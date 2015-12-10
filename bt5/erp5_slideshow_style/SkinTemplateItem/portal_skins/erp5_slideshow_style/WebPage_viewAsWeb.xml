@@ -52,12 +52,14 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+css_link = context.REQUEST.get("css_link", "slides.css")\n
+\n
 return"""<!DOCTYPE html>\n
 <html>\n
   <head>\n
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">\n
-    <link href="http://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">\n
-    <link rel="stylesheet" type="text/css" href="slides.css">\n
+    <link href="//fonts.googleapis.com/css?family=Oswald" rel="stylesheet">\n
+    <link rel="stylesheet" type="text/css" href="%s">\n
     <script type="text/javascript" src="slides.js"></script>\n
     <meta charset="utf-8">\n
     <title>%s</title>\n
@@ -66,7 +68,7 @@ return"""<!DOCTYPE html>\n
   <body>\n
 %s   \n
   </body>\n
-</html>""" % (context.getTitle(), context.getTextContent())\n
+</html>""" % (css_link, context.getTitle(), context.getTextContent())\n
 
 
 ]]></string> </value>
