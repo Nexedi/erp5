@@ -441,30 +441,40 @@
    is_maximized = true;\n
  }\n
 \n
+ var update_check_text = undefined,\n
+     update_check_running = false;\n
  function checkPythonSourceCode(text, updateLinting, options, cm) {\n
+   update_check_text = text;\n
    checker_parameters = {code: text};\n
 <dtml-if bound_names>\n
    checker_parameters[\'bound_names\'] = <dtml-var name="bound_names">;\n
    checker_parameters[\'params\'] = $(\'input[name="params"]\').val();\n
 </dtml-if>\n
-   $.post(\n
-     \'&dtml-portal_url;/ERP5Site_checkPythonSourceCodeAsJSON\',\n
-     {\'data\': JSON.stringify(checker_parameters)},\n
-      function(data){\n
-        var messages = data.annotations;\n
-        var found = [];\n
-        for(var i = 0; i < messages.length; i++) {\n
-          message = messages[i];\n
-          found.push({\n
-            from: CodeMirror.Pos(message.row, message.column - 1),\n
-            to: CodeMirror.Pos(message.row, message.column),\n
-            message: message.text,\n
-            severity: message.type\n
-          });\n
-        }\n
+   if (update_check_running === false) {\n
+     update_check_running = true;\n
+     $.post(\n
+       \'&dtml-portal_url;/ERP5Site_checkPythonSourceCodeAsJSON\',\n
+       {\'data\': JSON.stringify(checker_parameters)},\n
+        function(data){\n
+          var messages = data.annotations;\n
+          var found = [];\n
+          update_check_running = false;\n
+          for(var i = 0; i < messages.length; i++) {\n
+            message = messages[i];\n
+            found.push({\n
+              from: CodeMirror.Pos(message.row, message.column - 1),\n
+              to: CodeMirror.Pos(message.row, message.column),\n
+              message: message.text,\n
+              severity: message.type\n
+            });\n
+          }\n
 \n
-        updateLinting(cm, found);\n
-   });\n
+          updateLinting(cm, found);\n
+          if (update_check_text !== text) {\n
+            checkPythonSourceCode(update_check_text, updateLinting, options, cm);\n
+          }\n
+     });\n
+   }\n
  }\n
 \n
  var mode = "&dtml-mode;";\n
