@@ -97,7 +97,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_viewHateoasPreference</string> </value>
+            <value> <string>WebSection_viewRenderJSPreference</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
