@@ -89,7 +89,7 @@
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//input[@value=\'Logout\']</td>\n
+  <td>//input[@value=\'Confirm\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -99,7 +99,7 @@
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//input[@value=\'Logout\']</td>\n
+  <td>//input[@value=\'Confirm\']</td>\n
   <td></td>\n
 </tr>\n
 \n
