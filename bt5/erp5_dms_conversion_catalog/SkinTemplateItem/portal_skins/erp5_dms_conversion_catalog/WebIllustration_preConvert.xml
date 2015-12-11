@@ -53,30 +53,25 @@
             <value> <string encoding="cdata"><![CDATA[
 
 """\n
-  Do actual conversion of any Image type.\n
+  Do actual conversion of Web Page. As it involves cloudoo use serialization tag and activity.\n
 """\n
-if quality is None:\n
-  # it\'s required so fall back to system preferences as\n
-  # directly accessed over URL will do the same\n
-  quality = context.getDefaultImageQuality(format)\n
+portal = context.getPortalObject()\n
 \n
-if not context.getContentType("").startswith(\'image/\'):\n
-  context.log(\'Image_preConvert\', \'%s is not an image, skipping preconversion\' % context.getRelativeUrl())\n
-  return \n
+format_kw = {\'format\': format,\n
+            \'quality\': quality}\n
+for display in display_list:\n
+  format_kw[\'display\'] = display\n
+  context.activate(serialization_tag=\'pre_convert\').convert(**format_kw)\n
 \n
-# UI uses \'large\' display\n
-display_list.append(\'large\')\n
-# Usually links in web page contain image as <img src="url?format=png"> without display\n
-display_list.append(None)\n
-\n
-context.Base_preConvert(format, quality, display_list)\n
+# try to convert all relative referenced (i.e. by <img> tag) documents\n
+context.activate().WebPage_preConvertReferencedImageList(**format_kw)\n
 
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>format, quality=None, display_list=[]</string> </value>
+            <value> <string>format, quality, display_list</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -88,7 +83,7 @@ context.Base_preConvert(format, quality, display_list)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Image_preConvert</string> </value>
+            <value> <string>WebIllustration_preConvert</string> </value>
         </item>
       </dictionary>
     </pickle>
