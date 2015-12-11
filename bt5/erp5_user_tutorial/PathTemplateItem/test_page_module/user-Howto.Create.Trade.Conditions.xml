@@ -10,11 +10,9 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -24,7 +22,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -43,8 +40,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -53,11 +48,9 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -149,7 +142,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value> <string>How to create sale trade conditions</string> </value>
+            <value> <string>Create Sale Trade Conditions</string> </value>
         </item>
         <item>
             <key> <string>text_content</string> </key>
@@ -218,7 +211,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </test>\n
       </section><section class="screenshot">\n
         <h1>What are Trade Conditions?</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Explanation?format=png" type="image/png" title="What are Trade Conditions?" alt="What are Trade Conditions?">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.Explanation?format=png" type="image/png" title="What are Trade Conditions?" alt="What are Trade Conditions?">\n
         <details open="open">\n
           <p>Trade conditions, as you will notice in this tutorial look like sale or purchase orders documents. The idea is that trade conditions help you store some information that you use in a specific type of order. Once this information is stored, you can import it from the Trade Condition to the Sale or Purchase Order in order to save time. On a Trade Condition, you can set information about the payment mode, the currency, the tax behaviour, the discount behaviour, the delivery mode, the incoterm. This information will be stored only in those trade conditions, and imported whenever necessary to different sale/purchase orders, as many times as you need.</p>\n
         </details>\n
@@ -229,7 +222,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </test>\n
       </section><section class="screenshot">\n
         <h1>Create a Sale Trade Condition</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.New?format=png" type="image/png" title="Create a Sale Trade Condition" alt="Create a Sale Trade Condition">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.New?format=png" type="image/png" title="Create a Sale Trade Condition" alt="Create a Sale Trade Condition">\n
         <details open="open">\n
           <p>In order to create a Sale Trade Condition document from the home page of your instance, click the New tab and click on Sale Trade Condition in the Trade area.</p>\n
         </details>\n
@@ -251,7 +244,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </test>\n
       </section><section class="screenshot">\n
         <h1>The Trade Conditions document</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Document?format=png" type="image/png" title="Trade Conditions document" alt="Trade Conditions document">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.Document?format=png" type="image/png" title="Trade Conditions document" alt="Trade Conditions document">\n
         <details open="open">\n
           <p>Your Sale Trade Condition document has been created successfully, and as you can see on the picture, Sale Trade Conditions look exactly the same as Sale Orders. The reason for this is that the information borne on Sale Trade Conditions are identical as the information borne by Sale Oders.</p>\n
         </details>\n
@@ -262,7 +255,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </test>\n
       </section><section class="screenshot">\n
         <h1>Fill the View Tab</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Edit.View?format=png" type="image/png" title="Fill the View Tab" alt="Fill the View Tab">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.Edit.View?format=png" type="image/png" title="Fill the View Tab" alt="Fill the View Tab">\n
         <details open="open">\n
           <p>Add a title to your Trade Condition in the Red area, and then add the blue fields with information about the sender, the seller and the supplier. The green area displays the effective and validity dates, and comments for the other users of your ERP5 instance.</p><p>\n
             Another important field which is necessary to fill when you are creating any Sale/Purchase Trade Conditions, is the "Specialised Trade Conditions and Business Processes ". It defines the workflow of the ERP5 trade module (Sale/Purchase Orders, Sale/Purchase Packing Lists and Invoices) which you need to apply this Trade Condition later. To fill the field, <strong>click on the Wheel</strong>\n
@@ -347,7 +340,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </test>\n
       </section><section class="screenshot">\n
         <h1>"Specialised Trade Conditions and Business Processes " (1)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Set.Relations.Business.Processes?format=png" type="image/svg+xml" title="Specialised Business Processes" alt="Specialised Business Processes">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.Set.Relations.Business.Processes?format=png" type="image/svg+xml" title="Specialised Business Processes" alt="Specialised Business Processes">\n
         <details open="open">\n
           <p>\n
             In this page, you can choose Specialised Trade Conditions and Business Processes. Because we are creating a Sale Trade Condition, so here we <strong>choose in the first line "Business Processes"</strong>\n
@@ -356,7 +349,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </details>\n
       </section><section class="screenshot">\n
         <h1>"Specialised Trade Conditions and Business Processes" (2)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Set.Relations.Default.Trade.Business.Process?format=png" type="image/svg+xml" title="Default Business Processes" alt="Default Business Processes">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.Set.Relations.Default.Trade.Business.Process?format=png" type="image/svg+xml" title="Default Business Processes" alt="Default Business Processes">\n
         <details open="open">\n
           <p>\n
             Now you can see there is an option "Default Trade Business Process" on the "Specialised Trade Conditions and Business Processes" list, it is created automatically by the ERP5 configurator when you configurated your instance. Please first <strong>check off</strong>\n
@@ -367,7 +360,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </details>\n
       </section><section class="screenshot">\n
         <h1>"Specialised Trade Conditions and Business Processes" (3)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.View.Specialised.Trade.Conditions.And.Business.Processes?format=png" type="image/svg+xml" title="Specialised Trade Conditions and Business Processes" alt="Specialised Trade Conditions and Business Processes">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.View.Specialised.Trade.Conditions.And.Business.Processes?format=png" type="image/svg+xml" title="Specialised Trade Conditions and Business Processes" alt="Specialised Trade Conditions and Business Processes">\n
         <details open="open">\n
           <p>\n
             Now you are led again to the View page of the sale trade condition you created. You will see the <strong>"Specialised Trade Conditions and Business Processes" has been defined</strong>\n
@@ -376,7 +369,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </details>\n
       </section><section class="screenshot">\n
         <h1>Fill the Payment Tab(1)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Fill.Payment.Tab?format=png" type="image/png" title="Fill Payment Tab" alt="Fill Payment Tab">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.Fill.Payment.Tab?format=png" type="image/png" title="Fill Payment Tab" alt="Fill Payment Tab">\n
         <details open="open">\n
           <p>The Payment tab displays the payment mode you want to be applied to your orders. In order to edit the Payment mode, click on the payment tab of the Sale Trade Condition document and jump to this page.</p><p>The area circled in blue on the picture is the default payment condition that will be applied to your orders whenever you decide to import those sale trade conditions to them. In this area, you can set the following information: payment mode, trade date, term, end of month and additional term. When you are done, click the save button and jump to next page.</p>\n
         </details>\n
@@ -413,7 +406,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </test>\n
       </section><section class="screenshot">\n
         <h1>Fill the Payment Tab (2)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Add.Payment.Condition?format=png" type="image/png" title="Add Payment Conditions" alt="Add Payment Conditions">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.Add.Payment.Condition?format=png" type="image/png" title="Add Payment Conditions" alt="Add Payment Conditions">\n
         <details open="open">\n
           <p>In many cases, you will need more complex payment options. For instance you might need your customers to pay an advance on payment, and pay the balance when the goods are delivered. This is possible in ERP5 Express to add more than one payment conditions, which means that you can build complex payment conditions, following this procedure:</p><p>Open the Action Item List and choose Add Payment Condition.</p>\n
         </details>\n
@@ -430,7 +423,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </test>\n
       </section><section class="screenshot">\n
         <h1>Fill the Payment Tab(3)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.New.Payment.Condition?format=png" type="image/png" title="New Payment Condition" alt="New Payment Condition">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.New.Payment.Condition?format=png" type="image/png" title="New Payment Condition" alt="New Payment Condition">\n
         <details open="open">\n
           <p>This is the new payment condition that has been created in previous page. This condition will not replace the default payment conditions but will be added to them. As you can see circled in red on the picture, you can first decide the % or the amount that will have to be paid following the rules of this payment condition. When you are done, click the save button.</p>\n
         </details>\n
@@ -462,7 +455,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </test>\n
       </section><section class="screenshot">\n
         <h1>Fill the Payment Tab(4)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Advance.Payment?format=png" type="image/png" title="Advance Payment" alt="Advance Payment">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.Advance.Payment?format=png" type="image/png" title="Advance Payment" alt="Advance Payment">\n
         <details open="open">\n
           <p>This Payment condition is in fact an Advance on Payment of 20%. We have put some information about when this advance should be paid and the payment mode. Refer to the picture for more details. When you are done, click the save button.</p>\n
         </details>\n
@@ -473,13 +466,12 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </test>\n
       </section><section class="screenshot">\n
         <h1>Fill the Payment Tab(5)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Additional.Payments?format=png" type="image/png" title="Additional Payments" alt="Additional Payments">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.Additional.Payments?format=png" type="image/png" title="Additional Payments" alt="Additional Payments">\n
         <details open="open">\n
-          <p>Back on the Payment Tab of the Sale Trade Condition, you can see that the Payment Condition you have created has been added to the Payment Lines. For your information, the default_payment line is the line that has been created automatically when you filled the Payment tab in the previous steps.</p><p>We will now edit the default payment line, in order at least to change its name. Click on the line, and jump to next page.</p>\n
+          <p>Back on the Payment Tab of the Sale Trade Condition, you can see that the Payment Condition you have created has been added to the Additional Payment Lines. For your information, the default_payment line is the line that has been created automatically when you filled the Payment tab in the previous steps.</p><p>We will now edit the default payment line, in order at least to change its name. Click on the line, and jump to next page.</p>\n
         </details>\n
         <test>\n
-          " class="test"&gt;\n
-          <table style="display: none;">\n
+          <table class="test" style="display: none;">\n
             <tbody>\n
               <tr style="opacity: 1;">\n
                 <td>clickAndWait</td>\n
@@ -496,7 +488,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </test>\n
       </section><section class="screenshot">\n
         <h1>Fill the Payment Tab(6)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Default.Payment.Condition?format=png" type="image/png" title="Edit default payment condition" alt="Edit default payment condition">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.Default.Payment.Condition?format=png" type="image/png" title="Edit default payment condition" alt="Edit default payment condition">\n
         <details open="open">\n
           <p>We will only change the title of the line and add a description. This line in fact is the balance of the Payment.</p>\n
         </details>\n
@@ -533,7 +525,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </test>\n
       </section><section class="screenshot">\n
         <h1>Fill the Payment Tab(7)</h1>\n
-        <img title="Balance" alt="Balance" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Default.Payment.Condition.Edit?format=png" type="image/png">\n
+        <img title="Balance" alt="Balance" src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.Default.Payment.Condition.Edit?format=png" type="image/png">\n
         <details open="open">\n
           <p>When you are done, save your work and go back to the payment tab of your Sale Trade Conditions.</p>\n
         </details>\n
@@ -550,7 +542,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </test>\n
       </section><section class="screenshot">\n
         <h1>Finalized Payment Conditions</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Payment.Condition.Finalized?format=png" type="image/png" title="Finalized Payment Conditions" alt="Finalized Payment Conditions">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.Payment.Condition.Finalized?format=png" type="image/png" title="Finalized Payment Conditions" alt="Finalized Payment Conditions">\n
         <details open="open">\n
           <p>As you can see here, the two lines have been created, one line for the Advance Payment and one line for the Balance. We are done with the payment Conditions, we will now see the Profile Tab.</p>\n
         </details>\n
@@ -582,7 +574,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </test>\n
       </section><section class="screenshot">\n
         <h1>The Profile Tab</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Profile.Supplier?format=png" type="image/png" title="The Profile Tab" alt="The Profile Tab">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.Profile.Supplier?format=png" type="image/png" title="The Profile Tab" alt="The Profile Tab">\n
         <details open="open">\n
           <p>This tab gathers information about the two parties of the sale order-the supplier parts are circled in red, the client parts are circled in blue. Some information of the supplier part have already been filled if you filled the view tab correctly. The only fields you have to edit here are the "Invoice Sender" and the "Payee". You will notice that the "Payee" has no options, this is because you haven\'t edited the "Financial Information" tab of the your organisation which you put in the supplier fields. So we will now add a "Bank Account" in the "Financial Information" tab of the organisation.</p><p>Note that for the client fields which are circled in blue,  the information are necessary to fill up when you set a sale order with your customer, but you don\'t have to edit them now, because these fields are different according to different sale orders. So you can edit them differently in each particular Sale Order document, after you have imported the general Sale Payment Conditions which we just created.</p>\n
         </details>\n
@@ -599,14 +591,13 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </test>\n
       </section><section class="screenshot">\n
         <h1>Add Payee</h1>\n
-        <img title="Sale Trade Conditions-Supplier" alt="Sale Trade Conditions-Supplier" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Choose.Payee?format=png" type="image/png">\n
+        <img title="Sale Trade Conditions-Supplier" alt="Sale Trade Conditions-Supplier" src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.Choose.Payee?format=png" type="image/png">\n
         <details open="open">\n
           <p>\n
             In a Sale Order, the one who gets paid is usually the supplier. Therefore we define in the <strong>Payee</strong>\n
              field our own bank account. If you cannot select any bank account, than you first have to create a bank account for your organisation as decribed in the tutorial <a href="user-Howto.Create.Bank.Account/view"><strong>How to create Bank Accounts</strong></a>\n
           </p>\n
         </details>\n
-        <strong>\n
           <test>\n
             <table class="test" style="display: none;">\n
               <tbody>\n
@@ -658,22 +649,18 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
               </tbody>\n
             </table>\n
           </test>\n
-        </strong>\n
       </section><section class="screenshot">\n
-        <strong>\n
           <h1>Validate the Sale Trade Condition</h1>\n
-          <img alt="Validate Sale Trade Condition" title="Validate Sale Trade Condition" type="image/svg+xml" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Validate?format=png">\n
+          <img alt="Validate Sale Trade Condition" title="Validate Sale Trade Condition" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Create.Trade.Conditions.Validate?format=png">\n
           <details open="open">\n
             <p>\n
               The final step to create the a Sale Trade Condition, is to go back to the View tab and <strong>Validate</strong>\n
               it.\n
             </p><p>For now, you have successfully created a Sale Trade Condition, which you can apply later. The steps to create a Purchase Trade Condition are the same. Now we will show you how and where to apply them.</p>\n
           </details>\n
-        </strong>\n
       </section><section class="screenshot">\n
-        <strong>\n
           <h1>Create a Sale Order</h1>\n
-          <img alt="Create a Sale Order" title="Create a Sale Order" src="http://www.erp5.com/user-Howto.Apply.Trade.Conditions.Create.Sale.Order.New?format=png" type="image/png">\n
+          <img alt="Create a Sale Order" title="Create a Sale Order" src="http://img.erp5.cn/user-Howto.Apply.Trade.Conditions.Create.Sale.Order.New?format=png" type="image/png">\n
           <details open="open">\n
             <p>Now we have created Sale Trade Conditions, how can we apply them?</p><p>\n
               The Trade Conditions are mostly used when we create a Sale/Purchase order from the Home Page of your ERP5 instance. So <strong>click on the new tab and choose Sale Order in the Trade Area</strong>\n
@@ -719,11 +706,9 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
               </tbody>\n
             </table>\n
           </test>\n
-        </strong>\n
       </section><section class="screenshot">\n
-        <strong>\n
           <h1>Apply Trade Conditions</h1>\n
-          <img alt="Apply Sale Trade Condition" title="Apply Sale Trade Condition" src="http://www.erp5.com/user-Howto.Apply.Trade.Conditions.Fill.Save.Apply?format=png" type="image/png">\n
+          <img alt="Apply Sale Trade Condition" title="Apply Sale Trade Condition" src="http://img.erp5.cn/user-Howto.Apply.Trade.Conditions.Fill.Save.Apply?format=png" type="image/png">\n
           <details open="open">\n
             <p>\n
               When the order is created, <strong>enter the name of your Trade Condition in the Trade Condition field</strong>\n
@@ -750,11 +735,9 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
               </tbody>\n
             </table>\n
           </test>\n
-        </strong>\n
       </section><section class="screenshot">\n
-        <strong>\n
           <h1>Imported trade condition information on View tab</h1>\n
-          <img alt="Imported information on View tab" title="Imported information on View tab" src="http://www.erp5.com/user-Howto.Apply.Trade.Conditions.Information.Imported.View?format=png" type="image/png">\n
+          <img alt="Imported information on View tab" title="Imported information on View tab" src="http://img.erp5.cn/user-Howto.Apply.Trade.Conditions.Information.Imported.View?format=png" type="image/png">\n
           <details open="open">\n
             <p>As you can see, the View tab has been filled with information imported from the Sale Trade Condition you choose to apply.</p>\n
           </details>\n
@@ -774,13 +757,38 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
               </tbody>\n
             </table>\n
           </test>\n
-        </strong>\n
       </section><section class="screenshot">\n
-        <strong>\n
-          <h1>The profile tab is updated</h1>\n
-          <img alt="The profile tab is updated" title="The profile tab is updated" src="http://www.erp5.com/user-Howto.Apply.Trade.Conditions.Information.Imported.Profile?format=png" type="image/png">\n
+          <h1>The Payment tab is updated</h1>\n
+          <img alt="The Payment tab is updated" title="The Payment tab is updated" src="http://img.erp5.cn/user-Howto.Apply.Trade.Conditions.Information.Imported.Payment?format=png" type="image/png">\n
           <details open="open">\n
-            <p>The Profile Tab has been updated as well.</p><p>In the following tutorials about sale/purchase orders, packing lists, invoices and payments, you will see the Specialised Business Processes you just defined in the Trade Conditions will also be updated automatically once you apply the Trade Conditions with the defined business processes.</p>\n
+            <p>The Information about the Payment mode has also been imported, you can find here the two lines we had just created in the Sale Trade Condition, one for the Advance Payment, and the other one for the Balance. If we don\'t apply the Trade Condition, this fields will be empty.</p>\n
+          </details>\n
+          <test>\n
+            <table class="test" style="display: none;">\n
+              <tbody>\n
+                <tr>\n
+                  <td>clickAndWait</td>\n
+                  <td>link=Payment</td>\n
+                  <td></td>\n
+                </tr>\n
+                <tr>\n
+                  <td>verifyTextPresent</td>\n
+                  <td>ZUITE-TEST-PAYMENT-CONDITION-001</td>\n
+                  <td></td>\n
+                </tr>\n
+                <tr>\n
+                  <td>verifyTextPresent</td>\n
+                  <td>ZUITE-TEST-PAYMENT-CONDITION-002</td>\n
+                  <td></td>\n
+                </tr>\n
+              </tbody>\n
+            </table>\n
+          </test>\n
+      </section><section class="screenshot">\n
+          <h1>The profile tab is updated</h1>\n
+          <img alt="The profile tab is updated" title="The profile tab is updated" src="http://img.erp5.cn/user-Howto.Apply.Trade.Conditions.Information.Imported.Profile?format=png" type="image/png">\n
+          <details open="open">\n
+            <p>The Profile Tab has been updated as well.</p><p>In the following tutorials about sale/purchase orders, packing lists, invoices and payments, you will see the Specialised Business Processes you just defined in the Trade Conditions will also be applied automatically once you apply the Trade Conditions with the defined business processes.</p>\n
           </details>\n
           <test>\n
             <table class="test" style="display: none;">\n
@@ -832,15 +840,15 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
               </tbody>\n
             </table>\n
           </test>\n
-        </strong>\n
       </section>\n
-    
+     \n
+
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>How to create sale trade conditions in ERP5</string> </value>
+            <value> <string>How to Create Sale Trade Conditions</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -1040,6 +1048,45 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>archive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1413967469.78</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>archived</string> </value>
+            </item>
+          </dictionary>
         </list>
       </tuple>
     </pickle>
@@ -1059,7 +1106,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>jingjing</string> </value>
+                <value> <string>rafael</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -1073,7 +1120,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>923.24330.40301.42769</string> </value>
+                <value> <string>937.51504.20632.5222</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1091,53 +1138,8 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1355931757.58</float>
-                        <string>GMT</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>edit</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>jingjing</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>923.24330.40301.42769</string> </value>
-            </item>
-            <item>
-                <key> <string>state</string> </key>
-                <value> <string>current</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="7.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1355932000.81</float>
-                        <string>GMT</string>
+                        <float>1412588421.26</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -1165,7 +1167,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>923.24338.44877.6980</string> </value>
+                <value> <string>0.0.0.0</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1181,8 +1183,8 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1358466182.18</float>
-                        <string>GMT</string>
+                        <float>1413966855.68</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -1210,7 +1212,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>924.1039.3345.54903</string> </value>
+                <value> <string>0.0.0.0</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1226,8 +1228,8 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1358467361.53</float>
-                        <string>GMT</string>
+                        <float>1413966932.7</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -1255,7 +1257,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>924.1058.45548.35618</string> </value>
+                <value> <string>0.0.0.0</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1271,8 +1273,8 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1358467643.82</float>
-                        <string>GMT</string>
+                        <float>1413967160.22</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -1300,7 +1302,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>924.1063.26295.13636</string> </value>
+                <value> <string>0.0.0.0</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1316,143 +1318,8 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1358467782.28</float>
-                        <string>GMT</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>edit</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>924.1065.46423.36010</string> </value>
-            </item>
-            <item>
-                <key> <string>state</string> </key>
-                <value> <string>current</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="7.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1358467975.03</float>
-                        <string>GMT</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>edit</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>jingjing</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>924.1068.60311.11690</string> </value>
-            </item>
-            <item>
-                <key> <string>state</string> </key>
-                <value> <string>current</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="7.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1358506904.14</float>
-                        <string>GMT</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>edit</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>jingjing</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>924.1717.48460.7082</string> </value>
-            </item>
-            <item>
-                <key> <string>state</string> </key>
-                <value> <string>current</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="7.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1368627177.11</float>
-                        <string>GMT</string>
+                        <float>1413967230.28</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -1637,7 +1504,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>922.58363.24071.32170</string> </value>
+                <value> <string>923.24330.40301.42769</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1649,6 +1516,740 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                   <object>
                     <klass>
                       <global id="9.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1355931757.58</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>923.24330.40301.42769</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1355932000.81</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>923.24338.44877.6980</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358466182.18</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>924.1039.3345.54903</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358467361.53</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>924.1058.45548.35618</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358467643.82</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>924.1063.26295.13636</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358467782.28</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>924.1065.46423.36010</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358467975.03</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>924.1068.60311.11690</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358506904.14</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>924.1717.48460.7082</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1368627177.11</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>931.51462.5588.34235</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1395331374.71</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>933.40040.47372.14728</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1395331443.18</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>933.40041.56497.10069</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1395331449.47</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>933.40041.63319.57139</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1395331464.71</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>933.40042.14426.42769</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1395331464.85</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>933.40042.14426.42769</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1395409420.16</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>933.41341.33655.17834</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1411575181.89</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="10" aka="AAAAAAAAAAo=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>922.58363.24071.32170</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="10.1" name="DateTime" module="DateTime.DateTime"/>
                     </klass>
                     <tuple>
                       <none/>
@@ -1694,7 +2295,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="9.1"/> </klass>
+                    <klass> <reference id="10.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -1739,7 +2340,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="9.1"/> </klass>
+                    <klass> <reference id="10.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -1784,7 +2385,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="9.1"/> </klass>
+                    <klass> <reference id="10.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -1829,7 +2430,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="9.1"/> </klass>
+                    <klass> <reference id="10.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -1874,7 +2475,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="9.1"/> </klass>
+                    <klass> <reference id="10.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -1919,7 +2520,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="9.1"/> </klass>
+                    <klass> <reference id="10.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -1964,7 +2565,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="9.1"/> </klass>
+                    <klass> <reference id="10.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2009,7 +2610,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="9.1"/> </klass>
+                    <klass> <reference id="10.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2054,7 +2655,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="9.1"/> </klass>
+                    <klass> <reference id="10.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2099,7 +2700,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="9.1"/> </klass>
+                    <klass> <reference id="10.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2144,7 +2745,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="9.1"/> </klass>
+                    <klass> <reference id="10.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2189,7 +2790,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="9.1"/> </klass>
+                    <klass> <reference id="10.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2234,7 +2835,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="9.1"/> </klass>
+                    <klass> <reference id="10.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2279,7 +2880,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="9.1"/> </klass>
+                    <klass> <reference id="10.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2324,7 +2925,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="9.1"/> </klass>
+                    <klass> <reference id="10.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2342,13 +2943,13 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
       </tuple>
     </pickle>
   </record>
-  <record id="10" aka="AAAAAAAAAAo=">
+  <record id="11" aka="AAAAAAAAAAs=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
     <pickle>
       <tuple>
-        <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+        <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
         <list>
           <dictionary>
             <item>
@@ -2382,7 +2983,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <value>
                   <object>
                     <klass>
-                      <global id="10.1" name="DateTime" module="DateTime.DateTime"/>
+                      <global id="11.1" name="DateTime" module="DateTime.DateTime"/>
                     </klass>
                     <tuple>
                       <none/>
@@ -2428,7 +3029,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="10.1"/> </klass>
+                    <klass> <reference id="11.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2473,7 +3074,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="10.1"/> </klass>
+                    <klass> <reference id="11.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2518,7 +3119,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="10.1"/> </klass>
+                    <klass> <reference id="11.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2563,7 +3164,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="10.1"/> </klass>
+                    <klass> <reference id="11.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2608,7 +3209,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="10.1"/> </klass>
+                    <klass> <reference id="11.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2653,7 +3254,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="10.1"/> </klass>
+                    <klass> <reference id="11.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2698,7 +3299,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="10.1"/> </klass>
+                    <klass> <reference id="11.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2743,7 +3344,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="10.1"/> </klass>
+                    <klass> <reference id="11.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2788,7 +3389,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="10.1"/> </klass>
+                    <klass> <reference id="11.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2833,7 +3434,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="10.1"/> </klass>
+                    <klass> <reference id="11.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2878,7 +3479,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="10.1"/> </klass>
+                    <klass> <reference id="11.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2923,7 +3524,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="10.1"/> </klass>
+                    <klass> <reference id="11.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -2968,7 +3569,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="10.1"/> </klass>
+                    <klass> <reference id="11.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3013,7 +3614,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="10.1"/> </klass>
+                    <klass> <reference id="11.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3058,7 +3659,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="10.1"/> </klass>
+                    <klass> <reference id="11.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3076,13 +3677,13 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
       </tuple>
     </pickle>
   </record>
-  <record id="11" aka="AAAAAAAAAAs=">
+  <record id="12" aka="AAAAAAAAAAw=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
     <pickle>
       <tuple>
-        <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
+        <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
         <list>
           <dictionary>
             <item>
@@ -3116,7 +3717,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <value>
                   <object>
                     <klass>
-                      <global id="11.1" name="DateTime" module="DateTime.DateTime"/>
+                      <global id="12.1" name="DateTime" module="DateTime.DateTime"/>
                     </klass>
                     <tuple>
                       <none/>
@@ -3162,7 +3763,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="11.1"/> </klass>
+                    <klass> <reference id="12.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3207,7 +3808,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="11.1"/> </klass>
+                    <klass> <reference id="12.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3252,7 +3853,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="11.1"/> </klass>
+                    <klass> <reference id="12.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3297,7 +3898,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="11.1"/> </klass>
+                    <klass> <reference id="12.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3342,7 +3943,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="11.1"/> </klass>
+                    <klass> <reference id="12.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3387,7 +3988,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="11.1"/> </klass>
+                    <klass> <reference id="12.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3432,7 +4033,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="11.1"/> </klass>
+                    <klass> <reference id="12.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3477,7 +4078,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="11.1"/> </klass>
+                    <klass> <reference id="12.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3522,7 +4123,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="11.1"/> </klass>
+                    <klass> <reference id="12.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3567,7 +4168,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="11.1"/> </klass>
+                    <klass> <reference id="12.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3612,7 +4213,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="11.1"/> </klass>
+                    <klass> <reference id="12.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3657,7 +4258,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="11.1"/> </klass>
+                    <klass> <reference id="12.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3702,7 +4303,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="11.1"/> </klass>
+                    <klass> <reference id="12.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3747,7 +4348,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="11.1"/> </klass>
+                    <klass> <reference id="12.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3792,7 +4393,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="11.1"/> </klass>
+                    <klass> <reference id="12.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3810,13 +4411,13 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
       </tuple>
     </pickle>
   </record>
-  <record id="12" aka="AAAAAAAAAAw=">
+  <record id="13" aka="AAAAAAAAAA0=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
     <pickle>
       <tuple>
-        <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
+        <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
         <list>
           <dictionary>
             <item>
@@ -3850,7 +4451,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <value>
                   <object>
                     <klass>
-                      <global id="12.1" name="DateTime" module="DateTime.DateTime"/>
+                      <global id="13.1" name="DateTime" module="DateTime.DateTime"/>
                     </klass>
                     <tuple>
                       <none/>
@@ -3896,7 +4497,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="12.1"/> </klass>
+                    <klass> <reference id="13.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3941,7 +4542,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="12.1"/> </klass>
+                    <klass> <reference id="13.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -3986,7 +4587,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="12.1"/> </klass>
+                    <klass> <reference id="13.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4031,7 +4632,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="12.1"/> </klass>
+                    <klass> <reference id="13.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4076,7 +4677,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="12.1"/> </klass>
+                    <klass> <reference id="13.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4121,7 +4722,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="12.1"/> </klass>
+                    <klass> <reference id="13.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4166,7 +4767,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="12.1"/> </klass>
+                    <klass> <reference id="13.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4211,7 +4812,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="12.1"/> </klass>
+                    <klass> <reference id="13.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4256,7 +4857,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="12.1"/> </klass>
+                    <klass> <reference id="13.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4301,7 +4902,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="12.1"/> </klass>
+                    <klass> <reference id="13.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4346,7 +4947,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="12.1"/> </klass>
+                    <klass> <reference id="13.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4391,7 +4992,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="12.1"/> </klass>
+                    <klass> <reference id="13.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4436,7 +5037,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="12.1"/> </klass>
+                    <klass> <reference id="13.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4481,7 +5082,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="12.1"/> </klass>
+                    <klass> <reference id="13.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4526,7 +5127,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="12.1"/> </klass>
+                    <klass> <reference id="13.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4544,7 +5145,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
       </tuple>
     </pickle>
   </record>
-  <record id="13" aka="AAAAAAAAAA0=">
+  <record id="14" aka="AAAAAAAAAA4=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
@@ -4582,7 +5183,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <value>
                   <object>
                     <klass>
-                      <global id="13.1" name="DateTime" module="DateTime.DateTime"/>
+                      <global id="14.1" name="DateTime" module="DateTime.DateTime"/>
                     </klass>
                     <tuple>
                       <none/>
@@ -4609,7 +5210,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             <item>
                 <key> <string>comment</string> </key>
                 <value>
-                  <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
+                  <persistent> <string encoding="base64">AAAAAAAAAA8=</string> </persistent>
                 </value>
             </item>
             <item>
@@ -4628,7 +5229,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="13.1"/> </klass>
+                    <klass> <reference id="14.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4673,7 +5274,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="13.1"/> </klass>
+                    <klass> <reference id="14.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4718,7 +5319,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="13.1"/> </klass>
+                    <klass> <reference id="14.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4763,7 +5364,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="13.1"/> </klass>
+                    <klass> <reference id="14.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4808,7 +5409,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="13.1"/> </klass>
+                    <klass> <reference id="14.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4853,7 +5454,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="13.1"/> </klass>
+                    <klass> <reference id="14.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4898,7 +5499,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="13.1"/> </klass>
+                    <klass> <reference id="14.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4943,7 +5544,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="13.1"/> </klass>
+                    <klass> <reference id="14.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -4988,7 +5589,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="13.1"/> </klass>
+                    <klass> <reference id="14.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -5033,7 +5634,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="13.1"/> </klass>
+                    <klass> <reference id="14.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -5078,7 +5679,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="13.1"/> </klass>
+                    <klass> <reference id="14.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -5123,7 +5724,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="13.1"/> </klass>
+                    <klass> <reference id="14.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -5168,7 +5769,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="13.1"/> </klass>
+                    <klass> <reference id="14.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -5213,7 +5814,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="13.1"/> </klass>
+                    <klass> <reference id="14.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -5258,7 +5859,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <key> <string>time</string> </key>
                 <value>
                   <object>
-                    <klass> <reference id="13.1"/> </klass>
+                    <klass> <reference id="14.1"/> </klass>
                     <tuple>
                       <none/>
                     </tuple>
@@ -5276,7 +5877,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
       </tuple>
     </pickle>
   </record>
-  <record id="14" aka="AAAAAAAAAA4=">
+  <record id="15" aka="AAAAAAAAAA8=">
     <pickle>
       <global name="Message" module="Products.ERP5Type.Message"/>
     </pickle>

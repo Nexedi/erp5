@@ -153,7 +153,7 @@
     \n
       <section class="master">\n
         <h1>How to Prepare Outgoing Events</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Event.Front.Page?format=png" title="Create an Event from the campaign Ticket: Beta developer program" alt="Create an Event from the campaign Ticket: Beta developer program">\n
+        <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Event.Front.Page?format=png" title="Create an Event from the campaign Ticket: Beta developer program" alt="Create an Event from the campaign Ticket: Beta developer program">\n
         <footer>\n
           by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.\n
         </footer>\n
@@ -179,7 +179,7 @@
         </details>\n
       </section><section class="screenshot">\n
         <h1>Example: Create the Event Mail message (SlapOS Recruits Beta Developers) from the Ticket (Beta Developer Program)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Example.Beta.Developer.Program.Ticket.Mail.Message.Event?format=png" alt="Example: Create the Event - Mail message from the Ticke - Beta Developer Program" title="Example: Create the Event - Mail message from the Ticke - Beta Developer Program">\n
+        <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Example.Beta.Developer.Program.Ticket.Mail.Message.Event?format=png" alt="Example: Create the Event - Mail message from the Ticke - Beta Developer Program" title="Example: Create the Event - Mail message from the Ticke - Beta Developer Program">\n
         <details open="open">\n
           <p>In last tutorial, we have created a Ticket - the marketing campaign Beta Developer Program (the right side screenshot), which aims to increasing the awareness of SlapOS (The new open source Cloud developed by VIFIB) by announcing the campaign and hiring software developers.</p><p>Now that the campaign Ticket has been opened, we are going to create Events for it, send these Outgoing Events to the customers of the marketing campaign, and then handle those Incoming Events from our clients. In our VIFIB example, after the marketing campaign has been opened, as described in the introductory of Events, Cédric de Saint Martin, the community manager of VIFIB will create a mail message - an Event, and then send to his contacts who might be interested in the program and become developers of SlapOS in the future. After these contacts have received the email, they will reply to the VIFIB manager by mail message, which will be well stored in the CRM system for future reference.</p><p>In this tutorial, we will describe in detail how to create the mail message Event from the marketing campaign Ticket</p><p>\n
             <strong>Description:</strong>\n
@@ -200,8 +200,7 @@
         </details>\n
         <test>\n
           <table class="test" style="display: none;">\n
-            <tbody>
-              <tr class="" style="opacity: 1;">\n
+            <tbody>              <tr class="" style="opacity: 1;">\n
                 <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>\n
               </tr>\n
               <tr>\n
@@ -229,7 +228,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Starting point: the Ticket - Campaign</h1>\n
-        <img alt="The screenshot of a newly opened Campaign Ticket shows that we will create new Event from the Ticket" title="Create an Event: Start from the Ticket-Campaign" src="http://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Starting.Point.Ticket.Campaign.Empty.Event.List?format=png">\n
+        <img alt="The screenshot of a newly opened Campaign Ticket shows that we will create new Event from the Ticket" title="Create an Event: Start from the Ticket-Campaign" src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Starting.Point.Ticket.Campaign.Empty.Event.List?format=png">\n
         <details open="open">\n
           <p>\n
             At the bottom of a campaign Ticket there is a list of all the events of the campaign. As you can see in the screenshot, this list is empty now, and we will create new events <strong>from this campaign Ticket</strong>\n
@@ -269,7 +268,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Create a new Event</h1>\n
-        <img alt="The screenshot shows the first step to create Event is to choose the \'Create New Event\' from the \'Action\' item list" title="Create a new Event from the \'Action\' item list" src="http://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Create.New.Event.Action.List?format=png">\n
+        <img alt="The screenshot shows the first step to create Event is to choose the \'Create New Event\' from the \'Action\' item list" title="Create a new Event from the \'Action\' item list" src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Create.New.Event.Action.List?format=png">\n
         <details>\n
           <p>\n
             In order to add an Event to a campaign Ticket, <strong>open the "Action" item list</strong>\n
@@ -323,18 +322,13 @@
                 <td>ZUITE-TEST-CREATE-EVENT-EVENT-001</td>\n
               </tr>\n
               <tr>\n
-                <td>select</td>\n
-                <td>//select[@name="field_your_destination"]</td>\n
-                <td>functional_test_username</td>\n
-              </tr>\n
-              <tr>\n
                 <td>type</td>\n
                 <td>//textarea[@name="field_your_text_content"]</td>\n
                 <td>Annoucing the developer hiring campaign and describing the progression of SlapOS Project.</td>\n
               </tr>\n
               <tr>\n
                 <td>click</td>\n
-                <td>//input[@name="field_your_event_workflow_action" and @value="plan"]</td>\n
+                <td>//input[@name="field_your_direction" and @value="outgoing"]</td>\n
                 <td></td>\n
               </tr>\n
               <tr>\n
@@ -354,7 +348,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Event “Follow Up” a Ticket</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Event.Follow.Up.Ticket?format=png" title="Event follows up a Ticket" alt="Event follows up a Ticket">\n
+        <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Event.Follow.Up.Ticket?format=png" title="Event follows up a Ticket" alt="Event follows up a Ticket">\n
         <details open="open">\n
           <p>Now that the Event has been created, you can see on the screenshot that some fields of this event have already been filled.</p><p>\n
             For example, we will now explain the <strong>“Follow Up”</strong>\n
@@ -384,7 +378,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Edit the Event document</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Edit.Event.Document.Description.Senders.And.Recipients?format=png" title="Edit the Event document" alt="Edit the Event document">\n
+        <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Edit.Event.Document.Description.Senders.And.Recipients?format=png" title="Edit the Event document" alt="Edit the Event document">\n
         <details open="open">\n
           <p>\n
             Because in the previous step "Set Event title, type, direction and edit the message", we have write the content of the email, so now you only have to fill up the  <strong>"Description"</strong>\n
@@ -417,7 +411,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Preview the Event</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Preview?format=png" title="Preview the Event" alt="Preview the Event">\n
+        <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Preview?format=png" title="Preview the Event" alt="Preview the Event">\n
         <details open="open">\n
           <p>\n
             If you want to see what your email looks like, you can <strong>click on the “Preview” tab</strong>\n
@@ -466,7 +460,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Go back to the Ticket from Event</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Go.Back.To.Ticket.From.Event?format=png" title="Go back to the Campaign Ticket" alt="Go back to the Campaign Ticket">\n
+        <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Go.Back.To.Ticket.From.Event?format=png" title="Go back to the Campaign Ticket" alt="Go back to the Campaign Ticket">\n
         <details open="open">\n
           <p>We will now go back to the campaign in order to check that this event has been added to the Campaign Ticket.</p><p>\n
             In order to reach the associated Campaign Ticket, you can <strong>go back to the view tab</strong>\n
@@ -515,7 +509,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Check the Events list in the Ticket</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Event.Check.Events.List.In.Ticket.Document?format=png" title="Events list in the Ticket" alt="Events list in the Ticket">\n
+        <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Event.Check.Events.List.In.Ticket.Document?format=png" title="Events list in the Ticket" alt="Events list in the Ticket">\n
         <details open="open">\n
           <p>\n
             Now you will be redirected to the Follow Up Ticket of the Event, which is the Campaign from where we created the event. In the red area on the bottom of this campaign Ticket, you can now see that the Event you just created and edited is <strong>displayed as a Planned message</strong>\n
@@ -1202,6 +1196,51 @@
                       <tuple>
                         <float>1358497413.2</float>
                         <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>931.51462.5222.37239</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1412588368.2</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

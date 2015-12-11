@@ -190,7 +190,7 @@
         </test>\n
       </section><section class="illustration">\n
         <h1>Scenario</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Led.Characteristics?format=png" title="Scenario" alt="Scenario">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Led.Characteristics?format=png" title="Scenario" alt="Scenario">\n
         <p>\n
           <strong>As electronics specialist, the core of your business is to sell high quality components, like this LED for example, wich is your star product</strong>\n
         </p><details open="open">\n
@@ -204,7 +204,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Go to the « new » tab</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.New.Tab?format=png" title="Go to &quot;New&quot; tab" alt="Go to &quot;New&quot; tab">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.New.Tab?format=png" title="Go to &quot;New&quot; tab" alt="Go to &quot;New&quot; tab">\n
         <details open="open">\n
           <p>You are now familiar with creating new objects in ERP5 as it was covered in the first several tutorials. Product creation works the same way :</p><p>\n
             <strong>First reach the “new” tab of the home menu</strong>\n
@@ -218,7 +218,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Click on product</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Productss.Click.On.Products?format=png" title="Click on product" alt="Click on product">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Productss.Click.On.Products?format=png" title="Click on product" alt="Click on product">\n
         <details open="open">\n
           <p>\n
             To create a product, simply <strong>click on “product”</strong>\n
@@ -253,7 +253,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Fill the “View” tab</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Product.Module.Fill.View.Tab?format=png" title="Fill the “View” tab" alt="Fill the “View” tab">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Product.Module.Fill.View.Tab?format=png" title="Fill the “View” tab" alt="Fill the “View” tab">\n
         <details open="open">\n
           <p>First, please fill the “view” tab, the same way we did for persons and organisations.</p><p>Look on the picture or in the first pages of this tutorial to find the details of the “Red Led”, and try to fill out the “view” tab, which is first step in the detail edition, because not all characteristics belong to this tab.</p><p>\n
             Note that since this product doesn\'t have any variation of size or price, <strong>in the field "Individual Variation Base Category List", we can not choose "Variation". To do so, please click on the option "Variation", then hold "Ctrl" and click on "Variation" again</strong>\n
@@ -298,7 +298,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Fill the "Purchase" information</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Product.Module.Fill.Purchase.Tab?format=png" title="Purchase Information" alt="Purchase Information">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Product.Module.Fill.Purchase.Tab?format=png" title="Purchase Information" alt="Purchase Information">\n
         <details open="open">\n
           <p>\n
             With the characteristics given in the example, we are able to fill out 5 fields of the <strong>“Purchase”</strong>\n
@@ -374,7 +374,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Fill the "Sale" information</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Product.Module.Fill.Sale.Tab?format=png" title="Fill the Sales information" alt="Fill the Sales information">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Product.Module.Fill.Sale.Tab?format=png" title="Fill the Sales information" alt="Fill the Sales information">\n
         <details open="open">\n
           <p>\n
             Now that we have filled correctly the purchase information, it is time to give details about your selling price, by <strong>filling the “Sale” tab</strong>\n
@@ -417,7 +417,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>About the “Stock” tab</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Product.Module.Stock.Tab?format=png" title="About the “Stock” tab" alt="About the “Stock” tab">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Product.Module.Stock.Tab?format=png" title="About the “Stock” tab" alt="About the “Stock” tab">\n
         <details open="open">\n
           <p>\n
             Managing stock levels is another crucial business activity, and ERP5 allows you to track it smoothly thanks to the “inventory” function. As we will demonstrate in another tutorial, you can make an inventory to establish your stock levels for each product. If you do it correctly, your stock will be kept up to date by ERP5. You can find <strong>this very information in the “Stock” tab of your product</strong>\n
@@ -431,7 +431,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Validate</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Action.Validate?format=png" title="Validate" alt="Validate">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Action.Validate?format=png" title="Validate" alt="Validate">\n
         <details open="open">\n
           <p>Now that you have defined your product, it is time to validate it.</p><p>To do so, please follow the same steps as to validate a person or an organisation. The goal of this validation is to inform your co workers that the information you provide can be taken for granted. If you are not sure about the data you entered, do not validate, but rather leave it as draft to avoid confusion!</p>\n
         </details>\n
@@ -481,7 +481,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Complex products-Variations (1): Individual Variation Base Category List</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Complex.Product.Variation?format=png" title="Complex products - Variations" alt="Complex products - Variations">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Complex.Product.Variation?format=png" title="Complex products - Variations" alt="Complex products - Variations">\n
         <details open="open">\n
           <p>In ERP5, you can create products that are much more complex than standard products we have just created. For example, you might need to enter an unique reference, to store different product variations. We will see here the example of a book, that is available in different formats, a big and a small format. Of course, the prices are different, be it the purchase or sale price. But we would like to have only one reference for this product, displaying both the big and small format with their respective information such as prices and stock level.</p><p>\n
             When you create the new product, in the "View" tab, <strong>choose "Variation" in the "Individual Variation Base Category List"</strong>\n
@@ -501,7 +501,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Complex products-Variations (2): Add Product Individual Variation</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Add.Product.Individual.Variation?format=png" title="Add “Product individual variation”" alt="Add “Product individual variation”">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Add.Product.Individual.Variation?format=png" title="Add “Product individual variation”" alt="Add “Product individual variation”">\n
         <details open="open">\n
           <p>\n
             In this second step, we will add Product individual variations. In order to do this,<strong>open the Action item</strong>\n
@@ -523,7 +523,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Complex products-Variations (3): Name your variation(s)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Product.Module.Name.Your.Variation?format=png" title="Name your variation(s)" alt="Name your variation(s)">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Product.Module.Name.Your.Variation?format=png" title="Name your variation(s)" alt="Name your variation(s)">\n
         <details open="open">\n
           <p>\n
             This is your product individual variation document that has been created. You can <strong>set a name</strong>\n
@@ -574,7 +574,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Go back to your product</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Go.Back.To.Product?format=png" title="Go back to your product" alt="Go back to your product">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Go.Back.To.Product?format=png" title="Go back to your product" alt="Go back to your product">\n
         <details open="open">\n
           <p>\n
             Here we are back on the Product document. As you can see on the bottom of the document, a <strong>list of Product Individual Variations is displayed</strong>\n
@@ -604,7 +604,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Set the prices (1)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Product.Module.Set.The.Prices.1?format=png" title="Set the prices (1)" alt="Set the prices (1)">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Product.Module.Set.The.Prices.1?format=png" title="Set the prices (1)" alt="Set the prices (1)">\n
         <details open="open">\n
           <p>We will now see how to set the Purchase price of these product individual variations.</p><p>As you can see on the screenshot, the variations you created in the previous steps are not displayed here. Indeed, there is a step to take in order for you to be able to set the prices of those variations. Jump to next page.</p>\n
         </details>\n
@@ -621,7 +621,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Set the prices (2)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Product.Module.Set.The.Prices.2?format=png" title="Set the prices (2)" alt="Set the prices (2)">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Product.Module.Set.The.Prices.2?format=png" title="Set the prices (2)" alt="Set the prices (2)">\n
         <details open="open">\n
           <p>\n
             In the blue area, <strong>click on variation</strong>\n
@@ -648,7 +648,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Set the prices (3)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Product.Module.Set.The.Prices.3?format=png" title="Set the prices (3)" alt="Set the prices (3)">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Product.Module.Set.The.Prices.3?format=png" title="Set the prices (3)" alt="Set the prices (3)">\n
         <details open="open">\n
           <p>\n
             You can see in the red area that the two variations we have created in this tutorial are now displayed on the bottom of the page. You can now set the <strong>purchase price</strong>\n
@@ -690,7 +690,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Set the prices (4)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Product.Module.Set.The.Prices.4?format=png" title="Set the prices (4)" alt="Set the prices (4)">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Product.Module.Set.The.Prices.4?format=png" title="Set the prices (4)" alt="Set the prices (4)">\n
         <details open="open">\n
           <p>\n
             In order to define the Sale Price of your variations, <strong>click on the Sale tab and take the same steps as for the Purchase price</strong>\n
@@ -735,7 +735,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Complex prices–Quantity steps (1)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Product.Module.Complex.Prices.Quantity.Steps.1?format=png" title="Complex prices–Quantity steps (1)" alt="Complex prices–Quantity steps (1)">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Product.Module.Complex.Prices.Quantity.Steps.1?format=png" title="Complex prices–Quantity steps (1)" alt="Complex prices–Quantity steps (1)">\n
         <details open="open">\n
           <p>ERP5 also manages Price Quantity Steps. This feature is useful if the price of a product varies with the ordered or sold quantity. In this example, we will set 3 different quantity steps for the purchase and the sale price, whether the quantity is less than 50 units, between 50 and 100 units and more than 100 units. The Quantity step field will help you do this operation. Enter the different quantity steps you need in the Quantity step field, separating each of them by the Return Key of your keyboard. When you are done, click the Save button and jump to next page.</p>\n
         </details>\n
@@ -757,7 +757,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Complex prices–Quantity steps (2)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Product.Module.Complex.Prices.Quantity.Steps.2?format=png" title="Complex prices–Quantity steps (2)Complex prices–Quantity steps (2)Complex prices–Quantity steps (2)" alt="Complex prices–Quantity steps (2)Complex prices–Quantity steps (2)Complex prices–Quantity steps (2)">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Product.Module.Complex.Prices.Quantity.Steps.2?format=png" title="Complex prices–Quantity steps (2)Complex prices–Quantity steps (2)Complex prices–Quantity steps (2)" alt="Complex prices–Quantity steps (2)Complex prices–Quantity steps (2)Complex prices–Quantity steps (2)">\n
         <details open="open">\n
           <p>As we are using here the product for which we created individual variations, the Quantity steps will be applied to those different variations. As you can see on the picture, for each variation, three price fields are now available. The first column is the unit price for an order of less than 50 pieces, the second column is the unit price for an order between 50 and 100 units, and the column on the right is the unit price for an order of more than 100 pieces. Each line stands for a product individual variation, in our example, big format and small format. Jump to next page.</p>\n
         </details>\n
@@ -779,7 +779,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Complex prices–Quantity steps (3)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Product.Module.Complex.Prices.Quantity.Steps.3?format=png" title="Complex prices–Quantity steps (3)" alt="Complex prices–Quantity steps (3)">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.and.Manage.Products.Product.Module.Complex.Prices.Quantity.Steps.3?format=png" title="Complex prices–Quantity steps (3)" alt="Complex prices–Quantity steps (3)">\n
         <details open="open">\n
           <p>\n
             <strong>Enter all the unit prices for your variations and quantity steps</strong>\n
@@ -1628,6 +1628,51 @@
                       <tuple>
                         <float>1354703372.91</float>
                         <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>931.51462.205.51814</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1412588413.28</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

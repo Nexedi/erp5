@@ -144,7 +144,7 @@
     \n
       <section class="master">\n
         <h1>How to Create a Marketing Campaign</h1>\n
-        <img title="Marketing campaign: Beta Developer Program" alt="Campaign example: Beta Developer Program" src="http://www.erp5.com/user-Tickets.Campaign.Example.Vifib.Beta.Developer.Program?format=png">\n
+        <img title="Marketing campaign: Beta Developer Program" alt="Campaign example: Beta Developer Program" src="http://img.erp5.cn/user-Tickets.Campaign.Example.Vifib.Beta.Developer.Program?format=png">\n
         <footer>\n
           by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.\n
         </footer>\n
@@ -200,7 +200,7 @@
         </details>\n
       </section><section class="illustration">\n
         <h1>Marketing campaign: Example-Beta Developer Program</h1>\n
-        <img title="Campaign example: Beta Developer Program" alt="Campaign example: Beta Developer Program" type="image/svg+xml" src="http://www.erp5.com/user-Tickets.Campaign.Example.Vifib.Beta.Developer.Program?format=png">\n
+        <img title="Campaign example: Beta Developer Program" alt="Campaign example: Beta Developer Program" type="image/svg+xml" src="http://img.erp5.cn/user-Tickets.Campaign.Example.Vifib.Beta.Developer.Program?format=png">\n
         <details open="open">\n
           <p>\n
             VIFIB director Mr Smets plans to launch a marketing campaign aims to increasing the product awareness of SlapOS the new operation system of VIFIB, in the way of hiring software developers. The main interactions of this campaign is to send mail messages to contacts (customers) of VIFIB, and these emails would be the <strong>Related Events</strong>\n
@@ -231,7 +231,7 @@
         </test>\n
       </section><section class="illustration">\n
         <h1>What is a campaign</h1>\n
-        <img title="Campaign: a type of Ticket" alt="Campaign: a type of Ticket" type="image/svg+xml" src="http://www.erp5.com/user-Tickets.Beta.Developer.Program?format=png">\n
+        <img title="Campaign: a type of Ticket" alt="Campaign: a type of Ticket" type="image/svg+xml" src="http://img.erp5.cn/user-Tickets.Beta.Developer.Program?format=png">\n
         <details open="open">\n
           <p>From the previous introductories of Events and Tickets, we know that a campaign in ERP5 CRM is a Ticket. The principle of a ticket is to gather one or more events in the same place, offering a good follow up for them.</p><p>\n
             In our VIFIB example, the operations manager XU Jingjing created the <strong>Campaign Ticket</strong>\n
@@ -251,7 +251,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Click on the “New” tab</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.A.Marketing.Campaign.Click.New.Tab?format=png" alt="Create a marketing campaign: Click on the \'New\' tab" type="image/svg+xml" title="Create a marketing campaign: Click on the \'New\' tab">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.A.Marketing.Campaign.Click.New.Tab?format=png" alt="Create a marketing campaign: Click on the \'New\' tab" type="image/svg+xml" title="Create a marketing campaign: Click on the \'New\' tab">\n
         <details open="open">\n
           <p>In order to create a campaign, click on the "New" tab of your ERP5 instance Home Page and click on “Campaign” in the CRM Area.</p>\n
         </details>\n
@@ -278,7 +278,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Reach the campaign document</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.A.Marketing.Campaign.Reach.Campaign.Document?format=png" alt="Create a marketing campaign: Reach the campaign document" type="image/svg+xml" title="Create a marketing campaign: Reach the campaign document">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.A.Marketing.Campaign.Reach.Campaign.Document?format=png" alt="Create a marketing campaign: Reach the campaign document" type="image/svg+xml" title="Create a marketing campaign: Reach the campaign document">\n
         <details open="open">\n
           <p>\n
             A new Campaign ticket has been created, and can now be edited in the campaign creation page. Here are the Three different areas of a campaign ticket:<br>\n
@@ -297,7 +297,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>How to edit a campaign</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.A.Marketing.Campaign.Edit.Campaign?format=png" alt="Edit a marketing campaign" type="image/svg+xml" title="Edit a marketing campaign">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.A.Marketing.Campaign.Edit.Campaign?format=png" alt="Edit a marketing campaign" type="image/svg+xml" title="Edit a marketing campaign">\n
         <details open="open">\n
           <p>\n
             Here are the different zones of the editable area of a campaign.<br>\n
@@ -412,7 +412,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>How to open a Campaign (1)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.A.Marketing.Campaign.Open.Campaign.Action.List?format=png" alt="Open a Campaign: Choose \'Open\' in the Action List" type="image/svg+xml" title="Open a Campaign: Choose \'Open\' in the Action List">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.A.Marketing.Campaign.Open.Campaign.Action.List?format=png" alt="Open a Campaign: Choose \'Open\' in the Action List" type="image/svg+xml" title="Open a Campaign: Choose \'Open\' in the Action List">\n
         <details open="open">\n
           <p>\n
             In order to open a campaign, open first the “Action” Item List, and Choose “Open”. <span style="color: rgb(255, 0, 0);">Note that this action can only be done by the Campaign Manager, or the creator of the Campaign ticket.</span>\n
@@ -431,9 +431,9 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>How to open a Campaign (2)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.A.Marketing.Campaign.Open.Campaign.Comments.Open?format=png" alt="Open a Campaign: Add comments and click on \'Open\'" type="image/svg+xml" title="Open a Campaign: Add comments and click on \'Open\'">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.A.Marketing.Campaign.Open.Campaign.Comments.Open?format=png" alt="Open a Campaign: Add comments and click on \'Open\'" type="image/svg+xml" title="Open a Campaign: Add comments and click on \'Open\'">\n
         <details open="open">\n
-          <p>In this step, you can add comments. When you are done, validate the Ticket by clicking the “Open” button.</p>\n
+          <p>In this step, you can add comments. When you are done, validate the Ticket by clicking the “Validate” button.</p>\n
         </details>\n
         <test>\n
           <table class="test" style="display: none;">\n
@@ -450,7 +450,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>How to open a Campaign (3)</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Create.A.Marketing.Campaign.Open.Campaign.State?format=png" alt="Open a Campaign: Check the state of the campaign" type="image/svg+xml" title="Open a Campaign: Check the state of the campaign">\n
+        <img src="http://img.erp5.cn/user-Howto.Create.A.Marketing.Campaign.Open.Campaign.State?format=png" alt="Open a Campaign: Check the state of the campaign" type="image/svg+xml" title="Open a Campaign: Check the state of the campaign">\n
         <details open="open">\n
           <p>As you see on the image, the state of the campaign is now Open.</p>\n
         </details>\n
@@ -1032,6 +1032,96 @@
                       <tuple>
                         <float>1358496157.04</float>
                         <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>931.51462.205.51814</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1395247656.99</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>933.38645.25479.7150</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1412588357.32</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

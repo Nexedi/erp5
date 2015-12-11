@@ -155,7 +155,7 @@
     \n
       <section class="illustration">\n
         <h1>How to manage Invoices</h1>\n
-        <img alt="Invoice Sample" title="Invoice Sample" type="image/png" src="http://www.erp5.com/user-Howto.Manage.Invoices.Invoice?format=png">\n
+        <img alt="Invoice Sample" title="Invoice Sample" type="image/png" src="http://img.erp5.cn/user-Howto.Manage.Invoices.Invoice?format=png">\n
         <footer>\n
           by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.\n
         </footer>\n
@@ -241,7 +241,7 @@
         <details open="open"></details>\n
       </section><section class="screenshot">\n
         <h1>Reach the Invoice: reach the Packing List</h1>\n
-        <img alt="Sale Packing List Module" title="Sale Packing List Module" src="http://www.erp5.com/user-Howto.Manage.Invoices.Reach.Invoice.Packing.Lists.Module?format=png" type="image/png">\n
+        <img alt="Sale Packing List Module" title="Sale Packing List Module" src="http://img.erp5.cn/user-Howto.Manage.Invoices.Reach.Invoice.Packing.Lists.Module?format=png" type="image/png">\n
         <details open="open">\n
           <p>\n
             If you want to edit the sale invoice, you will have to <strong>locate it first</strong>\n
@@ -281,7 +281,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Reach the Invoice: jump to "Related Sale Invoice Transaction"</h1>\n
-        <img alt="Related Sale Invoice Transaction" title="Related Sale Invoice Transaction" src="http://www.erp5.com/user-Howto.Manage.Sale.Packing.Lists.Jump.To.Related.Invoice?format=png" type="image/png">\n
+        <img alt="Related Sale Invoice Transaction" title="Related Sale Invoice Transaction" src="http://img.erp5.cn/user-Howto.Manage.Sale.Packing.Lists.Jump.To.Related.Invoice?format=png" type="image/png">\n
         <details open="open">\n
           <p>\n
             Now you can <strong>reach</strong>\n
@@ -333,7 +333,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Check Sale Invoice Tabs</h1>\n
-        <img alt="Check Sale Invoice Tabs" title="Check Sale Invoice Tabs" src="http://www.erp5.com/user-Howto.Manage.Invoices.Invoice.View.Tabs?format=png" type="image/png">\n
+        <img alt="Check Sale Invoice Tabs" title="Check Sale Invoice Tabs" src="http://img.erp5.cn/user-Howto.Manage.Invoices.Invoice.View.Tabs?format=png" type="image/png">\n
         <details open="open">\n
           <p>Read the message that appears in red on top of the invoice document, you are now landed on the related sale invoice.The tabs of this invoice document incorporates lots of information, which comes directly from the initial Sale Order as well as from the Sale Packing List.</p><p>\n
             In theory, there should not be anything here to fill out. The first step before trying to start the accounting transaction, is to <strong>check that the information provided by the sale invoice is correct</strong>\n
@@ -352,7 +352,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Journalise Transaction</h1>\n
-        <img alt="Journalise Transaction" title="Journalise Transaction" src="http://www.erp5.com/user-Howto.Manage.Invoices.Journalise.Transaction?format=png" type="image/png">\n
+        <img alt="Journalise Transaction" title="Journalise Transaction" src="http://img.erp5.cn/user-Howto.Manage.Invoices.Journalise.Transaction?format=png" type="image/png">\n
         <details open="open">\n
           <p>\n
             In order to do an accounting transaction you have to <strong>initiate it</strong>\n
@@ -404,14 +404,14 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Check the Accounting Transaction Lines</h1>\n
-        <img alt="Accounting Lines to Check" title="Accounting Lines to Check" src="http://www.erp5.com/user-Howto.Manage.Invoices.Check.Accounting.Lines?format=png" type="image/png">\n
+        <img alt="Accounting Lines to Check" title="Accounting Lines to Check" src="http://img.erp5.cn/user-Howto.Manage.Invoices.Check.Accounting.Lines?format=png" type="image/png">\n
         <details open="open">\n
           <p>Before trying to go further in the accounting process, we will analyse what changes occurred on the invoice document after we journalised transaction.</p><p>First, as you can see in red on the screenshot, the state has changed from "Confirmed" to "Journalised". This means that ERP5 has created some accounting lines for your transaction.</p>\n
 \n
 <p><strong>Note: </strong>It can take up to 5 minutes until the accounting lines have been created. You might have to refresh the page, if you don\'t see the accounting lines.</p>\n
 \n
 <p>This is the second part of the analysis: as you can see in blue, the first accounting transaction lines have been created. They are automatically created by ERP5, and, if you can read the accounting lines, they represent your transaction. In our example, the sell account should be credited with 100000€. If you did not yet subscribe to ERP5, you may not know that more than one accounting plan is available. On this screenshot, the French accounting plan is used, but many others are available. We already have accounting plans catered especially for Africa and Japan, and we are constantly working on developing more plans that will be available soon.</p><p>Note that a transaction can be modified as long as it is at "Journalised" state.</p><p>\n
-            <strong>However, even though the accounting transaction lines have been created, but they have not been validated yet, in accounting terms, the transaction has not yet been journalised.</strong>\n
+            <strong>However, even though the accounting transaction lines have been created, but they have not been validated yet</strong>.\n
             To validate the transaction, you have to acting "Post to General Ledger". Please see next page.\n
           </p>\n
         </details>\n
@@ -422,7 +422,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Post Transaction</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Manage.Invoices.Post.Transaction.To.General.Ledger?format=png" type="image/png" title="Post Transaction To General Ledger" alt="Post Transaction To General Ledger">\n
+        <img src="http://img.erp5.cn/user-Howto.Manage.Invoices.Post.Transaction.To.General.Ledger?format=png" type="image/png" title="Post Transaction To General Ledger" alt="Post Transaction To General Ledger">\n
         <details open="open">\n
           <p>Once you have checked all the accounting transaction lines, you can validate them.</p><p>\n
             To do so, please browse the “Action” menu and choose <strong>"Post Transaction to General Ledger"</strong>\n
@@ -452,7 +452,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Validated transaction</h1>\n
-        <img alt="Validated transaction" title="Validated transaction" type="image/svg+xml" src="http://www.erp5.com/user-Howto.Manage.Invoices.Transaction.Validted?format=png">\n
+        <img alt="Validated transaction" title="Validated transaction" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Manage.Invoices.Transaction.Validted?format=png">\n
         <details open="open">\n
           <p>\n
             After "Post to General Ledger", as shown in the screenshot, the invoice state changed from "Journalised" to <strong>"Posted to General Ledger"</strong>\n
@@ -467,7 +467,7 @@
         </details>\n
       </section><section class="screenshot">\n
         <h1>Definitively Close Transaction</h1>\n
-        <img alt="Definitively Close Accounting Action" title="Definitively Close Accounting Action" src="http://www.erp5.com/user-Howto.Manage.Invoices.Definitely.Close.Transaction?format=png" type="image/png">\n
+        <img alt="Definitively Close Accounting Action" title="Definitively Close Accounting Action" src="http://img.erp5.cn/user-Howto.Manage.Invoices.Definitely.Close.Transaction?format=png" type="image/png">\n
         <details open="open">\n
           <p>\n
             The very last step of managing an invoice is to “<strong>Definitively Close</strong>\n
@@ -512,7 +512,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Printing the invoice (1)</h1>\n
-        <img alt="Print Button" title="Print Button" src="http://www.erp5.com/user-Howto.Manage.Invoices.Closed.Transaction.Print?format=png" type="image/png">\n
+        <img alt="Print Button" title="Print Button" src="http://img.erp5.cn/user-Howto.Manage.Invoices.Closed.Transaction.Print?format=png" type="image/png">\n
         <details open="open">\n
           <p>\n
             ERP5 allows you to <strong>print</strong>\n
@@ -536,7 +536,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Printing the invoice (2)</h1>\n
-        <img alt="Print Sale Invoice Transaction Dialog" title="Print Sale Invoice Transaction Dialog" src="http://www.erp5.com/user-Howto.Manage.Invoices.Closed.Transaction.Print.Options?format=png" type="image/png">\n
+        <img alt="Print Sale Invoice Transaction Dialog" title="Print Sale Invoice Transaction Dialog" src="http://img.erp5.cn/user-Howto.Manage.Invoices.Closed.Transaction.Print.Options?format=png" type="image/png">\n
         <details open="open">\n
           <p>\n
             The <strong>print setting page</strong>\n
@@ -930,6 +930,96 @@
                       <tuple>
                         <float>1358515570.35</float>
                         <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>931.51462.4456.3515</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1395607445.79</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>933.44642.1957.29354</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1412588460.46</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

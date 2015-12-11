@@ -239,7 +239,7 @@
         </test>\n
       </section><section class="illustration">\n
         <h1>Managing a Packing List</h1>\n
-        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Sale.Packing.Lists.Model?format=png" title="Delivery Flow" alt="Delivery Flow">\n
+        <img type="image/png" src="http://img.erp5.cn/user-Howto.Manage.Sale.Packing.Lists.Model?format=png" title="Delivery Flow" alt="Delivery Flow">\n
         <details open="open">\n
           <p>As you can see on the drawing, the different steps of managing a Packing List can be linked with real people in the company.</p><p>The principle of workflow based application makes sense in this case. Indeed, once the Sale Order has been registered and confirmed by the sales manager, the employee from the warehouse will prepare the automatically generated Sale Packing List related to the order. Thanks to the workflow, the sales manager will be aware that the order is ready to be sent and will give the order to “Ship” the goods. Once the client receives the goods, checks them and gives feedback, the sales manager will then change the status to “Delivered”.</p><p>In this way, it is possible to track the whole shipment process, thanks to ERP5.</p>\n
         </details>\n
@@ -250,7 +250,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Sale Packing List</h1>\n
-        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Sale.Packing.Lists.View?format=png" title="Packing List View Tab" alt="Packing List View Tab">\n
+        <img type="image/png" src="http://img.erp5.cn/user-Howto.Manage.Sale.Packing.Lists.View?format=png" title="Packing List View Tab" alt="Packing List View Tab">\n
         <details open="open">\n
           <p>\n
             From the previous tutorial <a href="user-Howto.Create.Sale.Orders/view">"How to create Sale Orders"</a>, you have learned to generate the related Sale Packing List automatically by confirming the Sale Order, and reach the Sale Packing List by using the "Jump ..." menu.\n
@@ -353,7 +353,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Ship</h1>\n
-        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Sale.Packing.Lists.Ship?format=png" title="Selecting Ship on Action Menu" alt="Selecting Ship on Action Menu">\n
+        <img type="image/png" src="http://img.erp5.cn/user-Howto.Manage.Sale.Packing.Lists.Ship?format=png" title="Selecting Ship on Action Menu" alt="Selecting Ship on Action Menu">\n
         <details open="open">\n
           <p>After the sales manager confirms the Sale Order, the employees in warehouse will prepare the shipment and ship it. If the shipment corresponds with the information in the Sale Packing List, you have to tell ERP5 that your order has been shipped.</p><p>\n
             To do so, browse the “Action” menu on top of the screen, and click on <strong>“Ship Packing List”</strong>\n
@@ -361,7 +361,7 @@
           </p><p>\n
             This will change the status of the Sale Packing List from "Confirmed" to <strong>"Shipped"</strong>\n
             , as you can see on the next page\'s screenshot.\n
-          </p><p>The next step will be to set the order as delivered after the clients acknowledges the shipment.</p>\n
+          </p><p>The next step will be to set the packing list as delivered after the clients acknowledges the shipment.</p>\n
         </details>\n
         <test>\n
           <table style="display: none;" class="test">\n
@@ -399,9 +399,9 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Deliver</h1>\n
-        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Sale.Packing.Lists.Deliver?format=png" title="Selecting Delivery on Action Menu" alt="Selecting Delivery on Action Menu">\n
+        <img type="image/png" src="http://img.erp5.cn/user-Howto.Manage.Sale.Packing.Lists.Deliver?format=png" title="Selecting Delivery on Action Menu" alt="Selecting Delivery on Action Menu">\n
         <details open="open">\n
-          <p>When the shipment has been received by the customer, if the goods have been checked and are in good condition, you would like to set the order as delivered.</p><p>\n
+          <p>When the shipment has been received by the customer, if the goods have been checked and are in good condition, you would like to set the packing list as delivered.</p><p>\n
             To do so, please browse the “Action” menu and click on the line <strong>“Deliver Packing List”</strong>\n
             .\n
           </p><p>\n
@@ -441,23 +441,23 @@
           </table>\n
         </test>\n
       </section><section class="screenshot">\n
-        <h1>Jump to "Related Sale Transaction Invoice"</h1>\n
-        <img alt="Jump to &quot;Related Sale Transaction Invoice&quot;" title="Jump to &quot;Related Sale Transaction Invoice&quot;" type="image/svg+xml" src="http://www.erp5.com/user-Howto.Manage.Sale.Packing.Lists.Jump.To.Related.Invoice?format=png">\n
+        <h1>Jump to "Related Sale Invoice Transaction"</h1>\n
+        <img alt="Jump to &quot;Related Sale Transaction Invoice&quot;" title="Jump to &quot;Related Sale Transaction Invoice&quot;" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Manage.Sale.Packing.Lists.Jump.To.Related.Invoice?format=png">\n
         <details open="open">\n
           <p>\n
-            After the Packing List is in "Delivered" state, you can access to related invoice by <strong>clicking the "Related Sale Transaction Invoice" in the "Jump..." menu</strong>\n
+            After the Packing List is in "Delivered" state, you can access to related invoice by <strong>clicking the "Related Sale Invoice Transaction" in the "Jump..." menu</strong>\n
             .\n
           </p>\n
         </details>\n
       </section><section class="screenshot">\n
-        <h1>Generated Sale Transaction Invoice</h1>\n
-        <img alt="Generated Sale Transaction Invoice" title="Generated Sale Transaction Invoice" type="image/svg+xml" src="http://www.erp5.com/user-Howto.Manage.Sale.Packing.Lists.Related.Invoice?format=png">\n
+        <h1>Generated Sale Invoice Transaction</h1>\n
+        <img alt="Generated Sale Transaction Invoice" title="Generated Sale Transaction Invoice" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Manage.Sale.Packing.Lists.Related.Invoice?format=png">\n
         <details open="open">\n
-          <p>Now you can have a look at the Sale Transaction Invoice generated from the Sale Packing List. If you need to go back to the initial Sale Order or Sale Packing List, you can either use the "Jump..." list again, or by browsing the Sale Orders or Sale Packing Lists in the "Modules" list.</p><p>In next tutorial, you will learn how to manage invoices.</p>\n
+          <p>Now you can have a look at the Sale Invoice Transaction generated from the Sale Packing List. If you need to go back to the initial Sale Order or Sale Packing List, you can either use the "Jump..." list again, or by browsing the Sale Orders or Sale Packing Lists in the "Modules" list.</p><p>In next tutorial, you will learn how to manage invoices.</p>\n
         </details>\n
       </section><section class="illustration">\n
         <h1>Diverged Packing List</h1>\n
-        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Sale.Packing.Lists.Manage.Shipped.Quantity.Difference.Acknowledge?format=png" title="Diverged Packing List" alt="Diverged Packing List">\n
+        <img type="image/png" src="http://img.erp5.cn/user-Howto.Manage.Sale.Packing.Lists.Manage.Shipped.Quantity.Difference.Acknowledge?format=png" title="Diverged Packing List" alt="Diverged Packing List">\n
         <details open="open">\n
           <p>\n
             Sale Packing Lists can <strong>generate an invoice</strong>\n
@@ -1106,6 +1106,96 @@
                       <tuple>
                         <float>1354885136.76</float>
                         <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>931.51462.205.51814</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1395495207.92</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>933.42771.22869.10325</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1412588442.11</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

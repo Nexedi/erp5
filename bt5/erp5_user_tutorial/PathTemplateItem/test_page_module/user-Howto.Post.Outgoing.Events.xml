@@ -135,7 +135,7 @@
     \n
       <section class="master">\n
         <h1>How to Send Outgoing Events</h1>\n
-        <img alt="Send outgoing Events in Tickets" title="Send outgoing Events in Tickets" src="http://www.erp5.com/user-Howto.Send.Outgoing.Front.Page.Ticket.Opened.Event.Sent?format=png">\n
+        <img alt="Send outgoing Events in Tickets" title="Send outgoing Events in Tickets" src="http://img.erp5.cn/user-Howto.Send.Outgoing.Front.Page.Ticket.Opened.Event.Sent?format=png">\n
         <footer>\n
           by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.\n
         </footer>\n
@@ -191,7 +191,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>The planned Event sheet</h1>\n
-        <img alt="The planned Event sheet - Event to be send" title="The planned Event sheet - Event to be send" src="http://www.erp5.com/user-Howto.Send.Outgoing.Events.Event.Sheet?format=png">\n
+        <img alt="The planned Event sheet - Event to be send" title="The planned Event sheet - Event to be send" src="http://img.erp5.cn/user-Howto.Send.Outgoing.Events.Event.Sheet?format=png">\n
         <details open="open">\n
           <p>The Red Zone of the screenshot shows you the Bread Crumb which gives you your location in your ERP5 instance: the planned Event waiting to be sent.</p><p>\n
             The Blue Zone displays the content of the Event. As we have edited this Event previously, it is now <strong>ready to be sent</strong>\n
@@ -224,7 +224,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Confirm the Event (1): Click on \'Confirm\' in \'Action\' list</h1>\n
-        <img alt="Send the Event (1): Confirm the planned Event" title="Send the Event (1): Confirm the planned Event" src="http://www.erp5.com/user-Howto.Send.Outgoing.Events.Confirm.Event.Action.List.Confirm?format=png">\n
+        <img alt="Send the Event (1): Confirm the planned Event" title="Send the Event (1): Confirm the planned Event" src="http://img.erp5.cn/user-Howto.Send.Outgoing.Events.Confirm.Event.Action.List.Confirm?format=png">\n
         <details open="open">\n
           <p>\n
             In order to send the Event, first we should verify that everything is correctly set in the Event sheet and then <strong>confirm</strong>\n
@@ -251,7 +251,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Confirm the Event (2): Comment and confirm</h1>\n
-        <img alt="Confirm the Event (1): Comment and confirm" title="Confirm the Event (1): Comment and confirm" src="http://www.erp5.com/user-Howto.Send.Outgoing.Events.Confirm.Event.Comments.Confirm?format=png">\n
+        <img alt="Confirm the Event (1): Comment and confirm" title="Confirm the Event (1): Comment and confirm" src="http://img.erp5.cn/user-Howto.Send.Outgoing.Events.Confirm.Event.Comments.Confirm?format=png">\n
         <details open="open">\n
           <p>\n
             In this page you can add comments to this Event going to be confirmed, and then <strong>click on Confirm</strong>\n
@@ -281,7 +281,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Send the Event (1): Click on \'Send\' in \'Action\' item list</h1>\n
-        <img alt="Send the Event (1): Click on \'Send\' in \'Action\' item list" title="Send the Event (1): Click on \'Send\' in \'Action\' item list" src="http://www.erp5.com/user-Howto.Send.Outgoing.Events.Send.Event.Status.Confirmed.Action.Send?format=png">\n
+        <img alt="Send the Event (1): Click on \'Send\' in \'Action\' item list" title="Send the Event (1): Click on \'Send\' in \'Action\' item list" src="http://img.erp5.cn/user-Howto.Send.Outgoing.Events.Send.Event.Status.Confirmed.Action.Send?format=png">\n
         <details open="open">\n
           <p>\n
             After you <strong>Confirm</strong>\n
@@ -312,7 +312,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Send the Event (2): Comment and send the Event</h1>\n
-        <img alt="Send the Event (2): Comment and send the Event" title="Send the Event (2): Comment and send the Event" src="http://www.erp5.com/user-Howto.Send.Outgoing.Events.Send.Event.Comment.Send?format=png" type="image/svg+xml">\n
+        <img alt="Send the Event (2): Comment and send the Event" title="Send the Event (2): Comment and send the Event" src="http://img.erp5.cn/user-Howto.Send.Outgoing.Events.Send.Event.Comment.Send?format=png" type="image/svg+xml">\n
         <details open="open">\n
           <p>This is the page that asks for confirmation that you really want to send the Event. When an Event is sent, it cannot be modified anymore, so be careful.</p><p>\n
             You can first <strong>add some comments</strong>\n
@@ -334,7 +334,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Check the Event status (1): In the Event sheet</h1>\n
-        <img alt="Check the Event status (1): In the Event sheet" title="Check the Event status (1): In the Event sheet" src="http://www.erp5.com/user-Howto.Send.Outgoing.Events.Check.Status.1.Event.Sheet?format=png">\n
+        <img alt="Check the Event status (1): In the Event sheet" title="Check the Event status (1): In the Event sheet" src="http://img.erp5.cn/user-Howto.Send.Outgoing.Events.Check.Status.1.Event.Sheet?format=png">\n
         <details open="open">\n
           <p>\n
             After the Event is sent, you will have to check the <strong>Event status</strong>\n
@@ -373,7 +373,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Check the Event status (2): In the Ticket sheet</h1>\n
-        <img alt="Check the Event status (2): In the Ticket sheet" title="Check the Event status (2): In the Ticket sheet" src="http://www.erp5.com/user-Howto.Send.Outgoing.Events.Check.Status.2.Ticket.Sheet?format=png">\n
+        <img alt="Check the Event status (2): In the Ticket sheet" title="Check the Event status (2): In the Ticket sheet" src="http://img.erp5.cn/user-Howto.Send.Outgoing.Events.Check.Status.2.Ticket.Sheet?format=png">\n
         <details open="open">\n
           <p>\n
             From the previous step we see that the <strong>Event sheet</strong>\n
@@ -425,7 +425,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Check the Event status (3): Reach ERP5 Persons database</h1>\n
-        <img alt="Check the Event status (3): Reach ERP5 Persons database" title="Check the Event status (3): Reach ERP5 Persons database" src="http://www.erp5.com/user-Howto.Send.Outgoing.Events.Check.Status.3.Persons.Database?format=png">\n
+        <img alt="Check the Event status (3): Reach ERP5 Persons database" title="Check the Event status (3): Reach ERP5 Persons database" src="http://img.erp5.cn/user-Howto.Send.Outgoing.Events.Check.Status.3.Persons.Database?format=png">\n
         <details open="open">\n
           <p>\n
             Now that you have been lead to the Persons database of your ERP5 instance which displays the list of the persons stored in your instance. <strong>Click on the line of the Recipient of the Event</strong>\n
@@ -445,7 +445,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Check the Event status (4): In the Recipient\'s document</h1>\n
-        <img alt="Check the Event status (4): In the Recipient\'s document" title="Check the Event status (4): In the Recipient\'s document" src="http://www.erp5.com/user-Howto.Send.Outgoing.Events.Check.Status.4.Recipient.Document?format=png">\n
+        <img alt="Check the Event status (4): In the Recipient\'s document" title="Check the Event status (4): In the Recipient\'s document" src="http://img.erp5.cn/user-Howto.Send.Outgoing.Events.Check.Status.4.Recipient.Document?format=png">\n
         <details open="open">\n
           <p>\n
             Now we have been redirected to Rafaël Dubois\'s Person Document, to check how does the Event behaves in this document, we will <strong>click on the “Event” tab</strong>\n
@@ -478,7 +478,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Your Event has been sent</h1>\n
-        <img alt="Back to the sent Event" title="Back to the sent Event" src="http://www.erp5.com/user-Howto.Send.Outgoing.Events.Event.Sent?format=png">\n
+        <img alt="Back to the sent Event" title="Back to the sent Event" src="http://img.erp5.cn/user-Howto.Send.Outgoing.Events.Event.Sent?format=png">\n
         <details open="open">\n
           <p>Here we are back on the Event sheet of the Event that we have sent to Rafaël Dubois and other recipients in this tutorial.</p>\n
         </details>\n
@@ -1383,6 +1383,51 @@
                       <tuple>
                         <float>1358498979.53</float>
                         <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>931.51462.205.51814</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1412588381.82</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

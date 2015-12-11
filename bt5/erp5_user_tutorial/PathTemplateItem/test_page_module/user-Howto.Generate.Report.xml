@@ -149,8 +149,8 @@
           <p>In this guide, you will learn which type of report you can generate with ERP5, and how to generate them.</p>\n
         </details>\n
       </section><section class="screenshot">\n
-        <h1>The Reports tab</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Generate.Report.Home.Reports.Tab?format=png" type="image/png" title="The Reports tab" alt="The Reports tab">\n
+        <h1>The Reports tab in ERP5 home page</h1>\n
+        <img src="http://img.erp5.cn/user-Howto.Generate.Report.Home.Reports.Tab?format=png" type="image/png" title="The Reports tab" alt="The Reports tab">\n
         <details open="open">\n
           <p>\n
             In order to see the list of reports available to generate, click on the Reports tab of your ERP5 instance. On the left, you can see the Accounting area displaying a list of the reports you are able to generate: Import Report, Trial Balance, Account Statement, Journal, Third Parties, General Ledger, Balance Sheet, Profit and Loss, and Invoices Report. In order to create a report, <strong>simply click on the line of the report you want to create</strong>\n
@@ -159,7 +159,7 @@
         </details>\n
       </section><section class="screenshot">\n
         <h1>Example: Account Statement</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Generate.Report.Create.Edit.Account.Statement?format=png" type="image/png" title="Account Statement" alt="Account Statement">\n
+        <img src="http://img.erp5.cn/user-Howto.Generate.Report.Create.Edit.Account.Statement?format=png" type="image/png" title="Account Statement" alt="Account Statement">\n
         <details open="open">\n
           <p>Here is an example of an Account Statement report Creation. As you can see in the screenshot, please follow the steps to set the following information.</p><p>\n
             Firstly, in the red area, the <strong>Section Category</strong>\n
@@ -196,19 +196,19 @@
         </details>\n
       </section><section class="screenshot">\n
         <h1>Account Statement example</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Generate.Report.Print.Account.Statement?format=png" type="image/png" title="Account Statement example" alt="Account Statement example">\n
+        <img src="http://img.erp5.cn/user-Howto.Generate.Report.Print.Account.Statement?format=png" type="image/png" title="Account Statement example" alt="Account Statement example">\n
         <details open="open">\n
           <p>Here is an example of the Account Statement report we have just created.</p>\n
         </details>\n
       </section><section class="screenshot">\n
         <h1>Another example: Profit and Loss</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Generate.Report.Edit.Profit.And.Loss?format=png" type="image/png" title="Another example: Profit and Loss" alt="Another example: Profit and Loss">\n
+        <img src="http://img.erp5.cn/user-Howto.Generate.Report.Edit.Profit.And.Loss?format=png" type="image/png" title="Another example: Profit and Loss" alt="Another example: Profit and Loss">\n
         <details open="open">\n
           <p>As you can see on the picture, this is an other example of report: Profit and Loss. The details requested by ERP5 are different from the Account Statement, as the report itself is different.</p>\n
         </details>\n
       </section><section class="screenshot">\n
         <h1>Profit and Loss</h1>\n
-        <img src="http://www.erp5.com/user-Howto.Generate.Report.Print.Profit.And.Loss?format=png" type="image/png" title="Profit and Loss" alt="Profit and Loss">\n
+        <img src="http://img.erp5.cn/user-Howto.Generate.Report.Print.Profit.And.Loss?format=png" type="image/png" title="Profit and Loss" alt="Profit and Loss">\n
         <details open="open">\n
           <p>Here is the Profit and Loss Report we have just created.</p>\n
         </details>\n
@@ -675,6 +675,96 @@
                       <tuple>
                         <float>1355841489.33</float>
                         <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>931.51462.205.51814</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1395672178.13</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>933.45720.61030.44475</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1412588498.71</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

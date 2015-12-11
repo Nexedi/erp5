@@ -154,7 +154,7 @@
     \n
       <section class="master">\n
         <h1>How to Add People</h1>\n
-        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Add.People.Front.Page.John.Scott.Doh?format=png" alt="Photo of John Scott Doh" title="Add people: John Scott Doh">\n
+        <img type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Add.People.Front.Page.John.Scott.Doh?format=png" alt="Photo of John Scott Doh" title="Add people: John Scott Doh">\n
         <footer>\n
           by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.\n
         </footer>\n
@@ -201,7 +201,7 @@
         </test>\n
       </section><section class="illustration">\n
         <h1>Example</h1>\n
-        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Add.People.John.Scott.Doh.Example?format=png" alt="Add people in ERP5 example: John Scott Doh" title="Add people in ERP5 example: John Scott Doh">\n
+        <img type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Add.People.John.Scott.Doh.Example?format=png" alt="Add people in ERP5 example: John Scott Doh" title="Add people in ERP5 example: John Scott Doh">\n
         <details open="open">\n
           <p>As you can see on the picture, we are going to create a person named John Doh, with the information above.</p>\n
         </details>\n
@@ -212,7 +212,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Click on the “New” tab</h1>\n
-        <img title="Add people: Click on the \'New\' tab" type="image/svg+xml" src="http://www.erp5.com/user-Howto.Add.People.Menu.New?format=png" alt="Add people: Click on the \'New\' tab">\n
+        <img title="Add people: Click on the \'New\' tab" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Add.People.Menu.New?format=png" alt="Add people: Click on the \'New\' tab">\n
         <details open="open">\n
           <p>After you log in your ERP5 instance, in the ERP5 home page, click on “new” in the tab menu, you will see the Base area on the first line. The Base area gathers the person and organisation creation functions. This is also in this module that you will be able to add a currency for example.</p>\n
         </details>\n
@@ -223,7 +223,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Click on “Persons”</h1>\n
-        <img type="image/svg+xml" title="Add people: Click on \'Person\'" alt="Add people: Click on \'Person\'" src="http://www.erp5.com/user-Howto.Add.People.Menu.Persons?format=png">\n
+        <img type="image/svg+xml" title="Add people: Click on \'Person\'" alt="Add people: Click on \'Person\'" src="http://img.erp5.cn/user-Howto.Add.People.Menu.Persons?format=png">\n
         <details open="open">\n
           <p>Click on “person” to create a person. This will open the View page of a new Person\'s document where you will have to fill with the required information.</p>\n
         </details>\n
@@ -245,7 +245,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Reach the person creation page</h1>\n
-        <img title="Person creation page" type="image/svg+xml" src="http://www.erp5.com/user-Howto.Add.People.Action.Tab.Screenshot?format=png" alt="Person creation page">\n
+        <img title="Person creation page" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Add.People.Action.Tab.Screenshot?format=png" alt="Person creation page">\n
         <details open="open">\n
           <p>The person creation page helps you store any specific information about a person, whether it is personal or financial, or even his/her picture. <strong>Note:</strong> If you are using the ERP5 Virtual Machine, you can find a picture of John Doe in your home folder. As you can see, there are different tabs on the person creation page. All those tabs gather the required information about the person, and it is possible to add some more details with the "Action" menu on top of the page, as we will see later in this tutorial.</p>\n
         </details>\n
@@ -267,7 +267,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Fill the “View” page and save</h1>\n
-        <img title="Add people: Fill the \'View\' tab and save" src="http://www.erp5.com/user-Howto.Add.People.View.And.Save?format=png" type="image/svg+xml" alt="Add people: Fill the \'View\' tab and save">\n
+        <img title="Add people: Fill the \'View\' tab and save" src="http://img.erp5.cn/user-Howto.Add.People.View.And.Save?format=png" type="image/svg+xml" alt="Add people: Fill the \'View\' tab and save">\n
         <details open="open">\n
           <p>Now let\'s refer back to our example: one of your company\'s contact is John Doh, the marketing manager of Z Company, a client of your company. Fill out the “view” page with those basic information of Mr Doh, then you can store his information in ERP5, by clicking on the Save button.</p><p>Note that after entering all information in the current form, you should always save them before switching to another tab or document.</p>\n
         </details>\n
@@ -334,7 +334,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Create the related organisation</h1>\n
-        <img title="Create the related organisation" alt="Create the related organisation" type="image/svg+xml" src="http://www.erp5.com/user-Howto.Add.People.Create.The.Related.Organisation?format=png">\n
+        <img title="Create the related organisation" alt="Create the related organisation" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Add.People.Create.The.Related.Organisation?format=png">\n
         <details open="open">\n
           <p>Now that you have saved the information about John Doh, we see that there seems to be a problem with the organisation Z Company. Indeed, as John Doh is the first person of Z Company to be stored in ERP5, the organisation does not exist yet, unless you have created it before thanks to the organisation creation function, which obviously is not the case here.</p><p>We will now solve this problem by creating the organisation - Z Company. To do that, just  open the item list circled in red, and choose “Add organisation”.</p><p>Note that you cannot see it but your organisation has been created in the “organisation” section.</p>\n
         </details>\n
@@ -371,7 +371,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Fill the “Details” page</h1>\n
-        <img title="Add people: Fill the \'Details\' tab" alt="Add people: Fill the \'Details\' tab" src="http://www.erp5.com/user-Howto.Create.New.Persons.Details?format=png" type="image/svg+xml">\n
+        <img title="Add people: Fill the \'Details\' tab" alt="Add people: Fill the \'Details\' tab" src="http://img.erp5.cn/user-Howto.Create.New.Persons.Details?format=png" type="image/svg+xml">\n
         <details open="open">\n
           <p>\n
             When you are done with the “view” tab, <strong>fill the other tabs.</strong>\n
@@ -406,7 +406,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>About the other tabs</h1>\n
-        <img type="image/svg+xml" title="Add people: Other tabs in the \'Details\' page" alt="Add people: Other tabs in the \'Details\' page" src="http://www.erp5.com/user-Howto.Add.People.Details.Other.Tabs?format=png">\n
+        <img type="image/svg+xml" title="Add people: Other tabs in the \'Details\' page" alt="Add people: Other tabs in the \'Details\' page" src="http://img.erp5.cn/user-Howto.Add.People.Details.Other.Tabs?format=png">\n
         <details open="open">\n
           <p>As you can see, some tabs like “assignment” for instance, do not allow to enter data. Indeed, the only way to specify this information to ERP5, is to use the “Action” item list and choose “Add assignment”. But it is important to notice that the tabs circled in red on the picture, are tabs that will automatically be updated by the application whenever necessary. This subject will be treated in a specific tutorial.</p><p>Remember that these tabs provide the general information about the person you are creating, but you can add different properties using the "Action" menu on top of the page. For example, the « view» tab allows you to set the person\'s email address. But sometimes, a person can have several email addresses. The "Action" menu makes it possible for example to add an other email address; simply choose “add email”.</p>\n
         </details>\n
@@ -417,7 +417,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>How to Validate a Person (1)</h1>\n
-        <img type="image/svg+xml" alt="Validate new person (1): Click on the \'Action\' tab" title="Validate new person (1): Click on the \'Action\' tab" src="http://www.erp5.com/user-Howto.Add.People.Validate.1.Action?format=png">\n
+        <img type="image/svg+xml" alt="Validate new person (1): Click on the \'Action\' tab" title="Validate new person (1): Click on the \'Action\' tab" src="http://img.erp5.cn/user-Howto.Add.People.Validate.1.Action?format=png">\n
         <details open="open">\n
           <p>Open the "Action" menu.</p><p>ERP5 is an application based on workflows, which means that the data you enter in the system needs to be validated. In the case of a person, this step is really important, for instance, there is no need to validate somebody if you are not sure of his/her name: if the state is “draft”, which is the state by default, you warn everybody that the related information is incomplete. But when it is validated, the data is sure.</p>\n
         </details>\n
@@ -434,7 +434,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>How to Validate a Person (2)</h1>\n
-        <img type="image/svg+xml" alt="Validate new person (2): Click on \'Validate\'" title="Validate new person (2): Click on \'Validate\'" src="http://www.erp5.com/user-Howto.Add.People.Validate.2.Validate?format=png">\n
+        <img type="image/svg+xml" alt="Validate new person (2): Click on \'Validate\'" title="Validate new person (2): Click on \'Validate\'" src="http://img.erp5.cn/user-Howto.Add.People.Validate.2.Validate?format=png">\n
         <details open="open">\n
           <p>Click on “Validate”.</p>\n
         </details>\n
@@ -456,7 +456,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>How to Validate a Person (3)</h1>\n
-        <img type="image/svg+xml" alt="Validate new person (3): Check the update status" title="Validate new person (3): Check the update status" src="http://www.erp5.com/user-Howto.Add.People.Validate.3.Status.Changed?format=png">\n
+        <img type="image/svg+xml" alt="Validate new person (3): Check the update status" title="Validate new person (3): Check the update status" src="http://img.erp5.cn/user-Howto.Add.People.Validate.3.Status.Changed?format=png">\n
         <details open="open">\n
           <p>Check the update status which has been changed from "Draft" to "Validated".</p><p>Thanks to this function, your data will be validated, which means that your co-workers can be confident in accuracy of the information.</p>\n
         </details>\n
@@ -486,7 +486,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>How to Check the Creation (1)</h1>\n
-        <img title="Check person creation (1): Click on the \'Modules\' tab" alt="Check person creation (1): Click on the \'Modules\' tab" type="image/svg+xml" src="http://www.erp5.com/user-Howto.Add.People.Check.Creation.1.Modules.Persons?format=png">\n
+        <img title="Check person creation (1): Click on the \'Modules\' tab" alt="Check person creation (1): Click on the \'Modules\' tab" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Add.People.Check.Creation.1.Modules.Persons?format=png">\n
         <details open="open">\n
           <p>Now that the person has been created, defined and validated, we are going to check that everything worked fine.</p><p>This is a 3 step procedure: As a first step, browse the “ERP5 modules” item list on the top of the page, and choose “persons”. The aim of this action is to lead you to the person module which displays each person who has been created in ERP5.</p>\n
         </details>\n
@@ -508,7 +508,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>How to Check the Creation (2)</h1>\n
-        <img title="Check person creation (2): Click on \'Persons\'" alt="Check person creation (2): Click on \'Persons\'" type="image/svg+xml" src="http://www.erp5.com/user-Howto.Add.People.Check.Creation.2.Persons.List?format=png">\n
+        <img title="Check person creation (2): Click on \'Persons\'" alt="Check person creation (2): Click on \'Persons\'" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Add.People.Check.Creation.2.Persons.List?format=png">\n
         <details open="open">\n
           <p>The second step is only to check that you are located in the person general menu and that the new person you created is on the Persons List.</p>\n
         </details>\n
@@ -530,7 +530,7 @@
         </test>\n
       </section><section class="screenshot">\n
         <h1>Use "Browse" tab</h1>\n
-        <img title="Check person creation: Browse the \'Persons\' database" alt="Check person creation: Browse the \'Persons\' database" type="image/svg+xml" src="http://www.erp5.com/user-Howto.Add.People.Check.Creation.Browse.Persons.Base?format=png">\n
+        <img title="Check person creation: Browse the \'Persons\' database" alt="Check person creation: Browse the \'Persons\' database" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Add.People.Check.Creation.Browse.Persons.Base?format=png">\n
         <details open="open">\n
           <p>You can also use the "Browse" tab in the home page to check the persons stored in your ERP5 database. Just click on “Persons” in the “Base”module, which is the module that gathers “Currencies”, “Organisations” and “Persons”.</p>\n
         </details>\n
@@ -1041,6 +1041,51 @@
                       <tuple>
                         <float>1376056024.64</float>
                         <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>931.51462.205.51814</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1412587875.05</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
