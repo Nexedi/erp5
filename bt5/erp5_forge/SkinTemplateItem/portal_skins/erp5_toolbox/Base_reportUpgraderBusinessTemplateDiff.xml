@@ -50,9 +50,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># This script comes with Base_gitDiffWithZODBAsText.\n
-# It should be ran in an alarm thank to a property sheet constraint.\n
-# Where does this script should be commited?\n
+            <value> <string># It should be ran in an alarm thank to a property sheet constraint.\n
+from ZODB.POSException import ConflictError\n
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery\n
 \n
 if fixit:\n
@@ -77,20 +76,16 @@ bt_list = [\n
   if bt.getInstallationState() == "installed"\n
 ]\n
 \n
-#bt_list = [\n
-#  x.getObject()\n
-#  for x in portal.portal_catalog(\n
-#    portal_type="Business Template",\n
-#    installation_state="installed",\n
-#  )\n
-#  if x.getInstallationState() == "installed"\n
-#]\n
-\n
 diff_list = []\n
 for bt in bt_list:\n
-  diff = bt.BusinessTemplate_getDiffWithZODBAsText()\n
-  if diff:\n
-    diff_list += ["===== %s =====" % bt.getTitle()] + diff.splitlines()\n
+  try:\n
+    diff = bt.BusinessTemplate_getDiffWithZODBAsText()\n
+    if diff:\n
+      diff_list += ["===== %s =====" % bt.getTitle()] + diff.splitlines()\n
+  except ConflictError:\n
+    raise\n
+  except Exception as e:\n
+    diff_list += ["===== %s =====" % bt.getTitle(), repr(e)]\n
 \n
 return diff_list\n
 </string> </value>

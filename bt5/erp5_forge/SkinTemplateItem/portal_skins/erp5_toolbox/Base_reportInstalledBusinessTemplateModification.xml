@@ -50,22 +50,45 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def respond(v):\n
-  if REQUEST is None:\n
-    return v\n
-  REQUEST.RESPONSE.write(v)\n
-  raise ValueError("Abort Transaction")\n
+            <value> <string># It should be ran in an alarm thank to a property sheet constraint.\n
+from ZODB.POSException import ConflictError\n
 \n
-return respond(context.Base_formatDiffObjectListToText(context.BusinessTemplate_getDiffObjectListFromZODB(detailed=detailed)))\n
+if fixit:\n
+  return ["Cannot fix automatically, please do it manually. (Or deactivate the constraint to force upgrade.)"]\n
+\n
+portal = context.getPortalObject()\n
+\n
+black_list = getattr(context, "Base_getInstalledBusinessTemplateBlackListForModificationList", lambda: ())()\n
+bt_list = [\n
+  x.getObject()\n
+  for x in portal.portal_catalog(\n
+    portal_type="Business Template",\n
+    installation_state="installed",\n
+  )\n
+  if x.getInstallationState() == "installed" and x.getTitle() not in black_list and x.getId() not in black_list\n
+]\n
+\n
+diff_list = []\n
+for bt in bt_list:\n
+  try:\n
+    diff = bt.BusinessTemplate_getDiffWithZODBAsText()\n
+    if diff:\n
+      diff_list += ["===== %s =====" % bt.getTitle()] + diff.splitlines()\n
+  except ConflictError:\n
+    raise\n
+  except Exception as e:\n
+    diff_list += ["===== %s =====" % bt.getTitle(), repr(e)]\n
+\n
+return diff_list\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, detailed=False</string> </value>
+            <value> <string>fixit=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_getDiffWithZODBAsText</string> </value>
+            <value> <string>Base_reportInstalledBusinessTemplateModification</string> </value>
         </item>
       </dictionary>
     </pickle>

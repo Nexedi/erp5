@@ -50,22 +50,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def respond(v):\n
-  if REQUEST is None:\n
-    return v\n
-  REQUEST.RESPONSE.write(v)\n
-  raise ValueError("Abort Transaction")\n
-\n
-return respond(context.Base_formatDiffObjectListToText(context.BusinessTemplate_getDiffObjectListFromZODB(detailed=detailed)))\n
+            <value> <string>return context.BusinessTemplate_getDiffWithZODBAsHTML(REQUEST=REQUEST, detailed=True)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, detailed=False</string> </value>
+            <value> <string>REQUEST=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_getDiffWithZODBAsText</string> </value>
+            <value> <string>BusinessTemplate_getDetailedDiffWithZODBAsHTML</string> </value>
         </item>
       </dictionary>
     </pickle>

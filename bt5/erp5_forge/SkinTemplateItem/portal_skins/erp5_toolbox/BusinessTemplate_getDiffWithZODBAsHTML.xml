@@ -53,10 +53,11 @@
             <value> <string>def respond(v):\n
   if REQUEST is None:\n
     return v\n
+  REQUEST.RESPONSE.setHeader("Content-Type", "text/html")\n
   REQUEST.RESPONSE.write(v)\n
   raise ValueError("Abort Transaction")\n
 \n
-return respond(context.Base_formatDiffObjectListToText(context.BusinessTemplate_getDiffObjectListFromZODB(detailed=detailed)))\n
+return respond(context.Base_formatDiffObjectListToHTML(context.BusinessTemplate_getDiffObjectListFromZODB(detailed=detailed)))\n
 </string> </value>
         </item>
         <item>
@@ -65,7 +66,7 @@ return respond(context.Base_formatDiffObjectListToText(context.BusinessTemplate_
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_getDiffWithZODBAsText</string> </value>
+            <value> <string>BusinessTemplate_getDiffWithZODBAsHTML</string> </value>
         </item>
       </dictionary>
     </pickle>

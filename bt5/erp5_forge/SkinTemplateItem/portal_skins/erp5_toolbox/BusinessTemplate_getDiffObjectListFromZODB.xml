@@ -50,13 +50,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def respond(v):\n
-  if REQUEST is None:\n
-    return v\n
-  REQUEST.RESPONSE.write(v)\n
-  raise ValueError("Abort Transaction")\n
+            <value> <string>if REQUEST is not None:\n
+  raise ValueError("This script cannot be called from the web")\n
 \n
-return respond(context.Base_formatDiffObjectListToText(context.BusinessTemplate_getDiffObjectListFromZODB(detailed=detailed)))\n
+import string\n
+import random\n
+\n
+installed_bt_for_diff = context.Base_createCloneDocument(clone=1, batch_mode=1)\n
+\n
+random_str = \'\'.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))\n
+installed_bt_for_diff.setId("installed_bt_for_diff_%s" % random_str)\n
+installed_bt_for_diff.build()\n
+diff_object_list = context.Base_getBusinessTemplateDiffObjectList(context, installed_bt_for_diff, detailed=detailed)\n
+# XXX replace context.getPortalObject().portal_templates by something like context.getParentObject\n
+context.getPortalObject().portal_templates.manage_delObjects(ids=[installed_bt_for_diff.getId()])\n
+return diff_object_list\n
 </string> </value>
         </item>
         <item>
@@ -65,7 +73,7 @@ return respond(context.Base_formatDiffObjectListToText(context.BusinessTemplate_
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_getDiffWithZODBAsText</string> </value>
+            <value> <string>BusinessTemplate_getDiffObjectListFromZODB</string> </value>
         </item>
       </dictionary>
     </pickle>
