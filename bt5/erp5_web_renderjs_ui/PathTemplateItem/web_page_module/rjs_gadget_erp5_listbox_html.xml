@@ -129,7 +129,9 @@
       <div class="ui-table-header ui-header ui-bar-c ui-corner-all">\n
         <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">\n
           <div class="ui-controlgroup-controls">\n
-            <a data-i18n="hide" class="ui-responsive ui-btn ui-btn-icon-left ui-icon-eye ui-first-child ui-override-theme ui-disabled" href="#">Hide Rows</a>\n
+            <form class="hide_form">\n
+                <button data-rel="hide" data-i18n="Hide Rows" type="submit" class="submit responsive ui-last-child ui-btn ui-icon-eye ui-btn-icon-left">Hide Rows</button>\n
+            </form>\n
           </div>\n
         </div>\n
         <h1 data-i18n="0 items selected" class="ui-title ui-override-theme">0 items selected</h1>\n
@@ -285,7 +287,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.65186.57926.52411</string> </value>
+                <value> <string>947.35221.57104.11707</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -303,7 +305,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1447174021.56</float>
+                        <float>1449492558.36</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

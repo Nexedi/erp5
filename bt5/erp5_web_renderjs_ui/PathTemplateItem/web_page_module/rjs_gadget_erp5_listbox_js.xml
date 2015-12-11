@@ -108,8 +108,10 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint indent: 2, maxerr: 3, nomen: true */\n
-/*global window, document, rJS, URI, RSVP, loopEventListener*/\n
-(function (window, document, rJS, URI, RSVP, loopEventListener) {\n
+/*global window, document, rJS, URI, RSVP, loopEventListener,\n
+  SimpleQuery, ComplexQuery, Query, QueryFactory*/\n
+(function (window, document, rJS, URI, RSVP, loopEventListener,\n
+  SimpleQuery, ComplexQuery) {\n
   "use strict";\n
 \n
 \n
@@ -142,6 +144,7 @@
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")\n
     .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")\n
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")\n
+    .declareAcquiredMethod("redirect", "redirect")\n
     //////////////////////////////////////////////\n
     // initialize the gadget content\n
     //////////////////////////////////////////////\n
@@ -276,7 +279,7 @@
       for (i = 0; i < field_json.column_list.length; i += 1) {\n
         select_list.push(field_json.column_list[i][0]);\n
       }\n
-\n
+      select_list.push("uid");\n
       return gadget.jio_allDocs({\n
         // XXX Not jIO compatible, but until a better api is found...\n
         "list_method_template": field_json.list_method_template,\n
@@ -333,6 +336,7 @@
         dataset = result;\n
         for (i = 0; i < counter; i += 1) {\n
           tr = document.createElement("tr");\n
+          tr.setAttribute("value", result.data.rows[i].value.uid);\n
           tmp_url = result_list[i + 1];\n
 \n
           if (field_json.show_anchor) {\n
@@ -534,6 +538,127 @@
         }\n
       );\n
     })\n
+    .declareService(function () {\n
+      var gadget = this,\n
+        hide_form = gadget.props.element.querySelector(".hide_form");\n
+      /* hide form */\n
+      return loopEventListener(\n
+        hide_form,\n
+        "submit",\n
+        false,\n
+        function () {\n
+          var tr_list = gadget.props.element.querySelector("tbody").querySelectorAll("tr"),\n
+            thead_tr = gadget.props.element.querySelector("thead").querySelector("tr"),\n
+            i,\n
+            th,\n
+            hide_form_elements,\n
+            all_hide_form_elements,\n
+            hide_submit_form = document.createElement("form"),\n
+            hide_show_all = document.createElement("button"),\n
+            query_list = [],\n
+            search_query,\n
+            translate_div,\n
+            button,\n
+            checkbox;\n
+          all_hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element");\n
+          hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element:checked");\n
+\n
+          if (all_hide_form_elements.length > 0) {\n
+            //if nothing is selected, show all\n
+            button = hide_form.querySelector("button");\n
+            button.setAttribute("data-i18n", "Hide Rows");\n
+            return new RSVP.Queue()\n
+              .push(function () {\n
+                return gadget.translateHtml(hide_form.innerHTML);\n
+              })\n
+              .push(function (innerHTML) {\n
+                hide_form.innerHTML = innerHTML;\n
+                if (hide_form_elements.length === 0) {\n
+                  return gadget.redirect({\n
+                    command: \'store_and_change\',\n
+                    options: {\n
+                      "extended_search": ""\n
+                    }\n
+                  });\n
+                }\n
+\n
+                //all selected\n
+                //no need to submit\n
+                if (hide_form_elements.length + 1 === all_hide_form_elements.length) {\n
+                  for (i = 0; i < all_hide_form_elements.length; i += 1) {\n
+                    all_hide_form_elements[i].parentElement.removeChild(all_hide_form_elements[i]);\n
+                  }\n
+                  return;\n
+                }\n
+\n
+                //a part is selected\n
+                for (i = 0; i < hide_form_elements.length; i += 1) {\n
+                  query_list.push(new SimpleQuery({\n
+                    key: "catalog.uid",\n
+                    type: "simple",\n
+                    value: hide_form_elements[i].parentElement.getAttribute("value")\n
+                  }));\n
+                }\n
+                search_query = new ComplexQuery({\n
+                  operator: "OR",\n
+                  query_list: query_list,\n
+                  type: "complex"\n
+                });\n
+\n
+                return gadget.redirect({\n
+                  command: \'store_and_change\',\n
+                  options: {\n
+                    "extended_search": Query.objectToSearchText(search_query)\n
+                  }\n
+                });\n
+              });\n
+          }\n
+\n
+          //just opened\n
+          button = hide_form.querySelector("button");\n
+          button.setAttribute("data-i18n", "submit");\n
+          hide_show_all.setAttribute("type", "submit");\n
+          hide_show_all.setAttribute("data-i18n", "Show All");\n
+          hide_show_all.className = "ui-btn responsive ui-last-child";\n
+          translate_div = document.createElement("div");\n
+          translate_div.appendChild(hide_show_all);\n
+          return new RSVP.Queue()\n
+            .push(function () {\n
+              return RSVP.all([gadget.translateHtml(translate_div.innerHTML),\n
+                               gadget.translateHtml(hide_form.innerHTML)]);\n
+            })\n
+            .push(function (all_innerHTML) {\n
+              var innerHTML = all_innerHTML[0];\n
+              hide_form.innerHTML = all_innerHTML[1];\n
+              hide_submit_form.innerHTML = innerHTML;\n
+              th = document.createElement("th");\n
+              th.setAttribute("class", "hide_form_element");\n
+              th.appendChild(hide_submit_form);\n
+              thead_tr.insertBefore(th, thead_tr.firstChild);\n
+              for (i = 0; i < tr_list.length; i += 1) {\n
+                checkbox = document.createElement("input");\n
+                checkbox.setAttribute("type", "checkbox");\n
+                checkbox.setAttribute("checked", true);\n
+                checkbox.setAttribute("class", "hide_form_element");\n
+                tr_list[i].insertBefore(checkbox, tr_list[i].firstChild);\n
+              }\n
+              return loopEventListener(\n
+                hide_submit_form,\n
+                "submit",\n
+                false,\n
+                function () {\n
+                  return gadget.redirect({\n
+                    command: \'change\',\n
+                    options: {\n
+                      "extended_search": ""\n
+                    }\n
+                  });\n
+                }\n
+              );\n
+            });\n
+        }\n
+      );\n
+    })\n
 \n
     .allowPublicAcquisition("notifyInvalid", function () {\n
       return;\n
@@ -543,7 +668,8 @@
       return;\n
     });\n
 \n
-}(window, document, rJS, URI, RSVP, loopEventListener));
+}(window, document, rJS, URI, RSVP, loopEventListener,\n
+  SimpleQuery, ComplexQuery));
 
 ]]></string> </value>
         </item>
@@ -680,7 +806,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.29639.47524.59016</string> </value>
+                <value> <string>947.47189.39318.38297</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -698,7 +824,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448903288.34</float>
+                        <float>1449860519.93</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
