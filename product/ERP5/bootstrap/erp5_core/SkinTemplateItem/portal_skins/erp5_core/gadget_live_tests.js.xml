@@ -36,12 +36,11 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-/*global window, rJS, jIO, RSVP, location, document , FormData, console */\n
+/*global window, rJS, jIO, RSVP, location, document, FormData */\n
 /*jslint indent: 2, maxlen: 80, nomen: true */\n
-(function (rJS, jIO, RSVP, window, document, FormData, console) {\n
+(function (rJS, jIO, RSVP, window, document, FormData) {\n
   "use strict";\n
-  var live_test_js_already_loaded = false,\n
-    my_url_run_test = document.baseURI + \'runLiveTest\',\n
+  var my_url_run_test = document.baseURI + \'runLiveTest\',\n
     my_url_read_test = document.baseURI + \'readTestOutput\',\n
     paused = false,\n
     data_textarea =\n
@@ -51,12 +50,6 @@
     last_call = false,\n
     data_size = 0,\n
     form_data = new FormData();\n
-\n
-  if (live_test_js_already_loaded) {\n
-    console.error("Live test already loaded");\n
-    return;\n
-  }\n
-  live_test_js_already_loaded = true;\n
 \n
   data_textarea.value = "";\n
 \n
@@ -88,7 +81,7 @@
   rJS(window).declareService(function () {\n
     var queue = new RSVP.Queue();\n
 \n
-    function readDataExamine() {\n
+    function launchLiveTest() {\n
       queue.push(function () {\n
         return jIO.util.ajax({\n
           type: "POST",\n
@@ -105,12 +98,12 @@
       });\n
     }\n
     return queue.push(function () {\n
-      return readDataExamine();\n
+      return launchLiveTest();\n
     });\n
   }).declareService(function () {\n
     var queue = new RSVP.Queue();\n
 \n
-    function getDataExamine() {\n
+    function getLiveTestOutput() {\n
       queue.push(function () {\n
         return jIO.util.ajax({\n
           type: "POST",\n
@@ -130,21 +123,23 @@
         return RSVP.delay(1000);\n
       }).push(function () {\n
         if (continue_loop) {\n
-          return getDataExamine();\n
+          return getLiveTestOutput();\n
         }\n
         if (!continue_loop) {\n
           if (!last_call) {\n
             last_call = true;\n
-            return getDataExamine();\n
+            return getLiveTestOutput();\n
           }\n
         }\n
       });\n
     }\n
     return queue.push(function () {\n
-      return getDataExamine();\n
-    });\n
+      // a delay of 2 seconds so the test can be launched\n
+      // before results are read\n
+      return RSVP.delay(2000);\n
+    }).push(getLiveTestOutput());\n
   });\n
-}(rJS, jIO, RSVP, window, document, FormData, console));
+}(rJS, jIO, RSVP, window, document, FormData));
 
 ]]></unicode> </value>
         </item>

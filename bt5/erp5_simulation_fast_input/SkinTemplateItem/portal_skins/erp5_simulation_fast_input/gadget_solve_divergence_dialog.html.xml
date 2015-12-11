@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts47152215.08</string> </value>
+            <value> <string>ts49844638.75</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -36,7 +36,6 @@
 \n
 <script src="rsvp.js" type="text/javascript"></script>\n
 <script src="renderjs.js" type="text/javascript"></script>\n
-<script src="jio_sha256.amd.js" type="text/javascript"></script>\n
 <script src="jio.js" type="text/javascript"></script>\n
 <script src="gadget_solve_divergence_dialog.js" type="text/javascript"></script>\n
 \n
@@ -55,7 +54,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>648</int> </value>
+            <value> <int>583</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
