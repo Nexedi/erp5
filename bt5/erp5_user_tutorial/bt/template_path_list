@@ -10,8 +10,8 @@ test_page_module/user-Howto.Create.Outgoing.Events/**
 test_page_module/user-Howto.Create.Persons
 test_page_module/user-Howto.Create.Persons/**
 test_page_module/user-Howto.Create.Sale.Orders
-test_page_module/user-Howto.Create.Trade.Conditions
-test_page_module/user-Howto.Create.Trade.Conditions/**
+test_page_module/user-Howto.Create.Trade.Conditions.007.en
+test_page_module/user-Howto.Create.Trade.Conditions.007.en/**
 test_page_module/user-Howto.Create.and.Manage.Products
 test_page_module/user-Howto.Generate.Report
 test_page_module/user-Howto.Link.Persons.and.Organisations
@@ -19,6 +19,6 @@ test_page_module/user-Howto.Manage.Invoices
 test_page_module/user-Howto.Manage.Invoices/**
 test_page_module/user-Howto.Manage.Packing.Lists
 test_page_module/user-Howto.Manage.Packing.Lists/**
-test_page_module/user-Howto.Manage.Support.Request
-test_page_module/user-Howto.Manage.Support.Request/**
+test_page_module/user-Howto.Manage.Support.Request.007.en
+test_page_module/user-Howto.Manage.Support.Request.007.en/**
 test_page_module/user-Howto.Post.Outgoing.Events
