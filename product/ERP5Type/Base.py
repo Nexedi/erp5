@@ -85,7 +85,7 @@ from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 from Products.ERP5Type.Accessor.TypeDefinition import asDate
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, super_user
 
 from zope.interface import classImplementsOnly, implementedBy
 
@@ -2758,7 +2758,8 @@ class Base( CopyContainer,
     root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
     if self.isIndexable and root_indexable:
       #LOG("immediateReindexObject",0,self.getRelativeUrl())
-      PortalContent.reindexObject(self, *args, **kw)
+      with super_user():
+        PortalContent.reindexObject(self, *args, **kw)
     else:
       pass
       #LOG("No reindex now",0,self.getRelativeUrl())
