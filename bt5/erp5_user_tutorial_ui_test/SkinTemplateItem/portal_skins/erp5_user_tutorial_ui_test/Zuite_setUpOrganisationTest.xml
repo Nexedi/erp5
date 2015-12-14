@@ -53,6 +53,17 @@
             <value> <string>if clean:\n
   context.Zuite_tearDownOrganisationTest()\n
 \n
+portal = context.getPortalObject()\n
+result_list = portal.portal_catalog(\n
+  portal_type="Organisation",\n
+  title=context.Zuite_getHowToInfo()[\'organisation_howto_organisation_title\'])\n
+\n
+if len(result_list) == 0:\n
+  # If you follow the sequence of tutorial, Z Company is already created by previous tutotial.\n
+  # Then, is already expected when running tests from user-Howto.Create.Organisations\n
+  portal.organisation_module.newContent(portal_type="Organisation",\n
+    title=context.Zuite_getHowToInfo()[\'organisation_howto_organisation_title\'])\n
+\n
 context.portal_caches.clearAllCache()\n
 \n
 return "Init Ok"\n

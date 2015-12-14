@@ -133,7 +133,7 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-    \n
+\n
       <section class="master">\n
         <h1>How to Add Organisations</h1>\n
         <img alt="Photo of the building of Z Company" src="http://img.erp5.cn/user-Howto.Add.Organisations.Front.Page.Building.Zcompany?format=png" title="Add organisation: Z Company">\n
@@ -149,7 +149,7 @@
               <tr class="" style="opacity: 1;">\n
                 <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>\n
               </tr>\n
-              <tr>\n
+              <tr class="" style="opacity: 1; z-index: 0;">\n
                 <td>openAndWait</td>\n
                 <td>${base_url}/Zuite_setUpOrganisationTest</td>\n
                 <td></td>\n
@@ -214,29 +214,44 @@
             </tbody>\n
           </table>\n
         </test>\n
-      </section><section class="screenshot"> \n
+      </section><section class="screenshot">\n
         <h1>Click on the "Browse" tab</h1>\n
         <img src="http://img.erp5.cn/user-Howto.Add.Organisations.Check.Creation.Browse.Organisations.Base.Screenshot?format=png" alt="Check organisation creation: Browse the \'Organisations\' database" title="Check organisation creation: Browse the \'Organisations\' database">\n
         <details open="open">\n
-         <p>Click on the Browse Tab and then on "Organisations" to find our client Z Company.</p>\n
+          <p>Click on the Browse Tab and then on "Organisations" to find our client Z Company.</p>\n
         </details>\n
-      </section><section class="screenshot">    \n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
         <h1>Click on "Z Company"</h1>\n
         <img src="http://img.erp5.cn/user-Howto.Add.Organisations.Check.Creation.3.Organisationline.Screenshot?format=png" alt="Check organisation creation (3): Check the organisation\'s line" title="Check organisation creation (3): Check the organisation\'s line">\n
         <details open="open">\n
           <p>You will find our client Z Company in the Organisation Module. Click on the line to open the organisation.</p>\n
         </details>\n
-      </section><section class="screenshot">\n
-        <h1>Fill the “view” tab and save</h1>\n
-        <img alt="Add organisations: Fill the \'View\' page and save" src="http://img.erp5.cn/user-Howto.Add.Organisations.View.Save?format=png" title="Add organisations: Fill the \'View\' page and save">\n
-        <details open="open">\n
-          <p>You will now be led to the details page of the Z Company page which has existed. As you can see, there are many fields to fill, which allow you to be really precise about the different organisations stored in ERP5. You just have to enter its detail information and then save it.</p><p>Summary: we had created a person named John Doh, who is the marketing manager of Z Company, one of VIFIB clients. If you remember well, the rganisation Z Company had been created directly through the person creation module (cf “How to add people” tutorial) by "Add Organisation", but had not been taken care of.Now we are going to enter some details in "view" tab about the organisation Z Company: Z Company Ltd is an international electricity supplier, which has been using the services of VIFIB for quite a long time as a client. Here is the address of the Company: 12 Zorro Street, 93210 Beverly Hills.</p><p>After you have filled the “view” tab, save the data by clicking on the disk image on the right of the screen. </p>\n
-<p>But please note that the organisations can also be created through the organisation creation module from the New tab in ERP5 home page, as you have seen in the previous tutorial “How to add people”.</p>\n
-        </details>\n
         <test>\n
           <table style="display: none;" class="test">\n
             <tbody>\n
               <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//td[@class=\'listbox-table-data-cell\']//a[text()=\'Z Company\']</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Fill the “view” tab and save</h1>\n
+        <img alt="Add organisations: Fill the \'View\' page and save" src="http://img.erp5.cn/user-Howto.Add.Organisations.View.Save?format=png" title="Add organisations: Fill the \'View\' page and save">\n
+        <details open="open">\n
+          <p>You will now be led to the details page of the Z Company page which has existed. As you can see, there are many fields to fill, which allow you to be really precise about the different organisations stored in ERP5. You just have to enter its detail information and then save it.</p><p>Summary: we had created a person named John Doh, who is the marketing manager of Z Company, one of VIFIB clients. If you remember well, the rganisation Z Company had been created directly through the person creation module (cf “How to add people” tutorial) by "Add Organisation", but had not been taken care of.Now we are going to enter some details in "view" tab about the organisation Z Company: Z Company Ltd is an international electricity supplier, which has been using the services of VIFIB for quite a long time as a client. Here is the address of the Company: 12 Zorro Street, 93210 Beverly Hills.</p><p>After you have filled the “view” tab, save the data by clicking on the disk image on the right of the screen.</p><p>But please note that the organisations can also be created through the organisation creation module from the New tab in ERP5 home page, as you have seen in the previous tutorial “How to add people”.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody>\n
+              <tr class="" style="opacity: 1; z-index: 0;">\n
                 <td>type</td>\n
                 <td>//input[@name="field_my_title"]</td>\n
                 <td>Z Company</td>\n
@@ -1233,6 +1248,51 @@
                     <state>
                       <tuple>
                         <float>1412588521.97</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>ERP5TypeTestCase</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>947.51063.41256.12663</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1450099097.21</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
