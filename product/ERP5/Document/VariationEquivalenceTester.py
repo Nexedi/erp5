@@ -86,8 +86,8 @@ class VariationEquivalenceTester(Predicate, EquivalenceTesterMixin):
           # XXX We should use "getTranslatedTestedPropertyTitleList", but it seems to
           # not exist for accessors having multiple possible values
           property_name = self.getTestedPropertyTitleList()[property_title_index]
-        except ValueError, IndexError:
           pass
+        except (ValueError, IndexError):
         return (
           prevision_value, decision_value,
           'The value of ${property_name} is different between decision and prevision.',
