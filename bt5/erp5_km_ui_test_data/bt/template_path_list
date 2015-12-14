@@ -8,6 +8,10 @@ portal_categories/publication_section/**
 portal_categories/region/**
 portal_categories/role/**
 portal_categories/site/**
+web_page_module/predecessor_test_documentation_page
+web_page_module/predecessor_test_section_default_page
 web_page_module/test_km_web_site_page
 web_site_module/km_test_web_site
 web_site_module/km_test_web_site/**
+web_site_module/predecessor_test_web_site
+web_site_module/predecessor_test_web_site/**
