@@ -150,7 +150,7 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-    \n
+\n
       <section class="master">\n
         <h1>How to Prepare Outgoing Events</h1>\n
         <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Event.Front.Page?format=png" title="Create an Event from the campaign Ticket: Beta developer program" alt="Create an Event from the campaign Ticket: Beta developer program">\n
@@ -162,6 +162,11 @@
             From the previous tutorial <a href="user-Howto.Create.Campaigns/view">"How to create Campaigns"</a>, you have learned how to create a campaign with ERP5 CRM Ticket module. Then in this tutorial, you will see how to create new events from this campaign.\n
           </p><p>As introduced in the previous tutorial "Events", an event can be a phone call, an email, a fax message, etc. It can be either an incoming or outgoing event. The idea here is to learn how to prepare a campaign, which means create its detail events that will be sent later, as you will learn in the next tutorial.</p>\n
         </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
       </section><section>\n
         <h1>Agenda</h1>\n
         <ul>\n
@@ -200,7 +205,8 @@
         </details>\n
         <test>\n
           <table class="test" style="display: none;">\n
-            <tbody>              <tr class="" style="opacity: 1;">\n
+            <tbody>\n
+              <tr class="" style="opacity: 1;">\n
                 <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>\n
               </tr>\n
               <tr>\n
@@ -321,6 +327,11 @@
                 <td>//input[@name="field_your_title"]</td>\n
                 <td>ZUITE-TEST-CREATE-EVENT-EVENT-001</td>\n
               </tr>\n
+              <tr class="" style="opacity: 1; z-index: 0;">\n
+                <td>select</td>\n
+                <td>//select[@name="field_your_destination"]</td>\n
+                <td>functional_test_username</td>\n
+              </tr>\n
               <tr>\n
                 <td>type</td>\n
                 <td>//textarea[@name="field_your_text_content"]</td>\n
@@ -328,7 +339,7 @@
               </tr>\n
               <tr>\n
                 <td>click</td>\n
-                <td>//input[@name="field_your_direction" and @value="outgoing"]</td>\n
+                <td>//input[@name="field_your_event_workflow_action" and @value="plan"]</td>\n
                 <td></td>\n
               </tr>\n
               <tr>\n
@@ -1240,6 +1251,96 @@
                     <state>
                       <tuple>
                         <float>1412588368.2</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>ERP5TypeTestCase</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>947.51063.41256.12663</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1450103173.53</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>ERP5TypeTestCase</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>947.51234.14811.2116</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1450103547.34</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
