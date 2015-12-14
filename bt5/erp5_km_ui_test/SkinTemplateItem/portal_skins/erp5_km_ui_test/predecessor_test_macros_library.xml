@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block metal:define-macro="discussions">\n
+  <div class="bottomPosts Discussions"\n
+       tal:define="web_site here/getWebSiteValue;\n
+                   absolute_url here/getAbsoluteUrl;\n
+                   relative_url here/getRelativeUrl;\n
+                   discussion_thread_section here/WebSite_getDefaultForumWebSectionValue;\n
+                   discussion_thread_list here/WebSection_getLatestDiscussionThreadList">\n
+    <h2>\n
+      <a title="Show more" tal:attributes="href string:${discussion_thread_section/absolute_url}">Discussions</a>\n
+      <a class="txtButn" title="Show more"\n
+         tal:attributes="href string:${discussion_thread_section/absolute_url}/WebSection_viewCreateNewDiscussionThreadDialog?cancel_url=${absolute_url}&amp;predecessor_url=${relative_url}">New</a>\n
+    </h2>\n
+    \n
+    <div class="row" tal:repeat="discussion_thread discussion_thread_list">\n
+      <tal:block tal:define="discussion_post discussion_thread/DiscussionThread_getLastPost;\n
+                             author_dict discussion_post/DiscussionPost_getAuthorDict;\n
+                             is_author_link_available python:author_dict[\'author_url\'] is not None;\n
+                             base_url python: \'%s/%s/%s\' %(web_site.absolute_url(), discussion_thread_section.getId(), discussion_thread.getReference())">\n
+     \n
+        <div class="date">\n
+          <span tal:replace="python: discussion_post.getModificationDate().strftime(\'%d-%m\')"/>\n
+          <span tal:content="python: discussion_post.getModificationDate().strftime(\'%Y\')"/>\n
+        </div>\n
+        <div class="text">\n
+          <h3>\n
+            <a title="Show post"\n
+              tal:attributes="href python: \'%s/view?list_start=%s&amp;reset=1#%s\' %(base_url, discussion_post.getId(), discussion_post.getUid())"\n
+              tal:content="discussion_post/getTitle"/> \n
+            <em>by <spam tal:replace="author_dict/author_title"/></em>\n
+          </h3>\n
+          <span tal:replace="structure python: discussion_post.getTextContent()"/>\n
+        </div>\n
+      </tal:block>\n
+    </div>\n
+    <div class="clear"></div>\n
+  </div>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>predecessor_test_macros_library</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

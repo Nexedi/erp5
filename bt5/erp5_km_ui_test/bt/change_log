@@ -1,3 +1,6 @@
+2015-12-09 sven
+* added tests for predecessor handling to display related discussions on web-pages or web-section/default pages
+
 2010-07-02 lucas
 * It is required to wait for activities after adding a new file. Improved testCreateNewFile and testMyDocumentsGadget.
 
