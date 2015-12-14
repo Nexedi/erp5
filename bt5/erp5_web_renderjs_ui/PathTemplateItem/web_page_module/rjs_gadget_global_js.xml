@@ -107,13 +107,17 @@
   "use strict";\n
 \n
   window.loopEventListener = function (target, type, useCapture, callback,\n
-                                       allowDefault) {\n
+                                       prevent_default) {\n
     //////////////////////////\n
     // Infinite event listener (promise is never resolved)\n
     // eventListener is removed when promise is cancelled/rejected\n
     //////////////////////////\n
     var handle_event_callback,\n
       callback_promise;\n
+\n
+    if (prevent_default === undefined) {\n
+      prevent_default = true;\n
+    }\n
 \n
     function cancelResolver() {\n
       if ((callback_promise !== undefined) &&\n
@@ -129,16 +133,25 @@
       cancelResolver();\n
     }\n
     function itsANonResolvableTrap(resolve, reject) {\n
-\n
+      var result;\n
       handle_event_callback = function (evt) {\n
-        evt.stopPropagation();\n
-        if (allowDefault !== true) {\n
+        if (prevent_default) {\n
+          evt.stopPropagation();\n
           evt.preventDefault();\n
         }\n
+\n
         cancelResolver();\n
-        callback_promise = new RSVP.Queue()\n
+\n
+        try {\n
+          result = callback(evt);\n
+        } catch (e) {\n
+          result = RSVP.reject(e);\n
+        }\n
+\n
+        callback_promise = result;\n
+        new RSVP.Queue()\n
           .push(function () {\n
-            return callback(evt);\n
+            return result;\n
           })\n
           .push(undefined, function (error) {\n
             if (!(error instanceof RSVP.CancellationError)) {\n
@@ -314,7 +327,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -328,7 +341,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.42855.7627.63982</string> </value>
+                <value> <string>947.51167.64410.14796</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -346,8 +359,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411056451.0</float>
-                        <string>GMT</string>
+                        <float>1450099422.01</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
