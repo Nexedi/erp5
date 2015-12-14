@@ -771,6 +771,11 @@ define("rsvp/promise",\n
           then = value.then;\n
 \n
           if (isFunction(then)) {\n
+            if (isFunction(value.on)) {\n
+              value.on(\'promise:notified\', function (event) {\n
+                notify(promise, event.detail);\n
+              });\n
+            }\n
             promise.on(\'promise:cancelled\', function(event) {\n
               if (isFunction(value.cancel)) {\n
                 value.cancel();\n
@@ -833,11 +838,11 @@ define("rsvp/promise",\n
     __exports__.Promise = Promise;\n
   });\n
 define("rsvp/queue",\n
-  ["rsvp/promise","rsvp/timeout","exports"],\n
+  ["rsvp/promise","rsvp/resolve","exports"],\n
   function(__dependency1__, __dependency2__, __exports__) {\n
     "use strict";\n
     var Promise = __dependency1__.Promise;\n
-    var delay = __dependency2__.delay;\n
+    var resolve = __dependency2__.resolve;\n
 \n
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error\n
     function ResolvedQueueError(message) {\n
@@ -856,6 +861,7 @@ define("rsvp/queue",\n
         promise,\n
         fulfill,\n
         reject,\n
+        notify,\n
         resolved;\n
 \n
       if (!(this instanceof Queue)) {\n
@@ -868,7 +874,7 @@ define("rsvp/queue",\n
         }\n
       }\n
 \n
-      promise = new Promise(function(done, fail) {\n
+      promise = new Promise(function(done, fail, progress) {\n
         fulfill = function (fulfillmentValue) {\n
           if (resolved) {return;}\n
           queue.isFulfilled = true;\n
@@ -883,9 +889,10 @@ define("rsvp/queue",\n
           resolved = true;\n
           return fail(rejectedReason);\n
         };\n
+        notify = progress;\n
       }, canceller);\n
 \n
-      promise_list.push(delay());\n
+      promise_list.push(resolve());\n
       promise_list.push(promise_list[0].then(function () {\n
         promise_list.splice(0, 2);\n
         if (promise_list.length === 0) {\n
@@ -906,7 +913,7 @@ define("rsvp/queue",\n
         return promise.then.apply(promise, arguments);\n
       };\n
 \n
-      queue.push = function(done, fail) {\n
+      queue.push = function(done, fail, progress) {\n
         var last_promise = promise_list[promise_list.length - 1],\n
           next_promise;\n
 \n
@@ -914,11 +921,11 @@ define("rsvp/queue",\n
           throw new ResolvedQueueError();\n
         }\n
 \n
-        next_promise = last_promise.then(done, fail);\n
+        next_promise = last_promise.then(done, fail, progress);\n
         promise_list.push(next_promise);\n
 \n
         // Handle pop\n
-        promise_list.push(next_promise.then(function (fulfillmentValue) {\n
+        last_promise = next_promise.then(function (fulfillmentValue) {\n
           promise_list.splice(0, 2);\n
           if (promise_list.length === 0) {\n
             fulfill(fulfillmentValue);\n
@@ -932,7 +939,13 @@ define("rsvp/queue",\n
           } else {\n
             throw rejectedReason;\n
           }\n
-        }));\n
+        }, function (notificationValue) {\n
+          if (promise_list[promise_list.length - 1] === last_promise) {\n
+            notify(notificationValue);\n
+          }\n
+          return notificationValue;\n
+        });\n
+        promise_list.push(last_promise);\n
 \n
         return this;\n
       };\n
@@ -1225,7 +1238,7 @@ window.RSVP = requireModule("rsvp");\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.11490.23964.35481</string> </value>
+                <value> <string>947.51153.11549.27255</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1243,8 +1256,8 @@ window.RSVP = requireModule("rsvp");\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421142585.57</float>
-                        <string>GMT</string>
+                        <float>1450107607.48</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
