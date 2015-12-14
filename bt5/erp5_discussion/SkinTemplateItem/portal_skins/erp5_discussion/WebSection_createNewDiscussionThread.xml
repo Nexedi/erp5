@@ -62,6 +62,7 @@ person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
 \n
 version = \'001\'\n
 language = portal.Localizer.get_selected_language()\n
+has_website = context.getWebSiteValue()\n
 \n
 try:\n
   user_assignment_dict = portal.ERP5Site_getPersonAssignmentDict()\n
@@ -75,21 +76,23 @@ if site_list in MARKER:\n
   site_list = user_assignment_dict[\'site_list\']\n
 \n
 # set predicate settings for current Web Section\n
-membership_criterion_category_list = context.getMembershipCriterionCategoryList()\n
-multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()\n
+if has_website is not None:\n
+  membership_criterion_category_list = context.getMembershipCriterionCategoryList()\n
+  multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()\n
 \n
 reference = context.Base_generateReferenceFromString(title)\n
 \n
-existing_document = context.getDocumentValue(reference)\n
-existing_web_section_list = portal.portal_catalog(id=reference, portal_type=[\'Web Site\', \'Web Section\'])\n
-existing_module_list = portal.portal_catalog(id=reference, parent_uid=portal.getUid())\n
-if existing_document is not None \\\n
-  or len(existing_web_section_list) \\\n
-  or len(existing_module_list):\n
-  # if there are other document or any tarversal objects (module, web section)\n
-  # which ID or reference duplicates just add some random part\n
-  # so we can distinguish)\n
-  reference = \'%s-%s\' %(context.Base_generateRandomString(), reference)\n
+if has_website is not None:\n
+  existing_document = context.getDocumentValue(reference)\n
+  existing_web_section_list = portal.portal_catalog(id=reference, portal_type=[\'Web Site\', \'Web Section\'])\n
+  existing_module_list = portal.portal_catalog(id=reference, parent_uid=portal.getUid())\n
+  if existing_document is not None \\\n
+    or len(existing_web_section_list) \\\n
+    or len(existing_module_list):\n
+    # if there are other document or any tarversal objects (module, web section)\n
+    # which ID or reference duplicates just add some random part\n
+    # so we can distinguish)\n
+    reference = \'%s-%s\' %(context.Base_generateRandomString(), reference)\n
 \n
 category_list = []\n
 create_kw = dict(title = title,\n
@@ -103,9 +106,10 @@ create_kw = dict(title = title,\n
                  group_list=group_list,\n
                  site_list=site_list)\n
 \n
-for base_category in multimembership_criterion_base_category_list:\n
-  #create_kw[\'%s_list\' %base_category] = [x for x in membership_criterion_category_list if x.startswith(base_category)]\n
-  category_list.extend([x for x in membership_criterion_category_list if x.startswith(base_category)])\n
+if has_website is not None:\n
+  for base_category in multimembership_criterion_base_category_list:\n
+    #create_kw[\'%s_list\' %base_category] = [x for x in membership_criterion_category_list if x.startswith(base_category)]\n
+    category_list.extend([x for x in membership_criterion_category_list if x.startswith(base_category)])\n
 \n
 discussion_thread = portal.discussion_thread_module.newContent(\n
                       portal_type = "Discussion Thread",\n
@@ -114,6 +118,23 @@ discussion_thread = portal.discussion_thread_module.newContent(\n
 # all categories from it to create thread, this way thread will be part\n
 # of web section (through getDocumentValue API)\n
 discussion_thread.setCategoryList(category_list)\n
+\n
+# predecessor\n
+if predecessor is not None:\n
+  predecessor_object = context.restrictedTraverse(predecessor)\n
+  predecessor_portal_type = predecessor_object.getPortalType()\n
+  predecessor_absolute_url = predecessor_object.getAbsoluteUrl()\n
+\n
+  # predecessor will only be set on document = web section default page\n
+  if predecessor_portal_type == \'Web Section\':\n
+    predecessor_default_page = predecessor_object.getAggregate()\n
+    if predecessor_default_page is not None:\n
+      predecessor_document = context.restrictedTraverse(predecessor_default_page)\n
+      discussion_thread.setPredecessorValueList([predecessor_document])\n
+  \n
+  # set predecessor on document\n
+  if predecessor_portal_type == \'Web Page\':\n
+    discussion_thread.setPredecessorValueList([predecessor_object])\n
 \n
 discussion_post = discussion_thread.newContent(\n
                       portal_type = "Discussion Post",\n
@@ -177,7 +198,7 @@ if send_notification_text not in (\'\', None):\n
         message_text_format=notification_message.getContentType(),\n
         store_as_event=False)\n
 \n
-return context.Base_redirect(redirect_url=context.absolute_url(),\n
+return context.Base_redirect(redirect_url=predecessor_absolute_url or context.getAbsoluteUrl(),\n
          keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message),\n
                            thread_relative_url=discussion_thread.getRelativeUrl()))\n
 </string> </value>

@@ -98,6 +98,7 @@
                         <string>your_text_content</string>
                         <string>your_file</string>
                         <string>your_captcha</string>
+                        <string>your_predecessor</string>
                         <string>your_warning</string>
                       </list>
                     </value>
