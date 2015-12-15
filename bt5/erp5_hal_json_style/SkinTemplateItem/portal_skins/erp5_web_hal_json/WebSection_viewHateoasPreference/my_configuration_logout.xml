@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_configuration_connection_section</string> </value>
+            <value> <string>my_configuration_logout</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -85,7 +85,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Connection Web Section</string> </value>
+                    <value> <string>Logout</string> </value>
                 </item>
               </dictionary>
             </value>

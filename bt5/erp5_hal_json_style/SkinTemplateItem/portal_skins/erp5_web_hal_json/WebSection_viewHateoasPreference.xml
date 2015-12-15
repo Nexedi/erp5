@@ -72,7 +72,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_configuration_connection_section</string>
+                        <string>my_configuration_login</string>
+                        <string>my_configuration_logout</string>
                       </list>
                     </value>
                 </item>
