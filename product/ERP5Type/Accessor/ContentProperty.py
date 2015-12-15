@@ -156,12 +156,16 @@ class Getter(Base.Getter):
 
     def __call__(self, instance, *args, **kw):
       # We return the first available object in the list
+      if args:
+        default_result = args[0]
+      else:
+        default_result = self._default
       o = None
       for k in self._storage_id_list:
         o = getattr(instance, k, None)
         if o is not None and o.portal_type in self._portal_type:
-          return o.getProperty(self._acquired_property, *args, **kw)
-      return args[0] if args else self._default
+          return o.getProperty(self._acquired_property, default_result, **kw)
+      return default_result
 
     psyco.bind(__call__)
 
