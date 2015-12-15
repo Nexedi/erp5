@@ -3401,6 +3401,237 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def _createNewBusinessTemplate(self, template_tool):
+    template = template_tool.newContent(portal_type='Business Template')
+    self.assertTrue(template.getBuildingState() == 'draft')
+    self.assertTrue(template.getInstallationState() == 'not_installed')
+    template.edit(title ='test_template',
+                  version='1.0',
+                  description='bt for unit_test')
+    return template
+
+  def _buildAndExportBusinessTemplate(self, template, export_dir):
+    self.tic()
+    template.build()
+    self.tic()
+
+    template.export(path=export_dir, local=True)
+    self.tic()
+
+  def _importBusinessTemplate(self, template, export_dir, template_tool, cfg):
+    template_id = template.getId()
+    template_path = os.path.join(cfg.instancehome, export_dir)
+    template_tool.manage_delObjects(template_id)
+
+    import_template = template_tool.download(url='file:'+template_path)
+
+    shutil.rmtree(export_dir)
+
+    self.assertFalse(import_template is None)
+    self.assertEqual(import_template.getPortalType(), 'Business Template')
+
+    return import_template
+
+  def test_twoFileImportExportForTestDocument(self):
+    """Test Business Template Import And Export With Test Document"""
+    cfg = getConfiguration()
+    export_dir = tempfile.mkdtemp()
+    try:
+      template_tool = self.getTemplateTool()
+      template = self._createNewBusinessTemplate(template_tool)
+
+      test_document_page = self.portal.portal_components.newContent(title="foo",
+                                                                    text_content='def dummy(): pass',
+                                                                    portal_type="Test Component")
+
+      test_component_id = test_document_page.getId()
+
+      test_component_kw = {"title": "foo", "id": test_component_id,
+                           "text_content": "def dummy(): pass",
+                           "portal_type": "Test Component"}
+      template.edit(template_test_id_list=['portal_components/'+test_component_id,])
+
+      self._buildAndExportBusinessTemplate(template, export_dir)
+
+      test_component_path = os.path.join(cfg.instancehome, export_dir,
+                                         'TestTemplateItem', 'portal_components')
+      xml_document_path = os.path.join(test_component_path, test_component_id+'.xml')
+      test_document_path = os.path.join(test_component_path, test_component_id+'.py')
+
+      self.assertTrue(os.path.exists(xml_document_path))
+      self.assertTrue(os.path.exists(test_document_path))
+      test_file=open(test_document_path,'r+');
+      self.assertEqual(test_file.read(), test_component_kw["text_content"])
+
+      import_template = self._importBusinessTemplate(template, export_dir, template_tool, cfg)
+
+      self.portal.portal_components.manage_delObjects([test_component_id])
+
+      import_template.install()
+
+      test_page = self.portal.portal_components[test_component_id]
+
+      for property_id, property_value in test_component_kw.iteritems():
+        self.assertEqual(test_page.getProperty(property_id), property_value)
+
+      import_template.uninstall()
+
+    # in case the test fails, remove the temporary folder made
+    finally:
+      export_dir_path = os.path.join(cfg.instancehome, export_dir)
+      if os.path.exists(export_dir_path):
+        shutil.rmtree(export_dir)
+
+  def test_twoFileImportExportForWebPage(self):
+    """Test Business Template Import And Export With Web Page"""
+
+    cfg = getConfiguration()
+    export_dir = tempfile.mkdtemp()
+    try:
+      template_tool = self.getTemplateTool()
+      template = self._createNewBusinessTemplate(template_tool)
+      html_page = self.portal.web_page_module.newContent(title="foo",
+                                              text_content='<html></html>',
+                                              portal_type="Web Page")
+      html_file_id = html_page.getId()
+
+      html_document_kw = {"title": "foo", "id": html_file_id, "text_content": "<html></html>",
+                                  "portal_type": "Web Page"}
+
+      template.edit(template_path_list=['web_page_module/'+html_file_id,])
+
+      self._buildAndExportBusinessTemplate(template, export_dir)
+
+      web_page_module_path = os.path.join(cfg.instancehome, export_dir,
+                                          'PathTemplateItem', 'web_page_module')
+      xml_document_path = os.path.join(web_page_module_path, html_file_id+'.xml')
+      html_document_path = os.path.join(web_page_module_path, html_file_id+'.html')
+      self.assertTrue(os.path.exists(xml_document_path))
+      self.assertTrue(os.path.exists(html_document_path))
+      html_file=open(html_document_path,'r+');
+      self.assertEqual(html_file.read(), html_document_kw["text_content"])
+
+      import_template = self._importBusinessTemplate(template, export_dir, template_tool, cfg)
+
+      self.portal.web_page_module.manage_delObjects([html_file_id])
+
+      import_template.install()
+
+      web_page = self.portal.web_page_module[html_file_id]
+      for property_id, property_value in html_document_kw.iteritems():
+        self.assertEqual(web_page.getProperty(property_id), property_value)
+
+      import_template.uninstall()
+
+    # in case the test fails, remove the temporary folder made
+    finally:
+      export_dir_path = os.path.join(cfg.instancehome, export_dir)
+      if os.path.exists(export_dir_path):
+        shutil.rmtree(export_dir)
+
+  def test_twoFileImportExportForPythonScript(self):
+    """Test Business Template Import And Export With PythonScript"""
+    cfg = getConfiguration()
+    export_dir = tempfile.mkdtemp()
+    try:
+      template_tool = self.getTemplateTool()
+      template = self._createNewBusinessTemplate(template_tool)
+      skin_folder_id = 'dummy_test_folder'
+      if skin_folder_id in self.portal.portal_skins.objectIds():
+        self.portal.portal_skins.manage_delObjects([skin_folder_id])
+
+      self.portal.portal_skins.manage_addProduct['OFSP'].manage_addFolder(skin_folder_id)
+      skin_folder = self.portal.portal_skins[skin_folder_id]
+
+      python_script_id = 'dummy_test_script'
+      if python_script_id in skin_folder.objectIds():
+        skin_folder.manage_delObjects([python_script_id])
+      skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(id = python_script_id)
+      python_script = skin_folder[python_script_id]
+      python_script.ZPythonScript_edit('', "context.setTitle('foo')")
+
+      python_script_kw = {"_body": "context.setTitle('foo')\n",}
+
+      template.edit(template_skin_id_list=[skin_folder_id+'/'+python_script_id,])
+
+      self._buildAndExportBusinessTemplate(template, export_dir)
+
+      python_script_module_path = os.path.join(cfg.instancehome, export_dir,
+                                          'SkinTemplateItem', 'portal_skins',skin_folder_id)
+      xml_document_path = os.path.join(python_script_module_path, python_script_id+'.xml')
+      python_script_path = os.path.join(python_script_module_path, python_script_id+'.py')
+
+      self.assertTrue(os.path.exists(xml_document_path))
+      self.assertTrue(os.path.exists(python_script_path))
+      python_script_file=open(python_script_path,'r+');
+      self.assertEqual(python_script_file.read(), python_script_kw["_body"])
+
+      import_template = self._importBusinessTemplate(template, export_dir, template_tool, cfg)
+
+      self.portal.portal_skins[skin_folder_id].manage_delObjects([python_script_id])
+
+      import_template.install()
+
+      python_script_page = self.portal.portal_skins[skin_folder_id][python_script_id]
+      python_script_content = python_script_page.read()
+      self.assertTrue(python_script_content.endswith(python_script_kw['_body']))
+
+      import_template.uninstall()
+
+    # in case the test fails, remove the temporary folder made
+    finally:
+      export_dir_path = os.path.join(cfg.instancehome, export_dir)
+      if os.path.exists(export_dir_path):
+        shutil.rmtree(export_dir)
+        
+  def test_twoFileImportExportForImage(self):
+    """Test Business Template Import And Export With Image In Image Module"""
+    cfg = getConfiguration()
+    export_dir = tempfile.mkdtemp()
+    image_data = """iVBORw0KGgoAAAANSUhEUgAAAAUA
+AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
+9TXL0Y4OHwAAAABJRU5ErkJggg=="""
+    try:
+      template_tool = self.getTemplateTool()
+      template = self._createNewBusinessTemplate(template_tool)
+      image_page = self.portal.image_module.newContent(title="foo.png",
+                                              data=image_data,
+                                              portal_type="Image")
+      image_file_id = image_page.getId()
+
+      image_document_kw = {"title": "foo.png", "id": image_file_id, "data": image_data,
+                                  "portal_type": "Image"}
+
+      template.edit(template_path_list=['image_module/'+image_file_id,])
+
+      self._buildAndExportBusinessTemplate(template, export_dir)
+
+      image_module_path = os.path.join(cfg.instancehome, export_dir,
+                                          'PathTemplateItem', 'image_module')
+      xml_document_path = os.path.join(image_module_path, image_file_id+'.xml')
+      image_document_path = os.path.join(image_module_path, image_file_id+'.png')
+      self.assertTrue(os.path.exists(xml_document_path))
+      self.assertTrue(os.path.exists(image_document_path))
+      image_file=open(image_document_path,'r+');
+      self.assertEqual(image_file.read(), image_document_kw["data"])
+
+      import_template = self._importBusinessTemplate(template, export_dir, template_tool, cfg)
+
+      self.portal.image_module.manage_delObjects([image_file_id])
+
+      import_template.install()
+
+      image_page = self.portal.image_module[image_file_id]
+      for property_id, property_value in image_document_kw.iteritems():
+        self.assertEqual(image_page.getProperty(property_id), property_value)
+
+      import_template.uninstall()
+
+    finally:
+      export_dir_path = os.path.join(cfg.instancehome, export_dir)
+      if os.path.exists(export_dir_path):
+        shutil.rmtree(export_dir)
+
   # test of portal types
   def test_02_BusinessTemplateWithPortalTypes(self):
     """Test Business Template With Portal Types"""
