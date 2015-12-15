@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>output</string> </key>
-            <value> <string>image/svg</string> </value>
+            <value> <string>image/svg+xml</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
