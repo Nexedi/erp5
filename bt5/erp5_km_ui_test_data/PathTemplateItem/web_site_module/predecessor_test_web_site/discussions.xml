@@ -368,7 +368,9 @@
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value> <string></string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -376,7 +378,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
+                <value> <string>947.44018.2151.15581</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -387,329 +389,14 @@
                 <value>
                   <object>
                     <klass>
-                      <global id="7.1" name="DateTime" module="DateTime.DateTime"/>
+                      <global name="DateTime" module="DateTime.DateTime"/>
                     </klass>
                     <tuple>
                       <none/>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1449656397.11</float>
-                        <string>GMT</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>edit</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value>
-                  <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
-                </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
-            </item>
-            <item>
-                <key> <string>state</string> </key>
-                <value> <string>current</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="7.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1449656397.11</float>
-                        <string>GMT</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>edit</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>947.43787.62430.40721</string> </value>
-            </item>
-            <item>
-                <key> <string>state</string> </key>
-                <value> <string>current</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="7.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1449656464.86</float>
-                        <string>GMT</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>edit</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>947.43787.62430.40721</string> </value>
-            </item>
-            <item>
-                <key> <string>state</string> </key>
-                <value> <string>current</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="7.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1449656674.17</float>
-                        <string>GMT</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>edit</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>947.43787.62430.40721</string> </value>
-            </item>
-            <item>
-                <key> <string>state</string> </key>
-                <value> <string>current</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="7.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1449665917.78</float>
-                        <string>GMT</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>edit</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>947.43787.62430.40721</string> </value>
-            </item>
-            <item>
-                <key> <string>state</string> </key>
-                <value> <string>current</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="7.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1449666357.52</float>
-                        <string>GMT</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>edit</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>947.43787.62430.40721</string> </value>
-            </item>
-            <item>
-                <key> <string>state</string> </key>
-                <value> <string>current</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="7.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1449666368.83</float>
-                        <string>GMT</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>edit</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>947.43787.62430.40721</string> </value>
-            </item>
-            <item>
-                <key> <string>state</string> </key>
-                <value> <string>current</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass> <reference id="7.1"/> </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1449670201.94</float>
+                        <float>1450184308.94</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -719,38 +406,6 @@
           </dictionary>
         </list>
       </tuple>
-    </pickle>
-  </record>
-  <record id="8" aka="AAAAAAAAAAg=">
-    <pickle>
-      <global name="Message" module="Products.ERP5Type.Message"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>default</string> </key>
-            <value> <string>Object copied from ${source_item}</string> </value>
-        </item>
-        <item>
-            <key> <string>domain</string> </key>
-            <value> <string>erp5_ui</string> </value>
-        </item>
-        <item>
-            <key> <string>mapping</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>source_item</string> </key>
-                    <value> <string>/erp5/web_site_module/10</string> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>message</string> </key>
-            <value> <string>Object copied from ${source_item}</string> </value>
-        </item>
-      </dictionary>
     </pickle>
   </record>
 </ZopeData>
