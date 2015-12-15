@@ -340,6 +340,14 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
 DCWorkflowDefinition.security.declarePrivate('getWorklistVariableMatchDict')
 DCWorkflowDefinition.getWorklistVariableMatchDict = DCWorkflowDefinition_getWorklistVariableMatchDict
 
+TransitionDefinition__init__orig = TransitionDefinition.__init__
+def TransitionDefinition__init__(self, *args, **kw):
+  TransitionDefinition__init__orig(self, *args, **kw)
+  self.guard = Guard()
+  self.guard.permissions = ('Modify portal content',)
+
+TransitionDefinition.__init__ = TransitionDefinition__init__
+
 class ValidationFailed(Exception):
     """Transition can not be executed because data is not in consistent state"""
     __allow_access_to_unprotected_subobjects__ = {'msg': 1}
