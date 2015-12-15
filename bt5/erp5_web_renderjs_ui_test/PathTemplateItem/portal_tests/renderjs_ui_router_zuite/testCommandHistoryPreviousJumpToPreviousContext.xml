@@ -204,7 +204,7 @@
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Back\' and contains(@href, \'#!history_previous\')]</td>\n
+  <td>//div[@data-gadget-scope=\'header\']//button[@data-i18n=\'Menu\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
