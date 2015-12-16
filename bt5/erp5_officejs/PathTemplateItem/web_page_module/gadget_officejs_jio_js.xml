@@ -101,10 +101,38 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, jIO, FormData, XMLHttpRequestProgressEvent */\n
+/*global window, rJS, jIO, FormData, XMLHttpRequestProgressEvent, UriTemplate */\n
 /*jslint indent: 2, maxerr: 3 */\n
 (function (window, rJS, jIO) {\n
   "use strict";\n
+\n
+  // jIO call wrapper for redirection to authentication page if needed\n
+  function wrapJioCall(gadget, method_name, argument_list) {\n
+    var storage = gadget.state_parameter_dict.jio_storage;\n
+    return storage[method_name].apply(storage, argument_list)\n
+      .push(undefined, function (error) {\n
+        if (error instanceof XMLHttpRequestProgressEvent &&\n
+            error.target.status === 401) {\n
+          if (gadget.state_parameter_dict.jio_storage_name === "ERP5") {\n
+            return gadget.redirect({ page: "login" });\n
+          }\n
+          if (gadget.state_parameter_dict.jio_storage_name === "DAV") {\n
+            var regexp = /^Nayookie login_url=(http[s]?:\\/\\/[\\/\\-\\[\\]{}()*+=:?&.,\\\\\\^$|#\\s\\w%]+)$/,\n
+              auth_page = error.target.getResponseHeader(\'WWW-Authenticate\'),\n
+              site;\n
+            if (regexp.test(auth_page)) {\n
+              site = UriTemplate.parse(\n
+                regexp.exec(auth_page)[1]\n
+              ).expand({back_url: window.location.href,\n
+                        origin: window.location.protocol + \'//\' +\n
+                                window.location.host});\n
+              return gadget.redirect({ toExternal: true, url: site});\n
+            }\n
+          }\n
+        }\n
+        throw error;\n
+      });\n
+  }\n
 \n
   rJS(window)\n
 \n
@@ -137,57 +165,34 @@
         });\n
     })\n
     .declareMethod(\'allDocs\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.allDocs.apply(storage, arguments);\n
+      return wrapJioCall(this, \'allDocs\', arguments);\n
     })\n
     .declareMethod(\'allAttachments\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.allAttachments.apply(storage, arguments);\n
+      return wrapJioCall(this, \'allAttachments\', arguments);\n
     })\n
     .declareMethod(\'get\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.get.apply(storage, arguments);\n
+      return wrapJioCall(this, \'get\', arguments);\n
     })\n
     .declareMethod(\'put\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.put.apply(storage, arguments);\n
+      return wrapJioCall(this, \'put\', arguments);\n
     })\n
     .declareMethod(\'post\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.post.apply(storage, arguments);\n
+      return wrapJioCall(this, \'post\', arguments);\n
     })\n
     .declareMethod(\'remove\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.remove.apply(storage, arguments);\n
+      return wrapJioCall(this, \'remove\', arguments);\n
     })\n
     .declareMethod(\'getAttachment\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.getAttachment.apply(storage, arguments);\n
+      return wrapJioCall(this, \'gettAttachment\', arguments);\n
     })\n
     .declareMethod(\'putAttachment\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.putAttachment.apply(storage, arguments);\n
+      return wrapJioCall(this, \'putAttachment\', arguments);\n
     })\n
     .declareMethod(\'removeAttachment\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.removeAttachment.apply(storage, arguments);\n
+      return wrapJioCall(this, \'removeAttachment\', arguments);\n
     })\n
     .declareMethod(\'repair\', function () {\n
-      var gadget = this,\n
-        storage = gadget.state_parameter_dict.jio_storage;\n
-      return storage.repair.apply(storage, arguments)\n
-        .push(undefined, function (error) {\n
-          if (error instanceof XMLHttpRequestProgressEvent &&\n
-              error.currentTarget.status === 401 &&\n
-              gadget.state_parameter_dict.jio_storage_name === "ERP5") {\n
-            return {\n
-              redirect: {\n
-                page: "login"\n
-              }\n
-            };\n
-          }\n
-          throw error;\n
-        });\n
+      return wrapJioCall(this, \'repair\', arguments);\n
     });\n
 \n
 }(window, rJS, jIO));
@@ -313,7 +318,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -327,7 +332,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.63008.32756.3891</string> </value>
+                <value> <string>947.54207.48571.57002</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -345,7 +350,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443118127.75</float>
+                        <float>1450281591.67</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
