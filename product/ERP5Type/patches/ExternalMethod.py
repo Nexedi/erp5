@@ -13,6 +13,13 @@
 
 from inspect import getargs
 from Products.ExternalMethod.ExternalMethod import *
+from AccessControl import ModuleSecurityInfo
+from AccessControl.class_init import InitializeClass
+from Acquisition import aq_parent
+from Products.ERP5Type.patches.PythonScript import _guard_form, \
+     _guard_manage_options, checkGuard, getGuard, manage_guardForm, \
+     manage_setGuard
+from zExceptions import Forbidden
 
 if 1:
     def getFunction(self, reload=False, f=None):
@@ -74,6 +81,7 @@ if 1:
         first argument.
 
         Monkey patches:
+        - check guard against context, if guard exists.
         - call ZODB Component Extension, by trying first to import ZODB
           Component Extension if available, otherwise fallback on filesystem
           Extension
@@ -81,6 +89,11 @@ if 1:
         - fix magic "self" argument when positional arguments get their values
           from kw.
         """
+        guard = getattr(self, 'guard', None)
+        if guard is not None:
+            if not checkGuard(guard, aq_parent(self)):
+                raise Forbidden, 'Calling %s %s is denied by Guard.' % (self.meta_type, self.id)
+
         import erp5.component.extension
         component_module = erp5.component.extension.find_load_module(self._module)
         if component_module is not None:
@@ -133,3 +146,18 @@ if 1:
             finally: tb=None
 
     ExternalMethod.__call__ = __call__
+
+security = ModuleSecurityInfo('Products.ExternalMethod.ExternalMethod.ExternalMethod')
+
+ExternalMethod.manage_options += _guard_manage_options
+ExternalMethod._guard_form = _guard_form
+
+ExternalMethod.manage_guardForm = manage_guardForm
+security.declareProtected(view_management_screens, 'manage_guardForm')
+
+ExternalMethod.getGuard = getGuard
+
+ExternalMethod.manage_setGuard = manage_setGuard
+security.declareProtected(change_external_methods, 'manage_setGuard')
+
+InitializeClass(ExternalMethod)

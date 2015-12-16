@@ -16,6 +16,7 @@ from Products.PythonScripts.PythonScript import PythonScript
 from App.special_dtml import DTMLFile
 from Products.ERP5Type import _dtmldir
 from AccessControl import ModuleSecurityInfo, getSecurityManager
+from AccessControl.class_init import InitializeClass
 from OFS.misc_ import p_
 from App.ImageFile import ImageFile
 from Acquisition import aq_base, aq_parent
@@ -58,14 +59,17 @@ PythonScript.manage_editForm = manage_editForm
 
 security = ModuleSecurityInfo('Products.PythonScripts.PythonScript.PythonScript')
 
-PythonScript.manage_options += (
+_guard_manage_options = (
   {
     'label':'Guard',
     'action':'manage_guardForm',
   },
 )
-PythonScript._guard_form = DTMLFile(
+PythonScript.manage_options += _guard_manage_options
+
+_guard_form = DTMLFile(
   'editGuardForm', _dtmldir)
+PythonScript._guard_form = _guard_form
 
 def manage_guardForm(self, REQUEST, manage_tabs_message=None):
   '''
@@ -157,3 +161,5 @@ def _exec(self, *args):
   # PATCH END
   return PythonScript_exec(self, *args)
 PythonScript._exec = _exec
+
+InitializeClass(PythonScript)
