@@ -10,13 +10,13 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-from Products.CMFCore.utils import _checkPermission
 from Products.DCWorkflow.Guard import Guard
 from Products.PythonScripts.PythonScript import PythonScript
 from App.special_dtml import DTMLFile
 from Products.ERP5Type import _dtmldir
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.class_init import InitializeClass
+from AccessControl.PermissionRole import rolesForPermissionOn
 from OFS.misc_ import p_
 from App.ImageFile import ImageFile
 from Acquisition import aq_base, aq_parent
@@ -109,27 +109,32 @@ def checkGuard(guard, ob):
   # returns 1 if guard passes against ob, else 0.
   # TODO : implement TALES evaluation by defining an appropriate
   # context.
-  sm = None
+  u_roles = None
+  def getRoles():
+    sm = getSecurityManager()
+    u = sm.getUser()
+    stack = sm._context.stack
+    if stack and len(stack) > 1:
+      eo = stack[-2] # -1 is the current script.
+      proxy_roles = getattr(eo, '_proxy_roles', None)
+      if proxy_roles:
+        roles = proxy_roles
+        return proxy_roles
+    roles = u.getRolesInContext(ob)
+    return roles
   if guard.permissions:
+    # Require at least one role for required roles for the given permission.
+    if u_roles is None:
+      u_roles = getRoles()
     for p in guard.permissions:
-      if _checkPermission(p, ob):
+      if set(rolesForPermissionOn(p, ob)).intersection(u_roles):
         break
-      else:
-        return 0
+    else:
+      return 0
   if guard.roles:
-    if sm is None:
-      sm = getSecurityManager()
-      u = sm.getUser()
-    def getRoles():
-      stack = sm._context.stack
-      if stack and len(stack) > 1:
-        eo = stack[-2] # -1 is the current script.
-        proxy_roles = getattr(eo, '_proxy_roles', None)
-        if proxy_roles:
-          return proxy_roles
-      return u.getRolesInContext(ob)
     # Require at least one of the given roles.
-    u_roles = getRoles()
+    if u_roles is None:
+      u_roles = getRoles()
     for role in guard.roles:
       if role in u_roles:
         break
@@ -137,9 +142,8 @@ def checkGuard(guard, ob):
       return 0
   if guard.groups:
     # Require at least one of the specified groups.
-    if sm is None:
-      sm = getSecurityManager()
-      u = sm.getUser()
+    sm = getSecurityManager()
+    u = sm.getUser()
     b = aq_base( u )
     if hasattr( b, 'getGroupsInContext' ):
       u_groups = u.getGroupsInContext( ob )
