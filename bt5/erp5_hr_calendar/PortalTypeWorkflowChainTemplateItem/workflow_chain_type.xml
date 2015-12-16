@@ -1,0 +1,18 @@
+<workflow_chain>
+ <chain>
+  <type>Public Holiday</type>
+  <workflow>edit_workflow, hr_calendar_interaction_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Public Holiday Line</type>
+  <workflow>edit_workflow, hr_calendar_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Time Table</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Time Table Line</type>
+  <workflow>edit_workflow, hr_calendar_interaction_workflow</workflow>
+ </chain>
+</workflow_chain>

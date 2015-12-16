@@ -1,0 +1,9 @@
+Public Holiday Line | edit_workflow
+Public Holiday Line | hr_calendar_interaction_workflow
+Public Holiday | edit_workflow
+Public Holiday | hr_calendar_interaction_workflow
+Public Holiday | validation_workflow
+Time Table Line | edit_workflow
+Time Table Line | hr_calendar_interaction_workflow
+Time Table | edit_workflow
+Time Table | validation_workflow

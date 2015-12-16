@@ -1,0 +1,14 @@
+<base_category_list>
+ <portal_type id="Public Holiday">
+  <item>region</item>
+ </portal_type>
+ <portal_type id="Public Holiday Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Time Table">
+  <item>region</item>
+ </portal_type>
+ <portal_type id="Time Table Module">
+  <item>business_application</item>
+ </portal_type>
+</base_category_list>

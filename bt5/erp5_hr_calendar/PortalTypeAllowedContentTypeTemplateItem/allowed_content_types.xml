@@ -1,0 +1,14 @@
+<allowed_content_type_list>
+ <portal_type id="Public Holiday">
+  <item>Public Holiday Line</item>
+ </portal_type>
+ <portal_type id="Public Holiday Module">
+  <item>Public Holiday</item>
+ </portal_type>
+ <portal_type id="Time Table">
+  <item>Time Table Line</item>
+ </portal_type>
+ <portal_type id="Time Table Module">
+  <item>Time Table</item>
+ </portal_type>
+</allowed_content_type_list>

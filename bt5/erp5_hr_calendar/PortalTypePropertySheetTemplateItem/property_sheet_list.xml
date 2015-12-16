@@ -1,0 +1,18 @@
+<property_sheet_list>
+ <portal_type id="Public Holiday">
+  <item>DublinCore</item>
+ </portal_type>
+ <portal_type id="Public Holiday Line">
+  <item>Amount</item>
+  <item>DublinCore</item>
+  <item>Task</item>
+ </portal_type>
+ <portal_type id="Time Table">
+  <item>DublinCore</item>
+ </portal_type>
+ <portal_type id="Time Table Line">
+  <item>Amount</item>
+  <item>SortIndex</item>
+  <item>TimeTableLine</item>
+ </portal_type>
+</property_sheet_list>
