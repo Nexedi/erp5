@@ -173,14 +173,20 @@
     })\n
 \n
     .declareMethod(\'redirect\', function (options) {\n
-      return this.getCommandUrlFor(options)\n
-        .push(function (hash) {\n
-          window.location.replace(hash);\n
-          // prevent returning unexpected response\n
-          // wait for the hash change to occur\n
-          // fail if nothing happens\n
-          return RSVP.timeout(REDIRECT_TIMEOUT);\n
-        });\n
+      if (options !== undefined && options.toExternal) {\n
+        window.location.replace(options.url);\n
+        return RSVP.timeout(REDIRECT_TIMEOUT); // timeout if not redirected\n
+      }\n
+      else {\n
+        return this.getCommandUrlFor(options)\n
+          .push(function (hash) {\n
+            window.location.replace(hash);\n
+            // prevent returning unexpected response\n
+            // wait for the hash change to occur\n
+            // fail if nothing happens\n
+            return RSVP.timeout(REDIRECT_TIMEOUT);\n
+          });\n
+      }\n
     })\n
 \n
     .declareMethod(\'route\', function (options) {\n
@@ -374,7 +380,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.59105.23936.34252</string> </value>
+                <value> <string>947.54085.31754.65399</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -392,7 +398,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446740807.62</float>
+                        <float>1450274255.9</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -144,7 +144,8 @@
             type: "dav",\n
             url: gadget.props.element.querySelector("input[name=\'dav_url\']").value,\n
             basic_login: btoa(gadget.props.element.querySelector("input[name=\'dav_username\']").value\n
-              + \':\' + gadget.props.element.querySelector("input[name=\'dav_password\']").value)\n
+              + \':\' + gadget.props.element.querySelector("input[name=\'dav_password\']").value),\n
+            with_credentials: true\n
           }\n
         }\n
       }\n
@@ -355,7 +356,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.59103.36885.15735</string> </value>
+                <value> <string>947.53845.25131.55500</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -373,7 +374,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446741080.69</float>
+                        <float>1450259852.52</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
