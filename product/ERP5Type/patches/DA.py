@@ -21,12 +21,17 @@ from Shared.DC.ZRDB.DA import DA, DatabaseError, SQLMethodTracebackSupplement
 from Shared.DC.ZRDB import RDB
 from Shared.DC.ZRDB.Results import Results
 from App.Extensions import getBrain
-from AccessControl import getSecurityManager
+from AccessControl import ClassSecurityInfo, getSecurityManager 
+from Products.ERP5Type.Globals import InitializeClass
 from Acquisition import aq_base, aq_parent
 from zLOG import LOG, INFO, ERROR
 from string import find
 from cStringIO import StringIO
+from Products.ERP5Type import Permissions
 import sys
+
+security = ClassSecurityInfo()
+DA.security = security
 
 def DA_fromFile(self, filename):
   """
@@ -261,7 +266,9 @@ def DA_upgradeSchema(self, connection_id=None, create_if_not_exists=False,
                        initialize, src__)
 
 DA.__call__ = DA__call__
+security.declarePrivate('fromFile')
 DA.fromFile = DA_fromFile
+security.declarePrivate('fromText')
 DA.fromText = DA_fromText
 DA.manage_FTPget = DA_manage_FTPget
 DA.PUT = DA_PUT
@@ -297,3 +304,4 @@ if hasattr(Shared.DC.ZRDB.DA, 'getObject'):
 
 import App.Extensions
 App.Extensions.getObject = getObjectMeta(App.Extensions.getObject)
+InitializeClass(DA)

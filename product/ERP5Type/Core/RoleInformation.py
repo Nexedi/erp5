@@ -76,6 +76,7 @@ class RoleInformation(XMLObject):
       value = value and Expression(value) or None
     self._baseSetCondition(value)
 
+  security.declareProtected(AccessContentsInformation, 'getCondition')
   def getCondition(self):
     """Overridden getter for 'condition' to clean null values"""
     if getattr(aq_base(self), 'condition', None) == '':

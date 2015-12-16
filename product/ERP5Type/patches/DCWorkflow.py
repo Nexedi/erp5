@@ -16,7 +16,7 @@
 # Optimized rendering of global actions (cache)
 
 from Products.ERP5Type.Globals import DTMLFile
-from Products.ERP5Type import _dtmldir
+from Products.ERP5Type import Permissions, _dtmldir
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition, StateChangeInfo, createExprContext
 from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved, aq_parent, aq_inner
 from Products.DCWorkflow import DCWorkflow
@@ -110,6 +110,7 @@ def Guard_checkWithoutRoles(self, sm, wf_def, ob, **kw):
             return 0
     return 1
 
+DCWorkflowDefinition.security = ClassSecurityInfo()
 
 def DCWorkflowDefinition_listGlobalActions(self, info):
     '''
@@ -336,6 +337,7 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
     return None
   return variable_match_dict
 
+DCWorkflowDefinition.security.declarePrivate('getWorklistVariableMatchDict')
 DCWorkflowDefinition.getWorklistVariableMatchDict = DCWorkflowDefinition_getWorklistVariableMatchDict
 
 class ValidationFailed(Exception):
@@ -699,6 +701,8 @@ def getPortalTypeListForWorkflow(self):
       result.append(portal_type)
   return result
 
+DCWorkflowDefinition.security.declareProtected(Permissions.AccessContentsInformation,
+                                               'getPortalTypeListForWorkflow')
 DCWorkflowDefinition.getPortalTypeListForWorkflow = getPortalTypeListForWorkflow
 
 def DCWorkflowDefinition_getFutureStateSet(self, state, ignore=(),
@@ -719,8 +723,10 @@ def DCWorkflowDefinition_getFutureStateSet(self, state, ignore=(),
       self.getFutureStateSet(state, ignore, _future_state_set)
   return _future_state_set
 
+DCWorkflowDefinition.security.declarePrivate('getFutureStateSet')
 DCWorkflowDefinition.getFutureStateSet = DCWorkflowDefinition_getFutureStateSet
 
+InitializeClass(DCWorkflowDefinition)
 
 # This patch allows to use workflowmethod as an after_script
 # However, the right way of doing would be to have a combined state of TRIGGER_USER_ACTION and TRIGGER_WORKFLOW_METHOD

@@ -31,6 +31,7 @@ import warnings
 from contextlib import contextmanager
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from ActivityRuntimeEnvironment import getActivityRuntimeEnvironment
 from AccessControl import Unauthorized
@@ -58,6 +59,7 @@ class ActiveObject(ExtensionClass.Base):
 
   security = ClassSecurityInfo()
 
+  security.declarePublic('activate')
   def activate(self, activity=DEFAULT_ACTIVITY, active_process=None,
                activate_kw=None, REQUEST=None, **kw):
     """Returns an active wrapper for this object.
@@ -207,3 +209,5 @@ class ActiveObject(ExtensionClass.Base):
 
   def getActivityRuntimeEnvironment(self):
     return getActivityRuntimeEnvironment()
+
+InitializeClass(ActiveObject)

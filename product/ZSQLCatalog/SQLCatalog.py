@@ -2015,6 +2015,7 @@ class Catalog(Folder,
     ) + list(self.sql_catalog_related_keys)
 
   # Compatibililty SQL Sql
+  security.declarePrivate('getSqlCatalogRelatedKeyList')
   getSqlCatalogRelatedKeyList = getSQLCatalogRelatedKeyList
 
   security.declarePrivate('getSQLCatalogScriptableKeyList')

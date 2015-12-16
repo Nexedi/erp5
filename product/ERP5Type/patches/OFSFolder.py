@@ -12,7 +12,10 @@
 #
 ##############################################################################
 
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type.Globals import InitializeClass
 from OFS.Folder import Folder
+from Products.ERP5Type import Permissions
 
 """
   This patch modifies OFS.Folder._setOb to update portal_skins cache when
@@ -55,3 +58,8 @@ def Folder_isERP5SitePresent(self):
   return len(self.objectIds("ERP5 Site")) > 0
 
 Folder.isERP5SitePresent = Folder_isERP5SitePresent
+
+security = ClassSecurityInfo()
+security.declareProtected(Permissions.ManagePortal, 'isERP5SitePresent')
+Folder.security = security
+InitializeClass(Folder)

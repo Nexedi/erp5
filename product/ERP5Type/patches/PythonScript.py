@@ -15,12 +15,15 @@ from Products.DCWorkflow.Guard import Guard
 from Products.PythonScripts.PythonScript import PythonScript
 from App.special_dtml import DTMLFile
 from Products.ERP5Type import _dtmldir
-from AccessControl import ModuleSecurityInfo, getSecurityManager
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.class_init import InitializeClass
 from OFS.misc_ import p_
 from App.ImageFile import ImageFile
 from Acquisition import aq_base, aq_parent
 from zExceptions import Forbidden
+
+security = ClassSecurityInfo()
+PythonScript.security = security
 
 def haveProxyRole(self):
   """if a script has proxy role, return True"""
@@ -41,7 +44,9 @@ pyscript_proxyrole = ImageFile('pyscript_proxyrole.gif', globals())
 #
 # Add proxy role icon in ZMI
 #
+security.declarePrivate('haveProxyRole')
 PythonScript.haveProxyRole = haveProxyRole
+
 PythonScript.om_icons = om_icons
 p_.PythonScript_ProxyRole_icon = pyscript_proxyrole
 
@@ -56,8 +61,6 @@ PythonScript.manage = manage_editForm
 PythonScript.manage_main = manage_editForm
 PythonScript.manage_editDocument = manage_editForm
 PythonScript.manage_editForm = manage_editForm
-
-security = ModuleSecurityInfo('Products.PythonScripts.PythonScript.PythonScript')
 
 _guard_manage_options = (
   {

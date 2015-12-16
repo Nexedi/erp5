@@ -75,7 +75,7 @@ class LocalRoleAssignorMixIn(object):
 
     zope.interface.implements(interfaces.ILocalRoleAssignor)
 
-    security.declarePrivate('updateLocalRolesOnObject')
+    security.declarePrivate('updateLocalRolesOnDocument')
     @UnrestrictedMethod
     def updateLocalRolesOnDocument(self, ob, user_name=None, reindex=True, activate_kw=()):
       """
@@ -208,6 +208,8 @@ class LocalRoleAssignorMixIn(object):
         setattr(role, k, v)
       role.uid = None
       return self[self._setObject(role.id, role, set_owner=0)]
+
+InitializeClass(LocalRoleAssignorMixIn)
 
 class ERP5TypeInformation(XMLObject,
                           FactoryTypeInformation,

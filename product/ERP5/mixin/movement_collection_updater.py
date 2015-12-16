@@ -28,7 +28,7 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from AccessControl.class_init import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5.MovementCollectionDiff import (
   MovementCollectionDiff, _getPropertyAndCategoryList)
@@ -52,6 +52,8 @@ class MovementCollectionUpdaterMixin:
   zope.interface.implements(interfaces.IMovementCollectionUpdater,)
 
   # Implementation of IMovementCollectionUpdater
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getMovementCollectionDiff')
   def getMovementCollectionDiff(self, context, rounding=False,
                                 movement_generator=None):
     """
@@ -147,6 +149,8 @@ class MovementCollectionUpdaterMixin:
 
     return movement_collection_diff
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'updateMovementCollection')
   def updateMovementCollection(self, context, rounding=False,
                                movement_generator=None):
     """

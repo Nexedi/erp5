@@ -29,7 +29,7 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from AccessControl.class_init import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.UnrestrictedMethod import super_user
 from Products.ERP5Type.XMLObject import XMLObject
@@ -58,6 +58,8 @@ class SolverMixin(object):
   def getPortalTypeValue(self):
     return self.getPortalObject().portal_solvers._getOb(self.getPortalType())
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'searchDeliverySolverList')
   def searchDeliverySolverList(self, **kw):
     """
     this method returns a list of delivery solvers
@@ -69,6 +71,8 @@ class SolverMixin(object):
     target_solver_type = self.getPortalTypeValue()
     solver_list = target_solver_type.getDeliverySolverValueList()
     return solver_list
+
+InitializeClass(SolverMixin)
 
 class ConfigurablePropertySolverMixin(SolverMixin,
                                       ConfigurableMixin,
@@ -118,4 +122,4 @@ class ConfigurablePropertySolverMixin(SolverMixin,
       tested_property_list = portal_type.getTestedPropertyList()
     return tested_property_list
 
-InitializeClass(SolverMixin)
+InitializeClass(ConfigurablePropertySolverMixin)

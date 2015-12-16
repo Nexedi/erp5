@@ -4804,6 +4804,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
           self.workflow_history[
                             'business_template_installation_workflow'] = None
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getShortRevision')
     def getShortRevision(self):
       """Returned a shortened revision"""
       r = self.getRevision()
@@ -4962,12 +4964,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return self.portal_templates.publish(self, url, username=username,
                                            password=password)
 
+    security.declareProtected(Permissions.ManagePortal, 'update')
     def update(self):
       """
         Update template: download new template definition
       """
       return self.portal_templates.update(self)
 
+    security.declareProtected(Permissions.ManagePortal, 'isCatalogUpdatable')
     def isCatalogUpdatable(self):
       """
       Return if catalog will be updated or not by business template installation
@@ -4985,6 +4989,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
               return True
       return False
 
+    security.declareProtected(Permissions.ManagePortal, 'preinstall')
     def preinstall(self, check_dependencies=1, **kw):
       """
         Return the list of modified/new/removed object between a Business Template
@@ -5243,6 +5248,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         result = tuple(result)
       return result
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateCatalogMethodIdList')
     def getTemplateCatalogMethodIdList(self):
       """
       We have to set this method because we want an
@@ -5250,6 +5256,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_catalog_method_id')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateBaseCategoryList')
     def getTemplateBaseCategoryList(self):
       """
       We have to set this method because we want an
@@ -5257,6 +5264,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_base_category')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateWorkflowIdList')
     def getTemplateWorkflowIdList(self):
       """
       We have to set this method because we want an
@@ -5264,6 +5272,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_workflow_id')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeIdList')
     def getTemplatePortalTypeIdList(self):
       """
       We have to set this method because we want an
@@ -5271,6 +5280,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_portal_type_id')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeWorkflowChainList')
     def getTemplatePortalTypeWorkflowChainList(self):
       """
       We have to set this method because we want an
@@ -5278,6 +5288,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_portal_type_workflow_chain')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePathList')
     def getTemplatePathList(self):
       """
       We have to set this method because we want an
@@ -5285,6 +5296,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_path')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePreferenceList')
     def getTemplatePreferenceList(self):
       """
       We have to set this method because we want an
@@ -5292,6 +5304,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_preference')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeAllowedContentTypeList')
     def getTemplatePortalTypeAllowedContentTypeList(self):
       """
       We have to set this method because we want an
@@ -5299,6 +5312,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_portal_type_allowed_content_type')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeHiddenContentTypeList')
     def getTemplatePortalTypeHiddenContentTypeList(self):
       """
       We have to set this method because we want an
@@ -5306,6 +5320,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_portal_type_hidden_content_type')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypePropertySheetList')
     def getTemplatePortalTypePropertySheetList(self):
       """
       We have to set this method because we want an
@@ -5313,6 +5328,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_portal_type_property_sheet')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeBaseCategoryList')
     def getTemplatePortalTypeBaseCategoryList(self):
       """
       We have to set this method because we want an
@@ -5320,6 +5336,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_portal_type_base_category')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateActionPathList')
     def getTemplateActionPathList(self):
       """
       We have to set this method because we want an
@@ -5327,6 +5344,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_action_path')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeRoleList')
     def getTemplatePortalTypeRoleList(self):
       """
       We have to set this method because we want an
@@ -5334,6 +5352,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_portal_type_role')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateLocalRoleList')
     def getTemplateLocalRoleList(self):
       """
       We have to set this method because we want an
@@ -5341,6 +5360,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_local_role')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateSkinIdList')
     def getTemplateSkinIdList(self):
       """
       We have to set this method because we want an
@@ -5348,6 +5368,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_skin_id')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateRegisteredSkinSelectionList')
     def getTemplateRegisteredSkinSelectionList(self):
       """
       We have to set this method because we want an
@@ -5355,6 +5376,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_registered_skin_selection')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateRegisteredVersionPrioritySelectionList')
     def getTemplateRegisteredVersionPrioritySelectionList(self):
       """
       We have to set this method because we want an
@@ -5367,6 +5389,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       except AttributeError:
         return ()
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateModuleIdList')
     def getTemplateModuleIdList(self):
       """
       We have to set this method because we want an
@@ -5374,6 +5397,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_module_id')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateMessageTranslationList')
     def getTemplateMessageTranslationList(self):
       """
       We have to set this method because we want an
@@ -5381,6 +5405,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_message_translation')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateToolIdList')
     def getTemplateToolIdList(self):
       """
       We have to set this method because we want an
@@ -5399,18 +5424,21 @@ Business Template is a set of definitions, such as skins, portal types and categ
           return True
       return False
 
+    security.declarePrivate('isKeepObject')
     def isKeepObject(self, path):
       """
       Return True if path is included in keep object list.
       """
       return self._isInKeepList(self.getTemplateKeepPathList(), path)
 
+    security.declarePrivate('isKeepWorkflowObject')
     def isKeepWorkflowObject(self, path):
       """
       Return True if path is included in keep workflow object list.
       """
       return self._isInKeepList(self.getTemplateKeepWorkflowPathList(), path)
 
+    security.declarePrivate('isKeepWorkflowObjectLastHistoryOnly')
     def isKeepWorkflowObjectLastHistoryOnly(self, path):
       """
       Return True if path is included in keep workflow last state only list
@@ -5418,6 +5446,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return self._isInKeepList(self.getTemplateKeepLastWorkflowHistoryOnlyPathList(),
                                 path)
 
+    security.declarePrivate('getExportPath')
     def getExportPath(self):
       preferences = self.getPortalObject().portal_preferences
       bt_name = self.getTitle()
@@ -5565,6 +5594,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       self._setRevision(bta.getRevision())
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getItemsList')
     def getItemsList(self):
       """Return list of items in business template
       """
@@ -5575,6 +5605,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           items_list.extend(item.getKeys())
       return items_list
 
+    security.declareProtected(Permissions.ManagePortal, 'checkDependencies')
     def checkDependencies(self):
       """
        Check if all the dependencies of the business template
@@ -5587,6 +5618,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           'Impossible to install %s, please install the following dependencies before: %s' \
           %(self.getTitle(), repr(missing_dep_list))
 
+    security.declareProtected(Permissions.ManagePortal, 'getMissingDependencyList')
     def getMissingDependencyList(self):
       """
       Retuns a list of missing dependencies.
@@ -5613,6 +5645,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
             missing_dep_list.append((dependency, version_restriction or ''))
       return [' '.join([y for y in x if y]) for x in missing_dep_list]
 
+    security.declareProtected(Permissions.ManagePortal, 'diffObjectAsHTML')
     def diffObjectAsHTML(self, REQUEST, **kw):
       """
         Convert diff into a HTML format before reply
@@ -5621,6 +5654,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return DiffFile(self.diffObject(REQUEST, **kw)).toHTML()
 
+    security.declareProtected(Permissions.ManagePortal, 'diffObject')
     def diffObject(self, REQUEST, **kw):
       """
         Make a diff between an object in the Business Template
@@ -5812,6 +5846,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return diff_msg
 
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalTypesProperties')
     def getPortalTypesProperties(self, **kw):
       """
       Fill field about properties for each portal type
@@ -5902,6 +5937,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self.setTemplateActionPathList(bt_action_list)
 
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'guessPortalTypes')
     def guessPortalTypes(self, **kw):
       """
       This method guesses portal types based on modules define in the Business Template
@@ -5972,6 +6009,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       setattr(self, 'template_portal_type_id', bt_portal_types_id_list)
       return
 
+    security.declarePrivate('clearPortalTypes')
     def clearPortalTypes(self, **kw):
       """
       clear id list register for portal types

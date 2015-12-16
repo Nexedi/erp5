@@ -1197,6 +1197,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       return md5(str(sorted(map(str, uid_list)))).hexdigest()
 
     # Related document searching
+    security.declarePublic('viewSearchRelatedDocumentDialog')
     def viewSearchRelatedDocumentDialog(self, index, form_id,
                                         REQUEST=None, sub_index=None, **kw):
       """
@@ -1433,6 +1434,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       tv['_user_id'] = user_id
       return user_id
 
+    security.declarePrivate('getTemporarySelectionDict')
     def getTemporarySelectionDict(self):
       """ Temporary selections are used in push/pop nested scope,
       to prevent from editting for stored selection in the scope.
@@ -1794,7 +1796,7 @@ for x in SelectionTool.__dict__:
   if x in method_id_filter_list:
     continue
   roles = getattr(SelectionTool, '%s__roles__' % x, None)
-  if roles is None:
+  if roles is None or roles == ():
     continue
   if roles.__name__ == ERP5Permissions.ManagePortal:
     continue

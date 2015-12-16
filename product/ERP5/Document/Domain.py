@@ -120,6 +120,8 @@ class Domain(Predicate, MetaNode, MetaResource):
     domain = self.newContent(id=id, portal_type='Domain', temp_object=1)
     return domain.__of__(self)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getChildDomainValueList')
   def getChildDomainValueList(self, parent = None, **kw):
     """
     Return child domain objects already present or me may generate
@@ -130,6 +132,8 @@ class Domain(Predicate, MetaNode, MetaResource):
     return self.portal_domains.getChildDomainValueList(parent, **kw)
 
   # Experimental - WebDAV browsing support - ask JPS
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'experimental_listDAVObjects')
   def experimental_listDAVObjects(self):
     result = self.objectValues(portal_type = self.getPortalType())
     result.extend(self.portal_catalog(selection_domain = self))

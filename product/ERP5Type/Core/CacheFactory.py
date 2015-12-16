@@ -61,6 +61,7 @@ class CacheFactory(XMLObject):
                     , PropertySheet.SortIndex
                     )
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCacheId')
   def getCacheId(self):
     """
       Get a common Cache Factory / Cache Bag ID in this
@@ -94,6 +95,7 @@ class CacheFactory(XMLObject):
     for cache_plugin in cache_plugin_list:
       cache_plugin.set(cache_id, value)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCachePluginList')
   def getCachePluginList(self, allowed_type_list=None):
     """ get ordered list of installed cache plugins in ZODB """
     if allowed_type_list is None:

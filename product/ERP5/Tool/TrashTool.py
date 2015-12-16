@@ -55,6 +55,7 @@ class TrashTool(BaseTool):
   security.declareProtected(Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainTrashTool', _dtmldir )
 
+  security.declarePrivate('backupObject')
   def backupObject(self, trashbin, container_path, object_id, save, **kw):
     """
       Backup an object in a trash bin
@@ -159,6 +160,7 @@ class TrashTool(BaseTool):
               obj._cleanup()
     return subobjects_dict
 
+  security.declarePrivate('newTrashBin')
   def newTrashBin(self, bt_title='trash', bt=None):
     """
       Create a new trash bin at upgrade of bt
@@ -191,6 +193,7 @@ class TrashTool(BaseTool):
                               )
     return trashbin
 
+  security.declareProtected(Permissions.ManagePortal, 'getTrashBinObjectsList')
   def getTrashBinObjectsList(self, trashbin):
     """
       Return a list of trash objects for a given trash bin

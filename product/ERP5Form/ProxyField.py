@@ -412,6 +412,7 @@ class ProxyField(ZMIField):
     """
     return self.getTemplateField().get_error_names()
 
+  security.declareProtected('Access contents information', 'getTemplateField')
   def getTemplateField(self, cache=True):
     """
     Return template field of the proxy field.
@@ -478,6 +479,7 @@ class ProxyField(ZMIField):
       self._setTemplateFieldCache(proxy_field)
     return proxy_field
 
+  security.declareProtected('Access contents information', 'getRecursiveTemplateField')
   def getRecursiveTemplateField(self):
     """
     Return template field of the proxy field.
@@ -639,6 +641,7 @@ class ProxyField(ZMIField):
         else:
           return None
 
+  security.declareProtected('Access contents information', 'getFieldValue')
   def getFieldValue(self, field, id, **kw):
     """
       Return a callable expression and cacheable boolean flag

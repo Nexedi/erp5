@@ -78,6 +78,7 @@ class ERP5GroupManager(BasePlugin):
   #
   #   IGroupsPlugin implementation
   #
+  security.declarePrivate('getGroupsForPrincipal')
   def getGroupsForPrincipal(self, principal, request=None):
     """ See IGroupsPlugin.
     """

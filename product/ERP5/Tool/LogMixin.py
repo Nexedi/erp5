@@ -28,6 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 
 # XXX This Mixin is not finished yet. Added as a reference for the
@@ -86,3 +87,5 @@ class LogMixin:
     """
     method = self.getTypeBasedMethod('parseLogLine')
     return method(log_name, log_line)
+
+InitializeClass(LogMixin)

@@ -313,7 +313,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     text = self.getSearchableText() # XXX getSearchableText or asText ?
     return self._getSearchableReferenceList(text)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSearchableReferenceList')
+  security.declareProtected(Permissions.AccessContentsInformation, 'isSearchableReference')
   def isSearchableReference(self):
     """
       Determine if current document's reference can be used for searching - i.e. follows

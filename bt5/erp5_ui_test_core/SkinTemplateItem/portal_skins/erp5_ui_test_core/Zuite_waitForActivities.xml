@@ -77,6 +77,14 @@ return \'Done.\'\n
             <value> <string>count = 1000</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Zuite_waitForActivities</string> </value>
         </item>

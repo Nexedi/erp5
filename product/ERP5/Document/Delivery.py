@@ -339,6 +339,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
          divergence_list.extend(simulation_movement.getDivergenceList())
       return divergence_list
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'updateCausalityState')
     @UnrestrictedMethod
     def updateCausalityState(self, solve_automatically=True, **kw):
       """
@@ -369,6 +370,8 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       if kw:
         super(Delivery, self).updateSimulation(**kw)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'splitAndDeferMovementList')
     def splitAndDeferMovementList(self, start_date=None, stop_date=None,
         movement_uid_list=[], delivery_solver=None,
         target_solver='CopyToTarget', delivery_builder=None):
@@ -757,6 +760,8 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       """
       pass
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getBuilderList')
     def getBuilderList(self):
       """Returns appropriate builder list."""
       return self._getTypeBasedMethod('getBuilderList')()
@@ -832,6 +837,8 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         result += movement.getDeliveryRelatedValueList()
       return result
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getDivergentTesterAndSimulationMovementList')
     def getDivergentTesterAndSimulationMovementList(self):
       """
       This method returns a list of (tester, simulation_movement) for each divergence.

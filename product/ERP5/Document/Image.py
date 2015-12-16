@@ -438,6 +438,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     File.PUT(self, REQUEST, RESPONSE)
     self._update_image_info()
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultImageQuality')
   def getDefaultImageQuality(self, format=None):
     """
     Get default image quality for a format.

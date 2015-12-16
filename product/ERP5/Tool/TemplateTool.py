@@ -113,6 +113,8 @@ class TemplateTool (BaseTool):
     security.declareProtected(Permissions.ManagePortal, 'manage_overview')
     manage_overview = DTMLFile('explainTemplateTool', _dtmldir)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getInstalledBusinessTemplate')
     def getInstalledBusinessTemplate(self, title, strict=False, **kw):
       """Returns an installed version of business template of a given title.
 
@@ -148,6 +150,8 @@ class TemplateTool (BaseTool):
               last_time = t
       return last_bt
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getInstalledBusinessTemplatesList')
     def getInstalledBusinessTemplatesList(self):
       """Deprecated.
       """
@@ -166,16 +170,22 @@ class TemplateTool (BaseTool):
           installed_bts.append(bt5)
       return installed_bts
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getInstalledBusinessTemplateList')
     def getInstalledBusinessTemplateList(self):
       """Get the list of installed business templates.
       """
       return self._getInstalledBusinessTemplateList(only_title=0)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getInstalledBusinessTemplateTitleList')
     def getInstalledBusinessTemplateTitleList(self):
       """Get the list of installed business templates.
       """
       return self._getInstalledBusinessTemplateList(only_title=1)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getInstalledBusinessTemplateRevision')
     def getInstalledBusinessTemplateRevision(self, title, **kw):
       """
         Return the revision of business template installed with the title
@@ -186,6 +196,8 @@ class TemplateTool (BaseTool):
         return bt.getRevision()
       return None
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getBuiltBusinessTemplateList')
     def getBuiltBusinessTemplateList(self):
       """Get the list of built and not installed business templates.
       """
@@ -283,6 +295,7 @@ class TemplateTool (BaseTool):
              content_type='application/x-erp5-business-template')
       business_template.setPublicationUrl(url)
 
+    security.declareProtected(Permissions.ManagePortal, 'update')
     def update(self, business_template):
       """
         Update an existing template from its publication URL.
@@ -371,6 +384,7 @@ class TemplateTool (BaseTool):
       bt.build(no_action=True)
       return bt
 
+    security.declareProtected('Import/Export objects', 'importBase64EncodedText')
     def importBase64EncodedText(self, file_data=None, id=None, REQUEST=None,
                                 batch_mode=False, **kw):
       """
@@ -380,6 +394,7 @@ class TemplateTool (BaseTool):
       return self.importFile(import_file = import_file, id = id, REQUEST = REQUEST,
                              batch_mode = batch_mode, **kw)
 
+    security.declareProtected('Import/Export objects', 'importFile')
     def importFile(self, import_file=None, id=None, REQUEST=None,
                    batch_mode=False, **kw):
       """
@@ -421,6 +436,7 @@ class TemplateTool (BaseTool):
       elif batch_mode:
         return bt
 
+    security.declareProtected(Permissions.ManagePortal, 'getDiffFilterScriptList')
     def getDiffFilterScriptList(self):
       """
       Return list of scripts usable to filter diff
@@ -438,12 +454,14 @@ class TemplateTool (BaseTool):
           LOG("TemplateTool", WARNING, "Unable to find %r script" % script_id)
       return script_list
 
+    security.declareProtected(Permissions.ManagePortal, 'getFilteredDiffAsHTML')
     def getFilteredDiffAsHTML(self, diff):
       """
       Return the diff filtered by python scripts into html format
       """
       return self.getFilteredDiff(diff).toHTML()
 
+    security.declareProtected(Permissions.ManagePortal, 'getFilteredDiff')
     def getFilteredDiff(self, diff):
       """
       Filter the diff using python scripts
@@ -461,6 +479,7 @@ class TemplateTool (BaseTool):
       # DiffFile does not provide yet such feature
       return diff_file_object
 
+    security.declareProtected(Permissions.ManagePortal, 'diffObjectAsHTML')
     def diffObjectAsHTML(self, REQUEST, **kw):
       """
         Convert diff into a HTML format before reply
@@ -469,6 +488,7 @@ class TemplateTool (BaseTool):
       """
       return DiffFile(self.diffObject(REQUEST, **kw)).toHTML()
 
+    security.declareProtected(Permissions.ManagePortal, 'diffObject')
     def diffObject(self, REQUEST, **kw):
       """
         Make diff between two objects, whose paths are stored in values bt1
@@ -612,6 +632,7 @@ class TemplateTool (BaseTool):
       """
       return b64encode(cPickle.dumps((repository, id)))
 
+    security.declarePublic('compareVersionStrings')
     def compareVersionStrings(self, version, comparing_string):
       """
        comparing_string is like "<= 0.2" | "operator version"
@@ -755,6 +776,8 @@ class TemplateTool (BaseTool):
         raise BusinessTemplateUnknownError, 'The Business Template %s could not be found on repository %s'%(bt[1], bt[0])
       return []
 
+    security.declareProtected(Permissions.ManagePortal,
+                              'findProviderInBTList')
     def findProviderInBTList(self, provider_list, bt_list):
       """
        Find one provider in provider_list which is present in
@@ -968,6 +991,7 @@ class TemplateTool (BaseTool):
       #LOG('getUpdatedRepositoryBusinessTemplateList', 0, 'kw = %r' % (kw,))
       return self.getRepositoryBusinessTemplateList(update_only=True, **kw)
 
+    security.declarePublic('compareVersions')
     def compareVersions(self, version1, version2):
       """
         Return negative if version1 < version2, 0 if version1 == version2,

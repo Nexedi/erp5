@@ -27,7 +27,7 @@
 #
 ##############################################################################
 from AccessControl import ClassSecurityInfo, Unauthorized
-from AccessControl.class_init import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import fill_args_from_request
 from Products.CMFCore.utils import getToolByName, _checkConditionalGET, _setCacheHeaders,\

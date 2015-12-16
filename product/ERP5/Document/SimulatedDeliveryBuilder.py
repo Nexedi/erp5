@@ -93,6 +93,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
                     , PropertySheet.DeliveryBuilder
                     )
 
+  security.declarePrivate('callBeforeBuildingScript')
   def callBeforeBuildingScript(self):  # XXX-JPS
     """
       Redefine this method, because it seems nothing interesting can be
@@ -100,6 +101,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
     """
     pass
 
+  security.declarePrivate('searchMovementList')
   @UnrestrictedMethod
   def searchMovementList(self, applied_rule_uid=None, **kw):
     """
@@ -189,6 +191,8 @@ class SimulatedDeliveryBuilder(BuilderMixin):
       delivery_relative_url,
       divergence_to_adopt_list=divergence_to_adopt_list)
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'solveDeliveryGroupDivergence')
   @UnrestrictedMethod
   def solveDeliveryGroupDivergence(self, delivery_relative_url,
                                    property_dict=None):
@@ -333,6 +337,8 @@ class SimulatedDeliveryBuilder(BuilderMixin):
 
     return delivery_list
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'solveDivergence')
   solveDivergence = UnrestrictedMethod(_solveDivergence)
 
   def _createDelivery(self, delivery_module, movement_list, activate_kw):

@@ -101,11 +101,15 @@ class TransformedResource(AmountGeneratorLine):
         value += delivery_amount.getConvertedQuantity()
       return value
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getBaseApplication')
     def getBaseApplication(self):
       """
       """
       return self.getBaseApplicationList()[0]
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getBaseApplicationList')
     def getBaseApplicationList(self):
       """
       """

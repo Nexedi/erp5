@@ -2495,6 +2495,7 @@ return 1
     kw['portal_type'] = "Spreadsheet"
     new_document = self.portal.Base_contribute(**kw)
     self.assertEqual(new_document.getValidationState(), 'draft')
+    self.tic()
 
     # make it read only
     document.manage_permission(Permissions.ModifyPortalContent, [])

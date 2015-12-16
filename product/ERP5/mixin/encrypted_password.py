@@ -31,7 +31,7 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from AccessControl.AuthEncoding import pw_encrypt, pw_validate
-from AccessControl.class_init import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Globals import PersistentMapping
@@ -55,6 +55,7 @@ class EncryptedPasswordMixin:
       return pw_validate(self.getPassword(), value)
     return False
 
+  security.declareProtected(Permissions.SetOwnPassword, 'checkPasswordValueAcceptable')
   def checkPasswordValueAcceptable(self, value):
     """
     Check the password. This method is defined explicitly, because:

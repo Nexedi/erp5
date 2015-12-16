@@ -33,7 +33,7 @@ import string
 
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
-from AccessControl.class_init import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from OFS.Image import Pdata, Image as OFSImage

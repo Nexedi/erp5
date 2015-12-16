@@ -56,7 +56,9 @@ class BudgetModel(Predicate):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
+  
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getCellRangeForBudgetLine')
   def getCellRangeForBudgetLine(self, budget_line, matrixbox=0):
     """Return the cell range to use for the budget.
     """
@@ -74,6 +76,8 @@ class BudgetModel(Predicate):
         cell_range.extend(variation_cell_range)
     return cell_range
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getConsumptionCellRangeForBudgetLine')
   def getConsumptionCellRangeForBudgetLine(self, budget_line, matrixbox=0, engaged_budget=False):
     """Return the cell range to use for the budget consumption.
 
@@ -94,6 +98,8 @@ class BudgetModel(Predicate):
         cell_range.extend(variation_cell_range)
     return cell_range
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getInventoryQueryDict')
   def getInventoryQueryDict(self, budget_cell):
     """Returns the query dict to pass to simulation query for a budget cell
     """
@@ -112,6 +118,8 @@ class BudgetModel(Predicate):
       query_dict.setdefault('at_date', start_date_range_max.latestTime())
     return query_dict
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getInventoryListQueryDict')
   def getInventoryListQueryDict(self, budget_line):
     """Returns the query dict to pass to simulation query for a budget line
     """
@@ -154,7 +162,9 @@ class BudgetModel(Predicate):
       if key:
         cell_key += (key,)
     return cell_key
-
+    
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'asBudgetPredicate')
   def asBudgetPredicate(self):
     " "
     # XXX predicate for line / cell ?

@@ -78,6 +78,7 @@ class SolverProcess(XMLObject, ActiveProcess):
                            )
 
   # Implementation
+  security.declareProtected(Permissions.ModifyPortalContent, 'buildTargetSolverList')
   @UnrestrictedMethod
   def buildTargetSolverList(self):
     """
@@ -176,6 +177,7 @@ class SolverProcess(XMLObject, ActiveProcess):
   # ISolver implementation
   # Solver Process Workflow Interface
   #  NOTE: how can we consider that a workflow defines or provides an interface ?
+  security.declareProtected(Permissions.ModifyPortalContent, 'solve')
   def solve(self, activate_kw=None):
     """
       Start solving
@@ -200,6 +202,8 @@ class SolverProcess(XMLObject, ActiveProcess):
           activate_kw=activate_kw)
 
   # API
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isSolverDecisionListConsistent')
   def isSolverDecisionListConsistent(self):
     """
     Returns True is the Solver Process decisions do not
@@ -208,6 +212,8 @@ class SolverProcess(XMLObject, ActiveProcess):
     this helps reducing CPU time.
     """
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'buildSolverDecisionList')
   def buildSolverDecisionList(self, delivery_or_movement=None):
     """
     Build (or rebuild) the solver decisions in the solver process

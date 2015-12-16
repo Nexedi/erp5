@@ -29,7 +29,7 @@
 
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
-from AccessControl.class_init import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Message import Message
 
@@ -237,7 +237,7 @@ class PeriodicityMixin:
     return [(Message(domain='erp5_ui', message=x), x) \
             for x in self.getWeekDayList()]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getWeekDayItemList')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getMonthItemList')
   def getMonthItemList(self):
     """
     returns something like [('January', 1), ('February', 2),...]

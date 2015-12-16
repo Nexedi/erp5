@@ -86,18 +86,21 @@ class ActionInformation(XMLObject):
   # XXX Following getAction/getCondition/getIcon are problably not useful
   #     because properties should already be cleaned up during migration
   #     or installation from BT.
+  security.declareProtected(AccessContentsInformation, 'getAction')
   def getAction(self):
     """Overridden getter for 'action' to clean null values"""
     if getattr(aq_base(self), 'action', None) == '':
       del self.action
     return self._baseGetAction()
 
+  security.declareProtected(AccessContentsInformation, 'getCondition')
   def getCondition(self):
     """Overridden getter for 'condition' to clean null values"""
     if getattr(aq_base(self), 'condition', None) == '':
       del self.condition
     return self._baseGetCondition()
 
+  security.declareProtected(AccessContentsInformation, 'getIcon')
   def getIcon(self):
     """Overridden getter for 'icon' to clean null values"""
     if getattr(aq_base(self), 'icon', None) == '':

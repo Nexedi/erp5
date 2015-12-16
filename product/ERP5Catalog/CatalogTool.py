@@ -314,6 +314,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                 , 'manage_schema')
     manage_schema = DTMLFile('dtml/manageSchema', globals())
 
+    security.declarePublic('getPreferredSQLCatalogId')
     def getPreferredSQLCatalogId(self, id=None):
       """
       Get the SQL Catalog from preference.
@@ -366,6 +367,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         return result
 
     # Schema Management
+    security.declareProtected(Permissions.ManagePortal, 'editColumn')
     def editColumn(self, column_id, sql_definition, method_id, default_value, REQUEST=None, RESPONSE=None):
       """
         Modifies a schema column of the catalog
@@ -379,17 +381,20 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         new_schema.append(new_c)
       self.setColumnList(new_schema)
 
+    security.declareProtected(Permissions.ManagePortal, 'setColumnList')
     def setColumnList(self, column_list):
       """
       """
       self._sql_schema = column_list
 
+    security.declarePublic('getColumnList')
     def getColumnList(self):
       """
       """
       if not hasattr(self, '_sql_schema'): self._sql_schema = []
       return self._sql_schema
 
+    security.declarePublic('getColumn')
     def getColumn(self, column_id):
       """
       """
@@ -398,6 +403,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           return c
       return None
 
+    security.declareProtected(Permissions.ManagePortal, 'editIndex')
     def editIndex(self, index_id, sql_definition, REQUEST=None, RESPONSE=None):
       """
         Modifies the schema of the catalog
@@ -411,17 +417,20 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         new_index.append(new_c)
       self.setIndexList(new_index)
 
+    security.declareProtected(Permissions.ManagePortal, 'setIndexList')
     def setIndexList(self, index_list):
       """
       """
       self._sql_index = index_list
 
+    security.declarePublic('getIndexList')
     def getIndexList(self):
       """
       """
       if not hasattr(self, '_sql_index'): self._sql_index = []
       return self._sql_index
 
+    security.declarePublic('getIndex')
     def getIndex(self, index_id):
       """
       """
@@ -512,6 +521,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       return allowedRolesAndUsers, role_column_dict, local_role_column_dict
 
+    security.declarePublic('getSecurityUidDictAndRoleColumnDict')
     def getSecurityUidDictAndRoleColumnDict(self, sql_catalog_id=None, local_roles=None):
       """
         Return a dict of local_roles_group_id -> security Uids and a

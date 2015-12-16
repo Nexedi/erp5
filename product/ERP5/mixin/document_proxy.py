@@ -28,7 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from AccessControl.class_init import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from warnings import warn
 
@@ -59,7 +59,7 @@ class DocumentProxyMixin:
     return self.getProxiedDocumentValue()
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getProxiedDocument' )
+                            'getProxiedDocumentValue')
   def getProxiedDocumentValue(self):
     """
     Try to retrieve the original document

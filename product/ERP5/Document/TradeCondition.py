@@ -104,6 +104,8 @@ class TradeCondition(MappedValue, AmountGeneratorMixin, VariatedMixin):
       return [x for x in context._findEffectiveSpecialiseValueList()
                 if x.getPortalType() in portal_type_set]
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getAggregatedAmountList')
     def getAggregatedAmountList(self, *args, **kw):
       """
       """

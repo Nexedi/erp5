@@ -90,6 +90,8 @@ class Url(Coordinate, UrlMixin):
     return ("http://www.erp5.org", "mailto:info@erp5.org")
 
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getUrlString')
   def getUrlString(self, default=_marker):
     """Fallback on coordinate_text
     """

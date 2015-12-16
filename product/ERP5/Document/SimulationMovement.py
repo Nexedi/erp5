@@ -722,6 +722,8 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
 
     return True
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSolverProcessValueList')
   def getSolverProcessValueList(self, movement=None, validation_state=None):
     """
     Returns the list of solver processes which are
@@ -736,6 +738,8 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     """
     raise NotImplementedError
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSolverDecisionValueList')
   def getSolverDecisionValueList(self, movement=None, validation_state=None):
     """
     Returns the list of solver decisions which apply
@@ -748,6 +752,8 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     """
     raise NotImplementedError
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSolvedPropertyApplicationValueList')
   def getSolvedPropertyApplicationValueList(self, movement=None, divergence_tester=None):
     """
     Returns the list of documents at which a given divergence resolution

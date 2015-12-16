@@ -808,6 +808,7 @@ class ActivityTool (Folder, UniqueObject):
         self.subscribe()
         Folder.inheritedAttribute('manage_afterAdd')(self, item, container)
 
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'getServerAddress')
     def getServerAddress(self):
         """
         Backward-compatibility code only.
@@ -828,6 +829,7 @@ class ActivityTool (Folder, UniqueObject):
             _server_address = '%s:%s' %(ip, port)
         return _server_address
 
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'getCurrentNode')
     def getCurrentNode(self):
         """ Return current node identifier """
         global currentNode
@@ -848,7 +850,7 @@ class ActivityTool (Folder, UniqueObject):
           currentNode = self.getServerAddress()
         return currentNode
 
-    security.declarePublic('getDistributingNode')
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'getDistributingNode')
     def getDistributingNode(self):
         """ Return the distributingNode """
         return self.distributingNode
@@ -977,6 +979,7 @@ class ActivityTool (Folder, UniqueObject):
           '/manageLoadBalancing?manage_tabs_message=' +
           urllib.quote(message))
 
+    security.declarePrivate('process_shutdown')
     def process_shutdown(self, phase, time_in_phase):
         """
           Prevent shutdown from happening while an activity queue is
@@ -989,6 +992,7 @@ class ActivityTool (Folder, UniqueObject):
           is_running_lock.acquire()
           LOG('CMFActivity', INFO, "Shutdown: Activities finished.")
 
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'process_timer')
     def process_timer(self, tick, interval, prev="", next=""):
       """
       Call distribute() if we are the Distributing Node and call tic()
@@ -1112,6 +1116,7 @@ class ActivityTool (Folder, UniqueObject):
           return True
       return False
 
+    security.declarePrivate('getActivityBuffer')
     def getActivityBuffer(self, create_if_not_found=True):
       """
         Get activtity buffer for this thread for this activity tool.

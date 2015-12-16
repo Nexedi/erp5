@@ -199,6 +199,7 @@ class CacheTool(BaseTool):
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache factory scope %s cleared.' %cache_factory_id)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCacheTotalMemorySize')
   def getCacheTotalMemorySize(self, REQUEST=None):
     """ Calculate total size of memory used for cache.
 

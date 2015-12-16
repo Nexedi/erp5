@@ -121,6 +121,8 @@ class BusinessLink(Path, Predicate):
     method = getattr(movement, method_id) # We wish to raise if it does not exist
     return method()
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getCompletionDate')
   def getCompletionDate(self, explanation):
     """Returns the date of completion of business path in the
     context of the explanation. The completion date of the Business
@@ -220,6 +222,7 @@ class BusinessLink(Path, Predicate):
         return False
     return True
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isDelivered')
   def isDelivered(self, explanation):
     """Returns True is all simulation movements related to this
     Business Link in the context of given explanation are built

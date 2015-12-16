@@ -184,6 +184,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         # return IDataStream object
         return result
 
+    security.declarePrivate('getRequirementListByMimetype')
     def getRequirementListByMimetype(self, origin_mimetype, target_mimetype):
       """Return requirements only if origin_mimetype
       and target_mimetype are matching transform policy
@@ -573,6 +574,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             REQUEST['RESPONSE'].redirect(self.absolute_url() +
                 '/manage_editTransformationPolicyForm')
 
+    security.declarePrivate('listPolicies')
     def listPolicies(self):
         """ return the list of defined policies
 
@@ -625,6 +627,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             return []
 
     # available mimetypes ####################################################
+    security.declarePrivate('listAvailableTextInputs')
     def listAvailableTextInputs(self):
         """Returns a list of mimetypes that can be used as input for textfields
         by building a list of the inputs beginning with "text/" of all

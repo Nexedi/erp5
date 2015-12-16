@@ -154,6 +154,8 @@ class UrlRegistryTool(BaseTool):
         url_list.append(url)
     return url_list
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'updateUrlRegistryTool')
   def updateUrlRegistryTool(self):
     """
     Fetch all document path, then call in activities

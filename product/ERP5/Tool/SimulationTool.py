@@ -126,18 +126,26 @@ class SimulationTool(BaseTool):
             ['Manager',])
       BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'solveDelivery')
     def solveDelivery(self, delivery, delivery_solver_name, target_solver_name,
                       additional_parameters=None, **kw):
       """
+        XXX obsoleted API
+
         Solves a delivery by calling first DeliverySolver, then TargetSolver
       """
       return self._solveMovementOrDelivery(delivery, delivery_solver_name,
           target_solver_name, delivery=1,
           additional_parameters=additional_parameters, **kw)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'solveMovement')
     def solveMovement(self, movement, delivery_solver_name, target_solver_name,
                       additional_parameters=None, **kw):
       """
+        XXX obsoleted API
+
         Solves a movement by calling first DeliverySolver, then TargetSolver
       """
       return self._solveMovementOrDelivery(movement, delivery_solver_name,
@@ -1396,6 +1404,8 @@ class SimulationTool(BaseTool):
             result = delta_result
       return result
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getInventoryCacheLag')
     def getInventoryCacheLag(self):
       """
       Returns a duration, in days, for stock cache management.

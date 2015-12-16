@@ -1007,6 +1007,8 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
 
       return insert_list
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getQuantityUnitDefinitionRatio')
     def getQuantityUnitDefinitionRatio(self, quantity_unit_value):
       """
       get the ratio used to define the quantity unit quantity_unit_value.

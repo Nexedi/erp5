@@ -383,28 +383,6 @@ class CopyContainer:
                            group_method_id='portal_catalog/uncatalogObjectList',
                            serialization_tag=self.getRootDocumentPath()).unindexObject(uid=uid)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'moveObject')
-  def moveObject(self, idxs=None):
-      """
-          Reindex the object in the portal catalog.
-          If idxs is present, only those indexes are reindexed.
-          The metadata is always updated.
-
-          Also update the modification date of the object,
-          unless specific indexes were requested.
-
-          Passes is_object_moved to catalog to force
-          reindexing without creating new uid
-      """
-      if idxs is None: idxs = []
-      if idxs == []:
-          # Update the modification date.
-          if getattr(aq_base(self), 'notifyModified', _marker) is not _marker:
-              self.notifyModified()
-      catalog = getattr(self.getPortalObject(), 'portal_catalog', None)
-      if catalog is not None:
-          catalog.moveObject(self, idxs=idxs)
-
   def _notifyOfCopyTo(self, container, op=0):
       """Overiden to track object cut and pastes, and update related
       content accordingly.

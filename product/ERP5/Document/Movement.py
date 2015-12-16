@@ -512,6 +512,8 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
         return True
     return False
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDivergenceList')
   def getDivergenceList(self):
     """
     Return a list of messages that contains the divergences

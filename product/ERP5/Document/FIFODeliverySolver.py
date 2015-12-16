@@ -57,6 +57,7 @@ class FIFODeliverySolver(XMLObject):
   zope.interface.implements(interfaces.IDeliverySolver,)
 
   # IDeliverySolver Implementation
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
   def getTotalQuantity(self):
     """
       Move this to mixin
@@ -66,6 +67,7 @@ class FIFODeliverySolver(XMLObject):
       total_quantity += movement.getQuantity()
     return total_quantity
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'setTotalQuantity')
   def setTotalQuantity(self, new_quantity, activate_kw=None):
     """
     """

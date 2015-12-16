@@ -355,12 +355,14 @@ class Predicate(XMLObject):
   security.declareProtected( Permissions.AccessContentsInformation, 'asSqlJoinExpression' )
   asSqlJoinExpression = asSQLJoinExpression
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'searchResults')
   def searchResults(self, **kw):
     """
     """
     portal_catalog = getToolByName(self, 'portal_catalog')
     return portal_catalog.searchResults(build_sql_query_method=self.buildSQLQuery,**kw)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'countResults')
   def countResults(self, REQUEST=None, used=None, **kw):
     """
     """
@@ -600,6 +602,7 @@ class Predicate(XMLObject):
   def _asPredicate(self):
     return self
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'searchPredicate')
   def searchPredicate(self, **kw):
     """
       Returns a list of documents matching the predicate

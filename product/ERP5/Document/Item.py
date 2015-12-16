@@ -70,6 +70,7 @@ class Item(XMLObject, Amount):
         """
         return XMLObject.generateNewId(self, id_group=id_group, default=default, method=method)
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
     def getPrice(self,context=None,**kw):
       """
         Get the Price in the context.
@@ -84,16 +85,15 @@ class Item(XMLObject, Amount):
         if resource is not None:
           local_price = resource.getPrice(self.asContext( context=context, **kw))
       return local_price
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'getRemainingQuantity')
+  
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getRemainingQuantity')
     def getRemainingQuantity(self):
         """
         Computes the quantity of an item minus quantity of all sub_items
         """
         sub_quantity = 0
-        sub_item_list = [document
-                         for document in self.objectValues()
-                         if document.isItem()]
-        for sub_item in sub_item_list :
-            sub_quantity += sub_item.getQuantity()
+        for sub_item in self.objectValues():
+            if sub_item.isItem():
+                sub_quantity += sub_item.getQuantity()
         return self.getQuantity() - sub_quantity

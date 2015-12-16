@@ -669,6 +669,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         self.title = title
         self.row_length = 4
 
+    security.declarePublic('all_meta_types')
     def all_meta_types(self):
         """Get all meta types addable to this field. The ZMI uses
         this method (original defined in ObjectManager).

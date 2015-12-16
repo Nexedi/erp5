@@ -37,6 +37,8 @@ import sys
 import unittest
 import ZODB
 import zLOG
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type.Globals import InitializeClass
 from App.config import getConfiguration
 from ZConfig.matcher import SectionValue
 from Zope2.Startup.datatypes import ZopeDatabase
@@ -67,6 +69,8 @@ class DummyMailHostMixin(object):
   _previous_message = ()
   _message_list = []
 
+  security = ClassSecurityInfo()
+
   @classmethod
   def _send(cls, mfrom, mto, messageText, immediate=False):
     """Record message in _last_message."""
@@ -84,6 +88,7 @@ class DummyMailHostMixin(object):
         message_text = part.get_payload(decode=1)
     return message_text
 
+  security.declarePrivate('getMessageList')
   @classmethod
   def getMessageList(cls, decode=True):
     """ Return message list"""
@@ -91,6 +96,7 @@ class DummyMailHostMixin(object):
       return [(m[0], m[1], cls._decodeMessage(m[2])) for m in cls._message_list]
     return cls._message_list
 
+  security.declarePrivate('getLastLog')
   @classmethod
   def getLastLog(cls):
     """ Return last message """
@@ -101,6 +107,8 @@ class DummyMailHostMixin(object):
     cls._last_message = ()
     cls._previous_message = ()
     cls._message_list = []
+
+InitializeClass(DummyMailHostMixin)
 
 class DummyMailHost(DummyMailHostMixin, MailHost):
   pass

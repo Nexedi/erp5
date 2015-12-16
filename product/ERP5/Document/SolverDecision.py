@@ -80,6 +80,8 @@ class SolverDecision(ConfigurableMixin, XMLObject):
   zope.interface.implements(interfaces.IConfigurable,
                            )
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDefaultConfigurationPropertyDict')
   def getDefaultConfigurationPropertyDict(self):
     """
     Returns a dictionary of default properties for specified
@@ -92,6 +94,8 @@ class SolverDecision(ConfigurableMixin, XMLObject):
     else:
       return solver_type.getDefaultConfigurationPropertyDict(self)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getConfigurationPropertyListDict')
   def getConfigurationPropertyListDict(self):
     """
     Returns a dictionary of possible values for specified
@@ -104,6 +108,8 @@ class SolverDecision(ConfigurableMixin, XMLObject):
     else:
       return solver_type.getConfigurationPropertyListDict(self)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'searchDeliverySolverList')
   def searchDeliverySolverList(self, **kw):
     """
     this method returns a list of delivery solvers, as predicates against
@@ -115,6 +121,8 @@ class SolverDecision(ConfigurableMixin, XMLObject):
     solver_list = target_solver_type.getDeliverySolverValueList()
     return filter(lambda x:x.test(self), solver_list)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getExplanationMessage')
   def getExplanationMessage(self, all=False):
     """
     Returns the HTML message that describes the detail of divergences to

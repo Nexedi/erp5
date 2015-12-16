@@ -710,6 +710,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
       return ret
 
     # Utilities
+    security.declareProtected('View', 'ErrorFields')
     def ErrorFields(self, validation_errors):
         """
             Create a dictionnary of validation_errors
@@ -788,6 +789,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
 
     manage_FTPput = PUT
 
+    security.declarePrivate('getSimilarSkinFolderIdList')
     def getSimilarSkinFolderIdList(self):
       """
       Find other skins id installed in the same time

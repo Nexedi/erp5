@@ -108,6 +108,8 @@ class Container(Movement, XMLObject):
       """
       return False
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getContainerText')
     def getContainerText(self):
       """
         Creates a unique string which allows to compare/hash two containers

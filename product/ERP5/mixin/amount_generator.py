@@ -30,7 +30,7 @@ from collections import defaultdict, deque
 import random
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from AccessControl.class_init import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Acquisition import aq_base, Implicit
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 from Products.ERP5Type import Permissions, interfaces

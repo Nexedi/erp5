@@ -28,6 +28,10 @@
 #
 ##############################################################################
 
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type import Permissions
+
 # Products.DCWorkflowGraph.config does not check the return value of
 # getenv('PATH'). This fails if PATH is not defined which is the case when
 # running ZEO with SlapOS for example. But, Products.DCWorkflowGraph.__init__
@@ -182,3 +186,9 @@ DCWorkflowGraph.getGraph = getGraph
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 DCWorkflowDefinition.getGraph = getGraph
 DCWorkflowDefinition.getPOT = DCWorkflowGraph.getPOT
+
+security = ClassSecurityInfo()
+security.declareProtected(Permissions.ManagePortal, 'getPOT')
+security.declareProtected(Permissions.ManagePortal, 'getGraph')
+DCWorkflowDefinition.security = security
+InitializeClass(DCWorkflowDefinition)

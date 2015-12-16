@@ -268,6 +268,7 @@ class Transform(SimpleItem):
         reload(m)
         self._tr_init()
 
+    security.declarePrivate('preprocess_param')
     def preprocess_param(self, kwargs):
         """ preprocess param fetched from an http post to handle optional dictionary
         """

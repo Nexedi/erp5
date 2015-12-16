@@ -28,7 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from AccessControl.class_init import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Core.Predicate import Predicate
@@ -150,6 +150,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
   def getRelatedBusinessLinkValueList(self):
     return self.getDeliveryBuilderRelatedValueList(portal_type='Business Link')
 
+  security.declarePrivate('callBeforeBuildingScript')
   def callBeforeBuildingScript(self):
     """
       Call a script on the module, for example, to remove some
@@ -284,8 +285,10 @@ class BuilderMixin(XMLObject, Amount, Predicate):
 
     return movement_list
 
+  security.declarePrivate('searchMovementList')
   searchMovementList = UnrestrictedMethod(_searchMovementList)
 
+  security.declarePrivate('collectMovement')
   def collectMovement(self, movement_list):
     """
       group movements in the way we want. Thanks to this method, we are able
@@ -366,6 +369,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                             for movement_group_node in movement_group_node_list]
     return instance, self._getSortedPropertyDict(property_dict_list)
 
+  security.declarePrivate('buildDeliveryList')
   @UnrestrictedMethod
   def buildDeliveryList(self, movement_group_node,
                         delivery_relative_url_list=None,
@@ -717,6 +721,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       # Update properties on object (quantity, price...)
       delivery_movement._edit(force_update=1, **property_dict)
 
+  security.declarePrivate('callAfterBuildingScript')
   @UnrestrictedMethod
   def callAfterBuildingScript(self, delivery_list, movement_list=(), **kw):
     """

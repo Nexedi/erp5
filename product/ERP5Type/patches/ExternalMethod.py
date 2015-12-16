@@ -14,7 +14,7 @@
 from inspect import getargs
 from Products.ExternalMethod.ExternalMethod import *
 from AccessControl import ModuleSecurityInfo
-from AccessControl.class_init import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Acquisition import aq_parent
 from Products.ERP5Type.patches.PythonScript import _guard_form, \
      _guard_manage_options, checkGuard, getGuard, manage_guardForm, \

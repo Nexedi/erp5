@@ -28,7 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from AccessControl.class_init import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import normaliseUrl
 
@@ -133,6 +133,8 @@ class UrlMixin:
     url_string = self.getUrlString()
     return '/'.join(url_string.split('/')[1:])
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'asNormalisedURL')
   def asNormalisedURL(self, base_url=None):
     """
     call normaliseUrl with raw url

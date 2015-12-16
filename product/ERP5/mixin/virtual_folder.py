@@ -31,7 +31,7 @@
 _marker=[]
 
 from AccessControl import ClassSecurityInfo
-from AccessControl.class_init import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 

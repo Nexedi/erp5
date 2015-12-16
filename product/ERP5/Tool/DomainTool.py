@@ -359,6 +359,8 @@ class DomainTool(BaseTool):
         return mapped_value
 
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getChildDomainValueList')
     def getChildDomainValueList(self, parent, **kw):
       """
       Return child domain objects already present adn thois generetaded dynamically
@@ -370,6 +372,8 @@ class DomainTool(BaseTool):
       return object_list
 
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getDomainByPath')
     def getDomainByPath(self, path, default=_MARKER):
       """
       Return the domain object for a given path

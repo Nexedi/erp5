@@ -61,6 +61,8 @@ class NodeBudgetVariation(BudgetVariation):
 
   # zope.interface.implements(BudgetVariation, )
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'asBudgetPredicate')
   def asBudgetPredicate(self):
     """This budget variation in a predicate
     """
@@ -87,6 +89,8 @@ class NodeBudgetVariation(BudgetVariation):
     node_title_method_id = self.getProperty('node_title_method_id', 'getTitle')
     return guarded_getattr(node, node_title_method_id)()
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getCellRangeForBudgetLine')
   def getCellRangeForBudgetLine(self, budget_line, matrixbox=0):
     """The cell range added by this variation
     """
@@ -103,6 +107,8 @@ class NodeBudgetVariation(BudgetVariation):
       return [[i for i in node_item_list if i[0] in variation_category_list]]
     return [[i[0] for i in node_item_list if i[0] in variation_category_list]]
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getConsumptionCellRangeForBudgetLine')
   def getConsumptionCellRangeForBudgetLine(self, budget_line, matrixbox=0, engaged_budget=False):
     """The cell range added by this variation for consumption
     """
@@ -136,6 +142,8 @@ class NodeBudgetVariation(BudgetVariation):
       return [[i for i in node_item_list if i[0] in used_node_item_set]]
     return [[i[0] for i in node_item_list if i[0] in used_node_item_set]]
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getInventoryQueryDict')
   def getInventoryQueryDict(self, budget_cell):
     """ Query dict to pass to simulation query
     """
@@ -218,6 +226,8 @@ class NodeBudgetVariation(BudgetVariation):
 
     return query_dict
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getInventoryListQueryDict')
   def getInventoryListQueryDict(self, budget_line):
     """Returns the query dict to pass to simulation query for a budget line
     """
@@ -309,6 +319,8 @@ class NodeBudgetVariation(BudgetVariation):
             self.getProperty('variation_base_category'),)
     return key
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getBudgetLineVariationRangeCategoryList')
   def getBudgetLineVariationRangeCategoryList(self, budget_line):
     """Returns the Variation Range Category List that can be applied to this
     budget line.
@@ -320,6 +332,8 @@ class NodeBudgetVariation(BudgetVariation):
     return [(self._getNodeTitle(node), '%s%s' % (prefix, node.getRelativeUrl()))
                 for node in self._getNodeList(budget_line)]
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getBudgetVariationRangeCategoryList')
   def getBudgetVariationRangeCategoryList(self, budget):
     """Returns the Variation Range Category List that can be applied to this
     budget.
@@ -331,6 +345,8 @@ class NodeBudgetVariation(BudgetVariation):
     return [(self._getNodeTitle(node), '%s%s' % (prefix, node.getRelativeUrl()))
                 for node in self._getNodeList(budget)]
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'initializeBudgetLine')
   def initializeBudgetLine(self, budget_line):
     """Initialize a budget line
     """
@@ -348,6 +364,8 @@ class NodeBudgetVariation(BudgetVariation):
       budget_line.setMembershipCriterionBaseCategoryList(
           budget_line_membership_criterion_base_category_list)
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'initializeBudget')
   def initializeBudget(self, budget):
     """Initialize a budget.
     """

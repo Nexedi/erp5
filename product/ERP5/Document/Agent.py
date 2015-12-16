@@ -65,7 +65,8 @@ class Agent(Folder, Image):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'viewImage')
   viewImage = Image.index_html
-
+  
+  security.declareProtected(Permissions.ModifyPortalContent, 'importSignature')
   def importSignature(self, import_file=None, form_id=None, REQUEST=None, **kw):
     """
       Imports a scan of a signature.
@@ -89,4 +90,3 @@ class Agent(Folder, Image):
       ret_url = self.absolute_url() + '/' + REQUEST.get('form_id', 'view')
       REQUEST.RESPONSE.redirect("%s?portal_status_message=Signature+Imported+Successfully"
                                 % ret_url)
-

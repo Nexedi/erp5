@@ -57,6 +57,8 @@ class BaseCategory(CMFBaseCategory, XMLObject):
                       , PropertySheet.Predicate)
 
     # Experimental - WebDAV browsing support - ask JPS
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'experimental_listDAVObjects')
     def experimental_listDAVObjects(self):
       from zLOG import LOG
       LOG("BaseCategory listDAVObjects" ,0, "listDAVObjects")

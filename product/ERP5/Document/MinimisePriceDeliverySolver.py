@@ -57,6 +57,7 @@ class MinimisePriceDeliverySolver(FIFODeliverySolver):
   zope.interface.implements(interfaces.IDeliverySolver,)
 
   # IDeliverySolver Implementation
+  security.declareProtected(Permissions.ModifyPortalContent, 'setTotalQuantity')
   def setTotalQuantity(self, new_quantity, activate_kw=None):
     """
     """

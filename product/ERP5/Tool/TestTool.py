@@ -58,6 +58,7 @@ try:
     security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
     manage_overview = DTMLFile( 'explainTestTool', _dtmldir )
 
+    security.declarePublic('getZeleniumVersion')
     def getZeleniumVersion(self):
       """Returns the version of the zelenium product
       """

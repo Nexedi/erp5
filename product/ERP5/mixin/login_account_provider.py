@@ -30,7 +30,7 @@
 from Products.ERP5Type import Permissions
 from AccessControl.AuthEncoding import pw_validate
 from AccessControl import ClassSecurityInfo
-from AccessControl.class_init import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 
 class LoginAccountProviderMixin:
   """
@@ -87,7 +87,8 @@ class LoginAccountProviderMixin:
     if not len(result_code_list):
       return True
     return False
-
+    
+  security.declareProtected(Permissions.SetOwnPassword, 'analyzePassword')
   def analyzePassword(self, password, **kw):
     """
     Analyze password validity.

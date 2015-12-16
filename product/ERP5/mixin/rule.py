@@ -29,7 +29,7 @@
 import transaction
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from AccessControl.class_init import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Base import Base
@@ -158,6 +158,8 @@ class RuleMixin(Predicate):
   movement_type = 'Simulation Movement'
 
   # Implementation of IRule
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'constructNewAppliedRule')
   def constructNewAppliedRule(self, context, **kw):
     """
     Create a new applied rule in the context.
@@ -190,6 +192,8 @@ class RuleMixin(Predicate):
       return False
     return super(RuleMixin, self).test(*args, **kw)
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'expand')
   def expand(self, applied_rule, expand_policy=None, **kw):
     """
     Expand this applied rule to create new documents inside the
@@ -473,6 +477,7 @@ class RuleMixin(Predicate):
         new_movement = self._newProfitAndLossMovement(prevision_movement)
         movement_collection_diff.addNewMovement(new_movement)
 
+InitializeClass(RuleMixin)
 
 class SimulableMixin(Base):
   security = ClassSecurityInfo()
@@ -553,6 +558,8 @@ class SimulableMixin(Base):
         if not movement.aq_inContextOf(applied_rule):
           movement.recursiveReindexObject(activate_kw=activate_kw)
 
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getRuleReference')
   def getRuleReference(self):
     """Returns an appropriate rule reference
 
@@ -609,4 +616,4 @@ class SimulableMixin(Base):
       o.getParentValue().deleteContent(o.getId())
     super(SimulableMixin, self).manage_beforeDelete(item, container)
 
-InitializeClass(RuleMixin)
+InitializeClass(SimulableMixin)

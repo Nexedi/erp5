@@ -452,6 +452,8 @@ class Category(Folder):
                                            display_id='logical_path',
                                            base=base, **kw)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getCategoryChildTranslatedLogicalPathItemList')
     def getCategoryChildTranslatedLogicalPathItemList(self,
                                               recursive=1, base=0, **kw):
       """
@@ -652,6 +654,7 @@ class Category(Folder):
     # Predicate interface
     _operators = []
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'test')
     def test(self, context):
       """
         A Predicate can be tested on a given context
@@ -799,10 +802,12 @@ class BaseCategory(Category):
     # BBB: Required to start instance with old
     #      version of erp5_property_sheets BT.
     related_locally_indexed = False
+    security.declarePrivate('isRelatedLocallyIndexed')
     def isRelatedLocallyIndexed(self):
       """Determines if related values should be indexed on target documents"""
       return self.related_locally_indexed
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'asSQLExpression')
     def asSQLExpression(self, strict_membership=0, table='category', base_category=None):
       """
         A Predicate can be rendered as an sql expression. This

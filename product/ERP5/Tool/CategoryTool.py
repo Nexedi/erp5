@@ -85,6 +85,7 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
     def hasContent(self,id):
       return id in self.objectIds()
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryDict')
     @caching_instance_method(
       id='portal_categories.getBaseCategoryDict',
       cache_factory='erp5_content_long',

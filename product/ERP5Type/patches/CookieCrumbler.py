@@ -25,6 +25,8 @@ Patch CookieCrumbler to prevent came_from to appear in the URL
 when ERP5 runs in "require_referer" mode.
 """
 
+from AccessControl.SecurityInfo import ClassSecurityInfo
+from App.class_init import InitializeClass
 from Products.CMFCore.CookieCrumbler import CookieCrumbler
 from Products.CMFCore.CookieCrumbler import CookieCrumblerDisabled
 from urllib import quote, unquote
@@ -42,6 +44,8 @@ class PatchedCookieCrumbler(CookieCrumbler):
     This class is only for backward compatibility.
   """
   pass
+
+security = ClassSecurityInfo()
 
 def getLoginURL(self):
     '''
@@ -68,6 +72,7 @@ def getLoginURL(self):
             return url
     return None
 
+security.declarePublic('getLoginURL')
 CookieCrumbler.getLoginURL = getLoginURL
 
 def balancer_cookie_hook(ob, req, resp):
@@ -177,3 +182,6 @@ def credentialsChanged(self, user, name, pw):
   method( resp, self.auth_cookie, quote( ac ) )
 
 CookieCrumbler.credentialsChanged = credentialsChanged
+
+CookieCrumbler.security = security
+InitializeClass(CookieCrumbler)

@@ -16,8 +16,13 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+from Products.ERP5Type.Globals import InitializeClass
+from AccessControl import ClassSecurityInfo
 from Products.CMFCore.ActionsTool import ActionsTool
 from Products.CMFCore.interfaces import IActionProvider
+from Products.CMFCore.permissions import ManagePortal
+
+security = ClassSecurityInfo()
 
 def migrateNonProviders(portal_actions):
   portal_actions_path = '/'.join(portal_actions.getPhysicalPath())
@@ -100,4 +105,8 @@ def reorderActions(self, REQUEST=None):
     return self.manage_editActionsForm(REQUEST,
         manage_tabs_message='Actions reordered.')
 
+security.declareProtected(ManagePortal, 'reorderActions')
 ActionsTool.reorderActions = reorderActions
+
+ActionsTool.security = security
+InitializeClass(ActionsTool)

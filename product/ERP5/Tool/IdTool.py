@@ -279,6 +279,8 @@ class IdTool(BaseTool):
 
   ## XXX Old API deprecated
   #backward compatibility
+  security.declareProtected(Permissions.AccessContentsInformation,
+                           'generateNewLengthIdList')
   generateNewLengthIdList = generateNewIdList
 
   security.declareProtected(Permissions.AccessContentsInformation,

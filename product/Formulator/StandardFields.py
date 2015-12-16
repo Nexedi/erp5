@@ -146,7 +146,7 @@ class DateTimeField(ZMIField):
       self.sub_form = create_datetime_list_sub_form()
       year_field = self.sub_form.get_field('year', include_disabled=1)
       year_field.overrides['items'] = BoundMethod(self,
-                                                  'override_year_items')
+                                                  '_override_year_items')
     else:
       assert 0, "Unknown input_style."
     self.on_value_css_class_changed(self.values['css_class'])
@@ -161,7 +161,7 @@ class DateTimeField(ZMIField):
       field.values['css_class'] = value
       field._p_changed = 1
 
-  def override_year_items(self):
+  def _override_year_items(self):
     """The method gets called to get the right amount of years.
     """
     start_datetime = self.get_value('start_datetime')

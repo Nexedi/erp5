@@ -85,6 +85,8 @@ class VariationEquivalenceTester(Predicate, EquivalenceTesterMixin):
           dict(property_name=tested_property))
     return None
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'generateHashKey')
   def generateHashKey(self, movement):
     """
     Returns a hash key which can be used to optimise the
@@ -106,6 +108,8 @@ class VariationEquivalenceTester(Predicate, EquivalenceTesterMixin):
                                                        tested_property))
     return 'variation/%r' % (value_list)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getUpdatablePropertyDict')
   def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
     """
     Returns a list of properties to update on decision_movement

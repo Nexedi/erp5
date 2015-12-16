@@ -146,6 +146,7 @@ class Localizer(LanguageManager, Folder):
 
 
     # New code to control the language policy
+    security.declarePrivate('accept_cookie')
     def accept_cookie(self, accept_language):
         """Add the language from a cookie."""
         lang = self.REQUEST.cookies.get('LOCALIZER_LANGUAGE', None)
@@ -153,6 +154,7 @@ class Localizer(LanguageManager, Folder):
             accept_language.set(lang, 2.0)
 
 
+    security.declarePrivate('accept_path')
     def accept_path(self, accept_language):
         """Add the language from the path."""
         stack = self.REQUEST['TraversalRequestNameStack']
@@ -161,6 +163,7 @@ class Localizer(LanguageManager, Folder):
             accept_language.set(lang, 3.0)
 
 
+    security.declarePrivate('accept_url')
     def accept_url(self, accept_language):
         """Add the language from the URL."""
         lang = self.REQUEST.form.get('LOCALIZER_LANGUAGE')

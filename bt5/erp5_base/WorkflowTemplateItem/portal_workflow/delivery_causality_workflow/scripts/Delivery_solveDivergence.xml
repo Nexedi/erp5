@@ -74,6 +74,14 @@ if len(delivery_solve_property_dict) or len(divergence_to_accept_list) \\\n
             <value> <string>state_change</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Delivery_solveDivergence</string> </value>
         </item>

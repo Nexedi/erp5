@@ -465,6 +465,7 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
             delivery_ratio = 1.0 / len(s_m_list_per_movement)
             s_m.edit(delivery_ratio=delivery_ratio)
 
+    security.declareProtected(Permissions.ModifyPortalContent, 'solve')
     def solve(self, decision_list):
       """Solves line according to decision list
       """

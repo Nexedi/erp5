@@ -17,6 +17,7 @@ import re
 import transaction
 from Acquisition import aq_parent, aq_inner, aq_base
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.CMFCore.PortalContent import ResourceLockedError
 from Products.CMFCore.utils import getToolByName
@@ -192,6 +193,8 @@ class TextContent:
   def get_size( self ):
     """ Used for FTP and apparently the ZMI now too """
     return len(self.manage_FTPget())
+
+InitializeClass(TextContent)
 
 from webdav.common import Locked, PreconditionFailed
 from webdav.interfaces import IWriteLock

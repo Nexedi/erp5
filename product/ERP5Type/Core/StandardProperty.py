@@ -86,6 +86,8 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
   getDescription = Base.Getter('getDescription', 'description', 'string',
                                default='')
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getElementaryType')
   def getElementaryType(self):
     """
     Define this getter manually as it is not possible to rely on

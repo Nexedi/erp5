@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.EmailDocument import EmailDocument
 
@@ -60,6 +61,8 @@ class AcknowledgeableMixin:
       return method(**kw)
     return None
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'hasAcknowledgementActivity')
   def hasAcknowledgementActivity(self, user_name=None):
     """
     We will check if there is some current activities running or not
@@ -87,6 +90,8 @@ class AcknowledgeableMixin:
                 destination_relative_url=person_value.getRelativeUrl())) > 0:
         result = True
     return result
+
+InitializeClass(AcknowledgeableMixin)
 
 class Event(Movement, EmailDocument, AcknowledgeableMixin):
   """

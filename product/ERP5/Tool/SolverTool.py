@@ -31,6 +31,7 @@ import zope.interface
 import re
 
 from AccessControl import ClassSecurityInfo
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Tool.TypesTool import TypeProvider
 from Products.ERP5 import DeliverySolver
@@ -55,6 +56,8 @@ class SolverTool(TypeProvider):
   zope.interface.implements(interfaces.IDeliverySolverFactory,)
 
   # IDeliverySolverFactory implementation
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'newDeliverySolver')
   def newDeliverySolver(self, portal_type, movement_list):
     """
     Return a new instance of delivery solver of the given
@@ -73,6 +76,8 @@ class SolverTool(TypeProvider):
     tmp_solver.setDeliveryValueList(movement_list)
     return tmp_solver
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDeliverySolverTranslatedItemList')
   def getDeliverySolverTranslatedItemList(self, portal_type_list=None):
     """
     """
@@ -81,6 +86,8 @@ class SolverTool(TypeProvider):
                    if portal_type_list is None or x in portal_type_list],
                   key=lambda x:str(x[0]))
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSolverProcessValueList')
   def getSolverProcessValueList(self, delivery_or_movement=None, validation_state=None):
     """
     Returns the list of solver processes which are
@@ -95,6 +102,8 @@ class SolverTool(TypeProvider):
                         to filter the result
     """
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSolverDecisionValueList')
   def getSolverDecisionValueList(self, delivery_or_movement=None, validation_state=None):
     """
     Returns the list of solver decisions which apply
@@ -107,6 +116,8 @@ class SolverTool(TypeProvider):
                         to filter the result
     """
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSolverDecisionApplicationValueList')
   def getSolverDecisionApplicationValueList(self, movement, divergence_tester=None):
     """
     Returns the list of documents at which a given divergence resolution
@@ -190,6 +201,8 @@ class SolverTool(TypeProvider):
             application_value_level[property_group.getCollectGroupOrder()] = None
     # etc. same
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'searchTargetSolverList')
   def searchTargetSolverList(self, divergence_tester,
                              simulation_movement,
                              automatic_solver_only=False, **kw):
@@ -203,3 +216,5 @@ class SolverTool(TypeProvider):
               x.test(simulation_movement, **kw)]
     else:
       return [x for x in solver_list if x.test(simulation_movement, **kw)]
+
+InitializeClass(SolverTool)

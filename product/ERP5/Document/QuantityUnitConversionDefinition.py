@@ -67,6 +67,8 @@ class QuantityUnitConversionDefinition(XMLObject):
 
     return default_title
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getConversionRatio')
   def getConversionRatio(self):
     """
       Compute conversion ratio associated with this definition

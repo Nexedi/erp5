@@ -89,6 +89,8 @@ class WebServiceTool(BaseTool):
   security.declareProtected(Permissions.ManagePortal, 'manage_overview')
   manage_overview = DTMLFile('explainWebServiceTool', _dtmldir )
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getConnectionPluginList')
   def getConnectionPluginList(self):
     """
     Return list of available connection plugins
@@ -97,6 +99,7 @@ class WebServiceTool(BaseTool):
     plugin_list.sort()
     return plugin_list
 
+  security.declareProtected(Permissions.ManagePortal, 'connect')
   def connect(self, url, user_name=None, password=None, transport=None, transport_kw=None):
     """
     Connect to remote instances

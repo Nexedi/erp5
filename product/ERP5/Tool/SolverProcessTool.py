@@ -30,6 +30,7 @@
 import zope.interface
 
 from AccessControl import ClassSecurityInfo
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Globals import DTMLFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -58,6 +59,8 @@ class SolverProcessTool(BaseTool):
   manage_overview = DTMLFile( 'explainSolverTool', _dtmldir )
 
   # IDivergenceController implementation
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isDivergent')
   def isDivergent(self, delivery_or_movement=None):
     """
     Returns True if any of the movements provided
@@ -73,6 +76,8 @@ class SolverProcessTool(BaseTool):
         return True
     return False
 
+  security.declareProtected(Permissions.AddPortalContent,
+                            'newSolverProcess')
   @UnrestrictedMethod
   def newSolverProcess(self, delivery_or_movement=None, temp_object=False):
     """
@@ -107,3 +112,5 @@ class SolverProcessTool(BaseTool):
       delivery.setSolverValueList(solver_list)
 
     return new_solver
+
+InitializeClass(SolverProcessTool)

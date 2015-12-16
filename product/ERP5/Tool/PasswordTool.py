@@ -110,7 +110,7 @@ class PasswordTool(BaseTool):
   def getExpirationDateForKey(self, key=None):
     return self._password_request_dict[key][1]
 
-
+  security.declarePublic('mailPasswordResetRequest')
   def mailPasswordResetRequest(self, user_login=None, REQUEST=None,
                                notification_message=None, sender=None,
                                store_as_event=False,
@@ -227,33 +227,7 @@ class PasswordTool(BaseTool):
     data = ' '.join((str(t), str(r), str(a), str(args)))
     return md5(data).hexdigest()
 
-  def resetPassword(self, reset_key=None, REQUEST=None):
-    """
-    """
-    # XXX-Aurel : is it used ?
-    if REQUEST is None:
-      REQUEST = get_request()
-    user_login, expiration_date = self._password_request_dict.get(reset_key, (None, None))
-    site_url = self.getPortalObject().absolute_url()
-    if REQUEST and 'came_from' in REQUEST:
-      site_url = REQUEST.came_from
-    if reset_key is None or user_login is None:
-      ret_url = '%s/login_form' % site_url
-      return REQUEST.RESPONSE.redirect( ret_url )
-
-    # check date
-    current_date = DateTime()
-    if current_date > expiration_date:
-      msg = translateString("Date has expire.")
-      parameter = urlencode(dict(portal_status_message=msg))
-      ret_url = '%s/login_form?%s' % (site_url, parameter)
-      return REQUEST.RESPONSE.redirect( ret_url )
-
-    # redirect to form as all is ok
-    REQUEST.set("password_key", reset_key)
-    return self.reset_password_form(REQUEST=REQUEST)
-
-
+  security.declareProtected(Permissions.ModifyPortalContent, 'removeExpiredRequests')
   def removeExpiredRequests(self):
     """
     Browse dict and remove expired request
@@ -264,6 +238,7 @@ class PasswordTool(BaseTool):
       if date < current_date:
         del password_request_dict[key]
 
+  security.declarePublic('changeUserPassword')
   def changeUserPassword(self, password, password_key, password_confirm=None,
                          user_login=None, REQUEST=None, **kw):
     """

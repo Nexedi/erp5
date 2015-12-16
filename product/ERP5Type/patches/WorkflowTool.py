@@ -19,7 +19,8 @@ from types import StringTypes
 
 # Make sure Interaction Workflows are called even if method not wrapped
 
-from AccessControl import Unauthorized
+from AccessControl import ClassSecurityInfo, Unauthorized
+from Products.ERP5Type.Globals import InitializeClass
 from Products.CMFCore.WorkflowTool import WorkflowTool
 from Products.CMFCore.WorkflowCore import ObjectMoved, ObjectDeleted
 from Products.CMFCore.WorkflowCore import WorkflowException
@@ -29,6 +30,7 @@ from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 from Products.CMFCore.utils import getToolByName
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
 from Products.CMFCore.utils import _getAuthenticatedUser
+from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import CachingMethod
 from sets import ImmutableSet
 from Acquisition import aq_base
@@ -37,6 +39,9 @@ from Products.ERP5Type.Globals import PersistentMapping
 from itertools import izip
 from MySQLdb import ProgrammingError, OperationalError
 from DateTime import DateTime
+
+security = ClassSecurityInfo()
+WorkflowTool.security = security
 
 def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
     '''
@@ -84,6 +89,7 @@ def DCWorkflowDefinition_notifySuccess(self, ob, transition_list, result, args=N
     '''
     pass
 
+security.declarePrivate('notifyWorkflowMethod')
 DCWorkflowDefinition.notifyWorkflowMethod = DCWorkflowDefinition_notifyWorkflowMethod
 DCWorkflowDefinition.notifyBefore = DCWorkflowDefinition_notifyBefore
 DCWorkflowDefinition.notifySuccess = DCWorkflowDefinition_notifySuccess
@@ -709,6 +715,7 @@ def WorkflowTool_refreshWorklistCache(self):
             self.Base_zCreateWorklistTable()
             Base_zInsertIntoWorklistTable(**value_column_dict)
 
+security.declareProtected(Permissions.ManagePortal, 'refreshWorklistCache')
 WorkflowTool.refreshWorklistCache = WorkflowTool_refreshWorklistCache
 
 class WorkflowHistoryList(Persistent):
@@ -831,6 +838,7 @@ def WorkflowTool_isTransitionPossible(self, ob, transition_id, wf_id=None):
         return 1
     return 0
 
+security.declarePublic('isTransitionPossible')
 WorkflowTool.isTransitionPossible = WorkflowTool_isTransitionPossible
 
 def WorkflowTool_getWorkflowChainDict(self, sorted=True):
@@ -844,6 +852,7 @@ def WorkflowTool_getWorkflowChainDict(self, sorted=True):
     return_dict['chain_%s' % portal_type] = ', '.join(workflow_id_list)
   return return_dict
 
+security.declareProtected(Permissions.ManagePortal, 'getWorkflowChainDict')
 WorkflowTool.getWorkflowChainDict = WorkflowTool_getWorkflowChainDict
 
 WorkflowTool._reindexWorkflowVariables = lambda self, ob: \
@@ -858,6 +867,7 @@ def WorkflowTool_getChainDict(self):
             chain_dict.setdefault(wf_id, []).append(portal_type)
     return chain_dict
 
+security.declareProtected(Permissions.ManagePortal, 'getChainDict')
 WorkflowTool.getChainDict = WorkflowTool_getChainDict
 
 # Backward compatibility, as WorkflowMethod has been removed in CMFCore 2.2
@@ -936,3 +946,5 @@ def _isJumpToStatePossibleFor(self, ob, state_id, wf_id=None):
 
 WorkflowTool._jumpToStateFor = _jumpToStateFor
 WorkflowTool._isJumpToStatePossibleFor = _isJumpToStatePossibleFor
+
+InitializeClass(WorkflowTool)

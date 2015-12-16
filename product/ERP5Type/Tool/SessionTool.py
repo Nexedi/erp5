@@ -191,6 +191,7 @@ class SessionTool(BaseTool):
     session._updatecontext(self)
     return session
 
+  security.declarePrivate('getSession')
   def getSession(self, session_id, session_duration=None):
     """ Return session object. """
     storage_plugin = self._getStoragePlugin()
@@ -216,6 +217,7 @@ class SessionTool(BaseTool):
       session = session.getValue()
     return session
 
+  security.declarePublic('newContent')
   def newContent(self, id, **kw):
     """ Create new session object. """
     session =  self.getSession(id)

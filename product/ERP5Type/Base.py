@@ -809,12 +809,16 @@ class Base( CopyContainer,
   getId = BaseAccessor.Getter('getId', 'id', 'string')
 
   # Debug
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getOid')
   def getOid(self):
     """
       Return ODB oid
     """
     return self._p_oid
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getOidRepr')
   def getOidRepr(self):
     """
       Return ODB oid, in an 'human' readable form.
@@ -822,10 +826,14 @@ class Base( CopyContainer,
     from ZODB.utils import oid_repr
     return oid_repr(self._p_oid)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSerial')
   def getSerial(self):
     """Return ODB Serial."""
     return self._p_serial
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getHistorySerial')
   def getHistorySerial(self):
     """Return ODB Serial, in the same format used for history keys"""
     return '.'.join([str(x) for x in unpack('>HHHH', self._p_serial)])
@@ -1378,6 +1386,8 @@ class Base( CopyContainer,
   # Accessors are not workflow methods by default
   # Ping provides a dummy method to trigger automatic methods
   # XXX : maybe an empty edit is enough (self.edit())
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'ping')
   def ping(self):
     pass
 
@@ -1565,6 +1575,8 @@ class Base( CopyContainer,
     """
     return self
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDocumentInstance')
   def getDocumentInstance(self):
     """
       Returns self
@@ -1584,6 +1596,8 @@ class Base( CopyContainer,
         assert mount_point._getMountedConnection(connection) is connection
         return mount_point._traverseToMountedRoot(connection.root(), None)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'asSQLExpression')
   def asSQLExpression(self, strict_membership=0, table='category', base_category = None):
     """
       Any document can be used as a Category. It can therefore
@@ -3266,6 +3280,8 @@ class Base( CopyContainer,
     self._p_changed = 1
 
   # Helpers
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getQuantityPrecisionFromResource')
   def getQuantityPrecisionFromResource(self, resource, d=2):
     """
       Provides a quick access to precision without accessing the resource

@@ -32,6 +32,7 @@
 from __future__ import absolute_import
 
 from AccessControl import ClassSecurityInfo
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5.mixin.property_recordable import PropertyRecordableMixin
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base
@@ -399,3 +400,5 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     rev = historicalRevision(self, serial)
 
     return rev.getTextContent()
+
+InitializeClass(ComponentMixin)

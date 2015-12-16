@@ -28,7 +28,7 @@
 
 import warnings
 from AccessControl import ClassSecurityInfo
-from AccessControl.class_init import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from Products.CMFActivity.ActivityTool import ActivityTool
 from Products.ERP5Type import Permissions
 try:

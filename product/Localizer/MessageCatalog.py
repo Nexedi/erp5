@@ -713,7 +713,9 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     # Backwards compatibility (XXX)
     #######################################################################
 
+    security.declarePublic('hasmsg')
     hasmsg = message_exists
+    security.declarePublic('hasLS')
     hasLS = message_exists  # CMFLocalizer uses it
 
 class POFile(SimpleItem):
