@@ -62,7 +62,7 @@ person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
 \n
 version = \'001\'\n
 language = portal.Localizer.get_selected_language()\n
-has_website = context.getWebSiteValue()\n
+has_website = context.getWebSiteValue() is not None\n
 \n
 try:\n
   user_assignment_dict = portal.ERP5Site_getPersonAssignmentDict()\n
@@ -76,13 +76,13 @@ if site_list in MARKER:\n
   site_list = user_assignment_dict[\'site_list\']\n
 \n
 # set predicate settings for current Web Section\n
-if has_website is not None:\n
+if has_website:\n
   membership_criterion_category_list = context.getMembershipCriterionCategoryList()\n
   multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()\n
 \n
 reference = context.Base_generateReferenceFromString(title)\n
 \n
-if has_website is not None:\n
+if has_website:\n
   existing_document = context.getDocumentValue(reference)\n
   existing_web_section_list = portal.portal_catalog(id=reference, portal_type=[\'Web Site\', \'Web Section\'])\n
   existing_module_list = portal.portal_catalog(id=reference, parent_uid=portal.getUid())\n
@@ -106,7 +106,7 @@ create_kw = dict(title = title,\n
                  group_list=group_list,\n
                  site_list=site_list)\n
 \n
-if has_website is not None:\n
+if has_website:\n
   for base_category in multimembership_criterion_base_category_list:\n
     #create_kw[\'%s_list\' %base_category] = [x for x in membership_criterion_category_list if x.startswith(base_category)]\n
     category_list.extend([x for x in membership_criterion_category_list if x.startswith(base_category)])\n
@@ -120,10 +120,12 @@ discussion_thread = portal.discussion_thread_module.newContent(\n
 discussion_thread.setCategoryList(category_list)\n
 \n
 # predecessor\n
-if predecessor is not None:\n
+if predecessor is None:\n
+  redirect_url = context.getAbsoluteUrl()\n
+else:\n
   predecessor_object = context.restrictedTraverse(predecessor)\n
   predecessor_portal_type = predecessor_object.getPortalType()\n
-  predecessor_absolute_url = predecessor_object.getAbsoluteUrl()\n
+  redirect_url = predecessor_object.getAbsoluteUrl()\n
 \n
   # predecessor will only be set on document = web section default page\n
   if predecessor_portal_type == \'Web Section\':\n
@@ -198,7 +200,7 @@ if send_notification_text not in (\'\', None):\n
         message_text_format=notification_message.getContentType(),\n
         store_as_event=False)\n
 \n
-return context.Base_redirect(redirect_url=predecessor_absolute_url or context.getAbsoluteUrl(),\n
+return context.Base_redirect(redirect_url=redirect_url,\n
          keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message),\n
                            thread_relative_url=discussion_thread.getRelativeUrl()))\n
 </string> </value>
