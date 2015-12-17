@@ -884,6 +884,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       traversed_document_portal_type = traversed_document.getPortalType()\n
       if traversed_document_portal_type == "ERP5 Form":\n
         renderFormDefinition(traversed_document, result_dict)\n
+        response.setHeader("Cache-Control", "private, max-age=1800")\n
+        response.setHeader("Vary", "Cookie,Authorization,Accept-Encoding")\n
+        response.setHeader("Last-Modified", DateTime().rfc822())\n
         REQUEST.set("X-HATEOAS-CACHE", 1)\n
       elif relative_url == \'portal_workflow\':\n
         result_dict[\'_links\'][\'action_worklist\'] = {\n
