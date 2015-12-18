@@ -162,6 +162,7 @@ class AccountingTestCase(ERP5TypeTestCase):
     newSecurityManager(None, user)
 
   def afterSetUp(self):
+    super(AccountingTestCase, self).login()
     self.account_module = self.portal.account_module
     self.accounting_module = self.portal.accounting_module
     self.organisation_module = self.portal.organisation_module
