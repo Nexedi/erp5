@@ -669,6 +669,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         })\n
       )\n
     response.setStatus(401)\n
+    return ""\n
   \n
   elif mime_type != traversed_document.Base_handleAcceptHeader([mime_type]):\n
     response.setStatus(406)\n
