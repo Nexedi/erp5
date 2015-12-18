@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts47172081.7</string> </value>
+            <value> <string>ts49844688.61</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -33,7 +33,6 @@
 // modify an existing dialog, we do not have nice structure of a full\n
 // renderjs web page\n
 \n
-\n
 // horrible copy/paste, this code is now present in latest renderjs,\n
 // until we can use it, just duplicate the code and remove it when\n
 // renderjs is up to date\n
@@ -45,7 +44,6 @@ function loopEventListener(target, type, useCapture, callback) {\n
   //////////////////////////\n
   var handle_event_callback,\n
     callback_promise;\n
-\n
   function cancelResolver() {\n
     if ((callback_promise !== undefined) &&\n
         (typeof callback_promise.cancel === "function")) {\n
@@ -153,7 +151,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4104</int> </value>
+            <value> <int>4102</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
