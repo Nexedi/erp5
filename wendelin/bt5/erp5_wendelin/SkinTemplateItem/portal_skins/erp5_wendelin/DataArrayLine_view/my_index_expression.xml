@@ -10,17 +10,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
-                <string>list_method</string>
-                <string>portal_types</string>
-                <string>selection_name</string>
+                <string>external_validator</string>
                 <string>title</string>
+                <string>width</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>my_index_expression</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,63 +74,18 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>dtype</string>
-                          <string>Dtype</string>
-                        </tuple>
-                        <tuple>
-                          <string>index_expression</string>
-                          <string>Index Expression</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
-                </item>
-                <item>
-                    <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
+                    <key> <string>external_validator</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Data Acquisition Sensor</string>
-                          <string>Data Acquisition Sensor</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>field_id</string> </key>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Data Array Line</string>
-                          <string>Data Array Line</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>data_array_line</string> </value>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -140,7 +93,11 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Data Array Lines</string> </value>
+                    <value> <string>Index Expression</string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -156,7 +113,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>objectValues</string> </value>
+            <value> <string>Base_validateStringFieldWithIndexExpression</string> </value>
         </item>
       </dictionary>
     </pickle>

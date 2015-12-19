@@ -11,6 +11,9 @@
  <portal_type id="Data Analysis Module">
   <item>Data Analysis</item>
  </portal_type>
+ <portal_type id="Data Array">
+  <item>Data Array Line</item>
+ </portal_type>
  <portal_type id="Data Array Module">
   <item>Data Array</item>
  </portal_type>
