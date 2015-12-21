@@ -75,13 +75,27 @@ old = context.HistoricalRevisions[serial]\n
 result = []\n
 \n
 binary_data_explanation = Base_translateString("Binary data can\'t be displayed")\n
+base_error_message = Base_translateString(\'(value retrieval failed)\')\n
 \n
 for prop_dict in context.getPropertyMap():\n
   prop = prop_dict[\'id\']\n
-  current_value=context.getProperty(prop)\n
-  old_value = old.getProperty(prop)\n
-  new_value = new_getProperty(prop)\n
-  if new_value != old_value:\n
+  error = False\n
+  try:\n
+    current_value = context.getProperty(prop)\n
+  except TypeError:\n
+    error = True\n
+    current_value = base_error_message\n
+  try:\n
+    old_value = old.getProperty(prop)\n
+  except TypeError:\n
+    error = True\n
+    old_value = base_error_message\n
+  try:\n
+    new_value = new_getProperty(prop)\n
+  except TypeError:\n
+    error = True\n
+    new_value = base_error_message\n
+  if new_value != old_value or error:\n
     # check if values are unicode convertible (binary are not)\n
     if isinstance(new_value, (str, unicode)):\n
       try:\n
