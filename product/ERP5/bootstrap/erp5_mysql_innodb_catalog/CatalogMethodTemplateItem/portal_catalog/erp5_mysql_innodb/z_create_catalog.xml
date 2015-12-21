@@ -65,6 +65,14 @@
 CREATE TABLE `catalog` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
   `security_uid` INT UNSIGNED,\n
+  `source_security_uid` INT UNSIGNED,\n
+  `destination_decision_security_uid` INT UNSIGNED,\n
+  `follow_up_security_uid` INT UNSIGNED,\n
+  `follow_up_associate_security_uid` INT UNSIGNED,\n
+  `follow_up_auditor_security_uid` INT UNSIGNED,\n
+  `follow_up_assignor_security_uid` INT UNSIGNED,\n
+  `source_decision_security_uid` INT UNSIGNED,\n
+  `source_trade_security_uid` INT UNSIGNED,\n
   `owner` varbinary(255) NOT NULL default \'\',\n
   `viewable_owner` varbinary(255) NOT NULL default \'\',\n
   `path` varchar(255) NOT NULL default \'\',\n
@@ -99,6 +107,14 @@ CREATE TABLE `catalog` (\n
   `indexation_timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n
   PRIMARY KEY  (`uid`),\n
   KEY `security_uid` (`security_uid`),\n
+  KEY `source_security_uid` (`source_security_uid`),\n
+  KEY `destination_decision_security_uid` (`destination_decision_security_uid`),\n
+  KEY `follow_up_security_uid` (`follow_up_security_uid`),\n
+  KEY `follow_up_associate_security_uid` (`follow_up_associate_security_uid`),\n
+  KEY `follow_up_auditor_security_uid` (`follow_up_auditor_security_uid`),\n
+  KEY `follow_up_assignor_security_uid` (`follow_up_assignor_security_uid`),\n
+  KEY `source_decision_security_uid` (`source_decision_security_uid`),\n
+  KEY `source_trade_security_uid` (`source_trade_security_uid`),\n
   KEY `owner` (`owner`),\n
   KEY `viewable_owner` (`viewable_owner`),\n
   KEY `Parent` (`parent_uid`),\n

@@ -16,6 +16,14 @@
             <key> <string>arguments_src</string> </key>
             <value> <string>uid\r\n
 security_uid\r\n
+source_security_uid\r\n
+destination_decision_security_uid\r\n
+follow_up_security_uid\r\n
+follow_up_associate_security_uid\r\n
+follow_up_auditor_security_uid\r\n
+follow_up_assignor_security_uid\r\n
+source_decision_security_uid\r\n
+source_trade_security_uid\r\n
 getOwnerInfo\r\n
 getViewPermissionOwner\r\n
 getPath\r\n
@@ -88,7 +96,10 @@ getModificationDate</string> </value>
 
 REPLACE INTO\n
   catalog\n
-  (`uid`, `security_uid`, `owner`, `viewable_owner`, `path`, `relative_url`, `parent_uid`, `id`, `description`, `title`, `meta_type`,\n
+  (`uid`, `security_uid`, `source_security_uid`, `destination_decision_security_uid`, `follow_up_security_uid`,\n
+   `follow_up_associate_security_uid`, `follow_up_auditor_security_uid`, `follow_up_assignor_security_uid`,  \n
+   `source_decision_security_uid`, `source_trade_security_uid`, \n
+   `owner`, `viewable_owner`, `path`, `relative_url`, `parent_uid`, `id`, `description`, `title`, `meta_type`,\n
    `portal_type`, `opportunity_state`, `corporate_registration_code`, `ean13_code`, `validation_state`, `simulation_state`,\n
    `causality_state`, `invoice_state`, `payment_state`, `event_state`, `immobilisation_state`, `reference`, `grouping_reference`, `grouping_date`,\n
    `source_reference`, `destination_reference`, `string_index`, `int_index`, `float_index`, `has_cell_content`, `creation_date`,\n
@@ -98,6 +109,14 @@ VALUES\n
 (\n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,  \n
   <dtml-sqlvar expr="security_uid[loop_item]" type="int">,\n
+  <dtml-sqlvar expr="source_security_uid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="destination_decision_security_uid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="follow_up_security_uid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="follow_up_associate_security_uid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="follow_up_auditor_security_uid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="follow_up_assignor_security_uid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="source_decision_security_uid[loop_item]" type="int" optional>,\n
+  <dtml-sqlvar expr="source_trade_security_uid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getOwnerInfo[loop_item][\'id\']" type="string">,\n
   <dtml-sqlvar expr="(getViewPermissionOwner[loop_item] is not None) and getViewPermissionOwner[loop_item] or \'\'" type="string" optional>,\n
   <dtml-sqlvar expr="getPath[loop_item]" type="string">,\n
