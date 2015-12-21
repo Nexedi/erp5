@@ -101,7 +101,11 @@ class DataArray(BigFile):
     """
        Implement getSize interface for ndarray
     """
-    return self.getArray().nbytes
+    array = self.getArray()
+    if array is None:
+      return 0
+    else:
+      return self.getArray().nbytes
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getArrayShape')
   def getArrayShape(self):
