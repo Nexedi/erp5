@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change[\'object\'].getExplanationValue().Delivery_calculate()\n
+            <value> <string>explanation_value = state_change[\'object\'].getExplanationValue()\n
+if explanation_value:\n
+  explanation_value.Delivery_calculate()\n
 </string> </value>
         </item>
         <item>
