@@ -72,7 +72,7 @@
         <!-- Display Lines -->\n
         <tal:block tal:repeat="line_item python:current_line.contentValues(portal_type=\'Sale Order Line\', sort_on = ((\'int_index\',\'ascending\', \'int\'),))">\n
           <text:h text:outline-level=\'1\' text:style-name=\'Heading_20_1\'\n
-                  tal:content="line_item/getTranslatedTitle"\n
+                  tal:content="line_item/getTitle"\n
                   tal:attributes="text:outline-level python:\'%s\' % depth;\n
                                   text:style-name python:\'Heading_20_%s\' % depth">Sale Order Line</text:h>\n
           <text:p text:style-name=\'Project_20_Box\'>\n
@@ -99,10 +99,10 @@
           </text:p>\n
           <text:p text:style-name=\'Project_20_Box\' tal:condition="line_item/getSourceTitleList">\n
             <text:span text:style-name=\'T1\' i18n:translate="Resources" i18n:domain="erp5_ui">Resources</text:span>: <tal:block tal:replace="python:\', \'.join(line_item.getSourceTradeTitleList([]))">JP Smets, B. Faye</tal:block></text:p>\n
-          <text:p text:style-name=\'Project_20_Box\' tal:condition="line_item/getTranslatedOutcomeDescription">\n
+          <text:p text:style-name=\'Project_20_Box\' tal:condition="line_item/getOutcomeDescription">\n
             <text:span text:style-name=\'T1\' i18n:translate="Result" i18n:domain="erp5_ui">Result</text:span>: <tal:block tal:replace="line_item/getOutcomeDescription">description of result</tal:block>\n
           </text:p>\n
-            <tal:block tal:repeat="partial_description python: line_item.getTranslatedDescription().split(\'\\n\')">\n
+            <tal:block tal:repeat="partial_description python: line_item.getDescription().split(\'\\n\')">\n
                <text:p text:style-name=\'Text_20_body\' tal:content="partial_description">Project Line description</text:p>\n
             </tal:block>\n
           <tal:block tal:define="global current_line python:line_item"/>\n
@@ -117,7 +117,7 @@
           <tal:block tal:define="global depth python:depth + 1"/>\n
           <text:h text:outline-level=\'1\' text:style-name=\'Heading_20_1\'\n
                   tal:attributes="text:outline-level python:\'%s\' % depth;\n
-                  text:style-name python:\'Heading_20_%s\' % depth"><tal:block i18n:translate="Milestone:" i18n:domain="erp5_ui">Milestone: </tal:block><tal:block tal:content="line_item/getTranslatedTitle">Project Line</tal:block></text:h>\n
+                  text:style-name python:\'Heading_20_%s\' % depth"><tal:block i18n:translate="Milestone:" i18n:domain="erp5_ui">Milestone: </tal:block><tal:block tal:content="line_item/getTitle">Project Line</tal:block></text:h>\n
           <text:p text:style-name=\'Project_20_Box\'>\n
             <text:span text:style-name=\'T1\' i18n:translate="" i18n:domain="erp5_ui">ID</text:span>: <tal:block tal:replace="line_item/Project_getDefaultReference">description of result</tal:block>\n
             <tal:block tal:condition="line_item/getRequirementValueList">\n
@@ -131,7 +131,7 @@
             </tal:block>\n
             <text:span text:style-name=\'T1\' i18n:translate="End" i18n:domain="erp5_ui">End</text:span>: <tal:block tal:replace="line_item/getStopDate">2006-01-01</tal:block>\n
           </text:p>\n
-          <tal:block tal:repeat="partial_description python: line_item.getTranslatedDescription().split(\'\\n\')">\n
+          <tal:block tal:repeat="partial_description python: line_item.getDescription().split(\'\\n\')">\n
              <text:p text:style-name=\'Text_20_body\' tal:content="partial_description">Milestone description</text:p>\n
           </tal:block>\n
 \n
