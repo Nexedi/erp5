@@ -14,7 +14,6 @@
                 <string>columns</string>
                 <string>domain_root_list</string>
                 <string>domain_tree</string>
-                <string>list_method</string>
                 <string>portal_types</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
@@ -261,12 +260,6 @@ Role & Region
                     <value> <string>PERSON_LIST</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>more_columns</string> </key>
                     <value>
                       <list>
@@ -451,19 +444,6 @@ Role & Region
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>
