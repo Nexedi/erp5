@@ -75,6 +75,7 @@
                     <value>
                       <list>
                         <string>my_description</string>
+                        <string>my_translated_description</string>
                       </list>
                     </value>
                 </item>
@@ -113,6 +114,7 @@
                         <string>my_source_decision_title</string>
                         <string>my_initial_implementation_state</string>
                         <string>my_comment</string>
+                        <string>my_translated_comment</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
