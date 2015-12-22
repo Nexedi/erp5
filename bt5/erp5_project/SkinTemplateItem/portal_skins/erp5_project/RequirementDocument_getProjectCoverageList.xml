@@ -58,8 +58,8 @@ for r in context.contentValues(portal_type= "Requirement", sort_on = ((\'int_ind
   if not requirement_related_list:\n
     if not r.contentValues(portal_type= "Requirement", sort_on = ((\'int_index\',\'ascending\', \'int\'),), checked_permission=\'View\'):\n
       result.append({\'requirement_reference\': r.Requirement_getDefaultReference(),\n
-                     \'requirement_title\': r.getTitle(),\n
-                     \'requirement_comment\': r.getComment(),\n
+                     \'requirement_title\': r.getTranslatedTitle(),\n
+                     \'requirement_comment\': r.getTranslatedComment(),\n
                      \'repeat_index\' : 0,\n
                      \'repeat_count\' : 1,\n
                      \'project_reference\': \'Not covered\',\n
@@ -69,12 +69,12 @@ for r in context.contentValues(portal_type= "Requirement", sort_on = ((\'int_ind
     i = 0\n
     for p in requirement_related_list:\n
       result.append({\'requirement_reference\': r.Requirement_getDefaultReference(),\n
-                     \'requirement_title\': r.getTitle(),\n
-                     \'requirement_comment\': r.getComment(),\n
+                     \'requirement_title\': r.getTranslatedTitle(),\n
+                     \'requirement_comment\': r.getTranslatedComment(),\n
                      \'repeat_index\' : i,\n
                      \'repeat_count\' : requirement_related_count,\n
                      \'project_reference\': p.Project_getDefaultReference(),\n
-                     \'project_title\': p.getTitle(),\n
+                     \'project_title\': p.getTranslatedTitle(),\n
                      \'stop_date\': p.getStopDate()})\n
       i += 1\n
   result.extend(r.RequirementDocument_getProjectCoverageList())\n
