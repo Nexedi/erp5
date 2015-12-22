@@ -344,6 +344,14 @@
                           <string>Outcome</string>
                         </tuple>
                         <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit</string>
+                          <string>Quantity Unit</string>
+                        </tuple>
+                        <tuple>
                           <string>stop_date</string>
                           <string>Stop Date</string>
                         </tuple>
