@@ -10,12 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>report_root_list</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
+                <string>info_tooltip</string>
                 <string>list_method</string>
+                <string>portal_types</string>
+                <string>report_root_list</string>
                 <string>round_script</string>
+                <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -89,6 +90,10 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>info_tooltip</string> </key>
+                    <value> <string>getSourceTitle</string> </value>
+                </item>
+                <item>
                     <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -148,10 +153,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
