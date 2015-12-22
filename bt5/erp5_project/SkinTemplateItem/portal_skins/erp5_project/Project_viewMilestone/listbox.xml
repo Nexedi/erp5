@@ -11,7 +11,6 @@
             <value>
               <list>
                 <string>all_columns</string>
-                <string>anchor</string>
                 <string>columns</string>
                 <string>editable_columns</string>
                 <string>portal_types</string>
@@ -127,10 +126,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>anchor</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -158,12 +153,12 @@
                           <string>Index</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
-                          <string>End Date</string>
+                          <string>quantity</string>
+                          <string>Estimated Time</string>
                         </tuple>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>stop_date</string>
+                          <string>End Date</string>
                         </tuple>
                       </list>
                     </value>

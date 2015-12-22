@@ -111,10 +111,7 @@ for line in line_list:\n
     error_message = None\n
     if result is None:\n
       result = portal.portal_catalog(portal_type=(\'Project\', \'Project Line\'),\n
-                                     reference=line_source_project_title)\n
-      if len(result) == 0:\n
-        result = portal.portal_catalog(portal_type=(\'Project\', \'Project Line\'),\n
-                                       title=line_source_project_title)\n
+                                     title=line_source_project_title)\n
       project_search_dict[line_source_project_title] = result\n
     if len(result) == 0:\n
       error_message = "No such project"\n

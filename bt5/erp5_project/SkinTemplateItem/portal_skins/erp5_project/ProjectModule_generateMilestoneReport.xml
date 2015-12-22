@@ -50,27 +50,46 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
 This script is in charge to retrive all milestones that\n
 match report parameters, then sort them and prepare data\n
 that will allows to generate temp objects for listbox\n
 """\n
 listbox = []\n
+translateString = context.Base_translateString\n
 portal = context.getPortalObject()\n
+\n
+query_kw = {}\n
 \n
 sql_kw = {}\n
 if project_validation_state_list is not None and \\\n
     len(project_validation_state_list):\n
   sql_kw[\'validation_state\'] = project_validation_state_list\n
 \n
+from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery, ComplexQuery\n
 project_list = portal.portal_catalog(portal_type=\'Project\', **sql_kw)\n
 project_uid_list = [x.uid for x in project_list]\n
 \n
+\n
+# the start date of milestones is only in the movement table\n
 sql_kw = {}\n
+query_list = []\n
+if from_date is not None:\n
+  query_kw = {}\n
+  query_kw[\'movement.stop_date\'] = from_date\n
+  query_kw[\'range\'] = \'min\'\n
+  query_list.append(Query(**query_kw))\n
+if at_date is not None:\n
+  query_kw = {}\n
+  query_kw[\'movement.stop_date\'] = at_date\n
+  query_kw[\'range\'] = \'ngt\'\n
+  query_list.append(Query(**query_kw))\n
+if len(query_list):\n
+  query_kw = {\'operator\': \'AND\'}\n
+  sql_kw[\'query\'] = ComplexQuery(*query_list, **query_kw)\n
 \n
 select_dict = {}\n
+select_dict[\'movement.stop_date\'] = None\n
 select_dict[\'title\'] = None\n
 select_dict[\'description\'] = None\n
 select_dict[\'parent_title\'] = None\n
@@ -94,15 +113,6 @@ milestone_list.sort(key = lambda x: (x.parent_title, getattr(x, \'stop_date\', N
 for milestone in milestone_list:\n
   # We wish to display the project only for the first milestone\n
   # of this project\n
-\n
-  # XXX These two statements below filter the result,\n
-  # we can increase speed by filtering directly from the catalog.\n
-  if from_date is not None:\n
-    if milestone.getStartDate() < from_date:\n
-      continue\n
-  if at_date is not None:\n
-    if milestone.getStopDate() >= at_date:\n
-      continue\n
   line_kw = {}\n
   line_kw[\'project_title\'] = milestone.parent_title\n
   line_kw[\'milestone_title\'] = milestone.title\n
@@ -113,9 +123,7 @@ for milestone in milestone_list:\n
 \n
 context.Base_updateDialogForm(listbox=listbox, empty_line_number=0)\n
 return context.ProjectModule_viewMilestoneReport()\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
