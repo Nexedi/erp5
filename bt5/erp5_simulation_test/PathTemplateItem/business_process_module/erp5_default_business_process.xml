@@ -10,6 +10,7 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
+                <string>Agent</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
@@ -50,6 +51,7 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
+                <string>Agent</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>

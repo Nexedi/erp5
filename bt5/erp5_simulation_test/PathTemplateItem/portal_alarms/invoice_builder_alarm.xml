@@ -8,13 +8,16 @@
       <dictionary>
         <item>
             <key> <string>active_sense_method_id</string> </key>
-            <value> <string>Alarm_buildInvoice</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Disabled because broken. It\'s been more than 3 months that it\'s not run because of an "after_method_id" dependency to a failed activity.\n
+The strange thing is that we have accumulated ~3000 activities in -1 state, with the consequence that the distribute node uses more than 50% CPU.\n
+\n
+I enabled this alarm, because this alarm is called by accounting_workflow/scripts/Delivery_localBuild and because it was disabled, activeSense method raised an exception and I could not change workflow state of invoice transactions. So, instead of disabling this alarm, I removed Active Sense Method. It  was "Alarm_buildInvoice".(yusei 2015/12/14)</string> </value>
         </item>
         <item>
             <key> <string>enabled</string> </key>
