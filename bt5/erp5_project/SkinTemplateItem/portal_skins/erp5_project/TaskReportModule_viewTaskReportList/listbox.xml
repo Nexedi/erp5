@@ -198,7 +198,7 @@
                       <list>
                         <tuple>
                           <string>region</string>
-                          <string>region</string>
+                          <string>Region</string>
                         </tuple>
                         <tuple>
                           <string>journal</string>
@@ -259,7 +259,7 @@
                       <list>
                         <tuple>
                           <string>region</string>
-                          <string>region</string>
+                          <string>Region</string>
                         </tuple>
                         <tuple>
                           <string>journal</string>
