@@ -89,6 +89,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>total_quantity</string>
+                          <string>Total Quantity</string>
+                        </tuple>
+                        <tuple>
                           <string>quantity_unit_title</string>
                           <string>Unit</string>
                         </tuple>
