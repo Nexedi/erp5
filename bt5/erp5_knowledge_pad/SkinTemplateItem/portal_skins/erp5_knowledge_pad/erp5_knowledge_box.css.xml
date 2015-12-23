@@ -424,6 +424,10 @@ div.document-gadget-quick-preview span.modification-date{\n
   color: #000;\n
 }\n
 \n
+div.document-gadget-quick-preview div.teaser img {\n
+    max-width: 150px;\n
+}\n
+\n
 /* Some items can be marked as read and we need a way to visualize it */\n
 div.document-gadget-quick-preview div.read span.document-title,\n
 div.document-gadget-quick-preview div.read span.modification-date{\n
