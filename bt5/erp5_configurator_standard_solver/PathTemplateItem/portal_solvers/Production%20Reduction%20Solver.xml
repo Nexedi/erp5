@@ -110,6 +110,18 @@
             </value>
         </item>
         <item>
+            <key> <string>allowed_content_types</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>base_category_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>contributor_list</string> </key>
             <value>
               <tuple/>
@@ -139,6 +151,12 @@
             <value> <string>Production Reduction Solver is only a placeholder for now. (it will need its own class later)</string> </value>
         </item>
         <item>
+            <key> <string>hidden_content_type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Production Reduction Solver</string> </value>
         </item>
@@ -162,6 +180,12 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Solver Type</string> </value>
+        </item>
+        <item>
+            <key> <string>property_sheet_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -67,15 +67,27 @@
             </value>
         </item>
         <item>
-            <key> <string>_mt_index</string> </key>
+            <key> <string>_identity_criterion</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>_tree</string> </key>
+            <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
             </value>
         </item>
         <item>
@@ -83,8 +95,20 @@
             <value> <int>1</int> </value>
         </item>
         <item>
+            <key> <string>allowed_content_types</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>automatic_solver</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>base_category_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
@@ -127,6 +151,12 @@
             </value>
         </item>
         <item>
+            <key> <string>hidden_content_type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Quantity Split Solver</string> </value>
         </item>
@@ -135,10 +165,6 @@
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>2</string> </value>
         </item>
         <item>
             <key> <string>line_exclusive</string> </key>
@@ -163,6 +189,12 @@
             <value> <int>0</int> </value>
         </item>
         <item>
+            <key> <string>property_sheet_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>solver_action_title</string> </key>
             <value> <string>Split and Differ</string> </value>
         </item>
@@ -181,13 +213,43 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
       <none/>
     </pickle>
   </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>

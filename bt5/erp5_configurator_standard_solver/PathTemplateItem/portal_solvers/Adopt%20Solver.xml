@@ -67,9 +67,15 @@
             </value>
         </item>
         <item>
-            <key> <string>_mt_index</string> </key>
+            <key> <string>_identity_criterion</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
         </item>
         <item>
@@ -79,27 +85,45 @@
                 <item>
                     <key> <string>short_title</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
             </value>
         </item>
         <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>acquire_local_roles</string> </key>
             <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>allowed_content_types</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>base_category_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
@@ -128,6 +152,12 @@
             </value>
         </item>
         <item>
+            <key> <string>hidden_content_type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Adopt Solver</string> </value>
         </item>
@@ -152,6 +182,12 @@
             <value> <string>Solver Type</string> </value>
         </item>
         <item>
+            <key> <string>property_sheet_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>solver_action_title</string> </key>
             <value> <string>Replace value</string> </value>
         </item>
@@ -166,13 +202,28 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
       <none/>
     </pickle>
   </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <tuple>
         <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
@@ -192,7 +243,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="5" aka="AAAAAAAAAAU=">
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <tuple>
         <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
@@ -212,7 +263,22 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="6" aka="AAAAAAAAAAY=">
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
