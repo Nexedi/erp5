@@ -62,9 +62,8 @@ def getPreferredForumSignature(username):\n
             \'preferred_forum_quote_original_message\': False}\n
   preference = portal.portal_catalog.getResultValue(\n
                                        portal_type=\'Preference\',\n
-                                       owner = username,\n
-                                       preference_state=\'enabled\')\n
-  if preference is not None:\n
+                                       owner = username)\n
+  if preference is not None and preference.getPreferenceState() == "enabled":\n
     result[\'preferred_forum_signature\'] = preference.getPreferredForumSignature()\n
     result[\'preferred_forum_quote_original_message\'] = preference.getPreferredForumQuoteOriginalMessage()\n
 \n
