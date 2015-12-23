@@ -189,6 +189,10 @@
             <key> <string>solver_action_title</string> </key>
             <value> <string>Unify value</string> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>UnifySolver</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>

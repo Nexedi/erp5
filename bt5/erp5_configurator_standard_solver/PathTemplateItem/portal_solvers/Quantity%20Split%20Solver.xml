@@ -166,6 +166,10 @@
             <key> <string>solver_action_title</string> </key>
             <value> <string>Split and Differ</string> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>QuantitySplitSolver</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>

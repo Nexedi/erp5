@@ -150,6 +150,10 @@
             <key> <string>solver_action_title</string> </key>
             <value> <string>Cancel Quantity</string> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>QuantityCancelSolver</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
