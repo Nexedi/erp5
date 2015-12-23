@@ -1,0 +1,1340 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885451.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>pt.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>88214</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\r\n
+  "Common.Controllers.Chat.notcriticalErrorTitle": "Aviso",\r\n
+  "Common.Controllers.Chat.textEnterMessage": "Insira sua mensagem aqui",\r\n
+  "Common.Controllers.Chat.textUserLimit": "You are using ONLYOFFICE Free Edition.<br>Only two users can co-edit the document simultaneously.<br>Want more? Consider buying ONLYOFFICE Enterprise Edition.<br><a href=\\"http://www.onlyoffice.com/free-edition.aspx\\" target=\\"_blank\\">Read more</a>",\r\n
+  "Common.Controllers.ExternalDiagramEditor.textAnonymous": "Anônimo",\r\n
+  "Common.Controllers.ExternalDiagramEditor.textClose": "Fechar",\r\n
+  "Common.Controllers.ExternalDiagramEditor.warningText": "O objeto está desabilitado por que está sendo editado por outro usuário.",\r\n
+  "Common.Controllers.ExternalDiagramEditor.warningTitle": "Aviso",\r\n
+  "Common.Controllers.ExternalMergeEditor.textAnonymous": "Anonymous",\r\n
+  "Common.Controllers.ExternalMergeEditor.textClose": "Close",\r\n
+  "Common.Controllers.ExternalMergeEditor.warningText": "The object is disabled because it is being edited by another user.",\r\n
+  "Common.Controllers.ExternalMergeEditor.warningTitle": "Warning",\r\n
+  "Common.Controllers.History.notcriticalErrorTitle": "Warning",\r\n
+  "Common.UI.ComboBorderSize.txtNoBorders": "Sem bordas",\r\n
+  "Common.UI.ComboBorderSizeEditable.txtNoBorders": "Sem bordas",\r\n
+  "Common.UI.ComboDataView.emptyComboText": "Sem estilos",\r\n
+  "Common.UI.ExtendedColorDialog.addButtonText": "Adicionar",\r\n
+  "Common.UI.ExtendedColorDialog.cancelButtonText": "Cancelar",\r\n
+  "Common.UI.ExtendedColorDialog.textCurrent": "Atual",\r\n
+  "Common.UI.ExtendedColorDialog.textHexErr": "O valor inserido está incorreto.<br>Insira um valor entre 000000 e FFFFFF.",\r\n
+  "Common.UI.ExtendedColorDialog.textNew": "Novo",\r\n
+  "Common.UI.ExtendedColorDialog.textRGBErr": "O valor inserido está incorreto.<br>Insira um valor numérico entre 0 e 255.",\r\n
+  "Common.UI.HSBColorPicker.textNoColor": "Sem cor",\r\n
+  "Common.UI.SearchDialog.textHighlight": "Destacar resultados",\r\n
+  "Common.UI.SearchDialog.textMatchCase": "Diferenciar maiúsculas de minúsculas",\r\n
+  "Common.UI.SearchDialog.textReplaceDef": "Inserir o texto de substituição",\r\n
+  "Common.UI.SearchDialog.textSearchStart": "Insira seu texto aqui",\r\n
+  "Common.UI.SearchDialog.textTitle": "Localizar e substituir",\r\n
+  "Common.UI.SearchDialog.textTitle2": "Localizar",\r\n
+  "Common.UI.SearchDialog.textWholeWords": "Palavras inteiras apenas",\r\n
+  "Common.UI.SearchDialog.txtBtnReplace": "Substituir",\r\n
+  "Common.UI.SearchDialog.txtBtnReplaceAll": "Substituir tudo",\r\n
+  "Common.UI.SynchronizeTip.textDontShow": "Não exibir esta mensagem novamente",\r\n
+  "Common.UI.SynchronizeTip.textSynchronize": "O documento foi alterado por outro usuário.<br/>Clique para salvar suas alterações e recarregar as atualizações.",\r\n
+  "Common.UI.Window.cancelButtonText": "Cancelar",\r\n
+  "Common.UI.Window.closeButtonText": "Fechar",\r\n
+  "Common.UI.Window.noButtonText": "Não",\r\n
+  "Common.UI.Window.okButtonText": "OK",\r\n
+  "Common.UI.Window.textConfirmation": "Confirmação",\r\n
+  "Common.UI.Window.textDontShow": "Não exibir esta mensagem novamente",\r\n
+  "Common.UI.Window.textError": "Erro",\r\n
+  "Common.UI.Window.textInformation": "Informações",\r\n
+  "Common.UI.Window.textWarning": "Aviso",\r\n
+  "Common.UI.Window.yesButtonText": "Sim",\r\n
+  "Common.Views.About.txtAddress": "endereço:",\r\n
+  "Common.Views.About.txtAscAddress": "Lubanas st. 125a-25, Riga, Latvia, EU, LV-1021",\r\n
+  "Common.Views.About.txtLicensee": "LICENÇA",\r\n
+  "Common.Views.About.txtLicensor": "LICENCIANTE",\r\n
+  "Common.Views.About.txtMail": "e-mail:",\r\n
+  "Common.Views.About.txtPoweredBy": "Desenvolvido por",\r\n
+  "Common.Views.About.txtTel": "tel.: ",\r\n
+  "Common.Views.About.txtVersion": "Versão",\r\n
+  "Common.Views.AdvancedSettingsWindow.cancelButtonText": "Cancelar",\r\n
+  "Common.Views.AdvancedSettingsWindow.okButtonText": "OK",\r\n
+  "Common.Views.Chat.textSend": "Enviar",\r\n
+  "Common.Views.Comments.textAdd": "Adicionar",\r\n
+  "Common.Views.Comments.textAddComment": "Adicionar comentário",\r\n
+  "Common.Views.Comments.textAddCommentToDoc": "Adicionar comentário ao documento",\r\n
+  "Common.Views.Comments.textAddReply": "Adicionar resposta",\r\n
+  "Common.Views.Comments.textAnonym": "Visitante",\r\n
+  "Common.Views.Comments.textCancel": "Cancelar",\r\n
+  "Common.Views.Comments.textClose": "Fechar",\r\n
+  "Common.Views.Comments.textComments": "Comentários",\r\n
+  "Common.Views.Comments.textEdit": "Editar",\r\n
+  "Common.Views.Comments.textEnterCommentHint": "Insira seu comentário aqui",\r\n
+  "Common.Views.Comments.textOpenAgain": "Abrir novamente",\r\n
+  "Common.Views.Comments.textReply": "Responder",\r\n
+  "Common.Views.Comments.textResolve": "Resolver",\r\n
+  "Common.Views.Comments.textResolved": "Resolvido",\r\n
+  "Common.Views.CopyWarningDialog.textDontShow": "Não exibir esta mensagem novamente",\r\n
+  "Common.Views.CopyWarningDialog.textMsg": "As ações copiar, cortar e colar usando os botões da barra de ferramentas do editor e as ações de menu de contexto serão realizadas apenas nesta aba do editor.<br><br>Para copiar ou colar para ou de aplicativos externos a aba do editor, use as seguintes combinações do teclado:",\r\n
+  "Common.Views.CopyWarningDialog.textTitle": "Ações copiar, cortar e colar",\r\n
+  "Common.Views.CopyWarningDialog.textToCopy": "para Copiar",\r\n
+  "Common.Views.CopyWarningDialog.textToCut": "para Cortar",\r\n
+  "Common.Views.CopyWarningDialog.textToPaste": "para Colar",\r\n
+  "Common.Views.DocumentAccessDialog.textLoading": "Carregando...",\r\n
+  "Common.Views.DocumentAccessDialog.textTitle": "Configurações de compartilhamento",\r\n
+  "Common.Views.ExternalDiagramEditor.textClose": "Fechar",\r\n
+  "Common.Views.ExternalDiagramEditor.textSave": "Salvar e Sair",\r\n
+  "Common.Views.ExternalDiagramEditor.textTitle": "Editor de gráfico",\r\n
+  "Common.Views.ExternalMergeEditor.textClose": "Close",\r\n
+  "Common.Views.ExternalMergeEditor.textSave": "Save & Exit",\r\n
+  "Common.Views.ExternalMergeEditor.textTitle": "Mail Merge Recepients",\r\n
+  "Common.Views.Header.openNewTabText": "Open in New Tab",\r\n
+  "Common.Views.Header.textBack": "Ir para Documentos",\r\n
+  "Common.Views.History.textHistoryHeader": "Back to Document",\r\n
+  "Common.Views.ImageFromUrlDialog.cancelButtonText": "Cancelar",\r\n
+  "Common.Views.ImageFromUrlDialog.okButtonText": "OK",\r\n
+  "Common.Views.ImageFromUrlDialog.textUrl": "Colar uma URL de imagem:",\r\n
+  "Common.Views.ImageFromUrlDialog.txtEmpty": "Este campo é obrigatório",\r\n
+  "Common.Views.ImageFromUrlDialog.txtNotUrl": "Este campo deve ser uma URL no formato \\"http://www.example.com\\"",\r\n
+  "Common.Views.InsertTableDialog.cancelButtonText": "Cancelar",\r\n
+  "Common.Views.InsertTableDialog.okButtonText": "OK",\r\n
+  "Common.Views.InsertTableDialog.textInvalidRowsCols": "Você precisa especificar a contagem de linhas e colunas válida.",\r\n
+  "Common.Views.InsertTableDialog.txtColumns": "Número de colunas",\r\n
+  "Common.Views.InsertTableDialog.txtMaxText": "O valor máximo para este campo é {0}.",\r\n
+  "Common.Views.InsertTableDialog.txtMinText": "O valor mínimo para este campo é {0}.",\r\n
+  "Common.Views.InsertTableDialog.txtRows": "Número de linhas",\r\n
+  "Common.Views.InsertTableDialog.txtTitle": "Tamanho da tabela",\r\n
+  "DE.Controllers.LeftMenu.leavePageText": "All unsaved changes in this document will be lost.<br> Click \\"Cancel\\" then \\"Save\\" to save them. Click \\"OK\\" to discard all the unsaved changes.",\r\n
+  "DE.Controllers.LeftMenu.newDocumentTitle": "Documento sem nome",\r\n
+  "DE.Controllers.LeftMenu.notcriticalErrorTitle": "Warning",\r\n
+  "DE.Controllers.LeftMenu.requestEditRightsText": "Solicitando direitos de edição...",\r\n
+  "DE.Controllers.LeftMenu.textLoadHistory": "Loading versions history...",\r\n
+  "DE.Controllers.LeftMenu.textNoTextFound": "Os dados que você tem estado procurando não podem ser encontrados. Ajuste suas opções de pesquisa.",\r\n
+  "DE.Controllers.LeftMenu.textReplaceSkipped": "A substituição foi realizada. {0} ocorrências foram ignoradas.",\r\n
+  "DE.Controllers.LeftMenu.textReplaceSuccess": "A pesquisa foi realizada. Ocorrências substituídas: {0}",\r\n
+  "DE.Controllers.Main.applyChangesTextText": "Carregando as alterações...",\r\n
+  "DE.Controllers.Main.applyChangesTitleText": "Carregando as alterações",\r\n
+  "DE.Controllers.Main.convertationErrorText": "Conversão falhou.",\r\n
+  "DE.Controllers.Main.convertationTimeoutText": "Tempo limite de conversão excedido.",\r\n
+  "DE.Controllers.Main.criticalErrorExtText": "Pressione \\"OK\\" para voltar para a lista de documentos.",\r\n
+  "DE.Controllers.Main.criticalErrorTitle": "Erro",\r\n
+  "DE.Controllers.Main.defaultTitleText": "Editor de documento ONLYOFFICE",\r\n
+  "DE.Controllers.Main.downloadErrorText": "Download falhou.",\r\n
+  "DE.Controllers.Main.downloadMergeText": "Downloading...",\r\n
+  "DE.Controllers.Main.downloadMergeTitle": "Downloading",\r\n
+  "DE.Controllers.Main.downloadTextText": "Baixando documento...",\r\n
+  "DE.Controllers.Main.downloadTitleText": "Baixando documento",\r\n
+  "DE.Controllers.Main.errorCoAuthoringDisconnect": "Conexão com servidor perdida. O documento não pode ser editado neste momento.",\r\n
+  "DE.Controllers.Main.errorDatabaseConnection": "Erro externo.<br>Erro de conexão ao banco de dados. Entre em contato com o suporte caso o erro persista.",\r\n
+  "DE.Controllers.Main.errorDataRange": "Intervalo de dados incorreto.",\r\n
+  "DE.Controllers.Main.errorDefaultMessage": "Código do erro: %1",\r\n
+  "DE.Controllers.Main.errorFilePassProtect": "O documento é protegido por senha e não pode ser aberto.",\r\n
+  "DE.Controllers.Main.errorKeyEncrypt": "Descritor de chave desconhecido",\r\n
+  "DE.Controllers.Main.errorKeyExpire": "Descritor de chave expirado",\r\n
+  "DE.Controllers.Main.errorMailMergeLoadFile": "Loading failed",\r\n
+  "DE.Controllers.Main.errorMailMergeSaveFile": "Merge failed.",\r\n
+  "DE.Controllers.Main.errorProcessSaveResult": "Salvamento falhou.",\r\n
+  "DE.Controllers.Main.errorStockChart": "Ordem da linha incorreta. Para criar um gráfico de ações coloque os dados na planilha na seguinte ordem:<br>preço de abertura, preço máx., preço mín., preço de fechamento.",\r\n
+  "DE.Controllers.Main.errorUpdateVersion": "A versão do arquivo foi alterada. A página será recarregada.",\r\n
+  "DE.Controllers.Main.errorUserDrop": "O arquivo não pode ser acessado agora.",\r\n
+  "DE.Controllers.Main.errorUsersExceed": "O número de usuários permitidos pelo plano de preços foi excedido",\r\n
+  "DE.Controllers.Main.leavePageText": "Você não salvou as alterações neste documento. Clique em \\"Permanecer nesta página\\", em seguida, clique em \\"Salvar\\" para salvá-las. Clique em \\"Sair desta página\\" para descartar todas as alterações não salvas.",\r\n
+  "DE.Controllers.Main.loadFontsTextText": "Carregando dados...",\r\n
+  "DE.Controllers.Main.loadFontsTitleText": "Carregando dados",\r\n
+  "DE.Controllers.Main.loadFontTextText": "Carregando dados...",\r\n
+  "DE.Controllers.Main.loadFontTitleText": "Carregando dados",\r\n
+  "DE.Controllers.Main.loadImagesTextText": "Carregando imagens...",\r\n
+  "DE.Controllers.Main.loadImagesTitleText": "Carregando imagens",\r\n
+  "DE.Controllers.Main.loadImageTextText": "Carregando imagem...",\r\n
+  "DE.Controllers.Main.loadImageTitleText": "Carregando imagem",\r\n
+  "DE.Controllers.Main.loadingDocumentTextText": "Carregando documento...",\r\n
+  "DE.Controllers.Main.loadingDocumentTitleText": "Carregando documento",\r\n
+  "DE.Controllers.Main.mailMergeLoadFileText": "Loading Data Source...",\r\n
+  "DE.Controllers.Main.mailMergeLoadFileTitle": "Loading Data Source",\r\n
+  "DE.Controllers.Main.notcriticalErrorTitle": "Aviso",\r\n
+  "DE.Controllers.Main.openTextText": "Abrindo documento...",\r\n
+  "DE.Controllers.Main.openTitleText": "Abrindo documento",\r\n
+  "DE.Controllers.Main.printTextText": "Imprimindo documento...",\r\n
+  "DE.Controllers.Main.printTitleText": "Imprimindo documento",\r\n
+  "DE.Controllers.Main.reloadButtonText": "Recarregar página",\r\n
+  "DE.Controllers.Main.requestEditFailedMessageText": "Alguém está editando este documento neste momento. Tente novamente mais tarde.",\r\n
+  "DE.Controllers.Main.requestEditFailedTitleText": "Acesso negado",\r\n
+  "DE.Controllers.Main.savePreparingText": "Preparando para salvar",\r\n
+  "DE.Controllers.Main.savePreparingTitle": "Preparando para salvar. Aguarde...",\r\n
+  "DE.Controllers.Main.saveTextText": "Salvando documento...",\r\n
+  "DE.Controllers.Main.saveTitleText": "Salvando documento",\r\n
+  "DE.Controllers.Main.sendMergeText": "Sending Merge...",\r\n
+  "DE.Controllers.Main.sendMergeTitle": "Sending Merge",\r\n
+  "DE.Controllers.Main.splitDividerErrorText": "O número de linhas deve ser um divisor de %1.",\r\n
+  "DE.Controllers.Main.splitMaxColsErrorText": "O número de colunas deve ser inferior a %1.",\r\n
+  "DE.Controllers.Main.splitMaxRowsErrorText": "O número de linhas deve ser inferior a %1.",\r\n
+  "DE.Controllers.Main.textAnonymous": "Anônimo",\r\n
+  "DE.Controllers.Main.textCloseTip": "Clique para fechar a dica",\r\n
+  "DE.Controllers.Main.textLoadingDocument": "Carregando documento",\r\n
+  "DE.Controllers.Main.titleUpdateVersion": "Versão alterada",\r\n
+  "DE.Controllers.Main.txtBasicShapes": "Formas básicas",\r\n
+  "DE.Controllers.Main.txtButtons": "Botões",\r\n
+  "DE.Controllers.Main.txtCallouts": "Textos explicativos",\r\n
+  "DE.Controllers.Main.txtCharts": "Gráficos",\r\n
+  "DE.Controllers.Main.txtDiagramTitle": "Título do diagrama",\r\n
+  "DE.Controllers.Main.txtEditingMode": "Definir modo de edição...",\r\n
+  "DE.Controllers.Main.txtFiguredArrows": "Setas figuradas",\r\n
+  "DE.Controllers.Main.txtLines": "Linhas",\r\n
+  "DE.Controllers.Main.txtMath": "Matemática",\r\n
+  "DE.Controllers.Main.txtNeedSynchronize": "Você tem atualizações",\r\n
+  "DE.Controllers.Main.txtRectangles": "Retângulos",\r\n
+  "DE.Controllers.Main.txtSeries": "Série",\r\n
+  "DE.Controllers.Main.txtStarsRibbons": "Estrelas e arco-íris",\r\n
+  "DE.Controllers.Main.txtXAxis": "Eixo X",\r\n
+  "DE.Controllers.Main.txtYAxis": "Eixo Y",\r\n
+  "DE.Controllers.Main.unknownErrorText": "Erro desconhecido.",\r\n
+  "DE.Controllers.Main.unsupportedBrowserErrorText ": "Seu navegador não é suportado.",\r\n
+  "DE.Controllers.Main.uploadImageExtMessage": "Formato de imagem desconhecido.",\r\n
+  "DE.Controllers.Main.uploadImageFileCountMessage": "Sem imagens carregadas.",\r\n
+  "DE.Controllers.Main.uploadImageSizeMessage": "Limite máximo do tamanho da imagem excedido.",\r\n
+  "DE.Controllers.Main.uploadImageTextText": "Carregando imagem...",\r\n
+  "DE.Controllers.Main.uploadImageTitleText": "Carregando imagem",\r\n
+  "DE.Controllers.Main.warnBrowserIE9": "O aplicativo tem baixa capacidade no IE9. Usar IE10 ou superior",\r\n
+  "DE.Controllers.Main.warnBrowserZoom": "A configuração de zoom atual de seu navegador não é completamente suportada. Redefina para o zoom padrão pressionando Ctrl+0.",\r\n
+  "DE.Controllers.Main.warnProcessRightsChange": "Foi negado a você o direito de editar o arquivo.",\r\n
+  "DE.Controllers.Statusbar.zoomText": "Zoom {0}%",\r\n
+  "DE.Controllers.Toolbar.confirmAddFontName": "The font you are going to save is not available on the current device.<br>The text style will be displayed using one of the device fonts, the saved font will be used when it is available.<br>Do you want to continue?",\r\n
+  "DE.Controllers.Toolbar.textAccent": "Destaques",\r\n
+  "DE.Controllers.Toolbar.textBracket": "Parênteses",\r\n
+  "DE.Controllers.Toolbar.textEmptyImgUrl": "Você precisa especificar uma URL de imagem.",\r\n
+  "DE.Controllers.Toolbar.textFontSizeErr": "O valor inserido está incorreto.<br>Insira um valor numérico entre 1 e 100",\r\n
+  "DE.Controllers.Toolbar.textFraction": "Frações",\r\n
+  "DE.Controllers.Toolbar.textFunction": "Funções",\r\n
+  "DE.Controllers.Toolbar.textIntegral": "Inteiros",\r\n
+  "DE.Controllers.Toolbar.textLargeOperator": "Grandes operadores",\r\n
+  "DE.Controllers.Toolbar.textLimitAndLog": "Limites e logaritmos",\r\n
+  "DE.Controllers.Toolbar.textMatrix": "Matrizes",\r\n
+  "DE.Controllers.Toolbar.textOperator": "Operadores",\r\n
+  "DE.Controllers.Toolbar.textRadical": "Radicais",\r\n
+  "DE.Controllers.Toolbar.textScript": "Scripts",\r\n
+  "DE.Controllers.Toolbar.textSymbols": "Símbolos",\r\n
+  "DE.Controllers.Toolbar.textWarning": "Aviso",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Accent": "Agudo",\r\n
+  "DE.Controllers.Toolbar.txtAccent_ArrowD": "Seta para direita-esquerda acima",\r\n
+  "DE.Controllers.Toolbar.txtAccent_ArrowL": "Seta adiante para cima",\r\n
+  "DE.Controllers.Toolbar.txtAccent_ArrowR": "Seta para direita acima",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Bar": "Barra",\r\n
+  "DE.Controllers.Toolbar.txtAccent_BarBot": "Barra inferior",\r\n
+  "DE.Controllers.Toolbar.txtAccent_BarTop": "Barra superior",\r\n
+  "DE.Controllers.Toolbar.txtAccent_BorderBox": "Fórmula embalada (com Placeholder)",\r\n
+  "DE.Controllers.Toolbar.txtAccent_BorderBoxCustom": "Fórmula embalada(Exemplo)",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Check": "Verificar",\r\n
+  "DE.Controllers.Toolbar.txtAccent_CurveBracketBot": "Chave Inferior",\r\n
+  "DE.Controllers.Toolbar.txtAccent_CurveBracketTop": "Chave Superior",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Custom_1": "Vetor A",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Custom_2": "Barra superior com ABC",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Custom_3": "x XOR y com barra superior",\r\n
+  "DE.Controllers.Toolbar.txtAccent_DDDot": "Ponto triplo",\r\n
+  "DE.Controllers.Toolbar.txtAccent_DDot": "Ponto duplo",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Dot": "Ponto",\r\n
+  "DE.Controllers.Toolbar.txtAccent_DoubleBar": "Barra superior dupla",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Grave": "Grave",\r\n
+  "DE.Controllers.Toolbar.txtAccent_GroupBot": "Agrupamento de caracteres abaixo",\r\n
+  "DE.Controllers.Toolbar.txtAccent_GroupTop": "Agrupamento de caracteres acima",\r\n
+  "DE.Controllers.Toolbar.txtAccent_HarpoonL": "Arpão adiante para cima",\r\n
+  "DE.Controllers.Toolbar.txtAccent_HarpoonR": "Arpão para direita acima",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Hat": "Acento circunflexo",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Smile": "Breve",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Tilde": "Til",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle": "Parênteses",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle_Delimiter_2": "Parênteses com separadores",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle_Delimiter_3": "Parênteses com separadores",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle_NoneOpen": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle_OpenNone": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Curve": "Parênteses",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Curve_Delimiter_2": "Parênteses com separadores",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Curve_NoneOpen": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Curve_OpenNone": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_1": "Casos (Duas Condições)",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_2": "Casos (Três Condições)",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_3": "Objeto Empilhado",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_4": "Objeto Empilhado",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_5": "Exemplo de casos",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_6": "Coeficiente binominal",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_7": "Coeficiente binominal",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Line": "Parênteses",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Line_NoneOpen": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Line_OpenNone": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LineDouble": "Parênteses",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LineDouble_NoneOpen": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LineDouble_OpenNone": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LowLim": "Parênteses",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LowLim_NoneNone": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LowLim_OpenNone": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Round": "Parênteses",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Round_Delimiter_2": "Parênteses com separadores",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Round_NoneOpen": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Round_OpenNone": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square": "Parênteses",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_CloseClose": "Parênteses",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_CloseOpen": "Parênteses",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_NoneOpen": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_OpenNone": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_OpenOpen": "Parênteses",\r\n
+  "DE.Controllers.Toolbar.txtBracket_SquareDouble": "Parênteses",\r\n
+  "DE.Controllers.Toolbar.txtBracket_SquareDouble_NoneOpen": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_SquareDouble_OpenNone": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_UppLim": "Parênteses",\r\n
+  "DE.Controllers.Toolbar.txtBracket_UppLim_NoneOpen": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtBracket_UppLim_OpenNone": "Colchete Simples",\r\n
+  "DE.Controllers.Toolbar.txtFractionDiagonal": "Fração inclinada",\r\n
+  "DE.Controllers.Toolbar.txtFractionDifferential_1": "Diferencial",\r\n
+  "DE.Controllers.Toolbar.txtFractionDifferential_2": "Diferencial",\r\n
+  "DE.Controllers.Toolbar.txtFractionDifferential_3": "Diferencial",\r\n
+  "DE.Controllers.Toolbar.txtFractionDifferential_4": "Diferencial",\r\n
+  "DE.Controllers.Toolbar.txtFractionHorizontal": "Fração linear",\r\n
+  "DE.Controllers.Toolbar.txtFractionPi_2": "Pi sobre 2",\r\n
+  "DE.Controllers.Toolbar.txtFractionSmall": "Fração pequena",\r\n
+  "DE.Controllers.Toolbar.txtFractionVertical": "Fração Empilhada",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Cos": "Função cosseno inverso",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Cosh": "Função cosseno inverso hiperbólico",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Cot": "Função cotangente inversa",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Coth": "Função cotangente inversa hiperbólica",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Csc": "Função cossecante inversa",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Csch": "Função cossecante inversa hiperbólica",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Sec": "Função secante inversa",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Sech": "Função secante inversa hiperbólica",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Sin": "Função seno inverso",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Sinh": "Função seno inverso hiperbólico",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Tan": "Função tangente inversa",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Tanh": "Função tangente inversa hiperbólica",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Cos": "Função cosseno",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Cosh": "Função cosseno hiperbólico",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Cot": "Função cotangente",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Coth": "Função cotangente hiperbólica",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Csc": "Função cossecante",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Csch": "Função co-secante hiperbólica",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Custom_1": "Teta seno",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Custom_2": "Cos 2x",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Custom_3": "Fórmula da tangente",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Sec": "Função secante",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Sech": "Função secante hiperbólica",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Sin": "Função de seno",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Sinh": "Função seno hiperbólico",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Tan": "Função da tangente",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Tanh": "Função tangente hiperbólica",\r\n
+  "DE.Controllers.Toolbar.txtIntegral": "Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegral_dtheta": "Teta diferencial",\r\n
+  "DE.Controllers.Toolbar.txtIntegral_dx": "Diferencial x",\r\n
+  "DE.Controllers.Toolbar.txtIntegral_dy": "Diferencial y",\r\n
+  "DE.Controllers.Toolbar.txtIntegralCenterSubSup": "Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralDouble": "Inteiro duplo",\r\n
+  "DE.Controllers.Toolbar.txtIntegralDoubleCenterSubSup": "Inteiro duplo",\r\n
+  "DE.Controllers.Toolbar.txtIntegralDoubleSubSup": "Inteiro duplo",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOriented": "Contorno integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedCenterSubSup": "Contorno integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedDouble": "Integral de Superfície",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedDoubleCenterSubSup": "Integral de Superfície",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedDoubleSubSup": "Integral de Superfície",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedSubSup": "Contorno integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedTriple": "Volume Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedTripleCenterSubSup": "Volume Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedTripleSubSup": "Volume Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralSubSup": "Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralTriple": "Integral Tripla",\r\n
+  "DE.Controllers.Toolbar.txtIntegralTripleCenterSubSup": "Integral Tripla",\r\n
+  "DE.Controllers.Toolbar.txtIntegralTripleSubSup": "Integral Tripla",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction": "Triangular",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction_CenterSub": "Triangular",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction_CenterSubSup": "Triangular",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction_Sub": "Triangular",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction_SubSup": "Triangular",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd": "Coproduto",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd_CenterSub": "Coproduto",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd_CenterSubSup": "Coproduto",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd_Sub": "Coproduto",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd_SubSup": "Coproduto",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_1": "Somatório",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_2": "Somatório",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_3": "Somatório",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_4": "Produto",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_5": "União",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction": "Vee",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction_CenterSub": "Vee",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction_CenterSubSup": "Vee",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction_Sub": "Vee",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction_SubSup": "Vee",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection": "Interseção",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection_CenterSub": "Interseção",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection_CenterSubSup": "Interseção",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection_Sub": "Interseção",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection_SubSup": "Interseção",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod": "Produto",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod_CenterSub": "Produto",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod_CenterSubSup": "Produto",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod_Sub": "Produto",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod_SubSup": "Produto",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum": "Somatório",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum_CenterSub": "Somatório",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum_CenterSubSup": "Somatório",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum_Sub": "Somatório",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum_SubSup": "Somatório",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union": "União",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union_CenterSub": "União",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union_CenterSubSup": "União",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union_Sub": "União",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union_SubSup": "União",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Custom_1": "Exemplo limite",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Custom_2": "Exemplo máximo",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Lim": "Limite",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Ln": "Logaritmo natural",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Log": "Logaritmo",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_LogBase": "Logaritmo",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Max": "Máximo",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Min": "Mínimo",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_1_2": "Matriz Vazia 1x2",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_1_3": "Matriz Vazia 1x3",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_1": "Matriz Vazia 2x1",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2": "Matriz Vazia 2x2",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2_DLineBracket": "Matriz vazia com parênteses",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2_LineBracket": "Matriz vazia com parênteses",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2_RoundBracket": "Matriz vazia com parênteses",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2_SquareBracket": "Matriz vazia com parênteses",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_3": "Matriz Vazia 2x3",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_3_1": "Matriz Vazia 3x1",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_3_2": "Matriz Vazia 3x2",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_3_3": "Matriz Vazia 3x3",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Dots_Baseline": "Pontos de linha de base",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Dots_Center": "Pontos de linha média",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Dots_Diagonal": "Pontos diagonais",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Dots_Vertical": "Pontos verticais",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Flat_Round": "Matriz dispersa",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Flat_Square": "Matriz dispersa",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Identity_2": "Matriz da identidade 2x2",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Identity_2_NoZeros": "Matriz da identidade 3x3",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Identity_3": "Matriz da identidade 3x3",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Identity_3_NoZeros": "Matriz da identidade 3x3",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowD_Bot": "Seta para direita esquerda abaixo",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowD_Top": "Seta para direita-esquerda acima",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowL_Bot": "Seta adiante para baixo",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowL_Top": "Seta adiante para cima",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowR_Bot": "Seta para direita abaixo",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowR_Top": "Seta para direita acima",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ColonEquals": "Dois-pontos-Sinal de Igual",\r\n
+  "DE.Controllers.Toolbar.txtOperator_Custom_1": "Resultados",\r\n
+  "DE.Controllers.Toolbar.txtOperator_Custom_2": "Resultados de Delta",\r\n
+  "DE.Controllers.Toolbar.txtOperator_Definition": "Igual a por definição",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DeltaEquals": "Delta igual a",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowD_Bot": "Seta para direita esquerda abaixo",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowD_Top": "Seta para direita-esquerda acima",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowL_Bot": "Seta adiante para baixo",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowL_Top": "Seta adiante para cima",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowR_Bot": "Seta para direita abaixo",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowR_Top": "Rightwards Arrow Above",\r\n
+  "DE.Controllers.Toolbar.txtOperator_EqualsEquals": "Sinal de Igual-Sinal de Igual",\r\n
+  "DE.Controllers.Toolbar.txtOperator_MinusEquals": "Sinal de Menos-Sinal de Igual",\r\n
+  "DE.Controllers.Toolbar.txtOperator_PlusEquals": "Sinal de Mais-Sinal de Igual",\r\n
+  "DE.Controllers.Toolbar.txtOperator_UnitOfMeasure": "Medido por",\r\n
+  "DE.Controllers.Toolbar.txtRadicalCustom_1": "Radical",\r\n
+  "DE.Controllers.Toolbar.txtRadicalCustom_2": "Radical",\r\n
+  "DE.Controllers.Toolbar.txtRadicalRoot_2": "Raiz quadrada com grau",\r\n
+  "DE.Controllers.Toolbar.txtRadicalRoot_3": "Raiz cúbica",\r\n
+  "DE.Controllers.Toolbar.txtRadicalRoot_n": "Radical com grau",\r\n
+  "DE.Controllers.Toolbar.txtRadicalSqrt": "Raiz quadrada",\r\n
+  "DE.Controllers.Toolbar.txtScriptCustom_1": "Script",\r\n
+  "DE.Controllers.Toolbar.txtScriptCustom_2": "Script",\r\n
+  "DE.Controllers.Toolbar.txtScriptCustom_3": "Script",\r\n
+  "DE.Controllers.Toolbar.txtScriptCustom_4": "Script",\r\n
+  "DE.Controllers.Toolbar.txtScriptSub": "Subscrito",\r\n
+  "DE.Controllers.Toolbar.txtScriptSubSup": "Subscrito-Sobrescrito",\r\n
+  "DE.Controllers.Toolbar.txtScriptSubSupLeft": "LeftSubscript-Superscript",\r\n
+  "DE.Controllers.Toolbar.txtScriptSup": "Sobrescrito",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_about": "Aproximadamente",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_additional": "Complemento",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_aleph": "Alef",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_alpha": "Alfa",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_approx": "Quase igual a",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_ast": "Operador de asterisco",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_beta": "Beta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_beth": "Aposta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_bullet": "Operador de marcador",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cap": "Interseção",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cbrt": "Raiz cúbica",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cdots": "Reticências horizontais de linha média",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_celsius": "Graus Celsius",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_chi": "Ki",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cong": "Aproximadamente igual a",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cup": "União",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_ddots": "Reticências diagonal para baixo à direita",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_degree": "Graus",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_delta": "Delta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_div": "Sinal de divisão",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_downarrow": "Seta para baixo",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_emptyset": "Conjunto vazio",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_epsilon": "Epsílon",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_equals": "Igual",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_equiv": "Idêntico a",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_eta": "Eta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_exists": "Existe",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_factorial": "Fatorial",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_fahrenheit": "Graus Fahrenheit",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_forall": "Para todos",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_gamma": "Gama",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_geq": "Superior a ou igual a",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_gg": "Muito superior a",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_greater": "Superior a",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_in": "Elemento de",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_inc": "Incremento",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_infinity": "Infinidade",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_iota": "Iota",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_kappa": "Capa",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_lambda": "Lambda",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_leftarrow": "Seta para esquerda",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_leftrightarrow": "Seta esquerda-direita",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_leq": "Inferior a ou igual a",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_less": "Inferior a",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_ll": "Muito inferior a",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_minus": "Menos",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_mp": "Sinal de Menos-Sinal de Mais",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_mu": "Mu",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_nabla": "Nabla",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_neq": "Não igual a",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_ni": "Contém como membro",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_not": "Não entrar",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_notexists": "Não existe",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_nu": "Nu",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_o": "Omicron",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_omega": "Ômega",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_partial": "Diferencial parcial",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_percent": "Porcentagem",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_phi": "Fi",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_pi": "Pi",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_plus": "Mais",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_pm": "Sinal de Menos-Sinal de Igual",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_propto": "Proporcional a",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_psi": "Psi",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_qdrt": "Quarta raiz",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_QED": "Fim da prova",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_rddots": "Reticências diagonal direitas para cima",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_rho": "Rô",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_rightarrow": "Seta para direita",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_sigma": "Sigma",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_sqrt": "Sinal de Radical",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_tau": "Tau",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_therefore": "Portanto",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_theta": "Teta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_times": "Sinal de multiplicação",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_uparrow": "Seta para cima",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_upsilon": "Ípsilon",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varepsilon": "Variante de Epsílon",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varphi": "Variante de fi",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varpi": "Variante de Pi",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varrho": "Variante de Rô",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varsigma": "Variante de Sigma",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_vartheta": "Variante de Teta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_vdots": "Reticências verticais",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_Xsi": "Xi",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_zeta": "Zeta",\r\n
+  "DE.Views.ChartSettings.textAdvanced": "Exibir configurações avançadas",\r\n
+  "DE.Views.ChartSettings.textArea": "Gráfico da Área",\r\n
+  "DE.Views.ChartSettings.textBar": "Gráfico de barras",\r\n
+  "DE.Views.ChartSettings.textChartType": "Alterar tipo de gráfico",\r\n
+  "DE.Views.ChartSettings.textColumn": "Gráfico de coluna",\r\n
+  "DE.Views.ChartSettings.textEditData": "Editar dados",\r\n
+  "DE.Views.ChartSettings.textHeight": "Altura",\r\n
+  "DE.Views.ChartSettings.textLine": "Gráfico de linha",\r\n
+  "DE.Views.ChartSettings.textOriginalSize": "Tamanho padrão",\r\n
+  "DE.Views.ChartSettings.textPie": "Gráfico de pizza",\r\n
+  "DE.Views.ChartSettings.textPoint": "Gráfico de pontos",\r\n
+  "DE.Views.ChartSettings.textSize": "Tamanho",\r\n
+  "DE.Views.ChartSettings.textStock": "Gráfico de ações",\r\n
+  "DE.Views.ChartSettings.textStyle": "Estilo",\r\n
+  "DE.Views.ChartSettings.textUndock": "Desencaixar do painel",\r\n
+  "DE.Views.ChartSettings.textWidth": "Largura",\r\n
+  "DE.Views.ChartSettings.textWrap": "Estilo da quebra automática",\r\n
+  "DE.Views.ChartSettings.txtBehind": "Atrás",\r\n
+  "DE.Views.ChartSettings.txtInFront": "Em frente",\r\n
+  "DE.Views.ChartSettings.txtInline": "Embutido",\r\n
+  "DE.Views.ChartSettings.txtSquare": "Quadrado",\r\n
+  "DE.Views.ChartSettings.txtThrough": "Através",\r\n
+  "DE.Views.ChartSettings.txtTight": "Justo",\r\n
+  "DE.Views.ChartSettings.txtTitle": "Gráfico",\r\n
+  "DE.Views.ChartSettings.txtTopAndBottom": "Parte superior e inferior",\r\n
+  "DE.Views.DocumentHolder.aboveText": "Acima",\r\n
+  "DE.Views.DocumentHolder.addCommentText": "Adicionar comentário",\r\n
+  "DE.Views.DocumentHolder.advancedFrameText": "Configurações avançadas de moldura",\r\n
+  "DE.Views.DocumentHolder.advancedParagraphText": "Configurações avançadas de parágrafo",\r\n
+  "DE.Views.DocumentHolder.advancedTableText": "Configurações avançadas de tabela",\r\n
+  "DE.Views.DocumentHolder.advancedText": "Configurações avançadas",\r\n
+  "DE.Views.DocumentHolder.alignmentText": "Alinhamento",\r\n
+  "DE.Views.DocumentHolder.belowText": "Abaixo",\r\n
+  "DE.Views.DocumentHolder.bottomCellText": "Alinhar à parte inferior",\r\n
+  "DE.Views.DocumentHolder.breakBeforeText": "Quebra de página antes",\r\n
+  "DE.Views.DocumentHolder.cellAlignText": "Alinhamento vertical da célula",\r\n
+  "DE.Views.DocumentHolder.cellText": "Célula",\r\n
+  "DE.Views.DocumentHolder.centerCellText": "Alinhar ao centro",\r\n
+  "DE.Views.DocumentHolder.centerText": "Centro",\r\n
+  "DE.Views.DocumentHolder.chartText": "Configurações avançadas de gráfico",\r\n
+  "DE.Views.DocumentHolder.columnText": "Coluna",\r\n
+  "DE.Views.DocumentHolder.deleteColumnText": "Excluir coluna",\r\n
+  "DE.Views.DocumentHolder.deleteRowText": "Excluir linha",\r\n
+  "DE.Views.DocumentHolder.deleteTableText": "Excluir tabela",\r\n
+  "DE.Views.DocumentHolder.deleteText": "Excluir",\r\n
+  "DE.Views.DocumentHolder.direct270Text": "Rotate at 270°",\r\n
+  "DE.Views.DocumentHolder.direct90Text": "Rotate at 90°",\r\n
+  "DE.Views.DocumentHolder.directHText": "Horizontal",\r\n
+  "DE.Views.DocumentHolder.directionText": "Text Direction",\r\n
+  "DE.Views.DocumentHolder.editChartText": "Editar dados",\r\n
+  "DE.Views.DocumentHolder.editFooterText": "Editar rodapé",\r\n
+  "DE.Views.DocumentHolder.editHeaderText": "Editar cabeçalho",\r\n
+  "DE.Views.DocumentHolder.editHyperlinkText": "Editar hiperlink",\r\n
+  "DE.Views.DocumentHolder.flowoverText": "Estilo da quebra automática - Fluxo",\r\n
+  "DE.Views.DocumentHolder.guestText": "Visitante",\r\n
+  "DE.Views.DocumentHolder.hyperlinkText": "Hiperlink",\r\n
+  "DE.Views.DocumentHolder.ignoreAllSpellText": "Ignorar tudo",\r\n
+  "DE.Views.DocumentHolder.ignoreSpellText": "Ignorar",\r\n
+  "DE.Views.DocumentHolder.imageText": "Configurações avançadas de imagem",\r\n
+  "DE.Views.DocumentHolder.inlineText": "Estilo da quebra automática - Embutido",\r\n
+  "DE.Views.DocumentHolder.insertColumnLeftText": "Coluna esquerda",\r\n
+  "DE.Views.DocumentHolder.insertColumnRightText": "Coluna direita",\r\n
+  "DE.Views.DocumentHolder.insertColumnText": "Inserir coluna",\r\n
+  "DE.Views.DocumentHolder.insertRowAboveText": "Linha acima",\r\n
+  "DE.Views.DocumentHolder.insertRowBelowText": "Linha abaixo",\r\n
+  "DE.Views.DocumentHolder.insertRowText": "Inserir linha",\r\n
+  "DE.Views.DocumentHolder.insertText": "Inserir",\r\n
+  "DE.Views.DocumentHolder.keepLinesText": "Manter as linhas juntas",\r\n
+  "DE.Views.DocumentHolder.langText": "Selecionar idioma",\r\n
+  "DE.Views.DocumentHolder.leftText": "Esquerda",\r\n
+  "DE.Views.DocumentHolder.loadSpellText": "Carregando variantes...",\r\n
+  "DE.Views.DocumentHolder.mergeCellsText": "Mesclar células",\r\n
+  "DE.Views.DocumentHolder.moreText": "Mais variantes...",\r\n
+  "DE.Views.DocumentHolder.noSpellVariantsText": "Sem varientes",\r\n
+  "DE.Views.DocumentHolder.originalSizeText": "Tamanho padrão",\r\n
+  "DE.Views.DocumentHolder.paragraphText": "Parágrafo",\r\n
+  "DE.Views.DocumentHolder.removeHyperlinkText": "Remover hiperlink",\r\n
+  "DE.Views.DocumentHolder.rightText": "Direita",\r\n
+  "DE.Views.DocumentHolder.rowText": "Linha",\r\n
+  "DE.Views.DocumentHolder.selectCellText": "Selecionar célula",\r\n
+  "DE.Views.DocumentHolder.selectColumnText": "Selecionar coluna",\r\n
+  "DE.Views.DocumentHolder.selectRowText": "Selecionar linha",\r\n
+  "DE.Views.DocumentHolder.selectTableText": "Selecionar tabela",\r\n
+  "DE.Views.DocumentHolder.selectText": "Selecionar",\r\n
+  "DE.Views.DocumentHolder.shapeText": "Configurações avançadas de forma",\r\n
+  "DE.Views.DocumentHolder.spellcheckText": "Verificação ortográfica",\r\n
+  "DE.Views.DocumentHolder.splitCellsText": "Dividir célula...",\r\n
+  "DE.Views.DocumentHolder.splitCellTitleText": "Dividir célula",\r\n
+  "DE.Views.DocumentHolder.tableText": "Tabela",\r\n
+  "DE.Views.DocumentHolder.textAlign": "Alinhar",\r\n
+  "DE.Views.DocumentHolder.textArrange": "Organizar",\r\n
+  "DE.Views.DocumentHolder.textArrangeBack": "Enviar para plano de fundo",\r\n
+  "DE.Views.DocumentHolder.textArrangeBackward": "Mover para trás",\r\n
+  "DE.Views.DocumentHolder.textArrangeForward": "Mover para frente",\r\n
+  "DE.Views.DocumentHolder.textArrangeFront": "Trazer para primeiro plano",\r\n
+  "DE.Views.DocumentHolder.textCopy": "Copiar",\r\n
+  "DE.Views.DocumentHolder.textCut": "Cortar",\r\n
+  "DE.Views.DocumentHolder.textEditWrapBoundary": "Editar limite de disposição",\r\n
+  "DE.Views.DocumentHolder.textNextPage": "Próxima página",\r\n
+  "DE.Views.DocumentHolder.textPaste": "Colar",\r\n
+  "DE.Views.DocumentHolder.textPrevPage": "Página anterior",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignBottom": "Alinhar à parte inferior",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignCenter": "Alinhar ao centro",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignLeft": "Alinhar à esquerda",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignMiddle": "Alinhar ao meio",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignRight": "Alinhar à direita",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignTop": "Alinhar à parte superior",\r\n
+  "DE.Views.DocumentHolder.textWrap": "Estilo da quebra automática",\r\n
+  "DE.Views.DocumentHolder.tipIsLocked": "Este elemento está sendo atualmente editado por outro usuário.",\r\n
+  "DE.Views.DocumentHolder.topCellText": "Alinhar à parte superior",\r\n
+  "DE.Views.DocumentHolder.txtBehind": "Atrás",\r\n
+  "DE.Views.DocumentHolder.txtGroup": "Grupo",\r\n
+  "DE.Views.DocumentHolder.txtInFront": "Em frente",\r\n
+  "DE.Views.DocumentHolder.txtInline": "Embutido",\r\n
+  "DE.Views.DocumentHolder.txtPressLink": "Pressione CTRL e clique no link",\r\n
+  "DE.Views.DocumentHolder.txtSquare": "Quadrado",\r\n
+  "DE.Views.DocumentHolder.txtThrough": "Através",\r\n
+  "DE.Views.DocumentHolder.txtTight": "Justo",\r\n
+  "DE.Views.DocumentHolder.txtTopAndBottom": "Parte superior e inferior",\r\n
+  "DE.Views.DocumentHolder.txtUngroup": "Desagrupar",\r\n
+  "DE.Views.DocumentHolder.vertAlignText": "Alinhamento vertical",\r\n
+  "DE.Views.DropcapSettingsAdvanced.cancelButtonText": "Cancelar",\r\n
+  "DE.Views.DropcapSettingsAdvanced.okButtonText": "OK",\r\n
+  "DE.Views.DropcapSettingsAdvanced.strBorders": "Bordas e preenchimento",\r\n
+  "DE.Views.DropcapSettingsAdvanced.strDropcap": "Letra capitular",\r\n
+  "DE.Views.DropcapSettingsAdvanced.strMargins": "Margens",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textAlign": "Alinhamento",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textAtLeast": "Pelo menos",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textAuto": "Automático",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBackColor": "Cor do plano de fundo",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBorderColor": "Cor da borda",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBorderDesc": "Clique no diagrama ou use os botões para selecionar bordas",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBorderWidth": "Tamanho da borda",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBottom": "Inferior",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textCenter": "Centro",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textColumn": "Coluna",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textDistance": "Distância do texto",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textExact": "Exatamente",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textFlow": "Estrutura de fluxo",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textFont": "Fonte",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textFrame": "Moldura",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textHeight": "Altura",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textHorizontal": "Horizontal",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textInline": "Moldura embutida",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textInMargin": "Na margem",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textInText": "No texto",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textLeft": "Esquerda",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textMargin": "Margem",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textMove": "Mover com texto",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textNewColor": "Adicionar nova cor personalizada",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textNone": "Nenhum",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textPage": "Página",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textParagraph": "Parágrafo",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textParameters": "Parâmetros",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textPosition": "Posição",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textRelative": "Relativo para",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textRight": "Direita",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textRowHeight": "Altura em linhas",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textStandartColors": "Cores padrão",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textThemeColors": "Cores do tema",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textTitle": "Letra capitular - Configurações avançadas",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textTitleFrame": "Moldura - Configurações Avançadas",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textTop": "Parte superior",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textVertical": "Vertical",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textWidth": "Largura",\r\n
+  "DE.Views.DropcapSettingsAdvanced.tipFontName": "Nome da fonte",\r\n
+  "DE.Views.DropcapSettingsAdvanced.txtNoBorders": "Sem bordas",\r\n
+  "DE.Views.FileMenu.btnBackCaption": "Ir para Documentos",\r\n
+  "DE.Views.FileMenu.btnCreateNewCaption": "Criar novo",\r\n
+  "DE.Views.FileMenu.btnDownloadCaption": "Baixar como...",\r\n
+  "DE.Views.FileMenu.btnHelpCaption": "Ajuda...",\r\n
+  "DE.Views.FileMenu.btnHistoryCaption": "Version History",\r\n
+  "DE.Views.FileMenu.btnInfoCaption": "Informações do documento...",\r\n
+  "DE.Views.FileMenu.btnPrintCaption": "Imprimir",\r\n
+  "DE.Views.FileMenu.btnRecentFilesCaption": "Abrir recente...",\r\n
+  "DE.Views.FileMenu.btnReturnCaption": "Voltar para documento",\r\n
+  "DE.Views.FileMenu.btnRightsCaption": "Direitos de Acesso...",\r\n
+  "DE.Views.FileMenu.btnSaveCaption": "Salvar",\r\n
+  "DE.Views.FileMenu.btnSettingsCaption": "Configurações avançadas...",\r\n
+  "DE.Views.FileMenu.btnToEditCaption": "Editar documento",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.fromBlankText": "Do branco",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.fromTemplateText": "Do Modelo",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.newDescriptionText": "Crie um novo documento de texto em branco que você será capaz de nomear e formatar após ele ser criado durante a edição. Ou escolha um dos modelos para iniciar um documento de um tipo ou propósito determinado onde alguns estilos já foram pré-aplicados.",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.newDocumentText": "Novo documento de texto",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.noTemplatesText": "Não há modelos",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtAuthor": "Autor",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtBtnAccessRights": "Alterar direitos de acesso",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtDate": "Data de criação",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtLoading": "Carregando...",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtPages": "Páginas",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtParagraphs": "Parágrafos",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtPlacement": "Localização",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtRights": "Pessoas que têm direitos",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtSpaces": "Símbolos com espaços",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtStatistics": "Estatísticas",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtSymbols": "Símbolos",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtTitle": "Título do documento",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtWords": "Palavras",\r\n
+  "DE.Views.FileMenuPanels.DocumentRights.txtBtnAccessRights": "Alterar direitos de acesso",\r\n
+  "DE.Views.FileMenuPanels.DocumentRights.txtRights": "Pessoas que têm direitos",\r\n
+  "DE.Views.FileMenuPanels.Settings.okButtonText": "Aplicar",\r\n
+  "DE.Views.FileMenuPanels.Settings.strAlignGuides": "Ativar guias de alinhamento",\r\n
+  "DE.Views.FileMenuPanels.Settings.strAutosave": "Ativar salvamento automático",\r\n
+  "DE.Views.FileMenuPanels.Settings.strFontRender": "Dicas de fonte",\r\n
+  "DE.Views.FileMenuPanels.Settings.strInputMode": "Ativar hieróglifos",\r\n
+  "DE.Views.FileMenuPanels.Settings.strLiveComment": "Ativar opção comentário ao vivo",\r\n
+  "DE.Views.FileMenuPanels.Settings.strShowChanges": "Alterações de colaboração em tempo real",\r\n
+  "DE.Views.FileMenuPanels.Settings.strSpellCheckMode": "Ativar a opção de verificação ortográfica",\r\n
+  "DE.Views.FileMenuPanels.Settings.strUnit": "Unidade de medida",\r\n
+  "DE.Views.FileMenuPanels.Settings.strZoom": "Valor de zoom padrão",\r\n
+  "DE.Views.FileMenuPanels.Settings.text10Minutes": "Cada 10 minutos",\r\n
+  "DE.Views.FileMenuPanels.Settings.text30Minutes": "Cada 30 minutos",\r\n
+  "DE.Views.FileMenuPanels.Settings.text5Minutes": "Cada 5 minutos",\r\n
+  "DE.Views.FileMenuPanels.Settings.text60Minutes": "Cada hora",\r\n
+  "DE.Views.FileMenuPanels.Settings.textAlignGuides": "Guias de alinhamento",\r\n
+  "DE.Views.FileMenuPanels.Settings.textAutoSave": "Salvamento automático",\r\n
+  "DE.Views.FileMenuPanels.Settings.textDisabled": "Desabilitado",\r\n
+  "DE.Views.FileMenuPanels.Settings.textMinute": "Cada minuto",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtAll": "Visualizar todos",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtCm": "Centímetro",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtInput": "Entrada alternativa",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtLast": "Visualizar último",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtLiveComment": "Comentário ao vivo",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtMac": "como SO X",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtNative": "Nativo",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtNone": "Visualizar nenhum",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtPt": "Ponto",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtSpellCheck": "Verificação ortográfica",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtWin": "como Windows",\r\n
+  "DE.Views.HeaderFooterSettings.textBottomCenter": "Centro inferior",\r\n
+  "DE.Views.HeaderFooterSettings.textBottomLeft": "Esquerda inferior",\r\n
+  "DE.Views.HeaderFooterSettings.textBottomRight": "Direita inferior",\r\n
+  "DE.Views.HeaderFooterSettings.textDiffFirst": "Primeira página diferente",\r\n
+  "DE.Views.HeaderFooterSettings.textDiffOdd": "Páginas pares e ímpares diferentes",\r\n
+  "DE.Views.HeaderFooterSettings.textHeaderFromBottom": "Rodapé abaixo",\r\n
+  "DE.Views.HeaderFooterSettings.textHeaderFromTop": "Cabeçalho no início",\r\n
+  "DE.Views.HeaderFooterSettings.textOptions": "Opções",\r\n
+  "DE.Views.HeaderFooterSettings.textPageNum": "Inserir número da página",\r\n
+  "DE.Views.HeaderFooterSettings.textPosition": "Posição",\r\n
+  "DE.Views.HeaderFooterSettings.textSameAs": "Vincular a Anterior",\r\n
+  "DE.Views.HeaderFooterSettings.textTopCenter": "Superior central",\r\n
+  "DE.Views.HeaderFooterSettings.textTopLeft": "Superior esquerdo",\r\n
+  "DE.Views.HeaderFooterSettings.textTopRight": "Superior direito",\r\n
+  "DE.Views.HyperlinkSettingsDialog.cancelButtonText": "Cancelar",\r\n
+  "DE.Views.HyperlinkSettingsDialog.okButtonText": "OK",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textDefault": "Fragmento de texto selecionado",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textDisplay": "Exibir",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textTitle": "Configurações de hiperlink",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textTooltip": "Texto de dica de tela:",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textUrl": "Vincular a",\r\n
+  "DE.Views.HyperlinkSettingsDialog.txtEmpty": "Este campo é obrigatório",\r\n
+  "DE.Views.HyperlinkSettingsDialog.txtNotUrl": "Este campo deve ser uma URL no formato \\"http://www.example.com\\"",\r\n
+  "DE.Views.ImageSettings.textAdvanced": "Exibir configurações avançadas",\r\n
+  "DE.Views.ImageSettings.textFromFile": "Do Arquivo",\r\n
+  "DE.Views.ImageSettings.textFromUrl": "Da URL",\r\n
+  "DE.Views.ImageSettings.textHeight": "Altura",\r\n
+  "DE.Views.ImageSettings.textInsert": "Substituir imagem",\r\n
+  "DE.Views.ImageSettings.textOriginalSize": "Tamanho padrão",\r\n
+  "DE.Views.ImageSettings.textSize": "Tamanho",\r\n
+  "DE.Views.ImageSettings.textWidth": "Largura",\r\n
+  "DE.Views.ImageSettings.textWrap": "Estilo da quebra automática",\r\n
+  "DE.Views.ImageSettings.txtBehind": "Atrás",\r\n
+  "DE.Views.ImageSettings.txtInFront": "Em frente",\r\n
+  "DE.Views.ImageSettings.txtInline": "Embutido",\r\n
+  "DE.Views.ImageSettings.txtSquare": "Quadrado",\r\n
+  "DE.Views.ImageSettings.txtThrough": "Através",\r\n
+  "DE.Views.ImageSettings.txtTight": "Justo",\r\n
+  "DE.Views.ImageSettings.txtTopAndBottom": "Parte superior e inferior",\r\n
+  "DE.Views.ImageSettingsAdvanced.cancelButtonText": "Cancelar",\r\n
+  "DE.Views.ImageSettingsAdvanced.okButtonText": "OK",\r\n
+  "DE.Views.ImageSettingsAdvanced.strMargins": "Preenchimento de texto",\r\n
+  "DE.Views.ImageSettingsAdvanced.textAlignment": "Alinhamento",\r\n
+  "DE.Views.ImageSettingsAdvanced.textArrows": "Setas",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBeginSize": "Tamanho inicial",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBeginStyle": "Estilo inicial",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBelow": "abaixo",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBevel": "Bisel",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBottom": "Inferior",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBottomMargin": "Margem inferior",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBtnWrap": "Disposição do texto",\r\n
+  "DE.Views.ImageSettingsAdvanced.textCapType": "Tipo de letra",\r\n
+  "DE.Views.ImageSettingsAdvanced.textCenter": "Centro",\r\n
+  "DE.Views.ImageSettingsAdvanced.textCharacter": "Caractere",\r\n
+  "DE.Views.ImageSettingsAdvanced.textColumn": "Coluna",\r\n
+  "DE.Views.ImageSettingsAdvanced.textDistance": "Distância do texto",\r\n
+  "DE.Views.ImageSettingsAdvanced.textEndSize": "Tamanho final",\r\n
+  "DE.Views.ImageSettingsAdvanced.textEndStyle": "Estilo final",\r\n
+  "DE.Views.ImageSettingsAdvanced.textFlat": "Plano",\r\n
+  "DE.Views.ImageSettingsAdvanced.textHeight": "Altura",\r\n
+  "DE.Views.ImageSettingsAdvanced.textHorizontal": "Horizontal",\r\n
+  "DE.Views.ImageSettingsAdvanced.textJoinType": "Tipo de junção",\r\n
+  "DE.Views.ImageSettingsAdvanced.textKeepRatio": "Proporções constantes",\r\n
+  "DE.Views.ImageSettingsAdvanced.textLeft": "Esquerda",\r\n
+  "DE.Views.ImageSettingsAdvanced.textLeftMargin": "Margem esquerda",\r\n
+  "DE.Views.ImageSettingsAdvanced.textLine": "Linha",\r\n
+  "DE.Views.ImageSettingsAdvanced.textLineStyle": "Estilo de linha",\r\n
+  "DE.Views.ImageSettingsAdvanced.textMargin": "Margem",\r\n
+  "DE.Views.ImageSettingsAdvanced.textMiter": "Malhete",\r\n
+  "DE.Views.ImageSettingsAdvanced.textMove": "Mover objeto com texto",\r\n
+  "DE.Views.ImageSettingsAdvanced.textOptions": "Opções",\r\n
+  "DE.Views.ImageSettingsAdvanced.textOriginalSize": "Tamanho padrão",\r\n
+  "DE.Views.ImageSettingsAdvanced.textOverlap": "Permitir sobreposição",\r\n
+  "DE.Views.ImageSettingsAdvanced.textPage": "Página",\r\n
+  "DE.Views.ImageSettingsAdvanced.textParagraph": "Parágrafo",\r\n
+  "DE.Views.ImageSettingsAdvanced.textPosition": "Posição",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRelative": "relativo para",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRight": "Direita",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRightMargin": "Margem direita",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRightOf": "para a direita de",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRound": "Rodada",\r\n
+  "DE.Views.ImageSettingsAdvanced.textShape": "Configurações da forma",\r\n
+  "DE.Views.ImageSettingsAdvanced.textSize": "Tamanho",\r\n
+  "DE.Views.ImageSettingsAdvanced.textSquare": "Quadrado",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTitle": "Imagem - Configurações avançadas",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTitleChart": "Gráfico - Configurações avançadas",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTitleShape": "Forma - Configurações avançadas",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTop": "Parte superior",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTopMargin": "Margem superior",\r\n
+  "DE.Views.ImageSettingsAdvanced.textVertical": "Vertical",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWidth": "Largura",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrap": "Estilo da quebra automática",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapBehindTooltip": "Atrás",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapInFrontTooltip": "Em frente",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapInlineTooltip": "Embutido",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapSquareTooltip": "Quadrado",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapThroughTooltip": "Através",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapTightTooltip": "Justo",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapTopbottomTooltip": "Parte superior e inferior",\r\n
+  "DE.Views.LeftMenu.tipAbout": "Sobre",\r\n
+  "DE.Views.LeftMenu.tipChat": "Chat",\r\n
+  "DE.Views.LeftMenu.tipComments": "Comentários",\r\n
+  "DE.Views.LeftMenu.tipFile": "Arquivo",\r\n
+  "DE.Views.LeftMenu.tipSearch": "Pesquisar",\r\n
+  "DE.Views.LeftMenu.tipSupport": "Feedback e Suporte",\r\n
+  "DE.Views.LeftMenu.tipTitles": "Títulos",\r\n
+  "DE.Views.MailMergeEmailDlg.cancelButtonText": "Cancel",\r\n
+  "DE.Views.MailMergeEmailDlg.filePlaceholder": "PDF",\r\n
+  "DE.Views.MailMergeEmailDlg.okButtonText": "Send",\r\n
+  "DE.Views.MailMergeEmailDlg.subjectPlaceholder": "Theme",\r\n
+  "DE.Views.MailMergeEmailDlg.textAttachDocx": "Attach as DOCX",\r\n
+  "DE.Views.MailMergeEmailDlg.textAttachPdf": "Attach as PDF",\r\n
+  "DE.Views.MailMergeEmailDlg.textFileName": "File name",\r\n
+  "DE.Views.MailMergeEmailDlg.textFormat": "Mail format",\r\n
+  "DE.Views.MailMergeEmailDlg.textFrom": "From",\r\n
+  "DE.Views.MailMergeEmailDlg.textHTML": "HTML",\r\n
+  "DE.Views.MailMergeEmailDlg.textMessage": "Message",\r\n
+  "DE.Views.MailMergeEmailDlg.textSubject": "Subject Line",\r\n
+  "DE.Views.MailMergeEmailDlg.textTitle": "Send to E-mail",\r\n
+  "DE.Views.MailMergeEmailDlg.textTo": "To",\r\n
+  "DE.Views.MailMergeEmailDlg.textWarning": "Warning!",\r\n
+  "DE.Views.MailMergeEmailDlg.textWarningMsg": "Please note that mailing cannot be stopped once your click the \'Send\' button.",\r\n
+  "DE.Views.MailMergeRecepients.textLoading": "Loading",\r\n
+  "DE.Views.MailMergeRecepients.textTitle": "Select Data Source",\r\n
+  "DE.Views.MailMergeSaveDlg.textLoading": "Loading",\r\n
+  "DE.Views.MailMergeSaveDlg.textTitle": "Folder for save",\r\n
+  "DE.Views.MailMergeSettings.downloadMergeTitle": "Merging",\r\n
+  "DE.Views.MailMergeSettings.errorMailMergeSaveFile": "Merge failed.",\r\n
+  "DE.Views.MailMergeSettings.notcriticalErrorTitle": "Warning",\r\n
+  "DE.Views.MailMergeSettings.textAll": "All records",\r\n
+  "DE.Views.MailMergeSettings.textCurrent": "Current record",\r\n
+  "DE.Views.MailMergeSettings.textDataSource": "Data Source",\r\n
+  "DE.Views.MailMergeSettings.textDocx": "Docx",\r\n
+  "DE.Views.MailMergeSettings.textDownload": "Download",\r\n
+  "DE.Views.MailMergeSettings.textEditData": "Edit data source",\r\n
+  "DE.Views.MailMergeSettings.textEmail": "E-mail",\r\n
+  "DE.Views.MailMergeSettings.textFrom": "From",\r\n
+  "DE.Views.MailMergeSettings.textHighlight": "Highlight merge fields",\r\n
+  "DE.Views.MailMergeSettings.textInsertField": "Insert Merge Field",\r\n
+  "DE.Views.MailMergeSettings.textMaxRecepients": "Max 100 recepients.",\r\n
+  "DE.Views.MailMergeSettings.textMerge": "Merge",\r\n
+  "DE.Views.MailMergeSettings.textMergeFields": "Merge Fields",\r\n
+  "DE.Views.MailMergeSettings.textMergeTo": "Merge to",\r\n
+  "DE.Views.MailMergeSettings.textPdf": "PDF",\r\n
+  "DE.Views.MailMergeSettings.textPortal": "Save",\r\n
+  "DE.Views.MailMergeSettings.textPreview": "Preview results",\r\n
+  "DE.Views.MailMergeSettings.textReadMore": "Read more",\r\n
+  "DE.Views.MailMergeSettings.textSendMsg": "All mail messages are ready and will be sent out within some time.<br>The speed of mailing depends on your mail service.<br>You can continue working with document or close it. After the operation is over the notification will be sent to your %1 email address.",\r\n
+  "DE.Views.MailMergeSettings.textTo": "To",\r\n
+  "DE.Views.MailMergeSettings.txtFirst": "To first field",\r\n
+  "DE.Views.MailMergeSettings.txtFromToError": "\\"From\\" value must be less than \\"To\\" value",\r\n
+  "DE.Views.MailMergeSettings.txtLast": "To last field",\r\n
+  "DE.Views.MailMergeSettings.txtNext": "To next field",\r\n
+  "DE.Views.MailMergeSettings.txtPrev": "To previous field",\r\n
+  "DE.Views.MailMergeSettings.txtUntitled": "Untitled",\r\n
+  "DE.Views.MailMergeSettings.warnProcessMailMerge": "Starting merge failed",\r\n
+  "DE.Views.ParagraphSettings.strLineHeight": "Espaçamento de linha",\r\n
+  "DE.Views.ParagraphSettings.strParagraphSpacing": "Espaçamento",\r\n
+  "DE.Views.ParagraphSettings.strSomeParagraphSpace": "Não adicionar intervalo entre parágrafos do mesmo estilo",\r\n
+  "DE.Views.ParagraphSettings.strSpacingAfter": "Depois",\r\n
+  "DE.Views.ParagraphSettings.strSpacingBefore": "Antes",\r\n
+  "DE.Views.ParagraphSettings.textAdvanced": "Exibir configurações avançadas",\r\n
+  "DE.Views.ParagraphSettings.textAt": "Em",\r\n
+  "DE.Views.ParagraphSettings.textAtLeast": "Pelo menos",\r\n
+  "DE.Views.ParagraphSettings.textAuto": "Múltiplo",\r\n
+  "DE.Views.ParagraphSettings.textBackColor": "Cor do plano de fundo",\r\n
+  "DE.Views.ParagraphSettings.textExact": "Exatamente",\r\n
+  "DE.Views.ParagraphSettings.textNewColor": "Adicionar nova cor personalizada",\r\n
+  "DE.Views.ParagraphSettings.textStandartColors": "Cores padrão",\r\n
+  "DE.Views.ParagraphSettings.textThemeColors": "Cores do tema",\r\n
+  "DE.Views.ParagraphSettings.txtAutoText": "Automático",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.cancelButtonText": "Cancelar",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.noTabs": "As abas especificadas aparecerão neste campo",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.okButtonText": "OK",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strAllCaps": "Todas maiúsculas",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strBorders": "Bordas e Preenchimento",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strBreakBefore": "Quebra de página antes",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strDoubleStrike": "Tachado duplo",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strIndentsFirstLine": "Primeira linha",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strIndentsLeftText": "Esquerda",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strIndentsRightText": "Direita",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strKeepLines": "Manter as linhas juntas",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strKeepNext": "Manter com o próximo",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strMargins": "Preenchimentos",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strOrphan": "Controle de órfão",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strParagraphFont": "Fonte",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strParagraphIndents": "Recuos e Posicionamento",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strParagraphPosition": "Posicionamento",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strSmallCaps": "Versalete",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strStrike": "Taxado",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strSubscript": "Subscrito",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strSuperscript": "Sobrescrito",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strTabs": "Aba",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textAlign": "Alinhamento",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBackColor": "Cor do plano de fundo",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBorderColor": "Cor da borda",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBorderDesc": "Clique no diagrama ou use os botões para selecionar bordas e aplicar o estilo escolhido a elas",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBorderWidth": "Tamanho da borda",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBottom": "Inferior",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textCharacterSpacing": "Espaçamento entre caracteres",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textDefault": "Aba padrão",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textEffects": "Efeitos",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textLeft": "Esquerda",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textNewColor": "Adicionar nova cor personalizada",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textPosition": "Posição",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textRemove": "Remover",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textRemoveAll": "Remover todos",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textRight": "Direita",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textSet": "Especificar",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textSpacing": "Espaçamento",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textStandartColors": "Cores padrão",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTabCenter": "Centro",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTabLeft": "Esquerda",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTabPosition": "Posição da aba",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTabRight": "Direita",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textThemeColors": "Cores do tema",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTitle": "Parágrafo - Configurações avançadas",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTop": "Parte superior",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipAll": "Definir borda externa e todas as linhas internas",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipBottom": "Definir borda inferior apenas",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipInner": "Definir apenas linhas internas horizontais",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipLeft": "Definir apenas borda esquerda",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipNone": "Definir sem bordas",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipOuter": "Definir apenas borda externa",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipRight": "Definir apenas borda direita",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipTop": "Definir apenas borda superior",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.txtNoBorders": "Sem bordas",\r\n
+  "DE.Views.RightMenu.txtChartSettings": "Configurações de gráfico",\r\n
+  "DE.Views.RightMenu.txtHeaderFooterSettings": "Configurações de cabeçalho e rodapé",\r\n
+  "DE.Views.RightMenu.txtImageSettings": "Configurações de imagem",\r\n
+  "DE.Views.RightMenu.txtMailMergeSettings": "Mail Merge Settings",\r\n
+  "DE.Views.RightMenu.txtParagraphSettings": "Configurações do parágrafo",\r\n
+  "DE.Views.RightMenu.txtShapeSettings": "Configurações da forma",\r\n
+  "DE.Views.RightMenu.txtTableSettings": "Configurações da tabela",\r\n
+  "DE.Views.ShapeSettings.strBackground": "Cor do plano de fundo",\r\n
+  "DE.Views.ShapeSettings.strChange": "Alterar forma automática",\r\n
+  "DE.Views.ShapeSettings.strColor": "Cor",\r\n
+  "DE.Views.ShapeSettings.strFill": "Preencher",\r\n
+  "DE.Views.ShapeSettings.strForeground": "Cor do primeiro plano",\r\n
+  "DE.Views.ShapeSettings.strPattern": "Padrão",\r\n
+  "DE.Views.ShapeSettings.strSize": "Tamanho",\r\n
+  "DE.Views.ShapeSettings.strStroke": "Traço",\r\n
+  "DE.Views.ShapeSettings.strTransparency": "Opacidade",\r\n
+  "DE.Views.ShapeSettings.textAdvanced": "Exibir configurações avançadas",\r\n
+  "DE.Views.ShapeSettings.textBorderSizeErr": "O valor inserido está incorreto.<br>Insira um valor entre 0 pt e 1.584 pt.",\r\n
+  "DE.Views.ShapeSettings.textColor": "Preenchimento de cor",\r\n
+  "DE.Views.ShapeSettings.textDirection": "Direção",\r\n
+  "DE.Views.ShapeSettings.textEmptyPattern": "Sem padrão",\r\n
+  "DE.Views.ShapeSettings.textFromFile": "Do Arquivo",\r\n
+  "DE.Views.ShapeSettings.textFromUrl": "Da URL",\r\n
+  "DE.Views.ShapeSettings.textGradient": "Gradiente",\r\n
+  "DE.Views.ShapeSettings.textGradientFill": "Preenchimento gradiente",\r\n
+  "DE.Views.ShapeSettings.textImageTexture": "Imagem ou Textura",\r\n
+  "DE.Views.ShapeSettings.textLinear": "Linear",\r\n
+  "DE.Views.ShapeSettings.textNewColor": "Adicionar nova cor personalizada",\r\n
+  "DE.Views.ShapeSettings.textNoFill": "Sem preenchimento",\r\n
+  "DE.Views.ShapeSettings.textPatternFill": "Padrão",\r\n
+  "DE.Views.ShapeSettings.textRadial": "Radial",\r\n
+  "DE.Views.ShapeSettings.textSelectTexture": "Selecionar",\r\n
+  "DE.Views.ShapeSettings.textStandartColors": "Cores padrão",\r\n
+  "DE.Views.ShapeSettings.textStretch": "Alongar",\r\n
+  "DE.Views.ShapeSettings.textStyle": "Estilo",\r\n
+  "DE.Views.ShapeSettings.textTexture": "Da Textura",\r\n
+  "DE.Views.ShapeSettings.textThemeColors": "Cores do tema",\r\n
+  "DE.Views.ShapeSettings.textTile": "Lado a lado",\r\n
+  "DE.Views.ShapeSettings.textWrap": "Estilo da quebra automática",\r\n
+  "DE.Views.ShapeSettings.txtBehind": "Atrás",\r\n
+  "DE.Views.ShapeSettings.txtBrownPaper": "Papel pardo",\r\n
+  "DE.Views.ShapeSettings.txtCanvas": "Canvas",\r\n
+  "DE.Views.ShapeSettings.txtCarton": "Papelão",\r\n
+  "DE.Views.ShapeSettings.txtDarkFabric": "Tecido escuro",\r\n
+  "DE.Views.ShapeSettings.txtGrain": "Granulação",\r\n
+  "DE.Views.ShapeSettings.txtGranite": "Granito",\r\n
+  "DE.Views.ShapeSettings.txtGreyPaper": "Papel cinza",\r\n
+  "DE.Views.ShapeSettings.txtInFront": "Em frente",\r\n
+  "DE.Views.ShapeSettings.txtInline": "Embutido",\r\n
+  "DE.Views.ShapeSettings.txtKnit": "Encontro",\r\n
+  "DE.Views.ShapeSettings.txtLeather": "Couro",\r\n
+  "DE.Views.ShapeSettings.txtNoBorders": "Sem linha",\r\n
+  "DE.Views.ShapeSettings.txtPapyrus": "Papiro",\r\n
+  "DE.Views.ShapeSettings.txtSquare": "Quadrado",\r\n
+  "DE.Views.ShapeSettings.txtThrough": "Através",\r\n
+  "DE.Views.ShapeSettings.txtTight": "Justo",\r\n
+  "DE.Views.ShapeSettings.txtTopAndBottom": "Parte superior e inferior",\r\n
+  "DE.Views.ShapeSettings.txtWood": "Madeira",\r\n
+  "DE.Views.Statusbar.goToPageText": "Ir para a Página",\r\n
+  "DE.Views.Statusbar.LanguageDialog.btnCancel": "Cancelar",\r\n
+  "DE.Views.Statusbar.LanguageDialog.btnOk": "OK",\r\n
+  "DE.Views.Statusbar.LanguageDialog.labelSelect": "Selecionar idioma do documento",\r\n
+  "DE.Views.Statusbar.pageIndexText": "Página {0} de {1}",\r\n
+  "DE.Views.Statusbar.tipFitPage": "Ajustar página",\r\n
+  "DE.Views.Statusbar.tipFitWidth": "Ajustar largura",\r\n
+  "DE.Views.Statusbar.tipMoreUsers": "e %1 usuários.",\r\n
+  "DE.Views.Statusbar.tipSetDocLang": "Definir idioma do documento",\r\n
+  "DE.Views.Statusbar.tipSetLang": "Definir idioma do texto",\r\n
+  "DE.Views.Statusbar.tipSetSpelling": "Verificação ortográfica",\r\n
+  "DE.Views.Statusbar.tipShowUsers": "Para ver todos os usuários clique no ícone abaixo.",\r\n
+  "DE.Views.Statusbar.tipUsers": "O documento atualmente está sendo editado por vários usuários.",\r\n
+  "DE.Views.Statusbar.tipZoomFactor": "Ampliação",\r\n
+  "DE.Views.Statusbar.tipZoomIn": "Ampliar",\r\n
+  "DE.Views.Statusbar.tipZoomOut": "Reduzir",\r\n
+  "DE.Views.Statusbar.txtPageNumInvalid": "Número da página inválido",\r\n
+  "DE.Views.TableSettings.deleteColumnText": "Excluir coluna",\r\n
+  "DE.Views.TableSettings.deleteRowText": "Excluir linha",\r\n
+  "DE.Views.TableSettings.deleteTableText": "Excluir tabela",\r\n
+  "DE.Views.TableSettings.insertColumnLeftText": "Inserir coluna à esquerda",\r\n
+  "DE.Views.TableSettings.insertColumnRightText": "Inserir coluna à direita",\r\n
+  "DE.Views.TableSettings.insertRowAboveText": "Inserir linha acima",\r\n
+  "DE.Views.TableSettings.insertRowBelowText": "Inserir linha abaixo",\r\n
+  "DE.Views.TableSettings.mergeCellsText": "Mesclar células",\r\n
+  "DE.Views.TableSettings.selectCellText": "Selecionar célula",\r\n
+  "DE.Views.TableSettings.selectColumnText": "Selecionar coluna",\r\n
+  "DE.Views.TableSettings.selectRowText": "Selecionar linha",\r\n
+  "DE.Views.TableSettings.selectTableText": "Selecionar tabela",\r\n
+  "DE.Views.TableSettings.splitCellsText": "Dividir célula...",\r\n
+  "DE.Views.TableSettings.splitCellTitleText": "Dividir célula",\r\n
+  "DE.Views.TableSettings.strRepeatRow": "Repetir como linha de cabeçalho na parte superior de todas as páginas",\r\n
+  "DE.Views.TableSettings.textAdvanced": "Exibir configurações avançadas",\r\n
+  "DE.Views.TableSettings.textBackColor": "Cor do plano de fundo",\r\n
+  "DE.Views.TableSettings.textBanded": "Em tiras",\r\n
+  "DE.Views.TableSettings.textBorderColor": "Cor",\r\n
+  "DE.Views.TableSettings.textBorders": "Estilo de bordas",\r\n
+  "DE.Views.TableSettings.textCancel": "Cancelar",\r\n
+  "DE.Views.TableSettings.textColumns": "Colunas",\r\n
+  "DE.Views.TableSettings.textEdit": "Linhas e Colunas",\r\n
+  "DE.Views.TableSettings.textEmptyTemplate": "Sem modelos",\r\n
+  "DE.Views.TableSettings.textFirst": "Primeiro",\r\n
+  "DE.Views.TableSettings.textHeader": "Cabeçalho",\r\n
+  "DE.Views.TableSettings.textLast": "Último",\r\n
+  "DE.Views.TableSettings.textNewColor": "Adicionar nova cor personalizada",\r\n
+  "DE.Views.TableSettings.textOK": "OK",\r\n
+  "DE.Views.TableSettings.textRows": "Linhas",\r\n
+  "DE.Views.TableSettings.textSelectBorders": "Selecione as bordas que você deseja alterar aplicando o estilo escolhido acima",\r\n
+  "DE.Views.TableSettings.textStandartColors": "Cores padrão",\r\n
+  "DE.Views.TableSettings.textTemplate": "Selecionar a partir do modelo",\r\n
+  "DE.Views.TableSettings.textThemeColors": "Cores do tema",\r\n
+  "DE.Views.TableSettings.textTotal": "Total",\r\n
+  "DE.Views.TableSettings.textWrap": "Disposição do texto",\r\n
+  "DE.Views.TableSettings.textWrapNoneTooltip": "Tabela embutida",\r\n
+  "DE.Views.TableSettings.textWrapParallelTooltip": "Tabela de fluxo",\r\n
+  "DE.Views.TableSettings.tipAll": "Definir borda externa e todas as linhas internas",\r\n
+  "DE.Views.TableSettings.tipBottom": "Definir apenas borda inferior externa",\r\n
+  "DE.Views.TableSettings.tipInner": "Definir apenas linhas internas",\r\n
+  "DE.Views.TableSettings.tipInnerHor": "Definir apenas linhas internas horizontais",\r\n
+  "DE.Views.TableSettings.tipInnerVert": "Definir apenas linhas internas verticais",\r\n
+  "DE.Views.TableSettings.tipLeft": "Definir apenas borda esquerda externa",\r\n
+  "DE.Views.TableSettings.tipNone": "Definir sem bordas",\r\n
+  "DE.Views.TableSettings.tipOuter": "Definir apenas borda externa",\r\n
+  "DE.Views.TableSettings.tipRight": "Definir apenas borda direita externa",\r\n
+  "DE.Views.TableSettings.tipTop": "Definir apenas borda superior externa",\r\n
+  "DE.Views.TableSettings.txtNoBorders": "Sem bordas",\r\n
+  "DE.Views.TableSettingsAdvanced.cancelButtonText": "Cancelar",\r\n
+  "DE.Views.TableSettingsAdvanced.okButtonText": "OK",\r\n
+  "DE.Views.TableSettingsAdvanced.textAlign": "Alinhamento",\r\n
+  "DE.Views.TableSettingsAdvanced.textAlignment": "Alinhamento",\r\n
+  "DE.Views.TableSettingsAdvanced.textAllowSpacing": "Permitir espaçamento entre células",\r\n
+  "DE.Views.TableSettingsAdvanced.textAnchorText": "Тexto",\r\n
+  "DE.Views.TableSettingsAdvanced.textAutofit": "Automaticamente redimensionado para ajustar conteúdo",\r\n
+  "DE.Views.TableSettingsAdvanced.textBackColor": "Plano de fundo da célula",\r\n
+  "DE.Views.TableSettingsAdvanced.textBelow": "abaixo",\r\n
+  "DE.Views.TableSettingsAdvanced.textBorderColor": "Cor da borda",\r\n
+  "DE.Views.TableSettingsAdvanced.textBorderDesc": "Clique no diagrama ou use os botões para selecionar bordas e aplicar o estilo escolhido a elas",\r\n
+  "DE.Views.TableSettingsAdvanced.textBordersBackgroung": "Bordas e Plano de fundo",\r\n
+  "DE.Views.TableSettingsAdvanced.textBorderWidth": "Tamanho da borda",\r\n
+  "DE.Views.TableSettingsAdvanced.textBottom": "Inferior",\r\n
+  "DE.Views.TableSettingsAdvanced.textCellProps": "Propriedades da célula",\r\n
+  "DE.Views.TableSettingsAdvanced.textCenter": "Centro",\r\n
+  "DE.Views.TableSettingsAdvanced.textCenterTooltip": "Centro",\r\n
+  "DE.Views.TableSettingsAdvanced.textCheckMargins": "Usar margens padrão",\r\n
+  "DE.Views.TableSettingsAdvanced.textDefaultMargins": "Margens padrão",\r\n
+  "DE.Views.TableSettingsAdvanced.textDistance": "Distância do texto",\r\n
+  "DE.Views.TableSettingsAdvanced.textHorizontal": "Horizontal",\r\n
+  "DE.Views.TableSettingsAdvanced.textIndLeft": "Recuo da esquerda",\r\n
+  "DE.Views.TableSettingsAdvanced.textLeft": "Esquerda",\r\n
+  "DE.Views.TableSettingsAdvanced.textLeftTooltip": "Esquerda",\r\n
+  "DE.Views.TableSettingsAdvanced.textMargin": "Margem",\r\n
+  "DE.Views.TableSettingsAdvanced.textMargins": "Margens da célula",\r\n
+  "DE.Views.TableSettingsAdvanced.textMove": "Mover objeto com texto",\r\n
+  "DE.Views.TableSettingsAdvanced.textNewColor": "Adicionar nova cor personalizada",\r\n
+  "DE.Views.TableSettingsAdvanced.textOnlyCells": "Apenas para as células selecionadas",\r\n
+  "DE.Views.TableSettingsAdvanced.textOptions": "Opções",\r\n
+  "DE.Views.TableSettingsAdvanced.textOverlap": "Permitir sobreposição",\r\n
+  "DE.Views.TableSettingsAdvanced.textPage": "Página",\r\n
+  "DE.Views.TableSettingsAdvanced.textPosition": "Posição",\r\n
+  "DE.Views.TableSettingsAdvanced.textPreview": "Pré-visualizar",\r\n
+  "DE.Views.TableSettingsAdvanced.textRelative": "relativo para",\r\n
+  "DE.Views.TableSettingsAdvanced.textRight": "Direita",\r\n
+  "DE.Views.TableSettingsAdvanced.textRightOf": "para a direita de",\r\n
+  "DE.Views.TableSettingsAdvanced.textRightTooltip": "Direita",\r\n
+  "DE.Views.TableSettingsAdvanced.textStandartColors": "Cores padrão",\r\n
+  "DE.Views.TableSettingsAdvanced.textTableBackColor": "Plano de fundo da tabela",\r\n
+  "DE.Views.TableSettingsAdvanced.textThemeColors": "Cores do tema",\r\n
+  "DE.Views.TableSettingsAdvanced.textTitle": "Tabela - Configurações avançadas",\r\n
+  "DE.Views.TableSettingsAdvanced.textTop": "Parte superior",\r\n
+  "DE.Views.TableSettingsAdvanced.textVertical": "Vertical",\r\n
+  "DE.Views.TableSettingsAdvanced.textWidth": "Largura",\r\n
+  "DE.Views.TableSettingsAdvanced.textWidthSpaces": "Largura e Espaços",\r\n
+  "DE.Views.TableSettingsAdvanced.textWrap": "Disposição do texto",\r\n
+  "DE.Views.TableSettingsAdvanced.textWrapNoneTooltip": "Tabela embutida",\r\n
+  "DE.Views.TableSettingsAdvanced.textWrapParallelTooltip": "Tabela de fluxo",\r\n
+  "DE.Views.TableSettingsAdvanced.tipAll": "Definir borda externa e todas as linhas internas",\r\n
+  "DE.Views.TableSettingsAdvanced.tipCellAll": "Definir bordas para células internas apenas",\r\n
+  "DE.Views.TableSettingsAdvanced.tipCellInner": "Definir linhas verticais e horizontais apenas para células internas",\r\n
+  "DE.Views.TableSettingsAdvanced.tipCellOuter": "Definir bordas externas apenas para células internas",\r\n
+  "DE.Views.TableSettingsAdvanced.tipInner": "Definir apenas linhas internas",\r\n
+  "DE.Views.TableSettingsAdvanced.tipNone": "Definir sem bordas",\r\n
+  "DE.Views.TableSettingsAdvanced.tipOuter": "Definir apenas borda externa",\r\n
+  "DE.Views.TableSettingsAdvanced.tipTableOuterCellAll": "Definir borda externa e bordas para todas as células internas",\r\n
+  "DE.Views.TableSettingsAdvanced.tipTableOuterCellInner": "Definir borda externa e linhas verticais e horizontais para células internas",\r\n
+  "DE.Views.TableSettingsAdvanced.tipTableOuterCellOuter": "Definir borda externa da tabela e bordas externas para células internas",\r\n
+  "DE.Views.TableSettingsAdvanced.txtNoBorders": "Sem bordas",\r\n
+  "DE.Views.Toolbar.mniCustomTable": "Inserir tabela personalizada",\r\n
+  "DE.Views.Toolbar.mniEditDropCap": "Configurações avançadas de Letra capitular",\r\n
+  "DE.Views.Toolbar.mniEditFooter": "Editar rodapé",\r\n
+  "DE.Views.Toolbar.mniEditHeader": "Editar cabeçalho",\r\n
+  "DE.Views.Toolbar.mniHiddenBorders": "Ocultar bordas da tabela",\r\n
+  "DE.Views.Toolbar.mniHiddenChars": "Caracteres não imprimíveis",\r\n
+  "DE.Views.Toolbar.mniImageFromFile": "Imagem do arquivo",\r\n
+  "DE.Views.Toolbar.mniImageFromUrl": "Imagem da URL",\r\n
+  "DE.Views.Toolbar.strMenuNoFill": "Sem preenchimento",\r\n
+  "DE.Views.Toolbar.textArea": "Gráfico da Área",\r\n
+  "DE.Views.Toolbar.textAutoColor": "Automático",\r\n
+  "DE.Views.Toolbar.textBar": "Gráfico de barras",\r\n
+  "DE.Views.Toolbar.textBold": "Negrito",\r\n
+  "DE.Views.Toolbar.textColumn": "Gráfico de coluna",\r\n
+  "DE.Views.Toolbar.textCompactView": "Visualizar barra de ferramentas compacta",\r\n
+  "DE.Views.Toolbar.textContPage": "Página contínua",\r\n
+  "DE.Views.Toolbar.textEvenPage": "Página par",\r\n
+  "DE.Views.Toolbar.textFitPage": "Ajustar página",\r\n
+  "DE.Views.Toolbar.textFitWidth": "Ajustar largura",\r\n
+  "DE.Views.Toolbar.textHideLines": "Ocultar réguas",\r\n
+  "DE.Views.Toolbar.textHideStatusBar": "Ocultar barra de status",\r\n
+  "DE.Views.Toolbar.textHideTitleBar": "Ocultar barra de título",\r\n
+  "DE.Views.Toolbar.textInMargin": "Na margem",\r\n
+  "DE.Views.Toolbar.textInsertPageNumber": "Inserir número de página",\r\n
+  "DE.Views.Toolbar.textInsPageBreak": "Inserir quebra de página",\r\n
+  "DE.Views.Toolbar.textInsSectionBreak": "Inserir quebra de seção",\r\n
+  "DE.Views.Toolbar.textInText": "No texto",\r\n
+  "DE.Views.Toolbar.textItalic": "Itálico",\r\n
+  "DE.Views.Toolbar.textLine": "Gráfico de linha",\r\n
+  "DE.Views.Toolbar.textNewColor": "Adicionar nova cor personalizada",\r\n
+  "DE.Views.Toolbar.textNextPage": "Próxima página",\r\n
+  "DE.Views.Toolbar.textNone": "Nenhum",\r\n
+  "DE.Views.Toolbar.textOddPage": "Página ímpar",\r\n
+  "DE.Views.Toolbar.textPie": "Gráfico de pizza",\r\n
+  "DE.Views.Toolbar.textPoint": "Gráfico de pontos",\r\n
+  "DE.Views.Toolbar.textStandartColors": "Cores padrão",\r\n
+  "DE.Views.Toolbar.textStock": "Gráfico de ações",\r\n
+  "DE.Views.Toolbar.textStrikeout": "Riscado",\r\n
+  "DE.Views.Toolbar.textSubscript": "Subscrito",\r\n
+  "DE.Views.Toolbar.textSuperscript": "Sobrescrito",\r\n
+  "DE.Views.Toolbar.textThemeColors": "Cores do tema",\r\n
+  "DE.Views.Toolbar.textTitleError": "Erro",\r\n
+  "DE.Views.Toolbar.textToCurrent": "Para posição atual",\r\n
+  "DE.Views.Toolbar.textUnderline": "Sublinhado",\r\n
+  "DE.Views.Toolbar.textZoom": "Zoom",\r\n
+  "DE.Views.Toolbar.tipAdvSettings": "Configurações avançadas",\r\n
+  "DE.Views.Toolbar.tipAlignCenter": "Alinhar ao centro",\r\n
+  "DE.Views.Toolbar.tipAlignJust": "Justificado",\r\n
+  "DE.Views.Toolbar.tipAlignLeft": "Alinhar à esquerda",\r\n
+  "DE.Views.Toolbar.tipAlignRight": "Alinhar à direita",\r\n
+  "DE.Views.Toolbar.tipBack": "Voltar",\r\n
+  "DE.Views.Toolbar.tipClearStyle": "Limpar estilo",\r\n
+  "DE.Views.Toolbar.tipColorSchemas": "Alterar esquema de cor",\r\n
+  "DE.Views.Toolbar.tipCopy": "Copiar",\r\n
+  "DE.Views.Toolbar.tipCopyStyle": "Copiar estilo",\r\n
+  "DE.Views.Toolbar.tipDecFont": "Diminuir tamanho da fonte",\r\n
+  "DE.Views.Toolbar.tipDecPrLeft": "Diminuir o Recuo",\r\n
+  "DE.Views.Toolbar.tipDropCap": "Inserir letra capitular",\r\n
+  "DE.Views.Toolbar.tipEditHeader": "Editar cabeçalho e rodapé",\r\n
+  "DE.Views.Toolbar.tipFontColor": "Cor da fonte",\r\n
+  "DE.Views.Toolbar.tipFontName": "Nome da fonte",\r\n
+  "DE.Views.Toolbar.tipFontSize": "Tamanho da fonte",\r\n
+  "DE.Views.Toolbar.tipHAligh": "Alinhamento horizontal",\r\n
+  "DE.Views.Toolbar.tipHighlightColor": "Cor de realce",\r\n
+  "DE.Views.Toolbar.tipIncFont": "Aumentar tamanho da fonte",\r\n
+  "DE.Views.Toolbar.tipIncPrLeft": "Aumentar recuo",\r\n
+  "DE.Views.Toolbar.tipInsertChart": "Inserir gráfico",\r\n
+  "DE.Views.Toolbar.tipInsertEquation": "Inserir equação",\r\n
+  "DE.Views.Toolbar.tipInsertHyperlink": "Adicionar hiperlink",\r\n
+  "DE.Views.Toolbar.tipInsertImage": "Inserir imagem",\r\n
+  "DE.Views.Toolbar.tipInsertNum": "Inserir número da página",\r\n
+  "DE.Views.Toolbar.tipInsertShape": "Inserir forma automática",\r\n
+  "DE.Views.Toolbar.tipInsertTable": "Inserir tabela",\r\n
+  "DE.Views.Toolbar.tipInsertText": "Inserir texto",\r\n
+  "DE.Views.Toolbar.tipLineSpace": "Espaçamento entre linhas do parágrafo",\r\n
+  "DE.Views.Toolbar.tipMailRecepients": "Select Recepients",\r\n
+  "DE.Views.Toolbar.tipMarkers": "Marcadores",\r\n
+  "DE.Views.Toolbar.tipMultilevels": "Contorno",\r\n
+  "DE.Views.Toolbar.tipNewDocument": "Novo documento",\r\n
+  "DE.Views.Toolbar.tipNumbers": "Numeração",\r\n
+  "DE.Views.Toolbar.tipOpenDocument": "Abrir documento",\r\n
+  "DE.Views.Toolbar.tipPageBreak": "Inserir página ou quebra de seção",\r\n
+  "DE.Views.Toolbar.tipPageOrient": "Orientação da página",\r\n
+  "DE.Views.Toolbar.tipPageSize": "Tamanho da página",\r\n
+  "DE.Views.Toolbar.tipParagraphStyle": "Estilo do parágrafo",\r\n
+  "DE.Views.Toolbar.tipPaste": "Colar",\r\n
+  "DE.Views.Toolbar.tipPrColor": "Cor do plano de fundo do parágrafo",\r\n
+  "DE.Views.Toolbar.tipPrint": "Imprimir",\r\n
+  "DE.Views.Toolbar.tipRedo": "Refazer",\r\n
+  "DE.Views.Toolbar.tipSave": "Salvar",\r\n
+  "DE.Views.Toolbar.tipSaveCoauth": "Salvar suas alterações para que os outros usuários as vejam.",\r\n
+  "DE.Views.Toolbar.tipShowHiddenChars": "Caracteres não imprimíveis",\r\n
+  "DE.Views.Toolbar.tipSynchronize": "O documento foi alterado por outro usuário. Clique para salvar suas alterações e recarregar as atualizações.",\r\n
+  "DE.Views.Toolbar.tipUndo": "Desfazer",\r\n
+  "DE.Views.Toolbar.tipViewSettings": "Visualizar configurações",\r\n
+  "DE.Views.Toolbar.txtScheme1": "Office",\r\n
+  "DE.Views.Toolbar.txtScheme10": "Mediana",\r\n
+  "DE.Views.Toolbar.txtScheme11": "Metro",\r\n
+  "DE.Views.Toolbar.txtScheme12": "Módulo",\r\n
+  "DE.Views.Toolbar.txtScheme13": "Opulento",\r\n
+  "DE.Views.Toolbar.txtScheme14": "Balcão envidraçado",\r\n
+  "DE.Views.Toolbar.txtScheme15": "Origem",\r\n
+  "DE.Views.Toolbar.txtScheme16": "Papel",\r\n
+  "DE.Views.Toolbar.txtScheme17": "Solstício",\r\n
+  "DE.Views.Toolbar.txtScheme18": "Técnica",\r\n
+  "DE.Views.Toolbar.txtScheme19": "Viagem",\r\n
+  "DE.Views.Toolbar.txtScheme2": "Escala de cinza",\r\n
+  "DE.Views.Toolbar.txtScheme20": "Urbano",\r\n
+  "DE.Views.Toolbar.txtScheme21": "Verve",\r\n
+  "DE.Views.Toolbar.txtScheme3": "Ápice",\r\n
+  "DE.Views.Toolbar.txtScheme4": "Aspecto",\r\n
+  "DE.Views.Toolbar.txtScheme5": "Cívico",\r\n
+  "DE.Views.Toolbar.txtScheme6": "Concurso",\r\n
+  "DE.Views.Toolbar.txtScheme7": "Patrimônio Líquido",\r\n
+  "DE.Views.Toolbar.txtScheme8": "Fluxo",\r\n
+  "DE.Views.Toolbar.txtScheme9": "Fundição"\r\n
+}
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

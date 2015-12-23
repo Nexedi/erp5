@@ -1,0 +1,1340 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885452.15</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>sl.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>85720</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\r\n
+  "Common.Controllers.Chat.notcriticalErrorTitle": "Opozorilo",\r\n
+  "Common.Controllers.Chat.textEnterMessage": "Svoje sporočilo vnesite tu",\r\n
+  "Common.Controllers.Chat.textUserLimit": "You are using ONLYOFFICE Free Edition.<br>Only two users can co-edit the document simultaneously.<br>Want more? Consider buying ONLYOFFICE Enterprise Edition.<br><a href=\\"http://www.onlyoffice.com/free-edition.aspx\\" target=\\"_blank\\">Read more</a>",\r\n
+  "Common.Controllers.ExternalDiagramEditor.textAnonymous": "Anonimno",\r\n
+  "Common.Controllers.ExternalDiagramEditor.textClose": "Zapri",\r\n
+  "Common.Controllers.ExternalDiagramEditor.warningText": "Objekt je onemogočen, saj ga ureja drug uporabnik.",\r\n
+  "Common.Controllers.ExternalDiagramEditor.warningTitle": "Opozorilo",\r\n
+  "Common.Controllers.ExternalMergeEditor.textAnonymous": "Anonymous",\r\n
+  "Common.Controllers.ExternalMergeEditor.textClose": "Close",\r\n
+  "Common.Controllers.ExternalMergeEditor.warningText": "The object is disabled because it is being edited by another user.",\r\n
+  "Common.Controllers.ExternalMergeEditor.warningTitle": "Warning",\r\n
+  "Common.Controllers.History.notcriticalErrorTitle": "Warning",\r\n
+  "Common.UI.ComboBorderSize.txtNoBorders": "Ni mej",\r\n
+  "Common.UI.ComboBorderSizeEditable.txtNoBorders": "Ni mej",\r\n
+  "Common.UI.ComboDataView.emptyComboText": "Ni slogov",\r\n
+  "Common.UI.ExtendedColorDialog.addButtonText": "Dodaj",\r\n
+  "Common.UI.ExtendedColorDialog.cancelButtonText": "Prekliči",\r\n
+  "Common.UI.ExtendedColorDialog.textCurrent": "trenuten",\r\n
+  "Common.UI.ExtendedColorDialog.textHexErr": "Vnesena vrednost je nepravilna.<br>Prosim vnesite vrednost med 000000 in FFFFFF.",\r\n
+  "Common.UI.ExtendedColorDialog.textNew": "Novo",\r\n
+  "Common.UI.ExtendedColorDialog.textRGBErr": "Vnesena vrednost je nepravilna.<br>Prosim vnesite numerično vrednost med 0 in 255.",\r\n
+  "Common.UI.HSBColorPicker.textNoColor": "Ni barve",\r\n
+  "Common.UI.SearchDialog.textHighlight": "Označi rezultate",\r\n
+  "Common.UI.SearchDialog.textMatchCase": "Občutljiv na velike in male črke",\r\n
+  "Common.UI.SearchDialog.textReplaceDef": "Vnesi nadomestno besedilo",\r\n
+  "Common.UI.SearchDialog.textSearchStart": "Svoje besedilo vnesite tu",\r\n
+  "Common.UI.SearchDialog.textTitle": "Najdi in zamenjaj",\r\n
+  "Common.UI.SearchDialog.textTitle2": "Najdi",\r\n
+  "Common.UI.SearchDialog.textWholeWords": "Le cele besede",\r\n
+  "Common.UI.SearchDialog.txtBtnReplace": "Zamenjaj",\r\n
+  "Common.UI.SearchDialog.txtBtnReplaceAll": "Zamenjaj vse",\r\n
+  "Common.UI.SynchronizeTip.textDontShow": "Tega sporočila ne prikaži več",\r\n
+  "Common.UI.SynchronizeTip.textSynchronize": "Dokument je spremenil drug uporabnik.<br/>Prosim pritisnite za shranjevanje svojih sprememb in osvežitev posodobitev.",\r\n
+  "Common.UI.Window.cancelButtonText": "Prekliči",\r\n
+  "Common.UI.Window.closeButtonText": "Zapri",\r\n
+  "Common.UI.Window.noButtonText": "Ne",\r\n
+  "Common.UI.Window.okButtonText": "OK",\r\n
+  "Common.UI.Window.textConfirmation": "Potrditev",\r\n
+  "Common.UI.Window.textDontShow": "Tega sporočila ne prikaži več",\r\n
+  "Common.UI.Window.textError": "Napaka",\r\n
+  "Common.UI.Window.textInformation": "Informacija",\r\n
+  "Common.UI.Window.textWarning": "Opozorilo",\r\n
+  "Common.UI.Window.yesButtonText": "Da",\r\n
+  "Common.Views.About.txtAddress": "naslov:",\r\n
+  "Common.Views.About.txtAscAddress": "Lubanas st. 125a-25, Riga, Latvija, EU, LV-1021",\r\n
+  "Common.Views.About.txtLicensee": "LICENCE",\r\n
+  "Common.Views.About.txtLicensor": "DAJALEC LICENCE",\r\n
+  "Common.Views.About.txtMail": "e-naslov:",\r\n
+  "Common.Views.About.txtPoweredBy": "Poganja",\r\n
+  "Common.Views.About.txtTel": "tel.: ",\r\n
+  "Common.Views.About.txtVersion": "Različica",\r\n
+  "Common.Views.AdvancedSettingsWindow.cancelButtonText": "Prekliči",\r\n
+  "Common.Views.AdvancedSettingsWindow.okButtonText": "OK",\r\n
+  "Common.Views.Chat.textSend": "Pošlji",\r\n
+  "Common.Views.Comments.textAdd": "Dodaj",\r\n
+  "Common.Views.Comments.textAddComment": "Dodaj komentar",\r\n
+  "Common.Views.Comments.textAddCommentToDoc": "K dokumentu dodaj komentar",\r\n
+  "Common.Views.Comments.textAddReply": "Dodaj odgovor",\r\n
+  "Common.Views.Comments.textAnonym": "Gost",\r\n
+  "Common.Views.Comments.textCancel": "Prekliči",\r\n
+  "Common.Views.Comments.textClose": "Zapri",\r\n
+  "Common.Views.Comments.textComments": "Komentarji",\r\n
+  "Common.Views.Comments.textEdit": "Uredi",\r\n
+  "Common.Views.Comments.textEnterCommentHint": "Svoj komentar vnesite tu",\r\n
+  "Common.Views.Comments.textOpenAgain": "Ponovno odpri",\r\n
+  "Common.Views.Comments.textReply": "Odgovori",\r\n
+  "Common.Views.Comments.textResolve": "Razreši",\r\n
+  "Common.Views.Comments.textResolved": "Razrešeno",\r\n
+  "Common.Views.CopyWarningDialog.textDontShow": "Tega sporočila ne prikaži več",\r\n
+  "Common.Views.CopyWarningDialog.textMsg": "Dejanja kopiraj, izreži in prilepi izvedena z uporabo gumbov urejevalne orodne vrstice in kontekstnega menija bodo izvedena le v urejevalnem zavihku.<br><br>Za kopiranje in lepljenje v in iz aplikacij zunaj urejevalnega zavihka uporabite sledeče kombinacije na tipkovnici:",\r\n
+  "Common.Views.CopyWarningDialog.textTitle": "Kopiraj, Izreži in Prilepi dejanja",\r\n
+  "Common.Views.CopyWarningDialog.textToCopy": "za Kopijo",\r\n
+  "Common.Views.CopyWarningDialog.textToCut": "za Izrez",\r\n
+  "Common.Views.CopyWarningDialog.textToPaste": "za Lepljenje",\r\n
+  "Common.Views.DocumentAccessDialog.textLoading": "Nalaganje...",\r\n
+  "Common.Views.DocumentAccessDialog.textTitle": "Nastavitve deljenja",\r\n
+  "Common.Views.ExternalDiagramEditor.textClose": "Zapri",\r\n
+  "Common.Views.ExternalDiagramEditor.textSave": "Shrani & Zapusti",\r\n
+  "Common.Views.ExternalDiagramEditor.textTitle": "Urejevalec grafa",\r\n
+  "Common.Views.ExternalMergeEditor.textClose": "Close",\r\n
+  "Common.Views.ExternalMergeEditor.textSave": "Save & Exit",\r\n
+  "Common.Views.ExternalMergeEditor.textTitle": "Mail Merge Recipients",\r\n
+  "Common.Views.Header.openNewTabText": "Open in New Tab",\r\n
+  "Common.Views.Header.textBack": "Pojdi v dokumente",\r\n
+  "Common.Views.History.textHistoryHeader": "Back to Document",\r\n
+  "Common.Views.ImageFromUrlDialog.cancelButtonText": "Prekliči",\r\n
+  "Common.Views.ImageFromUrlDialog.okButtonText": "OK",\r\n
+  "Common.Views.ImageFromUrlDialog.textUrl": "Prilepi URL slike:",\r\n
+  "Common.Views.ImageFromUrlDialog.txtEmpty": "To polje je obvezno",\r\n
+  "Common.Views.ImageFromUrlDialog.txtNotUrl": "To polje mora biti URL v \\"http://www.example.com\\" formatu",\r\n
+  "Common.Views.InsertTableDialog.cancelButtonText": "Prekliči",\r\n
+  "Common.Views.InsertTableDialog.okButtonText": "OK",\r\n
+  "Common.Views.InsertTableDialog.textInvalidRowsCols": "Določiti morate veljaven seštevek vrstic in stolpcev.",\r\n
+  "Common.Views.InsertTableDialog.txtColumns": "Število stolpcev",\r\n
+  "Common.Views.InsertTableDialog.txtMaxText": "Maksimalna vrednost za to polje je {0}.",\r\n
+  "Common.Views.InsertTableDialog.txtMinText": "Minimalna vrednost za to polje je {0}.",\r\n
+  "Common.Views.InsertTableDialog.txtRows": "Število vrstic",\r\n
+  "Common.Views.InsertTableDialog.txtTitle": "Velikost tabele",\r\n
+  "DE.Controllers.LeftMenu.leavePageText": "All unsaved changes in this document will be lost.<br> Click \\"Cancel\\" then \\"Save\\" to save them. Click \\"OK\\" to discard all the unsaved changes.",\r\n
+  "DE.Controllers.LeftMenu.newDocumentTitle": "Neimenovan dokument",\r\n
+  "DE.Controllers.LeftMenu.notcriticalErrorTitle": "Warning",\r\n
+  "DE.Controllers.LeftMenu.requestEditRightsText": "Zahtevanje urejevalnih pravic...",\r\n
+  "DE.Controllers.LeftMenu.textLoadHistory": "Loading versions history...",\r\n
+  "DE.Controllers.LeftMenu.textNoTextFound": "Podatkov, katere iščete, ni bilo mogoče najti. Prosim nastavite svoje možnosti iskanja.",\r\n
+  "DE.Controllers.LeftMenu.textReplaceSkipped": "Nadomestek je bil izdelan. {0} dogodki so bili preskočeni.",\r\n
+  "DE.Controllers.LeftMenu.textReplaceSuccess": "Iskanje je bilo storjeno. Dogodki nadomeščeni: {0}",\r\n
+  "DE.Controllers.Main.applyChangesTextText": "Nalaganje sprememb...",\r\n
+  "DE.Controllers.Main.applyChangesTitleText": "Nalaganje sprememb",\r\n
+  "DE.Controllers.Main.convertationErrorText": "Pogovor ni uspel.",\r\n
+  "DE.Controllers.Main.convertationTimeoutText": "Pretvorbena prekinitev presežena.",\r\n
+  "DE.Controllers.Main.criticalErrorExtText": "Pritisnite \\"OK\\" za vrnitev na seznam dokumentov.",\r\n
+  "DE.Controllers.Main.criticalErrorTitle": "Napaka",\r\n
+  "DE.Controllers.Main.defaultTitleText": "ONLYOFFICE urejevalec dokumentov",\r\n
+  "DE.Controllers.Main.downloadErrorText": "Prenos ni uspel.",\r\n
+  "DE.Controllers.Main.downloadMergeText": "Downloading...",\r\n
+  "DE.Controllers.Main.downloadMergeTitle": "Downloading",\r\n
+  "DE.Controllers.Main.downloadTextText": "Prenašanje dokumenta...",\r\n
+  "DE.Controllers.Main.downloadTitleText": "Prenašanje dokumenta",\r\n
+  "DE.Controllers.Main.errorCoAuthoringDisconnect": "Povezava s strežnikom izgubljena. Dokument v tem trenutku ne more biti urejen.",\r\n
+  "DE.Controllers.Main.errorDatabaseConnection": "Zunanja napaka.<br>Napaka povezave baze podatkov. V primeru, da napaka ni odpravljena, prosim kontaktirajte ekipo za pomoč.",\r\n
+  "DE.Controllers.Main.errorDataRange": "Nepravilen obseg podatkov.",\r\n
+  "DE.Controllers.Main.errorDefaultMessage": "Koda napake: %1",\r\n
+  "DE.Controllers.Main.errorFilePassProtect": "Dokument je zaščiten z geslom in ga ni mogoče odpreti.",\r\n
+  "DE.Controllers.Main.errorKeyEncrypt": "Neznan ključni deskriptor",\r\n
+  "DE.Controllers.Main.errorKeyExpire": "Ključni deskriptor je potekel",\r\n
+  "DE.Controllers.Main.errorMailMergeLoadFile": "Loading failed",\r\n
+  "DE.Controllers.Main.errorMailMergeSaveFile": "Merge failed.",\r\n
+  "DE.Controllers.Main.errorProcessSaveResult": "Shranjevanje ni bilo uspešno",\r\n
+  "DE.Controllers.Main.errorStockChart": "Nepravilen vrstni red vrstic. Za izgradnjo razpredelnice delnic podatke na strani navedite v sledečem vrstnem redu:<br>otvoritvena cena, maksimalna cena, minimalna cena, zaključna cena.",\r\n
+  "DE.Controllers.Main.errorUpdateVersion": "Različica datoteke je bila spremenjena. Stran bo osvežena.",\r\n
+  "DE.Controllers.Main.errorUserDrop": "Do datoteke v tem trenutku ni možno dostopati.",\r\n
+  "DE.Controllers.Main.errorUsersExceed": "Število uporabnikov, ki ga dovoljuje cenovni načrt, je bilo preseženo",\r\n
+  "DE.Controllers.Main.leavePageText": "V dokumentu imate neshranjene spremembe. Pritisnite \\"Ostani na tej strani\\" in nato \\"Shrani\\", da jih shranite. Pritisnite \\"Zapusti to stran\\" če želite zavreči vse neshranjene spremembe.",\r\n
+  "DE.Controllers.Main.loadFontsTextText": "Nalaganje podatkov...",\r\n
+  "DE.Controllers.Main.loadFontsTitleText": "Nalaganje podatkov",\r\n
+  "DE.Controllers.Main.loadFontTextText": "Nalaganje podatkov...",\r\n
+  "DE.Controllers.Main.loadFontTitleText": "Nalaganje podatkov",\r\n
+  "DE.Controllers.Main.loadImagesTextText": "Nalaganje slik...",\r\n
+  "DE.Controllers.Main.loadImagesTitleText": "Nalaganje slik",\r\n
+  "DE.Controllers.Main.loadImageTextText": "Nalaganje slike...",\r\n
+  "DE.Controllers.Main.loadImageTitleText": "Nalaganje Slike",\r\n
+  "DE.Controllers.Main.loadingDocumentTextText": "Nalaganje dokumenta...",\r\n
+  "DE.Controllers.Main.loadingDocumentTitleText": "Nalaganje Dokumenta",\r\n
+  "DE.Controllers.Main.mailMergeLoadFileText": "Loading Data Source...",\r\n
+  "DE.Controllers.Main.mailMergeLoadFileTitle": "Loading Data Source",\r\n
+  "DE.Controllers.Main.notcriticalErrorTitle": "Opozorilo",\r\n
+  "DE.Controllers.Main.openTextText": "Odpiranje dokumenta...",\r\n
+  "DE.Controllers.Main.openTitleText": "Odpiranje dokumenta",\r\n
+  "DE.Controllers.Main.printTextText": "Tiskanje dokumenta...",\r\n
+  "DE.Controllers.Main.printTitleText": "Tiskanje dokumenta",\r\n
+  "DE.Controllers.Main.reloadButtonText": "Osveži stran",\r\n
+  "DE.Controllers.Main.requestEditFailedMessageText": "Nekdo v tem trenutku ureja ta dokument. Prosim ponovno poskusite kasneje.",\r\n
+  "DE.Controllers.Main.requestEditFailedTitleText": "Dostop zavrnjen",\r\n
+  "DE.Controllers.Main.savePreparingText": "Priprava za shranjevanje",\r\n
+  "DE.Controllers.Main.savePreparingTitle": "Priprava za shranjevanje. Prosim počakajte...",\r\n
+  "DE.Controllers.Main.saveTextText": "Shranjevanje dokumenta...",\r\n
+  "DE.Controllers.Main.saveTitleText": "Shranjevanje dokumenta",\r\n
+  "DE.Controllers.Main.sendMergeText": "Sending Merge...",\r\n
+  "DE.Controllers.Main.sendMergeTitle": "Sending Merge",\r\n
+  "DE.Controllers.Main.splitDividerErrorText": "Število vrstic mora biti razdelilec %1.",\r\n
+  "DE.Controllers.Main.splitMaxColsErrorText": "Število stolpcev mora biti manj kot 1%.",\r\n
+  "DE.Controllers.Main.splitMaxRowsErrorText": "Število vrstic mora biti manj kot %1.",\r\n
+  "DE.Controllers.Main.textAnonymous": "Anonimno",\r\n
+  "DE.Controllers.Main.textCloseTip": "Pritisni za zapiranje namiga",\r\n
+  "DE.Controllers.Main.textLoadingDocument": "Nalaganje dokumenta",\r\n
+  "DE.Controllers.Main.titleUpdateVersion": "Različica spremenjena",\r\n
+  "DE.Controllers.Main.txtBasicShapes": "Osnovne oblike",\r\n
+  "DE.Controllers.Main.txtButtons": "Gumbi",\r\n
+  "DE.Controllers.Main.txtCallouts": "Oblački",\r\n
+  "DE.Controllers.Main.txtCharts": "Grafi",\r\n
+  "DE.Controllers.Main.txtDiagramTitle": "Naslov diagrama",\r\n
+  "DE.Controllers.Main.txtEditingMode": "Nastavi način urejanja...",\r\n
+  "DE.Controllers.Main.txtFiguredArrows": "Figurirane puščice",\r\n
+  "DE.Controllers.Main.txtLines": "Vrste",\r\n
+  "DE.Controllers.Main.txtMath": "Matematika",\r\n
+  "DE.Controllers.Main.txtNeedSynchronize": "Imate posodobitve",\r\n
+  "DE.Controllers.Main.txtRectangles": "Pravokotniki",\r\n
+  "DE.Controllers.Main.txtSeries": "Serije",\r\n
+  "DE.Controllers.Main.txtStarsRibbons": "Zvezde & Trakovi",\r\n
+  "DE.Controllers.Main.txtXAxis": "X os",\r\n
+  "DE.Controllers.Main.txtYAxis": "Y os",\r\n
+  "DE.Controllers.Main.unknownErrorText": "Neznana napaka.",\r\n
+  "DE.Controllers.Main.unsupportedBrowserErrorText ": "Vaš brskalnik ni podprt.",\r\n
+  "DE.Controllers.Main.uploadImageExtMessage": "Neznan format slike.",\r\n
+  "DE.Controllers.Main.uploadImageFileCountMessage": "Ni naloženih slik.",\r\n
+  "DE.Controllers.Main.uploadImageSizeMessage": "Limit maksimalne velikosti slike presežen.",\r\n
+  "DE.Controllers.Main.uploadImageTextText": "Nalaganje slike...",\r\n
+  "DE.Controllers.Main.uploadImageTitleText": "Nalaganje slike",\r\n
+  "DE.Controllers.Main.warnBrowserIE9": "Aplikacija ima nizke zmogljivosti na IE9. Uporabite IE10 ali več",\r\n
+  "DE.Controllers.Main.warnBrowserZoom": "Nastavitve povečave vašega trenutnega brskalnika niso popolnoma podprte. Prosim ponastavite na privzeto povečanje s pritiskom na Ctrl+0.",\r\n
+  "DE.Controllers.Main.warnProcessRightsChange": "Pravica, da urejate datoteko je bila zavrnjena.",\r\n
+  "DE.Controllers.Statusbar.zoomText": "Povečava {0}%",\r\n
+  "DE.Controllers.Toolbar.confirmAddFontName": "The font you are going to save is not available on the current device.<br>The text style will be displayed using one of the device fonts, the saved font will be used when it is available.<br>Do you want to continue?",\r\n
+  "DE.Controllers.Toolbar.textAccent": "Narečja",\r\n
+  "DE.Controllers.Toolbar.textBracket": "Oklepaji",\r\n
+  "DE.Controllers.Toolbar.textEmptyImgUrl": "Določiti morate URL slike.",\r\n
+  "DE.Controllers.Toolbar.textFontSizeErr": "Vnesena vrednost je nepravilna.<br>Prosim vnesite numerično vrednost med 1 in 100",\r\n
+  "DE.Controllers.Toolbar.textFraction": "Frakcije",\r\n
+  "DE.Controllers.Toolbar.textFunction": "Funkcije",\r\n
+  "DE.Controllers.Toolbar.textIntegral": "Integrali",\r\n
+  "DE.Controllers.Toolbar.textLargeOperator": "Veliki operatorji",\r\n
+  "DE.Controllers.Toolbar.textLimitAndLog": "Limiti in logaritmi",\r\n
+  "DE.Controllers.Toolbar.textMatrix": "Matrice",\r\n
+  "DE.Controllers.Toolbar.textOperator": "Operatorji",\r\n
+  "DE.Controllers.Toolbar.textRadical": "Radikali",\r\n
+  "DE.Controllers.Toolbar.textScript": "Skripte",\r\n
+  "DE.Controllers.Toolbar.textSymbols": "Simboli",\r\n
+  "DE.Controllers.Toolbar.textWarning": "Opozorilo",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Accent": "Akuten",\r\n
+  "DE.Controllers.Toolbar.txtAccent_ArrowD": "Desno-Leva puščica nad",\r\n
+  "DE.Controllers.Toolbar.txtAccent_ArrowL": "Puščica zgoraj v levo",\r\n
+  "DE.Controllers.Toolbar.txtAccent_ArrowR": "Puščica zgoraj v desno",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Bar": "Vrstica",\r\n
+  "DE.Controllers.Toolbar.txtAccent_BarBot": "Podvrstica",\r\n
+  "DE.Controllers.Toolbar.txtAccent_BarTop": "Nadvrstica",\r\n
+  "DE.Controllers.Toolbar.txtAccent_BorderBox": "Škatlasta formula (s predmetom, ki hrani prostor)",\r\n
+  "DE.Controllers.Toolbar.txtAccent_BorderBoxCustom": "Pakirana formula(primer)",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Check": "Obkljukaj",\r\n
+  "DE.Controllers.Toolbar.txtAccent_CurveBracketBot": "Podoklepaj",\r\n
+  "DE.Controllers.Toolbar.txtAccent_CurveBracketTop": "Čezopornik",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Custom_1": "Vektor A",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Custom_2": "ABC z nadvrstico",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Custom_3": "x XOR y z nadvrstico",\r\n
+  "DE.Controllers.Toolbar.txtAccent_DDDot": "Trojna pika",\r\n
+  "DE.Controllers.Toolbar.txtAccent_DDot": "Dvojna pika",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Dot": "Pika",\r\n
+  "DE.Controllers.Toolbar.txtAccent_DoubleBar": "Dvojna nadvrstica",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Grave": "Grob",\r\n
+  "DE.Controllers.Toolbar.txtAccent_GroupBot": "Združevanje znakov pod",\r\n
+  "DE.Controllers.Toolbar.txtAccent_GroupTop": "Združevanje znakov nad",\r\n
+  "DE.Controllers.Toolbar.txtAccent_HarpoonL": "Harpuna nad v levo",\r\n
+  "DE.Controllers.Toolbar.txtAccent_HarpoonR": "Harpuna zgoraj v desno",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Hat": "Klobuk",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Smile": "Breve",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Tilde": "Tilda",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle": "Oklepaji",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle_Delimiter_2": "Oklepaji z ločevalniki",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle_Delimiter_3": "Oklepaji z ločevalniki",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle_NoneOpen": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle_OpenNone": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Curve": "Oklepaji",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Curve_Delimiter_2": "Oklepaji z ločevalniki",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Curve_NoneOpen": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Curve_OpenNone": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_1": "Primeri (dva pogoja)",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_2": "Primeri (trije pogoji)",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_3": "Zloži predmete",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_4": "Zloži predmete",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_5": "Primer primerov",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_6": "Binomski koeficient",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_7": "Binomski koeficient",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Line": "Oklepaji",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Line_NoneOpen": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Line_OpenNone": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LineDouble": "Oklepaji",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LineDouble_NoneOpen": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LineDouble_OpenNone": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LowLim": "Oklepaji",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LowLim_NoneNone": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LowLim_OpenNone": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Round": "Oklepaji",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Round_Delimiter_2": "Oklepaji z ločevalniki",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Round_NoneOpen": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Round_OpenNone": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square": "Oklepaji",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_CloseClose": "Oklepaji",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_CloseOpen": "Oklepaji",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_NoneOpen": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_OpenNone": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_OpenOpen": "Oklepaji",\r\n
+  "DE.Controllers.Toolbar.txtBracket_SquareDouble": "Oklepaji",\r\n
+  "DE.Controllers.Toolbar.txtBracket_SquareDouble_NoneOpen": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_SquareDouble_OpenNone": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_UppLim": "Oklepaji",\r\n
+  "DE.Controllers.Toolbar.txtBracket_UppLim_NoneOpen": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtBracket_UppLim_OpenNone": "Enojni oklepaj",\r\n
+  "DE.Controllers.Toolbar.txtFractionDiagonal": "Zamaknjena frakcija",\r\n
+  "DE.Controllers.Toolbar.txtFractionDifferential_1": "Diferencial",\r\n
+  "DE.Controllers.Toolbar.txtFractionDifferential_2": "Diferencial",\r\n
+  "DE.Controllers.Toolbar.txtFractionDifferential_3": "Diferencial",\r\n
+  "DE.Controllers.Toolbar.txtFractionDifferential_4": "Diferencial",\r\n
+  "DE.Controllers.Toolbar.txtFractionHorizontal": "Linearna frakcija",\r\n
+  "DE.Controllers.Toolbar.txtFractionPi_2": "Pi čez 2",\r\n
+  "DE.Controllers.Toolbar.txtFractionSmall": "Majhen delež",\r\n
+  "DE.Controllers.Toolbar.txtFractionVertical": "Zložena frakcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Cos": "Inverzna kosinusna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Cosh": "Hiperbolična inverzna kosinusna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Cot": "Inverzna kotangensna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Coth": "Hiperbolična inverzna kotangenska funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Csc": "Inverzna kosinusna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Csch": "Hiperbolična inverzna kosinusna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Sec": "Inverzna sekantna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Sech": "Hiperbolična inverzna sekantna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Sin": "Inverzna sinusna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Sinh": "Hiperbolična inverzna sinusna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Tan": "Inverzna tangenska funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Tanh": "Hiperbolična inverzna tangensna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Cos": "Kosinusna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Cosh": "Hiperbolična kosinusna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Cot": "Kotangens funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Coth": "Hiperbolična kotangensna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Csc": "Kosinusna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Csch": "Hiperbolična kosinusna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Custom_1": "Sinus tete",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Custom_2": "Cos 2x",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Custom_3": "Tangentna formula",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Sec": "Sekantna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Sech": "Hiperbolična sekantna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Sin": "Sinusna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Sinh": "Hiperbolična sinusna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Tan": "Tangentna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Tanh": "Hiperbolična tangentna funkcija",\r\n
+  "DE.Controllers.Toolbar.txtIntegral": "Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegral_dtheta": "Diferencial teta",\r\n
+  "DE.Controllers.Toolbar.txtIntegral_dx": "Diferencial x",\r\n
+  "DE.Controllers.Toolbar.txtIntegral_dy": "Diferencial y",\r\n
+  "DE.Controllers.Toolbar.txtIntegralCenterSubSup": "Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralDouble": "Dvojni integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralDoubleCenterSubSup": "Dvojni integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralDoubleSubSup": "Dvojni integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOriented": "Integral konture",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedCenterSubSup": "Integral konture",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedDouble": "Površinski integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedDoubleCenterSubSup": "Površinski integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedDoubleSubSup": "Površinski integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedSubSup": "Integral konture",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedTriple": "Integral volumna",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedTripleCenterSubSup": "Integral volumna",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedTripleSubSup": "Integral volumna",\r\n
+  "DE.Controllers.Toolbar.txtIntegralSubSup": "Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralTriple": "Trojni integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralTripleCenterSubSup": "Trojni integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralTripleSubSup": "Trojni integral",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction": "Zagozda",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction_CenterSub": "Zagozda",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction_CenterSubSup": "Zagozda",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction_Sub": "Zagozda",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction_SubSup": "Zagozda",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd": "So-Izdelek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd_CenterSub": "So-Izdelek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd_CenterSubSup": "So-Izdelek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd_Sub": "So-Izdelek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd_SubSup": "So-Izdelek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_1": "Seštevek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_2": "Seštevek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_3": "Seštevek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_4": "Izdelek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_5": "Unija",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction": "Črka V",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction_CenterSub": "Črka V",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction_CenterSubSup": "Črka V",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction_Sub": "Črka V",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction_SubSup": "Črka V",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection": "Presek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection_CenterSub": "Presek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection_CenterSubSup": "Presek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection_Sub": "Presek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection_SubSup": "Presek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod": "Izdelek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod_CenterSub": "Izdelek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod_CenterSubSup": "Izdelek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod_Sub": "Izdelek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod_SubSup": "Izdelek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum": "Seštevek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum_CenterSub": "Seštevek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum_CenterSubSup": "Seštevek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum_Sub": "Seštevek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum_SubSup": "Seštevek",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union": "Unija",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union_CenterSub": "Unija",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union_CenterSubSup": "Unija",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union_Sub": "Unija",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union_SubSup": "Unija",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Custom_1": "Primer limita",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Custom_2": "Maksimalni primer",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Lim": "Limit",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Ln": "Naravni logaritem",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Log": "Logaritem",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_LogBase": "Logaritem",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Max": "Maksimum",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Min": "Minumum",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_1_2": "1x2 Prazna matrica",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_1_3": "1x3 Prazna Matrica",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_1": "2x1 Prazna Matrica",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2": "2x2 Prazna Matrica",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2_DLineBracket": "Sprazni matrico z oklepaji",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2_LineBracket": "Sprazni matrico z oklepaji",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2_RoundBracket": "Sprazni matrico z oklepaji",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2_SquareBracket": "Sprazni matrico z oklepaji",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_3": "2x3 Prazna Matrica",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_3_1": "3x1 Prazna Matrica",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_3_2": "3x2 Prazna Matrica",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_3_3": "3x3 Prazna Matrica",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Dots_Baseline": "Izhodiščne pike",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Dots_Center": "Sredinske pike",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Dots_Diagonal": "Diagonalne pike",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Dots_Vertical": "Vertikalne pike",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Flat_Round": "Redka matrica",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Flat_Square": "Redka matrica",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Identity_2": "2x2 matrica identitete",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Identity_2_NoZeros": "3x3 matrica identitete",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Identity_3": "3x3 matrica identitete",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Identity_3_NoZeros": "3x3 matrica identitete",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowD_Bot": "Desno-Leva puščica spodaj",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowD_Top": "Desno-Leva puščica nad",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowL_Bot": "Puščica spodaj v levo",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowL_Top": "Puščica zgoraj v levo",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowR_Bot": "Puščica spodaj v desno",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowR_Top": "Puščica zgoraj v desno",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ColonEquals": "Enak dvopičju",\r\n
+  "DE.Controllers.Toolbar.txtOperator_Custom_1": "Donosi",\r\n
+  "DE.Controllers.Toolbar.txtOperator_Custom_2": "Delta donosi",\r\n
+  "DE.Controllers.Toolbar.txtOperator_Definition": "Enak po definiciji",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DeltaEquals": "Delta je enaka",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowD_Bot": "Desno-Leva puščica spodaj",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowD_Top": "Desno-Leva puščica nad",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowL_Bot": "Puščica spodaj v levo",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowL_Top": "Puščica zgoraj v levo",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowR_Bot": "Puščica spodaj v desno",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowR_Top": "Puščica zgoraj v desno",\r\n
+  "DE.Controllers.Toolbar.txtOperator_EqualsEquals": "Enak Enak",\r\n
+  "DE.Controllers.Toolbar.txtOperator_MinusEquals": "Minus enako",\r\n
+  "DE.Controllers.Toolbar.txtOperator_PlusEquals": "Plus enako",\r\n
+  "DE.Controllers.Toolbar.txtOperator_UnitOfMeasure": "Izmerjen z",\r\n
+  "DE.Controllers.Toolbar.txtRadicalCustom_1": "Radikal",\r\n
+  "DE.Controllers.Toolbar.txtRadicalCustom_2": "Radikal",\r\n
+  "DE.Controllers.Toolbar.txtRadicalRoot_2": "Kvadratni koren s stopinjo",\r\n
+  "DE.Controllers.Toolbar.txtRadicalRoot_3": "Kvadratni koren",\r\n
+  "DE.Controllers.Toolbar.txtRadicalRoot_n": "Radikal s stopinjo",\r\n
+  "DE.Controllers.Toolbar.txtRadicalSqrt": "Kvadratni koren",\r\n
+  "DE.Controllers.Toolbar.txtScriptCustom_1": "Skripta",\r\n
+  "DE.Controllers.Toolbar.txtScriptCustom_2": "Skripta",\r\n
+  "DE.Controllers.Toolbar.txtScriptCustom_3": "Skripta",\r\n
+  "DE.Controllers.Toolbar.txtScriptCustom_4": "Skripta",\r\n
+  "DE.Controllers.Toolbar.txtScriptSub": "Pripis",\r\n
+  "DE.Controllers.Toolbar.txtScriptSubSup": "Pripis-Nadpis",\r\n
+  "DE.Controllers.Toolbar.txtScriptSubSupLeft": "LeviPodpis-Nadpis",\r\n
+  "DE.Controllers.Toolbar.txtScriptSup": "Nadpis",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_about": "Pribljižno",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_additional": "Kompliment",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_aleph": "Alef",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_alpha": "Alfa",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_approx": "Skoraj enak",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_ast": "Zvezdica operaterja",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_beta": "Beta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_beth": "Stava",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_bullet": "Operater točk",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cap": "Presek",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cbrt": "Koren kvadrata",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cdots": "Sredinske horizontalne elipse",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_celsius": "Stopinje Celzija",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_chi": "Chi",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cong": "Pribljižno enako",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cup": "Unija",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_ddots": "Spodnja desna diagonalna elipsa",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_degree": "Stopinje",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_delta": "Delta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_div": "Delitveni znak",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_downarrow": "Puščica dol",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_emptyset": "Izprazni nastavljeno",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_epsilon": "Epsilon",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_equals": "Enak",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_equiv": "Identično",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_eta": "Eta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_exists": "Tam obstaja",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_factorial": "Faktorial",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_fahrenheit": "stopinje Fahrenheita",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_forall": "Za vse",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_gamma": "Gama",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_geq": "Večji kot ali enak",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_gg": "Mnogo večji kot",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_greater": "Več od",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_in": "Element",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_inc": "Prirastek",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_infinity": "Neskončnost",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_iota": "jota",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_kappa": "Kapa",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_lambda": "Lambda",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_leftarrow": "Leva puščica",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_leftrightarrow": "Levo-desna puščica",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_leq": "Manj ali enako",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_less": "Manj kot",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_ll": "Mnogo manj kot",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_minus": "Minus",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_mp": "Minus Plus",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_mu": "Mu",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_nabla": "Nabla",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_neq": "Ni enako",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_ni": "Vsebuje kot član",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_not": "Ni znak",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_notexists": "Tam ne obstaja",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_nu": "Nu",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_o": "Omikron",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_omega": "Omega",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_partial": "Delni diferencial",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_percent": "Odstotek",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_phi": "Fi",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_pi": "Pi",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_plus": "Plus",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_pm": "Plus Minus",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_propto": "Sorazmeren z",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_psi": "Psi",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_qdrt": "Četrti koren",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_QED": "Konec dokaza",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_rddots": "Zgornja desna diagonalna elipsa",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_rho": "Ro",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_rightarrow": "Desna puščica",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_sigma": "Sigma",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_sqrt": "Radikalni znak",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_tau": "Tav",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_therefore": "Zato",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_theta": "Teta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_times": "Znak množenja",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_uparrow": "Puščica navzgor",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_upsilon": "Ipsilon",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varepsilon": "Epsilonska varianta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varphi": "Fi varianta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varpi": "Pi varianta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varrho": "Ro varianta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varsigma": "Varianta sigme",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_vartheta": "Varianta tete",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_vdots": "Vertikalne elipse",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_Xsi": "Xi",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_zeta": "Zeta",\r\n
+  "DE.Views.ChartSettings.textAdvanced": "Prikaži napredne nastavitve",\r\n
+  "DE.Views.ChartSettings.textArea": "Ploščinski grafikon",\r\n
+  "DE.Views.ChartSettings.textBar": "Stolpični grafikon",\r\n
+  "DE.Views.ChartSettings.textChartType": "Spremeni vrsto razpredelnice",\r\n
+  "DE.Views.ChartSettings.textColumn": "Stolpični grafikon",\r\n
+  "DE.Views.ChartSettings.textEditData": "Uredi podatke",\r\n
+  "DE.Views.ChartSettings.textHeight": "Višina",\r\n
+  "DE.Views.ChartSettings.textLine": "Vrstični grafikon",\r\n
+  "DE.Views.ChartSettings.textOriginalSize": "Privzeta velikost",\r\n
+  "DE.Views.ChartSettings.textPie": "Tortni grafikon",\r\n
+  "DE.Views.ChartSettings.textPoint": "Točkovni grafikon",\r\n
+  "DE.Views.ChartSettings.textSize": "Velikost",\r\n
+  "DE.Views.ChartSettings.textStock": "Založni grafikon",\r\n
+  "DE.Views.ChartSettings.textStyle": "Slog",\r\n
+  "DE.Views.ChartSettings.textUndock": "Odklopi s plošče",\r\n
+  "DE.Views.ChartSettings.textWidth": "Širina",\r\n
+  "DE.Views.ChartSettings.textWrap": "Slog zavijanja",\r\n
+  "DE.Views.ChartSettings.txtBehind": "Za",\r\n
+  "DE.Views.ChartSettings.txtInFront": "v ospredju",\r\n
+  "DE.Views.ChartSettings.txtInline": "V vrstici",\r\n
+  "DE.Views.ChartSettings.txtSquare": "Kvadrat",\r\n
+  "DE.Views.ChartSettings.txtThrough": "Preko",\r\n
+  "DE.Views.ChartSettings.txtTight": "Tesen",\r\n
+  "DE.Views.ChartSettings.txtTitle": "Graf",\r\n
+  "DE.Views.ChartSettings.txtTopAndBottom": "Vrh in Dno",\r\n
+  "DE.Views.DocumentHolder.aboveText": "Nad",\r\n
+  "DE.Views.DocumentHolder.addCommentText": "Dodaj komentar",\r\n
+  "DE.Views.DocumentHolder.advancedFrameText": "Napredne nastavitve okvirja",\r\n
+  "DE.Views.DocumentHolder.advancedParagraphText": "Napredne nastavitve odstavka",\r\n
+  "DE.Views.DocumentHolder.advancedTableText": "Napredne nastavitve tabele",\r\n
+  "DE.Views.DocumentHolder.advancedText": "Napredne nastavitve",\r\n
+  "DE.Views.DocumentHolder.alignmentText": "Poravnava",\r\n
+  "DE.Views.DocumentHolder.belowText": "pod",\r\n
+  "DE.Views.DocumentHolder.bottomCellText": "Poravnaj dno",\r\n
+  "DE.Views.DocumentHolder.breakBeforeText": "Prelom strani pred",\r\n
+  "DE.Views.DocumentHolder.cellAlignText": "Vertikalna poravnava celic",\r\n
+  "DE.Views.DocumentHolder.cellText": "Celica",\r\n
+  "DE.Views.DocumentHolder.centerCellText": "Poravnaj središče",\r\n
+  "DE.Views.DocumentHolder.centerText": "Center",\r\n
+  "DE.Views.DocumentHolder.chartText": "Napredne nastavitve grafa",\r\n
+  "DE.Views.DocumentHolder.columnText": "Stolpec",\r\n
+  "DE.Views.DocumentHolder.deleteColumnText": "Izbriši stolpec",\r\n
+  "DE.Views.DocumentHolder.deleteRowText": "Izbriši vrsto",\r\n
+  "DE.Views.DocumentHolder.deleteTableText": "Izbriši tabelo",\r\n
+  "DE.Views.DocumentHolder.deleteText": "Izbriši",\r\n
+  "DE.Views.DocumentHolder.direct270Text": "Rotate at 270°",\r\n
+  "DE.Views.DocumentHolder.direct90Text": "Rotate at 90°",\r\n
+  "DE.Views.DocumentHolder.directHText": "Horizontal",\r\n
+  "DE.Views.DocumentHolder.directionText": "Text Direction",\r\n
+  "DE.Views.DocumentHolder.editChartText": "Uredi podatke",\r\n
+  "DE.Views.DocumentHolder.editFooterText": "Uredi nogo",\r\n
+  "DE.Views.DocumentHolder.editHeaderText": "Uredi glavo",\r\n
+  "DE.Views.DocumentHolder.editHyperlinkText": "Uredi hiperpovezavo",\r\n
+  "DE.Views.DocumentHolder.flowoverText": "Slog zavijanja - Tok",\r\n
+  "DE.Views.DocumentHolder.guestText": "Gost",\r\n
+  "DE.Views.DocumentHolder.hyperlinkText": "Hiperpovezava",\r\n
+  "DE.Views.DocumentHolder.ignoreAllSpellText": "Ignoriraj vse",\r\n
+  "DE.Views.DocumentHolder.ignoreSpellText": "Ignorirajte",\r\n
+  "DE.Views.DocumentHolder.imageText": "Napredne nastavitve slike",\r\n
+  "DE.Views.DocumentHolder.inlineText": "Slog zavijanja - V vrstici",\r\n
+  "DE.Views.DocumentHolder.insertColumnLeftText": "Stolpec levo",\r\n
+  "DE.Views.DocumentHolder.insertColumnRightText": "Stolpec desno",\r\n
+  "DE.Views.DocumentHolder.insertColumnText": "Vstavi stolpec",\r\n
+  "DE.Views.DocumentHolder.insertRowAboveText": "Vrsta zgoraj",\r\n
+  "DE.Views.DocumentHolder.insertRowBelowText": "Vrsta spodaj",\r\n
+  "DE.Views.DocumentHolder.insertRowText": "Vstavi vrsto",\r\n
+  "DE.Views.DocumentHolder.insertText": "Vstavi",\r\n
+  "DE.Views.DocumentHolder.keepLinesText": "Linije ohrani skupaj",\r\n
+  "DE.Views.DocumentHolder.langText": "Izberi jezik",\r\n
+  "DE.Views.DocumentHolder.leftText": "Levo",\r\n
+  "DE.Views.DocumentHolder.loadSpellText": "Nalaganje variant...",\r\n
+  "DE.Views.DocumentHolder.mergeCellsText": "Združi celice",\r\n
+  "DE.Views.DocumentHolder.moreText": "Več variant...",\r\n
+  "DE.Views.DocumentHolder.noSpellVariantsText": "Ni variant",\r\n
+  "DE.Views.DocumentHolder.originalSizeText": "Privzeta velikost",\r\n
+  "DE.Views.DocumentHolder.paragraphText": "Odstavek",\r\n
+  "DE.Views.DocumentHolder.removeHyperlinkText": "Odstrani hiperpovezavo",\r\n
+  "DE.Views.DocumentHolder.rightText": "Desno",\r\n
+  "DE.Views.DocumentHolder.rowText": "Vrsta",\r\n
+  "DE.Views.DocumentHolder.selectCellText": "Izberi celico",\r\n
+  "DE.Views.DocumentHolder.selectColumnText": "Izberi stolpec",\r\n
+  "DE.Views.DocumentHolder.selectRowText": "Izberi vrstico",\r\n
+  "DE.Views.DocumentHolder.selectTableText": "Izberi tabelo",\r\n
+  "DE.Views.DocumentHolder.selectText": "Izberi",\r\n
+  "DE.Views.DocumentHolder.shapeText": "Napredne nastavitve oblike",\r\n
+  "DE.Views.DocumentHolder.spellcheckText": "Preverjanje črkovanja",\r\n
+  "DE.Views.DocumentHolder.splitCellsText": "Razdeli celico...",\r\n
+  "DE.Views.DocumentHolder.splitCellTitleText": "Razdeli celico",\r\n
+  "DE.Views.DocumentHolder.tableText": "Tabela",\r\n
+  "DE.Views.DocumentHolder.textAlign": "Poravnaj",\r\n
+  "DE.Views.DocumentHolder.textArrange": "Razporedi",\r\n
+  "DE.Views.DocumentHolder.textArrangeBack": "Pošlji k ozadju",\r\n
+  "DE.Views.DocumentHolder.textArrangeBackward": "Premakni nazaj",\r\n
+  "DE.Views.DocumentHolder.textArrangeForward": "Premakni naprej",\r\n
+  "DE.Views.DocumentHolder.textArrangeFront": "Premakni v ospredje",\r\n
+  "DE.Views.DocumentHolder.textCopy": "Kopiraj",\r\n
+  "DE.Views.DocumentHolder.textCut": "Izreži",\r\n
+  "DE.Views.DocumentHolder.textEditWrapBoundary": "Uredi mejo ukrivljanja",\r\n
+  "DE.Views.DocumentHolder.textNextPage": "Naslednja stran",\r\n
+  "DE.Views.DocumentHolder.textPaste": "Prilepi",\r\n
+  "DE.Views.DocumentHolder.textPrevPage": "Prejšnja stran",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignBottom": "Poravnaj dno",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignCenter": "Poravnaj središče",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignLeft": "Poravnaj levo",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignMiddle": "Poravnaj sredino",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignRight": "Poravnaj desno",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignTop": "Poravnaj vrh",\r\n
+  "DE.Views.DocumentHolder.textWrap": "Slog zavijanja",\r\n
+  "DE.Views.DocumentHolder.tipIsLocked": "Ta element trenutno ureja drug uporabnik.",\r\n
+  "DE.Views.DocumentHolder.topCellText": "Poravnaj vrh",\r\n
+  "DE.Views.DocumentHolder.txtBehind": "Za",\r\n
+  "DE.Views.DocumentHolder.txtGroup": "Skupina",\r\n
+  "DE.Views.DocumentHolder.txtInFront": "v ospredju",\r\n
+  "DE.Views.DocumentHolder.txtInline": "V vrstici",\r\n
+  "DE.Views.DocumentHolder.txtPressLink": "Pritisnite CTRL in pritisnite povezavo",\r\n
+  "DE.Views.DocumentHolder.txtSquare": "Kvadrat",\r\n
+  "DE.Views.DocumentHolder.txtThrough": "Preko",\r\n
+  "DE.Views.DocumentHolder.txtTight": "Tesen",\r\n
+  "DE.Views.DocumentHolder.txtTopAndBottom": "Vrh in Dno",\r\n
+  "DE.Views.DocumentHolder.txtUngroup": "Razdruži",\r\n
+  "DE.Views.DocumentHolder.vertAlignText": "Vertikalna poravnava",\r\n
+  "DE.Views.DropcapSettingsAdvanced.cancelButtonText": "Prekliči",\r\n
+  "DE.Views.DropcapSettingsAdvanced.okButtonText": "OK",\r\n
+  "DE.Views.DropcapSettingsAdvanced.strBorders": "Obrobe & Zapolnitev",\r\n
+  "DE.Views.DropcapSettingsAdvanced.strDropcap": "Spustni pokrovček",\r\n
+  "DE.Views.DropcapSettingsAdvanced.strMargins": "Meje",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textAlign": "Poravnava",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textAtLeast": "Vsaj",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textAuto": "Samodejno",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBackColor": "Barva ozadja",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBorderColor": "Barva obrobe",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBorderDesc": "Pritisni na diagram, ali pa uporabi gumbe za izbiro mej",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBorderWidth": "Velikost obrobe",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBottom": "Dno",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textCenter": "Center",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textColumn": "Stolpec",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textDistance": "Oddaljenost od besedila",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textExact": "Točno",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textFlow": "Okvir toka",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textFont": "Pisava",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textFrame": "Okvir",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textHeight": "Višina",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textHorizontal": "Horizontalen",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textInline": "Okvir v vrstici",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textInMargin": "v meji",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textInText": "v besedilu",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textLeft": "Levo",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textMargin": "Meja",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textMove": "Premakni z besedilom",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textNewColor": "Dodaj novo barvo po meri",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textNone": "nič",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textPage": "Stran",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textParagraph": "Odstavek",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textParameters": "Parametri",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textPosition": "Položaj",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textRelative": "Relativno z",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textRight": "Desno",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textRowHeight": "Višina v vrsticah",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textStandartColors": "Standardne barve",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textThemeColors": "Barve teme",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textTitle": "Spustni pokrovček - Napredne nastavitve",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textTitleFrame": "Okvir - Napredne nastavitve",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textTop": "Vrh",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textVertical": "Vertikalen",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textWidth": "Širina",\r\n
+  "DE.Views.DropcapSettingsAdvanced.tipFontName": "Ime pisave",\r\n
+  "DE.Views.DropcapSettingsAdvanced.txtNoBorders": "Ni mej",\r\n
+  "DE.Views.FileMenu.btnBackCaption": "Pojdi v dokumente",\r\n
+  "DE.Views.FileMenu.btnCreateNewCaption": "Ustvari nov",\r\n
+  "DE.Views.FileMenu.btnDownloadCaption": "Prenesi kot...",\r\n
+  "DE.Views.FileMenu.btnHelpCaption": "Pomoč...",\r\n
+  "DE.Views.FileMenu.btnHistoryCaption": "Version History",\r\n
+  "DE.Views.FileMenu.btnInfoCaption": "Informacije dokumenta...",\r\n
+  "DE.Views.FileMenu.btnPrintCaption": "Natisni",\r\n
+  "DE.Views.FileMenu.btnRecentFilesCaption": "Odpri nedavno...",\r\n
+  "DE.Views.FileMenu.btnReturnCaption": "Nazaj v dokument",\r\n
+  "DE.Views.FileMenu.btnRightsCaption": "Uporabniške pravice...",\r\n
+  "DE.Views.FileMenu.btnSaveCaption": "Shrani",\r\n
+  "DE.Views.FileMenu.btnSettingsCaption": "Napredne nastavitve...",\r\n
+  "DE.Views.FileMenu.btnToEditCaption": "Uredi dokument",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.fromBlankText": "Z praznine",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.fromTemplateText": "Z predloge",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.newDescriptionText": "Ustvari nov prazen besedilni dokument, ki ga boste lahko oblikovali med urejanjem ko je že ustvarjen. Ali pa uporabite eno izmed predlog za ustvarjanje dokumenta določene vrste ali namena, kjer so nekateri slogi že pred-uporabljeni.",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.newDocumentText": "Nov besedilni dokument",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.noTemplatesText": "Ni predlog",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtAuthor": "Avtor",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtBtnAccessRights": "Spremeni pravice dostopa",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtDate": "Datum nastanka",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtLoading": "Nalaganje...",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtPages": "Strani",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtParagraphs": "Odstavki",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtPlacement": "Lokacija",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtRights": "Osebe, ki imajo pravice",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtSpaces": "Simboli s presledki",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtStatistics": "Statistika",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtSymbols": "Simboli",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtTitle": "Naslov dokumenta",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtWords": "Besede",\r\n
+  "DE.Views.FileMenuPanels.DocumentRights.txtBtnAccessRights": "Spremeni pravice dostopa",\r\n
+  "DE.Views.FileMenuPanels.DocumentRights.txtRights": "Osebe, ki imajo pravice",\r\n
+  "DE.Views.FileMenuPanels.Settings.okButtonText": "Uporabi",\r\n
+  "DE.Views.FileMenuPanels.Settings.strAlignGuides": "Vključi vodnike poravnave",\r\n
+  "DE.Views.FileMenuPanels.Settings.strAutosave": "Vključi samodejno shranjevanje",\r\n
+  "DE.Views.FileMenuPanels.Settings.strFontRender": "Namigovanje pisave",\r\n
+  "DE.Views.FileMenuPanels.Settings.strInputMode": "Vključi hieroglife",\r\n
+  "DE.Views.FileMenuPanels.Settings.strLiveComment": "Vključi možnost živega komentiranja",\r\n
+  "DE.Views.FileMenuPanels.Settings.strShowChanges": "Sprotne spremembe sodelovanja",\r\n
+  "DE.Views.FileMenuPanels.Settings.strSpellCheckMode": "Vključi možnost preverjanja črkovanja",\r\n
+  "DE.Views.FileMenuPanels.Settings.strUnit": "Merilna enota",\r\n
+  "DE.Views.FileMenuPanels.Settings.strZoom": "Privzeta vrednost zooma",\r\n
+  "DE.Views.FileMenuPanels.Settings.text10Minutes": "Vsakih 10 minut",\r\n
+  "DE.Views.FileMenuPanels.Settings.text30Minutes": "Vsakih 30 minut",\r\n
+  "DE.Views.FileMenuPanels.Settings.text5Minutes": "Vsakih 5 minut",\r\n
+  "DE.Views.FileMenuPanels.Settings.text60Minutes": "Vsako uro",\r\n
+  "DE.Views.FileMenuPanels.Settings.textAlignGuides": "Navodila poravnave",\r\n
+  "DE.Views.FileMenuPanels.Settings.textAutoSave": "Samodejno shranjevanje",\r\n
+  "DE.Views.FileMenuPanels.Settings.textDisabled": "Onemogočeno",\r\n
+  "DE.Views.FileMenuPanels.Settings.textMinute": "Vsako minuto",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtAll": "Poglej vse",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtCm": "Centimeter",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtInput": "Nadomestni vhod",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtLast": "Poglej zadnjega",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtLiveComment": "Živo komentiranje",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtMac": "kot OS X",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtNative": "Domači",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtNone": "Poglej nobenega",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtPt": "Točka",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtSpellCheck": "Preverjanje črkovanja",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtWin": "kot Windows",\r\n
+  "DE.Views.HeaderFooterSettings.textBottomCenter": "Središče dna",\r\n
+  "DE.Views.HeaderFooterSettings.textBottomLeft": "Spodaj levo",\r\n
+  "DE.Views.HeaderFooterSettings.textBottomRight": "Spodaj desno",\r\n
+  "DE.Views.HeaderFooterSettings.textDiffFirst": "Različna prva stran",\r\n
+  "DE.Views.HeaderFooterSettings.textDiffOdd": "Različne sode in lihe strani",\r\n
+  "DE.Views.HeaderFooterSettings.textHeaderFromBottom": "Noga z dna",\r\n
+  "DE.Views.HeaderFooterSettings.textHeaderFromTop": "Glava z vrha",\r\n
+  "DE.Views.HeaderFooterSettings.textOptions": "Možnosti",\r\n
+  "DE.Views.HeaderFooterSettings.textPageNum": "Vstavi številko strani",\r\n
+  "DE.Views.HeaderFooterSettings.textPosition": "Položaj",\r\n
+  "DE.Views.HeaderFooterSettings.textSameAs": "Povezava k prejšnji",\r\n
+  "DE.Views.HeaderFooterSettings.textTopCenter": "Središče vrha",\r\n
+  "DE.Views.HeaderFooterSettings.textTopLeft": "Levo vrha",\r\n
+  "DE.Views.HeaderFooterSettings.textTopRight": "Vrh desno",\r\n
+  "DE.Views.HyperlinkSettingsDialog.cancelButtonText": "Prekliči",\r\n
+  "DE.Views.HyperlinkSettingsDialog.okButtonText": "OK",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textDefault": "Izbran fragment besedila",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textDisplay": "Zaslon",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textTitle": "Nastavitve hiperpovezave",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textTooltip": "Besedila zaslonskega tipa",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textUrl": "Povezava k",\r\n
+  "DE.Views.HyperlinkSettingsDialog.txtEmpty": "To polje je obvezno",\r\n
+  "DE.Views.HyperlinkSettingsDialog.txtNotUrl": "To polje mora biti URL v \\"http://www.example.com\\" formatu",\r\n
+  "DE.Views.ImageSettings.textAdvanced": "Prikaži napredne nastavitve",\r\n
+  "DE.Views.ImageSettings.textFromFile": "z datoteke",\r\n
+  "DE.Views.ImageSettings.textFromUrl": "z URL",\r\n
+  "DE.Views.ImageSettings.textHeight": "Višina",\r\n
+  "DE.Views.ImageSettings.textInsert": "Zamenjaj sliko",\r\n
+  "DE.Views.ImageSettings.textOriginalSize": "Privzeta velikost",\r\n
+  "DE.Views.ImageSettings.textSize": "Velikost",\r\n
+  "DE.Views.ImageSettings.textWidth": "Širina",\r\n
+  "DE.Views.ImageSettings.textWrap": "Slog zavijanja",\r\n
+  "DE.Views.ImageSettings.txtBehind": "Za",\r\n
+  "DE.Views.ImageSettings.txtInFront": "v ospredju",\r\n
+  "DE.Views.ImageSettings.txtInline": "V vrstici",\r\n
+  "DE.Views.ImageSettings.txtSquare": "Kvadrat",\r\n
+  "DE.Views.ImageSettings.txtThrough": "Preko",\r\n
+  "DE.Views.ImageSettings.txtTight": "Tesen",\r\n
+  "DE.Views.ImageSettings.txtTopAndBottom": "Vrh in Dno",\r\n
+  "DE.Views.ImageSettingsAdvanced.cancelButtonText": "Prekliči",\r\n
+  "DE.Views.ImageSettingsAdvanced.okButtonText": "OK",\r\n
+  "DE.Views.ImageSettingsAdvanced.strMargins": "Oblazinjenje besedila",\r\n
+  "DE.Views.ImageSettingsAdvanced.textAlignment": "Poravnava",\r\n
+  "DE.Views.ImageSettingsAdvanced.textArrows": "Puščice",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBeginSize": "Začetna velikost",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBeginStyle": "Začetni stil",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBelow": "pod",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBevel": "Stožčasti",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBottom": "Dno",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBottomMargin": "Spodnja meja",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBtnWrap": "Zavijanje besedila",\r\n
+  "DE.Views.ImageSettingsAdvanced.textCapType": "Vrsta pokrovčka",\r\n
+  "DE.Views.ImageSettingsAdvanced.textCenter": "Center",\r\n
+  "DE.Views.ImageSettingsAdvanced.textCharacter": "Znak",\r\n
+  "DE.Views.ImageSettingsAdvanced.textColumn": "Stolpec",\r\n
+  "DE.Views.ImageSettingsAdvanced.textDistance": "Oddaljenost od besedila",\r\n
+  "DE.Views.ImageSettingsAdvanced.textEndSize": "Končna velikost",\r\n
+  "DE.Views.ImageSettingsAdvanced.textEndStyle": "Končni slog",\r\n
+  "DE.Views.ImageSettingsAdvanced.textFlat": "Ploščat",\r\n
+  "DE.Views.ImageSettingsAdvanced.textHeight": "Višina",\r\n
+  "DE.Views.ImageSettingsAdvanced.textHorizontal": "Horizontalen",\r\n
+  "DE.Views.ImageSettingsAdvanced.textJoinType": "Vrsta pridruževanja",\r\n
+  "DE.Views.ImageSettingsAdvanced.textKeepRatio": "Nenehna razmerja",\r\n
+  "DE.Views.ImageSettingsAdvanced.textLeft": "Levo",\r\n
+  "DE.Views.ImageSettingsAdvanced.textLeftMargin": "Leva meja",\r\n
+  "DE.Views.ImageSettingsAdvanced.textLine": "Črta",\r\n
+  "DE.Views.ImageSettingsAdvanced.textLineStyle": "Slog vrste",\r\n
+  "DE.Views.ImageSettingsAdvanced.textMargin": "Meja",\r\n
+  "DE.Views.ImageSettingsAdvanced.textMiter": "Mitre",\r\n
+  "DE.Views.ImageSettingsAdvanced.textMove": "Premakni objekt z besedilom",\r\n
+  "DE.Views.ImageSettingsAdvanced.textOptions": "Možnosti",\r\n
+  "DE.Views.ImageSettingsAdvanced.textOriginalSize": "Privzeta velikost",\r\n
+  "DE.Views.ImageSettingsAdvanced.textOverlap": "Dovoli prekrivanje",\r\n
+  "DE.Views.ImageSettingsAdvanced.textPage": "Stran",\r\n
+  "DE.Views.ImageSettingsAdvanced.textParagraph": "Odstavek",\r\n
+  "DE.Views.ImageSettingsAdvanced.textPosition": "Položaj",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRelative": "Relativno z",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRight": "Desno",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRightMargin": "Desna meja",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRightOf": "desno od",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRound": "Okrogel",\r\n
+  "DE.Views.ImageSettingsAdvanced.textShape": "Nastavitve oblike",\r\n
+  "DE.Views.ImageSettingsAdvanced.textSize": "Velikost",\r\n
+  "DE.Views.ImageSettingsAdvanced.textSquare": "Kvadrat",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTitle": "Slika - napredne nastavitve",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTitleChart": "Graf - Napredne nastavitve",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTitleShape": "Oblika - Napredne nastavitve",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTop": "Vrh",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTopMargin": "Vrhnja meja",\r\n
+  "DE.Views.ImageSettingsAdvanced.textVertical": "Vertikalen",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWidth": "Širina",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrap": "Slog zavijanja",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapBehindTooltip": "Za",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapInFrontTooltip": "v Ospredju",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapInlineTooltip": "V vrstici",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapSquareTooltip": "Kvadrat",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapThroughTooltip": "Preko",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapTightTooltip": "Tesen",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapTopbottomTooltip": "Vrh in Dno",\r\n
+  "DE.Views.LeftMenu.tipAbout": "O programu",\r\n
+  "DE.Views.LeftMenu.tipChat": "Pogovor",\r\n
+  "DE.Views.LeftMenu.tipComments": "Komentarji",\r\n
+  "DE.Views.LeftMenu.tipFile": "Datoteka",\r\n
+  "DE.Views.LeftMenu.tipSearch": "Iskanje",\r\n
+  "DE.Views.LeftMenu.tipSupport": "Povratne informacije & Pomoč",\r\n
+  "DE.Views.LeftMenu.tipTitles": "Naslovi",\r\n
+  "DE.Views.MailMergeEmailDlg.cancelButtonText": "Cancel",\r\n
+  "DE.Views.MailMergeEmailDlg.filePlaceholder": "PDF",\r\n
+  "DE.Views.MailMergeEmailDlg.okButtonText": "Send",\r\n
+  "DE.Views.MailMergeEmailDlg.subjectPlaceholder": "Theme",\r\n
+  "DE.Views.MailMergeEmailDlg.textAttachDocx": "Attach as DOCX",\r\n
+  "DE.Views.MailMergeEmailDlg.textAttachPdf": "Attach as PDF",\r\n
+  "DE.Views.MailMergeEmailDlg.textFileName": "File name",\r\n
+  "DE.Views.MailMergeEmailDlg.textFormat": "Mail format",\r\n
+  "DE.Views.MailMergeEmailDlg.textFrom": "From",\r\n
+  "DE.Views.MailMergeEmailDlg.textHTML": "HTML",\r\n
+  "DE.Views.MailMergeEmailDlg.textMessage": "Message",\r\n
+  "DE.Views.MailMergeEmailDlg.textSubject": "Subject Line",\r\n
+  "DE.Views.MailMergeEmailDlg.textTitle": "Send to E-mail",\r\n
+  "DE.Views.MailMergeEmailDlg.textTo": "To",\r\n
+  "DE.Views.MailMergeEmailDlg.textWarning": "Warning!",\r\n
+  "DE.Views.MailMergeEmailDlg.textWarningMsg": "Please note that mailing cannot be stopped once your click the \'Send\' button.",\r\n
+  "DE.Views.MailMergeRecepients.textLoading": "Loading",\r\n
+  "DE.Views.MailMergeRecepients.textTitle": "Select Data Source",\r\n
+  "DE.Views.MailMergeSaveDlg.textLoading": "Loading",\r\n
+  "DE.Views.MailMergeSaveDlg.textTitle": "Folder for save",\r\n
+  "DE.Views.MailMergeSettings.downloadMergeTitle": "Merging",\r\n
+  "DE.Views.MailMergeSettings.errorMailMergeSaveFile": "Merge failed.",\r\n
+  "DE.Views.MailMergeSettings.notcriticalErrorTitle": "Warning",\r\n
+  "DE.Views.MailMergeSettings.textAll": "All records",\r\n
+  "DE.Views.MailMergeSettings.textCurrent": "Current record",\r\n
+  "DE.Views.MailMergeSettings.textDataSource": "Data Source",\r\n
+  "DE.Views.MailMergeSettings.textDocx": "Docx",\r\n
+  "DE.Views.MailMergeSettings.textDownload": "Download",\r\n
+  "DE.Views.MailMergeSettings.textEditData": "Edit recipients list",\r\n
+  "DE.Views.MailMergeSettings.textEmail": "E-mail",\r\n
+  "DE.Views.MailMergeSettings.textFrom": "From",\r\n
+  "DE.Views.MailMergeSettings.textHighlight": "Highlight merge fields",\r\n
+  "DE.Views.MailMergeSettings.textInsertField": "Insert Merge Field",\r\n
+  "DE.Views.MailMergeSettings.textMaxRecepients": "Max 100 recipients.",\r\n
+  "DE.Views.MailMergeSettings.textMerge": "Merge",\r\n
+  "DE.Views.MailMergeSettings.textMergeFields": "Merge Fields",\r\n
+  "DE.Views.MailMergeSettings.textMergeTo": "Merge to",\r\n
+  "DE.Views.MailMergeSettings.textPdf": "PDF",\r\n
+  "DE.Views.MailMergeSettings.textPortal": "Save",\r\n
+  "DE.Views.MailMergeSettings.textPreview": "Preview results",\r\n
+  "DE.Views.MailMergeSettings.textReadMore": "Read more",\r\n
+  "DE.Views.MailMergeSettings.textSendMsg": "All mail messages are ready and will be sent out within some time.<br>The speed of mailing depends on your mail service.<br>You can continue working with document or close it. After the operation is over the notification will be sent to your %1 email address.",\r\n
+  "DE.Views.MailMergeSettings.textTo": "To",\r\n
+  "DE.Views.MailMergeSettings.txtFirst": "To first field",\r\n
+  "DE.Views.MailMergeSettings.txtFromToError": "\\"From\\" value must be less than \\"To\\" value",\r\n
+  "DE.Views.MailMergeSettings.txtLast": "To last field",\r\n
+  "DE.Views.MailMergeSettings.txtNext": "To next field",\r\n
+  "DE.Views.MailMergeSettings.txtPrev": "To previous field",\r\n
+  "DE.Views.MailMergeSettings.txtUntitled": "Untitled",\r\n
+  "DE.Views.MailMergeSettings.warnProcessMailMerge": "Starting merge failed",\r\n
+  "DE.Views.ParagraphSettings.strLineHeight": "Razmik med vrsticami",\r\n
+  "DE.Views.ParagraphSettings.strParagraphSpacing": "Razmik",\r\n
+  "DE.Views.ParagraphSettings.strSomeParagraphSpace": "Med odstavke enakega sloga ne dodaj intervalov",\r\n
+  "DE.Views.ParagraphSettings.strSpacingAfter": "po",\r\n
+  "DE.Views.ParagraphSettings.strSpacingBefore": "Pred",\r\n
+  "DE.Views.ParagraphSettings.textAdvanced": "Prikaži napredne nastavitve",\r\n
+  "DE.Views.ParagraphSettings.textAt": "na",\r\n
+  "DE.Views.ParagraphSettings.textAtLeast": "Vsaj",\r\n
+  "DE.Views.ParagraphSettings.textAuto": "Večkratno",\r\n
+  "DE.Views.ParagraphSettings.textBackColor": "Barva ozadja",\r\n
+  "DE.Views.ParagraphSettings.textExact": "Točno",\r\n
+  "DE.Views.ParagraphSettings.textNewColor": "Dodaj novo barvo po meri",\r\n
+  "DE.Views.ParagraphSettings.textStandartColors": "Standardne barve",\r\n
+  "DE.Views.ParagraphSettings.textThemeColors": "Barve teme",\r\n
+  "DE.Views.ParagraphSettings.txtAutoText": "Samodejno",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.cancelButtonText": "Prekliči",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.noTabs": "Določeni zavihki se bodo pojavili v tem polju",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.okButtonText": "OK",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strAllCaps": "Vse z veliko",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strBorders": "Obrobe & Zapolnitev",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strBreakBefore": "Prelom strani pred",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strDoubleStrike": "Dvojno prečrtanje",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strIndentsFirstLine": "Prva vrsta",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strIndentsLeftText": "Levo",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strIndentsRightText": "Desno",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strKeepLines": "Linije ohrani skupaj",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strKeepNext": "Ohrani z naslednjim",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strMargins": "Blazinice",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strOrphan": "Nadzor sirot",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strParagraphFont": "Pisava",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strParagraphIndents": "Zamiki & Postavitev",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strParagraphPosition": "Postavitev",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strSmallCaps": "mali pokrovčki",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strStrike": "Prečrtano",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strSubscript": "Pripis",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strSuperscript": "Nadpis",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strTabs": "Zavihek",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textAlign": "Poravnava",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBackColor": "Barva ozadja",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBorderColor": "Barva obrobe",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBorderDesc": "Pritisni na diagram, ali pa uporabi gumbe za izbiro mej in potrditev njihovega izbranega stila\\n",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBorderWidth": "Velikost obrobe",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBottom": "Dno",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textCharacterSpacing": "Razmak znaka",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textDefault": "Prevzeti zavihek",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textEffects": "Učinki",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textLeft": "Levo",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textNewColor": "Dodaj novo barvo po meri",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textPosition": "Položaj",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textRemove": "Odstrani",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textRemoveAll": "Odstrani vse",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textRight": "Desno",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textSet": "Določite",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textSpacing": "Razmik",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textStandartColors": "Standardne barve",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTabCenter": "Center",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTabLeft": "Levo",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTabPosition": "Položaj zavihka",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTabRight": "Desno",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textThemeColors": "Barve teme",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTitle": "Odstavek - Napredne nastavitve",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTop": "Vrh",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipAll": "Nastavi zunanjo mejo in vse notranje črte",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipBottom": "Nastavi le spodnjo mejo",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipInner": "Nastavi le horizontalne notranje črte",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipLeft": "Nastavi le levo mejo",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipNone": "Ne nastavi nobene meje",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipOuter": "Nastavi le zunanjo mejo",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipRight": "Nastavi le desno mejo",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipTop": "Nastavi le zgornjo mejo",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.txtNoBorders": "Ni mej",\r\n
+  "DE.Views.RightMenu.txtChartSettings": "Nastavitve grafa",\r\n
+  "DE.Views.RightMenu.txtHeaderFooterSettings": "Nastavitve glave in noge",\r\n
+  "DE.Views.RightMenu.txtImageSettings": "Nastavitve slike",\r\n
+  "DE.Views.RightMenu.txtMailMergeSettings": "Mail Merge Settings",\r\n
+  "DE.Views.RightMenu.txtParagraphSettings": "Nastavitve odstavka",\r\n
+  "DE.Views.RightMenu.txtShapeSettings": "Nastavitve oblike",\r\n
+  "DE.Views.RightMenu.txtTableSettings": "Nastavitve tabele",\r\n
+  "DE.Views.ShapeSettings.strBackground": "Barva ozadja",\r\n
+  "DE.Views.ShapeSettings.strChange": "Spremeni samodejno obliko",\r\n
+  "DE.Views.ShapeSettings.strColor": "Barva",\r\n
+  "DE.Views.ShapeSettings.strFill": "Dopolni",\r\n
+  "DE.Views.ShapeSettings.strForeground": "Barva ospredja",\r\n
+  "DE.Views.ShapeSettings.strPattern": "Vzorec",\r\n
+  "DE.Views.ShapeSettings.strSize": "Velikost",\r\n
+  "DE.Views.ShapeSettings.strStroke": "Črta",\r\n
+  "DE.Views.ShapeSettings.strTransparency": "Motnost",\r\n
+  "DE.Views.ShapeSettings.textAdvanced": "Prikaži napredne nastavitve",\r\n
+  "DE.Views.ShapeSettings.textBorderSizeErr": "Vnesena vrednost je nepravilna.<br>Prosim vnesite vrednost med 0 pt in 1584 pt.",\r\n
+  "DE.Views.ShapeSettings.textColor": "Barvna izpolnitev",\r\n
+  "DE.Views.ShapeSettings.textDirection": "Smer",\r\n
+  "DE.Views.ShapeSettings.textEmptyPattern": "Ni vzorcev",\r\n
+  "DE.Views.ShapeSettings.textFromFile": "z datoteke",\r\n
+  "DE.Views.ShapeSettings.textFromUrl": "z URL",\r\n
+  "DE.Views.ShapeSettings.textGradient": "Gradient",\r\n
+  "DE.Views.ShapeSettings.textGradientFill": "Polnjenje gradienta",\r\n
+  "DE.Views.ShapeSettings.textImageTexture": "Slika ali tekstura",\r\n
+  "DE.Views.ShapeSettings.textLinear": "Linearna",\r\n
+  "DE.Views.ShapeSettings.textNewColor": "Dodaj novo barvo po meri",\r\n
+  "DE.Views.ShapeSettings.textNoFill": "Ni polnila",\r\n
+  "DE.Views.ShapeSettings.textPatternFill": "Vzorec",\r\n
+  "DE.Views.ShapeSettings.textRadial": "Radial",\r\n
+  "DE.Views.ShapeSettings.textSelectTexture": "Izberi",\r\n
+  "DE.Views.ShapeSettings.textStandartColors": "Standardne barve",\r\n
+  "DE.Views.ShapeSettings.textStretch": "Raztegni",\r\n
+  "DE.Views.ShapeSettings.textStyle": "Slog",\r\n
+  "DE.Views.ShapeSettings.textTexture": "Z teksture",\r\n
+  "DE.Views.ShapeSettings.textThemeColors": "Barve teme",\r\n
+  "DE.Views.ShapeSettings.textTile": "Ploščica",\r\n
+  "DE.Views.ShapeSettings.textWrap": "Slog zavijanja",\r\n
+  "DE.Views.ShapeSettings.txtBehind": "Za",\r\n
+  "DE.Views.ShapeSettings.txtBrownPaper": "Rjav papir",\r\n
+  "DE.Views.ShapeSettings.txtCanvas": "Platno",\r\n
+  "DE.Views.ShapeSettings.txtCarton": "Karton",\r\n
+  "DE.Views.ShapeSettings.txtDarkFabric": "Temna tkanina",\r\n
+  "DE.Views.ShapeSettings.txtGrain": "Zrno",\r\n
+  "DE.Views.ShapeSettings.txtGranite": "Granit",\r\n
+  "DE.Views.ShapeSettings.txtGreyPaper": "Siv papir",\r\n
+  "DE.Views.ShapeSettings.txtInFront": "v ospredju",\r\n
+  "DE.Views.ShapeSettings.txtInline": "V vrstici",\r\n
+  "DE.Views.ShapeSettings.txtKnit": "Pleti",\r\n
+  "DE.Views.ShapeSettings.txtLeather": "Usnje",\r\n
+  "DE.Views.ShapeSettings.txtNoBorders": "Ni črte",\r\n
+  "DE.Views.ShapeSettings.txtPapyrus": "Papirus",\r\n
+  "DE.Views.ShapeSettings.txtSquare": "Kvadrat",\r\n
+  "DE.Views.ShapeSettings.txtThrough": "Preko",\r\n
+  "DE.Views.ShapeSettings.txtTight": "Tesen",\r\n
+  "DE.Views.ShapeSettings.txtTopAndBottom": "Vrh in Dno",\r\n
+  "DE.Views.ShapeSettings.txtWood": "Les",\r\n
+  "DE.Views.Statusbar.goToPageText": "Pojdi na stran",\r\n
+  "DE.Views.Statusbar.LanguageDialog.btnCancel": "Prekliči",\r\n
+  "DE.Views.Statusbar.LanguageDialog.btnOk": "OK",\r\n
+  "DE.Views.Statusbar.LanguageDialog.labelSelect": "Izberi jezik dokumenta",\r\n
+  "DE.Views.Statusbar.pageIndexText": "Stran {0} od {1}",\r\n
+  "DE.Views.Statusbar.tipFitPage": "Prilagodi stran",\r\n
+  "DE.Views.Statusbar.tipFitWidth": "Prilagodi širino",\r\n
+  "DE.Views.Statusbar.tipMoreUsers": "in %1 uporabnikov.",\r\n
+  "DE.Views.Statusbar.tipSetDocLang": "Nastavi jezik dokumenta",\r\n
+  "DE.Views.Statusbar.tipSetLang": "Nastavi jezik besedila",\r\n
+  "DE.Views.Statusbar.tipSetSpelling": "Preverjanje črkovanja",\r\n
+  "DE.Views.Statusbar.tipShowUsers": "Za ogled vseh uporabnikov pritisni spodnjo ikono.",\r\n
+  "DE.Views.Statusbar.tipUsers": "Dokument trenutno ureja več uporabnikov",\r\n
+  "DE.Views.Statusbar.tipZoomFactor": "Povečava",\r\n
+  "DE.Views.Statusbar.tipZoomIn": "Približaj",\r\n
+  "DE.Views.Statusbar.tipZoomOut": "Oddalji",\r\n
+  "DE.Views.Statusbar.txtPageNumInvalid": "številka strani nepravilna",\r\n
+  "DE.Views.TableSettings.deleteColumnText": "Izbriši stolpec",\r\n
+  "DE.Views.TableSettings.deleteRowText": "Izbriši vrsto",\r\n
+  "DE.Views.TableSettings.deleteTableText": "Izbriši tabelo",\r\n
+  "DE.Views.TableSettings.insertColumnLeftText": "Vstavi stolpec levo",\r\n
+  "DE.Views.TableSettings.insertColumnRightText": "Vstavi stolpec desno",\r\n
+  "DE.Views.TableSettings.insertRowAboveText": "Vstavi vrsto zgoraj",\r\n
+  "DE.Views.TableSettings.insertRowBelowText": "Vstavi vrsto spodaj",\r\n
+  "DE.Views.TableSettings.mergeCellsText": "Združi celice",\r\n
+  "DE.Views.TableSettings.selectCellText": "Izberi celico",\r\n
+  "DE.Views.TableSettings.selectColumnText": "Izberi stolpec",\r\n
+  "DE.Views.TableSettings.selectRowText": "Izberi vrstico",\r\n
+  "DE.Views.TableSettings.selectTableText": "Izberi tabelo",\r\n
+  "DE.Views.TableSettings.splitCellsText": "Razdeli celico...",\r\n
+  "DE.Views.TableSettings.splitCellTitleText": "Razdeli celico",\r\n
+  "DE.Views.TableSettings.strRepeatRow": "Ponovi kot vrstico glave na vrhu vsake strani",\r\n
+  "DE.Views.TableSettings.textAdvanced": "Prikaži napredne nastavitve",\r\n
+  "DE.Views.TableSettings.textBackColor": "Barva ozadja",\r\n
+  "DE.Views.TableSettings.textBanded": "Odvisen",\r\n
+  "DE.Views.TableSettings.textBorderColor": "Barva",\r\n
+  "DE.Views.TableSettings.textBorders": "Stil obrob",\r\n
+  "DE.Views.TableSettings.textCancel": "Prekliči",\r\n
+  "DE.Views.TableSettings.textColumns": "Stolpci",\r\n
+  "DE.Views.TableSettings.textEdit": "Vrste & Stolpci",\r\n
+  "DE.Views.TableSettings.textEmptyTemplate": "Ni predlog",\r\n
+  "DE.Views.TableSettings.textFirst": "prvi",\r\n
+  "DE.Views.TableSettings.textHeader": "Glava",\r\n
+  "DE.Views.TableSettings.textLast": "zadnji",\r\n
+  "DE.Views.TableSettings.textNewColor": "Dodaj novo barvo po meri",\r\n
+  "DE.Views.TableSettings.textOK": "OK",\r\n
+  "DE.Views.TableSettings.textRows": "Vrste",\r\n
+  "DE.Views.TableSettings.textSelectBorders": "Izberite meje katere želite spremeniti z uporabo zgoraj izbranega sloga",\r\n
+  "DE.Views.TableSettings.textStandartColors": "Standardne barve",\r\n
+  "DE.Views.TableSettings.textTemplate": "Izberi z predloge",\r\n
+  "DE.Views.TableSettings.textThemeColors": "Barve teme",\r\n
+  "DE.Views.TableSettings.textTotal": "Skupno",\r\n
+  "DE.Views.TableSettings.textWrap": "Zavijanje besedila",\r\n
+  "DE.Views.TableSettings.textWrapNoneTooltip": "Vrstična tabela",\r\n
+  "DE.Views.TableSettings.textWrapParallelTooltip": "Razpredelnica toka",\r\n
+  "DE.Views.TableSettings.tipAll": "Nastavi zunanjo mejo in vse notranje črte",\r\n
+  "DE.Views.TableSettings.tipBottom": "nastavi le zunanjo spodnjo mejo",\r\n
+  "DE.Views.TableSettings.tipInner": "Nastavi le notranje črte",\r\n
+  "DE.Views.TableSettings.tipInnerHor": "Nastavi le horizontalne notranje črte",\r\n
+  "DE.Views.TableSettings.tipInnerVert": "Nastavi le vertikalne notranje linije",\r\n
+  "DE.Views.TableSettings.tipLeft": "Nastavi le zunanjo levo mejo",\r\n
+  "DE.Views.TableSettings.tipNone": "Ne nastavi nobene meje",\r\n
+  "DE.Views.TableSettings.tipOuter": "Nastavi le zunanjo mejo",\r\n
+  "DE.Views.TableSettings.tipRight": "Nastavi le zunanjo desno mejo",\r\n
+  "DE.Views.TableSettings.tipTop": "Nastavi le zunanjo zgornjo mejo",\r\n
+  "DE.Views.TableSettings.txtNoBorders": "Ni mej",\r\n
+  "DE.Views.TableSettingsAdvanced.cancelButtonText": "Prekliči",\r\n
+  "DE.Views.TableSettingsAdvanced.okButtonText": "OK",\r\n
+  "DE.Views.TableSettingsAdvanced.textAlign": "Poravnava",\r\n
+  "DE.Views.TableSettingsAdvanced.textAlignment": "Poravnava",\r\n
+  "DE.Views.TableSettingsAdvanced.textAllowSpacing": "Dovoli razmak med celicami",\r\n
+  "DE.Views.TableSettingsAdvanced.textAnchorText": "Besedilo",\r\n
+  "DE.Views.TableSettingsAdvanced.textAutofit": "Samodejno prilagodi velikost da ustreza vsebini",\r\n
+  "DE.Views.TableSettingsAdvanced.textBackColor": "Ozadje celice",\r\n
+  "DE.Views.TableSettingsAdvanced.textBelow": "pod",\r\n
+  "DE.Views.TableSettingsAdvanced.textBorderColor": "Barva obrobe",\r\n
+  "DE.Views.TableSettingsAdvanced.textBorderDesc": "Pritisni na diagram, ali pa uporabi gumbe za izbiro mej in potrditev njihovega izbranega stila\\n",\r\n
+  "DE.Views.TableSettingsAdvanced.textBordersBackgroung": "Obrobe & Ozadje",\r\n
+  "DE.Views.TableSettingsAdvanced.textBorderWidth": "Velikost obrobe",\r\n
+  "DE.Views.TableSettingsAdvanced.textBottom": "Dno",\r\n
+  "DE.Views.TableSettingsAdvanced.textCellProps": "Lastnosti celice",\r\n
+  "DE.Views.TableSettingsAdvanced.textCenter": "Center",\r\n
+  "DE.Views.TableSettingsAdvanced.textCenterTooltip": "Center",\r\n
+  "DE.Views.TableSettingsAdvanced.textCheckMargins": "Uporabi privzete meje",\r\n
+  "DE.Views.TableSettingsAdvanced.textDefaultMargins": "Privzete meje",\r\n
+  "DE.Views.TableSettingsAdvanced.textDistance": "Oddaljenost od besedila",\r\n
+  "DE.Views.TableSettingsAdvanced.textHorizontal": "Horizontalen",\r\n
+  "DE.Views.TableSettingsAdvanced.textIndLeft": "Zamik z leve",\r\n
+  "DE.Views.TableSettingsAdvanced.textLeft": "Levo",\r\n
+  "DE.Views.TableSettingsAdvanced.textLeftTooltip": "Levo",\r\n
+  "DE.Views.TableSettingsAdvanced.textMargin": "Meja",\r\n
+  "DE.Views.TableSettingsAdvanced.textMargins": "Meje celice",\r\n
+  "DE.Views.TableSettingsAdvanced.textMove": "Premakni objekt z besedilom",\r\n
+  "DE.Views.TableSettingsAdvanced.textNewColor": "Dodaj novo barvo po meri",\r\n
+  "DE.Views.TableSettingsAdvanced.textOnlyCells": "le za izbrane celice",\r\n
+  "DE.Views.TableSettingsAdvanced.textOptions": "Možnosti",\r\n
+  "DE.Views.TableSettingsAdvanced.textOverlap": "Dovoli prekrivanje",\r\n
+  "DE.Views.TableSettingsAdvanced.textPage": "Stran",\r\n
+  "DE.Views.TableSettingsAdvanced.textPosition": "Položaj",\r\n
+  "DE.Views.TableSettingsAdvanced.textPreview": "Predogled",\r\n
+  "DE.Views.TableSettingsAdvanced.textRelative": "Relativno z",\r\n
+  "DE.Views.TableSettingsAdvanced.textRight": "Desno",\r\n
+  "DE.Views.TableSettingsAdvanced.textRightOf": "desno od",\r\n
+  "DE.Views.TableSettingsAdvanced.textRightTooltip": "Desno",\r\n
+  "DE.Views.TableSettingsAdvanced.textStandartColors": "Standardne barve",\r\n
+  "DE.Views.TableSettingsAdvanced.textTableBackColor": "Ozadje tabele",\r\n
+  "DE.Views.TableSettingsAdvanced.textThemeColors": "Barve teme",\r\n
+  "DE.Views.TableSettingsAdvanced.textTitle": "Tabela - Napredne nastavitve",\r\n
+  "DE.Views.TableSettingsAdvanced.textTop": "Vrh",\r\n
+  "DE.Views.TableSettingsAdvanced.textVertical": "Vertikalen",\r\n
+  "DE.Views.TableSettingsAdvanced.textWidth": "Širina",\r\n
+  "DE.Views.TableSettingsAdvanced.textWidthSpaces": "Širina & Presledki",\r\n
+  "DE.Views.TableSettingsAdvanced.textWrap": "Zavijanje besedila",\r\n
+  "DE.Views.TableSettingsAdvanced.textWrapNoneTooltip": "Vrstična tabela",\r\n
+  "DE.Views.TableSettingsAdvanced.textWrapParallelTooltip": "Razpredelnica toka",\r\n
+  "DE.Views.TableSettingsAdvanced.tipAll": "Nastavi zunanjo mejo in vse notranje črte",\r\n
+  "DE.Views.TableSettingsAdvanced.tipCellAll": "Nastavi meje le za notranje celice",\r\n
+  "DE.Views.TableSettingsAdvanced.tipCellInner": "Nastavi vertikalne in horizontalne linije le za notranje celice",\r\n
+  "DE.Views.TableSettingsAdvanced.tipCellOuter": "Nastavi zunanje meje le za notranje celice",\r\n
+  "DE.Views.TableSettingsAdvanced.tipInner": "Nastavi le notranje črte",\r\n
+  "DE.Views.TableSettingsAdvanced.tipNone": "Ne nastavi nobene meje",\r\n
+  "DE.Views.TableSettingsAdvanced.tipOuter": "Nastavi le zunanjo mejo",\r\n
+  "DE.Views.TableSettingsAdvanced.tipTableOuterCellAll": "Nastavi zunanjo mejo in meje za vse notranje celice",\r\n
+  "DE.Views.TableSettingsAdvanced.tipTableOuterCellInner": "Nastavi zunanjo mejo in vertikalne ter horizontalne črte za notranje celice",\r\n
+  "DE.Views.TableSettingsAdvanced.tipTableOuterCellOuter": "Nastavi zunanjo mejo tabele in zunanje meje za notranje celice",\r\n
+  "DE.Views.TableSettingsAdvanced.txtNoBorders": "Ni mej",\r\n
+  "DE.Views.Toolbar.mniCustomTable": "Vstavi tabelo po more",\r\n
+  "DE.Views.Toolbar.mniEditDropCap": "Nastavitve spustnega pokrovčka",\r\n
+  "DE.Views.Toolbar.mniEditFooter": "Uredi nogo",\r\n
+  "DE.Views.Toolbar.mniEditHeader": "Uredi glavo",\r\n
+  "DE.Views.Toolbar.mniHiddenBorders": "Skrite meje razpredelnice",\r\n
+  "DE.Views.Toolbar.mniHiddenChars": "Nenatisljivi znaki",\r\n
+  "DE.Views.Toolbar.mniImageFromFile": "Slika z datoteke",\r\n
+  "DE.Views.Toolbar.mniImageFromUrl": "Slika z URL",\r\n
+  "DE.Views.Toolbar.strMenuNoFill": "Ni polnila",\r\n
+  "DE.Views.Toolbar.textArea": "Ploščinski grafikon",\r\n
+  "DE.Views.Toolbar.textAutoColor": "Samodejen",\r\n
+  "DE.Views.Toolbar.textBar": "Stolpični grafikon",\r\n
+  "DE.Views.Toolbar.textBold": "Krepko",\r\n
+  "DE.Views.Toolbar.textColumn": "Stolpični grafikon",\r\n
+  "DE.Views.Toolbar.textCompactView": "Poglej kompaktno orodno vrstico",\r\n
+  "DE.Views.Toolbar.textContPage": "Neprekinjena stran",\r\n
+  "DE.Views.Toolbar.textEvenPage": "Tudi stran",\r\n
+  "DE.Views.Toolbar.textFitPage": "Prilagodi stran",\r\n
+  "DE.Views.Toolbar.textFitWidth": "Prilagodi širino",\r\n
+  "DE.Views.Toolbar.textHideLines": "Skrij pravila",\r\n
+  "DE.Views.Toolbar.textHideStatusBar": "Skrij statusno vrstico",\r\n
+  "DE.Views.Toolbar.textHideTitleBar": "Skrij naslovno vrstico",\r\n
+  "DE.Views.Toolbar.textInMargin": "v Meji",\r\n
+  "DE.Views.Toolbar.textInsertPageNumber": "Vstavi številko strani",\r\n
+  "DE.Views.Toolbar.textInsPageBreak": "Vstavi prelom strani",\r\n
+  "DE.Views.Toolbar.textInsSectionBreak": "Vstavi prelom oddelka",\r\n
+  "DE.Views.Toolbar.textInText": "v Besedilu",\r\n
+  "DE.Views.Toolbar.textItalic": "Poševno",\r\n
+  "DE.Views.Toolbar.textLine": "Vrstični grafikon",\r\n
+  "DE.Views.Toolbar.textNewColor": "Dodaj novo barvo po meri",\r\n
+  "DE.Views.Toolbar.textNextPage": "Naslednja stran",\r\n
+  "DE.Views.Toolbar.textNone": "nič",\r\n
+  "DE.Views.Toolbar.textOddPage": "Čudna stran",\r\n
+  "DE.Views.Toolbar.textPie": "Tortni grafikon",\r\n
+  "DE.Views.Toolbar.textPoint": "Točkovni grafikon",\r\n
+  "DE.Views.Toolbar.textStandartColors": "Standardne barve",\r\n
+  "DE.Views.Toolbar.textStock": "Založni grafikon",\r\n
+  "DE.Views.Toolbar.textStrikeout": "Prečrtaj",\r\n
+  "DE.Views.Toolbar.textSubscript": "Pripis",\r\n
+  "DE.Views.Toolbar.textSuperscript": "Nadpis",\r\n
+  "DE.Views.Toolbar.textThemeColors": "Barve teme",\r\n
+  "DE.Views.Toolbar.textTitleError": "Napaka",\r\n
+  "DE.Views.Toolbar.textToCurrent": "Do trenutnega položaja",\r\n
+  "DE.Views.Toolbar.textUnderline": "Podčrtaj",\r\n
+  "DE.Views.Toolbar.textZoom": "Povečava",\r\n
+  "DE.Views.Toolbar.tipAdvSettings": "Napredne nastavitve",\r\n
+  "DE.Views.Toolbar.tipAlignCenter": "Poravnaj središče",\r\n
+  "DE.Views.Toolbar.tipAlignJust": "Upravičena",\r\n
+  "DE.Views.Toolbar.tipAlignLeft": "Poravnaj levo",\r\n
+  "DE.Views.Toolbar.tipAlignRight": "Poravnaj desno",\r\n
+  "DE.Views.Toolbar.tipBack": "Nazaj",\r\n
+  "DE.Views.Toolbar.tipClearStyle": "Počisti stil",\r\n
+  "DE.Views.Toolbar.tipColorSchemas": "Spremeni barvno shemo",\r\n
+  "DE.Views.Toolbar.tipCopy": "Kopiraj",\r\n
+  "DE.Views.Toolbar.tipCopyStyle": "Kopiraj slog",\r\n
+  "DE.Views.Toolbar.tipDecFont": "Zmanjšaj velikost pisave",\r\n
+  "DE.Views.Toolbar.tipDecPrLeft": "Zmanjšaj zamik",\r\n
+  "DE.Views.Toolbar.tipDropCap": "Vstavi spustno kapo",\r\n
+  "DE.Views.Toolbar.tipEditHeader": "Uredi glavo ali nogo",\r\n
+  "DE.Views.Toolbar.tipFontColor": "Barva pisave",\r\n
+  "DE.Views.Toolbar.tipFontName": "Ime pisave",\r\n
+  "DE.Views.Toolbar.tipFontSize": "Velikost pisave",\r\n
+  "DE.Views.Toolbar.tipHAligh": "Horizontalno poravnano",\r\n
+  "DE.Views.Toolbar.tipHighlightColor": "Označi barvo",\r\n
+  "DE.Views.Toolbar.tipIncFont": "Prirastek velikosti pisave",\r\n
+  "DE.Views.Toolbar.tipIncPrLeft": "Povečajte zamik",\r\n
+  "DE.Views.Toolbar.tipInsertChart": "Vstavi grafikon",\r\n
+  "DE.Views.Toolbar.tipInsertEquation": "Vstavi enačbo",\r\n
+  "DE.Views.Toolbar.tipInsertHyperlink": "Dodaj Hiperpovezavo",\r\n
+  "DE.Views.Toolbar.tipInsertImage": "Vstavi sliko",\r\n
+  "DE.Views.Toolbar.tipInsertNum": "Vstavi številko strani",\r\n
+  "DE.Views.Toolbar.tipInsertShape": "Vstavi samodejno obliko",\r\n
+  "DE.Views.Toolbar.tipInsertTable": "Vstavi tabelo",\r\n
+  "DE.Views.Toolbar.tipInsertText": "Vstavi besedilo",\r\n
+  "DE.Views.Toolbar.tipLineSpace": "Razmik črt odstavka",\r\n
+  "DE.Views.Toolbar.tipMailRecepients": "Mail Merge",\r\n
+  "DE.Views.Toolbar.tipMarkers": "Krogle",\r\n
+  "DE.Views.Toolbar.tipMultilevels": "Obroba",\r\n
+  "DE.Views.Toolbar.tipNewDocument": "Nov dokument",\r\n
+  "DE.Views.Toolbar.tipNumbers": "Oštevilčenje",\r\n
+  "DE.Views.Toolbar.tipOpenDocument": "Odpri dokument",\r\n
+  "DE.Views.Toolbar.tipPageBreak": "Vstavi stran ali prelom sekcije",\r\n
+  "DE.Views.Toolbar.tipPageOrient": "Orientacija strani",\r\n
+  "DE.Views.Toolbar.tipPageSize": "Velikost strani",\r\n
+  "DE.Views.Toolbar.tipParagraphStyle": "Slog odstavka",\r\n
+  "DE.Views.Toolbar.tipPaste": "Prilepi",\r\n
+  "DE.Views.Toolbar.tipPrColor": "Barva ozadja odstavka",\r\n
+  "DE.Views.Toolbar.tipPrint": "Natisni",\r\n
+  "DE.Views.Toolbar.tipRedo": "Ponovite",\r\n
+  "DE.Views.Toolbar.tipSave": "Shrani",\r\n
+  "DE.Views.Toolbar.tipSaveCoauth": "Shranite svoje spremembe, da jih drugi uporabniki lahko vidijo.",\r\n
+  "DE.Views.Toolbar.tipShowHiddenChars": "Nenatisljivi znaki",\r\n
+  "DE.Views.Toolbar.tipSynchronize": "Dokument je spremenil drug uporabnik. Prosim pritisnite za shranjevanje svojih sprememb in osvežitev posodobitev.",\r\n
+  "DE.Views.Toolbar.tipUndo": "Razveljavi",\r\n
+  "DE.Views.Toolbar.tipViewSettings": "Poglej nastavitve",\r\n
+  "DE.Views.Toolbar.txtScheme1": "Pisarna",\r\n
+  "DE.Views.Toolbar.txtScheme10": "Mediana",\r\n
+  "DE.Views.Toolbar.txtScheme11": "Metro",\r\n
+  "DE.Views.Toolbar.txtScheme12": "Modul",\r\n
+  "DE.Views.Toolbar.txtScheme13": "Razkošen",\r\n
+  "DE.Views.Toolbar.txtScheme14": "Oriel",\r\n
+  "DE.Views.Toolbar.txtScheme15": "Izvor",\r\n
+  "DE.Views.Toolbar.txtScheme16": "Papir",\r\n
+  "DE.Views.Toolbar.txtScheme17": "Solsticij",\r\n
+  "DE.Views.Toolbar.txtScheme18": "Tehnika",\r\n
+  "DE.Views.Toolbar.txtScheme19": "Trek",\r\n
+  "DE.Views.Toolbar.txtScheme2": "Sivina",\r\n
+  "DE.Views.Toolbar.txtScheme20": "Urban",\r\n
+  "DE.Views.Toolbar.txtScheme21": "Navdušenje",\r\n
+  "DE.Views.Toolbar.txtScheme3": "Apeks",\r\n
+  "DE.Views.Toolbar.txtScheme4": "Vidik",\r\n
+  "DE.Views.Toolbar.txtScheme5": "Državljanski",\r\n
+  "DE.Views.Toolbar.txtScheme6": "Avla",\r\n
+  "DE.Views.Toolbar.txtScheme7": "Kapital",\r\n
+  "DE.Views.Toolbar.txtScheme8": "Tok",\r\n
+  "DE.Views.Toolbar.txtScheme9": "Livarna"\r\n
+}
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

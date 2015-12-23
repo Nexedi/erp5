@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885475.8</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>it.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\r\n
+  "PE.controller.Main.convertationErrorText": "Conversione fallita.",\r\n
+  "PE.controller.Main.convertationTimeoutText": "E\' stato superato il tempo limite della conversione.",\r\n
+  "PE.controller.Main.criticalErrorExtText": "Clicca su \\"OK\\" per ricaricare la pagina.",\r\n
+  "PE.controller.Main.criticalErrorTitle": "Errore",\r\n
+  "PE.controller.Main.downloadErrorText": "Download fallito.",\r\n
+  "PE.controller.Main.editModeText": "Modifica",\r\n
+  "PE.controller.Main.errorDefaultMessage": "Codice errore: %1",\r\n
+  "PE.controller.Main.errorKeyEncrypt": "Descrittore di chiave sconosciuto",\r\n
+  "PE.controller.Main.errorKeyExpire": "Descrittore di chiave scaduto",\r\n
+  "PE.controller.Main.errorUsersExceed": "E\' stato superato il numero di utenti consentito dal piano tariffario",\r\n
+  "PE.controller.Main.notcriticalErrorTitle": "Avviso",\r\n
+  "PE.controller.Main.printText": "Stampa in corso...",\r\n
+  "PE.controller.Main.reloadButtonText": "Ricarica pagina",\r\n
+  "PE.controller.Main.requestEditFailedMessageText": "Qualcuno sta modificando questo documento. Si prega di provare più tardi.",\r\n
+  "PE.controller.Main.requestEditFailedTitleText": "Accesso vietato",\r\n
+  "PE.controller.Main.requestEditRightsText": "Richiesta di autorizzazione di modifica...",\r\n
+  "PE.controller.Main.splitDividerErrorText": "Il numero di righe deve essere un divisore di %1",\r\n
+  "PE.controller.Main.splitMaxColsErrorText": "Il numero di colonne deve essere inferiore a %1",\r\n
+  "PE.controller.Main.splitMaxRowsErrorText": "Il numero di righe deve essere inferiore a %1",\r\n
+  "PE.controller.Main.textAnonymous": "Anonimo",\r\n
+  "PE.controller.Main.textLoadingDocument": "Caricamento del documento",\r\n
+  "PE.controller.Main.unknownErrorText": "Errore sconosciuto.",\r\n
+  "PE.controller.Main.unsupportedBrowserErrorText": "Il tuo browser non è supportato.",\r\n
+  "PE.controller.Main.uploadImageExtMessage": "Formato immagine sconosciuto.",\r\n
+  "PE.controller.Main.uploadImageFileCountMessage": "Nessun immagine caricata.",\r\n
+  "PE.controller.Main.uploadImageSizeMessage": "E\' stata superata la dimensione massima.",\r\n
+  "PE.controller.Main.viewModeText": "Visualizzazione",\r\n
+  "PE.controller.phone.Main.pageText": "Pagina",\r\n
+  "PE.controller.tablet.Main.pageText": "Pagina",\r\n
+  "PE.controller.toolbar.View.txtFinalMessage": "Fine di visualizzazione",\r\n
+  "PE.view.phone.toolbar.View.doneText": "Fatto",\r\n
+  "PE.view.tablet.toolbar.View.doneText": "Fatto"\r\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2405</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

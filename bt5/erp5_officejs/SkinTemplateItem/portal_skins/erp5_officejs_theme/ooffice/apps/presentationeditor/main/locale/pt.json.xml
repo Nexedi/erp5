@@ -1,0 +1,814 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885473.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>pt.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\r\n
+  "Common.Controllers.Chat.notcriticalErrorTitle": "Aviso",\r\n
+  "Common.Controllers.Chat.textEnterMessage": "Inserir sua mensagem aqui",\r\n
+  "Common.Controllers.Chat.textUserLimit": "You are using ONLYOFFICE Free Edition.<br>Only two users can co-edit the document simultaneously.<br>Want more? Consider buying ONLYOFFICE Enterprise Edition.<br><a href=\\"http:\\/\\/www.onlyoffice.com\\/free-edition.aspx\\" target=\\"_blank\\">Read more</a>",\r\n
+  "Common.Controllers.ExternalDiagramEditor.textAnonymous": "Anônimo",\r\n
+  "Common.Controllers.ExternalDiagramEditor.textClose": "Fechar",\r\n
+  "Common.Controllers.ExternalDiagramEditor.warningText": "O objeto está desabilitado por que está sendo editado por outro usuário.",\r\n
+  "Common.Controllers.ExternalDiagramEditor.warningTitle": "Aviso",\r\n
+  "Common.UI.ComboBorderSize.txtNoBorders": "Sem bordas",\r\n
+  "Common.UI.ComboBorderSizeEditable.txtNoBorders": "Sem bordas",\r\n
+  "Common.UI.ComboDataView.emptyComboText": "Sem estilos",\r\n
+  "Common.UI.ExtendedColorDialog.addButtonText": "Adicionar",\r\n
+  "Common.UI.ExtendedColorDialog.cancelButtonText": "Cancelar",\r\n
+  "Common.UI.ExtendedColorDialog.textCurrent": "Atual",\r\n
+  "Common.UI.ExtendedColorDialog.textHexErr": "O valor inserido está incorreto.<br>Insira um valor entre 000000 e FFFFFF.",\r\n
+  "Common.UI.ExtendedColorDialog.textNew": "Novo",\r\n
+  "Common.UI.ExtendedColorDialog.textRGBErr": "O valor inserido está incorreto.<br>Insira um valor numérico entre 0 e 255.",\r\n
+  "Common.UI.HSBColorPicker.textNoColor": "Sem cor",\r\n
+  "Common.UI.SearchDialog.textHighlight": "Destacar resultados",\r\n
+  "Common.UI.SearchDialog.textMatchCase": "Diferenciar maiúsculas de minúsculas",\r\n
+  "Common.UI.SearchDialog.textReplaceDef": "Inserir o texto de substituição",\r\n
+  "Common.UI.SearchDialog.textSearchStart": "Inserir seu texto aqui",\r\n
+  "Common.UI.SearchDialog.textTitle": "Pesquisar",\r\n
+  "Common.UI.SearchDialog.textTitle2": "Pesquisar",\r\n
+  "Common.UI.SearchDialog.textWholeWords": "Palavras inteiras apenas",\r\n
+  "Common.UI.SearchDialog.txtBtnReplace": "Substituir",\r\n
+  "Common.UI.SearchDialog.txtBtnReplaceAll": "Substituir tudo",\r\n
+  "Common.UI.SynchronizeTip.textDontShow": "Não exibir esta mensagem novamente",\r\n
+  "Common.UI.SynchronizeTip.textSynchronize": "O documento foi alterado por outro usuário.<br/>Clique para salvar suas alterações e recarregar as atualizações.",\r\n
+  "Common.UI.Window.cancelButtonText": "Cancelar",\r\n
+  "Common.UI.Window.closeButtonText": "Fechar",\r\n
+  "Common.UI.Window.noButtonText": "Não",\r\n
+  "Common.UI.Window.okButtonText": "OK",\r\n
+  "Common.UI.Window.textConfirmation": "Confirmação",\r\n
+  "Common.UI.Window.textError": "Erro",\r\n
+  "Common.UI.Window.textInformation": "Informações",\r\n
+  "Common.UI.Window.textWarning": "Aviso",\r\n
+  "Common.UI.Window.yesButtonText": "Sim",\r\n
+  "Common.Views.About.txtAddress": "endereço:",\r\n
+  "Common.Views.About.txtAscAddress": "Lubanas st. 125a-25, Riga, Latvia, EU, LV-1021",\r\n
+  "Common.Views.About.txtLicensee": "LICENÇA",\r\n
+  "Common.Views.About.txtLicensor": "LICENCIANTE",\r\n
+  "Common.Views.About.txtMail": "e-mail:",\r\n
+  "Common.Views.About.txtPoweredBy": "Powered by",\r\n
+  "Common.Views.About.txtTel": "tel.: ",\r\n
+  "Common.Views.About.txtVersion": "Versão",\r\n
+  "Common.Views.AdvancedSettingsWindow.cancelButtonText": "Cancelar",\r\n
+  "Common.Views.AdvancedSettingsWindow.okButtonText": "OK",\r\n
+  "Common.Views.Chat.textSend": "Enviar",\r\n
+  "Common.Views.Comments.textAdd": "Adicionar",\r\n
+  "Common.Views.Comments.textAddComment": "Adicionar comentário",\r\n
+  "Common.Views.Comments.textAddCommentToDoc": "Adicionar comentário ao documento",\r\n
+  "Common.Views.Comments.textAddReply": "Adicionar resposta",\r\n
+  "Common.Views.Comments.textAnonym": "Visitante",\r\n
+  "Common.Views.Comments.textCancel": "Cancelar",\r\n
+  "Common.Views.Comments.textClose": "Fechar",\r\n
+  "Common.Views.Comments.textComments": "Comentários",\r\n
+  "Common.Views.Comments.textEdit": "Editar",\r\n
+  "Common.Views.Comments.textEnterCommentHint": "Inserir seu comentário aqui",\r\n
+  "Common.Views.Comments.textOpenAgain": "Abrir novamente",\r\n
+  "Common.Views.Comments.textReply": "Responder",\r\n
+  "Common.Views.Comments.textResolve": "Resolver",\r\n
+  "Common.Views.Comments.textResolved": "Resolvido",\r\n
+  "Common.Views.CopyWarningDialog.textDontShow": "Não exibir esta mensagem novamente",\r\n
+  "Common.Views.CopyWarningDialog.textMsg": "As ações copiar, cortar e colar usando os botões da barra de ferramentas do editor e as ações de menu de contexto serão realizadas apenas nesta aba do editor.<br><br>Para copiar ou colar para ou de aplicativos externos a aba do editor, use as seguintes combinações do teclado:",\r\n
+  "Common.Views.CopyWarningDialog.textTitle": "Ações copiar, cortar e colar",\r\n
+  "Common.Views.CopyWarningDialog.textToCopy": "para Copiar",\r\n
+  "Common.Views.CopyWarningDialog.textToCut": "para Cortar",\r\n
+  "Common.Views.CopyWarningDialog.textToPaste": "para Colar",\r\n
+  "Common.Views.DocumentAccessDialog.textLoading": "Carregando...",\r\n
+  "Common.Views.DocumentAccessDialog.textTitle": "Configurações de compartilhamento",\r\n
+  "Common.Views.ExternalDiagramEditor.textClose": "Fechar",\r\n
+  "Common.Views.ExternalDiagramEditor.textSave": "Salvar e Sair",\r\n
+  "Common.Views.ExternalDiagramEditor.textTitle": "Editor de gráfico",\r\n
+  "Common.Views.Header.textBack": "Ir para Documentos",\r\n
+  "Common.Views.ImageFromUrlDialog.cancelButtonText": "Cancelar",\r\n
+  "Common.Views.ImageFromUrlDialog.okButtonText": "OK",\r\n
+  "Common.Views.ImageFromUrlDialog.textUrl": "Colar uma URL de imagem:",\r\n
+  "Common.Views.ImageFromUrlDialog.txtEmpty": "Este campo é obrigatório",\r\n
+  "Common.Views.ImageFromUrlDialog.txtNotUrl": "Este campo deve ser uma URL no formato \\"http://www.example.com\\"",\r\n
+  "Common.Views.InsertTableDialog.cancelButtonText": "Cancelar",\r\n
+  "Common.Views.InsertTableDialog.okButtonText": "OK",\r\n
+  "Common.Views.InsertTableDialog.textInvalidRowsCols": "Você precisa especificar números de linhas e colunas válidos.",\r\n
+  "Common.Views.InsertTableDialog.txtColumns": "Número de colunas",\r\n
+  "Common.Views.InsertTableDialog.txtMaxText": "O valor máximo para este campo é {0}.",\r\n
+  "Common.Views.InsertTableDialog.txtMinText": "O valor mínimo para este campo é {0}.",\r\n
+  "Common.Views.InsertTableDialog.txtRows": "Número de linhas",\r\n
+  "Common.Views.InsertTableDialog.txtTitle": "Tamanho da tabela",\r\n
+  "PE.Controllers.LeftMenu.newDocumentTitle": "Apresentação sem nome",\r\n
+  "PE.Controllers.LeftMenu.requestEditRightsText": "Solicitando direitos de edição...",\r\n
+  "PE.Controllers.LeftMenu.textNoTextFound": "Os dados que você tem estado procurando não podem ser encontrados. Ajuste suas opções de pesquisa.",\r\n
+  "PE.Controllers.Main.applyChangesTextText": "Carregando dados...",\r\n
+  "PE.Controllers.Main.applyChangesTitleText": "Carregando dados",\r\n
+  "PE.Controllers.Main.convertationErrorText": "Conversão falhou.",\r\n
+  "PE.Controllers.Main.convertationTimeoutText": "Tempo limite de conversão excedido.",\r\n
+  "PE.Controllers.Main.criticalErrorExtText": "Pressione \\"OK\\" para voltar para a lista de documentos.",\r\n
+  "PE.Controllers.Main.criticalErrorTitle": "Erro",\r\n
+  "PE.Controllers.Main.defaultTitleText": "Editor de apresentação ONLYOFFICE",\r\n
+  "PE.Controllers.Main.downloadErrorText": "Download falhou.",\r\n
+  "PE.Controllers.Main.downloadTextText": "Baixando apresentação...",\r\n
+  "PE.Controllers.Main.downloadTitleText": "Baixando apresentação",\r\n
+  "PE.Controllers.Main.errorCoAuthoringDisconnect": "Conexão com servidor perdida. O documento não pode ser editado neste momento.",\r\n
+  "PE.Controllers.Main.errorDatabaseConnection": "Erro externo.<br>Erro de conexão ao banco de dados. Entre em contato com o suporte caso o erro persista.",\r\n
+  "PE.Controllers.Main.errorDataRange": "Intervalo de dados incorreto.",\r\n
+  "PE.Controllers.Main.errorDefaultMessage": "Código do erro: %1",\r\n
+  "PE.Controllers.Main.errorFilePassProtect": "O documento é protegido por senha e não pode ser aberto.",\r\n
+  "PE.Controllers.Main.errorKeyEncrypt": "Descritor de chave desconhecido",\r\n
+  "PE.Controllers.Main.errorKeyExpire": "Descritor de chave expirado",\r\n
+  "PE.Controllers.Main.errorProcessSaveResult": "Salvamento falhou.",\r\n
+  "PE.Controllers.Main.errorStockChart": "Ordem da linha incorreta. Para criar um gráfico de ações coloque os dados na planilha na seguinte ordem:<br>preço de abertura, preço máx., preço mín., preço de fechamento.",\r\n
+  "PE.Controllers.Main.errorUpdateVersion": "A versão do arquivo foi alterada. A página será recarregada.",\r\n
+  "PE.Controllers.Main.errorUserDrop": "The file cannot be accessed right now.",\r\n
+  "PE.Controllers.Main.errorUsersExceed": "O número de usuários permitidos pelo plano de preços foi excedido",\r\n
+  "PE.Controllers.Main.leavePageText": "Você não salvou as alterações nesta apresentação. Clique em \\"Permanecer nesta página\\", em seguida em \\"Salvar\\" para salvá-las. Clique em \\"Sair desta página\\" para descartar todas as alterações não salvas.",\r\n
+  "PE.Controllers.Main.loadFontsTextText": "Carregando dados...",\r\n
+  "PE.Controllers.Main.loadFontsTitleText": "Carregando dados",\r\n
+  "PE.Controllers.Main.loadFontTextText": "Carregando dados...",\r\n
+  "PE.Controllers.Main.loadFontTitleText": "Carregando dados",\r\n
+  "PE.Controllers.Main.loadImagesTextText": "Carregando imagens...",\r\n
+  "PE.Controllers.Main.loadImagesTitleText": "Carregando imagens",\r\n
+  "PE.Controllers.Main.loadImageTextText": "Carregando imagem...",\r\n
+  "PE.Controllers.Main.loadImageTitleText": "Carregando imagem",\r\n
+  "PE.Controllers.Main.loadingDocumentTextText": "Carregando documento...",\r\n
+  "PE.Controllers.Main.loadingDocumentTitleText": "Carregando documento",\r\n
+  "PE.Controllers.Main.loadThemeTextText": "Carregando temas...",\r\n
+  "PE.Controllers.Main.loadThemeTitleText": "Carregando tema",\r\n
+  "PE.Controllers.Main.notcriticalErrorTitle": "Aviso",\r\n
+  "PE.Controllers.Main.openTextText": "Abrindo apresentação...",\r\n
+  "PE.Controllers.Main.openTitleText": "Abrindo apresentação",\r\n
+  "PE.Controllers.Main.printTextText": "Imprimindo apresentação...",\r\n
+  "PE.Controllers.Main.printTitleText": "Imprimindo apresentação",\r\n
+  "PE.Controllers.Main.reloadButtonText": "Recarregar página",\r\n
+  "PE.Controllers.Main.requestEditFailedMessageText": "Alguém está editando esta apresentação neste momento. Tente novamente mais tarde.",\r\n
+  "PE.Controllers.Main.requestEditFailedTitleText": "Acesso negado",\r\n
+  "PE.Controllers.Main.savePreparingText": "Preparando para salvar",\r\n
+  "PE.Controllers.Main.savePreparingTitle": "Preparando para salvar. Aguarde...",\r\n
+  "PE.Controllers.Main.saveTextText": "Salvando apresentação...",\r\n
+  "PE.Controllers.Main.saveTitleText": "Salvando apresentação",\r\n
+  "PE.Controllers.Main.splitDividerErrorText": "O número de linhas deve ser um divisor de %1.",\r\n
+  "PE.Controllers.Main.splitMaxColsErrorText": "O número de colunas deve ser inferior a %1.",\r\n
+  "PE.Controllers.Main.splitMaxRowsErrorText": "O número de linhas deve ser inferior a %1.",\r\n
+  "PE.Controllers.Main.textAnonymous": "Anônimo",\r\n
+  "PE.Controllers.Main.textCloseTip": "Clique para fechar a dica",\r\n
+  "PE.Controllers.Main.textLoadingDocument": "Carregando documento",\r\n
+  "PE.Controllers.Main.textShape": "Forma",\r\n
+  "PE.Controllers.Main.txtBasicShapes": "Formas básicas",\r\n
+  "PE.Controllers.Main.txtButtons": "Botões",\r\n
+  "PE.Controllers.Main.txtCallouts": "Textos explicativos",\r\n
+  "PE.Controllers.Main.txtCharts": "Gráficos",\r\n
+  "PE.Controllers.Main.txtEditingMode": "Definir modo de edição...",\r\n
+  "PE.Controllers.Main.txtFiguredArrows": "Setas figuradas",\r\n
+  "PE.Controllers.Main.txtLines": "Linhas",\r\n
+  "PE.Controllers.Main.txtMath": "Matemática",\r\n
+  "PE.Controllers.Main.txtNeedSynchronize": "Você tem atualizações",\r\n
+  "PE.Controllers.Main.txtRectangles": "Retângulos",\r\n
+  "PE.Controllers.Main.txtSldLtTBlank": "Branco",\r\n
+  "PE.Controllers.Main.txtSldLtTChart": "Gráfico",\r\n
+  "PE.Controllers.Main.txtSldLtTChartAndTx": "Gráfico e Texto",\r\n
+  "PE.Controllers.Main.txtSldLtTClipArtAndTx": "Clip Art e Texto",\r\n
+  "PE.Controllers.Main.txtSldLtTClipArtAndVertTx": "Clip Art e Texto vertical",\r\n
+  "PE.Controllers.Main.txtSldLtTCust": "Personalizar",\r\n
+  "PE.Controllers.Main.txtSldLtTDgm": "Diagrama",\r\n
+  "PE.Controllers.Main.txtSldLtTFourObj": "Quatro objetos",\r\n
+  "PE.Controllers.Main.txtSldLtTMediaAndTx": "Mídia e Texto",\r\n
+  "PE.Controllers.Main.txtSldLtTObj": "Título e Objeto",\r\n
+  "PE.Controllers.Main.txtSldLtTObjAndTwoObj": "Objeto e Dois objetos",\r\n
+  "PE.Controllers.Main.txtSldLtTObjAndTx": "Objeto e Texto",\r\n
+  "PE.Controllers.Main.txtSldLtTObjOnly": "Objeto",\r\n
+  "PE.Controllers.Main.txtSldLtTObjOverTx": "Objeto sobre o texto",\r\n
+  "PE.Controllers.Main.txtSldLtTObjTx": "Título, objeto e legenda",\r\n
+  "PE.Controllers.Main.txtSldLtTPicTx": "Imagem e Legenda",\r\n
+  "PE.Controllers.Main.txtSldLtTSecHead": "Cabeçalho da seção",\r\n
+  "PE.Controllers.Main.txtSldLtTTbl": "Tabela",\r\n
+  "PE.Controllers.Main.txtSldLtTTitle": "Titulo",\r\n
+  "PE.Controllers.Main.txtSldLtTTitleOnly": "Apenas título",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoColTx": "Texto em duas colulas",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoObj": "Dois objetos",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoObjAndObj": "Dois objetos e Objeto",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoObjAndTx": "Dois objetos e Texto",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoObjOverTx": "Dois objetos sobre Texto",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoTxTwoObj": "Dois textos e Dois objetos",\r\n
+  "PE.Controllers.Main.txtSldLtTTx": "Тexto",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndChart": "Texto e Gráfico",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndClipArt": "Texto e Clip Art",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndMedia": "Texto e Mídia",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndObj": "Texto e Objeto",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndTwoObj": "Texto e Dois objetos",\r\n
+  "PE.Controllers.Main.txtSldLtTTxOverObj": "Texto sobre Objeto",\r\n
+  "PE.Controllers.Main.txtSldLtTVertTitleAndTx": "Título vertical e Texto",\r\n
+  "PE.Controllers.Main.txtSldLtTVertTitleAndTxOverChart": "Título vertical e Texto sobre gráfico",\r\n
+  "PE.Controllers.Main.txtSldLtTVertTx": "Texto vertical",\r\n
+  "PE.Controllers.Main.txtStarsRibbons": "Estrelas e Arco-íris",\r\n
+  "PE.Controllers.Main.unknownErrorText": "Erro desconhecido.",\r\n
+  "PE.Controllers.Main.unsupportedBrowserErrorText": "Seu navegador não é suportado.",\r\n
+  "PE.Controllers.Main.uploadImageExtMessage": "Formato de imagem desconhecido.",\r\n
+  "PE.Controllers.Main.uploadImageFileCountMessage": "Sem imagens carregadas.",\r\n
+  "PE.Controllers.Main.uploadImageSizeMessage": "Limite máximo do tamanho da imagem excedido.",\r\n
+  "PE.Controllers.Main.uploadImageTextText": "Carregando imagem...",\r\n
+  "PE.Controllers.Main.uploadImageTitleText": "Carregando imagem",\r\n
+  "PE.Controllers.Main.warnBrowserIE9": "O aplicativo tem baixa capacidade no IE9. Usar IE10 ou superior",\r\n
+  "PE.Controllers.Main.warnBrowserZoom": "A configuração de zoom atual de seu navegador não é completamente suportada. Redefina para o zoom padrão pressionando Ctrl+0.",\r\n
+  "PE.Controllers.Main.warnProcessRightsChange": "Foi negado a você o direito de editar o arquivo.",\r\n
+  "PE.Controllers.Statusbar.zoomText": "Zoom {0}%",\r\n
+  "PE.Controllers.Toolbar.textEmptyImgUrl": "Você precisa especificar uma URL de imagem.",\r\n
+  "PE.Controllers.Toolbar.textFontSizeErr": "O valor inserido está incorreto.<br>Insira um valor numérico entre 1 e 100",\r\n
+  "PE.Controllers.Toolbar.textWarning": "Aviso",\r\n
+  "PE.Views.ChartSettings.textArea": "Gráfico de área",\r\n
+  "PE.Views.ChartSettings.textBar": "Gráfico de barras",\r\n
+  "PE.Views.ChartSettings.textChartType": "Alterar tipo de gráfico",\r\n
+  "PE.Views.ChartSettings.textColumn": "Gráfico de coluna",\r\n
+  "PE.Views.ChartSettings.textEditData": "Editar dados",\r\n
+  "PE.Views.ChartSettings.textHeight": "Altura",\r\n
+  "PE.Views.ChartSettings.textKeepRatio": "Proporções constantes",\r\n
+  "PE.Views.ChartSettings.textLine": "Gráfico de linha",\r\n
+  "PE.Views.ChartSettings.textPie": "Gráfico de pizza",\r\n
+  "PE.Views.ChartSettings.textPoint": "Gráfico de pontos",\r\n
+  "PE.Views.ChartSettings.textSize": "Tamanho",\r\n
+  "PE.Views.ChartSettings.textStock": "Gráfico de ações",\r\n
+  "PE.Views.ChartSettings.textStyle": "Estilo",\r\n
+  "PE.Views.ChartSettings.textWidth": "Largura",\r\n
+  "PE.Views.DocumentHolder.aboveText": "Acima",\r\n
+  "PE.Views.DocumentHolder.addCommentText": "Adicionar comentário",\r\n
+  "PE.Views.DocumentHolder.advancedImageText": "Configurações avançadas de imagem",\r\n
+  "PE.Views.DocumentHolder.advancedParagraphText": "Configurações avançadas de texto",\r\n
+  "PE.Views.DocumentHolder.advancedShapeText": "Configurações avançadas de forma",\r\n
+  "PE.Views.DocumentHolder.advancedTableText": "Configurações avançadas de tabela",\r\n
+  "PE.Views.DocumentHolder.belowText": "Abaixo",\r\n
+  "PE.Views.DocumentHolder.bottomCellText": "Alinhar à parte inferior",\r\n
+  "PE.Views.DocumentHolder.cellAlignText": "Alinhamento vertical da célula",\r\n
+  "PE.Views.DocumentHolder.cellText": "Célula",\r\n
+  "PE.Views.DocumentHolder.centerCellText": "Alinhar ao centro",\r\n
+  "PE.Views.DocumentHolder.columnText": "Coluna",\r\n
+  "PE.Views.DocumentHolder.deleteColumnText": "Excluir coluna",\r\n
+  "PE.Views.DocumentHolder.deleteRowText": "Excluir linha",\r\n
+  "PE.Views.DocumentHolder.deleteTableText": "Excluir tabela",\r\n
+  "PE.Views.DocumentHolder.deleteText": "Excluir",\r\n
+  "PE.Views.DocumentHolder.editChartText": "Editar dados",\r\n
+  "PE.Views.DocumentHolder.editHyperlinkText": "Editar hiperlink",\r\n
+  "PE.Views.DocumentHolder.hyperlinkText": "Hiperlink",\r\n
+  "PE.Views.DocumentHolder.insertColumnLeftText": "Coluna esquerda",\r\n
+  "PE.Views.DocumentHolder.insertColumnRightText": "Coluna direita",\r\n
+  "PE.Views.DocumentHolder.insertColumnText": "Inserir coluna",\r\n
+  "PE.Views.DocumentHolder.insertRowAboveText": "Linha acima",\r\n
+  "PE.Views.DocumentHolder.insertRowBelowText": "Linha abaixo",\r\n
+  "PE.Views.DocumentHolder.insertRowText": "Inserir linha",\r\n
+  "PE.Views.DocumentHolder.insertText": "Insert",\r\n
+  "PE.Views.DocumentHolder.mergeCellsText": "Mesclar células",\r\n
+  "PE.Views.DocumentHolder.originalSizeText": "Tamanho padrão",\r\n
+  "PE.Views.DocumentHolder.removeHyperlinkText": "Remover hiperlink",\r\n
+  "PE.Views.DocumentHolder.rowText": "Linha",\r\n
+  "PE.Views.DocumentHolder.selectText": "Selecionar",\r\n
+  "PE.Views.DocumentHolder.splitCellsText": "Dividir célula...",\r\n
+  "PE.Views.DocumentHolder.splitCellTitleText": "Dividir célula",\r\n
+  "PE.Views.DocumentHolder.tableText": "Tabela",\r\n
+  "PE.Views.DocumentHolder.textArrangeBack": "Enviar para plano de fundo",\r\n
+  "PE.Views.DocumentHolder.textArrangeBackward": "Mover para trás",\r\n
+  "PE.Views.DocumentHolder.textArrangeForward": "Mover para frente",\r\n
+  "PE.Views.DocumentHolder.textArrangeFront": "Trazer para primeiro plano",\r\n
+  "PE.Views.DocumentHolder.textCopy": "Copiar",\r\n
+  "PE.Views.DocumentHolder.textCut": "Cortar",\r\n
+  "PE.Views.DocumentHolder.textNextPage": "Próximo slide",\r\n
+  "PE.Views.DocumentHolder.textPaste": "Colar",\r\n
+  "PE.Views.DocumentHolder.textPrevPage": "Slide anterior",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignBottom": "Alinhar à parte inferior",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignCenter": "Alinhar ao centro",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignLeft": "Alinhar à esquerda",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignMiddle": "Alinhar ao meio",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignRight": "Alinhar à direita",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignTop": "Alinhar à parte superior",\r\n
+  "PE.Views.DocumentHolder.textSlideSettings": "Slide Settings",\r\n
+  "PE.Views.DocumentHolder.tipIsLocked": "Este elemento está sendo atualmente editado por outro usuário.",\r\n
+  "PE.Views.DocumentHolder.topCellText": "Alinhar à parte superior",\r\n
+  "PE.Views.DocumentHolder.txtAlign": "Alinhar",\r\n
+  "PE.Views.DocumentHolder.txtArrange": "Organizar",\r\n
+  "PE.Views.DocumentHolder.txtBackground": "Plano de fundo",\r\n
+  "PE.Views.DocumentHolder.txtChangeLayout": "Alterar layout",\r\n
+  "PE.Views.DocumentHolder.txtDeleteSlide": "Excluir slide",\r\n
+  "PE.Views.DocumentHolder.txtDistribHor": "Distribuir horizontalmente",\r\n
+  "PE.Views.DocumentHolder.txtDistribVert": "Distribuir verticalmente",\r\n
+  "PE.Views.DocumentHolder.txtDuplicateSlide": "Slide duplicado",\r\n
+  "PE.Views.DocumentHolder.txtGroup": "Grupo",\r\n
+  "PE.Views.DocumentHolder.txtNewSlide": "Novo slide",\r\n
+  "PE.Views.DocumentHolder.txtPressLink": "Pressione CTRL e clique no link",\r\n
+  "PE.Views.DocumentHolder.txtPreview": "Pré-visualizar",\r\n
+  "PE.Views.DocumentHolder.txtSelectAll": "Selecionar tudo",\r\n
+  "PE.Views.DocumentHolder.txtSlide": "Slide",\r\n
+  "PE.Views.DocumentHolder.txtUngroup": "Desagrupar",\r\n
+  "PE.Views.DocumentHolder.vertAlignText": "Alinhamento vertical",\r\n
+  "PE.Views.DocumentPreview.goToSlideText": "Ir para Slide",\r\n
+  "PE.Views.DocumentPreview.slideIndexText": "Slide {0} de {1}",\r\n
+  "PE.Views.DocumentPreview.txtClose": "Fechar pré-visualização",\r\n
+  "PE.Views.DocumentPreview.txtFinalMessage": "Fim da pré-visualização de slide. Clique para sair.",\r\n
+  "PE.Views.DocumentPreview.txtNext": "Próximo slide",\r\n
+  "PE.Views.DocumentPreview.txtPageNumInvalid": "Número de slide inválido",\r\n
+  "PE.Views.DocumentPreview.txtPause": "Pausar apresentação",\r\n
+  "PE.Views.DocumentPreview.txtPlay": "Iniciar apresentação",\r\n
+  "PE.Views.DocumentPreview.txtPrev": "Slide anterior",\r\n
+  "PE.Views.FileMenu.btnAboutCaption": "Sobre",\r\n
+  "PE.Views.FileMenu.btnBackCaption": "Ir para Documentos",\r\n
+  "PE.Views.FileMenu.btnCreateNewCaption": "Criar novo",\r\n
+  "PE.Views.FileMenu.btnDownloadCaption": "Baixar como...",\r\n
+  "PE.Views.FileMenu.btnHelpCaption": "Ajuda...",\r\n
+  "PE.Views.FileMenu.btnInfoCaption": "Informações de apresentação...",\r\n
+  "PE.Views.FileMenu.btnPrintCaption": "Imprimir",\r\n
+  "PE.Views.FileMenu.btnRecentFilesCaption": "Abrir recente...",\r\n
+  "PE.Views.FileMenu.btnReturnCaption": "Voltar para a apresentação",\r\n
+  "PE.Views.FileMenu.btnSaveCaption": "Salvar",\r\n
+  "PE.Views.FileMenu.btnSettingsCaption": "Configurações avançadas...",\r\n
+  "PE.Views.FileMenu.btnToEditCaption": "Editar apresentação",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.fromBlankText": "Do branco",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.fromTemplateText": "Do modelo",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.newDescriptionText": "Criar uma nova apresentação em branco que você vai ser capaz de produzir e formatar depois que ele for criado durante a edição. Ou escolha um dos modelos para iniciar uma apresentação de um determinado tipo ou finalidade, onde alguns estilos já foram pré-aplicados.",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.newDocumentText": "Nova apresentação",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.noTemplatesText": "Não há modelos",\r\n
+  "PE.Views.FileMenuPanels.DocumentInfo.txtAuthor": "Autor",\r\n
+  "PE.Views.FileMenuPanels.DocumentRights.txtBtnAccessRights": "Alterar direitos de acesso",\r\n
+  "PE.Views.FileMenuPanels.DocumentInfo.txtDate": "Data de criação",\r\n
+  "PE.Views.FileMenuPanels.DocumentInfo.txtPlacement": "Localização",\r\n
+  "PE.Views.FileMenuPanels.DocumentRights.txtRights": "Pessoas que têm direitos",\r\n
+  "PE.Views.FileMenuPanels.DocumentInfo.txtTitle": "Título de apresentação",\r\n
+  "PE.Views.FileMenuPanels.Settings.okButtonText": "Aplicar",\r\n
+  "PE.Views.FileMenuPanels.Settings.strAlignGuides": "Turn on alignment guides",\r\n
+  "PE.Views.FileMenuPanels.Settings.strAutosave": "Ativar salvamento automático",\r\n
+  "PE.Views.FileMenuPanels.Settings.strInputMode": "Ativar hieróglifos",\r\n
+  "PE.Views.FileMenuPanels.Settings.strShowChanges": "Alterações de colaboração em tempo real",\r\n
+  "PE.Views.FileMenuPanels.Settings.strUnit": "Unidade de medida",\r\n
+  "PE.Views.FileMenuPanels.Settings.strZoom": "Valor de zoom padrão",\r\n
+  "PE.Views.FileMenuPanels.Settings.text10Minutes": "A cada 10 minutos",\r\n
+  "PE.Views.FileMenuPanels.Settings.text30Minutes": "A cada 30 minutos",\r\n
+  "PE.Views.FileMenuPanels.Settings.text5Minutes": "A cada 5 minutos",\r\n
+  "PE.Views.FileMenuPanels.Settings.text60Minutes": "A cada hora",\r\n
+  "PE.Views.FileMenuPanels.Settings.textAlignGuides": "Alignment Guides",\r\n
+  "PE.Views.FileMenuPanels.Settings.textAutoSave": "Salvamento automático",\r\n
+  "PE.Views.FileMenuPanels.Settings.textDisabled": "Desabilitado",\r\n
+  "PE.Views.FileMenuPanels.Settings.textMinute": "A cada minuto",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtAll": "Visualizar tudo",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtCm": "Centímetro",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtFitSlide": "Ajustar slide",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtInput": "Entrada alternativa",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtLast": "Visualizar último",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtPt": "Ponto",\r\n
+  "PE.Views.HyperlinkSettingsDialog.cancelButtonText": "Cancelar",\r\n
+  "PE.Views.HyperlinkSettingsDialog.okButtonText": "OK",\r\n
+  "PE.Views.HyperlinkSettingsDialog.strDisplay": "Exibir",\r\n
+  "PE.Views.HyperlinkSettingsDialog.strLinkTo": "Vincular a",\r\n
+  "PE.Views.HyperlinkSettingsDialog.strPlaceInDocument": "Selecionar um lugar neste documento",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textDefault": "Selected text fragment",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textEmptyDesc": "Inserir legenda aqui",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textEmptyLink": "Inserir link aqui",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textEmptyTooltip": "Inserir dica de ferramenta aqui",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textExternalLink": "Link externo",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textInternalLink": "Slide nesta apresentação",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textLinkType": "Tipo de link",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textTipText": "Texto de dica de tela:",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textTitle": "Configurações de hiperlink",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtEmpty": "Este campo é obrigatório",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtFirst": "Primeiro slide",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtLast": "Último slide",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtNext": "Próximo slide",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtNotUrl": "Este campo deve ser uma URL no formato \\"http://www.example.com\\"",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtPrev": "Slide anterior",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtSlide": "Slide",\r\n
+  "PE.Views.ImageSettings.textAdvanced": "Exibir configurações avançadas",\r\n
+  "PE.Views.ImageSettings.textFromFile": "Do arquivo",\r\n
+  "PE.Views.ImageSettings.textFromUrl": "Da URL",\r\n
+  "PE.Views.ImageSettings.textHeight": "Altura",\r\n
+  "PE.Views.ImageSettings.textInsert": "Substituir imagem",\r\n
+  "PE.Views.ImageSettings.textOriginalSize": "Tamanho padrão",\r\n
+  "PE.Views.ImageSettings.textSize": "Tamanho",\r\n
+  "PE.Views.ImageSettings.textWidth": "Largura",\r\n
+  "PE.Views.ImageSettingsAdvanced.cancelButtonText": "Cancelar",\r\n
+  "PE.Views.ImageSettingsAdvanced.okButtonText": "OK",\r\n
+  "PE.Views.ImageSettingsAdvanced.textHeight": "Altura",\r\n
+  "PE.Views.ImageSettingsAdvanced.textKeepRatio": "Proporções constantes",\r\n
+  "PE.Views.ImageSettingsAdvanced.textOriginalSize": "Tamanho padrão",\r\n
+  "PE.Views.ImageSettingsAdvanced.textPosition": "Posição",\r\n
+  "PE.Views.ImageSettingsAdvanced.textSize": "Tamanho",\r\n
+  "PE.Views.ImageSettingsAdvanced.textTitle": "Imagem - Configurações avançadas",\r\n
+  "PE.Views.ImageSettingsAdvanced.textWidth": "Largura",\r\n
+  "PE.Views.LeftMenu.tipAbout": "Sobre",\r\n
+  "PE.Views.LeftMenu.tipChat": "Gráfico",\r\n
+  "PE.Views.LeftMenu.tipComments": "Comentários",\r\n
+  "PE.Views.LeftMenu.tipFile": "Arquivo",\r\n
+  "PE.Views.LeftMenu.tipSearch": "Pesquisar",\r\n
+  "PE.Views.LeftMenu.tipSlides": "Slides",\r\n
+  "PE.Views.LeftMenu.tipSupport": "Feedback e Suporte",\r\n
+  "PE.Views.LeftMenu.tipTitles": "Títulos",\r\n
+  "PE.Views.ParagraphSettings.strLineHeight": "Espaçamento de linha",\r\n
+  "PE.Views.ParagraphSettings.strParagraphSpacing": "Espaçamento",\r\n
+  "PE.Views.ParagraphSettings.strSpacingAfter": "Depois",\r\n
+  "PE.Views.ParagraphSettings.strSpacingBefore": "Antes",\r\n
+  "PE.Views.ParagraphSettings.textAdvanced": "Exibir configurações avançadas",\r\n
+  "PE.Views.ParagraphSettings.textAt": "Em",\r\n
+  "PE.Views.ParagraphSettings.textAtLeast": "Pelo menos",\r\n
+  "PE.Views.ParagraphSettings.textAuto": "Múltiplo",\r\n
+  "PE.Views.ParagraphSettings.textExact": "Exatamente",\r\n
+  "PE.Views.ParagraphSettings.txtAutoText": "Automático",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.cancelButtonText": "Cancelar",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.noTabs": "As abas especificadas aparecerão neste campo",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.okButtonText": "OK",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strAllCaps": "Todas maiúsculas",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strDoubleStrike": "Tachado duplo",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strIndentsFirstLine": "Primeira linha",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strIndentsLeftText": "Esquerda",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strIndentsRightText": "Direita",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strParagraphFont": "Fonte",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strParagraphIndents": "Recuos e Posicionamento",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strSmallCaps": "Versalete",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strStrike": "Taxado",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strSubscript": "Subscrito",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strSuperscript": "Sobrescrito",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strTabs": "Aba",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textAlign": "Alinhamento",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textCharacterSpacing": "Espaçamento entre caracteres",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textDefault": "Aba padrão",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textEffects": "Efeitos",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textRemove": "Remover",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textRemoveAll": "Remover todos",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textSet": "Especificar",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTabCenter": "Centro",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTabLeft": "Esquerda",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTabPosition": "Posição da aba",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTabRight": "Direita",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTitle": "Parágrafo - Configurações avançadas",\r\n
+  "PE.Views.RightMenu.txtChartSettings": "Configurações do gráfico",\r\n
+  "PE.Views.RightMenu.txtImageSettings": "Configurações de imagem",\r\n
+  "PE.Views.RightMenu.txtParagraphSettings": "Configurações de texto",\r\n
+  "PE.Views.RightMenu.txtShapeSettings": "Configurações da forma",\r\n
+  "PE.Views.RightMenu.txtSlideSettings": "Configurações de slide",\r\n
+  "PE.Views.RightMenu.txtTableSettings": "Configurações da tabela",\r\n
+  "PE.Views.ShapeSettings.strBackground": "Cor do plano de fundo",\r\n
+  "PE.Views.ShapeSettings.strChange": "Alterar forma automática",\r\n
+  "PE.Views.ShapeSettings.strColor": "Cor",\r\n
+  "PE.Views.ShapeSettings.strFill": "Preencher",\r\n
+  "PE.Views.ShapeSettings.strForeground": "Cor do plano de fundo",\r\n
+  "PE.Views.ShapeSettings.strPattern": "Padrão",\r\n
+  "PE.Views.ShapeSettings.strSize": "Tamanho",\r\n
+  "PE.Views.ShapeSettings.strStroke": "Traço",\r\n
+  "PE.Views.ShapeSettings.strTransparency": "Opacidade",\r\n
+  "PE.Views.ShapeSettings.textAdvanced": "Exibir configurações avançadas",\r\n
+  "PE.Views.ShapeSettings.textBorderSizeErr": "O valor inserido está incorreto.<br>Insira um valor entre 0 pt e 1.584 pt.",\r\n
+  "PE.Views.ShapeSettings.textColor": "Preenchimento de cor",\r\n
+  "PE.Views.ShapeSettings.textDirection": "Direção",\r\n
+  "PE.Views.ShapeSettings.textEmptyPattern": "Sem padrão",\r\n
+  "PE.Views.ShapeSettings.textFromFile": "Do arquivo",\r\n
+  "PE.Views.ShapeSettings.textFromUrl": "Da URL",\r\n
+  "PE.Views.ShapeSettings.textGradient": "Gradiente",\r\n
+  "PE.Views.ShapeSettings.textGradientFill": "Preenchimento gradiente",\r\n
+  "PE.Views.ShapeSettings.textImageTexture": "Imagem ou Textura",\r\n
+  "PE.Views.ShapeSettings.textLinear": "Linear",\r\n
+  "PE.Views.ShapeSettings.textNewColor": "Cor personalizada",\r\n
+  "PE.Views.ShapeSettings.textNoFill": "Sem preenchimento",\r\n
+  "PE.Views.ShapeSettings.textPatternFill": "Padrão",\r\n
+  "PE.Views.ShapeSettings.textRadial": "Radial",\r\n
+  "PE.Views.ShapeSettings.textSelectTexture": "Selecionar",\r\n
+  "PE.Views.ShapeSettings.textStandartColors": "Cores padrão",\r\n
+  "PE.Views.ShapeSettings.textStretch": "Alongar",\r\n
+  "PE.Views.ShapeSettings.textStyle": "Estilo",\r\n
+  "PE.Views.ShapeSettings.textTexture": "Da textura",\r\n
+  "PE.Views.ShapeSettings.textThemeColors": "Cores do tema",\r\n
+  "PE.Views.ShapeSettings.textTile": "Lado a lado",\r\n
+  "PE.Views.ShapeSettings.txtBrownPaper": "Papel pardo",\r\n
+  "PE.Views.ShapeSettings.txtCanvas": "Canvas",\r\n
+  "PE.Views.ShapeSettings.txtCarton": "Papelão",\r\n
+  "PE.Views.ShapeSettings.txtDarkFabric": "Tecido escuro",\r\n
+  "PE.Views.ShapeSettings.txtGrain": "Granulação",\r\n
+  "PE.Views.ShapeSettings.txtGranite": "Granito",\r\n
+  "PE.Views.ShapeSettings.txtGreyPaper": "Papel cinza",\r\n
+  "PE.Views.ShapeSettings.txtKnit": "Encontro",\r\n
+  "PE.Views.ShapeSettings.txtLeather": "Couro",\r\n
+  "PE.Views.ShapeSettings.txtNoBorders": "Sem linha",\r\n
+  "PE.Views.ShapeSettings.txtPapyrus": "Papiro",\r\n
+  "PE.Views.ShapeSettings.txtWood": "Madeira",\r\n
+  "PE.Views.ShapeSettingsAdvanced.cancelButtonText": "Cancelar",\r\n
+  "PE.Views.ShapeSettingsAdvanced.okButtonText": "OK",\r\n
+  "PE.Views.ShapeSettingsAdvanced.strMargins": "Preenchimento de texto",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textArrows": "Setas",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textBeginSize": "Tamanho inicial",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textBeginStyle": "Estilo inicial",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textBevel": "Bisel",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textBottom": "Inferior",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textCapType": "Tipo de letra",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textEndSize": "Tamanho final",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textEndStyle": "Estilo final",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textFlat": "Plano",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textHeight": "Altura",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textJoinType": "Tipo de junção",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textKeepRatio": "Proporções constantes",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textLeft": "Esquerda",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textLineStyle": "Estilo de linha",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textMiter": "Malhete",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textRight": "Direita",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textRound": "Rodada",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textSize": "Tamanho",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textSquare": "Quadrado",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textTitle": "Forma - Configurações avançadas",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textTop": "Parte superior",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textWeightArrows": "Pesos e Setas",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textWidth": "Largura",\r\n
+  "PE.Views.ShapeSettingsAdvanced.txtNone": "Nenhum",\r\n
+  "PE.Views.SlideSettings.strBackground": "Cor do plano de fundo",\r\n
+  "PE.Views.SlideSettings.strColor": "Cor",\r\n
+  "PE.Views.SlideSettings.strDelay": "Atraso",\r\n
+  "PE.Views.SlideSettings.strDuration": "Duração",\r\n
+  "PE.Views.SlideSettings.strEffect": "Efeito",\r\n
+  "PE.Views.SlideSettings.strFill": "Preencher",\r\n
+  "PE.Views.SlideSettings.strForeground": "Cor do plano de fundo",\r\n
+  "PE.Views.SlideSettings.strPattern": "Padrão",\r\n
+  "PE.Views.SlideSettings.strStartOnClick": "Iniciar ao clicar",\r\n
+  "PE.Views.SlideSettings.textAdvanced": "Exibir configurações avançadas",\r\n
+  "PE.Views.SlideSettings.textApplyAll": "Aplicar a todos os slides",\r\n
+  "PE.Views.SlideSettings.textBlack": "Através preto",\r\n
+  "PE.Views.SlideSettings.textBottom": "Inferior",\r\n
+  "PE.Views.SlideSettings.textBottomLeft": "Esquerda inferior",\r\n
+  "PE.Views.SlideSettings.textBottomRight": "Direita inferior",\r\n
+  "PE.Views.SlideSettings.textClock": "Relógio",\r\n
+  "PE.Views.SlideSettings.textClockwise": "Sentido horário",\r\n
+  "PE.Views.SlideSettings.textColor": "Preenchimento de cor",\r\n
+  "PE.Views.SlideSettings.textCounterclockwise": "Sentido anti-horário",\r\n
+  "PE.Views.SlideSettings.textCover": "Folha de rosto",\r\n
+  "PE.Views.SlideSettings.textDirection": "Direção",\r\n
+  "PE.Views.SlideSettings.textEmptyPattern": "Sem padrão",\r\n
+  "PE.Views.SlideSettings.textFade": "Esmaecer",\r\n
+  "PE.Views.SlideSettings.textFromFile": "Do arquivo",\r\n
+  "PE.Views.SlideSettings.textFromUrl": "Da URL",\r\n
+  "PE.Views.SlideSettings.textGradient": "Gradiente",\r\n
+  "PE.Views.SlideSettings.textGradientFill": "Preenchimento gradiente",\r\n
+  "PE.Views.SlideSettings.textHorizontalIn": "Horizontal para dentro",\r\n
+  "PE.Views.SlideSettings.textHorizontalOut": "Horizontal para fora",\r\n
+  "PE.Views.SlideSettings.textImageTexture": "Imagem ou Textura",\r\n
+  "PE.Views.SlideSettings.textLeft": "Esquerda",\r\n
+  "PE.Views.SlideSettings.textLinear": "Linear",\r\n
+  "PE.Views.SlideSettings.textNewColor": "Cor personalizada",\r\n
+  "PE.Views.SlideSettings.textNoFill": "Sem preenchimento",\r\n
+  "PE.Views.SlideSettings.textNone": "Nenhum",\r\n
+  "PE.Views.SlideSettings.textPatternFill": "Padrão",\r\n
+  "PE.Views.SlideSettings.textPreview": "Pré-visualizar",\r\n
+  "PE.Views.SlideSettings.textPush": "Empurrar",\r\n
+  "PE.Views.SlideSettings.textRadial": "Radial",\r\n
+  "PE.Views.SlideSettings.textReset": "Reset Changes",\r\n
+  "PE.Views.SlideSettings.textRight": "Direita",\r\n
+  "PE.Views.SlideSettings.textSelectTexture": "Selecionar",\r\n
+  "PE.Views.SlideSettings.textSmoothly": "Suavemente",\r\n
+  "PE.Views.SlideSettings.textSplit": "Dividir",\r\n
+  "PE.Views.SlideSettings.textStandartColors": "Cores padrão",\r\n
+  "PE.Views.SlideSettings.textStretch": "Alongar",\r\n
+  "PE.Views.SlideSettings.textStyle": "Estilo",\r\n
+  "PE.Views.SlideSettings.textTexture": "Da textura",\r\n
+  "PE.Views.SlideSettings.textThemeColors": "Cores do tema",\r\n
+  "PE.Views.SlideSettings.textTile": "Lado a lado",\r\n
+  "PE.Views.SlideSettings.textTop": "Parte superior",\r\n
+  "PE.Views.SlideSettings.textTopLeft": "Superior esquerdo",\r\n
+  "PE.Views.SlideSettings.textTopRight": "Superior direito",\r\n
+  "PE.Views.SlideSettings.textUnCover": "Descobrir",\r\n
+  "PE.Views.SlideSettings.textVerticalIn": "Vertical para dentro",\r\n
+  "PE.Views.SlideSettings.textVerticalOut": "Vertical para fora",\r\n
+  "PE.Views.SlideSettings.textWedge": "Triangular",\r\n
+  "PE.Views.SlideSettings.textWipe": "Revelar",\r\n
+  "PE.Views.SlideSettings.textZoom": "Zoom",\r\n
+  "PE.Views.SlideSettings.textZoomIn": "Ampliar",\r\n
+  "PE.Views.SlideSettings.textZoomOut": "Reduzir",\r\n
+  "PE.Views.SlideSettings.textZoomRotate": "Zoom e Rotação",\r\n
+  "PE.Views.SlideSettings.txtBrownPaper": "Papel pardo",\r\n
+  "PE.Views.SlideSettings.txtCanvas": "Canvas",\r\n
+  "PE.Views.SlideSettings.txtCarton": "Papelão",\r\n
+  "PE.Views.SlideSettings.txtDarkFabric": "Tecido escuro",\r\n
+  "PE.Views.SlideSettings.txtGrain": "Granulação",\r\n
+  "PE.Views.SlideSettings.txtGranite": "Granito",\r\n
+  "PE.Views.SlideSettings.txtGreyPaper": "Papel cinza",\r\n
+  "PE.Views.SlideSettings.txtKnit": "Encontro",\r\n
+  "PE.Views.SlideSettings.txtLeather": "Couro",\r\n
+  "PE.Views.SlideSettings.txtPapyrus": "Papiro",\r\n
+  "PE.Views.SlideSettings.txtWood": "Madeira",\r\n
+  "PE.Views.SlideSizeSettings.cancelButtonText": "Cancelar",\r\n
+  "PE.Views.SlideSizeSettings.okButtonText": "OK",\r\n
+  "PE.Views.SlideSizeSettings.textHeight": "Altura",\r\n
+  "PE.Views.SlideSizeSettings.textSlideSize": "Tamanho de slide",\r\n
+  "PE.Views.SlideSizeSettings.textTitle": "Configurações de tamanho do slide",\r\n
+  "PE.Views.SlideSizeSettings.textWidth": "Largura",\r\n
+  "PE.Views.SlideSizeSettings.txt35": "Slides de 35 mm",\r\n
+  "PE.Views.SlideSizeSettings.txtA3": "Papel A3 (297x420 mm)",\r\n
+  "PE.Views.SlideSizeSettings.txtA4": "Papel A4 (210x297 mm)",\r\n
+  "PE.Views.SlideSizeSettings.txtB4": "Papel B4 (ICO) (250x353 mm)",\r\n
+  "PE.Views.SlideSizeSettings.txtB5": "Papel B5 (ICO) (176x250 mm)",\r\n
+  "PE.Views.SlideSizeSettings.txtBanner": "Banner",\r\n
+  "PE.Views.SlideSizeSettings.txtCustom": "Personalizar",\r\n
+  "PE.Views.SlideSizeSettings.txtLedger": "Papel Ledger(11x17 in)",\r\n
+  "PE.Views.SlideSizeSettings.txtLetter": "Papel carta (8,5x11 pol)",\r\n
+  "PE.Views.SlideSizeSettings.txtOverhead": "Transparência",\r\n
+  "PE.Views.SlideSizeSettings.txtStandard": "Padrão (4:3)",\r\n
+  "PE.Views.SlideSizeSettings.txtWidescreen1": "Widescreen (16:9)",\r\n
+  "PE.Views.SlideSizeSettings.txtWidescreen2": "Widescreen (16:10)",\r\n
+  "PE.Views.Statusbar.goToPageText": "Ir para Slide",\r\n
+  "PE.Views.Statusbar.pageIndexText": "Slide {0} de {1}",\r\n
+  "PE.Views.Statusbar.tipFitPage": "Ajustar slide",\r\n
+  "PE.Views.Statusbar.tipFitWidth": "Ajustar largura",\r\n
+  "PE.Views.Statusbar.tipMoreUsers": "e %1 usuários.",\r\n
+  "PE.Views.Statusbar.tipShowUsers": "Para ver todos os usuários clique no ícone abaixo.",\r\n
+  "PE.Views.Statusbar.tipUsers": "O documento atualmente está sendo editado por vários usuários.",\r\n
+  "PE.Views.Statusbar.tipZoomFactor": "Ampliação",\r\n
+  "PE.Views.Statusbar.tipZoomIn": "Ampliar",\r\n
+  "PE.Views.Statusbar.tipZoomOut": "Reduzir",\r\n
+  "PE.Views.Statusbar.txtPageNumInvalid": "Número de slide inválido",\r\n
+  "PE.Views.TableSettings.deleteColumnText": "Excluir coluna",\r\n
+  "PE.Views.TableSettings.deleteRowText": "Excluir linha",\r\n
+  "PE.Views.TableSettings.deleteTableText": "Excluir tabela",\r\n
+  "PE.Views.TableSettings.insertColumnLeftText": "Inserir coluna à esquerda",\r\n
+  "PE.Views.TableSettings.insertColumnRightText": "Inserir coluna à direita",\r\n
+  "PE.Views.TableSettings.insertRowAboveText": "Inserir linha acima",\r\n
+  "PE.Views.TableSettings.insertRowBelowText": "Inserir linha abaixo",\r\n
+  "PE.Views.TableSettings.mergeCellsText": "Mesclar células",\r\n
+  "PE.Views.TableSettings.selectCellText": "Selecionar célula",\r\n
+  "PE.Views.TableSettings.selectColumnText": "Selecionar coluna",\r\n
+  "PE.Views.TableSettings.selectRowText": "Selecionar linha",\r\n
+  "PE.Views.TableSettings.selectTableText": "Selecionar tabela",\r\n
+  "PE.Views.TableSettings.splitCellsText": "Dividir célula...",\r\n
+  "PE.Views.TableSettings.splitCellTitleText": "Dividir célula",\r\n
+  "PE.Views.TableSettings.textAdvanced": "Exibir configurações avançadas",\r\n
+  "PE.Views.TableSettings.textBackColor": "Cor do plano de fundo",\r\n
+  "PE.Views.TableSettings.textBanded": "Em tiras",\r\n
+  "PE.Views.TableSettings.textBorderColor": "Cor",\r\n
+  "PE.Views.TableSettings.textBorders": "Estilo das bordas",\r\n
+  "PE.Views.TableSettings.textColumns": "Colunas",\r\n
+  "PE.Views.TableSettings.textEdit": "Linhas e Colunas",\r\n
+  "PE.Views.TableSettings.textEmptyTemplate": "Sem modelos",\r\n
+  "PE.Views.TableSettings.textFirst": "Primeiro",\r\n
+  "PE.Views.TableSettings.textHeader": "Cabeçalho",\r\n
+  "PE.Views.TableSettings.textLast": "Último",\r\n
+  "PE.Views.TableSettings.textNewColor": "Cor personalizada",\r\n
+  "PE.Views.TableSettings.textRows": "Linhas",\r\n
+  "PE.Views.TableSettings.textSelectBorders": "Selecione as bordas que você deseja alterar aplicando o estilo escolhido acima",\r\n
+  "PE.Views.TableSettings.textStandartColors": "Cores padrão",\r\n
+  "PE.Views.TableSettings.textTemplate": "Selecionar a partir do modelo",\r\n
+  "PE.Views.TableSettings.textThemeColors": "Cores do tema",\r\n
+  "PE.Views.TableSettings.textTotal": "Total",\r\n
+  "PE.Views.TableSettings.tipAll": "Definir borda externa e todas as linhas internas",\r\n
+  "PE.Views.TableSettings.tipBottom": "Definir apenas borda inferior externa",\r\n
+  "PE.Views.TableSettings.tipInner": "Definir apenas linhas internas",\r\n
+  "PE.Views.TableSettings.tipInnerHor": "Definir apenas linhas internas horizontais",\r\n
+  "PE.Views.TableSettings.tipInnerVert": "Definir apenas linhas internas verticais",\r\n
+  "PE.Views.TableSettings.tipLeft": "Definir apenas borda esquerda externa",\r\n
+  "PE.Views.TableSettings.tipNone": "Definir sem bordas",\r\n
+  "PE.Views.TableSettings.tipOuter": "Definir apenas borda externa",\r\n
+  "PE.Views.TableSettings.tipRight": "Definir apenas borda direita externa",\r\n
+  "PE.Views.TableSettings.tipTop": "Definir apenas borda superior externa",\r\n
+  "PE.Views.TableSettings.txtNoBorders": "Sem bordas",\r\n
+  "PE.Views.TableSettingsAdvanced.cancelButtonText": "Cancelar",\r\n
+  "PE.Views.TableSettingsAdvanced.okButtonText": "OK",\r\n
+  "PE.Views.TableSettingsAdvanced.textBottom": "Inferior",\r\n
+  "PE.Views.TableSettingsAdvanced.textCheckMargins": "Usar margens padrão",\r\n
+  "PE.Views.TableSettingsAdvanced.textDefaultMargins": "Margens padrão",\r\n
+  "PE.Views.TableSettingsAdvanced.textLeft": "Esquerda",\r\n
+  "PE.Views.TableSettingsAdvanced.textMargins": "Margens da célula",\r\n
+  "PE.Views.TableSettingsAdvanced.textRight": "Direita",\r\n
+  "PE.Views.TableSettingsAdvanced.textTitle": "Tabela - Configurações avançadas",\r\n
+  "PE.Views.TableSettingsAdvanced.textTop": "Parte superior",\r\n
+  "PE.Views.TableSettingsAdvanced.textWidthSpaces": "Margens",\r\n
+  "PE.Views.Toolbar.mniCustomTable": "Inserir tabela personalizada",\r\n
+  "PE.Views.Toolbar.mniImageFromFile": "Imagem do Arquivo",\r\n
+  "PE.Views.Toolbar.mniImageFromUrl": "Imagem da URL",\r\n
+  "PE.Views.Toolbar.mniSlideAdvanced": "Configurações avançadas",\r\n
+  "PE.Views.Toolbar.mniSlideStandard": "Padrão (4:3)",\r\n
+  "PE.Views.Toolbar.mniSlideWide": "Widescreen (16:9)",\r\n
+  "PE.Views.Toolbar.textAlignBottom": "Alinhar texto à parte inferior",\r\n
+  "PE.Views.Toolbar.textAlignCenter": "Centralizar texto",\r\n
+  "PE.Views.Toolbar.textAlignJust": "Justificar",\r\n
+  "PE.Views.Toolbar.textAlignLeft": "Alinhar texto à esquerda",\r\n
+  "PE.Views.Toolbar.textAlignMiddle": "Alinhar texto ao meio",\r\n
+  "PE.Views.Toolbar.textAlignRight": "Alinhar texto à direita",\r\n
+  "PE.Views.Toolbar.textAlignTop": "Alinhar texto à parte superior",\r\n
+  "PE.Views.Toolbar.textArea": "Gráfico de área",\r\n
+  "PE.Views.Toolbar.textArrangeBack": "Enviar para plano de fundo",\r\n
+  "PE.Views.Toolbar.textArrangeBackward": "Mover para trás",\r\n
+  "PE.Views.Toolbar.textArrangeForward": "Mover para frente",\r\n
+  "PE.Views.Toolbar.textArrangeFront": "Trazer para primeiro plano",\r\n
+  "PE.Views.Toolbar.textBar": "Gráfico de barras",\r\n
+  "PE.Views.Toolbar.textBold": "Negrito",\r\n
+  "PE.Views.Toolbar.textCancel": "Cancelar",\r\n
+  "PE.Views.Toolbar.textColumn": "Gráfico de coluna",\r\n
+  "PE.Views.Toolbar.textCompactView": "Visualizar barra de ferramentas compacta",\r\n
+  "PE.Views.Toolbar.textFitPage": "Ajustar slide",\r\n
+  "PE.Views.Toolbar.textFitWidth": "Ajustar largura",\r\n
+  "PE.Views.Toolbar.textHideLines": "Ocultar réguas",\r\n
+  "PE.Views.Toolbar.textHideStatusBar": "Ocultar barra de status",\r\n
+  "PE.Views.Toolbar.textHideTitleBar": "Ocultar barra de título",\r\n
+  "PE.Views.Toolbar.textItalic": "Itálico",\r\n
+  "PE.Views.Toolbar.textLine": "Gráfico de linha",\r\n
+  "PE.Views.Toolbar.textNewColor": "Cor personalizada",\r\n
+  "PE.Views.Toolbar.textOK": "OK",\r\n
+  "PE.Views.Toolbar.textPie": "Gráfico de pizza",\r\n
+  "PE.Views.Toolbar.textPoint": "Gráfico de pontos",\r\n
+  "PE.Views.Toolbar.textShapeAlignBottom": "Alinhar à parte inferior",\r\n
+  "PE.Views.Toolbar.textShapeAlignCenter": "Alinhar ao centro",\r\n
+  "PE.Views.Toolbar.textShapeAlignLeft": "Alinhar à esquerda",\r\n
+  "PE.Views.Toolbar.textShapeAlignMiddle": "Alinhar ao meio",\r\n
+  "PE.Views.Toolbar.textShapeAlignRight": "Alinhar à direita",\r\n
+  "PE.Views.Toolbar.textShapeAlignTop": "Alinhar à parte superior",\r\n
+  "PE.Views.Toolbar.textStandartColors": "Cores padrão",\r\n
+  "PE.Views.Toolbar.textStock": "Gráfico de ações",\r\n
+  "PE.Views.Toolbar.textStrikeout": "Riscado",\r\n
+  "PE.Views.Toolbar.textSubscript": "Subscrito",\r\n
+  "PE.Views.Toolbar.textSuperscript": "Sobrescrito",\r\n
+  "PE.Views.Toolbar.textThemeColors": "Cores do tema",\r\n
+  "PE.Views.Toolbar.textTitleError": "Erro",\r\n
+  "PE.Views.Toolbar.textUnderline": "Sublinhado",\r\n
+  "PE.Views.Toolbar.textZoom": "Zoom",\r\n
+  "PE.Views.Toolbar.tipAddSlide": "Adicionar slide",\r\n
+  "PE.Views.Toolbar.tipAdvSettings": "Configurações avançadas",\r\n
+  "PE.Views.Toolbar.tipBack": "Voltar",\r\n
+  "PE.Views.Toolbar.tipChangeSlide": "Alterar slide de layout",\r\n
+  "PE.Views.Toolbar.tipClearStyle": "Limpar estilo",\r\n
+  "PE.Views.Toolbar.tipColorSchemas": "Alterar esquema de cor",\r\n
+  "PE.Views.Toolbar.tipCopy": "Copiar",\r\n
+  "PE.Views.Toolbar.tipCopyStyle": "Copiar estilo",\r\n
+  "PE.Views.Toolbar.tipDecPrLeft": "Diminuir recuo",\r\n
+  "PE.Views.Toolbar.tipFontColor": "Cor da fonte",\r\n
+  "PE.Views.Toolbar.tipFontName": "Nome da fonte",\r\n
+  "PE.Views.Toolbar.tipFontSize": "Tamanho da fonte",\r\n
+  "PE.Views.Toolbar.tipHAligh": "Alinhamento horizontal",\r\n
+  "PE.Views.Toolbar.tipHideBars": "Ocultar barra de título e barra de status",\r\n
+  "PE.Views.Toolbar.tipIncPrLeft": "Aumentar recuo",\r\n
+  "PE.Views.Toolbar.tipInsertChart": "Inserir gráfico",\r\n
+  "PE.Views.Toolbar.tipInsertHyperlink": "Adicionar hiperlink",\r\n
+  "PE.Views.Toolbar.tipInsertImage": "Inserir imagem",\r\n
+  "PE.Views.Toolbar.tipInsertShape": "Inserir forma automática",\r\n
+  "PE.Views.Toolbar.tipInsertTable": "Inserir tabela",\r\n
+  "PE.Views.Toolbar.tipInsertText": "Inserir texto",\r\n
+  "PE.Views.Toolbar.tipLineSpace": "Espaçamento de linha",\r\n
+  "PE.Views.Toolbar.tipMarkers": "Marcadores",\r\n
+  "PE.Views.Toolbar.tipNewDocument": "Nova apresentação",\r\n
+  "PE.Views.Toolbar.tipNumbers": "Numeração",\r\n
+  "PE.Views.Toolbar.tipOpenDocument": "Abrir apresentação",\r\n
+  "PE.Views.Toolbar.tipPaste": "Colar",\r\n
+  "PE.Views.Toolbar.tipPreview": "Iniciar pré-visualização",\r\n
+  "PE.Views.Toolbar.tipPrint": "Imprimir",\r\n
+  "PE.Views.Toolbar.tipRedo": "Refazer",\r\n
+  "PE.Views.Toolbar.tipSave": "Salvar",\r\n
+  "PE.Views.Toolbar.tipSaveCoauth": "Salvar suas alterações para que os outros usuários as vejam.",\r\n
+  "PE.Views.Toolbar.tipShapeAlign": "Alinhar forma",\r\n
+  "PE.Views.Toolbar.tipShapeArrange": "Organizar forma",\r\n
+  "PE.Views.Toolbar.tipSlideSize": "Selecionar tamanho do slide",\r\n
+  "PE.Views.Toolbar.tipSlideTheme": "Tema do slide",\r\n
+  "PE.Views.Toolbar.tipUndo": "Desfazer",\r\n
+  "PE.Views.Toolbar.tipVAligh": "Alinhamento vertical",\r\n
+  "PE.Views.Toolbar.tipViewSettings": "Visualizar configurações",\r\n
+  "PE.Views.Toolbar.txtDistribHor": "Distribuir horizontalmente",\r\n
+  "PE.Views.Toolbar.txtDistribVert": "Distribuir verticalmente",\r\n
+  "PE.Views.Toolbar.txtGroup": "Grupo",\r\n
+  "PE.Views.Toolbar.txtScheme1": "Office",\r\n
+  "PE.Views.Toolbar.txtScheme10": "Mediana",\r\n
+  "PE.Views.Toolbar.txtScheme11": "Metro",\r\n
+  "PE.Views.Toolbar.txtScheme12": "Módulo",\r\n
+  "PE.Views.Toolbar.txtScheme13": "Opulento",\r\n
+  "PE.Views.Toolbar.txtScheme14": "Balcão Envidraçado",\r\n
+  "PE.Views.Toolbar.txtScheme15": "Origem",\r\n
+  "PE.Views.Toolbar.txtScheme16": "Papel",\r\n
+  "PE.Views.Toolbar.txtScheme17": "Solstício",\r\n
+  "PE.Views.Toolbar.txtScheme18": "Técnica",\r\n
+  "PE.Views.Toolbar.txtScheme19": "Viagem",\r\n
+  "PE.Views.Toolbar.txtScheme2": "Escala de cinza",\r\n
+  "PE.Views.Toolbar.txtScheme20": "Urbano",\r\n
+  "PE.Views.Toolbar.txtScheme21": "Verve",\r\n
+  "PE.Views.Toolbar.txtScheme3": "Ápice",\r\n
+  "PE.Views.Toolbar.txtScheme4": "Aspecto",\r\n
+  "PE.Views.Toolbar.txtScheme5": "Cívico",\r\n
+  "PE.Views.Toolbar.txtScheme6": "Concurso",\r\n
+  "PE.Views.Toolbar.txtScheme7": "Patrimônio Líquido",\r\n
+  "PE.Views.Toolbar.txtScheme8": "Fluxo",\r\n
+  "PE.Views.Toolbar.txtScheme9": "Fundição",\r\n
+  "PE.Views.Toolbar.txtUngroup": "Desagrupar"\r\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>50915</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885476.19</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tr.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\r\n
+  "PE.controller.Main.convertationErrorText": "Değişim başarısız oldu.",\r\n
+  "PE.controller.Main.convertationTimeoutText": "Değişim süresi aşıldı.",\r\n
+  "PE.controller.Main.criticalErrorExtText": "Sayfayı yenilemek için \\"TAMAM\\"\'a tıklayınız",\r\n
+  "PE.controller.Main.criticalErrorTitle": "Hata",\r\n
+  "PE.controller.Main.downloadErrorText": "Yükleme başarısız oldu.",\r\n
+  "PE.controller.Main.editModeText": "Düzenleme modu",\r\n
+  "PE.controller.Main.errorDefaultMessage": "Hata kodu: %1",\r\n
+  "PE.controller.Main.errorKeyEncrypt": "Bilinmeyen anahtar tanımlayıcı",\r\n
+  "PE.controller.Main.errorKeyExpire": "Anahtar tanımlayıcının süresi doldu",\r\n
+  "PE.controller.Main.errorUsersExceed": "Fiyat planının izin verdiği kullanıcı sayısı aşıldı",\r\n
+  "PE.controller.Main.notcriticalErrorTitle": "Dikkat",\r\n
+  "PE.controller.Main.printText": "Yazdırılıyor...",\r\n
+  "PE.controller.Main.reloadButtonText": "Sayfayı Yenile",\r\n
+  "PE.controller.Main.requestEditFailedMessageText": "Şu bu döküman biri tarafından düzenleniyor. Lütfen daha sonra tekrar deneyin.",\r\n
+  "PE.controller.Main.requestEditFailedTitleText": "Erişim reddedildi",\r\n
+  "PE.controller.Main.requestEditRightsText": "Düzenleme hakları isteniyor...",\r\n
+  "PE.controller.Main.splitDividerErrorText": "Satır sayısı %1\'in böleni olmalıdır",\r\n
+  "PE.controller.Main.splitMaxColsErrorText": "Sütun sayısı %1\'den az olmalıdır",\r\n
+  "PE.controller.Main.splitMaxRowsErrorText": "Satır sayısı %1\'den az olmalıdır",\r\n
+  "PE.controller.Main.textAnonymous": "Anonim",\r\n
+  "PE.controller.Main.textLoadingDocument": "Döküman yükleniyor",\r\n
+  "PE.controller.Main.unknownErrorText": "Bilinmeyen hata.",\r\n
+  "PE.controller.Main.unsupportedBrowserErrorText": "Tarayıcınız desteklenmiyor.",\r\n
+  "PE.controller.Main.uploadImageExtMessage": "Bilinmeyen resim formatı",\r\n
+  "PE.controller.Main.uploadImageFileCountMessage": "Resim yüklenmedi.",\r\n
+  "PE.controller.Main.uploadImageSizeMessage": "Maksimum resim boyutu aşıldı.",\r\n
+  "PE.controller.Main.viewModeText": "Görüntüleme Modu",\r\n
+  "PE.controller.phone.Main.pageText": "Sayfa",\r\n
+  "PE.controller.tablet.Main.pageText": "Sayfa",\r\n
+  "PE.controller.toolbar.View.txtFinalMessage": "Slayt önizlemenin sonu",\r\n
+  "PE.view.phone.toolbar.View.doneText": "Tamamlandı",\r\n
+  "PE.view.tablet.toolbar.View.doneText": "Tamamlandı"\r\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2372</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885455.45</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tr.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\r\n
+  "Common.view.PopClip.copyButtonText": "Kopyala",\r\n
+  "Common.view.PopClip.cutButtonText": "Kes",\r\n
+  "Common.view.PopClip.pasteButtonText": "Yapıştır",\r\n
+  "DE.controller.Main.convertationErrorText": "Değişim başarısız oldu.",\r\n
+  "DE.controller.Main.convertationTimeoutText": "Değişim süresi aşıldı.",\r\n
+  "DE.controller.Main.criticalErrorExtText": "Sayfayı yenilemek için \\"TAMAM\\"\'a tıklayınız",\r\n
+  "DE.controller.Main.criticalErrorTitle": "Hata",\r\n
+  "DE.controller.Main.downloadErrorText": "Yükleme başarısız oldu.",\r\n
+  "DE.controller.Main.editModeText": "Düzenleme modu",\r\n
+  "DE.controller.Main.errorCoAuthoringDisconnect": "Sunucu bağlantısı kesildi. Döküman şu an düzenlenemez.",\r\n
+  "DE.controller.Main.errorDefaultMessage": "Hata kodu: %1",\r\n
+  "DE.controller.Main.errorDocTooBig": "Açmaya çalıştığınız dökümanda 30000\'den fazla karaktar yada 1000\'den fazla paragraf var ve mobil aygıtınızda açılamıyor. Lütfen masaüstü PC\'nizi kullanarak açmayı deneyin.",\r\n
+  "DE.controller.Main.errorKeyEncrypt": "Bilinmeyen anahtar tanımlayıcı",\r\n
+  "DE.controller.Main.errorKeyExpire": "Anahtar tanımlayıcının süresi doldu",\r\n
+  "DE.controller.Main.errorUsersExceed": "Fiyat planının izin verdiği kullanıcı sayısı aşıldı",\r\n
+  "DE.controller.Main.loadingDocText": "DÖKÜMAN YÜKLENİYOR",\r\n
+  "DE.controller.Main.notcriticalErrorTitle": "Dikkat",\r\n
+  "DE.controller.Main.printText": "Yazdırılıyor...",\r\n
+  "DE.controller.Main.reloadButtonText": "Sayfayı Yenile",\r\n
+  "DE.controller.Main.requestEditFailedMessageText": "Şu bu döküman biri tarafından düzenleniyor. Lütfen daha sonra tekrar deneyin.",\r\n
+  "DE.controller.Main.requestEditFailedTitleText": "Erişim reddedildi",\r\n
+  "DE.controller.Main.requestEditRightsText": "Düzenleme hakları isteniyor...",\r\n
+  "DE.controller.Main.saveText": "Kaydediliyor...",\r\n
+  "DE.controller.Main.splitDividerErrorText": "Satır sayısı %1\'in böleni olmalıdır",\r\n
+  "DE.controller.Main.splitMaxColsErrorText": "Sütun sayısı %1\'den az olmalıdır",\r\n
+  "DE.controller.Main.splitMaxRowsErrorText": "Satır sayısı %1\'den az olmalıdır",\r\n
+  "DE.controller.Main.textAnonymous": "Anonim",\r\n
+  "DE.controller.Main.unknownErrorText": "Bilinmeyen hata.",\r\n
+  "DE.controller.Main.unsupportedBrowserErrorText ": "Tarayıcınız desteklenmiyor.",\r\n
+  "DE.controller.Main.uploadImageExtMessage": "Bilinmeyen resim formatı",\r\n
+  "DE.controller.Main.uploadImageFileCountMessage": "Resim yüklenmedi.",\r\n
+  "DE.controller.Main.uploadImageSizeMessage": "Maksimum resim boyutu aşıldı.",\r\n
+  "DE.controller.Main.viewModeText": "Görüntüleme Modu",\r\n
+  "DE.controller.phone.Main.pageText": "Sayfa",\r\n
+  "DE.controller.tablet.Main.pageText": "Sayfa",\r\n
+  "DE.controller.tablet.panel.Insert.unsupportUploadText": "Özellik bu aygıtta desteklenmiyor.",\r\n
+  "DE.controller.tablet.panel.Insert.uploadingText": "Yükleniyor",\r\n
+  "DE.controller.toolbar.Edit.dlgLeaveMsgText": "Bu dökümandaki değişiklikleri kaydetmediniz. \\"Bu sayfada kal\\"\'a tıklayınız ve sonrasında kaydetmek için \\"Kaydet\\"\'e tıklayınız. Kaydedilmeyen değişikliklerin tümünü göz ardı etmek için \\"Bu Sayfadan Ayrıl\\"\'a tıklayınız.",\r\n
+  "DE.controller.toolbar.Edit.dlgLeaveTitleText": "Uygulamadan çıkıyorsunuz",\r\n
+  "DE.controller.toolbar.Edit.leaveButtonText": "Bu sayfadan ayrıl",\r\n
+  "DE.controller.toolbar.Edit.stayButtonText": "Bu sayfada kal",\r\n
+  "DE.controller.toolbar.View.requestEditFailedMessageText": "Dökümanı şimdi düzenleyemezsiniz. Lütfen daha sonra tekrar deneyin.",\r\n
+  "DE.controller.toolbar.View.requestEditFailedTitleText": "Erişim reddedildi",\r\n
+  "DE.view.phone.Main.cancelText": "İptal Et",\r\n
+  "DE.view.phone.Main.searchText": "Ara",\r\n
+  "DE.view.phone.toolbar.Search.searchText": "Ara",\r\n
+  "DE.view.phone.toolbar.View.doneText": "Tamamlandı",\r\n
+  "DE.view.phone.toolbar.View.readerText": "Okuyucu",\r\n
+  "DE.view.tablet.Main.searchText": "Ara",\r\n
+  "DE.view.tablet.panel.Font.backText": "Geri",\r\n
+  "DE.view.tablet.panel.Font.fontNameText": "Yazı Tipi İsmi",\r\n
+  "DE.view.tablet.panel.Insert.backText": "Geri",\r\n
+  "DE.view.tablet.panel.Insert.columnsText": "Sütunlar",\r\n
+  "DE.view.tablet.panel.Insert.insertColumnText": "Sütun Ekle",\r\n
+  "DE.view.tablet.panel.Insert.insertPicture": "Resim ekle",\r\n
+  "DE.view.tablet.panel.Insert.insertRowText": "Satır Ekle",\r\n
+  "DE.view.tablet.panel.Insert.insertTableText": "Tablo ekle",\r\n
+  "DE.view.tablet.panel.Insert.insertText": "Ekle",\r\n
+  "DE.view.tablet.panel.Insert.pictureText": "Resim",\r\n
+  "DE.view.tablet.panel.Insert.pictureUploadFloat": "Kaydırma Ekle",\r\n
+  "DE.view.tablet.panel.Insert.pictureUploadInline": "Satıriçi Ekle",\r\n
+  "DE.view.tablet.panel.Insert.rowsText": "Satırlar",\r\n
+  "DE.view.tablet.panel.Insert.tableText": "Tablo",\r\n
+  "DE.view.tablet.panel.ListStyle.backText": "Geri",\r\n
+  "DE.view.tablet.panel.ListStyle.bulletsText": "İmler",\r\n
+  "DE.view.tablet.panel.ListStyle.decIndentText": "Girintiyi Azalt",\r\n
+  "DE.view.tablet.panel.ListStyle.incIndentText": "Girintiyi Arttır",\r\n
+  "DE.view.tablet.panel.ListStyle.listStyleText": "Listeleme Stili",\r\n
+  "DE.view.tablet.panel.ListStyle.noneText": "hiçbiri",\r\n
+  "DE.view.tablet.panel.ListStyle.numberingText": "Numaralandırma",\r\n
+  "DE.view.tablet.panel.ListStyle.outlineText": "Çerçeve",\r\n
+  "DE.view.tablet.panel.Spacing.backText": "Geri",\r\n
+  "DE.view.tablet.panel.Spacing.decIndentText": "Girintiyi Azalt",\r\n
+  "DE.view.tablet.panel.Spacing.incIndentText": "Girintiyi Arttır",\r\n
+  "DE.view.tablet.panel.Spacing.lineSpacingText": "Paragraf Satır Aralığı",\r\n
+  "DE.view.tablet.panel.Spacing.spacingText": "Aralık",\r\n
+  "DE.view.tablet.panel.TextColor.backText": "Geri",\r\n
+  "DE.view.tablet.panel.TextColor.colorText": "Renk",\r\n
+  "DE.view.tablet.panel.TextColor.highlightColorText": "Vurgu Rengi",\r\n
+  "DE.view.tablet.panel.TextColor.noFillText": "Dolgu Yok",\r\n
+  "DE.view.tablet.panel.TextColor.textColorText": "Metin rengi",\r\n
+  "DE.view.tablet.toolbar.Edit.doneText": "Tamamlandı",\r\n
+  "DE.view.tablet.toolbar.Edit.fontText": "Yazı Tipi",\r\n
+  "DE.view.tablet.toolbar.Search.searchText": "Ara",\r\n
+  "DE.view.tablet.toolbar.View.doneText": "Tamamlandı",\r\n
+  "DE.view.tablet.toolbar.View.editText": "Düzenle",\r\n
+  "DE.view.tablet.toolbar.View.readerText": "Okuyucu"\r\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6279</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

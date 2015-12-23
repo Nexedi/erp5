@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885475.89</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>pt.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\r\n
+  "PE.controller.Main.convertationErrorText": "Conversão falhou.",\r\n
+  "PE.controller.Main.convertationTimeoutText": "Tempo limite de conversão excedido.",\r\n
+  "PE.controller.Main.criticalErrorExtText": "Pressione \\"OK\\" para recarregar a página.",\r\n
+  "PE.controller.Main.criticalErrorTitle": "Erro",\r\n
+  "PE.controller.Main.downloadErrorText": "Download falhou.",\r\n
+  "PE.controller.Main.editModeText": "Modo de edição",\r\n
+  "PE.controller.Main.errorDefaultMessage": "Código do erro: %1",\r\n
+  "PE.controller.Main.errorKeyEncrypt": "Descritor de chave desconhecido",\r\n
+  "PE.controller.Main.errorKeyExpire": "Descritor de chave expirado",\r\n
+  "PE.controller.Main.errorUsersExceed": "O número de usuários permitidos pelo plano de preços foi excedido",\r\n
+  "PE.controller.Main.notcriticalErrorTitle": "Aviso",\r\n
+  "PE.controller.Main.printText": "Imprimindo...",\r\n
+  "PE.controller.Main.reloadButtonText": "Recarregar página",\r\n
+  "PE.controller.Main.requestEditFailedMessageText": "Alguém está editando este documento neste momento. Tente novamente mais tarde.",\r\n
+  "PE.controller.Main.requestEditFailedTitleText": "Acesso negado",\r\n
+  "PE.controller.Main.requestEditRightsText": "Solicitando direitos de edição...",\r\n
+  "PE.controller.Main.splitDividerErrorText": "O número de linhas deve ser um divisor de %1",\r\n
+  "PE.controller.Main.splitMaxColsErrorText": "O número de colunas deve ser menor que %1",\r\n
+  "PE.controller.Main.splitMaxRowsErrorText": "O número de linhas deve ser menor que %1",\r\n
+  "PE.controller.Main.textAnonymous": "Anônimo",\r\n
+  "PE.controller.Main.textLoadingDocument": "Carregando documento",\r\n
+  "PE.controller.Main.unknownErrorText": "Erro desconhecido.",\r\n
+  "PE.controller.Main.unsupportedBrowserErrorText": "Seu navegador não é suportado.",\r\n
+  "PE.controller.Main.uploadImageExtMessage": "Formato de imagem desconhecido.",\r\n
+  "PE.controller.Main.uploadImageFileCountMessage": "Sem imagens carregadas.",\r\n
+  "PE.controller.Main.uploadImageSizeMessage": "Tamanho limite máximo da imagem excedido.",\r\n
+  "PE.controller.Main.viewModeText": "Modo de exibição",\r\n
+  "PE.controller.phone.Main.pageText": "Página",\r\n
+  "PE.controller.tablet.Main.pageText": "Página",\r\n
+  "PE.controller.toolbar.View.txtFinalMessage": "O final da pré-visualização de slide",\r\n
+  "PE.view.phone.toolbar.View.doneText": "Concluído",\r\n
+  "PE.view.tablet.toolbar.View.doneText": "Concluído"\r\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2399</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

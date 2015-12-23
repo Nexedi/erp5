@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885475.52</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>de.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\r\n
+  "PE.controller.Main.convertationErrorText": "Konvertierung ist fehlgeschlagen.",\r\n
+  "PE.controller.Main.convertationTimeoutText": "Timeout für die Konvertierung wurde überschritten.",\r\n
+  "PE.controller.Main.criticalErrorExtText": "Klicken Sie auf \\"OK\\", um die Seite neu zu laden.",\r\n
+  "PE.controller.Main.criticalErrorTitle": "Fehler",\r\n
+  "PE.controller.Main.downloadErrorText": "Download ist fehlgeschlagen.",\r\n
+  "PE.controller.Main.editModeText": "Bearbeitungsmodus",\r\n
+  "PE.controller.Main.errorDefaultMessage": "Fehlercode: %1",\r\n
+  "PE.controller.Main.errorKeyEncrypt": "Unbekannter Schlüsseldeskriptor",\r\n
+  "PE.controller.Main.errorKeyExpire": "Der Schlüsseldeskriptor ist abgelaufen",\r\n
+  "PE.controller.Main.errorUsersExceed": "Die nach dem Zahlungsplan erlaubte Benutzeranzahl ist überschritten",\r\n
+  "PE.controller.Main.notcriticalErrorTitle": "Warnung",\r\n
+  "PE.controller.Main.printText": "Drucken...",\r\n
+  "PE.controller.Main.reloadButtonText": "Seite neu laden",\r\n
+  "PE.controller.Main.requestEditFailedMessageText": "Jemand bearbeitet dieses Dokument in diesem Moment. Bitte versuchen Sie es später erneut.",\r\n
+  "PE.controller.Main.requestEditFailedTitleText": "Zugriff verweigert",\r\n
+  "PE.controller.Main.requestEditRightsText": "Anfrage betreffend die Bearbeitungsberechtigung...",\r\n
+  "PE.controller.Main.splitDividerErrorText": "Die Zeilenanzahl muss ein Divisor von %1 sein.",\r\n
+  "PE.controller.Main.splitMaxColsErrorText": "Die Spaltenanzahl muss weniger sein als %1",\r\n
+  "PE.controller.Main.splitMaxRowsErrorText": "Die Zeilenanzahl muss weniger sein als %1",\r\n
+  "PE.controller.Main.textAnonymous": "Anonym",\r\n
+  "PE.controller.Main.textLoadingDocument": "Ladevorgang",\r\n
+  "PE.controller.Main.unknownErrorText": "Unbekannter Fehler.",\r\n
+  "PE.controller.Main.unsupportedBrowserErrorText": "Ihr Webbrowser wird nicht unterstützt.",\r\n
+  "PE.controller.Main.uploadImageExtMessage": "Unbekanntes Bildformat.",\r\n
+  "PE.controller.Main.uploadImageFileCountMessage": "Keine Bilder hochgeladen.",\r\n
+  "PE.controller.Main.uploadImageSizeMessage": "Die maximal zulässige Bildgröße ist überschritten.",\r\n
+  "PE.controller.Main.viewModeText": "Lesemodus",\r\n
+  "PE.controller.phone.Main.pageText": "Seite",\r\n
+  "PE.controller.tablet.Main.pageText": "Seite",\r\n
+  "PE.controller.toolbar.View.txtFinalMessage": "Folienvorschau beendet",\r\n
+  "PE.view.phone.toolbar.View.doneText": "Fertig",\r\n
+  "PE.view.tablet.toolbar.View.doneText": "Fertig"\r\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2452</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

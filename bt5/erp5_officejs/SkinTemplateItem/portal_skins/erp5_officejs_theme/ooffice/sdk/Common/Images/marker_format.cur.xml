@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885477.73</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>marker_format.cur</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">AAACAAEAEhAAAA4ACADoBAAAFgAAACgAAAASAAAAIAAAAAEAIAAAAAAAwAQAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAA/////////////////////wAAAAAAAAAAAAAAAP//////////
+/////wAAAAD///////////////8AAAAAAAAAAAAAAAAAAAAA/////2FhYf9hYWH///////////8A
+AAAAAAAAAP////9kZGT/ZGRk//////9kZGT/ZGRk//////8AAAAAAAAAAAAAAAAAAAAA/////15e
+Xv//////Xl5e//////8AAAAAAAAAAP///////////////2BgYP////////////////8AAAAAAAAA
+AAAAAAD//////////1paWv9aWlr/Wlpa////////////AAAAAAAAAAAAAAAA/////1xcXP//////
+AAAAAAAAAAAAAAAAAAAAAAAAAAD/////VlZW/////////////////1ZWVv//////AAAAAAAAAAAA
+AAAA/////1dXV///////AAAAAAAAAAAAAAAAAAAAAAAAAAD/////UVFR/1FRUf9RUVH/UVFR/1FR
+Uf//////AAAAAAAAAAAAAAAA/////1JSUv//////AAAAAAAAAAAAAAAAAAAAAAAAAAD/////TExM
+/////////////////0xMTP//////AAAAAAAAAAAAAAAA/////01NTf//////AAAAAAAAAAAAAAAA
+AAAAAAAAAAD/////R0dH//////8AAAAA/////0dHR///////AAAAAAAAAAAAAAAA/////0hISP//
+////AAAAAAAAAAAAAAAAAAAAAAAAAAD/////QUFB//////8AAAAA/////0FBQf//////AAAAAAAA
+AAAAAAAA/////0JCQv//////AAAAAAAAAAAAAAAAAAAAAAAAAAD/////PDw8//////8AAAAA////
+/zw8PP//////AAAAAAAAAAAAAAAA/////z09Pf//////AAAAAAAAAAAAAAAAAAAAAAAAAAD/////
+Nzc3//////8AAAAA/////zc3N///////AAAAAAAAAAAAAAAA/////zg4OP//////AAAAAAAAAAAA
+AAAAAAAAAAAAAAD/////MzMz//////8AAAAA/////zMzM///////AAAAAAAAAAAAAAAA/////zMz
+M///////AAAAAAAAAAAAAAAAAAAAAAAAAAD/////Ly8v/////////////////y8vL///////AAAA
+AAAAAAAAAAAA/////y8vL///////AAAAAAAAAAAAAAAAAAAAAAAAAAD/////LCws/ywsLP8sLCz/
+LCws/ywsLP//////AAAAAP///////////////ywsLP////////////////8AAAAAAAAAAAAAAAD/
+/////////ykpKf8pKSn/KSkp////////////AAAAAP////8pKSn/KSkp//////8pKSn/KSkp////
+//8AAAAAAAAAAAAAAAAAAAAA//////////////////////////8AAAAAAAAAAP//////////////
+/wAAAAD////////////////w4gAA8GAAAPBgAADgOMAA4DjAAOA4wADgOMAA4jjAAOI4wADiOMAA
+4jjAAOI4wADgOMAA4CAAAOAgAADwYgAA</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1278</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885455.37</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>sl.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\r\n
+  "Common.view.PopClip.copyButtonText": "Kopiraj",\r\n
+  "Common.view.PopClip.cutButtonText": "Izreži",\r\n
+  "Common.view.PopClip.pasteButtonText": "Prilepi",\r\n
+  "DE.controller.Main.convertationErrorText": "Pogovor ni uspel.",\r\n
+  "DE.controller.Main.convertationTimeoutText": "Pretvorbena prekinitev presežena.",\r\n
+  "DE.controller.Main.criticalErrorExtText": "Pritisnite \\"OK\\" za osvežitev strani.",\r\n
+  "DE.controller.Main.criticalErrorTitle": "Napaka",\r\n
+  "DE.controller.Main.downloadErrorText": "Prenos ni uspel.",\r\n
+  "DE.controller.Main.editModeText": "Urejevalni način",\r\n
+  "DE.controller.Main.errorCoAuthoringDisconnect": "Povezava s strežnikom izgubljena. Dokument v tem trenutku ne more biti urejen.",\r\n
+  "DE.controller.Main.errorDefaultMessage": "Koda napake: %1",\r\n
+  "DE.controller.Main.errorDocTooBig": "Dokument, ki ga poskušate odpreti ima več kot 30000 znakov ali 1000 odstavkov in ne more biti odprt na vaši mobilni napravi. Prosim poskušajte jo odpreti z uporabo PC-ja.",\r\n
+  "DE.controller.Main.errorKeyEncrypt": "Neznan ključni deskriptor",\r\n
+  "DE.controller.Main.errorKeyExpire": "Ključni deskriptor je potekel",\r\n
+  "DE.controller.Main.errorUsersExceed": "Število uporabnikov, ki ga dovoljuje cenovni načrt, je bilo preseženo",\r\n
+  "DE.controller.Main.loadingDocText": "NALAGANJE DOKUMENTA",\r\n
+  "DE.controller.Main.notcriticalErrorTitle": "Opozorilo",\r\n
+  "DE.controller.Main.printText": "Tiskanje...",\r\n
+  "DE.controller.Main.reloadButtonText": "Osveži stran",\r\n
+  "DE.controller.Main.requestEditFailedMessageText": "Nekdo v tem trenutku ureja ta dokument. Prosim ponovno poskusite kasneje.",\r\n
+  "DE.controller.Main.requestEditFailedTitleText": "Dostop zavrnjen",\r\n
+  "DE.controller.Main.requestEditRightsText": "Zahtevanje urejevalnih pravic...",\r\n
+  "DE.controller.Main.saveText": "Shranjevanje...",\r\n
+  "DE.controller.Main.splitDividerErrorText": "Število vrstic mora biti delitelj %1",\r\n
+  "DE.controller.Main.splitMaxColsErrorText": "Število stolpcev mora biti manj kot %1",\r\n
+  "DE.controller.Main.splitMaxRowsErrorText": "Število vrstic mora biti manj kot %1",\r\n
+  "DE.controller.Main.textAnonymous": "Anonimno",\r\n
+  "DE.controller.Main.unknownErrorText": "Neznana napaka.",\r\n
+  "DE.controller.Main.unsupportedBrowserErrorText ": "Vaš brskalnik ni podprt.",\r\n
+  "DE.controller.Main.uploadImageExtMessage": "Neznan format slike.",\r\n
+  "DE.controller.Main.uploadImageFileCountMessage": "Ni naloženih slik.",\r\n
+  "DE.controller.Main.uploadImageSizeMessage": "Maksimalni limit velikosti slike je presežen.",\r\n
+  "DE.controller.Main.viewModeText": "Način ogleda",\r\n
+  "DE.controller.phone.Main.pageText": "Stran",\r\n
+  "DE.controller.tablet.Main.pageText": "Stran",\r\n
+  "DE.controller.tablet.panel.Insert.unsupportUploadText": "Funkcija v tej napravi ni podprta.",\r\n
+  "DE.controller.tablet.panel.Insert.uploadingText": "Nalaganje",\r\n
+  "DE.controller.toolbar.Edit.dlgLeaveMsgText": "V tem dokumentu imate neshranjene spremembe. Pritisnite \\"Ostani na tej strani\\" in nato \\"Shrani\\", da se shranijo. Pritisnite \\"Zapusti to stran\\", če želite zavreči vse neshranjene spremembe.",\r\n
+  "DE.controller.toolbar.Edit.dlgLeaveTitleText": "Zapustite aplikacijo",\r\n
+  "DE.controller.toolbar.Edit.leaveButtonText": "Zapusti to stran",\r\n
+  "DE.controller.toolbar.Edit.stayButtonText": "Ostani na tej strani",\r\n
+  "DE.controller.toolbar.View.requestEditFailedMessageText": "V tem trenutku ne morete urediti dokumenta. Ponovno prosim poskusite kasneje.",\r\n
+  "DE.controller.toolbar.View.requestEditFailedTitleText": "Dostop zavrnjen",\r\n
+  "DE.view.phone.Main.cancelText": "Prekliči",\r\n
+  "DE.view.phone.Main.searchText": "Iskanje",\r\n
+  "DE.view.phone.toolbar.Search.searchText": "Iskanje",\r\n
+  "DE.view.phone.toolbar.View.doneText": "Končano",\r\n
+  "DE.view.phone.toolbar.View.readerText": "Bralnik",\r\n
+  "DE.view.tablet.Main.searchText": "Iskanje",\r\n
+  "DE.view.tablet.panel.Font.backText": "Nazaj",\r\n
+  "DE.view.tablet.panel.Font.fontNameText": "Ime pisave",\r\n
+  "DE.view.tablet.panel.Insert.backText": "Nazaj",\r\n
+  "DE.view.tablet.panel.Insert.columnsText": "Stolpci",\r\n
+  "DE.view.tablet.panel.Insert.insertColumnText": "Vstavi stolpec",\r\n
+  "DE.view.tablet.panel.Insert.insertPicture": "Vstavi sliko",\r\n
+  "DE.view.tablet.panel.Insert.insertRowText": "Vstavi vrsto",\r\n
+  "DE.view.tablet.panel.Insert.insertTableText": "Vstavi tabelo",\r\n
+  "DE.view.tablet.panel.Insert.insertText": "Vstavi",\r\n
+  "DE.view.tablet.panel.Insert.pictureText": "Slika",\r\n
+  "DE.view.tablet.panel.Insert.pictureUploadFloat": "Vstavi plovnost",\r\n
+  "DE.view.tablet.panel.Insert.pictureUploadInline": "Vstavi v vrstici",\r\n
+  "DE.view.tablet.panel.Insert.rowsText": "Vrste",\r\n
+  "DE.view.tablet.panel.Insert.tableText": "Tabela",\r\n
+  "DE.view.tablet.panel.ListStyle.backText": "Nazaj",\r\n
+  "DE.view.tablet.panel.ListStyle.bulletsText": "Krogle",\r\n
+  "DE.view.tablet.panel.ListStyle.decIndentText": "Zmanjšaj zamik",\r\n
+  "DE.view.tablet.panel.ListStyle.incIndentText": "Povečajte zamik",\r\n
+  "DE.view.tablet.panel.ListStyle.listStyleText": "Slog seznama",\r\n
+  "DE.view.tablet.panel.ListStyle.noneText": "nič",\r\n
+  "DE.view.tablet.panel.ListStyle.numberingText": "Oštevilčenje",\r\n
+  "DE.view.tablet.panel.ListStyle.outlineText": "Obroba",\r\n
+  "DE.view.tablet.panel.Spacing.backText": "Nazaj",\r\n
+  "DE.view.tablet.panel.Spacing.decIndentText": "Zmanjšaj zamik",\r\n
+  "DE.view.tablet.panel.Spacing.incIndentText": "Povečajte zamik",\r\n
+  "DE.view.tablet.panel.Spacing.lineSpacingText": "Razmik črt odstavka",\r\n
+  "DE.view.tablet.panel.Spacing.spacingText": "Razmik",\r\n
+  "DE.view.tablet.panel.TextColor.backText": "Nazaj",\r\n
+  "DE.view.tablet.panel.TextColor.colorText": "Barva",\r\n
+  "DE.view.tablet.panel.TextColor.highlightColorText": "Označi barvo",\r\n
+  "DE.view.tablet.panel.TextColor.noFillText": "Ni polnila",\r\n
+  "DE.view.tablet.panel.TextColor.textColorText": "Barva besedila",\r\n
+  "DE.view.tablet.toolbar.Edit.doneText": "Končano",\r\n
+  "DE.view.tablet.toolbar.Edit.fontText": "Pisava",\r\n
+  "DE.view.tablet.toolbar.Search.searchText": "Iskanje",\r\n
+  "DE.view.tablet.toolbar.View.doneText": "Končano",\r\n
+  "DE.view.tablet.toolbar.View.editText": "Uredi",\r\n
+  "DE.view.tablet.toolbar.View.readerText": "Bralnik"\r\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6166</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

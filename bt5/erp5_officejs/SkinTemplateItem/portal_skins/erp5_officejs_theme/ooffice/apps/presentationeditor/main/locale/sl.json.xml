@@ -1,0 +1,814 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885473.89</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>sl.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\r\n
+  "Common.Controllers.Chat.notcriticalErrorTitle": "Opozorilo",\r\n
+  "Common.Controllers.Chat.textEnterMessage": "Svoje sporočilo vnesite tu",\r\n
+  "Common.Controllers.Chat.textUserLimit": "You are using ONLYOFFICE Free Edition.<br>Only two users can co-edit the document simultaneously.<br>Want more? Consider buying ONLYOFFICE Enterprise Edition.<br><a href=\\"http:\\/\\/www.onlyoffice.com\\/free-edition.aspx\\" target=\\"_blank\\">Read more</a>",\r\n
+  "Common.Controllers.ExternalDiagramEditor.textAnonymous": "Anonimno",\r\n
+  "Common.Controllers.ExternalDiagramEditor.textClose": "Zapri",\r\n
+  "Common.Controllers.ExternalDiagramEditor.warningText": "Objekt je onemogočen, saj ga ureja drug uporabnik.",\r\n
+  "Common.Controllers.ExternalDiagramEditor.warningTitle": "Opozorilo",\r\n
+  "Common.UI.ComboBorderSize.txtNoBorders": "Ni mej",\r\n
+  "Common.UI.ComboBorderSizeEditable.txtNoBorders": "Ni mej",\r\n
+  "Common.UI.ComboDataView.emptyComboText": "Ni slogov",\r\n
+  "Common.UI.ExtendedColorDialog.addButtonText": "Dodaj",\r\n
+  "Common.UI.ExtendedColorDialog.cancelButtonText": "Prekliči",\r\n
+  "Common.UI.ExtendedColorDialog.textCurrent": "trenuten",\r\n
+  "Common.UI.ExtendedColorDialog.textHexErr": "Vnesena vrednost je nepravilna.<br>Prosim vnesite vrednost med 000000 in FFFFFF.",\r\n
+  "Common.UI.ExtendedColorDialog.textNew": "Novo",\r\n
+  "Common.UI.ExtendedColorDialog.textRGBErr": "Vnesena vrednost je nepravilna.<br>Prosim vnesite numerično vrednost med 0 in 255.",\r\n
+  "Common.UI.HSBColorPicker.textNoColor": "Ni barve",\r\n
+  "Common.UI.SearchDialog.textHighlight": "Označi rezultate",\r\n
+  "Common.UI.SearchDialog.textMatchCase": "Občutljiv na velike in male črke",\r\n
+  "Common.UI.SearchDialog.textReplaceDef": "Vnesi nadomestno besedilo",\r\n
+  "Common.UI.SearchDialog.textSearchStart": "Svoje besedilo vnesite tu",\r\n
+  "Common.UI.SearchDialog.textTitle": "Iskanje",\r\n
+  "Common.UI.SearchDialog.textTitle2": "Iskanje",\r\n
+  "Common.UI.SearchDialog.textWholeWords": "Le cele besede",\r\n
+  "Common.UI.SearchDialog.txtBtnReplace": "Zamenjaj",\r\n
+  "Common.UI.SearchDialog.txtBtnReplaceAll": "Zamenjaj vse",\r\n
+  "Common.UI.SynchronizeTip.textDontShow": "Tega sporočila ne prikaži več",\r\n
+  "Common.UI.SynchronizeTip.textSynchronize": "Dokument je spremenil drug uporabnik.<br/>Prosim pritisnite za shranjevanje svojih sprememb in osvežitev posodobitev.",\r\n
+  "Common.UI.Window.cancelButtonText": "Prekliči",\r\n
+  "Common.UI.Window.closeButtonText": "Zapri",\r\n
+  "Common.UI.Window.noButtonText": "Ne",\r\n
+  "Common.UI.Window.okButtonText": "OK",\r\n
+  "Common.UI.Window.textConfirmation": "Potrditev",\r\n
+  "Common.UI.Window.textError": "Napaka",\r\n
+  "Common.UI.Window.textInformation": "Informacija",\r\n
+  "Common.UI.Window.textWarning": "Opozorilo",\r\n
+  "Common.UI.Window.yesButtonText": "Da",\r\n
+  "Common.Views.About.txtAddress": "naslov:",\r\n
+  "Common.Views.About.txtAscAddress": "Lubanas st. 125a-25, Riga, Latvija, EU, LV-1021",\r\n
+  "Common.Views.About.txtLicensee": "LICENCE",\r\n
+  "Common.Views.About.txtLicensor": "DAJALEC LICENCE",\r\n
+  "Common.Views.About.txtMail": "e-naslov:",\r\n
+  "Common.Views.About.txtPoweredBy": "Poganja",\r\n
+  "Common.Views.About.txtTel": "tel.: ",\r\n
+  "Common.Views.About.txtVersion": "Različica",\r\n
+  "Common.Views.AdvancedSettingsWindow.cancelButtonText": "Prekliči",\r\n
+  "Common.Views.AdvancedSettingsWindow.okButtonText": "OK",\r\n
+  "Common.Views.Chat.textSend": "Pošlji",\r\n
+  "Common.Views.Comments.textAdd": "Dodaj",\r\n
+  "Common.Views.Comments.textAddComment": "Dodaj komentar",\r\n
+  "Common.Views.Comments.textAddCommentToDoc": "K dokumentu dodaj komentar",\r\n
+  "Common.Views.Comments.textAddReply": "Dodaj odgovor",\r\n
+  "Common.Views.Comments.textAnonym": "Gost",\r\n
+  "Common.Views.Comments.textCancel": "Prekliči",\r\n
+  "Common.Views.Comments.textClose": "Zapri",\r\n
+  "Common.Views.Comments.textComments": "Komentarji",\r\n
+  "Common.Views.Comments.textEdit": "Uredi",\r\n
+  "Common.Views.Comments.textEnterCommentHint": "Svoj komentar vnesite tu",\r\n
+  "Common.Views.Comments.textOpenAgain": "Ponovno odpri",\r\n
+  "Common.Views.Comments.textReply": "Odgovori",\r\n
+  "Common.Views.Comments.textResolve": "Razreši",\r\n
+  "Common.Views.Comments.textResolved": "Razrešeno",\r\n
+  "Common.Views.CopyWarningDialog.textDontShow": "Tega sporočila ne prikaži več",\r\n
+  "Common.Views.CopyWarningDialog.textMsg": "Dejanja kopiraj, izreži in prilepi izvedena z uporabo gumbov urejevalne orodne vrstice in kontekstnega menija bodo izvedena le v urejevalnem zavihku.<br><br>Za kopiranje in lepljenje v in iz aplikacij zunaj urejevalnega zavihka uporabite sledeče kombinacije na tipkovnici:",\r\n
+  "Common.Views.CopyWarningDialog.textTitle": "Kopiraj, Izreži in Prilepi dejanja",\r\n
+  "Common.Views.CopyWarningDialog.textToCopy": "za Kopijo",\r\n
+  "Common.Views.CopyWarningDialog.textToCut": "za Izrez",\r\n
+  "Common.Views.CopyWarningDialog.textToPaste": "za Lepljenje",\r\n
+  "Common.Views.DocumentAccessDialog.textLoading": "Nalaganje...",\r\n
+  "Common.Views.DocumentAccessDialog.textTitle": "Nastavitve deljenja",\r\n
+  "Common.Views.ExternalDiagramEditor.textClose": "Zapri",\r\n
+  "Common.Views.ExternalDiagramEditor.textSave": "Shrani & Zapusti",\r\n
+  "Common.Views.ExternalDiagramEditor.textTitle": "Urejevalec grafa",\r\n
+  "Common.Views.Header.textBack": "Pojdi v dokumente",\r\n
+  "Common.Views.ImageFromUrlDialog.cancelButtonText": "Prekliči",\r\n
+  "Common.Views.ImageFromUrlDialog.okButtonText": "OK",\r\n
+  "Common.Views.ImageFromUrlDialog.textUrl": "Prilepi URL slike:",\r\n
+  "Common.Views.ImageFromUrlDialog.txtEmpty": "To polje je obvezno",\r\n
+  "Common.Views.ImageFromUrlDialog.txtNotUrl": "To polje mora biti URL v \\"http://www.example.com\\" formatu",\r\n
+  "Common.Views.InsertTableDialog.cancelButtonText": "Prekliči",\r\n
+  "Common.Views.InsertTableDialog.okButtonText": "OK",\r\n
+  "Common.Views.InsertTableDialog.textInvalidRowsCols": "Določiti morate veljavna števila vrstic in stolpcev.",\r\n
+  "Common.Views.InsertTableDialog.txtColumns": "Število stolpcev",\r\n
+  "Common.Views.InsertTableDialog.txtMaxText": "Maksimalna vrednost za to polje je {0}.",\r\n
+  "Common.Views.InsertTableDialog.txtMinText": "Minimalna vrednost za to polje je {0}.",\r\n
+  "Common.Views.InsertTableDialog.txtRows": "Število vrstic",\r\n
+  "Common.Views.InsertTableDialog.txtTitle": "Velikost tabele",\r\n
+  "PE.Controllers.LeftMenu.newDocumentTitle": "Neimenovana predstavitev",\r\n
+  "PE.Controllers.LeftMenu.requestEditRightsText": "Zahtevanje urejevalnih pravic...",\r\n
+  "PE.Controllers.LeftMenu.textNoTextFound": "Podatkov, katere iščete, ni bilo mogoče najti. Prosim nastavite svoje možnosti iskanja.",\r\n
+  "PE.Controllers.Main.applyChangesTextText": "Nalaganje podatkov...",\r\n
+  "PE.Controllers.Main.applyChangesTitleText": "Nalaganje podatkov",\r\n
+  "PE.Controllers.Main.convertationErrorText": "Pretvorba ni uspela.",\r\n
+  "PE.Controllers.Main.convertationTimeoutText": "Pretvorbena prekinitev presežena.",\r\n
+  "PE.Controllers.Main.criticalErrorExtText": "Pritisnite \\"OK\\" za vrnitev na seznam dokumentov.",\r\n
+  "PE.Controllers.Main.criticalErrorTitle": "Napaka",\r\n
+  "PE.Controllers.Main.defaultTitleText": "ONLYOFFICE Urejevalnik predstavitev",\r\n
+  "PE.Controllers.Main.downloadErrorText": "Prenos ni uspel.",\r\n
+  "PE.Controllers.Main.downloadTextText": "Prenašanje predstavitve...",\r\n
+  "PE.Controllers.Main.downloadTitleText": "Prenašanje predstavitve",\r\n
+  "PE.Controllers.Main.errorCoAuthoringDisconnect": "Povezava s strežnikom izgubljena. Dokument v tem trenutku ne more biti urejen.",\r\n
+  "PE.Controllers.Main.errorDatabaseConnection": "Zunanja napaka.<br>Napaka povezave baze podatkov. V primeru, da napaka ni odpravljena, prosim kontaktirajte ekipo za pomoč.",\r\n
+  "PE.Controllers.Main.errorDataRange": "Nepravilen obseg podatkov.",\r\n
+  "PE.Controllers.Main.errorDefaultMessage": "Koda napake: %1",\r\n
+  "PE.Controllers.Main.errorFilePassProtect": "Dokument je zaščiten z geslom in ga ni mogoče odpreti.",\r\n
+  "PE.Controllers.Main.errorKeyEncrypt": "Neznan ključni deskriptor",\r\n
+  "PE.Controllers.Main.errorKeyExpire": "Ključni deskriptor je potekel",\r\n
+  "PE.Controllers.Main.errorProcessSaveResult": "Shranjevanje ni bilo uspešno",\r\n
+  "PE.Controllers.Main.errorStockChart": "Nepravilen vrstni red vrstic. Za izgradnjo razpredelnice delnic podatke na strani navedite v sledečem vrstnem redu:<br>otvoritvena cena, maksimalna cena, minimalna cena, zaključna cena.",\r\n
+  "PE.Controllers.Main.errorUpdateVersion": "Različica datoteke je bila spremenjena. Stran bo osvežena.",\r\n
+  "PE.Controllers.Main.errorUserDrop": "Do datoteke v tem trenutku ni možno dostopati.",\r\n
+  "PE.Controllers.Main.errorUsersExceed": "Število uporabnikov, ki ga dovoljuje cenovni načrt, je bilo preseženo",\r\n
+  "PE.Controllers.Main.leavePageText": "V tej predstavitvi imate neshranjene spremembe. Pritisnite \'\'Ostani na tej strani\'\', nato \'\'Shrani\'\' da jih shranite. Pritisnite \'\'Zapusti to stran\'\' če želite zavreči vse neshranjene spremembe.",\r\n
+  "PE.Controllers.Main.loadFontsTextText": "Nalaganje podatkov...",\r\n
+  "PE.Controllers.Main.loadFontsTitleText": "Nalaganje podatkov",\r\n
+  "PE.Controllers.Main.loadFontTextText": "Nalaganje podatkov...",\r\n
+  "PE.Controllers.Main.loadFontTitleText": "Nalaganje podatkov",\r\n
+  "PE.Controllers.Main.loadImagesTextText": "Nalaganje slik...",\r\n
+  "PE.Controllers.Main.loadImagesTitleText": "Nalaganje slik",\r\n
+  "PE.Controllers.Main.loadImageTextText": "Nalaganje slike...",\r\n
+  "PE.Controllers.Main.loadImageTitleText": "Nalaganje Slike",\r\n
+  "PE.Controllers.Main.loadingDocumentTextText": "Nalaganje dokumenta...",\r\n
+  "PE.Controllers.Main.loadingDocumentTitleText": "Nalaganje Dokumenta",\r\n
+  "PE.Controllers.Main.loadThemeTextText": "Nalaganje teme...",\r\n
+  "PE.Controllers.Main.loadThemeTitleText": "Nalaganje teme",\r\n
+  "PE.Controllers.Main.notcriticalErrorTitle": "Opozorilo",\r\n
+  "PE.Controllers.Main.openTextText": "Odpiranje predstavitve...",\r\n
+  "PE.Controllers.Main.openTitleText": "Odpiranje predstavitve",\r\n
+  "PE.Controllers.Main.printTextText": "Tiskanje predstavitve...",\r\n
+  "PE.Controllers.Main.printTitleText": "Tiskanje predstavitve",\r\n
+  "PE.Controllers.Main.reloadButtonText": "Osveži stran",\r\n
+  "PE.Controllers.Main.requestEditFailedMessageText": "Nekdo v tem trenutku ureja to predstavitev. Prosim ponovno poskusite kasneje.",\r\n
+  "PE.Controllers.Main.requestEditFailedTitleText": "Dostop zavrnjen",\r\n
+  "PE.Controllers.Main.savePreparingText": "Priprava za shranjevanje",\r\n
+  "PE.Controllers.Main.savePreparingTitle": "Priprava za shranjevanje. Prosim počakajte...",\r\n
+  "PE.Controllers.Main.saveTextText": "Shranjevanje predstavitve...",\r\n
+  "PE.Controllers.Main.saveTitleText": "Shranjevanje predstavitve",\r\n
+  "PE.Controllers.Main.splitDividerErrorText": "Število vrstic mora biti razdelilec %1.",\r\n
+  "PE.Controllers.Main.splitMaxColsErrorText": "Število stolpcev mora biti manj kot 1%.",\r\n
+  "PE.Controllers.Main.splitMaxRowsErrorText": "Število vrstic mora biti manj kot %1.",\r\n
+  "PE.Controllers.Main.textAnonymous": "Anonimno",\r\n
+  "PE.Controllers.Main.textCloseTip": "Pritisni za zapiranje namiga",\r\n
+  "PE.Controllers.Main.textLoadingDocument": "Nalaganje Dokumenta",\r\n
+  "PE.Controllers.Main.textShape": "Oblika",\r\n
+  "PE.Controllers.Main.txtBasicShapes": "Osnovne oblike",\r\n
+  "PE.Controllers.Main.txtButtons": "Gumbi",\r\n
+  "PE.Controllers.Main.txtCallouts": "Oblački",\r\n
+  "PE.Controllers.Main.txtCharts": "Grafi",\r\n
+  "PE.Controllers.Main.txtEditingMode": "Nastavi način urejanja...",\r\n
+  "PE.Controllers.Main.txtFiguredArrows": "Figurirane puščice",\r\n
+  "PE.Controllers.Main.txtLines": "Vrste",\r\n
+  "PE.Controllers.Main.txtMath": "Matematika",\r\n
+  "PE.Controllers.Main.txtNeedSynchronize": "Imate posodobitve",\r\n
+  "PE.Controllers.Main.txtRectangles": "Pravokotniki",\r\n
+  "PE.Controllers.Main.txtSldLtTBlank": "Prazen",\r\n
+  "PE.Controllers.Main.txtSldLtTChart": "Graf",\r\n
+  "PE.Controllers.Main.txtSldLtTChartAndTx": "Graf in besedilo",\r\n
+  "PE.Controllers.Main.txtSldLtTClipArtAndTx": "Izrezki in besedilo",\r\n
+  "PE.Controllers.Main.txtSldLtTClipArtAndVertTx": "Izrezki in vertikalno besedilo",\r\n
+  "PE.Controllers.Main.txtSldLtTCust": "Po meri",\r\n
+  "PE.Controllers.Main.txtSldLtTDgm": "Diagram",\r\n
+  "PE.Controllers.Main.txtSldLtTFourObj": "Štiri objekti",\r\n
+  "PE.Controllers.Main.txtSldLtTMediaAndTx": "Mediji in besedilo",\r\n
+  "PE.Controllers.Main.txtSldLtTObj": "Naslov in objekt",\r\n
+  "PE.Controllers.Main.txtSldLtTObjAndTwoObj": "Objekt in dva objekta",\r\n
+  "PE.Controllers.Main.txtSldLtTObjAndTx": "Objekt in besedilo",\r\n
+  "PE.Controllers.Main.txtSldLtTObjOnly": "Objekt",\r\n
+  "PE.Controllers.Main.txtSldLtTObjOverTx": "Objekt nad besedilom",\r\n
+  "PE.Controllers.Main.txtSldLtTObjTx": "Naslov, objekt in Napis",\r\n
+  "PE.Controllers.Main.txtSldLtTPicTx": "Slika in napis",\r\n
+  "PE.Controllers.Main.txtSldLtTSecHead": "Glava oddelka",\r\n
+  "PE.Controllers.Main.txtSldLtTTbl": "Tabela",\r\n
+  "PE.Controllers.Main.txtSldLtTTitle": "Naslov",\r\n
+  "PE.Controllers.Main.txtSldLtTTitleOnly": "Le naslov",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoColTx": "Dvo stolpično besedilo",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoObj": "Dva objekta",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoObjAndObj": "Dva objekta in objekt",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoObjAndTx": "Dva objekta in besedilo",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoObjOverTx": "Dva objekta nad besedilom",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoTxTwoObj": "Dve besedili in dva objekta",\r\n
+  "PE.Controllers.Main.txtSldLtTTx": "Besedilo",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndChart": "Besedilo in graf",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndClipArt": "Besedilo in izrezki",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndMedia": "Besedilo in mediji",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndObj": "Besedilo in objekt",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndTwoObj": "Besedilo in dva objekta",\r\n
+  "PE.Controllers.Main.txtSldLtTTxOverObj": "Besedilo nad objektom",\r\n
+  "PE.Controllers.Main.txtSldLtTVertTitleAndTx": "Vertikalen naslov in besedilo",\r\n
+  "PE.Controllers.Main.txtSldLtTVertTitleAndTxOverChart": "Vertikalen naslov in besedilo nad tabelo",\r\n
+  "PE.Controllers.Main.txtSldLtTVertTx": "Vertikalno besedilo",\r\n
+  "PE.Controllers.Main.txtStarsRibbons": "Zvezde & Trakovi",\r\n
+  "PE.Controllers.Main.unknownErrorText": "Neznana napaka.",\r\n
+  "PE.Controllers.Main.unsupportedBrowserErrorText": "Vaš brskalnik ni podprt.",\r\n
+  "PE.Controllers.Main.uploadImageExtMessage": "Neznan format slike.",\r\n
+  "PE.Controllers.Main.uploadImageFileCountMessage": "Ni naloženih slik.",\r\n
+  "PE.Controllers.Main.uploadImageSizeMessage": "Limit maksimalne velikosti slike presežen.",\r\n
+  "PE.Controllers.Main.uploadImageTextText": "Nalaganje slike...",\r\n
+  "PE.Controllers.Main.uploadImageTitleText": "Nalaganje slike",\r\n
+  "PE.Controllers.Main.warnBrowserIE9": "Aplikacija ima nizke zmogljivosti na IE9. Uporabite IE10 ali več",\r\n
+  "PE.Controllers.Main.warnBrowserZoom": "Nastavitve povečave vašega trenutnega brskalnika niso popolnoma podprte. Prosim ponastavite na privzeto povečanje s pritiskom na Ctrl+0.",\r\n
+  "PE.Controllers.Main.warnProcessRightsChange": "Pravica, da urejate datoteko je bila zavrnjena.",\r\n
+  "PE.Controllers.Statusbar.zoomText": "Povečava {0}%",\r\n
+  "PE.Controllers.Toolbar.textEmptyImgUrl": "Določiti morate URL slike.",\r\n
+  "PE.Controllers.Toolbar.textFontSizeErr": "Vnesena vrednost je nepravilna.<br>Prosim vnesite numerično vrednost med 1 in 100",\r\n
+  "PE.Controllers.Toolbar.textWarning": "Opozorilo",\r\n
+  "PE.Views.ChartSettings.textArea": "Ploščinski grafikon",\r\n
+  "PE.Views.ChartSettings.textBar": "Stolpični grafikon",\r\n
+  "PE.Views.ChartSettings.textChartType": "Spremeni vrsto razpredelnice",\r\n
+  "PE.Views.ChartSettings.textColumn": "Stolpični grafikon",\r\n
+  "PE.Views.ChartSettings.textEditData": "Uredi podatke",\r\n
+  "PE.Views.ChartSettings.textHeight": "Višina",\r\n
+  "PE.Views.ChartSettings.textKeepRatio": "Nenehna razmerja",\r\n
+  "PE.Views.ChartSettings.textLine": "Vrstični grafikon",\r\n
+  "PE.Views.ChartSettings.textPie": "Tortni grafikon",\r\n
+  "PE.Views.ChartSettings.textPoint": "Točkovni grafikon",\r\n
+  "PE.Views.ChartSettings.textSize": "Velikost",\r\n
+  "PE.Views.ChartSettings.textStock": "Založni grafikon",\r\n
+  "PE.Views.ChartSettings.textStyle": "Slog",\r\n
+  "PE.Views.ChartSettings.textWidth": "Širina",\r\n
+  "PE.Views.DocumentHolder.aboveText": "Nad",\r\n
+  "PE.Views.DocumentHolder.addCommentText": "Dodaj komentar",\r\n
+  "PE.Views.DocumentHolder.advancedImageText": "Napredne nastavitve slike",\r\n
+  "PE.Views.DocumentHolder.advancedParagraphText": "Napredne nastavitve besedila",\r\n
+  "PE.Views.DocumentHolder.advancedShapeText": "Napredne nastavitve oblike",\r\n
+  "PE.Views.DocumentHolder.advancedTableText": "Napredne nastavitve tabele",\r\n
+  "PE.Views.DocumentHolder.belowText": "pod",\r\n
+  "PE.Views.DocumentHolder.bottomCellText": "Poravnaj dno",\r\n
+  "PE.Views.DocumentHolder.cellAlignText": "Vertikalna poravnava celic",\r\n
+  "PE.Views.DocumentHolder.cellText": "Celica",\r\n
+  "PE.Views.DocumentHolder.centerCellText": "Poravnaj središče",\r\n
+  "PE.Views.DocumentHolder.columnText": "Stolpec",\r\n
+  "PE.Views.DocumentHolder.deleteColumnText": "Izbriši stolpec",\r\n
+  "PE.Views.DocumentHolder.deleteRowText": "Izbriši vrsto",\r\n
+  "PE.Views.DocumentHolder.deleteTableText": "Izbriši tabelo",\r\n
+  "PE.Views.DocumentHolder.deleteText": "Izbriši",\r\n
+  "PE.Views.DocumentHolder.editChartText": "Uredi podatke",\r\n
+  "PE.Views.DocumentHolder.editHyperlinkText": "Uredi hiperpovezavo",\r\n
+  "PE.Views.DocumentHolder.hyperlinkText": "Hiperpovezava",\r\n
+  "PE.Views.DocumentHolder.insertColumnLeftText": "Stolpec levo",\r\n
+  "PE.Views.DocumentHolder.insertColumnRightText": "Stolpec desno",\r\n
+  "PE.Views.DocumentHolder.insertColumnText": "Vstavi stolpec",\r\n
+  "PE.Views.DocumentHolder.insertRowAboveText": "Vrsta zgoraj",\r\n
+  "PE.Views.DocumentHolder.insertRowBelowText": "Vrsta spodaj",\r\n
+  "PE.Views.DocumentHolder.insertRowText": "Vstavi vrsto",\r\n
+  "PE.Views.DocumentHolder.insertText": "Vstavi",\r\n
+  "PE.Views.DocumentHolder.mergeCellsText": "Združi celice",\r\n
+  "PE.Views.DocumentHolder.originalSizeText": "Privzeta velikost",\r\n
+  "PE.Views.DocumentHolder.removeHyperlinkText": "Odstrani hiperpovezavo",\r\n
+  "PE.Views.DocumentHolder.rowText": "Vrsta",\r\n
+  "PE.Views.DocumentHolder.selectText": "Izberi",\r\n
+  "PE.Views.DocumentHolder.splitCellsText": "Razdeli celico...",\r\n
+  "PE.Views.DocumentHolder.splitCellTitleText": "Razdeli celico",\r\n
+  "PE.Views.DocumentHolder.tableText": "Tabela",\r\n
+  "PE.Views.DocumentHolder.textArrangeBack": "Pošlji k ozadju",\r\n
+  "PE.Views.DocumentHolder.textArrangeBackward": "Premakni nazaj",\r\n
+  "PE.Views.DocumentHolder.textArrangeForward": "Premakni naprej",\r\n
+  "PE.Views.DocumentHolder.textArrangeFront": "Premakni v ospredje",\r\n
+  "PE.Views.DocumentHolder.textCopy": "Kopiraj",\r\n
+  "PE.Views.DocumentHolder.textCut": "Izreži",\r\n
+  "PE.Views.DocumentHolder.textNextPage": "Naslednji diapozitiv",\r\n
+  "PE.Views.DocumentHolder.textPaste": "Prilepi",\r\n
+  "PE.Views.DocumentHolder.textPrevPage": "Prejšnji diapozitiv",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignBottom": "Poravnaj dno",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignCenter": "Poravnaj središče",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignLeft": "Poravnaj levo",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignMiddle": "Poravnaj sredino",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignRight": "Poravnaj desno",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignTop": "Poravnaj vrh",\r\n
+  "PE.Views.DocumentHolder.textSlideSettings": "Nastavitve diapozitiva",\r\n
+  "PE.Views.DocumentHolder.tipIsLocked": "Ta element trenutno ureja drug uporabnik.",\r\n
+  "PE.Views.DocumentHolder.topCellText": "Poravnaj vrh",\r\n
+  "PE.Views.DocumentHolder.txtAlign": "Poravnaj",\r\n
+  "PE.Views.DocumentHolder.txtArrange": "Razporedi",\r\n
+  "PE.Views.DocumentHolder.txtBackground": "Ozadje",\r\n
+  "PE.Views.DocumentHolder.txtChangeLayout": "Spremeni postavitev",\r\n
+  "PE.Views.DocumentHolder.txtDeleteSlide": "Izbriši diapozitiv",\r\n
+  "PE.Views.DocumentHolder.txtDistribHor": "Distributiraj horizontalno",\r\n
+  "PE.Views.DocumentHolder.txtDistribVert": "Distributiraj vertikalno",\r\n
+  "PE.Views.DocumentHolder.txtDuplicateSlide": "Dupliciraj diapozitiv",\r\n
+  "PE.Views.DocumentHolder.txtGroup": "Skupina",\r\n
+  "PE.Views.DocumentHolder.txtNewSlide": "Nov diapozitiv",\r\n
+  "PE.Views.DocumentHolder.txtPressLink": "Pritisnite CTRL in pritisnite povezavo",\r\n
+  "PE.Views.DocumentHolder.txtPreview": "Predogled",\r\n
+  "PE.Views.DocumentHolder.txtSelectAll": "Izberi vse",\r\n
+  "PE.Views.DocumentHolder.txtSlide": "Diapozitiv",\r\n
+  "PE.Views.DocumentHolder.txtUngroup": "Razdruži",\r\n
+  "PE.Views.DocumentHolder.vertAlignText": "Vertikalna poravnava",\r\n
+  "PE.Views.DocumentPreview.goToSlideText": "Pojdi k diapozitivu",\r\n
+  "PE.Views.DocumentPreview.slideIndexText": "Diapozitiv {0} od {1}",\r\n
+  "PE.Views.DocumentPreview.txtClose": "Zapri predogled",\r\n
+  "PE.Views.DocumentPreview.txtFinalMessage": "Konec predogleda diapozitiva. Pritisnite za izhod.",\r\n
+  "PE.Views.DocumentPreview.txtNext": "Naslednji diapozitiv",\r\n
+  "PE.Views.DocumentPreview.txtPageNumInvalid": "Nepravilno število diapozitiva",\r\n
+  "PE.Views.DocumentPreview.txtPause": "Pavziraj predstavitev",\r\n
+  "PE.Views.DocumentPreview.txtPlay": "Začni predstavitev",\r\n
+  "PE.Views.DocumentPreview.txtPrev": "Prejšnji diapozitiv",\r\n
+  "PE.Views.FileMenu.btnAboutCaption": "o",\r\n
+  "PE.Views.FileMenu.btnBackCaption": "Pojdi v dokumente",\r\n
+  "PE.Views.FileMenu.btnCreateNewCaption": "Ustvari nov",\r\n
+  "PE.Views.FileMenu.btnDownloadCaption": "Prenesi kot...",\r\n
+  "PE.Views.FileMenu.btnHelpCaption": "Pomoč...",\r\n
+  "PE.Views.FileMenu.btnInfoCaption": "Informacije predstavitve...",\r\n
+  "PE.Views.FileMenu.btnPrintCaption": "Natisni",\r\n
+  "PE.Views.FileMenu.btnRecentFilesCaption": "Odpri nedavno...",\r\n
+  "PE.Views.FileMenu.btnReturnCaption": "Nazaj k predstavitvi",\r\n
+  "PE.Views.FileMenu.btnSaveCaption": "Shrani",\r\n
+  "PE.Views.FileMenu.btnSettingsCaption": "Napredne nastavitve...",\r\n
+  "PE.Views.FileMenu.btnToEditCaption": "Uredi predstavitev",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.fromBlankText": "Z praznine",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.fromTemplateText": "Z predloge",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.newDescriptionText": "Ustvari novo prazno predstavitev, ki jo boste po ustvaritvi lahko stilizirali in formatirali med urejanjem. Ali pa izberite eno izmed predlog za začetek predstavitve določene vrste ali namena z nekaterimi vnaprej določenimi slogi.",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.newDocumentText": "Nova predstavitev",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.noTemplatesText": "Ni predlog",\r\n
+  "PE.Views.FileMenuPanels.DocumentInfo.txtAuthor": "Avtor",\r\n
+  "PE.Views.FileMenuPanels.DocumentRights.txtBtnAccessRights": "Spremeni pravice dostopa",\r\n
+  "PE.Views.FileMenuPanels.DocumentInfo.txtDate": "Datum nastanka",\r\n
+  "PE.Views.FileMenuPanels.DocumentInfo.txtPlacement": "Lokacija",\r\n
+  "PE.Views.FileMenuPanels.DocumentRights.txtRights": "Osebe, ki imajo pravice",\r\n
+  "PE.Views.FileMenuPanels.DocumentInfo.txtTitle": "Naslov predstavitve",\r\n
+  "PE.Views.FileMenuPanels.Settings.okButtonText": "Uporabi",\r\n
+  "PE.Views.FileMenuPanels.Settings.strAlignGuides": "Vključi vodnike poravnave",\r\n
+  "PE.Views.FileMenuPanels.Settings.strAutosave": "Vključi samodejno shranjevanje",\r\n
+  "PE.Views.FileMenuPanels.Settings.strInputMode": "Vključi hieroglife",\r\n
+  "PE.Views.FileMenuPanels.Settings.strShowChanges": "Sprotne spremembe sodelovanja",\r\n
+  "PE.Views.FileMenuPanels.Settings.strUnit": "Merilna enota",\r\n
+  "PE.Views.FileMenuPanels.Settings.strZoom": "Privzeta vrednost zooma",\r\n
+  "PE.Views.FileMenuPanels.Settings.text10Minutes": "Vsakih 10 minut",\r\n
+  "PE.Views.FileMenuPanels.Settings.text30Minutes": "Vsakih 30 minut",\r\n
+  "PE.Views.FileMenuPanels.Settings.text5Minutes": "Vsakih 5 minut",\r\n
+  "PE.Views.FileMenuPanels.Settings.text60Minutes": "Vsako uro",\r\n
+  "PE.Views.FileMenuPanels.Settings.textAlignGuides": "Navodila poravnave",\r\n
+  "PE.Views.FileMenuPanels.Settings.textAutoSave": "Samodejno shranjevanje",\r\n
+  "PE.Views.FileMenuPanels.Settings.textDisabled": "Onemogočeno",\r\n
+  "PE.Views.FileMenuPanels.Settings.textMinute": "Vsako minuto",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtAll": "Poglej vse",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtCm": "Centimeter",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtFitSlide": "Prilagodi diapozitiv",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtInput": "Nadomestni vhod",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtLast": "Poglej zadnjega",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtPt": "Točka",\r\n
+  "PE.Views.HyperlinkSettingsDialog.cancelButtonText": "Prekliči",\r\n
+  "PE.Views.HyperlinkSettingsDialog.okButtonText": "OK",\r\n
+  "PE.Views.HyperlinkSettingsDialog.strDisplay": "Zaslon",\r\n
+  "PE.Views.HyperlinkSettingsDialog.strLinkTo": "Povezava k",\r\n
+  "PE.Views.HyperlinkSettingsDialog.strPlaceInDocument": "Izberi kraj v tem dokumentu",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textDefault": "Izbran fragment besedila",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textEmptyDesc": "Napis vnesite tu",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textEmptyLink": "Povezavo vnesi tu",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textEmptyTooltip": "Namig vnesite tu",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textExternalLink": "Zunanja povezava",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textInternalLink": "Diapozitiv v tej predstavitvi",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textLinkType": "Vrsta povezave",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textTipText": "Besedila zaslonskega tipa",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textTitle": "Nastavitve hiperpovezave",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtEmpty": "To polje je obvezno",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtFirst": "Prvi diapozitiv",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtLast": "Zadnji diapozitiv",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtNext": "Naslednji diapozitiv",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtNotUrl": "To polje mora biti URL v \\"http://www.example.com\\" formatu",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtPrev": "Prejšnji diapozitiv",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtSlide": "Diapozitiv",\r\n
+  "PE.Views.ImageSettings.textAdvanced": "Prikaži napredne nastavitve",\r\n
+  "PE.Views.ImageSettings.textFromFile": "z datoteke",\r\n
+  "PE.Views.ImageSettings.textFromUrl": "z URL",\r\n
+  "PE.Views.ImageSettings.textHeight": "Višina",\r\n
+  "PE.Views.ImageSettings.textInsert": "Zamenjaj sliko",\r\n
+  "PE.Views.ImageSettings.textOriginalSize": "Privzeta velikost",\r\n
+  "PE.Views.ImageSettings.textSize": "Velikost",\r\n
+  "PE.Views.ImageSettings.textWidth": "Širina",\r\n
+  "PE.Views.ImageSettingsAdvanced.cancelButtonText": "Prekliči",\r\n
+  "PE.Views.ImageSettingsAdvanced.okButtonText": "OK",\r\n
+  "PE.Views.ImageSettingsAdvanced.textHeight": "Višina",\r\n
+  "PE.Views.ImageSettingsAdvanced.textKeepRatio": "Nenehna razmerja",\r\n
+  "PE.Views.ImageSettingsAdvanced.textOriginalSize": "Privzeta velikost",\r\n
+  "PE.Views.ImageSettingsAdvanced.textPosition": "Položaj",\r\n
+  "PE.Views.ImageSettingsAdvanced.textSize": "Velikost",\r\n
+  "PE.Views.ImageSettingsAdvanced.textTitle": "Slika - napredne nastavitve",\r\n
+  "PE.Views.ImageSettingsAdvanced.textWidth": "Širina",\r\n
+  "PE.Views.LeftMenu.tipAbout": "o",\r\n
+  "PE.Views.LeftMenu.tipChat": "Pogovor",\r\n
+  "PE.Views.LeftMenu.tipComments": "Komentarji",\r\n
+  "PE.Views.LeftMenu.tipFile": "Datoteka",\r\n
+  "PE.Views.LeftMenu.tipSearch": "Iskanje",\r\n
+  "PE.Views.LeftMenu.tipSlides": "Diapozitivi",\r\n
+  "PE.Views.LeftMenu.tipSupport": "Povratne informacije & Pomoč",\r\n
+  "PE.Views.LeftMenu.tipTitles": "Naslovi",\r\n
+  "PE.Views.ParagraphSettings.strLineHeight": "Razmik med vrsticami",\r\n
+  "PE.Views.ParagraphSettings.strParagraphSpacing": "Razmik",\r\n
+  "PE.Views.ParagraphSettings.strSpacingAfter": "po",\r\n
+  "PE.Views.ParagraphSettings.strSpacingBefore": "Pred",\r\n
+  "PE.Views.ParagraphSettings.textAdvanced": "Prikaži napredne nastavitve",\r\n
+  "PE.Views.ParagraphSettings.textAt": "na",\r\n
+  "PE.Views.ParagraphSettings.textAtLeast": "Vsaj",\r\n
+  "PE.Views.ParagraphSettings.textAuto": "Večkratno",\r\n
+  "PE.Views.ParagraphSettings.textExact": "Točno",\r\n
+  "PE.Views.ParagraphSettings.txtAutoText": "Samodejno",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.cancelButtonText": "Prekliči",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.noTabs": "Določeni zavihki se bodo pojavili v tem polju",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.okButtonText": "OK",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strAllCaps": "Vse z veliko",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strDoubleStrike": "Dvojno prečrtanje",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strIndentsFirstLine": "Prva vrsta",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strIndentsLeftText": "Levo",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strIndentsRightText": "Desno",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strParagraphFont": "Pisava",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strParagraphIndents": "Zamiki & Postavitev",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strSmallCaps": "mali pokrovčki",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strStrike": "Prečrtano",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strSubscript": "Pripis",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strSuperscript": "Nadpis",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strTabs": "Zavihek",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textAlign": "Poravnava",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textCharacterSpacing": "Razmak znaka",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textDefault": "Prevzeti zavihek",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textEffects": "Učinki",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textRemove": "Odstrani",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textRemoveAll": "Odstrani vse",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textSet": "Določite",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTabCenter": "Center",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTabLeft": "Levo",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTabPosition": "Položaj zavihka",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTabRight": "Desno",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTitle": "Odstavek - Napredne nastavitve",\r\n
+  "PE.Views.RightMenu.txtChartSettings": "Nastavitve grafa",\r\n
+  "PE.Views.RightMenu.txtImageSettings": "Nastavitve slike",\r\n
+  "PE.Views.RightMenu.txtParagraphSettings": "Nastavitve besedila",\r\n
+  "PE.Views.RightMenu.txtShapeSettings": "Nastavitve oblike",\r\n
+  "PE.Views.RightMenu.txtSlideSettings": "Nastavitve diapozitiva",\r\n
+  "PE.Views.RightMenu.txtTableSettings": "Nastavitve tabele",\r\n
+  "PE.Views.ShapeSettings.strBackground": "Barva ozadja",\r\n
+  "PE.Views.ShapeSettings.strChange": "Spremeni samodejno obliko",\r\n
+  "PE.Views.ShapeSettings.strColor": "Barva",\r\n
+  "PE.Views.ShapeSettings.strFill": "Dopolni",\r\n
+  "PE.Views.ShapeSettings.strForeground": "Barva ospredja",\r\n
+  "PE.Views.ShapeSettings.strPattern": "Vzorec",\r\n
+  "PE.Views.ShapeSettings.strSize": "Velikost",\r\n
+  "PE.Views.ShapeSettings.strStroke": "Črta",\r\n
+  "PE.Views.ShapeSettings.strTransparency": "Motnost",\r\n
+  "PE.Views.ShapeSettings.textAdvanced": "Prikaži napredne nastavitve",\r\n
+  "PE.Views.ShapeSettings.textBorderSizeErr": "Vnesena vrednost je nepravilna.<br>Prosim vnesite vrednost med 0 pt in 1584 pt.",\r\n
+  "PE.Views.ShapeSettings.textColor": "Barvna izpolnitev",\r\n
+  "PE.Views.ShapeSettings.textDirection": "Smer",\r\n
+  "PE.Views.ShapeSettings.textEmptyPattern": "Ni vzorcev",\r\n
+  "PE.Views.ShapeSettings.textFromFile": "z datoteke",\r\n
+  "PE.Views.ShapeSettings.textFromUrl": "z URL",\r\n
+  "PE.Views.ShapeSettings.textGradient": "Gradient",\r\n
+  "PE.Views.ShapeSettings.textGradientFill": "Polnjenje gradienta",\r\n
+  "PE.Views.ShapeSettings.textImageTexture": "Slika ali tekstura",\r\n
+  "PE.Views.ShapeSettings.textLinear": "Linearna",\r\n
+  "PE.Views.ShapeSettings.textNewColor": "Barva po meri",\r\n
+  "PE.Views.ShapeSettings.textNoFill": "Ni polnila",\r\n
+  "PE.Views.ShapeSettings.textPatternFill": "Vzorec",\r\n
+  "PE.Views.ShapeSettings.textRadial": "Radial",\r\n
+  "PE.Views.ShapeSettings.textSelectTexture": "Izberi",\r\n
+  "PE.Views.ShapeSettings.textStandartColors": "Standardne barve",\r\n
+  "PE.Views.ShapeSettings.textStretch": "Raztegni",\r\n
+  "PE.Views.ShapeSettings.textStyle": "Slog",\r\n
+  "PE.Views.ShapeSettings.textTexture": "S teksture",\r\n
+  "PE.Views.ShapeSettings.textThemeColors": "Barve teme",\r\n
+  "PE.Views.ShapeSettings.textTile": "Ploščica",\r\n
+  "PE.Views.ShapeSettings.txtBrownPaper": "Rjav papir",\r\n
+  "PE.Views.ShapeSettings.txtCanvas": "Platno",\r\n
+  "PE.Views.ShapeSettings.txtCarton": "Karton",\r\n
+  "PE.Views.ShapeSettings.txtDarkFabric": "Temna tkanina",\r\n
+  "PE.Views.ShapeSettings.txtGrain": "Zrno",\r\n
+  "PE.Views.ShapeSettings.txtGranite": "Granit",\r\n
+  "PE.Views.ShapeSettings.txtGreyPaper": "Siv papir",\r\n
+  "PE.Views.ShapeSettings.txtKnit": "Pleti",\r\n
+  "PE.Views.ShapeSettings.txtLeather": "Usnje",\r\n
+  "PE.Views.ShapeSettings.txtNoBorders": "Ni črte",\r\n
+  "PE.Views.ShapeSettings.txtPapyrus": "Papirus",\r\n
+  "PE.Views.ShapeSettings.txtWood": "Les",\r\n
+  "PE.Views.ShapeSettingsAdvanced.cancelButtonText": "Prekliči",\r\n
+  "PE.Views.ShapeSettingsAdvanced.okButtonText": "OK",\r\n
+  "PE.Views.ShapeSettingsAdvanced.strMargins": "Oblazinjenje besedila",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textArrows": "Puščice",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textBeginSize": "Začetna velikost",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textBeginStyle": "Začetni stil",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textBevel": "Stožčasti",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textBottom": "Dno",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textCapType": "Vrsta pokrovčka",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textEndSize": "Končna velikost",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textEndStyle": "Končni slog",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textFlat": "Ploščat",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textHeight": "Višina",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textJoinType": "Vrsta pridruževanja",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textKeepRatio": "Nenehna razmerja",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textLeft": "Levo",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textLineStyle": "Slog vrste",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textMiter": "Mitre",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textRight": "Desno",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textRound": "Okrogel",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textSize": "Velikost",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textSquare": "Kvadrat",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textTitle": "Oblika - Napredne nastavitve",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textTop": "Vrh",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textWeightArrows": "Uteži & puščice",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textWidth": "Širina",\r\n
+  "PE.Views.ShapeSettingsAdvanced.txtNone": "nič",\r\n
+  "PE.Views.SlideSettings.strBackground": "Barva ozadja",\r\n
+  "PE.Views.SlideSettings.strColor": "Barva",\r\n
+  "PE.Views.SlideSettings.strDelay": "Zamik",\r\n
+  "PE.Views.SlideSettings.strDuration": "Trajanje",\r\n
+  "PE.Views.SlideSettings.strEffect": "Učinek",\r\n
+  "PE.Views.SlideSettings.strFill": "Dopolni",\r\n
+  "PE.Views.SlideSettings.strForeground": "Barva ospredja",\r\n
+  "PE.Views.SlideSettings.strPattern": "Vzorec",\r\n
+  "PE.Views.SlideSettings.strStartOnClick": "Začni z klikom",\r\n
+  "PE.Views.SlideSettings.textAdvanced": "Prikaži napredne nastavitve",\r\n
+  "PE.Views.SlideSettings.textApplyAll": "Uporabi za vse diapozitive",\r\n
+  "PE.Views.SlideSettings.textBlack": "Skozi črno",\r\n
+  "PE.Views.SlideSettings.textBottom": "Dno",\r\n
+  "PE.Views.SlideSettings.textBottomLeft": "Spodaj levo",\r\n
+  "PE.Views.SlideSettings.textBottomRight": "Spodaj desno",\r\n
+  "PE.Views.SlideSettings.textClock": "Ura",\r\n
+  "PE.Views.SlideSettings.textClockwise": "V smeri urinega kazalca",\r\n
+  "PE.Views.SlideSettings.textColor": "Barvna izpolnitev",\r\n
+  "PE.Views.SlideSettings.textCounterclockwise": "V nasprotni smeri urinega kazalca",\r\n
+  "PE.Views.SlideSettings.textCover": "Pokrov",\r\n
+  "PE.Views.SlideSettings.textDirection": "Smer",\r\n
+  "PE.Views.SlideSettings.textEmptyPattern": "Ni vzorcev",\r\n
+  "PE.Views.SlideSettings.textFade": "Zbledi",\r\n
+  "PE.Views.SlideSettings.textFromFile": "z datoteke",\r\n
+  "PE.Views.SlideSettings.textFromUrl": "z URL",\r\n
+  "PE.Views.SlideSettings.textGradient": "Gradient",\r\n
+  "PE.Views.SlideSettings.textGradientFill": "Polnjenje gradienta",\r\n
+  "PE.Views.SlideSettings.textHorizontalIn": "Horizontalno v",\r\n
+  "PE.Views.SlideSettings.textHorizontalOut": "Horizontalno iz",\r\n
+  "PE.Views.SlideSettings.textImageTexture": "Slika ali tekstura",\r\n
+  "PE.Views.SlideSettings.textLeft": "Levo",\r\n
+  "PE.Views.SlideSettings.textLinear": "Linearna",\r\n
+  "PE.Views.SlideSettings.textNewColor": "Barva po meri",\r\n
+  "PE.Views.SlideSettings.textNoFill": "Ni polnila",\r\n
+  "PE.Views.SlideSettings.textNone": "nič",\r\n
+  "PE.Views.SlideSettings.textPatternFill": "Vzorec",\r\n
+  "PE.Views.SlideSettings.textPreview": "Predogled",\r\n
+  "PE.Views.SlideSettings.textPush": "Potisni",\r\n
+  "PE.Views.SlideSettings.textRadial": "Radial",\r\n
+  "PE.Views.SlideSettings.textReset": "Ponastavi spremembe",\r\n
+  "PE.Views.SlideSettings.textRight": "Desno",\r\n
+  "PE.Views.SlideSettings.textSelectTexture": "Izberi",\r\n
+  "PE.Views.SlideSettings.textSmoothly": "Gladko",\r\n
+  "PE.Views.SlideSettings.textSplit": "Razdeli",\r\n
+  "PE.Views.SlideSettings.textStandartColors": "Standardne barve",\r\n
+  "PE.Views.SlideSettings.textStretch": "Raztegni",\r\n
+  "PE.Views.SlideSettings.textStyle": "Slog",\r\n
+  "PE.Views.SlideSettings.textTexture": "S teksture",\r\n
+  "PE.Views.SlideSettings.textThemeColors": "Barve teme",\r\n
+  "PE.Views.SlideSettings.textTile": "Ploščica",\r\n
+  "PE.Views.SlideSettings.textTop": "Vrh",\r\n
+  "PE.Views.SlideSettings.textTopLeft": "Zgoraj levo",\r\n
+  "PE.Views.SlideSettings.textTopRight": "Zgoraj desno",\r\n
+  "PE.Views.SlideSettings.textUnCover": "Razkrij",\r\n
+  "PE.Views.SlideSettings.textVerticalIn": "Vertikalen v",\r\n
+  "PE.Views.SlideSettings.textVerticalOut": "Vertikalen iz",\r\n
+  "PE.Views.SlideSettings.textWedge": "Zagozda",\r\n
+  "PE.Views.SlideSettings.textWipe": "Obriši",\r\n
+  "PE.Views.SlideSettings.textZoom": "Povečava",\r\n
+  "PE.Views.SlideSettings.textZoomIn": "Približaj",\r\n
+  "PE.Views.SlideSettings.textZoomOut": "Oddalji",\r\n
+  "PE.Views.SlideSettings.textZoomRotate": "Povečaj in zavrti",\r\n
+  "PE.Views.SlideSettings.txtBrownPaper": "Rjav papir",\r\n
+  "PE.Views.SlideSettings.txtCanvas": "Platno",\r\n
+  "PE.Views.SlideSettings.txtCarton": "Karton",\r\n
+  "PE.Views.SlideSettings.txtDarkFabric": "Temna tkanina",\r\n
+  "PE.Views.SlideSettings.txtGrain": "Zrno",\r\n
+  "PE.Views.SlideSettings.txtGranite": "Granit",\r\n
+  "PE.Views.SlideSettings.txtGreyPaper": "Siv papir",\r\n
+  "PE.Views.SlideSettings.txtKnit": "Pleti",\r\n
+  "PE.Views.SlideSettings.txtLeather": "Usnje",\r\n
+  "PE.Views.SlideSettings.txtPapyrus": "Papirus",\r\n
+  "PE.Views.SlideSettings.txtWood": "Les",\r\n
+  "PE.Views.SlideSizeSettings.cancelButtonText": "Prekliči",\r\n
+  "PE.Views.SlideSizeSettings.okButtonText": "OK",\r\n
+  "PE.Views.SlideSizeSettings.textHeight": "Višina",\r\n
+  "PE.Views.SlideSizeSettings.textSlideSize": "Velikost diapozitiva",\r\n
+  "PE.Views.SlideSizeSettings.textTitle": "Nastavitve velikosti diapozitiva",\r\n
+  "PE.Views.SlideSizeSettings.textWidth": "Širina",\r\n
+  "PE.Views.SlideSizeSettings.txt35": "35 mm diapozitivov",\r\n
+  "PE.Views.SlideSizeSettings.txtA3": "A3 Papir (297x420 mm)",\r\n
+  "PE.Views.SlideSizeSettings.txtA4": "A4 Papir (210x297 mm)",\r\n
+  "PE.Views.SlideSizeSettings.txtB4": "B4 (ICO) Papir (250x353 mm)Clip Art and Text",\r\n
+  "PE.Views.SlideSizeSettings.txtB5": "B5 (ICO) Papir (176x250 mm)",\r\n
+  "PE.Views.SlideSizeSettings.txtBanner": "Baner",\r\n
+  "PE.Views.SlideSizeSettings.txtCustom": "Po meri",\r\n
+  "PE.Views.SlideSizeSettings.txtLedger": "Knjižni papir (11x17 in)",\r\n
+  "PE.Views.SlideSizeSettings.txtLetter": "Pisemski papir (8.5x11 in)",\r\n
+  "PE.Views.SlideSizeSettings.txtOverhead": "Nadzemne",\r\n
+  "PE.Views.SlideSizeSettings.txtStandard": "Standardno (4:3)",\r\n
+  "PE.Views.SlideSizeSettings.txtWidescreen1": "Širok zaslon (16:9)",\r\n
+  "PE.Views.SlideSizeSettings.txtWidescreen2": "Širok zaslon (16:10)",\r\n
+  "PE.Views.Statusbar.goToPageText": "Pojdi k diapozitivu",\r\n
+  "PE.Views.Statusbar.pageIndexText": "Diapozitiv {0} od {1}",\r\n
+  "PE.Views.Statusbar.tipFitPage": "Prilagodi diapozitiv",\r\n
+  "PE.Views.Statusbar.tipFitWidth": "Prilagodi širino",\r\n
+  "PE.Views.Statusbar.tipMoreUsers": "in %1 uporabnikov.",\r\n
+  "PE.Views.Statusbar.tipShowUsers": "Za ogled vseh uporabnikov pritisnite spodnjo ikono.",\r\n
+  "PE.Views.Statusbar.tipUsers": "Dokument trenutno ureja več uporabnikov",\r\n
+  "PE.Views.Statusbar.tipZoomFactor": "Povečava",\r\n
+  "PE.Views.Statusbar.tipZoomIn": "Približaj",\r\n
+  "PE.Views.Statusbar.tipZoomOut": "Oddalji",\r\n
+  "PE.Views.Statusbar.txtPageNumInvalid": "Nepravilno število diapozitiva",\r\n
+  "PE.Views.TableSettings.deleteColumnText": "Izbriši stolpec",\r\n
+  "PE.Views.TableSettings.deleteRowText": "Izbriši vrsto",\r\n
+  "PE.Views.TableSettings.deleteTableText": "Izbriši tabelo",\r\n
+  "PE.Views.TableSettings.insertColumnLeftText": "Vstavi stolpec levo",\r\n
+  "PE.Views.TableSettings.insertColumnRightText": "Vstavi stolpec desno",\r\n
+  "PE.Views.TableSettings.insertRowAboveText": "Vstavi vrsto zgoraj",\r\n
+  "PE.Views.TableSettings.insertRowBelowText": "Vstavi vrsto spodaj",\r\n
+  "PE.Views.TableSettings.mergeCellsText": "Združi celice",\r\n
+  "PE.Views.TableSettings.selectCellText": "Izberi celico",\r\n
+  "PE.Views.TableSettings.selectColumnText": "Izberi stolpec",\r\n
+  "PE.Views.TableSettings.selectRowText": "Izberi vrstico",\r\n
+  "PE.Views.TableSettings.selectTableText": "Izberi tabelo",\r\n
+  "PE.Views.TableSettings.splitCellsText": "Razdeli celico...",\r\n
+  "PE.Views.TableSettings.splitCellTitleText": "Razdeli celico",\r\n
+  "PE.Views.TableSettings.textAdvanced": "Prikaži napredne nastavitve",\r\n
+  "PE.Views.TableSettings.textBackColor": "Barva ozadja",\r\n
+  "PE.Views.TableSettings.textBanded": "Odvisen",\r\n
+  "PE.Views.TableSettings.textBorderColor": "Barva",\r\n
+  "PE.Views.TableSettings.textBorders": "Stil obrob",\r\n
+  "PE.Views.TableSettings.textColumns": "Stolpci",\r\n
+  "PE.Views.TableSettings.textEdit": "Vrste & Stolpci",\r\n
+  "PE.Views.TableSettings.textEmptyTemplate": "Ni predlog",\r\n
+  "PE.Views.TableSettings.textFirst": "prvi",\r\n
+  "PE.Views.TableSettings.textHeader": "Glava",\r\n
+  "PE.Views.TableSettings.textLast": "zadnji",\r\n
+  "PE.Views.TableSettings.textNewColor": "Barva po meri",\r\n
+  "PE.Views.TableSettings.textRows": "Vrste",\r\n
+  "PE.Views.TableSettings.textSelectBorders": "Izberite meje katere želite spremeniti z uporabo zgoraj izbranega sloga",\r\n
+  "PE.Views.TableSettings.textStandartColors": "Standardne barve",\r\n
+  "PE.Views.TableSettings.textTemplate": "Izberi z predloge",\r\n
+  "PE.Views.TableSettings.textThemeColors": "Barve teme",\r\n
+  "PE.Views.TableSettings.textTotal": "Skupno",\r\n
+  "PE.Views.TableSettings.tipAll": "Nastavi zunanjo mejo in vse notranje črte",\r\n
+  "PE.Views.TableSettings.tipBottom": "nastavi le zunanjo spodnjo mejo",\r\n
+  "PE.Views.TableSettings.tipInner": "Nastavi le notranje črte",\r\n
+  "PE.Views.TableSettings.tipInnerHor": "Nastavi le horizontalne notranje črte",\r\n
+  "PE.Views.TableSettings.tipInnerVert": "Nastavi le vertikalne notranje linije",\r\n
+  "PE.Views.TableSettings.tipLeft": "Nastavi le zunanjo levo mejo",\r\n
+  "PE.Views.TableSettings.tipNone": "Ne nastavi nobene meje",\r\n
+  "PE.Views.TableSettings.tipOuter": "Nastavi le zunanjo mejo",\r\n
+  "PE.Views.TableSettings.tipRight": "Nastavi le zunanjo desno mejo",\r\n
+  "PE.Views.TableSettings.tipTop": "Nastavi le zunanjo zgornjo mejo",\r\n
+  "PE.Views.TableSettings.txtNoBorders": "Ni mej",\r\n
+  "PE.Views.TableSettingsAdvanced.cancelButtonText": "Prekliči",\r\n
+  "PE.Views.TableSettingsAdvanced.okButtonText": "OK",\r\n
+  "PE.Views.TableSettingsAdvanced.textBottom": "Dno",\r\n
+  "PE.Views.TableSettingsAdvanced.textCheckMargins": "Uporabi privzete meje",\r\n
+  "PE.Views.TableSettingsAdvanced.textDefaultMargins": "Privzete meje",\r\n
+  "PE.Views.TableSettingsAdvanced.textLeft": "Levo",\r\n
+  "PE.Views.TableSettingsAdvanced.textMargins": "Meje celice",\r\n
+  "PE.Views.TableSettingsAdvanced.textRight": "Desno",\r\n
+  "PE.Views.TableSettingsAdvanced.textTitle": "Tabela - Napredne nastavitve",\r\n
+  "PE.Views.TableSettingsAdvanced.textTop": "Vrh",\r\n
+  "PE.Views.TableSettingsAdvanced.textWidthSpaces": "Meje",\r\n
+  "PE.Views.Toolbar.mniCustomTable": "Vstavi tabelo po meri",\r\n
+  "PE.Views.Toolbar.mniImageFromFile": "Slika z datoteke",\r\n
+  "PE.Views.Toolbar.mniImageFromUrl": "Slika z URL",\r\n
+  "PE.Views.Toolbar.mniSlideAdvanced": "Napredne nastavitve",\r\n
+  "PE.Views.Toolbar.mniSlideStandard": "Standardno (4:3)",\r\n
+  "PE.Views.Toolbar.mniSlideWide": "Širok zaslon (16:9)",\r\n
+  "PE.Views.Toolbar.textAlignBottom": "Besedilo poravnaj na dno",\r\n
+  "PE.Views.Toolbar.textAlignCenter": "Središčno besedilo",\r\n
+  "PE.Views.Toolbar.textAlignJust": "Upraviči",\r\n
+  "PE.Views.Toolbar.textAlignLeft": "Uskladi Besedilo Levo",\r\n
+  "PE.Views.Toolbar.textAlignMiddle": "Besedilo poravnaj na sredino",\r\n
+  "PE.Views.Toolbar.textAlignRight": "Uskladi Besedilo Desno",\r\n
+  "PE.Views.Toolbar.textAlignTop": "Besedilo poravnaj na vrh",\r\n
+  "PE.Views.Toolbar.textArea": "Ploščinski grafikon",\r\n
+  "PE.Views.Toolbar.textArrangeBack": "Pošlji k ozadju",\r\n
+  "PE.Views.Toolbar.textArrangeBackward": "Premakni nazaj",\r\n
+  "PE.Views.Toolbar.textArrangeForward": "Premakni naprej",\r\n
+  "PE.Views.Toolbar.textArrangeFront": "Premakni v ospredje",\r\n
+  "PE.Views.Toolbar.textBar": "Stolpični grafikon",\r\n
+  "PE.Views.Toolbar.textBold": "Odebeljen",\r\n
+  "PE.Views.Toolbar.textCancel": "Prekliči",\r\n
+  "PE.Views.Toolbar.textColumn": "Stolpični grafikon",\r\n
+  "PE.Views.Toolbar.textCompactView": "Poglej kompaktno orodno vrstico",\r\n
+  "PE.Views.Toolbar.textFitPage": "Prilagodi diapozitiv",\r\n
+  "PE.Views.Toolbar.textFitWidth": "Prilagodi širino",\r\n
+  "PE.Views.Toolbar.textHideLines": "Skrij pravila",\r\n
+  "PE.Views.Toolbar.textHideStatusBar": "Skrij statusno vrstico",\r\n
+  "PE.Views.Toolbar.textHideTitleBar": "Skrij naslovno vrstico",\r\n
+  "PE.Views.Toolbar.textItalic": "Poševno",\r\n
+  "PE.Views.Toolbar.textLine": "Vrstični grafikon",\r\n
+  "PE.Views.Toolbar.textNewColor": "Barva po meri",\r\n
+  "PE.Views.Toolbar.textOK": "OK",\r\n
+  "PE.Views.Toolbar.textPie": "Tortni grafikon",\r\n
+  "PE.Views.Toolbar.textPoint": "Točkovni grafikon",\r\n
+  "PE.Views.Toolbar.textShapeAlignBottom": "Poravnaj dno",\r\n
+  "PE.Views.Toolbar.textShapeAlignCenter": "Poravnaj središče",\r\n
+  "PE.Views.Toolbar.textShapeAlignLeft": "Poravnaj levo",\r\n
+  "PE.Views.Toolbar.textShapeAlignMiddle": "Poravnaj sredino",\r\n
+  "PE.Views.Toolbar.textShapeAlignRight": "Poravnaj desno",\r\n
+  "PE.Views.Toolbar.textShapeAlignTop": "Poravnaj vrh",\r\n
+  "PE.Views.Toolbar.textStandartColors": "Standardne barve",\r\n
+  "PE.Views.Toolbar.textStock": "Založni grafikon",\r\n
+  "PE.Views.Toolbar.textStrikeout": "Prečrtaj",\r\n
+  "PE.Views.Toolbar.textSubscript": "Pripis",\r\n
+  "PE.Views.Toolbar.textSuperscript": "Nadpis",\r\n
+  "PE.Views.Toolbar.textThemeColors": "Barve teme",\r\n
+  "PE.Views.Toolbar.textTitleError": "Napaka",\r\n
+  "PE.Views.Toolbar.textUnderline": "Podčrtaj",\r\n
+  "PE.Views.Toolbar.textZoom": "Povečava",\r\n
+  "PE.Views.Toolbar.tipAddSlide": "Dodaj diapozitiv",\r\n
+  "PE.Views.Toolbar.tipAdvSettings": "Napredne nastavitve",\r\n
+  "PE.Views.Toolbar.tipBack": "Nazaj",\r\n
+  "PE.Views.Toolbar.tipChangeSlide": "Spremeni postavitev diapozitiva",\r\n
+  "PE.Views.Toolbar.tipClearStyle": "Počisti stil",\r\n
+  "PE.Views.Toolbar.tipColorSchemas": "Spremeni barvno shemo",\r\n
+  "PE.Views.Toolbar.tipCopy": "Kopiraj",\r\n
+  "PE.Views.Toolbar.tipCopyStyle": "Kopiraj slog",\r\n
+  "PE.Views.Toolbar.tipDecPrLeft": "Zmanjšaj zamik",\r\n
+  "PE.Views.Toolbar.tipFontColor": "Barva pisave",\r\n
+  "PE.Views.Toolbar.tipFontName": "Ime pisave",\r\n
+  "PE.Views.Toolbar.tipFontSize": "Velikost pisave",\r\n
+  "PE.Views.Toolbar.tipHAligh": "Horizontalno poravnano",\r\n
+  "PE.Views.Toolbar.tipHideBars": "Skrij naslovno vrstico & Statusno vrstico",\r\n
+  "PE.Views.Toolbar.tipIncPrLeft": "Povečajte zamik",\r\n
+  "PE.Views.Toolbar.tipInsertChart": "Vstavi grafikon",\r\n
+  "PE.Views.Toolbar.tipInsertHyperlink": "Dodaj Hiperpovezavo",\r\n
+  "PE.Views.Toolbar.tipInsertImage": "Vstavi sliko",\r\n
+  "PE.Views.Toolbar.tipInsertShape": "Vstavi samodejno obliko",\r\n
+  "PE.Views.Toolbar.tipInsertTable": "Vstavi tabelo",\r\n
+  "PE.Views.Toolbar.tipInsertText": "Vstavi besedilo",\r\n
+  "PE.Views.Toolbar.tipLineSpace": "Razmik med vrsticami",\r\n
+  "PE.Views.Toolbar.tipMarkers": "Krogle",\r\n
+  "PE.Views.Toolbar.tipNewDocument": "Nova predstavitev",\r\n
+  "PE.Views.Toolbar.tipNumbers": "Oštevilčenje",\r\n
+  "PE.Views.Toolbar.tipOpenDocument": "Odpri predstavitev",\r\n
+  "PE.Views.Toolbar.tipPaste": "Prilepi",\r\n
+  "PE.Views.Toolbar.tipPreview": "Začni predogled",\r\n
+  "PE.Views.Toolbar.tipPrint": "Natisni",\r\n
+  "PE.Views.Toolbar.tipRedo": "Ponovite",\r\n
+  "PE.Views.Toolbar.tipSave": "Shrani",\r\n
+  "PE.Views.Toolbar.tipSaveCoauth": "Shranite svoje spremembe, da jih drugi uporabniki lahko vidijo.",\r\n
+  "PE.Views.Toolbar.tipShapeAlign": "Poravnaj obliko",\r\n
+  "PE.Views.Toolbar.tipShapeArrange": "Določi obliko",\r\n
+  "PE.Views.Toolbar.tipSlideSize": "Izberi velikost diapozitiva",\r\n
+  "PE.Views.Toolbar.tipSlideTheme": "Tema diapozitiva",\r\n
+  "PE.Views.Toolbar.tipUndo": "Razveljavi",\r\n
+  "PE.Views.Toolbar.tipVAligh": "Poravnaj vertikalno",\r\n
+  "PE.Views.Toolbar.tipViewSettings": "Poglej nastavitve",\r\n
+  "PE.Views.Toolbar.txtDistribHor": "Distributiraj horizontalno",\r\n
+  "PE.Views.Toolbar.txtDistribVert": "Distributiraj vertikalno",\r\n
+  "PE.Views.Toolbar.txtGroup": "Skupina",\r\n
+  "PE.Views.Toolbar.txtScheme1": "Pisarna",\r\n
+  "PE.Views.Toolbar.txtScheme10": "Mediana",\r\n
+  "PE.Views.Toolbar.txtScheme11": "Metro",\r\n
+  "PE.Views.Toolbar.txtScheme12": "Modul",\r\n
+  "PE.Views.Toolbar.txtScheme13": "Razkošen",\r\n
+  "PE.Views.Toolbar.txtScheme14": "Oriel",\r\n
+  "PE.Views.Toolbar.txtScheme15": "Izvor",\r\n
+  "PE.Views.Toolbar.txtScheme16": "Papir",\r\n
+  "PE.Views.Toolbar.txtScheme17": "Solsticij",\r\n
+  "PE.Views.Toolbar.txtScheme18": "Tehnika",\r\n
+  "PE.Views.Toolbar.txtScheme19": "Trek",\r\n
+  "PE.Views.Toolbar.txtScheme2": "Sivina",\r\n
+  "PE.Views.Toolbar.txtScheme20": "Urban",\r\n
+  "PE.Views.Toolbar.txtScheme21": "Navdušenje",\r\n
+  "PE.Views.Toolbar.txtScheme3": "Apeks",\r\n
+  "PE.Views.Toolbar.txtScheme4": "Vidik",\r\n
+  "PE.Views.Toolbar.txtScheme5": "Državljanski",\r\n
+  "PE.Views.Toolbar.txtScheme6": "Avla",\r\n
+  "PE.Views.Toolbar.txtScheme7": "Kapital",\r\n
+  "PE.Views.Toolbar.txtScheme8": "Tok",\r\n
+  "PE.Views.Toolbar.txtScheme9": "Livarna",\r\n
+  "PE.Views.Toolbar.txtUngroup": "Razdruži"\r\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>49879</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

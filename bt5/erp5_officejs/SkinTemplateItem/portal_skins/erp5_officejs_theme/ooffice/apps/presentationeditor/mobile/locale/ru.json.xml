@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885475.99</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ru.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\r\n
+  "PE.controller.Main.convertationErrorText": "Конвертация не удалась.",\r\n
+  "PE.controller.Main.convertationTimeoutText": "Превышено время ожидания конвертации.",\r\n
+  "PE.controller.Main.criticalErrorExtText": "Нажмите \\"OK\\", чтобы обновить страницу.",\r\n
+  "PE.controller.Main.criticalErrorTitle": "Ошибка",\r\n
+  "PE.controller.Main.downloadErrorText": "Загрузка не удалась.",\r\n
+  "PE.controller.Main.editModeText": "Режим редактирования",\r\n
+  "PE.controller.Main.errorDefaultMessage": "Код ошибки: %1",\r\n
+  "PE.controller.Main.errorKeyEncrypt": "Неизвестный дескриптор ключа",\r\n
+  "PE.controller.Main.errorKeyExpire": "Срок действия дескриптора ключа истек",\r\n
+  "PE.controller.Main.errorUsersExceed": "Превышено количество пользователей, разрешенных согласно тарифному плану",\r\n
+  "PE.controller.Main.notcriticalErrorTitle": "Предупреждение",\r\n
+  "PE.controller.Main.printText": "Печать...",\r\n
+  "PE.controller.Main.reloadButtonText": "Обновить страницу",\r\n
+  "PE.controller.Main.requestEditFailedMessageText": "В настоящее время документ редактируется. Пожалуйста, попробуйте позже.",\r\n
+  "PE.controller.Main.requestEditFailedTitleText": "Доступ запрещен",\r\n
+  "PE.controller.Main.requestEditRightsText": "Запрос прав на редактирование...",\r\n
+  "PE.controller.Main.splitDividerErrorText": "Число строк должно являться делителем для %1",\r\n
+  "PE.controller.Main.splitMaxColsErrorText": "Число столбцов должно быть меньше, чем %1",\r\n
+  "PE.controller.Main.splitMaxRowsErrorText": "Число строк должно быть меньше, чем %1",\r\n
+  "PE.controller.Main.textAnonymous": "Аноним",\r\n
+  "PE.controller.Main.textLoadingDocument": "Загрузка документа",\r\n
+  "PE.controller.Main.unknownErrorText": "Неизвестная ошибка.",\r\n
+  "PE.controller.Main.unsupportedBrowserErrorText": "Ваш браузер не поддерживается.",\r\n
+  "PE.controller.Main.uploadImageExtMessage": "Неизвестный формат изображения.",\r\n
+  "PE.controller.Main.uploadImageFileCountMessage": "Ни одного изображения не загружено.",\r\n
+  "PE.controller.Main.uploadImageSizeMessage": "Превышен максимальный размер изображения.",\r\n
+  "PE.controller.Main.viewModeText": "Режим просмотра",\r\n
+  "PE.controller.phone.Main.pageText": "Страница",\r\n
+  "PE.controller.tablet.Main.pageText": "Страница",\r\n
+  "PE.controller.toolbar.View.txtFinalMessage": "Просмотр слайдов завершен",\r\n
+  "PE.view.phone.toolbar.View.doneText": "Готово",\r\n
+  "PE.view.tablet.toolbar.View.doneText": "Готово"\r\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3106</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
