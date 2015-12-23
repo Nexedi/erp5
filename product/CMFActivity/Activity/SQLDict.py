@@ -167,7 +167,7 @@ class SQLDict(SQLBase):
         for line in result:
           message = Message.load(line.message, uid=line.uid, line=line)
           if not hasattr(message, 'order_validation_text'): # BBB
-            message.order_validation_text = line.order_validation_text
+            message.order_validation_text = self.getOrderValidationText(message)
           self.getExecutableMessageList(activity_tool, message, message_dict,
                                         validation_text_dict, now_date=now_date)
 
