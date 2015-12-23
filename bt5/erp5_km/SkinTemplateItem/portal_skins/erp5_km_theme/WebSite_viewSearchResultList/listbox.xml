@@ -21,6 +21,7 @@
                 <string>list_action</string>
                 <string>list_method</string>
                 <string>select</string>
+                <string>selection_name</string>
                 <string>style_columns</string>
                 <string>title</string>
                 <string>url_columns</string>
@@ -229,6 +230,10 @@
                 <item>
                     <key> <string>select</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>IVAN_WebSite_viewSearchResultList</string> </value>
                 </item>
                 <item>
                     <key> <string>style_columns</string> </key>
