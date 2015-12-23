@@ -145,14 +145,14 @@
   <section class="custom-footer ui-bar-d">\n
     <div class="ui-grid-a ui-responsive">\n
       <div class="ui-block-a">\n
-        <p class="custom-fineprint">&copy; 2014 Nexedi SA. All Rights Reserved.</p>\n
+        <p class="custom-fineprint">&copy; 2015 <a href="http://www.nexedi.com" target="_blank" title="Nexedi Website">Nexedi</a> SA. All Rights Reserved.</p>\n
       </div>\n
       <div class="ui-block-b">\n
         <div class="ui-controlgroup ui-controlgroup-horizontal">\n
           <div class="ui-controlgroup-controls">\n
-            <a href="#" class="ui-btn ui-icon-facebook ui-btn-icon-notext ui-first-child">Facebook</a>\n
-            <a href="#" class="ui-btn ui-icon-twitter ui-btn-icon-notext">Twitter</a>\n
-            <a href="#" class="ui-btn ui-icon-github ui-btn-icon-notext ui-last-child">Github</a>\n
+            <a href="https://www.facebook.com/pages/Nexedi/168462169880320" target="_blank" title="Nexedi on Facebook" class="ui-btn ui-icon-facebook ui-btn-icon-notext ui-first-child">Facebook</a>\n
+            <a href="https://twitter.com/nexedi" class="ui-btn ui-icon-twitter ui-btn-icon-notext" target="_blank" title="Nexedi on Twitter">Twitter</a>\n
+            <a href="https://github.com/nexedi" class="ui-btn ui-icon-github ui-btn-icon-notext ui-last-child" target="_blank" title="Nexedi on Github">Github</a>\n
           </div>\n
         </div>\n
       </div>\n
@@ -287,7 +287,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>supersven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -301,7 +301,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.12330.95.14165</string> </value>
+                <value> <string>944.23124.17070.16913</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -319,8 +319,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432299837.35</float>
-                        <string>GMT</string>
+                        <float>1439884784.49</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
