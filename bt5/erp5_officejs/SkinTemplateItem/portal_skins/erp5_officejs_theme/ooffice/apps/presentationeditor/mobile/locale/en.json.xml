@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885475.61</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>en.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\r\n
+  "PE.controller.Main.convertationErrorText": "Conversion failed.",\r\n
+  "PE.controller.Main.convertationTimeoutText": "Conversion timeout exceeded.",\r\n
+  "PE.controller.Main.criticalErrorExtText": "Press \\"OK\\" to reload the page.",\r\n
+  "PE.controller.Main.criticalErrorTitle": "Error",\r\n
+  "PE.controller.Main.downloadErrorText": "Download failed.",\r\n
+  "PE.controller.Main.editModeText": "Edit Mode",\r\n
+  "PE.controller.Main.errorDefaultMessage": "Error code: %1",\r\n
+  "PE.controller.Main.errorKeyEncrypt": "Unknown key descriptor",\r\n
+  "PE.controller.Main.errorKeyExpire": "Key descriptor expired",\r\n
+  "PE.controller.Main.errorUsersExceed": "The number of users allowed by the pricing plan was exceeded",\r\n
+  "PE.controller.Main.notcriticalErrorTitle": "Warning",\r\n
+  "PE.controller.Main.printText": "Printing...",\r\n
+  "PE.controller.Main.reloadButtonText": "Reload Page",\r\n
+  "PE.controller.Main.requestEditFailedMessageText": "Someone is editing this document right now. Please try again later.",\r\n
+  "PE.controller.Main.requestEditFailedTitleText": "Access denied",\r\n
+  "PE.controller.Main.requestEditRightsText": "Requesting editing rights...",\r\n
+  "PE.controller.Main.splitDividerErrorText": "The number of rows must be a divisor of %1",\r\n
+  "PE.controller.Main.splitMaxColsErrorText": "The number of columns must be less than %1",\r\n
+  "PE.controller.Main.splitMaxRowsErrorText": "The number of rows must be less than %1",\r\n
+  "PE.controller.Main.textAnonymous": "Anonymous",\r\n
+  "PE.controller.Main.textLoadingDocument": "Loading document",\r\n
+  "PE.controller.Main.unknownErrorText": "Unknown error.",\r\n
+  "PE.controller.Main.unsupportedBrowserErrorText": "Your browser is not supported.",\r\n
+  "PE.controller.Main.uploadImageExtMessage": "Unknown image format.",\r\n
+  "PE.controller.Main.uploadImageFileCountMessage": "No images uploaded.",\r\n
+  "PE.controller.Main.uploadImageSizeMessage": "Maximium image size limit exceeded.",\r\n
+  "PE.controller.Main.viewModeText": "View Mode",\r\n
+  "PE.controller.phone.Main.pageText": "Page",\r\n
+  "PE.controller.tablet.Main.pageText": "Page",\r\n
+  "PE.controller.toolbar.View.txtFinalMessage": "The end of slide preview",\r\n
+  "PE.view.phone.toolbar.View.doneText": "Done",\r\n
+  "PE.view.tablet.toolbar.View.doneText": "Done"\r\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2243</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

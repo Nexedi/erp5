@@ -1,0 +1,815 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885473.33</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>en.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\r\n
+  "Common.Controllers.Chat.notcriticalErrorTitle": "Warning",\r\n
+  "Common.Controllers.Chat.textEnterMessage": "Enter your message here",\r\n
+  "Common.Controllers.Chat.textUserLimit": "You are using ONLYOFFICE Free Edition.<br>Only two users can co-edit the document simultaneously.<br>Want more? Consider buying ONLYOFFICE Enterprise Edition.<br><a href=\\"http:\\/\\/www.onlyoffice.com\\/free-edition.aspx\\" target=\\"_blank\\">Read more</a>",\r\n
+  "Common.Controllers.ExternalDiagramEditor.textAnonymous": "Anonymous",\r\n
+  "Common.Controllers.ExternalDiagramEditor.textClose": "Close",\r\n
+  "Common.Controllers.ExternalDiagramEditor.warningText": "The object is disabled because it is being edited by another user.",\r\n
+  "Common.Controllers.ExternalDiagramEditor.warningTitle": "Warning",\r\n
+  "Common.UI.ComboBorderSize.txtNoBorders": "No borders",\r\n
+  "Common.UI.ComboBorderSizeEditable.txtNoBorders": "No borders",\r\n
+  "Common.UI.ComboDataView.emptyComboText": "No styles",\r\n
+  "Common.UI.ExtendedColorDialog.addButtonText": "Add",\r\n
+  "Common.UI.ExtendedColorDialog.cancelButtonText": "Cancel",\r\n
+  "Common.UI.ExtendedColorDialog.textCurrent": "Current",\r\n
+  "Common.UI.ExtendedColorDialog.textHexErr": "The entered value is incorrect.<br>Please enter a value between 000000 and FFFFFF.",\r\n
+  "Common.UI.ExtendedColorDialog.textNew": "New",\r\n
+  "Common.UI.ExtendedColorDialog.textRGBErr": "The entered value is incorrect.<br>Please enter a numeric value between 0 and 255.",\r\n
+  "Common.UI.HSBColorPicker.textNoColor": "No Color",\r\n
+  "Common.UI.SearchDialog.textHighlight": "Highlight results",\r\n
+  "Common.UI.SearchDialog.textMatchCase": "Case sensitive",\r\n
+  "Common.UI.SearchDialog.textReplaceDef": "Enter the replacement text",\r\n
+  "Common.UI.SearchDialog.textSearchStart": "Enter your text here",\r\n
+  "Common.UI.SearchDialog.textTitle": "Search",\r\n
+  "Common.UI.SearchDialog.textTitle2": "Search",\r\n
+  "Common.UI.SearchDialog.textWholeWords": "Whole words only",\r\n
+  "Common.UI.SearchDialog.txtBtnReplace": "Replace",\r\n
+  "Common.UI.SearchDialog.txtBtnReplaceAll": "Replace All",\r\n
+  "Common.UI.SynchronizeTip.textDontShow": "Don\'t show this message again",\r\n
+  "Common.UI.SynchronizeTip.textSynchronize": "The document has been changed by another user.<br/>Please click to save your changes and reload the updates.",\r\n
+  "Common.UI.Window.cancelButtonText": "Cancel",\r\n
+  "Common.UI.Window.closeButtonText": "Close",\r\n
+  "Common.UI.Window.noButtonText": "No",\r\n
+  "Common.UI.Window.okButtonText": "OK",\r\n
+  "Common.UI.Window.textConfirmation": "Confirmation",\r\n
+  "Common.UI.Window.textError": "Error",\r\n
+  "Common.UI.Window.textInformation": "Information",\r\n
+  "Common.UI.Window.textWarning": "Warning",\r\n
+  "Common.UI.Window.yesButtonText": "Yes",\r\n
+  "Common.Views.About.txtAddress": "address: ",\r\n
+  "Common.Views.About.txtAscAddress": "Lubanas st. 125a-25, Riga, Latvia, EU, LV-1021",\r\n
+  "Common.Views.About.txtLicensee": "LICENSEE",\r\n
+  "Common.Views.About.txtLicensor": "LICENSOR",\r\n
+  "Common.Views.About.txtMail": "email: ",\r\n
+  "Common.Views.About.txtPoweredBy": "Powered by",\r\n
+  "Common.Views.About.txtTel": "tel.: ",\r\n
+  "Common.Views.About.txtVersion": "Version ",\r\n
+  "Common.Views.AdvancedSettingsWindow.cancelButtonText": "Cancel",\r\n
+  "Common.Views.AdvancedSettingsWindow.okButtonText": "OK",\r\n
+  "Common.Views.Chat.textSend": "Send",\r\n
+  "Common.Views.Comments.textAdd": "Add",\r\n
+  "Common.Views.Comments.textAddComment": "Add Comment",\r\n
+  "Common.Views.Comments.textAddCommentToDoc": "Add Comment to Document",\r\n
+  "Common.Views.Comments.textAddReply": "Add Reply",\r\n
+  "Common.Views.Comments.textAnonym": "Guest",\r\n
+  "Common.Views.Comments.textCancel": "Cancel",\r\n
+  "Common.Views.Comments.textClose": "Close",\r\n
+  "Common.Views.Comments.textComments": "Comments",\r\n
+  "Common.Views.Comments.textEdit": "Edit",\r\n
+  "Common.Views.Comments.textEnterCommentHint": "Enter your comment here",\r\n
+  "Common.Views.Comments.textOpenAgain": "Open Again",\r\n
+  "Common.Views.Comments.textReply": "Reply",\r\n
+  "Common.Views.Comments.textResolve": "Resolve",\r\n
+  "Common.Views.Comments.textResolved": "Resolved",\r\n
+  "Common.Views.CopyWarningDialog.textDontShow": "Don\'t show this message again",\r\n
+  "Common.Views.CopyWarningDialog.textMsg": "Copy, cut and paste actions using the editor toolbar buttons and context menu actions will be performed within this editor tab only.<br><br>To copy or paste to or from applications outside the editor tab use the following keyboard combinations:",\r\n
+  "Common.Views.CopyWarningDialog.textTitle": "Copy, Cut and Paste Actions",\r\n
+  "Common.Views.CopyWarningDialog.textToCopy": "for Copy",\r\n
+  "Common.Views.CopyWarningDialog.textToCut": "for Cut",\r\n
+  "Common.Views.CopyWarningDialog.textToPaste": "for Paste",\r\n
+  "Common.Views.DocumentAccessDialog.textLoading": "Loading...",\r\n
+  "Common.Views.DocumentAccessDialog.textTitle": "Sharing Settings",\r\n
+  "Common.Views.ExternalDiagramEditor.textClose": "Close",\r\n
+  "Common.Views.ExternalDiagramEditor.textSave": "Save & Exit",\r\n
+  "Common.Views.ExternalDiagramEditor.textTitle": "Chart Editor",\r\n
+  "Common.Views.Header.textBack": "Go to Documents",\r\n
+  "Common.Views.ImageFromUrlDialog.cancelButtonText": "Cancel",\r\n
+  "Common.Views.ImageFromUrlDialog.okButtonText": "OK",\r\n
+  "Common.Views.ImageFromUrlDialog.textUrl": "Paste an image URL:",\r\n
+  "Common.Views.ImageFromUrlDialog.txtEmpty": "This field is required",\r\n
+  "Common.Views.ImageFromUrlDialog.txtNotUrl": "This field should be a URL in the \\"http://www.example.com\\" format",\r\n
+  "Common.Views.InsertTableDialog.cancelButtonText": "Cancel",\r\n
+  "Common.Views.InsertTableDialog.okButtonText": "OK",\r\n
+  "Common.Views.InsertTableDialog.textInvalidRowsCols": "You need to specify valid rows and columns number.",\r\n
+  "Common.Views.InsertTableDialog.txtColumns": "Number of Columns",\r\n
+  "Common.Views.InsertTableDialog.txtMaxText": "The maximum value for this field is {0}.",\r\n
+  "Common.Views.InsertTableDialog.txtMinText": "The minimum value for this field is {0}.",\r\n
+  "Common.Views.InsertTableDialog.txtRows": "Number of Rows",\r\n
+  "Common.Views.InsertTableDialog.txtTitle": "Table Size",\r\n
+  "PE.Controllers.LeftMenu.newDocumentTitle": "Unnamed presentation",\r\n
+  "PE.Controllers.LeftMenu.requestEditRightsText": "Requesting editing rights...",\r\n
+  "PE.Controllers.LeftMenu.textNoTextFound": "The data you have been searching for could not be found. Please adjust your search options.",\r\n
+  "PE.Controllers.Main.applyChangesTextText": "Loading data...",\r\n
+  "PE.Controllers.Main.applyChangesTitleText": "Loading Data",\r\n
+  "PE.Controllers.Main.convertationErrorText": "Conversion failed.",\r\n
+  "PE.Controllers.Main.convertationTimeoutText": "Conversion timeout exceeded.",\r\n
+  "PE.Controllers.Main.criticalErrorExtText": "Press \\"OK\\" to return to document list.",\r\n
+  "PE.Controllers.Main.criticalErrorTitle": "Error",\r\n
+  "PE.Controllers.Main.defaultTitleText": "ONLYOFFICE Presentation Editor",\r\n
+  "PE.Controllers.Main.downloadErrorText": "Download failed.",\r\n
+  "PE.Controllers.Main.downloadTextText": "Downloading presentation...",\r\n
+  "PE.Controllers.Main.downloadTitleText": "Downloading Presentation",\r\n
+  "PE.Controllers.Main.errorCoAuthoringDisconnect": "Server connection lost. The document cannot be edited right now.",\r\n
+  "PE.Controllers.Main.errorDatabaseConnection": "External error.<br>Database connection error. Please contact support in case the error persists.",\r\n
+  "PE.Controllers.Main.errorDataRange": "Incorrect data range.",\r\n
+  "PE.Controllers.Main.errorDefaultMessage": "Error code: %1",\r\n
+  "PE.Controllers.Main.errorFilePassProtect": "The document is password protected and could not be opened.",\r\n
+  "PE.Controllers.Main.errorKeyEncrypt": "Unknown key descriptor",\r\n
+  "PE.Controllers.Main.errorKeyExpire": "Key descriptor expired",\r\n
+  "PE.Controllers.Main.errorProcessSaveResult": "Saving failed.",\r\n
+  "PE.Controllers.Main.errorStockChart": "Incorrect row order. To build a stock chart place the data on the sheet in the following order:<br> opening price, max price, min price, closing price.",\r\n
+  "PE.Controllers.Main.errorUpdateVersion": "The file version has been changed. The page will be reloaded.",\r\n
+  "PE.Controllers.Main.errorUserDrop": "The file cannot be accessed right now.",\r\n
+  "PE.Controllers.Main.errorUsersExceed": "The number of users allowed by the pricing plan was exceeded",\r\n
+  "PE.Controllers.Main.leavePageText": "You have unsaved changes in this presentation. Click \\"Stay on This Page\\", then \\"Save\\" to save them. Click \\"Leave This Page\\" to discard all the unsaved changes.",\r\n
+  "PE.Controllers.Main.loadFontsTextText": "Loading data...",\r\n
+  "PE.Controllers.Main.loadFontsTitleText": "Loading Data",\r\n
+  "PE.Controllers.Main.loadFontTextText": "Loading data...",\r\n
+  "PE.Controllers.Main.loadFontTitleText": "Loading Data",\r\n
+  "PE.Controllers.Main.loadImagesTextText": "Loading images...",\r\n
+  "PE.Controllers.Main.loadImagesTitleText": "Loading Images",\r\n
+  "PE.Controllers.Main.loadImageTextText": "Loading image...",\r\n
+  "PE.Controllers.Main.loadImageTitleText": "Loading Image",\r\n
+  "PE.Controllers.Main.loadingDocumentTextText": "Loading document...",\r\n
+  "PE.Controllers.Main.loadingDocumentTitleText": "Loading Document",\r\n
+  "PE.Controllers.Main.loadThemeTextText": "Loading theme...",\r\n
+  "PE.Controllers.Main.loadThemeTitleText": "Loading Theme",\r\n
+  "PE.Controllers.Main.notcriticalErrorTitle": "Warning",\r\n
+  "PE.Controllers.Main.openTextText": "Opening presentation...",\r\n
+  "PE.Controllers.Main.openTitleText": "Opening Presentation",\r\n
+  "PE.Controllers.Main.printTextText": "Printing presentation...",\r\n
+  "PE.Controllers.Main.printTitleText": "Printing Presentation",\r\n
+  "PE.Controllers.Main.reloadButtonText": "Reload Page",\r\n
+  "PE.Controllers.Main.requestEditFailedMessageText": "Someone is editing this presentation right now. Please try again later.",\r\n
+  "PE.Controllers.Main.requestEditFailedTitleText": "Access denied",\r\n
+  "PE.Controllers.Main.savePreparingText": "Preparing to save",\r\n
+  "PE.Controllers.Main.savePreparingTitle": "Preparing to save. Please wait...",\r\n
+  "PE.Controllers.Main.saveTextText": "Saving presentation...",\r\n
+  "PE.Controllers.Main.saveTitleText": "Saving Presentation",\r\n
+  "PE.Controllers.Main.splitDividerErrorText": "The number of rows must be a divisor of %1.",\r\n
+  "PE.Controllers.Main.splitMaxColsErrorText": "The number of columns must be less than %1.",\r\n
+  "PE.Controllers.Main.splitMaxRowsErrorText": "The number of rows must be less than %1.",\r\n
+  "PE.Controllers.Main.textAnonymous": "Anonymous",\r\n
+  "PE.Controllers.Main.textCloseTip": "\\nClick to close the tip",\r\n
+  "PE.Controllers.Main.textLoadingDocument": "Loading document",\r\n
+  "PE.Controllers.Main.textShape": "Shape",\r\n
+  "PE.Controllers.Main.txtBasicShapes": "Basic Shapes",\r\n
+  "PE.Controllers.Main.txtButtons": "Buttons",\r\n
+  "PE.Controllers.Main.txtCallouts": "Callouts",\r\n
+  "PE.Controllers.Main.txtCharts": "Charts",\r\n
+  "PE.Controllers.Main.txtEditingMode": "Set editing mode...",\r\n
+  "PE.Controllers.Main.txtFiguredArrows": "Figured Arrows",\r\n
+  "PE.Controllers.Main.txtLines": "Lines",\r\n
+  "PE.Controllers.Main.txtMath": "Math",\r\n
+  "PE.Controllers.Main.txtNeedSynchronize": "You have updates",\r\n
+  "PE.Controllers.Main.txtRectangles": "Rectangles",\r\n
+  "PE.Controllers.Main.txtSldLtTBlank": "Blank",\r\n
+  "PE.Controllers.Main.txtSldLtTChart": "Chart",\r\n
+  "PE.Controllers.Main.txtSldLtTChartAndTx": "Chart and Text",\r\n
+  "PE.Controllers.Main.txtSldLtTClipArtAndTx": "Clip Art and Text",\r\n
+  "PE.Controllers.Main.txtSldLtTClipArtAndVertTx": "Clip Art and Vertical Text",\r\n
+  "PE.Controllers.Main.txtSldLtTCust": "Custom",\r\n
+  "PE.Controllers.Main.txtSldLtTDgm": "Diagram",\r\n
+  "PE.Controllers.Main.txtSldLtTFourObj": "Four Objects",\r\n
+  "PE.Controllers.Main.txtSldLtTMediaAndTx": "Media and Text",\r\n
+  "PE.Controllers.Main.txtSldLtTObj": "Title and Object",\r\n
+  "PE.Controllers.Main.txtSldLtTObjAndTwoObj": "Object and Two Objects",\r\n
+  "PE.Controllers.Main.txtSldLtTObjAndTx": "Object and Text",\r\n
+  "PE.Controllers.Main.txtSldLtTObjOnly": "Object",\r\n
+  "PE.Controllers.Main.txtSldLtTObjOverTx": "Object over Text",\r\n
+  "PE.Controllers.Main.txtSldLtTObjTx": "Title, Object, and Caption",\r\n
+  "PE.Controllers.Main.txtSldLtTPicTx": "Picture and Caption",\r\n
+  "PE.Controllers.Main.txtSldLtTSecHead": "Section Header",\r\n
+  "PE.Controllers.Main.txtSldLtTTbl": "Table",\r\n
+  "PE.Controllers.Main.txtSldLtTTitle": "Title",\r\n
+  "PE.Controllers.Main.txtSldLtTTitleOnly": "Title Only",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoColTx": "Two Column Text",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoObj": "Two Objects",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoObjAndObj": "Two Objects and Object",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoObjAndTx": "Two Objects and Text",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoObjOverTx": "Two Objects over Text",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoTxTwoObj": "Two Text and Two Objects",\r\n
+  "PE.Controllers.Main.txtSldLtTTx": "Text",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndChart": "Text and Chart",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndClipArt": "Text and Clip Art",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndMedia": "Text and Media",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndObj": "Text and Object",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndTwoObj": "Text and Two Objects",\r\n
+  "PE.Controllers.Main.txtSldLtTTxOverObj": "Text over Object",\r\n
+  "PE.Controllers.Main.txtSldLtTVertTitleAndTx": "Vertical Title and Text",\r\n
+  "PE.Controllers.Main.txtSldLtTVertTitleAndTxOverChart": "Vertical Title and Text Over Chart",\r\n
+  "PE.Controllers.Main.txtSldLtTVertTx": "Vertical Text",\r\n
+  "PE.Controllers.Main.txtStarsRibbons": "Stars & Ribbons",\r\n
+  "PE.Controllers.Main.unknownErrorText": "Unknown error.",\r\n
+  "PE.Controllers.Main.unsupportedBrowserErrorText": "Your browser is not supported.",\r\n
+  "PE.Controllers.Main.uploadImageExtMessage": "Unknown image format.",\r\n
+  "PE.Controllers.Main.uploadImageFileCountMessage": "No images uploaded.",\r\n
+  "PE.Controllers.Main.uploadImageSizeMessage": "Maximum image size limit exceeded.",\r\n
+  "PE.Controllers.Main.uploadImageTextText": "Uploading image...",\r\n
+  "PE.Controllers.Main.uploadImageTitleText": "Uploading Image",\r\n
+  "PE.Controllers.Main.warnBrowserIE9": "The application has low capabilities on IE9. Use IE10 or higher",\r\n
+  "PE.Controllers.Main.warnBrowserZoom": "Your browser current zoom setting is not fully supported. Please reset to the default zoom by pressing Ctrl+0.",\r\n
+  "PE.Controllers.Main.warnProcessRightsChange": "You have been denied the right to edit the file.",\r\n
+  "PE.Controllers.Statusbar.zoomText": "Zoom {0}%",\r\n
+  "PE.Controllers.Toolbar.textEmptyImgUrl": "You need to specify image URL.",\r\n
+  "PE.Controllers.Toolbar.textFontSizeErr": "The entered value is incorrect.<br>Please enter a numeric value between 1 and 100",\r\n
+  "PE.Controllers.Toolbar.textWarning": "Warning",\r\n
+  "PE.Views.ChartSettings.textArea": "Area Chart",\r\n
+  "PE.Views.ChartSettings.textBar": "Bar Chart",\r\n
+  "PE.Views.ChartSettings.textChartType": "Change Chart Type",\r\n
+  "PE.Views.ChartSettings.textColumn": "Column Chart",\r\n
+  "PE.Views.ChartSettings.textEditData": "Edit Data",\r\n
+  "PE.Views.ChartSettings.textHeight": "Height",\r\n
+  "PE.Views.ChartSettings.textKeepRatio": "Constant Proportions",\r\n
+  "PE.Views.ChartSettings.textLine": "Line Chart",\r\n
+  "PE.Views.ChartSettings.textPie": "Pie Chart",\r\n
+  "PE.Views.ChartSettings.textPoint": "Point Chart",\r\n
+  "PE.Views.ChartSettings.textSize": "Size",\r\n
+  "PE.Views.ChartSettings.textStock": "Stock Chart",\r\n
+  "PE.Views.ChartSettings.textStyle": "Style",\r\n
+  "PE.Views.ChartSettings.textWidth": "Width",\r\n
+  "PE.Views.DocumentHolder.aboveText": "Above",\r\n
+  "PE.Views.DocumentHolder.addCommentText": "Add Comment",\r\n
+  "PE.Views.DocumentHolder.advancedImageText": "Image Advanced Settings",\r\n
+  "PE.Views.DocumentHolder.advancedParagraphText": "Text Advanced Settings",\r\n
+  "PE.Views.DocumentHolder.advancedShapeText": "Shape Advanced Settings",\r\n
+  "PE.Views.DocumentHolder.advancedTableText": "Table Advanced Settings",\r\n
+  "PE.Views.DocumentHolder.belowText": "Below",\r\n
+  "PE.Views.DocumentHolder.bottomCellText": "Align Bottom",\r\n
+  "PE.Views.DocumentHolder.cellAlignText": "Cell Vertical Alignment",\r\n
+  "PE.Views.DocumentHolder.cellText": "Cell",\r\n
+  "PE.Views.DocumentHolder.centerCellText": "Align Center",\r\n
+  "PE.Views.DocumentHolder.columnText": "Column",\r\n
+  "PE.Views.DocumentHolder.deleteColumnText": "Delete Column",\r\n
+  "PE.Views.DocumentHolder.deleteRowText": "Delete Row",\r\n
+  "PE.Views.DocumentHolder.deleteTableText": "Delete Table",\r\n
+  "PE.Views.DocumentHolder.deleteText": "Delete",\r\n
+  "PE.Views.DocumentHolder.editChartText": "Edit Data",\r\n
+  "PE.Views.DocumentHolder.editHyperlinkText": "Edit Hyperlink",\r\n
+  "PE.Views.DocumentHolder.hyperlinkText": "Hyperlink",\r\n
+  "PE.Views.DocumentHolder.insertColumnLeftText": "Column Left",\r\n
+  "PE.Views.DocumentHolder.insertColumnRightText": "Column Right",\r\n
+  "PE.Views.DocumentHolder.insertColumnText": "Insert Column",\r\n
+  "PE.Views.DocumentHolder.insertRowAboveText": "Row Above",\r\n
+  "PE.Views.DocumentHolder.insertRowBelowText": "Row Below",\r\n
+  "PE.Views.DocumentHolder.insertRowText": "Insert Row",\r\n
+  "PE.Views.DocumentHolder.insertText": "Insert",\r\n
+  "PE.Views.DocumentHolder.mergeCellsText": "Merge Cells",\r\n
+  "PE.Views.DocumentHolder.originalSizeText": "Default Size",\r\n
+  "PE.Views.DocumentHolder.removeHyperlinkText": "Remove Hyperlink",\r\n
+  "PE.Views.DocumentHolder.rowText": "Row",\r\n
+  "PE.Views.DocumentHolder.selectText": "Select",\r\n
+  "PE.Views.DocumentHolder.splitCellsText": "Split Cell...",\r\n
+  "PE.Views.DocumentHolder.splitCellTitleText": "Split Cell",\r\n
+  "PE.Views.DocumentHolder.tableText": "Table",\r\n
+  "PE.Views.DocumentHolder.textArrangeBack": "Send to Background",\r\n
+  "PE.Views.DocumentHolder.textArrangeBackward": "Move Backward",\r\n
+  "PE.Views.DocumentHolder.textArrangeForward": "Move Forward",\r\n
+  "PE.Views.DocumentHolder.textArrangeFront": "Bring To Foreground",\r\n
+  "PE.Views.DocumentHolder.textCopy": "Copy",\r\n
+  "PE.Views.DocumentHolder.textCut": "Cut",\r\n
+  "PE.Views.DocumentHolder.textNextPage": "Next Slide",\r\n
+  "PE.Views.DocumentHolder.textPaste": "Paste",\r\n
+  "PE.Views.DocumentHolder.textPrevPage": "Previous Slide",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignBottom": "Align Bottom",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignCenter": "Align Center",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignLeft": "Align Left",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignMiddle": "Align Middle",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignRight": "Align Right",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignTop": "Align Top",\r\n
+  "PE.Views.DocumentHolder.textSlideSettings": "Slide Settings",\r\n
+  "PE.Views.DocumentHolder.tipIsLocked": "This element is currently being edited by another user.",\r\n
+  "PE.Views.DocumentHolder.topCellText": "Align Top",\r\n
+  "PE.Views.DocumentHolder.txtAlign": "Align",\r\n
+  "PE.Views.DocumentHolder.txtArrange": "Arrange",\r\n
+  "PE.Views.DocumentHolder.txtBackground": "Background",\r\n
+  "PE.Views.DocumentHolder.txtChangeLayout": "Change Layout",\r\n
+  "PE.Views.DocumentHolder.txtDeleteSlide": "Delete Slide",\r\n
+  "PE.Views.DocumentHolder.txtDistribHor": "Distribute Horizontally",\r\n
+  "PE.Views.DocumentHolder.txtDistribVert": "Distribute Vertically",\r\n
+  "PE.Views.DocumentHolder.txtDuplicateSlide": "Duplicate Slide",\r\n
+  "PE.Views.DocumentHolder.txtGroup": "Group",\r\n
+  "PE.Views.DocumentHolder.txtNewSlide": "New Slide",\r\n
+  "PE.Views.DocumentHolder.txtPressLink": "Press CTRL and click link",\r\n
+  "PE.Views.DocumentHolder.txtPreview": "Preview",\r\n
+  "PE.Views.DocumentHolder.txtSelectAll": "Select All",\r\n
+  "PE.Views.DocumentHolder.txtSlide": "Slide",\r\n
+  "PE.Views.DocumentHolder.txtUngroup": "Ungroup",\r\n
+  "PE.Views.DocumentHolder.vertAlignText": "Vertical Alignment",\r\n
+  "PE.Views.DocumentPreview.goToSlideText": "Go to Slide",\r\n
+  "PE.Views.DocumentPreview.slideIndexText": "Slide {0} of {1}",\r\n
+  "PE.Views.DocumentPreview.txtClose": "Close Preview",\r\n
+  "PE.Views.DocumentPreview.txtFinalMessage": "The end of slide preview. Click to exit.",\r\n
+  "PE.Views.DocumentPreview.txtNext": "Next Slide",\r\n
+  "PE.Views.DocumentPreview.txtPageNumInvalid": "Invalid slide number",\r\n
+  "PE.Views.DocumentPreview.txtPause": "Pause Presentation",\r\n
+  "PE.Views.DocumentPreview.txtPlay": "Start Presentation",\r\n
+  "PE.Views.DocumentPreview.txtPrev": "Previous Slide",\r\n
+  "PE.Views.FileMenu.btnAboutCaption": "About",\r\n
+  "PE.Views.FileMenu.btnBackCaption": "Go to Documents",\r\n
+  "PE.Views.FileMenu.btnCreateNewCaption": "Create New",\r\n
+  "PE.Views.FileMenu.btnDownloadCaption": "Download as...",\r\n
+  "PE.Views.FileMenu.btnHelpCaption": "Help...",\r\n
+  "PE.Views.FileMenu.btnInfoCaption": "Presentation Info...",\r\n
+  "PE.Views.FileMenu.btnRightsCaption": "Access Rights...",\r\n
+  "PE.Views.FileMenu.btnPrintCaption": "Print",\r\n
+  "PE.Views.FileMenu.btnRecentFilesCaption": "Open Recent...",\r\n
+  "PE.Views.FileMenu.btnReturnCaption": "Back to Presentation",\r\n
+  "PE.Views.FileMenu.btnSaveCaption": "Save",\r\n
+  "PE.Views.FileMenu.btnSettingsCaption": "Advanced Settings...",\r\n
+  "PE.Views.FileMenu.btnToEditCaption": "Edit Presentation",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.fromBlankText": "From Blank",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.fromTemplateText": "From Template",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.newDescriptionText": "Create a new blank presentation which you will be able to style and format after it is created during the editing. Or choose one of the templates to start a presentation of a certain type or purpose where some styles have already been pre-applied.",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.newDocumentText": "New Presentation",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.noTemplatesText": "There are no templates",\r\n
+  "PE.Views.FileMenuPanels.DocumentInfo.txtAuthor": "Author",\r\n
+  "PE.Views.FileMenuPanels.DocumentRights.txtBtnAccessRights": "Change access rights",\r\n
+  "PE.Views.FileMenuPanels.DocumentInfo.txtDate": "Creation Date",\r\n
+  "PE.Views.FileMenuPanels.DocumentInfo.txtPlacement": "Location",\r\n
+  "PE.Views.FileMenuPanels.DocumentRights.txtRights": "Persons who have rights",\r\n
+  "PE.Views.FileMenuPanels.DocumentInfo.txtTitle": "Presentation Title",\r\n
+  "PE.Views.FileMenuPanels.Settings.okButtonText": "Apply",\r\n
+  "PE.Views.FileMenuPanels.Settings.strAlignGuides": "Turn on alignment guides",\r\n
+  "PE.Views.FileMenuPanels.Settings.strAutosave": "Turn on autosave",\r\n
+  "PE.Views.FileMenuPanels.Settings.strInputMode": "Turn on hieroglyphs",\r\n
+  "PE.Views.FileMenuPanels.Settings.strShowChanges": "Realtime Collaboration Changes",\r\n
+  "PE.Views.FileMenuPanels.Settings.strUnit": "Unit of Measurement",\r\n
+  "PE.Views.FileMenuPanels.Settings.strZoom": "Default Zoom Value",\r\n
+  "PE.Views.FileMenuPanels.Settings.text10Minutes": "Every 10 Minutes",\r\n
+  "PE.Views.FileMenuPanels.Settings.text30Minutes": "Every 30 Minutes",\r\n
+  "PE.Views.FileMenuPanels.Settings.text5Minutes": "Every 5 Minutes",\r\n
+  "PE.Views.FileMenuPanels.Settings.text60Minutes": "Every Hour",\r\n
+  "PE.Views.FileMenuPanels.Settings.textAlignGuides": "Alignment Guides",\r\n
+  "PE.Views.FileMenuPanels.Settings.textAutoSave": "Autosave",\r\n
+  "PE.Views.FileMenuPanels.Settings.textDisabled": "Disabled",\r\n
+  "PE.Views.FileMenuPanels.Settings.textMinute": "Every Minute",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtAll": "View All",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtCm": "Centimeter",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtFitSlide": "Fit Slide",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtInput": "Alternate Input",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtLast": "View Last",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtPt": "Point",\r\n
+  "PE.Views.HyperlinkSettingsDialog.cancelButtonText": "Cancel",\r\n
+  "PE.Views.HyperlinkSettingsDialog.okButtonText": "OK",\r\n
+  "PE.Views.HyperlinkSettingsDialog.strDisplay": "Display",\r\n
+  "PE.Views.HyperlinkSettingsDialog.strLinkTo": "Link To",\r\n
+  "PE.Views.HyperlinkSettingsDialog.strPlaceInDocument": "Select a Place in This Document",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textDefault": "Selected text fragment",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textEmptyDesc": "Enter caption here",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textEmptyLink": "Enter link here",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textEmptyTooltip": "Enter tooltip here",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textExternalLink": "External Link",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textInternalLink": "Slide In This Presentation",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textLinkType": "Link Type",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textTipText": "ScreenTip Text",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textTitle": "Hyperlink Settings",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtEmpty": "This field is required",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtFirst": "First Slide",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtLast": "Last Slide",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtNext": "Next Slide",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtNotUrl": "This field should be a URL in the \\"http://www.example.com\\" format",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtPrev": "Previous Slide",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtSlide": "Slide",\r\n
+  "PE.Views.ImageSettings.textAdvanced": "Show advanced settings",\r\n
+  "PE.Views.ImageSettings.textFromFile": "From File",\r\n
+  "PE.Views.ImageSettings.textFromUrl": "From URL",\r\n
+  "PE.Views.ImageSettings.textHeight": "Height",\r\n
+  "PE.Views.ImageSettings.textInsert": "Replace Image",\r\n
+  "PE.Views.ImageSettings.textOriginalSize": "Default Size",\r\n
+  "PE.Views.ImageSettings.textSize": "Size",\r\n
+  "PE.Views.ImageSettings.textWidth": "Width",\r\n
+  "PE.Views.ImageSettingsAdvanced.cancelButtonText": "Cancel",\r\n
+  "PE.Views.ImageSettingsAdvanced.okButtonText": "OK",\r\n
+  "PE.Views.ImageSettingsAdvanced.textHeight": "Height",\r\n
+  "PE.Views.ImageSettingsAdvanced.textKeepRatio": "Constant Proportions",\r\n
+  "PE.Views.ImageSettingsAdvanced.textOriginalSize": "Default Size",\r\n
+  "PE.Views.ImageSettingsAdvanced.textPosition": "Position",\r\n
+  "PE.Views.ImageSettingsAdvanced.textSize": "Size",\r\n
+  "PE.Views.ImageSettingsAdvanced.textTitle": "Image - Advanced Settings",\r\n
+  "PE.Views.ImageSettingsAdvanced.textWidth": "Width",\r\n
+  "PE.Views.LeftMenu.tipAbout": "About",\r\n
+  "PE.Views.LeftMenu.tipChat": "Chat",\r\n
+  "PE.Views.LeftMenu.tipComments": "Comments",\r\n
+  "PE.Views.LeftMenu.tipFile": "File",\r\n
+  "PE.Views.LeftMenu.tipSearch": "Search",\r\n
+  "PE.Views.LeftMenu.tipSlides": "Slides",\r\n
+  "PE.Views.LeftMenu.tipSupport": "Feedback & Support",\r\n
+  "PE.Views.LeftMenu.tipTitles": "Titles",\r\n
+  "PE.Views.ParagraphSettings.strLineHeight": "Line Spacing",\r\n
+  "PE.Views.ParagraphSettings.strParagraphSpacing": "Spacing",\r\n
+  "PE.Views.ParagraphSettings.strSpacingAfter": "After",\r\n
+  "PE.Views.ParagraphSettings.strSpacingBefore": "Before",\r\n
+  "PE.Views.ParagraphSettings.textAdvanced": "Show advanced settings",\r\n
+  "PE.Views.ParagraphSettings.textAt": "At",\r\n
+  "PE.Views.ParagraphSettings.textAtLeast": "At least",\r\n
+  "PE.Views.ParagraphSettings.textAuto": "Multiple",\r\n
+  "PE.Views.ParagraphSettings.textExact": "Exactly",\r\n
+  "PE.Views.ParagraphSettings.txtAutoText": "Auto",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.cancelButtonText": "Cancel",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.noTabs": "The specified tabs will appear in this field",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.okButtonText": "OK",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strAllCaps": "All caps",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strDoubleStrike": "Double strikethrough",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strIndentsFirstLine": "First Line",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strIndentsLeftText": "Left",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strIndentsRightText": "Right",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strParagraphFont": "Font",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strParagraphIndents": "Indents & Placement",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strSmallCaps": "Small caps",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strStrike": "Strikethrough",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strSubscript": "Subscript",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strSuperscript": "Superscript",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strTabs": "Tab",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textAlign": "Alignment",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textCharacterSpacing": "Character Spacing",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textDefault": "Default Tab",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textEffects": "Effects",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textRemove": "Remove",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textRemoveAll": "Remove All",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textSet": "Specify",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTabCenter": "Center",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTabLeft": "Left",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTabPosition": "Tab Position",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTabRight": "Right",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTitle": "Paragraph - Advanced Settings",\r\n
+  "PE.Views.RightMenu.txtChartSettings": "Chart Settings",\r\n
+  "PE.Views.RightMenu.txtImageSettings": "Image Settings",\r\n
+  "PE.Views.RightMenu.txtParagraphSettings": "Text Settings",\r\n
+  "PE.Views.RightMenu.txtShapeSettings": "Shape Settings",\r\n
+  "PE.Views.RightMenu.txtSlideSettings": "Slide Settings",\r\n
+  "PE.Views.RightMenu.txtTableSettings": "Table Settings",\r\n
+  "PE.Views.ShapeSettings.strBackground": "Background color",\r\n
+  "PE.Views.ShapeSettings.strChange": "Change Autoshape",\r\n
+  "PE.Views.ShapeSettings.strColor": "Color",\r\n
+  "PE.Views.ShapeSettings.strFill": "Fill",\r\n
+  "PE.Views.ShapeSettings.strForeground": "Foreground color",\r\n
+  "PE.Views.ShapeSettings.strPattern": "Pattern",\r\n
+  "PE.Views.ShapeSettings.strSize": "Size",\r\n
+  "PE.Views.ShapeSettings.strStroke": "Stroke",\r\n
+  "PE.Views.ShapeSettings.strTransparency": "Opacity",\r\n
+  "PE.Views.ShapeSettings.textAdvanced": "Show advanced settings",\r\n
+  "PE.Views.ShapeSettings.textBorderSizeErr": "The entered value is incorrect.<br>Please enter a value between 0 pt and 1584 pt.",\r\n
+  "PE.Views.ShapeSettings.textColor": "Color Fill",\r\n
+  "PE.Views.ShapeSettings.textDirection": "Direction",\r\n
+  "PE.Views.ShapeSettings.textEmptyPattern": "No Pattern",\r\n
+  "PE.Views.ShapeSettings.textFromFile": "From File",\r\n
+  "PE.Views.ShapeSettings.textFromUrl": "From URL",\r\n
+  "PE.Views.ShapeSettings.textGradient": "Gradient",\r\n
+  "PE.Views.ShapeSettings.textGradientFill": "Gradient Fill",\r\n
+  "PE.Views.ShapeSettings.textImageTexture": "Picture or Texture",\r\n
+  "PE.Views.ShapeSettings.textLinear": "Linear",\r\n
+  "PE.Views.ShapeSettings.textNewColor": "Custom Color",\r\n
+  "PE.Views.ShapeSettings.textNoFill": "No Fill",\r\n
+  "PE.Views.ShapeSettings.textPatternFill": "Pattern",\r\n
+  "PE.Views.ShapeSettings.textRadial": "Radial",\r\n
+  "PE.Views.ShapeSettings.textSelectTexture": "Select",\r\n
+  "PE.Views.ShapeSettings.textStandartColors": "Standard Colors",\r\n
+  "PE.Views.ShapeSettings.textStretch": "Stretch",\r\n
+  "PE.Views.ShapeSettings.textStyle": "Style",\r\n
+  "PE.Views.ShapeSettings.textTexture": "From Texture",\r\n
+  "PE.Views.ShapeSettings.textThemeColors": "Theme Colors",\r\n
+  "PE.Views.ShapeSettings.textTile": "Tile",\r\n
+  "PE.Views.ShapeSettings.txtBrownPaper": "Brown Paper",\r\n
+  "PE.Views.ShapeSettings.txtCanvas": "Canvas",\r\n
+  "PE.Views.ShapeSettings.txtCarton": "Carton",\r\n
+  "PE.Views.ShapeSettings.txtDarkFabric": "Dark Fabric",\r\n
+  "PE.Views.ShapeSettings.txtGrain": "Grain",\r\n
+  "PE.Views.ShapeSettings.txtGranite": "Granite",\r\n
+  "PE.Views.ShapeSettings.txtGreyPaper": "Gray Paper",\r\n
+  "PE.Views.ShapeSettings.txtKnit": "Knit",\r\n
+  "PE.Views.ShapeSettings.txtLeather": "Leather",\r\n
+  "PE.Views.ShapeSettings.txtNoBorders": "No Line",\r\n
+  "PE.Views.ShapeSettings.txtPapyrus": "Papyrus",\r\n
+  "PE.Views.ShapeSettings.txtWood": "Wood",\r\n
+  "PE.Views.ShapeSettingsAdvanced.cancelButtonText": "Cancel",\r\n
+  "PE.Views.ShapeSettingsAdvanced.okButtonText": "OK",\r\n
+  "PE.Views.ShapeSettingsAdvanced.strMargins": "Text Padding",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textArrows": "Arrows",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textBeginSize": "Begin Size",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textBeginStyle": "Begin Style",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textBevel": "Bevel",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textBottom": "Bottom",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textCapType": "Cap Type",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textEndSize": "End Size",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textEndStyle": "End Style",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textFlat": "Flat",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textHeight": "Height",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textJoinType": "Join Type",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textKeepRatio": "Constant Proportions",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textLeft": "Left",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textLineStyle": "Line Style",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textMiter": "Miter",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textRight": "Right",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textRound": "Round",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textSize": "Size",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textSquare": "Square",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textTitle": "Shape - Advanced Settings",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textTop": "Top",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textWeightArrows": "Weights & Arrows",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textWidth": "Width",\r\n
+  "PE.Views.ShapeSettingsAdvanced.txtNone": "None",\r\n
+  "PE.Views.SlideSettings.strBackground": "Background color",\r\n
+  "PE.Views.SlideSettings.strColor": "Color",\r\n
+  "PE.Views.SlideSettings.strDelay": "Delay",\r\n
+  "PE.Views.SlideSettings.strDuration": "Duration",\r\n
+  "PE.Views.SlideSettings.strEffect": "Effect",\r\n
+  "PE.Views.SlideSettings.strFill": "Fill",\r\n
+  "PE.Views.SlideSettings.strForeground": "Foreground color",\r\n
+  "PE.Views.SlideSettings.strPattern": "Pattern",\r\n
+  "PE.Views.SlideSettings.strStartOnClick": "Start On Click",\r\n
+  "PE.Views.SlideSettings.textAdvanced": "Show advanced settings",\r\n
+  "PE.Views.SlideSettings.textApplyAll": "Apply to All Slides",\r\n
+  "PE.Views.SlideSettings.textBlack": "Through Black",\r\n
+  "PE.Views.SlideSettings.textBottom": "Bottom",\r\n
+  "PE.Views.SlideSettings.textBottomLeft": "Bottom Left",\r\n
+  "PE.Views.SlideSettings.textBottomRight": "Bottom Right",\r\n
+  "PE.Views.SlideSettings.textClock": "Clock",\r\n
+  "PE.Views.SlideSettings.textClockwise": "Clockwise",\r\n
+  "PE.Views.SlideSettings.textColor": "Color Fill",\r\n
+  "PE.Views.SlideSettings.textCounterclockwise": "Counterclockwise",\r\n
+  "PE.Views.SlideSettings.textCover": "Cover",\r\n
+  "PE.Views.SlideSettings.textDirection": "Direction",\r\n
+  "PE.Views.SlideSettings.textEmptyPattern": "No Pattern",\r\n
+  "PE.Views.SlideSettings.textFade": "Fade",\r\n
+  "PE.Views.SlideSettings.textFromFile": "From File",\r\n
+  "PE.Views.SlideSettings.textFromUrl": "From URL",\r\n
+  "PE.Views.SlideSettings.textGradient": "Gradient",\r\n
+  "PE.Views.SlideSettings.textGradientFill": "Gradient Fill",\r\n
+  "PE.Views.SlideSettings.textHorizontalIn": "Horizontal In",\r\n
+  "PE.Views.SlideSettings.textHorizontalOut": "Horizontal Out",\r\n
+  "PE.Views.SlideSettings.textImageTexture": "Picture or Texture",\r\n
+  "PE.Views.SlideSettings.textLeft": "Left",\r\n
+  "PE.Views.SlideSettings.textLinear": "Linear",\r\n
+  "PE.Views.SlideSettings.textNewColor": "Custom Color",\r\n
+  "PE.Views.SlideSettings.textNoFill": "No Fill",\r\n
+  "PE.Views.SlideSettings.textNone": "None",\r\n
+  "PE.Views.SlideSettings.textPatternFill": "Pattern",\r\n
+  "PE.Views.SlideSettings.textPreview": "Preview",\r\n
+  "PE.Views.SlideSettings.textPush": "Push",\r\n
+  "PE.Views.SlideSettings.textRadial": "Radial",\r\n
+  "PE.Views.SlideSettings.textReset": "Reset Changes",\r\n
+  "PE.Views.SlideSettings.textRight": "Right",\r\n
+  "PE.Views.SlideSettings.textSelectTexture": "Select",\r\n
+  "PE.Views.SlideSettings.textSmoothly": "Smoothly",\r\n
+  "PE.Views.SlideSettings.textSplit": "Split",\r\n
+  "PE.Views.SlideSettings.textStandartColors": "Standard Colors",\r\n
+  "PE.Views.SlideSettings.textStretch": "Stretch",\r\n
+  "PE.Views.SlideSettings.textStyle": "Style",\r\n
+  "PE.Views.SlideSettings.textTexture": "From Texture",\r\n
+  "PE.Views.SlideSettings.textThemeColors": "Theme Colors",\r\n
+  "PE.Views.SlideSettings.textTile": "Tile",\r\n
+  "PE.Views.SlideSettings.textTop": "Top",\r\n
+  "PE.Views.SlideSettings.textTopLeft": "Top Left",\r\n
+  "PE.Views.SlideSettings.textTopRight": "Top Right",\r\n
+  "PE.Views.SlideSettings.textUnCover": "Uncover",\r\n
+  "PE.Views.SlideSettings.textVerticalIn": "Vertical In",\r\n
+  "PE.Views.SlideSettings.textVerticalOut": "Vertical Out",\r\n
+  "PE.Views.SlideSettings.textWedge": "Wedge",\r\n
+  "PE.Views.SlideSettings.textWipe": "Wipe",\r\n
+  "PE.Views.SlideSettings.textZoom": "Zoom",\r\n
+  "PE.Views.SlideSettings.textZoomIn": "Zoom In",\r\n
+  "PE.Views.SlideSettings.textZoomOut": "Zoom Out",\r\n
+  "PE.Views.SlideSettings.textZoomRotate": "Zoom and Rotate",\r\n
+  "PE.Views.SlideSettings.txtBrownPaper": "Brown Paper",\r\n
+  "PE.Views.SlideSettings.txtCanvas": "Canvas",\r\n
+  "PE.Views.SlideSettings.txtCarton": "Carton",\r\n
+  "PE.Views.SlideSettings.txtDarkFabric": "Dark Fabric",\r\n
+  "PE.Views.SlideSettings.txtGrain": "Grain",\r\n
+  "PE.Views.SlideSettings.txtGranite": "Granite",\r\n
+  "PE.Views.SlideSettings.txtGreyPaper": "Gray Paper",\r\n
+  "PE.Views.SlideSettings.txtKnit": "Knit",\r\n
+  "PE.Views.SlideSettings.txtLeather": "Leather",\r\n
+  "PE.Views.SlideSettings.txtPapyrus": "Papyrus",\r\n
+  "PE.Views.SlideSettings.txtWood": "Wood",\r\n
+  "PE.Views.SlideSizeSettings.cancelButtonText": "Cancel",\r\n
+  "PE.Views.SlideSizeSettings.okButtonText": "OK",\r\n
+  "PE.Views.SlideSizeSettings.textHeight": "Height",\r\n
+  "PE.Views.SlideSizeSettings.textSlideSize": "Slide Size",\r\n
+  "PE.Views.SlideSizeSettings.textTitle": "Slide Size Settings",\r\n
+  "PE.Views.SlideSizeSettings.textWidth": "Width",\r\n
+  "PE.Views.SlideSizeSettings.txt35": "35 mm Slides",\r\n
+  "PE.Views.SlideSizeSettings.txtA3": "A3 Paper (297x420 mm)",\r\n
+  "PE.Views.SlideSizeSettings.txtA4": "A4 Paper (210x297 mm)",\r\n
+  "PE.Views.SlideSizeSettings.txtB4": "B4 (ICO) Paper (250x353 mm)",\r\n
+  "PE.Views.SlideSizeSettings.txtB5": "B5 (ICO) Paper (176x250 mm)",\r\n
+  "PE.Views.SlideSizeSettings.txtBanner": "Banner",\r\n
+  "PE.Views.SlideSizeSettings.txtCustom": "Custom",\r\n
+  "PE.Views.SlideSizeSettings.txtLedger": "Ledger Paper (11x17 in)",\r\n
+  "PE.Views.SlideSizeSettings.txtLetter": "Letter Paper (8.5x11 in)",\r\n
+  "PE.Views.SlideSizeSettings.txtOverhead": "Overhead",\r\n
+  "PE.Views.SlideSizeSettings.txtStandard": "Standard (4:3)",\r\n
+  "PE.Views.SlideSizeSettings.txtWidescreen1": "Widescreen (16:9)",\r\n
+  "PE.Views.SlideSizeSettings.txtWidescreen2": "Widescreen (16:10)",\r\n
+  "PE.Views.Statusbar.goToPageText": "Go to Slide",\r\n
+  "PE.Views.Statusbar.pageIndexText": "Slide {0} of {1}",\r\n
+  "PE.Views.Statusbar.tipFitPage": "Fit Slide",\r\n
+  "PE.Views.Statusbar.tipFitWidth": "Fit Width",\r\n
+  "PE.Views.Statusbar.tipMoreUsers": "and %1 users.",\r\n
+  "PE.Views.Statusbar.tipShowUsers": "To see all users click the icon below.",\r\n
+  "PE.Views.Statusbar.tipUsers": "Document is currently being edited by several users.",\r\n
+  "PE.Views.Statusbar.tipZoomFactor": "Magnification",\r\n
+  "PE.Views.Statusbar.tipZoomIn": "Zoom In",\r\n
+  "PE.Views.Statusbar.tipZoomOut": "Zoom Out",\r\n
+  "PE.Views.Statusbar.txtPageNumInvalid": "Invalid slide number",\r\n
+  "PE.Views.TableSettings.deleteColumnText": "Delete Column",\r\n
+  "PE.Views.TableSettings.deleteRowText": "Delete Row",\r\n
+  "PE.Views.TableSettings.deleteTableText": "Delete Table",\r\n
+  "PE.Views.TableSettings.insertColumnLeftText": "Insert Column Left",\r\n
+  "PE.Views.TableSettings.insertColumnRightText": "Insert Column Right",\r\n
+  "PE.Views.TableSettings.insertRowAboveText": "Insert Row Above",\r\n
+  "PE.Views.TableSettings.insertRowBelowText": "Insert Row Below",\r\n
+  "PE.Views.TableSettings.mergeCellsText": "Merge Cells",\r\n
+  "PE.Views.TableSettings.selectCellText": "Select Cell",\r\n
+  "PE.Views.TableSettings.selectColumnText": "Select Column",\r\n
+  "PE.Views.TableSettings.selectRowText": "Select Row",\r\n
+  "PE.Views.TableSettings.selectTableText": "Select Table",\r\n
+  "PE.Views.TableSettings.splitCellsText": "Split Cell...",\r\n
+  "PE.Views.TableSettings.splitCellTitleText": "Split Cell",\r\n
+  "PE.Views.TableSettings.textAdvanced": "Show advanced settings",\r\n
+  "PE.Views.TableSettings.textBackColor": "Background color",\r\n
+  "PE.Views.TableSettings.textBanded": "Banded",\r\n
+  "PE.Views.TableSettings.textBorderColor": "Color",\r\n
+  "PE.Views.TableSettings.textBorders": "Borders Style",\r\n
+  "PE.Views.TableSettings.textColumns": "Columns",\r\n
+  "PE.Views.TableSettings.textEdit": "Rows & Columns",\r\n
+  "PE.Views.TableSettings.textEmptyTemplate": "No templates",\r\n
+  "PE.Views.TableSettings.textFirst": "First",\r\n
+  "PE.Views.TableSettings.textHeader": "Header",\r\n
+  "PE.Views.TableSettings.textLast": "Last",\r\n
+  "PE.Views.TableSettings.textNewColor": "Custom Color",\r\n
+  "PE.Views.TableSettings.textRows": "Rows",\r\n
+  "PE.Views.TableSettings.textSelectBorders": "Select borders you want to change applying style chosen above",\r\n
+  "PE.Views.TableSettings.textStandartColors": "Standard Colors",\r\n
+  "PE.Views.TableSettings.textTemplate": "Select From Template",\r\n
+  "PE.Views.TableSettings.textThemeColors": "Theme Colors",\r\n
+  "PE.Views.TableSettings.textTotal": "Total",\r\n
+  "PE.Views.TableSettings.tipAll": "Set Outer Border and All Inner Lines",\r\n
+  "PE.Views.TableSettings.tipBottom": "Set Outer Bottom Border Only",\r\n
+  "PE.Views.TableSettings.tipInner": "Set Inner Lines Only",\r\n
+  "PE.Views.TableSettings.tipInnerHor": "Set Horizontal Inner Lines Only",\r\n
+  "PE.Views.TableSettings.tipInnerVert": "Set Vertical Inner Lines Only",\r\n
+  "PE.Views.TableSettings.tipLeft": "Set Outer Left Border Only",\r\n
+  "PE.Views.TableSettings.tipNone": "Set No Borders",\r\n
+  "PE.Views.TableSettings.tipOuter": "Set Outer Border Only",\r\n
+  "PE.Views.TableSettings.tipRight": "Set Outer Right Border Only",\r\n
+  "PE.Views.TableSettings.tipTop": "Set Outer Top Border Only",\r\n
+  "PE.Views.TableSettings.txtNoBorders": "No borders",\r\n
+  "PE.Views.TableSettingsAdvanced.cancelButtonText": "Cancel",\r\n
+  "PE.Views.TableSettingsAdvanced.okButtonText": "OK",\r\n
+  "PE.Views.TableSettingsAdvanced.textBottom": "Bottom",\r\n
+  "PE.Views.TableSettingsAdvanced.textCheckMargins": "Use default margins",\r\n
+  "PE.Views.TableSettingsAdvanced.textDefaultMargins": "Default Margins",\r\n
+  "PE.Views.TableSettingsAdvanced.textLeft": "Left",\r\n
+  "PE.Views.TableSettingsAdvanced.textMargins": "Cell Margins",\r\n
+  "PE.Views.TableSettingsAdvanced.textRight": "Right",\r\n
+  "PE.Views.TableSettingsAdvanced.textTitle": "Table - Advanced Settings",\r\n
+  "PE.Views.TableSettingsAdvanced.textTop": "Top",\r\n
+  "PE.Views.TableSettingsAdvanced.textWidthSpaces": "Margins",\r\n
+  "PE.Views.Toolbar.mniCustomTable": "Insert Custom Table",\r\n
+  "PE.Views.Toolbar.mniImageFromFile": "Picture from File",\r\n
+  "PE.Views.Toolbar.mniImageFromUrl": "Picture from URL",\r\n
+  "PE.Views.Toolbar.mniSlideAdvanced": "Advanced Settings",\r\n
+  "PE.Views.Toolbar.mniSlideStandard": "Standard (4:3)",\r\n
+  "PE.Views.Toolbar.mniSlideWide": "Widescreen (16:9)",\r\n
+  "PE.Views.Toolbar.textAlignBottom": "Align text to the bottom",\r\n
+  "PE.Views.Toolbar.textAlignCenter": "Center text",\r\n
+  "PE.Views.Toolbar.textAlignJust": "Justify",\r\n
+  "PE.Views.Toolbar.textAlignLeft": "Align text left",\r\n
+  "PE.Views.Toolbar.textAlignMiddle": "Align text to the middle",\r\n
+  "PE.Views.Toolbar.textAlignRight": "Align text right",\r\n
+  "PE.Views.Toolbar.textAlignTop": "Align text to the top",\r\n
+  "PE.Views.Toolbar.textArea": "Area Chart",\r\n
+  "PE.Views.Toolbar.textArrangeBack": "Send to Background",\r\n
+  "PE.Views.Toolbar.textArrangeBackward": "Move Backward",\r\n
+  "PE.Views.Toolbar.textArrangeForward": "Move Forward",\r\n
+  "PE.Views.Toolbar.textArrangeFront": "Bring To Foreground",\r\n
+  "PE.Views.Toolbar.textBar": "Bar Chart",\r\n
+  "PE.Views.Toolbar.textBold": "Bold",\r\n
+  "PE.Views.Toolbar.textCancel": "Cancel",\r\n
+  "PE.Views.Toolbar.textColumn": "Column Chart",\r\n
+  "PE.Views.Toolbar.textCompactView": "View Compact Toolbar",\r\n
+  "PE.Views.Toolbar.textFitPage": "Fit Slide",\r\n
+  "PE.Views.Toolbar.textFitWidth": "Fit Width",\r\n
+  "PE.Views.Toolbar.textHideLines": "Hide Rulers",\r\n
+  "PE.Views.Toolbar.textHideStatusBar": "Hide Status Bar",\r\n
+  "PE.Views.Toolbar.textHideTitleBar": "Hide Title Bar",\r\n
+  "PE.Views.Toolbar.textItalic": "Italic",\r\n
+  "PE.Views.Toolbar.textLine": "Line Chart",\r\n
+  "PE.Views.Toolbar.textNewColor": "Custom Color",\r\n
+  "PE.Views.Toolbar.textOK": "OK",\r\n
+  "PE.Views.Toolbar.textPie": "Pie Chart",\r\n
+  "PE.Views.Toolbar.textPoint": "Point Chart",\r\n
+  "PE.Views.Toolbar.textShapeAlignBottom": "Align Bottom",\r\n
+  "PE.Views.Toolbar.textShapeAlignCenter": "Align Center",\r\n
+  "PE.Views.Toolbar.textShapeAlignLeft": "Align Left",\r\n
+  "PE.Views.Toolbar.textShapeAlignMiddle": "Align Middle",\r\n
+  "PE.Views.Toolbar.textShapeAlignRight": "Align Right",\r\n
+  "PE.Views.Toolbar.textShapeAlignTop": "Align Top",\r\n
+  "PE.Views.Toolbar.textStandartColors": "Standard Colors",\r\n
+  "PE.Views.Toolbar.textStock": "Stock Chart",\r\n
+  "PE.Views.Toolbar.textStrikeout": "Strikeout",\r\n
+  "PE.Views.Toolbar.textSubscript": "Subscript",\r\n
+  "PE.Views.Toolbar.textSuperscript": "Superscript",\r\n
+  "PE.Views.Toolbar.textThemeColors": "Theme Colors",\r\n
+  "PE.Views.Toolbar.textTitleError": "Error",\r\n
+  "PE.Views.Toolbar.textUnderline": "Underline",\r\n
+  "PE.Views.Toolbar.textZoom": "Zoom",\r\n
+  "PE.Views.Toolbar.tipAddSlide": "Add Slide",\r\n
+  "PE.Views.Toolbar.tipAdvSettings": "Advanced Settings",\r\n
+  "PE.Views.Toolbar.tipBack": "Back",\r\n
+  "PE.Views.Toolbar.tipChangeSlide": "Change Slide Layout",\r\n
+  "PE.Views.Toolbar.tipClearStyle": "Clear Style",\r\n
+  "PE.Views.Toolbar.tipColorSchemas": "Change Color Scheme",\r\n
+  "PE.Views.Toolbar.tipCopy": "Copy",\r\n
+  "PE.Views.Toolbar.tipCopyStyle": "Copy Style",\r\n
+  "PE.Views.Toolbar.tipDecPrLeft": "Decrease Indent",\r\n
+  "PE.Views.Toolbar.tipFontColor": "Font color",\r\n
+  "PE.Views.Toolbar.tipFontName": "Font Name",\r\n
+  "PE.Views.Toolbar.tipFontSize": "Font Size",\r\n
+  "PE.Views.Toolbar.tipHAligh": "Horizontal Align",\r\n
+  "PE.Views.Toolbar.tipHideBars": "Hide Title bar & Status bar",\r\n
+  "PE.Views.Toolbar.tipIncPrLeft": "Increase Indent",\r\n
+  "PE.Views.Toolbar.tipInsertChart": "Insert Chart",\r\n
+  "PE.Views.Toolbar.tipInsertHyperlink": "Add Hyperlink",\r\n
+  "PE.Views.Toolbar.tipInsertImage": "Insert Picture",\r\n
+  "PE.Views.Toolbar.tipInsertShape": "Insert Autoshape",\r\n
+  "PE.Views.Toolbar.tipInsertTable": "Insert Table",\r\n
+  "PE.Views.Toolbar.tipInsertText": "Insert Text",\r\n
+  "PE.Views.Toolbar.tipLineSpace": "Line Spacing",\r\n
+  "PE.Views.Toolbar.tipMarkers": "Bullets",\r\n
+  "PE.Views.Toolbar.tipNewDocument": "New Presentation",\r\n
+  "PE.Views.Toolbar.tipNumbers": "Numbering",\r\n
+  "PE.Views.Toolbar.tipOpenDocument": "Open Presentation",\r\n
+  "PE.Views.Toolbar.tipPaste": "Paste",\r\n
+  "PE.Views.Toolbar.tipPreview": "Start Preview",\r\n
+  "PE.Views.Toolbar.tipPrint": "Print",\r\n
+  "PE.Views.Toolbar.tipRedo": "Redo",\r\n
+  "PE.Views.Toolbar.tipSave": "Save",\r\n
+  "PE.Views.Toolbar.tipSaveCoauth": "Save your changes for the other users to see them.",\r\n
+  "PE.Views.Toolbar.tipShapeAlign": "Align Shape",\r\n
+  "PE.Views.Toolbar.tipShapeArrange": "Arrange Shape",\r\n
+  "PE.Views.Toolbar.tipSlideSize": "Select Slide Size",\r\n
+  "PE.Views.Toolbar.tipSlideTheme": "Slide Theme",\r\n
+  "PE.Views.Toolbar.tipUndo": "Undo",\r\n
+  "PE.Views.Toolbar.tipVAligh": "Vertical Align",\r\n
+  "PE.Views.Toolbar.tipViewSettings": "View Settings",\r\n
+  "PE.Views.Toolbar.txtDistribHor": "Distribute Horizontally",\r\n
+  "PE.Views.Toolbar.txtDistribVert": "Distribute Vertically",\r\n
+  "PE.Views.Toolbar.txtGroup": "Group",\r\n
+  "PE.Views.Toolbar.txtScheme1": "Office",\r\n
+  "PE.Views.Toolbar.txtScheme10": "Median",\r\n
+  "PE.Views.Toolbar.txtScheme11": "Metro",\r\n
+  "PE.Views.Toolbar.txtScheme12": "Module",\r\n
+  "PE.Views.Toolbar.txtScheme13": "Opulent",\r\n
+  "PE.Views.Toolbar.txtScheme14": "Oriel",\r\n
+  "PE.Views.Toolbar.txtScheme15": "Origin",\r\n
+  "PE.Views.Toolbar.txtScheme16": "Paper",\r\n
+  "PE.Views.Toolbar.txtScheme17": "Solstice",\r\n
+  "PE.Views.Toolbar.txtScheme18": "Technic",\r\n
+  "PE.Views.Toolbar.txtScheme19": "Trek",\r\n
+  "PE.Views.Toolbar.txtScheme2": "Grayscale",\r\n
+  "PE.Views.Toolbar.txtScheme20": "Urban",\r\n
+  "PE.Views.Toolbar.txtScheme21": "Verve",\r\n
+  "PE.Views.Toolbar.txtScheme3": "Apex",\r\n
+  "PE.Views.Toolbar.txtScheme4": "Aspect",\r\n
+  "PE.Views.Toolbar.txtScheme5": "Civic",\r\n
+  "PE.Views.Toolbar.txtScheme6": "Concourse",\r\n
+  "PE.Views.Toolbar.txtScheme7": "Equity",\r\n
+  "PE.Views.Toolbar.txtScheme8": "Flow",\r\n
+  "PE.Views.Toolbar.txtScheme9": "Foundry",\r\n
+  "PE.Views.Toolbar.txtUngroup": "Ungroup"\r\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>48148</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

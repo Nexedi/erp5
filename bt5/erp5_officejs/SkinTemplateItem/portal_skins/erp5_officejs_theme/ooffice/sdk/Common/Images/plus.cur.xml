@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885477.84</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plus.cur</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">AAACAAEADg4AAAYABgBwAwAAFgAAACgAAAAOAAAAHAAAAAEAIAAAAAAASAMAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAERERP9ERET/RERE/0RERP8AAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARERE////////////RERE/wAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABERET///////////9ERET/AAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAERERP///////////0RERP8AAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAARERE////////////RERE/wAAAAAAAAAAAAAAAAAAAAAAAAAA
+RERE/0RERP9ERET/RERE/0RERP9ERET///////////9ERET/RERE/0RERP9ERET/RERE/0RERP9E
+RET/////////////////////////////////////////////////////////////////RERE/0RE
+RP////////////////////////////////////////////////////////////////9ERET/RERE
+/0RERP9ERET/RERE/0RERP9ERET///////////9ERET/RERE/0RERP9ERET/RERE/0RERP8AAAAA
+AAAAAAAAAAAAAAAAAAAAAERERP///////////0RERP8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAARERE////////////RERE/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAABERET///////////9ERET/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAERERP///////////0RERP8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAARERE/0RERP9ERET/RERE/wAAAAAAAAAAAAAAAAAAAAAAAAAA+HwmAPh8JgD4
+fCYA+HwmAPh8JgAAACYAAAAmAAAAJgAAACYA+HwmAPh8JgD4fCYA+HwmAPh8JgA=</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>902</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,815 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885473.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ru.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\r\n
+  "Common.Controllers.Chat.notcriticalErrorTitle": "Предупреждение",\r\n
+  "Common.Controllers.Chat.textEnterMessage": "Введите здесь своё сообщение",\r\n
+  "Common.Controllers.Chat.textUserLimit": "Вы используете бесплатную версию ONLYOFFICE.<br>Только два пользователя одновременно могут совместно редактировать документ.<br>Требуется больше? Рекомендуем приобрести корпоративную версию ONLYOFFICE.<br><a href=\\"http:\\/\\/www.onlyoffice.com\\/free-edition.aspx\\" target=\\"_blank\\">Читать дальше</a>",\r\n
+  "Common.Controllers.ExternalDiagramEditor.textAnonymous": "Аноним",\r\n
+  "Common.Controllers.ExternalDiagramEditor.textClose": "Закрыть",\r\n
+  "Common.Controllers.ExternalDiagramEditor.warningText": "Объект недоступен, так как редактируется другим пользователем.",\r\n
+  "Common.Controllers.ExternalDiagramEditor.warningTitle": "Предупреждение",\r\n
+  "Common.UI.ComboBorderSize.txtNoBorders": "Без границ",\r\n
+  "Common.UI.ComboBorderSizeEditable.txtNoBorders": "Без границ",\r\n
+  "Common.UI.ComboDataView.emptyComboText": "Без стилей",\r\n
+  "Common.UI.ExtendedColorDialog.addButtonText": "Добавить",\r\n
+  "Common.UI.ExtendedColorDialog.cancelButtonText": "Отмена",\r\n
+  "Common.UI.ExtendedColorDialog.textCurrent": "Текущий",\r\n
+  "Common.UI.ExtendedColorDialog.textHexErr": "Введено некорректное значение.<br>Пожалуйста, введите значение от 000000 до FFFFFF.",\r\n
+  "Common.UI.ExtendedColorDialog.textNew": "Новый",\r\n
+  "Common.UI.ExtendedColorDialog.textRGBErr": "Введено некорректное значение.<br>Пожалуйста, введите числовое значение от 0 до 255.",\r\n
+  "Common.UI.HSBColorPicker.textNoColor": "Без цвета",\r\n
+  "Common.UI.SearchDialog.textHighlight": "Выделить результаты",\r\n
+  "Common.UI.SearchDialog.textMatchCase": "С учетом регистра",\r\n
+  "Common.UI.SearchDialog.textReplaceDef": "Введите текст для замены",\r\n
+  "Common.UI.SearchDialog.textSearchStart": "Введите здесь текст",\r\n
+  "Common.UI.SearchDialog.textTitle": "Поиск",\r\n
+  "Common.UI.SearchDialog.textTitle2": "Поиск",\r\n
+  "Common.UI.SearchDialog.textWholeWords": "Только слово целиком",\r\n
+  "Common.UI.SearchDialog.txtBtnReplace": "Заменить",\r\n
+  "Common.UI.SearchDialog.txtBtnReplaceAll": "Заменить все",\r\n
+  "Common.UI.SynchronizeTip.textDontShow": "Больше не показывать это сообщение",\r\n
+  "Common.UI.SynchronizeTip.textSynchronize": "Документ изменен другим пользователем.<br/>Нажмите, чтобы сохранить свои изменения и загрузить обновления.",\r\n
+  "Common.UI.Window.cancelButtonText": "Отмена",\r\n
+  "Common.UI.Window.closeButtonText": "Закрыть",\r\n
+  "Common.UI.Window.noButtonText": "Нет",\r\n
+  "Common.UI.Window.okButtonText": "OK",\r\n
+  "Common.UI.Window.textConfirmation": "Подтверждение",\r\n
+  "Common.UI.Window.textError": "Ошибка",\r\n
+  "Common.UI.Window.textInformation": "Информация",\r\n
+  "Common.UI.Window.textWarning": "Внимание",\r\n
+  "Common.UI.Window.yesButtonText": "Да",\r\n
+  "Common.Views.About.txtAddress": "адрес: ",\r\n
+  "Common.Views.About.txtAscAddress": "Lubanas st. 125a-25, Riga, Latvia, EU, LV-1021",\r\n
+  "Common.Views.About.txtLicensee": "ЛИЦЕНЗИАТ",\r\n
+  "Common.Views.About.txtLicensor": "ЛИЦЕНЗИАР",\r\n
+  "Common.Views.About.txtMail": "email: ",\r\n
+  "Common.Views.About.txtPoweredBy": "Powered by",\r\n
+  "Common.Views.About.txtTel": "тел.: ",\r\n
+  "Common.Views.About.txtVersion": "Версия ",\r\n
+  "Common.Views.AdvancedSettingsWindow.cancelButtonText": "Отмена",\r\n
+  "Common.Views.AdvancedSettingsWindow.okButtonText": "OK",\r\n
+  "Common.Views.Chat.textSend": "Отправить",\r\n
+  "Common.Views.Comments.textAdd": "Добавить",\r\n
+  "Common.Views.Comments.textAddComment": "Добавить",\r\n
+  "Common.Views.Comments.textAddCommentToDoc": "Добавить комментарий к документу",\r\n
+  "Common.Views.Comments.textAddReply": "Добавить ответ",\r\n
+  "Common.Views.Comments.textAnonym": "Гость",\r\n
+  "Common.Views.Comments.textCancel": "Отмена",\r\n
+  "Common.Views.Comments.textClose": "Закрыть",\r\n
+  "Common.Views.Comments.textComments": "Комментарии",\r\n
+  "Common.Views.Comments.textEdit": "Правка",\r\n
+  "Common.Views.Comments.textEnterCommentHint": "Введите здесь свой комментарий",\r\n
+  "Common.Views.Comments.textOpenAgain": "Открыть снова",\r\n
+  "Common.Views.Comments.textReply": "Ответить",\r\n
+  "Common.Views.Comments.textResolve": "Решить",\r\n
+  "Common.Views.Comments.textResolved": "Решено",\r\n
+  "Common.Views.CopyWarningDialog.textDontShow": "Больше не показывать это сообщение",\r\n
+  "Common.Views.CopyWarningDialog.textMsg": "Операции копирования, вырезания и вставки можно выполнить с помощью кнопок на панели инструментов и команд контекстного меню только в этой вкладке редактора.<br><br>Для копирования в другие приложения и вставки из них используйте следующие сочетания клавиш:",\r\n
+  "Common.Views.CopyWarningDialog.textTitle": "Операции копирования, вырезания и вставки",\r\n
+  "Common.Views.CopyWarningDialog.textToCopy": "для копирования",\r\n
+  "Common.Views.CopyWarningDialog.textToCut": "для вырезания",\r\n
+  "Common.Views.CopyWarningDialog.textToPaste": "для вставки",\r\n
+  "Common.Views.DocumentAccessDialog.textLoading": "Загрузка...",\r\n
+  "Common.Views.DocumentAccessDialog.textTitle": "Настройки совместного доступа",\r\n
+  "Common.Views.ExternalDiagramEditor.textClose": "Закрыть",\r\n
+  "Common.Views.ExternalDiagramEditor.textSave": "Сохранить и выйти",\r\n
+  "Common.Views.ExternalDiagramEditor.textTitle": "Редактор диаграмм",\r\n
+  "Common.Views.Header.textBack": "Перейти к Документам",\r\n
+  "Common.Views.ImageFromUrlDialog.cancelButtonText": "Отмена",\r\n
+  "Common.Views.ImageFromUrlDialog.okButtonText": "OK",\r\n
+  "Common.Views.ImageFromUrlDialog.textUrl": "Вставьте URL изображения:",\r\n
+  "Common.Views.ImageFromUrlDialog.txtEmpty": "Это поле обязательно для заполнения",\r\n
+  "Common.Views.ImageFromUrlDialog.txtNotUrl": "Это поле должно быть URL-адресом в формате \\"http://www.example.com\\"",\r\n
+  "Common.Views.InsertTableDialog.cancelButtonText": "Отмена",\r\n
+  "Common.Views.InsertTableDialog.okButtonText": "OK",\r\n
+  "Common.Views.InsertTableDialog.textInvalidRowsCols": "Необходимо указать допустимое количество строк и столбцов.",\r\n
+  "Common.Views.InsertTableDialog.txtColumns": "Количество столбцов",\r\n
+  "Common.Views.InsertTableDialog.txtMaxText": "Максимальное значение для этого поля - {0}.",\r\n
+  "Common.Views.InsertTableDialog.txtMinText": "Минимальное значение для этого поля - {0}.",\r\n
+  "Common.Views.InsertTableDialog.txtRows": "Количество строк",\r\n
+  "Common.Views.InsertTableDialog.txtTitle": "Размер таблицы",\r\n
+  "PE.Controllers.LeftMenu.newDocumentTitle": "Презентация без имени",\r\n
+  "PE.Controllers.LeftMenu.requestEditRightsText": "Запрос прав на редактирование...",\r\n
+  "PE.Controllers.LeftMenu.textNoTextFound": "Искомые данные не найдены. Пожалуйста, измените параметры поиска.",\r\n
+  "PE.Controllers.Main.applyChangesTextText": "Загрузка данных...",\r\n
+  "PE.Controllers.Main.applyChangesTitleText": "Загрузка данных",\r\n
+  "PE.Controllers.Main.convertationErrorText": "Конвертация не удалась.",\r\n
+  "PE.Controllers.Main.convertationTimeoutText": "Превышено время ожидания конвертации.",\r\n
+  "PE.Controllers.Main.criticalErrorExtText": "Нажмите \\"OK\\", чтобы вернуться к списку документов.",\r\n
+  "PE.Controllers.Main.criticalErrorTitle": "Ошибка",\r\n
+  "PE.Controllers.Main.defaultTitleText": "ONLYOFFICE Presentation Editor",\r\n
+  "PE.Controllers.Main.downloadErrorText": "Загрузка не удалась.",\r\n
+  "PE.Controllers.Main.downloadTextText": "Загрузка презентации...",\r\n
+  "PE.Controllers.Main.downloadTitleText": "Загрузка презентации",\r\n
+  "PE.Controllers.Main.errorCoAuthoringDisconnect": "Потеряно соединение с сервером. В данный момент нельзя отредактировать документ.",\r\n
+  "PE.Controllers.Main.errorDatabaseConnection": "Внешняя ошибка.<br>Ошибка подключения к базе данных. Если ошибка повторяется, пожалуйста, обратитесь в службу поддержки.",\r\n
+  "PE.Controllers.Main.errorDataRange": "Некорректный диапазон данных.",\r\n
+  "PE.Controllers.Main.errorDefaultMessage": "Код ошибки: %1",\r\n
+  "PE.Controllers.Main.errorFilePassProtect": "Документ защищен паролем и не может быть открыт.",\r\n
+  "PE.Controllers.Main.errorKeyEncrypt": "Неизвестный дескриптор ключа",\r\n
+  "PE.Controllers.Main.errorKeyExpire": "Срок действия дескриптора ключа истек",\r\n
+  "PE.Controllers.Main.errorProcessSaveResult": "Сбой при сохранении.",\r\n
+  "PE.Controllers.Main.errorStockChart": "Неверный порядок строк. Чтобы создать биржевую диаграмму, расположите данные на листе в следующем порядке:<br> цена открытия, максимальная цена, минимальная цена, цена закрытия.",\r\n
+  "PE.Controllers.Main.errorUpdateVersion": "Версия файла была изменена. Страница будет перезагружена.",\r\n
+  "PE.Controllers.Main.errorUserDrop": "В настоящий момент файл недоступен.",\r\n
+  "PE.Controllers.Main.errorUsersExceed": "Превышено количество пользователей, разрешенных согласно тарифному плану",\r\n
+  "PE.Controllers.Main.leavePageText": "Презентация содержит несохраненные изменения. Чтобы сохранить их, нажмите \\"Остаться на этой странице\\", затем \\"Сохранить\\". Нажмите \\"Покинуть эту страницу\\", чтобы сбросить все несохраненные изменения.",\r\n
+  "PE.Controllers.Main.loadFontsTextText": "Загрузка данных...",\r\n
+  "PE.Controllers.Main.loadFontsTitleText": "Загрузка данных",\r\n
+  "PE.Controllers.Main.loadFontTextText": "Загрузка данных...",\r\n
+  "PE.Controllers.Main.loadFontTitleText": "Загрузка данных",\r\n
+  "PE.Controllers.Main.loadImagesTextText": "Загрузка изображений...",\r\n
+  "PE.Controllers.Main.loadImagesTitleText": "Загрузка изображений",\r\n
+  "PE.Controllers.Main.loadImageTextText": "Загрузка изображения...",\r\n
+  "PE.Controllers.Main.loadImageTitleText": "Загрузка изображения",\r\n
+  "PE.Controllers.Main.loadingDocumentTextText": "Загрузка документа...",\r\n
+  "PE.Controllers.Main.loadingDocumentTitleText": "Загрузка документа",\r\n
+  "PE.Controllers.Main.loadThemeTextText": "Загрузка темы...",\r\n
+  "PE.Controllers.Main.loadThemeTitleText": "Загрузка темы",\r\n
+  "PE.Controllers.Main.notcriticalErrorTitle": "Предупреждение",\r\n
+  "PE.Controllers.Main.openTextText": "Открытие презентации...",\r\n
+  "PE.Controllers.Main.openTitleText": "Открытие презентации",\r\n
+  "PE.Controllers.Main.printTextText": "Печать презентации...",\r\n
+  "PE.Controllers.Main.printTitleText": "Печать презентации",\r\n
+  "PE.Controllers.Main.reloadButtonText": "Обновить страницу",\r\n
+  "PE.Controllers.Main.requestEditFailedMessageText": "В настоящее время презентация редактируется. Пожалуйста, повторите попытку позже.",\r\n
+  "PE.Controllers.Main.requestEditFailedTitleText": "Доступ запрещён",\r\n
+  "PE.Controllers.Main.savePreparingText": "Подготовка к сохранению",\r\n
+  "PE.Controllers.Main.savePreparingTitle": "Подготовка к сохранению. Пожалуйста, подождите...",\r\n
+  "PE.Controllers.Main.saveTextText": "Сохранение презентации...",\r\n
+  "PE.Controllers.Main.saveTitleText": "Сохранение презентации",\r\n
+  "PE.Controllers.Main.splitDividerErrorText": "Число строк должно являться делителем для %1.",\r\n
+  "PE.Controllers.Main.splitMaxColsErrorText": "Число столбцов должно быть меньше, чем %1.",\r\n
+  "PE.Controllers.Main.splitMaxRowsErrorText": "Число строк должно быть меньше, чем %1.",\r\n
+  "PE.Controllers.Main.textAnonymous": "Аноним",\r\n
+  "PE.Controllers.Main.textCloseTip": "\\nЩелкните, чтобы закрыть эту подсказку",\r\n
+  "PE.Controllers.Main.textLoadingDocument": "Загрузка документа",\r\n
+  "PE.Controllers.Main.textShape": "Фигура",\r\n
+  "PE.Controllers.Main.txtBasicShapes": "Основные фигуры",\r\n
+  "PE.Controllers.Main.txtButtons": "Кнопки",\r\n
+  "PE.Controllers.Main.txtCallouts": "Выноски",\r\n
+  "PE.Controllers.Main.txtCharts": "Схемы",\r\n
+  "PE.Controllers.Main.txtEditingMode": "Установка режима редактирования...",\r\n
+  "PE.Controllers.Main.txtFiguredArrows": "Фигурные стрелки",\r\n
+  "PE.Controllers.Main.txtLines": "Линии",\r\n
+  "PE.Controllers.Main.txtMath": "Математические знаки",\r\n
+  "PE.Controllers.Main.txtNeedSynchronize": "Есть обновления",\r\n
+  "PE.Controllers.Main.txtRectangles": "Прямоугольники",\r\n
+  "PE.Controllers.Main.txtSldLtTBlank": "Пустой слайд",\r\n
+  "PE.Controllers.Main.txtSldLtTChart": "Диаграмма",\r\n
+  "PE.Controllers.Main.txtSldLtTChartAndTx": "Диаграмма и текст",\r\n
+  "PE.Controllers.Main.txtSldLtTClipArtAndTx": "Графика и текст",\r\n
+  "PE.Controllers.Main.txtSldLtTClipArtAndVertTx": "Графика и вертикальный текст",\r\n
+  "PE.Controllers.Main.txtSldLtTCust": "Пользовательский слайд",\r\n
+  "PE.Controllers.Main.txtSldLtTDgm": "Схема",\r\n
+  "PE.Controllers.Main.txtSldLtTFourObj": "Четыре объекта",\r\n
+  "PE.Controllers.Main.txtSldLtTMediaAndTx": "Медиаклип и текст",\r\n
+  "PE.Controllers.Main.txtSldLtTObj": "Заголовок и объект",\r\n
+  "PE.Controllers.Main.txtSldLtTObjAndTwoObj": "Объект и два объекта",\r\n
+  "PE.Controllers.Main.txtSldLtTObjAndTx": "Объект и текст",\r\n
+  "PE.Controllers.Main.txtSldLtTObjOnly": "Объект",\r\n
+  "PE.Controllers.Main.txtSldLtTObjOverTx": "Объект над текстом",\r\n
+  "PE.Controllers.Main.txtSldLtTObjTx": "Заголовок, объект и подпись",\r\n
+  "PE.Controllers.Main.txtSldLtTPicTx": "Рисунок с подписью",\r\n
+  "PE.Controllers.Main.txtSldLtTSecHead": "Заголовок раздела",\r\n
+  "PE.Controllers.Main.txtSldLtTTbl": "Таблица",\r\n
+  "PE.Controllers.Main.txtSldLtTTitle": "Титульный слайд",\r\n
+  "PE.Controllers.Main.txtSldLtTTitleOnly": "Только заголовок",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoColTx": "Текст в две колонки",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoObj": "Два объекта",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoObjAndObj": "Два объекта и объект",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoObjAndTx": "Два объекта и текст",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoObjOverTx": "Два объекта над текстом",\r\n
+  "PE.Controllers.Main.txtSldLtTTwoTxTwoObj": "Два текста и два объекта",\r\n
+  "PE.Controllers.Main.txtSldLtTTx": "Текст",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndChart": "Текст и диаграмма",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndClipArt": "Текст и графика",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndMedia": "Текст и медиаклип",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndObj": "Текст и объект",\r\n
+  "PE.Controllers.Main.txtSldLtTTxAndTwoObj": "Текст и два объекта",\r\n
+  "PE.Controllers.Main.txtSldLtTTxOverObj": "Текст над объектом",\r\n
+  "PE.Controllers.Main.txtSldLtTVertTitleAndTx": "Вертикальный заголовок и текст",\r\n
+  "PE.Controllers.Main.txtSldLtTVertTitleAndTxOverChart": "Вертикальный заголовок и текст над диаграммой",\r\n
+  "PE.Controllers.Main.txtSldLtTVertTx": "Вертикальный текст",\r\n
+  "PE.Controllers.Main.txtStarsRibbons": "Звезды и ленты",\r\n
+  "PE.Controllers.Main.unknownErrorText": "Неизвестная ошибка.",\r\n
+  "PE.Controllers.Main.unsupportedBrowserErrorText": "Ваш браузер не поддерживается.",\r\n
+  "PE.Controllers.Main.uploadImageExtMessage": "Неизвестный формат изображения.",\r\n
+  "PE.Controllers.Main.uploadImageFileCountMessage": "Ни одного изображения не загружено.",\r\n
+  "PE.Controllers.Main.uploadImageSizeMessage": "Превышен максимальный размер изображения.",\r\n
+  "PE.Controllers.Main.uploadImageTextText": "Загрузка изображения...",\r\n
+  "PE.Controllers.Main.uploadImageTitleText": "Загрузка изображения",\r\n
+  "PE.Controllers.Main.warnBrowserIE9": "В IE9 приложение имеет низкую производительность. Используйте IE10 или более позднюю версию.",\r\n
+  "PE.Controllers.Main.warnBrowserZoom": "Текущее значение масштаба страницы в браузере поддерживается не полностью. Вернитесь к масштабу по умолчанию, нажав Ctrl+0",\r\n
+  "PE.Controllers.Main.warnProcessRightsChange": "Вам было отказано в праве на редактирование этого файла.",\r\n
+  "PE.Controllers.Statusbar.zoomText": "Масштаб {0}%",\r\n
+  "PE.Controllers.Toolbar.textEmptyImgUrl": "Необходимо указать URL изображения.",\r\n
+  "PE.Controllers.Toolbar.textFontSizeErr": "Введенное значение некорректно.<br>Введите числовое значение от 1 до 100",\r\n
+  "PE.Controllers.Toolbar.textWarning": "Предупреждение",\r\n
+  "PE.Views.ChartSettings.textArea": "С областями",\r\n
+  "PE.Views.ChartSettings.textBar": "Линейчатая",\r\n
+  "PE.Views.ChartSettings.textChartType": "Изменить тип диаграммы",\r\n
+  "PE.Views.ChartSettings.textColumn": "Гистограмма",\r\n
+  "PE.Views.ChartSettings.textEditData": "Изменить данные",\r\n
+  "PE.Views.ChartSettings.textHeight": "Высота",\r\n
+  "PE.Views.ChartSettings.textKeepRatio": "Сохранять пропорции",\r\n
+  "PE.Views.ChartSettings.textLine": "График",\r\n
+  "PE.Views.ChartSettings.textPie": "Круговая",\r\n
+  "PE.Views.ChartSettings.textPoint": "Точечная",\r\n
+  "PE.Views.ChartSettings.textSize": "Размер",\r\n
+  "PE.Views.ChartSettings.textStock": "Биржевая",\r\n
+  "PE.Views.ChartSettings.textStyle": "Стиль",\r\n
+  "PE.Views.ChartSettings.textWidth": "Ширина",\r\n
+  "PE.Views.DocumentHolder.aboveText": "Выше",\r\n
+  "PE.Views.DocumentHolder.addCommentText": "Добавить комментарий",\r\n
+  "PE.Views.DocumentHolder.advancedImageText": "Дополнительные параметры изображения",\r\n
+  "PE.Views.DocumentHolder.advancedParagraphText": "Дополнительные параметры текста",\r\n
+  "PE.Views.DocumentHolder.advancedShapeText": "Дополнительные параметры фигуры",\r\n
+  "PE.Views.DocumentHolder.advancedTableText": "Дополнительные параметры таблицы",\r\n
+  "PE.Views.DocumentHolder.belowText": "Ниже",\r\n
+  "PE.Views.DocumentHolder.bottomCellText": "По нижнему краю",\r\n
+  "PE.Views.DocumentHolder.cellAlignText": "Вертикальное выравнивание в ячейках",\r\n
+  "PE.Views.DocumentHolder.cellText": "Ячейку",\r\n
+  "PE.Views.DocumentHolder.centerCellText": "По центру",\r\n
+  "PE.Views.DocumentHolder.columnText": "Столбец",\r\n
+  "PE.Views.DocumentHolder.deleteColumnText": "Удалить столбец",\r\n
+  "PE.Views.DocumentHolder.deleteRowText": "Удалить строку",\r\n
+  "PE.Views.DocumentHolder.deleteTableText": "Удалить таблицу",\r\n
+  "PE.Views.DocumentHolder.deleteText": "Удалить",\r\n
+  "PE.Views.DocumentHolder.editChartText": "Изменить данные",\r\n
+  "PE.Views.DocumentHolder.editHyperlinkText": "Изменить гиперссылку",\r\n
+  "PE.Views.DocumentHolder.hyperlinkText": "Гиперссылка",\r\n
+  "PE.Views.DocumentHolder.insertColumnLeftText": "Столбец слева",\r\n
+  "PE.Views.DocumentHolder.insertColumnRightText": "Столбец справа",\r\n
+  "PE.Views.DocumentHolder.insertColumnText": "Вставить столбец",\r\n
+  "PE.Views.DocumentHolder.insertRowAboveText": "Строку выше",\r\n
+  "PE.Views.DocumentHolder.insertRowBelowText": "Строку ниже",\r\n
+  "PE.Views.DocumentHolder.insertRowText": "Вставить строку",\r\n
+  "PE.Views.DocumentHolder.insertText": "Добавить",\r\n
+  "PE.Views.DocumentHolder.mergeCellsText": "Объединить ячейки",\r\n
+  "PE.Views.DocumentHolder.originalSizeText": "Размер по умолчанию",\r\n
+  "PE.Views.DocumentHolder.removeHyperlinkText": "Удалить гиперссылку",\r\n
+  "PE.Views.DocumentHolder.rowText": "Строку",\r\n
+  "PE.Views.DocumentHolder.selectText": "Выделить",\r\n
+  "PE.Views.DocumentHolder.splitCellsText": "Разделить ячейку...",\r\n
+  "PE.Views.DocumentHolder.splitCellTitleText": "Разделить ячейку",\r\n
+  "PE.Views.DocumentHolder.tableText": "Таблицу",\r\n
+  "PE.Views.DocumentHolder.textArrangeBack": "Переместить на задний план",\r\n
+  "PE.Views.DocumentHolder.textArrangeBackward": "Перенести назад",\r\n
+  "PE.Views.DocumentHolder.textArrangeForward": "Перенести вперед",\r\n
+  "PE.Views.DocumentHolder.textArrangeFront": "Вынести на передний план",\r\n
+  "PE.Views.DocumentHolder.textCopy": "Копировать",\r\n
+  "PE.Views.DocumentHolder.textCut": "Вырезать",\r\n
+  "PE.Views.DocumentHolder.textNextPage": "Следующий слайд",\r\n
+  "PE.Views.DocumentHolder.textPaste": "Вставить",\r\n
+  "PE.Views.DocumentHolder.textPrevPage": "Предыдущий слайд",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignBottom": "Выровнять по нижнему краю",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignCenter": "Выровнять по центру",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignLeft": "Выровнять по левому краю",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignMiddle": "Выровнять по середине",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignRight": "Выровнять по правому краю",\r\n
+  "PE.Views.DocumentHolder.textShapeAlignTop": "Выровнять по верхнему краю",\r\n
+  "PE.Views.DocumentHolder.textSlideSettings": "Параметры слайда",\r\n
+  "PE.Views.DocumentHolder.tipIsLocked": "Этот элемент редактируется другим пользователем.",\r\n
+  "PE.Views.DocumentHolder.topCellText": "По верхнему краю",\r\n
+  "PE.Views.DocumentHolder.txtAlign": "Выравнивание",\r\n
+  "PE.Views.DocumentHolder.txtArrange": "Порядок",\r\n
+  "PE.Views.DocumentHolder.txtBackground": "Фон",\r\n
+  "PE.Views.DocumentHolder.txtChangeLayout": "Изменить макет",\r\n
+  "PE.Views.DocumentHolder.txtDeleteSlide": "Удалить слайд",\r\n
+  "PE.Views.DocumentHolder.txtDistribHor": "Распределить по горизонтали",\r\n
+  "PE.Views.DocumentHolder.txtDistribVert": "Распределить по вертикали",\r\n
+  "PE.Views.DocumentHolder.txtDuplicateSlide": "Дублировать слайд",\r\n
+  "PE.Views.DocumentHolder.txtGroup": "Сгруппировать",\r\n
+  "PE.Views.DocumentHolder.txtNewSlide": "Новый слайд",\r\n
+  "PE.Views.DocumentHolder.txtPressLink": "Нажмите клавишу CTRL и щелкните по ссылке",\r\n
+  "PE.Views.DocumentHolder.txtPreview": "Просмотр",\r\n
+  "PE.Views.DocumentHolder.txtSelectAll": "Выделить все",\r\n
+  "PE.Views.DocumentHolder.txtSlide": "Слайд",\r\n
+  "PE.Views.DocumentHolder.txtUngroup": "Разгруппировать",\r\n
+  "PE.Views.DocumentHolder.vertAlignText": "Вертикальное выравнивание",\r\n
+  "PE.Views.DocumentPreview.goToSlideText": "Перейти к слайду",\r\n
+  "PE.Views.DocumentPreview.slideIndexText": "Слайд {0} из {1}",\r\n
+  "PE.Views.DocumentPreview.txtClose": "Закрыть просмотр",\r\n
+  "PE.Views.DocumentPreview.txtFinalMessage": "Просмотр слайдов завершен. Щелкните, чтобы выйти.",\r\n
+  "PE.Views.DocumentPreview.txtNext": "Следующий слайд",\r\n
+  "PE.Views.DocumentPreview.txtPageNumInvalid": "Неправильный номер слайда",\r\n
+  "PE.Views.DocumentPreview.txtPause": "Приостановить презентацию",\r\n
+  "PE.Views.DocumentPreview.txtPlay": "Запустить презентацию",\r\n
+  "PE.Views.DocumentPreview.txtPrev": "Предыдущий слайд",\r\n
+  "PE.Views.FileMenu.btnAboutCaption": "О программе",\r\n
+  "PE.Views.FileMenu.btnBackCaption": "Перейти к Документам",\r\n
+  "PE.Views.FileMenu.btnCreateNewCaption": "Создать новую",\r\n
+  "PE.Views.FileMenu.btnDownloadCaption": "Скачать как...",\r\n
+  "PE.Views.FileMenu.btnHelpCaption": "Справка...",\r\n
+  "PE.Views.FileMenu.btnInfoCaption": "Сведения о презентации...",\r\n
+  "PE.Views.FileMenu.btnPrintCaption": "Печать",\r\n
+  "PE.Views.FileMenu.btnRecentFilesCaption": "Открыть последние...",\r\n
+  "PE.Views.FileMenu.btnReturnCaption": "Вернуться к презентации",\r\n
+  "PE.Views.FileMenu.btnRightsCaption": "Права доступа...",\r\n
+  "PE.Views.FileMenu.btnSaveCaption": "Сохранить",\r\n
+  "PE.Views.FileMenu.btnSettingsCaption": "Дополнительные параметры...",\r\n
+  "PE.Views.FileMenu.btnToEditCaption": "Редактировать",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.fromBlankText": "Пустая",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.fromTemplateText": "По шаблону",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.newDescriptionText": "Создайте новую пустую презентацию, к которой Вы сможете применить стили и отформатировать при редактировании после того, как она будет создана. Или выберите один из шаблонов, чтобы создать презентацию определенного типа или предназначения, где уже предварительно применены некоторые стили.",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.newDocumentText": "Новая презентация",\r\n
+  "PE.Views.FileMenuPanels.CreateNew.noTemplatesText": "Шаблоны отсутствуют",\r\n
+  "PE.Views.FileMenuPanels.DocumentInfo.txtAuthor": "Автор",\r\n
+  "PE.Views.FileMenuPanels.DocumentRights.txtBtnAccessRights": "Изменить права доступа",\r\n
+  "PE.Views.FileMenuPanels.DocumentInfo.txtDate": "Дата создания",\r\n
+  "PE.Views.FileMenuPanels.DocumentInfo.txtPlacement": "Размещение",\r\n
+  "PE.Views.FileMenuPanels.DocumentRights.txtRights": "Люди, имеющие права",\r\n
+  "PE.Views.FileMenuPanels.DocumentInfo.txtTitle": "Название презентации",\r\n
+  "PE.Views.FileMenuPanels.Settings.okButtonText": "Применить",\r\n
+  "PE.Views.FileMenuPanels.Settings.strAlignGuides": "Включить направляющие выравнивания",\r\n
+  "PE.Views.FileMenuPanels.Settings.strAutosave": "Включить автосохранение",\r\n
+  "PE.Views.FileMenuPanels.Settings.strInputMode": "Включить иероглифы",\r\n
+  "PE.Views.FileMenuPanels.Settings.strShowChanges": "Отображать изменения при совместной работе",\r\n
+  "PE.Views.FileMenuPanels.Settings.strUnit": "Единица измерения",\r\n
+  "PE.Views.FileMenuPanels.Settings.strZoom": "Стандартное значение масштаба",\r\n
+  "PE.Views.FileMenuPanels.Settings.text10Minutes": "Каждые 10 минут",\r\n
+  "PE.Views.FileMenuPanels.Settings.text30Minutes": "Каждые 30 минут",\r\n
+  "PE.Views.FileMenuPanels.Settings.text5Minutes": "Каждые 5 минут",\r\n
+  "PE.Views.FileMenuPanels.Settings.text60Minutes": "Каждый час",\r\n
+  "PE.Views.FileMenuPanels.Settings.textAlignGuides": "Направляющие выравнивания",\r\n
+  "PE.Views.FileMenuPanels.Settings.textAutoSave": "Автосохранение",\r\n
+  "PE.Views.FileMenuPanels.Settings.textDisabled": "Отключено",\r\n
+  "PE.Views.FileMenuPanels.Settings.textMinute": "Каждую минуту",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtAll": "Все",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtCm": "Сантиметр",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtFitSlide": "По размеру слайда",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtInput": "Альтернативный ввод",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtLast": "Последние",\r\n
+  "PE.Views.FileMenuPanels.Settings.txtPt": "Пункт",\r\n
+  "PE.Views.HyperlinkSettingsDialog.cancelButtonText": "Отмена",\r\n
+  "PE.Views.HyperlinkSettingsDialog.okButtonText": "OK",\r\n
+  "PE.Views.HyperlinkSettingsDialog.strDisplay": "Отображать",\r\n
+  "PE.Views.HyperlinkSettingsDialog.strLinkTo": "Связать с",\r\n
+  "PE.Views.HyperlinkSettingsDialog.strPlaceInDocument": "Выбрать место в этом документе",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textDefault": "Выделенный фрагмент текста",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textEmptyDesc": "Введите здесь надпись",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textEmptyLink": "Введите здесь ссылку",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textEmptyTooltip": "Введите здесь подсказку",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textExternalLink": "Внешняя ссылка",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textInternalLink": "Слайд в этой презентации",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textLinkType": "Тип ссылки",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textTipText": "Текст подсказки",\r\n
+  "PE.Views.HyperlinkSettingsDialog.textTitle": "Параметры гиперссылки",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtEmpty": "Это поле обязательно для заполнения",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtFirst": "Первый слайд",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtLast": "Последний слайд",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtNext": "Следующий слайд",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtNotUrl": "Это поле должно быть URL-адресом в формате \\"http://www.example.com\\"",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtPrev": "Предыдущий слайд",\r\n
+  "PE.Views.HyperlinkSettingsDialog.txtSlide": "Слайд",\r\n
+  "PE.Views.ImageSettings.textAdvanced": "Дополнительные параметры",\r\n
+  "PE.Views.ImageSettings.textFromFile": "Из файла",\r\n
+  "PE.Views.ImageSettings.textFromUrl": "По URL",\r\n
+  "PE.Views.ImageSettings.textHeight": "Высота",\r\n
+  "PE.Views.ImageSettings.textInsert": "Заменить изображение",\r\n
+  "PE.Views.ImageSettings.textOriginalSize": "По умолчанию",\r\n
+  "PE.Views.ImageSettings.textSize": "Размер",\r\n
+  "PE.Views.ImageSettings.textWidth": "Ширина",\r\n
+  "PE.Views.ImageSettingsAdvanced.cancelButtonText": "Отмена",\r\n
+  "PE.Views.ImageSettingsAdvanced.okButtonText": "OK",\r\n
+  "PE.Views.ImageSettingsAdvanced.textHeight": "Высота",\r\n
+  "PE.Views.ImageSettingsAdvanced.textKeepRatio": "Сохранять пропорции",\r\n
+  "PE.Views.ImageSettingsAdvanced.textOriginalSize": "По умолчанию",\r\n
+  "PE.Views.ImageSettingsAdvanced.textPosition": "Положение",\r\n
+  "PE.Views.ImageSettingsAdvanced.textSize": "Размер",\r\n
+  "PE.Views.ImageSettingsAdvanced.textTitle": "Изображение - дополнительные параметры",\r\n
+  "PE.Views.ImageSettingsAdvanced.textWidth": "Ширина",\r\n
+  "PE.Views.LeftMenu.tipAbout": "О программе",\r\n
+  "PE.Views.LeftMenu.tipChat": "Чат",\r\n
+  "PE.Views.LeftMenu.tipComments": "Комментарии",\r\n
+  "PE.Views.LeftMenu.tipFile": "Файл",\r\n
+  "PE.Views.LeftMenu.tipSearch": "Поиск",\r\n
+  "PE.Views.LeftMenu.tipSlides": "Слайды",\r\n
+  "PE.Views.LeftMenu.tipSupport": "Обратная связь и поддержка",\r\n
+  "PE.Views.LeftMenu.tipTitles": "Заголовки",\r\n
+  "PE.Views.ParagraphSettings.strLineHeight": "Междустрочный",\r\n
+  "PE.Views.ParagraphSettings.strParagraphSpacing": "Интервал",\r\n
+  "PE.Views.ParagraphSettings.strSpacingAfter": "После",\r\n
+  "PE.Views.ParagraphSettings.strSpacingBefore": "Перед",\r\n
+  "PE.Views.ParagraphSettings.textAdvanced": "Дополнительные параметры",\r\n
+  "PE.Views.ParagraphSettings.textAt": "Значение",\r\n
+  "PE.Views.ParagraphSettings.textAtLeast": "Минимум",\r\n
+  "PE.Views.ParagraphSettings.textAuto": "Множитель",\r\n
+  "PE.Views.ParagraphSettings.textExact": "Точно",\r\n
+  "PE.Views.ParagraphSettings.txtAutoText": "Авто",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.cancelButtonText": "Отмена",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.noTabs": "В этом поле появятся позиции табуляции, которые вы зададите",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.okButtonText": "ОК",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strAllCaps": "Все прописные",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strDoubleStrike": "Двойное зачёркивание",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strIndentsFirstLine": "Первая строка",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strIndentsLeftText": "Слева",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strIndentsRightText": "Справа",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strParagraphFont": "Шрифт",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strParagraphIndents": "Отступы и положение",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strSmallCaps": "Малые прописные",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strStrike": "Зачёркивание",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strSubscript": "Подстрочные",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strSuperscript": "Надстрочные",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.strTabs": "Табуляция",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textAlign": "Выравнивание",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textCharacterSpacing": "Межзнаковый интервал",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textDefault": "По умолчанию",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textEffects": "Эффекты",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textRemove": "Удалить",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textRemoveAll": "Удалить все",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textSet": "Задать",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTabCenter": "По центру",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTabLeft": "По левому краю",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTabPosition": "Позиция",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTabRight": "По правому краю",\r\n
+  "PE.Views.ParagraphSettingsAdvanced.textTitle": "Абзац - дополнительные параметры",\r\n
+  "PE.Views.RightMenu.txtChartSettings": "Параметры диаграммы",\r\n
+  "PE.Views.RightMenu.txtImageSettings": "Параметры изображения",\r\n
+  "PE.Views.RightMenu.txtParagraphSettings": "Параметры текста",\r\n
+  "PE.Views.RightMenu.txtShapeSettings": "Параметры фигуры",\r\n
+  "PE.Views.RightMenu.txtSlideSettings": "Параметры слайда",\r\n
+  "PE.Views.RightMenu.txtTableSettings": "Параметры таблицы",\r\n
+  "PE.Views.ShapeSettings.strBackground": "Цвет фона",\r\n
+  "PE.Views.ShapeSettings.strChange": "Изменить автофигуру",\r\n
+  "PE.Views.ShapeSettings.strColor": "Цвет",\r\n
+  "PE.Views.ShapeSettings.strFill": "Заливка",\r\n
+  "PE.Views.ShapeSettings.strForeground": "Цвет переднего плана",\r\n
+  "PE.Views.ShapeSettings.strPattern": "Узор",\r\n
+  "PE.Views.ShapeSettings.strSize": "Толщина",\r\n
+  "PE.Views.ShapeSettings.strStroke": "Обводка",\r\n
+  "PE.Views.ShapeSettings.strTransparency": "Непрозрачность",\r\n
+  "PE.Views.ShapeSettings.textAdvanced": "Дополнительные параметры",\r\n
+  "PE.Views.ShapeSettings.textBorderSizeErr": "Введено некорректное значение.<br>Пожалуйста, введите значение от 0 до 1584 пунктов.",\r\n
+  "PE.Views.ShapeSettings.textColor": "Заливка цветом",\r\n
+  "PE.Views.ShapeSettings.textDirection": "Направление",\r\n
+  "PE.Views.ShapeSettings.textEmptyPattern": "Без узора",\r\n
+  "PE.Views.ShapeSettings.textFromFile": "Из файла",\r\n
+  "PE.Views.ShapeSettings.textFromUrl": "По URL",\r\n
+  "PE.Views.ShapeSettings.textGradient": "Градиент",\r\n
+  "PE.Views.ShapeSettings.textGradientFill": "Градиентная заливка",\r\n
+  "PE.Views.ShapeSettings.textImageTexture": "Изображение или текстура",\r\n
+  "PE.Views.ShapeSettings.textLinear": "Линейный",\r\n
+  "PE.Views.ShapeSettings.textNewColor": "Пользовательский цвет",\r\n
+  "PE.Views.ShapeSettings.textNoFill": "Без заливки",\r\n
+  "PE.Views.ShapeSettings.textPatternFill": "Узор",\r\n
+  "PE.Views.ShapeSettings.textRadial": "Радиальный",\r\n
+  "PE.Views.ShapeSettings.textSelectTexture": "Выбрать",\r\n
+  "PE.Views.ShapeSettings.textStandartColors": "Стандартные цвета",\r\n
+  "PE.Views.ShapeSettings.textStretch": "Растяжение",\r\n
+  "PE.Views.ShapeSettings.textStyle": "Стиль",\r\n
+  "PE.Views.ShapeSettings.textTexture": "Из текстуры",\r\n
+  "PE.Views.ShapeSettings.textThemeColors": "Цвета темы",\r\n
+  "PE.Views.ShapeSettings.textTile": "Плитка",\r\n
+  "PE.Views.ShapeSettings.txtBrownPaper": "Крафт-бумага",\r\n
+  "PE.Views.ShapeSettings.txtCanvas": "Холст",\r\n
+  "PE.Views.ShapeSettings.txtCarton": "Картон",\r\n
+  "PE.Views.ShapeSettings.txtDarkFabric": "Темная ткань",\r\n
+  "PE.Views.ShapeSettings.txtGrain": "Песок",\r\n
+  "PE.Views.ShapeSettings.txtGranite": "Гранит",\r\n
+  "PE.Views.ShapeSettings.txtGreyPaper": "Серая бумага",\r\n
+  "PE.Views.ShapeSettings.txtKnit": "Вязание",\r\n
+  "PE.Views.ShapeSettings.txtLeather": "Кожа",\r\n
+  "PE.Views.ShapeSettings.txtNoBorders": "Без линии",\r\n
+  "PE.Views.ShapeSettings.txtPapyrus": "Папирус",\r\n
+  "PE.Views.ShapeSettings.txtWood": "Дерево",\r\n
+  "PE.Views.ShapeSettingsAdvanced.cancelButtonText": "Отмена",\r\n
+  "PE.Views.ShapeSettingsAdvanced.okButtonText": "OK",\r\n
+  "PE.Views.ShapeSettingsAdvanced.strMargins": "Поля вокруг текста",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textArrows": "Стрелки",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textBeginSize": "Начальный размер",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textBeginStyle": "Начальный стиль",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textBevel": "Скошенный",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textBottom": "Снизу",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textCapType": "Тип окончания",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textEndSize": "Конечный размер",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textEndStyle": "Конечный стиль",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textFlat": "Плоский",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textHeight": "Высота",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textJoinType": "Тип соединения",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textKeepRatio": "Сохранять пропорции",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textLeft": "Слева",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textLineStyle": "Стиль линии",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textMiter": "Прямой",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textRight": "Справа",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textRound": "Закругленный",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textSize": "Размер",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textSquare": "Квадратный",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textTitle": "Фигура - Дополнительные параметры",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textTop": "Сверху",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textWeightArrows": "Линии и стрелки",\r\n
+  "PE.Views.ShapeSettingsAdvanced.textWidth": "Ширина",\r\n
+  "PE.Views.ShapeSettingsAdvanced.txtNone": "Нет",\r\n
+  "PE.Views.SlideSettings.strBackground": "Цвет фона",\r\n
+  "PE.Views.SlideSettings.strColor": "Цвет",\r\n
+  "PE.Views.SlideSettings.strDelay": "Задержка",\r\n
+  "PE.Views.SlideSettings.strDuration": "Длит.",\r\n
+  "PE.Views.SlideSettings.strEffect": "Эффект",\r\n
+  "PE.Views.SlideSettings.strFill": "Заливка",\r\n
+  "PE.Views.SlideSettings.strForeground": "Цвет переднего плана",\r\n
+  "PE.Views.SlideSettings.strPattern": "Узор",\r\n
+  "PE.Views.SlideSettings.strStartOnClick": "Запускать щелчком",\r\n
+  "PE.Views.SlideSettings.textAdvanced": "Дополнительные параметры",\r\n
+  "PE.Views.SlideSettings.textApplyAll": "Применить ко всем слайдам",\r\n
+  "PE.Views.SlideSettings.textBlack": "Через черное",\r\n
+  "PE.Views.SlideSettings.textBottom": "Снизу",\r\n
+  "PE.Views.SlideSettings.textBottomLeft": "Снизу слева",\r\n
+  "PE.Views.SlideSettings.textBottomRight": "Снизу справа",\r\n
+  "PE.Views.SlideSettings.textClock": "Часы",\r\n
+  "PE.Views.SlideSettings.textClockwise": "По часовой стрелке",\r\n
+  "PE.Views.SlideSettings.textColor": "Заливка цветом",\r\n
+  "PE.Views.SlideSettings.textCounterclockwise": "Против часовой стрелки",\r\n
+  "PE.Views.SlideSettings.textCover": "Наплыв",\r\n
+  "PE.Views.SlideSettings.textDirection": "Направление",\r\n
+  "PE.Views.SlideSettings.textEmptyPattern": "Без узора",\r\n
+  "PE.Views.SlideSettings.textFade": "Выцветание",\r\n
+  "PE.Views.SlideSettings.textFromFile": "Из файла",\r\n
+  "PE.Views.SlideSettings.textFromUrl": "По URL",\r\n
+  "PE.Views.SlideSettings.textGradient": "Градиент",\r\n
+  "PE.Views.SlideSettings.textGradientFill": "Градиентная заливка",\r\n
+  "PE.Views.SlideSettings.textHorizontalIn": "По горизонтали внутрь",\r\n
+  "PE.Views.SlideSettings.textHorizontalOut": "По горизонтали наружу",\r\n
+  "PE.Views.SlideSettings.textImageTexture": "Изображение или текстура",\r\n
+  "PE.Views.SlideSettings.textLeft": "Слева",\r\n
+  "PE.Views.SlideSettings.textLinear": "Линейный",\r\n
+  "PE.Views.SlideSettings.textNewColor": "Пользовательский цвет",\r\n
+  "PE.Views.SlideSettings.textNoFill": "Без заливки",\r\n
+  "PE.Views.SlideSettings.textNone": "Нет",\r\n
+  "PE.Views.SlideSettings.textPatternFill": "Узор",\r\n
+  "PE.Views.SlideSettings.textPreview": "Просмотр",\r\n
+  "PE.Views.SlideSettings.textPush": "Задвигание",\r\n
+  "PE.Views.SlideSettings.textRadial": "Радиальный",\r\n
+  "PE.Views.SlideSettings.textReset": "Сбросить изменения",\r\n
+  "PE.Views.SlideSettings.textRight": "Справа",\r\n
+  "PE.Views.SlideSettings.textSelectTexture": "Выбрать",\r\n
+  "PE.Views.SlideSettings.textSmoothly": "Плавно",\r\n
+  "PE.Views.SlideSettings.textSplit": "Панорама",\r\n
+  "PE.Views.SlideSettings.textStandartColors": "Стандартные цвета",\r\n
+  "PE.Views.SlideSettings.textStretch": "Растяжение",\r\n
+  "PE.Views.SlideSettings.textStyle": "Стиль",\r\n
+  "PE.Views.SlideSettings.textTexture": "Из текстуры",\r\n
+  "PE.Views.SlideSettings.textThemeColors": "Цвета темы",\r\n
+  "PE.Views.SlideSettings.textTile": "Плитка",\r\n
+  "PE.Views.SlideSettings.textTop": "Сверху",\r\n
+  "PE.Views.SlideSettings.textTopLeft": "Сверху слева",\r\n
+  "PE.Views.SlideSettings.textTopRight": "Сверху справа",\r\n
+  "PE.Views.SlideSettings.textUnCover": "Открывание",\r\n
+  "PE.Views.SlideSettings.textVerticalIn": "По вертикали внутрь",\r\n
+  "PE.Views.SlideSettings.textVerticalOut": "По вертикали наружу",\r\n
+  "PE.Views.SlideSettings.textWedge": "Симметрично по кругу",\r\n
+  "PE.Views.SlideSettings.textWipe": "Появление",\r\n
+  "PE.Views.SlideSettings.textZoom": "Масштабирование",\r\n
+  "PE.Views.SlideSettings.textZoomIn": "Увеличение",\r\n
+  "PE.Views.SlideSettings.textZoomOut": "Уменьшение",\r\n
+  "PE.Views.SlideSettings.textZoomRotate": "Увеличение с поворотом",\r\n
+  "PE.Views.SlideSettings.txtBrownPaper": "Крафт-бумага",\r\n
+  "PE.Views.SlideSettings.txtCanvas": "Холст",\r\n
+  "PE.Views.SlideSettings.txtCarton": "Картон",\r\n
+  "PE.Views.SlideSettings.txtDarkFabric": "Темная ткань",\r\n
+  "PE.Views.SlideSettings.txtGrain": "Песок",\r\n
+  "PE.Views.SlideSettings.txtGranite": "Гранит",\r\n
+  "PE.Views.SlideSettings.txtGreyPaper": "Серая бумага",\r\n
+  "PE.Views.SlideSettings.txtKnit": "Вязание",\r\n
+  "PE.Views.SlideSettings.txtLeather": "Кожа",\r\n
+  "PE.Views.SlideSettings.txtPapyrus": "Папирус",\r\n
+  "PE.Views.SlideSettings.txtWood": "Дерево",\r\n
+  "PE.Views.SlideSizeSettings.cancelButtonText": "Отмена",\r\n
+  "PE.Views.SlideSizeSettings.okButtonText": "OK",\r\n
+  "PE.Views.SlideSizeSettings.textHeight": "Высота",\r\n
+  "PE.Views.SlideSizeSettings.textSlideSize": "Размер слайда",\r\n
+  "PE.Views.SlideSizeSettings.textTitle": "Настройки размера слайда",\r\n
+  "PE.Views.SlideSizeSettings.textWidth": "Ширина",\r\n
+  "PE.Views.SlideSizeSettings.txt35": "Слайды 35 мм",\r\n
+  "PE.Views.SlideSizeSettings.txtA3": "Лист A3 (297x420 мм)",\r\n
+  "PE.Views.SlideSizeSettings.txtA4": "Лист A4 (210x297 мм)",\r\n
+  "PE.Views.SlideSizeSettings.txtB4": "Лист B4 (ICO) (250x353 мм)",\r\n
+  "PE.Views.SlideSizeSettings.txtB5": "Лист B5 (ICO) (176x250 мм)",\r\n
+  "PE.Views.SlideSizeSettings.txtBanner": "Баннер",\r\n
+  "PE.Views.SlideSizeSettings.txtCustom": "Пользовательский",\r\n
+  "PE.Views.SlideSizeSettings.txtLedger": "Лист Ledger (11x17 дюймов)",\r\n
+  "PE.Views.SlideSizeSettings.txtLetter": "Лист Letter (8.5x11 дюймов)",\r\n
+  "PE.Views.SlideSizeSettings.txtOverhead": "Прозрачная пленка",\r\n
+  "PE.Views.SlideSizeSettings.txtStandard": "Стандартный (4:3)",\r\n
+  "PE.Views.SlideSizeSettings.txtWidescreen1": "Широкоэкранный (16:9)",\r\n
+  "PE.Views.SlideSizeSettings.txtWidescreen2": "Широкоэкранный (16:10)",\r\n
+  "PE.Views.Statusbar.goToPageText": "Перейти к слайду",\r\n
+  "PE.Views.Statusbar.pageIndexText": "Слайд {0} из {1}",\r\n
+  "PE.Views.Statusbar.tipFitPage": "По размеру слайда",\r\n
+  "PE.Views.Statusbar.tipFitWidth": "По ширине",\r\n
+  "PE.Views.Statusbar.tipMoreUsers": "и %1 пользователей.",\r\n
+  "PE.Views.Statusbar.tipShowUsers": "Чтобы увидеть всех пользователей, нажмите на значок ниже.",\r\n
+  "PE.Views.Statusbar.tipUsers": "Документ редактируется несколькими пользователями.",\r\n
+  "PE.Views.Statusbar.tipZoomFactor": "Увеличение",\r\n
+  "PE.Views.Statusbar.tipZoomIn": "Увеличить",\r\n
+  "PE.Views.Statusbar.tipZoomOut": "Уменьшить",\r\n
+  "PE.Views.Statusbar.txtPageNumInvalid": "Неправильный номер слайда",\r\n
+  "PE.Views.TableSettings.deleteColumnText": "Удалить столбец",\r\n
+  "PE.Views.TableSettings.deleteRowText": "Удалить строку",\r\n
+  "PE.Views.TableSettings.deleteTableText": "Удалить таблицу",\r\n
+  "PE.Views.TableSettings.insertColumnLeftText": "Вставить столбец слева",\r\n
+  "PE.Views.TableSettings.insertColumnRightText": "Вставить столбец справа",\r\n
+  "PE.Views.TableSettings.insertRowAboveText": "Вставить строку выше",\r\n
+  "PE.Views.TableSettings.insertRowBelowText": "Вставить строку ниже",\r\n
+  "PE.Views.TableSettings.mergeCellsText": "Объединить ячейки",\r\n
+  "PE.Views.TableSettings.selectCellText": "Выбрать ячейку",\r\n
+  "PE.Views.TableSettings.selectColumnText": "Выбрать столбец",\r\n
+  "PE.Views.TableSettings.selectRowText": "Выбрать строку",\r\n
+  "PE.Views.TableSettings.selectTableText": "Выбрать таблицу",\r\n
+  "PE.Views.TableSettings.splitCellsText": "Разделить ячейку...",\r\n
+  "PE.Views.TableSettings.splitCellTitleText": "Разделить ячейку",\r\n
+  "PE.Views.TableSettings.textAdvanced": "Дополнительные параметры",\r\n
+  "PE.Views.TableSettings.textBackColor": "Цвет фона",\r\n
+  "PE.Views.TableSettings.textBanded": "Чередовать",\r\n
+  "PE.Views.TableSettings.textBorderColor": "Цвет",\r\n
+  "PE.Views.TableSettings.textBorders": "Стиль границ",\r\n
+  "PE.Views.TableSettings.textColumns": "Столбцы",\r\n
+  "PE.Views.TableSettings.textEdit": "Строки и столбцы",\r\n
+  "PE.Views.TableSettings.textEmptyTemplate": "Без шаблонов",\r\n
+  "PE.Views.TableSettings.textFirst": "Первый",\r\n
+  "PE.Views.TableSettings.textHeader": "Заголовок",\r\n
+  "PE.Views.TableSettings.textLast": "Последний",\r\n
+  "PE.Views.TableSettings.textNewColor": "Пользовательский цвет",\r\n
+  "PE.Views.TableSettings.textRows": "Строки",\r\n
+  "PE.Views.TableSettings.textSelectBorders": "Выберите границы, к которым надо применить выбранный стиль",\r\n
+  "PE.Views.TableSettings.textStandartColors": "Стандартные цвета",\r\n
+  "PE.Views.TableSettings.textTemplate": "По шаблону",\r\n
+  "PE.Views.TableSettings.textThemeColors": "Цвета темы",\r\n
+  "PE.Views.TableSettings.textTotal": "Итоговая",\r\n
+  "PE.Views.TableSettings.tipAll": "Задать внешнюю границу и все внутренние линии",\r\n
+  "PE.Views.TableSettings.tipBottom": "Задать только внешнюю нижнюю границу",\r\n
+  "PE.Views.TableSettings.tipInner": "Задать только внутренние линии",\r\n
+  "PE.Views.TableSettings.tipInnerHor": "Задать только горизонтальные внутренние линии",\r\n
+  "PE.Views.TableSettings.tipInnerVert": "Задать только вертикальные внутренние линии",\r\n
+  "PE.Views.TableSettings.tipLeft": "Задать только внешнюю левую границу",\r\n
+  "PE.Views.TableSettings.tipNone": "Не задавать границ",\r\n
+  "PE.Views.TableSettings.tipOuter": "Задать только внешнюю границу",\r\n
+  "PE.Views.TableSettings.tipRight": "Задать только внешнюю правую границу",\r\n
+  "PE.Views.TableSettings.tipTop": "Задать только внешнюю верхнюю границу",\r\n
+  "PE.Views.TableSettings.txtNoBorders": "Без границ",\r\n
+  "PE.Views.TableSettingsAdvanced.cancelButtonText": "Отмена",\r\n
+  "PE.Views.TableSettingsAdvanced.okButtonText": "OK",\r\n
+  "PE.Views.TableSettingsAdvanced.textBottom": "Снизу",\r\n
+  "PE.Views.TableSettingsAdvanced.textCheckMargins": "Использовать поля по умолчанию",\r\n
+  "PE.Views.TableSettingsAdvanced.textDefaultMargins": "Поля по умолчанию",\r\n
+  "PE.Views.TableSettingsAdvanced.textLeft": "Слева",\r\n
+  "PE.Views.TableSettingsAdvanced.textMargins": "Поля ячейки",\r\n
+  "PE.Views.TableSettingsAdvanced.textRight": "Справа",\r\n
+  "PE.Views.TableSettingsAdvanced.textTitle": "Таблица - дополнительные параметры",\r\n
+  "PE.Views.TableSettingsAdvanced.textTop": "Сверху",\r\n
+  "PE.Views.TableSettingsAdvanced.textWidthSpaces": "Поля",\r\n
+  "PE.Views.Toolbar.mniCustomTable": "Пользовательская таблица",\r\n
+  "PE.Views.Toolbar.mniImageFromFile": "Изображение из файла",\r\n
+  "PE.Views.Toolbar.mniImageFromUrl": "Изображение по URL",\r\n
+  "PE.Views.Toolbar.mniSlideAdvanced": "Дополнительные параметры",\r\n
+  "PE.Views.Toolbar.mniSlideStandard": "Стандартный (4:3)",\r\n
+  "PE.Views.Toolbar.mniSlideWide": "Широкоэкранный (16:9)",\r\n
+  "PE.Views.Toolbar.textAlignBottom": "Выравнивание текста по нижнему краю",\r\n
+  "PE.Views.Toolbar.textAlignCenter": "Выравнивание текста по центру",\r\n
+  "PE.Views.Toolbar.textAlignJust": "Выравнивание текста по ширине",\r\n
+  "PE.Views.Toolbar.textAlignLeft": "Выравнивание текста по левому краю",\r\n
+  "PE.Views.Toolbar.textAlignMiddle": "Выравнивание текста по середине",\r\n
+  "PE.Views.Toolbar.textAlignRight": "Выравнивание текста по правому краю",\r\n
+  "PE.Views.Toolbar.textAlignTop": "Выравнивание текста по верхнему краю",\r\n
+  "PE.Views.Toolbar.textArea": "С областями",\r\n
+  "PE.Views.Toolbar.textArrangeBack": "Переместить на задний план",\r\n
+  "PE.Views.Toolbar.textArrangeBackward": "Перенести назад",\r\n
+  "PE.Views.Toolbar.textArrangeForward": "Перенести вперед",\r\n
+  "PE.Views.Toolbar.textArrangeFront": "Вынести на передний план",\r\n
+  "PE.Views.Toolbar.textBar": "Линейчатая",\r\n
+  "PE.Views.Toolbar.textBold": "Жирный",\r\n
+  "PE.Views.Toolbar.textCancel": "Отмена",\r\n
+  "PE.Views.Toolbar.textColumn": "Гистограмма",\r\n
+  "PE.Views.Toolbar.textCompactView": "Компактная панель инструментов",\r\n
+  "PE.Views.Toolbar.textFitPage": "По размеру слайда",\r\n
+  "PE.Views.Toolbar.textFitWidth": "По ширине",\r\n
+  "PE.Views.Toolbar.textHideLines": "Скрыть линейки",\r\n
+  "PE.Views.Toolbar.textHideStatusBar": "Скрыть строку состояния",\r\n
+  "PE.Views.Toolbar.textHideTitleBar": "Скрыть строку заголовка",\r\n
+  "PE.Views.Toolbar.textItalic": "Курсив",\r\n
+  "PE.Views.Toolbar.textLine": "График",\r\n
+  "PE.Views.Toolbar.textNewColor": "Пользовательский цвет",\r\n
+  "PE.Views.Toolbar.textOK": "OK",\r\n
+  "PE.Views.Toolbar.textPie": "Круговая",\r\n
+  "PE.Views.Toolbar.textPoint": "Точечная",\r\n
+  "PE.Views.Toolbar.textShapeAlignBottom": "Выровнять по нижнему краю",\r\n
+  "PE.Views.Toolbar.textShapeAlignCenter": "Выровнять по центру",\r\n
+  "PE.Views.Toolbar.textShapeAlignLeft": "Выровнять по левому краю",\r\n
+  "PE.Views.Toolbar.textShapeAlignMiddle": "Выровнять по середине",\r\n
+  "PE.Views.Toolbar.textShapeAlignRight": "Выровнять по правому краю",\r\n
+  "PE.Views.Toolbar.textShapeAlignTop": "Выровнять по верхнему краю",\r\n
+  "PE.Views.Toolbar.textStandartColors": "Стандартные цвета",\r\n
+  "PE.Views.Toolbar.textStock": "Биржевая",\r\n
+  "PE.Views.Toolbar.textStrikeout": "Зачеркнутый",\r\n
+  "PE.Views.Toolbar.textSubscript": "Подстрочные знаки",\r\n
+  "PE.Views.Toolbar.textSuperscript": "Надстрочные знаки",\r\n
+  "PE.Views.Toolbar.textThemeColors": "Цвета темы",\r\n
+  "PE.Views.Toolbar.textTitleError": "Ошибка",\r\n
+  "PE.Views.Toolbar.textUnderline": "Подчеркнутый",\r\n
+  "PE.Views.Toolbar.textZoom": "Масштаб",\r\n
+  "PE.Views.Toolbar.tipAddSlide": "Добавить слайд",\r\n
+  "PE.Views.Toolbar.tipAdvSettings": "Дополнительные параметры",\r\n
+  "PE.Views.Toolbar.tipBack": "Назад",\r\n
+  "PE.Views.Toolbar.tipChangeSlide": "Изменить макет слайда",\r\n
+  "PE.Views.Toolbar.tipClearStyle": "Очистить стиль",\r\n
+  "PE.Views.Toolbar.tipColorSchemas": "Изменение цветовой схемы",\r\n
+  "PE.Views.Toolbar.tipCopy": "Копировать",\r\n
+  "PE.Views.Toolbar.tipCopyStyle": "Копировать стиль",\r\n
+  "PE.Views.Toolbar.tipDecPrLeft": "Уменьшить отступ",\r\n
+  "PE.Views.Toolbar.tipFontColor": "Цвет шрифта",\r\n
+  "PE.Views.Toolbar.tipFontName": "Название шрифта",\r\n
+  "PE.Views.Toolbar.tipFontSize": "Размер шрифта",\r\n
+  "PE.Views.Toolbar.tipHAligh": "Горизонтальное выравнивание",\r\n
+  "PE.Views.Toolbar.tipHideBars": "Скрыть строки заголовка и статуса",\r\n
+  "PE.Views.Toolbar.tipIncPrLeft": "Увеличить отступ",\r\n
+  "PE.Views.Toolbar.tipInsertChart": "Вставить диаграмму",\r\n
+  "PE.Views.Toolbar.tipInsertHyperlink": "Добавить гиперссылку",\r\n
+  "PE.Views.Toolbar.tipInsertImage": "Вставить изображение",\r\n
+  "PE.Views.Toolbar.tipInsertShape": "Вставить автофигуру",\r\n
+  "PE.Views.Toolbar.tipInsertTable": "Вставить таблицу",\r\n
+  "PE.Views.Toolbar.tipInsertText": "Вставить текст",\r\n
+  "PE.Views.Toolbar.tipLineSpace": "Междустрочный интервал",\r\n
+  "PE.Views.Toolbar.tipMarkers": "Маркированный список",\r\n
+  "PE.Views.Toolbar.tipNewDocument": "Новая презентация",\r\n
+  "PE.Views.Toolbar.tipNumbers": "Нумерованный список",\r\n
+  "PE.Views.Toolbar.tipOpenDocument": "Открыть презентацию",\r\n
+  "PE.Views.Toolbar.tipPaste": "Вставить",\r\n
+  "PE.Views.Toolbar.tipPreview": "Начать просмотр",\r\n
+  "PE.Views.Toolbar.tipPrint": "Печать",\r\n
+  "PE.Views.Toolbar.tipRedo": "Повторить",\r\n
+  "PE.Views.Toolbar.tipSave": "Сохранить",\r\n
+  "PE.Views.Toolbar.tipSaveCoauth": "Сохраните свои изменения, чтобы другие пользователи их увидели.",\r\n
+  "PE.Views.Toolbar.tipShapeAlign": "Выравнивание фигур",\r\n
+  "PE.Views.Toolbar.tipShapeArrange": "Порядок фигур",\r\n
+  "PE.Views.Toolbar.tipSlideSize": "Выбор размеров слайда",\r\n
+  "PE.Views.Toolbar.tipSlideTheme": "Тема слайда",\r\n
+  "PE.Views.Toolbar.tipUndo": "Отменить",\r\n
+  "PE.Views.Toolbar.tipVAligh": "Вертикальное выравнивание",\r\n
+  "PE.Views.Toolbar.tipViewSettings": "Параметры представления",\r\n
+  "PE.Views.Toolbar.txtDistribHor": "Распределить по горизонтали",\r\n
+  "PE.Views.Toolbar.txtDistribVert": "Распределить по вертикали",\r\n
+  "PE.Views.Toolbar.txtGroup": "Сгруппировать",\r\n
+  "PE.Views.Toolbar.txtScheme1": "Стандартная",\r\n
+  "PE.Views.Toolbar.txtScheme10": "Обычная",\r\n
+  "PE.Views.Toolbar.txtScheme11": "Метро",\r\n
+  "PE.Views.Toolbar.txtScheme12": "Модульная",\r\n
+  "PE.Views.Toolbar.txtScheme13": "Изящная",\r\n
+  "PE.Views.Toolbar.txtScheme14": "Эркер",\r\n
+  "PE.Views.Toolbar.txtScheme15": "Начальная",\r\n
+  "PE.Views.Toolbar.txtScheme16": "Бумажная",\r\n
+  "PE.Views.Toolbar.txtScheme17": "Солнцестояние",\r\n
+  "PE.Views.Toolbar.txtScheme18": "Техническая",\r\n
+  "PE.Views.Toolbar.txtScheme19": "Трек",\r\n
+  "PE.Views.Toolbar.txtScheme2": "Оттенки серого",\r\n
+  "PE.Views.Toolbar.txtScheme20": "Городская",\r\n
+  "PE.Views.Toolbar.txtScheme21": "Яркая",\r\n
+  "PE.Views.Toolbar.txtScheme3": "Апекс",\r\n
+  "PE.Views.Toolbar.txtScheme4": "Аспект",\r\n
+  "PE.Views.Toolbar.txtScheme5": "Официальная",\r\n
+  "PE.Views.Toolbar.txtScheme6": "Открытая",\r\n
+  "PE.Views.Toolbar.txtScheme7": "Справедливость",\r\n
+  "PE.Views.Toolbar.txtScheme8": "Поток",\r\n
+  "PE.Views.Toolbar.txtScheme9": "Литейная",\r\n
+  "PE.Views.Toolbar.txtUngroup": "Разгруппировать"\r\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>62930</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,660 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885478.56</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>native.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+ * (c) Copyright Ascensio System SIA 2010-2015\r\n
+ */\r\n
+var editor = undefined;\r\n
+var window = {};\r\n
+var navigator = {};\r\n
+navigator.userAgent = "chrome";\r\n
+window.navigator = navigator;\r\n
+window.location = {};\r\n
+\r\n
+window.location.protocol = "";\r\n
+window.location.host = "";\r\n
+window.location.href = "";\r\n
+\r\n
+window.NATIVE_EDITOR_ENJINE = true;\r\n
+window.NATIVE_EDITOR_ENJINE_SYNC_RECALC = true;\r\n
+\r\n
+var document = {};\r\n
+window.document = document;\r\n
+\r\n
+function ConvertJSC_Array(_array)\r\n
+{\r\n
+    var _len = _array.length;\r\n
+    var ret = new Uint8Array(_len);\r\n
+    for (var i = 0; i < _len; i++)\r\n
+        ret[i] = _array.getAt(i);\r\n
+    return ret;\r\n
+}\r\n
+\r\n
+function Image()\r\n
+{\r\n
+    this.src = "";\r\n
+    this.onload = function()\r\n
+    {\r\n
+    }\r\n
+    this.onerror = function()\r\n
+    {\r\n
+    }\r\n
+}\r\n
+\r\n
+function _image_data()\r\n
+{\r\n
+    this.data = null;\r\n
+    this.length = 0;\r\n
+}\r\n
+\r\n
+function native_pattern_fill()\r\n
+{\r\n
+}\r\n
+native_pattern_fill.prototype =\r\n
+{\r\n
+    setTransform : function(transform) {}\r\n
+};\r\n
+\r\n
+function native_gradient_fill()\r\n
+{\r\n
+}\r\n
+native_gradient_fill.prototype =\r\n
+{\r\n
+    addColorStop : function(offset,color) {}\r\n
+};\r\n
+\r\n
+function native_context2d(parent)\r\n
+{\r\n
+    this.canvas = parent;\r\n
+\r\n
+    this.globalAlpha = 0;\r\n
+    this.globalCompositeOperation = "";\r\n
+    this.fillStyle = "";\r\n
+    this.strokeStyle = "";\r\n
+\r\n
+    this.lineWidth = 0;\r\n
+    this.lineCap = 0;\r\n
+    this.lineJoin = 0;\r\n
+    this.miterLimit = 0;\r\n
+    this.shadowOffsetX = 0;\r\n
+    this.shadowOffsetY = 0;\r\n
+    this.shadowBlur = 0;\r\n
+    this.shadowColor = 0;\r\n
+    this.font = "";\r\n
+    this.textAlign = 0;\r\n
+    this.textBaseline = 0;\r\n
+}\r\n
+native_context2d.prototype =\r\n
+{\r\n
+    save : function() {},\r\n
+    restore : function() {},\r\n
+\r\n
+    scale : function(x,y) {},\r\n
+    rotate : function(angle) {},\r\n
+    translate : function(x,y) {},\r\n
+    transform : function(m11,m12,m21,m22,dx,dy) {},\r\n
+    setTransform : function(m11,m12,m21,m22,dx,dy) {},\r\n
+\r\n
+    createLinearGradient : function(x0,y0,x1,y1) { return new native_gradient_fill(); },\r\n
+    createRadialGradient : function(x0,y0,r0,x1,y1,r1) { return null; },\r\n
+    createPattern : function(image,repetition) { return new native_pattern_fill(); },\r\n
+\r\n
+    clearRect : function(x,y,w,h) {},\r\n
+    fillRect : function(x,y,w,h) {},\r\n
+    strokeRect : function(x,y,w,h) {},\r\n
+\r\n
+    beginPath : function() {},\r\n
+    closePath : function() {},\r\n
+    moveTo : function(x,y) {},\r\n
+    lineTo : function(x,y) {},\r\n
+    quadraticCurveTo : function(cpx,cpy,x,y) {},\r\n
+    bezierCurveTo : function(cp1x,cp1y,cp2x,cp2y,x,y) {},\r\n
+    arcTo : function(x1,y1,x2,y2,radius) {},\r\n
+    rect : function(x,y,w,h) {},\r\n
+    arc : function(x,y,radius,startAngle,endAngle,anticlockwise) {},\r\n
+\r\n
+    fill : function() {},\r\n
+    stroke : function() {},\r\n
+    clip : function() {},\r\n
+    isPointInPath : function(x,y) {},\r\n
+    drawFocusRing : function(element,xCaret,yCaret,canDrawCustom) {},\r\n
+\r\n
+    fillText : function(text,x,y,maxWidth) {},\r\n
+    strokeText : function(text,x,y,maxWidth) {},\r\n
+    measureText : function(text) {},\r\n
+\r\n
+    drawImage : function(img_elem,dx_or_sx,dy_or_sy,dw_or_sw,dh_or_sh,dx,dy,dw,dh) {},\r\n
+\r\n
+    createImageData : function(imagedata_or_sw,sh) \r\n
+    { \r\n
+        var _data = new _image_data();\r\n
+        _data.length = imagedata_or_sw * sh * 4;\r\n
+        _data.data = (typeof(Uint8Array) != \'undefined\') ? new Uint8Array(_data.length) : new Array(_data.length);\r\n
+        return _data;\r\n
+    },\r\n
+    getImageData : function(sx,sy,sw,sh) {},\r\n
+    putImageData : function(image_data,dx,dy,dirtyX,dirtyY,dirtyWidth,dirtyHeight) {}\r\n
+};\r\n
+\r\n
+function native_canvas()\r\n
+{\r\n
+    this.id = "";\r\n
+    this.width = 300;\r\n
+    this.height = 150;\r\n
+    \r\n
+    this.nodeType = 1;\r\n
+}\r\n
+native_canvas.prototype =\r\n
+{\r\n
+    getContext : function(type)\r\n
+    {\r\n
+        if (type == "2d")\r\n
+            return new native_context2d(this);\r\n
+        return null;\r\n
+    },\r\n
+\r\n
+    toDataUrl : function(type)\r\n
+    {\r\n
+        return "";\r\n
+    },\r\n
+    \r\n
+    addEventListener : function()\r\n
+    {\r\n
+    },\r\n
+    \r\n
+    attr : function()\r\n
+    {\r\n
+    } \r\n
+};\r\n
+\r\n
+window["Asc"] = {};\r\n
+\r\n
+var _null_object = {};\r\n
+_null_object.length = 0;\r\n
+_null_object.nodeType = 1;\r\n
+_null_object.offsetWidth = 1;\r\n
+_null_object.offsetHeight = 1;\r\n
+_null_object.clientWidth = 1;\r\n
+_null_object.clientHeight = 1;\r\n
+_null_object.scrollWidth = 1;\r\n
+_null_object.scrollHeight = 1;\r\n
+_null_object.style = {};\r\n
+_null_object.documentElement = _null_object;\r\n
+_null_object.body = _null_object;\r\n
+_null_object.ownerDocument = _null_object;\r\n
+_null_object.defaultView = _null_object;\r\n
+\r\n
+_null_object.addEventListener = function(){};\r\n
+_null_object.setAttribute = function(){};\r\n
+_null_object.getElementsByTagName = function() { return []; };\r\n
+_null_object.appendChild = function() {};\r\n
+_null_object.removeChild = function() {};\r\n
+_null_object.insertBefore = function() {};\r\n
+_null_object.childNodes = [];\r\n
+_null_object.parent = _null_object;\r\n
+_null_object.parentNode = _null_object;\r\n
+_null_object.find = function() { return this; };\r\n
+_null_object.appendTo = function() { return this; };\r\n
+_null_object.css = function() { return this; };\r\n
+_null_object.width = function() { return 0; };\r\n
+_null_object.height = function() { return 0; };\r\n
+_null_object.attr = function() { return this; };\r\n
+_null_object.prop = function() { return this; };\r\n
+_null_object.val = function() { return this; };\r\n
+_null_object.remove = function() {};\r\n
+_null_object.getComputedStyle = function() { return null; };\r\n
+_null_object.getContext = function(type) {\r\n
+    if (type == "2d")\r\n
+        return new native_context2d(this);\r\n
+    return null;\r\n
+};\r\n
+\r\n
+window._null_object = _null_object;\r\n
+\r\n
+document.createElement = function(type)\r\n
+{\r\n
+    if (type && type.toLowerCase)\r\n
+    {\r\n
+        if (type.toLowerCase() == "canvas")\r\n
+            return new native_canvas();\r\n
+    }\r\n
+    \r\n
+    return _null_object;\r\n
+}\r\n
+\r\n
+function _return_empty_html_element() { return _null_object; };\r\n
+\r\n
+document.createDocumentFragment = _return_empty_html_element;\r\n
+document.getElementsByTagName = function(tag) { \r\n
+    var ret = [];\r\n
+    if ("head" == tag)\r\n
+        ret.push(_null_object);\r\n
+    return ret;\r\n
+};\r\n
+document.insertBefore = function() {};\r\n
+document.appendChild = function() {};\r\n
+document.removeChild = function() {};\r\n
+document.getElementById = function() { return _null_object; };\r\n
+document.createComment = function() { return undefined; };\r\n
+\r\n
+document.documentElement = _null_object;\r\n
+document.body = _null_object;\r\n
+\r\n
+var native = CreateNativeEngine();\r\n
+window.native = native;\r\n
+window["native"] = native;\r\n
+\r\n
+function GetNativeEngine()\r\n
+{\r\n
+\treturn window.native;\r\n
+}\r\n
+\r\n
+var native_renderer = null;\r\n
+var _api = null;\r\n
+var Asc = window["Asc"];\r\n
+\r\n
+function NativeOpenFileData(data, version)\r\n
+{\r\n
+    window.NATIVE_DOCUMENT_TYPE = window.native.GetEditorType();\r\n
+\r\n
+    if (window.NATIVE_DOCUMENT_TYPE == "presentation" || window.NATIVE_DOCUMENT_TYPE == "document")\r\n
+    {\r\n
+        _api = new window["asc_docs_api"]("");\r\n
+        _api.asc_nativeOpenFile(data, version);\r\n
+    }\r\n
+    else\r\n
+    {\r\n
+        _api = new window["Asc"]["spreadsheet_api"]();\r\n
+        _api.asc_nativeOpenFile(data, version);\r\n
+    }\r\n
+}\r\n
+\r\n
+function NativeOpenFile()\r\n
+{\r\n
+    var doc_bin = window.native.GetFileString(window.native.GetFilePath());\r\n
+    window.NATIVE_DOCUMENT_TYPE = window.native.GetEditorType();\r\n
+    \r\n
+    if (window.NATIVE_DOCUMENT_TYPE == "presentation" || window.NATIVE_DOCUMENT_TYPE == "document")\r\n
+    {\r\n
+        _api = new window["asc_docs_api"]("");       \r\n
+        _api.asc_nativeOpenFile(doc_bin);\r\n
+    }\r\n
+    else\r\n
+    { \r\n
+        _api = new window["Asc"]["spreadsheet_api"]();\r\n
+        _api.asc_nativeOpenFile(doc_bin);\r\n
+    }\r\n
+}\r\n
+\r\n
+function NativeOpenFile2(_params)\r\n
+{\r\n
+\twindow["CreateMainTextMeasurerWrapper"]();\r\n
+\r\n
+\twindow.g_file_path = "native_open_file";\r\n
+\twindow.NATIVE_DOCUMENT_TYPE = window.native.GetEditorType();\r\n
+    var doc_bin = window.native.GetFileString(window.g_file_path);\r\n
+    if (window.NATIVE_DOCUMENT_TYPE == "presentation" || window.NATIVE_DOCUMENT_TYPE == "document")\r\n
+    {\r\n
+        _api = new window["asc_docs_api"]("");\r\n
+\r\n
+        if (undefined !== _api.Native_Editor_Initialize_Settings)\r\n
+        {\r\n
+            _api.Native_Editor_Initialize_Settings(_params);\r\n
+        }\r\n
+\r\n
+        _api.asc_nativeOpenFile(doc_bin);\r\n
+        \r\n
+        if (_api.NativeAfterLoad)\r\n
+            _api.NativeAfterLoad();\r\n
+    }\r\n
+    else\r\n
+    {\r\n
+        _api = new window["Asc"]["spreadsheet_api"]();\r\n
+        _api.asc_nativeOpenFile(doc_bin);        \r\n
+    }\r\n
+}\r\n
+\r\n
+function NativeCalculateFile()\r\n
+{\r\n
+\t_api.asc_nativeCalculateFile();\r\n
+}\r\n
+\r\n
+function NativeApplyChangesData(data, isFull)\r\n
+{\r\n
+    if (window.NATIVE_DOCUMENT_TYPE == "presentation" || window.NATIVE_DOCUMENT_TYPE == "document")\r\n
+    {\r\n
+        _api.asc_nativeApplyChanges2(data, isFull);\r\n
+    }\r\n
+    else\r\n
+    {\r\n
+\t\t_api.asc_nativeApplyChanges2(data, isFull);\r\n
+    }\r\n
+}\r\n
+\r\n
+function NativeApplyChanges()\r\n
+{\r\n
+    if (window.NATIVE_DOCUMENT_TYPE == "presentation" || window.NATIVE_DOCUMENT_TYPE == "document")\r\n
+    {\r\n
+        var __changes = [];\r\n
+        var _count_main = window.native.GetCountChanges();\r\n
+        for (var i = 0; i < _count_main; i++)\r\n
+        {\r\n
+            var _changes_file = window.native.GetChangesFile(i);\r\n
+            var _changes = JSON.parse(window.native.GetFileString(_changes_file));\r\n
+\r\n
+            for (var j = 0; j < _changes.length; j++)\r\n
+            {     \r\n
+                __changes.push(_changes[j]);\r\n
+            }\r\n
+        }\r\n
+        _api.asc_nativeApplyChanges(__changes);\r\n
+    }\r\n
+    else\r\n
+    {\r\n
+        var __changes = [];\r\n
+        var _count_main = window.native.GetCountChanges();\r\n
+        for (var i = 0; i < _count_main; i++)\r\n
+        {\r\n
+            var _changes_file = window.native.GetChangesFile(i);\r\n
+            var _changes = JSON.parse(window.native.GetFileString(_changes_file));\r\n
+\r\n
+            for (var j = 0; j < _changes.length; j++)\r\n
+            {     \r\n
+                __changes.push(_changes[j]);   \r\n
+            }\r\n
+        }\r\n
+        \r\n
+        _api.asc_nativeApplyChanges(__changes);\r\n
+    }    \r\n
+}\r\n
+function NativeGetFileString()\r\n
+{\r\n
+    return _api.asc_nativeGetFile();\r\n
+}\r\n
+function NativeGetFileData()\r\n
+{\r\n
+    return _api.asc_nativeGetFileData();\r\n
+}\r\n
+function NativeGetFileDataHtml()\r\n
+{\r\n
+    if (_api.asc_nativeGetHtml)\r\n
+        return _api.asc_nativeGetHtml();\r\n
+    return "";\r\n
+}\r\n
+\r\n
+function NativeStartMailMergeByList(database)\r\n
+{\r\n
+    if (_api.asc_StartMailMergeByList)\r\n
+        return _api.asc_StartMailMergeByList(database);\r\n
+    return undefined;\r\n
+}\r\n
+function NativePreviewMailMergeResult(index)\r\n
+{\r\n
+    if (_api.asc_PreviewMailMergeResult)\r\n
+        return _api.asc_PreviewMailMergeResult(index);\r\n
+    return undefined;\r\n
+}\r\n
+function NativeGetMailMergeFiledValue(index, name)\r\n
+{\r\n
+    if (_api.asc_GetMailMergeFiledValue)\r\n
+        return _api.asc_GetMailMergeFiledValue(index, name);\r\n
+    return "";\r\n
+}\r\n
+\r\n
+function GetNativeCountPages()\r\n
+{\r\n
+    return _api.asc_nativePrintPagesCount();\r\n
+}\r\n
+\r\n
+function GetNativeFileDataPDF()\r\n
+{\r\n
+    return _api.asc_nativeGetPDF();\r\n
+}\r\n
+\r\n
+window.memory1 = null;\r\n
+window.memory2 = null;\r\n
+\r\n
+function GetNativePageBase64(pageIndex)\r\n
+{\r\n
+    if (null == window.memory1)\r\n
+        window.memory1 = CreateNativeMemoryStream();\r\n
+    else\r\n
+        window.memory1.ClearNoAttack();\r\n
+        \r\n
+    if (null == window.memory2)\r\n
+        window.memory2 = CreateNativeMemoryStream();\r\n
+    else\r\n
+        window.memory2.ClearNoAttack();\r\n
+\r\n
+    if (native_renderer == null)\r\n
+    {\r\n
+        native_renderer = _api.asc_nativeCheckPdfRenderer(window.memory1, window.memory2);\r\n
+    }\r\n
+    else\r\n
+    {\r\n
+        window.memory1.ClearNoAttack();\r\n
+        window.memory2.ClearNoAttack();\r\n
+    }\r\n
+    \r\n
+    _api.asc_nativePrint(native_renderer, pageIndex);\r\n
+    return window.memory1;\r\n
+}\r\n
+\r\n
+function GetNativePageMeta(pageIndex)\r\n
+{\r\n
+    return _api.GetNativePageMeta(pageIndex);\r\n
+}\r\n
+\r\n
+function GetNativeId()\r\n
+{\r\n
+    return window.native.GetFileId();\r\n
+}\r\n
+\r\n
+// для работы с таймерами\r\n
+window.NativeSupportTimeouts = false;\r\n
+window.NativeTimeoutObject = {};\r\n
+\r\n
+function clearTimeout(_id)\r\n
+{\r\n
+    if (!window.NativeSupportTimeouts)\r\n
+        return;\r\n
+\r\n
+    window.NativeTimeoutObject["" + _id] = undefined;\r\n
+    window.native["ClearTimeout"](_id);\r\n
+}\r\n
+function setTimeout(func, interval)\r\n
+{\r\n
+    if (!window.NativeSupportTimeouts)\r\n
+        return;\r\n
+\r\n
+    var _id = window.native["GenerateTimeoutId"](interval);\r\n
+    window.NativeTimeoutObject["" + _id] = func;\r\n
+    return _id;\r\n
+}\r\n
+\r\n
+window.native.Call_TimeoutFire = function(_id)\r\n
+{\r\n
+    if (!window.NativeSupportTimeouts)\r\n
+        return;\r\n
+\r\n
+    var _prop = "" + _id;\r\n
+    var _func = window.NativeTimeoutObject[_prop];\r\n
+    window.NativeTimeoutObject[_prop] = undefined;\r\n
+\r\n
+    if (!_func)\r\n
+        return;\r\n
+\r\n
+    _func.call(null);\r\n
+    _func = null;\r\n
+};\r\n
+\r\n
+function clearInterval(_id)\r\n
+{\r\n
+    if (!window.NativeSupportTimeouts)\r\n
+        return;\r\n
+\r\n
+    window.NativeTimeoutObject["" + _id] = undefined;\r\n
+    window.native["ClearTimeout"](_id);\r\n
+}\r\n
+function setInterval(func, interval)\r\n
+{\r\n
+    if (!window.NativeSupportTimeouts)\r\n
+        return;\r\n
+\r\n
+    var _intervalFunc = function()\r\n
+    {\r\n
+        func.call(null);\r\n
+        setTimeout(func, interval);\r\n
+    };\r\n
+\r\n
+    var _id = window.native["GenerateTimeoutId"](interval);\r\n
+    window.NativeTimeoutObject["" + _id] = _intervalFunc;\r\n
+    return _id;\r\n
+}\r\n
+\r\n
+window.clearTimeout     = clearTimeout;\r\n
+window.setTimeout       = setTimeout;\r\n
+window.clearInterval    = clearInterval;\r\n
+window.setInterval      = setInterval;\r\n
+\r\n
+var console = {\r\n
+\tlog : function(param) { window.native.ConsoleLog(param); }\r\n
+};\r\n
+\r\n
+// HTML page interface\r\n
+window.native.Call_OnUpdateOverlay = function(param)\r\n
+{\r\n
+    return _api.Call_OnUpdateOverlay(param);\r\n
+};\r\n
+\r\n
+window.native.Call_OnMouseDown = function(e)\r\n
+{\r\n
+    return _api.Call_OnMouseDown(e);\r\n
+};\r\n
+window.native.Call_OnMouseUp = function(e)\r\n
+{\r\n
+    return _api.Call_OnMouseUp(e);\r\n
+};\r\n
+window.native.Call_OnMouseMove = function(e)\r\n
+{\r\n
+    return _api.Call_OnMouseMove(e);\r\n
+};\r\n
+window.native.Call_OnCheckMouseDown = function(e)\r\n
+{\r\n
+    return _api.Call_OnCheckMouseDown(e);\r\n
+};\r\n
+\r\n
+window.native.Call_OnKeyDown = function(e)\r\n
+{\r\n
+    return _api.Call_OnKeyDown(e);\r\n
+};\r\n
+window.native.Call_OnKeyPress = function(e)\r\n
+{\r\n
+    return _api.Call_OnKeyPress(e);\r\n
+};\r\n
+window.native.Call_OnKeyUp = function(e)\r\n
+{\r\n
+    return _api.Call_OnKeyUp(e);\r\n
+};\r\n
+window.native.Call_OnKeyboardEvent = function(e)\r\n
+{\r\n
+    return _api.Call_OnKeyboardEvent(e);\r\n
+};\r\n
+\r\n
+window.native.Call_CalculateResume = function()\r\n
+{\r\n
+    return _api.Call_CalculateResume();\r\n
+};\r\n
+\r\n
+window.native.Call_TurnOffRecalculate = function()\r\n
+{\r\n
+    return _api.Call_TurnOffRecalculate();\r\n
+};\r\n
+window.native.Call_TurnOnRecalculate = function()\r\n
+{\r\n
+    return _api.Call_TurnOnRecalculate();\r\n
+};\r\n
+\r\n
+window.native.Call_CheckTargetUpdate = function()\r\n
+{\r\n
+    return _api.Call_CheckTargetUpdate();\r\n
+};\r\n
+window.native.Call_Common = function(type, param)\r\n
+{\r\n
+    return _api.Call_Common(type, param);\r\n
+};\r\n
+\r\n
+window.native.Call_HR_Tabs = function(arrT, arrP)\r\n
+{\r\n
+    return _api.Call_HR_Tabs(arrT, arrP);\r\n
+};\r\n
+window.native.Call_HR_Pr = function(_indent_left, _indent_right, _indent_first)\r\n
+{\r\n
+    return _api.Call_HR_Pr(_indent_left, _indent_right, _indent_first);\r\n
+};\r\n
+window.native.Call_HR_Margins = function(_margin_left, _margin_right)\r\n
+{\r\n
+    return _api.Call_HR_Margins(_margin_left, _margin_right);\r\n
+};\r\n
+window.native.Call_HR_Table = function(_params, _cols, _margins, _rows)\r\n
+{\r\n
+    return _api.Call_HR_Table(_params, _cols, _margins, _rows);\r\n
+};\r\n
+\r\n
+window.native.Call_VR_Margins = function(_top, _bottom)\r\n
+{\r\n
+    return _api.Call_VR_Margins(_top, _bottom);\r\n
+};\r\n
+window.native.Call_VR_Header = function(_header_top, _header_bottom)\r\n
+{\r\n
+    return _api.Call_VR_Header(_header_top, _header_bottom);\r\n
+};\r\n
+window.native.Call_VR_Table = function(_params, _cols, _margins, _rows)\r\n
+{\r\n
+    return _api.Call_VR_Table(_params, _cols, _margins, _rows);\r\n
+};\r\n
+\r\n
+window.native.Call_Menu_Event = function(type, _params)\r\n
+{\r\n
+    return _api.Call_Menu_Event(type, _params);\r\n
+};
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>15903</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885455.28</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ru.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\r\n
+  "Common.view.PopClip.copyButtonText": "Копировать",\r\n
+  "Common.view.PopClip.cutButtonText": "Вырезать",\r\n
+  "Common.view.PopClip.pasteButtonText": "Вставить",\r\n
+  "DE.controller.Main.convertationErrorText": "Конвертация не удалась.",\r\n
+  "DE.controller.Main.convertationTimeoutText": "Превышено время ожидания конвертации.",\r\n
+  "DE.controller.Main.criticalErrorExtText": "Нажмите \\"OK\\", чтобы обновить страницу.",\r\n
+  "DE.controller.Main.criticalErrorTitle": "Ошибка",\r\n
+  "DE.controller.Main.downloadErrorText": "Загрузка не удалась.",\r\n
+  "DE.controller.Main.editModeText": "Режим редактирования",\r\n
+  "DE.controller.Main.errorCoAuthoringDisconnect": "Потеряно соединение с сервером. В данный момент нельзя отредактировать документ.",\r\n
+  "DE.controller.Main.errorDefaultMessage": "Код ошибки: %1",\r\n
+  "DE.controller.Main.errorDocTooBig": "Документ, который вы пытаетесь открыть, содержит более 30000 символов или 1000 абзацев, и его нельзя открыть на вашем мобильном устройстве. Пожалуйста, попробуйте открыть его на настольном компьютере.",\r\n
+  "DE.controller.Main.errorKeyEncrypt": "Неизвестный дескриптор ключа",\r\n
+  "DE.controller.Main.errorKeyExpire": "Срок действия дескриптора ключа истек",\r\n
+  "DE.controller.Main.errorUsersExceed": "Превышено количество пользователей, разрешенных согласно тарифному плану",\r\n
+  "DE.controller.Main.loadingDocText": "ЗАГРУЗКА ДОКУМЕНТА",\r\n
+  "DE.controller.Main.notcriticalErrorTitle": "Предупреждение",\r\n
+  "DE.controller.Main.printText": "Печать...",\r\n
+  "DE.controller.Main.reloadButtonText": "Обновить страницу",\r\n
+  "DE.controller.Main.requestEditFailedMessageText": "В настоящее время документ редактируется. Пожалуйста, попробуйте позже.",\r\n
+  "DE.controller.Main.requestEditFailedTitleText": "Доступ запрещен",\r\n
+  "DE.controller.Main.requestEditRightsText": "Запрос прав на редактирование...",\r\n
+  "DE.controller.Main.saveText": "Сохранение...",\r\n
+  "DE.controller.Main.splitDividerErrorText": "Число строк должно являться делителем для %1",\r\n
+  "DE.controller.Main.splitMaxColsErrorText": "Число столбцов должно быть меньше, чем %1",\r\n
+  "DE.controller.Main.splitMaxRowsErrorText": "Число строк должно быть меньше, чем %1",\r\n
+  "DE.controller.Main.textAnonymous": "Аноним",\r\n
+  "DE.controller.Main.unknownErrorText": "Неизвестная ошибка.",\r\n
+  "DE.controller.Main.unsupportedBrowserErrorText ": "Ваш браузер не поддерживается.",\r\n
+  "DE.controller.Main.uploadImageExtMessage": "Неизвестный формат изображения.",\r\n
+  "DE.controller.Main.uploadImageFileCountMessage": "Ни одного изображения не загружено.",\r\n
+  "DE.controller.Main.uploadImageSizeMessage": "Превышен максимальный размер изображения.",\r\n
+  "DE.controller.Main.viewModeText": "Режим просмотра",\r\n
+  "DE.controller.phone.Main.pageText": "Страница",\r\n
+  "DE.controller.tablet.Main.pageText": "Страница",\r\n
+  "DE.controller.tablet.panel.Insert.unsupportUploadText": "Функция не поддерживается на этом устройстве.",\r\n
+  "DE.controller.tablet.panel.Insert.uploadingText": "Загрузка",\r\n
+  "DE.controller.toolbar.Edit.dlgLeaveMsgText": "Документ содержит несохраненные изменения. Чтобы сохранить их, нажмите \\"Остаться\\", затем \\"Сохранить\\". Нажмите \\"Покинуть страницу\\", чтобы сбросить все несохраненные изменения.",\r\n
+  "DE.controller.toolbar.Edit.dlgLeaveTitleText": "Вы выходите из приложения",\r\n
+  "DE.controller.toolbar.Edit.leaveButtonText": "Покинуть страницу",\r\n
+  "DE.controller.toolbar.Edit.stayButtonText": "Остаться",\r\n
+  "DE.controller.toolbar.View.requestEditFailedMessageText": "В настоящий момент нельзя отредактировать документ. Пожалуйста, попробуйте позже.",\r\n
+  "DE.controller.toolbar.View.requestEditFailedTitleText": "Доступ запрещен",\r\n
+  "DE.view.phone.Main.cancelText": "Отмена",\r\n
+  "DE.view.phone.Main.searchText": "Поиск",\r\n
+  "DE.view.phone.toolbar.Search.searchText": "Поиск",\r\n
+  "DE.view.phone.toolbar.View.doneText": "Готово",\r\n
+  "DE.view.phone.toolbar.View.readerText": "Режим чтения",\r\n
+  "DE.view.tablet.Main.searchText": "Поиск",\r\n
+  "DE.view.tablet.panel.Font.backText": "Назад",\r\n
+  "DE.view.tablet.panel.Font.fontNameText": "Название шрифта",\r\n
+  "DE.view.tablet.panel.Insert.backText": "Назад",\r\n
+  "DE.view.tablet.panel.Insert.columnsText": "Столбцы",\r\n
+  "DE.view.tablet.panel.Insert.insertColumnText": "Вставить столбец",\r\n
+  "DE.view.tablet.panel.Insert.insertPicture": "Вставить изображение",\r\n
+  "DE.view.tablet.panel.Insert.insertRowText": "Вставить строку",\r\n
+  "DE.view.tablet.panel.Insert.insertTableText": "Вставить таблицу",\r\n
+  "DE.view.tablet.panel.Insert.insertText": "Вставить",\r\n
+  "DE.view.tablet.panel.Insert.pictureText": "Изображение",\r\n
+  "DE.view.tablet.panel.Insert.pictureUploadFloat": "Вставить плавающее",\r\n
+  "DE.view.tablet.panel.Insert.pictureUploadInline": "Вставить встроенное",\r\n
+  "DE.view.tablet.panel.Insert.rowsText": "Строки",\r\n
+  "DE.view.tablet.panel.Insert.tableText": "Таблица",\r\n
+  "DE.view.tablet.panel.ListStyle.backText": "Назад",\r\n
+  "DE.view.tablet.panel.ListStyle.bulletsText": "Маркированный список",\r\n
+  "DE.view.tablet.panel.ListStyle.decIndentText": "Уменьшить отступ",\r\n
+  "DE.view.tablet.panel.ListStyle.incIndentText": "Увеличить отступ",\r\n
+  "DE.view.tablet.panel.ListStyle.listStyleText": "Стиль списка",\r\n
+  "DE.view.tablet.panel.ListStyle.noneText": "нет",\r\n
+  "DE.view.tablet.panel.ListStyle.numberingText": "Нумерованный список",\r\n
+  "DE.view.tablet.panel.ListStyle.outlineText": "Структура",\r\n
+  "DE.view.tablet.panel.Spacing.backText": "Назад",\r\n
+  "DE.view.tablet.panel.Spacing.decIndentText": "Уменьшить отступ",\r\n
+  "DE.view.tablet.panel.Spacing.incIndentText": "Увеличить отступ",\r\n
+  "DE.view.tablet.panel.Spacing.lineSpacingText": "Междустрочный интервал в абзацах",\r\n
+  "DE.view.tablet.panel.Spacing.spacingText": "Интервал",\r\n
+  "DE.view.tablet.panel.TextColor.backText": "Назад",\r\n
+  "DE.view.tablet.panel.TextColor.colorText": "Цвет",\r\n
+  "DE.view.tablet.panel.TextColor.highlightColorText": "Цвет выделения",\r\n
+  "DE.view.tablet.panel.TextColor.noFillText": "Без заливки",\r\n
+  "DE.view.tablet.panel.TextColor.textColorText": "Цвет текста",\r\n
+  "DE.view.tablet.toolbar.Edit.doneText": "Готово",\r\n
+  "DE.view.tablet.toolbar.Edit.fontText": "Шрифт",\r\n
+  "DE.view.tablet.toolbar.Search.searchText": "Поиск",\r\n
+  "DE.view.tablet.toolbar.View.doneText": "Готово",\r\n
+  "DE.view.tablet.toolbar.View.editText": "Редактировать",\r\n
+  "DE.view.tablet.toolbar.View.readerText": "Режим чтения"\r\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8055</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

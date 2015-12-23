@@ -1,0 +1,1340 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885451.99</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ru.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>107191</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\r\n
+  "Common.Controllers.Chat.notcriticalErrorTitle": "Предупреждение",\r\n
+  "Common.Controllers.Chat.textEnterMessage": "Введите здесь своё сообщение",\r\n
+  "Common.Controllers.Chat.textUserLimit": "Вы используете бесплатную версию ONLYOFFICE.<br>Только два пользователя одновременно могут совместно редактировать документ.<br>Требуется больше? Рекомендуем приобрести корпоративную версию ONLYOFFICE.<br><a href=\\"http://www.onlyoffice.com/free-edition.aspx\\" target=\\"_blank\\">Читать дальше</a>",\r\n
+  "Common.Controllers.ExternalDiagramEditor.textAnonymous": "Аноним",\r\n
+  "Common.Controllers.ExternalDiagramEditor.textClose": "Закрыть",\r\n
+  "Common.Controllers.ExternalDiagramEditor.warningText": "Объект недоступен, так как редактируется другим пользователем.",\r\n
+  "Common.Controllers.ExternalDiagramEditor.warningTitle": "Предупреждение",\r\n
+  "Common.Controllers.ExternalMergeEditor.textAnonymous": "Анонимный пользователь",\r\n
+  "Common.Controllers.ExternalMergeEditor.textClose": "Закрыть",\r\n
+  "Common.Controllers.ExternalMergeEditor.warningText": "Объект недоступен, так как редактируется другим пользователем.",\r\n
+  "Common.Controllers.ExternalMergeEditor.warningTitle": "Внимание",\r\n
+  "Common.Controllers.History.notcriticalErrorTitle": "Внимание",\r\n
+  "Common.UI.ComboBorderSize.txtNoBorders": "Без границ",\r\n
+  "Common.UI.ComboBorderSizeEditable.txtNoBorders": "Без границ",\r\n
+  "Common.UI.ComboDataView.emptyComboText": "Без стилей",\r\n
+  "Common.UI.ExtendedColorDialog.addButtonText": "Добавить",\r\n
+  "Common.UI.ExtendedColorDialog.cancelButtonText": "Отмена",\r\n
+  "Common.UI.ExtendedColorDialog.textCurrent": "Текущий",\r\n
+  "Common.UI.ExtendedColorDialog.textHexErr": "Введено некорректное значение.<br>Пожалуйста, введите значение от 000000 до FFFFFF.",\r\n
+  "Common.UI.ExtendedColorDialog.textNew": "Новый",\r\n
+  "Common.UI.ExtendedColorDialog.textRGBErr": "Введено некорректное значение.<br>Пожалуйста, введите числовое значение от 0 до 255.",\r\n
+  "Common.UI.HSBColorPicker.textNoColor": "Без цвета",\r\n
+  "Common.UI.SearchDialog.textHighlight": "Выделить результаты",\r\n
+  "Common.UI.SearchDialog.textMatchCase": "С учетом регистра",\r\n
+  "Common.UI.SearchDialog.textReplaceDef": "Введите текст для замены",\r\n
+  "Common.UI.SearchDialog.textSearchStart": "Введите здесь текст",\r\n
+  "Common.UI.SearchDialog.textTitle": "Поиск и замена",\r\n
+  "Common.UI.SearchDialog.textTitle2": "Найти",\r\n
+  "Common.UI.SearchDialog.textWholeWords": "Только слово целиком",\r\n
+  "Common.UI.SearchDialog.txtBtnReplace": "Заменить",\r\n
+  "Common.UI.SearchDialog.txtBtnReplaceAll": "Заменить все",\r\n
+  "Common.UI.SynchronizeTip.textDontShow": "Больше не показывать это сообщение",\r\n
+  "Common.UI.SynchronizeTip.textSynchronize": "Документ изменен другим пользователем.<br/>Нажмите, чтобы сохранить свои изменения и загрузить обновления.",\r\n
+  "Common.UI.Window.cancelButtonText": "Отмена",\r\n
+  "Common.UI.Window.closeButtonText": "Закрыть",\r\n
+  "Common.UI.Window.noButtonText": "Нет",\r\n
+  "Common.UI.Window.okButtonText": "OK",\r\n
+  "Common.UI.Window.textConfirmation": "Подтверждение",\r\n
+  "Common.UI.Window.textDontShow": "Больше не показывать это сообщение",\r\n
+  "Common.UI.Window.textError": "Ошибка",\r\n
+  "Common.UI.Window.textInformation": "Информация",\r\n
+  "Common.UI.Window.textWarning": "Предупреждение",\r\n
+  "Common.UI.Window.yesButtonText": "Да",\r\n
+  "Common.Views.About.txtAddress": "адрес: ",\r\n
+  "Common.Views.About.txtAscAddress": "Lubanas st. 125a-25, Riga, Latvia, EU, LV-1021",\r\n
+  "Common.Views.About.txtLicensee": "ЛИЦЕНЗИАТ",\r\n
+  "Common.Views.About.txtLicensor": "ЛИЦЕНЗИАР",\r\n
+  "Common.Views.About.txtMail": "email: ",\r\n
+  "Common.Views.About.txtPoweredBy": "Powered by",\r\n
+  "Common.Views.About.txtTel": "тел.: ",\r\n
+  "Common.Views.About.txtVersion": "Версия ",\r\n
+  "Common.Views.AdvancedSettingsWindow.cancelButtonText": "Отмена",\r\n
+  "Common.Views.AdvancedSettingsWindow.okButtonText": "OK",\r\n
+  "Common.Views.Chat.textSend": "Отправить",\r\n
+  "Common.Views.Comments.textAdd": "Добавить",\r\n
+  "Common.Views.Comments.textAddComment": "Добавить",\r\n
+  "Common.Views.Comments.textAddCommentToDoc": "Добавить комментарий к документу",\r\n
+  "Common.Views.Comments.textAddReply": "Добавить ответ",\r\n
+  "Common.Views.Comments.textAnonym": "Гость",\r\n
+  "Common.Views.Comments.textCancel": "Отмена",\r\n
+  "Common.Views.Comments.textClose": "Закрыть",\r\n
+  "Common.Views.Comments.textComments": "Комментарии",\r\n
+  "Common.Views.Comments.textEdit": "Правка",\r\n
+  "Common.Views.Comments.textEnterCommentHint": "Введите здесь свой комментарий",\r\n
+  "Common.Views.Comments.textOpenAgain": "Открыть снова",\r\n
+  "Common.Views.Comments.textReply": "Ответить",\r\n
+  "Common.Views.Comments.textResolve": "Решить",\r\n
+  "Common.Views.Comments.textResolved": "Решено",\r\n
+  "Common.Views.CopyWarningDialog.textDontShow": "Больше не показывать это сообщение",\r\n
+  "Common.Views.CopyWarningDialog.textMsg": "Операции копирования, вырезания и вставки можно выполнить с помощью кнопок на панели инструментов и команд контекстного меню только в этой вкладке редактора.<br><br>Для копирования в другие приложения и вставки из них используйте следующие сочетания клавиш:",\r\n
+  "Common.Views.CopyWarningDialog.textTitle": "Операции копирования, вырезания и вставки",\r\n
+  "Common.Views.CopyWarningDialog.textToCopy": "для копирования",\r\n
+  "Common.Views.CopyWarningDialog.textToCut": "для вырезания",\r\n
+  "Common.Views.CopyWarningDialog.textToPaste": "для вставки",\r\n
+  "Common.Views.DocumentAccessDialog.textLoading": "Загрузка...",\r\n
+  "Common.Views.DocumentAccessDialog.textTitle": "Настройки совместного доступа",\r\n
+  "Common.Views.ExternalDiagramEditor.textClose": "Закрыть",\r\n
+  "Common.Views.ExternalDiagramEditor.textSave": "Сохранить и выйти",\r\n
+  "Common.Views.ExternalDiagramEditor.textTitle": "Редактор диаграмм",\r\n
+  "Common.Views.ExternalMergeEditor.textClose": "Закрыть",\r\n
+  "Common.Views.ExternalMergeEditor.textSave": "Сохранить и выйти",\r\n
+  "Common.Views.ExternalMergeEditor.textTitle": "Получатели слияния",\r\n
+  "Common.Views.Header.openNewTabText": "Открыть в новой вкладке",\r\n
+  "Common.Views.Header.textBack": "Перейти к Документам",\r\n
+  "Common.Views.History.textHistoryHeader": "Вернуться к документу",\r\n
+  "Common.Views.ImageFromUrlDialog.cancelButtonText": "Отмена",\r\n
+  "Common.Views.ImageFromUrlDialog.okButtonText": "OK",\r\n
+  "Common.Views.ImageFromUrlDialog.textUrl": "Вставьте URL изображения:",\r\n
+  "Common.Views.ImageFromUrlDialog.txtEmpty": "Это поле обязательно для заполнения",\r\n
+  "Common.Views.ImageFromUrlDialog.txtNotUrl": "Это поле должно быть URL-адресом в формате \\"http://www.example.com\\"",\r\n
+  "Common.Views.InsertTableDialog.cancelButtonText": "Отмена",\r\n
+  "Common.Views.InsertTableDialog.okButtonText": "OK",\r\n
+  "Common.Views.InsertTableDialog.textInvalidRowsCols": "Необходимо указать допустимое количество строк и столбцов.",\r\n
+  "Common.Views.InsertTableDialog.txtColumns": "Количество столбцов",\r\n
+  "Common.Views.InsertTableDialog.txtMaxText": "Максимальное значение для этого поля - {0}.",\r\n
+  "Common.Views.InsertTableDialog.txtMinText": "Минимальное значение для этого поля - {0}.",\r\n
+  "Common.Views.InsertTableDialog.txtRows": "Количество строк",\r\n
+  "Common.Views.InsertTableDialog.txtTitle": "Размер таблицы",\r\n
+  "DE.Controllers.LeftMenu.leavePageText": "Все несохраненные изменения в этом документе будут потеряны.<br> Нажмите кнопку \\"Отмена\\", а затем нажмите кнопку \\"Сохранить\\", чтобы сохранить их. Нажмите кнопку \\"OK\\", чтобы сбросить все несохраненные изменения.",\r\n
+  "DE.Controllers.LeftMenu.newDocumentTitle": "Документ без имени",\r\n
+  "DE.Controllers.LeftMenu.notcriticalErrorTitle": "Внимание",\r\n
+  "DE.Controllers.LeftMenu.requestEditRightsText": "Запрос прав на редактирование...",\r\n
+  "DE.Controllers.LeftMenu.textLoadHistory": "Загрузка журнала версий...",\r\n
+  "DE.Controllers.LeftMenu.textNoTextFound": "Искомые данные не найдены. Пожалуйста, измените параметры поиска.",\r\n
+  "DE.Controllers.LeftMenu.textReplaceSkipped": "Замена выполнена. Пропущено вхождений - {0}.",\r\n
+  "DE.Controllers.LeftMenu.textReplaceSuccess": "Поиск выполнен. Заменено вхождений: {0}",\r\n
+  "DE.Controllers.Main.applyChangesTextText": "Загрузка изменений...",\r\n
+  "DE.Controllers.Main.applyChangesTitleText": "Загрузка изменений",\r\n
+  "DE.Controllers.Main.convertationErrorText": "Конвертация не удалась.",\r\n
+  "DE.Controllers.Main.convertationTimeoutText": "Превышено время ожидания конвертации.",\r\n
+  "DE.Controllers.Main.criticalErrorExtText": "Нажмите \\"OK\\", чтобы вернуться к списку документов.",\r\n
+  "DE.Controllers.Main.criticalErrorTitle": "Ошибка",\r\n
+  "DE.Controllers.Main.defaultTitleText": "ONLYOFFICE Document Editor",\r\n
+  "DE.Controllers.Main.downloadErrorText": "Загрузка не удалась.",\r\n
+  "DE.Controllers.Main.downloadMergeText": "Загрузка...",\r\n
+  "DE.Controllers.Main.downloadMergeTitle": "Загрузка",\r\n
+  "DE.Controllers.Main.downloadTextText": "Загрузка документа...",\r\n
+  "DE.Controllers.Main.downloadTitleText": "Загрузка документа",\r\n
+  "DE.Controllers.Main.errorCoAuthoringDisconnect": "Потеряно соединение с сервером. В данный момент нельзя отредактировать документ.",\r\n
+  "DE.Controllers.Main.errorDatabaseConnection": "Внешняя ошибка.<br>Ошибка подключения к базе данных. Если ошибка повторяется, пожалуйста, обратитесь в службу поддержки.",\r\n
+  "DE.Controllers.Main.errorDataRange": "Некорректный диапазон данных.",\r\n
+  "DE.Controllers.Main.errorDefaultMessage": "Код ошибки: %1",\r\n
+  "DE.Controllers.Main.errorFilePassProtect": "Документ защищен паролем и не может быть открыт.",\r\n
+  "DE.Controllers.Main.errorKeyEncrypt": "Неизвестный дескриптор ключа",\r\n
+  "DE.Controllers.Main.errorKeyExpire": "Срок действия дескриптора ключа истек",\r\n
+  "DE.Controllers.Main.errorMailMergeLoadFile": "Сбой при загрузке",\r\n
+  "DE.Controllers.Main.errorMailMergeSaveFile": "Не удалось выполнить слияние.",\r\n
+  "DE.Controllers.Main.errorProcessSaveResult": "Сбой при сохранении.",\r\n
+  "DE.Controllers.Main.errorStockChart": "Неверный порядок строк. Чтобы создать биржевую диаграмму, расположите данные на листе в следующем порядке:<br> цена открытия, максимальная цена, минимальная цена, цена закрытия.",\r\n
+  "DE.Controllers.Main.errorUpdateVersion": "Версия файла была изменена. Страница будет перезагружена.",\r\n
+  "DE.Controllers.Main.errorUserDrop": "В настоящий момент файл недоступен.",\r\n
+  "DE.Controllers.Main.errorUsersExceed": "Превышено количество пользователей, разрешенных согласно тарифному плану",\r\n
+  "DE.Controllers.Main.leavePageText": "Документ содержит несохраненные изменения. Чтобы сохранить их, нажмите \\"Остаться на этой странице\\", затем \\"Сохранить\\". Нажмите \\"Покинуть эту страницу\\", чтобы сбросить все несохраненные изменения.",\r\n
+  "DE.Controllers.Main.loadFontsTextText": "Загрузка данных...",\r\n
+  "DE.Controllers.Main.loadFontsTitleText": "Загрузка данных",\r\n
+  "DE.Controllers.Main.loadFontTextText": "Загрузка данных...",\r\n
+  "DE.Controllers.Main.loadFontTitleText": "Загрузка данных",\r\n
+  "DE.Controllers.Main.loadImagesTextText": "Загрузка изображений...",\r\n
+  "DE.Controllers.Main.loadImagesTitleText": "Загрузка изображений",\r\n
+  "DE.Controllers.Main.loadImageTextText": "Загрузка изображения...",\r\n
+  "DE.Controllers.Main.loadImageTitleText": "Загрузка изображения",\r\n
+  "DE.Controllers.Main.loadingDocumentTextText": "Загрузка документа...",\r\n
+  "DE.Controllers.Main.loadingDocumentTitleText": "Загрузка документа",\r\n
+  "DE.Controllers.Main.mailMergeLoadFileText": "Загрузка источника данных...",\r\n
+  "DE.Controllers.Main.mailMergeLoadFileTitle": "Загрузка источника данных",\r\n
+  "DE.Controllers.Main.notcriticalErrorTitle": "Предупреждение",\r\n
+  "DE.Controllers.Main.openTextText": "Открытие документа...",\r\n
+  "DE.Controllers.Main.openTitleText": "Открытие документа",\r\n
+  "DE.Controllers.Main.printTextText": "Печать документа...",\r\n
+  "DE.Controllers.Main.printTitleText": "Печать документа",\r\n
+  "DE.Controllers.Main.reloadButtonText": "Обновить страницу",\r\n
+  "DE.Controllers.Main.requestEditFailedMessageText": "В настоящее время документ редактируется. Пожалуйста, попробуйте позже.",\r\n
+  "DE.Controllers.Main.requestEditFailedTitleText": "Доступ запрещён",\r\n
+  "DE.Controllers.Main.savePreparingText": "Подготовка к сохранению",\r\n
+  "DE.Controllers.Main.savePreparingTitle": "Подготовка к сохранению. Пожалуйста, подождите...",\r\n
+  "DE.Controllers.Main.saveTextText": "Сохранение документа...",\r\n
+  "DE.Controllers.Main.saveTitleText": "Сохранение документа",\r\n
+  "DE.Controllers.Main.sendMergeText": "Отправка результатов слияния...",\r\n
+  "DE.Controllers.Main.sendMergeTitle": "Отправка результатов слияния",\r\n
+  "DE.Controllers.Main.splitDividerErrorText": "Число строк должно являться делителем для %1.",\r\n
+  "DE.Controllers.Main.splitMaxColsErrorText": "Число столбцов должно быть меньше, чем %1.",\r\n
+  "DE.Controllers.Main.splitMaxRowsErrorText": "Число строк должно быть меньше, чем %1.",\r\n
+  "DE.Controllers.Main.textAnonymous": "Аноним",\r\n
+  "DE.Controllers.Main.textCloseTip": "\\nЩелкните, чтобы закрыть эту подсказку",\r\n
+  "DE.Controllers.Main.textLoadingDocument": "Загрузка документа",\r\n
+  "DE.Controllers.Main.titleUpdateVersion": "Версия изменилась",\r\n
+  "DE.Controllers.Main.txtBasicShapes": "Основные фигуры",\r\n
+  "DE.Controllers.Main.txtButtons": "Кнопки",\r\n
+  "DE.Controllers.Main.txtCallouts": "Выноски",\r\n
+  "DE.Controllers.Main.txtCharts": "Схемы",\r\n
+  "DE.Controllers.Main.txtDiagramTitle": "Заголовок диаграммы",\r\n
+  "DE.Controllers.Main.txtEditingMode": "Установка режима редактирования...",\r\n
+  "DE.Controllers.Main.txtFiguredArrows": "Фигурные стрелки",\r\n
+  "DE.Controllers.Main.txtLines": "Линии",\r\n
+  "DE.Controllers.Main.txtMath": "Математические знаки",\r\n
+  "DE.Controllers.Main.txtNeedSynchronize": "Есть обновления",\r\n
+  "DE.Controllers.Main.txtRectangles": "Прямоугольники",\r\n
+  "DE.Controllers.Main.txtSeries": "Ряд",\r\n
+  "DE.Controllers.Main.txtStarsRibbons": "Звезды и ленты",\r\n
+  "DE.Controllers.Main.txtXAxis": "Ось X",\r\n
+  "DE.Controllers.Main.txtYAxis": "Ось Y",\r\n
+  "DE.Controllers.Main.unknownErrorText": "Неизвестная ошибка.",\r\n
+  "DE.Controllers.Main.unsupportedBrowserErrorText ": "Ваш браузер не поддерживается.",\r\n
+  "DE.Controllers.Main.uploadImageExtMessage": "Неизвестный формат изображения.",\r\n
+  "DE.Controllers.Main.uploadImageFileCountMessage": "Ни одного изображения не загружено.",\r\n
+  "DE.Controllers.Main.uploadImageSizeMessage": "Превышен максимальный размер изображения.",\r\n
+  "DE.Controllers.Main.uploadImageTextText": "Загрузка изображения...",\r\n
+  "DE.Controllers.Main.uploadImageTitleText": "Загрузка изображения",\r\n
+  "DE.Controllers.Main.warnBrowserIE9": "В IE9 приложение имеет низкую производительность. Используйте IE10 или более позднюю версию.",\r\n
+  "DE.Controllers.Main.warnBrowserZoom": "Текущее значение масштаба страницы в браузере поддерживается не полностью. Вернитесь к масштабу по умолчанию, нажав Ctrl+0.",\r\n
+  "DE.Controllers.Main.warnProcessRightsChange": "Вам было отказано в праве на редактирование этого файла.",\r\n
+  "DE.Controllers.Statusbar.zoomText": "Масштаб {0}%",\r\n
+  "DE.Controllers.Toolbar.confirmAddFontName": "Шрифт, который вы собираетесь сохранить, недоступен на этом устройстве.<br>Стиль текста будет отображаться с использованием одного из шрифтов устройства; сохраненный шрифт будет использоваться, когда он будет доступен.<br>Вы хотите продолжить?",\r\n
+  "DE.Controllers.Toolbar.textAccent": "Диакритические знаки",\r\n
+  "DE.Controllers.Toolbar.textBracket": "Скобки",\r\n
+  "DE.Controllers.Toolbar.textEmptyImgUrl": "Необходимо указать URL изображения.",\r\n
+  "DE.Controllers.Toolbar.textFontSizeErr": "Введенное значение некорректно.<br>Введите числовое значение от 1 до 100",\r\n
+  "DE.Controllers.Toolbar.textFraction": "Дроби",\r\n
+  "DE.Controllers.Toolbar.textFunction": "Функции",\r\n
+  "DE.Controllers.Toolbar.textIntegral": "Интегралы",\r\n
+  "DE.Controllers.Toolbar.textLargeOperator": "Крупные операторы",\r\n
+  "DE.Controllers.Toolbar.textLimitAndLog": "Пределы и логарифмы",\r\n
+  "DE.Controllers.Toolbar.textMatrix": "Матрицы",\r\n
+  "DE.Controllers.Toolbar.textOperator": "Операторы",\r\n
+  "DE.Controllers.Toolbar.textRadical": "Радикалы",\r\n
+  "DE.Controllers.Toolbar.textScript": "Индексы",\r\n
+  "DE.Controllers.Toolbar.textSymbols": "Символы",\r\n
+  "DE.Controllers.Toolbar.textWarning": "Предупреждение",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Accent": "Ударение",\r\n
+  "DE.Controllers.Toolbar.txtAccent_ArrowD": "Стрелка вправо-влево сверху",\r\n
+  "DE.Controllers.Toolbar.txtAccent_ArrowL": "Стрелка влево сверху",\r\n
+  "DE.Controllers.Toolbar.txtAccent_ArrowR": "Стрелка вправо сверху",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Bar": "Черта",\r\n
+  "DE.Controllers.Toolbar.txtAccent_BarBot": "Черта снизу",\r\n
+  "DE.Controllers.Toolbar.txtAccent_BarTop": "Черта сверху",\r\n
+  "DE.Controllers.Toolbar.txtAccent_BorderBox": "Формула в рамке (с заполнителем)",\r\n
+  "DE.Controllers.Toolbar.txtAccent_BorderBoxCustom": "Формула в рамке (пример)",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Check": "Галочка",\r\n
+  "DE.Controllers.Toolbar.txtAccent_CurveBracketBot": "Фигурная скобка снизу",\r\n
+  "DE.Controllers.Toolbar.txtAccent_CurveBracketTop": "Фигурная скобка сверху",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Custom_1": "Вектор A",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Custom_2": "ABC с чертой сверху",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Custom_3": "x XOR y с чертой сверху",\r\n
+  "DE.Controllers.Toolbar.txtAccent_DDDot": "Три точки",\r\n
+  "DE.Controllers.Toolbar.txtAccent_DDot": "Две точки",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Dot": "Точка",\r\n
+  "DE.Controllers.Toolbar.txtAccent_DoubleBar": "Двойная черта сверху",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Grave": "Тупое ударение",\r\n
+  "DE.Controllers.Toolbar.txtAccent_GroupBot": "Группирующий знак снизу",\r\n
+  "DE.Controllers.Toolbar.txtAccent_GroupTop": "Группирующий знак сверху",\r\n
+  "DE.Controllers.Toolbar.txtAccent_HarpoonL": "Гарпун влево сверху",\r\n
+  "DE.Controllers.Toolbar.txtAccent_HarpoonR": "Гарпун вправо сверху",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Hat": "Крышка",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Smile": "Значок краткости",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Tilde": "Тильда",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle": "Скобки",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle_Delimiter_2": "Скобки и разделители",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle_Delimiter_3": "Скобки и разделители",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle_NoneOpen": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle_OpenNone": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Curve": "Скобки",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Curve_Delimiter_2": "Скобки и разделители",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Curve_NoneOpen": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Curve_OpenNone": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_1": "Наборы условий (два условия)",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_2": "Наборы условий (три условия)",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_3": "Стопка объектов",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_4": "Стопка объектов",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_5": "Наборы условий (пример)",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_6": "Биномиальный коэффициент",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_7": "Биномиальный коэффициент",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Line": "Скобки",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Line_NoneOpen": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Line_OpenNone": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LineDouble": "Скобки",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LineDouble_NoneOpen": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LineDouble_OpenNone": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LowLim": "Скобки",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LowLim_NoneNone": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LowLim_OpenNone": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Round": "Скобки",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Round_Delimiter_2": "Скобки и разделители",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Round_NoneOpen": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Round_OpenNone": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square": "Скобки",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_CloseClose": "Скобки",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_CloseOpen": "Скобки",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_NoneOpen": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_OpenNone": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_OpenOpen": "Скобки",\r\n
+  "DE.Controllers.Toolbar.txtBracket_SquareDouble": "Скобки",\r\n
+  "DE.Controllers.Toolbar.txtBracket_SquareDouble_NoneOpen": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_SquareDouble_OpenNone": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_UppLim": "Скобки",\r\n
+  "DE.Controllers.Toolbar.txtBracket_UppLim_NoneOpen": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtBracket_UppLim_OpenNone": "Отдельная скобка",\r\n
+  "DE.Controllers.Toolbar.txtFractionDiagonal": "Диагональная простая дробь",\r\n
+  "DE.Controllers.Toolbar.txtFractionDifferential_1": "Дифференциал",\r\n
+  "DE.Controllers.Toolbar.txtFractionDifferential_2": "Дифференциал",\r\n
+  "DE.Controllers.Toolbar.txtFractionDifferential_3": "Дифференциал",\r\n
+  "DE.Controllers.Toolbar.txtFractionDifferential_4": "Дифференциал",\r\n
+  "DE.Controllers.Toolbar.txtFractionHorizontal": "Горизонтальная простая дробь",\r\n
+  "DE.Controllers.Toolbar.txtFractionPi_2": "Пи разделить на два",\r\n
+  "DE.Controllers.Toolbar.txtFractionSmall": "Маленькая простая дробь",\r\n
+  "DE.Controllers.Toolbar.txtFractionVertical": "Вертикальная простая дробь",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Cos": "Арккосинус",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Cosh": "Гиперболический арккосинус",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Cot": "Арккотангенс",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Coth": "Гиперболический арккотангенс",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Csc": "Арккосеканс",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Csch": "Гиперболический арккосеканс",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Sec": "Арксеканс",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Sech": "Гиперболический арксеканс",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Sin": "Арксинус",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Sinh": "Гиперболический арксинус",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Tan": "Арктангенс",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Tanh": "Гиперболический арктангенс",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Cos": "Косинус",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Cosh": "Гиперболический косинус",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Cot": "Котангенс",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Coth": "Гиперболический котангенс",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Csc": "Косеканс",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Csch": "Гиперболический косеканс",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Custom_1": "Sin θ",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Custom_2": "Cos 2x",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Custom_3": "Формула тангенса",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Sec": "Секанс",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Sech": "Гиперболический секанс",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Sin": "Синус",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Sinh": "Гиперболический синус",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Tan": "Тангенс",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Tanh": "Гиперболический тангенс",\r\n
+  "DE.Controllers.Toolbar.txtIntegral": "Интеграл",\r\n
+  "DE.Controllers.Toolbar.txtIntegral_dtheta": "Дифференциал dθ",\r\n
+  "DE.Controllers.Toolbar.txtIntegral_dx": "Дифференциал dx",\r\n
+  "DE.Controllers.Toolbar.txtIntegral_dy": "Дифференциал dy",\r\n
+  "DE.Controllers.Toolbar.txtIntegralCenterSubSup": "Интеграл",\r\n
+  "DE.Controllers.Toolbar.txtIntegralDouble": "Двойной интеграл",\r\n
+  "DE.Controllers.Toolbar.txtIntegralDoubleCenterSubSup": "Двойной интеграл",\r\n
+  "DE.Controllers.Toolbar.txtIntegralDoubleSubSup": "Двойной интеграл",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOriented": "Контурный интеграл",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedCenterSubSup": "Контурный интеграл",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedDouble": "Интеграл по поверхности",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedDoubleCenterSubSup": "Интеграл по поверхности",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedDoubleSubSup": "Интеграл по поверхности",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedSubSup": "Контурный интеграл",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedTriple": "Интеграл по объему",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedTripleCenterSubSup": "Интеграл по объему",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedTripleSubSup": "Интеграл по объему",\r\n
+  "DE.Controllers.Toolbar.txtIntegralSubSup": "Интеграл",\r\n
+  "DE.Controllers.Toolbar.txtIntegralTriple": "Тройной интеграл",\r\n
+  "DE.Controllers.Toolbar.txtIntegralTripleCenterSubSup": "Тройной интеграл",\r\n
+  "DE.Controllers.Toolbar.txtIntegralTripleSubSup": "Тройной интеграл",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction": "Клин",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction_CenterSub": "Клин",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction_CenterSubSup": "Клин",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction_Sub": "Клин",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction_SubSup": "Клин",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd": "Сопроизведение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd_CenterSub": "Сопроизведение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd_CenterSubSup": "Сопроизведение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd_Sub": "Сопроизведение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd_SubSup": "Сопроизведение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_1": "Сумма",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_2": "Сумма",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_3": "Сумма",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_4": "Произведение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_5": "Объединение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction": "Буква V",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction_CenterSub": "Буква V",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction_CenterSubSup": "Буква V",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction_Sub": "Буква V",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction_SubSup": "Буква V",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection": "Пересечение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection_CenterSub": "Пересечение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection_CenterSubSup": "Пересечение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection_Sub": "Пересечение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection_SubSup": "Пересечение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod": "Произведение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod_CenterSub": "Произведение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod_CenterSubSup": "Произведение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod_Sub": "Произведение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod_SubSup": "Произведение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum": "Сумма",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum_CenterSub": "Сумма",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum_CenterSubSup": "Сумма",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum_Sub": "Сумма",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum_SubSup": "Сумма",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union": "Объединение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union_CenterSub": "Объединение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union_CenterSubSup": "Объединение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union_Sub": "Объединение",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union_SubSup": "Объединение",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Custom_1": "Пример предела",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Custom_2": "Пример максимума",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Lim": "Предел",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Ln": "Натуральный логарифм",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Log": "Логарифм",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_LogBase": "Логарифм",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Max": "Максимум",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Min": "Минимум",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_1_2": "Пустая матрица 1 x 2",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_1_3": "Пустая матрица 1 x 3",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_1": "Пустая матрица 2 x 1",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2": "Пустая матрица 2 x 2",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2_DLineBracket": "Пустая матрица со скобками",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2_LineBracket": "Пустая матрица со скобками",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2_RoundBracket": "Пустая матрица со скобками",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2_SquareBracket": "Пустая матрица со скобками",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_3": "Пустая матрица 2 x 3",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_3_1": "Пустая матрица 3 x 1",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_3_2": "Пустая матрица 3 x 2",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_3_3": "Пустая матрица 3 x 3",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Dots_Baseline": "Точки на опорной линии",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Dots_Center": "Точки посередине",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Dots_Diagonal": "Точки по диагонали",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Dots_Vertical": "Точки по вертикали",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Flat_Round": "Разреженная матрица",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Flat_Square": "Разреженная матрица",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Identity_2": "Единичная матрица 2 x 2",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Identity_2_NoZeros": "Единичная матрица 3 x 3",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Identity_3": "Единичная матрица 3 x 3",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Identity_3_NoZeros": "Единичная матрица 3 x 3",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowD_Bot": "Стрелка вправо-влево снизу",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowD_Top": "Стрелка вправо-влево сверху",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowL_Bot": "Стрелка влево снизу",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowL_Top": "Стрелка влево сверху",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowR_Bot": "Стрелка вправо снизу",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowR_Top": "Стрелка вправо сверху",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ColonEquals": "Двоеточие равно",\r\n
+  "DE.Controllers.Toolbar.txtOperator_Custom_1": "Выход",\r\n
+  "DE.Controllers.Toolbar.txtOperator_Custom_2": "Дельта выхода",\r\n
+  "DE.Controllers.Toolbar.txtOperator_Definition": "Равно по определению",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DeltaEquals": "Дельта равна",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowD_Bot": "Стрелка вправо-влево снизу",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowD_Top": "Стрелка вправо-влево сверху",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowL_Bot": "Стрелка влево снизу",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowL_Top": "Стрелка влево сверху",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowR_Bot": "Стрелка вправо снизу",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowR_Top": "Стрелка вправо сверху",\r\n
+  "DE.Controllers.Toolbar.txtOperator_EqualsEquals": "Равно равно",\r\n
+  "DE.Controllers.Toolbar.txtOperator_MinusEquals": "Минус равно",\r\n
+  "DE.Controllers.Toolbar.txtOperator_PlusEquals": "Плюс равно",\r\n
+  "DE.Controllers.Toolbar.txtOperator_UnitOfMeasure": "Единица измерения",\r\n
+  "DE.Controllers.Toolbar.txtRadicalCustom_1": "Радикал",\r\n
+  "DE.Controllers.Toolbar.txtRadicalCustom_2": "Радикал",\r\n
+  "DE.Controllers.Toolbar.txtRadicalRoot_2": "Квадратный корень со степенью",\r\n
+  "DE.Controllers.Toolbar.txtRadicalRoot_3": "Кубический корень",\r\n
+  "DE.Controllers.Toolbar.txtRadicalRoot_n": "Радикал со степенью",\r\n
+  "DE.Controllers.Toolbar.txtRadicalSqrt": "Квадратный корень",\r\n
+  "DE.Controllers.Toolbar.txtScriptCustom_1": "Индекс",\r\n
+  "DE.Controllers.Toolbar.txtScriptCustom_2": "Индекс",\r\n
+  "DE.Controllers.Toolbar.txtScriptCustom_3": "Индекс",\r\n
+  "DE.Controllers.Toolbar.txtScriptCustom_4": "Индекс",\r\n
+  "DE.Controllers.Toolbar.txtScriptSub": "Нижний индекс",\r\n
+  "DE.Controllers.Toolbar.txtScriptSubSup": "Нижний и верхний индексы",\r\n
+  "DE.Controllers.Toolbar.txtScriptSubSupLeft": "Нижний и верхний индексы слева",\r\n
+  "DE.Controllers.Toolbar.txtScriptSup": "Верхний индекс",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_about": "Приблизительно",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_additional": "Дополнение",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_aleph": "Алеф",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_alpha": "Альфа",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_approx": "Почти равно",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_ast": "Оператор-звездочка",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_beta": "Бета",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_beth": "Бет",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_bullet": "Оператор-маркер",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cap": "Пересечение",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cbrt": "Кубический корень",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cdots": "Горизонтальное многоточие посередине",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_celsius": "Градусы Цельсия",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_chi": "Хи",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cong": "Приблизительно равно",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cup": "Объединение",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_ddots": "Диагональное многоточие вниз вправо",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_degree": "Градусы",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_delta": "Дельта",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_div": "Знак деления",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_downarrow": "Стрелка вниз",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_emptyset": "Пустое множество",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_epsilon": "Эпсилон",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_equals": "Равно",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_equiv": "Тождественно",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_eta": "Эта",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_exists": "Существует",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_factorial": "Факториал",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_fahrenheit": "Градусы Фаренгейта",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_forall": "Для всех",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_gamma": "Гамма",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_geq": "Больше или равно",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_gg": "Много больше",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_greater": "Больше",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_in": "Является элементом",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_inc": "Приращение",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_infinity": "Бесконечность",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_iota": "Йота",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_kappa": "Каппа",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_lambda": "Лямбда",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_leftarrow": "Стрелка влево",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_leftrightarrow": "Стрелка влево и вправо",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_leq": "Меньше или равно",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_less": "Меньше",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_ll": "Много меньше",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_minus": "Минус",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_mp": "Минус и плюс",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_mu": "Мю",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_nabla": "Набла",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_neq": "Не равно",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_ni": "Содержит как член",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_not": "Знак отрицания",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_notexists": "Не существует",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_nu": "Ню",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_o": "Омикрон",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_omega": "Омега",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_partial": "Частный дифференциал",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_percent": "Процент",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_phi": "Фи",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_pi": "Пи",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_plus": "Плюс",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_pm": "Плюс и минус",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_propto": "Пропорционально",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_psi": "Пси",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_qdrt": "Корень четвертой степени",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_QED": "Что и требовалось доказать",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_rddots": "Диагональное многоточие вверх вправо",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_rho": "Ро",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_rightarrow": "Стрелка вправо",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_sigma": "Сигма",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_sqrt": "Знак радикала",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_tau": "Тау",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_therefore": "Следовательно",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_theta": "Тета",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_times": "Знак умножения",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_uparrow": "Стрелка вверх",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_upsilon": "Ипсилон",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varepsilon": "Эпсилон (вариант)",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varphi": "Фи (вариант)",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varpi": "Пи (вариант)",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varrho": "Ро (вариант)",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varsigma": "Сигма (вариант)",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_vartheta": "Тета (вариант)",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_vdots": "Вертикальное многоточие",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_Xsi": "Кси",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_zeta": "Дзета",\r\n
+  "DE.Views.ChartSettings.textAdvanced": "Дополнительные параметры",\r\n
+  "DE.Views.ChartSettings.textArea": "С областями",\r\n
+  "DE.Views.ChartSettings.textBar": "Линейчатая",\r\n
+  "DE.Views.ChartSettings.textChartType": "Изменить тип диаграммы",\r\n
+  "DE.Views.ChartSettings.textColumn": "Гистограмма",\r\n
+  "DE.Views.ChartSettings.textEditData": "Изменить данные",\r\n
+  "DE.Views.ChartSettings.textHeight": "Высота",\r\n
+  "DE.Views.ChartSettings.textLine": "График",\r\n
+  "DE.Views.ChartSettings.textOriginalSize": "По умолчанию",\r\n
+  "DE.Views.ChartSettings.textPie": "Круговая",\r\n
+  "DE.Views.ChartSettings.textPoint": "Точечная",\r\n
+  "DE.Views.ChartSettings.textSize": "Размер",\r\n
+  "DE.Views.ChartSettings.textStock": "Биржевая",\r\n
+  "DE.Views.ChartSettings.textStyle": "Стиль",\r\n
+  "DE.Views.ChartSettings.textUndock": "Открепить от панели",\r\n
+  "DE.Views.ChartSettings.textWidth": "Ширина",\r\n
+  "DE.Views.ChartSettings.textWrap": "Стиль обтекания",\r\n
+  "DE.Views.ChartSettings.txtBehind": "За текстом",\r\n
+  "DE.Views.ChartSettings.txtInFront": "Перед текстом",\r\n
+  "DE.Views.ChartSettings.txtInline": "В тексте",\r\n
+  "DE.Views.ChartSettings.txtSquare": "Вокруг рамки",\r\n
+  "DE.Views.ChartSettings.txtThrough": "Сквозное",\r\n
+  "DE.Views.ChartSettings.txtTight": "По контуру",\r\n
+  "DE.Views.ChartSettings.txtTitle": "Диаграмма",\r\n
+  "DE.Views.ChartSettings.txtTopAndBottom": "Сверху и снизу",\r\n
+  "DE.Views.DocumentHolder.aboveText": "Выше",\r\n
+  "DE.Views.DocumentHolder.addCommentText": "Добавить комментарий",\r\n
+  "DE.Views.DocumentHolder.advancedFrameText": "Дополнительные параметры рамки",\r\n
+  "DE.Views.DocumentHolder.advancedParagraphText": "Дополнительные параметры абзаца",\r\n
+  "DE.Views.DocumentHolder.advancedTableText": "Дополнительные параметры таблицы",\r\n
+  "DE.Views.DocumentHolder.advancedText": "Дополнительные параметры",\r\n
+  "DE.Views.DocumentHolder.alignmentText": "Выравнивание",\r\n
+  "DE.Views.DocumentHolder.belowText": "Ниже",\r\n
+  "DE.Views.DocumentHolder.bottomCellText": "По нижнему краю",\r\n
+  "DE.Views.DocumentHolder.breakBeforeText": "С новой страницы",\r\n
+  "DE.Views.DocumentHolder.cellAlignText": "Вертикальное выравнивание в ячейках",\r\n
+  "DE.Views.DocumentHolder.cellText": "Ячейку",\r\n
+  "DE.Views.DocumentHolder.centerCellText": "По центру",\r\n
+  "DE.Views.DocumentHolder.centerText": "По центру",\r\n
+  "DE.Views.DocumentHolder.chartText": "Дополнительные параметры диаграммы",\r\n
+  "DE.Views.DocumentHolder.columnText": "Столбец",\r\n
+  "DE.Views.DocumentHolder.deleteColumnText": "Удалить столбец",\r\n
+  "DE.Views.DocumentHolder.deleteRowText": "Удалить строку",\r\n
+  "DE.Views.DocumentHolder.deleteTableText": "Удалить таблицу",\r\n
+  "DE.Views.DocumentHolder.deleteText": "Удалить",\r\n
+  "DE.Views.DocumentHolder.direct270Text": "Поворот на 270°",\r\n
+  "DE.Views.DocumentHolder.direct90Text": "Поворот на 90°",\r\n
+  "DE.Views.DocumentHolder.directHText": "Горизонтальное",\r\n
+  "DE.Views.DocumentHolder.directionText": "Направление текста",\r\n
+  "DE.Views.DocumentHolder.editChartText": "Изменить данные",\r\n
+  "DE.Views.DocumentHolder.editFooterText": "Изменить нижний колонтитул",\r\n
+  "DE.Views.DocumentHolder.editHeaderText": "Изменить верхний колонтитул",\r\n
+  "DE.Views.DocumentHolder.editHyperlinkText": "Изменить гиперссылку",\r\n
+  "DE.Views.DocumentHolder.flowoverText": "Стиль обтекания - Плавающий",\r\n
+  "DE.Views.DocumentHolder.guestText": "Гость",\r\n
+  "DE.Views.DocumentHolder.hyperlinkText": "Гиперссылка",\r\n
+  "DE.Views.DocumentHolder.ignoreAllSpellText": "Пропустить все",\r\n
+  "DE.Views.DocumentHolder.ignoreSpellText": "Пропустить",\r\n
+  "DE.Views.DocumentHolder.imageText": "Дополнительные параметры изображения",\r\n
+  "DE.Views.DocumentHolder.inlineText": "Стиль обтекания - Встроенный",\r\n
+  "DE.Views.DocumentHolder.insertColumnLeftText": "Столбец слева",\r\n
+  "DE.Views.DocumentHolder.insertColumnRightText": "Столбец справа",\r\n
+  "DE.Views.DocumentHolder.insertColumnText": "Вставить столбец",\r\n
+  "DE.Views.DocumentHolder.insertRowAboveText": "Строку выше",\r\n
+  "DE.Views.DocumentHolder.insertRowBelowText": "Строку ниже",\r\n
+  "DE.Views.DocumentHolder.insertRowText": "Вставить строку",\r\n
+  "DE.Views.DocumentHolder.insertText": "Добавить",\r\n
+  "DE.Views.DocumentHolder.keepLinesText": "Не разрывать абзац",\r\n
+  "DE.Views.DocumentHolder.langText": "Выбрать язык",\r\n
+  "DE.Views.DocumentHolder.leftText": "По левому краю",\r\n
+  "DE.Views.DocumentHolder.loadSpellText": "Загрузка вариантов...",\r\n
+  "DE.Views.DocumentHolder.mergeCellsText": "Объединить ячейки",\r\n
+  "DE.Views.DocumentHolder.moreText": "Больше вариантов...",\r\n
+  "DE.Views.DocumentHolder.noSpellVariantsText": "Нет вариантов",\r\n
+  "DE.Views.DocumentHolder.originalSizeText": "Размер по умолчанию",\r\n
+  "DE.Views.DocumentHolder.paragraphText": "Абзац",\r\n
+  "DE.Views.DocumentHolder.removeHyperlinkText": "Удалить гиперссылку",\r\n
+  "DE.Views.DocumentHolder.rightText": "По правому краю",\r\n
+  "DE.Views.DocumentHolder.rowText": "Строку",\r\n
+  "DE.Views.DocumentHolder.selectCellText": "Выделить ячейку",\r\n
+  "DE.Views.DocumentHolder.selectColumnText": "Выделить столбец",\r\n
+  "DE.Views.DocumentHolder.selectRowText": "Выделить строку",\r\n
+  "DE.Views.DocumentHolder.selectTableText": "Выделить таблицу",\r\n
+  "DE.Views.DocumentHolder.selectText": "Выделить",\r\n
+  "DE.Views.DocumentHolder.shapeText": "Дополнительные параметры фигуры",\r\n
+  "DE.Views.DocumentHolder.spellcheckText": "Проверка орфографии",\r\n
+  "DE.Views.DocumentHolder.splitCellsText": "Разделить ячейку...",\r\n
+  "DE.Views.DocumentHolder.splitCellTitleText": "Разделить ячейку",\r\n
+  "DE.Views.DocumentHolder.tableText": "Таблицу",\r\n
+  "DE.Views.DocumentHolder.textAlign": "Выравнивание",\r\n
+  "DE.Views.DocumentHolder.textArrange": "Порядок",\r\n
+  "DE.Views.DocumentHolder.textArrangeBack": "Переместить на задний план",\r\n
+  "DE.Views.DocumentHolder.textArrangeBackward": "Перенести назад",\r\n
+  "DE.Views.DocumentHolder.textArrangeForward": "Перенести вперед",\r\n
+  "DE.Views.DocumentHolder.textArrangeFront": "Вынести на передний план",\r\n
+  "DE.Views.DocumentHolder.textCopy": "Копировать",\r\n
+  "DE.Views.DocumentHolder.textCut": "Вырезать",\r\n
+  "DE.Views.DocumentHolder.textEditWrapBoundary": "Изменить границу обтекания",\r\n
+  "DE.Views.DocumentHolder.textNextPage": "Следующая страница",\r\n
+  "DE.Views.DocumentHolder.textPaste": "Вставить",\r\n
+  "DE.Views.DocumentHolder.textPrevPage": "Предыдущая страница",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignBottom": "Выровнять по нижнему краю",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignCenter": "Выровнять по центру",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignLeft": "Выровнять по левому краю",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignMiddle": "Выровнять по середине",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignRight": "Выровнять по правому краю",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignTop": "Выровнять по верхнему краю",\r\n
+  "DE.Views.DocumentHolder.textWrap": "Стиль обтекания",\r\n
+  "DE.Views.DocumentHolder.tipIsLocked": "Этот элемент редактируется другим пользователем.",\r\n
+  "DE.Views.DocumentHolder.topCellText": "По верхнему краю",\r\n
+  "DE.Views.DocumentHolder.txtBehind": "За текстом",\r\n
+  "DE.Views.DocumentHolder.txtGroup": "Сгруппировать",\r\n
+  "DE.Views.DocumentHolder.txtInFront": "Перед текстом",\r\n
+  "DE.Views.DocumentHolder.txtInline": "В тексте",\r\n
+  "DE.Views.DocumentHolder.txtPressLink": "Нажмите CTRL и щелкните по ссылке",\r\n
+  "DE.Views.DocumentHolder.txtSquare": "Вокруг рамки",\r\n
+  "DE.Views.DocumentHolder.txtThrough": "Сквозное",\r\n
+  "DE.Views.DocumentHolder.txtTight": "По контуру",\r\n
+  "DE.Views.DocumentHolder.txtTopAndBottom": "Сверху и снизу",\r\n
+  "DE.Views.DocumentHolder.txtUngroup": "Разгруппировать",\r\n
+  "DE.Views.DocumentHolder.vertAlignText": "Вертикальное выравнивание",\r\n
+  "DE.Views.DropcapSettingsAdvanced.cancelButtonText": "Отмена",\r\n
+  "DE.Views.DropcapSettingsAdvanced.okButtonText": "ОК",\r\n
+  "DE.Views.DropcapSettingsAdvanced.strBorders": "Границы и заливка",\r\n
+  "DE.Views.DropcapSettingsAdvanced.strDropcap": "Буквица",\r\n
+  "DE.Views.DropcapSettingsAdvanced.strMargins": "Поля",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textAlign": "Выравнивание",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textAtLeast": "Минимум",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textAuto": "Авто",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBackColor": "Цвет фона",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBorderColor": "Цвет границ",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBorderDesc": "Щелкайте по схеме или используйте кнопки, чтобы выбрать границы",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBorderWidth": "Ширина границ",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBottom": "Снизу",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textCenter": "По центру",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textColumn": "Столбца",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textDistance": "Расстояние до текста",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textExact": "Точно",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textFlow": "Плавающая рамка",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textFont": "Шрифт",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textFrame": "Рамка",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textHeight": "Высота",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textHorizontal": "По горизонтали",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textInline": "Встроенная рамка",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textInMargin": "На поле",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textInText": "В тексте",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textLeft": "Слева",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textMargin": "Поля",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textMove": "Перемещать с текстом",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textNewColor": "Пользовательский цвет",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textNone": "Нет",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textPage": "Страницы",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textParagraph": "Абзаца",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textParameters": "Параметры",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textPosition": "Положение",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textRelative": "Относительно",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textRight": "Справа",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textRowHeight": "Высота в строках",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textStandartColors": "Стандартные цвета",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textThemeColors": "Цвета темы",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textTitle": "Буквица - дополнительные параметры",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textTitleFrame": "Рамка - дополнительные параметры",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textTop": "Сверху",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textVertical": "По вертикали",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textWidth": "Ширина",\r\n
+  "DE.Views.DropcapSettingsAdvanced.tipFontName": "Название шрифта",\r\n
+  "DE.Views.DropcapSettingsAdvanced.txtNoBorders": "Без границ",\r\n
+  "DE.Views.FileMenu.btnBackCaption": "Перейти к Документам",\r\n
+  "DE.Views.FileMenu.btnCreateNewCaption": "Создать новый",\r\n
+  "DE.Views.FileMenu.btnDownloadCaption": "Скачать как...",\r\n
+  "DE.Views.FileMenu.btnHelpCaption": "Справка...",\r\n
+  "DE.Views.FileMenu.btnHistoryCaption": "Журнал версий",\r\n
+  "DE.Views.FileMenu.btnInfoCaption": "Сведения о документе...",\r\n
+  "DE.Views.FileMenu.btnPrintCaption": "Печать",\r\n
+  "DE.Views.FileMenu.btnRecentFilesCaption": "Открыть последние...",\r\n
+  "DE.Views.FileMenu.btnReturnCaption": "Вернуться к документу",\r\n
+  "DE.Views.FileMenu.btnRightsCaption": "Права доступа...",\r\n
+  "DE.Views.FileMenu.btnSaveCaption": "Сохранить",\r\n
+  "DE.Views.FileMenu.btnSettingsCaption": "Дополнительные параметры...",\r\n
+  "DE.Views.FileMenu.btnToEditCaption": "Редактировать",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.fromBlankText": "Пустой",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.fromTemplateText": "По шаблону",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.newDescriptionText": "Создайте новый пустой текстовый документ, к которому Вы сможете применить стили и отформатировать при редактировании после того, как он создан. Или выберите один из шаблонов, чтобы создать документ определенного типа или предназначения, где уже предварительно применены некоторые стили.",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.newDocumentText": "Новый текстовый документ",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.noTemplatesText": "Шаблоны отсутствуют",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtAuthor": "Автор",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtBtnAccessRights": "Изменить права доступа",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtDate": "Дата создания",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtLoading": "Загрузка...",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtPages": "Страницы",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtParagraphs": "Абзацы",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtPlacement": "Размещение",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtRights": "Люди, имеющие права",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtSpaces": "Символы с пробелами",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtStatistics": "Статистика",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtSymbols": "Символы",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtTitle": "Название документа",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtWords": "Слова",\r\n
+  "DE.Views.FileMenuPanels.DocumentRights.txtBtnAccessRights": "Изменить права доступа",\r\n
+  "DE.Views.FileMenuPanels.DocumentRights.txtRights": "Люди, имеющие права",\r\n
+  "DE.Views.FileMenuPanels.Settings.okButtonText": "Применить",\r\n
+  "DE.Views.FileMenuPanels.Settings.strAlignGuides": "Включить направляющие выравнивания",\r\n
+  "DE.Views.FileMenuPanels.Settings.strAutosave": "Включить автосохранение",\r\n
+  "DE.Views.FileMenuPanels.Settings.strFontRender": "Хинтинг шрифтов",\r\n
+  "DE.Views.FileMenuPanels.Settings.strInputMode": "Включить иероглифы",\r\n
+  "DE.Views.FileMenuPanels.Settings.strLiveComment": "Включить опцию комментирования в реальном времени",\r\n
+  "DE.Views.FileMenuPanels.Settings.strShowChanges": "Отображать изменения при совместной работе",\r\n
+  "DE.Views.FileMenuPanels.Settings.strSpellCheckMode": "Включить проверку орфографии",\r\n
+  "DE.Views.FileMenuPanels.Settings.strUnit": "Единица измерения",\r\n
+  "DE.Views.FileMenuPanels.Settings.strZoom": "Стандартное значение масштаба",\r\n
+  "DE.Views.FileMenuPanels.Settings.text10Minutes": "Каждые 10 минут",\r\n
+  "DE.Views.FileMenuPanels.Settings.text30Minutes": "Каждые 30 минут",\r\n
+  "DE.Views.FileMenuPanels.Settings.text5Minutes": "Каждые 5 минут",\r\n
+  "DE.Views.FileMenuPanels.Settings.text60Minutes": "Каждый час",\r\n
+  "DE.Views.FileMenuPanels.Settings.textAlignGuides": "Направляющие выравнивания",\r\n
+  "DE.Views.FileMenuPanels.Settings.textAutoSave": "Автосохранение",\r\n
+  "DE.Views.FileMenuPanels.Settings.textDisabled": "Отключено",\r\n
+  "DE.Views.FileMenuPanels.Settings.textMinute": "Каждую минуту",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtAll": "Все",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtCm": "Сантиметр",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtInput": "Альтернативный ввод",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtLast": "Последние",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtLiveComment": "Комментирование в реальном времени",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtMac": "как OS X",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtNative": "Собственный",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtNone": "Никакие",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtPt": "Пункт",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtSpellCheck": "Проверка орфографии",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtWin": "как Windows",\r\n
+  "DE.Views.HeaderFooterSettings.textBottomCenter": "Снизу по центру",\r\n
+  "DE.Views.HeaderFooterSettings.textBottomLeft": "Снизу слева",\r\n
+  "DE.Views.HeaderFooterSettings.textBottomRight": "Снизу справа",\r\n
+  "DE.Views.HeaderFooterSettings.textDiffFirst": "Особый для первой страницы",\r\n
+  "DE.Views.HeaderFooterSettings.textDiffOdd": "Разные для четных и нечетных",\r\n
+  "DE.Views.HeaderFooterSettings.textHeaderFromBottom": "Нижний колонтитул",\r\n
+  "DE.Views.HeaderFooterSettings.textHeaderFromTop": "Верхний колонтитул",\r\n
+  "DE.Views.HeaderFooterSettings.textOptions": "Параметры",\r\n
+  "DE.Views.HeaderFooterSettings.textPageNum": "Вставка номера страницы",\r\n
+  "DE.Views.HeaderFooterSettings.textPosition": "Положение",\r\n
+  "DE.Views.HeaderFooterSettings.textSameAs": "Связать с предыдущим",\r\n
+  "DE.Views.HeaderFooterSettings.textTopCenter": "Сверху по центру",\r\n
+  "DE.Views.HeaderFooterSettings.textTopLeft": "Сверху слева",\r\n
+  "DE.Views.HeaderFooterSettings.textTopRight": "Сверху справа",\r\n
+  "DE.Views.HyperlinkSettingsDialog.cancelButtonText": "Отмена",\r\n
+  "DE.Views.HyperlinkSettingsDialog.okButtonText": "OK",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textDefault": "Выделенный фрагмент текста",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textDisplay": "Отображать",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textTitle": "Параметры гиперссылки",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textTooltip": "Текст подсказки",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textUrl": "Связать с",\r\n
+  "DE.Views.HyperlinkSettingsDialog.txtEmpty": "Это поле обязательно для заполнения",\r\n
+  "DE.Views.HyperlinkSettingsDialog.txtNotUrl": "Это поле должно быть URL-адресом в формате \\"http://www.example.com\\"",\r\n
+  "DE.Views.ImageSettings.textAdvanced": "Дополнительные параметры",\r\n
+  "DE.Views.ImageSettings.textFromFile": "Из файла",\r\n
+  "DE.Views.ImageSettings.textFromUrl": "По URL",\r\n
+  "DE.Views.ImageSettings.textHeight": "Высота",\r\n
+  "DE.Views.ImageSettings.textInsert": "Заменить изображение",\r\n
+  "DE.Views.ImageSettings.textOriginalSize": "По умолчанию",\r\n
+  "DE.Views.ImageSettings.textSize": "Размер",\r\n
+  "DE.Views.ImageSettings.textWidth": "Ширина",\r\n
+  "DE.Views.ImageSettings.textWrap": "Стиль обтекания",\r\n
+  "DE.Views.ImageSettings.txtBehind": "За текстом",\r\n
+  "DE.Views.ImageSettings.txtInFront": "Перед текстом",\r\n
+  "DE.Views.ImageSettings.txtInline": "В тексте",\r\n
+  "DE.Views.ImageSettings.txtSquare": "Вокруг рамки",\r\n
+  "DE.Views.ImageSettings.txtThrough": "Сквозное",\r\n
+  "DE.Views.ImageSettings.txtTight": "По контуру",\r\n
+  "DE.Views.ImageSettings.txtTopAndBottom": "Сверху и снизу",\r\n
+  "DE.Views.ImageSettingsAdvanced.cancelButtonText": "Отмена",\r\n
+  "DE.Views.ImageSettingsAdvanced.okButtonText": "OK",\r\n
+  "DE.Views.ImageSettingsAdvanced.strMargins": "Поля вокруг текста",\r\n
+  "DE.Views.ImageSettingsAdvanced.textAlignment": "Выравнивание",\r\n
+  "DE.Views.ImageSettingsAdvanced.textArrows": "Стрелки",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBeginSize": "Начальный размер",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBeginStyle": "Начальный стиль",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBelow": "ниже",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBevel": "Скошенный",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBottom": "Снизу",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBottomMargin": "Нижнего поля",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBtnWrap": "Обтекание текстом",\r\n
+  "DE.Views.ImageSettingsAdvanced.textCapType": "Тип окончания",\r\n
+  "DE.Views.ImageSettingsAdvanced.textCenter": "По центру",\r\n
+  "DE.Views.ImageSettingsAdvanced.textCharacter": "Символа",\r\n
+  "DE.Views.ImageSettingsAdvanced.textColumn": "Столбца",\r\n
+  "DE.Views.ImageSettingsAdvanced.textDistance": "Расстояние до текста",\r\n
+  "DE.Views.ImageSettingsAdvanced.textEndSize": "Конечный размер",\r\n
+  "DE.Views.ImageSettingsAdvanced.textEndStyle": "Конечный стиль",\r\n
+  "DE.Views.ImageSettingsAdvanced.textFlat": "Плоский",\r\n
+  "DE.Views.ImageSettingsAdvanced.textHeight": "Высота",\r\n
+  "DE.Views.ImageSettingsAdvanced.textHorizontal": "По горизонтали",\r\n
+  "DE.Views.ImageSettingsAdvanced.textJoinType": "Тип соединения",\r\n
+  "DE.Views.ImageSettingsAdvanced.textKeepRatio": "Сохранять пропорции",\r\n
+  "DE.Views.ImageSettingsAdvanced.textLeft": "Слева",\r\n
+  "DE.Views.ImageSettingsAdvanced.textLeftMargin": "Левого поля",\r\n
+  "DE.Views.ImageSettingsAdvanced.textLine": "Строки",\r\n
+  "DE.Views.ImageSettingsAdvanced.textLineStyle": "Стиль линии",\r\n
+  "DE.Views.ImageSettingsAdvanced.textMargin": "Поля",\r\n
+  "DE.Views.ImageSettingsAdvanced.textMiter": "Прямой",\r\n
+  "DE.Views.ImageSettingsAdvanced.textMove": "Перемещать с текстом",\r\n
+  "DE.Views.ImageSettingsAdvanced.textOptions": "Параметры",\r\n
+  "DE.Views.ImageSettingsAdvanced.textOriginalSize": "По умолчанию",\r\n
+  "DE.Views.ImageSettingsAdvanced.textOverlap": "Разрешить перекрытие",\r\n
+  "DE.Views.ImageSettingsAdvanced.textPage": "Страницы",\r\n
+  "DE.Views.ImageSettingsAdvanced.textParagraph": "Абзаца",\r\n
+  "DE.Views.ImageSettingsAdvanced.textPosition": "Положение",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRelative": "относительно",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRight": "Справа",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRightMargin": "Правого поля",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRightOf": "справа от",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRound": "Закругленный",\r\n
+  "DE.Views.ImageSettingsAdvanced.textShape": "Параметры фигуры",\r\n
+  "DE.Views.ImageSettingsAdvanced.textSize": "Размер",\r\n
+  "DE.Views.ImageSettingsAdvanced.textSquare": "Квадратный",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTitle": "Изображение - дополнительные параметры",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTitleChart": "Диаграмма - Дополнительные параметры",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTitleShape": "Фигура - Дополнительные параметры",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTop": "Сверху",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTopMargin": "Верхнего поля",\r\n
+  "DE.Views.ImageSettingsAdvanced.textVertical": "По вертикали",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWidth": "Ширина",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrap": "Стиль обтекания",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapBehindTooltip": "За текстом",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapInFrontTooltip": "Перед текстом",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapInlineTooltip": "В тексте",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapSquareTooltip": "Вокруг рамки",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapThroughTooltip": "Сквозное",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapTightTooltip": "По контуру",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapTopbottomTooltip": "Сверху и снизу",\r\n
+  "DE.Views.LeftMenu.tipAbout": "О программе",\r\n
+  "DE.Views.LeftMenu.tipChat": "Чат",\r\n
+  "DE.Views.LeftMenu.tipComments": "Комментарии",\r\n
+  "DE.Views.LeftMenu.tipFile": "Файл",\r\n
+  "DE.Views.LeftMenu.tipSearch": "Поиск",\r\n
+  "DE.Views.LeftMenu.tipSupport": "Обратная связь и поддержка",\r\n
+  "DE.Views.LeftMenu.tipTitles": "Заголовки",\r\n
+  "DE.Views.MailMergeEmailDlg.cancelButtonText": "Отмена",\r\n
+  "DE.Views.MailMergeEmailDlg.filePlaceholder": "PDF",\r\n
+  "DE.Views.MailMergeEmailDlg.okButtonText": "Отправить",\r\n
+  "DE.Views.MailMergeEmailDlg.subjectPlaceholder": "Тема",\r\n
+  "DE.Views.MailMergeEmailDlg.textAttachDocx": "Прикрепить как DOCX",\r\n
+  "DE.Views.MailMergeEmailDlg.textAttachPdf": "Прикрепить как PDF",\r\n
+  "DE.Views.MailMergeEmailDlg.textFileName": "Имя файла",\r\n
+  "DE.Views.MailMergeEmailDlg.textFormat": "Формат",\r\n
+  "DE.Views.MailMergeEmailDlg.textFrom": "От кого",\r\n
+  "DE.Views.MailMergeEmailDlg.textHTML": "HTML",\r\n
+  "DE.Views.MailMergeEmailDlg.textMessage": "Сообщение",\r\n
+  "DE.Views.MailMergeEmailDlg.textSubject": "Строка темы",\r\n
+  "DE.Views.MailMergeEmailDlg.textTitle": "Отправить по электронной почте",\r\n
+  "DE.Views.MailMergeEmailDlg.textTo": "Кому",\r\n
+  "DE.Views.MailMergeEmailDlg.textWarning": "Внимание!",\r\n
+  "DE.Views.MailMergeEmailDlg.textWarningMsg": "Пожалуйста, обратите внимание: после нажатия кнопки \'Отправить\' отправку нельзя будет остановить.",\r\n
+  "DE.Views.MailMergeRecepients.textLoading": "Загрузка",\r\n
+  "DE.Views.MailMergeRecepients.textTitle": "Выбрать источник данных",\r\n
+  "DE.Views.MailMergeSaveDlg.textLoading": "Загрузка",\r\n
+  "DE.Views.MailMergeSaveDlg.textTitle": "Папка для сохранения",\r\n
+  "DE.Views.MailMergeSettings.downloadMergeTitle": "Слияние",\r\n
+  "DE.Views.MailMergeSettings.errorMailMergeSaveFile": "Не удалось выполнить слияние.",\r\n
+  "DE.Views.MailMergeSettings.notcriticalErrorTitle": "Внимание",\r\n
+  "DE.Views.MailMergeSettings.textAll": "Все записи",\r\n
+  "DE.Views.MailMergeSettings.textCurrent": "Текущая запись",\r\n
+  "DE.Views.MailMergeSettings.textDataSource": "Источник данных",\r\n
+  "DE.Views.MailMergeSettings.textDocx": "Docx",\r\n
+  "DE.Views.MailMergeSettings.textDownload": "Скачать",\r\n
+  "DE.Views.MailMergeSettings.textEditData": "Изменить список получателей",\r\n
+  "DE.Views.MailMergeSettings.textEmail": "E-mail",\r\n
+  "DE.Views.MailMergeSettings.textFrom": "С",\r\n
+  "DE.Views.MailMergeSettings.textHighlight": "Выделить поля слияния",\r\n
+  "DE.Views.MailMergeSettings.textInsertField": "Вставить поле слияния",\r\n
+  "DE.Views.MailMergeSettings.textMaxRecepients": "Макс. 100 получателей.",\r\n
+  "DE.Views.MailMergeSettings.textMerge": "Слияние",\r\n
+  "DE.Views.MailMergeSettings.textMergeFields": "Поля слияния",\r\n
+  "DE.Views.MailMergeSettings.textMergeTo": "Слияние в",\r\n
+  "DE.Views.MailMergeSettings.textPdf": "PDF",\r\n
+  "DE.Views.MailMergeSettings.textPortal": "Сохранить",\r\n
+  "DE.Views.MailMergeSettings.textPreview": "Просмотр результатов",\r\n
+  "DE.Views.MailMergeSettings.textReadMore": "Подробнее",\r\n
+  "DE.Views.MailMergeSettings.textSendMsg": "Письма сформированы и будут отправлены в течение некоторого времени.<br>Скорость отправки писем зависит от вашего почтового сервиса.<br>Вы можете продолжить работу с документом или закрыть документ. По завершению процесса отправки на ваш почтовый ящик %1 придет уведомление.",\r\n
+  "DE.Views.MailMergeSettings.textTo": "По",\r\n
+  "DE.Views.MailMergeSettings.txtFirst": "Первое поле",\r\n
+  "DE.Views.MailMergeSettings.txtFromToError": "Значение \\"С\\" должно быть меньше значения \\"По\\"",\r\n
+  "DE.Views.MailMergeSettings.txtLast": "Последнее поле",\r\n
+  "DE.Views.MailMergeSettings.txtNext": "Следующее поле",\r\n
+  "DE.Views.MailMergeSettings.txtPrev": "Предыдущее поле",\r\n
+  "DE.Views.MailMergeSettings.txtUntitled": "Без имени",\r\n
+  "DE.Views.MailMergeSettings.warnProcessMailMerge": "Не удалось начать слияние",\r\n
+  "DE.Views.ParagraphSettings.strLineHeight": "Междустрочный",\r\n
+  "DE.Views.ParagraphSettings.strParagraphSpacing": "Интервал",\r\n
+  "DE.Views.ParagraphSettings.strSomeParagraphSpace": "Не добавлять интервал между абзацами одного стиля",\r\n
+  "DE.Views.ParagraphSettings.strSpacingAfter": "После",\r\n
+  "DE.Views.ParagraphSettings.strSpacingBefore": "Перед",\r\n
+  "DE.Views.ParagraphSettings.textAdvanced": "Дополнительные параметры",\r\n
+  "DE.Views.ParagraphSettings.textAt": "Значение",\r\n
+  "DE.Views.ParagraphSettings.textAtLeast": "Минимум",\r\n
+  "DE.Views.ParagraphSettings.textAuto": "Множитель",\r\n
+  "DE.Views.ParagraphSettings.textBackColor": "Цвет фона",\r\n
+  "DE.Views.ParagraphSettings.textExact": "Точно",\r\n
+  "DE.Views.ParagraphSettings.textNewColor": "Пользовательский цвет",\r\n
+  "DE.Views.ParagraphSettings.textStandartColors": "Стандартные цвета",\r\n
+  "DE.Views.ParagraphSettings.textThemeColors": "Цвета темы",\r\n
+  "DE.Views.ParagraphSettings.txtAutoText": "Авто",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.cancelButtonText": "Отмена",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.noTabs": "В этом поле появятся позиции табуляции, которые вы зададите",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.okButtonText": "OK",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strAllCaps": "Все прописные",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strBorders": "Границы и заливка",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strBreakBefore": "С новой страницы",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strDoubleStrike": "Двойное зачёркивание",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strIndentsFirstLine": "Первая строка",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strIndentsLeftText": "Слева",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strIndentsRightText": "Справа",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strKeepLines": "Не разрывать абзац",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strKeepNext": "Не отрывать от следующего",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strMargins": "Внутренние поля",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strOrphan": "Запрет висячих строк",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strParagraphFont": "Шрифт",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strParagraphIndents": "Отступы и положение",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strParagraphPosition": "Положение",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strSmallCaps": "Малые прописные",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strStrike": "Зачёркивание",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strSubscript": "Подстрочные",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strSuperscript": "Надстрочные",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strTabs": "Табуляция",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textAlign": "Выравнивание",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBackColor": "Цвет фона",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBorderColor": "Цвет границ",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBorderDesc": "Щелкайте по схеме или используйте кнопки, чтобы выбрать границы и применить к ним выбранный стиль",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBorderWidth": "Ширина границ",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBottom": "Снизу",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textCharacterSpacing": "Межзнаковый интервал",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textDefault": "По умолчанию",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textEffects": "Эффекты",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textLeft": "Слева",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textNewColor": "Пользовательский цвет",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textPosition": "Положение",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textRemove": "Удалить",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textRemoveAll": "Удалить все",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textRight": "Справа",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textSet": "Задать",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textSpacing": "Интервал",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textStandartColors": "Стандартные цвета",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTabCenter": "По центру",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTabLeft": "По левому краю",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTabPosition": "Позиция",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTabRight": "По правому краю",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textThemeColors": "Цвета темы",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTitle": "Абзац - дополнительные параметры",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTop": "Сверху",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipAll": "Задать внешнюю границу и все внутренние линии",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipBottom": "Задать только нижнюю границу",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipInner": "Задать только горизонтальные внутренние линии",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipLeft": "Задать только левую границу",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipNone": "Не задавать границ",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipOuter": "Задать только внешнюю границу",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipRight": "Задать только правую границу",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipTop": "Задать только верхнюю границу",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.txtNoBorders": "Без границ",\r\n
+  "DE.Views.RightMenu.txtChartSettings": "Параметры диаграммы",\r\n
+  "DE.Views.RightMenu.txtHeaderFooterSettings": "Параметры верхнего и нижнего колонтитулов",\r\n
+  "DE.Views.RightMenu.txtImageSettings": "Параметры изображения",\r\n
+  "DE.Views.RightMenu.txtMailMergeSettings": "Параметры слияния",\r\n
+  "DE.Views.RightMenu.txtParagraphSettings": "Параметры абзаца",\r\n
+  "DE.Views.RightMenu.txtShapeSettings": "Параметры фигуры",\r\n
+  "DE.Views.RightMenu.txtTableSettings": "Параметры таблицы",\r\n
+  "DE.Views.ShapeSettings.strBackground": "Цвет фона",\r\n
+  "DE.Views.ShapeSettings.strChange": "Изменить автофигуру",\r\n
+  "DE.Views.ShapeSettings.strColor": "Цвет",\r\n
+  "DE.Views.ShapeSettings.strFill": "Заливка",\r\n
+  "DE.Views.ShapeSettings.strForeground": "Цвет переднего плана",\r\n
+  "DE.Views.ShapeSettings.strPattern": "Узор",\r\n
+  "DE.Views.ShapeSettings.strSize": "Толщина",\r\n
+  "DE.Views.ShapeSettings.strStroke": "Обводка",\r\n
+  "DE.Views.ShapeSettings.strTransparency": "Непрозрачность",\r\n
+  "DE.Views.ShapeSettings.textAdvanced": "Дополнительные параметры",\r\n
+  "DE.Views.ShapeSettings.textBorderSizeErr": "Введено некорректное значение.<br>Пожалуйста, введите значение от 0 до 1584 пунктов.",\r\n
+  "DE.Views.ShapeSettings.textColor": "Заливка цветом",\r\n
+  "DE.Views.ShapeSettings.textDirection": "Направление",\r\n
+  "DE.Views.ShapeSettings.textEmptyPattern": "Без узора",\r\n
+  "DE.Views.ShapeSettings.textFromFile": "Из файла",\r\n
+  "DE.Views.ShapeSettings.textFromUrl": "По URL",\r\n
+  "DE.Views.ShapeSettings.textGradient": "Градиент",\r\n
+  "DE.Views.ShapeSettings.textGradientFill": "Градиентная заливка",\r\n
+  "DE.Views.ShapeSettings.textImageTexture": "Изображение или текстура",\r\n
+  "DE.Views.ShapeSettings.textLinear": "Линейный",\r\n
+  "DE.Views.ShapeSettings.textNewColor": "Пользовательский цвет",\r\n
+  "DE.Views.ShapeSettings.textNoFill": "Без заливки",\r\n
+  "DE.Views.ShapeSettings.textPatternFill": "Узор",\r\n
+  "DE.Views.ShapeSettings.textRadial": "Радиальный",\r\n
+  "DE.Views.ShapeSettings.textSelectTexture": "Выбрать",\r\n
+  "DE.Views.ShapeSettings.textStandartColors": "Стандартные цвета",\r\n
+  "DE.Views.ShapeSettings.textStretch": "Растяжение",\r\n
+  "DE.Views.ShapeSettings.textStyle": "Стиль",\r\n
+  "DE.Views.ShapeSettings.textTexture": "Из текстуры",\r\n
+  "DE.Views.ShapeSettings.textThemeColors": "Цвета темы",\r\n
+  "DE.Views.ShapeSettings.textTile": "Плитка",\r\n
+  "DE.Views.ShapeSettings.textWrap": "Стиль обтекания",\r\n
+  "DE.Views.ShapeSettings.txtBehind": "За текстом",\r\n
+  "DE.Views.ShapeSettings.txtBrownPaper": "Крафт-бумага",\r\n
+  "DE.Views.ShapeSettings.txtCanvas": "Холст",\r\n
+  "DE.Views.ShapeSettings.txtCarton": "Картон",\r\n
+  "DE.Views.ShapeSettings.txtDarkFabric": "Темная ткань",\r\n
+  "DE.Views.ShapeSettings.txtGrain": "Песок",\r\n
+  "DE.Views.ShapeSettings.txtGranite": "Гранит",\r\n
+  "DE.Views.ShapeSettings.txtGreyPaper": "Серая бумага",\r\n
+  "DE.Views.ShapeSettings.txtInFront": "Перед текстом",\r\n
+  "DE.Views.ShapeSettings.txtInline": "В тексте",\r\n
+  "DE.Views.ShapeSettings.txtKnit": "Вязание",\r\n
+  "DE.Views.ShapeSettings.txtLeather": "Кожа",\r\n
+  "DE.Views.ShapeSettings.txtNoBorders": "Без линии",\r\n
+  "DE.Views.ShapeSettings.txtPapyrus": "Папирус",\r\n
+  "DE.Views.ShapeSettings.txtSquare": "Вокруг рамки",\r\n
+  "DE.Views.ShapeSettings.txtThrough": "Сквозное",\r\n
+  "DE.Views.ShapeSettings.txtTight": "По контуру",\r\n
+  "DE.Views.ShapeSettings.txtTopAndBottom": "Сверху и снизу",\r\n
+  "DE.Views.ShapeSettings.txtWood": "Дерево",\r\n
+  "DE.Views.Statusbar.goToPageText": "Перейти на страницу",\r\n
+  "DE.Views.Statusbar.LanguageDialog.btnCancel": "Отмена",\r\n
+  "DE.Views.Statusbar.LanguageDialog.btnOk": "ОК",\r\n
+  "DE.Views.Statusbar.LanguageDialog.labelSelect": "Выбрать язык документа",\r\n
+  "DE.Views.Statusbar.pageIndexText": "Страница {0} из {1}",\r\n
+  "DE.Views.Statusbar.tipFitPage": "По размеру страницы",\r\n
+  "DE.Views.Statusbar.tipFitWidth": "По ширине",\r\n
+  "DE.Views.Statusbar.tipMoreUsers": "и %1 пользователей.",\r\n
+  "DE.Views.Statusbar.tipSetDocLang": "Задать язык документа",\r\n
+  "DE.Views.Statusbar.tipSetLang": "Выбрать язык текста",\r\n
+  "DE.Views.Statusbar.tipSetSpelling": "Проверка орфографии",\r\n
+  "DE.Views.Statusbar.tipShowUsers": "Чтобы увидеть всех пользователей, нажмите на значок ниже.",\r\n
+  "DE.Views.Statusbar.tipUsers": "Документ редактируется несколькими пользователями.",\r\n
+  "DE.Views.Statusbar.tipZoomFactor": "Увеличение",\r\n
+  "DE.Views.Statusbar.tipZoomIn": "Увеличить",\r\n
+  "DE.Views.Statusbar.tipZoomOut": "Уменьшить",\r\n
+  "DE.Views.Statusbar.txtPageNumInvalid": "Неправильный номер страницы",\r\n
+  "DE.Views.TableSettings.deleteColumnText": "Удалить столбец",\r\n
+  "DE.Views.TableSettings.deleteRowText": "Удалить строку",\r\n
+  "DE.Views.TableSettings.deleteTableText": "Удалить таблицу",\r\n
+  "DE.Views.TableSettings.insertColumnLeftText": "Вставить столбец слева",\r\n
+  "DE.Views.TableSettings.insertColumnRightText": "Вставить столбец справа",\r\n
+  "DE.Views.TableSettings.insertRowAboveText": "Вставить строку выше",\r\n
+  "DE.Views.TableSettings.insertRowBelowText": "Вставить строку ниже",\r\n
+  "DE.Views.TableSettings.mergeCellsText": "Объединить ячейки",\r\n
+  "DE.Views.TableSettings.selectCellText": "Выбрать ячейку",\r\n
+  "DE.Views.TableSettings.selectColumnText": "Выбрать столбец",\r\n
+  "DE.Views.TableSettings.selectRowText": "Выбрать строку",\r\n
+  "DE.Views.TableSettings.selectTableText": "Выбрать таблицу",\r\n
+  "DE.Views.TableSettings.splitCellsText": "Разделить ячейку...",\r\n
+  "DE.Views.TableSettings.splitCellTitleText": "Разделить ячейку",\r\n
+  "DE.Views.TableSettings.strRepeatRow": "Повторять как заголовок на каждой странице",\r\n
+  "DE.Views.TableSettings.textAdvanced": "Дополнительные параметры",\r\n
+  "DE.Views.TableSettings.textBackColor": "Цвет фона",\r\n
+  "DE.Views.TableSettings.textBanded": "Чередовать",\r\n
+  "DE.Views.TableSettings.textBorderColor": "Цвет",\r\n
+  "DE.Views.TableSettings.textBorders": "Стиль границ",\r\n
+  "DE.Views.TableSettings.textCancel": "Отмена",\r\n
+  "DE.Views.TableSettings.textColumns": "Столбцы",\r\n
+  "DE.Views.TableSettings.textEdit": "Строки и столбцы",\r\n
+  "DE.Views.TableSettings.textEmptyTemplate": "Без шаблонов",\r\n
+  "DE.Views.TableSettings.textFirst": "Первый",\r\n
+  "DE.Views.TableSettings.textHeader": "Заголовок",\r\n
+  "DE.Views.TableSettings.textLast": "Последний",\r\n
+  "DE.Views.TableSettings.textNewColor": "Пользовательский цвет",\r\n
+  "DE.Views.TableSettings.textOK": "OK",\r\n
+  "DE.Views.TableSettings.textRows": "Строки",\r\n
+  "DE.Views.TableSettings.textSelectBorders": "Выберите границы, к которым надо применить выбранный стиль",\r\n
+  "DE.Views.TableSettings.textStandartColors": "Стандартные цвета",\r\n
+  "DE.Views.TableSettings.textTemplate": "По шаблону",\r\n
+  "DE.Views.TableSettings.textThemeColors": "Цвета темы",\r\n
+  "DE.Views.TableSettings.textTotal": "Итоговая",\r\n
+  "DE.Views.TableSettings.textWrap": "Обтекание текстом",\r\n
+  "DE.Views.TableSettings.textWrapNoneTooltip": "Встроенная таблица",\r\n
+  "DE.Views.TableSettings.textWrapParallelTooltip": "Плавающая таблица",\r\n
+  "DE.Views.TableSettings.tipAll": "Задать внешнюю границу и все внутренние линии",\r\n
+  "DE.Views.TableSettings.tipBottom": "Задать только внешнюю нижнюю границу",\r\n
+  "DE.Views.TableSettings.tipInner": "Задать только внутренние линии",\r\n
+  "DE.Views.TableSettings.tipInnerHor": "Задать только горизонтальные внутренние линии",\r\n
+  "DE.Views.TableSettings.tipInnerVert": "Задать только вертикальные внутренние линии",\r\n
+  "DE.Views.TableSettings.tipLeft": "Задать только внешнюю левую границу",\r\n
+  "DE.Views.TableSettings.tipNone": "Не задавать границ",\r\n
+  "DE.Views.TableSettings.tipOuter": "Задать только внешнюю границу",\r\n
+  "DE.Views.TableSettings.tipRight": "Задать только внешнюю правую границу",\r\n
+  "DE.Views.TableSettings.tipTop": "Задать только внешнюю верхнюю границу",\r\n
+  "DE.Views.TableSettings.txtNoBorders": "Без границ",\r\n
+  "DE.Views.TableSettingsAdvanced.cancelButtonText": "Отмена",\r\n
+  "DE.Views.TableSettingsAdvanced.okButtonText": "OK",\r\n
+  "DE.Views.TableSettingsAdvanced.textAlign": "Выравнивание",\r\n
+  "DE.Views.TableSettingsAdvanced.textAlignment": "Выравнивание",\r\n
+  "DE.Views.TableSettingsAdvanced.textAllowSpacing": "Интервалы между ячейками",\r\n
+  "DE.Views.TableSettingsAdvanced.textAnchorText": "Текста",\r\n
+  "DE.Views.TableSettingsAdvanced.textAutofit": "Автоподбор размеров по содержимому",\r\n
+  "DE.Views.TableSettingsAdvanced.textBackColor": "Фон ячейки",\r\n
+  "DE.Views.TableSettingsAdvanced.textBelow": "ниже",\r\n
+  "DE.Views.TableSettingsAdvanced.textBorderColor": "Цвет границ",\r\n
+  "DE.Views.TableSettingsAdvanced.textBorderDesc": "Щелкайте по схеме или используйте кнопки, чтобы выбрать границы и применить к ним выбранный стиль",\r\n
+  "DE.Views.TableSettingsAdvanced.textBordersBackgroung": "Границы и фон",\r\n
+  "DE.Views.TableSettingsAdvanced.textBorderWidth": "Ширина границ",\r\n
+  "DE.Views.TableSettingsAdvanced.textBottom": "Снизу",\r\n
+  "DE.Views.TableSettingsAdvanced.textCellProps": "Свойства ячейки",\r\n
+  "DE.Views.TableSettingsAdvanced.textCenter": "По центру",\r\n
+  "DE.Views.TableSettingsAdvanced.textCenterTooltip": "По центру",\r\n
+  "DE.Views.TableSettingsAdvanced.textCheckMargins": "Использовать поля по умолчанию",\r\n
+  "DE.Views.TableSettingsAdvanced.textDefaultMargins": "Поля по умолчанию",\r\n
+  "DE.Views.TableSettingsAdvanced.textDistance": "Расстояние до текста",\r\n
+  "DE.Views.TableSettingsAdvanced.textHorizontal": "По горизонтали",\r\n
+  "DE.Views.TableSettingsAdvanced.textIndLeft": "Отступ слева",\r\n
+  "DE.Views.TableSettingsAdvanced.textLeft": "Слева",\r\n
+  "DE.Views.TableSettingsAdvanced.textLeftTooltip": "По левому краю",\r\n
+  "DE.Views.TableSettingsAdvanced.textMargin": "Поля",\r\n
+  "DE.Views.TableSettingsAdvanced.textMargins": "Поля ячейки",\r\n
+  "DE.Views.TableSettingsAdvanced.textMove": "Перемещать с текстом",\r\n
+  "DE.Views.TableSettingsAdvanced.textNewColor": "Пользовательский цвет",\r\n
+  "DE.Views.TableSettingsAdvanced.textOnlyCells": "Только для выбранных ячеек",\r\n
+  "DE.Views.TableSettingsAdvanced.textOptions": "Параметры",\r\n
+  "DE.Views.TableSettingsAdvanced.textOverlap": "Разрешить перекрытие",\r\n
+  "DE.Views.TableSettingsAdvanced.textPage": "Страницы",\r\n
+  "DE.Views.TableSettingsAdvanced.textPosition": "Положение",\r\n
+  "DE.Views.TableSettingsAdvanced.textPreview": "Просмотр",\r\n
+  "DE.Views.TableSettingsAdvanced.textRelative": "относительно",\r\n
+  "DE.Views.TableSettingsAdvanced.textRight": "Справа",\r\n
+  "DE.Views.TableSettingsAdvanced.textRightOf": "справа от",\r\n
+  "DE.Views.TableSettingsAdvanced.textRightTooltip": "По правому краю",\r\n
+  "DE.Views.TableSettingsAdvanced.textStandartColors": "Стандартные цвета",\r\n
+  "DE.Views.TableSettingsAdvanced.textTableBackColor": "Фон таблицы",\r\n
+  "DE.Views.TableSettingsAdvanced.textThemeColors": "Цвета темы",\r\n
+  "DE.Views.TableSettingsAdvanced.textTitle": "Таблица - дополнительные параметры",\r\n
+  "DE.Views.TableSettingsAdvanced.textTop": "Сверху",\r\n
+  "DE.Views.TableSettingsAdvanced.textVertical": "По вертикали",\r\n
+  "DE.Views.TableSettingsAdvanced.textWidth": "Ширина",\r\n
+  "DE.Views.TableSettingsAdvanced.textWidthSpaces": "Ширина и интервал",\r\n
+  "DE.Views.TableSettingsAdvanced.textWrap": "Обтекание текстом",\r\n
+  "DE.Views.TableSettingsAdvanced.textWrapNoneTooltip": "Встроенная таблица",\r\n
+  "DE.Views.TableSettingsAdvanced.textWrapParallelTooltip": "Плавающая таблица",\r\n
+  "DE.Views.TableSettingsAdvanced.tipAll": "Задать внешнюю границу и все внутренние линии",\r\n
+  "DE.Views.TableSettingsAdvanced.tipCellAll": "Задать границы только для внутренних ячеек",\r\n
+  "DE.Views.TableSettingsAdvanced.tipCellInner": "Задать вертикальные и горизонтальные линии только для внутренних ячеек",\r\n
+  "DE.Views.TableSettingsAdvanced.tipCellOuter": "Задать внешние границы только для внутренних ячеек",\r\n
+  "DE.Views.TableSettingsAdvanced.tipInner": "Задать только внутренние линии",\r\n
+  "DE.Views.TableSettingsAdvanced.tipNone": "Не задавать границ",\r\n
+  "DE.Views.TableSettingsAdvanced.tipOuter": "Задать только внешнюю границу",\r\n
+  "DE.Views.TableSettingsAdvanced.tipTableOuterCellAll": "Задать внешнюю границу и границы для всех внутренних ячеек",\r\n
+  "DE.Views.TableSettingsAdvanced.tipTableOuterCellInner": "Задать внешнюю границу и вертикальные и горизонтальные линии для внутренних ячеек",\r\n
+  "DE.Views.TableSettingsAdvanced.tipTableOuterCellOuter": "Задать внешнюю границу таблицы и внешние границы для внутренних ячеек",\r\n
+  "DE.Views.TableSettingsAdvanced.txtNoBorders": "Без границ",\r\n
+  "DE.Views.Toolbar.mniCustomTable": "Пользовательская таблица",\r\n
+  "DE.Views.Toolbar.mniEditDropCap": "Параметры буквицы",\r\n
+  "DE.Views.Toolbar.mniEditFooter": "Изменить нижний колонтитул",\r\n
+  "DE.Views.Toolbar.mniEditHeader": "Изменить верхний колонтитул",\r\n
+  "DE.Views.Toolbar.mniHiddenBorders": "Скрытые границы таблиц",\r\n
+  "DE.Views.Toolbar.mniHiddenChars": "Непечатаемые символы",\r\n
+  "DE.Views.Toolbar.mniImageFromFile": "Изображение из файла",\r\n
+  "DE.Views.Toolbar.mniImageFromUrl": "Изображение по URL",\r\n
+  "DE.Views.Toolbar.strMenuNoFill": "Без заливки",\r\n
+  "DE.Views.Toolbar.textArea": "С областями",\r\n
+  "DE.Views.Toolbar.textAutoColor": "Автоматический",\r\n
+  "DE.Views.Toolbar.textBar": "Линейчатая",\r\n
+  "DE.Views.Toolbar.textBold": "Жирный",\r\n
+  "DE.Views.Toolbar.textColumn": "Гистограмма",\r\n
+  "DE.Views.Toolbar.textCompactView": "Компактная панель инструментов",\r\n
+  "DE.Views.Toolbar.textContPage": "На текущей странице",\r\n
+  "DE.Views.Toolbar.textEvenPage": "С четной страницы",\r\n
+  "DE.Views.Toolbar.textFitPage": "По размеру страницы",\r\n
+  "DE.Views.Toolbar.textFitWidth": "По ширине",\r\n
+  "DE.Views.Toolbar.textHideLines": "Скрыть линейки",\r\n
+  "DE.Views.Toolbar.textHideStatusBar": "Скрыть строку состояния",\r\n
+  "DE.Views.Toolbar.textHideTitleBar": "Скрыть строку заголовка",\r\n
+  "DE.Views.Toolbar.textInMargin": "На поле",\r\n
+  "DE.Views.Toolbar.textInsertPageNumber": "Вставить номер страницы",\r\n
+  "DE.Views.Toolbar.textInsPageBreak": "Вставить разрыв страницы",\r\n
+  "DE.Views.Toolbar.textInsSectionBreak": "Вставить разрыв раздела",\r\n
+  "DE.Views.Toolbar.textInText": "В тексте",\r\n
+  "DE.Views.Toolbar.textItalic": "Курсив",\r\n
+  "DE.Views.Toolbar.textLine": "График",\r\n
+  "DE.Views.Toolbar.textNewColor": "Пользовательский цвет",\r\n
+  "DE.Views.Toolbar.textNextPage": "Со следующей страницы",\r\n
+  "DE.Views.Toolbar.textNone": "Нет",\r\n
+  "DE.Views.Toolbar.textOddPage": "С нечетной страницы",\r\n
+  "DE.Views.Toolbar.textPie": "Круговая",\r\n
+  "DE.Views.Toolbar.textPoint": "Точечная",\r\n
+  "DE.Views.Toolbar.textStandartColors": "Стандартные цвета",\r\n
+  "DE.Views.Toolbar.textStock": "Биржевая",\r\n
+  "DE.Views.Toolbar.textStrikeout": "Зачеркнутый",\r\n
+  "DE.Views.Toolbar.textSubscript": "Подстрочные знаки",\r\n
+  "DE.Views.Toolbar.textSuperscript": "Надстрочные знаки",\r\n
+  "DE.Views.Toolbar.textThemeColors": "Цвета темы",\r\n
+  "DE.Views.Toolbar.textTitleError": "Ошибка",\r\n
+  "DE.Views.Toolbar.textToCurrent": "В текущей позиции",\r\n
+  "DE.Views.Toolbar.textUnderline": "Подчеркнутый",\r\n
+  "DE.Views.Toolbar.textZoom": "Масштаб",\r\n
+  "DE.Views.Toolbar.tipAdvSettings": "Дополнительные параметры",\r\n
+  "DE.Views.Toolbar.tipAlignCenter": "Выравнивание по центру",\r\n
+  "DE.Views.Toolbar.tipAlignJust": "Выравнивание по ширине",\r\n
+  "DE.Views.Toolbar.tipAlignLeft": "Выравнивание по левому краю",\r\n
+  "DE.Views.Toolbar.tipAlignRight": "Выравнивание по правому краю",\r\n
+  "DE.Views.Toolbar.tipBack": "Назад",\r\n
+  "DE.Views.Toolbar.tipClearStyle": "Очистить стиль",\r\n
+  "DE.Views.Toolbar.tipColorSchemas": "Изменение цветовой схемы",\r\n
+  "DE.Views.Toolbar.tipCopy": "Копировать",\r\n
+  "DE.Views.Toolbar.tipCopyStyle": "Копировать стиль",\r\n
+  "DE.Views.Toolbar.tipDecFont": "Уменьшить размер шрифта",\r\n
+  "DE.Views.Toolbar.tipDecPrLeft": "Уменьшить отступ",\r\n
+  "DE.Views.Toolbar.tipDropCap": "Вставить буквицу",\r\n
+  "DE.Views.Toolbar.tipEditHeader": "Изменить колонтитулы",\r\n
+  "DE.Views.Toolbar.tipFontColor": "Цвет шрифта",\r\n
+  "DE.Views.Toolbar.tipFontName": "Название шрифта",\r\n
+  "DE.Views.Toolbar.tipFontSize": "Размер шрифта",\r\n
+  "DE.Views.Toolbar.tipHAligh": "Горизонтальное выравнивание",\r\n
+  "DE.Views.Toolbar.tipHighlightColor": "Цвет выделения",\r\n
+  "DE.Views.Toolbar.tipIncFont": "Увеличить размер шрифта",\r\n
+  "DE.Views.Toolbar.tipIncPrLeft": "Увеличить отступ",\r\n
+  "DE.Views.Toolbar.tipInsertChart": "Вставить диаграмму",\r\n
+  "DE.Views.Toolbar.tipInsertEquation": "Вставить формулу",\r\n
+  "DE.Views.Toolbar.tipInsertHyperlink": "Добавить гиперссылку",\r\n
+  "DE.Views.Toolbar.tipInsertImage": "Вставить изображение",\r\n
+  "DE.Views.Toolbar.tipInsertNum": "Вставить номер страницы",\r\n
+  "DE.Views.Toolbar.tipInsertShape": "Вставить автофигуру",\r\n
+  "DE.Views.Toolbar.tipInsertTable": "Вставить таблицу",\r\n
+  "DE.Views.Toolbar.tipInsertText": "Вставить текст",\r\n
+  "DE.Views.Toolbar.tipLineSpace": "Междустрочный интервал в абзацах",\r\n
+  "DE.Views.Toolbar.tipMailRecepients": "Слияние",\r\n
+  "DE.Views.Toolbar.tipMarkers": "Маркированный список",\r\n
+  "DE.Views.Toolbar.tipMultilevels": "Структура",\r\n
+  "DE.Views.Toolbar.tipNewDocument": "Новый документ",\r\n
+  "DE.Views.Toolbar.tipNumbers": "Нумерованный список",\r\n
+  "DE.Views.Toolbar.tipOpenDocument": "Открыть документ",\r\n
+  "DE.Views.Toolbar.tipPageBreak": "Вставить разрыв страницы или раздела",\r\n
+  "DE.Views.Toolbar.tipPageOrient": "Ориентация страницы",\r\n
+  "DE.Views.Toolbar.tipPageSize": "Размер страницы",\r\n
+  "DE.Views.Toolbar.tipParagraphStyle": "Стиль абзаца",\r\n
+  "DE.Views.Toolbar.tipPaste": "Вставить",\r\n
+  "DE.Views.Toolbar.tipPrColor": "Цвет фона абзаца",\r\n
+  "DE.Views.Toolbar.tipPrint": "Печать",\r\n
+  "DE.Views.Toolbar.tipRedo": "Повторить",\r\n
+  "DE.Views.Toolbar.tipSave": "Сохранить",\r\n
+  "DE.Views.Toolbar.tipSaveCoauth": "Сохраните свои изменения, чтобы другие пользователи их увидели.",\r\n
+  "DE.Views.Toolbar.tipShowHiddenChars": "Непечатаемые символы",\r\n
+  "DE.Views.Toolbar.tipSynchronize": "Документ изменен другим пользователем. Нажмите, чтобы сохранить свои изменения и загрузить обновления.",\r\n
+  "DE.Views.Toolbar.tipUndo": "Отменить",\r\n
+  "DE.Views.Toolbar.tipViewSettings": "Параметры представления",\r\n
+  "DE.Views.Toolbar.txtScheme1": "Стандартная",\r\n
+  "DE.Views.Toolbar.txtScheme10": "Обычная",\r\n
+  "DE.Views.Toolbar.txtScheme11": "Метро",\r\n
+  "DE.Views.Toolbar.txtScheme12": "Модульная",\r\n
+  "DE.Views.Toolbar.txtScheme13": "Изящная",\r\n
+  "DE.Views.Toolbar.txtScheme14": "Эркер",\r\n
+  "DE.Views.Toolbar.txtScheme15": "Начальная",\r\n
+  "DE.Views.Toolbar.txtScheme16": "Бумажная",\r\n
+  "DE.Views.Toolbar.txtScheme17": "Солнцестояние",\r\n
+  "DE.Views.Toolbar.txtScheme18": "Техническая",\r\n
+  "DE.Views.Toolbar.txtScheme19": "Трек",\r\n
+  "DE.Views.Toolbar.txtScheme2": "Оттенки серого",\r\n
+  "DE.Views.Toolbar.txtScheme20": "Городская",\r\n
+  "DE.Views.Toolbar.txtScheme21": "Яркая",\r\n
+  "DE.Views.Toolbar.txtScheme3": "Апекс",\r\n
+  "DE.Views.Toolbar.txtScheme4": "Аспект",\r\n
+  "DE.Views.Toolbar.txtScheme5": "Официальная",\r\n
+  "DE.Views.Toolbar.txtScheme6": "Открытая",\r\n
+  "DE.Views.Toolbar.txtScheme7": "Справедливость",\r\n
+  "DE.Views.Toolbar.txtScheme8": "Поток",\r\n
+  "DE.Views.Toolbar.txtScheme9": "Литейная"\r\n
+}
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

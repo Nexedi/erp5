@@ -1,0 +1,1340 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885452.21</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tr.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>86128</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\r\n
+  "Common.Controllers.Chat.notcriticalErrorTitle": "Dikkat",\r\n
+  "Common.Controllers.Chat.textEnterMessage": "Mesajınızı buraya giriniz",\r\n
+  "Common.Controllers.Chat.textUserLimit": "You are using ONLYOFFICE Free Edition.<br>Only two users can co-edit the document simultaneously.<br>Want more? Consider buying ONLYOFFICE Enterprise Edition.<br><a href=\\"http://www.onlyoffice.com/free-edition.aspx\\" target=\\"_blank\\">Read more</a>",\r\n
+  "Common.Controllers.ExternalDiagramEditor.textAnonymous": "Anonim",\r\n
+  "Common.Controllers.ExternalDiagramEditor.textClose": "Kapat",\r\n
+  "Common.Controllers.ExternalDiagramEditor.warningText": "Obje devre dışı bırakıldı, çünkü başka kullanıcı tarafından düzenleniyor.",\r\n
+  "Common.Controllers.ExternalDiagramEditor.warningTitle": "Dikkat",\r\n
+  "Common.Controllers.ExternalMergeEditor.textAnonymous": "Anonymous",\r\n
+  "Common.Controllers.ExternalMergeEditor.textClose": "Close",\r\n
+  "Common.Controllers.ExternalMergeEditor.warningText": "The object is disabled because it is being edited by another user.",\r\n
+  "Common.Controllers.ExternalMergeEditor.warningTitle": "Warning",\r\n
+  "Common.Controllers.History.notcriticalErrorTitle": "Warning",\r\n
+  "Common.UI.ComboBorderSize.txtNoBorders": "Sınır yok",\r\n
+  "Common.UI.ComboBorderSizeEditable.txtNoBorders": "Sınır yok",\r\n
+  "Common.UI.ComboDataView.emptyComboText": "Stil yok",\r\n
+  "Common.UI.ExtendedColorDialog.addButtonText": "Ekle",\r\n
+  "Common.UI.ExtendedColorDialog.cancelButtonText": "İptal Et",\r\n
+  "Common.UI.ExtendedColorDialog.textCurrent": "Mevcut",\r\n
+  "Common.UI.ExtendedColorDialog.textHexErr": "Girilen değer yanlış. <br> Lütfen 000000 ile FFFFFF arasında değer giriniz.",\r\n
+  "Common.UI.ExtendedColorDialog.textNew": "Yeni",\r\n
+  "Common.UI.ExtendedColorDialog.textRGBErr": "Girilen değer yanlış. <br> Lütfen 0 ile 255 arasında sayısal değer giriniz.",\r\n
+  "Common.UI.HSBColorPicker.textNoColor": "Renk yok",\r\n
+  "Common.UI.SearchDialog.textHighlight": "Vurgu sonuçları",\r\n
+  "Common.UI.SearchDialog.textMatchCase": "Büyük küçük harfe duyarlı",\r\n
+  "Common.UI.SearchDialog.textReplaceDef": "Yerine geçecek metini giriniz",\r\n
+  "Common.UI.SearchDialog.textSearchStart": "Metninizi buraya giriniz",\r\n
+  "Common.UI.SearchDialog.textTitle": "Bul ve Değiştir",\r\n
+  "Common.UI.SearchDialog.textTitle2": "Bul",\r\n
+  "Common.UI.SearchDialog.textWholeWords": "Sadece tam kelimeler",\r\n
+  "Common.UI.SearchDialog.txtBtnReplace": "Değiştir",\r\n
+  "Common.UI.SearchDialog.txtBtnReplaceAll": "Hepsini Değiştir",\r\n
+  "Common.UI.SynchronizeTip.textDontShow": "Bu mesajı bir daha gösterme",\r\n
+  "Common.UI.SynchronizeTip.textSynchronize": "Döküman başka bir kullanıcı tarafından değiştirildi.<br/> Lütfen değişikleri kaydetmek için tıklayın ve güncellemeleri yenileyin.",\r\n
+  "Common.UI.Window.cancelButtonText": "İptal Et",\r\n
+  "Common.UI.Window.closeButtonText": "Kapat",\r\n
+  "Common.UI.Window.noButtonText": "Hayır",\r\n
+  "Common.UI.Window.okButtonText": "TAMAM",\r\n
+  "Common.UI.Window.textConfirmation": "Konfirmasyon",\r\n
+  "Common.UI.Window.textDontShow": "Bu mesajı bir daha gösterme",\r\n
+  "Common.UI.Window.textError": "Hata",\r\n
+  "Common.UI.Window.textInformation": "Bilgi",\r\n
+  "Common.UI.Window.textWarning": "Dikkat",\r\n
+  "Common.UI.Window.yesButtonText": "Evet",\r\n
+  "Common.Views.About.txtAddress": "adres:",\r\n
+  "Common.Views.About.txtAscAddress": "Lubanas st. 125a-25, Riga, Letonya, AB, LV-1021",\r\n
+  "Common.Views.About.txtLicensee": "LİSANS SAHİBİ",\r\n
+  "Common.Views.About.txtLicensor": "LİSANS VEREN",\r\n
+  "Common.Views.About.txtMail": "eposta:",\r\n
+  "Common.Views.About.txtPoweredBy": "Powered by",\r\n
+  "Common.Views.About.txtTel": "tel:",\r\n
+  "Common.Views.About.txtVersion": "Versiyon",\r\n
+  "Common.Views.AdvancedSettingsWindow.cancelButtonText": "İptal Et",\r\n
+  "Common.Views.AdvancedSettingsWindow.okButtonText": "TAMAM",\r\n
+  "Common.Views.Chat.textSend": "Gönder",\r\n
+  "Common.Views.Comments.textAdd": "Ekle",\r\n
+  "Common.Views.Comments.textAddComment": "Yorum Ekle",\r\n
+  "Common.Views.Comments.textAddCommentToDoc": "Dökümana yorum ekle",\r\n
+  "Common.Views.Comments.textAddReply": "Cevap ekle",\r\n
+  "Common.Views.Comments.textAnonym": "Misafir",\r\n
+  "Common.Views.Comments.textCancel": "İptal Et",\r\n
+  "Common.Views.Comments.textClose": "Kapat",\r\n
+  "Common.Views.Comments.textComments": "Yorumlar",\r\n
+  "Common.Views.Comments.textEdit": "Düzenle",\r\n
+  "Common.Views.Comments.textEnterCommentHint": "Yorumunuzu buraya giriniz",\r\n
+  "Common.Views.Comments.textOpenAgain": "Tekrar Aç",\r\n
+  "Common.Views.Comments.textReply": "Yanıtla",\r\n
+  "Common.Views.Comments.textResolve": "Çöz",\r\n
+  "Common.Views.Comments.textResolved": "Çözüldü",\r\n
+  "Common.Views.CopyWarningDialog.textDontShow": "Bu mesajı bir daha gösterme",\r\n
+  "Common.Views.CopyWarningDialog.textMsg": "Editör araç çubuğu tuşlarını kullanarak eylemleri kopyala,kes ve yapıştır ve içerik menüsü eylemleri sadece bu editör sekmesiyle yapılabilir. <br><br>Editör sekmesi dışındaki uygulamalara/dan kopyalamak yada yapıştırmak için şu klavye kombinasyonlarını kullanınız:",\r\n
+  "Common.Views.CopyWarningDialog.textTitle": "Eylemler Kopyala,Kes ve Yapıştır",\r\n
+  "Common.Views.CopyWarningDialog.textToCopy": "Kopyalamak için",\r\n
+  "Common.Views.CopyWarningDialog.textToCut": "Kesmek için",\r\n
+  "Common.Views.CopyWarningDialog.textToPaste": "Yapıştırmak için",\r\n
+  "Common.Views.DocumentAccessDialog.textLoading": "Yükleniyor...",\r\n
+  "Common.Views.DocumentAccessDialog.textTitle": "Paylaşım Ayarları",\r\n
+  "Common.Views.ExternalDiagramEditor.textClose": "Kapat",\r\n
+  "Common.Views.ExternalDiagramEditor.textSave": "Kaydet & Çık",\r\n
+  "Common.Views.ExternalDiagramEditor.textTitle": "Grafik Editörü",\r\n
+  "Common.Views.ExternalMergeEditor.textClose": "Close",\r\n
+  "Common.Views.ExternalMergeEditor.textSave": "Save & Exit",\r\n
+  "Common.Views.ExternalMergeEditor.textTitle": "Mail Merge Recipients",\r\n
+  "Common.Views.Header.openNewTabText": "Open in New Tab",\r\n
+  "Common.Views.Header.textBack": "Dökümanlara Git",\r\n
+  "Common.Views.History.textHistoryHeader": "Back to Document",\r\n
+  "Common.Views.ImageFromUrlDialog.cancelButtonText": "İptal Et",\r\n
+  "Common.Views.ImageFromUrlDialog.okButtonText": "TAMAM",\r\n
+  "Common.Views.ImageFromUrlDialog.textUrl": "Resim URL\'sini yapıştır:",\r\n
+  "Common.Views.ImageFromUrlDialog.txtEmpty": "Bu alan gereklidir",\r\n
+  "Common.Views.ImageFromUrlDialog.txtNotUrl": "Bu alan \\"http://www.example.com\\" formatında URL olmalıdır",\r\n
+  "Common.Views.InsertTableDialog.cancelButtonText": "İptal Et",\r\n
+  "Common.Views.InsertTableDialog.okButtonText": "TAMAM",\r\n
+  "Common.Views.InsertTableDialog.textInvalidRowsCols": "Geçerli satır ve sütun miktarı belirtmelisiniz.",\r\n
+  "Common.Views.InsertTableDialog.txtColumns": "Sütun Sayısı",\r\n
+  "Common.Views.InsertTableDialog.txtMaxText": "Bu alan için maksimum değer: {0}.",\r\n
+  "Common.Views.InsertTableDialog.txtMinText": "Bu alan için minimum değer: {0}.",\r\n
+  "Common.Views.InsertTableDialog.txtRows": "Sıra Sayısı",\r\n
+  "Common.Views.InsertTableDialog.txtTitle": "Tablo Boyutu",\r\n
+  "DE.Controllers.LeftMenu.leavePageText": "All unsaved changes in this document will be lost.<br> Click \\"Cancel\\" then \\"Save\\" to save them. Click \\"OK\\" to discard all the unsaved changes.",\r\n
+  "DE.Controllers.LeftMenu.newDocumentTitle": "İsimlendirilmemiş döküman",\r\n
+  "DE.Controllers.LeftMenu.notcriticalErrorTitle": "Warning",\r\n
+  "DE.Controllers.LeftMenu.requestEditRightsText": "Düzenleme hakları isteniyor...",\r\n
+  "DE.Controllers.LeftMenu.textLoadHistory": "Loading versions history...",\r\n
+  "DE.Controllers.LeftMenu.textNoTextFound": "Aradığınız veri bulunamadı. Lütfen arama seçeneklerinizi ayarlayınız.",\r\n
+  "DE.Controllers.LeftMenu.textReplaceSkipped": "Değiştirme yapıldı. {0} olay atlandı.",\r\n
+  "DE.Controllers.LeftMenu.textReplaceSuccess": "Arama yapıldı. {0} olay değiştirildi.",\r\n
+  "DE.Controllers.Main.applyChangesTextText": "Değişiklikler yükleniyor...",\r\n
+  "DE.Controllers.Main.applyChangesTitleText": "Değişiklikler Yükleniyor",\r\n
+  "DE.Controllers.Main.convertationErrorText": "Değişim başarısız oldu.",\r\n
+  "DE.Controllers.Main.convertationTimeoutText": "Değişim süresi geçti.",\r\n
+  "DE.Controllers.Main.criticalErrorExtText": "Döküman listesine dönmek için \\"TAMAM\\"\'a tıklayın",\r\n
+  "DE.Controllers.Main.criticalErrorTitle": "Hata",\r\n
+  "DE.Controllers.Main.defaultTitleText": "ONLYOFFICE Döküman Editörü",\r\n
+  "DE.Controllers.Main.downloadErrorText": "Yükleme başarısız oldu.",\r\n
+  "DE.Controllers.Main.downloadMergeText": "Downloading...",\r\n
+  "DE.Controllers.Main.downloadMergeTitle": "Downloading",\r\n
+  "DE.Controllers.Main.downloadTextText": "Döküman yükleniyor...",\r\n
+  "DE.Controllers.Main.downloadTitleText": "Döküman yükleniyor",\r\n
+  "DE.Controllers.Main.errorCoAuthoringDisconnect": "Sunucu bağlantısı kesildi. Döküman şu an düzenlenemez.",\r\n
+  "DE.Controllers.Main.errorDatabaseConnection": "Harci hata. <br>Veri tabanı bağlantı hatası. Hata devam ederse lütfen destek ile iletişime geçin.",\r\n
+  "DE.Controllers.Main.errorDataRange": "Yanlış veri aralığı.",\r\n
+  "DE.Controllers.Main.errorDefaultMessage": "Hata kodu: %1",\r\n
+  "DE.Controllers.Main.errorFilePassProtect": "Döküman şifre korumalı ve açılamadı",\r\n
+  "DE.Controllers.Main.errorKeyEncrypt": "Bilinmeyen anahtar tanımlayıcı",\r\n
+  "DE.Controllers.Main.errorKeyExpire": "Anahtar tanımlayıcının süresi doldu",\r\n
+  "DE.Controllers.Main.errorMailMergeLoadFile": "Loading failed",\r\n
+  "DE.Controllers.Main.errorMailMergeSaveFile": "Merge failed.",\r\n
+  "DE.Controllers.Main.errorProcessSaveResult": "Kaydetme başarısız.",\r\n
+  "DE.Controllers.Main.errorStockChart": "Yanlış dizi sırası. Stok grafiği oluşturma için tablodaki verileri şu sırada yerleştirin:<br> açılış fiyatı, maksimum fiyat, minimum fiyat, kapanış fiyatı. ",\r\n
+  "DE.Controllers.Main.errorUpdateVersion": "Dosya versiyonu değiştirildi. Sayfa yenilenecektir.",\r\n
+  "DE.Controllers.Main.errorUserDrop": "The file cannot be accessed right now.",\r\n
+  "DE.Controllers.Main.errorUsersExceed": "Fiyat planının izin verdiği kullanıcı sayısı aşıldı",\r\n
+  "DE.Controllers.Main.leavePageText": "Bu dökümandaki değişiklikleri kaydetmediniz. \\"Bu sayfada kal\\"\'a tıklayınız ve sonrasında kaydetmek için \\"Kaydet\\"\'e tıklayınız. Kaydedilmeyen değişikliklerin tümünü göz ardı etmek için \\"Bu Sayfadan Ayrıl\\"\'a tıklayınız.",\r\n
+  "DE.Controllers.Main.loadFontsTextText": "Veri yükleniyor...",\r\n
+  "DE.Controllers.Main.loadFontsTitleText": "Veri yükleniyor",\r\n
+  "DE.Controllers.Main.loadFontTextText": "Veri yükleniyor...",\r\n
+  "DE.Controllers.Main.loadFontTitleText": "Veri yükleniyor",\r\n
+  "DE.Controllers.Main.loadImagesTextText": "Resimler yükleniyor...",\r\n
+  "DE.Controllers.Main.loadImagesTitleText": "Resimler yükleniyor",\r\n
+  "DE.Controllers.Main.loadImageTextText": "Resim yükleniyor...",\r\n
+  "DE.Controllers.Main.loadImageTitleText": "Resim yükleniyor",\r\n
+  "DE.Controllers.Main.loadingDocumentTextText": "Döküman yükleniyor...",\r\n
+  "DE.Controllers.Main.loadingDocumentTitleText": "Döküman yükleniyor",\r\n
+  "DE.Controllers.Main.mailMergeLoadFileText": "Loading Data Source...",\r\n
+  "DE.Controllers.Main.mailMergeLoadFileTitle": "Loading Data Source",\r\n
+  "DE.Controllers.Main.notcriticalErrorTitle": "Dikkat",\r\n
+  "DE.Controllers.Main.openTextText": "Döküman Açılıyor",\r\n
+  "DE.Controllers.Main.openTitleText": "Döküman Açılıyor",\r\n
+  "DE.Controllers.Main.printTextText": "Döküman yazdırılıyor...",\r\n
+  "DE.Controllers.Main.printTitleText": "Döküman Yazdırılıyor",\r\n
+  "DE.Controllers.Main.reloadButtonText": "Sayfayı Yenile",\r\n
+  "DE.Controllers.Main.requestEditFailedMessageText": "Şu bu döküman biri tarafından düzenleniyor. Lütfen daha sonra tekrar deneyin.",\r\n
+  "DE.Controllers.Main.requestEditFailedTitleText": "Erişim reddedildi",\r\n
+  "DE.Controllers.Main.savePreparingText": "Kaydetmeye hazırlanıyor",\r\n
+  "DE.Controllers.Main.savePreparingTitle": "Kaydetmeye hazırlanıyor. Lütfen bekleyin...",\r\n
+  "DE.Controllers.Main.saveTextText": "Döküman kaydediliyor...",\r\n
+  "DE.Controllers.Main.saveTitleText": "Döküman Kaydediliyor",\r\n
+  "DE.Controllers.Main.sendMergeText": "Sending Merge...",\r\n
+  "DE.Controllers.Main.sendMergeTitle": "Sending Merge",\r\n
+  "DE.Controllers.Main.splitDividerErrorText": "Satır sayısı %1\'in böleni olmalıdır.",\r\n
+  "DE.Controllers.Main.splitMaxColsErrorText": "Sütun sayısı %1\'den az olmalıdır.",\r\n
+  "DE.Controllers.Main.splitMaxRowsErrorText": "Satır sayısı %1\'den az olmalıdır.",\r\n
+  "DE.Controllers.Main.textAnonymous": "Anonim",\r\n
+  "DE.Controllers.Main.textCloseTip": "Ucu kapamak için tıklayın",\r\n
+  "DE.Controllers.Main.textLoadingDocument": "Döküman yükleniyor",\r\n
+  "DE.Controllers.Main.titleUpdateVersion": "Versiyon değiştirildi",\r\n
+  "DE.Controllers.Main.txtBasicShapes": "Temel Şekiller",\r\n
+  "DE.Controllers.Main.txtButtons": "Tuşlar",\r\n
+  "DE.Controllers.Main.txtCallouts": "Belirtme Çizgiler",\r\n
+  "DE.Controllers.Main.txtCharts": "Grafikler",\r\n
+  "DE.Controllers.Main.txtDiagramTitle": "Diagram Başlığı",\r\n
+  "DE.Controllers.Main.txtEditingMode": "Düzenleme modunu belirle",\r\n
+  "DE.Controllers.Main.txtFiguredArrows": "Şekilli Oklar",\r\n
+  "DE.Controllers.Main.txtLines": "Satırlar",\r\n
+  "DE.Controllers.Main.txtMath": "Matematik",\r\n
+  "DE.Controllers.Main.txtNeedSynchronize": "Güncellemeleriniz var",\r\n
+  "DE.Controllers.Main.txtRectangles": "Dikdörtgenler",\r\n
+  "DE.Controllers.Main.txtSeries": "Seriler",\r\n
+  "DE.Controllers.Main.txtStarsRibbons": "Yıldızlar & Kurdeleler",\r\n
+  "DE.Controllers.Main.txtXAxis": "X Ekseni",\r\n
+  "DE.Controllers.Main.txtYAxis": "Y Ekseni",\r\n
+  "DE.Controllers.Main.unknownErrorText": "Bilinmeyen hata.",\r\n
+  "DE.Controllers.Main.unsupportedBrowserErrorText ": "Tarayıcınız desteklenmiyor.",\r\n
+  "DE.Controllers.Main.uploadImageExtMessage": "Bilinmeyen resim formatı",\r\n
+  "DE.Controllers.Main.uploadImageFileCountMessage": "Resim yüklenmedi.",\r\n
+  "DE.Controllers.Main.uploadImageSizeMessage": "Maksimum resim boyutu aşıldı.",\r\n
+  "DE.Controllers.Main.uploadImageTextText": "Resim yükleniyor...",\r\n
+  "DE.Controllers.Main.uploadImageTitleText": "Resim Yükleniyor",\r\n
+  "DE.Controllers.Main.warnBrowserIE9": "Uygulama IE9\'da düşük yeteneklere sahip. IE10 yada daha yükseğini kullanınız",\r\n
+  "DE.Controllers.Main.warnBrowserZoom": "Tarayıcınızın mevcut zum ayarı tam olarak desteklenmiyor. Ctrl+0\'a basarak varsayılan zumu sıfırlayınız.",\r\n
+  "DE.Controllers.Main.warnProcessRightsChange": "Dosyayı düzenleme hakkınız reddedildi",\r\n
+  "DE.Controllers.Statusbar.zoomText": "Zum {0}%",\r\n
+  "DE.Controllers.Toolbar.confirmAddFontName": "The font you are going to save is not available on the current device.<br>The text style will be displayed using one of the device fonts, the saved font will be used when it is available.<br>Do you want to continue?",\r\n
+  "DE.Controllers.Toolbar.textAccent": "Accents",\r\n
+  "DE.Controllers.Toolbar.textBracket": "Brackets",\r\n
+  "DE.Controllers.Toolbar.textEmptyImgUrl": "Resim URL\'si belirtmelisiniz.",\r\n
+  "DE.Controllers.Toolbar.textFontSizeErr": "Girilen değer yanlış. <br> Lütfen 1 ile 100 arasında sayısal değer giriniz.",\r\n
+  "DE.Controllers.Toolbar.textFraction": "Fractions",\r\n
+  "DE.Controllers.Toolbar.textFunction": "Functions",\r\n
+  "DE.Controllers.Toolbar.textIntegral": "Integrals",\r\n
+  "DE.Controllers.Toolbar.textLargeOperator": "Large Operators",\r\n
+  "DE.Controllers.Toolbar.textLimitAndLog": "Limits And Logarithms",\r\n
+  "DE.Controllers.Toolbar.textMatrix": "Matrixes",\r\n
+  "DE.Controllers.Toolbar.textOperator": "Operators",\r\n
+  "DE.Controllers.Toolbar.textRadical": "Radicals",\r\n
+  "DE.Controllers.Toolbar.textScript": "Scripts",\r\n
+  "DE.Controllers.Toolbar.textSymbols": "Symbols",\r\n
+  "DE.Controllers.Toolbar.textWarning": "Dikkat",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Accent": "Acute",\r\n
+  "DE.Controllers.Toolbar.txtAccent_ArrowD": "Right-Left Arrow Above",\r\n
+  "DE.Controllers.Toolbar.txtAccent_ArrowL": "Leftwards Arrow Above",\r\n
+  "DE.Controllers.Toolbar.txtAccent_ArrowR": "Rightwards Arrow Above",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Bar": "Bar",\r\n
+  "DE.Controllers.Toolbar.txtAccent_BarBot": "Underbar",\r\n
+  "DE.Controllers.Toolbar.txtAccent_BarTop": "Overbar",\r\n
+  "DE.Controllers.Toolbar.txtAccent_BorderBox": "Boxed Formula (With Placeholder)",\r\n
+  "DE.Controllers.Toolbar.txtAccent_BorderBoxCustom": "Boxed Formula(Example)",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Check": "Check",\r\n
+  "DE.Controllers.Toolbar.txtAccent_CurveBracketBot": "Underbrace",\r\n
+  "DE.Controllers.Toolbar.txtAccent_CurveBracketTop": "Overbrace",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Custom_1": "Vector A",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Custom_2": "ABC With Overbar",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Custom_3": "x XOR y With Overbar",\r\n
+  "DE.Controllers.Toolbar.txtAccent_DDDot": "Triple Dot",\r\n
+  "DE.Controllers.Toolbar.txtAccent_DDot": "Double Dot",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Dot": "Dot",\r\n
+  "DE.Controllers.Toolbar.txtAccent_DoubleBar": "Double Overbar",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Grave": "Grave",\r\n
+  "DE.Controllers.Toolbar.txtAccent_GroupBot": "Grouping Character Below",\r\n
+  "DE.Controllers.Toolbar.txtAccent_GroupTop": "Grouping Character Above",\r\n
+  "DE.Controllers.Toolbar.txtAccent_HarpoonL": "Leftwards Harpoon Above",\r\n
+  "DE.Controllers.Toolbar.txtAccent_HarpoonR": "Rightwards Harpoon Above",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Hat": "Hat",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Smile": "Breve",\r\n
+  "DE.Controllers.Toolbar.txtAccent_Tilde": "Tilde",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle": "Brackets",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle_Delimiter_2": "Brackets with Separators",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle_Delimiter_3": "Brackets with Separators",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle_NoneOpen": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Angle_OpenNone": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Curve": "Brackets",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Curve_Delimiter_2": "Brackets with Separators",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Curve_NoneOpen": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Curve_OpenNone": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_1": "Cases (Two Conditions)",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_2": "Cases (Three Conditions)",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_3": "Stack Object",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_4": "Stack Object",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_5": "Cases Example",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_6": "Binomial Coefficient",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Custom_7": "Binomial Coefficient",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Line": "Brackets",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Line_NoneOpen": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Line_OpenNone": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LineDouble": "Brackets",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LineDouble_NoneOpen": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LineDouble_OpenNone": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LowLim": "Brackets",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LowLim_NoneNone": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_LowLim_OpenNone": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Round": "Brackets",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Round_Delimiter_2": "Brackets with Separators",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Round_NoneOpen": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Round_OpenNone": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square": "Brackets",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_CloseClose": "Brackets",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_CloseOpen": "Brackets",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_NoneOpen": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_OpenNone": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_Square_OpenOpen": "Brackets",\r\n
+  "DE.Controllers.Toolbar.txtBracket_SquareDouble": "Brackets",\r\n
+  "DE.Controllers.Toolbar.txtBracket_SquareDouble_NoneOpen": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_SquareDouble_OpenNone": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_UppLim": "Brackets",\r\n
+  "DE.Controllers.Toolbar.txtBracket_UppLim_NoneOpen": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtBracket_UppLim_OpenNone": "Single Bracket",\r\n
+  "DE.Controllers.Toolbar.txtFractionDiagonal": "Skewed Fraction",\r\n
+  "DE.Controllers.Toolbar.txtFractionDifferential_1": "Differential",\r\n
+  "DE.Controllers.Toolbar.txtFractionDifferential_2": "Differential",\r\n
+  "DE.Controllers.Toolbar.txtFractionDifferential_3": "Differential",\r\n
+  "DE.Controllers.Toolbar.txtFractionDifferential_4": "Differential",\r\n
+  "DE.Controllers.Toolbar.txtFractionHorizontal": "Linear Fraction",\r\n
+  "DE.Controllers.Toolbar.txtFractionPi_2": "Pi Over 2",\r\n
+  "DE.Controllers.Toolbar.txtFractionSmall": "Small Fraction",\r\n
+  "DE.Controllers.Toolbar.txtFractionVertical": "Stacked Fraction",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Cos": "Inverse Cosine Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Cosh": "Hyperbolic Inverse Cosine Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Cot": "Inverse Cotangent Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Coth": "Hyperbolic Inverse Cotangent Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Csc": "Inverse Cosecant Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Csch": "Hyperbolic Inverse Cosecant Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Sec": "Inverse Secant Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Sech": "Hyperbolic Inverse Secant Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Sin": "Inverse Sine Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Sinh": "Hyperbolic Inverse Sine Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Tan": "Inverse Tangent Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_1_Tanh": "Hyperbolic Inverse Tangent Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Cos": "Cosine Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Cosh": "Hyperbolic Cosine Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Cot": "Cotangent Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Coth": "Hyperbolic Cotangent Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Csc": "Cosecant Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Csch": "Hyperbolic Cosecant Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Custom_1": "Sine theta",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Custom_2": "Cos 2x",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Custom_3": "Tangent formula",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Sec": "Secant Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Sech": "Hyperbolic Secant Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Sin": "Sine Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Sinh": "Hyperbolic Sine Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Tan": "Tangent Function",\r\n
+  "DE.Controllers.Toolbar.txtFunction_Tanh": "Hyperbolic Tangent Function",\r\n
+  "DE.Controllers.Toolbar.txtIntegral": "Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegral_dtheta": "Differential theta",\r\n
+  "DE.Controllers.Toolbar.txtIntegral_dx": "Differential x",\r\n
+  "DE.Controllers.Toolbar.txtIntegral_dy": "Differential y",\r\n
+  "DE.Controllers.Toolbar.txtIntegralCenterSubSup": "Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralDouble": "Double Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralDoubleCenterSubSup": "Double Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralDoubleSubSup": "Double Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOriented": "Contour Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedCenterSubSup": "Contour Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedDouble": "Surface Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedDoubleCenterSubSup": "Surface Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedDoubleSubSup": "Surface Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedSubSup": "Contour Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedTriple": "Volume Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedTripleCenterSubSup": "Volume Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralOrientedTripleSubSup": "Volume Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralSubSup": "Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralTriple": "Triple Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralTripleCenterSubSup": "Triple Integral",\r\n
+  "DE.Controllers.Toolbar.txtIntegralTripleSubSup": "Triple Integral",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction": "Wedge",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction_CenterSub": "Wedge",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction_CenterSubSup": "Wedge",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction_Sub": "Wedge",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Conjunction_SubSup": "Wedge",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd": "Co-Product",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd_CenterSub": "Co-Product",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd_CenterSubSup": "Co-Product",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd_Sub": "Co-Product",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_CoProd_SubSup": "Co-Product",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_1": "Summation",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_2": "Summation",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_3": "Summation",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_4": "Product",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Custom_5": "Union",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction": "Vee",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction_CenterSub": "Vee",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction_CenterSubSup": "Vee",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction_Sub": "Vee",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Disjunction_SubSup": "Vee",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection": "Intersection",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection_CenterSub": "Intersection",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection_CenterSubSup": "Intersection",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection_Sub": "Intersection",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Intersection_SubSup": "Intersection",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod": "Product",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod_CenterSub": "Product",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod_CenterSubSup": "Product",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod_Sub": "Product",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Prod_SubSup": "Product",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum": "Summation",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum_CenterSub": "Summation",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum_CenterSubSup": "Summation",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum_Sub": "Summation",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Sum_SubSup": "Summation",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union": "Union",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union_CenterSub": "Union",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union_CenterSubSup": "Union",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union_Sub": "Union",\r\n
+  "DE.Controllers.Toolbar.txtLargeOperator_Union_SubSup": "Union",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Custom_1": "Limit Example",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Custom_2": "Maximum Example",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Lim": "Limit",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Ln": "Natural Logarithm",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Log": "Logarithm",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_LogBase": "Logarithm",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Max": "Maximum",\r\n
+  "DE.Controllers.Toolbar.txtLimitLog_Min": "Minimum",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_1_2": "1x2 Empty Matrix",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_1_3": "1x3 Empty Matrix",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_1": "2x1 Empty Matrix",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2": "2x2 Empty Matrix",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2_DLineBracket": "Empty Matrix with Brackets",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2_LineBracket": "Empty Matrix with Brackets",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2_RoundBracket": "Empty Matrix with Brackets",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_2_SquareBracket": "Empty Matrix with Brackets",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_2_3": "2x3 Empty Matrix",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_3_1": "3x1 Empty Matrix",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_3_2": "3x2 Empty Matrix",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_3_3": "3x3 Empty Matrix",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Dots_Baseline": "Baseline Dots",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Dots_Center": "Midline Dots",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Dots_Diagonal": "Diagonal Dots",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Dots_Vertical": "Vertical Dots",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Flat_Round": "Sparse Matrix",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Flat_Square": "Sparse Matrix",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Identity_2": "2x2 Identity Matrix",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Identity_2_NoZeros": "3x3 Identity Matrix",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Identity_3": "3x3 Identity Matrix",\r\n
+  "DE.Controllers.Toolbar.txtMatrix_Identity_3_NoZeros": "3x3 Identity Matrix",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowD_Bot": "Right-Left Arrow Below",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowD_Top": "Right-Left Arrow Above",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowL_Bot": "Leftwards Arrow Below",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowL_Top": "Leftwards Arrow Above",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowR_Bot": "Rightwards Arrow Below",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ArrowR_Top": "Rightwards Arrow Above",\r\n
+  "DE.Controllers.Toolbar.txtOperator_ColonEquals": "Colon Equal",\r\n
+  "DE.Controllers.Toolbar.txtOperator_Custom_1": "Yields",\r\n
+  "DE.Controllers.Toolbar.txtOperator_Custom_2": "Delta Yields",\r\n
+  "DE.Controllers.Toolbar.txtOperator_Definition": "Equal to By Definition",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DeltaEquals": "Delta Equal To",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowD_Bot": "Right-Left Arrow Below",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowD_Top": "Right-Left Arrow Above",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowL_Bot": "Leftwards Arrow Below",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowL_Top": "Leftwards Arrow Above",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowR_Bot": "Rightwards Arrow Below",\r\n
+  "DE.Controllers.Toolbar.txtOperator_DoubleArrowR_Top": "Rightwards Arrow Above",\r\n
+  "DE.Controllers.Toolbar.txtOperator_EqualsEquals": "Equal Equal",\r\n
+  "DE.Controllers.Toolbar.txtOperator_MinusEquals": "Minus Equal",\r\n
+  "DE.Controllers.Toolbar.txtOperator_PlusEquals": "Plus Equal",\r\n
+  "DE.Controllers.Toolbar.txtOperator_UnitOfMeasure": "Measured By",\r\n
+  "DE.Controllers.Toolbar.txtRadicalCustom_1": "Radical",\r\n
+  "DE.Controllers.Toolbar.txtRadicalCustom_2": "Radical",\r\n
+  "DE.Controllers.Toolbar.txtRadicalRoot_2": "Square Root With Degree",\r\n
+  "DE.Controllers.Toolbar.txtRadicalRoot_3": "Cubic Root",\r\n
+  "DE.Controllers.Toolbar.txtRadicalRoot_n": "Radical With Degree",\r\n
+  "DE.Controllers.Toolbar.txtRadicalSqrt": "Square Root",\r\n
+  "DE.Controllers.Toolbar.txtScriptCustom_1": "Script",\r\n
+  "DE.Controllers.Toolbar.txtScriptCustom_2": "Script",\r\n
+  "DE.Controllers.Toolbar.txtScriptCustom_3": "Script",\r\n
+  "DE.Controllers.Toolbar.txtScriptCustom_4": "Script",\r\n
+  "DE.Controllers.Toolbar.txtScriptSub": "Subscript",\r\n
+  "DE.Controllers.Toolbar.txtScriptSubSup": "Subscript-Superscript",\r\n
+  "DE.Controllers.Toolbar.txtScriptSubSupLeft": "LeftSubscript-Superscript",\r\n
+  "DE.Controllers.Toolbar.txtScriptSup": "Superscript",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_about": "Approximately",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_additional": "Complement",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_aleph": "Alef",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_alpha": "Alpha",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_approx": "Almost Equal To",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_ast": "Asterisk Operator",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_beta": "Beta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_beth": "Bet",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_bullet": "Bullet Operator",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cap": "Intersection",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cbrt": "Cube Root",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cdots": "Midline Horizontal Ellipsis",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_celsius": "Degrees Celsius",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_chi": "Chi",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cong": "Approximately Equal To",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_cup": "Union",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_ddots": "Down Right Diagonal Ellipsis",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_degree": "Degrees",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_delta": "Delta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_div": "Division Sign",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_downarrow": "Down Arrow",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_emptyset": "Empty Set",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_epsilon": "Epsilon",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_equals": "Equal",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_equiv": "Identical To",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_eta": "Eta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_exists": "There Exist",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_factorial": "Factorial",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_fahrenheit": "Degrees Fahrenheit",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_forall": "For All",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_gamma": "Gamma",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_geq": "Greater Than or Equal To",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_gg": "Much Greater Than",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_greater": "Greater Than",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_in": "Element Of",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_inc": "Increment",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_infinity": "Infinity",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_iota": "Iota",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_kappa": "Kappa",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_lambda": "Lambda",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_leftarrow": "Left Arrow",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_leftrightarrow": "Left-Right Arrow",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_leq": "Less Than or Equal To",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_less": "Less Than",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_ll": "Much Less Than",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_minus": "Minus",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_mp": "Minus Plus",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_mu": "Mu",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_nabla": "Nabla",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_neq": "Not Equal To",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_ni": "Contains as Member",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_not": "Not Sign",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_notexists": "There Does Not Exist",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_nu": "Nu",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_o": "Omicron",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_omega": "Omega",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_partial": "Partial Differential",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_percent": "Percentage",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_phi": "Phi",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_pi": "Pi",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_plus": "Plus",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_pm": "Plus Minus",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_propto": "Proportional To",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_psi": "Psi",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_qdrt": "Fourth Root",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_QED": "End of Proof",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_rddots": "Up Right Diagonal Ellipsis",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_rho": "Rho",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_rightarrow": "Right Arrow",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_sigma": "Sigma",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_sqrt": "Radical Sign",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_tau": "Tau",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_therefore": "Therefore",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_theta": "Theta",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_times": "Multiplication Sign",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_uparrow": "Up Arrow",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_upsilon": "Upsilon",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varepsilon": "Epsilon Variant",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varphi": "Phi Variant",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varpi": "Pi Variant",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varrho": "Rho Variant",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_varsigma": "Sigma Variant",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_vartheta": "Theta Variant",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_vdots": "Vertical Ellipsis",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_Xsi": "Xi",\r\n
+  "DE.Controllers.Toolbar.txtSymbol_zeta": "Zeta",\r\n
+  "DE.Views.ChartSettings.textAdvanced": "Gelişmiş ayarları göster",\r\n
+  "DE.Views.ChartSettings.textArea": "Bölge Grafiği",\r\n
+  "DE.Views.ChartSettings.textBar": "Çubuk grafik",\r\n
+  "DE.Views.ChartSettings.textChartType": "Grafik Tipini Değiştir",\r\n
+  "DE.Views.ChartSettings.textColumn": "Sütun grafik",\r\n
+  "DE.Views.ChartSettings.textEditData": "Veri düzenle",\r\n
+  "DE.Views.ChartSettings.textHeight": "Yükseklik",\r\n
+  "DE.Views.ChartSettings.textLine": "Çizgi grafiği",\r\n
+  "DE.Views.ChartSettings.textOriginalSize": "Varsayılan Boyut",\r\n
+  "DE.Views.ChartSettings.textPie": "Dilim grafik",\r\n
+  "DE.Views.ChartSettings.textPoint": "Nokta grafiği",\r\n
+  "DE.Views.ChartSettings.textSize": "Boyut",\r\n
+  "DE.Views.ChartSettings.textStock": "Stok Grafiği",\r\n
+  "DE.Views.ChartSettings.textStyle": "Stil",\r\n
+  "DE.Views.ChartSettings.textUndock": "Panelden çıkar",\r\n
+  "DE.Views.ChartSettings.textWidth": "Genişlik",\r\n
+  "DE.Views.ChartSettings.textWrap": "Kaydırma Stili",\r\n
+  "DE.Views.ChartSettings.txtBehind": "Arkada",\r\n
+  "DE.Views.ChartSettings.txtInFront": "Önde",\r\n
+  "DE.Views.ChartSettings.txtInline": "Satıriçi",\r\n
+  "DE.Views.ChartSettings.txtSquare": "Kare",\r\n
+  "DE.Views.ChartSettings.txtThrough": "Sonu",\r\n
+  "DE.Views.ChartSettings.txtTight": "Sıkı",\r\n
+  "DE.Views.ChartSettings.txtTitle": "Grafik",\r\n
+  "DE.Views.ChartSettings.txtTopAndBottom": "Üst ve alt",\r\n
+  "DE.Views.DocumentHolder.aboveText": "Yukarıda",\r\n
+  "DE.Views.DocumentHolder.addCommentText": "Yorum Ekle",\r\n
+  "DE.Views.DocumentHolder.advancedFrameText": "Çerçeve Gelişmiş Ayarlar",\r\n
+  "DE.Views.DocumentHolder.advancedParagraphText": "Paragraf Gelişmiş Ayarlar",\r\n
+  "DE.Views.DocumentHolder.advancedTableText": "Tablo Gelişmiş Ayarlar",\r\n
+  "DE.Views.DocumentHolder.advancedText": "Gelişmiş Ayarlar",\r\n
+  "DE.Views.DocumentHolder.alignmentText": "Hiza",\r\n
+  "DE.Views.DocumentHolder.belowText": "Altında",\r\n
+  "DE.Views.DocumentHolder.bottomCellText": "Alta Hizala",\r\n
+  "DE.Views.DocumentHolder.breakBeforeText": "Şundan önce sayfa kesmesi:",\r\n
+  "DE.Views.DocumentHolder.cellAlignText": "Hücre Dikey Hizalama",\r\n
+  "DE.Views.DocumentHolder.cellText": "Hücre",\r\n
+  "DE.Views.DocumentHolder.centerCellText": "Ortaya Hizala",\r\n
+  "DE.Views.DocumentHolder.centerText": "Orta",\r\n
+  "DE.Views.DocumentHolder.chartText": "Grafik Gelişmiş Ayarlar",\r\n
+  "DE.Views.DocumentHolder.columnText": "Sütun",\r\n
+  "DE.Views.DocumentHolder.deleteColumnText": "Sütunu Sil",\r\n
+  "DE.Views.DocumentHolder.deleteRowText": "Satırı Sil",\r\n
+  "DE.Views.DocumentHolder.deleteTableText": "Tabloyu Sil",\r\n
+  "DE.Views.DocumentHolder.deleteText": "Sil",\r\n
+  "DE.Views.DocumentHolder.direct270Text": "Rotate at 270°",\r\n
+  "DE.Views.DocumentHolder.direct90Text": "Rotate at 90°",\r\n
+  "DE.Views.DocumentHolder.directHText": "Horizontal",\r\n
+  "DE.Views.DocumentHolder.directionText": "Text Direction",\r\n
+  "DE.Views.DocumentHolder.editChartText": "Veri düzenle",\r\n
+  "DE.Views.DocumentHolder.editFooterText": "Altlığı Düzenle",\r\n
+  "DE.Views.DocumentHolder.editHeaderText": "Üstlüğü Düzenle",\r\n
+  "DE.Views.DocumentHolder.editHyperlinkText": "Hiper bağı düzenle",\r\n
+  "DE.Views.DocumentHolder.flowoverText": "Kaydırma Stili - Akış",\r\n
+  "DE.Views.DocumentHolder.guestText": "Misafir",\r\n
+  "DE.Views.DocumentHolder.hyperlinkText": "Hiper bağ",\r\n
+  "DE.Views.DocumentHolder.ignoreAllSpellText": "Hepsini yoksay",\r\n
+  "DE.Views.DocumentHolder.ignoreSpellText": "Yoksay",\r\n
+  "DE.Views.DocumentHolder.imageText": "Resim Gelişmiş Ayarlar",\r\n
+  "DE.Views.DocumentHolder.inlineText": "Kaydırma Stili - Satır içi",\r\n
+  "DE.Views.DocumentHolder.insertColumnLeftText": "Sol Sütun",\r\n
+  "DE.Views.DocumentHolder.insertColumnRightText": "Sağ Sütun",\r\n
+  "DE.Views.DocumentHolder.insertColumnText": "Sütun Ekle",\r\n
+  "DE.Views.DocumentHolder.insertRowAboveText": "Üstteki Satır",\r\n
+  "DE.Views.DocumentHolder.insertRowBelowText": "Alttaki Satır",\r\n
+  "DE.Views.DocumentHolder.insertRowText": "Satır Ekle",\r\n
+  "DE.Views.DocumentHolder.insertText": "Ekle",\r\n
+  "DE.Views.DocumentHolder.keepLinesText": "Satırları birlikte tut",\r\n
+  "DE.Views.DocumentHolder.langText": "Dil Seç",\r\n
+  "DE.Views.DocumentHolder.leftText": "Sol",\r\n
+  "DE.Views.DocumentHolder.loadSpellText": "Varyantlar yükleniyor...",\r\n
+  "DE.Views.DocumentHolder.mergeCellsText": "Hücreleri birleştir",\r\n
+  "DE.Views.DocumentHolder.moreText": "Daha fazla varyant...",\r\n
+  "DE.Views.DocumentHolder.noSpellVariantsText": "Varyant yok",\r\n
+  "DE.Views.DocumentHolder.originalSizeText": "Varsayılan Boyut",\r\n
+  "DE.Views.DocumentHolder.paragraphText": "Paragraf",\r\n
+  "DE.Views.DocumentHolder.removeHyperlinkText": "Hiper bağı kaldır",\r\n
+  "DE.Views.DocumentHolder.rightText": "Sağ",\r\n
+  "DE.Views.DocumentHolder.rowText": "Satır",\r\n
+  "DE.Views.DocumentHolder.selectCellText": "Hücre seçin",\r\n
+  "DE.Views.DocumentHolder.selectColumnText": "Sütun Seçin",\r\n
+  "DE.Views.DocumentHolder.selectRowText": "Satır Seç",\r\n
+  "DE.Views.DocumentHolder.selectTableText": "Tablo Seç",\r\n
+  "DE.Views.DocumentHolder.selectText": "Seç",\r\n
+  "DE.Views.DocumentHolder.shapeText": "Şekil Gelişmiş Ayarlar",\r\n
+  "DE.Views.DocumentHolder.spellcheckText": "Yazım denetimi",\r\n
+  "DE.Views.DocumentHolder.splitCellsText": "Hücreyi Böl...",\r\n
+  "DE.Views.DocumentHolder.splitCellTitleText": "Hücreyi Böl",\r\n
+  "DE.Views.DocumentHolder.tableText": "Tablo",\r\n
+  "DE.Views.DocumentHolder.textAlign": "Hizala",\r\n
+  "DE.Views.DocumentHolder.textArrange": "Düzenle",\r\n
+  "DE.Views.DocumentHolder.textArrangeBack": "Arkaplana gönder",\r\n
+  "DE.Views.DocumentHolder.textArrangeBackward": "Geri Taşı",\r\n
+  "DE.Views.DocumentHolder.textArrangeForward": "İler Taşı",\r\n
+  "DE.Views.DocumentHolder.textArrangeFront": "Önplana Getir",\r\n
+  "DE.Views.DocumentHolder.textCopy": "Kopyala",\r\n
+  "DE.Views.DocumentHolder.textCut": "Kes",\r\n
+  "DE.Views.DocumentHolder.textEditWrapBoundary": "Sargı Sınırı Düzenle",\r\n
+  "DE.Views.DocumentHolder.textNextPage": "Sonraki Sayfa",\r\n
+  "DE.Views.DocumentHolder.textPaste": "Yapıştır",\r\n
+  "DE.Views.DocumentHolder.textPrevPage": "Önceki Sayfa",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignBottom": "Alta Hizala",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignCenter": "Ortaya Hizala",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignLeft": "Sola Hizala",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignMiddle": "Ortaya hizala",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignRight": "Sağa Hizla",\r\n
+  "DE.Views.DocumentHolder.textShapeAlignTop": "Üste Hizala",\r\n
+  "DE.Views.DocumentHolder.textWrap": "Kaydırma Stili",\r\n
+  "DE.Views.DocumentHolder.tipIsLocked": "Bu element şu an başka bir kullanıcı tarafından düzenleniyor.",\r\n
+  "DE.Views.DocumentHolder.topCellText": "Üste Hizala",\r\n
+  "DE.Views.DocumentHolder.txtBehind": "Arkada",\r\n
+  "DE.Views.DocumentHolder.txtGroup": "Grup",\r\n
+  "DE.Views.DocumentHolder.txtInFront": "Önde",\r\n
+  "DE.Views.DocumentHolder.txtInline": "Satıriçi",\r\n
+  "DE.Views.DocumentHolder.txtPressLink": "CTRL\'ye basın ve bağlantıya tıklayın",\r\n
+  "DE.Views.DocumentHolder.txtSquare": "Kare",\r\n
+  "DE.Views.DocumentHolder.txtThrough": "Sonu",\r\n
+  "DE.Views.DocumentHolder.txtTight": "Sıkı",\r\n
+  "DE.Views.DocumentHolder.txtTopAndBottom": "Üst ve alt",\r\n
+  "DE.Views.DocumentHolder.txtUngroup": "Gruptan çıkar",\r\n
+  "DE.Views.DocumentHolder.vertAlignText": "Dikey Hizalama",\r\n
+  "DE.Views.DropcapSettingsAdvanced.cancelButtonText": "İptal Et",\r\n
+  "DE.Views.DropcapSettingsAdvanced.okButtonText": "Tamam",\r\n
+  "DE.Views.DropcapSettingsAdvanced.strBorders": "Sınırlar & Dolgu",\r\n
+  "DE.Views.DropcapSettingsAdvanced.strDropcap": "Büyük Harf",\r\n
+  "DE.Views.DropcapSettingsAdvanced.strMargins": "Kenar Boşlukları",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textAlign": "Hiza",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textAtLeast": "En az",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textAuto": "Otomatik",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBackColor": "Arka plan rengi",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBorderColor": "Sınır Rengi",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBorderDesc": "Grafiğe tıklayın yada sınır seçmek için tuşları kullanın",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBorderWidth": "Sınır Boyutu",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textBottom": "Alt",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textCenter": "Orta",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textColumn": "Sütun",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textDistance": "Metinden mesafe",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textExact": "Tam olarak",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textFlow": "Yayılma çerçevesi",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textFont": "Yazı Tipi",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textFrame": "Çerçeve",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textHeight": "Yükseklik",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textHorizontal": "Yatay",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textInline": "Satıriçi çerçeve",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textInMargin": "Kenar boşluğunda",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textInText": "Metinde",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textLeft": "Sol",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textMargin": "Kenar boşluğu",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textMove": "Metinle taşı",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textNewColor": "Yeni Özel Renk Ekle",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textNone": "hiçbiri",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textPage": "Sayfa",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textParagraph": "Paragraf",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textParameters": "Parametreler",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textPosition": "Pozisyon",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textRelative": "Şununla ilgili:",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textRight": "Sağ",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textRowHeight": "Sıralarda yükseklik",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textStandartColors": "Standart Renkler",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textThemeColors": "Tema Renkleri",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textTitle": "Büyük Harf - Gelişmiş Ayarlar",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textTitleFrame": "Çerçeve - Gelişmiş Ayarlar",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textTop": "Üst",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textVertical": "Dikey",\r\n
+  "DE.Views.DropcapSettingsAdvanced.textWidth": "Genişlik",\r\n
+  "DE.Views.DropcapSettingsAdvanced.tipFontName": "Yazı Tipi İsmi",\r\n
+  "DE.Views.DropcapSettingsAdvanced.txtNoBorders": "Sınır yok",\r\n
+  "DE.Views.FileMenu.btnBackCaption": "Dökümanlara Git",\r\n
+  "DE.Views.FileMenu.btnCreateNewCaption": "Yeni oluştur",\r\n
+  "DE.Views.FileMenu.btnDownloadCaption": "Farklı Yükle...",\r\n
+  "DE.Views.FileMenu.btnHelpCaption": "Yardım...",\r\n
+  "DE.Views.FileMenu.btnHistoryCaption": "Version History",\r\n
+  "DE.Views.FileMenu.btnInfoCaption": "Döküman Bilgisi...",\r\n
+  "DE.Views.FileMenu.btnPrintCaption": "Yazdır",\r\n
+  "DE.Views.FileMenu.btnRecentFilesCaption": "En sonunucuyu aç...",\r\n
+  "DE.Views.FileMenu.btnReturnCaption": "Dökümana Geri Dön",\r\n
+  "DE.Views.FileMenu.btnRightsCaption": "Access Rights...",\r\n
+  "DE.Views.FileMenu.btnSaveCaption": "Kaydet",\r\n
+  "DE.Views.FileMenu.btnSettingsCaption": "Gelişmiş Ayarlar...",\r\n
+  "DE.Views.FileMenu.btnToEditCaption": "Döküman Düzenle",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.fromBlankText": "Boştan",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.fromTemplateText": "Şablondan",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.newDescriptionText": "Oluşturulduktan sonra düzenleme sırasında stil ve format verebileceğiniz yeni boş metin dosyası oluşturun. Yada belli tipte yada amaçta dökümana başlamak için şablonlardan birini seçin, bu şablonlar önceden düzenlenmiştir.",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.newDocumentText": "Yeni Metin Dökümanı",\r\n
+  "DE.Views.FileMenuPanels.CreateNew.noTemplatesText": "Şablon yok",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtAuthor": "Yayıncı",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtBtnAccessRights": "Erişim haklarını değiştir",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtDate": "Oluşturulma tarihi",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtLoading": "Yükleniyor...",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtPages": "Sayfalar",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtParagraphs": "Paragraflar",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtPlacement": "Lokasyon",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtRights": "Hakkı olan kişiler",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtSpaces": "Aralıklarla semboller",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtStatistics": "İstatistikler",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtSymbols": "Semboller",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtTitle": "Döküman Başlığı",\r\n
+  "DE.Views.FileMenuPanels.DocumentInfo.txtWords": "Kelimeler",\r\n
+  "DE.Views.FileMenuPanels.DocumentRights.txtBtnAccessRights": "Erişim haklarını değiştir",\r\n
+  "DE.Views.FileMenuPanels.DocumentRights.txtRights": "Hakkı olan kişiler",\r\n
+  "DE.Views.FileMenuPanels.Settings.okButtonText": "Uygula",\r\n
+  "DE.Views.FileMenuPanels.Settings.strAlignGuides": "Turn on alignment guides",\r\n
+  "DE.Views.FileMenuPanels.Settings.strAutosave": "Otomatik kaydetmeyi aç",\r\n
+  "DE.Views.FileMenuPanels.Settings.strFontRender": "Yazı Tipi İpucu",\r\n
+  "DE.Views.FileMenuPanels.Settings.strInputMode": "Hiyeroglifleri aç",\r\n
+  "DE.Views.FileMenuPanels.Settings.strLiveComment": "Canlı yorum yapma seçeneğini aç",\r\n
+  "DE.Views.FileMenuPanels.Settings.strShowChanges": "Gerçek Zamanlı Ortak Düzenleme Değişiklikleri",\r\n
+  "DE.Views.FileMenuPanels.Settings.strSpellCheckMode": "Yazım denetimi seçeneğini aç",\r\n
+  "DE.Views.FileMenuPanels.Settings.strUnit": "Ölçüm birimi",\r\n
+  "DE.Views.FileMenuPanels.Settings.strZoom": "Varsayılan Zum Değeri",\r\n
+  "DE.Views.FileMenuPanels.Settings.text10Minutes": "Her 10 dakika",\r\n
+  "DE.Views.FileMenuPanels.Settings.text30Minutes": "Her 30 dakika",\r\n
+  "DE.Views.FileMenuPanels.Settings.text5Minutes": "Her 5 Dakika",\r\n
+  "DE.Views.FileMenuPanels.Settings.text60Minutes": "Her Saat",\r\n
+  "DE.Views.FileMenuPanels.Settings.textAlignGuides": "Alignment Guides",\r\n
+  "DE.Views.FileMenuPanels.Settings.textAutoSave": "Otomatik Kaydetme",\r\n
+  "DE.Views.FileMenuPanels.Settings.textDisabled": "Devre Dışı",\r\n
+  "DE.Views.FileMenuPanels.Settings.textMinute": "Her Dakika",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtAll": "Tümünü göster",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtCm": "Santimetre",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtInput": "Girdiyi Değiştir",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtLast": "Sonuncuyu göster",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtLiveComment": "Canlı Yorum",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtMac": "OS X olarak",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtNative": "Yerli",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtNone": "Hiçbirini gösterme",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtPt": "Nokta",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtSpellCheck": "Yazım denetimi",\r\n
+  "DE.Views.FileMenuPanels.Settings.txtWin": "Windows olarak",\r\n
+  "DE.Views.HeaderFooterSettings.textBottomCenter": "Alt Orta",\r\n
+  "DE.Views.HeaderFooterSettings.textBottomLeft": "Alt Sol",\r\n
+  "DE.Views.HeaderFooterSettings.textBottomRight": "Alt Sağ",\r\n
+  "DE.Views.HeaderFooterSettings.textDiffFirst": "Farklı ilk sayfa",\r\n
+  "DE.Views.HeaderFooterSettings.textDiffOdd": "Farklı tek ve çift sayfalar",\r\n
+  "DE.Views.HeaderFooterSettings.textHeaderFromBottom": "Alttan alt başlık",\r\n
+  "DE.Views.HeaderFooterSettings.textHeaderFromTop": "Yukarıdan Üst Başlık",\r\n
+  "DE.Views.HeaderFooterSettings.textOptions": "Seçenekler",\r\n
+  "DE.Views.HeaderFooterSettings.textPageNum": "Sayfa numarası ekle",\r\n
+  "DE.Views.HeaderFooterSettings.textPosition": "Pozisyon",\r\n
+  "DE.Views.HeaderFooterSettings.textSameAs": "Öncekine bağlantıla",\r\n
+  "DE.Views.HeaderFooterSettings.textTopCenter": "Üst Orta",\r\n
+  "DE.Views.HeaderFooterSettings.textTopLeft": "Üst Sol",\r\n
+  "DE.Views.HeaderFooterSettings.textTopRight": "Üst Sağ",\r\n
+  "DE.Views.HyperlinkSettingsDialog.cancelButtonText": "İptal Et",\r\n
+  "DE.Views.HyperlinkSettingsDialog.okButtonText": "TAMAM",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textDefault": "Seçili metin parçası",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textDisplay": "Görüntüle",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textTitle": "Hyperlink Settings",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textTooltip": "Ekranİpucu metni",\r\n
+  "DE.Views.HyperlinkSettingsDialog.textUrl": "Şuna bağlantıla:",\r\n
+  "DE.Views.HyperlinkSettingsDialog.txtEmpty": "Bu alan gereklidir",\r\n
+  "DE.Views.HyperlinkSettingsDialog.txtNotUrl": "Bu alan \\"http://www.example.com\\" formatında URL olmalıdır",\r\n
+  "DE.Views.ImageSettings.textAdvanced": "Gelişmiş ayarları göster",\r\n
+  "DE.Views.ImageSettings.textFromFile": "Dosyadan",\r\n
+  "DE.Views.ImageSettings.textFromUrl": "URL\'den",\r\n
+  "DE.Views.ImageSettings.textHeight": "Yükseklik",\r\n
+  "DE.Views.ImageSettings.textInsert": "Resimi Değiştir",\r\n
+  "DE.Views.ImageSettings.textOriginalSize": "Varsayılan Boyut",\r\n
+  "DE.Views.ImageSettings.textSize": "Boyut",\r\n
+  "DE.Views.ImageSettings.textWidth": "Genişlik",\r\n
+  "DE.Views.ImageSettings.textWrap": "Kaydırma Stili",\r\n
+  "DE.Views.ImageSettings.txtBehind": "Arkada",\r\n
+  "DE.Views.ImageSettings.txtInFront": "Önde",\r\n
+  "DE.Views.ImageSettings.txtInline": "Satıriçi",\r\n
+  "DE.Views.ImageSettings.txtSquare": "Kare",\r\n
+  "DE.Views.ImageSettings.txtThrough": "Sonu",\r\n
+  "DE.Views.ImageSettings.txtTight": "Sıkı",\r\n
+  "DE.Views.ImageSettings.txtTopAndBottom": "Üst ve alt",\r\n
+  "DE.Views.ImageSettingsAdvanced.cancelButtonText": "İptal Et",\r\n
+  "DE.Views.ImageSettingsAdvanced.okButtonText": "TAMAM",\r\n
+  "DE.Views.ImageSettingsAdvanced.strMargins": "Metin Dolgulama",\r\n
+  "DE.Views.ImageSettingsAdvanced.textAlignment": "Hiza",\r\n
+  "DE.Views.ImageSettingsAdvanced.textArrows": "Oklar",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBeginSize": "Başlama Boyutu",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBeginStyle": "Başlama Stili",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBelow": "altında",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBevel": "Eğimli",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBottom": "Alt",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBottomMargin": "Alt kenar boşluğu",\r\n
+  "DE.Views.ImageSettingsAdvanced.textBtnWrap": "Metin Kaydırma",\r\n
+  "DE.Views.ImageSettingsAdvanced.textCapType": "Başlık Tipi",\r\n
+  "DE.Views.ImageSettingsAdvanced.textCenter": "Orta",\r\n
+  "DE.Views.ImageSettingsAdvanced.textCharacter": "Karakter",\r\n
+  "DE.Views.ImageSettingsAdvanced.textColumn": "Sütun",\r\n
+  "DE.Views.ImageSettingsAdvanced.textDistance": "Metinden mesafe",\r\n
+  "DE.Views.ImageSettingsAdvanced.textEndSize": "Bitiş Boyutu",\r\n
+  "DE.Views.ImageSettingsAdvanced.textEndStyle": "Bitiş Stili",\r\n
+  "DE.Views.ImageSettingsAdvanced.textFlat": "Düz",\r\n
+  "DE.Views.ImageSettingsAdvanced.textHeight": "Yükseklik",\r\n
+  "DE.Views.ImageSettingsAdvanced.textHorizontal": "Yatay",\r\n
+  "DE.Views.ImageSettingsAdvanced.textJoinType": "Katılım Tipi",\r\n
+  "DE.Views.ImageSettingsAdvanced.textKeepRatio": "Sabit Orantılar",\r\n
+  "DE.Views.ImageSettingsAdvanced.textLeft": "Sol",\r\n
+  "DE.Views.ImageSettingsAdvanced.textLeftMargin": "Sol Kenar Boşluğu",\r\n
+  "DE.Views.ImageSettingsAdvanced.textLine": "Satır",\r\n
+  "DE.Views.ImageSettingsAdvanced.textLineStyle": "Çizgi stili",\r\n
+  "DE.Views.ImageSettingsAdvanced.textMargin": "Kenar boşluğu",\r\n
+  "DE.Views.ImageSettingsAdvanced.textMiter": "Gönye",\r\n
+  "DE.Views.ImageSettingsAdvanced.textMove": "Objeyi metinle taşı",\r\n
+  "DE.Views.ImageSettingsAdvanced.textOptions": "Seçenekler",\r\n
+  "DE.Views.ImageSettingsAdvanced.textOriginalSize": "Varsayılan Boyut",\r\n
+  "DE.Views.ImageSettingsAdvanced.textOverlap": "Çakışmaya izin ver",\r\n
+  "DE.Views.ImageSettingsAdvanced.textPage": "Sayfa",\r\n
+  "DE.Views.ImageSettingsAdvanced.textParagraph": "Paragraf",\r\n
+  "DE.Views.ImageSettingsAdvanced.textPosition": "Pozisyon",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRelative": "şununla ilgili:",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRight": "Sağ",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRightMargin": "Sağ Kenar Boşluğu",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRightOf": "sağına",\r\n
+  "DE.Views.ImageSettingsAdvanced.textRound": "Yuvarlak",\r\n
+  "DE.Views.ImageSettingsAdvanced.textShape": "Şekil Ayarları",\r\n
+  "DE.Views.ImageSettingsAdvanced.textSize": "Boyut",\r\n
+  "DE.Views.ImageSettingsAdvanced.textSquare": "Kare",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTitle": "Resim - Gelişmiş Ayarlar",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTitleChart": "Grafik - Gelişmiş Ayarlar",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTitleShape": "Şekil - Gelişmiş Ayarlar",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTop": "Üst",\r\n
+  "DE.Views.ImageSettingsAdvanced.textTopMargin": "Üst Kenar Aralığı",\r\n
+  "DE.Views.ImageSettingsAdvanced.textVertical": "Dikey",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWidth": "Genişlik",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrap": "Kaydırma Stili",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapBehindTooltip": "Arkada",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapInFrontTooltip": "Önde",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapInlineTooltip": "Satıriçi",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapSquareTooltip": "Kare",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapThroughTooltip": "Sonu",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapTightTooltip": "Sıkı",\r\n
+  "DE.Views.ImageSettingsAdvanced.textWrapTopbottomTooltip": "Üst ve alt",\r\n
+  "DE.Views.LeftMenu.tipAbout": "Hakkında",\r\n
+  "DE.Views.LeftMenu.tipChat": "Sohbet",\r\n
+  "DE.Views.LeftMenu.tipComments": "Yorumlar",\r\n
+  "DE.Views.LeftMenu.tipFile": "Dosya",\r\n
+  "DE.Views.LeftMenu.tipSearch": "Ara",\r\n
+  "DE.Views.LeftMenu.tipSupport": "Geri Bildirim & Destek",\r\n
+  "DE.Views.LeftMenu.tipTitles": "Başlıklar",\r\n
+  "DE.Views.MailMergeEmailDlg.cancelButtonText": "Cancel",\r\n
+  "DE.Views.MailMergeEmailDlg.filePlaceholder": "PDF",\r\n
+  "DE.Views.MailMergeEmailDlg.okButtonText": "Send",\r\n
+  "DE.Views.MailMergeEmailDlg.subjectPlaceholder": "Theme",\r\n
+  "DE.Views.MailMergeEmailDlg.textAttachDocx": "Attach as DOCX",\r\n
+  "DE.Views.MailMergeEmailDlg.textAttachPdf": "Attach as PDF",\r\n
+  "DE.Views.MailMergeEmailDlg.textFileName": "File name",\r\n
+  "DE.Views.MailMergeEmailDlg.textFormat": "Mail format",\r\n
+  "DE.Views.MailMergeEmailDlg.textFrom": "From",\r\n
+  "DE.Views.MailMergeEmailDlg.textHTML": "HTML",\r\n
+  "DE.Views.MailMergeEmailDlg.textMessage": "Message",\r\n
+  "DE.Views.MailMergeEmailDlg.textSubject": "Subject Line",\r\n
+  "DE.Views.MailMergeEmailDlg.textTitle": "Send to E-mail",\r\n
+  "DE.Views.MailMergeEmailDlg.textTo": "To",\r\n
+  "DE.Views.MailMergeEmailDlg.textWarning": "Warning!",\r\n
+  "DE.Views.MailMergeEmailDlg.textWarningMsg": "Please note that mailing cannot be stopped once your click the \'Send\' button.",\r\n
+  "DE.Views.MailMergeRecepients.textLoading": "Loading",\r\n
+  "DE.Views.MailMergeRecepients.textTitle": "Select Data Source",\r\n
+  "DE.Views.MailMergeSaveDlg.textLoading": "Loading",\r\n
+  "DE.Views.MailMergeSaveDlg.textTitle": "Folder for save",\r\n
+  "DE.Views.MailMergeSettings.downloadMergeTitle": "Merging",\r\n
+  "DE.Views.MailMergeSettings.errorMailMergeSaveFile": "Merge failed.",\r\n
+  "DE.Views.MailMergeSettings.notcriticalErrorTitle": "Warning",\r\n
+  "DE.Views.MailMergeSettings.textAll": "All records",\r\n
+  "DE.Views.MailMergeSettings.textCurrent": "Current record",\r\n
+  "DE.Views.MailMergeSettings.textDataSource": "Data Source",\r\n
+  "DE.Views.MailMergeSettings.textDocx": "Docx",\r\n
+  "DE.Views.MailMergeSettings.textDownload": "Download",\r\n
+  "DE.Views.MailMergeSettings.textEditData": "Edit recipients list",\r\n
+  "DE.Views.MailMergeSettings.textEmail": "E-mail",\r\n
+  "DE.Views.MailMergeSettings.textFrom": "From",\r\n
+  "DE.Views.MailMergeSettings.textHighlight": "Highlight merge fields",\r\n
+  "DE.Views.MailMergeSettings.textInsertField": "Insert Merge Field",\r\n
+  "DE.Views.MailMergeSettings.textMaxRecepients": "Max 100 recipients.",\r\n
+  "DE.Views.MailMergeSettings.textMerge": "Merge",\r\n
+  "DE.Views.MailMergeSettings.textMergeFields": "Merge Fields",\r\n
+  "DE.Views.MailMergeSettings.textMergeTo": "Merge to",\r\n
+  "DE.Views.MailMergeSettings.textPdf": "PDF",\r\n
+  "DE.Views.MailMergeSettings.textPortal": "Save",\r\n
+  "DE.Views.MailMergeSettings.textPreview": "Preview results",\r\n
+  "DE.Views.MailMergeSettings.textReadMore": "Read more",\r\n
+  "DE.Views.MailMergeSettings.textSendMsg": "All mail messages are ready and will be sent out within some time.<br>The speed of mailing depends on your mail service.<br>You can continue working with document or close it. After the operation is over the notification will be sent to your %1 email address.",\r\n
+  "DE.Views.MailMergeSettings.textTo": "To",\r\n
+  "DE.Views.MailMergeSettings.txtFirst": "To first field",\r\n
+  "DE.Views.MailMergeSettings.txtFromToError": "\\"From\\" value must be less than \\"To\\" value",\r\n
+  "DE.Views.MailMergeSettings.txtLast": "To last field",\r\n
+  "DE.Views.MailMergeSettings.txtNext": "To next field",\r\n
+  "DE.Views.MailMergeSettings.txtPrev": "To previous field",\r\n
+  "DE.Views.MailMergeSettings.txtUntitled": "Untitled",\r\n
+  "DE.Views.MailMergeSettings.warnProcessMailMerge": "Starting merge failed",\r\n
+  "DE.Views.ParagraphSettings.strLineHeight": "Satır Aralığı",\r\n
+  "DE.Views.ParagraphSettings.strParagraphSpacing": "Aralık",\r\n
+  "DE.Views.ParagraphSettings.strSomeParagraphSpace": "Aynı stildeki paragraflar arasına aralık ekleme",\r\n
+  "DE.Views.ParagraphSettings.strSpacingAfter": "Sonra",\r\n
+  "DE.Views.ParagraphSettings.strSpacingBefore": "Önce",\r\n
+  "DE.Views.ParagraphSettings.textAdvanced": "Gelişmiş ayarları göster",\r\n
+  "DE.Views.ParagraphSettings.textAt": "Şurada:",\r\n
+  "DE.Views.ParagraphSettings.textAtLeast": "En az",\r\n
+  "DE.Views.ParagraphSettings.textAuto": "Çoklu",\r\n
+  "DE.Views.ParagraphSettings.textBackColor": "Arka plan rengi",\r\n
+  "DE.Views.ParagraphSettings.textExact": "Tam olarak",\r\n
+  "DE.Views.ParagraphSettings.textNewColor": "Yeni Özel Renk Ekle",\r\n
+  "DE.Views.ParagraphSettings.textStandartColors": "Standart Renkler",\r\n
+  "DE.Views.ParagraphSettings.textThemeColors": "Tema Renkleri",\r\n
+  "DE.Views.ParagraphSettings.txtAutoText": "Otomatik",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.cancelButtonText": "İptal Et",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.noTabs": "Belirtilen sekmeler bu alanda görünecektir",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.okButtonText": "TAMAM",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strAllCaps": "Tüm başlıklar",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strBorders": "Sınırlar & Dolgu",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strBreakBefore": "Şundan önce sayfa kesmesi:",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strDoubleStrike": "Üstü çift çizili",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strIndentsFirstLine": "İlk Satır",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strIndentsLeftText": "Sol",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strIndentsRightText": "Sağ",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strKeepLines": "Satırları birlikte tut",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strKeepNext": "Sonrakiyle tut",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strMargins": "Dolgu maddeleri",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strOrphan": "Tek satır denetimi",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strParagraphFont": "Yazı Tipi",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strParagraphIndents": "Girinti & Yerleştirme",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strParagraphPosition": "Yerleştirme",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strSmallCaps": "Küçük büyük harf",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strStrike": "Üstü çizili",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strSubscript": "Altsimge",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strSuperscript": "Üstsimge",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.strTabs": "Sekme",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textAlign": "Hiza",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBackColor": "Arka plan rengi",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBorderColor": "Sınır Rengi",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBorderDesc": "Grafiğe tıklayın yada sınır seçmek için tuşları kullanın ve seçilen stili bunlara uygulayın",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBorderWidth": "Sınır Boyutu",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textBottom": "Alt",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textCharacterSpacing": "Karakter aralığı",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textDefault": "Varsayılan Sekme",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textEffects": "Efektler",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textLeft": "Sol",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textNewColor": "Yeni Özel Renk Ekle",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textPosition": "Pozisyon",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textRemove": "Kaldır",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textRemoveAll": "Hepsini Kaldır",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textRight": "Sağ",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textSet": "Belirt",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textSpacing": "Aralık",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textStandartColors": "Standart Renkler",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTabCenter": "Orta",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTabLeft": "Sol",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTabPosition": "Sekme Pozisyonu",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTabRight": "Sağ",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textThemeColors": "Tema Renkleri",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTitle": "Paragraf - Gelişmiş Ayarlar",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.textTop": "Üst",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipAll": "Dış Sınır ve Tüm İç Satırları Belirle",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipBottom": "Sadece Alt Sınırı Belirle",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipInner": "Sadece Yatay İç Satırları Belirle",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipLeft": "Sadece Sol Sınırı Belirle",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipNone": "Sınır belirleme",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipOuter": "Sadece Dış Sınırı Belirle",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipRight": "Sadece Sağ Sınırı Belirle",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.tipTop": "Sadece Üst Sınırı Belirle",\r\n
+  "DE.Views.ParagraphSettingsAdvanced.txtNoBorders": "Sınır yok",\r\n
+  "DE.Views.RightMenu.txtChartSettings": "Grafik Ayarları",\r\n
+  "DE.Views.RightMenu.txtHeaderFooterSettings": "Üst Başlık ve Alt Başlık Ayarları",\r\n
+  "DE.Views.RightMenu.txtImageSettings": "Resim Ayarları",\r\n
+  "DE.Views.RightMenu.txtMailMergeSettings": "Mail Merge Settings",\r\n
+  "DE.Views.RightMenu.txtParagraphSettings": "Paragraf Ayarları",\r\n
+  "DE.Views.RightMenu.txtShapeSettings": "Şekil Ayarları",\r\n
+  "DE.Views.RightMenu.txtTableSettings": "Tablo Ayarları",\r\n
+  "DE.Views.ShapeSettings.strBackground": "Arka plan rengi",\r\n
+  "DE.Views.ShapeSettings.strChange": "Otomatik Biçim Vermeyi Değiştir",\r\n
+  "DE.Views.ShapeSettings.strColor": "Renk",\r\n
+  "DE.Views.ShapeSettings.strFill": "Doldur",\r\n
+  "DE.Views.ShapeSettings.strForeground": "Önplan rengi",\r\n
+  "DE.Views.ShapeSettings.strPattern": "Desen",\r\n
+  "DE.Views.ShapeSettings.strSize": "Boyut",\r\n
+  "DE.Views.ShapeSettings.strStroke": "Bölü işareti",\r\n
+  "DE.Views.ShapeSettings.strTransparency": "Opasite",\r\n
+  "DE.Views.ShapeSettings.textAdvanced": "Gelişmiş ayarları göster",\r\n
+  "DE.Views.ShapeSettings.textBorderSizeErr": "Girilen değer yanlış. <br> Lütfen 0 ile 1584 pt arasında değer giriniz.",\r\n
+  "DE.Views.ShapeSettings.textColor": "Renk Dolgusu",\r\n
+  "DE.Views.ShapeSettings.textDirection": "Yön",\r\n
+  "DE.Views.ShapeSettings.textEmptyPattern": "Desen Yok",\r\n
+  "DE.Views.ShapeSettings.textFromFile": "Dosyadan",\r\n
+  "DE.Views.ShapeSettings.textFromUrl": "URL\'den",\r\n
+  "DE.Views.ShapeSettings.textGradient": "Gradyan",\r\n
+  "DE.Views.ShapeSettings.textGradientFill": "Gradyan Dolgu",\r\n
+  "DE.Views.ShapeSettings.textImageTexture": "Resim yada Doldurma Deseni",\r\n
+  "DE.Views.ShapeSettings.textLinear": "Doğrusal",\r\n
+  "DE.Views.ShapeSettings.textNewColor": "Yeni Özel Renk Ekle",\r\n
+  "DE.Views.ShapeSettings.textNoFill": "Dolgu Yok",\r\n
+  "DE.Views.ShapeSettings.textPatternFill": "Desen",\r\n
+  "DE.Views.ShapeSettings.textRadial": "Radyal",\r\n
+  "DE.Views.ShapeSettings.textSelectTexture": "Seç",\r\n
+  "DE.Views.ShapeSettings.textStandartColors": "Standart Renkler",\r\n
+  "DE.Views.ShapeSettings.textStretch": "Esnet",\r\n
+  "DE.Views.ShapeSettings.textStyle": "Stil",\r\n
+  "DE.Views.ShapeSettings.textTexture": "Doldurma deseninden",\r\n
+  "DE.Views.ShapeSettings.textThemeColors": "Tema Renkleri",\r\n
+  "DE.Views.ShapeSettings.textTile": "Desen",\r\n
+  "DE.Views.ShapeSettings.textWrap": "Kaydırma Stili",\r\n
+  "DE.Views.ShapeSettings.txtBehind": "Arkada",\r\n
+  "DE.Views.ShapeSettings.txtBrownPaper": "Kahverengi Kağıt",\r\n
+  "DE.Views.ShapeSettings.txtCanvas": "Tuval",\r\n
+  "DE.Views.ShapeSettings.txtCarton": "Karton",\r\n
+  "DE.Views.ShapeSettings.txtDarkFabric": "Koyu Örgü",\r\n
+  "DE.Views.ShapeSettings.txtGrain": "Tane",\r\n
+  "DE.Views.ShapeSettings.txtGranite": "Granit",\r\n
+  "DE.Views.ShapeSettings.txtGreyPaper": "Gri Kağıt",\r\n
+  "DE.Views.ShapeSettings.txtInFront": "Önde",\r\n
+  "DE.Views.ShapeSettings.txtInline": "Satıriçi",\r\n
+  "DE.Views.ShapeSettings.txtKnit": "Birleştir",\r\n
+  "DE.Views.ShapeSettings.txtLeather": "Deri",\r\n
+  "DE.Views.ShapeSettings.txtNoBorders": "Çizgi yok",\r\n
+  "DE.Views.ShapeSettings.txtPapyrus": "Papirus",\r\n
+  "DE.Views.ShapeSettings.txtSquare": "Kare",\r\n
+  "DE.Views.ShapeSettings.txtThrough": "Sonu",\r\n
+  "DE.Views.ShapeSettings.txtTight": "Sıkı",\r\n
+  "DE.Views.ShapeSettings.txtTopAndBottom": "Üst ve alt",\r\n
+  "DE.Views.ShapeSettings.txtWood": "Ahşap",\r\n
+  "DE.Views.Statusbar.goToPageText": "Sayfaya Git",\r\n
+  "DE.Views.Statusbar.LanguageDialog.btnCancel": "İptal Et",\r\n
+  "DE.Views.Statusbar.LanguageDialog.btnOk": "Tamam",\r\n
+  "DE.Views.Statusbar.LanguageDialog.labelSelect": "Döküman dilini seçin",\r\n
+  "DE.Views.Statusbar.pageIndexText": "{1}\'in {0}. sayfası",\r\n
+  "DE.Views.Statusbar.tipFitPage": "Sayfaya Sığdır",\r\n
+  "DE.Views.Statusbar.tipFitWidth": "Genişliğe Sığdır",\r\n
+  "DE.Views.Statusbar.tipMoreUsers": "ve %1 kullanıcı.",\r\n
+  "DE.Views.Statusbar.tipSetDocLang": "Döküman Dilini Belirle",\r\n
+  "DE.Views.Statusbar.tipSetLang": "Metin Dili Belirle",\r\n
+  "DE.Views.Statusbar.tipSetSpelling": "Yazım denetimi",\r\n
+  "DE.Views.Statusbar.tipShowUsers": "Tüm kullanıcıları görmek için aşağıdaki ikona tıklayın.",\r\n
+  "DE.Views.Statusbar.tipUsers": "Döküman şu an bir kaç kullanıcı tarafından düzenleniyor.",\r\n
+  "DE.Views.Statusbar.tipZoomFactor": "Büyütme",\r\n
+  "DE.Views.Statusbar.tipZoomIn": "Yakınlaştır",\r\n
+  "DE.Views.Statusbar.tipZoomOut": "Uzaklaştır",\r\n
+  "DE.Views.Statusbar.txtPageNumInvalid": "Sayı numarası geçersiz",\r\n
+  "DE.Views.TableSettings.deleteColumnText": "Sütunu Sil",\r\n
+  "DE.Views.TableSettings.deleteRowText": "Satırı Sil",\r\n
+  "DE.Views.TableSettings.deleteTableText": "Tabloyu Sil",\r\n
+  "DE.Views.TableSettings.insertColumnLeftText": "Sola Sütun Ekle",\r\n
+  "DE.Views.TableSettings.insertColumnRightText": "Sağa Sütun Ekle",\r\n
+  "DE.Views.TableSettings.insertRowAboveText": "Yukarı Satır Ekle",\r\n
+  "DE.Views.TableSettings.insertRowBelowText": "Aşağı Satır Ekle",\r\n
+  "DE.Views.TableSettings.mergeCellsText": "Hücreleri birleştir",\r\n
+  "DE.Views.TableSettings.selectCellText": "Hücre seçin",\r\n
+  "DE.Views.TableSettings.selectColumnText": "Sütun Seçin",\r\n
+  "DE.Views.TableSettings.selectRowText": "Satır Seç",\r\n
+  "DE.Views.TableSettings.selectTableText": "Tablo Seç",\r\n
+  "DE.Views.TableSettings.splitCellsText": "Hücreyi Böl...",\r\n
+  "DE.Views.TableSettings.splitCellTitleText": "Hücreyi Böl",\r\n
+  "DE.Views.TableSettings.strRepeatRow": "Her sayfanın başında üst başlık sırası olarak tekrarla",\r\n
+  "DE.Views.TableSettings.textAdvanced": "Gelişmiş ayarları göster",\r\n
+  "DE.Views.TableSettings.textBackColor": "Arka plan rengi",\r\n
+  "DE.Views.TableSettings.textBanded": "Bağlı",\r\n
+  "DE.Views.TableSettings.textBorderColor": "Renk",\r\n
+  "DE.Views.TableSettings.textBorders": "Sınır Stili",\r\n
+  "DE.Views.TableSettings.textCancel": "İptal Et",\r\n
+  "DE.Views.TableSettings.textColumns": "Sütunlar",\r\n
+  "DE.Views.TableSettings.textEdit": "Satırlar & Sütunlar",\r\n
+  "DE.Views.TableSettings.textEmptyTemplate": "Şablon yok",\r\n
+  "DE.Views.TableSettings.textFirst": "ilk",\r\n
+  "DE.Views.TableSettings.textHeader": "Üst Başlık",\r\n
+  "DE.Views.TableSettings.textLast": "Son",\r\n
+  "DE.Views.TableSettings.textNewColor": "Yeni Özel Renk Ekle",\r\n
+  "DE.Views.TableSettings.textOK": "TAMAM",\r\n
+  "DE.Views.TableSettings.textRows": "Satırlar",\r\n
+  "DE.Views.TableSettings.textSelectBorders": "Yukarıda seçilen stili uygulayarak değiştirmek istediğiniz sınırları seçin",\r\n
+  "DE.Views.TableSettings.textStandartColors": "Standart Renkler",\r\n
+  "DE.Views.TableSettings.textTemplate": "Şablondan Seç",\r\n
+  "DE.Views.TableSettings.textThemeColors": "Tema Renkleri",\r\n
+  "DE.Views.TableSettings.textTotal": "Toplam",\r\n
+  "DE.Views.TableSettings.textWrap": "Metin Kaydırma",\r\n
+  "DE.Views.TableSettings.textWrapNoneTooltip": "Satıriçi tablo",\r\n
+  "DE.Views.TableSettings.textWrapParallelTooltip": "Yayılma tablası",\r\n
+  "DE.Views.TableSettings.tipAll": "Dış Sınır ve Tüm İç Satırları Belirle",\r\n
+  "DE.Views.TableSettings.tipBottom": "Sadece Dış Alt Sınırı Belirle",\r\n
+  "DE.Views.TableSettings.tipInner": "Sadece İç Satırları Belirle",\r\n
+  "DE.Views.TableSettings.tipInnerHor": "Sadece Yatay İç Satırları Belirle",\r\n
+  "DE.Views.TableSettings.tipInnerVert": "Sadece Dikey İç Çizgileri Belirle",\r\n
+  "DE.Views.TableSettings.tipLeft": "Sadece Dış Sol Sınırı Belirle",\r\n
+  "DE.Views.TableSettings.tipNone": "Sınır belirleme",\r\n
+  "DE.Views.TableSettings.tipOuter": "Sadece Dış Sınırı Belirle",\r\n
+  "DE.Views.TableSettings.tipRight": "Sadece Dış Sağ Sınırı Belirle",\r\n
+  "DE.Views.TableSettings.tipTop": "Sadece Dış Üst Sınırı Belirle",\r\n
+  "DE.Views.TableSettings.txtNoBorders": "Sınır yok",\r\n
+  "DE.Views.TableSettingsAdvanced.cancelButtonText": "İptal Et",\r\n
+  "DE.Views.TableSettingsAdvanced.okButtonText": "TAMAM",\r\n
+  "DE.Views.TableSettingsAdvanced.textAlign": "Hiza",\r\n
+  "DE.Views.TableSettingsAdvanced.textAlignment": "Hiza",\r\n
+  "DE.Views.TableSettingsAdvanced.textAllowSpacing": "Hücreler arası aralığa izin ver",\r\n
+  "DE.Views.TableSettingsAdvanced.textAnchorText": "Metin",\r\n
+  "DE.Views.TableSettingsAdvanced.textAutofit": "İçeriği sığdırmak için otomatik yeniden boyutlandır",\r\n
+  "DE.Views.TableSettingsAdvanced.textBackColor": "Hücre Arka Planı",\r\n
+  "DE.Views.TableSettingsAdvanced.textBelow": "altında",\r\n
+  "DE.Views.TableSettingsAdvanced.textBorderColor": "Sınır Rengi",\r\n
+  "DE.Views.TableSettingsAdvanced.textBorderDesc": "Grafiğe tıklayın yada sınır seçmek için tuşları kullanın ve seçilen stili bunlara uygulayın",\r\n
+  "DE.Views.TableSettingsAdvanced.textBordersBackgroung": "Sınırlar & Arka Plan",\r\n
+  "DE.Views.TableSettingsAdvanced.textBorderWidth": "Sınır Boyutu",\r\n
+  "DE.Views.TableSettingsAdvanced.textBottom": "Alt",\r\n
+  "DE.Views.TableSettingsAdvanced.textCellProps": "Hücre Özellikleri",\r\n
+  "DE.Views.TableSettingsAdvanced.textCenter": "Orta",\r\n
+  "DE.Views.TableSettingsAdvanced.textCenterTooltip": "Orta",\r\n
+  "DE.Views.TableSettingsAdvanced.textCheckMargins": "Varsayılan kenar boşluklarını kullan",\r\n
+  "DE.Views.TableSettingsAdvanced.textDefaultMargins": "Varsayılan Kenar Boşlukları",\r\n
+  "DE.Views.TableSettingsAdvanced.textDistance": "Metinden mesafe",\r\n
+  "DE.Views.TableSettingsAdvanced.textHorizontal": "Yatay",\r\n
+  "DE.Views.TableSettingsAdvanced.textIndLeft": "Soldan Girinti",\r\n
+  "DE.Views.TableSettingsAdvanced.textLeft": "Sol",\r\n
+  "DE.Views.TableSettingsAdvanced.textLeftTooltip": "Sol",\r\n
+  "DE.Views.TableSettingsAdvanced.textMargin": "Kenar boşluğu",\r\n
+  "DE.Views.TableSettingsAdvanced.textMargins": "Hücre Kenar Boşluğu",\r\n
+  "DE.Views.TableSettingsAdvanced.textMove": "Objeyi metinle taşı",\r\n
+  "DE.Views.TableSettingsAdvanced.textNewColor": "Yeni Özel Renk Ekle",\r\n
+  "DE.Views.TableSettingsAdvanced.textOnlyCells": "Sadece seçilen hücreler için",\r\n
+  "DE.Views.TableSettingsAdvanced.textOptions": "Seçenekler",\r\n
+  "DE.Views.TableSettingsAdvanced.textOverlap": "Çakışmaya izin ver",\r\n
+  "DE.Views.TableSettingsAdvanced.textPage": "Sayfa",\r\n
+  "DE.Views.TableSettingsAdvanced.textPosition": "Pozisyon",\r\n
+  "DE.Views.TableSettingsAdvanced.textPreview": "Önizleme",\r\n
+  "DE.Views.TableSettingsAdvanced.textRelative": "şununla ilgili:",\r\n
+  "DE.Views.TableSettingsAdvanced.textRight": "Sağ",\r\n
+  "DE.Views.TableSettingsAdvanced.textRightOf": "sağına",\r\n
+  "DE.Views.TableSettingsAdvanced.textRightTooltip": "Sağ",\r\n
+  "DE.Views.TableSettingsAdvanced.textStandartColors": "Standart Renkler",\r\n
+  "DE.Views.TableSettingsAdvanced.textTableBackColor": "Tablo Arka planı",\r\n
+  "DE.Views.TableSettingsAdvanced.textThemeColors": "Tema Renkleri",\r\n
+  "DE.Views.TableSettingsAdvanced.textTitle": "Tablo - Gelişmiş Ayarlar",\r\n
+  "DE.Views.TableSettingsAdvanced.textTop": "Üst",\r\n
+  "DE.Views.TableSettingsAdvanced.textVertical": "Dikey",\r\n
+  "DE.Views.TableSettingsAdvanced.textWidth": "Genişlik",\r\n
+  "DE.Views.TableSettingsAdvanced.textWidthSpaces": "Genişlik & Aralıklar",\r\n
+  "DE.Views.TableSettingsAdvanced.textWrap": "Metin Kaydırma",\r\n
+  "DE.Views.TableSettingsAdvanced.textWrapNoneTooltip": "Satıriçi tablo",\r\n
+  "DE.Views.TableSettingsAdvanced.textWrapParallelTooltip": "Yayılma tablası",\r\n
+  "DE.Views.TableSettingsAdvanced.tipAll": "Dış Sınır ve Tüm İç Satırları Belirle",\r\n
+  "DE.Views.TableSettingsAdvanced.tipCellAll": "Sadece iç hücreler için sınır belirleyin",\r\n
+  "DE.Views.TableSettingsAdvanced.tipCellInner": "Sadece İç Hücreler için Dikey ve Yatay Çizgileri Belirle",\r\n
+  "DE.Views.TableSettingsAdvanced.tipCellOuter": "Sadece İç Hücreler için Dış Sınırları Belirle",\r\n
+  "DE.Views.TableSettingsAdvanced.tipInner": "Sadece İç Satırları Belirle",\r\n
+  "DE.Views.TableSettingsAdvanced.tipNone": "Sınır belirleme",\r\n
+  "DE.Views.TableSettingsAdvanced.tipOuter": "Sadece Dış Sınırı Belirle",\r\n
+  "DE.Views.TableSettingsAdvanced.tipTableOuterCellAll": "Dış Sınırı ve Tüm İç Hücreler için Sınırları belirle",\r\n
+  "DE.Views.TableSettingsAdvanced.tipTableOuterCellInner": "Dış sınırı ve İç Hücreler için Dikey Yatay Çizgileri Belirleyin",\r\n
+  "DE.Views.TableSettingsAdvanced.tipTableOuterCellOuter": "Dış Sınır Tablosunu ve İç Hücreler için Dış Sınırları Belirle",\r\n
+  "DE.Views.TableSettingsAdvanced.txtNoBorders": "Sınır yok",\r\n
+  "DE.Views.Toolbar.mniCustomTable": "Özel Tablo Ekle",\r\n
+  "DE.Views.Toolbar.mniEditDropCap": "Büyük Harf Ayarları",\r\n
+  "DE.Views.Toolbar.mniEditFooter": "Altlığı Düzenle",\r\n
+  "DE.Views.Toolbar.mniEditHeader": "Üstlüğü Düzenle",\r\n
+  "DE.Views.Toolbar.mniHiddenBorders": "Gizli Tablo Sınırları",\r\n
+  "DE.Views.Toolbar.mniHiddenChars": "Basılmaz Karakterler",\r\n
+  "DE.Views.Toolbar.mniImageFromFile": "Dosyadan resim",\r\n
+  "DE.Views.Toolbar.mniImageFromUrl": "URL\'den resim",\r\n
+  "DE.Views.Toolbar.strMenuNoFill": "Dolgu Yok",\r\n
+  "DE.Views.Toolbar.textArea": "Bölge Grafiği",\r\n
+  "DE.Views.Toolbar.textAutoColor": "Otomatik",\r\n
+  "DE.Views.Toolbar.textBar": "Çubuk grafik",\r\n
+  "DE.Views.Toolbar.textBold": "Kalın",\r\n
+  "DE.Views.Toolbar.textColumn": "Sütun grafik",\r\n
+  "DE.Views.Toolbar.textCompactView": "Kompakt Aletçantasını göster",\r\n
+  "DE.Views.Toolbar.textContPage": "Devam Eden Sayfa",\r\n
+  "DE.Views.Toolbar.textEvenPage": "Çift Sayfa",\r\n
+  "DE.Views.Toolbar.textFitPage": "Sayfaya Sığdır",\r\n
+  "DE.Views.Toolbar.textFitWidth": "Genişliğe Sığdır",\r\n
+  "DE.Views.Toolbar.textHideLines": "Cetvelleri Gizle",\r\n
+  "DE.Views.Toolbar.textHideStatusBar": "Durum Çubuğunu Gizle",\r\n
+  "DE.Views.Toolbar.textHideTitleBar": "Başlık Çubuğunu Gizle",\r\n
+  "DE.Views.Toolbar.textInMargin": "Kenar boşluğunda",\r\n
+  "DE.Views.Toolbar.textInsertPageNumber": "Sayfa numarası ekle",\r\n
+  "DE.Views.Toolbar.textInsPageBreak": "Sayfa Kesmesi Ekle",\r\n
+  "DE.Views.Toolbar.textInsSectionBreak": "Bölüm kesmesi ekle",\r\n
+  "DE.Views.Toolbar.textInText": "Metinde",\r\n
+  "DE.Views.Toolbar.textItalic": "İtalik",\r\n
+  "DE.Views.Toolbar.textLine": "Çizgi grafiği",\r\n
+  "DE.Views.Toolbar.textNewColor": "Yeni Özel Renk Ekle",\r\n
+  "DE.Views.Toolbar.textNextPage": "Sonraki Sayfa",\r\n
+  "DE.Views.Toolbar.textNone": "hiçbiri",\r\n
+  "DE.Views.Toolbar.textOddPage": "Tek Sayfa",\r\n
+  "DE.Views.Toolbar.textPie": "Dilim grafik",\r\n
+  "DE.Views.Toolbar.textPoint": "Nokta grafiği",\r\n
+  "DE.Views.Toolbar.textStandartColors": "Standart Renkler",\r\n
+  "DE.Views.Toolbar.textStock": "Stok Grafiği",\r\n
+  "DE.Views.Toolbar.textStrikeout": "Üstü çizili",\r\n
+  "DE.Views.Toolbar.textSubscript": "Altsimge",\r\n
+  "DE.Views.Toolbar.textSuperscript": "Üstsimge",\r\n
+  "DE.Views.Toolbar.textThemeColors": "Tema Renkleri",\r\n
+  "DE.Views.Toolbar.textTitleError": "Hata",\r\n
+  "DE.Views.Toolbar.textToCurrent": "Mevcut pozisyona",\r\n
+  "DE.Views.Toolbar.textUnderline": "Altı çizili",\r\n
+  "DE.Views.Toolbar.textZoom": "Zum",\r\n
+  "DE.Views.Toolbar.tipAdvSettings": "Gelişmiş Ayarlar",\r\n
+  "DE.Views.Toolbar.tipAlignCenter": "Ortaya Hizala",\r\n
+  "DE.Views.Toolbar.tipAlignJust": "İki yana yaslı",\r\n
+  "DE.Views.Toolbar.tipAlignLeft": "Sola Hizala",\r\n
+  "DE.Views.Toolbar.tipAlignRight": "Sağa Hizla",\r\n
+  "DE.Views.Toolbar.tipBack": "Geri",\r\n
+  "DE.Views.Toolbar.tipClearStyle": "Stili Temizle",\r\n
+  "DE.Views.Toolbar.tipColorSchemas": "Renk Şemasını Değiştir",\r\n
+  "DE.Views.Toolbar.tipCopy": "Kopyala",\r\n
+  "DE.Views.Toolbar.tipCopyStyle": "Stili Kopyala",\r\n
+  "DE.Views.Toolbar.tipDecFont": "Yazı Boyutu Azaltımı",\r\n
+  "DE.Views.Toolbar.tipDecPrLeft": "Girintiyi Azalt",\r\n
+  "DE.Views.Toolbar.tipDropCap": "Büyük Harf Ekle",\r\n
+  "DE.Views.Toolbar.tipEditHeader": "Alt yada üst başlığı düzenle",\r\n
+  "DE.Views.Toolbar.tipFontColor": "Yazı Tipi Rengi",\r\n
+  "DE.Views.Toolbar.tipFontName": "Yazı Tipi İsmi",\r\n
+  "DE.Views.Toolbar.tipFontSize": "Yazıtipi boyutu",\r\n
+  "DE.Views.Toolbar.tipHAligh": "Yatay Hizala",\r\n
+  "DE.Views.Toolbar.tipHighlightColor": "Vurgu Rengi",\r\n
+  "DE.Views.Toolbar.tipIncFont": "Yazı Tipi Boyut Arttırımı",\r\n
+  "DE.Views.Toolbar.tipIncPrLeft": "Girintiyi Arttır",\r\n
+  "DE.Views.Toolbar.tipInsertChart": "Tablo ekle",\r\n
+  "DE.Views.Toolbar.tipInsertEquation": "Insert Equation",\r\n
+  "DE.Views.Toolbar.tipInsertHyperlink": "Hiperbağ ekle",\r\n
+  "DE.Views.Toolbar.tipInsertImage": "Resim ekle",\r\n
+  "DE.Views.Toolbar.tipInsertNum": "Sayfa numarası ekle",\r\n
+  "DE.Views.Toolbar.tipInsertShape": "Otomatik Şekil ekle",\r\n
+  "DE.Views.Toolbar.tipInsertTable": "Tablo ekle",\r\n
+  "DE.Views.Toolbar.tipInsertText": "Metin ekle",\r\n
+  "DE.Views.Toolbar.tipLineSpace": "Paragraf Satır Aralığı",\r\n
+  "DE.Views.Toolbar.tipMailRecepients": "Mail Merge",\r\n
+  "DE.Views.Toolbar.tipMarkers": "İmler",\r\n
+  "DE.Views.Toolbar.tipMultilevels": "Çerçeve",\r\n
+  "DE.Views.Toolbar.tipNewDocument": "Yeni Döküman",\r\n
+  "DE.Views.Toolbar.tipNumbers": "Numaralandırma",\r\n
+  "DE.Views.Toolbar.tipOpenDocument": "Dökümanı Aç",\r\n
+  "DE.Views.Toolbar.tipPageBreak": "Sayfa yada Bölüm Kesmesi Ekle",\r\n
+  "DE.Views.Toolbar.tipPageOrient": "Sayfa Orientasyonu",\r\n
+  "DE.Views.Toolbar.tipPageSize": "Sayfa Boyutu",\r\n
+  "DE.Views.Toolbar.tipParagraphStyle": "Paragraf Stili",\r\n
+  "DE.Views.Toolbar.tipPaste": "Yapıştır",\r\n
+  "DE.Views.Toolbar.tipPrColor": "Paragraf Arka Plan Rengi",\r\n
+  "DE.Views.Toolbar.tipPrint": "Yazdır",\r\n
+  "DE.Views.Toolbar.tipRedo": "Tekrar yap",\r\n
+  "DE.Views.Toolbar.tipSave": "Kaydet",\r\n
+  "DE.Views.Toolbar.tipSaveCoauth": "Diğer kullanıcıların görmesi için değişikliklerinizi kaydedin.",\r\n
+  "DE.Views.Toolbar.tipShowHiddenChars": "Basılmaz Karakterler",\r\n
+  "DE.Views.Toolbar.tipSynchronize": "Döküman başka bir kullanıcı tarafından değiştirildi. Lütfen değişikleri kaydetmek için tıklayın ve güncellemeleri yenileyin.",\r\n
+  "DE.Views.Toolbar.tipUndo": "Geri Al",\r\n
+  "DE.Views.Toolbar.tipViewSettings": "Ayarları Göster",\r\n
+  "DE.Views.Toolbar.txtScheme1": "Ofis",\r\n
+  "DE.Views.Toolbar.txtScheme10": "Medyan",\r\n
+  "DE.Views.Toolbar.txtScheme11": "Metro",\r\n
+  "DE.Views.Toolbar.txtScheme12": "Modül",\r\n
+  "DE.Views.Toolbar.txtScheme13": "Zengin",\r\n
+  "DE.Views.Toolbar.txtScheme14": "Sıkma",\r\n
+  "DE.Views.Toolbar.txtScheme15": "Orjin",\r\n
+  "DE.Views.Toolbar.txtScheme16": "Kağıt",\r\n
+  "DE.Views.Toolbar.txtScheme17": "Gün dönümü",\r\n
+  "DE.Views.Toolbar.txtScheme18": "Yöntem",\r\n
+  "DE.Views.Toolbar.txtScheme19": "Yolculuk",\r\n
+  "DE.Views.Toolbar.txtScheme2": "Gri Ölçeği",\r\n
+  "DE.Views.Toolbar.txtScheme20": "Kentsel",\r\n
+  "DE.Views.Toolbar.txtScheme21": "Şevk",\r\n
+  "DE.Views.Toolbar.txtScheme3": "Apex",\r\n
+  "DE.Views.Toolbar.txtScheme4": "Açı",\r\n
+  "DE.Views.Toolbar.txtScheme5": "Kentsel",\r\n
+  "DE.Views.Toolbar.txtScheme6": "Toplama",\r\n
+  "DE.Views.Toolbar.txtScheme7": "Net Değer",\r\n
+  "DE.Views.Toolbar.txtScheme8": "Yayılma",\r\n
+  "DE.Views.Toolbar.txtScheme9": "Döküm"\r\n
+}
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="File" module="OFS.Image"/>
+      <global name="Image" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts44308423.87</string> </value>
+            <value> <string>ts50885465.5</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -142,6 +142,10 @@ ZeDh5AESJDFUTSoWjkMSiZEoanrFwcGHGAQm8TgiItElDUQSqBlBIEkgACH5BAUKAGwALNUADQAH
 ABYAAAcvgGqCg4SFhh+IiR9sjI2Oj5CRMJOUbIYXl5cRm5wOkZ+goWwTpKUThqhqBqusBoEAOw==</string> </value>
         </item>
         <item>
+            <key> <string>height</string> </key>
+            <value> <int>62</int> </value>
+        </item>
+        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>
@@ -152,6 +156,10 @@ ABYAAAcvgGqCg4SFhh+IiR9sjI2Oj5CRMJOUbIYXl5cRm5wOkZ+goWwTpKUThqhqBqusBoEAOw==</st
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>220</int> </value>
         </item>
       </dictionary>
     </pickle>
