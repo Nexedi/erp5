@@ -58,7 +58,9 @@
   of the Event, the event is considered as frozen and can not \n
   be modified.\n
 """\n
-return getattr(context, \'hasFile\', None) is not None and not context.hasFile()\n
+return getattr(context, \'hasFile\', None) is not None and not context.hasFile() \\\n
+  and (context.getPortalType() != \'Mail Message\' \\\n
+       or context.getSimulationState() not in (\'started\', \'stopped\', \'delivered\'))\n
 </string> </value>
         </item>
         <item>
