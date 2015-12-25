@@ -367,7 +367,13 @@
         placehodler_obj = document.getElementById(placehodler),\n
         save_button = document.querySelector("button[name=\'Base_edit:method\']"),\n
         height,\n
-        onBack;\n
+        onBack,\n
+        documentType,\n
+        magic_to_format_map = {\n
+          \'DOCY;\' : \'text\',\n
+          \'XLSY;\' : \'spreadsheet\',\n
+          \'PPTY;\' : \'presentation\'\n
+        };\n
       if (save_button) {\n
         this.props.erp5_mode = true;\n
         save_button.hidden = true;\n
@@ -379,8 +385,12 @@
           this.fullscreen();\n
         }, this);\n
       }\n
-      console.log(options);\n
-      if (options.value === \'undefined\') { options.value = \'\'; }\n
+      if (options.value === undefined) {\n
+        options.value = \'\';\n
+        documentType = options.portal_type;\n
+      } else {\n
+        documentType = magic_to_format_map[options.value.substring(0, 5)];\n
+      }\n
       this.props.docEditor = new DocsAPI.DocEditor(placehodler, {\n
         //type: urlParams[\'type\'],\n
         width: \'100%\',\n
@@ -400,6 +410,7 @@
             reader: true\n
           }\n
         },\n
+        documentType: documentType,\n
         editorConfig: this.props.cfg,\n
         events: {\n
           \'onReady\': onDocEditorReady,\n
@@ -486,6 +497,12 @@
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -539,6 +556,65 @@
             <item>
                 <key> <string>validation_state</string> </key>
                 <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>947.64367.38968.33962</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1450904842.41</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
             </item>
           </dictionary>
         </list>
