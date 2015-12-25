@@ -2752,19 +2752,23 @@ class ListBoxValidator(Validator.Validator):
     required_not_found = 'Input is required but no input given.'
 
     def validate(self, field, key, REQUEST):
+        renderer = ListBoxRenderer(field=field, REQUEST=REQUEST)
         form = field.aq_parent
         # We need to know where we get the getter from
         # This is coppied from ERP5 Form
         here = getattr(form, 'aq_parent', REQUEST)
         columns = field.get_value('columns')
-        editable_columns = field.get_value('editable_columns')
         column_ids = [x[0] for x in columns]
+        editable_columns = field.get_value('editable_columns')
         editable_column_ids = [x[0] for x in editable_columns]
+        # Only consider editable columns that the user has selected
+        selected_column_ids = [x[0] for x in renderer.getSelectedColumnList()]
+        editable_column_ids = [x for x in editable_column_ids if x in selected_column_ids]
+
         editable_field_dict = {}
         for sql in editable_column_ids:
           alias = sql.replace('.', '_')
-          editable_field_dict[alias] = ListBoxRenderer(
-                                          field=field).getEditableField(alias)
+          editable_field_dict[alias] = renderer.getEditableField(alias)
 
         selection_name = field.get_value('selection_name')
         #LOG('ListBoxValidator', 0, 'field = %s, selection_name = %s' % (repr(field), repr(selection_name)))
