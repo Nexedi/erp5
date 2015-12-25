@@ -119,8 +119,6 @@
   function saveContent(gadget, submit_event) {\n
     var i,\n
       doc = gadget.options.doc;\n
-    doc.parent_relative_url = "document_module";\n
-    doc.portal_type = "Spreadsheet";\n
     doc.modification_date = (new Date()).toISOString();\n
     for (i = 0; i < submit_event.target.length; i += 1) {\n
       // XXX Should check input type instead\n
@@ -137,8 +135,6 @@
       })\n
       .push(function (data) {\n
         doc.data = data.text_content;\n
-        doc.content_type = "application/yformat.xlsy";\n
-        doc.filename = doc.title + ".xlsy";\n
         return gadget.put(gadget.options.jio_key, doc);\n
       });\n
   }\n
@@ -270,9 +266,10 @@
             .push(function (html) {\n
               gadget.props.element.innerHTML = html;\n
               return gadget.updateHeader({\n
-                page_title: options.doc.title + " | Spreadsheet",\n
-                back_url: "#page=spreadsheet_list",\n
-                panel_action: false,\n
+                page_title: options.doc.title + " | " + options.doc.portal_type,\n
+                back_url: "#page=" +\n
+                    options.doc.portal_type.toLowerCase() + "_list",\n
+                panel_action: false\n
                 // breadcrumb_url: all_result[4],\n
                 //save_action: true\n
               });\n
@@ -314,7 +311,8 @@
           switchFullscreenMode(gadget);\n
           return text_content_gadget.render({\n
             "key": \'text_content\',\n
-            "value": gadget.options.doc.data\n
+            "value": gadget.options.doc.data,\n
+            "portal_type": gadget.options.doc.portal_type\n
           });\n
         })\n
         .push(function () {\n
@@ -483,7 +481,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.30190.10718.55688</string> </value>
+                <value> <string>947.62818.19237.36403</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -501,7 +499,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448926957.73</float>
+                        <float>1450798287.45</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

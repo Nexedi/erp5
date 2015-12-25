@@ -116,7 +116,7 @@
       type: "replicate",\n
       // XXX This drop the signature lists...\n
       query: {\n
-        query: \'portal_type: ( "Web Page", "Spreadsheet" ) \'\n
+        query: \'portal_type: ( "Web Page", "Spreadsheet", "Text" ) \'\n
         // XX Synchonizing the whole module is too much, here is a way to start quietly\n
         // Supsended until modification_date is handled for synchronization\n
           + \' AND modification_date:>="\'\n
@@ -382,7 +382,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.29694.37023.57634</string> </value>
+                <value> <string>947.30152.42918.48418</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -400,7 +400,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448924679.21</float>
+                        <float>1450730073.08</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
