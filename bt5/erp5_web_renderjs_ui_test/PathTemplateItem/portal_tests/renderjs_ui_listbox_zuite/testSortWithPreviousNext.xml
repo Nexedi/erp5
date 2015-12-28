@@ -111,13 +111,19 @@
 \n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//form[@class=\'sort_form\']</td>\n
+  <td>//form[@class="document_table"]//button[@data-i18n=\'Sort\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>focus</td>\n
+  <td>//form[@class="document_table"]//button[@data-i18n=\'Sort\']</td>\n
   <td></td>\n
 </tr>\n
 \n
 <tr>\n
   <td>click</td>\n
-  <td>//form[@class=\'sort_form\']/button</td>\n
+  <td>//form[@class="document_table"]//button[@data-i18n=\'Sort\']</td>\n
   <td></td>\n
 </tr>\n
 \n

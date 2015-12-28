@@ -108,9 +108,145 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint indent: 2, maxerr: 3, nomen: true */\n
-/*global window, document, rJS, URI, RSVP, loopEventListener*/\n
-(function (window, document, rJS, URI, RSVP, loopEventListener) {\n
+/*global window, document, rJS, URI, RSVP, loopEventListener,\n
+  SimpleQuery, ComplexQuery, Query, Handlebars*/\n
+(function (window, document, rJS, URI, RSVP, loopEventListener,\n
+  SimpleQuery, ComplexQuery, Query, Handlebars) {\n
   "use strict";\n
+  var gadget_klass = rJS(window),\n
+    listbox_hidden_thead_source = gadget_klass.__template_element\n
+                         .getElementById("listbox-hidden-thead-template")\n
+                         .innerHTML,\n
+    listbox_hidden_thead_template = Handlebars.compile(listbox_hidden_thead_source),\n
+    listbox_show_thead_source = gadget_klass.__template_element\n
+                         .getElementById("listbox-show-thead-template")\n
+                         .innerHTML,\n
+    listbox_show_thead_template = Handlebars.compile(listbox_show_thead_source),\n
+\n
+    listbox_hidden_tbody_source = gadget_klass.__template_element\n
+                         .getElementById("listbox-hidden-tbody-template")\n
+                         .innerHTML,\n
+    listbox_hidden_tbody_template = Handlebars.compile(listbox_hidden_tbody_source),\n
+    listbox_show_tbody_source = gadget_klass.__template_element\n
+                         .getElementById("listbox-show-tbody-template")\n
+                         .innerHTML,\n
+    listbox_show_tbody_template = Handlebars.compile(listbox_show_tbody_source),\n
+\n
+    listbox_tfoot_source = gadget_klass.__template_element\n
+                         .getElementById("listbox-tfoot-template")\n
+                         .innerHTML,\n
+    listbox_tfoot_template = Handlebars.compile(listbox_tfoot_source),\n
+\n
+    listbox_source = gadget_klass.__template_element\n
+                         .getElementById("listbox-template")\n
+                         .innerHTML,\n
+    listbox_template = Handlebars.compile(listbox_source);\n
+\n
+\n
+  function renderListboxThead(gadget, template) {\n
+    if (template === undefined) {\n
+      template = listbox_hidden_thead_template;\n
+    }\n
+    return gadget.translateHtml(template(\n
+      {\n
+        "head_value": gadget.props.head_value,\n
+        "show_anchor": gadget.props.field_json.show_anchor\n
+      }\n
+    ));\n
+  }\n
+\n
+\n
+\n
+  function renderEditableField(gadget, element) {\n
+    var i,\n
+      promise_list = [],\n
+      uid_value_dict = {},\n
+      uid_value,\n
+      column,\n
+      line,\n
+      element_list = element.querySelectorAll(".editable_div");\n
+    gadget.props.listbox_uid_dict = {};\n
+    gadget.props.cell_gadget_list = [];\n
+    function renderSubCell(element, sub_field_json) {\n
+      return gadget.getFieldTypeGadgetUrl(sub_field_json.type)\n
+        .push(function (gadget_url) {\n
+          return gadget.declareGadget(gadget_url, {\n
+            element: element\n
+          });\n
+        })\n
+        .push(function (cell_gadget) {\n
+          gadget.props.cell_gadget_list.push(cell_gadget);\n
+          sub_field_json.editable = sub_field_json.editable && gadget.props.field_json.editable; // XXX \n
+          return cell_gadget.render({field_json: sub_field_json});\n
+        });\n
+    }\n
+    for (i = 0; i < element_list.length; i += 1) {\n
+      column = element_list[i].getAttribute("column");\n
+      line = element_list[i].getAttribute("line");\n
+      if (gadget.props.listbox_uid_dict.key === undefined) {\n
+        gadget.props.listbox_uid_dict.key = gadget.props.result.data.rows[line].value["listbox_uid:list"].key;\n
+        gadget.props.listbox_uid_dict.value = [gadget.props.result.data.rows[line].value["listbox_uid:list"].value];\n
+        uid_value_dict[gadget.props.result.data.rows[line].value["listbox_uid:list"].value] = null;\n
+      } else {\n
+        uid_value = gadget.props.result.data.rows[line].value["listbox_uid:list"].value;\n
+        if (!uid_value_dict.hasOwnProperty(uid_value)) {\n
+          uid_value_dict[uid_value] = null;\n
+          gadget.props.listbox_uid_dict.value.push(uid_value);\n
+        }\n
+      }\n
+      promise_list.push(renderSubCell(element_list[i],\n
+        gadget.props.result.data.rows[line].value[gadget.props.field_json.column_list[column][0]] || ""));\n
+    }\n
+    return RSVP.all(promise_list);\n
+  }\n
+\n
+  function renderListboxTbody(gadget, template) {\n
+    var tmp;\n
+    if (template === undefined) {\n
+      template = listbox_hidden_tbody_template;\n
+    }\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return gadget.translateHtml(template(\n
+          {\n
+            "body_value": gadget.props.body_value,\n
+            "show_ancher": gadget.props.field_json.show_anchor,\n
+            "column_list": gadget.props.field_json.column_list\n
+          }\n
+        ));\n
+      })\n
+      .push(function (my_html) {\n
+        tmp = document.createElement("tbody");\n
+        tmp.innerHTML = my_html;\n
+        return renderEditableField(gadget, tmp);\n
+      })\n
+      .push(function () {\n
+        gadget.props.element.querySelector("table").appendChild(tmp);\n
+      });\n
+  }\n
+\n
+  function renderListboxTfoot(gadget) {\n
+    return gadget.translateHtml(listbox_tfoot_template(\n
+      {\n
+        "colspan": gadget.props.foot.colspan,\n
+        "previous_classname": gadget.props.foot.previous_classname,\n
+        "previous_url": gadget.props.foot.previous_url,\n
+        "record": gadget.props.foot.record,\n
+        "next_classname": gadget.props.foot.next_classname,\n
+        "next_url": gadget.props.foot.next_url\n
+      }\n
+    ));\n
+  }\n
+\n
+\n
+  function renderListbox(gadget, i18n) {\n
+    return gadget.translateHtml(listbox_template(\n
+      {\n
+        "i18n": i18n || "Hide Rows",\n
+        "hide_class": gadget.props.hide_class\n
+      }\n
+    ));\n
+  }\n
 \n
 \n
   rJS(window)\n
@@ -142,30 +278,24 @@
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")\n
     .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")\n
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")\n
+    .declareAcquiredMethod("redirect", "redirect")\n
+    .declareAcquiredMethod("triggerSubmit", "triggerSubmit")\n
     //////////////////////////////////////////////\n
     // initialize the gadget content\n
     //////////////////////////////////////////////\n
     .declareMethod(\'render\', function (options) {\n
       var gadget = this,\n
-        thead = gadget.props.element.querySelector(\'thead\'),\n
         field_json = options.field_json,\n
-        tr = document.createElement("tr"),\n
-        document_table = gadget.props.element.querySelector(\'.document_table\'),\n
-        th,\n
-        length_table = field_json.column_list.length,\n
+        head_value = [],\n
+        class_value,\n
         tmp,\n
         i,\n
         j;\n
 \n
       gadget.props.field_json = field_json;\n
       gadget.props.extended_search = options.extended_search;\n
+      gadget.props.hide_class = options.hide_enabled ? "" : "ui-disabled";\n
       gadget.props.sort_list = [];\n
-      if (field_json.show_anchor) {\n
-        th = document.createElement("th");\n
-        th.textContent = "Jump";\n
-        th.setAttribute("data-i18n", "Jump");\n
-        tr.appendChild(th);\n
-      }\n
 \n
       //only display which is in listbox\'s column list\n
       if (field_json.sort_column_list.length) {\n
@@ -190,9 +320,13 @@
         });\n
       }\n
       field_json.search_column_list.push(["searchable_text", "Searchable Text"]);\n
-      thead.appendChild(tr);\n
+\n
       return new RSVP.Queue()\n
         .push(function () {\n
+          return renderListbox(gadget);\n
+        })\n
+        .push(function (my_html) {\n
+          gadget.props.element.querySelector(".document_table").innerHTML = my_html;\n
           // XXX Fix in case of multiple listboxes\n
           return RSVP.all([\n
             gadget.getUrlParameter(field_json.key + \'_begin_from\'),\n
@@ -205,28 +339,31 @@
           if (result === undefined) {\n
             result = \'0\';\n
           }\n
-          for (i = 0; i < length_table; i += 1) {\n
-            th = document.createElement("th");\n
-            th.textContent = field_json.column_list[i][1];\n
+          for (i = 0; i < gadget.props.field_json.column_list.length; i += 1) {\n
+            class_value = "";\n
             for (j = 0; j < gadget.props.sort_list.length; j += 1) {\n
               tmp = gadget.props.sort_list[j].split(",");\n
               if (tmp[0] === gadget.props.field_json.column_list[i][0]) {\n
                 if (tmp[1] === "ascending") {\n
-                  th.setAttribute("class", "ui-icon-arrow-up");\n
+                  class_value = "ui-icon-arrow-up";\n
                 } else {\n
-                  th.setAttribute("class", "ui-icon-arrow-down");\n
+                  class_value = "ui-icon-arrow-down";\n
                 }\n
                 break;\n
               }\n
             }\n
-            th.setAttribute("data-i18n", field_json.column_list[i][1]);\n
-            tr.appendChild(th);\n
+            head_value.push({\n
+              "data-i18n": field_json.column_list[i][1],\n
+              "class_value": class_value,\n
+              "text": field_json.column_list[i][1]\n
+            });\n
           }\n
+          gadget.props.head_value = head_value;\n
           gadget.props.begin_from = parseInt(result, 10) || 0;\n
-          return gadget.translateHtml(document_table.innerHTML);\n
+          return renderListboxThead(gadget);\n
         })\n
-        .push(function (my_translate_html) {\n
-          document_table.innerHTML = my_translate_html;\n
+        .push(function (my_html) {\n
+          gadget.props.element.querySelector(".thead").innerHTML = my_html;\n
         });\n
     })\n
     .declareMethod(\'getListboxInfo\', function () {\n
@@ -245,9 +382,6 @@
         props = gadget.props,\n
         field_json = props.field_json,\n
         begin_from = props.begin_from,\n
-        table = props.element.querySelector(\'table\'),\n
-        original_tfoot = props.element.querySelector(\'tfoot\'),\n
-        tbody = document.createElement("tbody"),\n
         url_query =  props.extended_search,\n
         query_string = new URI(field_json.query).query(true).query,\n
         lines = field_json.lines,\n
@@ -257,7 +391,7 @@
         i;\n
 \n
       if (field_json.query === undefined) {\n
-        original_tfoot.textContent = "Unsupported list method: \'" + field_json.list_method + "\'";\n
+        gadget.props.element.querySelector(\'tfoot\').textContent = "Unsupported list method: \'" + field_json.list_method + "\'";\n
         return;\n
       }\n
      // function buildQueryString(previous, next) {\n
@@ -276,7 +410,7 @@
       for (i = 0; i < field_json.column_list.length; i += 1) {\n
         select_list.push(field_json.column_list[i][0]);\n
       }\n
-\n
+      select_list.push("uid");\n
       return gadget.jio_allDocs({\n
         // XXX Not jIO compatible, but until a better api is found...\n
         "list_method_template": field_json.list_method_template,\n
@@ -305,91 +439,37 @@
 \n
       }).push(function (result_list) {\n
         var j,\n
-          tr,\n
-          th,\n
-          a,\n
           result = result_list[0],\n
-          tmp_url,\n
-          tmp_div,\n
           value,\n
-          promise_list = [],\n
-          uid_value,\n
-          uid_value_dict = {};\n
-\n
-        function renderSubCell(element, sub_field_json) {\n
-          return gadget.getFieldTypeGadgetUrl(sub_field_json.type)\n
-            .push(function (gadget_url) {\n
-              return gadget.declareGadget(gadget_url, {\n
-                element: element\n
-              });\n
-            })\n
-            .push(function (cell_gadget) {\n
-              gadget.props.cell_gadget_list.push(cell_gadget);\n
-              sub_field_json.editable = sub_field_json.editable && field_json.editable; // XXX \n
-              return cell_gadget.render({field_json: sub_field_json});\n
-            });\n
-        }\n
-\n
+          body_value = [],\n
+          tr_value = [],\n
+          tmp_url;\n
         dataset = result;\n
         for (i = 0; i < counter; i += 1) {\n
-          tr = document.createElement("tr");\n
           tmp_url = result_list[i + 1];\n
-\n
-          if (field_json.show_anchor) {\n
-            th = document.createElement("th");\n
-            a = document.createElement("a");\n
-            a.href = tmp_url;\n
-            a.className = "ui-link ui-btn ui-corner-all ui-icon-carat-r ui-btn-icon-notext";\n
-            th.appendChild(a);\n
-            tr.appendChild(th);\n
-          }\n
+          tr_value = [];\n
           for (j = 0; j < field_json.column_list.length; j += 1) {\n
-            th = document.createElement("th");\n
             value = result.data.rows[i].value[field_json.column_list[j][0]] || "";\n
-            if (value.type === undefined) {\n
-              a = document.createElement("a");\n
-              a.href = tmp_url;\n
-              a.className = "ui-link";\n
-              a.textContent = value;\n
-              th.appendChild(a);\n
-            } else {\n
-              tmp_div = document.createElement("div");\n
-              if (gadget.props.listbox_uid_dict.key === undefined) {\n
-                gadget.props.listbox_uid_dict.key = result.data.rows[i].value["listbox_uid:list"].key;\n
-                gadget.props.listbox_uid_dict.value = [result.data.rows[i].value["listbox_uid:list"].value];\n
-                uid_value_dict[result.data.rows[i].value["listbox_uid:list"].value] = null;\n
-              } else {\n
-                uid_value = result.data.rows[i].value["listbox_uid:list"].value;\n
-                if (!uid_value_dict.hasOwnProperty(uid_value)) {\n
-                  uid_value_dict[uid_value] = null;\n
-                  gadget.props.listbox_uid_dict.value.push(uid_value);\n
-                }\n
-              }\n
-\n
-              promise_list.push(renderSubCell(tmp_div, value));\n
-\n
-              //when a sub field is not editable but it\'s in listbox\'s editable colummn \n
-              //then create link, see ListBox.py line 2518\n
-              if (value.editable === 0) {\n
-                a = document.createElement("a");\n
-                a.href = tmp_url;\n
-                a.className = "ui-link";\n
-                a.appendChild(tmp_div);\n
-                th.appendChild(a);\n
-              } else {\n
-                th.appendChild(tmp_div);\n
-              }\n
-            }\n
-            tr.appendChild(th);\n
+            tr_value.push({\n
+              "type": value.type,\n
+              "editable": value.editable,\n
+              "href": tmp_url,\n
+              "text": value,\n
+              "line": i,\n
+              "column": j\n
+            });\n
           }\n
-\n
-          tbody.appendChild(tr);\n
+          body_value.push({\n
+            "value": result.data.rows[i].value.uid,\n
+            "tr_value": tr_value\n
+          });\n
         }\n
-        return RSVP.all(promise_list);\n
+        gadget.props.body_value = body_value;\n
+        gadget.props.result = result;\n
+        return renderListboxTbody(gadget);\n
       }).push(function () {\n
         var prev_param = {},\n
           next_param = {};\n
-\n
         function setNext() {\n
           if (dataset.data.rows.length > lines) {\n
             next_param[gadget.props.field_json.key + \'_begin_from\'] = begin_from + lines;\n
@@ -408,79 +488,32 @@
         ]);\n
 \n
       }).push(function (url_list) {\n
-        var fragment = document.createDocumentFragment(),\n
-          tfoot = gadget.__element.querySelector("tfoot"),\n
-          //tfoot = document.createElement("tfoot"),\n
-          tr = document.createElement("tr"),\n
-          th = document.createElement("th"),\n
-          paging_prev = document.createElement("a"),\n
-          paging_next = document.createElement("a"),\n
-          paging_info = document.createElement("span"),\n
-          paging_menu = document.createElement("div"),\n
-          paging_wrap = document.createElement("div"),\n
-          temp = document.createElement("div"),\n
-          temp_table = document.createElement("table"),\n
-          len;\n
-\n
-        th.setAttribute("colspan", field_json.column_list.length);\n
-        // NOTE: Romain: paging menu with 3+ buttons should have another class name (like ui-paging-grid)\n
-        paging_menu.className = "ui-controlgroup ui-controlgroup-horizontal ui-corner-all ui-paging-menu";\n
-        paging_wrap.className = "ui-controlgroup-controls";\n
-\n
-        paging_prev.className = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child";\n
-        paging_prev.textContent = "Previous";\n
-        paging_prev.setAttribute("data-i18n", "Previous");\n
-        paging_prev.href = url_list[0];\n
-        paging_info.className = "ui-btn ui-disabled";\n
+        var foot = {};\n
+        foot.colspan = field_json.column_list.length;\n
+        foot.default_colspan = foot.colspan;\n
+        foot.previous_classname = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child";\n
+        foot.previous_url = url_list[0];\n
+        foot.next_classname = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child";\n
+        foot.next_url = url_list[1];\n
         if ((begin_from === 0) && (counter === 0)) {\n
-          paging_info.textContent = "No records";\n
-          paging_info.setAttribute("data-i18n", "No Records");\n
+          foot.record = "No records";\n
         } else if ((dataset.data.rows.length <= lines) && (begin_from === 0)) {\n
-          paging_info.setAttribute("data-i18n", "[last]Record(s)");\n
-          paging_info.appendChild(document.createTextNode(counter));\n
-          paging_info.appendChild(document.createTextNode("Record(s)"));\n
+          foot.record = counter + " Records";\n
         } else {\n
-          paging_info.setAttribute("data-i18n", "[node]Record(s)");\n
-          paging_info.appendChild(document.createTextNode("Records "));\n
-          paging_info.appendChild(document.createTextNode((((begin_from + lines) / lines - 1) * lines + 1) + " - " + (((begin_from + lines) / lines - 1) * lines + counter)));\n
+          foot.record = "Records " + (((begin_from + lines) / lines - 1) * lines + 1) + " - " + (((begin_from + lines) / lines - 1) * lines + counter);\n
         }\n
-        // paging_info.textContent = "Page " + ((begin_from + lines) / lines);\n
-        paging_next.className = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child";\n
-        paging_next.textContent = "Next";\n
-        paging_next.setAttribute("data-i18n", "Next");\n
-        paging_next.href = url_list[1];\n
 \n
         if (begin_from === 0) {\n
-          paging_prev.className += " ui-disabled";\n
+          foot.previous_classname += " ui-disabled";\n
         }\n
         if (dataset.data.rows.length <= lines) {\n
-          paging_next.className += " ui-disabled";\n
+          foot.next_classname += " ui-disabled";\n
         }\n
-\n
-        paging_wrap.appendChild(paging_prev);\n
-        paging_wrap.appendChild(paging_info);\n
-        paging_wrap.appendChild(paging_next);\n
-        paging_menu.appendChild(paging_wrap);\n
-        th.appendChild(paging_menu);\n
-        tr.appendChild(th);\n
-        tfoot.appendChild(tr);\n
-        fragment.appendChild(tbody);\n
-        fragment.appendChild(tfoot);\n
-\n
-        for (len = table.children.length; len > 0; len -= 1) {\n
-          table.removeChild(table.lastChild);\n
-        }\n
-        // NOTE: for passing translations, temp must contain a table\n
-        temp_table.appendChild(fragment);\n
-        temp.appendChild(temp_table);\n
-        table.appendChild(temp.querySelector("tbody"));\n
-        return gadget.translateHtml(temp.querySelector("tfoot").innerHTML);\n
-      })\n
-        .push(function (my_translated_html) {\n
-          var temp = document.createElement("tfoot");\n
-          temp.innerHTML = my_translated_html;\n
-          table.appendChild(temp);\n
-        });\n
+        gadget.props.foot = foot;\n
+        return renderListboxTfoot(gadget);\n
+      }).push(function (my_html) {\n
+        gadget.props.element.querySelector(".tfoot").innerHTML = my_html;\n
+      });\n
     })\n
 \n
 \n
@@ -520,21 +553,97 @@
       var gadget = this,\n
         url,\n
         options = {},\n
-        sort_form = gadget.props.element.querySelector(".sort_form");\n
+        thead_template,\n
+        tbody_template,\n
+        form = gadget.props.element.querySelector(".document_table");\n
       return loopEventListener(\n
-        sort_form,\n
+        form,\n
         "submit",\n
         false,\n
         function () {\n
-          url = "gadget_erp5_sort_editor.html";\n
-          options.sort_column_list = gadget.props.field_json.sort_column_list;\n
-          options.sort_list = gadget.props.sort_list;\n
-          options.key = gadget.props.field_json.key + "_sort_list:json";\n
-          return gadget.renderEditorPanel(url, options);\n
+          var focus = document.activeElement,\n
+            name = focus.getAttribute("name");\n
+          if (name === "Sort") {\n
+            url = "gadget_erp5_sort_editor.html";\n
+            options.sort_column_list = gadget.props.field_json.sort_column_list;\n
+            options.sort_list = gadget.props.sort_list;\n
+            options.key = gadget.props.field_json.key + "_sort_list:json";\n
+            return gadget.renderEditorPanel(url, options);\n
+          }\n
+          if (name === "Hide") {\n
+            return new RSVP.Queue()\n
+              .push(function () {\n
+                var i,\n
+                  i18n,\n
+                  all_hide_form_elements,\n
+                  query_list = [],\n
+                  search_query,\n
+                  hide_form_elements;\n
+                if (gadget.props.foot.colspan === gadget.props.foot.default_colspan) {\n
+                  thead_template = listbox_show_thead_template;\n
+                  tbody_template = listbox_show_tbody_template;\n
+                  gadget.props.foot.colspan += 1;\n
+                  i18n = "Submit";\n
+                } else {\n
+                  //hide closed\n
+                  //maybe submit\n
+                  all_hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element");\n
+                  hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element:checked");\n
+                  //nothing selected, show all\n
+                  if (hide_form_elements.length === 0) {\n
+                    return gadget.redirect({\n
+                      command: \'store_and_change\',\n
+                      options: {\n
+                        "extended_search": ""\n
+                      }\n
+                    });\n
+                  }\n
+\n
+                  if (hide_form_elements.length < all_hide_form_elements.length) {\n
+                    for (i = 0; i < hide_form_elements.length; i += 1) {\n
+                      query_list.push(new SimpleQuery({\n
+                        key: "catalog.uid",\n
+                        type: "simple",\n
+                        value: hide_form_elements[i].getAttribute("value")\n
+                      }));\n
+                    }\n
+                    search_query = new ComplexQuery({\n
+                      operator: "OR",\n
+                      query_list: query_list,\n
+                      type: "complex"\n
+                    });\n
+                    return gadget.redirect({\n
+                      command: \'store_and_change\',\n
+                      options: {\n
+                        "extended_search": Query.objectToSearchText(search_query)\n
+                      }\n
+                    });\n
+                  }\n
+\n
+                  gadget.props.foot.colspan -= 1;\n
+                  thead_template = listbox_hidden_thead_template;\n
+                  tbody_template = listbox_hidden_tbody_template;\n
+                  i18n = "Hide Form";\n
+                }\n
+                return renderListbox(gadget, i18n);\n
+              })\n
+              .push(function (innerHTML) {\n
+                gadget.props.element.querySelector(".document_table").innerHTML = innerHTML;\n
+                return RSVP.all([\n
+                  renderListboxThead(gadget, thead_template),\n
+                  renderListboxTbody(gadget, tbody_template),\n
+                  renderListboxTfoot(gadget, listbox_tfoot_template)\n
+                ]);\n
+              })\n
+              .push(function (all_innerHTML) {\n
+                gadget.props.element.querySelector(".thead").innerHTML = all_innerHTML[0];\n
+                gadget.props.element.querySelector(".tfoot").innerHTML = all_innerHTML[2];\n
+              });\n
+          }\n
+          return gadget.triggerSubmit();\n
         }\n
       );\n
     })\n
-\n
     .allowPublicAcquisition("notifyInvalid", function () {\n
       return;\n
     })\n
@@ -543,7 +652,8 @@
       return;\n
     });\n
 \n
-}(window, document, rJS, URI, RSVP, loopEventListener));
+}(window, document, rJS, URI, RSVP, loopEventListener,\n
+  SimpleQuery, ComplexQuery, Query, Handlebars));
 
 ]]></string> </value>
         </item>
@@ -680,7 +790,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.29639.47524.59016</string> </value>
+                <value> <string>948.5861.16426.29047</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -698,7 +808,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448903288.34</float>
+                        <float>1451314486.28</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
