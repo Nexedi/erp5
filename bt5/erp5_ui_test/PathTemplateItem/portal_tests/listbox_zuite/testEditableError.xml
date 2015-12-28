@@ -100,13 +100,13 @@
   <td>assertElementNotPresent</td>\n
   <td>//a[@href=\'${base_url}/foo_module/0/1?selection_index=0&amp;selection_name=foo_line_selection&amp;reset:int=1\']</td>\n
   <td></td>\n
-  <td>Make sure an no a tag is present in ListBox</td>\n
+  <td>Make sure no a tag is present in ListBox</td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]/a/input</td>\n
   <td></td>\n
-  <td>Make sure an no a tag is present in ListBox</td>\n
+  <td>Make sure an input tag is present in ListBox</td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
