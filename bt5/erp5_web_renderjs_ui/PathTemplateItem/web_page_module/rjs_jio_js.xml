@@ -7584,115 +7584,6 @@ if ((error_count = __NODEJS_parse(string, error_offsets, error_lookaheads)) > 0)
   jIO.addStorage(\'memory\', MemoryStorage);\n
 \n
 }(jIO));\n
-;/*\n
- * Copyright 2013, Nexedi SA\n
- * Released under the LGPL license.\n
- * http://www.gnu.org/licenses/lgpl.html\n
- */\n
-\n
-/*jslint nomen: true*/\n
-/*global jIO, sessionStorage, localStorage, RSVP */\n
-\n
-/**\n
- * JIO Local Storage. Type = \'local\'.\n
- * Local browser "database" storage.\n
- *\n
- * Storage Description:\n
- *\n
- *     {\n
- *       "type": "local",\n
- *       "sessiononly": false\n
- *     }\n
- *\n
- * @class LocalStorage\n
- */\n
-\n
-(function (jIO, sessionStorage, localStorage, RSVP) {\n
-  "use strict";\n
-\n
-  function LocalStorage(spec) {\n
-    if (spec.sessiononly === true) {\n
-      this._storage = sessionStorage;\n
-    } else {\n
-      this._storage = localStorage;\n
-    }\n
-  }\n
-\n
-  function restrictDocumentId(id) {\n
-    if (id !== "/") {\n
-      throw new jIO.util.jIOError("id " + id + " is forbidden (!== /)",\n
-                                  400);\n
-    }\n
-  }\n
-\n
-  LocalStorage.prototype.get = function (id) {\n
-    restrictDocumentId(id);\n
-    return {};\n
-  };\n
-\n
-  LocalStorage.prototype.allAttachments = function (id) {\n
-    restrictDocumentId(id);\n
-\n
-    var attachments = {},\n
-      key;\n
-\n
-    for (key in this._storage) {\n
-      if (this._storage.hasOwnProperty(key)) {\n
-        attachments[key] = {};\n
-      }\n
-    }\n
-    return attachments;\n
-  };\n
-\n
-  LocalStorage.prototype.getAttachment = function (id, name) {\n
-    restrictDocumentId(id);\n
-\n
-    var textstring = this._storage.getItem(name);\n
-\n
-    if (textstring === null) {\n
-      throw new jIO.util.jIOError(\n
-        "Cannot find attachment " + name,\n
-        404\n
-      );\n
-    }\n
-    return jIO.util.dataURItoBlob(textstring);\n
-  };\n
-\n
-  LocalStorage.prototype.putAttachment = function (id, name, blob) {\n
-    var context = this;\n
-    restrictDocumentId(id);\n
-\n
-    // the document already exists\n
-    // download data\n
-    return new RSVP.Queue()\n
-      .push(function () {\n
-        return jIO.util.readBlobAsDataURL(blob);\n
-      })\n
-      .push(function (e) {\n
-        context._storage.setItem(name, e.target.result);\n
-      });\n
-  };\n
-\n
-  LocalStorage.prototype.removeAttachment = function (id, name) {\n
-    restrictDocumentId(id);\n
-    return this._storage.removeItem(name);\n
-  };\n
-\n
-\n
-  LocalStorage.prototype.hasCapacity = function (name) {\n
-    return (name === "list");\n
-  };\n
-\n
-  LocalStorage.prototype.buildQuery = function () {\n
-    return [{\n
-      id: "/",\n
-      value: {}\n
-    }];\n
-  };\n
-\n
-  jIO.addStorage(\'local\', LocalStorage);\n
-\n
-}(jIO, sessionStorage, localStorage, RSVP));\n
 ;/*jslint nomen: true*/\n
 /*global RSVP, Blob, LZString, DOMException*/\n
 (function (RSVP, Blob, LZString, DOMException) {\n
@@ -7807,195 +7698,6 @@ if ((error_count = __NODEJS_parse(string, error_offsets, error_lookaheads)) > 0)
 \n
   jIO.addStorage(\'zip\', ZipStorage);\n
 }(RSVP, Blob, LZString, DOMException));\n
-;/*\n
- * Copyright 2015, Nexedi SA\n
- * Released under the LGPL license.\n
- * http://www.gnu.org/licenses/lgpl.html\n
- */\n
-\n
-/*jslint nomen: true*/\n
-/*global jIO, RSVP, DOMException, Blob, crypto, Uint8Array, ArrayBuffer*/\n
-\n
-(function (jIO, RSVP, DOMException, Blob, crypto, Uint8Array, ArrayBuffer) {\n
-  "use strict";\n
-\n
-\n
-  // you the cryptography system used by this storage is AES-GCM.\n
-  // here is an example of how to generate a key to the json format.\n
-\n
-  // var key,\n
-  //     jsonKey;\n
-  // crypto.subtle.generateKey({name: "AES-GCM",length: 256},\n
-  //                           (true), ["encrypt", "decrypt"])\n
-  // .then(function(res){key = res;});\n
-  //\n
-  // window.crypto.subtle.exportKey("jwk", key)\n
-  // .then(function(res){jsonKey = val})\n
-  //\n
-  //var storage = jIO.createJIO({type: "crypt", key: jsonKey,\n
-  //                             sub_storage: {...}});\n
-\n
-  // find more informations about this cryptography system on\n
-  // https://github.com/diafygi/webcrypto-examples#aes-gcm\n
-\n
-  /**\n
-   * The JIO Cryptography Storage extension\n
-   *\n
-   * @class CryptStorage\n
-   * @constructor\n
-   */\n
-\n
-  var MIME_TYPE = "application/x-jio-aes-gcm-encryption";\n
-\n
-  function CryptStorage(spec) {\n
-    this._key = spec.key;\n
-    this._jsonKey = true;\n
-    this._sub_storage = jIO.createJIO(spec.sub_storage);\n
-  }\n
-\n
-  function convertKey(that) {\n
-    return new RSVP.Queue()\n
-      .push(function () {\n
-        return crypto.subtle.importKey("jwk", that._key,\n
-                                       "AES-GCM", false,\n
-                                       ["encrypt", "decrypt"]);\n
-      })\n
-      .push(function (res) {\n
-        that._key = res;\n
-        that._jsonKey = false;\n
-        return;\n
-      }, function () {\n
-        throw new TypeError(\n
-          "\'key\' must be a CryptoKey to JSON Web Key format"\n
-        );\n
-      });\n
-  }\n
-\n
-  CryptStorage.prototype.get = function () {\n
-    return this._sub_storage.get.apply(this._sub_storage,\n
-                                       arguments);\n
-  };\n
-\n
-  CryptStorage.prototype.post = function () {\n
-    return this._sub_storage.post.apply(this._sub_storage,\n
-                                        arguments);\n
-  };\n
-\n
-  CryptStorage.prototype.put = function () {\n
-    return this._sub_storage.put.apply(this._sub_storage,\n
-                                       arguments);\n
-  };\n
-\n
-  CryptStorage.prototype.remove = function () {\n
-    return this._sub_storage.remove.apply(this._sub_storage,\n
-                                          arguments);\n
-  };\n
-\n
-  CryptStorage.prototype.hasCapacity = function () {\n
-    return this._sub_storage.hasCapacity.apply(this._sub_storage,\n
-                                               arguments);\n
-  };\n
-\n
-  CryptStorage.prototype.buildQuery = function () {\n
-    return this._sub_storage.buildQuery.apply(this._sub_storage,\n
-                                              arguments);\n
-  };\n
-\n
-\n
-  CryptStorage.prototype.putAttachment = function (id, name, blob) {\n
-    var initializaton_vector = crypto.getRandomValues(new Uint8Array(12)),\n
-      that = this;\n
-\n
-    return new RSVP.Queue()\n
-      .push(function () {\n
-        if (that._jsonKey === true) {\n
-          return convertKey(that);\n
-        }\n
-        return;\n
-      })\n
-      .push(function () {\n
-        return jIO.util.readBlobAsDataURL(blob);\n
-      })\n
-      .push(function (dataURL) {\n
-        //string->arraybuffer\n
-        var strLen = dataURL.currentTarget.result.length,\n
-          buf = new ArrayBuffer(strLen),\n
-          bufView = new Uint8Array(buf),\n
-          i;\n
-\n
-        dataURL = dataURL.currentTarget.result;\n
-        for (i = 0; i < strLen; i += 1) {\n
-          bufView[i] = dataURL.charCodeAt(i);\n
-        }\n
-        return crypto.subtle.encrypt({\n
-          name : "AES-GCM",\n
-          iv : initializaton_vector\n
-        },\n
-                                     that._key, buf);\n
-      })\n
-      .push(function (coded) {\n
-        var blob = new Blob([initializaton_vector, coded], {type: MIME_TYPE});\n
-        return that._sub_storage.putAttachment(id, name, blob);\n
-      });\n
-  };\n
-\n
-  CryptStorage.prototype.getAttachment = function (id, name) {\n
-    var that = this;\n
-\n
-    return that._sub_storage.getAttachment(id, name)\n
-      .push(function (blob) {\n
-        if (blob.type !== MIME_TYPE) {\n
-          return blob;\n
-        }\n
-        return new RSVP.Queue()\n
-          .push(function () {\n
-            if (that._jsonKey === true) {\n
-              return convertKey(that);\n
-            }\n
-            return;\n
-          })\n
-          .push(function () {\n
-            return jIO.util.readBlobAsArrayBuffer(blob);\n
-          })\n
-          .push(function (coded) {\n
-            var initializaton_vector;\n
-\n
-            coded = coded.currentTarget.result;\n
-            initializaton_vector = new Uint8Array(coded.slice(0, 12));\n
-            return crypto.subtle.decrypt({\n
-              name : "AES-GCM",\n
-              iv : initializaton_vector\n
-            },\n
-                                         that._key, coded.slice(12));\n
-          })\n
-          .push(function (arr) {\n
-            //arraybuffer->string\n
-            arr = String.fromCharCode.apply(null, new Uint8Array(arr));\n
-            try {\n
-              return jIO.util.dataURItoBlob(arr);\n
-            } catch (error) {\n
-              if (error instanceof DOMException) {\n
-                return blob;\n
-              }\n
-              throw error;\n
-            }\n
-          }, function () { return blob; });\n
-      });\n
-  };\n
-\n
-  CryptStorage.prototype.removeAttachment = function () {\n
-    return this._sub_storage.removeAttachment.apply(this._sub_storage,\n
-                                                    arguments);\n
-  };\n
-\n
-  CryptStorage.prototype.allAttachments = function () {\n
-    return this._sub_storage.allAttachments.apply(this._sub_storage,\n
-                                                  arguments);\n
-  };\n
-\n
-  jIO.addStorage(\'crypt\', CryptStorage);\n
-\n
-}(jIO, RSVP, DOMException, Blob, crypto, Uint8Array, ArrayBuffer));\n
 ;/*\n
  * Copyright 2013, Nexedi SA\n
  * Released under the LGPL license.\n
@@ -8297,6 +7999,13 @@ if ((error_count = __NODEJS_parse(string, error_offsets, error_lookaheads)) > 0)
       }\n
       options.headers.Authorization = storage._authorization;\n
     }\n
+\n
+    if (storage._with_credentials !== undefined) {\n
+      if (options.xhrFields === undefined) {\n
+        options.xhrFields = {};\n
+      }\n
+      options.xhrFields.withCredentials = storage._with_credentials;\n
+    }\n
 //       if (start !== undefined) {\n
 //         if (end !== undefined) {\n
 //           headers.Range = "bytes=" + start + "-" + end;\n
@@ -8344,7 +8053,7 @@ if ((error_count = __NODEJS_parse(string, error_offsets, error_lookaheads)) > 0)
     if (typeof spec.basic_login === \'string\') {\n
       this._authorization = "Basic " + spec.basic_login;\n
     }\n
-\n
+    this._with_credentials = spec.with_credentials;\n
   }\n
 \n
   DavStorage.prototype.put = function (id, param) {\n
@@ -10279,6 +9988,115 @@ if ((error_count = __NODEJS_parse(string, error_offsets, error_lookaheads)) > 0)
 \n
 }(jIO, Blob, atob, btoa, RSVP));\n
 ;/*\n
+ * Copyright 2013, Nexedi SA\n
+ * Released under the LGPL license.\n
+ * http://www.gnu.org/licenses/lgpl.html\n
+ */\n
+\n
+/*jslint nomen: true*/\n
+/*global jIO, sessionStorage, localStorage, RSVP */\n
+\n
+/**\n
+ * JIO Local Storage. Type = \'local\'.\n
+ * Local browser "database" storage.\n
+ *\n
+ * Storage Description:\n
+ *\n
+ *     {\n
+ *       "type": "local",\n
+ *       "sessiononly": false\n
+ *     }\n
+ *\n
+ * @class LocalStorage\n
+ */\n
+\n
+(function (jIO, sessionStorage, localStorage, RSVP) {\n
+  "use strict";\n
+\n
+  function LocalStorage(spec) {\n
+    if (spec.sessiononly === true) {\n
+      this._storage = sessionStorage;\n
+    } else {\n
+      this._storage = localStorage;\n
+    }\n
+  }\n
+\n
+  function restrictDocumentId(id) {\n
+    if (id !== "/") {\n
+      throw new jIO.util.jIOError("id " + id + " is forbidden (!== /)",\n
+                                  400);\n
+    }\n
+  }\n
+\n
+  LocalStorage.prototype.get = function (id) {\n
+    restrictDocumentId(id);\n
+    return {};\n
+  };\n
+\n
+  LocalStorage.prototype.allAttachments = function (id) {\n
+    restrictDocumentId(id);\n
+\n
+    var attachments = {},\n
+      key;\n
+\n
+    for (key in this._storage) {\n
+      if (this._storage.hasOwnProperty(key)) {\n
+        attachments[key] = {};\n
+      }\n
+    }\n
+    return attachments;\n
+  };\n
+\n
+  LocalStorage.prototype.getAttachment = function (id, name) {\n
+    restrictDocumentId(id);\n
+\n
+    var textstring = this._storage.getItem(name);\n
+\n
+    if (textstring === null) {\n
+      throw new jIO.util.jIOError(\n
+        "Cannot find attachment " + name,\n
+        404\n
+      );\n
+    }\n
+    return jIO.util.dataURItoBlob(textstring);\n
+  };\n
+\n
+  LocalStorage.prototype.putAttachment = function (id, name, blob) {\n
+    var context = this;\n
+    restrictDocumentId(id);\n
+\n
+    // the document already exists\n
+    // download data\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return jIO.util.readBlobAsDataURL(blob);\n
+      })\n
+      .push(function (e) {\n
+        context._storage.setItem(name, e.target.result);\n
+      });\n
+  };\n
+\n
+  LocalStorage.prototype.removeAttachment = function (id, name) {\n
+    restrictDocumentId(id);\n
+    return this._storage.removeItem(name);\n
+  };\n
+\n
+\n
+  LocalStorage.prototype.hasCapacity = function (name) {\n
+    return (name === "list");\n
+  };\n
+\n
+  LocalStorage.prototype.buildQuery = function () {\n
+    return [{\n
+      id: "/",\n
+      value: {}\n
+    }];\n
+  };\n
+\n
+  jIO.addStorage(\'local\', LocalStorage);\n
+\n
+}(jIO, sessionStorage, localStorage, RSVP));\n
+;/*\n
  * Copyright 2014, Nexedi SA\n
  * Released under the LGPL license.\n
  * http://www.gnu.org/licenses/lgpl.html\n
@@ -10730,7 +10548,559 @@ if ((error_count = __NODEJS_parse(string, error_offsets, error_lookaheads)) > 0)
   };\n
 \n
   jIO.addStorage("indexeddb", IndexedDBStorage);\n
-}(indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange));
+}(indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange));\n
+;/*\n
+ * Copyright 2015, Nexedi SA\n
+ * Released under the LGPL license.\n
+ * http://www.gnu.org/licenses/lgpl.html\n
+ */\n
+\n
+/*jslint nomen: true*/\n
+/*global jIO, RSVP, DOMException, Blob, crypto, Uint8Array, ArrayBuffer*/\n
+\n
+(function (jIO, RSVP, DOMException, Blob, crypto, Uint8Array, ArrayBuffer) {\n
+  "use strict";\n
+\n
+\n
+  // you the cryptography system used by this storage is AES-GCM.\n
+  // here is an example of how to generate a key to the json format.\n
+\n
+  // var key,\n
+  //     jsonKey;\n
+  // crypto.subtle.generateKey({name: "AES-GCM",length: 256},\n
+  //                           (true), ["encrypt", "decrypt"])\n
+  // .then(function(res){key = res;});\n
+  //\n
+  // window.crypto.subtle.exportKey("jwk", key)\n
+  // .then(function(res){jsonKey = val})\n
+  //\n
+  //var storage = jIO.createJIO({type: "crypt", key: jsonKey,\n
+  //                             sub_storage: {...}});\n
+\n
+  // find more informations about this cryptography system on\n
+  // https://github.com/diafygi/webcrypto-examples#aes-gcm\n
+\n
+  /**\n
+   * The JIO Cryptography Storage extension\n
+   *\n
+   * @class CryptStorage\n
+   * @constructor\n
+   */\n
+\n
+  var MIME_TYPE = "application/x-jio-aes-gcm-encryption";\n
+\n
+  function CryptStorage(spec) {\n
+    this._key = spec.key;\n
+    this._jsonKey = true;\n
+    this._sub_storage = jIO.createJIO(spec.sub_storage);\n
+  }\n
+\n
+  function convertKey(that) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return crypto.subtle.importKey("jwk", that._key,\n
+                                       "AES-GCM", false,\n
+                                       ["encrypt", "decrypt"]);\n
+      })\n
+      .push(function (res) {\n
+        that._key = res;\n
+        that._jsonKey = false;\n
+        return;\n
+      });\n
+  }\n
+\n
+  CryptStorage.prototype.get = function () {\n
+    return this._sub_storage.get.apply(this._sub_storage,\n
+                                       arguments);\n
+  };\n
+\n
+  CryptStorage.prototype.post = function () {\n
+    return this._sub_storage.post.apply(this._sub_storage,\n
+                                        arguments);\n
+  };\n
+\n
+  CryptStorage.prototype.put = function () {\n
+    return this._sub_storage.put.apply(this._sub_storage,\n
+                                       arguments);\n
+  };\n
+\n
+  CryptStorage.prototype.remove = function () {\n
+    return this._sub_storage.remove.apply(this._sub_storage,\n
+                                          arguments);\n
+  };\n
+\n
+  CryptStorage.prototype.hasCapacity = function () {\n
+    return this._sub_storage.hasCapacity.apply(this._sub_storage,\n
+                                               arguments);\n
+  };\n
+\n
+  CryptStorage.prototype.buildQuery = function () {\n
+    return this._sub_storage.buildQuery.apply(this._sub_storage,\n
+                                              arguments);\n
+  };\n
+\n
+\n
+  CryptStorage.prototype.putAttachment = function (id, name, blob) {\n
+    var initializaton_vector = crypto.getRandomValues(new Uint8Array(12)),\n
+      that = this;\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        if (that._jsonKey === true) {\n
+          return convertKey(that);\n
+        }\n
+        return;\n
+      })\n
+      .push(function () {\n
+        return jIO.util.readBlobAsDataURL(blob);\n
+      })\n
+      .push(function (dataURL) {\n
+        //string->arraybuffer\n
+        var strLen = dataURL.currentTarget.result.length,\n
+          buf = new ArrayBuffer(strLen),\n
+          bufView = new Uint8Array(buf),\n
+          i;\n
+\n
+        dataURL = dataURL.currentTarget.result;\n
+        for (i = 0; i < strLen; i += 1) {\n
+          bufView[i] = dataURL.charCodeAt(i);\n
+        }\n
+        return crypto.subtle.encrypt({\n
+          name : "AES-GCM",\n
+          iv : initializaton_vector\n
+        },\n
+                                     that._key, buf);\n
+      })\n
+      .push(function (coded) {\n
+        var blob = new Blob([initializaton_vector, coded], {type: MIME_TYPE});\n
+        return that._sub_storage.putAttachment(id, name, blob);\n
+      });\n
+  };\n
+\n
+  CryptStorage.prototype.getAttachment = function (id, name) {\n
+    var that = this;\n
+\n
+    return that._sub_storage.getAttachment(id, name)\n
+      .push(function (blob) {\n
+        if (blob.type !== MIME_TYPE) {\n
+          return blob;\n
+        }\n
+        return new RSVP.Queue()\n
+          .push(function () {\n
+            if (that._jsonKey === true) {\n
+              return convertKey(that);\n
+            }\n
+            return;\n
+          })\n
+          .push(function () {\n
+            return jIO.util.readBlobAsArrayBuffer(blob);\n
+          })\n
+          .push(function (coded) {\n
+            var initializaton_vector;\n
+\n
+            coded = coded.currentTarget.result;\n
+            initializaton_vector = new Uint8Array(coded.slice(0, 12));\n
+            return new RSVP.Queue()\n
+              .push(function () {\n
+                return crypto.subtle.decrypt({\n
+                  name : "AES-GCM",\n
+                  iv : initializaton_vector\n
+                },\n
+                                             that._key, coded.slice(12));\n
+              })\n
+              .push(function (arr) {\n
+                //arraybuffer->string\n
+                arr = String.fromCharCode.apply(null, new Uint8Array(arr));\n
+                return jIO.util.dataURItoBlob(arr);\n
+              })\n
+              .push(undefined, function (error) {\n
+                if (error instanceof DOMException) {\n
+                  return blob;\n
+                }\n
+                throw error;\n
+              });\n
+          });\n
+      });\n
+  };\n
+\n
+  CryptStorage.prototype.removeAttachment = function () {\n
+    return this._sub_storage.removeAttachment.apply(this._sub_storage,\n
+                                                    arguments);\n
+  };\n
+\n
+  CryptStorage.prototype.allAttachments = function () {\n
+    return this._sub_storage.allAttachments.apply(this._sub_storage,\n
+                                                  arguments);\n
+  };\n
+\n
+  jIO.addStorage(\'crypt\', CryptStorage);\n
+\n
+}(jIO, RSVP, DOMException, Blob, crypto, Uint8Array, ArrayBuffer));\n
+;/*\n
+ * Copyright 2013, Nexedi SA\n
+ * Released under the LGPL license.\n
+ * http://www.gnu.org/licenses/lgpl.html\n
+ */\n
+/**\n
+ * JIO Websql Storage. Type = "websql".\n
+ * websql "database" storage.\n
+ */\n
+/*global Blob, jIO, RSVP, openDatabase*/\n
+/*jslint nomen: true*/\n
+\n
+(function (jIO, RSVP, Blob, openDatabase) {\n
+\n
+  "use strict";\n
+\n
+  /**\n
+   * The JIO Websql Storage extension\n
+   *\n
+   * @class WebSQLStorage\n
+   * @constructor\n
+   */\n
+\n
+  function queueSql(db, query_list, argument_list) {\n
+    return new RSVP.Promise(function (resolve, reject) {\n
+      /*jslint unparam: true*/\n
+      db.transaction(function (tx) {\n
+        var len = query_list.length,\n
+          result_list = [],\n
+          i;\n
+\n
+        function resolveTransaction(tx, result) {\n
+          result_list.push(result);\n
+          if (result_list.length === len) {\n
+            resolve(result_list);\n
+          }\n
+        }\n
+        function rejectTransaction(tx, error) {\n
+          reject(error);\n
+          return true;\n
+        }\n
+        for (i = 0; i < len; i += 1) {\n
+          tx.executeSql(query_list[i], argument_list[i], resolveTransaction,\n
+                        rejectTransaction);\n
+        }\n
+      }, function (tx, error) {\n
+        reject(error);\n
+      });\n
+      /*jslint unparam: false*/\n
+    });\n
+  }\n
+\n
+  function initDatabase(db) {\n
+    var query_list = [\n
+      "CREATE TABLE IF NOT EXISTS document" +\n
+        "(id VARCHAR PRIMARY KEY NOT NULL, data TEXT)",\n
+      "CREATE TABLE IF NOT EXISTS attachment" +\n
+        "(id VARCHAR, attachment VARCHAR, part INT, blob TEXT)",\n
+      "CREATE TRIGGER IF NOT EXISTS removeAttachment " +\n
+        "BEFORE DELETE ON document FOR EACH ROW " +\n
+        "BEGIN DELETE from attachment WHERE id = OLD.id;END;",\n
+      "CREATE INDEX IF NOT EXISTS index_document ON document (id);",\n
+      "CREATE INDEX IF NOT EXISTS index_attachment " +\n
+        "ON attachment (id, attachment);"\n
+    ];\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return queueSql(db, query_list, []);\n
+      });\n
+  }\n
+\n
+  function WebSQLStorage(spec) {\n
+    if (typeof spec.database !== \'string\' || !spec.database) {\n
+      throw new TypeError("database must be a string " +\n
+                          "which contains more than one character.");\n
+    }\n
+    this._database = openDatabase("jio:" + spec.database,\n
+                                  \'1.0\', \'\', 2 * 1024 * 1024);\n
+    if (spec.blob_length &&\n
+        (typeof spec.blob_length !== "number" ||\n
+         spec.blob_length < 20)) {\n
+      throw new TypeError("blob_len parameter must be a number >= 20");\n
+    }\n
+    this._blob_length = spec.blob_length || 2000000;\n
+    this._init_db_promise = initDatabase(this._database);\n
+  }\n
+\n
+  WebSQLStorage.prototype.put = function (id, param) {\n
+    var db = this._database,\n
+      that = this,\n
+      data_string = JSON.stringify(param);\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return that._init_db_promise;\n
+      })\n
+      .push(function () {\n
+        return queueSql(db, ["INSERT OR REPLACE INTO " +\n
+                            "document(id, data) VALUES(?,?)"],\n
+                       [[id, data_string]]);\n
+      })\n
+      .push(function () {\n
+        return id;\n
+      });\n
+  };\n
+\n
+  WebSQLStorage.prototype.remove = function (id) {\n
+    var db = this._database,\n
+      that = this;\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return that._init_db_promise;\n
+      })\n
+      .push(function () {\n
+        return queueSql(db, ["DELETE FROM document WHERE id = ?"], [[id]]);\n
+      })\n
+      .push(function (result_list) {\n
+        if (result_list[0].rowsAffected === 0) {\n
+          throw new jIO.util.jIOError("Cannot find document", 404);\n
+        }\n
+        return id;\n
+      });\n
+\n
+  };\n
+\n
+  WebSQLStorage.prototype.get = function (id) {\n
+    var db = this._database,\n
+      that = this;\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return that._init_db_promise;\n
+      })\n
+      .push(function () {\n
+        return queueSql(db, ["SELECT data FROM document WHERE id = ?"],\n
+                        [[id]]);\n
+      })\n
+      .push(function (result_list) {\n
+        if (result_list[0].rows.length === 0) {\n
+          throw new jIO.util.jIOError("Cannot find document", 404);\n
+        }\n
+        return JSON.parse(result_list[0].rows[0].data);\n
+      });\n
+  };\n
+\n
+  WebSQLStorage.prototype.allAttachments = function (id) {\n
+    var db = this._database,\n
+      that = this;\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return that._init_db_promise;\n
+      })\n
+      .push(function () {\n
+        return queueSql(db, [\n
+          "SELECT id FROM document WHERE id = ?",\n
+          "SELECT DISTINCT attachment FROM attachment WHERE id = ?"\n
+        ], [[id], [id]]);\n
+      })\n
+      .push(function (result_list) {\n
+        if (result_list[0].rows.length === 0) {\n
+          throw new jIO.util.jIOError("Cannot find document", 404);\n
+        }\n
+\n
+        var len = result_list[1].rows.length,\n
+          obj = {},\n
+          i;\n
+\n
+        for (i = 0; i < len; i += 1) {\n
+          obj[result_list[1].rows[i].attachment] = {};\n
+        }\n
+        return obj;\n
+      });\n
+  };\n
+\n
+  function sendBlobPart(blob, argument_list, index, queue) {\n
+    queue.push(function () {\n
+      return jIO.util.readBlobAsDataURL(blob);\n
+    })\n
+      .push(function (strBlob) {\n
+        argument_list[index + 2].push(strBlob.currentTarget.result);\n
+        return;\n
+      });\n
+  }\n
+\n
+  WebSQLStorage.prototype.putAttachment = function (id, name, blob) {\n
+    var db = this._database,\n
+      that = this,\n
+      part_size = this._blob_length;\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return that._init_db_promise;\n
+      })\n
+      .push(function () {\n
+        return queueSql(db, ["SELECT id FROM document WHERE id = ?"], [[id]]);\n
+      })\n
+      .push(function (result) {\n
+        var query_list = [],\n
+          argument_list = [],\n
+          blob_size = blob.size,\n
+          queue = new RSVP.Queue(),\n
+          i,\n
+          index;\n
+\n
+        if (result[0].rows.length === 0) {\n
+          throw new jIO.util.jIOError("Cannot access subdocument", 404);\n
+        }\n
+        query_list.push("DELETE FROM attachment WHERE id = ? " +\n
+                        "AND attachment = ?");\n
+        argument_list.push([id, name]);\n
+        query_list.push("INSERT INTO attachment(id, attachment, part, blob)" +\n
+                     "VALUES(?, ?, ?, ?)");\n
+        argument_list.push([id, name, -1,\n
+                            blob.type || "application/octet-stream"]);\n
+\n
+        for (i = 0, index = 0; i < blob_size; i += part_size, index += 1) {\n
+          query_list.push("INSERT INTO attachment(id, attachment, part, blob)" +\n
+                       "VALUES(?, ?, ?, ?)");\n
+          argument_list.push([id, name, index]);\n
+          sendBlobPart(blob.slice(i, i + part_size), argument_list, index,\n
+                       queue);\n
+        }\n
+        queue.push(function () {\n
+          return queueSql(db, query_list, argument_list);\n
+        });\n
+        return queue;\n
+      });\n
+  };\n
+\n
+  WebSQLStorage.prototype.getAttachment = function (id, name, options) {\n
+    var db = this._database,\n
+      that = this,\n
+      part_size = this._blob_length,\n
+      start,\n
+      end,\n
+      start_index,\n
+      end_index;\n
+\n
+    if (options === undefined) { options = {}; }\n
+    start = options.start || 0;\n
+    end = options.end || -1;\n
+\n
+    if (start < 0 || (options.end !== undefined && options.end < 0)) {\n
+      throw new jIO.util.jIOError("_start and _end must be positive",\n
+                                  400);\n
+    }\n
+    if (start > end && end !== -1) {\n
+      throw new jIO.util.jIOError("_start is greater than _end",\n
+                                  400);\n
+    }\n
+\n
+    start_index = Math.floor(start / part_size);\n
+    if (start === 0) { start_index -= 1; }\n
+    end_index =  Math.floor(end / part_size);\n
+    if (end % part_size === 0) {\n
+      end_index -= 1;\n
+    }\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return that._init_db_promise;\n
+      })\n
+      .push(function () {\n
+        var command = "SELECT part, blob FROM attachment WHERE id = ? AND " +\n
+          "attachment = ? AND part >= ?",\n
+          argument_list = [id, name, start_index];\n
+\n
+        if (end !== -1) {\n
+          command += " AND part <= ?";\n
+          argument_list.push(end_index);\n
+        }\n
+        return queueSql(db, [command], [argument_list]);\n
+      })\n
+      .push(function (response_list) {\n
+        var i,\n
+          response,\n
+          blob_array = [],\n
+          blob,\n
+          type;\n
+\n
+        response = response_list[0].rows;\n
+        if (response.length === 0) {\n
+          throw new jIO.util.jIOError("Cannot find document", 404);\n
+        }\n
+        for (i = 0; i < response.length; i += 1) {\n
+          if (response[i].part === -1) {\n
+            type = response[i].blob;\n
+            start_index += 1;\n
+          } else {\n
+            blob_array.push(jIO.util.dataURItoBlob(response[i].blob));\n
+          }\n
+        }\n
+        if ((start === 0) && (options.end === undefined)) {\n
+          return new Blob(blob_array, {type: type});\n
+        }\n
+        blob = new Blob(blob_array, {});\n
+        return blob.slice(start - (start_index * part_size),\n
+                          end === -1 ? blob.size :\n
+                          end - (start_index * part_size),\n
+                          "application/octet-stream");\n
+      });\n
+  };\n
+\n
+  WebSQLStorage.prototype.removeAttachment = function (id, name) {\n
+    var db = this._database,\n
+      that = this;\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return that._init_db_promise;\n
+      })\n
+      .push(function () {\n
+        return queueSql(db, ["DELETE FROM attachment WHERE " +\n
+                            "id = ? AND attachment = ?"], [[id, name]]);\n
+      })\n
+      .push(function (result) {\n
+        if (result[0].rowsAffected === 0) {\n
+          throw new jIO.util.jIOError("Cannot find document", 404);\n
+        }\n
+        return name;\n
+      });\n
+  };\n
+\n
+  WebSQLStorage.prototype.hasCapacity = function (name) {\n
+    return (name === "list" || (name === "include"));\n
+  };\n
+\n
+  WebSQLStorage.prototype.buildQuery = function (options) {\n
+    var db = this._database,\n
+      that = this,\n
+      query =  "SELECT id";\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return that._init_db_promise;\n
+      })\n
+      .push(function () {\n
+        if (options === undefined) { options = {}; }\n
+        if (options.include_docs === true) {\n
+          query += ", data AS doc";\n
+        }\n
+        query += " FROM document";\n
+        return queueSql(db, [query], [[]]);\n
+      })\n
+      .push(function (result) {\n
+        var array = [],\n
+          len = result[0].rows.length,\n
+          i;\n
+\n
+        for (i = 0; i < len; i += 1) {\n
+          array.push(result[0].rows[i]);\n
+          array[i].value = {};\n
+          if (array[i].doc !== undefined) {\n
+            array[i].doc = JSON.parse(array[i].doc);\n
+          }\n
+        }\n
+        return array;\n
+      });\n
+  };\n
+\n
+  jIO.addStorage(\'websql\', WebSQLStorage);\n
+\n
+}(jIO, RSVP, Blob, openDatabase));
 
 ]]></string> </value>
         </item>
@@ -10867,7 +11237,7 @@ if ((error_count = __NODEJS_parse(string, error_offsets, error_lookaheads)) > 0)
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.22494.14742.48810</string> </value>
+                <value> <string>947.46978.10225.52394</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -10885,7 +11255,7 @@ if ((error_count = __NODEJS_parse(string, error_offsets, error_lookaheads)) > 0)
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1449226044.59</float>
+                        <float>1451317168.97</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
