@@ -4,7 +4,15 @@
   <workflow>category_publication_workflow</workflow>
  </chain>
  <chain>
+  <type>Base Domain</type>
+  <workflow>category_publication_workflow</workflow>
+ </chain>
+ <chain>
   <type>Category</type>
+  <workflow>category_publication_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Domain</type>
   <workflow>category_publication_workflow</workflow>
  </chain>
  <chain>

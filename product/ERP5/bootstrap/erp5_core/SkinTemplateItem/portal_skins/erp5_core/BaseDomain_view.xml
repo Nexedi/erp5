@@ -90,6 +90,7 @@
                     <value>
                       <list>
                         <string>my_domain_generator_method_id</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
