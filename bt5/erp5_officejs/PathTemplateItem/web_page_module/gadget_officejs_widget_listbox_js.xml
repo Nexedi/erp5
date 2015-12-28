@@ -221,6 +221,7 @@
         })\n
         .push(function (result_list) {\n
           content += listbox_widget_table({\n
+            widget_theme : option_dict.widget_theme,\n
             search: option_dict.search,\n
             column_list: result_list[1],\n
             row_list: result_list[0]\n
@@ -383,7 +384,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -397,7 +398,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.13615.27432.39287</string> </value>
+                <value> <string>948.5700.26625.14643</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -415,7 +416,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440436885.27</float>
+                        <float>1451303858.2</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
