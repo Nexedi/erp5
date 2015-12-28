@@ -28,6 +28,10 @@
   <workflow>dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Base Domain</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Base Type</type>
   <workflow>base_type_interaction_workflow, dynamic_class_generation_interaction_workflow</workflow>
  </chain>
@@ -86,6 +90,10 @@
  <chain>
   <type>Document Component</type>
   <workflow>component_validation_workflow, dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Domain</type>
+  <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>Dynamic Category Property</type>

@@ -6,6 +6,7 @@ Attribute Equality Constraint | dynamic_class_generation_interaction_workflow
 Attribute Unicity Constraint | dynamic_class_generation_interaction_workflow
 Base Category | dynamic_class_generation_interaction_workflow
 Base Category | edit_workflow
+Base Domain | edit_workflow
 Base Type | base_type_interaction_workflow
 Base Type | dynamic_class_generation_interaction_workflow
 Business Template | business_template_building_workflow
@@ -25,6 +26,7 @@ Document Component | component_validation_workflow
 Document Component | dynamic_class_generation_interaction_workflow
 Document Component | edit_workflow
 Document | edit_workflow
+Domain | edit_workflow
 Dynamic Category Property | dynamic_class_generation_interaction_workflow
 Extension Component | component_validation_workflow
 Extension Component | dynamic_class_generation_interaction_workflow
