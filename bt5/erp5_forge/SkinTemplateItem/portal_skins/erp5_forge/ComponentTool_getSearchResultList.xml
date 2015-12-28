@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""TODO: support arguments (checkboxes from dialog)\n
+add checkbox for search_in_skins\n
+"""\n
+\n
+from Products.PythonScripts.standard import html_quote\n
+\n
+result_list = []\n
+\n
+\n
+if search_in_skins:\n
+  for script_container in (context.portal_skins, context.portal_workflow):\n
+    for script_path, script in context.ZopeFind(script_container, obj_metatypes=[\'Script (Python)\'], search_sub=1):\n
+      last_match = 4 # XXX this last_match thing does not work. The idea is to show only one match if, say, the first 3 lines have a match\n
+      line_list = script.document_src().splitlines()\n
+      max_line_len = len(line_list)\n
+      for line_number, line_text in enumerate(line_list):\n
+        if search_string in line_text:\n
+          if (line_number - last_match) >= 4:\n
+            result_list.append(dict(\n
+              url="%s/manage_main?line=%s" % (script.absolute_url(), line_number-8),\n
+              name=script.absolute_url(),\n
+              start_line=line_number-8,\n
+              match=("\\n".join(line_list[max(0, line_number-4):min(line_number+4, max_line_len)]))\n
+                .replace(search_string, "<mark>%s</mark>" % html_quote(search_string)),\n
+             ))\n
+          last_match = line_number\n
+\n
+\n
+for component in context.contentValues():\n
+  if component.getValidationState() not in (\'validated\', \'modified\'):\n
+    continue\n
+  text_content = component.getTextContent() or \'\'\n
+  last_match = 4\n
+  line_list = text_content.splitlines()\n
+  max_line_len = len(line_list)\n
+\n
+  for line_number, line_text in enumerate(line_list):\n
+    if search_string in line_text:\n
+      if (line_number - last_match) >= 4:\n
+        result_list.append(dict(\n
+          url="%s?line=%s" % (component.absolute_url(), line_number+1),\n
+          name=component.getReference(),\n
+          start_line=line_number +1,\n
+          match=("\\n".join(line_list[max(0, line_number-4):min(line_number+4, max_line_len)]))\n
+            .replace(search_string, "<mark>%s</mark>" % html_quote(search_string)),\n
+         ))\n
+      last_match = line_number\n
+\n
+return result_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>search_string, search_in_skins=True</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ComponentTool_getSearchResultList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

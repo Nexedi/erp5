@@ -21,6 +21,7 @@ Business Template | update_vcs_bt
 Business Template | update_vcs_bt_norevert
 Business Template | view_svn_repos_info
 Category Tool | generate_translation_file
+Component Tool | search_source_code
 Glossary Module | create_term_for_translation
 Glossary Module | export_po_file
 Glossary Module | find_duplicate_terms

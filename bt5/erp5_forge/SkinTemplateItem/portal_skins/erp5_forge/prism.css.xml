@@ -1,0 +1,227 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts46661608.9</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>prism.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* http://prismjs.com/download.html?themes=prism&languages=markup+css+clike+javascript+ini+python+sql&plugins=line-numbers+keep-markup */\n
+/**\n
+ * prism.js default theme for JavaScript, CSS and HTML\n
+ * Based on dabblet (http://dabblet.com)\n
+ * @author Lea Verou\n
+ */\n
+\n
+code[class*="language-"],\n
+pre[class*="language-"] {\n
+\tcolor: black;\n
+\ttext-shadow: 0 1px white;\n
+\tfont-family: Consolas, Monaco, \'Andale Mono\', \'Ubuntu Mono\', monospace;\n
+\tdirection: ltr;\n
+\ttext-align: left;\n
+\twhite-space: pre;\n
+\tword-spacing: normal;\n
+\tword-break: normal;\n
+\tword-wrap: normal;\n
+\tline-height: 1.5;\n
+\n
+\t-moz-tab-size: 4;\n
+\t-o-tab-size: 4;\n
+\ttab-size: 4;\n
+\n
+\t-webkit-hyphens: none;\n
+\t-moz-hyphens: none;\n
+\t-ms-hyphens: none;\n
+\thyphens: none;\n
+}\n
+\n
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,\n
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {\n
+\ttext-shadow: none;\n
+\tbackground: #b3d4fc;\n
+}\n
+\n
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,\n
+code[class*="language-"]::selection, code[class*="language-"] ::selection {\n
+\ttext-shadow: none;\n
+\tbackground: #b3d4fc;\n
+}\n
+\n
+@media print {\n
+\tcode[class*="language-"],\n
+\tpre[class*="language-"] {\n
+\t\ttext-shadow: none;\n
+\t}\n
+}\n
+\n
+/* Code blocks */\n
+pre[class*="language-"] {\n
+\tpadding: 1em;\n
+\tmargin: .5em 0;\n
+\toverflow: auto;\n
+}\n
+\n
+:not(pre) > code[class*="language-"],\n
+pre[class*="language-"] {\n
+\tbackground: #f5f2f0;\n
+}\n
+\n
+/* Inline code */\n
+:not(pre) > code[class*="language-"] {\n
+\tpadding: .1em;\n
+\tborder-radius: .3em;\n
+\twhite-space: normal;\n
+}\n
+\n
+.token.comment,\n
+.token.prolog,\n
+.token.doctype,\n
+.token.cdata {\n
+\tcolor: slategray;\n
+}\n
+\n
+.token.punctuation {\n
+\tcolor: #999;\n
+}\n
+\n
+.namespace {\n
+\topacity: .7;\n
+}\n
+\n
+.token.property,\n
+.token.tag,\n
+.token.boolean,\n
+.token.number,\n
+.token.constant,\n
+.token.symbol,\n
+.token.deleted {\n
+\tcolor: #905;\n
+}\n
+\n
+.token.selector,\n
+.token.attr-name,\n
+.token.string,\n
+.token.char,\n
+.token.builtin,\n
+.token.inserted {\n
+\tcolor: #690;\n
+}\n
+\n
+.token.operator,\n
+.token.entity,\n
+.token.url,\n
+.language-css .token.string,\n
+.style .token.string {\n
+\tcolor: #a67f59;\n
+\tbackground: hsla(0, 0%, 100%, .5);\n
+}\n
+\n
+.token.atrule,\n
+.token.attr-value,\n
+.token.keyword {\n
+\tcolor: #07a;\n
+}\n
+\n
+.token.function {\n
+\tcolor: #DD4A68;\n
+}\n
+\n
+.token.regex,\n
+.token.important,\n
+.token.variable {\n
+\tcolor: #e90;\n
+}\n
+\n
+.token.important,\n
+.token.bold {\n
+\tfont-weight: bold;\n
+}\n
+.token.italic {\n
+\tfont-style: italic;\n
+}\n
+\n
+.token.entity {\n
+\tcursor: help;\n
+}\n
+\n
+pre.line-numbers {\n
+\tposition: relative;\n
+\tpadding-left: 3.8em;\n
+\tcounter-reset: linenumber;\n
+}\n
+\n
+pre.line-numbers > code {\n
+\tposition: relative;\n
+}\n
+\n
+.line-numbers .line-numbers-rows {\n
+\tposition: absolute;\n
+\tpointer-events: none;\n
+\ttop: 0;\n
+\tfont-size: 100%;\n
+\tleft: -3.8em;\n
+\twidth: 3em; /* works for line-numbers below 1000 lines */\n
+\tletter-spacing: -1px;\n
+\tborder-right: 1px solid #999;\n
+\n
+\t-webkit-user-select: none;\n
+\t-moz-user-select: none;\n
+\t-ms-user-select: none;\n
+\tuser-select: none;\n
+\n
+}\n
+\n
+\t.line-numbers-rows > span {\n
+\t\tpointer-events: none;\n
+\t\tdisplay: block;\n
+\t\tcounter-increment: linenumber;\n
+\t}\n
+\n
+\t\t.line-numbers-rows > span:before {\n
+\t\t\tcontent: counter(linenumber);\n
+\t\t\tcolor: #999;\n
+\t\t\tdisplay: block;\n
+\t\t\tpadding-right: 0.8em;\n
+\t\t\ttext-align: right;\n
+\t\t}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3102</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>prism.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
