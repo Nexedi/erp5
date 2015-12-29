@@ -56,6 +56,7 @@ if response is None:\n
   response = REQUEST.RESPONSE\n
 \n
 web_page = context\n
+web_section = REQUEST.get("current_web_section")\n
 \n
 if REQUEST.getHeader(\'If-Modified-Since\', \'\') == web_page.getModificationDate().rfc822():\n
   response.setStatus(304)\n
@@ -77,12 +78,17 @@ elif (portal_type == "Web Manifest"):\n
 else:\n
   if (mapping_dict is not None):\n
     web_content = web_page.TextDocument_substituteTextContent(web_page, web_content, mapping_dict=mapping_dict)\n
+\n
+  content_security_policy = "default-src \'none\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' data:; script-src \'self\' \'unsafe-eval\'; style-src \'self\' \'unsafe-inline\' data:; frame-src \'self\' data:"\n
+  if (web_section):\n
+    content_security_policy = web_section.getLayoutProperty("configuration_content_security_policy", default=content_security_policy)\n
+\n
   # Do not allow to put inside an iframe\n
   response.setHeader("X-Frame-Options", "SAMEORIGIN")\n
   response.setHeader("X-Content-Type-Options", "nosniff")\n
 \n
   # Only fetch code (html, js, css, image) and data from this ERP5, to prevent any data leak as the web site do not control the gadget\'s code\n
-  response.setHeader("Content-Security-Policy", "default-src \'none\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' mail.tiolive.com data:; script-src \'self\' \'unsafe-eval\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:")\n
+  response.setHeader("Content-Security-Policy", content_security_policy)\n
 \n
   response.setHeader(\'Content-Type\', \'text/html\')\n
 \n
