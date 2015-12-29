@@ -31,6 +31,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.mixin.solver import SolverMixin
 from Products.ERP5.mixin.configurable import ConfigurableMixin
@@ -65,6 +66,8 @@ class ItemListSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
                            )
 
   # ISolver Implementation
+  security.declarePrivate('solve')
+  @UnrestrictedMethod
   def solve(self, activate_kw=None):
     """This method create new movement based on difference of aggregate sets.
     It supports only removed items.

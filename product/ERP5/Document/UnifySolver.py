@@ -30,6 +30,7 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5.Document.AcceptSolver import AcceptSolver
 
 class UnifySolver(AcceptSolver):
@@ -90,6 +91,8 @@ class UnifySolver(AcceptSolver):
     return simulation_movement_list
 
   # ISolver Implementation
+  security.declarePrivate('solve')
+  @UnrestrictedMethod
   def solve(self, activate_kw=None):
     """
     Adopt new property value to simulation movements and their deliveries,

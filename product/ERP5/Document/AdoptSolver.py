@@ -27,6 +27,9 @@
 #
 ##############################################################################
 
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import Permissions
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5.mixin.solver import ConfigurablePropertySolverMixin
 
 class AdoptSolver(ConfigurablePropertySolverMixin):
@@ -35,8 +38,13 @@ class AdoptSolver(ConfigurablePropertySolverMixin):
   meta_type = 'ERP5 Adopt Solver'
   portal_type = 'Adopt Solver'
 
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
   # ISolver Implementation
-  # XXX-Leo: Needs security declaration! It's currently public.
+  security.declarePrivate('solve')
+  @UnrestrictedMethod
   def solve(self, activate_kw=None):
     """
     Adopt new property to movements or deliveries.

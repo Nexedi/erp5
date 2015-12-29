@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.Core.Predicate import Predicate
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 class SolverTypeInformation(Predicate, ERP5TypeInformation):
   """
@@ -214,6 +215,8 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     method = getattr(solver, method_id)
     return method()
 
+  security.declarePrivate('solve')
+  @UnrestrictedMethod
   def solve(self, delivery_list=None, configuration_dict=None,
             activate_kw=None, **kw):
     if delivery_list is None:

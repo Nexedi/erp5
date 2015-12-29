@@ -29,6 +29,7 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5.Document.AcceptSolver import AcceptSolver
 
 class TradeModelSolver(AcceptSolver):
@@ -58,6 +59,8 @@ class TradeModelSolver(AcceptSolver):
   zope.interface.implements(interfaces.ISolver,)
 
   # ISolver Implementation
+  security.declarePrivate('solve')
+  @UnrestrictedMethod
   def solve(self, activate_kw=None):
     """
     Adopt new values to simulation movements, with keeping the original
