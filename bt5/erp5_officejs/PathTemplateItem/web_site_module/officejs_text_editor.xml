@@ -351,6 +351,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_content_security_policy</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -391,6 +401,10 @@
         <item>
             <key> <string>configuration_application_title</string> </key>
             <value> <string>Text Editor</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_content_security_policy</string> </key>
+            <value> <string>default-src \'none\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' localhost:5000 mail.tiolive.com data:; script-src \'self\' \'unsafe-eval\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -721,7 +735,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.4378.53544.28347</string> </value>
+                <value> <string>947.57052.16419.11059</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -739,7 +753,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446730078.39</float>
+                        <float>1450452633.63</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
