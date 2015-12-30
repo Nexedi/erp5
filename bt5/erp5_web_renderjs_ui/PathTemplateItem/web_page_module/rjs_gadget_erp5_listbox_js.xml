@@ -532,10 +532,10 @@
       var gadget = this,\n
         url,\n
         options = {},\n
-        sort_form = gadget.props.element.querySelector(".sort_form");\n
+        sort_button = gadget.props.element.querySelector(\'button[name="Sort"]\');\n
       return loopEventListener(\n
-        sort_form,\n
-        "submit",\n
+        sort_button,\n
+        "click",\n
         false,\n
         function () {\n
           url = "gadget_erp5_sort_editor.html";\n
@@ -692,7 +692,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.8764.40835.23040</string> </value>
+                <value> <string>948.8776.58910.16264</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -710,7 +710,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451487251.61</float>
+                        <float>1451487991.68</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
