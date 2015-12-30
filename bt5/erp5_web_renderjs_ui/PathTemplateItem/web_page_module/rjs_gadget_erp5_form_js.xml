@@ -221,6 +221,8 @@
       if (form_definition.extended_search) {\n
         suboption_dict.extended_search = form_definition.extended_search;\n
       }\n
+      // XXX Hardcoded for listbox\'s hide functionality\n
+      suboption_dict.hide_enabled = form_definition.hide_enabled;\n
 \n
       form_gadget.props.gadget_list = [];\n
       form_gadget.props.id = erp5_document._id;\n
@@ -527,7 +529,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.29788.20746.53162</string> </value>
+                <value> <string>948.7201.1182.16657</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -545,7 +547,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448902825.06</float>
+                        <float>1451393404.31</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

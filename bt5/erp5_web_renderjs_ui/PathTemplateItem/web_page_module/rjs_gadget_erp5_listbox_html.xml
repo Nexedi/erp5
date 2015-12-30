@@ -137,6 +137,22 @@
        </thead>\n
       </table>\n
     </script>\n
+\n
+    <script id="listbox-show-thead-template" type="text/x-handlebars-template">\n
+      <table>\n
+       <thead class="ui-bar-inherit head">\n
+         <tr>\n
+           {{#if show_anchor}}\n
+             <th data-i18n="Jump">Jump</th>\n
+           {{/if}}\n
+           <th></th>\n
+           {{#each head_value}}\n
+              <th  data-i18n="{{data-i18n}}" class="{{class_value}}">{{text}}</th>\n
+           {{/each}}\n
+         </tr>\n
+       </thead>\n
+      </table>\n
+    </script>\n
     \n
     <script id="listbox-hidden-tbody-template" type="text/x-handlebars-template">\n
      <table>\n
@@ -166,7 +182,40 @@
        </tbody>\n
       </table>\n
     </script>\n
-    \n
+\n
+\n
+    <script id="listbox-show-tbody-template" type="text/x-handlebars-template">\n
+       <table>\n
+       <tbody class="tbody">\n
+        {{#each body_value}}\n
+           <tr>\n
+            {{#if ../../show_anchor}}\n
+               <th class="ui-link ui-btn ui-corner-all ui-icon-carat-r ui-btn-icon-notext"></th>\n
+            {{/if}}\n
+            <th>\n
+              <input value="{{value}}" type="checkbox" checked="true" class="hide_element">\n
+            </th>\n
+           {{#each tr_value}}\n
+              <th>\n
+                {{#if type}}\n
+                  {{#if editable}}\n
+                    <div class="editable_div" column="{{column}}" line="{{line}}"></div>\n
+                  {{else}}\n
+                    <a href="{{href}}" class="ui-link">\n
+                      <div class="editable_div" column="{{column}}" line="{{line}}"></div>\n
+                    </a>\n
+                  {{/if}}\n
+                {{else}}\n
+                  <a href="{{href}}" class="ui-link" >{{text}}</a>\n
+                {{/if}}\n
+              </th>\n
+           {{/each}}\n
+         </tr>\n
+        {{/each}}\n
+       </tbody>\n
+      </table>\n
+    </script>\n
+\n
     <script id="listbox-tfoot-template" type="text/x-handlebars-template">\n
       <table>\n
        <tfoot class="ui-bar-inherit tfoot">\n
@@ -187,7 +236,7 @@
       <div class="ui-table-header ui-header ui-bar-c ui-corner-all">\n
         <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">\n
           <div class="ui-controlgroup-controls">\n
-            <button data-rel="hide" data-i18n="Hide Rows" name="Hide" type="submit" class="submit responsive ui-last-child ui-btn ui-icon-eye ui-btn-icon-left ui-disabled">Hide Rows</button>\n
+            <button data-rel="hide" data-i18n="Hide Rows" name="Hide" type="submit" class="submit responsive ui-last-child ui-btn ui-icon-eye ui-btn-icon-left {{hide_class}}">Hide Rows</button>\n
           </div>\n
         </div>\n
         <h1 data-i18n="0 items selected" class="ui-title ui-override-theme">0 items selected</h1>\n
@@ -199,6 +248,7 @@
       </div>\n
       <table class="ui-responsive ui-body-c ui-table-inset">\n
         <thead class="ui-bar-inherit thead"></thead>\n
+        <tbody></tbody>\n
         <tfoot class="ui-bar-inherit tfoot"></tfoot>\n
       </table>\n
     </div>\n
@@ -347,7 +397,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.8773.24940.60996</string> </value>
+                <value> <string>948.8903.55441.44066</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -365,7 +415,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451487984.08</float>
+                        <float>1451495552.88</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
