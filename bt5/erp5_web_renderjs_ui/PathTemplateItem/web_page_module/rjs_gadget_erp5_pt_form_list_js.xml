@@ -157,6 +157,8 @@
             form_options.form_definition.extended_search = extended_search;\n
             search_options.extended_search = extended_search;\n
           }\n
+          // XXX Hardcoded for listbox\'s hide functionality\n
+          form_options.form_definition.hide_enabled = true;\n
           var new_content_action = options.erp5_document._links.action_object_new_content_action;\n
           if (new_content_action !== undefined) {\n
             new_content_action = gadget.getUrlFor({command: \'change\', options: {view: new_content_action.href, editable: true}});\n
@@ -356,7 +358,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.25536.23903.53674</string> </value>
+                <value> <string>948.5880.58041.14626</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -374,7 +376,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448889486.07</float>
+                        <float>1451393377.12</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
