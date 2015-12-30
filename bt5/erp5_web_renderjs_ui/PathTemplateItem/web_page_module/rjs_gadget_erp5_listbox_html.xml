@@ -193,9 +193,7 @@
         <h1 data-i18n="0 items selected" class="ui-title ui-override-theme">0 items selected</h1>\n
         <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
           <div class="ui-controlgroup-controls">\n
-            <form class="sort_form">  \n
-              <button data-rel="Sort" data-i18n="Sort" name="Sort" type="submit" class="submit responsive ui-last-child ui-btn ui-icon-sort-amount-desc ui-btn-icon-left">Sort</button>\n
-            </form>\n
+            <button data-rel="Sort" data-i18n="Sort" name="Sort" type="submit" class="submit responsive ui-last-child ui-btn ui-icon-sort-amount-desc ui-btn-icon-left">Sort</button>\n
           </div>\n
         </div>\n
       </div>\n
@@ -349,7 +347,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.8752.11008.17032</string> </value>
+                <value> <string>948.8773.24940.60996</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -367,7 +365,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451486619.47</float>
+                        <float>1451487984.08</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
