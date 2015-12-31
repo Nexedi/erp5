@@ -30,6 +30,7 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.UnrestrictedMethod import super_user
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.mixin.configurable import ConfigurableMixin
 
@@ -44,7 +45,14 @@ class SolverMixin(object):
   # Declarative interfaces
   zope.interface.implements(interfaces.ISolver,)
 
+  def _solve(self, activate_kw=None):
+    raise NotImplementedError
+
   # Implementation of ISolver
+  security.declarePrivate('solve')
+  def solve(self, activate_kw=None):
+    with super_user():
+      self._solve(activate_kw=activate_kw)
 
   def getPortalTypeValue(self):
     return self.getPortalObject().portal_solvers._getOb(self.getPortalType())

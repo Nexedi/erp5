@@ -31,7 +31,6 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5.mixin.solver import SolverMixin
@@ -67,9 +66,7 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
                            )
 
   # ISolver Implementation
-  security.declarePrivate('solve')
-  @UnrestrictedMethod
-  def solve(self, activate_kw=None):
+  def _solve(self, activate_kw=None):
     """
     """
     configuration_dict = self.getConfigurationPropertyDict()

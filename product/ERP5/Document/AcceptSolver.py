@@ -29,7 +29,6 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5.mixin.solver import ConfigurablePropertySolverMixin
 
 class AcceptSolver(ConfigurablePropertySolverMixin):
@@ -42,10 +41,7 @@ class AcceptSolver(ConfigurablePropertySolverMixin):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # ISolver Implementation
-  security.declarePrivate('solve')
-  @UnrestrictedMethod
-  def solve(self, activate_kw=None):
+  def _solve(self, activate_kw=None):
     """
     Adopt new property to simulation movements, with keeping the
     original one recorded.
