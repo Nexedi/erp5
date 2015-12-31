@@ -17,6 +17,9 @@
  <portal_type id="Data Array Module">
   <item>Data Array</item>
  </portal_type>
+ <portal_type id="Data Event Module">
+  <item>Data Event</item>
+ </portal_type>
  <portal_type id="Data Ingestion">
   <item>Data Ingestion Line</item>
  </portal_type>
