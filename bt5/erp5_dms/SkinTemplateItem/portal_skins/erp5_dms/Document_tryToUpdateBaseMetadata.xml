@@ -53,8 +53,7 @@
             <value> <string>from ZODB.POSException import ConflictError\n
 from Products.ERP5.Document.Document import ConversionError\n
 from Products.ERP5Type.Log import log\n
-if context.getExternalProcessingState() == \'converted\':\n
-  return \n
+\n
 message = None\n
 try:\n
   return context.updateBaseMetadata(**kw)\n
@@ -75,7 +74,7 @@ isTransitionPossible = context.getPortalObject().portal_workflow.isTransitionPos
 if isTransitionPossible(context, \'conversion_failed\'):\n
   # mark document as conversion failed if not already done by convertToBaseFormat\n
   context.conversionFailed(comment=message)\n
-elif context.getExternalProcessingState() not in (\'converted\', \'empty\'):\n
+else:\n
   # just save problem message in workflow history\n
   context.processConversionFailed(comment=message)\n
 log(\'%s %s\' %(context.getRelativeUrl(), message))\n
