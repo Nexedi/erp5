@@ -295,7 +295,7 @@ function convertBook(linkToBook, container){\n
       var firstSection = true, firstChapter = true;\n
       var n = sections.length;\n
       var partCounter = 0, matterCounter = 1;\n
-      var partContainer;\n
+      var partContainer = $(\'<div>\');\n
       for(var i = 0; i < n; i++){\n
         var section = sections.eq(i);\n
         var isPart = section[0].tagName.toUpperCase() == \'UL\';\n
