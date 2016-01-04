@@ -47,6 +47,10 @@
             <key> <string>portal_type</string> </key>
             <value> <string>Standard Property</string> </value>
         </item>
+        <item>
+            <key> <string>translatable</string> </key>
+            <value> <int>1</int> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
