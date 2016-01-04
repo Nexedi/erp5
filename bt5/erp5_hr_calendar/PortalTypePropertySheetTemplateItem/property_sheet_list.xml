@@ -9,6 +9,7 @@
  </portal_type>
  <portal_type id="Time Table">
   <item>DublinCore</item>
+  <item>Task</item>
  </portal_type>
  <portal_type id="Time Table Line">
   <item>Amount</item>
