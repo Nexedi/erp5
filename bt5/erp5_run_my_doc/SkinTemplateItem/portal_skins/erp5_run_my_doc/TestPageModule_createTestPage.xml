@@ -90,7 +90,7 @@ return context.Base_redirect(\'TestPageModule_viewChapterCreationWizard\', \n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, author, author_mail, text_content, slide_content</string> </value>
+            <value> <string>title, author, author_mail, text_content, slide_content, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
