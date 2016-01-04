@@ -83,7 +83,7 @@ if group_calendar is not None:\n
         for public_holiday in portal.portal_catalog(portal_type="Public Holiday Line",\n
                           parent_region_uid=region_uid, validation_state="validated", **catalog_kw):\n
           public_holiday = public_holiday.getObject()\n
-          if public_holiday.getStartDate() >= start_date and public_holiday < stop_date:\n
+          if public_holiday.getStartDate() >= start_date and public_holiday.getStopDate() < stop_date:\n
             quantity = - period_dict[public_holiday.getStartDate().Day()] * (1 - public_holiday.getQuantity())\n
             if quantity:\n
               period_list.append(public_holiday.asContext(quantity=quantity, stop_date=public_holiday.getStartDate()+1))\n
