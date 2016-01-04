@@ -63,7 +63,12 @@ relative_url =  context.getRelativeUrl()\n
 counter = 0\n
 if len(annotation_list) > 0 and annotation_list[0] != "":\n
   for annotation in annotation_list:\n
-    comment, locator, context_url, author, color = annotation[1:-1].split("},{");\n
+    annotation_item = annotation[1:-1].split("},{")\n
+    if len(annotation_item) == 5:\n
+      comment, locator, context_url, author, color = annotation_item\n
+    else:\n
+      comment = "Failed to process: %s" % annotation\n
+      locator, context_url, author, color = "", "", "", ""\n
     element_list.append(newTempBase(context.getPortalObject(), relative_url,\n
                    title = comment,\n
                    uid = str(counter),\n
