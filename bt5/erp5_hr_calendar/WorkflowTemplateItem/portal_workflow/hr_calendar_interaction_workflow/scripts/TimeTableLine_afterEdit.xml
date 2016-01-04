@@ -68,13 +68,21 @@ if not(None in (day_of_week, quantity)):\n
   stop_date = start_date + 1.0/24*quantity\n
   time_table_line.setStopDate(stop_date)\n
 # after change, make sure to update group calendars through the usual alarm\n
-context.getPortalObject().portal_alarms.woelfel_update_time_table_end_periodicity.activate(\n
+context.getPortalObject().portal_alarms.update_time_table_end_periodicity.activate(\n
   priority=5).activeSense()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
