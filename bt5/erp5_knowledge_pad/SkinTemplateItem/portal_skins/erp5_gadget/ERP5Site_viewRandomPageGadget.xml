@@ -79,7 +79,12 @@ if box_relative_url:\n
 # Get the preferences (some casting of preferences would \n
 # probably be a good thing here so that there is no need\n
 # to cas them later)\n
-preferences = box.KnowledgeBox_getDefaultPreferencesDict()\n
+# \n
+# Prevent fail if no box is provided. \n
+if box is not None:\n
+  preferences = box.KnowledgeBox_getDefaultPreferencesDict()\n
+else:\n
+  preferences = {}\n
 \n
 if web_section_url is None:\n
   web_section_url = preferences.get(\'web_section_url\', \'\') # XXX-JPS - Why do we have to do casting ? (used to be str()\n
