@@ -231,10 +231,12 @@
       return;\n
     }\n
 \n
-    if (error instanceof XMLHttpRequest) {\n
-      error_text = error.toString() + " " +\n
-        error.status + " " +\n
-        error.statusText;\n
+    if (error.target instanceof XMLHttpRequest) {\n
+      error_text = error.target.toString() + " " +\n
+        error.target.status + " " +\n
+        error.target.statusText + "\\n" +\n
+        error.target.responseURL + "\\n\\n" +\n
+        error.target.getAllResponseHeaders();\n
     } else if (error instanceof Error) {\n
       error_text = error.toString();\n
     } else {\n
@@ -791,7 +793,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.3905.58968.48008</string> </value>
+                <value> <string>948.17186.10699.61269</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -809,7 +811,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1447351473.68</float>
+                        <float>1452007398.41</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
