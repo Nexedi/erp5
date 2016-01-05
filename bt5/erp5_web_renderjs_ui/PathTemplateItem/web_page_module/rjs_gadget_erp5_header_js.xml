@@ -360,11 +360,17 @@
         }\n
       }\n
       if (right_button !== undefined) {\n
+        if (right_button.icon === \'spinner\') {\n
+          right_button.class = "ui-disabled ui-icon-spin";\n
+        }\n
         promise_list.push(gadget.translateHtml(header_button_template(right_button)));\n
       } else if (right_link !== undefined) {\n
+        if (right_link.icon === \'spinner\') {\n
+          right_link.class = "ui-disabled ui-icon-spin";\n
+        }\n
         promise_list.push(gadget.translateHtml(header_link_template(right_link)));\n
       } else {\n
-        promise_list.push(gadget.translateHtml(""));\n
+        promise_list.push("");\n
       }\n
 \n
       // Handle sub header\n
@@ -574,7 +580,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.51114.9187.52923</string> </value>
+                <value> <string>948.17414.26904.28091</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -592,7 +598,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1450107450.54</float>
+                        <float>1452006752.82</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
