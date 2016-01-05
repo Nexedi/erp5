@@ -416,6 +416,7 @@ div.document-gadget-quick-preview div.teaser{\n
 \n
 div.document-gadget-quick-preview div.teaser img{\n
   vertical-align:top;\n
+  max-width: 150px;\n
 }\n
 \n
 div.document-gadget-quick-preview span.document-title,\n
