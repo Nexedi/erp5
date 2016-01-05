@@ -62,7 +62,7 @@ if (came_from is None):\n
   came_from = context.getPermanentURL(context)\n
 \n
 portal.portal_skins.updateSkinCookie()\n
-portal.setupCurrentSkin()\n
+portal.setupCurrentSkin(REQUEST)\n
 \n
 if (portal.portal_membership.isAnonymousUser()):\n
   RESPONSE.expireCookie(\'__ac\', path=\'/\')\n
