@@ -21,7 +21,7 @@ from portal_type_class import generatePortalTypeClass
 from accessor_holder import AccessorHolderType
 import persistent_migration
 
-class ERP5BaseBroken(Broken, ERP5Base):
+class ERP5BaseBroken(Broken, ERP5Base, PersistentBroken):
   # PersistentBroken can't be reused directly
   # because its « layout differs from 'GhostPortalType' »
 
