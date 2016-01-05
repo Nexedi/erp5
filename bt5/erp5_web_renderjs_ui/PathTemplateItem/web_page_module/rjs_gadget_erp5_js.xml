@@ -573,7 +573,6 @@
           );\n
         })\n
         .push(function (main_gadget) {\n
-          var input;\n
           // Append loaded gadget in the page\n
           if (main_gadget !== undefined) {\n
             return main_gadget.getElement()\n
@@ -596,13 +595,6 @@
                 element.appendChild(content_container);\n
 \n
                 $(element).trigger("create");\n
-\n
-                input = element.querySelector("input");\n
-                if ((input !== null) && (!input.readOnly)) {\n
-                  input.focus();\n
-                  input.select();\n
-                }\n
-\n
 \n
                 return updateHeader(gadget);\n
                 // XXX Drop notification\n
@@ -793,7 +785,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.17186.10699.61269</string> </value>
+                <value> <string>948.17438.33512.7714</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -811,7 +803,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452007398.41</float>
+                        <float>1452007617.7</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
