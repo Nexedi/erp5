@@ -62,27 +62,30 @@
 """\n
 from DateTime import DateTime\n
 from zExceptions import NotFound\n
+from Products.ZSQLCatalog.SQLCatalog import ComplexQuery\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
+   \n
 \n
 now = DateTime()\n
 request = context.REQUEST\n
 portal_catalog = context.portal_catalog\n
 \n
-# keep backwards compatability\n
-reference = request.get(\'reference\', \\\n
-              request.get(\'input_stream_ref\'))\n
+reference = request.get(\'reference\')\n
 data_chunk = request.get(\'data_chunk\')\n
-\n
-# XXX: add start_data and stop_date so all searches are time aware\n
-default_kw = dict(validation_state = \'validated\')\n
 \n
 if data_chunk is not None and reference is not None:\n
   # here we rely that fluentd will pass to us its tag which we use\n
   # as reference but we can extract it sometimes from sensor data\n
   # it thus depends on sensor and the fluentd topography\n
-  data_supply = portal_catalog.getResultValue( \\\n
-    portal_type = \'Data Supply\', \\\n
-    reference = reference, \\\n
-    **default_kw)\n
+  query=ComplexQuery(Query(portal_type = \'Data Supply\'),\n
+                     Query(reference = reference),\n
+                     Query(validation_state = \'validated\'),\n
+                     # XXX: enable when final decision made if Data Supply is a\n
+                     # Delivery or Supply\n
+                     #Query( **{\'delivery.stop_date\':now,  \'range\': \'max\'}),\n
+                     #Query( **{\'delivery.start_date\':now,  \'range\': \'min\'}),\n
+                     operator="AND")\n
+  data_supply = portal_catalog.getResultValue(query=query)\n
 \n
   #context.log(data_supply)\n
   # we can have multiple lines for each sensor and we filter out by reference\n
