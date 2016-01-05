@@ -52,6 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+import re\n
 REQUEST = context.REQUEST\n
 RESPONSE = REQUEST.RESPONSE\n
 from ZTUtils import make_query\n
@@ -73,10 +74,13 @@ else:\n
   # XXX Hardcoded behaviour for JS app.\n
   # Expect came_from to be an URL template\n
   person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+  url_parameter = "n.me"\n
+  pattern = \'{[&|?]%s}\' % url_parameter\n
   if (person is None):\n
-    came_from = came_from.replace(\'{&n.me}\', \'\')\n
+    came_from = re.sub(pattern, \'\', came_from)\n
   else:\n
-    came_from = came_from.replace(\'{&n.me}\', \'&%s\' % make_query({\'n.me\': person.getRelativeUrl()}))\n
+    prefix = "&" if "&%s" % url_parameter in came_from else "?"\n
+    came_from = re.sub(pattern, \'%s%s\' % (prefix, make_query({url_parameter: person.getRelativeUrl()})), came_from)\n
   # RESPONSE.redirect(came_from or context.getPermanentURL(context));\n
   RESPONSE.setHeader(\'Location\', came_from or context.getPermanentURL(context))\n
   RESPONSE.setStatus(303)\n
