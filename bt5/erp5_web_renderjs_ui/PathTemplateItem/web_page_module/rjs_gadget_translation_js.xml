@@ -130,7 +130,7 @@
     // translate a list of elements passed and returned as string\n
     .declareMethod(\'translateHtml\', function (my_string) {\n
       var temp, element_list, i, i_len, element, lookup, translate_list, target,\n
-        route_text, has_breaks, l, l_len, gadget;\n
+        route_text, has_breaks, l, l_len, gadget, j, j_len;\n
 \n
       gadget = this;\n
 \n
@@ -200,12 +200,15 @@
               element.innerHTML = translate(target[1]);\n
               break;\n
             default:\n
-              // NOTE: be careful of emptying elements with children!\n
-              while (element.hasChildNodes()) {\n
-                element.removeChild(element.lastChild);\n
+              if (element.hasChildNodes()) {\n
+                for (j = 0, j_len = element.childNodes.length; j < j_len; j += 1) {\n
+                  if (element.childNodes[j].nodeType === 3) {\n
+                    element.childNodes[j].textContent = translate(translate_list[l]);\n
+                  }\n
+                }\n
+              } else {\n
+                element.textContent = translate(translate_list[l]);\n
               }\n
-              element.appendChild(document.createTextNode(translate(translate_list[l])));\n
-              element.appendChild(document.createElement("span"));\n
               break;\n
             }\n
           }\n
@@ -341,7 +344,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -355,7 +358,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.45862.6528.13858</string> </value>
+                <value> <string>948.17388.42239.34542</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -373,8 +376,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445935096.31</float>
-                        <string>GMT</string>
+                        <float>1452009218.06</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
