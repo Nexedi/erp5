@@ -56,7 +56,7 @@
   Example of ingesting data in ERP5 coming from fluentd.\n
   Fluentd sends to us a JSON dictionary using msgpack protocol.\n
   In this implementation we find respective Data Stream and simply\n
-  append data there. We save raw JSON dictionary.\n
+  append data there. We save raw JSON dictionary as string.\n
   Ingestion Policy -> Data Supply -> Data Supply Line -> Sensor\n
                                                       -> Data Stream\n
 """\n
@@ -101,19 +101,11 @@ if data_chunk is not None and reference is not None:\n
     if data_stream is not None:\n
       pretty_data_chunk_list = []\n
       data_chunk_list = context.unpack(data_chunk)\n
-      \n
-      # in some case we can format data based on content type\n
-      content_type = data_stream.getContentType()\n
-      if content_type in (\'application/csv\',):\n
-        for data_chunk in data_chunk_list:\n
-          pretty_data = \',\'.join([\'"%s"\' %x for x in data_chunk[1].values()])\n
-          pretty_data_chunk_list.append(pretty_data)\n
-        data = \'\\n\'.join(pretty_data_chunk_list)\n
-      else:\n
-        for data_chunk in data_chunk_list:\n
-          pretty_data = str(data_chunk[1])\n
-          pretty_data_chunk_list.append(pretty_data)\n
-        data = \'\'.join(pretty_data_chunk_list)\n
+\n
+      for data_chunk in data_chunk_list:\n
+        pretty_data = str(data_chunk[1])\n
+        pretty_data_chunk_list.append(pretty_data)\n
+      data = \'\'.join(pretty_data_chunk_list)\n
 \n
       # append data\n
       data_stream.appendData(data)\n
