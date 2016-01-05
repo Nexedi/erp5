@@ -258,6 +258,9 @@
                   label_element.setAttribute(\'for\', renderered_field.key);\n
                   label_element.textContent = renderered_field.title;\n
                   label_element.setAttribute(\'data-i18n\', renderered_field.title);\n
+                  if (renderered_field.hasOwnProperty(\'error_text\')) {\n
+                    error_element.textContent = " (" + renderered_field.error_text + ")";\n
+                  }\n
                   // error_element.setAttribute(\'class\', \'ui-state-error ui-corner-all\');\n
                   label_element.appendChild(error_element);\n
                   if (group[0] !== "bottom") {\n
@@ -529,7 +532,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.36619.54273.47138</string> </value>
+                <value> <string>948.17341.58767.64750</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -547,7 +550,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451917036.79</float>
+                        <float>1452009359.45</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
