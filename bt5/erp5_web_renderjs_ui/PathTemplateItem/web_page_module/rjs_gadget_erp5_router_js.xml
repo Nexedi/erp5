@@ -129,6 +129,7 @@
     COMMAND_DISPLAY_STATE = "display",\n
     COMMAND_LOGIN = "login",\n
     COMMAND_RAW = "raw",\n
+    COMMAND_RELOAD = "reload",\n
     COMMAND_DISPLAY_STORED_STATE = "display_stored_state",\n
     COMMAND_CHANGE_STATE = "change",\n
     COMMAND_STORE_AND_CHANGE_STATE = "store_and_change",\n
@@ -150,6 +151,7 @@
   VALID_URL_COMMAND_DICT[COMMAND_PUSH_HISTORY] = null;\n
   VALID_URL_COMMAND_DICT[COMMAND_LOGIN] = null;\n
   VALID_URL_COMMAND_DICT[COMMAND_RAW] = null;\n
+  VALID_URL_COMMAND_DICT[COMMAND_RELOAD] = null;\n
 \n
 \n
   function endsWith(str, suffix) {\n
@@ -596,6 +598,14 @@
       });\n
   }\n
 \n
+  function execReloadCommand(previous_options) {\n
+    var jio_key = previous_options.jio_key;\n
+    delete previous_options.jio_key;\n
+    return synchronousChangeState(\n
+      getDisplayUrlFor(jio_key, previous_options)\n
+    );\n
+  }\n
+\n
   //////////////////////////////////////////////////////////////////\n
   // Command URL functions\n
   //////////////////////////////////////////////////////////////////\n
@@ -728,6 +738,9 @@
     }\n
     if (command_options.path === COMMAND_LOGIN) {\n
       return execLoginCommand(gadget, previous_options, next_options);\n
+    }\n
+    if (command_options.path === COMMAND_RELOAD) {\n
+      return execReloadCommand(previous_options);\n
     }\n
     throw new Error(\'Unsupported command \' + command_options.path);\n
 \n
@@ -1046,7 +1059,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.43761.4655.1297</string> </value>
+                <value> <string>948.17471.24428.20411</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1064,7 +1077,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1449754197.93</float>
+                        <float>1452009629.86</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
