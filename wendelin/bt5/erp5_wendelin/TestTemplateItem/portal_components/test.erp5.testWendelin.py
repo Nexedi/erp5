@@ -28,6 +28,7 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from wendelin.bigarray.array_zodb import ZBigArray
+from DateTime import DateTime
 from zExceptions import NotFound
 import msgpack
 import numpy as np
@@ -66,6 +67,8 @@ class Test(ERP5TypeTestCase):
       self.portal.portal_ingestion_policies.IngestionPolicyTool_addIngestionPolicy( \
         reference  = reference, \
         batch_mode = 1)
+    # to avoid random test failures due to test execution we make start date one day before
+    data_supply.setStartDate(DateTime() - 1)
     self.tic()
     
     return ingestion_policy, data_supply, data_stream, data_array
@@ -100,8 +103,6 @@ class Test(ERP5TypeTestCase):
     ingestion_policy, _, data_stream, data_array = \
       self.stepSetupIngestion(reference)
 
-    self.tic()
-    
     # simulate fluentd by setting proper values in REQUEST
     request.method = 'POST'
     data_chunk = msgpack.packb([0, real_data], use_bin_type=True)
