@@ -99,6 +99,8 @@ class Test(ERP5TypeTestCase):
 
     ingestion_policy, _, data_stream, data_array = \
       self.stepSetupIngestion(reference)
+
+    self.tic()
     
     # simulate fluentd by setting proper values in REQUEST
     request.method = 'POST'
@@ -106,7 +108,7 @@ class Test(ERP5TypeTestCase):
     request.set('reference', reference)
     request.set('data_chunk', data_chunk)
     ingestion_policy.ingest()
-    
+
     data_stream_data = data_stream.getData()
     self.assertEqual(real_data, data_stream_data)
     
