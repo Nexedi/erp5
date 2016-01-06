@@ -25,6 +25,10 @@ class ERP5BaseBroken(Broken, ERP5Base, PersistentBroken):
   # PersistentBroken can't be reused directly
   # because its « layout differs from 'GhostPortalType' »
 
+  # This prevents serialize (ZODB) from reloading the class during commit
+  # (which would look for __Broken_newargs__ which is not present)
+  __getnewargs__ = None
+
   def __metaclass__(name, base, d):
     d = dict(PersistentBroken.__dict__, **d)
     for x in '__dict__', '__metaclass__', '__weakref__':
