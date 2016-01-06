@@ -83,4 +83,9 @@ class VirtualFolderMixin:
     if document_url is not None:
       return self.getPortalObject().unrestrictedTraverse(document_url)
 
-    return Folder._getOb(self, id, **kw)
+    try:
+      return Folder._getOb(self, id, **kw)
+    except KeyError:
+      if default is _marker:
+        raise
+      return default
