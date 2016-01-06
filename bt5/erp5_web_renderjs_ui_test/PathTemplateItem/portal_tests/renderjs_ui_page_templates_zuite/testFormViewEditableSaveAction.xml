@@ -99,19 +99,6 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertTextPresent</td>\n
-  <td>Title 1</td>\n
-  <td></td>\n
-</tr>\n
-\n
-<!-- force reload the page to ensure breadcrumb title changed, and so, data was correctly stored -->\n
-<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />\n
-<tr>\n
-  <td>open</td>\n
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?editable=true</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
   <td>waitForElementPresent</td>\n
   <td>//div[@data-gadget-scope=\'header\']//a[text()=\'QWERTY\' and contains(@href, \'#!change\') and contains(@href, \'n.page=breadcrumb\')]</td>\n
   <td></td>\n

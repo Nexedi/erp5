@@ -71,13 +71,13 @@
  \n
     <tr>\n
       <td>waitForElementPresent</td>\n
-      <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child "]</td>\n
+      <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>\n
       <td></td>\n
     </tr>\n
 \n
     <tr>\n
       <td>waitForElementNotPresent</td>\n
-      <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child "]</td>\n
+      <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>\n
       <td></td>\n
     </tr>\n
     \n
