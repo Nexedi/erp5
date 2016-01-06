@@ -80,10 +80,8 @@ if data_chunk is not None and reference is not None:\n
   query=ComplexQuery(Query(portal_type = \'Data Supply\'),\n
                      Query(reference = reference),\n
                      Query(validation_state = \'validated\'),\n
-                     # XXX: enable when final decision made if Data Supply is a\n
-                     # Delivery or Supply\n
-                     #Query( **{\'delivery.stop_date\':now,  \'range\': \'max\'}),\n
-                     #Query( **{\'delivery.start_date\':now,  \'range\': \'min\'}),\n
+                     Query( **{\'delivery.stop_date\':now,  \'range\': \'min\'}),\n
+                     Query( **{\'delivery.start_date\':now,  \'range\': \'max\'}),\n
                      operator="AND")\n
   data_supply = portal_catalog.getResultValue(query=query)\n
 \n
@@ -127,7 +125,7 @@ if data_chunk is not None and reference is not None:\n
   else:\n
     raise NotFound(\'No data supply configuration found.\')\n
 else:\n
-  raise NotFound(\'No data or any configuration not found.\')\n
+  raise NotFound(\'No data or any configuration found.\')\n
 
 
 ]]></string> </value>
