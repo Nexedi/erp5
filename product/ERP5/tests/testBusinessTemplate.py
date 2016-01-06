@@ -6338,7 +6338,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     # check both File instances no longer behave like being overriden
     self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
 
-  def test_168_CheckPortalTypeAndPathInSameBusinessTemplate(self):
+  def test_168_CheckPortalTypeAndPathInSameBusinessTemplate(self, change_broken_object=False):
     """
     Make sure we can define a portal type and instance of that portal type
     in same bt. It already happened that this failed with error :
@@ -6353,6 +6353,9 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                      'BusinessTemplate_test_168_CheckPortalTypeAndPathInSameBusinessTemplate')
     bt = template_tool.download(bt_path)
     foo_in_bt = bt._path_item._objects["foo"]
+    if change_broken_object:
+      foo_in_bt.__Broken_state__["title"] = "FooBar"
+      foo_in_bt._p_changed = 1
     # Force evaluation of a method to force unghosting of the class
     getattr(foo_in_bt, "getTitle", None)
     self.assertTrue(isinstance(foo_in_bt, ERP5BaseBroken))
@@ -6362,7 +6365,18 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     foo_in_portal = self.portal.foo
     self.assertFalse(isinstance(foo_in_portal, ERP5BaseBroken))
     self.assertEqual("Foo", foo_in_portal.getPortalType())
+    if change_broken_object:
+      self.assertEqual("FooBar", getattr(foo_in_portal, "title"))
     self.uninstallBusinessTemplate('test_168_CheckPortalTypeAndPathInSameBusinessTemplate')
+
+  def test_169_CheckPortalTypeAndPathInSameBusinessTemplateAndBrokenObjectModification(self):
+    """
+    Make sure we have possibility to change broken
+    objects, such possibility is needed when document are exported
+    as separated file (one for metadata, one for the content, often
+    use for anything containing text or code)
+    """
+    self.test_168_CheckPortalTypeAndPathInSameBusinessTemplate(change_broken_object=True)
 
   def test_type_provider(self):
     self.portal.newContent(id='dummy_type_provider', portal_type="Types Tool")
