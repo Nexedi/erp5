@@ -62,6 +62,7 @@ from Products.ERP5Type.Utils import readLocalTest, \
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -656,6 +657,21 @@ class BaseTemplateItem(Implicit, Persistent):
     else:
       return context
 
+  def _resetDynamicModules(self):
+    # before any import, flush all ZODB caches to force a DB reload
+    # otherwise we could have objects trying to get commited while
+    # holding reference to a class that is no longer the same one as
+    # the class in its import location and pickle doesn't tolerate it.
+    # First we do a savepoint to dump dirty objects to temporary
+    # storage, so that all references to them can be freed.
+    transaction.savepoint(optimistic=True)
+    # Then we need to flush from all caches, not only the one from this
+    # connection
+    portal = self.getPortalObject()
+    portal._p_jar.db().cacheMinimize()
+    synchronizeDynamicModules(portal, force=True)
+    gc.collect()
+
 class ObjectTemplateItem(BaseTemplateItem):
   """
     This class is used for generic objects and as a subclass.
@@ -1001,6 +1017,10 @@ class ObjectTemplateItem(BaseTemplateItem):
       root_document_path = '/%s/%s' % (portal.getId(), root_path)
       recursiveUnindex(catalog, item_path, root_document_path)
 
+  def fixBrokenObject(self, obj):
+    if isinstance(obj, ERP5BaseBroken):
+      self._resetDynamicModules()
+
   def install(self, context, trashbin, **kw):
     self.beforeInstall()
     update_dict = kw.get('object_to_update')
@@ -1109,6 +1129,7 @@ class ObjectTemplateItem(BaseTemplateItem):
 
         # install object
         obj = self._objects[path]
+        self.fixBrokenObject(obj)
         # XXX Following code make Python Scripts compile twice, because
         #     _getCopy returns a copy without the result of the compilation.
         #     A solution could be to add a specific _getCopy method to
@@ -2165,7 +2186,6 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
               self._workflow_chain_archive[portal_type]
     context.portal_workflow.manage_changeWorkflows(default_chain,
                                                    props=chain_dict)
-
   # XXX : this method is kept temporarily, but can be removed once all bt5 are
   # re-exported with separated workflow-chain information
   def _importFile(self, file_name, file):
@@ -3523,21 +3543,6 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
         modified_object_list.update(
               {self._getKey(path) : ['Removed', self.__class__.__name__[:-12]]})
     return modified_object_list
-
-  def _resetDynamicModules(self):
-    # before any import, flush all ZODB caches to force a DB reload
-    # otherwise we could have objects trying to get commited while
-    # holding reference to a class that is no longer the same one as
-    # the class in its import location and pickle doesn't tolerate it.
-    # First we do a savepoint to dump dirty objects to temporary
-    # storage, so that all references to them can be freed.
-    transaction.savepoint(optimistic=True)
-    # Then we need to flush from all caches, not only the one from this
-    # connection
-    portal = self.getPortalObject()
-    portal._p_jar.db().cacheMinimize()
-    synchronizeDynamicModules(portal, force=True)
-    gc.collect()
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')

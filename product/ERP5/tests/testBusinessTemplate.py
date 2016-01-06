@@ -39,6 +39,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList, Sequence
 from urllib import pathname2url
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
+from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.Workflow import addWorkflowByType
 import shutil
@@ -6336,6 +6337,32 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     self.uninstallBusinessTemplate('test_167_InstanceAndRelatedClassDefinedInSameBT')
     # check both File instances no longer behave like being overriden
     self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
+
+  def test_168_CheckPortalTypeAndPathInSameBusinessTemplate(self):
+    """
+    Make sure we can define a portal type and instance of that portal type
+    in same bt. It already happened that this failed with error :
+    BrokenModified: Can't change broken objects
+
+    It might sound similar to test_167, but we had cases not working even
+    though test_167 was running fine (due to additional steps that were
+    doing more reset of components)
+    """
+    template_tool = self.portal.portal_templates
+    bt_path = os.path.join(os.path.dirname(__file__), 'test_data',
+                     'BusinessTemplate_test_168_CheckPortalTypeAndPathInSameBusinessTemplate')
+    bt = template_tool.download(bt_path)
+    foo_in_bt = bt._path_item._objects["foo"]
+    # Force evaluation of a method to force unghosting of the class
+    getattr(foo_in_bt, "getTitle", None)
+    self.assertTrue(isinstance(foo_in_bt, ERP5BaseBroken))
+    self.commit()
+    bt.install(force=1)
+    self.commit()
+    foo_in_portal = self.portal.foo
+    self.assertFalse(isinstance(foo_in_portal, ERP5BaseBroken))
+    self.assertEqual("Foo", foo_in_portal.getPortalType())
+    self.uninstallBusinessTemplate('test_168_CheckPortalTypeAndPathInSameBusinessTemplate')
 
   def test_type_provider(self):
     self.portal.newContent(id='dummy_type_provider', portal_type="Types Tool")
