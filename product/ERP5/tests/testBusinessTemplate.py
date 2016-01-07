@@ -6348,6 +6348,12 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     though test_167 was running fine (due to additional steps that were
     doing more reset of components)
     """
+    # Make sure we have no portal type Foo generated from a previous test
+    try:
+      import erp5
+      del erp5.portal_type.Foo
+    except AttributeError:
+      pass
     template_tool = self.portal.portal_templates
     bt_path = os.path.join(os.path.dirname(__file__), 'test_data',
                      'BusinessTemplate_test_168_CheckPortalTypeAndPathInSameBusinessTemplate')
