@@ -60,13 +60,15 @@ portal = context.getPortalObject()\n
 def getPreferredForumSignature(username):\n
   result = {\'preferred_forum_signature\': None,\n
             \'preferred_forum_quote_original_message\': False}\n
-  preference = portal.portal_catalog.getResultValue(\n
+  preference_list = portal.portal_catalog(\n
                                        portal_type=\'Preference\',\n
                                        owner = username,\n
-                                       preference_state=\'enabled\')\n
-  if preference is not None:\n
-    result[\'preferred_forum_signature\'] = preference.getPreferredForumSignature()\n
-    result[\'preferred_forum_quote_original_message\'] = preference.getPreferredForumQuoteOriginalMessage()\n
+                                         )\n
+  for preference in preference_list: \n
+    if preference.getPreferenceState() == "enabled":\n
+      result[\'preferred_forum_signature\'] = preference.getPreferredForumSignature()\n
+      result[\'preferred_forum_quote_original_message\'] = preference.getPreferredForumQuoteOriginalMessage()\n
+      break  # user should not have more than 1 enabled preference\n
 \n
   return result\n
 \n
