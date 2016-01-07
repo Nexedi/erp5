@@ -202,7 +202,14 @@
     .declareMethod(\'notifyChange\', function () {\n
       if (!this.stats.modified) {\n
         this.stats.modified = true;\n
-        return this.render(this.stats.options);\n
+        // Directly modify the previous calculated header\n
+        // in order not to remove the submit input\n
+        // and still receive \'submit\' event\n
+        var class_list = this.props.right_link.querySelector(\'button\').classList;\n
+        if (class_list.contains(\'ui-icon-check\')) {\n
+          class_list.remove(\'ui-icon-check\');\n
+          class_list.add(\'ui-icon-warning\');\n
+        }\n
       }\n
     })\n
     .declareMethod(\'notifySubmitting\', function () {\n
@@ -580,7 +587,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.17414.26904.28091</string> </value>
+                <value> <string>948.20235.19332.48128</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -598,7 +605,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452006752.82</float>
+                        <float>1452175785.28</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
