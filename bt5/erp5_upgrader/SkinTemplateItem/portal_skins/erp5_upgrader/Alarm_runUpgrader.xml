@@ -70,8 +70,7 @@ alarm = getattr(portal_alarms, \'upgrader_check_pre_upgrade\')\n
 if not(force) and alarm.sense() in (None, True):\n
   active_process.postActiveResult(summary=context.getTitle(),\n
       severity=1,\n
-      detail="Is required solve Pre Upgrade first. " +\\\n
-        "You need run active sense once at least on this alarm")\n
+      detail=["Is required solve Pre Upgrade first. You need run active sense once at least on this alarm"])\n
   return\n
 \n
 _, type_per_constraint_type = context.Base_getConstraintTypeListPerPortalType()\n
