@@ -1,13 +1,16 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: ERP5 Localized Content\n"
-"POT-Creation-Date: 2009-03-03 17:03+CET\n"
-"PO-Revision-Date: 2009-03-03 17:03+CET\n"
+"Project-Id-Version: ERP5 Contents\n"
+"POT-Creation-Date: 2016-01-08 10:01+UTC\n"
+"PO-Revision-Date: 2016-01-08 10:01+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "Account module"
+msgstr "Module des comptes"
 
 msgid "Accounting"
 msgstr "Comptabilité"
@@ -23,6 +26,12 @@ msgstr "Comptable"
 
 msgid "Accounting Manager"
 msgstr "Chef comptable"
+
+msgid "Accounting module"
+msgstr "Module de comptabilité"
+
+msgid "Accounting module features"
+msgstr "Fonctionnalités du module de gestion de la comptabilité"
 
 msgid "Accounts Payable"
 msgstr "Dettes à court terme"
@@ -225,6 +234,12 @@ msgstr "Métallurgie"
 msgid "Basotho"
 msgstr "Basotho"
 
+msgid "Become ERP5 Tiolive Consultant"
+msgstr "Devenez Consultant ERP5 Tiolive"
+
+msgid "Become Tiolive Certified Consultant"
+msgstr "Devenez un consultant Certifié de Tiolive"
+
 msgid "Belarus"
 msgstr "Bélarus"
 
@@ -324,6 +339,9 @@ msgstr "Burundi"
 msgid "Burundian"
 msgstr "Burundais"
 
+msgid "Business Phone with TioLive"
+msgstr "Téléphone professionel avec Tiolive"
+
 msgid "By Air"
 msgstr "Aérien"
 
@@ -347,6 +365,9 @@ msgstr "Cameroun"
 
 msgid "Cameroonian"
 msgstr "Camerounais"
+
+msgid "Campaign module features"
+msgstr "fonctionnalités du module de gestion des campagnes"
 
 msgid "Campaigns"
 msgstr "Campagnes"
@@ -489,6 +510,9 @@ msgstr "Programmation, conseil et autres activités informatiques"
 msgid "Conference"
 msgstr "Conference"
 
+msgid "Configure Thunderbird for Tiolive"
+msgstr "Configurer Thunderbird pour Tiolive"
+
 msgid "Congo"
 msgstr "Congo"
 
@@ -501,11 +525,23 @@ msgstr "Construction"
 msgid "Consumers' cooperative"
 msgstr "Coopérative"
 
+msgid "Contact Us"
+msgstr "Nous contacter"
+
+msgid "Contact modules"
+msgstr "Module des contacts"
+
 msgid "Contact us"
 msgstr "Nous contacter"
 
+msgid "Contacting TioLive"
+msgstr "Contacter Tiolive"
+
 msgid "Cook Islands"
 msgstr "Îles Cook"
+
+msgid "Corporate"
+msgstr "Entreprise"
 
 msgid "Cost and Freight"
 msgstr "Cost and Freight (CFR)"
@@ -542,6 +578,9 @@ msgstr "Cubain"
 
 msgid "Cubic Meter"
 msgstr "Mètre cube"
+
+msgid "Currency module features"
+msgstr "Fonctionnalités du module de gestion des devises"
 
 msgid "Current Assets"
 msgstr "Actif circulant"
@@ -615,6 +654,9 @@ msgstr "Depreciation des autres créances"
 msgid "Deprecation of Trade Receivables"
 msgstr "Depreciation des créances clients"
 
+msgid "Deprecation of Trade and Other Receivables"
+msgstr "Depreciation des créances clients et autres créances"
+
 msgid "Deprecation of inventories"
 msgstr "Depreciation du stock"
 
@@ -645,6 +687,9 @@ msgstr "Djiboutien"
 msgid "Doctor"
 msgstr "Docteur"
 
+msgid "Document module features"
+msgstr "Fonctionnalités du module de gestion des documents"
+
 msgid "Documentation"
 msgstr "Documentation"
 
@@ -663,8 +708,23 @@ msgstr "République Dominicaine"
 msgid "Drugs and Pharmaceutical Products"
 msgstr "Médicaments et produits pharmaceutiques"
 
+msgid "ERP5 Express Subscription Request Accepted"
+msgstr "Formulaire de demande d'abonnement au service ERP5 Express"
+
 msgid "ERP5 Worklists"
 msgstr "Listes de travail ERP5"
+
+msgid "EXPRESS CONFIGURATION"
+msgstr "CONFIGURATION EXPRESS"
+
+msgid "EXPRESS DEVELOPMENT"
+msgstr "DEVELOPPEMENT EXPRESS"
+
+msgid "EXPRESS HOSTING"
+msgstr "HEBERGEMENT EXPRESS"
+
+msgid "EXPRESS SUPPORT"
+msgstr "ASSISTANCE EXPRESS"
 
 msgid "East Timorese"
 msgstr "Est-Timorais"
@@ -729,6 +789,9 @@ msgstr "Part Employeur"
 msgid "Engineering and Research and Technology Based Services"
 msgstr "Services d'ingénierie et de recherche et services technologiques"
 
+msgid "Enterprise Resource Planning with TioLive"
+msgstr "Plannification des ressources de l'entreprise avec Tiolive"
+
 msgid "Environmental Services"
 msgstr "Services de l'environnement"
 
@@ -765,6 +828,9 @@ msgstr "Éthiopien"
 msgid "Europe"
 msgstr "Europe"
 
+msgid "Event module features"
+msgstr "Fonctionnalités du module de gestion des événements"
+
 msgid "Ex Works"
 msgstr "Ex Works (EXW)"
 
@@ -773,6 +839,18 @@ msgstr "Cadre"
 
 msgid "Expense"
 msgstr "Charges"
+
+msgid "Express Configuration"
+msgstr "Configuration Express"
+
+msgid "Express Hosting"
+msgstr "Hébergement Express"
+
+msgid "Express Support"
+msgstr "Assistance Express"
+
+msgid "Extra"
+msgstr "Extra"
 
 msgid "Extraterritorial organizations & bodies"
 msgstr "Activités extra-territoriales"
@@ -800,6 +878,9 @@ msgstr "Services professionnels pour l'agriculture, la pêche, la sylviculture e
 
 msgid "Farming and Fishing and Forestry and Wildlife Machinery and Accessories"
 msgstr "Machines et accessoires pour l'agriculture, la pêche, et l'exploitation forestière"
+
+msgid "Features"
+msgstr "Fonctionnalités"
 
 msgid "Federated States of Micronesia"
 msgstr "États Fédérés de Micronésie"
@@ -1026,6 +1107,9 @@ msgstr "Santé humaine et action sociale"
 msgid "Healthcare Services"
 msgstr "Services Médicaux"
 
+msgid "Highlight"
+msgstr "Focus"
+
 msgid "Holy See"
 msgstr "Saint-Siège"
 
@@ -1049,6 +1133,12 @@ msgstr "Hébergement et restauration"
 
 msgid "Hour"
 msgstr "Heure"
+
+msgid "How to configure Thomson VOIP Phone to use the Tiolive VOIP account"
+msgstr "Comment configurer les téléphone Thomson pour utiliser la VOIP de Tiolive"
+
+msgid "How to create a User in Tiolive"
+msgstr "Comment créer un utilisateur dans Tiolive"
 
 msgid "Human Resources"
 msgstr "Ressources humaines"
@@ -1137,6 +1227,9 @@ msgstr "Interne"
 msgid "Inventories"
 msgstr "Stock"
 
+msgid "Inventory module features"
+msgstr "Fonctionnalités du module de gestion de l'inventaire"
+
 msgid "Invoice"
 msgstr "Facture"
 
@@ -1221,6 +1314,9 @@ msgstr "Kiribatien"
 msgid "Kittsian; Nevisian"
 msgstr "Kitticien-Névicien"
 
+msgid "Knowledge Base"
+msgstr "Base de connaissances"
+
 msgid "Kuwait"
 msgstr "Koweït"
 
@@ -1241,6 +1337,9 @@ msgstr "Transports terrestres et transport par conduites"
 
 msgid "Land transport"
 msgstr "Transports terrestres et transport par conduites"
+
+msgid "Language"
+msgstr "Langue"
 
 msgid "Lao"
 msgstr "Laotien"
@@ -1542,6 +1641,9 @@ msgstr "Monténégrin"
 msgid "Montenegro"
 msgstr "Monténégro"
 
+msgid "Month"
+msgstr "Mois"
+
 msgid "Montserrat"
 msgstr "Montserrat"
 
@@ -1722,6 +1824,9 @@ msgstr "Operation"
 msgid "Order"
 msgstr "Commande"
 
+msgid "Organisation module features"
+msgstr "Fonctionnalités du module de gestion des Organisations"
+
 msgid "Organizations and Clubs"
 msgstr "Organizations and Clubs"
 
@@ -1809,6 +1914,9 @@ msgstr "Paraguayen"
 msgid "Partner"
 msgstr "Partenaire"
 
+msgid "Partners"
+msgstr "Partenaires"
+
 msgid "Partnership Meeting"
 msgstr "Réunion de partenariat"
 
@@ -1817,6 +1925,9 @@ msgstr "PayPal"
 
 msgid "Payable"
 msgstr "Dettes"
+
+msgid "Person module features"
+msgstr "Fonctionnalités du module de gestion des personnes"
 
 msgid "Personal"
 msgstr "Personel"
@@ -1884,6 +1995,9 @@ msgstr "Machines et accessoires pour la production et la distribution d'énergie
 msgid "Press Book"
 msgstr "Dossier de presse"
 
+msgid "Pricing"
+msgstr "Prix"
+
 msgid "Printing and Photographic and Audio and Visual Equipment and Supplies"
 msgstr "Équipements et fournitures pour l'impression, la photographie et l'audiovisuel"
 
@@ -1892,6 +2006,9 @@ msgstr "Privé"
 
 msgid "Product"
 msgstr "Produit"
+
+msgid "Product module features"
+msgstr "Fonctionnalités du module de gestion des produits"
 
 msgid "Production"
 msgstr "Production"
@@ -1956,6 +2073,15 @@ msgstr "Employé des achats"
 msgid "Purchase Manager"
 msgstr "Directeur des achats"
 
+msgid "Purchase Order module features"
+msgstr "Fonctionnalités du module de gestion des commandes d'achat"
+
+msgid "Purchase Packing List module features"
+msgstr "Fonctionnalités du module de gestion des bon de livraison d'achats"
+
+msgid "Purchase Trade Conditions module features"
+msgstr "Fonctionnalités du module de gestion des conditions d'achat"
+
 msgid "Purchases"
 msgstr "Achats"
 
@@ -1973,6 +2099,9 @@ msgstr "Qatarien"
 
 msgid "Quality Assurance"
 msgstr "Contrôle de la qualité"
+
+msgid "Query module features"
+msgstr "Fonctionnalités du module de gestion des demandes"
 
 msgid "R&D"
 msgstr "R&D"
@@ -2114,6 +2243,12 @@ msgstr "Tranches"
 
 msgid "Sale & maintenance of motor vehicles"
 msgstr "Commerce et réparation d'automobiles et de motocycles"
+
+msgid "Sale Opportunites module features"
+msgstr "Fonctionnalités du module de gestion des opportunités de vente"
+
+msgid "Sale Orders module features"
+msgstr "fonctionnalités du module de gestion des commandes de vente"
 
 msgid "Sales"
 msgstr "Ventes"
@@ -2313,6 +2448,9 @@ msgstr "Saint-Pierrais, Miquelonnais"
 msgid "Staff"
 msgstr "Employés"
 
+msgid "Standard"
+msgstr "Standart"
+
 msgid "Structures and Building and Construction and Manufacturing Components"
 msgstr "Constituants et provisions de Structures et bâtiments"
 
@@ -2330,6 +2468,9 @@ msgstr "Soudan"
 
 msgid "Sudanese"
 msgstr "Soudanais"
+
+msgid "Summary"
+msgstr "Résumé"
 
 msgid "Supplier"
 msgstr "Fournisseur"
@@ -2369,6 +2510,9 @@ msgstr "République Syrienne Arabe"
 
 msgid "System Administrator"
 msgstr "Administrateur système"
+
+msgid "TRAINING"
+msgstr "FORMATION"
 
 msgid "Tajik"
 msgstr "Tadjiks"
@@ -2418,6 +2562,15 @@ msgstr "Produits d'horlogerie, de bijouterie et gemmes"
 msgid "Timor-Leste"
 msgstr "Timor-Leste"
 
+msgid "TioLive Corporate Information"
+msgstr "Information à propos de l'équipe de Tiolive"
+
+msgid "TioLive Features Summary"
+msgstr "Aperçu des fonctionnalités de Tiolive"
+
+msgid "TioLive Partnership Program"
+msgstr "Programme de partenariat Tiolive"
+
 msgid "Tobacco products"
 msgstr "Fabrication de produits à base de tabac"
 
@@ -2451,8 +2604,14 @@ msgstr "Total gains"
 msgid "Trade Receivables"
 msgstr "Créances clients"
 
+msgid "Trade and Other Receivables"
+msgstr "Créances clients et autres créances"
+
 msgid "Trainee"
 msgstr "Stagiaire"
+
+msgid "Training"
+msgstr "Formation"
 
 msgid "Transport, storage & communications"
 msgstr "Transports et entreposage"
@@ -2621,6 +2780,9 @@ msgstr "Commerce et réparation d'automobiles et de motocycles"
 
 msgid "Wholesale trade except of motor vehicles"
 msgstr "Commerce de gros, à l'exception des automobiles et des motocycles"
+
+msgid "Why TioLive?"
+msgstr "Pourquoi TioLive?"
 
 msgid "Widowed"
 msgstr "Veuf/veuve"
