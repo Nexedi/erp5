@@ -361,7 +361,7 @@ class TestUpgrader(ERP5TypeTestCase):
     alarm = self.portal.portal_alarms.upgrader_check_upgrader
     active_process = alarm.getLastActiveProcess()
     detail_list = active_process.getResultList()[0].detail
-    self.assertTrue("Is required run upgrade before solve it. You need run active sense once at least on this alarm" in detail_list)
+    self.assertTrue("Is required solve Pre Upgrade first. You need run active sense once at least on this alarm" in detail_list)
 
   def stepCheckPersonNotInConstraintTypeListPerPortalType(self, sequence=None):
     constraint_type_per_type, _ = \
