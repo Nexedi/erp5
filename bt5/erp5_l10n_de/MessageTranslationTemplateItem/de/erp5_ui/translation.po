@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2014-09-16 17:09+UTC\n"
-"PO-Revision-Date: 2014-09-16 17:09+UTC\n"
+"Project-Id-Version: ERP5 User Interface\n"
+"POT-Creation-Date: 2016-01-08 14:01+UTC\n"
+"PO-Revision-Date: 2016-01-08 14:01+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: de <>\n"
 "MIME-Version: 1.0\n"
@@ -15,26 +15,11 @@ msgstr "${count} Dokumente erfolgreich erstellt."
 msgid "${date} at ${hour_minute_text}"
 msgstr "${date} um ${hour_minute_text}"
 
-msgid "${day_name} ${date}"
-msgstr "${day_name} ${date}"
-
 msgid "${days} Days"
 msgstr "${days} Tage"
 
 msgid "${days} Days End of Month"
 msgstr "${days} Am Ende des Monats"
-
-msgid "${delivery_portal_type} ${delivery_title}"
-msgstr "${delivery_portal_type} ${delivery_title}"
-
-msgid "${delivery_portal_type} ${delivery_title} (${causality_portal_type} ${causality_title})"
-msgstr "${delivery_portal_type} ${delivery_title} (${causality_portal_type} ${causality_title})"
-
-msgid "${key} ${usage}"
-msgstr "${key} ${usage}"
-
-msgid "${month_name} ${year}"
-msgstr "${month_name} ${year}"
 
 msgid "${number} records"
 msgstr "${number} Einträge"
@@ -47,9 +32,6 @@ msgstr "${portal_type} erfolgreich aktualisiert."
 
 msgid "${quantity} Weeks"
 msgstr "${quantity} Wochen"
-
-msgid "${template_title} (Template)"
-msgstr "${template_title} (Template)"
 
 msgid "${this_portal_type} related to ${that_portal_type} : ${that_title}."
 msgstr "${this_portal_type} verknüpft mit ${that_portal_type} : ${that_title}."
@@ -84,20 +66,8 @@ msgstr "${title} von ${value}"
 msgid "${year} years old"
 msgstr "${year} Jahre alt"
 
-msgid "&nbsp;"
-msgstr "&nbsp;"
-
 msgid "(${quantity}${quantity_unit} total)"
 msgstr "(${quantity}${quantity_unit} gesamt)"
-
-msgid "(0)"
-msgstr "(0)"
-
-msgid "+"
-msgstr "+"
-
-msgid "-"
-msgstr "-"
 
 msgid "- ${number} items selected"
 msgstr "- ${number} Elemente selektiert"
@@ -131,12 +101,6 @@ msgstr "-- Nutzer --"
 
 msgid "-- Workflows --"
 msgstr "-- Arbeitsabläufe --"
-
-msgid "."
-msgstr "."
-
-msgid "/"
-msgstr "/"
 
 msgid "10 Newest Items"
 msgstr "10 Neueste Einträge"
@@ -180,9 +144,6 @@ msgstr "<h2>Warnung</h2>Eine E-Mail mit angehängtem Brief wird zu ${mto} gesand
 msgid "<h2>Warning</h2>An sms will be sent to ${mto}"
 msgstr "<h2>Warnung</h2>Eine SMS wird zu ${mto} gesandt"
 
-msgid "<span class=\"document-title\">[]</span> - <span class=\"modification-date\">[]</span>"
-msgstr "<span class=\"document-title\">[]</span> - <span class=\"modification-date\">[]</span>"
-
 msgid "<span> Add ${document_template} </span>"
 msgstr "<span> ${document_template} Hinzufügen </span>"
 
@@ -194,9 +155,6 @@ msgstr "<span>Ankleben</span>"
 
 msgid "<span>Unstick it</span>"
 msgstr "<span>Loslösen</span>"
-
-msgid "<span>[]</span>"
-msgstr "<span>[]</span>"
 
 msgid "A Campaign is a marketing mini-project which keeps track of all events associated to a given marketing action. Use it for example to manage press relation campaigns, assessment campaigns, product presentation campaigns which involve contacting many customers through email, phone, etc."
 msgstr "Eine Kampagne ist ein Marketing Miniprojekt unter der alle zu dieser Kampagne gehörigen Maßnahmen und Aktionen zusammengefasst werden."
@@ -737,9 +695,6 @@ msgstr "Buchungs-Zeile"
 msgid "Balance Transaction Lines"
 msgstr "Buchungs-Zeilen"
 
-msgid "Bank"
-msgstr "Bank"
-
 msgid "Bank Account"
 msgstr "Bankkonto"
 
@@ -766,9 +721,6 @@ msgstr "Art des Bankkontos"
 
 msgid "Bank Accounts"
 msgstr "Bankkonten"
-
-msgid "Bank Code"
-msgstr "Bank Code"
 
 msgid "Bank Country Code"
 msgstr "Bank Ländercode"
@@ -824,9 +776,6 @@ msgstr "Zweigstellennummer"
 msgid "Budget Section"
 msgstr "Budgetposten"
 
-msgid "Bug"
-msgstr "Bug"
-
 msgid "Bug Line"
 msgstr "Bug Zeile"
 
@@ -847,9 +796,6 @@ msgstr "Knopf"
 
 msgid "Buyer"
 msgstr "Einkäufer"
-
-msgid "CRM"
-msgstr "CRM"
 
 msgid "CRM Selections"
 msgstr "CRM Kriterien"
@@ -929,9 +875,6 @@ msgstr "Abgebrochen"
 msgid "Cancelled."
 msgstr "Abgebrochen."
 
-msgid "Captcha"
-msgstr "Captcha"
-
 msgid "Cardholder Name"
 msgstr "Name des Kartenbesitzers"
 
@@ -988,9 +931,6 @@ msgstr "Zustand Ändern"
 
 msgid "Chat Address"
 msgstr "Chat Adresse"
-
-msgid "Checkbox"
-msgstr "Checkbox"
 
 msgid "Choose Import Report"
 msgstr "Import Bericht Auswählen"
@@ -1232,9 +1172,6 @@ msgstr "Handelsregisternummer"
 msgid "Country"
 msgstr "Ländervorwahl"
 
-msgid "Crawl"
-msgstr "Crawl"
-
 msgid "Crawl Content"
 msgstr "Inhalte Crawlen"
 
@@ -1414,9 +1351,6 @@ msgstr "Kunden-Referenz"
 
 msgid "Cut"
 msgstr "Ausschneiden"
-
-msgid "DMS"
-msgstr "DMS"
 
 msgid "DMS Preferences"
 msgstr "DMS Einstellungen"
@@ -1673,9 +1607,6 @@ msgstr "Detaillierte Anfangsbilanz"
 msgid "Detailed Mode"
 msgstr "Detaillierter Bericht"
 
-msgid "Details"
-msgstr "Details"
-
 msgid "Detect Converted File"
 msgstr "Konvertierung Erkennen"
 
@@ -1772,23 +1703,11 @@ msgstr "Dokumente, die einen ähnlichen Inhalt haben, wie dieses Dokument."
 msgid "Documents which serve as reference to the current document."
 msgstr "Dokumente, die von diesem Dokument als Referenz genutzt werden."
 
-msgid "Domain"
-msgstr "Domain"
-
-msgid "Domain Generator"
-msgstr "Domain Generator"
-
 msgid "Domain Generator Method"
 msgstr "Domain Generator Methode"
 
-msgid "Domain Tool"
-msgstr "Domain Tool"
-
 msgid "Domains"
 msgstr "Domain"
-
-msgid "Download"
-msgstr "Download"
 
 msgid "Download Converted File"
 msgstr "Konvertierte Datei Runterladen"
@@ -2120,9 +2039,6 @@ msgstr "FK je Einheit"
 msgid "Failed Lines"
 msgstr "Fehlerhafte Zeilen"
 
-msgid "Fax"
-msgstr "Fax"
-
 msgid "Fax Message"
 msgstr "Fax Nachricht"
 
@@ -2216,12 +2132,6 @@ msgstr "Ordner Inhalt"
 msgid "Follow Up or Group must be defined"
 msgstr "Follow Up oder Gruppe muss definiert sein"
 
-msgid "Follow-up"
-msgstr "Follow-up"
-
-msgid "Follow-up Ticket"
-msgstr "Follow-up Ticket"
-
 msgid "Follow-up Ticket Title"
 msgstr "Follow-up Ticket Titel"
 
@@ -2312,9 +2222,6 @@ msgstr "Verwendeter Kontenrahmen"
 msgid "GK per unit"
 msgstr "GK je Einheit"
 
-msgid "Gadget"
-msgstr "Gadget"
-
 msgid "Gadget Title"
 msgstr "Gadget Titel"
 
@@ -2326,9 +2233,6 @@ msgstr "Gadget Typ"
 
 msgid "Gadget View"
 msgstr "Gadget Ansicht"
-
-msgid "Gadgets"
-msgstr "Gadgets"
 
 msgid "Gender"
 msgstr "Geschlecht"
@@ -2483,9 +2387,6 @@ msgstr "Vergleichswert welchen Wert die eigene Währung momentan im vergleich zu
 msgid "I forgot my password!"
 msgstr "Ich habe mein Passwort vergessen!"
 
-msgid "IBAN"
-msgstr "IBAN"
-
 msgid "IBAN Key"
 msgstr "IBAN Nummer"
 
@@ -2497,12 +2398,6 @@ msgstr "ISO Code der Währung oder etwas ähnliches"
 
 msgid "ISO code of the currency or something similar : find some help here http://www.erp5.org/ResourceLibrary"
 msgstr "ISO Code der Wärung oder etwas vergleichbarem: Hilfe ist unter http://www.erp5.org/ResourceLibrary zu finden."
-
-msgid "Icon"
-msgstr "Icon"
-
-msgid "Id Tool"
-msgstr "Id Tool"
 
 msgid "Identification"
 msgstr "Identifikation"
@@ -2611,9 +2506,6 @@ msgstr "Marktbereiche"
 
 msgid "Inheritance"
 msgstr "Vererbung"
-
-msgid "Init Script ID"
-msgstr "Init Script ID"
 
 msgid "Input data has errors. Please look at the error messages below."
 msgstr "Die Eingabe ist fehlerhaft. Bitte beachten Sie die unten stehenden Fehlermeldungen."
@@ -2774,12 +2666,6 @@ msgstr "Wissens Block"
 msgid "Knowledge Pad Module"
 msgstr "Wissens Block Modul"
 
-msgid "Knowledge Pads"
-msgstr "Knowledge Pads"
-
-msgid "Landscape"
-msgstr "Landscape"
-
 msgid "Language"
 msgstr "Sprache"
 
@@ -2813,9 +2699,6 @@ msgstr "Neuestes"
 msgid "Latest Contents"
 msgstr "Neueste Inhalte"
 
-msgid "Layout"
-msgstr "Layout"
-
 msgid "Layout Configuration"
 msgstr "Layout Konfiguration"
 
@@ -2840,17 +2723,11 @@ msgstr "Kleiner Als"
 msgid "Letter"
 msgstr "Brief"
 
-msgid "Level"
-msgstr "Level"
-
 msgid "Liability + Equity"
 msgstr "Passiva"
 
 msgid "Lines Report"
 msgstr "Zeilen Bericht"
-
-msgid "Link"
-msgstr "Link"
 
 msgid "List"
 msgstr "Auflisten"
@@ -2896,9 +2773,6 @@ msgstr "Logischer Pfad"
 
 msgid "Login"
 msgstr "Einloggen"
-
-msgid "Logo"
-msgstr "Logo"
 
 msgid "Lost Sale Opportunity, as it has been rejected by the customer"
 msgstr "GescheiterteVerkaufsgelegenheit, da vom Kunden abgelehnt."
@@ -2962,9 +2836,6 @@ msgstr "Art des Meetings"
 
 msgid "Meeting Types"
 msgstr "Meeting Arten"
-
-msgid "Meetings"
-msgstr "Meetings"
 
 msgid "Message Source"
 msgstr "Nachrichtenquelle"
@@ -3098,9 +2969,6 @@ msgstr "Meine Geplanten Ereignisse"
 msgid "My Task Reports"
 msgstr "Meine Zeiterfassung"
 
-msgid "Name"
-msgstr "Name"
-
 msgid "Name of the client related to the new sale opportunity."
 msgstr "Name des mit der Verkaufsmöglichkeit verknüpften Kunden."
 
@@ -3115,9 +2983,6 @@ msgstr "Nationalität"
 
 msgid "Nature"
 msgstr "Art"
-
-msgid "Navigation"
-msgstr "Navigation"
 
 msgid "Net"
 msgstr "Netto"
@@ -3398,9 +3263,6 @@ msgstr "Bestelldatum"
 msgid "Orders"
 msgstr "Aufträge"
 
-msgid "Organisation"
-msgstr "Organisation"
-
 msgid "Organisation Default Address"
 msgstr "Standard Adresse der Organisation"
 
@@ -3458,14 +3320,8 @@ msgstr "Überstanden"
 msgid "Owner"
 msgstr "Eigentümer"
 
-msgid "PDF"
-msgstr "PDF"
-
 msgid "PDF documents store PDF files and can convert them to HTML, Text or different image formats."
 msgstr "PDF Dokumente speichern PDF´s und können diese in HTML, Text oder andere Formate umwandeln."
-
-msgid "PDM"
-msgstr "PDM"
 
 msgid "Packing List Nb. (Reference)"
 msgstr "Lieferschein-Nr. (Referenz)"
@@ -3599,9 +3455,6 @@ msgstr "Periodizität"
 msgid "Periods (in Days)"
 msgstr "Perioden (in Tagen)"
 
-msgid "Person"
-msgstr "Person"
-
 msgid "Person Assignment View"
 msgstr "Person Aufgabenzuweisung Ansicht"
 
@@ -3613,9 +3466,6 @@ msgstr "Ansicht der Berufsetappe der Person"
 
 msgid "Person Detailed Report"
 msgstr "Detaillierter Personen Bericht"
-
-msgid "Person Details"
-msgstr "Person Details"
 
 msgid "Person Module"
 msgstr "Person Modul"
@@ -3709,15 +3559,6 @@ msgstr "Bitte warten Sie, während Ihr Arbeitsbereich eingerichtet wird."
 
 msgid "Please wait while your home area is being updated."
 msgstr "Bitte warten Sie, während Ihr Arbeitsbereich aktualisiert wird."
-
-msgid "Portal Type"
-msgstr "Portal Type"
-
-msgid "Portal Type Property"
-msgstr "Portal Type Property"
-
-msgid "Portal Types"
-msgstr "Portal Types"
 
 msgid "Post"
 msgstr "Versenden"
@@ -3992,20 +3833,8 @@ msgstr "Projekt:"
 msgid "Projects"
 msgstr "Projekte"
 
-msgid "Property"
-msgstr "Property"
-
 msgid "Property ${property_id} was not defined"
 msgstr "Property ${property_id} ist nicht definiert"
-
-msgid "Property Name"
-msgstr "Property Name"
-
-msgid "Property Sheets"
-msgstr "Property Sheets"
-
-msgid "Property Sheets Tool"
-msgstr "Property Sheets Tool"
 
 msgid "Prospect Contacted"
 msgstr "Prospect Kontaktieren"
@@ -4199,20 +4028,8 @@ msgstr "Referenz"
 msgid "Quote Original Message"
 msgstr "Ursprüngliche Nachricht Zitieren"
 
-msgid "RSS"
-msgstr "RSS"
-
-msgid "RSS Feed"
-msgstr "RSS Feed"
-
-msgid "RSS Gadget"
-msgstr "RSS Gadget"
-
 msgid "RSS Gadget Preference Form"
 msgstr "Einstellungen für RSS Gadget"
-
-msgid "RSS URL"
-msgstr "RSS URL"
 
 msgid "Random Page Gadget Preference Form"
 msgstr "Einstellungen für Zufällige Seite Gadget"
@@ -4291,9 +4108,6 @@ msgstr "Referenz aktualisiert."
 
 msgid "Referenced Documents"
 msgstr "Referenzierte Dokumente"
-
-msgid "Region"
-msgstr "Region"
 
 msgid "Register Sale Opportunity"
 msgstr "Verkaufsgelegenheiten Registrieren"
@@ -4396,9 +4210,6 @@ msgstr "Verknüpfungswerte"
 
 msgid "Relation unchanged."
 msgstr "Verknüpfung nict geändert."
-
-msgid "Relative URL"
-msgstr "Relative URL"
 
 msgid "Release"
 msgstr "Freigeben"
@@ -4543,9 +4354,6 @@ msgstr "Angebot Überarbeiten"
 
 msgid "Revised"
 msgstr "Überarbeitet"
-
-msgid "Revision"
-msgstr "Revision"
 
 msgid "Revision Number"
 msgstr "Revisionsnummer"
@@ -5285,14 +5093,8 @@ msgstr "Angehalten"
 msgid "Suspended [state in project_workflow]"
 msgstr "Abgebrochen (FLOP)"
 
-msgid "Symbol"
-msgstr "Symbol"
-
 msgid "System Preference"
 msgstr "System Einstellungen"
-
-msgid "Tab 1"
-msgstr "Tab 1"
 
 msgid "Tab name"
 msgstr "Tab Name"
@@ -5402,9 +5204,6 @@ msgstr "Arbeiten zur Kontrolle"
 msgid "Tax"
 msgstr "Steuer"
 
-msgid "Tel"
-msgstr "Tel"
-
 msgid "Telephone"
 msgstr "Telefon"
 
@@ -5438,9 +5237,6 @@ msgstr "Terminiert"
 msgid "Termination Date"
 msgstr "Beendigungszeitpunkt"
 
-msgid "Text"
-msgstr "Text"
-
 msgid "Text Area Field Height"
 msgstr "Höhe eines mehrzeiligen Textfeldes"
 
@@ -5449,12 +5245,6 @@ msgstr "Breite eines mehrzeiligen Textfeldes"
 
 msgid "Text Content"
 msgstr "Text Inhalt"
-
-msgid "Text Editor"
-msgstr "Text Editor"
-
-msgid "Text Format"
-msgstr "Text Format"
 
 msgid "TextArea Field Height"
 msgstr "Textfeld Höhe"
@@ -5999,9 +5789,6 @@ msgstr "Vorschaubilder"
 msgid "Thursday"
 msgstr "Donnerstag"
 
-msgid "Ticket"
-msgstr "Ticket"
-
 msgid "Ticket Type"
 msgstr "Ticket Arten"
 
@@ -6013,9 +5800,6 @@ msgstr "Tickets und Ereignisse werden geklont."
 
 msgid "Ticket or Project"
 msgstr "Ticket oder Projekt"
-
-msgid "Tickets"
-msgstr "Tickets"
 
 msgid "Tickets in this state are waiting for approval from the Ticket manager before being further processed."
 msgstr "Tickets in diesem Zustand warten auf die Genehmigung durch den Ticketleiter, bevor sie weiter bearbeitet werden."
@@ -6164,23 +5948,11 @@ msgstr "Rendering Art"
 msgid "Type or Title of the query posted by a user"
 msgstr "Art der Frage, welche von einem Nutzer gepostet wird."
 
-msgid "UID"
-msgstr "UID"
-
-msgid "URL"
-msgstr "URL"
-
-msgid "URL Crawler"
-msgstr "URL Crawler"
-
 msgid "URL Registry Plugins"
 msgstr "URL Register Plugins"
 
 msgid "Unassigned"
 msgstr "Nicht Zugewiesen"
-
-msgid "Undo"
-msgstr "Undo"
 
 msgid "Unit"
 msgstr "Einheit"
@@ -6326,9 +6098,6 @@ msgstr "USt. ID"
 msgid "VAT ID"
 msgstr "USt. ID"
 
-msgid "VCS"
-msgstr "VCS"
-
 msgid "Valid from"
 msgstr "Gültig ab"
 
@@ -6365,17 +6134,11 @@ msgstr "Startzeitpunkt der Geltungsdauer"
 msgid "Value"
 msgstr "Wert "
 
-msgid "Variable"
-msgstr "Variable"
-
 msgid "Variable Additional Price"
 msgstr "Variabler Zusätzlicher Preis"
 
 msgid "Vat Returns"
 msgstr "USt-Voranmeldungen"
-
-msgid "Version"
-msgstr "Version"
 
 msgid "Version of the document"
 msgstr "Version des Dokuments"
@@ -6388,9 +6151,6 @@ msgstr "Version der Webseite"
 
 msgid "View"
 msgstr "Ansicht"
-
-msgid "View Form ID"
-msgstr "View Form ID"
 
 msgid "View Gadgets"
 msgstr "Gadgets Ansehen"
