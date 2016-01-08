@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2016-01-08 11:01+UTC\n"
-"PO-Revision-Date: 2016-01-08 11:01+UTC\n"
+"POT-Creation-Date: 2016-01-08 13:01+UTC\n"
+"PO-Revision-Date: 2016-01-08 13:01+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: ja <>\n"
 "MIME-Version: 1.0\n"
@@ -680,9 +680,6 @@ msgstr "ビジネス・テンプレートの更新が成功しました。"
 
 msgid "Buyer"
 msgstr "受け取り担当"
-
-msgid "CRM"
-msgstr "CRM"
 
 msgid "CSV Style"
 msgstr "CSVの形式"
@@ -1869,9 +1866,6 @@ msgstr "完了"
 msgid "Delivered [state in production_packing_list_workflow]"
 msgstr "完了"
 
-msgid "Delivery Builder"
-msgstr "Delivery Builder"
-
 msgid "Delivery Cell"
 msgstr "セル"
 
@@ -2328,9 +2322,6 @@ msgstr "外部フォルダー"
 msgid "External Sources"
 msgstr "外部参照元"
 
-msgid "FAX"
-msgstr "FAX"
-
 msgid "Fast Input"
 msgstr "一括入力"
 
@@ -2487,17 +2478,8 @@ msgstr "役割"
 msgid "Future"
 msgstr "将来"
 
-msgid "GAP"
-msgstr "GAP"
-
-msgid "GAP - ${gap_title}"
-msgstr "GAP - ${gap_title}"
-
 msgid "GAP Account ID"
 msgstr "GAP 勘定科目ID"
-
-msgid "GAP ID"
-msgstr "GAP ID"
 
 msgid "GAP Number"
 msgstr "GAP番号"
@@ -5564,9 +5546,6 @@ msgstr "通称"
 
 msgid "VAT Code"
 msgstr "VATコード"
-
-msgid "VAT ID"
-msgstr "VAT ID"
 
 msgid "Valid From"
 msgstr "有効期間の開始日"
