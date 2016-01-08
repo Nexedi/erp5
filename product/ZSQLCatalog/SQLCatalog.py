@@ -23,7 +23,7 @@ from thread import allocate_lock, get_ident
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import access_contents_information, \
-    manage_zcatalog_entries
+    import_export_objects, manage_zcatalog_entries
 from AccessControl.SimpleObjectPolicies import ContainerAssertions
 from BTrees.OIBTree import OIBTree
 from App.config import getConfiguration
@@ -357,17 +357,10 @@ class Catalog(Folder,
   __ac_permissions__= (
 
     ('Manage ZCatalog Entries',
-     ['manage_catalogObject', 'manage_uncatalogObject',
-
-      'manage_catalogView', 'manage_catalogFind',
+     ['manage_catalogView', 'manage_catalogFind',
       'manage_catalogFilter',
       'manage_catalogAdvanced',
-
-      'manage_catalogReindex', 'manage_catalogFoundItems',
-      'manage_catalogClear',
-      'manage_main',
-      'manage_editFilter',
-      ],
+      'manage_main',],
      ['Manager']),
 
     ('Search ZCatalog',
@@ -376,10 +369,6 @@ class Catalog(Folder,
       'getCatalogSearchTableIds',
       'getFilterableMethodList',],
      ['Anonymous', 'Manager']),
-
-    ('Import/Export objects',
-     ['manage_exportProperties', 'manage_importProperties', ],
-     ['Manager']),
 
     )
 
@@ -714,7 +703,7 @@ class Catalog(Folder,
       local_role_key_dict[role.strip()] = column.strip()
     return local_role_key_dict.items()
 
-  security.declareProtected(manage_zcatalog_entries, 'manage_exportProperties')
+  security.declareProtected(import_export_objects, 'manage_exportProperties')
   def manage_exportProperties(self, REQUEST=None, RESPONSE=None):
     """
       Export properties to an XML file.
@@ -774,7 +763,7 @@ class Catalog(Folder,
                           'inline;filename=properties.xml')
     return f.getvalue()
 
-  security.declareProtected(manage_zcatalog_entries, 'manage_importProperties')
+  security.declareProtected(import_export_objects, 'manage_importProperties')
   def manage_importProperties(self, file):
     """
       Import properties from an XML file.

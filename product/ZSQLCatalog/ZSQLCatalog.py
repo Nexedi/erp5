@@ -24,7 +24,8 @@ from Persistence import Persistent
 from DocumentTemplate.DT_Util import InstanceDict, TemplateDict
 from DocumentTemplate.DT_Util import Eval
 from AccessControl.Permission import name_trans
-from AccessControl.Permissions import manage_zcatalog_entries
+from AccessControl.Permissions import import_export_objects, \
+    manage_zcatalog_entries
 from SQLCatalog import CatalogError
 from AccessControl import ClassSecurityInfo
 from DocumentTemplate.security import RestrictedDTML
@@ -121,22 +122,11 @@ class ZCatalog(Folder, Persistent, Implicit):
   __ac_permissions__=(
 
     ('Manage ZCatalog Entries',
-     ['manage_catalogObject', 'manage_uncatalogObject',
-      'catalog_object', 'uncatalog_object', 'refreshCatalog',
-
-      'manage_catalogView', 'manage_catalogFind',
+     ['manage_catalogView', 'manage_catalogFind',
       'manage_catalogSchema', 'manage_catalogFilter',
       'manage_catalogAdvanced', 'manage_objectInformation',
       'manage_catalogHotReindexing',
-
-      'manage_catalogReindex', 'manage_catalogFoundItems',
-      'manage_catalogClear', 'manage_editSchema',
-      'manage_main',
-      'manage_editFilter',
-
-      'manage_hotReindexAll',
-
-      ],
+      'manage_main',],
      ['Manager']),
 
     ('Search ZCatalog',
@@ -146,10 +136,6 @@ class ZCatalog(Folder, Persistent, Implicit):
       'getobject', 'getObject', 'getObjectList', 'getCatalogSearchTableIds',
       'getCatalogSearchResultKeys', 'getFilterableMethodList', ],
      ['Anonymous', 'Manager']),
-
-    ('Import/Export objects',
-     ['manage_catalogExportProperties', 'manage_catalogImportProperties', ],
-     ['Manager']),
 
     )
 
@@ -227,7 +213,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     return self._getOb(id, default_value)
 
-  security.declareProtected(manage_zcatalog_entries, 'manage_catalogExportProperties')
+  security.declareProtected(import_export_objects, 'manage_catalogExportProperties')
   def manage_catalogExportProperties(self, REQUEST=None, RESPONSE=None, sql_catalog_id=None):
     """
       Export properties to an XML file.
@@ -236,7 +222,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       return catalog.manage_exportProperties(REQUEST=REQUEST, RESPONSE=RESPONSE)
 
-  security.declareProtected(manage_zcatalog_entries, 'manage_catalogImportProperties')
+  security.declareProtected(import_export_objects, 'manage_catalogImportProperties')
   def manage_catalogImportProperties(self, file, sql_catalog_id=None):
     """
       Import properties from an XML file.
@@ -592,7 +578,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       catalog.manage_catalogReindex(REQUEST, RESPONSE, URL1, urls=urls)
 
-  security.declarePrivate('refreshCatalog')
+  security.declareProtected(manage_zcatalog_entries, 'refreshCatalog')
   def refreshCatalog(self, clear=0, sql_catalog_id=None):
     """ re-index everything we can find """
 
@@ -716,7 +702,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     #LOG('ZSQLCatalog wrapObject', 0, 'object = %r, kw = %r' % (object, kw))
     return object
 
-  security.declarePrivate('catalog_object')
+  security.declareProtected(manage_zcatalog_entries, 'catalog_object')
   def catalog_object(self, obj, url=None, idxs=[], is_object_moved=0, sql_catalog_id=None, **kw):
     """ wrapper around catalog """
     self.catalogObjectList([obj], sql_catalog_id=sql_catalog_id)
@@ -866,7 +852,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     object_list[:] = failed_object_list
 
-  security.declarePrivate('uncatalog_object')
+  security.declareProtected(manage_zcatalog_entries, 'uncatalog_object')
   def uncatalog_object(self, uid=None,path=None, sql_catalog_id=None):
     """ wrapper around catalog """
     if uid is None:
