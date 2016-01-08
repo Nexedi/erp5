@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2010-07-08 07:06+JST\n"
-"PO-Revision-Date: 2010-07-08 07:06+JST\n"
+"Project-Id-Version: ERP5 User Interface\n"
+"POT-Creation-Date: 2016-01-08 11:01+UTC\n"
+"PO-Revision-Date: 2016-01-08 11:01+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: ja <>\n"
 "MIME-Version: 1.0\n"
@@ -12,8 +12,14 @@ msgstr ""
 msgid "${count} documents created successfully."
 msgstr "${count} 個のドキュメントを作成しました。"
 
+msgid "${number} item(s) selected"
+msgstr "${number} 個のアイテムが選択されています"
+
 msgid "${number} items selected"
 msgstr "${number} 個のアイテムが選択されています"
+
+msgid "${number} record(s)"
+msgstr "${number} レコード"
 
 msgid "${number} records"
 msgstr "${number} レコード"
@@ -29,6 +35,9 @@ msgstr "${template_title} (テンプレート)"
 
 msgid "${this_portal_type} related to ${that_portal_type} : ${that_title}."
 msgstr "${this_portal_type} は ${that_portal_type} と関連があります: ${that_title}。"
+
+msgid "- ${number} item(s) selected"
+msgstr "- ${number} 個のアイテムが選択されています"
 
 msgid "- ${number} items selected"
 msgstr "- ${number} 個のアイテムが選択されています"
@@ -50,6 +59,9 @@ msgstr "-- プロジェクトを選択してください --"
 
 msgid "-- User --"
 msgstr "-- ユーザ --"
+
+msgid "-- Validation Workflow --"
+msgstr "-- 確認ワークフロー --"
 
 msgid "-- Workflows --"
 msgstr "-- ワークフロー --"
@@ -262,6 +274,9 @@ msgid "Additional Price Quantity Step"
 msgstr "数量にともなう追加価格"
 
 msgid "Additional Term (Days)"
+msgstr "追加期間 (日数)"
+
+msgid "Additional Term (days)"
 msgstr "追加期間 (日数)"
 
 msgid "Address"
@@ -969,6 +984,9 @@ msgstr "セルレベルの不整合"
 msgid "Change Function"
 msgstr "役割を変更する"
 
+msgid "Change Log"
+msgstr "変更履歴"
+
 msgid "Change Page"
 msgstr "ページを変更する"
 
@@ -978,7 +996,7 @@ msgstr "パスワードを変更する"
 msgid "Change State"
 msgstr "状態を変更する"
 
-msgid "Change Log"
+msgid "ChangeLog"
 msgstr "変更履歴"
 
 msgid "Changelog"
@@ -1248,6 +1266,9 @@ msgstr "連絡先種別"
 msgid "Contact function of the data"
 msgstr "連絡先の役割"
 
+msgid "Contact us"
+msgstr "問い合わせる"
+
 msgid "Contacts"
 msgstr "連絡先"
 
@@ -1294,6 +1315,9 @@ msgid "Content"
 msgstr "内容"
 
 msgid "Content Format"
+msgstr "内容の形式"
+
+msgid "Content format"
 msgstr "内容の形式"
 
 msgid "Content of the web page"
@@ -1378,6 +1402,9 @@ msgid "Create New Bug"
 msgstr "不具合を報告する"
 
 msgid "Create New Document"
+msgstr "新しい文書を作成する"
+
+msgid "Create New Document(s)"
 msgstr "新しい文書を作成する"
 
 msgid "Create New Documents"
@@ -1560,6 +1587,12 @@ msgstr "日/月/年"
 msgid "Days"
 msgstr "日"
 
+msgid "Days Of Month"
+msgstr "何日"
+
+msgid "Days Of Week"
+msgstr "何曜日"
+
 msgid "Days of Month"
 msgstr "何日"
 
@@ -1603,6 +1636,9 @@ msgid "Default Export of Each Document (One sheet per view)"
 msgstr "標準エクスポート (シート別)"
 
 msgid "Default FAX"
+msgstr "標準のFAX番号"
+
+msgid "Default Fax"
 msgstr "標準のFAX番号"
 
 msgid "Default Image"
@@ -2292,8 +2328,14 @@ msgstr "外部フォルダー"
 msgid "External Sources"
 msgstr "外部参照元"
 
+msgid "FAX"
+msgstr "FAX"
+
 msgid "Fast Input"
 msgstr "一括入力"
+
+msgid "Fax"
+msgstr "FAX"
 
 msgid "Fax Message"
 msgstr "FAXメッセージ"
@@ -2373,7 +2415,7 @@ msgstr "フォルダー"
 msgid "Folder Contents"
 msgstr "フォルダーの内容"
 
-msgid "Follow-up"
+msgid "Follow Up"
 msgstr "対応するチケット"
 
 msgid "Follow Up Ticket"
@@ -2382,10 +2424,28 @@ msgstr "対応するチケット"
 msgid "Follow up must be set to acknowledge an Event."
 msgstr "イベントに応答するにはチケットの設定が必要です。"
 
+msgid "Follow-up"
+msgstr "対応するチケット"
+
 msgid "Format"
 msgstr "形式"
 
-msgid "Frequency in Weeks"
+msgid "Frequency (weeks)"
+msgstr "周期 (週)"
+
+msgid "Frequency In Days"
+msgstr "周期 (日数)"
+
+msgid "Frequency In Hours"
+msgstr "周期 (時間)"
+
+msgid "Frequency In Minutes"
+msgstr "周期 (分)"
+
+msgid "Frequency In Months"
+msgstr "周期 (月)"
+
+msgid "Frequency In Weeks"
 msgstr "周期 (週)"
 
 msgid "Frequency in Days"
@@ -2399,6 +2459,9 @@ msgstr "周期 (分)"
 
 msgid "Frequency in Months"
 msgstr "周期 (月)"
+
+msgid "Frequency in Weeks"
+msgstr "周期 (週)"
 
 msgid "Friday"
 msgstr "金曜"
@@ -2619,6 +2682,9 @@ msgstr "借方の期首残高"
 msgid "Initialised by Delivery Builder."
 msgstr "Delivery Builder により初期化されました。"
 
+msgid "Initialized by Delivery Builder."
+msgstr "配達ビルダーにより初期化されました。"
+
 msgid "Input data has errors. Please look at the error messages below."
 msgstr "入力データにエラーがあります。下記のエラーメッセージを確認してください。"
 
@@ -2795,6 +2861,12 @@ msgstr "請求先の顧客"
 
 msgid "Invoicing Rule"
 msgstr "請求の規則"
+
+msgid "Item(s) copied."
+msgstr "項目がコピーされました。"
+
+msgid "Item(s) pasted."
+msgstr "項目が貼り付けられました。"
 
 msgid "Items copied."
 msgstr "項目がコピーされました。"
@@ -3237,9 +3309,6 @@ msgstr "取引条件がありません。"
 msgid "No result !"
 msgstr "見つかれませんでした！"
 
-msgid "No result."
-msgstr "見つかれませんでした。"
-
 msgid "No such document was found."
 msgstr "ドキュメントが見つかりませんでした。"
 
@@ -3455,6 +3524,9 @@ msgstr "組織"
 
 msgid "Organisations to Validate"
 msgstr "承認すべき組織"
+
+msgid "Organisations:"
+msgstr "組織:"
 
 msgid "Original Supplier or Worker"
 msgstr "外注先"
@@ -4695,6 +4767,9 @@ msgstr "アクションを選択する"
 msgid "Select Exchange"
 msgstr "インポート/エクスポートの方法を選択"
 
+msgid "Select Favorite"
+msgstr "お気に入りを選択"
+
 msgid "Select Favourite"
 msgstr "お気に入りを選択"
 
@@ -4935,13 +5010,13 @@ msgstr "分割して延期する"
 msgid "Spreadsheet"
 msgstr "表計算文書"
 
-msgid "Start after"
+msgid "Start After"
 msgstr "指定日より後に開始"
 
 msgid "Start Assignment"
 msgstr "割当を開始する"
 
-msgid "Start before"
+msgid "Start Before"
 msgstr "指定日より前に開始"
 
 msgid "Start Building"
@@ -4958,6 +5033,12 @@ msgstr "繰返販売注文を開始する"
 
 msgid "Start Project"
 msgstr "開始する"
+
+msgid "Start after"
+msgstr "指定日より後に開始"
+
+msgid "Start before"
+msgstr "指定日より前に開始"
 
 msgid "Started"
 msgstr "開始"
@@ -4983,13 +5064,13 @@ msgstr "バリエーション毎の在庫"
 msgid "Stock per Variation"
 msgstr "バリエーション毎の在庫"
 
-msgid "Stop after"
+msgid "Stop After"
 msgstr "指定日より後に終了"
 
 msgid "Stop Assignment"
 msgstr "割当を停止する"
 
-msgid "Stop before"
+msgid "Stop Before"
 msgstr "指定日より前に終了"
 
 msgid "Stop Career Step"
@@ -5000,6 +5081,12 @@ msgstr "終了日"
 
 msgid "Stop Project"
 msgstr "終了する"
+
+msgid "Stop after"
+msgstr "指定日より後に終了"
+
+msgid "Stop before"
+msgstr "指定日より前に終了"
 
 msgid "Stopped"
 msgstr "終了済み"
@@ -5012,6 +5099,9 @@ msgstr "住所は必須です"
 
 msgid "Street must be defined"
 msgstr "住所は必須です"
+
+msgid "Subject"
+msgstr "件名"
 
 msgid "Submit Event"
 msgstr "提案する"
@@ -5178,10 +5268,16 @@ msgstr "電話"
 msgid "Telephone Name must be defined"
 msgstr "電話番号は必須です"
 
+msgid "Telephone Number"
+msgstr "電話番号"
+
 msgid "Telephone must be defined"
 msgstr "電話は必須です"
 
 msgid "Term (Days)"
+msgstr "期間 (日数)"
+
+msgid "Term (days)"
 msgstr "期間 (日数)"
 
 msgid "Terminate the Current Career Step"
@@ -5358,6 +5454,15 @@ msgstr "取引タイプ"
 msgid "Transactions"
 msgstr "取引"
 
+msgid "Transactions Related to This Account"
+msgstr "関連する取引"
+
+msgid "Transactions Related to This Bank Account"
+msgstr "関連する取引"
+
+msgid "Transactions Related to This Entity"
+msgstr "関連する取引"
+
 msgid "Transactions Related to this Account"
 msgstr "関連する取引"
 
@@ -5442,10 +5547,13 @@ msgstr "ユーザインタフェース"
 msgid "User Login"
 msgstr "ログイン名"
 
+msgid "User Name"
+msgstr "ユーザ名"
+
 msgid "User Password"
 msgstr "パスワード"
 
-msgid "User Name"
+msgid "User name"
 msgstr "ユーザ名"
 
 msgid "Using category for section is invalid."
@@ -5459,6 +5567,12 @@ msgstr "VATコード"
 
 msgid "VAT ID"
 msgstr "VAT ID"
+
+msgid "Valid From"
+msgstr "有効期間の開始日"
+
+msgid "Valid Until"
+msgstr "有効期間の終了日"
 
 msgid "Valid from"
 msgstr "有効期間の開始日"
