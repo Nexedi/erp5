@@ -78,31 +78,7 @@
 <!-- Initialize -->\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/web_site_module/renderjs_runner/</td>\n
-  <td></td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>waitForElementPresent</td>\n
-  <td>//h3[@data-i18n=\'Other\']</td>\n
-  <td></td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>click</td>\n
-  <td>//h3[@data-i18n=\'Other\']</td>\n
-  <td></td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>waitForElementPresent</td>\n
-  <td>//a[@data-i18n=\'Foos\']</td>\n
-  <td></td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>click</td>\n
-  <td>link=Foos</td>\n
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>\n
   <td></td>\n
 </tr>\n
 \n

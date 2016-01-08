@@ -612,7 +612,7 @@
   function routeMethodLess() {\n
     // Nothing. Go to front page\n
     return synchronousChangeState(\n
-      getDisplayUrlFor(undefined, {page: \'front\'})\n
+      getDisplayUrlFor(undefined, {page: \'worklist\'})\n
     );\n
   }\n
 \n
@@ -655,11 +655,7 @@
     }\n
 \n
     if (command_options.args.page === undefined) {\n
-      return synchronousChangeState(\n
-        getDisplayUrlFor(undefined, {\n
-          page: \'front\'\n
-        })\n
-      );\n
+      return routeMethodLess();\n
     }\n
 \n
     command_options.args.jio_key = command_options.path || undefined;\n
@@ -1059,7 +1055,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.17471.24428.20411</string> </value>
+                <value> <string>948.17472.32633.64870</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1077,7 +1073,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452009629.86</float>
+                        <float>1452242357.34</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

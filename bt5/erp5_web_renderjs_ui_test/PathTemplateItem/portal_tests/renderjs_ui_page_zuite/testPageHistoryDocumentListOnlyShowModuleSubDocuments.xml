@@ -52,7 +52,7 @@
 <!-- Access module, create a document, then create a sub document -->\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/web_site_module/renderjs_runner/#</td>\n
+  <td>${base_url}/web_site_module/renderjs_runner/#/?page=front</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

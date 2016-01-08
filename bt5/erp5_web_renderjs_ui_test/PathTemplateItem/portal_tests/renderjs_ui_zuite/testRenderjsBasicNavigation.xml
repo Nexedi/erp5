@@ -69,6 +69,27 @@
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
+  <td>//button[@data-i18n=\'Menu\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//button[@data-i18n=\'Menu\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Modules\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//a[@data-i18n=\'Modules\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
   <td>//h3[@data-i18n=\'Other\']</td>\n
   <td></td>\n
 </tr>\n
