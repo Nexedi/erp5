@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2009-07-30 12:07+CET\n"
-"PO-Revision-Date: 2009-07-30 14:27+0200\n"
+"Project-Id-Version: ERP5 User Interface\n"
+"POT-Creation-Date: 2016-01-08 11:01+UTC\n"
+"PO-Revision-Date: 2016-01-08 11:01+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: pl <>\n"
 "MIME-Version: 1.0\n"
@@ -12,8 +12,14 @@ msgstr ""
 msgid "${key} ${usage}"
 msgstr "${usage}: ${key} "
 
+msgid "${number} item(s) selected"
+msgstr "${number} pozycji zaznaczonych"
+
 msgid "${number} items selected"
 msgstr "${number} pozycji zaznaczonych"
+
+msgid "${number} record(s)"
+msgstr "${number} rekordów"
 
 msgid "${number} records"
 msgstr "${number} rekordów"
@@ -26,6 +32,9 @@ msgstr "Wyszukiwanie: ${title}"
 
 msgid "(deleted)"
 msgstr "(usunięte)"
+
+msgid "- ${number} item(s) selected"
+msgstr "- ${number} pozycji zaznaczonych"
 
 msgid "- ${number} items selected"
 msgstr "- ${number} pozycji zaznaczonych"
@@ -345,6 +354,9 @@ msgstr "Kod banku"
 msgid "Bank Country Code"
 msgstr "Kod kraju banku"
 
+msgid "Bank accounts"
+msgstr "Rachunki bankowe"
+
 msgid "Base Categories"
 msgstr "Kategorie bazowe"
 
@@ -533,6 +545,9 @@ msgstr "Zmień stronę"
 
 msgid "Change Password"
 msgstr "Zmień hasło"
+
+msgid "ChangeLog"
+msgstr "DziennikZm"
 
 msgid "Changelog"
 msgstr "Rejestr zmian"
@@ -747,10 +762,10 @@ msgstr "Stwórz nowy moduł"
 msgid "Create Sale Opportunity"
 msgstr "Stwórz możliwość sprzedaży"
 
-msgid "Created after"
+msgid "Created After"
 msgstr "Stworzone po"
 
-msgid "Created before"
+msgid "Created Before"
 msgstr "Stworzone przed"
 
 msgid "Created Clone ${portal_type}."
@@ -837,10 +852,10 @@ msgstr "Data, kiedy konto bankowe zostało otwarte"
 msgid "Day / Month / Year"
 msgstr "Dzień / Miesiąc / Rok"
 
-msgid "Days of Month"
+msgid "Days Of Month"
 msgstr "Dni miesiąca"
 
-msgid "Days of Week"
+msgid "Days Of Week"
 msgstr "Dni tygodnia"
 
 msgid "Debit"
@@ -1197,16 +1212,16 @@ msgstr "Zawartość foldera"
 msgid "Format"
 msgstr "Format"
 
-msgid "Frequency in Days"
+msgid "Frequency In Days"
 msgstr "Częstotliwość w dniach"
 
-msgid "Frequency in Hours"
+msgid "Frequency In Hours"
 msgstr "Częstotliwość w godzinach"
 
-msgid "Frequency in Months"
+msgid "Frequency In Months"
 msgstr "Częstotliwość w miesiącach"
 
-msgid "Frequency in Weeks"
+msgid "Frequency In Weeks"
 msgstr "Częstotliwość w tygodniach"
 
 msgid "From"
@@ -1349,6 +1364,9 @@ msgstr "IBAN"
 
 msgid "IBAN Key"
 msgstr "Klucz IBAN"
+
+msgid "ID"
+msgstr "ID"
 
 msgid "ID of the currency. Be aware that changing this ID will reindex all related objects."
 msgstr "ID waluty. Miej na uwadze fakt, że zmiana ID spowoduje reindeksację wszystkich obiektów."
@@ -1505,6 +1523,15 @@ msgstr "Element"
 
 msgid "Item Module"
 msgstr "Moduł elementów"
+
+msgid "Item(s) Copied."
+msgstr "Elementów skopiowanych."
+
+msgid "Item(s) Pasted."
+msgstr "Elementów wklejonych."
+
+msgid "Item(s)+Copied."
+msgstr "Elementów+skopiowanych."
 
 msgid "Items"
 msgstr "Elementy"
@@ -1725,7 +1752,7 @@ msgstr "Miesiące"
 msgid "Movement List"
 msgstr "Lista przesunięć"
 
-msgid "Multiple Installation of Business Templates"
+msgid "Multiple Installation Of Business Templates"
 msgstr "Instalowanie wielu Business Template'ów"
 
 msgid "Multivalue Keys"
@@ -2568,6 +2595,9 @@ msgstr "Komórka Zamówienia Sprzedaży"
 msgid "Sale Order Line"
 msgstr "Linia sprzedaży"
 
+msgid "Sale Order Line(s)"
+msgstr "Linie Zamówienia Sprzedaży"
+
 msgid "Sale Order Lines"
 msgstr "Linie sprzedaży"
 
@@ -2826,7 +2856,7 @@ msgstr "Status+zmieniony."
 msgid "Stock"
 msgstr "Skład"
 
-msgid "Stock by Variation"
+msgid "Stock By Variation"
 msgstr "Skład wg. wariantu"
 
 msgid "Stop"
@@ -3134,6 +3164,9 @@ msgstr "Nazwa użytkownika"
 
 msgid "User Password"
 msgstr "Hasło użytkownika"
+
+msgid "User name"
+msgstr "Nazwa użytkownika"
 
 msgid "Usual Name"
 msgstr "Nazwa skrócona"
