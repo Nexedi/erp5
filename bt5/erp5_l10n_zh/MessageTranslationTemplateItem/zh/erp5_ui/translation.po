@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2016-01-08 11:01+UTC\n"
-"PO-Revision-Date: 2016-01-08 11:01+UTC\n"
+"POT-Creation-Date: 2016-01-08 14:01+UTC\n"
+"PO-Revision-Date: 2016-01-08 14:01+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: zh <>\n"
 "MIME-Version: 1.0\n"
@@ -5607,9 +5607,6 @@ msgstr "解除警报"
 
 msgid "Solve Automatically"
 msgstr "自动解决"
-
-msgid "Solve Divergences"
-msgstr "Solve Divergences"
 
 msgid "Solve Divergences [transition in delivery_causality_workflow]"
 msgstr "解决分歧 [transition in delivery_causality_workflow]"
