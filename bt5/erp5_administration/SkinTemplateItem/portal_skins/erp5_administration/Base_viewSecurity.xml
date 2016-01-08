@@ -52,12 +52,15 @@
             <key> <string>_body</string> </key>
             <value> <string>from AccessControl import getSecurityManager\n
 from zExceptions import Unauthorized\n
-u=getSecurityManager().getUser()\n
+from pprint import pformat\n
 \n
-print \'User:\',u\n
-print \'Is owner:\',u.allowed(context,(\'Owner\',))\n
-print \'User roles:\',u.getRoles()\n
-print \'User roles in context:\',u.getRolesInContext(context)\n
+u = getSecurityManager().getUser()\n
+\n
+print \'User:\', u\n
+print \'Is owner:\', u.allowed(context,(\'Owner\',))\n
+print \'User roles:\', u.getRoles()\n
+print \'User roles in context:\', u.getRolesInContext(context)\n
+print \'Permissions:\'\n
 for permission in [\n
   \'Access contents information\',\n
   \'Add portal content\',\n
@@ -66,11 +69,16 @@ for permission in [\n
   \'View\',\n
   \'Manage portal\',\n
 ]:\n
-  print permission,u.has_permission(permission,context)\n
+  print " ", permission, u.has_permission(permission, context)\n
+\n
+print\n
 try:\n
-  print u.getGroups()\n
+  print "User groups:\\n", pformat(u.getGroups())\n
 except AttributeError:\n
   print \'no getGroups\'\n
+\n
+print\n
+print \'Local roles on document:\\n\', pformat(context.get_local_roles())\n
 \n
 print \'\'\'\n
 ----------------\n
