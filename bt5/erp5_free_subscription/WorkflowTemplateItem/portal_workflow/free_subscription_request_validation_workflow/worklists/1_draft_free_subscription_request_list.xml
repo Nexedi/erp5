@@ -59,8 +59,7 @@ free_subscription_request_module/view?validation_state=draft&local_roles=%(local
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

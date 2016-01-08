@@ -60,7 +60,6 @@ notification_message_module?validation_state=draft&local_roles=%(local_roles)s&p
             <value>
               <tuple>
                 <string>Owner</string>
-                <string>Assignee</string>
               </tuple>
             </value>
         </item>

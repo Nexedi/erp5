@@ -18,7 +18,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-account_module/view?validation_state=draft&local_roles:list=Assignor&local_roles:list=Assignee&reset:int=1
+account_module/view?validation_state=draft&local_roles=%(local_roles)s&reset:int=1
 
 ]]></string> </value>
         </item>
@@ -55,8 +55,7 @@ account_module/view?validation_state=draft&local_roles:list=Assignor&local_roles
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
-                <string>Assignee</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

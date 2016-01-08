@@ -59,8 +59,6 @@ task_report_module?simulation_state=draft&local_roles=%(local_roles)s&reset=1
             <value>
               <tuple>
                 <string>Owner</string>
-                <string>Assignor</string>
-                <string>Assignee</string>
               </tuple>
             </value>
         </item>

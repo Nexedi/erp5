@@ -22,7 +22,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-tax_return_module/view?reset=1&local_roles=Assignee&validation_state=draft
+tax_return_module/view?reset=1&local_roles=%(local_roles)s&validation_state=draft
 
 ]]></string> </value>
         </item>
@@ -59,7 +59,7 @@ tax_return_module/view?reset=1&local_roles=Assignee&validation_state=draft
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

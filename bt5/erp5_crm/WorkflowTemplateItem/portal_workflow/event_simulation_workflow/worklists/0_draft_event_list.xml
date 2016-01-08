@@ -60,7 +60,6 @@ event_module/view?simulation_state=draft&local_roles:list=%(local_roles)s&portal
             <value>
               <tuple>
                 <string>Owner</string>
-                <string>Assignee</string>
               </tuple>
             </value>
         </item>

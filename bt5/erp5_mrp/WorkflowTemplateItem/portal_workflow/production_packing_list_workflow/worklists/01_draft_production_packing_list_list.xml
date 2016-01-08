@@ -18,7 +18,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-production_packing_list_module?simulation_state=draft&portal_type=Production+Packing+List&local_roles:list=Owner&reset=1
+production_packing_list_module?simulation_state=draft&portal_type=Production+Packing+List&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>

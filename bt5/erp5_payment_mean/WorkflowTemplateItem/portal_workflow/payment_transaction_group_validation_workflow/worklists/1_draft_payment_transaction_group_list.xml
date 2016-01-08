@@ -59,7 +59,7 @@ payment_transaction_group_module?validation_state=draft&portal_type:list=%(porta
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

@@ -58,8 +58,6 @@ task_module?simulation_state=draft&local_roles=%(local_roles)s&reset=1
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
-                <string>Assignee</string>
                 <string>Owner</string>
               </tuple>
             </value>

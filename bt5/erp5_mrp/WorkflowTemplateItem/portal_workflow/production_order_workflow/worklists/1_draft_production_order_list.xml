@@ -58,7 +58,6 @@ production_order_module?simulation_state=draft&portal_type=Production+Order&loca
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Owner</string>
               </tuple>
             </value>

@@ -18,7 +18,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-open_sale_order_module/view?validation_state=draft&portal_type=Open+Sale+Order&local_roles:list=Assignee&local_roles:list=Owner&reset=1
+open_sale_order_module/view?validation_state=draft&portal_type=Open+Sale+Order&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
@@ -55,7 +55,6 @@ open_sale_order_module/view?validation_state=draft&portal_type=Open+Sale+Order&l
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Owner</string>
               </tuple>
             </value>
