@@ -117,6 +117,21 @@ def MessageCatalog_deleteNotTranslatedMessageDict(self):
     del(self._messages[k])
   return len(not_translated_message_dict.keys())
 
+def MessageCatalog_cleanUpMessageDict(self):
+  """
+    Cleans up translation dictionnaries by removing empty values
+    and deleting entries without any translation from the Localizer's
+    MessageCatalog instance messages.
+  """
+  count = 0
+  for k,v in self._messages.items():
+    for lang, translation in v.items():
+      if len(translation) == 0 or translation == k:
+        del self._messages[k][lang]
+    if len(v) == 0:
+      del self._messages[k]
+      count += 1
+  return count
 
 def checkConversionToolAvailability(self):
   """
