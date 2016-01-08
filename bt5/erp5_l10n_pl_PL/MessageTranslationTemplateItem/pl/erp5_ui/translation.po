@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2016-01-08 11:01+UTC\n"
-"PO-Revision-Date: 2016-01-08 11:01+UTC\n"
+"POT-Creation-Date: 2016-01-08 14:01+UTC\n"
+"PO-Revision-Date: 2016-01-08 14:01+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: pl <>\n"
 "MIME-Version: 1.0\n"
@@ -321,9 +321,6 @@ msgstr "Automatycznie zaplanowany"
 msgid "Available"
 msgstr "Dostępny"
 
-msgid "BBAN"
-msgstr "BBAN"
-
 msgid "BBAN Key"
 msgstr "Klucz BBAN"
 
@@ -335,9 +332,6 @@ msgstr "Tytuł BT"
 
 msgid "Balance"
 msgstr "Bilans"
-
-msgid "Bank"
-msgstr "Bank"
 
 msgid "Bank Account"
 msgstr "Rachunek bankowy"
@@ -404,9 +398,6 @@ msgstr "Zbuduj Business Template'a"
 
 msgid "Building"
 msgstr "Budowanie"
-
-msgid "Business Template"
-msgstr "Business Template"
 
 msgid "Business Template Building Workflow"
 msgstr "Workflow budowania Business Template'a"
@@ -738,9 +729,6 @@ msgstr "Dane teleadresowe"
 msgid "Copy"
 msgstr "Kopiuj"
 
-msgid "Copyright"
-msgstr "Copyright"
-
 msgid "Corporate Name"
 msgstr "Pełna nazwa"
 
@@ -1038,9 +1026,6 @@ msgstr "Pobierz OOo"
 msgid "Download original"
 msgstr "Pobierz oryginał"
 
-msgid "Draft"
-msgstr "Draft"
-
 msgid "Draft To Validate"
 msgstr "Drafty do sprawdzenia"
 
@@ -1056,9 +1041,6 @@ msgstr "Drafty do sprawdzenia"
 msgid "EAN 13 Code"
 msgstr "Kod EAN 13"
 
-msgid "ERP5"
-msgstr "ERP5"
-
 msgid "ERP5 Modules"
 msgstr "Moduły ERP5"
 
@@ -1070,9 +1052,6 @@ msgstr "Data obowiązywania"
 
 msgid "Efficiency (%)"
 msgstr "Wydajność (%)"
-
-msgid "Email"
-msgstr "Email"
 
 msgid "Emit Date"
 msgstr "Data emisji"
@@ -1203,14 +1182,8 @@ msgstr "Pojemność przepływu"
 msgid "Flow capacity"
 msgstr "Pojemność przepływu"
 
-msgid "Folder"
-msgstr "Folder"
-
 msgid "Folder Contents"
 msgstr "Zawartość foldera"
-
-msgid "Format"
-msgstr "Format"
 
 msgid "Frequency In Days"
 msgstr "Częstotliwość w dniach"
@@ -1359,14 +1332,8 @@ msgstr "Styl HTML"
 msgid "I forgot my password!"
 msgstr "Zapomniałem hasła!"
 
-msgid "IBAN"
-msgstr "IBAN"
-
 msgid "IBAN Key"
 msgstr "Klucz IBAN"
-
-msgid "ID"
-msgstr "ID"
 
 msgid "ID of the currency. Be aware that changing this ID will reindex all related objects."
 msgstr "ID waluty. Miej na uwadze fakt, że zmiana ID spowoduje reindeksację wszystkich obiektów."
@@ -1403,9 +1370,6 @@ msgstr "Przychodzący FAX"
 
 msgid "Incoming Letter"
 msgstr "Przychodzący list"
-
-msgid "Incoterm"
-msgstr "Incoterm"
 
 msgid "Index"
 msgstr "Indeks"
@@ -1622,9 +1586,6 @@ msgstr "Wylistuj obiekty w koszu"
 
 msgid "List Trash Bin"
 msgstr "Wylistuj kosz"
-
-msgid "Listbox"
-msgstr "Listbox"
 
 msgid "Local Roles"
 msgstr "Role lokalne"
@@ -2439,9 +2400,6 @@ msgstr "Waluta odniesienia"
 msgid "Reference Date"
 msgstr "Data odniesienia"
 
-msgid "Region"
-msgstr "Region"
-
 msgid "Related Documents"
 msgstr "Dokumenty powiązane"
 
@@ -2829,9 +2787,6 @@ msgstr "Sekcja źródłowa"
 msgid "Split and Defer"
 msgstr "Podziel i opóźnij"
 
-msgid "Start"
-msgstr "Start"
-
 msgid "Start Career Step"
 msgstr "Rozpocznij zatrudnienie"
 
@@ -2844,9 +2799,6 @@ msgstr "Rozpoczęte"
 msgid "State"
 msgstr "Stan"
 
-msgid "Status"
-msgstr "Status"
-
 msgid "Status changed."
 msgstr "Status zmieniony"
 
@@ -2858,9 +2810,6 @@ msgstr "Skład"
 
 msgid "Stock By Variation"
 msgstr "Skład wg. wariantu"
-
-msgid "Stop"
-msgstr "Stop"
 
 msgid "Stop Career Step"
 msgstr "Zakończ stopień kariery"
@@ -2888,9 +2837,6 @@ msgstr "Podkategorie"
 
 msgid "Subject"
 msgstr "Temat"
-
-msgid "Subversion"
-msgstr "Subversion"
 
 msgid "Subversion Working Copy List"
 msgstr "Lista roboczej kopii subversion"
@@ -3102,9 +3048,6 @@ msgstr "Kosze"
 msgid "Type"
 msgstr "Rodzaj"
 
-msgid "URL"
-msgstr "URL"
-
 msgid "Uncheck All"
 msgstr "Odznacz wszystkie"
 
@@ -3315,9 +3258,6 @@ msgstr "budowanie"
 msgid "built"
 msgstr "zbudowane"
 
-msgid "business_template_building_workflow"
-msgstr "business_template_building_workflow"
-
 msgid "calculating"
 msgstr "obliczanie"
 
@@ -3354,21 +3294,6 @@ msgstr "ilość"
 msgid "current"
 msgstr "aktualnie"
 
-msgid "default_address"
-msgstr "default_address"
-
-msgid "default_career"
-msgstr "default_career"
-
-msgid "default_email"
-msgstr "default_email"
-
-msgid "default_fax"
-msgstr "default_fax"
-
-msgid "default_telephone"
-msgstr "default_telephone"
-
 msgid "delivered"
 msgstr "zamknięta"
 
@@ -3393,17 +3318,11 @@ msgstr "aktywuj"
 msgid "enabled"
 msgstr "aktywne"
 
-msgid "erp5"
-msgstr "erp5"
-
 msgid "expense"
 msgstr "wydatek"
 
 msgid "go back."
 msgstr "wróć."
-
-msgid "id"
-msgstr "id"
 
 msgid "income"
 msgstr "przychód"
@@ -3416,9 +3335,6 @@ msgstr "unieważnione"
 
 msgid "max"
 msgstr "maks"
-
-msgid "min"
-msgstr "min"
 
 msgid "miss"
 msgstr "brak"
@@ -3444,9 +3360,6 @@ msgstr "spaczkowane"
 msgid "payable"
 msgstr "zobowiązanie"
 
-msgid "plan"
-msgstr "plan"
-
 msgid "planned"
 msgstr "zaplanowane"
 
@@ -3471,14 +3384,8 @@ msgstr "rozwiązane"
 msgid "solving"
 msgstr "rozwiązuje"
 
-msgid "start"
-msgstr "start"
-
 msgid "started"
 msgstr "zastartowane"
-
-msgid "stop"
-msgstr "stop"
 
 msgid "stopped"
 msgstr "zaksięgowana"
