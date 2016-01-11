@@ -201,47 +201,7 @@
   <td></td>\n
 </tr>\n
 \n
-<tr>\n
-  <td>waitForElementPresent</td>\n
-  <td>//button[@data-i18n=\'Save\']</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>click</td>\n
-  <td>//button[@data-i18n=\'Save\']</td>\n
-  <td></td>\n
-</tr>\n
-<!--\n
-xxx wait for implementation of catch reponse from erp5 after ajax\n
-<tr>\n
-  <td>waitForElementPresent</td>\n
-  <td>//div[@class=\'subfield_my_bar_category_title_list_0\']/a[@class=\'ui-btn ui-corner-all ui-btn-icon-notext ui-icon-plane ui-shadow-inset ui-btn-inline\']</td>\n
-  <td></td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>waitForElementPresent</td>\n
-  <td>//div[@class=\'subfield_my_bar_category_title_list_1\']/a[@class=\'ui-btn ui-corner-all ui-btn-icon-notext ui-icon-plane ui-shadow-inset ui-btn-inline\']</td>\n
-  <td></td>\n
-</tr>\n
--->\n
-<tr>\n
-  <td>waitForElementPresent</td>\n
-  <td>//button[@data-i18n=\'Save\']</td>\n
-  <td></td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>storeText</td>\n
-  <td>//body</td>\n
-  <td>debug</td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>echo</td>\n
-  <td>${debug}</td>\n
-  <td></td>\n
-</tr>\n
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />\n
 \n
 <tr>\n
   <td>click</td>\n
