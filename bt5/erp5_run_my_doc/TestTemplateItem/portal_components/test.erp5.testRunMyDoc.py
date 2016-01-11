@@ -80,53 +80,53 @@ class TestRunMyDoc(ERP5TypeTestCase):
               reference=test_page_reference,
               language="en",
               version="001")
-              
+
     test_page.publish()
     self.tic()
-    
+
     document = website.WebSection_getDocumentValue(test_page_reference)
-    
+
     self.assertNotEquals(None, document)
     self.assertEqual(document.getRelativeUrl(),
                       test_page.getRelativeUrl())
 
   def test_Zuite_uploadScreenShot(self):
     """
-      Test Screeshot upload script used by Zelenium to 
+      Test Screeshot upload script used by Zelenium to
       update screenshots of the documents.
     """
     image_upload = makeFileUpload('TEST-en-002.png')
     self.assertNotEquals(None, image_upload)
-    
+
     # Create a web page, and check if the content is not overwriten
     web_page_reference = "WEB-PAGE-REFERENCE"
     web_page = self.portal.web_page_module.newContent(
-                                     reference=web_page_reference, 
+                                     reference=web_page_reference,
                                      language="en", version="001")
     web_page.publishAlive()
     self.tic()
 
     image_reference = "IMAGE-REFERENCE-%s" % str(time())
     image_page = self.portal.image_module.newContent(
-                                   reference=image_reference, 
+                                   reference=image_reference,
                                    language="en", version="001")
     image_page.publishAlive()
     self.tic()
     image_page_2 = self.portal.image_module.newContent(
-                                   reference=image_reference, 
+                                   reference=image_reference,
                                    language="en", version="002")
     image_page_2.publishAlive()
     self.tic()
 
     self.portal.REQUEST.form['data_uri'] = image_upload
     fake_image_reference = "DO-NOT-EXISTANT-IMAGE"
-    self.assertNotEquals(None, 
+    self.assertNotEquals(None,
                    self.portal.Zuite_uploadScreenshot(image_upload, fake_image_reference))
 
-    self.assertNotEquals(None, 
+    self.assertNotEquals(None,
                    self.portal.Zuite_uploadScreenshot(image_upload, web_page_reference))
 
-    self.assertEqual(None, 
+    self.assertEqual(None,
                    self.portal.Zuite_uploadScreenshot(image_upload, image_reference))
 
     self.tic()
@@ -221,11 +221,11 @@ class TestRunMyDoc(ERP5TypeTestCase):
     </table>
   </body>
 </html>"""
-  
+
     test_page = self.portal.test_page_module.newContent(title="TEST",
                                                         reference='TESTPAGEREFERENCE',
                                                         text_content=test_page_html)
-    self.assertEqual(test_page.TestPage_viewSeleniumTest(), expected_test_html % 
+    self.assertEqual(test_page.TestPage_viewSeleniumTest(), expected_test_html %
                                  ("ERP5TypeTestCase", ""))
 
     self.tic()
@@ -233,7 +233,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
 
     zuite = getattr(self.portal.portal_tests, 'TESTPAGEREFERENCE', None)
     self.assertNotEquals(zuite, None)
-    
+
     zptest = getattr(zuite, "TEST", None)
     self.assertNotEquals(zptest, None)
 

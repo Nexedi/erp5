@@ -7,7 +7,7 @@ def parseTestReport(text):
   parser.feed(text)
   root = parser.close()
   table = root.xpath('//table[@id="SELENIUM-TEST"]')[0]
-  report = {}
+  report = dict()
   header = table[0][0]
   report['status'] = header.attrib['class'].find('passed') > -1
   report['name'] = header[0].text
@@ -49,59 +49,9 @@ def parseTestReport(text):
       del element.attrib['style']
     for child in element:
       stack.append(child)
-  
+
   return dict(title = title, text = lxml.html.tostring(html))
   """
-
-"""
-  Parse a HTML page and return a list of dictionnaries with the chapters and the tests they contain
-"""
-def parseTutorial(text):
-  from Products.ERP5Type.Document import newTempBase
-  from lxml import etree
-  parser = etree.HTMLParser(remove_comments=True)
-  parser.feed(text)
-  root = parser.close()
-  table_list = root.xpath('//table[@id="SELENIUM-TEST"]')
-  table = table_list[0]
-
-  listbox = []
-
-  i = 0
-  # Insert only the content of tbody
-  for table in table_list:
-    listbox.append(newTempBase(context.getPortalObject(),
-                               '',
-                               title = "Tested Chapter " + str(i),
-                               tag   = 'h1'))
-    if len(table) > 0:
-      for row in table[-1]:
-        if(row.tag.lower() == 'tr'):
-          listbox.append(newTempBase(context.getPortalObject(),
-                               '',
-                               title = row[0][0].text,
-                               tag   = 'tr',
-                               arg0  = row[0][1].text,
-                               arg1  = row[0][2].text))
-        else:
-          listbox.append(newTempBase(context.getPortalObject(),
-                               '',
-                               title = row[0][0].text,
-                               tag   = 'tr',
-                               arg0  = row[0][1].text,
-                               arg1  = row[0][2].text))
-          
-
-  stack = [html[1]]
-  # Let's display everything in the test by removing the style attributes (they're not supposed to have any style attributes at all during the tests)
-  while stack:
-    element = stack.pop()
-    if element.attrib.has_key('style'):
-      del element.attrib['style']
-    for child in element:
-      stack.append(child)
-  
-  return dict(title = title, text = lxml.html.tostring(html))
 
 """
   Return the content of a web page
@@ -115,7 +65,6 @@ def urlread(url):
 """
 def extractTest(text):
   import lxml.html
-  from lxml import etree
   root = lxml.html.fromstring(text)
   table_list = root.xpath('//test')
   testcode = ""
@@ -132,10 +81,9 @@ def extractTest(text):
 
 """
   HTML5 Presentation validador
-""" 
+"""
 def validateHTML5Document(text):
   import lxml.html
-  from lxml import etree
   root = lxml.html.fromstring(text)
   section_list = root.xpath('//section')
   count = 0
@@ -148,17 +96,15 @@ def validateHTML5Document(text):
 
     if section.get("class") in ["screenshot", "illustration"]:
       if section.xpath("img") == []:
-         error_list.append("Section %s has class %s but it doesn't have any image." % (count, section.get("class")))
+        error_list.append("Section %s has class %s but it doesn't have any image." % (count, section.get("class")))
       else:
-         if section.xpath("img")[0].get("title") == None:
-           error_list.append("At section %s, img has no title attribute." % count)
+        if section.xpath("img")[0].get("title") == None:
+          error_list.append("At section %s, img has no title attribute." % count)
 
-         if section.xpath("img")[0].get("alt") == None:
-           error_list.append("At section %s, img has no alt attribute." % count)
+        if section.xpath("img")[0].get("alt") == None:
+          error_list.append("At section %s, img has no alt attribute." % count)
 
     if section.xpath("details") == []:
       error_list.append("Section %s has no details tag." % (count))
 
   return error_list
-    
-    
