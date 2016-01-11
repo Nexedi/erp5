@@ -745,6 +745,23 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 0)
 
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoas_default_param_json_param(self):
+    fake_request = do_fake_request("GET")
+
+    self.assertRaisesRegexp(
+      TypeError,
+      # "Unknown columns.*'\\xc3\\xaa'.",
+      "Unknown columns.*\\\\xc3\\\\xaa.*",
+      self.portal.web_site_module.hateoas.ERP5Document_getHateoas,
+      REQUEST=fake_request,
+      mode="search",
+      default_param_json='eyJcdTAwZWEiOiAiXHUwMGU4In0=')
+
 class TestERP5Document_getHateoas_mode_bulk(ERP5HALJSONStyleSkinsMixin):
 
   @simulate('Base_getRequestHeader', '*args, **kwargs',

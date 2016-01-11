@@ -68,6 +68,17 @@ if REQUEST is None:\n
 if response is None:\n
   response = REQUEST.RESPONSE\n
 \n
+# http://stackoverflow.com/a/13105359\n
+def byteify(string):\n
+  if isinstance(string, dict):\n
+    return {byteify(key): byteify(value) for key, value in string.iteritems()}\n
+  elif isinstance(string, list):\n
+    return [byteify(element) for element in string]\n
+  elif isinstance(string, unicode):\n
+    return string.encode(\'utf-8\')\n
+  else:\n
+    return string\n
+\n
 url_template_dict = {\n
   "form_action": "%(traversed_document_url)s/%(action_id)s",\n
   "traverse_generator": "%(root_url)s/%(script_id)s?mode=traverse" + \\\n
@@ -954,7 +965,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
   #   context.log(query)\n
       catalog_kw = {}\n
       if (default_param_json is not None):\n
-        catalog_kw = json.loads(urlsafe_b64decode(default_param_json))\n
+        catalog_kw = byteify(json.loads(urlsafe_b64decode(default_param_json)))\n
       if (list_method is None):\n
         callable_list_method = portal.portal_catalog\n
       else:\n
