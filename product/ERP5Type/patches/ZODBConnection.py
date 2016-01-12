@@ -40,14 +40,7 @@ if 1: # keep indentation. Also good for quick disabling.
     Connection.ping = ping
     Connection.newTransaction = newTransaction
 
-    # See also neo/client/__init__.py from NEOPPOD project
     if FORCE_STORAGE_SYNC_ON_CONNECTION_OPENING:
-
-      try:
-        if Connection._nexedi_fix != 5:
-            raise Exception("A different ZODB fix is already applied")
-      except AttributeError:
-        Connection._nexedi_fix = 5
 
         # Whenever an connection is opened (and there's usually an existing one
         # in DB pool that can be reused) whereas the transaction is already
