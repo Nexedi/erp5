@@ -77,6 +77,8 @@ def SQLVar_render(self, md):
         #v="'%s'" % v
         return v
 
+    if args.get('optional'):
+        return 'null'
     raise ValueError('Invalid %s value for <em>%s</em>: %r'
                      % (t, self.__name__, v))
 
