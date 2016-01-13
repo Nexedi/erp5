@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test Form List Search Action</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test Default Module View</td></tr>\n
+</thead><tbody>\n
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
+\n
+<!-- Clean Up and prepare documents -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/ListBoxZuite_reset</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Reset Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <!-- create a Foo -->\n
+  <td>${base_url}/foo_module/Foo_createObjects?start:int=1&amp;num:int=25</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Initialize -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />\n
+\n
+<!-- start -->\n
+<tr>\n
+  <td>click</td>\n
+  <td>//a[@data-i18n=\'Next\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementNotPresent</td>\n
+  <td>//a[@data-i18n=\'Previous\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Previous\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>search</td>\n
+  <td>Title 10</td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//div[@data-gadget-scope=\'erp5_searchfield\']//input[@value=\'header-submit\' and @type=\'submit\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementNotPresent</td>\n
+  <td>//a[@data-i18n=\'Previous\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Previous\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Title 10</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//span[@data-i18n=\'1 Records\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+</tbody></table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testFormListSearchResetsPagination</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -204,7 +204,8 @@
           })\n
           .push(function (data) {\n
             var options = {\n
-              begin_from: undefined\n
+              begin_from: undefined,\n
+              field_listbox_begin_from: undefined\n
             };\n
             if (data.search) {\n
               options.extended_search = data.search;\n
@@ -358,7 +359,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.5880.58041.14626</string> </value>
+                <value> <string>948.28818.6372.631</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -376,7 +377,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451393377.12</float>
+                        <float>1452691563.42</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
