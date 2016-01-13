@@ -11,8 +11,14 @@
  <portal_type id="Data Analysis Module">
   <item>Data Analysis</item>
  </portal_type>
+ <portal_type id="Data Array">
+  <item>Data Array Line</item>
+ </portal_type>
  <portal_type id="Data Array Module">
   <item>Data Array</item>
+ </portal_type>
+ <portal_type id="Data Event Module">
+  <item>Data Event</item>
  </portal_type>
  <portal_type id="Data Ingestion">
   <item>Data Ingestion Line</item>
@@ -49,6 +55,9 @@
  </portal_type>
  <portal_type id="Ingestion Policy Tool">
   <item>Ingestion Policy</item>
+ </portal_type>
+ <portal_type id="Property Sheet">
+  <item>Data Array Line Existence Constraint</item>
  </portal_type>
  <portal_type id="Sensor Module">
   <item>Sensor</item>

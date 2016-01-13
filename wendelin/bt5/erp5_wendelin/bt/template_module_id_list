@@ -2,6 +2,7 @@ data_acquisition_unit_module
 data_aggregation_unit_module
 data_analysis_module
 data_array_module
+data_event_module
 data_ingestion_module
 data_license_module
 data_operation_module

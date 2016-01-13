@@ -53,9 +53,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -80,6 +78,7 @@
                         <string>my_reference</string>
                         <string>my_version</string>
                         <string>my_publication_section_list</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>

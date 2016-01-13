@@ -1,3 +1,5 @@
 IngestionPolicy
 DataArray
+DataArrayLine
+DataEvent
 OffsetIndex
