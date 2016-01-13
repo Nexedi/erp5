@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_skin_folder_priority</string> </value>
+            <value> <string>your_skin_layer_priority</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -231,6 +231,10 @@
                     <value> <string>-1234.5</string> </value>
                 </item>
                 <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string>text</string> </value>
+                </item>
+                <item>
                     <key> <string>precision</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -240,7 +244,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Skin Folder Priority</string> </value>
+                    <value> <string>Skin Layer Priority</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>

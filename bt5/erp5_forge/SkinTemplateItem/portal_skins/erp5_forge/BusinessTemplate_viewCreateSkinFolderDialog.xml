@@ -73,7 +73,7 @@
                     <value>
                       <list>
                         <string>your_skin_folder_name</string>
-                        <string>your_skin_folder_priority</string>
+                        <string>your_skin_layer_priority</string>
                       </list>
                     </value>
                 </item>
