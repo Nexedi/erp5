@@ -29,6 +29,9 @@
 
 import unittest
 import pprint
+import httplib
+import urlparse
+import base64
 
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
@@ -582,6 +585,38 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       # clean everything up, we don't want to mess the test environment
       self.abort()
       setSite(old_site)
+
+  def test_BasicAuthenticateDesactivated(self):
+    """Make sure Unauthorized error does not lead to Basic auth popup in browser"""
+    portal = self.getPortal()
+    # Create user account with very long login name
+    login_name = 'foo_login_name'
+    password = 'bar_password'
+    acl_users = portal.acl_users
+    acl_users._doAddUser(login_name, password, ['Member'], [])
+    user = acl_users.getUserById(login_name).__of__(acl_users)
+    # Login as the above user
+    newSecurityManager(None, user)
+    self.auth = '%s:%s' % (login_name, password)
+    self.commit()
+    self.tic()
+
+    api_scheme, api_netloc, api_path, api_query, \
+      api_fragment = urlparse.urlsplit(self.portal.absolute_url())
+
+    connection = httplib.HTTPConnection(api_netloc)
+    connection.request(
+      method='GET',
+      url='%s/Person_getPrimaryGroup' % \
+          self.portal.absolute_url(),
+      headers={
+       'Authorization': 'Basic %s' % \
+         base64.b64encode(self.auth)
+      }
+    )
+    response = connection.getresponse()
+    self.assertEqual(response.status, 401)
+    self.assertEqual(response.getheader('WWW-Authenticate'), None)
 
 def test_suite():
   suite = unittest.TestSuite()

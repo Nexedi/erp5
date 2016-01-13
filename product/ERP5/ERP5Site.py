@@ -260,6 +260,10 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  def __before_publishing_traverse__(self, self2, request):
+    request.RESPONSE.realm = None
+    return super(ERP5Site, self).__before_publishing_traverse__(self2, request)
+
   def _createInitialSiteManager(self):
     # This section of code is inspired by
     # Products.CMFDefault.upgrade.to21.upgrade_root_site_manager(),
