@@ -363,6 +363,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
     # portal_types = [x[1] for x in field.get_value(\'portal_types\')]\n
     portal_types = field.get_value(\'portal_types\')\n
     default_params = dict(field.get_value(\'default_params\'))\n
+    default_params[\'ignore_unknown_columns\'] = True\n
     # How to implement pagination?\n
     # default_params.update(REQUEST.form)\n
     lines = field.get_value(\'lines\')\n
