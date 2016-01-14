@@ -76,7 +76,7 @@ request.other[\'is_accounting_report\'] = True\n
 # role_filter_list == None means no filter on the role\n
 if role_filter_list == [\'\'] :\n
   role_filter_list = None\n
- \n
+\n
 section_uid = context.Base_getSectionUidListForSectionCategory(\n
                                              request[\'section_category\'],\n
                                              request[\'section_category_strict\'])\n
@@ -143,6 +143,7 @@ for party in context.Account_zDistinctSectionList(\n
     if omit_balanced_accounts and (\n
         round(simulation_tool.getInventoryAssetPrice(\n
                     mirror_section_uid=party.uid,\n
+                    ignore_unknown_columns=True,\n
                     precision=precision,\n
                     node_category_strict_membership=(\n
                           \'account_type/asset/receivable\',\n
