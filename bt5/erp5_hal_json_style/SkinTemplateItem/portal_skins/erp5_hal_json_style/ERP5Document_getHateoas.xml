@@ -439,7 +439,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
 \n
     result["query"] = url_template_dict["jio_search_template"] % {\n
         "query": make_query({"query": sql_catalog.buildQuery(\n
-          list_method_query_dict\n
+          list_method_query_dict, ignore_unknown_columns=True\n
         ).asSearchTextExpression(sql_catalog)})\n
       }\n
   else:\n
