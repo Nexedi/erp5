@@ -509,6 +509,9 @@
     .allowPublicAcquisition("jio_get", function (param_list) {\n
       return callJioGadget(this, "get", param_list);\n
     })\n
+    .allowPublicAcquisition("jio_allAttachments", function (param_list) {\n
+      return callJioGadget(this, "allAttachments", param_list);\n
+    })\n
     .allowPublicAcquisition("jio_getAttachment", function (param_list) {\n
       return callJioGadget(this, "getAttachment", param_list);\n
     })\n
@@ -785,7 +788,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.17438.33512.7714</string> </value>
+                <value> <string>948.30082.49058.20804</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -803,7 +806,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452007617.7</float>
+                        <float>1452766839.17</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
