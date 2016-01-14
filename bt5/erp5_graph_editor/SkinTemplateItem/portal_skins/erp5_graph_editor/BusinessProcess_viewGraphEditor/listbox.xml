@@ -14,7 +14,6 @@
                 <string>editable_columns</string>
                 <string>enabled</string>
                 <string>portal_types</string>
-                <string>selection_name</string>
                 <string>sort</string>
                 <string>title</string>
               </list>
@@ -145,10 +144,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>business_process_model_view_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
