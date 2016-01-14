@@ -50,9 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-order = context\n
+            <value> <string>order = context\n
 \n
 # copy categories\n
 category_list = [\n
@@ -137,9 +135,7 @@ else:\n
 new_category_dict[\'specialise\'] = trade_condition.getRelativeUrl()\n
 \n
 order.edit(**new_category_dict)\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -149,8 +145,8 @@ order.edit(**new_category_dict)\n
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
