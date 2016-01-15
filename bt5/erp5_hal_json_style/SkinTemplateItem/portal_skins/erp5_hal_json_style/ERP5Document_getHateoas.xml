@@ -62,6 +62,8 @@ from ZTUtils import make_query\n
 import json\n
 from base64 import urlsafe_b64encode, urlsafe_b64decode\n
 from DateTime import DateTime\n
+from ZODB.POSException import ConflictError\n
+\n
 if REQUEST is None:\n
   REQUEST = context.REQUEST\n
   # raise Unauthorized\n
@@ -78,6 +80,14 @@ def byteify(string):\n
     return string.encode(\'utf-8\')\n
   else:\n
     return string\n
+\n
+def getProtectedProperty(document, select):\n
+  try:\n
+    return document.getProperty(select, d=None)\n
+  except (ConflictError, RuntimeError):\n
+    raise\n
+  except:\n
+    return None\n
 \n
 url_template_dict = {\n
   "form_action": "%(traversed_document_url)s/%(action_id)s",\n
@@ -1024,7 +1034,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       except AttributeError:\n
         # XXX ERP5 Site is not an ERP5 document\n
         document = sql_document\n
-      document_uid = document.getUid()\n
+      document_uid = sql_document.uid\n
       document_result = {\n
   #       \'_relative_url\': sql_document.path[length:],\n
         \'_links\': {\n
@@ -1050,7 +1060,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           if (\'default\' in editable_field_dict[select].tales):\n
             tmp_value = None\n
           else:\n
-            tmp_value = document.getProperty(select, d=None)\n
+            tmp_value = getProtectedProperty(document, select)\n
   \n
           property_value = renderField(traversed_document, editable_field_dict[select], form_relative_url,\n
                                        tmp_value,\n
@@ -1058,7 +1068,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                                        document_uid))\n
           REQUEST.other.pop(\'cell\', None)\n
         else:\n
-          property_value = document.getProperty(select, d=None)\n
+          property_value = getProtectedProperty(document, select)\n
         if property_value is not None:\n
           if same_type(property_value, DateTime()):\n
             # Serialize DateTime\n
