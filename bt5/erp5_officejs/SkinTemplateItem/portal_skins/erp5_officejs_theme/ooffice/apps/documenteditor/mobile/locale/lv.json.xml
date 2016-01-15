@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885455.1</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>lv.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\r\n
+  "Common.view.PopClip.copyButtonText": "Kopēt",\r\n
+  "Common.view.PopClip.cutButtonText": "Cut",\r\n
+  "Common.view.PopClip.pasteButtonText": "Ievietot",\r\n
+  "DE.controller.Main.convertationErrorText": "Conversion failed.",\r\n
+  "DE.controller.Main.convertationTimeoutText": "Conversion timeout exceeded.",\r\n
+  "DE.controller.Main.criticalErrorExtText": "Press \\"OK\\" to reload the page.",\r\n
+  "DE.controller.Main.criticalErrorTitle": "Kļūda",\r\n
+  "DE.controller.Main.downloadErrorText": "Lejuplāde neizdevās.",\r\n
+  "DE.controller.Main.editModeText": "Rediģēšanas režīms",\r\n
+  "DE.controller.Main.errorCoAuthoringDisconnect": "Server connection lost. The document cannot be edited right now.",\r\n
+  "DE.controller.Main.errorDefaultMessage": "Kļūdas kods: %1",\r\n
+  "DE.controller.Main.errorDocTooBig": "The document you are trying to open has more than 30000 characters or 1000 paragraphs in it and cannot be opened on your mobile device. Please try to open it using a desktop PC.",\r\n
+  "DE.controller.Main.errorKeyEncrypt": "Unknown key descriptor",\r\n
+  "DE.controller.Main.errorKeyExpire": "Key descriptor expired",\r\n
+  "DE.controller.Main.errorUsersExceed": "The number of users allowed by the pricing plan was exceeded",\r\n
+  "DE.controller.Main.loadingDocText": "LOADING DOCUMENT",\r\n
+  "DE.controller.Main.notcriticalErrorTitle": "Warning",\r\n
+  "DE.controller.Main.printText": "Drukā...",\r\n
+  "DE.controller.Main.reloadButtonText": "Reload Page",\r\n
+  "DE.controller.Main.requestEditFailedMessageText": "Someone is editing this document right now. Please try again later.",\r\n
+  "DE.controller.Main.requestEditFailedTitleText": "Access denied",\r\n
+  "DE.controller.Main.requestEditRightsText": "Requesting editing rights...",\r\n
+  "DE.controller.Main.saveText": "Saglabā ...",\r\n
+  "DE.controller.Main.splitDividerErrorText": "The number of rows must be a divisor of %1",\r\n
+  "DE.controller.Main.splitMaxColsErrorText": "The number of columns must be less than %1",\r\n
+  "DE.controller.Main.splitMaxRowsErrorText": "The number of rows must be less than %1",\r\n
+  "DE.controller.Main.textAnonymous": "Anonymous",\r\n
+  "DE.controller.Main.unknownErrorText": "Unknown error.",\r\n
+  "DE.controller.Main.unsupportedBrowserErrorText ": "Your browser is not supported.",\r\n
+  "DE.controller.Main.uploadImageExtMessage": "Unknown image format.",\r\n
+  "DE.controller.Main.uploadImageFileCountMessage": "No images uploaded.",\r\n
+  "DE.controller.Main.uploadImageSizeMessage": "Maximium image size limit exceeded.",\r\n
+  "DE.controller.Main.viewModeText": "Skatīšanas režīms",\r\n
+  "DE.controller.phone.Main.pageText": "Lapa",\r\n
+  "DE.controller.tablet.Main.pageText": "Lapa",\r\n
+  "DE.controller.tablet.panel.Insert.unsupportUploadText": "Feature is not supported on this device.",\r\n
+  "DE.controller.tablet.panel.Insert.uploadingText": "Uploading",\r\n
+  "DE.controller.toolbar.Edit.dlgLeaveMsgText": "You have unsaved changes in this document. Click \\"Stay on this Page\\" then \\"Save\\" to save them. Click \\"Leave this Page\\" to discard all the unsaved changes.",\r\n
+  "DE.controller.toolbar.Edit.dlgLeaveTitleText": "You leave the application",\r\n
+  "DE.controller.toolbar.Edit.leaveButtonText": "Leave this Page",\r\n
+  "DE.controller.toolbar.Edit.stayButtonText": "Stay on this Page",\r\n
+  "DE.controller.toolbar.View.requestEditFailedMessageText": "You cannot edit the document right now. Please try again later.",\r\n
+  "DE.controller.toolbar.View.requestEditFailedTitleText": "Access denied",\r\n
+  "DE.view.phone.Main.cancelText": "Atcelt",\r\n
+  "DE.view.phone.Main.searchText": "Meklēt",\r\n
+  "DE.view.phone.toolbar.Search.searchText": "Meklēt",\r\n
+  "DE.view.phone.toolbar.View.doneText": "Done",\r\n
+  "DE.view.phone.toolbar.View.readerText": "Reader",\r\n
+  "DE.view.tablet.Main.searchText": "Meklēt",\r\n
+  "DE.view.tablet.panel.Font.backText": "Atpakaļ",\r\n
+  "DE.view.tablet.panel.Font.fontNameText": "Font Name",\r\n
+  "DE.view.tablet.panel.Insert.backText": "Back",\r\n
+  "DE.view.tablet.panel.Insert.columnsText": "Columns",\r\n
+  "DE.view.tablet.panel.Insert.insertColumnText": "Insert Column",\r\n
+  "DE.view.tablet.panel.Insert.insertPicture": "Ievietot attēlu",\r\n
+  "DE.view.tablet.panel.Insert.insertRowText": "Ievietot rindu",\r\n
+  "DE.view.tablet.panel.Insert.insertTableText": "Ievietot tabulu",\r\n
+  "DE.view.tablet.panel.Insert.insertText": "Ievietot",\r\n
+  "DE.view.tablet.panel.Insert.pictureText": "Attēls",\r\n
+  "DE.view.tablet.panel.Insert.pictureUploadFloat": "Insert Float",\r\n
+  "DE.view.tablet.panel.Insert.pictureUploadInline": "Insert Inline",\r\n
+  "DE.view.tablet.panel.Insert.rowsText": "Rindas",\r\n
+  "DE.view.tablet.panel.Insert.tableText": "Table",\r\n
+  "DE.view.tablet.panel.ListStyle.backText": "Atpakaļ",\r\n
+  "DE.view.tablet.panel.ListStyle.bulletsText": "Bullets",\r\n
+  "DE.view.tablet.panel.ListStyle.decIndentText": "Decrease Indent",\r\n
+  "DE.view.tablet.panel.ListStyle.incIndentText": "Palielināt atstarpi",\r\n
+  "DE.view.tablet.panel.ListStyle.listStyleText": "List Style",\r\n
+  "DE.view.tablet.panel.ListStyle.noneText": "none",\r\n
+  "DE.view.tablet.panel.ListStyle.numberingText": "Numbering",\r\n
+  "DE.view.tablet.panel.ListStyle.outlineText": "Struktūrskats",\r\n
+  "DE.view.tablet.panel.Spacing.backText": "Atpakaļ",\r\n
+  "DE.view.tablet.panel.Spacing.decIndentText": "Decrease Indent",\r\n
+  "DE.view.tablet.panel.Spacing.incIndentText": "Palielināt atstarpi",\r\n
+  "DE.view.tablet.panel.Spacing.lineSpacingText": "Paragraph Line Spacing",\r\n
+  "DE.view.tablet.panel.Spacing.spacingText": "Spacing",\r\n
+  "DE.view.tablet.panel.TextColor.backText": "Back",\r\n
+  "DE.view.tablet.panel.TextColor.colorText": "Krāsa",\r\n
+  "DE.view.tablet.panel.TextColor.highlightColorText": "Highlight color",\r\n
+  "DE.view.tablet.panel.TextColor.noFillText": "No Fill",\r\n
+  "DE.view.tablet.panel.TextColor.textColorText": "Text color",\r\n
+  "DE.view.tablet.toolbar.Edit.doneText": "Done",\r\n
+  "DE.view.tablet.toolbar.Edit.fontText": "Font",\r\n
+  "DE.view.tablet.toolbar.Search.searchText": "Meklēt",\r\n
+  "DE.view.tablet.toolbar.View.doneText": "Done",\r\n
+  "DE.view.tablet.toolbar.View.editText": "Rediģēt",\r\n
+  "DE.view.tablet.toolbar.View.readerText": "Reader"\r\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6075</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

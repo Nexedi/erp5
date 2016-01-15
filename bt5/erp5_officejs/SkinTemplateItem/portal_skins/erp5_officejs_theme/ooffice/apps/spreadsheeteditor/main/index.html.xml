@@ -2,25 +2,39 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="File" module="OFS.Image"/>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts44308424.39</string> </value>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
-            <key> <string>__name__</string> </key>
-            <value> <string>index.html</string> </value>
-        </item>
-        <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <!DOCTYPE html>\r\n
 <html>\r\n
@@ -28,13 +42,12 @@
     <title>ONLYOFFICE Document Editor</title>\r\n
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\r\n
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=IE8"/>\r\n
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">\r\n
+    <meta name="description" content="" />\r\n
+    <meta name="keywords" content="" />\r\n
+    <link rel="icon" href="resources/img/favicon.ico" type="image/x-icon" />\r\n
 \r\n
     <link rel="stylesheet" type="text/css" href="../../../sdk/Excel/css/main.css"/>\r\n
-\r\n
-    <!-- debug begin -->\r\n
-    <link rel="stylesheet/less" type="text/css" href="resources/less/app.less" />\r\n
-    <!-- debug end -->\r\n
+    <link rel="stylesheet" type="text/css" href="../../../apps/spreadsheeteditor/main/resources/css/app.css">\r\n
 \r\n
     <!-- splash -->        \r\n
 \r\n
@@ -188,32 +201,27 @@
 \r\n
     <div id="viewport"></div>\r\n
 \r\n
-    <!-- debug begin -->\r\n
-    <script type="text/javascript">var less=less||{};less.env=\'development\';</script>\r\n
-    <script src="../../../vendor/less/dist/less-1.5.1.js" type="text/javascript"></script>\r\n
-    <!-- debug end -->\r\n
-\r\n
-    <!-- application -->\r\n
-    <script type="text/javascript" src="../../../sdk/Common/docscoapisettings.js"></script>\r\n
     <script data-main="app" src="../../../vendor/requirejs/require.js"></script>\r\n
-\r\n
 </body>\r\n
-</html>\r\n
+</html>
 
-
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
-            <key> <string>precondition</string> </key>
-            <value> <string></string> </value>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
-            <key> <string>size</string> </key>
-            <value> <int>6678</int> </value>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
       </dictionary>
     </pickle>

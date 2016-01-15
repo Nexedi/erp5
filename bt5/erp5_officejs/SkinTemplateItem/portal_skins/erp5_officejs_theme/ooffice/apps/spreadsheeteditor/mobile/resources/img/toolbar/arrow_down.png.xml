@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="File" module="OFS.Image"/>
+      <global name="Image" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts44308771.34</string> </value>
+            <value> <string>ts50885463.52</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -35,6 +35,10 @@ syCzgpDhAKuoZYzdpW5lxZnhqNx7SlRDG0oDbCce58LUJ75+UG6oKyYepYBe4k8t9tSLu2DYuA8i
 ZbhofyHwPy71gD1gD9gD9oA9YHfyL8AAyi1SROO5B2IAAAAASUVORK5CYII=</string> </value>
         </item>
         <item>
+            <key> <string>height</string> </key>
+            <value> <int>60</int> </value>
+        </item>
+        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>
@@ -45,6 +49,10 @@ ZbhofyHwPy71gD1gD9gD9oA9YHfyL8AAyi1SROO5B2IAAAAASUVORK5CYII=</string> </value>
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>60</int> </value>
         </item>
       </dictionary>
     </pickle>

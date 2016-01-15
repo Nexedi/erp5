@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885455.18</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>pt.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\r\n
+  "Common.view.PopClip.copyButtonText": "Copiar",\r\n
+  "Common.view.PopClip.cutButtonText": "Cortar",\r\n
+  "Common.view.PopClip.pasteButtonText": "Colar",\r\n
+  "DE.controller.Main.convertationErrorText": "Conversão falhou.",\r\n
+  "DE.controller.Main.convertationTimeoutText": "Tempo limite de conversão excedido.",\r\n
+  "DE.controller.Main.criticalErrorExtText": "Pressione \\"OK\\" para recarregar a página.",\r\n
+  "DE.controller.Main.criticalErrorTitle": "Erro",\r\n
+  "DE.controller.Main.downloadErrorText": "Download falhou.",\r\n
+  "DE.controller.Main.editModeText": "Modo de edição",\r\n
+  "DE.controller.Main.errorCoAuthoringDisconnect": "Conexão com servidor perdida. O documento não pode ser editado neste momento.",\r\n
+  "DE.controller.Main.errorDefaultMessage": "Código do erro: %1",\r\n
+  "DE.controller.Main.errorDocTooBig": "O documento que você está tentando abrir tem mais de 30.000 caracteres ou 1.000 parágrafos e não pode ser aberto em seu dispositivo móvel. Tente abri-lo usando um PC desktop.",\r\n
+  "DE.controller.Main.errorKeyEncrypt": "Descritor de chave desconhecido",\r\n
+  "DE.controller.Main.errorKeyExpire": "Descritor de chave expirado",\r\n
+  "DE.controller.Main.errorUsersExceed": "O número de usuários permitidos pelo plano de preços foi excedido",\r\n
+  "DE.controller.Main.loadingDocText": "CARREGANDO DOCUMENTO",\r\n
+  "DE.controller.Main.notcriticalErrorTitle": "Aviso",\r\n
+  "DE.controller.Main.printText": "Imprimindo...",\r\n
+  "DE.controller.Main.reloadButtonText": "Recarregar página",\r\n
+  "DE.controller.Main.requestEditFailedMessageText": "Alguém está editando este documento neste momento. Tente novamente mais tarde.",\r\n
+  "DE.controller.Main.requestEditFailedTitleText": "Acesso negado",\r\n
+  "DE.controller.Main.requestEditRightsText": "Solicitando direitos de edição...",\r\n
+  "DE.controller.Main.saveText": "Salvando...",\r\n
+  "DE.controller.Main.splitDividerErrorText": "O número de linhas deve ser um divisor de %1",\r\n
+  "DE.controller.Main.splitMaxColsErrorText": "O número de colunas deve ser menor que %1",\r\n
+  "DE.controller.Main.splitMaxRowsErrorText": "O número de linhas deve ser menor que %1",\r\n
+  "DE.controller.Main.textAnonymous": "Anônimo",\r\n
+  "DE.controller.Main.unknownErrorText": "Erro desconhecido.",\r\n
+  "DE.controller.Main.unsupportedBrowserErrorText ": "Seu navegador não é suportado.",\r\n
+  "DE.controller.Main.uploadImageExtMessage": "Formato de imagem desconhecido.",\r\n
+  "DE.controller.Main.uploadImageFileCountMessage": "Sem imagens carregadas.",\r\n
+  "DE.controller.Main.uploadImageSizeMessage": "Tamanho limite máximo da imagem excedido.",\r\n
+  "DE.controller.Main.viewModeText": "Modo de exibição",\r\n
+  "DE.controller.phone.Main.pageText": "Página",\r\n
+  "DE.controller.tablet.Main.pageText": "Página",\r\n
+  "DE.controller.tablet.panel.Insert.unsupportUploadText": "Recurso não é suportado neste dispositivo.",\r\n
+  "DE.controller.tablet.panel.Insert.uploadingText": "Carregando",\r\n
+  "DE.controller.toolbar.Edit.dlgLeaveMsgText": "Você não salvou as alterações neste documento. Clique em \\"Permanecer nesta página\\" e, em seguida, \\"Salvar\\" para salvá-las. Clique em \\"Sair desta página\\" para descartar todas as alterações não salvas.",\r\n
+  "DE.controller.toolbar.Edit.dlgLeaveTitleText": "Você saiu do aplicativo",\r\n
+  "DE.controller.toolbar.Edit.leaveButtonText": "Sair desta página",\r\n
+  "DE.controller.toolbar.Edit.stayButtonText": "Ficar nesta página",\r\n
+  "DE.controller.toolbar.View.requestEditFailedMessageText": "Você não pode editar o documento neste momento. Tente novamente depois.",\r\n
+  "DE.controller.toolbar.View.requestEditFailedTitleText": "Acesso negado",\r\n
+  "DE.view.phone.Main.cancelText": "Cancelar",\r\n
+  "DE.view.phone.Main.searchText": "Pesquisar",\r\n
+  "DE.view.phone.toolbar.Search.searchText": "Pesquisar",\r\n
+  "DE.view.phone.toolbar.View.doneText": "Concluído",\r\n
+  "DE.view.phone.toolbar.View.readerText": "Leitor",\r\n
+  "DE.view.tablet.Main.searchText": "Pesquisar",\r\n
+  "DE.view.tablet.panel.Font.backText": "Voltar",\r\n
+  "DE.view.tablet.panel.Font.fontNameText": "Nome da fonte",\r\n
+  "DE.view.tablet.panel.Insert.backText": "Voltar",\r\n
+  "DE.view.tablet.panel.Insert.columnsText": "Colunas",\r\n
+  "DE.view.tablet.panel.Insert.insertColumnText": "Inserir coluna",\r\n
+  "DE.view.tablet.panel.Insert.insertPicture": "Inserir imagem",\r\n
+  "DE.view.tablet.panel.Insert.insertRowText": "Inserir linha",\r\n
+  "DE.view.tablet.panel.Insert.insertTableText": "Inserir tabela",\r\n
+  "DE.view.tablet.panel.Insert.insertText": "Inserir",\r\n
+  "DE.view.tablet.panel.Insert.pictureText": "Imagem",\r\n
+  "DE.view.tablet.panel.Insert.pictureUploadFloat": "Inserir flutuação",\r\n
+  "DE.view.tablet.panel.Insert.pictureUploadInline": "Inserir embutido",\r\n
+  "DE.view.tablet.panel.Insert.rowsText": "Linhas",\r\n
+  "DE.view.tablet.panel.Insert.tableText": "Tabela",\r\n
+  "DE.view.tablet.panel.ListStyle.backText": "Voltar",\r\n
+  "DE.view.tablet.panel.ListStyle.bulletsText": "Marcadores",\r\n
+  "DE.view.tablet.panel.ListStyle.decIndentText": "Diminuir recuo",\r\n
+  "DE.view.tablet.panel.ListStyle.incIndentText": "Aumentar recuo",\r\n
+  "DE.view.tablet.panel.ListStyle.listStyleText": "Estilo da lista",\r\n
+  "DE.view.tablet.panel.ListStyle.noneText": "nenhum",\r\n
+  "DE.view.tablet.panel.ListStyle.numberingText": "Numeração",\r\n
+  "DE.view.tablet.panel.ListStyle.outlineText": "Contorno",\r\n
+  "DE.view.tablet.panel.Spacing.backText": "Voltar",\r\n
+  "DE.view.tablet.panel.Spacing.decIndentText": "Diminuir recuo",\r\n
+  "DE.view.tablet.panel.Spacing.incIndentText": "Aumentar recuo",\r\n
+  "DE.view.tablet.panel.Spacing.lineSpacingText": "Espaçamento entre linhas do parágrafo",\r\n
+  "DE.view.tablet.panel.Spacing.spacingText": "Espaçamento",\r\n
+  "DE.view.tablet.panel.TextColor.backText": "Voltar",\r\n
+  "DE.view.tablet.panel.TextColor.colorText": "Cor",\r\n
+  "DE.view.tablet.panel.TextColor.highlightColorText": "Cor de realce",\r\n
+  "DE.view.tablet.panel.TextColor.noFillText": "Sem preenchimento",\r\n
+  "DE.view.tablet.panel.TextColor.textColorText": "Cor do texto",\r\n
+  "DE.view.tablet.toolbar.Edit.doneText": "Concluído",\r\n
+  "DE.view.tablet.toolbar.Edit.fontText": "Fonte",\r\n
+  "DE.view.tablet.toolbar.Search.searchText": "Pesquisar",\r\n
+  "DE.view.tablet.toolbar.View.doneText": "Concluído",\r\n
+  "DE.view.tablet.toolbar.View.editText": "Editar",\r\n
+  "DE.view.tablet.toolbar.View.readerText": "Leitor"\r\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6314</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

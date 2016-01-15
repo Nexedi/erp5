@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts50885476.1</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>sl.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\r\n
+  "PE.controller.Main.convertationErrorText": "Pretvorba ni uspela.",\r\n
+  "PE.controller.Main.convertationTimeoutText": "Pretvorbena prekinitev presežena.",\r\n
+  "PE.controller.Main.criticalErrorExtText": "Pritisnite \\"OK\\" za osvežitev strani.",\r\n
+  "PE.controller.Main.criticalErrorTitle": "Napaka",\r\n
+  "PE.controller.Main.downloadErrorText": "Prenos ni uspel.",\r\n
+  "PE.controller.Main.editModeText": "Urejevalni način",\r\n
+  "PE.controller.Main.errorDefaultMessage": "Koda napake: %1",\r\n
+  "PE.controller.Main.errorKeyEncrypt": "Neznan ključni deskriptor",\r\n
+  "PE.controller.Main.errorKeyExpire": "Ključni deskriptor je potekel",\r\n
+  "PE.controller.Main.errorUsersExceed": "Število uporabnikov, ki ga dovoljuje cenovni načrt, je bilo preseženo",\r\n
+  "PE.controller.Main.notcriticalErrorTitle": "Opozorilo",\r\n
+  "PE.controller.Main.printText": "Tiskanje...",\r\n
+  "PE.controller.Main.reloadButtonText": "Osveži stran",\r\n
+  "PE.controller.Main.requestEditFailedMessageText": "Nekdo v tem trenutku ureja ta dokument. Prosim ponovno poskusite kasneje.",\r\n
+  "PE.controller.Main.requestEditFailedTitleText": "Dostop zavrnjen",\r\n
+  "PE.controller.Main.requestEditRightsText": "Zahtevanje urejevalnih pravic...",\r\n
+  "PE.controller.Main.splitDividerErrorText": "Število vrstic mora biti delitelj %1",\r\n
+  "PE.controller.Main.splitMaxColsErrorText": "Število stolpcev mora biti manj kot %1",\r\n
+  "PE.controller.Main.splitMaxRowsErrorText": "Število vrstic mora biti manj kot %1",\r\n
+  "PE.controller.Main.textAnonymous": "Anonimno",\r\n
+  "PE.controller.Main.textLoadingDocument": "Nalaganje Dokumenta",\r\n
+  "PE.controller.Main.unknownErrorText": "Neznana napaka.",\r\n
+  "PE.controller.Main.unsupportedBrowserErrorText": "Vaš brskalnik ni podprt.",\r\n
+  "PE.controller.Main.uploadImageExtMessage": "Neznan format slike.",\r\n
+  "PE.controller.Main.uploadImageFileCountMessage": "Ni naloženih slik.",\r\n
+  "PE.controller.Main.uploadImageSizeMessage": "Maksimalni limit velikosti slike je presežen.",\r\n
+  "PE.controller.Main.viewModeText": "Način ogleda",\r\n
+  "PE.controller.phone.Main.pageText": "Stran",\r\n
+  "PE.controller.tablet.Main.pageText": "Stran",\r\n
+  "PE.controller.toolbar.View.txtFinalMessage": "Konec predogleda diapozitiva",\r\n
+  "PE.view.phone.toolbar.View.doneText": "Končano",\r\n
+  "PE.view.tablet.toolbar.View.doneText": "Končano"\r\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2324</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
