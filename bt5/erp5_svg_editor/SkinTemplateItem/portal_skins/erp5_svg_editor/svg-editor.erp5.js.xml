@@ -54,7 +54,7 @@ $(document).ready(function(){\n
     $.ajax({\n
        type: "POST",\n
        url: "Base_setSVGTextContent",\n
-       data: "text=" + svg_canvas.getSvgString(),\n
+       data: "text=" + encodeURIComponent(svg_canvas.getSvgString()),\n
        success: function(){\n
          window.location.reload();\n
        }\n
