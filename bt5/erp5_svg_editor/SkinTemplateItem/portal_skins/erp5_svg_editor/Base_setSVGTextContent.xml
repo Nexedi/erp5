@@ -57,9 +57,11 @@ text_content = context.REQUEST.get("text")\n
 if text_content is not None:\n
   portal_type = context.getPortalType()\n
   if portal_type in ("Web Illustration",):\n
-    context.setTextContent(text_content)\n
+    getattr(context, "setTextContent")\n
+    context.edit(text_content=text_content)\n
   elif portal_type in ("Image",):\n
-    context.setData(text_content)\n
+    getattr(context, "setData")\n
+    context.edit(data=text_content)\n
 </string> </value>
         </item>
         <item>
