@@ -46,6 +46,7 @@ import urllib
 import urllib2
 import httplib
 import urlparse
+import base64
 
 # test files' home
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
@@ -2008,12 +2009,6 @@ return result
     url_dict = dict(protocol=url_split[0],
                     hostname=url_split[1])
     uri = '%(protocol)s://%(hostname)s' % url_dict
-    password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
-    password_mgr.add_password(realm=None, uri=uri, user='ERP5TypeTestCase',
-                              passwd='')
-    opener = urllib2.build_opener(urllib2.HTTPDigestAuthHandler(password_mgr),
-                                  urllib2.HTTPBasicAuthHandler(password_mgr))
-    urllib2.install_opener(opener)
 
     push_url = '%s%s/newContent' % (uri, self.portal.portal_contributions.getPath(),)
     request = urllib2.Request(push_url, urllib.urlencode(
@@ -2021,7 +2016,10 @@ return result
                                         'filename': filename,
                                         'reference': reference,
                                         'disable_cookie_login__': 1,
-                                        }))
+                                        }), headers={
+       'Authorization': 'Basic %s' %
+         base64.b64encode('ERP5TypeTestCase:')
+      })
     # disable_cookie_login__ is required to force zope to raise Unauthorized (401)
     # then HTTPDigestAuthHandler can perform HTTP Authentication
     response = urllib2.urlopen(request)
