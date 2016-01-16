@@ -113,11 +113,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/*global window, rJS, DocsAPI, _, console, document*/\n
+            <value> <string>/*global window, rJS, DocsAPI, console, document*/\n
 /*jslint nomen: true, maxlen:80, indent:2*/\n
-(function (rJS, DocsAPI, _) {\n
+(function (rJS, DocsAPI) {\n
   "use strict";\n
   // Document Editor event handlers\n
   //function onRequestHistory() {\n
@@ -230,48 +228,6 @@
     // examine event.data.errorCode and event.data.errorDescription for details\n
   }\n
 \n
-  function getMaxHeight(wrap_obj) {\n
-    var height;\n
-    if (wrap_obj) {\n
-      height = window.innerHeight - wrap_obj.offsetTop - 280;\n
-    } else {\n
-      height = window.innerHeight;\n
-    }\n
-    if (height < 400) {\n
-      height = 400;\n
-    }\n
-    return height + "px";\n
-  }\n
-\n
-  function switchFullscreenMode(gadget) {\n
-    return function (event) {\n
-      var fullscreen_classname = "ui-content-fullscreen",\n
-        info,\n
-        wrap = gadget.props.element.querySelector(\'iframe\');\n
-      if (wrap.className.search(" " + fullscreen_classname) === -1) {\n
-        gadget.props.fullScreenRestore = {\n
-          scrollTop: window.pageYOffset,\n
-          scrollLeft: window.pageXOffset,\n
-          width: wrap.width,\n
-          height: wrap.height\n
-        };\n
-\n
-        wrap.style.width = "100%";\n
-        wrap.style.height = getMaxHeight();\n
-        wrap.className += " " + fullscreen_classname;\n
-        document.documentElement.style.overflow = "hidden";\n
-      } else {\n
-        wrap.className = wrap.className\n
-          .replace(new RegExp("\\\\s*" + fullscreen_classname + "\\\\b"), "");\n
-        document.documentElement.style.overflow = "";\n
-        info = gadget.props.fullScreenRestore;\n
-        wrap.style.width = info.width;\n
-        wrap.style.height = getMaxHeight(wrap);\n
-        window.scrollTo(info.scrollLeft, info.scrollTop);\n
-      }\n
-    };\n
-  }\n
-\n
   rJS(window)\n
     .ready(function (g) {\n
       g.props = {};\n
@@ -359,98 +315,85 @@
           g.props.element = element;\n
         });\n
     })\n
-    .declareAcquiredMethod("submitContent", "triggerSubmit")\n
-    .declareAcquiredMethod("maximize", "triggerMaximize")\n
-    .declareAcquiredMethod("fullscreen", "triggerFullscreen")\n
+    .declareAcquiredMethod("submitContent", "submitContent")\n
+    .declareAcquiredMethod("triggerMaximize", "triggerMaximize")\n
+    .declareAcquiredMethod("setFillStyle", "setFillStyle")\n
     .declareMethod(\'render\', function (options) {\n
-      var placehodler = \'oospreadsheet_gadget\',\n
-        placehodler_obj = document.getElementById(placehodler),\n
-        save_button = document.querySelector("button[name=\'Base_edit:method\']"),\n
-        height,\n
-        onBack,\n
+      var placeholder = \'oospreadsheet_gadget\',\n
+        g = this,\n
         documentType,\n
         magic_to_format_map = {\n
           \'DOCY;\' : \'text\',\n
           \'XLSY;\' : \'spreadsheet\',\n
           \'PPTY;\' : \'presentation\'\n
         };\n
-      if (save_button) {\n
-        this.props.erp5_mode = true;\n
-        save_button.hidden = true;\n
-        height = getMaxHeight(placehodler_obj);\n
-        onBack = switchFullscreenMode(this);\n
-      } else {\n
-        height = \'100%\';\n
-        onBack = _.bind(function (event) {\n
-          this.fullscreen();\n
-        }, this);\n
-      }\n
       if (options.value === undefined) {\n
         options.value = \'\';\n
         documentType = options.portal_type;\n
       } else {\n
         documentType = magic_to_format_map[options.value.substring(0, 5)];\n
       }\n
-      this.props.docEditor = new DocsAPI.DocEditor(placehodler, {\n
-        //type: urlParams[\'type\'],\n
-        width: \'100%\',\n
-        height: height,\n
-        // height: getMaxHeight(placehodler_obj),\n
-        //documentType: urlParams[\'doctype\'],\n
-        document: {\n
-          //key: undefined,\n
-          //url: undefined,\n
-          title: options.title,\n
-          //fileType: undefined,\n
-          //vkey: undefined,\n
-          data: options.value || "",\n
-          permissions: {\n
-            edit: true,\n
-            download: true,\n
-            reader: true\n
-          }\n
-        },\n
-        documentType: documentType,\n
-        editorConfig: this.props.cfg,\n
-        events: {\n
-          \'onReady\': onDocEditorReady,\n
-          \'onBack\': onBack,\n
-          // \'onDocumentStateChange\': function (event) {\n
-          //   if (!event.data) {\n
-          //     save_button.click();\n
-          //   }\n
-          // },\n
-          \'onRequestEditRights\': _.bind(function (event) {\n
-            // occurs whenever the user tryes to enter edit mode\n
-            this.props.docEditor.applyEditRights(true,\n
-              "Someone is editing this document right now." +\n
-              " Please try again later.");\n
-          }, this),\n
-          //\'onRequestHistory\': onRequestHistory,\n
-          //\'onRequestHistoryData\': onRequestHistoryData,\n
-          //\'onRequestHistoryClose\': onRequestHistoryClose,\n
-          \'onSave\': _.bind(function (event) {\n
-            this.props.value = event.data;\n
-            if (this.props.erp5_mode) {\n
-              save_button.click();\n
-            } else {\n
-              this.submitContent();\n
+      return g.setFillStyle()\n
+        .push(function (size) {\n
+          g.props.docEditor = new DocsAPI.DocEditor(placeholder, {\n
+            //type: urlParams[\'type\'],\n
+            width: size.width,\n
+            height: size.height,\n
+            documentType: documentType,\n
+            document: {\n
+              //key: undefined,\n
+              //url: undefined,\n
+              title: options.title,\n
+              //fileType: undefined,\n
+              //vkey: undefined,\n
+              data: options.value || "",\n
+              permissions: {\n
+                edit: true,\n
+                download: true,\n
+                reader: true\n
+              }\n
+            },\n
+            editorConfig: g.props.cfg,\n
+            events: {\n
+              \'onReady\': onDocEditorReady,\n
+              \'onBack\': function (event) {\n
+                g.triggerMaximize()\n
+                  .push(function (size) {\n
+                    var iframe = g.props.element.querySelector(\'iframe\');\n
+                    iframe.style.height = size.height;\n
+                    iframe.style.width = size.width;\n
+\n
+                  });\n
+              },\n
+              // \'onDocumentStateChange\': function (event) {\n
+              //   if (!event.data) {\n
+              //     save_button.click();\n
+              //   }\n
+              // },\n
+              \'onRequestEditRights\': function (event) {\n
+                // occurs whenever the user tryes to enter edit mode\n
+                g.props.docEditor.applyEditRights(true,\n
+                  "Someone is editing this document right now." +\n
+                  " Please try again later.");\n
+              },\n
+              //\'onRequestHistory\': onRequestHistory,\n
+              //\'onRequestHistoryData\': onRequestHistoryData,\n
+              //\'onRequestHistoryClose\': onRequestHistoryClose,\n
+              \'onSave\': function (event) {\n
+                g.props.value = event.data;\n
+                g.submitContent();\n
+                return true;\n
+                // if you want to async save process return false\n
+                // and call api.processSaveResult when ready\n
+              },\n
+              \'onError\': onError\n
             }\n
-            // clickSaveButton(\'Base_edit\');\n
-            return true;\n
-            // if you want to async save process return false\n
-            // and call api.processSaveResult when ready\n
-          }, this),\n
-          \'onError\': onError\n
-        }\n
-      });\n
-      this.props.key = options.key || "text_content";\n
-      this.props.value = options.value;\n
-      // default FullscreenMode\n
-      if (this.props.erp5_mode) {\n
-        switchFullscreenMode(this)();\n
-      }\n
-      return {};\n
+          });\n
+          g.props.key = options.key || "text_content";\n
+          g.props.value = options.value;\n
+          // g.fullscreen();\n
+          return {};\n
+        });\n
     })\n
 \n
     .declareMethod(\'getContent\', function () {\n
@@ -462,9 +405,7 @@
       return result;\n
     });\n
 \n
-}(rJS, DocsAPI, _));
-
-]]></string> </value>
+}(rJS, DocsAPI));</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -591,7 +532,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.64367.38968.33962</string> </value>
+                <value> <string>948.31979.10733.53111</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -609,7 +550,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1450904842.41</float>
+                        <float>1452885806.26</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

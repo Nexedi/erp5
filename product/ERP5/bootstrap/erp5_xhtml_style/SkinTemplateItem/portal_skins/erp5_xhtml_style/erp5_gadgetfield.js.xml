@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts20545059.65</string> </value>
+            <value> <string>ts52880321.72</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -55,6 +55,19 @@
     return new RSVP.Promise(resolver, canceller);\n
   }\n
 \n
+  function getMaxHeight(wrap_obj) {\n
+    var height;\n
+    if (wrap_obj) {\n
+      height = window.innerHeight - wrap_obj.offsetTop - 280;\n
+    } else {\n
+      height = window.innerHeight;\n
+    }\n
+    if (height < 400) {\n
+      height = 400;\n
+    }\n
+    return height + "px";\n
+  }\n
+\n
   rJS(window)\n
     /////////////////////////////////////////////////////////////////\n
     // ready\n
@@ -74,6 +87,53 @@
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
+    .allowPublicAcquisition(\'setFillStyle\', function () {\n
+      var gadget = this,\n
+        iframe = gadget.props.element.querySelector(\'iframe\'),\n
+        height = getMaxHeight(iframe),\n
+        width = "100%";\n
+      iframe.setAttribute(\n
+        \'style\',\n
+        \'width: \' + width + \'; border: 0 none; height: \' + height\n
+      );\n
+      return {height: height, width: width};\n
+    })\n
+    .allowPublicAcquisition(\'triggerMaximize\', function () {\n
+      var gadget = this,\n
+        fullscreen_classname = "ui-content-fullscreen",\n
+        info,\n
+        wrap = gadget.props.element.querySelector(\'iframe\'),\n
+        subiframe = wrap.contentDocument.querySelector(\'iframe\');\n
+      if (wrap.className.search(" " + fullscreen_classname) === -1) {\n
+        gadget.props.fullScreenRestore = {\n
+          scrollTop: window.pageYOffset,\n
+          scrollLeft: window.pageXOffset,\n
+          width: wrap.width,\n
+          height: wrap.height\n
+        };\n
+\n
+        wrap.style.width = "100%";\n
+        wrap.style.height = getMaxHeight();\n
+        wrap.className += " " + fullscreen_classname;\n
+        document.documentElement.style.overflow = "hidden";\n
+      } else {\n
+        wrap.className = wrap.className\n
+          .replace(new RegExp("\\\\s*" + fullscreen_classname + "\\\\b"), "");\n
+        document.documentElement.style.overflow = "";\n
+        info = gadget.props.fullScreenRestore;\n
+        // wrap.style.width = info.width;\n
+        wrap.style.width = "100%";\n
+        wrap.style.height = getMaxHeight(wrap);\n
+        window.scrollTo(info.scrollLeft, info.scrollTop);\n
+      }\n
+      if (subiframe) {\n
+        subiframe.style.height = wrap.style.height;\n
+      }\n
+    })\n
+\n
+    .allowPublicAcquisition(\'submitContent\', function () {\n
+      return document.querySelector("button[name=\'Base_edit:method\']").click();\n
+    })\n
     .declareService(function () {\n
       var g = this,\n
         i,\n
@@ -233,7 +293,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7063</int> </value>
+            <value> <int>9114</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

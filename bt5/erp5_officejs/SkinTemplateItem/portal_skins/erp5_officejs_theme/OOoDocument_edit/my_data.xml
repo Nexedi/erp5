@@ -177,7 +177,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>page</string> </value>
                 </item>
                 <item>
                     <key> <string>data_url</string> </key>
@@ -229,7 +229,7 @@
                 </item>
                 <item>
                     <key> <string>js_sandbox</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>iframe</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
