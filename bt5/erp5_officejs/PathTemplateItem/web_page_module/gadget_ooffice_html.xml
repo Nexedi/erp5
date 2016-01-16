@@ -125,7 +125,6 @@
     <script src="rsvp.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
 \n
-    <script type="text/javascript" src="ooffice/vendor/underscore/underscore-min.js"></script>\n
     <script type="text/javascript" src="ooffice/apps/api/documents/api.js"></script>\n
     <script src="gadget_ooffice.js" type="text/javascript"></script>\n
 \n
@@ -273,7 +272,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.29411.54037.32699</string> </value>
+                <value> <string>948.29298.60056.13943</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -291,7 +290,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1450885798.7</float>
+                        <float>1452880107.0</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -113,7 +113,7 @@
 
 /*globals window, rJS, Handlebars, RSVP, loopEventListener, console, document*/\n
 /*jslint indent: 2, nomen: true, maxlen: 80*/\n
-(function (window, RSVP, rJS, Handlebars, loopEventListener) {\n
+(function (window, document, RSVP, rJS, Handlebars, loopEventListener) {\n
   "use strict";\n
 \n
   function saveContent(gadget, submit_event) {\n
@@ -138,23 +138,16 @@
         return gadget.put(gadget.options.jio_key, doc);\n
       });\n
   }\n
-\n
-  function maximize(gadget) {\n
+  \n
+  function setFillStyle(gadget) {\n
     var iframe = gadget.props.element.querySelector(\'iframe\'),\n
-      iframe_class_string = iframe.getAttribute(\'class\') || "",\n
-      class_name = "ui-content-maximize",\n
-      class_index = iframe_class_string.indexOf(class_name);\n
-    if (class_index === -1) {\n
-      iframe_class_string += \' \' + class_name;\n
-      iframe.setAttribute(\'style\', \'\');\n
-      iframe.setAttribute(\'class\', iframe_class_string);\n
-      return;\n
-    }\n
-    iframe_class_string = iframe_class_string.substring(0, class_index)\n
-      + iframe_class_string.substring(class_index + class_name.length);\n
-    iframe.setAttribute(\'style\', \'width:100%; border: 0 none; height: 600px\');\n
-    iframe.setAttribute(\'class\', iframe_class_string);\n
-    return;\n
+      height = getMaxHeight(iframe),\n
+      width = "100%";\n
+    iframe.setAttribute(\n
+      \'style\',\n
+      \'width: \' + width + \'; border: 0 none; height: \' + height\n
+    );\n
+    return {height: height, width: width};\n
   }\n
 \n
   function getMaxHeight(wrap_obj) {\n
@@ -170,7 +163,7 @@
     return height + "px";\n
   }\n
 \n
-  function switchFullscreenMode(gadget) {\n
+  function switchMaximizeMode(gadget) {\n
     var fullscreen_classname = "ui-content-fullscreen",\n
       wrap = gadget.props.element.querySelector(\'iframe\'),\n
       info = gadget.props.fullScreenRestore;\n
@@ -184,7 +177,6 @@
 \n
       wrap.style.width = "100%";\n
       wrap.style.height = getMaxHeight();\n
-      // wrap.style.height = "auto";\n
       wrap.className += " " + fullscreen_classname;\n
       document.documentElement.style.overflow = "hidden";\n
     } else {\n
@@ -195,6 +187,7 @@
       wrap.style.height = getMaxHeight(wrap);\n
       window.scrollTo(info.scrollLeft, info.scrollTop);\n
     }\n
+    return { height: wrap.style.height, width: wrap.style.width }\n
   }\n
 \n
   var gadget_klass = rJS(window),\n
@@ -222,22 +215,19 @@
     .declareAcquiredMethod(\'allDocs\', \'jio_allDocs\')\n
     .declareAcquiredMethod("redirect", "redirect")\n
 \n
+    .allowPublicAcquisition(\'setFillStyle\', function () {\n
+      return setFillStyle(this);\n
+    })\n
+    \n
+    .declareMethod(\'setFillStyle\', function () {\n
+      return setFillStyle(this);\n
+    })\n
+\n
     .allowPublicAcquisition(\'triggerMaximize\', function () {\n
       var gadget = this;\n
       return RSVP.Queue()\n
         .push(function () {\n
-          return maximize(gadget);\n
-        })\n
-        .fail(function (e) {\n
-          console.log(e);\n
-        });\n
-    })\n
-\n
-    .allowPublicAcquisition(\'triggerFullscreen\', function () {\n
-      var gadget = this;\n
-      return RSVP.Queue()\n
-        .push(function () {\n
-          return switchFullscreenMode(gadget);\n
+          return switchMaximizeMode(gadget);\n
         })\n
         .fail(function (e) {\n
           console.log(e);\n
@@ -247,7 +237,7 @@
     .allowPublicAcquisition(\'triggerSubmit\', function () {\n
       return this.props.element.querySelector(\'button\').click();\n
     })\n
-\n
+    \n
     .declareMethod(\'triggerSubmit\', function () {\n
       return this.props.element.querySelector(\'button\').click();\n
     })\n
@@ -255,6 +245,7 @@
     .declareMethod("render", function (options) {\n
       var gadget = this;\n
       gadget.options = options;\n
+\n
       return gadget.jio_get(options.jio_key)\n
         .push(function (doc) {\n
           gadget.options.doc = doc;\n
@@ -302,13 +293,9 @@
           );\n
         })\n
         .push(function (text_content_gadget) {\n
-          var iframe = gadget.props.element.querySelector(\'iframe\');\n
-          iframe.setAttribute(\n
-            \'style\',\n
-            \'width:100%; border: 0 none; height: \' + getMaxHeight(iframe)\n
-          );\n
           text_gadget = text_content_gadget;\n
-          switchFullscreenMode(gadget);\n
+          gadget.setFillStyle();\n
+          // switchMaximizeMode(gadget);\n
           return text_content_gadget.render({\n
             "key": \'text_content\',\n
             "value": gadget.options.doc.data,\n
@@ -342,7 +329,7 @@
         });\n
     });\n
 \n
-}(window, RSVP, rJS, Handlebars, loopEventListener));
+}(window, document, RSVP, rJS, Handlebars, loopEventListener));
 
 ]]></string> </value>
         </item>
@@ -481,7 +468,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.62818.19237.36403</string> </value>
+                <value> <string>948.31999.56515.17117</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -499,7 +486,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1450798287.45</float>
+                        <float>1452882676.55</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
