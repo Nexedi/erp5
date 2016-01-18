@@ -134,8 +134,11 @@ class ERP5UserManager(BasePlugin):
       cache_factory='erp5_content_short')
     person_relative_url = _getPersonRelativeUrlFromReference(reference)
     if person_relative_url is not None:
-      return self.getPortalObject().unrestrictedTraverse(
+      person = self.getPortalObject().unrestrictedTraverse(
         person_relative_url)
+      if person.getPortalType() == "Person":
+        return person
+      return person.getParentValue()
 
   def checkPersonValidity(self, person):
     if person.getValidationState() in ('deleted',):
