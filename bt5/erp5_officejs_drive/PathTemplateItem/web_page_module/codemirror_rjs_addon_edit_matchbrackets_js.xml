@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_drive_jio.js</string> </value>
+            <value> <string>codemirror_addon_edit_matchbrackets.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_drive_jio_js</string> </value>
+            <value> <string>codemirror_rjs_addon_edit_matchbrackets_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -101,103 +101,136 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, jIO, XMLHttpRequestProgressEvent, UriTemplate */\n
-/*jslint indent: 2, maxerr: 3 */\n
-(function (window, rJS, jIO, XMLHttpRequestProgressEvent, UriTemplate) {\n
-  "use strict";\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
 \n
-  // jIO call wrapper for redirection to authentication page if needed\n
-  function wrapJioCall(gadget, method_name, argument_list) {\n
-    var storage = gadget.state_parameter_dict.jio_storage;\n
-    return storage[method_name].apply(storage, argument_list)\n
-      .push(undefined, function (error) {\n
-        if (error instanceof XMLHttpRequestProgressEvent &&\n
-            error.target.status === 401) {\n
-          if (gadget.state_parameter_dict.jio_storage_name === "ERP5") {\n
-            return gadget.redirect({ page: "login" });\n
-          }\n
-          if (gadget.state_parameter_dict.jio_storage_name === "DAV") {\n
-            var regexp = /^Nayookie login_url=(http[s]?:\\/\\/[\\/\\-\\[\\]{}()*+=:?&.,\\\\\\^$|#\\s\\w%]+)$/,\n
-              auth_page = error.target.getResponseHeader(\'WWW-Authenticate\'),\n
-              site;\n
-            if (regexp.test(auth_page)) {\n
-              site = UriTemplate.parse(\n
-                regexp.exec(auth_page)[1]\n
-              ).expand({back_url: window.location.href,\n
-                        origin: window.location.protocol + \'//\' +\n
-                                window.location.host});\n
-              return gadget.redirect({ toExternal: true, url: site});\n
-            }\n
-          }\n
-        }\n
-        throw error;\n
-      });\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+  var ie_lt8 = /MSIE \\d/.test(navigator.userAgent) &&\n
+    (document.documentMode == null || document.documentMode < 8);\n
+\n
+  var Pos = CodeMirror.Pos;\n
+\n
+  var matching = {"(": ")>", ")": "(<", "[": "]>", "]": "[<", "{": "}>", "}": "{<"};\n
+\n
+  function findMatchingBracket(cm, where, strict, config) {\n
+    var line = cm.getLineHandle(where.line), pos = where.ch - 1;\n
+    var match = (pos >= 0 && matching[line.text.charAt(pos)]) || matching[line.text.charAt(++pos)];\n
+    if (!match) return null;\n
+    var dir = match.charAt(1) == ">" ? 1 : -1;\n
+    if (strict && (dir > 0) != (pos == where.ch)) return null;\n
+    var style = cm.getTokenTypeAt(Pos(where.line, pos + 1));\n
+\n
+    var found = scanForBracket(cm, Pos(where.line, pos + (dir > 0 ? 1 : 0)), dir, style || null, config);\n
+    if (found == null) return null;\n
+    return {from: Pos(where.line, pos), to: found && found.pos,\n
+            match: found && found.ch == match.charAt(0), forward: dir > 0};\n
   }\n
 \n
-  rJS(window)\n
+  // bracketRegex is used to specify which type of bracket to scan\n
+  // should be a regexp, e.g. /[[\\]]/\n
+  //\n
+  // Note: If "where" is on an open bracket, then this bracket is ignored.\n
+  //\n
+  // Returns false when no bracket was found, null when it reached\n
+  // maxScanLines and gave up\n
+  function scanForBracket(cm, where, dir, style, config) {\n
+    var maxScanLen = (config && config.maxScanLineLength) || 10000;\n
+    var maxScanLines = (config && config.maxScanLines) || 1000;\n
 \n
-    .ready(function (gadget) {\n
-      // Initialize the gadget local parameters\n
-      // XXX Hardcoded\n
-      gadget.state_parameter_dict = {jio_storage_name: "DAV"};\n
-    })\n
-\n
-    .declareAcquiredMethod("redirect", "redirect")\n
-    .declareAcquiredMethod("getSetting", "getSetting")\n
-\n
-    .declareMethod(\'createJio\', function (jio_options) {\n
-      if (jio_options !== \'XXX couscous\') {\n
-        jio_options = {\n
-          type: "dav",\n
-          // XXX Hardcoded\n
-          url: "https://localhost:5000/webdav",\n
-          with_credentials: true\n
-        };\n
+    var stack = [];\n
+    var re = config && config.bracketRegex ? config.bracketRegex : /[(){}[\\]]/;\n
+    var lineEnd = dir > 0 ? Math.min(where.line + maxScanLines, cm.lastLine() + 1)\n
+                          : Math.max(cm.firstLine() - 1, where.line - maxScanLines);\n
+    for (var lineNo = where.line; lineNo != lineEnd; lineNo += dir) {\n
+      var line = cm.getLine(lineNo);\n
+      if (!line) continue;\n
+      var pos = dir > 0 ? 0 : line.length - 1, end = dir > 0 ? line.length : -1;\n
+      if (line.length > maxScanLen) continue;\n
+      if (lineNo == where.line) pos = where.ch - (dir < 0 ? 1 : 0);\n
+      for (; pos != end; pos += dir) {\n
+        var ch = line.charAt(pos);\n
+        if (re.test(ch) && (style === undefined || cm.getTokenTypeAt(Pos(lineNo, pos + 1)) == style)) {\n
+          var match = matching[ch];\n
+          if ((match.charAt(1) == ">") == (dir > 0)) stack.push(ch);\n
+          else if (!stack.length) return {pos: Pos(lineNo, pos), ch: ch};\n
+          else stack.pop();\n
+        }\n
       }\n
-      this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);\n
-    })\n
-    .declareMethod(\'allDocs\', function () {\n
-      return wrapJioCall(this, \'allDocs\', arguments);\n
-    })\n
-    .declareMethod(\'allAttachments\', function () {\n
-      return wrapJioCall(this, \'allAttachments\', arguments);\n
-    })\n
-    .declareMethod(\'get\', function () {\n
-      return wrapJioCall(this, \'get\', arguments);\n
-    })\n
-    .declareMethod(\'put\', function () {\n
-      return wrapJioCall(this, \'put\', arguments);\n
-    })\n
-    .declareMethod(\'post\', function () {\n
-      return wrapJioCall(this, \'post\', arguments);\n
-    })\n
-    .declareMethod(\'remove\', function () {\n
-      return wrapJioCall(this, \'remove\', arguments);\n
-    })\n
-    .declareMethod(\'getAttachment\', function () {\n
-      return wrapJioCall(this, \'getAttachment\', arguments);\n
-    })\n
-    .declareMethod(\'putAttachment\', function () {\n
-      return wrapJioCall(this, \'putAttachment\', arguments);\n
-    })\n
-    .declareMethod(\'removeAttachment\', function () {\n
-      return wrapJioCall(this, \'removeAttachment\', arguments);\n
-    })\n
-    .declareMethod(\'repair\', function () {\n
-      return wrapJioCall(this, \'repair\', arguments);\n
-    });\n
+    }\n
+    return lineNo - dir == (dir > 0 ? cm.lastLine() : cm.firstLine()) ? false : null;\n
+  }\n
 \n
-}(window, rJS, jIO, XMLHttpRequestProgressEvent, UriTemplate));
+  function matchBrackets(cm, autoclear, config) {\n
+    // Disable brace matching in long lines, since it\'ll cause hugely slow updates\n
+    var maxHighlightLen = cm.state.matchBrackets.maxHighlightLineLength || 1000;\n
+    var marks = [], ranges = cm.listSelections();\n
+    for (var i = 0; i < ranges.length; i++) {\n
+      var match = ranges[i].empty() && findMatchingBracket(cm, ranges[i].head, false, config);\n
+      if (match && cm.getLine(match.from.line).length <= maxHighlightLen) {\n
+        var style = match.match ? "CodeMirror-matchingbracket" : "CodeMirror-nonmatchingbracket";\n
+        marks.push(cm.markText(match.from, Pos(match.from.line, match.from.ch + 1), {className: style}));\n
+        if (match.to && cm.getLine(match.to.line).length <= maxHighlightLen)\n
+          marks.push(cm.markText(match.to, Pos(match.to.line, match.to.ch + 1), {className: style}));\n
+      }\n
+    }\n
+\n
+    if (marks.length) {\n
+      // Kludge to work around the IE bug from issue #1193, where text\n
+      // input stops going to the textare whever this fires.\n
+      if (ie_lt8 && cm.state.focused) cm.focus();\n
+\n
+      var clear = function() {\n
+        cm.operation(function() {\n
+          for (var i = 0; i < marks.length; i++) marks[i].clear();\n
+        });\n
+      };\n
+      if (autoclear) setTimeout(clear, 800);\n
+      else return clear;\n
+    }\n
+  }\n
+\n
+  var currentlyHighlighted = null;\n
+  function doMatchBrackets(cm) {\n
+    cm.operation(function() {\n
+      if (currentlyHighlighted) {currentlyHighlighted(); currentlyHighlighted = null;}\n
+      currentlyHighlighted = matchBrackets(cm, false, cm.state.matchBrackets);\n
+    });\n
+  }\n
+\n
+  CodeMirror.defineOption("matchBrackets", false, function(cm, val, old) {\n
+    if (old && old != CodeMirror.Init)\n
+      cm.off("cursorActivity", doMatchBrackets);\n
+    if (val) {\n
+      cm.state.matchBrackets = typeof val == "object" ? val : {};\n
+      cm.on("cursorActivity", doMatchBrackets);\n
+    }\n
+  });\n
+\n
+  CodeMirror.defineExtension("matchBrackets", function() {matchBrackets(this, true);});\n
+  CodeMirror.defineExtension("findMatchingBracket", function(pos, strict, config){\n
+    return findMatchingBracket(this, pos, strict, config);\n
+  });\n
+  CodeMirror.defineExtension("scanForBracket", function(pos, dir, style, config){\n
+    return scanForBracket(this, pos, dir, style, config);\n
+  });\n
+});
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Drive Jio Gadget JS</string> </value>
+            <value> <string>CodeMirror Addon Edit MatchBracket</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value> <string>4.3.0</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -257,7 +290,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -279,8 +312,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451481239.72</float>
-                        <string>UTC</string>
+                        <float>1406898405.59</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
@@ -324,7 +357,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.36185.35957.25497</string> </value>
+                <value> <string>948.28971.4139.30446</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -342,7 +375,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453132424.59</float>
+                        <float>1453133744.32</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -369,7 +402,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -399,8 +432,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451481208.9</float>
-                        <string>UTC</string>
+                        <float>1405068770.4</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

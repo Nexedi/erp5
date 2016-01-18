@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Style" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_drive_jio.js</string> </value>
+            <value> <string>gadget_codemirror.css</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_drive_jio_js</string> </value>
+            <value> <string>codemirror_rjs_gadget_css</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Style</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -99,101 +99,23 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/*global window, rJS, jIO, XMLHttpRequestProgressEvent, UriTemplate */\n
-/*jslint indent: 2, maxerr: 3 */\n
-(function (window, rJS, jIO, XMLHttpRequestProgressEvent, UriTemplate) {\n
-  "use strict";\n
+            <value> <string>// .CodeMirror, .codemirror_gadget {\n
+  // FIXME: hardcoded value\n
+//   height: 50em;\n
+// }\n
 \n
-  // jIO call wrapper for redirection to authentication page if needed\n
-  function wrapJioCall(gadget, method_name, argument_list) {\n
-    var storage = gadget.state_parameter_dict.jio_storage;\n
-    return storage[method_name].apply(storage, argument_list)\n
-      .push(undefined, function (error) {\n
-        if (error instanceof XMLHttpRequestProgressEvent &&\n
-            error.target.status === 401) {\n
-          if (gadget.state_parameter_dict.jio_storage_name === "ERP5") {\n
-            return gadget.redirect({ page: "login" });\n
-          }\n
-          if (gadget.state_parameter_dict.jio_storage_name === "DAV") {\n
-            var regexp = /^Nayookie login_url=(http[s]?:\\/\\/[\\/\\-\\[\\]{}()*+=:?&.,\\\\\\^$|#\\s\\w%]+)$/,\n
-              auth_page = error.target.getResponseHeader(\'WWW-Authenticate\'),\n
-              site;\n
-            if (regexp.test(auth_page)) {\n
-              site = UriTemplate.parse(\n
-                regexp.exec(auth_page)[1]\n
-              ).expand({back_url: window.location.href,\n
-                        origin: window.location.protocol + \'//\' +\n
-                                window.location.host});\n
-              return gadget.redirect({ toExternal: true, url: site});\n
-            }\n
-          }\n
-        }\n
-        throw error;\n
-      });\n
-  }\n
-\n
-  rJS(window)\n
-\n
-    .ready(function (gadget) {\n
-      // Initialize the gadget local parameters\n
-      // XXX Hardcoded\n
-      gadget.state_parameter_dict = {jio_storage_name: "DAV"};\n
-    })\n
-\n
-    .declareAcquiredMethod("redirect", "redirect")\n
-    .declareAcquiredMethod("getSetting", "getSetting")\n
-\n
-    .declareMethod(\'createJio\', function (jio_options) {\n
-      if (jio_options !== \'XXX couscous\') {\n
-        jio_options = {\n
-          type: "dav",\n
-          // XXX Hardcoded\n
-          url: "https://localhost:5000/webdav",\n
-          with_credentials: true\n
-        };\n
-      }\n
-      this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);\n
-    })\n
-    .declareMethod(\'allDocs\', function () {\n
-      return wrapJioCall(this, \'allDocs\', arguments);\n
-    })\n
-    .declareMethod(\'allAttachments\', function () {\n
-      return wrapJioCall(this, \'allAttachments\', arguments);\n
-    })\n
-    .declareMethod(\'get\', function () {\n
-      return wrapJioCall(this, \'get\', arguments);\n
-    })\n
-    .declareMethod(\'put\', function () {\n
-      return wrapJioCall(this, \'put\', arguments);\n
-    })\n
-    .declareMethod(\'post\', function () {\n
-      return wrapJioCall(this, \'post\', arguments);\n
-    })\n
-    .declareMethod(\'remove\', function () {\n
-      return wrapJioCall(this, \'remove\', arguments);\n
-    })\n
-    .declareMethod(\'getAttachment\', function () {\n
-      return wrapJioCall(this, \'getAttachment\', arguments);\n
-    })\n
-    .declareMethod(\'putAttachment\', function () {\n
-      return wrapJioCall(this, \'putAttachment\', arguments);\n
-    })\n
-    .declareMethod(\'removeAttachment\', function () {\n
-      return wrapJioCall(this, \'removeAttachment\', arguments);\n
-    })\n
-    .declareMethod(\'repair\', function () {\n
-      return wrapJioCall(this, \'repair\', arguments);\n
-    });\n
-\n
-}(window, rJS, jIO, XMLHttpRequestProgressEvent, UriTemplate));
-
-]]></string> </value>
+.CodeMirror {\n
+  // border: 1px solid #eee;\n
+  height: 60em;\n
+}\n
+// .CodeMirror-scroll {\n
+//  overflow-y: hidden;\n
+//   overflow-x: auto;\n
+// }</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Drive Jio Gadget JS</string> </value>
+            <value> <string>Codemirror Gadget CSS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -257,7 +179,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -279,8 +201,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451481239.72</float>
-                        <string>UTC</string>
+                        <float>1406898405.98</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
@@ -324,7 +246,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.36185.35957.25497</string> </value>
+                <value> <string>948.36205.49312.836</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -342,7 +264,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453132424.59</float>
+                        <float>1453133636.42</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -365,11 +287,13 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -381,7 +305,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
+                <value> <string>empty</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -399,8 +323,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451481208.9</float>
-                        <string>UTC</string>
+                        <float>1405081692.2</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

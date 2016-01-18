@@ -118,11 +118,13 @@
 \n
   </head>\n
   <body>\n
-        <div id=message></div>\n
+        <noscript>Javascript needed.</noscript>\n
+\n
+        <p class=message></p>\n
         <form class="view-web-page-form">\n
-            <textarea id="content"></textarea>\n
             <button type="submit"  class="ui-btn ui-btn-b ui-btn-inline ui-icon-edit ui-btn-icon-right ui-screen-hidden">Save</button>\n
         </form>\n
+        <div data-gadget-url="gadget_codemirror.html" data-gadget-scope="codemirror"></div>\n
   </body>\n
 </html>
 
@@ -261,7 +263,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.20288.34344.32136</string> </value>
+                <value> <string>948.35794.23372.40226</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -279,7 +281,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452183396.51</float>
+                        <float>1453109726.99</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -130,6 +130,34 @@ jquerymobile.css\n
 jquerymobile.js\n
 renderjs.js\n
 rsvp.js\n
+gadget_officejs_drive_page_edit.html\n
+gadget_officejs_drive_page_edit.js\n
+gadget_officejs_drive_page_browse_storage.html\n
+gadget_officejs_drive_page_browse.js\n
+gadget_officejs_drive_panel.html\n
+gadget_officejs_drive_jio.js\n
+gadget_officejs_drive_jio.html\n
+gadget_officejs_drive_header.js\n
+gadget_officejs_drive.appcache\n
+gadget_officejs_drive_panel.js\n
+gadget_officejs_drive_header.html\n
+gadget_officejs_drive_router.html\n
+gadget_officejs_drive_router.js\n
+gadget_codemirror.js\n
+gadget_codemirror.html\n
+gadget_codemirror.css\n
+codemirror_theme_zenburn.css\n
+codemirror_mode_javascript.js\n
+codemirror_mode_clike.js\n
+codemirror_keymap_vim.js\n
+codemirror.js\n
+codemirror.css\n
+codemirror_addon_searchcursor.js\n
+codemirror_addon_edit_matchbrackets.js\n
+codemirror_addon_display_fullscreen.js\n
+codemirror_addon_display_fullscreen.css\n
+codemirror_addon_dialog.js\n
+codemirror_addon_dialog.css\n
 NETWORK:\n
 *
 
@@ -268,7 +296,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.8659.41277.10359</string> </value>
+                <value> <string>948.27240.55520.50022</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -286,7 +314,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451480890.17</float>
+                        <float>1452596017.77</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -133,6 +133,9 @@
 \n
   <body>\n
     <h1>Super OfficeJS Drive</h1>\n
+    <form>\n
+    position: <input type="text" name="position">\n
+    </form>\n
     <ul>\n
     </ul>\n
   </body>\n
@@ -276,7 +279,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.20216.15255.7833</string> </value>
+                <value> <string>948.27123.59534.19558</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -294,7 +297,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452176160.33</float>
+                        <float>1452589359.42</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -111,9 +111,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*globals window, rJS, document */\n
+/*globals window, rJS, RSVP, loopEventListener, document */\n
 /*jslint indent: 2, nomen: true, maxlen: 80*/\n
-(function (window, rJS, document) {\n
+(function (window, rJS, RSVP, loopEventListener, document) {\n
   "use strict";\n
 \n
   var gadget_klass = rJS(window);\n
@@ -128,11 +128,28 @@
     })\n
 \n
     .declareAcquiredMethod("jio_allAttachments", "jio_allAttachments")\n
+    .declareAcquiredMethod("redirect", "redirect")\n
+\n
 \n
     .declareMethod("render", function (options) {\n
       var gadget = this,\n
         ul = gadget.props.element.querySelector(\'ul\'),\n
-        position = options.position || \'/key/notes/\';\n
+        position = options.position || \'/\';\n
+\n
+      if (!position.startsWith(\'/\')) {\n
+        position = \'/\' + position;\n
+      }\n
+      if (!position.endsWith(\'/\')) {\n
+        position += \'/\';\n
+      }\n
+\n
+      gadget.props.element.querySelector(\'input\').value = position;\n
+\n
+      // clean previous ul children\n
+      while (ul.hasChildNodes()) {\n
+        ul.removeChild(ul.firstChild);\n
+      }\n
+\n
       return gadget.jio_allAttachments(position)\n
         .push(function (all) {\n
           var key,\n
@@ -150,9 +167,27 @@
             }\n
           }\n
         });\n
+    })\n
+\n
+    .declareService(function () {\n
+      var gadget = this;\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return loopEventListener(\n
+            gadget.props.element.querySelector(\'form\'),\n
+            \'submit\',\n
+            true,\n
+            function () {\n
+              gadget.redirect(\n
+                {position: gadget.props.element.querySelector(\'input\').value}\n
+              );\n
+            }\n
+          );\n
+        });\n
     });\n
 \n
-}(window, rJS, document));
+}(window, rJS, RSVP, loopEventListener, document));
 
 ]]></string> </value>
         </item>
@@ -291,7 +326,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.20330.12482.53299</string> </value>
+                <value> <string>948.30407.28943.54340</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -309,7 +344,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452181116.02</float>
+                        <float>1453118514.19</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

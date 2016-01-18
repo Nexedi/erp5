@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_drive_jio.js</string> </value>
+            <value> <string>codemirror_addon_searchcursor.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_drive_jio_js</string> </value>
+            <value> <string>codemirror_rjs_addon_searchcursor_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -101,103 +101,205 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, jIO, XMLHttpRequestProgressEvent, UriTemplate */\n
-/*jslint indent: 2, maxerr: 3 */\n
-(function (window, rJS, jIO, XMLHttpRequestProgressEvent, UriTemplate) {\n
-  "use strict";\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
 \n
-  // jIO call wrapper for redirection to authentication page if needed\n
-  function wrapJioCall(gadget, method_name, argument_list) {\n
-    var storage = gadget.state_parameter_dict.jio_storage;\n
-    return storage[method_name].apply(storage, argument_list)\n
-      .push(undefined, function (error) {\n
-        if (error instanceof XMLHttpRequestProgressEvent &&\n
-            error.target.status === 401) {\n
-          if (gadget.state_parameter_dict.jio_storage_name === "ERP5") {\n
-            return gadget.redirect({ page: "login" });\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+  "use strict";\n
+  var Pos = CodeMirror.Pos;\n
+\n
+  function SearchCursor(doc, query, pos, caseFold) {\n
+    this.atOccurrence = false; this.doc = doc;\n
+    if (caseFold == null && typeof query == "string") caseFold = false;\n
+\n
+    pos = pos ? doc.clipPos(pos) : Pos(0, 0);\n
+    this.pos = {from: pos, to: pos};\n
+\n
+    // The matches method is filled in based on the type of query.\n
+    // It takes a position and a direction, and returns an object\n
+    // describing the next occurrence of the query, or null if no\n
+    // more matches were found.\n
+    if (typeof query != "string") { // Regexp match\n
+      if (!query.global) query = new RegExp(query.source, query.ignoreCase ? "ig" : "g");\n
+      this.matches = function(reverse, pos) {\n
+        if (reverse) {\n
+          query.lastIndex = 0;\n
+          var line = doc.getLine(pos.line).slice(0, pos.ch), cutOff = 0, match, start;\n
+          for (;;) {\n
+            query.lastIndex = cutOff;\n
+            var newMatch = query.exec(line);\n
+            if (!newMatch) break;\n
+            match = newMatch;\n
+            start = match.index;\n
+            cutOff = match.index + (match[0].length || 1);\n
+            if (cutOff == line.length) break;\n
           }\n
-          if (gadget.state_parameter_dict.jio_storage_name === "DAV") {\n
-            var regexp = /^Nayookie login_url=(http[s]?:\\/\\/[\\/\\-\\[\\]{}()*+=:?&.,\\\\\\^$|#\\s\\w%]+)$/,\n
-              auth_page = error.target.getResponseHeader(\'WWW-Authenticate\'),\n
-              site;\n
-            if (regexp.test(auth_page)) {\n
-              site = UriTemplate.parse(\n
-                regexp.exec(auth_page)[1]\n
-              ).expand({back_url: window.location.href,\n
-                        origin: window.location.protocol + \'//\' +\n
-                                window.location.host});\n
-              return gadget.redirect({ toExternal: true, url: site});\n
+          var matchLen = (match && match[0].length) || 0;\n
+          if (!matchLen) {\n
+            if (start == 0 && line.length == 0) {match = undefined;}\n
+            else if (start != doc.getLine(pos.line).length) {\n
+              matchLen++;\n
             }\n
           }\n
+        } else {\n
+          query.lastIndex = pos.ch;\n
+          var line = doc.getLine(pos.line), match = query.exec(line);\n
+          var matchLen = (match && match[0].length) || 0;\n
+          var start = match && match.index;\n
+          if (start + matchLen != line.length && !matchLen) matchLen = 1;\n
         }\n
-        throw error;\n
-      });\n
-  }\n
-\n
-  rJS(window)\n
-\n
-    .ready(function (gadget) {\n
-      // Initialize the gadget local parameters\n
-      // XXX Hardcoded\n
-      gadget.state_parameter_dict = {jio_storage_name: "DAV"};\n
-    })\n
-\n
-    .declareAcquiredMethod("redirect", "redirect")\n
-    .declareAcquiredMethod("getSetting", "getSetting")\n
-\n
-    .declareMethod(\'createJio\', function (jio_options) {\n
-      if (jio_options !== \'XXX couscous\') {\n
-        jio_options = {\n
-          type: "dav",\n
-          // XXX Hardcoded\n
-          url: "https://localhost:5000/webdav",\n
-          with_credentials: true\n
+        if (match && matchLen)\n
+          return {from: Pos(pos.line, start),\n
+                  to: Pos(pos.line, start + matchLen),\n
+                  match: match};\n
+      };\n
+    } else { // String query\n
+      var origQuery = query;\n
+      if (caseFold) query = query.toLowerCase();\n
+      var fold = caseFold ? function(str){return str.toLowerCase();} : function(str){return str;};\n
+      var target = query.split("\\n");\n
+      // Different methods for single-line and multi-line queries\n
+      if (target.length == 1) {\n
+        if (!query.length) {\n
+          // Empty string would match anything and never progress, so\n
+          // we define it to match nothing instead.\n
+          this.matches = function() {};\n
+        } else {\n
+          this.matches = function(reverse, pos) {\n
+            if (reverse) {\n
+              var orig = doc.getLine(pos.line).slice(0, pos.ch), line = fold(orig);\n
+              var match = line.lastIndexOf(query);\n
+              if (match > -1) {\n
+                match = adjustPos(orig, line, match);\n
+                return {from: Pos(pos.line, match), to: Pos(pos.line, match + origQuery.length)};\n
+              }\n
+             } else {\n
+               var orig = doc.getLine(pos.line).slice(pos.ch), line = fold(orig);\n
+               var match = line.indexOf(query);\n
+               if (match > -1) {\n
+                 match = adjustPos(orig, line, match) + pos.ch;\n
+                 return {from: Pos(pos.line, match), to: Pos(pos.line, match + origQuery.length)};\n
+               }\n
+            }\n
+          };\n
+        }\n
+      } else {\n
+        var origTarget = origQuery.split("\\n");\n
+        this.matches = function(reverse, pos) {\n
+          var last = target.length - 1;\n
+          if (reverse) {\n
+            if (pos.line - (target.length - 1) < doc.firstLine()) return;\n
+            if (fold(doc.getLine(pos.line).slice(0, origTarget[last].length)) != target[target.length - 1]) return;\n
+            var to = Pos(pos.line, origTarget[last].length);\n
+            for (var ln = pos.line - 1, i = last - 1; i >= 1; --i, --ln)\n
+              if (target[i] != fold(doc.getLine(ln))) return;\n
+            var line = doc.getLine(ln), cut = line.length - origTarget[0].length;\n
+            if (fold(line.slice(cut)) != target[0]) return;\n
+            return {from: Pos(ln, cut), to: to};\n
+          } else {\n
+            if (pos.line + (target.length - 1) > doc.lastLine()) return;\n
+            var line = doc.getLine(pos.line), cut = line.length - origTarget[0].length;\n
+            if (fold(line.slice(cut)) != target[0]) return;\n
+            var from = Pos(pos.line, cut);\n
+            for (var ln = pos.line + 1, i = 1; i < last; ++i, ++ln)\n
+              if (target[i] != fold(doc.getLine(ln))) return;\n
+            if (fold(doc.getLine(ln).slice(0, origTarget[last].length)) != target[last]) return;\n
+            return {from: from, to: Pos(ln, origTarget[last].length)};\n
+          }\n
         };\n
       }\n
-      this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);\n
-    })\n
-    .declareMethod(\'allDocs\', function () {\n
-      return wrapJioCall(this, \'allDocs\', arguments);\n
-    })\n
-    .declareMethod(\'allAttachments\', function () {\n
-      return wrapJioCall(this, \'allAttachments\', arguments);\n
-    })\n
-    .declareMethod(\'get\', function () {\n
-      return wrapJioCall(this, \'get\', arguments);\n
-    })\n
-    .declareMethod(\'put\', function () {\n
-      return wrapJioCall(this, \'put\', arguments);\n
-    })\n
-    .declareMethod(\'post\', function () {\n
-      return wrapJioCall(this, \'post\', arguments);\n
-    })\n
-    .declareMethod(\'remove\', function () {\n
-      return wrapJioCall(this, \'remove\', arguments);\n
-    })\n
-    .declareMethod(\'getAttachment\', function () {\n
-      return wrapJioCall(this, \'getAttachment\', arguments);\n
-    })\n
-    .declareMethod(\'putAttachment\', function () {\n
-      return wrapJioCall(this, \'putAttachment\', arguments);\n
-    })\n
-    .declareMethod(\'removeAttachment\', function () {\n
-      return wrapJioCall(this, \'removeAttachment\', arguments);\n
-    })\n
-    .declareMethod(\'repair\', function () {\n
-      return wrapJioCall(this, \'repair\', arguments);\n
-    });\n
+    }\n
+  }\n
 \n
-}(window, rJS, jIO, XMLHttpRequestProgressEvent, UriTemplate));
+  SearchCursor.prototype = {\n
+    findNext: function() {return this.find(false);},\n
+    findPrevious: function() {return this.find(true);},\n
+\n
+    find: function(reverse) {\n
+      var self = this, pos = this.doc.clipPos(reverse ? this.pos.from : this.pos.to);\n
+      function savePosAndFail(line) {\n
+        var pos = Pos(line, 0);\n
+        self.pos = {from: pos, to: pos};\n
+        self.atOccurrence = false;\n
+        return false;\n
+      }\n
+\n
+      for (;;) {\n
+        if (this.pos = this.matches(reverse, pos)) {\n
+          this.atOccurrence = true;\n
+          return this.pos.match || true;\n
+        }\n
+        if (reverse) {\n
+          if (!pos.line) return savePosAndFail(0);\n
+          pos = Pos(pos.line-1, this.doc.getLine(pos.line-1).length);\n
+        }\n
+        else {\n
+          var maxLine = this.doc.lineCount();\n
+          if (pos.line == maxLine - 1) return savePosAndFail(maxLine);\n
+          pos = Pos(pos.line + 1, 0);\n
+        }\n
+      }\n
+    },\n
+\n
+    from: function() {if (this.atOccurrence) return this.pos.from;},\n
+    to: function() {if (this.atOccurrence) return this.pos.to;},\n
+\n
+    replace: function(newText, origin) {\n
+      if (!this.atOccurrence) return;\n
+      var lines = CodeMirror.splitLines(newText);\n
+      this.doc.replaceRange(lines, this.pos.from, this.pos.to, origin);\n
+      this.pos.to = Pos(this.pos.from.line + lines.length - 1,\n
+                        lines[lines.length - 1].length + (lines.length == 1 ? this.pos.from.ch : 0));\n
+    }\n
+  };\n
+\n
+  // Maps a position in a case-folded line back to a position in the original line\n
+  // (compensating for codepoints increasing in number during folding)\n
+  function adjustPos(orig, folded, pos) {\n
+    if (orig.length == folded.length) return pos;\n
+    for (var pos1 = Math.min(pos, orig.length);;) {\n
+      var len1 = orig.slice(0, pos1).toLowerCase().length;\n
+      if (len1 < pos) ++pos1;\n
+      else if (len1 > pos) --pos1;\n
+      else return pos1;\n
+    }\n
+  }\n
+\n
+  CodeMirror.defineExtension("getSearchCursor", function(query, pos, caseFold) {\n
+    return new SearchCursor(this.doc, query, pos, caseFold);\n
+  });\n
+  CodeMirror.defineDocExtension("getSearchCursor", function(query, pos, caseFold) {\n
+    return new SearchCursor(this, query, pos, caseFold);\n
+  });\n
+\n
+  CodeMirror.defineExtension("selectMatches", function(query, caseFold) {\n
+    var ranges = [];\n
+    var cur = this.getSearchCursor(query, this.getCursor("from"), caseFold);\n
+    while (cur.findNext()) {\n
+      if (CodeMirror.cmpPos(cur.to(), this.getCursor("to")) > 0) break;\n
+      ranges.push({anchor: cur.from(), head: cur.to()});\n
+    }\n
+    if (ranges.length)\n
+      this.setSelections(ranges, 0);\n
+  });\n
+});
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Drive Jio Gadget JS</string> </value>
+            <value> <string>CodeMirror Addon Search SearchCursor</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value> <string>4.3.0</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -257,7 +359,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -279,8 +381,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451481239.72</float>
-                        <string>UTC</string>
+                        <float>1406898405.6</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
@@ -324,7 +426,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.36185.35957.25497</string> </value>
+                <value> <string>948.28970.29339.46830</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -342,7 +444,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453132424.59</float>
+                        <float>1453133731.36</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -369,7 +471,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -399,8 +501,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451481208.9</float>
-                        <string>UTC</string>
+                        <float>1405068082.99</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

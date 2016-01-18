@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_drive_jio.js</string> </value>
+            <value> <string>codemirror_addon_display_fullscreen.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_drive_jio_js</string> </value>
+            <value> <string>codemirror_rjs_addon_display_fullscreen_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -101,103 +101,57 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, jIO, XMLHttpRequestProgressEvent, UriTemplate */\n
-/*jslint indent: 2, maxerr: 3 */\n
-(function (window, rJS, jIO, XMLHttpRequestProgressEvent, UriTemplate) {\n
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
   "use strict";\n
 \n
-  // jIO call wrapper for redirection to authentication page if needed\n
-  function wrapJioCall(gadget, method_name, argument_list) {\n
-    var storage = gadget.state_parameter_dict.jio_storage;\n
-    return storage[method_name].apply(storage, argument_list)\n
-      .push(undefined, function (error) {\n
-        if (error instanceof XMLHttpRequestProgressEvent &&\n
-            error.target.status === 401) {\n
-          if (gadget.state_parameter_dict.jio_storage_name === "ERP5") {\n
-            return gadget.redirect({ page: "login" });\n
-          }\n
-          if (gadget.state_parameter_dict.jio_storage_name === "DAV") {\n
-            var regexp = /^Nayookie login_url=(http[s]?:\\/\\/[\\/\\-\\[\\]{}()*+=:?&.,\\\\\\^$|#\\s\\w%]+)$/,\n
-              auth_page = error.target.getResponseHeader(\'WWW-Authenticate\'),\n
-              site;\n
-            if (regexp.test(auth_page)) {\n
-              site = UriTemplate.parse(\n
-                regexp.exec(auth_page)[1]\n
-              ).expand({back_url: window.location.href,\n
-                        origin: window.location.protocol + \'//\' +\n
-                                window.location.host});\n
-              return gadget.redirect({ toExternal: true, url: site});\n
-            }\n
-          }\n
-        }\n
-        throw error;\n
-      });\n
+  CodeMirror.defineOption("fullScreen", false, function(cm, val, old) {\n
+    if (old == CodeMirror.Init) old = false;\n
+    if (!old == !val) return;\n
+    if (val) setFullscreen(cm);\n
+    else setNormal(cm);\n
+  });\n
+\n
+  function setFullscreen(cm) {\n
+    var wrap = cm.getWrapperElement();\n
+    cm.state.fullScreenRestore = {scrollTop: window.pageYOffset, scrollLeft: window.pageXOffset,\n
+                                  width: wrap.style.width, height: wrap.style.height};\n
+    wrap.style.width = "";\n
+    wrap.style.height = "auto";\n
+    wrap.className += " CodeMirror-fullscreen";\n
+    document.documentElement.style.overflow = "hidden";\n
+    cm.refresh();\n
   }\n
 \n
-  rJS(window)\n
-\n
-    .ready(function (gadget) {\n
-      // Initialize the gadget local parameters\n
-      // XXX Hardcoded\n
-      gadget.state_parameter_dict = {jio_storage_name: "DAV"};\n
-    })\n
-\n
-    .declareAcquiredMethod("redirect", "redirect")\n
-    .declareAcquiredMethod("getSetting", "getSetting")\n
-\n
-    .declareMethod(\'createJio\', function (jio_options) {\n
-      if (jio_options !== \'XXX couscous\') {\n
-        jio_options = {\n
-          type: "dav",\n
-          // XXX Hardcoded\n
-          url: "https://localhost:5000/webdav",\n
-          with_credentials: true\n
-        };\n
-      }\n
-      this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);\n
-    })\n
-    .declareMethod(\'allDocs\', function () {\n
-      return wrapJioCall(this, \'allDocs\', arguments);\n
-    })\n
-    .declareMethod(\'allAttachments\', function () {\n
-      return wrapJioCall(this, \'allAttachments\', arguments);\n
-    })\n
-    .declareMethod(\'get\', function () {\n
-      return wrapJioCall(this, \'get\', arguments);\n
-    })\n
-    .declareMethod(\'put\', function () {\n
-      return wrapJioCall(this, \'put\', arguments);\n
-    })\n
-    .declareMethod(\'post\', function () {\n
-      return wrapJioCall(this, \'post\', arguments);\n
-    })\n
-    .declareMethod(\'remove\', function () {\n
-      return wrapJioCall(this, \'remove\', arguments);\n
-    })\n
-    .declareMethod(\'getAttachment\', function () {\n
-      return wrapJioCall(this, \'getAttachment\', arguments);\n
-    })\n
-    .declareMethod(\'putAttachment\', function () {\n
-      return wrapJioCall(this, \'putAttachment\', arguments);\n
-    })\n
-    .declareMethod(\'removeAttachment\', function () {\n
-      return wrapJioCall(this, \'removeAttachment\', arguments);\n
-    })\n
-    .declareMethod(\'repair\', function () {\n
-      return wrapJioCall(this, \'repair\', arguments);\n
-    });\n
-\n
-}(window, rJS, jIO, XMLHttpRequestProgressEvent, UriTemplate));
+  function setNormal(cm) {\n
+    var wrap = cm.getWrapperElement();\n
+    wrap.className = wrap.className.replace(/\\s*CodeMirror-fullscreen\\b/, "");\n
+    document.documentElement.style.overflow = "";\n
+    var info = cm.state.fullScreenRestore;\n
+    wrap.style.width = info.width; wrap.style.height = info.height;\n
+    window.scrollTo(info.scrollLeft, info.scrollTop);\n
+    cm.refresh();\n
+  }\n
+});
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Drive Jio Gadget JS</string> </value>
+            <value> <string>CodeMirror Addon Display Fullscreen</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value> <string>4.3.0</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -257,7 +211,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -279,8 +233,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451481239.72</float>
-                        <string>UTC</string>
+                        <float>1406898405.95</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
@@ -324,7 +278,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.36185.35957.25497</string> </value>
+                <value> <string>948.28972.21153.9745</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -342,7 +296,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453132424.59</float>
+                        <float>1453133756.54</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -369,7 +323,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -399,8 +353,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451481208.9</float>
-                        <string>UTC</string>
+                        <float>1405084528.4</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
