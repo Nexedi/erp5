@@ -113,9 +113,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, DocsAPI, console, document*/\n
+            <value> <string>/*global window, rJS, RSVP, DocsAPI, console, document*/\n
 /*jslint nomen: true, maxlen:80, indent:2*/\n
-(function (rJS, DocsAPI) {\n
+(function (rJS, RSVP, DocsAPI) {\n
   "use strict";\n
   // Document Editor event handlers\n
   //function onRequestHistory() {\n
@@ -230,7 +230,7 @@
 \n
   rJS(window)\n
     .ready(function (g) {\n
-      g.props = {};\n
+      g.props = {save_defer: null};\n
     })\n
     .ready(function (g) {\n
       return g.getElement()\n
@@ -380,11 +380,18 @@
               //\'onRequestHistoryData\': onRequestHistoryData,\n
               //\'onRequestHistoryClose\': onRequestHistoryClose,\n
               \'onSave\': function (event) {\n
-                g.props.value = event.data;\n
+                var result = {};\n
+                if (g.props.save_defer === null) {\n
                   g.triggerSubmit();\n
+                } else {\n
+                  result[g.props.key] = event.data;\n
+                  g.props.save_defer.resolve(result);\n
+                  g.props.save_defer = null;\n
+                }\n
                 return true;\n
                 // if you want to async save process return false\n
                 // and call api.processSaveResult when ready\n
+                // g.props.docEditor.processSaveResult();\n
               },\n
               \'onError\': onError\n
             }\n
@@ -397,15 +404,13 @@
     })\n
 \n
     .declareMethod(\'getContent\', function () {\n
-      var result = {};\n
-      //document.getElementsByName(\'frameEditor\')[0]\n
-      //  .contentWindow.document.getElementById(\'id-toolbar-btn-save\').click();\n
-      // this.props.docEditor.processSaveResult();\n
-      result[this.props.key] = this.props.value;\n
-      return result;\n
+      var g = this;\n
+      g.props.save_defer = RSVP.defer();\n
+      g.props.docEditor.save();\n
+      return g.props.save_defer.promise;\n
     });\n
 \n
-}(rJS, DocsAPI));</string> </value>
+}(rJS, RSVP, DocsAPI));</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -532,7 +537,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.31979.10733.53111</string> </value>
+                <value> <string>948.36349.33632.18926</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -550,7 +555,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452885806.26</float>
+                        <float>1453142306.9</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts52780006.08</string> </value>
+            <value> <string>ts53132999.51</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2157758</int> </value>
+            <value> <int>2158117</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -54,7 +54,7 @@
  *\n
  * http://www.onlyoffice.com \n
  *\n
- * Version: 3.0.0 (build:862, rev:cb3d33b\n
+ * Version: 3.0.0 (build:864, rev:cb3d33b\n
 , date:Fri Dec 18 22:30:55 2015 +0300\n
 )\n
  */\n
@@ -4358,7 +4358,20 @@ jQuery.Callbacks = function( options ) {\n
 \t\t\tlocked: function() {\n
 \t\t\t\treturn !stack;\n
 \t\t\t},\n
-\t\t\t// Call all callbacks 
+\t\t\t// Call all callbacks with the given context and arguments\n
+\t\t\tfireWith: function( context, args ) {\n
+\t\t\t\tif ( list && ( !fired || stack ) ) {\n
+\t\t\t\t\targs = args || [];\n
+\t\t\t\t\targs = [ context, args.slice ? args.slice() : args ];\n
+\t\t\t\t\tif ( firing ) {\n
+\t\t\t\t\t\tstack.push( args );\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tfire( args );\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t\treturn this;\n
+\t\t\t},\n
+\t\t\t// Call all the callbacks with the gi
 
 ]]></string> </value>
         </item>
@@ -4381,20 +4394,7 @@ jQuery.Callbacks = function( options ) {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-with the given context and arguments\n
-\t\t\tfireWith: function( context, args ) {\n
-\t\t\t\tif ( list && ( !fired || stack ) ) {\n
-\t\t\t\t\targs = args || [];\n
-\t\t\t\t\targs = [ context, args.slice ? args.slice() : args ];\n
-\t\t\t\t\tif ( firing ) {\n
-\t\t\t\t\t\tstack.push( args );\n
-\t\t\t\t\t} else {\n
-\t\t\t\t\t\tfire( args );\n
-\t\t\t\t\t}\n
-\t\t\t\t}\n
-\t\t\t\treturn this;\n
-\t\t\t},\n
-\t\t\t// Call all the callbacks with the given arguments\n
+ven arguments\n
 \t\t\tfire: function() {\n
 \t\t\t\tself.fireWith( this, arguments );\n
 \t\t\t\treturn this;\n
@@ -6769,7 +6769,18 @@ function winnow( elements, qualifier, not ) {\n
 \t\t\treturn jQuery.filter( qualifier, elements, not );\n
 \t\t}\n
 \n
-\t\tqualifier = jQu
+\t\tqualifier = jQuery.filter( qualifier, elements );\n
+\t}\n
+\n
+\treturn jQuery.grep( elements, function( elem ) {\n
+\t\treturn ( core_indexOf.call( qualifier, elem ) >= 0 ) !== not;\n
+\t});\n
+}\n
+var rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\\w:]+)[^>]*)\\/>/gi,\n
+\trtagName = /<([\\w:]+)/,\n
+\trhtml = /<|&#?\\w+;/,\n
+\trnoInnerhtml = /<(?:script|style|link)/i,\n
+\tmanipulation_rche
 
 ]]></string> </value>
         </item>
@@ -6792,18 +6803,7 @@ function winnow( elements, qualifier, not ) {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-ery.filter( qualifier, elements );\n
-\t}\n
-\n
-\treturn jQuery.grep( elements, function( elem ) {\n
-\t\treturn ( core_indexOf.call( qualifier, elem ) >= 0 ) !== not;\n
-\t});\n
-}\n
-var rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\\w:]+)[^>]*)\\/>/gi,\n
-\trtagName = /<([\\w:]+)/,\n
-\trhtml = /<|&#?\\w+;/,\n
-\trnoInnerhtml = /<(?:script|style|link)/i,\n
-\tmanipulation_rcheckableType = /^(?:checkbox|radio)$/i,\n
+ckableType = /^(?:checkbox|radio)$/i,\n
 \t// checked="checked" or checked\n
 \trchecked = /checked\\s*(?:[^=]|=\\s*.checked.)/i,\n
 \trscriptType = /^$|\\/(?:java|ecma)script/i,\n
@@ -9179,7 +9179,14 @@ jQuery.ajaxTransport(function( options ) {\n
 \t\t\t\t\t}\n
 \t\t\t\t}\n
 \t\t\t\t// Override mime type if needed\n
-\t\t\t\tif ( options.
+\t\t\t\tif ( options.mimeType && xhr.overrideMimeType ) {\n
+\t\t\t\t\txhr.overrideMimeType( options.mimeType );\n
+\t\t\t\t}\n
+\t\t\t\t// X-Requested-With header\n
+\t\t\t\t// For cross-domain requests, seeing as conditions for a preflight are\n
+\t\t\t\t// akin to a jigsaw puzzle, we simply never set it to be sure.\n
+\t\t\t\t// (it can always be set on a per-request basis or even using ajaxSetup)\n
+\t\t\t\t// For same-dom
 
 ]]></string> </value>
         </item>
@@ -9202,14 +9209,7 @@ jQuery.ajaxTransport(function( options ) {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-mimeType && xhr.overrideMimeType ) {\n
-\t\t\t\t\txhr.overrideMimeType( options.mimeType );\n
-\t\t\t\t}\n
-\t\t\t\t// X-Requested-With header\n
-\t\t\t\t// For cross-domain requests, seeing as conditions for a preflight are\n
-\t\t\t\t// akin to a jigsaw puzzle, we simply never set it to be sure.\n
-\t\t\t\t// (it can always be set on a per-request basis or even using ajaxSetup)\n
-\t\t\t\t// For same-domain requests, won\'t change header if already provided.\n
+ain requests, won\'t change header if already provided.\n
 \t\t\t\tif ( !options.crossDomain && !headers["X-Requested-With"] ) {\n
 \t\t\t\t\theaders["X-Requested-With"] = "XMLHttpRequest";\n
 \t\t\t\t}\n
@@ -11220,7 +11220,14 @@ if ( typeof window === "object" && typeof window.document === "object" ) {\n
   // is simply a JavaScript object that represents a logical chunk of UI in the\n
   // DOM. This might be a single item, an entire list, a sidebar or panel, or\n
   // even the surrounding frame which wraps your whole app. Defining a chunk of\n
-  // UI as a **View** allows you to define your DOM events declarat
+  // UI as a **View** allows you to define your DOM events declaratively, without\n
+  // having to worry about render order ... and makes it easy for the view to\n
+  // react to specific changes in the state of your models.\n
+\n
+  // Creating a Backbone.View creates its initial element outside of the DOM,\n
+  // if an existing element is not provided...\n
+  var View = Backbone.View = function(options) {\n
+    this.cid = _.uniqueId(\'view
 
 ]]></string> </value>
         </item>
@@ -11243,14 +11250,7 @@ if ( typeof window === "object" && typeof window.document === "object" ) {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-ively, without\n
-  // having to worry about render order ... and makes it easy for the view to\n
-  // react to specific changes in the state of your models.\n
-\n
-  // Creating a Backbone.View creates its initial element outside of the DOM,\n
-  // if an existing element is not provided...\n
-  var View = Backbone.View = function(options) {\n
-    this.cid = _.uniqueId(\'view\');\n
+\');\n
     options || (options = {});\n
     _.extend(this, _.pick(options, viewOptions));\n
     this._ensureElement();\n
@@ -13269,7 +13269,20 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
     }\n
   }\n
 \n
-  Tooltip.prototype.ena
+  Tooltip.prototype.enable = function () {\n
+    this.enabled = true\n
+  }\n
+\n
+  Tooltip.prototype.disable = function () {\n
+    this.enabled = false\n
+  }\n
+\n
+  Tooltip.prototype.toggleEnabled = function () {\n
+    this.enabled = !this.enabled\n
+  }\n
+\n
+  Tooltip.prototype.toggle = function (e) {\n
+    var self = e ? $(e.currentTarget)[this.type](this.getDelegateOptions()).data(\'bs.\' + this.type) : th
 
 ]]></string> </value>
         </item>
@@ -13292,20 +13305,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-ble = function () {\n
-    this.enabled = true\n
-  }\n
-\n
-  Tooltip.prototype.disable = function () {\n
-    this.enabled = false\n
-  }\n
-\n
-  Tooltip.prototype.toggleEnabled = function () {\n
-    this.enabled = !this.enabled\n
-  }\n
-\n
-  Tooltip.prototype.toggle = function (e) {\n
-    var self = e ? $(e.currentTarget)[this.type](this.getDelegateOptions()).data(\'bs.\' + this.type) : this\n
+is\n
     self.tip().hasClass(\'in\') ? self.leave(self) : self.enter(self)\n
   }\n
 \n
@@ -14386,6 +14386,9 @@ Common.Gateway = new(function () {\r\n
         "applyEditRights": function (data) {\r\n
             $me.trigger("applyeditrights", data);\r\n
         },\r\n
+        "save": function (data) {\r\n
+            $me.trigger("save", data);\r\n
+        },\r\n
         "processSaveResult": function (data) {\r\n
             $me.trigger("processsaveresult", data);\r\n
         },\r\n
@@ -15101,7 +15104,16 @@ define(\'common/main/lib/view/Header\',["backbone", "text!common/main/lib/templa
         },\r\n
         setDocumentCaption: function (value, applyOnly) {\r\n
             if (_.isUndefined(applyOnly)) {\r\n
-                this.documentCapti
+                this.documentCaption = value;\r\n
+            }\r\n
+            if (!value) {\r\n
+                value = "";\r\n
+            }\r\n
+            var dc = $("#header-documentcaption");\r\n
+            if (dc) {\r\n
+                dc.html(Common.Utils.String.htmlEncode(value));\r\n
+            }\r\n
+            return
 
 ]]></string> </value>
         </item>
@@ -15124,16 +15136,7 @@ define(\'common/main/lib/view/Header\',["backbone", "text!common/main/lib/templa
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-on = value;\r\n
-            }\r\n
-            if (!value) {\r\n
-                value = "";\r\n
-            }\r\n
-            var dc = $("#header-documentcaption");\r\n
-            if (dc) {\r\n
-                dc.html(Common.Utils.String.htmlEncode(value));\r\n
-            }\r\n
-            return value;\r\n
+ value;\r\n
         },\r\n
         getDocumentCaption: function () {\r\n
             return this.documentCaption;\r\n
@@ -16643,7 +16646,13 @@ define(\'common/main/lib/component/Window\',["common/main/lib/component/BaseView
                         mask.show();\r\n
                     }\r\n
                     Common.NotificationCenter.trigger("modal:show", this);\r\n
-                    this.$lastmodal = $(".asc-window.modal:not(
+                    this.$lastmodal = $(".asc-window.modal:not(.dethrone):visible").first().addClass("dethrone");\r\n
+                }\r\n
+                if (!this.$window) {\r\n
+                    this.render();\r\n
+                    if (_.isNumber(x) && _.isNumber(y)) {\r\n
+                        this.$window.css("left", Math.floor(x));\r\n
+  
 
 ]]></string> </value>
         </item>
@@ -16666,13 +16675,7 @@ define(\'common/main/lib/component/Window\',["common/main/lib/component/BaseView
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-.dethrone):visible").first().addClass("dethrone");\r\n
-                }\r\n
-                if (!this.$window) {\r\n
-                    this.render();\r\n
-                    if (_.isNumber(x) && _.isNumber(y)) {\r\n
-                        this.$window.css("left", Math.floor(x));\r\n
-                        this.$window.css("top", Math.floor(y));\r\n
+                      this.$window.css("top", Math.floor(y));\r\n
                     } else {\r\n
                         _centre.call(this);\r\n
                     }\r\n
@@ -18133,7 +18136,16 @@ define(\'common/main/lib/component/MenuItem\',["common/main/lib/component/BaseVi
                 $this.data("perfect-scrollbar-destroy", destroy);\r\n
             };\r\n
             initialize();\r\n
-            retur
+            return $this;\r\n
+        });\r\n
+    };\r\n
+}));\n
+/*\r\n
+ * (c) Copyright Ascensio System SIA 2010-2015\r\n
+ *\r\n
+ * This program is a free software product. You can redistribute it and/or \r\n
+ * modify it under the terms of the GNU Affero General Public License (AGPL) \r\n
+ * version 3 as publishe
 
 ]]></string> </value>
         </item>
@@ -18156,16 +18168,7 @@ define(\'common/main/lib/component/MenuItem\',["common/main/lib/component/BaseVi
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-n $this;\r\n
-        });\r\n
-    };\r\n
-}));\n
-/*\r\n
- * (c) Copyright Ascensio System SIA 2010-2015\r\n
- *\r\n
- * This program is a free software product. You can redistribute it and/or \r\n
- * modify it under the terms of the GNU Affero General Public License (AGPL) \r\n
- * version 3 as published by the Free Software Foundation. In accordance with \r\n
+d by the Free Software Foundation. In accordance with \r\n
  * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect \r\n
  * that Ascensio System SIA expressly excludes the warranty of non-infringement\r\n
  * of any third-party rights.\r\n
@@ -19657,7 +19660,14 @@ define(\'common/main/lib/component/ComboBox\',["common/main/lib/component/BaseVi
                     this.$element.trigger(e);\r\n
                     if (e.isDefaultPrevented()) {\r\n
                         return;\r\n
-                
+                    }\r\n
+                    this.setContent();\r\n
+                    if (this.options.animation) {\r\n
+                        $tip.addClass("fade");\r\n
+                    }\r\n
+                    $tip.detach().css({\r\n
+                        top: 0,\r\n
+                        left:
 
 ]]></string> </value>
         </item>
@@ -19680,14 +19690,7 @@ define(\'common/main/lib/component/ComboBox\',["common/main/lib/component/BaseVi
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-    }\r\n
-                    this.setContent();\r\n
-                    if (this.options.animation) {\r\n
-                        $tip.addClass("fade");\r\n
-                    }\r\n
-                    $tip.detach().css({\r\n
-                        top: 0,\r\n
-                        left: 0,\r\n
+ 0,\r\n
                         display: "block"\r\n
                     });\r\n
                     this.options.container ? $tip.appendTo(this.options.container) : $tip.insertAfter(this.$element);\r\n
@@ -21006,7 +21009,12 @@ define(\'common/main/lib/component/MetricSpinner\',["common/main/lib/component/B
  * modify it under the terms of the GNU Affero General Public License (AGPL) \r\n
  * version 3 as published by the Free Software Foundation. In accordance with \r\n
  * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect \r\n
- * that Ascensio System SIA expressly exclu
+ * that Ascensio System SIA expressly excludes the warranty of non-infringement\r\n
+ * of any third-party rights.\r\n
+ *\r\n
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied \r\n
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For \r\n
+ * details, see the GNU AGPL at: http://www.
 
 ]]></string> </value>
         </item>
@@ -21029,12 +21037,7 @@ define(\'common/main/lib/component/MetricSpinner\',["common/main/lib/component/B
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-des the warranty of non-infringement\r\n
- * of any third-party rights.\r\n
- *\r\n
- * This program is distributed WITHOUT ANY WARRANTY; without even the implied \r\n
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For \r\n
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html\r\n
+gnu.org/licenses/agpl-3.0.html\r\n
  *\r\n
  * You can contact Ascensio System SIA at Lubanas st. 125a-25, Riga, Latvia,\r\n
  * EU, LV-1021.\r\n
@@ -22427,7 +22430,14 @@ define(\'common/main/lib/component/ListView\',["common/main/lib/component/DataVi
         },\r\n
         _handleInput: function (state) {\r\n
             if (this.options.handler) {\r\n
-          
+                this.options.handler.call(this, this, state);\r\n
+            }\r\n
+            this.close();\r\n
+        },\r\n
+        onBtnClick: function (event) {\r\n
+            this._handleInput(event.currentTarget.attributes["result"].value);\r\n
+        },\r\n
+        onEnterValue: function (e
 
 ]]></string> </value>
         </item>
@@ -22450,14 +22460,7 @@ define(\'common/main/lib/component/ListView\',["common/main/lib/component/DataVi
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-      this.options.handler.call(this, this, state);\r\n
-            }\r\n
-            this.close();\r\n
-        },\r\n
-        onBtnClick: function (event) {\r\n
-            this._handleInput(event.currentTarget.attributes["result"].value);\r\n
-        },\r\n
-        onEnterValue: function (event) {\r\n
+vent) {\r\n
             this._handleInput("ok");\r\n
         },\r\n
         onChange: function () {\r\n
@@ -23767,7 +23770,11 @@ define(\'common/main/lib/component/ListView\',["common/main/lib/component/DataVi
                             $(document.body).append(src);\r\n
                             showPoint = [coAuthTip.x_point + coAuthTip.XY[0], coAuthTip.y_point + coAuthTip.XY[1]]; ! is_sheet_lock && (showPoint[0] = coAuthTip.bodyWidth - showPoint[0]);\r\n
                             if (showPoint[1] > coAuthTip.XY[1] && showPoint[1] + coAuthTip.ttHeight < coAuthTip.XY[1] + coAuthTip.apiHeight) {\r\n
-                                src.text(getUserName(data.asc_getUs
+                                src.text(getUserName(data.asc_getUserId()));\r\n
+                                if (coAuthTip.bodyWidth - showPoint[0] < coAuthTip.ref.width()) {\r\n
+                                    src.css({\r\n
+                                        visibility: "visible",\r\n
+                                        left: "0px"
 
 ]]></string> </value>
         </item>
@@ -23790,11 +23797,7 @@ define(\'common/main/lib/component/ListView\',["common/main/lib/component/DataVi
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-erId()));\r\n
-                                if (coAuthTip.bodyWidth - showPoint[0] < coAuthTip.ref.width()) {\r\n
-                                    src.css({\r\n
-                                        visibility: "visible",\r\n
-                                        left: "0px",\r\n
+,\r\n
                                         top: (showPoint[1] - coAuthTip.ttHeight) + "px"\r\n
                                     });\r\n
                                 } else {\r\n
@@ -24762,7 +24765,12 @@ define(\'common/main/lib/component/Button\',["common/main/lib/component/BaseView
                 } else {\r\n
                     el.on("click", buttonHandler);\r\n
                 }\r\n
-                el.on("b
+                el.on("button.internal.active", _.bind(doSetActiveState, me));\r\n
+                el.on("mouseover", function (e) {\r\n
+                    if (!me.disabled) {\r\n
+                        me.cmpEl.addClass("over");\r\n
+                        me.trigger("mouseover", me, e);\r\n
+               
 
 ]]></string> </value>
         </item>
@@ -24785,12 +24793,7 @@ define(\'common/main/lib/component/Button\',["common/main/lib/component/BaseView
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-utton.internal.active", _.bind(doSetActiveState, me));\r\n
-                el.on("mouseover", function (e) {\r\n
-                    if (!me.disabled) {\r\n
-                        me.cmpEl.addClass("over");\r\n
-                        me.trigger("mouseover", me, e);\r\n
-                    }\r\n
+     }\r\n
                 });\r\n
                 el.on("mouseout", function (e) {\r\n
                     if (!me.disabled) {\r\n
@@ -26103,7 +26106,10 @@ define(\'common/main/lib/component/ComboBoxFonts\',["common/main/lib/component/C
                 Common.UI.ComboBox.prototype.initialize.call(this, _.extend(options, {\r\n
                     displayField: "name"\r\n
                 }));\r\n
-                th
+                this.recent = _.isNumber(options.recent) ? options.recent : 3;\r\n
+                this.bindUpdateVisibleFontsTiles = _.bind(this.updateVisibleFontsTiles, this);\r\n
+                Common.NotificationCenter.on("fonts:change", _.bind(this.onApiChangeFont, this));\r\n
+               
 
 ]]></string> </value>
         </item>
@@ -26126,10 +26132,7 @@ define(\'common/main/lib/component/ComboBoxFonts\',["common/main/lib/component/C
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-is.recent = _.isNumber(options.recent) ? options.recent : 3;\r\n
-                this.bindUpdateVisibleFontsTiles = _.bind(this.updateVisibleFontsTiles, this);\r\n
-                Common.NotificationCenter.on("fonts:change", _.bind(this.onApiChangeFont, this));\r\n
-                Common.NotificationCenter.on("fonts:load", _.bind(this.fillFonts, this));\r\n
+ Common.NotificationCenter.on("fonts:load", _.bind(this.fillFonts, this));\r\n
             },\r\n
             render: function (parentEl) {\r\n
                 var oldRawValue = null;\r\n
@@ -27611,7 +27614,15 @@ define(\'common/main/lib/component/SynchronizeTip\',["common/main/lib/component/
                     },\r\n
                     {\r\n
                         color: "000000",\r\n
-  
+                        effectId: 1\r\n
+                    },\r\n
+                    {\r\n
+                        color: "FFFFFF",\r\n
+                        effectId: 2\r\n
+                    },\r\n
+                    {\r\n
+                        color: "000000",\r\n
+                      
 
 ]]></string> </value>
         </item>
@@ -27634,15 +27645,7 @@ define(\'common/main/lib/component/SynchronizeTip\',["common/main/lib/component/
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-                      effectId: 1\r\n
-                    },\r\n
-                    {\r\n
-                        color: "FFFFFF",\r\n
-                        effectId: 2\r\n
-                    },\r\n
-                    {\r\n
-                        color: "000000",\r\n
-                        effectId: 1\r\n
+  effectId: 1\r\n
                     },\r\n
                     {\r\n
                         color: "000000",\r\n
@@ -29039,7 +29042,11 @@ define(\'common/main/lib/component/SynchronizeTip\',["common/main/lib/component/
                 }\r\n
             }\r\n
             _.each(controls, function (item) {\r\n
-                if (_.isFunction(item.setDisabled)) {
+                if (_.isFunction(item.setDisabled)) { ! item.keepState && (item.keepState = []);\r\n
+                    if (opts.clear && opts.clear.length > 0 && item.keepState.length > 0) {\r\n
+                        item.keepState = _.difference(item.keepState, opts.clear);\r\n
+                    }\r\n
+                    _.isArr
 
 ]]></string> </value>
         </item>
@@ -29062,11 +29069,7 @@ define(\'common/main/lib/component/SynchronizeTip\',["common/main/lib/component/
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
- ! item.keepState && (item.keepState = []);\r\n
-                    if (opts.clear && opts.clear.length > 0 && item.keepState.length > 0) {\r\n
-                        item.keepState = _.difference(item.keepState, opts.clear);\r\n
-                    }\r\n
-                    _.isArray(causes) ? _.each(causes, function (c) {\r\n
+ay(causes) ? _.each(causes, function (c) {\r\n
                         doLock(item, c);\r\n
                     }) : doLock(item, causes);\r\n
                     if (! (item.keepState.length > 0)) {\r\n
@@ -30300,7 +30303,11 @@ define(\'spreadsheeteditor/main/app/view/TableOptionsDialog\',["common/main/lib/
                     handler: function (result, value) {\r\n
                         if (result == "ok") {\r\n
                             if (me.api) {\r\n
-                                var checkUrl = v
+                                var checkUrl = value.replace(/\\s/g, "");\r\n
+                                if (!_.isEmpty(checkUrl)) {\r\n
+                                    me.toolbar.fireEvent("insertimage", me.toolbar);\r\n
+                                    me.api.asc_addImageDrawingObject(checkUrl);\r\n
+                  
 
 ]]></string> </value>
         </item>
@@ -30323,11 +30330,7 @@ define(\'spreadsheeteditor/main/app/view/TableOptionsDialog\',["common/main/lib/
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-alue.replace(/\\s/g, "");\r\n
-                                if (!_.isEmpty(checkUrl)) {\r\n
-                                    me.toolbar.fireEvent("insertimage", me.toolbar);\r\n
-                                    me.api.asc_addImageDrawingObject(checkUrl);\r\n
-                                    Common.component.Analytics.trackEvent("ToolBar", "Image");\r\n
+                  Common.component.Analytics.trackEvent("ToolBar", "Image");\r\n
                                 } else {\r\n
                                     Common.UI.warning({\r\n
                                         msg: this.textEmptyImgUrl\r\n
@@ -31603,7 +31606,7 @@ alue.replace(/\\s/g, "");\r\n
     });\r\n
 });\n
 \n
-define(\'text!spreadsheeteditor/main/app/template/StatusBar.template\',[],function () { return \'\\r\\n<div class="statusbar">\\r\\n    <div id="status-tabs-scroll" class="status-group">\\r\\n        <button id="status-btn-tabfirst" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-tab-first">&nbsp;</span></button>\\r\\n        <button id="status-btn-tabback" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-tab-back">&nbsp;</span></button>\\r\\n        <button id="status-btn-tabnext" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-tab-next">&nbsp;</span></button>\\r\\n        <button id="status-btn-tablast" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-tab-last">&nbsp;</span></button>\\r\\n    </div>\\r\\n    <div id="status-addtabs-box" class="status-group">\\r\\n        <button id="status-btn-addtab" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-zoom-up">&nbsp;</span></button>\\r\\n    </div>\\r\\n    <div id="status-zoom-box" class="status-group">\\r\\n        <div class="separator short" />\\r\\n        <button id="status-btn-zoomdown" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-zoom-down">&nbsp;</span></button>\\r\\n        <div class="cnt-zoom">\\r\\n            <div class="dropdown-toggle" data-toggle="dropdown">\\r\\n                <label id="status-label-zoom" class="status-label">
+define(\'text!spreadsheeteditor/main/app/template/StatusBar.template\',[],function () { return \'\\r\\n<div class="statusbar">\\r\\n    <div id="status-tabs-scroll" class="status-group">\\r\\n        <button id="status-btn-tabfirst" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-tab-first">&nbsp;</span></button>\\r\\n        <button id="status-btn-tabback" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-tab-back">&nbsp;</span></button>\\r\\n        <button id="status-btn-tabnext" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-tab-next">&nbsp;</span></button>\\r\\n        <button id="status-btn-tablast" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-tab-last">&nbsp;</span></button>\\r\\n    </div>\\r\\n    <div id="status-addtabs-box" class="status-group">\\r\\n        <button id="status-btn-addtab" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-zoom-up">&nbsp;</span></button>\\r\\n    </div>\\r\\n    <div id="status-zoom-box" class="status-group">\\r\\n        <div class="separator short" />\\r\\n        <button id="status-btn-zoomdown" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-zoom-down">&nbsp;</span></button>\\r\\n        <div class="cnt-zoom">\\r\\n            <div class="dropdown-toggle" data-toggle="dropdown">\\r\\n                <label id="status-label-zoom" class="status-label">Zoom 100%</label>\\r\\n            </div>\\r\\n        </div>\\r\\n        <button id="status-btn-zoomup" type="button" class="btn small btn-toolbar btn-toolbar-default" style="margin-right:40px;"><span class="btn-icon btn-zoom-up">&nbsp;</span></button>\\r\\n    </div>\\r\\n    <!
 
 ]]></string> </value>
         </item>
@@ -31626,7 +31629,7 @@ define(\'text!spreadsheeteditor/main/app/template/StatusBar.template\',[],functi
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Zoom 100%</label>\\r\\n            </div>\\r\\n        </div>\\r\\n        <button id="status-btn-zoomup" type="button" class="btn small btn-toolbar btn-toolbar-default" style="margin-right:40px;"><span class="btn-icon btn-zoom-up">&nbsp;</span></button>\\r\\n    </div>\\r\\n    <!-- /** coauthoring begin **/ -->\\r\\n    <div id="status-users-box" class="status-group" style="display:none;">\\r\\n        <div class="separator short" />\\r\\n        <div id="status-users-block" style="display:inline-block; cursor:pointer; margin-left: 12px;">\\r\\n            <span id="status-users-icon" />\\r\\n            <label id="status-users-count" class="status-label">3</label>\\r\\n        </div>\\r\\n    </div>\\r\\n    <!-- /** coauthoring end **/ -->\\r\\n    <div id="status-math-box" class="status-group">\\r\\n        <div class="separator short" style="margin-right: 12px;" />\\r\\n        <label id="status-math-average" class="status-label">AVERAGE: 10</label>\\r\\n        <label id="status-math-count" class="status-label">COUNT: 3</label>\\r\\n        <label id="status-math-sum" class="status-label">SUM: 5</label>\\r\\n    </div>\\r\\n    <div id="status-sheets-bar-box">\\r\\n        <div id="status-sheets-bar" class="status-group">\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n\';});\n
+-- /** coauthoring begin **/ -->\\r\\n    <div id="status-users-box" class="status-group" style="display:none;">\\r\\n        <div class="separator short" />\\r\\n        <div id="status-users-block" style="display:inline-block; cursor:pointer; margin-left: 12px;">\\r\\n            <span id="status-users-icon" />\\r\\n            <label id="status-users-count" class="status-label">3</label>\\r\\n        </div>\\r\\n    </div>\\r\\n    <!-- /** coauthoring end **/ -->\\r\\n    <div id="status-math-box" class="status-group">\\r\\n        <div class="separator short" style="margin-right: 12px;" />\\r\\n        <label id="status-math-average" class="status-label">AVERAGE: 10</label>\\r\\n        <label id="status-math-count" class="status-label">COUNT: 3</label>\\r\\n        <label id="status-math-sum" class="status-label">SUM: 5</label>\\r\\n    </div>\\r\\n    <div id="status-sheets-bar-box">\\r\\n        <div id="status-sheets-bar" class="status-group">\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n\';});\n
 \n
 /*\r\n
  * (c) Copyright Ascensio System SIA 2010-2015\r\n
@@ -33145,7 +33148,13 @@ define(\'common/main/lib/component/Tab\',["common/main/lib/component/BaseView"],
         views: ["Statusbar"],\r\n
         initialize: function () {\r\n
             this.addListeners({\r\n
-                "Statusbar
+                "Statusbar": {\r\n
+                    "show:hidden": _.bind(function (obj, index) {\r\n
+                        this.hideWorksheet(false, index);\r\n
+                    },\r\n
+                    this),\r\n
+                    "sheet:changename": _.bind(function () {\r\n
+                        th
 
 ]]></string> </value>
         </item>
@@ -33168,13 +33177,7 @@ define(\'common/main/lib/component/Tab\',["common/main/lib/component/BaseView"],
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-": {\r\n
-                    "show:hidden": _.bind(function (obj, index) {\r\n
-                        this.hideWorksheet(false, index);\r\n
-                    },\r\n
-                    this),\r\n
-                    "sheet:changename": _.bind(function () {\r\n
-                        this.api.asc_closeCellEditor();\r\n
+is.api.asc_closeCellEditor();\r\n
                         this.renameWorksheet();\r\n
                     },\r\n
                     this),\r\n
@@ -34319,7 +34322,7 @@ define(\'text!spreadsheeteditor/main/app/template/ImageSettings.template\',[],fu
 define(\'text!spreadsheeteditor/main/app/template/ChartSettings.template\',[],function () { return \'<table cols="3">\\r\\n    <tr>\\r\\n        <td colspan=3>\\r\\n            <label class="header"><%= scope.textSize %></label>\\r\\n        </td>\\r\\n    </tr>\\r\\n    <tr>\\r\\n        <td class="padding-small" width="88px">\\r\\n            <label class="input-label"><%= scope.textWidth %></label>\\r\\n            <div id="chart-spin-width"></div>\\r\\n        </td>\\r\\n        <td class="padding-small" width="28px" style="vertical-align: bottom;">\\r\\n            <div id="chart-button-ratio"></div>\\r\\n        </td>\\r\\n        <td class="padding-small" width="88px">\\r\\n            <label class="input-label"><%= scope.textHeight %></label>\\r\\n            <div id="chart-spin-height"></div>\\r\\n        </td>\\r\\n    </tr>\\r\\n</table>\\r\\n<table cols="2">\\r\\n    <tr>\\r\\n        <td class="padding-small" colspan=2>\\r\\n            <div class="separator horizontal"></div>\\r\\n        </td>\\r\\n    </tr>\\r\\n    <tr>\\r\\n        <td colspan=2>\\r\\n            <label class="header"><%= scope.textChartType %></label>\\r\\n        </td>\\r\\n    </tr>\\r\\n    <tr>\\r\\n        <td class="padding-small">\\r\\n            <div id="chart-button-type" style=""></div>\\r\\n        </td>\\r\\n        <td class="padding-small">\\r\\n            <div id="chart-button-style" style=""></div>\\r\\n        </td>\\r\\n    </tr>\\r\\n    <tr>\\r\\n        <td class="padding-small" colspan=2>\\r\\n            <div class="separator horizontal"></div>\\r\\n        </td>\\r\\n    </tr>\\r\\n    <tr>\\r\\n        <td align="center" colspan=2>\\r\\n            <label class="link" id="chart-advanced-link"><%= scope.textAdvanced %></label>\\r\\n        </td>\\r\\n    </tr>\\r\\n    <tr class="finish-cell"></tr>\\r\\n</table>\';});\n
 \n
 \n
-define(\'text!spreadsheeteditor/main/app/template/ChartSettingsDlg.template\',[],function () { return \'<div id="id-chart-settings-dlg-style" class="settings-panel active">\\r\\n    <div class="inner-content">\\r\\n        <table cols="2" style="">\\r\\n            <tr>\\r\\n                <td class="padding-large">\\r\\n                    <label class="header"><%= scope.textType %></label>\\r\\n                    <div id="chart-dlg-button-type" style="margin-right: 15px;"></div>\\r\\n                </td>\\r\\n                <td class="padding-large">\\r\\n                    <label class="header"><%= scope.textStyle %></label>\\r\\n                    <div id="chart-dlg-button-style" style=""></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n    <div class="separator horizontal padding-large"></div>\\r\\n    <div class="inner-content">\\r\\n        <table cols="2" style="width: 100%;">\\r\\n            <tr>\\r\\n                <td colspan=2 >\\r\\n                    <label class="header"><%= scope.textDataRange %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small" width="200">\\r\\n                    <div id="chart-dlg-txt-range" class="input-row" style="margin-right: 10px;"></div>\\r\\n                </td>\\r\\n                <td class="padding-small" style="text-align: right;">\\r\\n                    <button type="button" class="btn btn-text-default" id="chart-dlg-btn-data" style="min-width: 100px;"><%= scope.textSelectData %></button>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td colspan=2 class="padding-small">\\r\\n                    <label class="input-label"><%= scope.textDataSeries %></label>\\r\\n                    <div id="chart-dlg-combo-range" class="input-group-nr" style="width:120px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n</div>\\r\\n<div id="id-chart-settings-dlg-layout" class="settings-panel">\\r\\n    <div class="inner-content">\\r\\n        <table cols="2" style="width: 100%;">\\r\\n            <tr>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label"><%= scope.textChartTitle %></label>\\r\\n                    <div id="chart-dlg-combo-chart-title" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label" style="margin-left: 15px;"><%= scope.textLegendPos %></label>\\r\\n                    <div id="chart-dlg-combo-legend-pos" class="input-group-nr" style="margin-left: 15px;" />\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label"><%= scope.textHorTitle %></label>\\r\\n                    <div id="chart-dlg-combo-hor-title" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label" style="margin-left: 15px;"><%= scope.textVertTitle %></label>\\r\\n                    <div id="chart-dlg-combo-vert-title" class="input-group-nr" style="margin-left: 15px;" />\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label"><%= scope.textHorGrid %></label>\\r\\n                    <div id="chart-dlg-combo-hor-grid" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label" style="margin-left: 15px;"><%= scope.textVertGrid %></label>\\r\\n                    <div id="chart-dlg-combo-vert-grid" class="input-group-nr" style="margin-left: 15px;" />\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label"><%= scope.textDataLabels %></label>\\r\\n                    <div id="chart-dlg-combo-data-labels" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td rowspan="2" class="padding-small">\\r\\n                    <div id="chart-dlg-check-series" style="margin: 20px 0 9px 15px;"></div>\\r\\n                    <div id="chart-dlg-check-category" style="margin: 0 0 9px 15px;"></div>\\r\\n                    <div id="chart-dlg-check-value" style="margin: 0 0 5px 15px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label"><%= scope.textSeparator %></label>\\r\\n                    <div id="chart-dlg-txt-separator" class="input-row" />\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small">\\r\\n                    <label id="chart-dlg-label-lines" class="input-label"><%= scope.textLines %></label>\\r\\n                    <div id="chart-dlg-combo-lines" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td class="padding-small" style="vertical-align: bottom;">\\r\\n                    <div id="chart-dlg-check-markers" style="margin: 0 0 4px 15px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n</div>\\r\\n<div id="id-chart-settings-dlg-vert" class="settings-panel">\\r\\n    <div class="inner-content">\\r\\n        <table cols="3" style="width: 100%">\\r\\n            <tr>\\r\\n                <td colspan="3">\\r\\n                    <label class="header  padding-small"><%= scope.textAxisOptions %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small" width="100">\\r\\n                    <label class="input-label"><%= scope.textMinValue %></label>\\r\\n    
+define(\'text!spreadsheeteditor/main/app/template/ChartSettingsDlg.template\',[],function () { return \'<div id="id-chart-settings-dlg-style" class="settings-panel active">\\r\\n    <div class="inner-content">\\r\\n        <table cols="2" style="">\\r\\n            <tr>\\r\\n                <td class="padding-large">\\r\\n                    <label class="header"><%= scope.textType %></label>\\r\\n                    <div id="chart-dlg-button-type" style="margin-right: 15px;"></div>\\r\\n                </td>\\r\\n                <td class="padding-large">\\r\\n                    <label class="header"><%= scope.textStyle %></label>\\r\\n                    <div id="chart-dlg-button-style" style=""></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n    <div class="separator horizontal padding-large"></div>\\r\\n    <div class="inner-content">\\r\\n        <table cols="2" style="width: 100%;">\\r\\n            <tr>\\r\\n                <td colspan=2 >\\r\\n                    <label class="header"><%= scope.textDataRange %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small" width="200">\\r\\n                    <div id="chart-dlg-txt-range" class="input-row" style="margin-right: 10px;"></div>\\r\\n                </td>\\r\\n                <td class="padding-small" style="text-align: right;">\\r\\n                    <button type="button" class="btn btn-text-default" id="chart-dlg-btn-data" style="min-width: 100px;"><%= scope.textSelectData %></button>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td colspan=2 class="padding-small">\\r\\n                    <label class="input-label"><%= scope.textDataSeries %></label>\\r\\n                    <div id="chart-dlg-combo-range" class="input-group-nr" style="width:120px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n</div>\\r\\n<div id="id-chart-settings-dlg-layout" class="settings-panel">\\r\\n    <div class="inner-content">\\r\\n        <table cols="2" style="width: 100%;">\\r\\n            <tr>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label"><%= scope.textChartTitle %></label>\\r\\n                    <div id="chart-dlg-combo-chart-title" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label" style="margin-left: 15px;"><%= scope.textLegendPos %></label>\\r\\n                    <div id="chart-dlg-combo-legend-pos" class="input-group-nr" style="margin-left: 15px;" />\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label"><%= scope.textHorTitle %></label>\\r\\n                    <div id="chart-dlg-combo-hor-title" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label" style="margin-left: 15px;"><%= scope.textVertTitle %></label>\\r\\n                    <div id="chart-dlg-combo-vert-title" class="input-group-nr" style="margin-left: 15px;" />\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label"><%= scope.textHorGrid %></label>\\r\\n                    <div id="chart-dlg-combo-hor-grid" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label" style="margin-left: 15px;"><%= scope.textVertGrid %></label>\\r\\n                    <div id="chart-dlg-combo-vert-grid" class="input-group-nr" style="margin-left: 15px;" />\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label"><%= scope.textDataLabels %></label>\\r\\n                    <div id="chart-dlg-combo-data-labels" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td rowspan="2" class="padding-small">\\r\\n                    <div id="chart-dlg-check-series" style="margin: 20px 0 9px 15px;"></div>\\r\\n                    <div id="chart-dlg-check-category" style="margin: 0 0 9px 15px;"></div>\\r\\n                    <div id="chart-dlg-check-value" style="margin: 0 0 5px 15px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label"><%= scope.textSeparator %></label>\\r\\n                    <div id="chart-dlg-txt-separator" class="input-row" />\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small">\\r\\n                    <label id="chart-dlg-label-lines" class="input-label"><%= scope.textLines %></label>\\r\\n                    <div id="chart-dlg-combo-lines" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td class="padding-small" style="vertical-align: bottom;">\\r\\n                    <div id="chart-dlg-check-markers" style="margin: 0 0 4px 15px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n</div>\\r\\n<div id="id-chart-settings-dlg-vert" class="settings-panel">\\r\\n    <div class="inner-content">\\r\\n        <table cols="3" style="width: 100%">\\r\\n            <tr>\\r\\n                <td colspan="3">\\r\\n                    <label class="header  padding-small"><%= scope.textAxisOptions %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small" width="100">\\r\\n                    <label class="input-label"><%= scope.textMinValue %></label>\\r\\n                </td>\\r\\n                <td class="padding-small" width="115" style="padding-right: 10px;">\\r\\n                    <div id="chart-dlg-combo-mintype"></div>\\r\\n                </td>\\r\\n                <td class="padding-small" width="90">\\r\\n                  
 
 ]]></string> </value>
         </item>
@@ -34342,7 +34345,7 @@ define(\'text!spreadsheeteditor/main/app/template/ChartSettingsDlg.template\',[]
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-            </td>\\r\\n                <td class="padding-small" width="115" style="padding-right: 10px;">\\r\\n                    <div id="chart-dlg-combo-mintype"></div>\\r\\n                </td>\\r\\n                <td class="padding-small" width="90">\\r\\n                    <div id="chart-dlg-input-min-value"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-large" width="100">\\r\\n                    <label class="input-label"><%= scope.textMaxValue %></label>\\r\\n                </td>\\r\\n                <td class="padding-large" width="115" style="padding-right: 10px;">\\r\\n                    <div id="chart-dlg-combo-maxtype"></div>\\r\\n                </td>\\r\\n                <td class="padding-large" width="90">\\r\\n                    <div id="chart-dlg-input-max-value"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-large" width="100">\\r\\n                    <label class="input-label"><%= scope.textAxisCrosses %></label>\\r\\n                </td>\\r\\n                <td class="padding-large" width="115" style="padding-right: 10px;">\\r\\n                    <div id="chart-dlg-combo-v-crosstype"></div>\\r\\n                </td>\\r\\n                <td class="padding-large" width="90">\\r\\n                    <div id="chart-dlg-input-v-axis-crosses"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n    <div class="inner-content">\\r\\n        <table cols="1" style="width: 100%;">\\r\\n            <tr>\\r\\n                <td class="padding-large">\\r\\n                    <label class="input-label"><%= scope.textUnits %></label>\\r\\n                    <div id="chart-dlg-combo-units" class="input-group-nr" style="width:140px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-large">\\r\\n                    <div id="chart-dlg-check-v-reverse"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n    <div class="separator horizontal padding-large"></div>\\r\\n    <div class="inner-content">\\r\\n        <table cols="2" style="width: 100%;">\\r\\n            <tr>\\r\\n                <td colspan=2 class="padding-small">\\r\\n                    <label class="header"><%= scope.textTickOptions %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-large">\\r\\n                    <label class="input-label"><%= scope.textMajorType %></label>\\r\\n                    <div id="chart-dlg-combo-v-major-type" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td class="padding-large">\\r\\n                    <label class="input-label" style="margin-left: 15px;"><%= scope.textMinorType %></label>\\r\\n                    <div id="chart-dlg-combo-v-minor-type" class="input-group-nr" style="margin-left: 15px;" />\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n    <div class="separator horizontal padding-large"></div>\\r\\n    <div class="inner-content">\\r\\n        <table cols="1" style="width: 100%;">\\r\\n            <tr>\\r\\n                <td class="padding-small">\\r\\n                    <label class="header"><%= scope.textLabelOptions %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td>\\r\\n                    <label class="input-label"><%= scope.textLabelPos %></label>\\r\\n                    <div id="chart-dlg-combo-v-label-pos" class="input-group-nr" style="width:140px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n</div>\\r\\n<div id="id-chart-settings-dlg-hor" class="settings-panel">\\r\\n    <div class="inner-content">\\r\\n        <table cols="3" style="width: 100%">\\r\\n            <tr>\\r\\n                <td colspan="3">\\r\\n                    <label class="header  padding-small"><%= scope.textAxisOptions %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small" width="100">\\r\\n                    <label class="input-label"><%= scope.textAxisCrosses %></label>\\r\\n                </td>\\r\\n                <td class="padding-small" width="115" style="padding-right: 10px;">\\r\\n                    <div id="chart-dlg-combo-h-crosstype"></div>\\r\\n                </td>\\r\\n                <td class="padding-small" width="90">\\r\\n                    <div id="chart-dlg-input-h-axis-crosses"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n    <div class="inner-content">\\r\\n        <table cols="1" style="width: 100%;">\\r\\n            <tr>\\r\\n                <td class="padding-large" width="140">\\r\\n                    <label class="input-label"><%= scope.textAxisPos %></label>\\r\\n                    <div id="chart-dlg-combo-axis-pos" class="input-group-nr" style="width:140px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-large">\\r\\n                    <div id="chart-dlg-check-h-reverse"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n    <div class="separator horizontal padding-large"></div>\\r\\n    <div class="inner-content">\\r\\n        <table cols="2" style="width: 100%;">\\r\\n            <tr>\\r\\n                <td colspan=2 class="padding-small">\\r\\n                    <label class="header"><%= scope.textTickOptions %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small" width="140">\\r\\n                    <label class="input-label"><%= scope.textMajorType %></label>\\r\\n                    <div id="chart-dlg-combo-h-major-type" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label" style="margin-left: 15px;"><%= scope.textMinorType %></label>\\r\\n                    <div id="chart-dlg-combo-h-minor-type" class="input-group-nr" style="margin-left: 15px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td width="100%" colspan="2">\\r\\n                    <label class="input-label"><%= scope.textMarksInterval %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-large" width="140">\\r\\n                    <div id="chart-dlg-input-marks-interval"></div>\\r\\n                </td>\\r\\n                <td class="padding-large">\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n    <div class="separator horizontal padding-large"></div>\\r\\n    <div class="inner-content">\\r\\n        <table cols="2" style="width: 100%;">\\r\\n            <tr>\\r\\n                <td colspan=2 class="padding-small">\\r\\n                    <label class="header"><%= scope.textLabelOptions %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small" width="140">\\r\\n                    <label class="input-label"><%= scope.textLabelPos %></label>\\r\\n                    <div id="chart-dlg-combo-h-label-pos" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label" style="margin-left: 15px;"><%= scope.textLabelDist %></label>\\r\\n                    <div id="chart-dlg-input-label-dist" style="margin-left: 15px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td width="100%" colspan="2">\\r\\n                    <label class="input-label"><%= scope.textLabelInterval %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td width="140">\\r\\n                    <div id="chart-dlg-combo-label-int" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td style="vertical-align: bottom;">\\r\\n                    <div id="chart-dlg-input-label-int" style="margin-left: 15px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n</div>\';});\n
+  <div id="chart-dlg-input-min-value"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-large" width="100">\\r\\n                    <label class="input-label"><%= scope.textMaxValue %></label>\\r\\n                </td>\\r\\n                <td class="padding-large" width="115" style="padding-right: 10px;">\\r\\n                    <div id="chart-dlg-combo-maxtype"></div>\\r\\n                </td>\\r\\n                <td class="padding-large" width="90">\\r\\n                    <div id="chart-dlg-input-max-value"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-large" width="100">\\r\\n                    <label class="input-label"><%= scope.textAxisCrosses %></label>\\r\\n                </td>\\r\\n                <td class="padding-large" width="115" style="padding-right: 10px;">\\r\\n                    <div id="chart-dlg-combo-v-crosstype"></div>\\r\\n                </td>\\r\\n                <td class="padding-large" width="90">\\r\\n                    <div id="chart-dlg-input-v-axis-crosses"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n    <div class="inner-content">\\r\\n        <table cols="1" style="width: 100%;">\\r\\n            <tr>\\r\\n                <td class="padding-large">\\r\\n                    <label class="input-label"><%= scope.textUnits %></label>\\r\\n                    <div id="chart-dlg-combo-units" class="input-group-nr" style="width:140px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-large">\\r\\n                    <div id="chart-dlg-check-v-reverse"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n    <div class="separator horizontal padding-large"></div>\\r\\n    <div class="inner-content">\\r\\n        <table cols="2" style="width: 100%;">\\r\\n            <tr>\\r\\n                <td colspan=2 class="padding-small">\\r\\n                    <label class="header"><%= scope.textTickOptions %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-large">\\r\\n                    <label class="input-label"><%= scope.textMajorType %></label>\\r\\n                    <div id="chart-dlg-combo-v-major-type" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td class="padding-large">\\r\\n                    <label class="input-label" style="margin-left: 15px;"><%= scope.textMinorType %></label>\\r\\n                    <div id="chart-dlg-combo-v-minor-type" class="input-group-nr" style="margin-left: 15px;" />\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n    <div class="separator horizontal padding-large"></div>\\r\\n    <div class="inner-content">\\r\\n        <table cols="1" style="width: 100%;">\\r\\n            <tr>\\r\\n                <td class="padding-small">\\r\\n                    <label class="header"><%= scope.textLabelOptions %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td>\\r\\n                    <label class="input-label"><%= scope.textLabelPos %></label>\\r\\n                    <div id="chart-dlg-combo-v-label-pos" class="input-group-nr" style="width:140px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n</div>\\r\\n<div id="id-chart-settings-dlg-hor" class="settings-panel">\\r\\n    <div class="inner-content">\\r\\n        <table cols="3" style="width: 100%">\\r\\n            <tr>\\r\\n                <td colspan="3">\\r\\n                    <label class="header  padding-small"><%= scope.textAxisOptions %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small" width="100">\\r\\n                    <label class="input-label"><%= scope.textAxisCrosses %></label>\\r\\n                </td>\\r\\n                <td class="padding-small" width="115" style="padding-right: 10px;">\\r\\n                    <div id="chart-dlg-combo-h-crosstype"></div>\\r\\n                </td>\\r\\n                <td class="padding-small" width="90">\\r\\n                    <div id="chart-dlg-input-h-axis-crosses"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n    <div class="inner-content">\\r\\n        <table cols="1" style="width: 100%;">\\r\\n            <tr>\\r\\n                <td class="padding-large" width="140">\\r\\n                    <label class="input-label"><%= scope.textAxisPos %></label>\\r\\n                    <div id="chart-dlg-combo-axis-pos" class="input-group-nr" style="width:140px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-large">\\r\\n                    <div id="chart-dlg-check-h-reverse"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n    <div class="separator horizontal padding-large"></div>\\r\\n    <div class="inner-content">\\r\\n        <table cols="2" style="width: 100%;">\\r\\n            <tr>\\r\\n                <td colspan=2 class="padding-small">\\r\\n                    <label class="header"><%= scope.textTickOptions %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small" width="140">\\r\\n                    <label class="input-label"><%= scope.textMajorType %></label>\\r\\n                    <div id="chart-dlg-combo-h-major-type" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label" style="margin-left: 15px;"><%= scope.textMinorType %></label>\\r\\n                    <div id="chart-dlg-combo-h-minor-type" class="input-group-nr" style="margin-left: 15px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td width="100%" colspan="2">\\r\\n                    <label class="input-label"><%= scope.textMarksInterval %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-large" width="140">\\r\\n                    <div id="chart-dlg-input-marks-interval"></div>\\r\\n                </td>\\r\\n                <td class="padding-large">\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n    <div class="separator horizontal padding-large"></div>\\r\\n    <div class="inner-content">\\r\\n        <table cols="2" style="width: 100%;">\\r\\n            <tr>\\r\\n                <td colspan=2 class="padding-small">\\r\\n                    <label class="header"><%= scope.textLabelOptions %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td class="padding-small" width="140">\\r\\n                    <label class="input-label"><%= scope.textLabelPos %></label>\\r\\n                    <div id="chart-dlg-combo-h-label-pos" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td class="padding-small">\\r\\n                    <label class="input-label" style="margin-left: 15px;"><%= scope.textLabelDist %></label>\\r\\n                    <div id="chart-dlg-input-label-dist" style="margin-left: 15px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td width="100%" colspan="2">\\r\\n                    <label class="input-label"><%= scope.textLabelInterval %></label>\\r\\n                </td>\\r\\n            </tr>\\r\\n            <tr>\\r\\n                <td width="140">\\r\\n                    <div id="chart-dlg-combo-label-int" class="input-group-nr"></div>\\r\\n                </td>\\r\\n                <td style="vertical-align: bottom;">\\r\\n                    <div id="chart-dlg-input-label-int" style="margin-left: 15px;"></div>\\r\\n                </td>\\r\\n            </tr>\\r\\n        </table>\\r\\n    </div>\\r\\n</div>\';});\n
 \n
 /*\r\n
  * (c) Copyright Ascensio System SIA 2010-2015\r\n
@@ -35619,7 +35622,10 @@ define(\'spreadsheeteditor/main/app/view/CellRangeDialog\',["common/main/lib/com
                     if (me.cmbDataDirect.isDisabled()) {\r\n
                         me.cmbDataDirect.setDisabled(false);\r\n
                     }\r\n
-                    
+                    var isvalid = me.api.asc_checkDataRange(c_oAscSelectionDialogType.Chart, value, false);\r\n
+                    return (isvalid == c_oAscError.ID.DataRangeError) ? me.textInvalidRange : true;\r\n
+                };\r\n
+                this.cmbDataDirect.setDisabled(value === null)
 
 ]]></string> </value>
         </item>
@@ -35642,10 +35648,7 @@ define(\'spreadsheeteditor/main/app/view/CellRangeDialog\',["common/main/lib/com
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-var isvalid = me.api.asc_checkDataRange(c_oAscSelectionDialogType.Chart, value, false);\r\n
-                    return (isvalid == c_oAscError.ID.DataRangeError) ? me.textInvalidRange : true;\r\n
-                };\r\n
-                this.cmbDataDirect.setDisabled(value === null);\r\n
+;\r\n
                 this.cmbDataDirect.setValue(props.getInColumns() ? 1 : 0);\r\n
                 this.cmbChartTitle.setValue(props.getTitle());\r\n
                 this.cmbLegendPos.setValue(props.getLegendPos());\r\n
@@ -36906,7 +36909,9 @@ define(\'common/main/lib/component/Slider\',["common/main/lib/component/BaseView
             values: [0, 100]\r\n
         },\r\n
         disabled: false,\r\n
-        template: _.template([\'<div class="slider multi-slider">\', \'<div class="track">\', \'<div class="track
+        template: _.template([\'<div class="slider multi-slider">\', \'<div class="track">\', \'<div class="track-left"></div>\', \'<div class="track-center""></div>\', \'<div class="track-right" style=""></div>\', "</div>", "<% _.each(items, function(item) { %>", \'<div class="thumb" style=""></div>\', "<% }); %>", "</div>"].join("")),\r\n
+        initialize: function (options) {\r\n
+          
 
 ]]></string> </value>
         </item>
@@ -36929,9 +36934,7 @@ define(\'common/main/lib/component/Slider\',["common/main/lib/component/BaseView
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
--left"></div>\', \'<div class="track-center""></div>\', \'<div class="track-right" style=""></div>\', "</div>", "<% _.each(items, function(item) { %>", \'<div class="thumb" style=""></div>\', "<% }); %>", "</div>"].join("")),\r\n
-        initialize: function (options) {\r\n
-            Common.UI.BaseView.prototype.initialize.call(this, options);\r\n
+  Common.UI.BaseView.prototype.initialize.call(this, options);\r\n
             var me = this,\r\n
             el = $(this.el);\r\n
             me.width = me.options.width;\r\n
@@ -38199,7 +38202,16 @@ define(\'text!spreadsheeteditor/main/app/template/ShapeSettingsAdvanced.template
                     {\r\n
                         color: "FFFFFF",\r\n
                         effectId: 2\r\n
-          
+                    },\r\n
+                    {\r\n
+                        color: "000000",\r\n
+                        effectId: 1\r\n
+                    },\r\n
+                    {\r\n
+                        color: "000000",\r\n
+                        effectId: 1\r\n
+                    },\r\n
+      
 
 ]]></string> </value>
         </item>
@@ -38222,16 +38234,7 @@ define(\'text!spreadsheeteditor/main/app/template/ShapeSettingsAdvanced.template
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-          },\r\n
-                    {\r\n
-                        color: "000000",\r\n
-                        effectId: 1\r\n
-                    },\r\n
-                    {\r\n
-                        color: "000000",\r\n
-                        effectId: 1\r\n
-                    },\r\n
-                    {\r\n
+              {\r\n
                         color: "FFFFFF",\r\n
                         effectId: 2\r\n
                     },\r\n
@@ -39873,7 +39876,13 @@ define(\'text!spreadsheeteditor/main/app/template/ShapeSettingsAdvanced.template
                 fill.asc_getFill().asc_putColors([Common.Utils.ThemeColor.getRgbColor(this.GradColor.colors[0]), Common.Utils.ThemeColor.getRgbColor(this.GradColor.colors[1])]);\r\n
                 props.asc_putFill(fill);\r\n
                 this.imgprops.asc_putShapeProperties(props);\r\n
-      
+                this.api.asc_setGraphicObjectProps(this.imgprops);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this);\r\n
+        },\r\n
+        onSelectGradient: function (btn, picker, itemView, record) {\r\n
+            if (this._noApply) {\r\n
+        
 
 ]]></string> </value>
         </item>
@@ -39896,13 +39905,7 @@ define(\'text!spreadsheeteditor/main/app/template/ShapeSettingsAdvanced.template
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-          this.api.asc_setGraphicObjectProps(this.imgprops);\r\n
-            }\r\n
-            Common.NotificationCenter.trigger("edit:complete", this);\r\n
-        },\r\n
-        onSelectGradient: function (btn, picker, itemView, record) {\r\n
-            if (this._noApply) {\r\n
-                return;\r\n
+        return;\r\n
             }\r\n
             var rawData = {},\r\n
             isPickerSelect = _.isFunction(record.toJSON);\r\n
@@ -41083,7 +41086,13 @@ define(\'spreadsheeteditor/main/app/view/RightMenu\',["text!spreadsheeteditor/ma
                 });\r\n
             }\r\n
         },\r\n
-       
+        onFocusObject: function (SelectedObjects) {\r\n
+            if (!this.editMode) {\r\n
+                return;\r\n
+            }\r\n
+            for (var i = 0; i < this._settings.length; ++i) {\r\n
+                if (this._settings[i]) {\r\n
+                    this._settings[i].hidden =
 
 ]]></string> </value>
         </item>
@@ -41106,13 +41115,7 @@ define(\'spreadsheeteditor/main/app/view/RightMenu\',["text!spreadsheeteditor/ma
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
- onFocusObject: function (SelectedObjects) {\r\n
-            if (!this.editMode) {\r\n
-                return;\r\n
-            }\r\n
-            for (var i = 0; i < this._settings.length; ++i) {\r\n
-                if (this._settings[i]) {\r\n
-                    this._settings[i].hidden = 1;\r\n
+ 1;\r\n
                     this._settings[i].locked = false;\r\n
                 }\r\n
             }\r\n
@@ -42289,7 +42292,12 @@ define(\'common/main/lib/view/Comments\',["text!common/main/lib/template/Comment
             topPos = 0,\r\n
             sdkBoundsTopPos = 0;\r\n
             if (commentsView && arrowView && editorView && editorView.get(0)) {\r\n
-                editorBounds
+                editorBounds = editorView.get(0).getBoundingClientRect();\r\n
+                if (editorBounds) {\r\n
+                    sdkBoundsHeight = editorBounds.height - this.sdkBounds.padding * 2;\r\n
+                    this.$window.css({\r\n
+                        maxHeight: sdkBoundsHeight + "px"\r\n
+
 
 ]]></string> </value>
         </item>
@@ -42312,11 +42320,6 @@ define(\'common/main/lib/view/Comments\',["text!common/main/lib/template/Comment
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
- = editorView.get(0).getBoundingClientRect();\r\n
-                if (editorBounds) {\r\n
-                    sdkBoundsHeight = editorBounds.height - this.sdkBounds.padding * 2;\r\n
-                    this.$window.css({\r\n
-                        maxHeight: sdkBoundsHeight + "px"\r\n
                     });\r\n
                     this.sdkBounds.width = editorBounds.width;\r\n
                     this.sdkBounds.height = editorBounds.height;\r\n
@@ -43575,7 +43578,12 @@ define(\'common/main/lib/component/LoadMask\',["common/main/lib/component/BaseVi
         };\r\n
     })());\r\n
 });\n
-
+/*\r\n
+ * (c) Copyright Ascensio System SIA 2010-2015\r\n
+ *\r\n
+ * This program is a free software product. You can redistribute it and/or \r\n
+ * modify it under the terms of the GNU Affero General Public License (AGPL) \r\n
+ * version 3 as published by the Free Software Foundation. I
 
 ]]></string> </value>
         </item>
@@ -43598,12 +43606,7 @@ define(\'common/main/lib/component/LoadMask\',["common/main/lib/component/BaseVi
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*\r\n
- * (c) Copyright Ascensio System SIA 2010-2015\r\n
- *\r\n
- * This program is a free software product. You can redistribute it and/or \r\n
- * modify it under the terms of the GNU Affero General Public License (AGPL) \r\n
- * version 3 as published by the Free Software Foundation. In accordance with \r\n
+n accordance with \r\n
  * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect \r\n
  * that Ascensio System SIA expressly excludes the warranty of non-infringement\r\n
  * of any third-party rights.\r\n
@@ -44991,7 +44994,13 @@ define(\'common/main/lib/component/LoadMask\',["common/main/lib/component/BaseVi
             this.btnComments.on("click", _.bind(this.onBtnMenuClick, this));\r\n
             this.btnChat.on("click", _.bind(this.onBtnMenuClick, this));\r\n
             this.btnSearch.on("click", _.bind(this.onBtnMenuClick, this));\r\n
-            this.btnAbout.on("toggle", _.bind(this.onBtnMenuToggle, this
+            this.btnAbout.on("toggle", _.bind(this.onBtnMenuToggle, this));\r\n
+            this.btnFile.on("toggle", _.bind(this.onBtnMenuToggle, this));\r\n
+            var menuFile = new SSE.Views.FileMenu({});\r\n
+            menuFile.options = {\r\n
+                alias: "FileMenu"\r\n
+            };\r\n
+            this.btnFile.panel = menuFile.render()
 
 ]]></string> </value>
         </item>
@@ -45014,13 +45023,7 @@ define(\'common/main/lib/component/LoadMask\',["common/main/lib/component/BaseVi
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-));\r\n
-            this.btnFile.on("toggle", _.bind(this.onBtnMenuToggle, this));\r\n
-            var menuFile = new SSE.Views.FileMenu({});\r\n
-            menuFile.options = {\r\n
-                alias: "FileMenu"\r\n
-            };\r\n
-            this.btnFile.panel = menuFile.render();\r\n
+;\r\n
             this.btnAbout.panel = (new Common.Views.About({\r\n
                 el: $("#about-menu-panel"),\r\n
                 appName: "Spreadsheet Editor"\r\n
@@ -46447,7 +46450,15 @@ define(\'common/main/lib/controller/Fonts\',["core", "common/main/lib/collection
         textListDescription: "Select Function",\r\n
         sDescription: "Description",\r\n
         txtTitle: "Insert Function",\r\n
-   
+        syntaxText: "Syntax"\r\n
+    },\r\n
+    SSE.Views.FormulaDialog || {}));\r\n
+});\n
+/*\r\n
+ * (c) Copyright Ascensio System SIA 2010-2015\r\n
+ *\r\n
+ * This program is a free software product. You can redistribute it and/or \r\n
+ * modify it under the terms of the GNU Affero General Public 
 
 ]]></string> </value>
         </item>
@@ -46470,15 +46481,7 @@ define(\'common/main/lib/controller/Fonts\',["core", "common/main/lib/collection
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-     syntaxText: "Syntax"\r\n
-    },\r\n
-    SSE.Views.FormulaDialog || {}));\r\n
-});\n
-/*\r\n
- * (c) Copyright Ascensio System SIA 2010-2015\r\n
- *\r\n
- * This program is a free software product. You can redistribute it and/or \r\n
- * modify it under the terms of the GNU Affero General Public License (AGPL) \r\n
+License (AGPL) \r\n
  * version 3 as published by the Free Software Foundation. In accordance with \r\n
  * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect \r\n
  * that Ascensio System SIA expressly excludes the warranty of non-infringement\r\n
@@ -46962,6 +46965,9 @@ define(\'common/main/lib/controller/Fonts\',["core", "common/main/lib/collection
                     this.api.asc_getEditorPermissions();\r\n
                 }\r\n
             },\r\n
+            onSave: function (data) {\r\n
+                this.api.asc_Save();\r\n
+            },\r\n
             onProcessSaveResult: function (data) {\r\n
                 //XXX\r\n
                 //this.api.asc_OnSaveEnd(data.result);\r\n
@@ -47235,6 +47241,7 @@ define(\'common/main/lib/controller/Fonts\',["core", "common/main/lib/collection
                     Common.component.Analytics.initialize("UA-12442749-13", "Spreadsheet Editor");\r\n
                 }\r\n
                 Common.Gateway.on("applyeditrights", _.bind(me.onApplyEditRights, me));\r\n
+                Common.Gateway.on("save", _.bind(me.onSave, me));\r\n
                 Common.Gateway.on("processsaveresult", _.bind(me.onProcessSaveResult, me));\r\n
                 Common.Gateway.on("processrightschange", _.bind(me.onProcessRightsChange, me));\r\n
                 Common.Gateway.on("processmouse", _.bind(me.onProcessMouse, me));\r\n
@@ -47624,7 +47631,8 @@ define(\'common/main/lib/controller/Fonts\',["core", "common/main/lib/collection
             },\r\n
             onDocumentCanSaveChanged: function (isCanSave) {\r\n
                 if (this.toolbarView) {\r\n
-          
+                    var isSyncButton = $(".btn-icon", this.toolbarView.btnSave.cmpEl).hasClass("btn-synch");\r\n
+            
 
 ]]></string> </value>
         </item>
@@ -47647,8 +47655,7 @@ define(\'common/main/lib/controller/Fonts\',["core", "common/main/lib/collection
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-          var isSyncButton = $(".btn-icon", this.toolbarView.btnSave.cmpEl).hasClass("btn-synch");\r\n
-                    if (this.toolbarView.btnSave.isDisabled() !== (!isCanSave && !isSyncButton)) {\r\n
+        if (this.toolbarView.btnSave.isDisabled() !== (!isCanSave && !isSyncButton)) {\r\n
                         this.toolbarView.btnSave.setDisabled(!isCanSave && !isSyncButton);\r\n
                     }\r\n
                 }\r\n
@@ -47847,6 +47854,9 @@ define(\'common/main/lib/controller/Fonts\',["core", "common/main/lib/collection
                     switch (data.command) {\r\n
                     case "setChartData":\r\n
                         this.setChartData(data.data);\r\n
+                        break;\r\n
+                    case "save":\r\n
+                        this.api.asc_Save();\r\n
                         break;\r\n
                     case "getChartData":\r\n
                         this.getChartData();\r\n

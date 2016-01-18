@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts50885437.8</string> </value>
+            <value> <string>ts53133045.59</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -307,6 +307,16 @@
             });\r\n
         };\r\n
 \r\n
+        var _save = function(result, message) {\r\n
+            _sendCommand({\r\n
+                command: \'save\',\r\n
+                data: {\r\n
+                    result: result,\r\n
+                    message: message\r\n
+                }\r\n
+            });\r\n
+        };\r\n
+\r\n
         var _processSaveResult = function(result, message) {\r\n
             _sendCommand({\r\n
                 command: \'processSaveResult\',\r\n
@@ -385,6 +395,7 @@
             showError           : _showError,\r\n
             showMessage         : _showMessage,\r\n
             applyEditRights     : _applyEditRights,\r\n
+            save                : _save,\r\n
             processSaveResult   : _processSaveResult,\r\n
             processRightsChange : _processRightsChange,\r\n
             refreshHistory      : _refreshHistory,\r\n
@@ -411,7 +422,7 @@
     };\r\n
 \r\n
     DocsAPI.DocEditor.version = function() {\r\n
-        return \'3.0b.760\';\r\n
+        return \'3.0b##BN#\';\r\n
     };\r\n
 \r\n
     MessageDispatcher = function(fn, scope) {\r\n
@@ -558,7 +569,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>16820</int> </value>
+            <value> <int>17124</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

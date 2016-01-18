@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts52780726.72</string> </value>
+            <value> <string>ts53141051.65</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2472313</int> </value>
+            <value> <int>2472560</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -54,7 +54,7 @@
  *\n
  * http://www.onlyoffice.com \n
  *\n
- * Version: 3.0.0 (build:967, rev:cb3d33b\n
+ * Version: 3.0.0 (build:968, rev:cb3d33b\n
 , date:Fri Dec 18 22:30:55 2015 +0300\n
 )\n
  */\n
@@ -3892,7 +3892,14 @@ function matcherFromTokens( tokens ) {\n
 \t\t\t\tj = ++i;\n
 \t\t\t\tfor ( ; j < len; j++ ) {\n
 \t\t\t\t\tif ( Expr.relative[ tokens[j].type ] ) {\n
-\t\t\t\t\t\tbreak
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t\treturn setMatcher(\n
+\t\t\t\t\ti > 1 && elementMatcher( matchers ),\n
+\t\t\t\t\ti > 1 && toSelector(\n
+\t\t\t\t\t\t// If the preceding token was a descendant combinator, insert an implicit any-element `*`\n
+\t\t\t\t\t\ttokens.slice( 0, i - 1 ).concat({ value
 
 ]]></string> </value>
         </item>
@@ -3915,14 +3922,7 @@ function matcherFromTokens( tokens ) {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-;\n
-\t\t\t\t\t}\n
-\t\t\t\t}\n
-\t\t\t\treturn setMatcher(\n
-\t\t\t\t\ti > 1 && elementMatcher( matchers ),\n
-\t\t\t\t\ti > 1 && toSelector(\n
-\t\t\t\t\t\t// If the preceding token was a descendant combinator, insert an implicit any-element `*`\n
-\t\t\t\t\t\ttokens.slice( 0, i - 1 ).concat({ value: tokens[ i - 2 ].type === " " ? "*" : "" })\n
+: tokens[ i - 2 ].type === " " ? "*" : "" })\n
 \t\t\t\t\t).replace( rtrim, "$1" ),\n
 \t\t\t\t\tmatcher,\n
 \t\t\t\t\ti < j && matcherFromTokens( tokens.slice( i, j ) ),\n
@@ -6243,7 +6243,10 @@ jQuery.event = {\n
 \t\t}\n
 \t},\n
 \n
-\ts
+\tsimulate: function( type, elem, event, bubble ) {\n
+\t\t// Piggyback on a donor event to simulate a different one.\n
+\t\t// Fake originalEvent to avoid donor\'s stopPropagation, but if the\n
+\t\t// simulated event prevents default then we do the same on the don
 
 ]]></string> </value>
         </item>
@@ -6266,10 +6269,7 @@ jQuery.event = {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-imulate: function( type, elem, event, bubble ) {\n
-\t\t// Piggyback on a donor event to simulate a different one.\n
-\t\t// Fake originalEvent to avoid donor\'s stopPropagation, but if the\n
-\t\t// simulated event prevents default then we do the same on the donor.\n
+or.\n
 \t\tvar e = jQuery.extend(\n
 \t\t\tnew jQuery.Event(),\n
 \t\t\tevent,\n
@@ -8673,7 +8673,16 @@ jQuery.extend({\n
 \t\tif ( !transport ) {\n
 \t\t\tdone( -1, "No Transport" );\n
 \t\t} else {\n
-\t\t\tjqXHR.r
+\t\t\tjqXHR.readyState = 1;\n
+\n
+\t\t\t// Send global event\n
+\t\t\tif ( fireGlobals ) {\n
+\t\t\t\tglobalEventContext.trigger( "ajaxSend", [ jqXHR, s ] );\n
+\t\t\t}\n
+\t\t\t// Timeout\n
+\t\t\tif ( s.async && s.timeout > 0 ) {\n
+\t\t\t\ttimeoutTimer = setTimeout(function() {\n
+\t\t\t\t\tjqXHR.abort("timeou
 
 ]]></string> </value>
         </item>
@@ -8696,16 +8705,7 @@ jQuery.extend({\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-eadyState = 1;\n
-\n
-\t\t\t// Send global event\n
-\t\t\tif ( fireGlobals ) {\n
-\t\t\t\tglobalEventContext.trigger( "ajaxSend", [ jqXHR, s ] );\n
-\t\t\t}\n
-\t\t\t// Timeout\n
-\t\t\tif ( s.async && s.timeout > 0 ) {\n
-\t\t\t\ttimeoutTimer = setTimeout(function() {\n
-\t\t\t\t\tjqXHR.abort("timeout");\n
+t");\n
 \t\t\t\t}, s.timeout );\n
 \t\t\t}\n
 \n
@@ -10876,7 +10876,13 @@ if ( typeof window === "object" && typeof window.document === "object" ) {\n
     },\n
 \n
     // Remove a model, or a list of models from the set.\n
-    remove: function(models,
+    remove: function(models, options) {\n
+      var singular = !_.isArray(models);\n
+      models = singular ? [models] : _.clone(models);\n
+      options || (options = {});\n
+      var i, l, index, model;\n
+      for (i = 0, l = models.length; i < l; i++) {\n
+        model = models[i] 
 
 ]]></string> </value>
         </item>
@@ -10899,13 +10905,7 @@ if ( typeof window === "object" && typeof window.document === "object" ) {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
- options) {\n
-      var singular = !_.isArray(models);\n
-      models = singular ? [models] : _.clone(models);\n
-      options || (options = {});\n
-      var i, l, index, model;\n
-      for (i = 0, l = models.length; i < l; i++) {\n
-        model = models[i] = this.get(models[i]);\n
+= this.get(models[i]);\n
         if (!model) continue;\n
         delete this._byId[model.id];\n
         delete this._byId[model.cid];\n
@@ -12846,7 +12846,12 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
       this.$backdrop = $(\'<div class="modal-backdrop \' + animate + \'" />\')\n
         .appendTo(document.body)\n
 \n
-      this.$
+      this.$element.on(\'click.dismiss.modal\', $.proxy(function (e) {\n
+        if (e.target !== e.currentTarget) return\n
+        this.options.backdrop == \'static\'\n
+          ? this.$element[0].focus.call(this.$element[0])\n
+          : this.hide.call(this)\n
+      },
 
 ]]></string> </value>
         </item>
@@ -12869,12 +12874,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-element.on(\'click.dismiss.modal\', $.proxy(function (e) {\n
-        if (e.target !== e.currentTarget) return\n
-        this.options.backdrop == \'static\'\n
-          ? this.$element[0].focus.call(this.$element[0])\n
-          : this.hide.call(this)\n
-      }, this))\n
+ this))\n
 \n
       if (doAnimate) this.$backdrop[0].offsetWidth // force reflow\n
 \n
@@ -14386,6 +14386,9 @@ Common.Gateway = new(function () {\r\n
         "applyEditRights": function (data) {\r\n
             $me.trigger("applyeditrights", data);\r\n
         },\r\n
+        "save": function (data) {\r\n
+            $me.trigger("save", data);\r\n
+        },\r\n
         "processSaveResult": function (data) {\r\n
             $me.trigger("processsaveresult", data);\r\n
         },\r\n
@@ -14803,7 +14806,10 @@ define(\'text\',[\'module\'], function (module) {\n
             }\n
 \n
             //Load the text. Use XHR if possible and in a browser.\n
-            if (!hasLocation || useXhr(url, defaultProtocol, defaultHostName, defaultPort))
+            if (!hasLocation || useXhr(url, defaultProtocol, defaultHostName, defaultPort)) {\n
+                text.get(url, function (content) {\n
+                    text.finishLoad(name, parsed.strip, content, onLoad);\n
+                }, function (err
 
 ]]></string> </value>
         </item>
@@ -14826,10 +14832,7 @@ define(\'text\',[\'module\'], function (module) {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
- {\n
-                text.get(url, function (content) {\n
-                    text.finishLoad(name, parsed.strip, content, onLoad);\n
-                }, function (err) {\n
+) {\n
                     if (onLoad.error) {\n
                         onLoad.error(err);\n
                     }\n
@@ -16346,7 +16349,9 @@ define(\'common/main/lib/component/Button\',["common/main/lib/component/BaseView
  * grant you any rights under trademark law for use of our trademarks.\r\n
  *\r\n
  * All the Product\'s GUI elements, including illustrations and icon sets, as\r\n
- * well as tech
+ * well as technical writing content are licensed under the terms of the\r\n
+ * Creative Commons Attribution-ShareAlike 4.0 International. See the License\r\n
+ * terms at http://cre
 
 ]]></string> </value>
         </item>
@@ -16369,9 +16374,7 @@ define(\'common/main/lib/component/Button\',["common/main/lib/component/BaseView
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-nical writing content are licensed under the terms of the\r\n
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License\r\n
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode\r\n
+ativecommons.org/licenses/by-sa/4.0/legalcode\r\n
  *\r\n
  */\r\n
  (function (factory) {\r\n
@@ -17501,7 +17504,11 @@ Common.Utils.RGBColor = function (colorString) {\r\n
                     if (h < 120) {\r\n
                         rgb.g = t1;\r\n
                         rgb.b = t2;\r\n
-          
+                        rgb.r = t1 - t3;\r\n
+                    } else {\r\n
+                        if (h < 180) {\r\n
+                            rgb.g = t1;\r\n
+                 
 
 ]]></string> </value>
         </item>
@@ -17524,11 +17531,7 @@ Common.Utils.RGBColor = function (colorString) {\r\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-              rgb.r = t1 - t3;\r\n
-                    } else {\r\n
-                        if (h < 180) {\r\n
-                            rgb.g = t1;\r\n
-                            rgb.r = t2;\r\n
+           rgb.r = t2;\r\n
                             rgb.b = t2 + t3;\r\n
                         } else {\r\n
                             if (h < 240) {\r\n
@@ -19002,7 +19005,9 @@ define(\'common/main/lib/component/Window\',["common/main/lib/component/BaseView
                         me.$window.css({\r\n
                             "-webkit-transition": "0.3s opacity, 0.3s -webkit-transform",\r\n
                             "-webkit-transform": "scale(1)",\r\n
-                            "-moz-transition":
+                            "-moz-transition": "0.3s opacity, 0.3s -moz-transform",\r\n
+                            "-moz-transform": "scale(1)",\r\n
+                            "-ms-transition": "0.3s opacity, 0
 
 ]]></string> </value>
         </item>
@@ -19025,9 +19030,7 @@ define(\'common/main/lib/component/Window\',["common/main/lib/component/BaseView
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
- "0.3s opacity, 0.3s -moz-transform",\r\n
-                            "-moz-transform": "scale(1)",\r\n
-                            "-ms-transition": "0.3s opacity, 0.3s -ms-transform",\r\n
+.3s -ms-transform",\r\n
                             "-ms-transform": "scale(1)",\r\n
                             "-o-transition": "0.3s opacity, 0.3s -o-transform",\r\n
                             "-o-transform": "scale(1)",\r\n
@@ -20264,7 +20267,9 @@ define(\'common/main/lib/view/Comments\',["text!common/main/lib/template/Comment
                 });\r\n
                 if (!elem) {\r\n
                     arr.push({\r\n
-                      
+                        start: offset,\r\n
+                        end: len + offset,\r\n
+                        str: \'<a href="\' + ref + \'" target="_blank" data-can-copy="true">\' + subSt
 
 ]]></string> </value>
         </item>
@@ -20287,9 +20292,7 @@ define(\'common/main/lib/view/Comments\',["text!common/main/lib/template/Comment
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-  start: offset,\r\n
-                        end: len + offset,\r\n
-                        str: \'<a href="\' + ref + \'" target="_blank" data-can-copy="true">\' + subStr + "</a>"\r\n
+r + "</a>"\r\n
                     });\r\n
                 }\r\n
                 return "";\r\n
@@ -21612,7 +21615,12 @@ define(\'common/main/lib/component/LoadMask\',["common/main/lib/component/BaseVi
         txtTitle: "Document Title",\r\n
         txtAuthor: "Author",\r\n
         txtPlacement: "Placement",\r\n
-        txtDate: "Creation Dat
+        txtDate: "Creation Date",\r\n
+        txtStatistics: "Statistics",\r\n
+        txtPages: "Pages",\r\n
+        txtWords: "Words",\r\n
+        txtParagraphs: "Paragraphs",\r\n
+        txtSymbols: "Sy
 
 ]]></string> </value>
         </item>
@@ -21635,12 +21643,7 @@ define(\'common/main/lib/component/LoadMask\',["common/main/lib/component/BaseVi
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-e",\r\n
-        txtStatistics: "Statistics",\r\n
-        txtPages: "Pages",\r\n
-        txtWords: "Words",\r\n
-        txtParagraphs: "Paragraphs",\r\n
-        txtSymbols: "Symbols",\r\n
+mbols",\r\n
         txtSpaces: "Symbols with spaces",\r\n
         txtLoading: "Loading..."\r\n
     },\r\n
@@ -23134,7 +23137,10 @@ define(\'common/main/lib/component/Menu\',["common/main/lib/extend/Bootstrap", "
                         this.mustLayout = true;\r\n
                         return;\r\n
                     }\r\n
-                    var me = this
+                    var me = this,\r\n
+                    el = this.cmpEl;\r\n
+                    var menuRoot = (el.attr("role") === "menu") ? el : el.find("[role=menu]");\r\n
+                    if 
 
 ]]></string> </value>
         </item>
@@ -23157,10 +23163,7 @@ define(\'common/main/lib/component/Menu\',["common/main/lib/extend/Bootstrap", "
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-,\r\n
-                    el = this.cmpEl;\r\n
-                    var menuRoot = (el.attr("role") === "menu") ? el : el.find("[role=menu]");\r\n
-                    if (!menuRoot.is(":visible")) {\r\n
+(!menuRoot.is(":visible")) {\r\n
                         var pos = [menuRoot.css("left"), menuRoot.css("top")];\r\n
                         menuRoot.css({\r\n
                             left: "-1000px",\r\n
@@ -24315,7 +24318,12 @@ define(\'common/main/lib/component/MetricSpinner\',["common/main/lib/component/B
                 this.trigger("change", this, this.value, this.lastValue);\r\n
             }\r\n
             if (suspendchange !== true && showError) {\r\n
-                this.trigger("inputerror", this, thi
+                this.trigger("inputerror", this, this.value);\r\n
+            }\r\n
+            if (this.rendered) {\r\n
+                this.setRawValue(this.value);\r\n
+            } else {\r\n
+                this.options.va
 
 ]]></string> </value>
         </item>
@@ -24338,12 +24346,7 @@ define(\'common/main/lib/component/MetricSpinner\',["common/main/lib/component/B
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-s.value);\r\n
-            }\r\n
-            if (this.rendered) {\r\n
-                this.setRawValue(this.value);\r\n
-            } else {\r\n
-                this.options.value = this.value;\r\n
+lue = this.value;\r\n
             }\r\n
         },\r\n
         onMouseDown: function (type, e) {\r\n
@@ -25551,7 +25554,9 @@ define(\'common/main/lib/component/MaskedField\',["common/main/lib/component/Bas
  * that Ascensio System SIA expressly excludes the warranty of non-infringement\r\n
  * of any third-party rights.\r\n
  *\r\n
- * This program is distributed W
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied \r\n
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For \r\n
+ * details, see the GNU AGPL at: http
 
 ]]></string> </value>
         </item>
@@ -25574,9 +25579,7 @@ define(\'common/main/lib/component/MaskedField\',["common/main/lib/component/Bas
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-ITHOUT ANY WARRANTY; without even the implied \r\n
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For \r\n
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html\r\n
+://www.gnu.org/licenses/agpl-3.0.html\r\n
  *\r\n
  * You can contact Ascensio System SIA at Lubanas st. 125a-25, Riga, Latvia,\r\n
  * EU, LV-1021.\r\n
@@ -27080,7 +27083,10 @@ define(\'documenteditor/main/app/view/DropcapSettingsAdvanced\',["text!documente
             }).on("change", _.bind(function (field, newValue, oldValue) {\r\n
                 if (!this._noApply) {\r\n
                     if (_.isUndefined(this.Margins)) {\r\n
-             
+                        this.Margins = {};\r\n
+                    }\r\n
+                    this.Margins.Bottom = Common.Utils.Metric.fnRecalcToMM(field.getNumberValue());\r\n
+     
 
 ]]></string> </value>
         </item>
@@ -27103,10 +27109,7 @@ define(\'documenteditor/main/app/view/DropcapSettingsAdvanced\',["text!documente
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-           this.Margins = {};\r\n
-                    }\r\n
-                    this.Margins.Bottom = Common.Utils.Metric.fnRecalcToMM(field.getNumberValue());\r\n
-                }\r\n
+           }\r\n
             },\r\n
             me));\r\n
             this.spnMarginRight = new Common.UI.MetricSpinner({\r\n
@@ -28489,7 +28492,11 @@ define(\'common/main/lib/component/InputField\',["common/main/lib/component/Base
                 this.trigger("changed:before", this, newValue, oldValue, e);\r\n
                 if (e.isDefaultPrevented()) {\r\n
                     return;\r\n
-    
+                }\r\n
+                this.value = newValue;\r\n
+                if (this.validateOnBlur) {\r\n
+                    this.checkValidate();\r\n
+                }\r
 
 ]]></string> </value>
         </item>
@@ -28512,11 +28519,7 @@ define(\'common/main/lib/component/InputField\',["common/main/lib/component/Base
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-            }\r\n
-                this.value = newValue;\r\n
-                if (this.validateOnBlur) {\r\n
-                    this.checkValidate();\r\n
-                }\r\n
+\n
                 this.trigger("changed:after", this, newValue, oldValue, e);\r\n
             },\r\n
             onInputChanged: function (e, extra) {\r\n
@@ -29837,7 +29840,12 @@ define(\'common/main/lib/component/ListView\',["common/main/lib/component/DataVi
             });\r\n
             this.chAllCaps.on("change", _.bind(this.onAllCapsChange, this));\r\n
             this.numSpacing = new Common.UI.MetricSpinner({\r\n
-                el: $("#paragraphadv-spin-spaci
+                el: $("#paragraphadv-spin-spacing"),\r\n
+                step: 0.01,\r\n
+                width: 100,\r\n
+                defaultUnit: "cm",\r\n
+                defaultValue: 0,\r\n
+                value: "0
 
 ]]></string> </value>
         </item>
@@ -29860,12 +29868,7 @@ define(\'common/main/lib/component/ListView\',["common/main/lib/component/DataVi
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-ng"),\r\n
-                step: 0.01,\r\n
-                width: 100,\r\n
-                defaultUnit: "cm",\r\n
-                defaultValue: 0,\r\n
-                value: "0 cm",\r\n
+ cm",\r\n
                 maxValue: 55.87,\r\n
                 minValue: -55.87\r\n
             });\r\n
@@ -30879,7 +30882,11 @@ define(\'text!documenteditor/main/app/template/TableSettingsAdvanced.template\',
                 if (this._changedProps) {\r\n
                     this._changedProps.put_Spacing(Common.Utils.Metric.fnRecalcToMM(field.getNumberValue()));\r\n
                 }\r\n
-            },\r
+            },\r\n
+            this));\r\n
+            this.spinners.push(this.nfSpacing);\r\n
+            this.chAutofit = new Common.UI.CheckBox({\r\n
+                el: $("#tableadv-c
 
 ]]></string> </value>
         </item>
@@ -30902,11 +30909,7 @@ define(\'text!documenteditor/main/app/template/TableSettingsAdvanced.template\',
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-\n
-            this));\r\n
-            this.spinners.push(this.nfSpacing);\r\n
-            this.chAutofit = new Common.UI.CheckBox({\r\n
-                el: $("#tableadv-checkbox-autofit"),\r\n
+heckbox-autofit"),\r\n
                 value: true,\r\n
                 labelText: this.textAutofit\r\n
             });\r\n
@@ -32443,7 +32446,13 @@ define(\'text!documenteditor/main/app/template/TableSettingsAdvanced.template\',
                 tableProps: this._changedProps,\r\n
                 borderProps: {\r\n
                     borderSize: this.BorderSize,\r\n
-                    borderColor: this.btnBorderColor.color
+                    borderColor: this.btnBorderColor.color\r\n
+                }\r\n
+            };\r\n
+        },\r\n
+        _setDefaults: function (props) {\r\n
+            if (props) {\r\n
+                this._allTable = !props.get
 
 ]]></string> </value>
         </item>
@@ -32466,13 +32475,7 @@ define(\'text!documenteditor/main/app/template/TableSettingsAdvanced.template\',
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-\r\n
-                }\r\n
-            };\r\n
-        },\r\n
-        _setDefaults: function (props) {\r\n
-            if (props) {\r\n
-                this._allTable = !props.get_CellSelect();\r\n
+_CellSelect();\r\n
                 var value;\r\n
                 var TableWidth = props.get_Width();\r\n
                 if (TableWidth !== null) {\r\n
@@ -33631,7 +33634,10 @@ define(\'text!documenteditor/main/app/template/TableSettingsAdvanced.template\',
                     var key = event.keyCode;\r\n
                     if ((event.ctrlKey || event.metaKey) && !event.shiftKey) {\r\n
                         if (key === Common.UI.Keys.NUM_PLUS || key === Common.UI.Keys.EQUALITY || (Common.Utils.isOpera && key == 43)) {\r\n
-                            me
+                            me.api.zoomIn();\r\n
+                            event.preventDefault();\r\n
+                            event.stopPropagation();\r\n
+                            return fa
 
 ]]></string> </value>
         </item>
@@ -33654,10 +33660,7 @@ define(\'text!documenteditor/main/app/template/TableSettingsAdvanced.template\',
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-.api.zoomIn();\r\n
-                            event.preventDefault();\r\n
-                            event.stopPropagation();\r\n
-                            return false;\r\n
+lse;\r\n
                         } else {\r\n
                             if (key === Common.UI.Keys.NUM_MINUS || key === Common.UI.Keys.MINUS || (Common.Utils.isOpera && key == 45)) {\r\n
                                 me.api.zoomOut();\r\n
@@ -34889,7 +34892,12 @@ define(\'text!documenteditor/main/app/template/TableSettingsAdvanced.template\',
                 caption: me.hyperlinkText,\r\n
                 menu: new Common.UI.Menu({\r\n
                     menuAlign: "tl-tr",\r\n
-                    items: [menuEditHyperlinkTable, menuRemoveHy
+                    items: [menuEditHyperlinkTable, menuRemoveHyperlinkTable]\r\n
+                })\r\n
+            });\r\n
+            var menuAddCommentTable = new Common.UI.MenuItem({\r\n
+                caption: me.addCommentText\r\n
+
 
 ]]></string> </value>
         </item>
@@ -34912,11 +34920,6 @@ define(\'text!documenteditor/main/app/template/TableSettingsAdvanced.template\',
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-perlinkTable]\r\n
-                })\r\n
-            });\r\n
-            var menuAddCommentTable = new Common.UI.MenuItem({\r\n
-                caption: me.addCommentText\r\n
             }).on("click", _.bind(me.addComment, me));\r\n
             var menuAddHyperlinkTable = new Common.UI.MenuItem({\r\n
                 caption: me.hyperlinkText\r\n
@@ -35977,7 +35980,9 @@ define(\'common/main/lib/component/ColorPalette\',["common/main/lib/component/Ba
  if (Common === undefined) {\r\n
     var Common = {};\r\n
 }\r\n
-define(\'common/main/lib/component/DimensionPicker\',["common/main/
+define(\'common/main/lib/component/DimensionPicker\',["common/main/lib/component/BaseView"], function () {\r\n
+    Common.UI.DimensionPicker = Common.UI.BaseView.extend((function () {\r\n
+        var me, rootEl, areaMouseCatcher, are
 
 ]]></string> </value>
         </item>
@@ -36000,9 +36005,7 @@ define(\'common/main/lib/component/DimensionPicker\',["common/main/
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-lib/component/BaseView"], function () {\r\n
-    Common.UI.DimensionPicker = Common.UI.BaseView.extend((function () {\r\n
-        var me, rootEl, areaMouseCatcher, areaUnHighLighted, areaHighLighted, areaStatus, curColumns = 0,\r\n
+aUnHighLighted, areaHighLighted, areaStatus, curColumns = 0,\r\n
         curRows = 0;\r\n
         var onMouseMove = function (event) {\r\n
             me.setTableSize(Math.ceil((event.offsetX === undefined ? event.originalEvent.layerX : event.offsetX) / me.itemSize), Math.ceil((event.offsetY === undefined ? event.originalEvent.layerY : event.offsetY) / me.itemSize), event);\r\n
@@ -37360,7 +37363,8 @@ define(\'common/main/lib/component/SynchronizeTip\',["common/main/lib/component/
                     }), this.btnFitWidth = new Common.UI.MenuItem({\r\n
                         caption: this.textFitWidth,\r\n
                         checkable: true\r\n
-     
+                    }), (new Common.UI.MenuItem({\r\n
+                        template: _.template([\'<div id="id-toolbar-menu-zoom" class="menu-zoom" style="height: 25p
 
 ]]></string> </value>
         </item>
@@ -37383,8 +37387,7 @@ define(\'common/main/lib/component/SynchronizeTip\',["common/main/lib/component/
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-               }), (new Common.UI.MenuItem({\r\n
-                        template: _.template([\'<div id="id-toolbar-menu-zoom" class="menu-zoom" style="height: 25px;" \', "<% if(!_.isUndefined(options.stopPropagation)) { %>", \'data-stopPropagation="true"\', "<% } %>", ">", \'<label class="title">\' + this.textZoom + "</label>", \'<button id="id-menu-zoom-in" type="button" style="float:right; margin: 2px 5px 0 0;" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-zoomin">&nbsp;</span></button>\', \'<label class="zoom">100%</label>\', \'<button id="id-menu-zoom-out" type="button" style="float:right; margin-top: 2px;" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-zoomout">&nbsp;</span></button>\', "</div>"].join("")),\r\n
+x;" \', "<% if(!_.isUndefined(options.stopPropagation)) { %>", \'data-stopPropagation="true"\', "<% } %>", ">", \'<label class="title">\' + this.textZoom + "</label>", \'<button id="id-menu-zoom-in" type="button" style="float:right; margin: 2px 5px 0 0;" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-zoomin">&nbsp;</span></button>\', \'<label class="zoom">100%</label>\', \'<button id="id-menu-zoom-out" type="button" style="float:right; margin-top: 2px;" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-zoomout">&nbsp;</span></button>\', "</div>"].join("")),\r\n
                         stopPropagation: true\r\n
                     }))]\r\n
                 })\r\n
@@ -38911,7 +38914,11 @@ define(\'common/main/lib/component/SynchronizeTip\',["common/main/lib/component/
                 can_copycut: undefined,\r\n
                 show_copywarning: true\r\n
             };\r\n
-        
+            this.flg = {};\r\n
+            this.diagramEditor = null;\r\n
+            this._isAddingShape = false;\r\n
+            this._isAddingEquation = false;\r\n
+            t
 
 ]]></string> </value>
         </item>
@@ -38934,11 +38941,7 @@ define(\'common/main/lib/component/SynchronizeTip\',["common/main/lib/component/
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-    this.flg = {};\r\n
-            this.diagramEditor = null;\r\n
-            this._isAddingShape = false;\r\n
-            this._isAddingEquation = false;\r\n
-            this.editMode = true;\r\n
+his.editMode = true;\r\n
             this.addListeners({\r\n
                 "Toolbar": {\r\n
                     "changecompact": this.onChangeCompactView\r\n
@@ -40234,7 +40237,11 @@ define(\'common/main/lib/component/SynchronizeTip\',["common/main/lib/component/
             Common.component.Analytics.trackEvent("ToolBar", "Page Number");\r\n
         },\r\n
         onListStyleSelect: function (combo, record) {\r\n
-            this._state.prstyle = und
+            this._state.prstyle = undefined;\r\n
+            if (this.api) {\r\n
+                this.api.put_Style(record.get("title"));\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("ed
 
 ]]></string> </value>
         </item>
@@ -40257,11 +40264,7 @@ define(\'common/main/lib/component/SynchronizeTip\',["common/main/lib/component/
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-efined;\r\n
-            if (this.api) {\r\n
-                this.api.put_Style(record.get("title"));\r\n
-            }\r\n
-            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+it:complete", this.toolbar);\r\n
             Common.component.Analytics.trackEvent("ToolBar", "Style");\r\n
         },\r\n
         onHideTitleBar: function (item, checked) {\r\n
@@ -41583,7 +41586,7 @@ efined;\r\n
     DE.Controllers.Toolbar || {}));\r\n
 });\n
 \n
-define(\'text!documenteditor/main/app/template/StatusBar.template\',[],function () { return \'\\r\\n<div class="statusbar" style="display:table;">\\r\\n    <div class="status-group dropup">\\r\\n        <label id="status-label-pages" class="status-label" style="margin-left: 40px;" data-toggle="dropdown"><%= Common.Utils.String.format(scope.pageIndexText, 1, 1) %></label>\\r\\n        <div id="status-goto-box" class="dropdown-menu">\\r\\n            <label style="float:left;line-height:22px;"><%= scope.goToPageText %></label>\\r\\n            <div id="status-goto-page" style="display:inline-block;"></div>\\r\\n        </div>\\r\\n    </div>\\r\\n    <!-- /** coauthoring begin **/ -->\\r\\n    <div id="status-users-ct" class="status-group" style="display:none;">\\r\\n        <div class="separator short" style="margin-right: 12px; margin-left: 40px;" />\\r\\n        <div id="status-users-block" style="display:inline-block; cursor:pointer;">\\r\\n            <span id="status-users-icon" />\\r\\n            <label id="status-users-c
+define(\'text!documenteditor/main/app/template/StatusBar.template\',[],function () { return \'\\r\\n<div class="statusbar" style="display:table;">\\r\\n    <div class="status-group dropup">\\r\\n        <label id="status-label-pages" class="status-label" style="margin-left: 40px;" data-toggle="dropdown"><%= Common.Utils.String.format(scope.pageIndexText, 1, 1) %></label>\\r\\n        <div id="status-goto-box" class="dropdown-menu">\\r\\n            <label style="float:left;line-height:22px;"><%= scope.goToPageText %></label>\\r\\n            <div id="status-goto-page" style="display:inline-block;"></div>\\r\\n        </div>\\r\\n    </div>\\r\\n    <!-- /** coauthoring begin **/ -->\\r\\n    <div id="status-users-ct" class="status-group" style="display:none;">\\r\\n        <div class="separator short" style="margin-right: 12px; margin-left: 40px;" />\\r\\n        <div id="status-users-block" style="display:inline-block; cursor:pointer;">\\r\\n            <span id="status-users-icon" />\\r\\n            <label id="status-users-count" class="status-label">3</label>\\r\\n        </div>\\r\\n        <div class="separator short" style="margin-left: 10px;" />\\r\\n    </div>\\r\\n    <!-- /** coaut
 
 ]]></string> </value>
         </item>
@@ -41606,7 +41609,7 @@ define(\'text!documenteditor/main/app/template/StatusBar.template\',[],function 
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-ount" class="status-label">3</label>\\r\\n        </div>\\r\\n        <div class="separator short" style="margin-left: 10px;" />\\r\\n    </div>\\r\\n    <!-- /** coauthoring end **/ -->\\r\\n    <div class="status-group" style="width:100%; text-align:center;">\\r\\n        <label id="status-label-action" class="status-label"></label>\\r\\n    </div>\\r\\n    <div class="status-group" style="">\\r\\n        <div class="separator short el-edit"></div>\\r\\n        <div class="cnt-lang el-edit">\\r\\n            <div class="dropdown-toggle" data-toggle="dropdown" style="margin-right: 6px;">\\r\\n                <span class="icon-lang-flag" data-vertical-offset="10" />\\r\\n                <label id="status-label-lang" class="status-label">English (United States)</label>\\r\\n                <div class="caret up" />\\r\\n            </div>\\r\\n        </div>\\r\\n        <button id="btn-doc-lang" type="button" class="btn small btn-toolbar btn-toolbar-default el-edit"><span class="btn-icon">&nbsp;</span></button>\\r\\n        <button id="btn-doc-spell" type="button" class="btn small btn-toolbar btn-toolbar-default el-edit"><span class="btn-icon">&nbsp;</span></button>\\r\\n        <div class="separator short el-edit"></div>\\r\\n        <button id="btn-zoom-topage" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon">&nbsp;</span></button>\\r\\n        <button id="btn-zoom-towidth" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon">&nbsp;</span></button>\\r\\n        <button id="btn-zoom-down" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon">&nbsp;</span></button>\\r\\n        <div class="cnt-zoom">\\r\\n            <div class="dropdown-toggle" data-toggle="dropdown">\\r\\n                <label id="status-label-zoom" class="status-label">Zoom 100%</label>\\r\\n            </div>\\r\\n        </div>\\r\\n        <button id="btn-zoom-up" type="button" class="btn small btn-toolbar btn-toolbar-default" style="margin-right:40px;"><span class="btn-icon">&nbsp;</span></button>\\r\\n    </div>\\r\\n</div>\\r\\n\';});\n
+horing end **/ -->\\r\\n    <div class="status-group" style="width:100%; text-align:center;">\\r\\n        <label id="status-label-action" class="status-label"></label>\\r\\n    </div>\\r\\n    <div class="status-group" style="">\\r\\n        <div class="separator short el-edit"></div>\\r\\n        <div class="cnt-lang el-edit">\\r\\n            <div class="dropdown-toggle" data-toggle="dropdown" style="margin-right: 6px;">\\r\\n                <span class="icon-lang-flag" data-vertical-offset="10" />\\r\\n                <label id="status-label-lang" class="status-label">English (United States)</label>\\r\\n                <div class="caret up" />\\r\\n            </div>\\r\\n        </div>\\r\\n        <button id="btn-doc-lang" type="button" class="btn small btn-toolbar btn-toolbar-default el-edit"><span class="btn-icon">&nbsp;</span></button>\\r\\n        <button id="btn-doc-spell" type="button" class="btn small btn-toolbar btn-toolbar-default el-edit"><span class="btn-icon">&nbsp;</span></button>\\r\\n        <div class="separator short el-edit"></div>\\r\\n        <button id="btn-zoom-topage" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon">&nbsp;</span></button>\\r\\n        <button id="btn-zoom-towidth" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon">&nbsp;</span></button>\\r\\n        <button id="btn-zoom-down" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon">&nbsp;</span></button>\\r\\n        <div class="cnt-zoom">\\r\\n            <div class="dropdown-toggle" data-toggle="dropdown">\\r\\n                <label id="status-label-zoom" class="status-label">Zoom 100%</label>\\r\\n            </div>\\r\\n        </div>\\r\\n        <button id="btn-zoom-up" type="button" class="btn small btn-toolbar btn-toolbar-default" style="margin-right:40px;"><span class="btn-icon">&nbsp;</span></button>\\r\\n    </div>\\r\\n</div>\\r\\n\';});\n
 \n
 /*\r\n
  * (c) Copyright Ascensio System SIA 2010-2015\r\n
@@ -42956,7 +42959,12 @@ define(\'text!documenteditor/main/app/template/ParagraphSettings.template\',[],f
                     {\r\n
                         color: "000000",\r\n
                         effectId: 1\r\n
-   
+                    },\r\n
+                    {\r\n
+                        color: "000000",\r\n
+                        effectId: 1\r\n
+                    },\r\n
+             
 
 ]]></string> </value>
         </item>
@@ -42979,12 +42987,7 @@ define(\'text!documenteditor/main/app/template/ParagraphSettings.template\',[],f
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-                 },\r\n
-                    {\r\n
-                        color: "000000",\r\n
-                        effectId: 1\r\n
-                    },\r\n
-                    {\r\n
+       {\r\n
                         color: "FFFFFF",\r\n
                         effectId: 2\r\n
                     },\r\n
@@ -44022,7 +44025,11 @@ define(\'text!documenteditor/main/app/template/ImageSettingsAdvanced.template\',
                     this._changedProps.get_PositionH().put_Value(Common.Utils.Metric.fnRecalcToMM(field.getNumberValue()));\r\n
                     this._state.spnXChanged = true;\r\n
                 }\r\n
-       
+            },\r\n
+            this));\r\n
+            this.spinners.push(this.spnX);\r\n
+            this.spnY = new Common.UI.MetricSpinner({\r\n
+                el: $("#image-s
 
 ]]></string> </value>
         </item>
@@ -44045,11 +44052,7 @@ define(\'text!documenteditor/main/app/template/ImageSettingsAdvanced.template\',
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-     },\r\n
-            this));\r\n
-            this.spinners.push(this.spnX);\r\n
-            this.spnY = new Common.UI.MetricSpinner({\r\n
-                el: $("#image-spin-y"),\r\n
+pin-y"),\r\n
                 step: 0.1,\r\n
                 width: 115,\r\n
                 disabled: true,\r\n
@@ -45332,7 +45335,11 @@ define(\'text!documenteditor/main/app/template/ImageSettingsAdvanced.template\',
         _ImgWrapStyleChanged: function (style) {\r\n
             if (this._state.WrappingStyle !== style) {\r\n
                 this._noApply = true;\r\n
-                var record = this.mnuWr
+                var record = this.mnuWrapPicker.store.findWhere({\r\n
+                    data: style\r\n
+                });\r\n
+                this.mnuWrapPicker.selectRecord(record, true);\r\n
+              
 
 ]]></string> </value>
         </item>
@@ -45355,11 +45362,7 @@ define(\'text!documenteditor/main/app/template/ImageSettingsAdvanced.template\',
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-apPicker.store.findWhere({\r\n
-                    data: style\r\n
-                });\r\n
-                this.mnuWrapPicker.selectRecord(record, true);\r\n
-                if (record) {\r\n
+  if (record) {\r\n
                     this.btnWrapType.setIconCls("item-wrap " + record.get("iconcls"));\r\n
                 }\r\n
                 this._state.WrappingStyle = style;\r\n
@@ -46585,7 +46588,12 @@ define(\'common/main/lib/component/ComboBorderSize\',["common/main/lib/component
                     {\r\n
                         color: "008000",\r\n
                         effectId: 4\r\n
- 
+                    },\r\n
+                    "-", {\r\n
+                        color: "000000",\r\n
+                        effectId: 1\r\n
+                    },\r\n
+      
 
 ]]></string> </value>
         </item>
@@ -46608,12 +46616,7 @@ define(\'common/main/lib/component/ComboBorderSize\',["common/main/lib/component
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-                   },\r\n
-                    "-", {\r\n
-                        color: "000000",\r\n
-                        effectId: 1\r\n
-                    },\r\n
-                    {\r\n
+              {\r\n
                         color: "FFFFFF",\r\n
                         effectId: 2\r\n
                     },\r\n
@@ -48002,7 +48005,10 @@ define(\'common/main/lib/component/Slider\',["common/main/lib/component/BaseView
                         var above = me.thumbs[i + 1];\r\n
                         var below = me.thumbs[i - 1];\r\n
                         if (below !== undefined && pos < below.position) {\r\n
-       
+                            continue;\r\n
+                        }\r\n
+                        if (above !== undefined && pos > above.position) {\r\n
+                         
 
 ]]></string> </value>
         </item>
@@ -48025,10 +48031,7 @@ define(\'common/main/lib/component/Slider\',["common/main/lib/component/BaseView
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-                     continue;\r\n
-                        }\r\n
-                        if (above !== undefined && pos > above.position) {\r\n
-                            continue;\r\n
+   continue;\r\n
                         }\r\n
                         index = i;\r\n
                         nearest = dist;\r\n
@@ -49739,7 +49742,12 @@ define(\'common/main/lib/component/MultiSliderGradient\',["common/main/lib/compo
                     {\r\n
                         color: "000000",\r\n
                         effectId: 1\r\n
-   
+                    },\r\n
+                    {\r\n
+                        color: "FFFFFF",\r\n
+                        effectId: 2\r\n
+                    },\r\n
+             
 
 ]]></string> </value>
         </item>
@@ -49762,12 +49770,7 @@ define(\'common/main/lib/component/MultiSliderGradient\',["common/main/lib/compo
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-                 },\r\n
-                    {\r\n
-                        color: "FFFFFF",\r\n
-                        effectId: 2\r\n
-                    },\r\n
-                    {\r\n
+       {\r\n
                         color: "000000",\r\n
                         effectId: 1\r\n
                     },\r\n
@@ -50995,7 +50998,11 @@ define(\'common/main/lib/component/MultiSliderGradient\',["common/main/lib/compo
                                 break;\r\n
                             }\r\n
                         }\r\n
-                        if (!iss
+                        if (!isselected) {\r\n
+                            this.colorsGrad.clearSelection();\r\n
+                        }\r\n
+                    } else {\r\n
+                        this
 
 ]]></string> </value>
         </item>
@@ -51018,11 +51025,7 @@ define(\'common/main/lib/component/MultiSliderGradient\',["common/main/lib/compo
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-elected) {\r\n
-                            this.colorsGrad.clearSelection();\r\n
-                        }\r\n
-                    } else {\r\n
-                        this.colorsGrad.select(color, true);\r\n
+.colorsGrad.select(color, true);\r\n
                     }\r\n
                     this._state.GradColor = color;\r\n
                 }\r\n
@@ -52551,7 +52554,13 @@ define(\'common/main/lib/util/Shortcuts\',["backbone", "keymaster"], function (B
                     var me = this;\r\n
                     Common.UI.info({\r\n
                         msg: this.textNoTextFound,\r\n
-                        callback: 
+                        callback: function () {\r\n
+                            me.dlgSearch.focus();\r\n
+                        }\r\n
+                    });\r\n
+                }\r\n
+            }\r\n
+        
 
 ]]></string> </value>
         </item>
@@ -52574,13 +52583,7 @@ define(\'common/main/lib/util/Shortcuts\',["backbone", "keymaster"], function (B
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-function () {\r\n
-                            me.dlgSearch.focus();\r\n
-                        }\r\n
-                    });\r\n
-                }\r\n
-            }\r\n
-        },\r\n
+},\r\n
         onQueryReplaceAll: function (w, opts) {\r\n
             if (!_.isEmpty(opts.textsearch) && !_.isEmpty(opts.textreplace)) {\r\n
                 this.api.asc_replaceText(opts.textsearch, opts.textreplace, true, opts.matchcase, opts.matchword);\r\n
@@ -53342,6 +53345,9 @@ define(\'common/main/lib/controller/Fonts\',["core", "common/main/lib/collection
                     this.getApplication().getController("Viewport").getView("Common.Views.Header").setDocumentCaption(data.doc.title);\r\n
                 }\r\n
             },\r\n
+            onSave: function (data) {\r\n
+                this.api.asc_Save();\r\n
+            },\r\n
             onProcessSaveResult: function (data) {\r\n
                 // XXX\r\n
                 //this.api.asc_OnSaveEnd(data.result);\r\n
@@ -53789,6 +53795,7 @@ define(\'common/main/lib/controller/Fonts\',["core", "common/main/lib/collection
                     Common.component.Analytics.initialize("UA-12442749-13", "Document Editor");\r\n
                 }\r\n
                 Common.Gateway.on("applyeditrights", _.bind(me.onApplyEditRights, me));\r\n
+                Common.Gateway.on("save", _.bind(me.onSave, me));\r\n
                 Common.Gateway.on("processsaveresult", _.bind(me.onProcessSaveResult, me));\r\n
                 Common.Gateway.on("processrightschange", _.bind(me.onProcessRightsChange, me));\r\n
                 Common.Gateway.on("processmouse", _.bind(me.onProcessMouse, me));\r\n

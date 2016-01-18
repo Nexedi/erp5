@@ -260,9 +260,9 @@
                 page_title: options.doc.title + " | " + options.doc.portal_type,\n
                 back_url: "#page=" +\n
                     options.doc.portal_type.toLowerCase() + "_list",\n
-                panel_action: false\n
+                panel_action: false,\n
                 // breadcrumb_url: all_result[4],\n
-                //save_action: true\n
+                save_action: true\n
               });\n
             })\n
             .push(function () {\n
@@ -468,7 +468,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.31999.56515.17117</string> </value>
+                <value> <string>948.36396.44642.6109</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -486,7 +486,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452882676.55</float>
+                        <float>1453145109.87</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
