@@ -138,17 +138,6 @@
         return gadget.put(gadget.options.jio_key, doc);\n
       });\n
   }\n
-  \n
-  function setFillStyle(gadget) {\n
-    var iframe = gadget.props.element.querySelector(\'iframe\'),\n
-      height = getMaxHeight(iframe),\n
-      width = "100%";\n
-    iframe.setAttribute(\n
-      \'style\',\n
-      \'width: \' + width + \'; border: 0 none; height: \' + height\n
-    );\n
-    return {height: height, width: width};\n
-  }\n
 \n
   function getMaxHeight(wrap_obj) {\n
     var height;\n
@@ -161,6 +150,17 @@
       height = 400;\n
     }\n
     return height + "px";\n
+  }\n
+\n
+  function setFillStyle(gadget) {\n
+    var iframe = gadget.props.element.querySelector(\'iframe\'),\n
+      height = getMaxHeight(iframe),\n
+      width = "100%";\n
+    iframe.setAttribute(\n
+      \'style\',\n
+      \'width: \' + width + \'; border: 0 none; height: \' + height\n
+    );\n
+    return {height: height, width: width};\n
   }\n
 \n
   function switchMaximizeMode(gadget) {\n
@@ -187,7 +187,7 @@
       wrap.style.height = getMaxHeight(wrap);\n
       window.scrollTo(info.scrollLeft, info.scrollTop);\n
     }\n
-    return { height: wrap.style.height, width: wrap.style.width }\n
+    return { height: wrap.style.height, width: wrap.style.width };\n
   }\n
 \n
   var gadget_klass = rJS(window),\n
@@ -218,7 +218,7 @@
     .allowPublicAcquisition(\'setFillStyle\', function () {\n
       return setFillStyle(this);\n
     })\n
-    \n
+\n
     .declareMethod(\'setFillStyle\', function () {\n
       return setFillStyle(this);\n
     })\n
@@ -237,7 +237,7 @@
     .allowPublicAcquisition(\'triggerSubmit\', function () {\n
       return this.props.element.querySelector(\'button\').click();\n
     })\n
-    \n
+\n
     .declareMethod(\'triggerSubmit\', function () {\n
       return this.props.element.querySelector(\'button\').click();\n
     })\n
