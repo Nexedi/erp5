@@ -76,7 +76,7 @@
 \n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//div[@data-gadget-scope=\'m\']//a[text()=\'Foos\' and contains(@href, \'#!display\') and contains(@href, \'n.jio_key=foo_module\')]</td>\n
+  <td>//div[@data-gadget-scope=\'m\']//a[text()=\'Foos\' and contains(@href, \'#!display_stored_state\') and contains(@href, \'n.jio_key=foo_module\')]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -88,7 +88,7 @@
 <!-- Follow module link -->\n
 <tr>\n
   <td>click</td>\n
-  <td>//div[@data-gadget-scope=\'m\']//a[text()=\'Foos\' and contains(@href, \'#!display\') and contains(@href, \'n.jio_key=foo_module\')]</td>\n
+  <td>//div[@data-gadget-scope=\'m\']//a[text()=\'Foos\' and contains(@href, \'#!display_stored_state\') and contains(@href, \'n.jio_key=foo_module\')]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
