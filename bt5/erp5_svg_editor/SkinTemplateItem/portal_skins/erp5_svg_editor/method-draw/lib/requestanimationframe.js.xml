@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts52852162.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>requestanimationframe.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+    var lastTime = 0;\n
+    var vendors = [\'ms\', \'moz\', \'webkit\', \'o\'];\n
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {\n
+        window.requestAnimationFrame = window[vendors[x]+\'RequestAnimationFrame\'];\n
+        window.cancelAnimationFrame = \n
+          window[vendors[x]+\'CancelAnimationFrame\'] || window[vendors[x]+\'CancelRequestAnimationFrame\'];\n
+    }\n
+ \n
+    if (!window.requestAnimationFrame)\n
+        window.requestAnimationFrame = function(callback, element) {\n
+            var currTime = new Date().getTime();\n
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));\n
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); }, \n
+              timeToCall);\n
+            lastTime = currTime + timeToCall;\n
+            return id;\n
+        };\n
+ \n
+    if (!window.cancelAnimationFrame)\n
+        window.cancelAnimationFrame = function(id) {\n
+            clearTimeout(id);\n
+        };\n
+}());\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>961</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

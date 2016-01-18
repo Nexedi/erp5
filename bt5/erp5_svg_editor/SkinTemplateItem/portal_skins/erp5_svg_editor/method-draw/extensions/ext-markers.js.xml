@@ -1,0 +1,620 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts52850549.48</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ext-markers.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+ * ext-markers.js\n
+ *\n
+ * Licensed under the Apache License, Version 2\n
+ *\n
+ * Copyright(c) 2010 Will Schleter \n
+ *   based on ext-arrows.js by Copyright(c) 2010 Alexis Deveria\n
+ *\n
+ * This extension provides for the addition of markers to the either end\n
+ * or the middle of a line, polyline, path, polygon. \n
+ * \n
+ * Markers may be either a graphic or arbitary text\n
+ * \n
+ * to simplify the coding and make the implementation as robust as possible,\n
+ * markers are not shared - every object has its own set of markers.\n
+ * this relationship is maintained by a naming convention between the\n
+ * ids of the markers and the ids of the object\n
+ * \n
+ * The following restrictions exist for simplicty of use and programming\n
+ *    objects and their markers to have the same color\n
+ *    marker size is fixed\n
+ *    text marker font, size, and attributes are fixed\n
+ *    an application specific attribute - se_type - is added to each marker element\n
+ *        to store the type of marker\n
+ *        \n
+ * TODO:\n
+ *    remove some of the restrictions above\n
+ *    add option for keeping text aligned to horizontal\n
+ *    add support for dimension extension lines\n
+ *\n
+ */\n
+\n
+methodDraw.addExtension("Markers", function(S) {\n
+  var svgcontent = S.svgcontent,\n
+  addElem = S.addSvgElementFromJson,\n
+  selElems;\n
+\n
+  var mtypes = [\'start\',\'mid\',\'end\'];\n
+\n
+  var marker_prefix = \'se_marker_\';\n
+  var id_prefix = \'mkr_\';\n
+    \n
+  // note - to add additional marker types add them below with a unique id\n
+  // and add the associated icon(s) to marker-icons.svg\n
+  // the geometry is normallized to a 100x100 box with the origin at lower left\n
+  // Safari did not like negative values for low left of viewBox\n
+  // remember that the coordinate system has +y downward\n
+  var marker_types = {\n
+    nomarker: {},  \n
+    leftarrow:  \n
+      {element:\'path\', attr:{d:\'M0,50 L100,90 L70,50 L100,10 Z\'}},\n
+    rightarrow:\n
+      {element:\'path\', attr:{d:\'M100,50 L0,90 L30,50 L0,10 Z\'}},\n
+    textmarker:\n
+      {element:\'text\', attr: {x:0, y:0,\'stroke-width\':0,\'stroke\':\'none\',\'font-size\':75,\'font-family\':\'serif\',\'text-anchor\':\'left\',\n
+        \'xml:space\': \'preserve\'}},\n
+    forwardslash:\n
+      {element:\'path\', attr:{d:\'M30,100 L70,0\'}},\n
+    reverseslash:\n
+      {element:\'path\', attr:{d:\'M30,0 L70,100\'}},\n
+    verticalslash:\n
+      {element:\'path\', attr:{d:\'M50,0 L50,100\'}},\n
+    box:\n
+      {element:\'path\', attr:{d:\'M20,20 L20,80 L80,80 L80,20 Z\'}},\n
+    star:\n
+      {element:\'path\', attr:{d:\'M10,30 L90,30 L20,90 L50,10 L80,90 Z\'}},\n
+    xmark:\n
+      {element:\'path\', attr:{d:\'M20,80 L80,20 M80,80 L20,20\'}},\n
+    triangle:\n
+      {element:\'path\', attr:{d:\'M10,80 L50,20 L80,80 Z\'}},\n
+    mcircle:\n
+      {element:\'circle\', attr:{r:30, cx:50, cy:50}}\n
+  }\n
+  \n
+  \n
+  var lang_list = {\n
+    "en":[\n
+      {id: "start_marker_list", title: "Select start marker type" },\n
+      {id: "mid_marker_list", title: "Select mid marker type" },\n
+      {id: "end_marker_list", title: "Select end marker type" },\n
+      {id: "nomarker", title: "No Marker" },\n
+      {id: "leftarrow", title: "Left Arrow" },\n
+      {id: "rightarrow", title: "Right Arrow" },\n
+      {id: "textmarker", title: "Text Marker" },\n
+      {id: "forwardslash", title: "Forward Slash" },\n
+      {id: "reverseslash", title: "Reverse Slash" },\n
+      {id: "verticalslash", title: "Vertical Slash" },\n
+      {id: "box", title: "Box" },\n
+      {id: "star", title: "Star" },\n
+      {id: "xmark", title: "X" },\n
+      {id: "triangle", title: "Triangle" },\n
+      {id: "mcircle", title: "Circle" },\n
+      {id: "leftarrow_o", title: "Open Left Arrow" },\n
+      {id: "rightarrow_o", title: "Open Right Arrow" },\n
+      {id: "box_o", title: "Open Box" },\n
+      {id: "star_o", title: "Open Star" },\n
+      {id: "triangle_o", title: "Open Triangle" },\n
+      {id: "mcircle_o", title: "Open Circle" }\n
+    ]\n
+  };\n
+\n
+\n
+  // duplicate shapes to support unfilled (open) marker types with an _o suffix\n
+  $.each([\'leftarrow\',\'rightarrow\',\'box\',\'star\',\'mcircle\',\'triangle\'],function(i,v) {\n
+    marker_types[v+\'_o\'] = marker_types[v];\n
+  });\n
+  \n
+  // elem = a graphic element will have an attribute like marker-start\n
+  // attr - marker-start, marker-mid, or marker-end\n
+  // returns the marker element that is linked to the graphic element\n
+  function getLinked(elem, attr) {\n
+    var str = elem.getAttribute(attr);\n
+    if(!str) return null;\n
+    var m = str.match(/\\(\\#(.*)\\)/);\n
+    if(!m || m.length !== 2) {\n
+      return null;\n
+    }\n
+    return S.getElem(m[1]);\n
+  }\n
+\n
+  //toggles context tool panel off/on\n
+  //sets the controls with the selected element\'s settings\n
+  function showPanel(on) {\n
+    $(\'#marker_panel\').toggle(on);\n
+    if ($(\'#marker_panel_title\').length < 1) {\n
+      $(\'#marker_panel\').prepend("<h4 id=\'marker_panel_title\'>Arrows</h4>")\n
+    }\n
+\n
+    if(on) {\n
+      var el = selElems[0];\n
+      var val;\n
+      var ci;\n
+\n
+      $.each(mtypes, function(i, pos) {\n
+        var m=getLinked(el,"marker-"+pos);\n
+        var txtbox = $(\'#\'+pos+\'_marker\');\n
+        if (!m) {\n
+          val=\'\\\\nomarker\';\n
+          ci=val;\n
+          txtbox.hide() // hide text box\n
+        } else {\n
+          if (!m.attributes.se_type) return; // not created by this extension\n
+          val=\'\\\\\'+m.attributes.se_type.textContent;\n
+          ci=val;\n
+          if (val==\'\\\\textmarker\') {\n
+            val=m.lastChild.textContent;\n
+            //txtbox.show(); // show text box\n
+          } else {\n
+            txtbox.hide() // hide text box\n
+          }\n
+        }\n
+        txtbox.val(val);        \n
+        setIcon(pos,ci);\n
+      })\n
+    }\n
+  } \n
+\n
+  function addMarker(id, val) {\n
+    var txt_box_bg = \'#ffffff\';\n
+    var txt_box_border = \'none\';\n
+    var txt_box_stroke_width = 0;\n
+    \n
+    var marker = S.getElem(id);\n
+\n
+    if (marker) return;\n
+\n
+    if (val==\'\' || val==\'\\\\nomarker\') return;\n
+\n
+    var el = selElems[0];    \n
+    var color = el.getAttribute(\'stroke\');\n
+    //NOTE: Safari didn\'t like a negative value in viewBox\n
+    //so we use a standardized 0 0 100 100\n
+    //with 50 50 being mapped to the marker position\n
+    var refX = 50;\n
+    var refY = 50;\n
+    var viewBox = "0 0 100 100";\n
+    var markerWidth = 5;\n
+    var markerHeight = 5;\n
+    var strokeWidth = 10;\n
+    if (val.substr(0,1)==\'\\\\\') se_type=val.substr(1);\n
+    else se_type=\'textmarker\';\n
+\n
+    if (!marker_types[se_type]) return; // an unknown type!\n
+    \n
+    // create a generic marker\n
+    marker = addElem({\n
+      "element": "marker",\n
+      "attr": {\n
+      "id": id,\n
+      "markerUnits": "strokeWidth",\n
+      "orient": "auto",\n
+      "style": "pointer-events:none",\n
+      "se_type": se_type\n
+    }\n
+    });\n
+\n
+    if (se_type!=\'textmarker\') {\n
+      var mel = addElem(marker_types[se_type]);\n
+      var fillcolor = color;\n
+      if (se_type.substr(-2)==\'_o\') fillcolor=\'none\';\n
+      mel.setAttribute(\'fill\',fillcolor);\n
+      mel.setAttribute(\'stroke\',color);\n
+      mel.setAttribute(\'stroke-width\',strokeWidth);\n
+      marker.appendChild(mel);\n
+    } else {\n
+      var text = addElem(marker_types[se_type]);\n
+      // have to add text to get bounding box\n
+      text.textContent = val;\n
+      var tb=text.getBBox();\n
+      //alert( tb.x + " " + tb.y + " " + tb.width + " " + tb.height);\n
+      var pad=1;\n
+      var bb = tb;\n
+      bb.x = 0;\n
+      bb.y = 0;\n
+      bb.width += pad*2;\n
+      bb.height += pad*2;\n
+      // shift text according to its size\n
+      text.setAttribute(\'x\', pad);\n
+      text.setAttribute(\'y\', bb.height - pad - tb.height/4); // kludge?\n
+      text.setAttribute(\'fill\',color);\n
+      refX = bb.width/2+pad;\n
+      refY = bb.height/2+pad;\n
+      viewBox = bb.x + " " + bb.y + " " + bb.width + " " + bb.height;\n
+      markerWidth =bb.width/10;\n
+      markerHeight = bb.height/10;\n
+\n
+      var box = addElem({\n
+        "element": "rect",\n
+        "attr": {\n
+        "x": bb.x,\n
+        "y": bb.y,\n
+        "width": bb.width,\n
+        "height": bb.height,\n
+        "fill": txt_box_bg,\n
+        "stroke": txt_box_border,\n
+        "stroke-width": txt_box_stroke_width\n
+      }\n
+      });\n
+      marker.setAttribute("orient",0);\n
+      marker.appendChild(box);\n
+      marker.appendChild(text);\n
+    } \n
+\n
+    marker.setAttribute("viewBox",viewBox);\n
+    marker.setAttribute("markerWidth", markerWidth);\n
+    marker.setAttribute("markerHeight", markerHeight);\n
+    marker.setAttribute("refX", refX);\n
+    marker.setAttribute("refY", refY);\n
+    S.findDefs().appendChild(marker);\n
+\n
+    return marker;\n
+  }\n
+\n
+\n
+  function setMarker() {\n
+    var poslist={\'start_marker\':\'start\',\'mid_marker\':\'mid\',\'end_marker\':\'end\'};\n
+    var pos = poslist[this.id];\n
+    var marker_name = \'marker-\'+pos;\n
+    var val = this.value;\n
+    var el = selElems[0];\n
+    var marker = getLinked(el, marker_name);\n
+    if (marker) $(marker).remove();\n
+    el.removeAttribute(marker_name);\n
+    if (val==\'\') val=\'\\\\nomarker\';\n
+    if (val==\'\\\\nomarker\') {\n
+      setIcon(pos,val);\n
+      S.call("changed", selElems);\n
+      return;\n
+    }\n
+    // Set marker on element\n
+    var id = marker_prefix + pos + \'_\' + el.id;\n
+    addMarker(id, val);\n
+    svgCanvas.changeSelectedAttribute(marker_name, "url(#" + id + ")");\n
+    if (el.tagName == "line" && pos==\'mid\') el=convertline(el);\n
+    S.call("changed", selElems);\n
+    setIcon(pos,val);\n
+  }\n
+\n
+  function convertline(elem) {\n
+    // this routine came from the connectors extension\n
+    // it is needed because midpoint markers don\'t work with line elements\n
+    if (!(elem.tagName == "line")) return elem;\n
+\n
+    // Convert to polyline to accept mid-arrow\n
+\n
+    var x1 = elem.getAttribute(\'x1\')-0;\n
+    var x2 = elem.getAttribute(\'x2\')-0;\n
+    var y1 = elem.getAttribute(\'y1\')-0;\n
+    var y2 = elem.getAttribute(\'y2\')-0;\n
+    var id = elem.id;\n
+\n
+    var mid_pt = (\' \'+((x1+x2)/2)+\',\'+((y1+y2)/2) + \' \');\n
+    var pline = addElem({\n
+      "element": "polyline",\n
+      "attr": {\n
+      "points": (x1+\',\'+y1+ mid_pt +x2+\',\'+y2),\n
+      "stroke": elem.getAttribute(\'stroke\'),\n
+      "stroke-width": elem.getAttribute(\'stroke-width\'),\n
+      "fill": "none",\n
+      "opacity": elem.getAttribute(\'opacity\') || 1\n
+    }\n
+    });\n
+    $.each(mtypes, function(i, pos) { // get any existing marker definitions\n
+      var nam = \'marker-\'+pos;\n
+      var m = elem.getAttribute(nam);\n
+      if (m) pline.setAttribute(nam,elem.getAttribute(nam));\n
+    });\n
+    \n
+    var batchCmd = new S.BatchCommand();\n
+    batchCmd.addSubCommand(new S.RemoveElementCommand(elem, elem.parentNode));\n
+    batchCmd.addSubCommand(new S.InsertElementCommand(pline));\n
+    \n
+    $(elem).after(pline).remove();\n
+    svgCanvas.clearSelection();\n
+    pline.id = id;\n
+    svgCanvas.addToSelection([pline]);\n
+    S.addCommandToHistory(batchCmd);\n
+    return pline;\n
+  }\n
+\n
+  // called when the main system modifies an object\n
+  // this routine changes the associated markers to be the same color\n
+  function colorChanged(elem) {\n
+    var color = elem.getAttribute(\'stroke\');\n
+\n
+    $.each(mtypes, function(i, pos) {\n
+      var marker = getLinked(elem, \'marker-\'+pos);\n
+      if (!marker) return;\n
+      if (!marker.attributes.se_type) return; //not created by this extension\n
+      var ch = marker.lastElementChild;\n
+      if (!ch) return;\n
+      var curfill = ch.getAttribute("fill");\n
+      var curstroke = ch.getAttribute("stroke")\n
+      if (curfill && curfill!=\'none\') ch.setAttribute("fill",color);\n
+      if (curstroke && curstroke!=\'none\') ch.setAttribute("stroke",color);\n
+    });\n
+  }\n
+\n
+  // called when the main system creates or modifies an object\n
+  // primary purpose is create new markers for cloned objects\n
+  function updateReferences(el) {\n
+    $.each(mtypes, function (i,pos) {\n
+      var id = marker_prefix + pos + \'_\' + el.id;\n
+      var marker_name = \'marker-\'+pos;\n
+      var marker = getLinked(el, marker_name);\n
+      if (!marker || !marker.attributes.se_type) return; //not created by this extension\n
+      var url = el.getAttribute(marker_name);\n
+      if (url) {\n
+        var len = el.id.length;\n
+        var linkid = url.substr(-len-1,len);\n
+        if (el.id != linkid) {\n
+          var val = $(\'#\'+pos+\'_marker\').attr(\'value\');\n
+          addMarker(id, val);\n
+          svgCanvas.changeSelectedAttribute(marker_name, "url(#" + id + ")");\n
+          if (el.tagName == "line" && pos==\'mid\') el=convertline(el);\n
+          S.call("changed", selElems);\n
+        }\n
+      }\n
+    });\n
+  }\n
+\n
+  // simulate a change event a text box that stores the current element\'s marker type\n
+  function triggerTextEntry(pos,val) {\n
+    $(\'#\'+pos+\'_marker\').val(val);\n
+    $(\'#\'+pos+\'_marker\').change();\n
+    var txtbox = $(\'#\'+pos+\'_marker\');\n
+    //if (val.substr(0,1)==\'\\\\\') txtbox.hide();\n
+    //else txtbox.show();\n
+  }\n
+  \n
+  function setIcon(pos,id) {\n
+    if (id.substr(0,1)!=\'\\\\\') id=\'\\\\textmarker\'\n
+    var ci = \'#\'+id_prefix+pos+\'_\'+id.substr(1);\n
+    methodDraw.setIcon(\'#cur_\' + pos +\'_marker_list\', $(ci).children());\n
+    $(ci).addClass(\'current\').siblings().removeClass(\'current\');\n
+  }\n
+    \n
+  function setMarkerSet(obj) {\n
+    var parts = this.id.split(\'_\');\n
+    var set = parts[2];\n
+    switch (set) {\n
+    case \'off\':\n
+      triggerTextEntry(\'start\',\'\\\\nomarker\');\n
+      triggerTextEntry(\'mid\',\'\\\\nomarker\');\n
+      triggerTextEntry(\'end\',\'\\\\nomarker\');\n
+      break;\n
+    case \'dimension\':\n
+      triggerTextEntry(\'start\',\'\\\\leftarrow\');\n
+      triggerTextEntry(\'end\',\'\\\\rightarrow\');\n
+      showTextPrompt(\'mid\');\n
+      break;\n
+    case \'label\':\n
+      triggerTextEntry(\'mid\',\'\\\\nomarker\');\n
+      triggerTextEntry(\'end\',\'\\\\rightarrow\');\n
+      showTextPrompt(\'start\');\n
+      break;\n
+    }\n
+  }\n
+    \n
+  function showTextPrompt(pos) {\n
+    var def = $(\'#\'+pos+\'_marker\').val();\n
+    if (def.substr(0,1)==\'\\\\\') def=\'\';\n
+    $.prompt(\'Enter text for \' + pos + \' marker\', def , function(txt) { if (txt) triggerTextEntry(pos,txt); });\n
+  }\n
+  \n
+  // callback function for a toolbar button click\n
+  function setArrowFromButton(obj) {\n
+    \n
+    var parts = this.id.split(\'_\');\n
+    var pos = parts[1];\n
+    var val = parts[2];\n
+    if (parts[3]) val+=\'_\'+parts[3];\n
+    \n
+    if (val!=\'textmarker\') {\n
+      triggerTextEntry(pos,\'\\\\\'+val);\n
+    } else {\n
+      showTextPrompt(pos);\n
+    }\n
+  }\n
+  \n
+  function getTitle(lang,id) {\n
+    var list = lang_list[lang];\n
+    for (var i in list) {\n
+      if (list[i].id==id) return list[i].title;\n
+    }\n
+    return id;\n
+  }\n
+  \n
+  \n
+  // build the toolbar button array from the marker definitions\n
+  // TODO: need to incorporate language specific titles\n
+  function buildButtonList() {\n
+    var buttons=[];\n
+    var i=0;\n
+/*\n
+    buttons.push({\n
+      id:id_prefix + \'markers_off\',\n
+      title:\'Turn off all markers\',\n
+      type:\'context\',\n
+      events: { \'click\': setMarkerSet },\n
+      panel: \'marker_panel\'\n
+    });\n
+    buttons.push({\n
+      id:id_prefix + \'markers_dimension\',\n
+      title:\'Dimension\',\n
+      type:\'context\',\n
+      events: { \'click\': setMarkerSet },\n
+      panel: \'marker_panel\'\n
+    });\n
+    buttons.push({\n
+      id:id_prefix + \'markers_label\',\n
+      title:\'Label\',\n
+      type:\'context\',\n
+      events: { \'click\': setMarkerSet },\n
+      panel: \'marker_panel\'\n
+    });\n
+*/\n
+    $.each(mtypes,function(k,pos) {\n
+      var listname = pos + "_marker_list";\n
+      var def = true;\n
+    $.each(marker_types,function(id,v) {\n
+      var title = getTitle(\'en\',id);\n
+      buttons.push({\n
+          id:id_prefix + pos + "_" + id,\n
+          svgicon:id,\n
+          title:title,\n
+          type:\'context\',\n
+          events: { \'click\': setArrowFromButton },\n
+          panel:\'marker_panel\',\n
+          list: listname,\n
+          isDefault: def\n
+      });\n
+      def = false;\n
+    });\n
+    });\n
+    return buttons;\n
+  }\n
+\n
+  return {\n
+    name: "Markers",\n
+    svgicons: "extensions/markers-icons.xml",\n
+    buttons: buildButtonList(),\n
+    context_tools: [\n
+       {\n
+      type: "input",\n
+      panel: "marker_panel",\n
+      title: "Start marker",\n
+      id: "start_marker",\n
+      label: "Start",\n
+      size: 3,\n
+      events: { change: setMarker }\n
+    },{\n
+      type: "button-select",\n
+      panel: "marker_panel",\n
+      title: getTitle(\'en\',\'start_marker_list\'),\n
+      id: "start_marker_list",\n
+      colnum: 3,\n
+      events: { change: setArrowFromButton }\n
+    },{\n
+      type: "input",\n
+      panel: "marker_panel",\n
+      title: "Middle marker",\n
+      id: "mid_marker",\n
+      label: "Middle",\n
+      defval: "",\n
+      size: 3,\n
+      events: { change: setMarker }\n
+    },{\n
+      type: "button-select",\n
+      panel: "marker_panel",\n
+      title: getTitle(\'en\',\'mid_marker_list\'),\n
+      id: "mid_marker_list",\n
+      colnum: 3,\n
+      events: { change: setArrowFromButton }\n
+    },{\n
+      type: "input",\n
+      panel: "marker_panel",\n
+      title: "End marker",\n
+      id: "end_marker",\n
+      label: "End",\n
+      size: 3,\n
+      events: { change: setMarker }\n
+    },{\n
+      type: "button-select",\n
+      panel: "marker_panel",\n
+      title: getTitle(\'en\',\'end_marker_list\'),\n
+      id: "end_marker_list",\n
+      colnum: 3,\n
+      events: { change: setArrowFromButton }\n
+    } ],\n
+    callback: function() {\n
+      $(\'#marker_panel\').addClass(\'toolset\').hide();\n
+      \n
+    },\n
+    addLangData: function(lang) {\n
+      return { data: lang_list[lang] };\n
+    },\n
+\n
+  selectedChanged: function(opts) {\n
+    // Use this to update the current selected elements\n
+    //console.log(\'selectChanged\',opts);\n
+    selElems = opts.elems;\n
+\n
+    var i = selElems.length;\n
+    var marker_elems = [\'line\',\'path\',\'polyline\',\'polygon\'];\n
+\n
+    while(i--) {\n
+      var elem = selElems[i];\n
+      if(elem && $.inArray(elem.tagName, marker_elems) != -1) {\n
+        if(opts.selectedElement && !opts.multiselected) {\n
+          showPanel(true);\n
+        } else {\n
+          showPanel(false);\n
+        }\n
+      } else {\n
+        showPanel(false);\n
+      }\n
+    }\n
+  },\n
+\n
+  elementChanged: function(opts) {    \n
+    //console.log(\'elementChanged\',opts);\n
+    var elem = opts.elems[0];\n
+    if(elem && (\n
+        elem.getAttribute("marker-start") ||\n
+        elem.getAttribute("marker-mid") ||\n
+        elem.getAttribute("marker-end")\n
+    )) {\n
+      colorChanged(elem);\n
+      updateReferences(elem);\n
+    }\n
+    changing_flag = false;\n
+  }\n
+  };\n
+});\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>17633</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

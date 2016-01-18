@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts52852152.71</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>taphold.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ *  Copyright (c) 2011 Zauber S.A. <http://www.zaubersoftware.com/>\n
+ *\n
+ *  Licensed under the Apache License, Version 2.0 (the "License");\n
+ *  you may not use this file except in compliance with the License.\n
+ *  You may obtain a copy of the License at\n
+ *\n
+ *      http://www.apache.org/licenses/LICENSE-2.0\n
+ *\n
+ *  Unless required by applicable law or agreed to in writing, software\n
+ *  distributed under the License is distributed on an "AS IS" BASIS,\n
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n
+ *  See the License for the specific language governing permissions and\n
+ *  limitations under the License.\n
+ * \n
+ *  @author Guido Marucci Blas - guido@zaubersoftware.com\n
+ *  @description Adds a handler for a custom event \'taphold\' that handles a\n
+ *  tap and hold on touch interfaces.\n
+ */\n
+(function($) {\n
+    var TAP_AND_HOLD_TRIGGER_TIMER = 1000;\n
+    var MAX_DISTANCE_ALLOWED_IN_TAP_AND_HOLD_EVENT = 5;\n
+    var TOUCHSTART = "touchstart";\n
+    var TOUCHEND = "touchend";\n
+    var TOUCHMOVE = "touchmove";\n
+\n
+    // For debugging only\n
+    // var TOUCHSTART = "mousedown";\n
+    // var TOUCHEND = "mouseup";\n
+    // var TOUCHMOVE = "mousemove";\n
+\n
+    var tapAndHoldTimer = null;\n
+\n
+    function calculateEuclideanDistance(x1, y1, x2, y2) {\n
+        var diffX = (x2 - x1);\n
+        var diffY = (y2 - y1);\n
+        return Math.sqrt((diffX * diffX) + (diffY * diffY));\n
+    };\n
+\n
+    function onTouchStart(event) {\n
+        var e = event.originalEvent;\n
+\n
+        // Only start detector if and only if one finger is over the widget\n
+        if (!e.touches || (e.targetTouches.length === 1 && e.touches.length === 1)) {\n
+            startTapAndHoldDetector.call(this, event)\n
+            var element = $(this);\n
+            element.bind(TOUCHMOVE, onTouchMove);\n
+            element.bind(TOUCHEND, onTouchEnd); \n
+        } else {\n
+            stopTapAndHoldDetector.call(this);\n
+        }   \n
+    };\n
+\n
+    function onTouchMove(event) {\n
+        if (tapAndHoldTimer == null) {\n
+            return;\n
+        }\n
+\n
+        var e = event.originalEvent;\n
+        var x = (e.changedTouches) ? e.changedTouches[0].pageX: e.pageX;\n
+        var y = (e.changedTouches) ? e.changedTouches[0].pageY: e.pageY;\n
+        \n
+        var tapAndHoldPoint = $(this).data("taphold.point");\n
+        var euclideanDistance = calculateEuclideanDistance(tapAndHoldPoint.x, tapAndHoldPoint.y, x, y);\n
+                \n
+        if (euclideanDistance > MAX_DISTANCE_ALLOWED_IN_TAP_AND_HOLD_EVENT) {\n
+            stopTapAndHoldDetector.call(this);\n
+        }\n
+    };\n
+\n
+    function onTouchEnd(event) {\n
+        stopTapAndHoldDetector.call(this);\n
+    };\n
+\n
+    function onTapAndHold(event) {\n
+        clear.call(this);\n
+        $(this).data("taphold.handler").call(this, event);\n
+    };\n
+\n
+    function clear() {\n
+        tapAndHoldTimer = null;\n
+        $(this).unbind(TOUCHMOVE, onTouchMove);\n
+        $(this).unbind(TOUCHEND, onTouchEnd);   \n
+    };\n
+\n
+    function startTapAndHoldDetector(event) {\n
+        if (tapAndHoldTimer != null) {\n
+            return;\n
+        }\n
+        var self = this;\n
+        tapAndHoldTimer = setTimeout(function(){\n
+            onTapAndHold.call(self, event)\n
+        }, TAP_AND_HOLD_TRIGGER_TIMER);\n
+\n
+        // Stores tap x & y\n
+        var e = event.originalEvent;\n
+        var tapAndHoldPoint = {};\n
+        tapAndHoldPoint.x = (e.changedTouches) ? e.changedTouches[0].pageX: e.pageX;\n
+        tapAndHoldPoint.y = (e.changedTouches) ? e.changedTouches[0].pageY: e.pageY;\n
+        $(this).data("taphold.point", tapAndHoldPoint);\n
+    };\n
+\n
+    function stopTapAndHoldDetector() {\n
+        clearTimeout(tapAndHoldTimer);\n
+        clear.call(this);   \n
+    };\n
+\n
+    $.event.special["taphold"] = {\n
+        setup: function() {\n
+            \n
+        },\n
+\n
+        add: function(handleObj) {\n
+            $(this).data("taphold.handler", handleObj.handler);\n
+            if (handleObj.data) {\n
+                $(this).bind(TOUCHSTART, handleObj.data, onTouchStart);\n
+            } else {\n
+                $(this).bind(TOUCHSTART, onTouchStart);\n
+            }\n
+        },\n
+\n
+        remove: function(handleObj) {\n
+            stopTapAndHoldDetector.call(this);\n
+            if (handleObj.data) {\n
+                $(this).unbind(TOUCHSTART, handleObj.data, onTouchStart);\n
+            } else {\n
+                $(this).unbind(TOUCHSTART, onTouchStart);\n
+            }\n
+        },\n
+\n
+        teardown: function() {\n
+            \n
+        }\n
+    };\n
+\n
+})(jQuery);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4378</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

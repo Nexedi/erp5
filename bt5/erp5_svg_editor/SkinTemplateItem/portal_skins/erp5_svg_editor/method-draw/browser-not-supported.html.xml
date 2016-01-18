@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts52791603.3</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>browser-not-supported.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />\n
+<meta http-equiv="X-UA-Compatible" content="chrome=1"/>\n
+<link rel="icon" type="image/png" href="images/logo.png"/>\n
+<link rel="stylesheet" href="svg-editor.css" type="text/css"/>\n
+<script type="text/javascript" src="jquery.js"></script>\n
+<title>Browser does not support SVG | Method Draw</title>\n
+</head>\n
+<body>\n
+\n
+<div id="browser-not-supported">\n
+<img style="float:left;padding:10px;" src="images/logo.png" width="48" height="48" alt="SVG-edit logo" /><br />\n
+<p>Sorry, but your browser does not support SVG. Below is a list of alternate browsers and versions that support SVG and SVG-edit (from <a href="http://caniuse.com/#cats=SVG">caniuse.com</a>).</p>\n
+<p>Try the latest version of <a href="http://www.getfirefox.com">Firefox</a>, <a href="http://www.google.com/chrome/">Google Chrome</a>, <a href="http://www.apple.com/safari/download/">Safari</a>, <a href="http://www.opera.com/download/">Opera</a> or <a href="http://windows.microsoft.com/ie9">Internet Explorer</a>.</p>\n
+\n
+<script type="text/javascript">\n
+var viewportHeight =(window.innerHeight ? window.innerHeight : $(window).height()) - 140;\n
+document.write(\'<iframe width="100%" height="\'+viewportHeight+\'" src="http://caniuse.com/#cats=SVG"></iframe>\');\n
+</script>\n
+\n
+</div>\n
+\n
+</body>\n
+</html>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1341</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

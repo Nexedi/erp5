@@ -1,0 +1,676 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts52791538.27</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>method-draw.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />\n
+<meta http-equiv="X-UA-Compatible" content="chrome=1"/>\n
+<link rel="icon" type="image/png" href="images/logo.png"/>\n
+\n
+<!--{if svg_edit_release}-->\n
+  <link rel="stylesheet" href="css/method-draw.compiled.css" type="text/css"/>\n
+<!--{else}>\n
+  <link rel="stylesheet" href="lib/jgraduate/css/jPicker.css" type="text/css"/>\n
+  <link rel="stylesheet" href="lib/jgraduate/css/jgraduate.css" type="text/css"/>\n
+  <link rel="stylesheet" href="css/method-draw.css" type="text/css"/>\n
+  <link rel="stylesheet" href="css/fonts.css" type="text/css"/>\n
+<!{endif}-->\n
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>\n
+  <meta name="apple-mobile-web-app-capable" content="yes"/>\n
+\n
+\n
+  <script type="text/javascript" src="lib/jquery.js"></script>\n
+\n
+\n
+<!--{if svg_edit_release}-->\n
+  <script type="text/javascript" src="method-draw.compiled.js"></script>\n
+<!--{else}>\n
+  <script type="text/javascript" src="lib/pathseg.js"></script>\n
+  <script type="text/javascript" src="lib/touch.js"></script>\n
+  <script type="text/javascript" src="lib/js-hotkeys/jquery.hotkeys.min.js"></script>\n
+  <script type="text/javascript" src="icons/jquery.svgicons.js"></script>\n
+  <script type="text/javascript" src="lib/jgraduate/jquery.jgraduate.js"></script>\n
+  <script type="text/javascript" src="lib/contextmenu/jquery.contextMenu.js"></script>\n
+  <script type="text/javascript" src="lib/jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>\n
+  <script type="text/javascript" src="src/browser.js"></script>\n
+  <script type="text/javascript" src="src/svgtransformlist.js"></script>\n
+  <script type="text/javascript" src="src/math.js"></script>\n
+  <script type="text/javascript" src="src/units.js"></script>\n
+  <script type="text/javascript" src="src/svgutils.js"></script>\n
+  <script type="text/javascript" src="src/sanitize.js"></script>\n
+  <script type="text/javascript" src="src/history.js"></script>\n
+  <script type="text/javascript" src="src/select.js"></script>\n
+  <script type="text/javascript" src="src/draw.js"></script>\n
+  <script type="text/javascript" src="src/path.js"></script>\n
+  <script type="text/javascript" src="src/dialog.js"></script>\n
+  <script type="text/javascript" src="src/svgcanvas.js"></script>\n
+  <script type="text/javascript" src="src/method-draw.js"></script>\n
+  <script type="text/javascript" src="lib/jquery-draginput.js"></script>\n
+  <script type="text/javascript" src="lib/contextmenu.js"></script>\n
+  <script type="text/javascript" src="lib/jgraduate/jpicker.min.js"></script>\n
+  <script type="text/javascript" src="lib/mousewheel.js"></script>\n
+  <script type="text/javascript" src="extensions/ext-eyedropper.js"></script>\n
+  <script type="text/javascript" src="extensions/ext-shapes.js"></script>\n
+  <script type="text/javascript" src="extensions/ext-grid.js"></script>\n
+  <script type="text/javascript" src="lib/requestanimationframe.js"></script>\n
+  <script type="text/javascript" src="lib/taphold.js"></script>\n
+  <script type="text/javascript" src="lib/filesaver.js"></script>\n
+<!{endif}-->\n
+\n
+\n
+<title>Method Draw</title>\n
+</head>\n
+<body>\n
+<div id="svg_editor">\n
+\n
+<div id="rulers">\n
+  <div id="ruler_corner"></div>\n
+  <div id="ruler_x">\n
+    <div id="ruler_x_cursor"></div>\n
+    <div>\n
+      <canvas height="15"></canvas>\n
+    </div>\n
+  </div>\n
+  <div id="ruler_y">\n
+    <div id="ruler_y_cursor"></div>\n
+    <div>\n
+      <canvas width="15"></canvas>\n
+    </div>\n
+  </div>\n
+</div>\n
+\n
+<div id="workarea">\n
+<div id="svgcanvas" style="position:relative">\n
+\n
+</div>\n
+</div>\n
+\n
+<div id="menu_bar">\n
+  <a class="menu">\n
+    <div class="menu_title" id="logo"></div>\n
+    <div class="menu_list">\n
+      <div id="tool_about" class="menu_item">About this Editor...</div>\n
+      <div class="separator"></div>\n
+      <div id="tool_about" class="menu_item">Keyboard Shortcuts...</div>\n
+    </div>\n
+  </a>\n
+  \n
+  <div class="menu">\n
+    <div class="menu_title">File</div>\n
+    <div class="menu_list" id="file_menu"> \n
+      <div id="tool_clear" class="menu_item">New Document</div>\n
+      <div id="tool_open" class="menu_item" style="display: none;"><div id="fileinputs"></div>Open SVG...</div>\n
+      <div id="tool_import" class="menu_item" style="display: none;"><div id="fileinputs_import"></div>Import Image...</div>\n
+      <div id="tool_save" class="menu_item">Save Image... <span class="shortcut">⌘S</span></div>\n
+      <div id="tool_export" class="menu_item">Export as PNG</div>\n
+    </div>\n
+  </div>\n
+\n
+  <div class="menu">\n
+    <div class="menu_title">Edit</div>\n
+    <div class="menu_list" id="edit_menu">\n
+      <div class="menu_item" id="tool_undo">Undo <span class="shortcut">⌘Z</span></div>\n
+      <div class="menu_item" id="tool_redo">Redo <span class="shortcut">⌘Y</span></div>\n
+      <div class="separator"></div>\n
+      <div class="menu_item action_selected disabled" id="tool_cut">Cut <span class="shortcut">⌘X</span></div>\n
+      <div class="menu_item action_selected disabled" id="tool_copy">Copy <span class="shortcut">⌘C</span></div>\n
+      <div class="menu_item action_selected disabled" id="tool_paste">Paste <span class="shortcut">⌘V</span></div>\n
+      <div class="menu_item action_selected disabled" id="tool_clone">Duplicate <span class="shortcut">⌘D</span></div>\n
+      <div class="menu_item action_selected disabled" id="tool_delete">Delete <span>⌫</span></div>\n
+    </div>\n
+  </div>\n
+  \n
+  <div class="menu">\n
+    <div class="menu_title">Object</div>\n
+    <div class="menu_list"  id="object_menu">\n
+      <div class="menu_item action_selected disabled" id="tool_move_top">Bring to Front <span class="shortcut">⌘⇧↑</span></div>\n
+      <div class="menu_item action_selected disabled" id="tool_move_up">Bring Forward <span class="shortcut">⌘↑</span></div>\n
+      <div class="menu_item action_selected disabled" id="tool_move_down">Send Backward <span class="shortcut">⌘↓</span></div>\n
+      <div class="menu_item action_selected disabled" id="tool_move_bottom">Send to Back <span class="shortcut">⌘⇧↓</span></div>\n
+      <div class="separator"></div>\n
+      <div class="menu_item action_multi_selected disabled" id="tool_group">Group Elements <span class="shortcut">⌘G</span></div>\n
+      <div class="menu_item action_group_selected disabled" id="tool_ungroup">Ungroup Elements <span class="shortcut">⌘⇧G</span></div>\n
+      <div class="separator"></div>\n
+      <div class="menu_item action_path_convert_selected disabled" id="tool_topath">Convert to Path</div>\n
+      <div class="menu_item action_path_selected disabled" id="tool_reorient">Reorient path</div>\n
+    </div>\n
+  </div>\n
+\n
+  <div class="menu">\n
+    <div class="menu_title">View</div>\n
+    <div class="menu_list" id="view_menu">\n
+        <div class="menu_item push_button_pressed" id="tool_rulers">View Rulers</div>\n
+        <div class="menu_item" id="tool_wireframe">View Wireframe</div>\n
+        <div class="menu_item" id="tool_snap">Snap to Grid</div>\n
+        <div class="separator"></div>\n
+        <div class="menu_item" id="tool_source">Source... <span class="shortcut">⌘U</span></div>\n
+    </div>\n
+  </div>\n
+  \n
+\n
+  \n
+</div>\n
+\n
+<div id="tools_top" class="tools_panel">\n
+\n
+  <div id="canvas_panel" class="context_panel">\n
+    \n
+    <h4 class="clearfix">Canvas</h4>\n
+    \n
+    <label data-title="Change canvas width">\n
+      <input size="3" id="canvas_width" type="text" pattern="[0-9]*" />\n
+      <span class="icon_label">Width</span>\n
+    </label>\n
+    <label data-title="Change canvas height">\n
+      <input id="canvas_height" size="3" type="text" pattern="[0-9]*" />\n
+      <span class="icon_label">Height</span>\n
+    </label>\n
+        \n
+    \n
+    <label data-title="Change canvas color" class="draginput">\n
+      <span>Color</span>\n
+      <div id="color_canvas_tools">\n
+        <div class="color_tool active" id="tool_canvas">\n
+          <div class="color_block">\n
+            <div id="canvas_bg"></div>\n
+            <div id="canvas_color"></div>\n
+          </div>\n
+        </div>\n
+      </div>\n
+    </label>\n
+\n
+    <div class="draginput">\n
+      <span>Sizes</span>\n
+      <select id="resolution">\n
+        <option id="selectedPredefined" selected="selected">Custom</option>\n
+        <option>640x480</option>\n
+        <option>800x600</option>\n
+        <option>1024x768</option>\n
+        <option>1280x960</option>\n
+        <option>1600x1200</option>\n
+        <option id="fitToContent" value="content">Fit to Content</option>\n
+      </select>\n
+      <div class="caret"></div>\n
+      <label id="resolution_label">Custom</label>\n
+    </div>\n
+\n
+  </div>\n
+  \n
+  <div id="rect_panel" class="context_panel">\n
+    <h4 class="clearfix">Rectangle</h4>\n
+    <label>\n
+      <input id="rect_x" class="attr_changer" data-title="Change X coordinate" size="3" data-attr="x" pattern="[0-9]*" />\n
+      <span>X</span> \n
+    </label>\n
+    <label>\n
+      <input id="rect_y" class="attr_changer" data-title="Change Y coordinate" size="3" data-attr="y" pattern="[0-9]*" />\n
+      <span>Y</span> \n
+    </label>\n
+    <label id="rect_width_tool attr_changer" data-title="Change rectangle width">\n
+      <input id="rect_width" class="attr_changer" size="3" data-attr="width" type="text" pattern="[0-9]*" />\n
+      <span class="icon_label">Width</span>\n
+    </label>\n
+    <label id="rect_height_tool" data-title="Change rectangle height">\n
+      <input id="rect_height" class="attr_changer" size="3" data-attr="height" type="text" pattern="[0-9]*" />\n
+      <span class="icon_label">Height</span>\n
+    </label>\n
+  </div>\n
+  \n
+  <div id="path_panel" class="context_panel clearfix">\n
+    <h4 class="clearfix">Path</h4>\n
+    <label>\n
+      <input id="path_x" class="attr_changer" data-title="Change ellipse\'s cx coordinate" size="3" data-attr="x" pattern="[0-9]*" />\n
+      <span>X</span>\n
+    </label>\n
+    <label>\n
+      <input id="path_y" class="attr_changer" data-title="Change ellipse\'s cy coordinate" size="3" data-attr="y" pattern="[0-9]*" />\n
+      <span>Y</span>\n
+    </label>\n
+  </div>\n
+\n
+  <div id="image_panel" class="context_panel clearfix">\n
+  <h4>Image</h4>\n
+    <label>\n
+      <input id="image_x" class="attr_changer" data-title="Change X coordinate" size="3" data-attr="x"  pattern="[0-9]*"/>\n
+      <span>X</span> \n
+    </label>\n
+    <label>\n
+      <input id="image_y" class="attr_changer" data-title="Change Y coordinate" size="3" data-attr="y"  pattern="[0-9]*"/>\n
+      <span>Y</span> \n
+    </label>\n
+    <label>\n
+      <input id="image_width" class="attr_changer" data-title="Change image width" size="3" data-attr="width" pattern="[0-9]*" />\n
+      <span class="icon_label">Width</span>\n
+    </label>\n
+    <label>\n
+      <input id="image_height" class="attr_changer" data-title="Change image height" size="3" data-attr="height" pattern="[0-9]*" />\n
+      <span class="icon_label">Height</span>\n
+    </label>\n
+  </div>\n
+  \n
+  <div id="circle_panel" class="context_panel">\n
+    <h4>Circle</h4>\n
+    <label id="tool_circle_cx">\n
+      <span>Center X</span>\n
+      <input id="circle_cx" class="attr_changer" title="Change circle\'s cx coordinate" size="3" data-attr="cx"/>\n
+    </label>\n
+    <label id="tool_circle_cy">\n
+      <span>Center Y</span>\n
+      <input id="circle_cy" class="attr_changer" title="Change circle\'s cy coordinate" size="3" data-attr="cy"/>\n
+    </label>\n
+    <label id="tool_circle_r">\n
+      <span>Radius</span>\n
+      <input id="circle_r" class="attr_changer" title="Change circle\'s radius" size="3" data-attr="r"/>\n
+    </label>\n
+  </div>\n
+\n
+  <div id="ellipse_panel" class="context_panel clearfix">\n
+    <h4>Ellipse</h4>\n
+    <label id="tool_ellipse_cx">\n
+      <input id="ellipse_cx" class="attr_changer" data-title="Change ellipse\'s cx coordinate" size="3" data-attr="cx" pattern="[0-9]*" />\n
+      <span>X</span>\n
+    </label>\n
+    <label id="tool_ellipse_cy">\n
+      <input id="ellipse_cy" class="attr_changer" data-title="Change ellipse\'s cy coordinate" size="3" data-attr="cy" pattern="[0-9]*" />\n
+      <span>Y</span>\n
+    </label>\n
+    <label id="tool_ellipse_rx">\n
+      <input id="ellipse_rx" class="attr_changer" data-title="Change ellipse\'s x radius" size="3" data-attr="rx" pattern="[0-9]*" />\n
+      <span>Radius X</span>\n
+    </label>\n
+    <label id="tool_ellipse_ry">\n
+      <input id="ellipse_ry" class="attr_changer" data-title="Change ellipse\'s y radius" size="3" data-attr="ry" pattern="[0-9]*" />\n
+      <span>Radius Y</span>\n
+    </label>\n
+  </div>\n
+\n
+  <div id="line_panel" class="context_panel clearfix">\n
+    <h4>Line</h4>\n
+    <label id="tool_line_x1">\n
+      <input id="line_x1" class="attr_changer" data-title="Change line\'s starting x coordinate" size="3" data-attr="x1" pattern="[0-9]*" />\n
+      <span>Start X</span>\n
+    </label>\n
+    <label id="tool_line_y1">\n
+      <input id="line_y1" class="attr_changer" data-title="Change line\'s starting y coordinate" size="3" data-attr="y1" pattern="[0-9]*" />\n
+      <span>Start Y</span>\n
+    </label>\n
+    <label id="tool_line_x2">\n
+      <input id="line_x2" class="attr_changer" data-title="Change line\'s ending x coordinate" size="3" data-attr="x2"   pattern="[0-9]*" />\n
+      <span>End X</span>\n
+    </label>\n
+    <label id="tool_line_y2">\n
+      <input id="line_y2" class="attr_changer" data-title="Change line\'s ending y coordinate" size="3" data-attr="y2"   pattern="[0-9]*" />\n
+      <span>End Y</span>\n
+    </label>\n
+  </div>\n
+\n
+  <div id="text_panel" class="context_panel">\n
+    <h4>Text</h4>\n
+    <label>\n
+      <input id="text_x" class="attr_changer" data-title="Change text x coordinate" size="3" data-attr="x" pattern="[0-9]*" />\n
+      <span>X</span>\n
+    </label>\n
+    <label>\n
+      <input id="text_y" class="attr_changer" data-title="Change text y coordinate" size="3" data-attr="y" pattern="[0-9]*" />\n
+      <span>Y</span>\n
+    </label>\n
+    \n
+    <div class="toolset draginput select twocol" id="tool_font_family">\n
+        <!-- Font family -->\n
+      <span>Font</span>\n
+      <div id="preview_font" style="font-family: Helvetica, Arial, sans-serif;">Helvetica</div>\n
+      <div class="caret"></div>\n
+      <input id="font_family" data-title="Change Font Family" size="12" type="hidden" />\n
+      <select id="font_family_dropdown">\n
+          <option value="Arvo, sans-serif">Arvo</option>\n
+          <option value="\'Courier New\', Courier, monospace">Courier</option>\n
+          <option value="Euphoria, sans-serif">Euphoria</option>\n
+          <option value="Georgia, Times, \'Times New Roman\', serif">Georgia</option>\n
+          <option value="Helvetica, Arial, sans-serif" selected="selected">Helvetica</option>\n
+          <option value="Junction, sans-serif">Junction</option>\n
+          <option value="\'League Gothic\', sans-serif">League Gothic</option>\n
+          <option value="Oswald, sans-serif">Oswald</option>\n
+          <option value="\'Palatino Linotype\', \'Book Antiqua\', Palatino, serif">Palatino</option>\n
+          <option value="\'Trebuchet MS\', Gadget, sans-serif">Trebuchet</option>\n
+          <option value="\'Shadows Into Light\', serif">Shadows Into Light</option>\n
+          <option value="\'Simonetta\', serif">Simonetta</option>\n
+          <option value="\'Times New Roman\', Times, serif">Times</option>\n
+      </select>\n
+      <div class="tool_button" id="tool_bold" data-title="Bold Text [B]">B</div>\n
+      <div class="tool_button" id="tool_italic" data-title="Italic Text [I]">i</div>\n
+    </div>\n
+\n
+    <label id="tool_font_size" data-title="Change Font Size">\n
+      <input id="font_size" size="3" value="0" />\n
+      <span id="font_sizeLabel" class="icon_label">Font Size</span>\n
+    </label>\n
+    <!-- Not visible, but still used -->\n
+    <input id="text" type="text" size="35"/>\n
+  </div>\n
+\n
+  <!-- formerly gsvg_panel -->\n
+  <div id="container_panel" class="context_panel clearfix">\n
+  </div>\n
+  \n
+  <div id="use_panel" class="context_panel clearfix">\n
+    <div class="tool_button clearfix" id="tool_unlink_use" data-title="Break link to reference element (make unique)">Break link reference</div>\n
+  </div>\n
+  \n
+  <div id="g_panel" class="context_panel clearfix">\n
+    <h4>Group</h4>\n
+    <label>\n
+      <input id="g_x" class="attr_changer" data-title="Change groups\'s x coordinate" size="3" data-attr="x" pattern="[0-9]*" />\n
+      <span>X</span>\n
+    </label>\n
+    <label>\n
+      <input id="g_y" class="attr_changer" data-title="Change groups\'s y coordinate" size="3" data-attr="y" pattern="[0-9]*" />\n
+      <span>Y</span>\n
+    </label>\n
+  </div>\n
+  \n
+  <div id="path_node_panel" class="context_panel clearfix">\n
+    <h4>Edit Path</h4>\n
+\n
+    <label id="tool_node_x">\n
+      <input id="path_node_x" class="attr_changer" data-title="Change node\'s x coordinate" size="3" data-attr="x" />\n
+      <span>X</span>\n
+    </label>\n
+    <label id="tool_node_y">\n
+      <input id="path_node_y" class="attr_changer" data-title="Change node\'s y coordinate" size="3" data-attr="y" />\n
+      <span>Y</span>\n
+    </label>\n
+    \n
+    <div id="segment_type" class="draginput label">\n
+      <span>Segment Type</span>\n
+      <select id="seg_type" data-title="Change Segment type">\n
+        <option id="straight_segments" selected="selected" value="4">Straight</option>\n
+        <option id="curve_segments" value="6">Curve</option>\n
+      </select>\n
+      <div class="caret"></div>\n
+      <label id="seg_type_label">Straight</label>\n
+    </div>\n
+    \n
+    <!--\n
+    <label class="draginput checkbox" data-title="Link Control Points">\n
+      <span>Linked Control Points</span>\n
+      <div class="push_bottom"><input type="checkbox" id="tool_node_link" checked="checked" /></div>\n
+    </label>\n
+  -->\n
+    \n
+    <div class="clearfix"></div>\n
+    <div class="tool_button" id="tool_node_clone" title="Adds a node">Add Node</div>\n
+    <div class="tool_button" id="tool_node_delete" title="Delete Node">Delete Node</div>\n
+    <div class="tool_button" id="tool_openclose_path" title="Open/close sub-path">Open Path</div>\n
+    <!--<div class="tool_button" id="tool_add_subpath" title="Add sub-path"></div>-->\n
+  </div>\n
+  \n
+  <!-- Buttons when a single element is selected -->\n
+  <div id="selected_panel" class="context_panel">\n
+\n
+    <label id="tool_angle" data-title="Change rotation angle" class="draginput">\n
+      <input id="angle" class="attr_changer" size="2" value="0" data-attr="transform" data-min="-180" data-max="180" type="text"/>\n
+      <span class="icon_label">Rotation</span>\n
+      <div id="tool_angle_indicator">\n
+        <div id="tool_angle_indicator_cursor"></div>\n
+      </div>\n
+    </label>\n
+    \n
+      <label class="toolset" id="tool_opacity" data-title="Change selected item opacity">\n
+        <input id="group_opacity" class="attr_changer" data-attr="opacity" data-multiplier="0.01" size="3" value="100" step="5" min="0" max="100" />\n
+        <span id="group_opacityLabel" class="icon_label">Opacity</span>\n
+      </label>\n
+    \n
+    <div class="toolset" id="tool_blur" data-title="Change gaussian blur value">\n
+      <label>\n
+        <input id="blur" size="2" value="0" step=".1"  min="0" max="10" />\n
+        <span class="icon_label">Blur</span>\n
+      </label>\n
+    </div>\n
+    \n
+    <label id="cornerRadiusLabel" data-title="Change Rectangle Corner Radius">\n
+      <input id="rect_rx" size="3" value="0" data-attr="rx" class="attr_changer" type="text" pattern="[0-9]*" />\n
+      <span class="icon_label">Roundness</span>\n
+    </label>\n
+    \n
+    <div class="clearfix"></div>\n
+    <div id="align_tools">\n
+      <h4>Align</h4>\n
+      <div class="toolset align_buttons" id="tool_position">\n
+          <label>\n
+            <div class="col last clear" id="position_opts">\n
+              <div class="draginput_cell" id="tool_posleft" title="Align Left"></div>\n
+              <div class="draginput_cell" id="tool_poscenter" title="Align Center"></div>\n
+              <div class="draginput_cell" id="tool_posright" title="Align Right"></div>\n
+              <div class="draginput_cell" id="tool_postop" title="Align Top"></div>\n
+              <div class="draginput_cell" id="tool_posmiddle" title="Align Middle"></div>\n
+              <div class="draginput_cell" id="tool_posbottom" title="Align Bottom"></div>\n
+            </div>\n
+          </label>\n
+      </div>    \n
+    </div>\n
+  </div>\n
+  \n
+  <!-- Buttons when multiple elements are selected -->\n
+  <div id="multiselected_panel" class="context_panel clearfix">\n
+    <h4 class="hidable">Multiple Elements</h4>\n
+    \n
+    <div class="toolset align_buttons" style="position: relative">\n
+      <label id="tool_align_relative" style="margin-top: 10px;"> \n
+        <select id="align_relative_to" title="Align relative to ...">\n
+        <option id="selected_objects" value="selected">Align to objects</option>\n
+        <option id="page" value="page">Align to page</option>\n
+        </select>\n
+      </label>\n
+      <h4>.</h4>\n
+        <div class="col last clear">\n
+          <div class="draginput_cell" id="tool_alignleft" title="Align Left"></div>\n
+          <div class="draginput_cell" id="tool_aligncenter" title="Align Center"></div>\n
+          <div class="draginput_cell" id="tool_alignright" title="Align Right"></div>\n
+          <div class="draginput_cell" id="tool_aligntop" title="Align Top"></div>\n
+          <div class="draginput_cell" id="tool_alignmiddle" title="Align Middle"></div>\n
+          <div class="draginput_cell" id="tool_alignbottom" title="Align Bottom"></div>\n
+        </div>\n
+    </div>\n
+    <div class="clearfix"></div>\n
+\n
+  </div>\n
+  \n
+  <div id="stroke_panel" class="context_panel clearfix">\n
+    <div class="clearfix"></div>\n
+    <h4>Stroke</h4>\n
+    <div class="toolset" data-title="Change stroke">\n
+      <label>\n
+        <input id="stroke_width" size="2" value="5" data-attr="stroke-width" min="0" max="99" step="1" />\n
+        <span class="icon_label">Stroke Width</span>\n
+      </label>\n
+    </div>\n
+    <div class="stroke_tool draginput"> \n
+      <span>Stroke Dash</span>\n
+      <select id="stroke_style" data-title="Change stroke dash style">\n
+        <option selected="selected" value="none">—</option>\n
+        <option value="2,2">···</option>\n
+        <option value="5,5">- -</option>\n
+        <option value="5,2,2,2">-·-</option>\n
+        <option value="5,2,2,2,2,2">-··-</option>\n
+      </select>\n
+      <div class="caret"></div>\n
+      <label id="stroke_style_label">—</label>\n
+    </div>\n
+    \n
+    <label style="display: none;">\n
+      <span class="icon_label">Stroke Join</span>\n
+    </label>\n
+    \n
+    <label  style="display: none;">\n
+      <span class="icon_label">Stroke Cap</span>\n
+    </label>\n
+  </div>\n
+\n
+</div> <!-- tools_top -->\n
+  <div id="cur_context_panel">\n
+    \n
+  </div>\n
+\n
+\n
+<div id="tools_left" class="tools_panel">\n
+  <div class="tool_button" id="tool_select" title="Select Tool [V]"></div>\n
+  <div class="tool_button" id="tool_fhpath" title="Pencil Tool [P]"></div>\n
+  <div class="tool_button" id="tool_line" title="Line Tool [L]"></div>\n
+  <div class="tool_button" id="tool_rect" title="Square/Rect Tool [R]"></div>\n
+  <div class="tool_button" id="tool_ellipse" title="Ellipse/Circle Tool [C]"></div>\n
+  <div class="tool_button" id="tool_path" title="Path Tool [P]"></div>\n
+  <div class="tool_button" id="tool_text" title="Text Tool [T]"></div>\n
+  <div class="tool_button" id="tool_zoom" title="Zoom Tool [Z]"></div>\n
+  \n
+  <div id="color_tools">\n
+        <div id="tool_switch" title="Switch stroke and fill colors [X]"></div>\n
+        <div class="color_tool active" id="tool_fill">\n
+          <label class="icon_label" title="Change fill color"></label>\n
+          <div class="color_block">\n
+            <div id="fill_bg"></div>\n
+            <div id="fill_color" class="color_block"></div>\n
+          </div>\n
+        </div>\n
+\n
+        <div class="color_tool" id="tool_stroke">\n
+            <label class="icon_label" title="Change stroke color"></label>\n
+          <div class="color_block">\n
+            <div id="stroke_bg"></div>\n
+            <div id="stroke_color" class="color_block" title="Change stroke color"></div>\n
+          </div>\n
+        </div>\n
+  </div>\n
+</div> <!-- tools_left -->\n
+\n
+<div id="tools_bottom" class="tools_panel">\n
+\n
+    <!-- Zoom buttons -->\n
+  <div id="zoom_panel" class="toolset" title="Change zoom level">\n
+    <div class="draginput select" id="zoom_label">\n
+      <span  id="zoomLabel" class="zoom_tool icon_label"></span>\n
+      <select id="zoom_select">\n
+        <option value="6">6%</option>\n
+        <option value="12">12%</option>\n
+        <option value="16">16%</option>\n
+        <option value="25">25%</option>\n
+        <option value="50">50%</option>\n
+        <option value="75">75%</option>\n
+        <option value="100"  selected="selected">100%</option>\n
+        <option value="150">150%</option>\n
+        <option value="200">200%</option>\n
+        <option value="300">300%</option>\n
+        <option value="400">400%</option>\n
+        <option value="600">600%</option>\n
+        <option value="800">800%</option>\n
+        <option value="1600">1600%</option>\n
+      </select>\n
+      <div class="caret"></div>\n
+      <input id="zoom" size="3" value="100%" type="text" readonly="readonly" />\n
+    </div>\n
+  </div>\n
+\n
+  <div id="tools_bottom_3">\n
+    <div id="palette" title="Click to change fill color, shift-click to change stroke color"></div>\n
+  </div>\n
+</div>\n
+\n
+<!-- hidden divs -->\n
+<div id="color_picker"></div>\n
+\n
+</div> <!-- svg_editor -->\n
+\n
+<div id="svg_source_editor">\n
+  <div id="svg_source_overlay"></div>\n
+  <div id="svg_source_container">\n
+    <div id="save_output_btns">\n
+      <p id="copy_save_note">Copy the contents of this box into a text editor, then save the file with a .svg extension.</p>\n
+      <button id="copy_save_done">Done</button>\n
+    </div>\n
+    <form>\n
+      <textarea id="svg_source_textarea" spellcheck="false"></textarea>\n
+    </form>\n
+    <div id="tool_source_back" class="toolbar_button">\n
+      <button id="tool_source_cancel" class="cancel">Cancel</button>\n
+      <button id="tool_source_save" class="ok">Apply Changes</button>\n
+    </div>\n
+  </div>\n
+</div>\n
+\n
+<div id="base_unit_container">\n
+  <select id="base_unit">\n
+    <option value="px">Pixels</option>\n
+    <option value="cm">Centimeters</option>\n
+    <option value="mm">Millimeters</option>\n
+    <option value="in">Inches</option>\n
+    <option value="pt">Points</option>\n
+    <option value="pc">Picas</option>\n
+    <option value="em">Ems</option>\n
+    <option value="ex">Exs</option>\n
+  </select>\n
+</div>\n
+\n
+<div id="dialog_box">\n
+  <div id="dialog_box_overlay"></div>\n
+  <div id="dialog_container">\n
+    <div id="dialog_content"></div>\n
+    <div id="dialog_buttons"></div>\n
+  </div>\n
+</div>\n
+\n
+<ul id="cmenu_canvas" class="contextMenu">\n
+  <li><a href="#cut">Cut <span class="shortcut">⌘X;</span></a></li>\n
+  <li><a href="#copy">Copy<span class="shortcut">⌘C</span></a></li>\n
+  <li><a href="#paste">Paste<span class="shortcut">⌘V</span></a></li>\n
+  <li class="separator"><a href="#delete">Delete<span class="shortcut">⌫</span></a></li>\n
+  <li class="separator"><a href="#group">Group<span class="shortcut">⌘G</span></a></li>\n
+  <li><a href="#ungroup">Ungroup<span class="shortcut">⌘⇧G</span></a></li>\n
+  <li class="separator"><a href="#move_front">Bring to Front<span class="shortcut">⌘⇧↑</span></a></li>\n
+  <li><a href="#move_up">Bring Forward<span class="shortcut">⌘↑</span></a></li>\n
+  <li><a href="#move_down">Send Backward<span class="shortcut">⌘↓</span></a></li>\n
+  <li><a href="#move_back">Send to Back<span class="shortcut">⌘⇧↓</span></a></li>\n
+</ul>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>26888</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts52850494.23</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ext-shapes.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAYAAACN1PRVAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bWFnZVJlYWR5ccllPAAAARdJREFUeNrsloENgjAQRSlxgG6gExjZQDdxA0cwTABOICs4AWxQdQFw
+A51A/5mSGNKW9kASEy/5oRLS13/+FkSSLJ/RRBVHE9ZPwM5TwRpoA92ngKVKXQl0+DasAajQ4zzU
+XSgsbQccdzHTVcRxF3Nccd0JwwnSaFG8H1BFq8fE1rhjjhUuElpDc2gBtfeMsHekMWkz1ibWi1Cm
+NtJqlH5gLFDp+s/IdjkU+AGSfQEZBLSBXGlkAV2gvujLbs89ygry2WehyZRDNnUorBoCuzBeP9aa
+hb4kEQLaj1uoMBwAt1HaSBDoiGEN7emK3xkkfdsoXF9XWLnQk2XajanawzjXAak5MGrhCdr1pawD
+3bOc/b8bfeslwACoq2A3EAiuqwAAAABJRU5ErkJggg==</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>373</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

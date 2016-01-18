@@ -40,7 +40,7 @@
 <script type="text/javascript" src="svg-editor.erp5.js"></script>\n
 <iframe name="svgframe" \n
         id="svgframe" \n
-        src="jquery/plugin/svg-editor/svg-editor.html" \n
+        src="method-draw/method-draw.html" \n
         width="100%" \n
         height="570"/>\n
 

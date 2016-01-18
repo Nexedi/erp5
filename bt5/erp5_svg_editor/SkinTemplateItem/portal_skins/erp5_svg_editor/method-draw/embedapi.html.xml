@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts52791583.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>embedapi.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n
+<html xmlns="http://www.w3.org/1999/xhtml" >\n
+<head>\n
+    <title></title>\n
+</head>\n
+<body>\n
+\n
+    <script type="text/javascript" src="embedapi.js"></script>\n
+    <script type="text/javascript">\n
+        var svgCanvas = null;\n
+\n
+        function init_embed() {\n
+            var frame = document.getElementById(\'svgedit\');\n
+      svgCanvas = new embedded_svg_edit(frame);\n
+      \n
+      // Hide main button, as we will be controlling new/load/save etc from the host document\n
+      var doc;\n
+      doc = frame.contentDocument;\n
+      if (!doc)\n
+      {\n
+        doc = frame.contentWindow.document;\n
+      }\n
+      \n
+      var mainButton = doc.getElementById(\'main_button\');\n
+      mainButton.style.display = \'none\';            \n
+        }\n
+        \n
+        function handleSvgData(data, error) {\n
+      if (error)\n
+      {\n
+        alert(\'error \' + error);\n
+      }\n
+            else\n
+      {\n
+        alert(\'Congratulations. Your SVG string is back in the host page, do with it what you will\\n\\n\' + data);\n
+      }     \n
+        }\n
+        \n
+        function loadSvg() {\n
+            var svgexample = \'<svg width="640" height="480" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1</title><rect stroke-width="5" stroke="#000000" fill="#FF0000" id="svg_1" height="35" width="51" y="35" x="32"/><ellipse ry="15" rx="24" stroke-width="5" stroke="#000000" fill="#0000ff" id="svg_2" cy="60" cx="66"/></g></svg>\';\n
+            svgCanvas.setSvgString(svgexample);\n
+        }\n
+    \n
+    function saveSvg() {      \n
+      svgCanvas.getSvgString()(handleSvgData);\n
+    }\n
+    </script>\n
+\n
+\n
+    <button onclick="loadSvg();">Load example</button>\n
+    <button onclick="saveSvg();">Save data</button>\n
+    <br/>\n
+\n
+    <iframe src="index.html" width="900px" height="600px" id="svgedit" onload="init_embed()"></iframe>    \n
+</body>\n
+</html>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1940</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
