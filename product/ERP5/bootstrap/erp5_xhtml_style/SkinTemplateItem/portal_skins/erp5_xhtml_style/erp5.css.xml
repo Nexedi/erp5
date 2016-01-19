@@ -1461,7 +1461,12 @@ div.pdf-preview-navigation img.last{\n
     display: none;\n
   }\n
 \n
-}
+}\n
+\n
+fieldset > div.large-gadget {\n
+  height: 85vh;\n
+}\n
+
 
 ]]></string> </value>
         </item>
