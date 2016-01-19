@@ -1,3 +1,7 @@
+2016-01-19 tristan
+* Gadgetify method-draw
+* Remove EditorField support
+
 2016-01-18 tristan
 * Replace svg-edit by method-draw
 * Remove jquery plugin dependencies to improve maintenance

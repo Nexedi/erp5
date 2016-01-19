@@ -75,7 +75,6 @@
                     <value>
                       <list>
                         <string>my_text_content</string>
-                        <string>text_content</string>
                       </list>
                     </value>
                 </item>
@@ -114,7 +113,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>svg_edit_form_view</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
