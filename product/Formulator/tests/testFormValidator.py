@@ -179,6 +179,15 @@ class BooleanValidatorTestCase(ValidatorTestCase):
             TestField('f'),
             'f', {'f': 0})
         self.assertEqual(0, result)
+        result = self.v.validate(
+            TestField('f', required=1),
+            'f', {'f': 1})
+        self.assertEqual(1, result)
+        self.assertValidatorRaises(
+            Validator.ValidationError, 'required_not_found',
+            self.v.validate,
+            TestField('f', required=1),
+            'f', {'f': 0})
 
 class IntegerValidatorTestCase(ValidatorTestCase):
     def setUp(self):

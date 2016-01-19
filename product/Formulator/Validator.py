@@ -227,13 +227,28 @@ class PatternValidator(StringValidator):
 PatternValidatorInstance = PatternValidator()
 
 class BooleanValidator(Validator):
+    property_names = Validator.property_names + ['required']
+
+    required = fields.CheckBoxField('required',
+                                title='Required',
+                                description=(
+    "Checked if the field is required; the user has to check."),
+                                default=0)
+
+    message_names = Validator.message_names + ['required_not_found']
+
+    required_not_found = 'This field is mandatory.'
+
     def validate(self, field, key, REQUEST):
       result = REQUEST.get(key, REQUEST.get('default_%s' % key))
       if result is None:
         raise KeyError('Field %r is not present in request object.' % field.id)
       # XXX If the checkbox is hidden, Widget_render_hidden is used instead of
       #     CheckBoxWidget_render, and ':int' suffix is missing.
-      return result and result != '0' and 1 or 0
+      value = result and result != '0' and 1 or 0
+      if not value and field.get_value('required'):
+        self.raise_error('required_not_found', field)
+      return value
 
 
 BooleanValidatorInstance = BooleanValidator()
