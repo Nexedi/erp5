@@ -56,5 +56,6 @@ def initialize( context ):
 try:
   from Products.ERP5VCS.Subversion import Subversion
 except ImportError:
-  pass
+  # Used by BusinessTemplate_handleException
+  from Products.ERP5VCS.SubversionClient import SubversionSSLTrustError, SubversionLoginError
 from Products.ERP5VCS.Git import Git
