@@ -66,7 +66,7 @@ class VideoWidget(Widget.TextWidget):
       title='Enable on the fly video player change (based on java script)',
       description='Define if javascript is enabled or not on the current Video',
       default=1,
-      required=1)
+      required=0)
 
   video_player = fields.ListField('video_player',
                                  title='Video Player',

@@ -655,7 +655,7 @@ class PlanningBoxWidget(Widget.Widget):
       title='enable on the fly edition (based on java script)',
       description='define if javascript is enabled or not on the current Planning',
       default=1,
-      required=1)
+      required=0)
 
   # kind of representation to render : Planning or Calendar
   vertical_view = fields.CheckBoxField('vertical_view',
@@ -663,7 +663,7 @@ class PlanningBoxWidget(Widget.Widget):
       description='define if need to changes axis order. By default Y axis is'
                   'main axis, but to display calendar main axis must be X one.',
       default=0,
-      required=1)
+      required=0)
 
   # added especially for new Planning Structure generation
   # is used to split result in pages in a ListBox like rendering
@@ -737,14 +737,14 @@ class PlanningBoxWidget(Widget.Widget):
                   'If checked, the Y axis will match the right border' \
                   'of the planning, otherwise default is applied : left',
       default=0,
-      required=1)
+      required=0)
 
   x_axis_position = fields.CheckBoxField('x_axis_position',
       title='Force X axis to the bottom instead of top',
       description='position of X axis over the planning content.' \
                   'default is top, if checked then right apply',
       default=0,
-      required=1)
+      required=0)
 
 
   default = fields.TextAreaField('default',

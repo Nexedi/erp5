@@ -553,7 +553,7 @@ def create_settings_form():
     unicode_mode = fields.CheckBoxField('unicode_mode',
                                         title='Form properties are unicode',
                                         default=0,
-                                        required=1)
+                                        required=0)
     edit_order = fields.LinesField('edit_order',
                                    title='Setters for these properties should be'
                                    '<br /> called by edit() in the defined order')
