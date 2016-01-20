@@ -122,51 +122,6 @@ class TestUNG(ERP5TypeTestCase):
     self.assertEqual(web_illustration.WebPage_getUNGIcon(),
                       "<img src='ung_images/svg.png'/>")
 
-  def testWebSection_deleteObjectList(self):
-    """Test if objects are deleted correctly"""
-    web_page_module = self.portal.web_page_module
-    web_page = web_page_module.newContent(portal_type="Web Page")
-    relative_url = web_page.getRelativeUrl()
-    self.portal.REQUEST.set("uids", [web_page.getUid(),])
-    self.tic()
-    self.changeSkin("UNGDoc")
-    self.portal.WebSection_deleteObjectList()
-    self.tic()
-    self.assertEqual(web_page.getValidationState(), "deleted")
-    self.portal.REQUEST.set("uids", [web_page.getUid(),])
-    self.tic()
-    self.changeSkin("UNGDoc")
-    self.portal.WebSection_deleteObjectList()
-    self.tic()
-    self.assertEqual(len(self.portal.portal_catalog(relative_url=relative_url)), 0)
-    web_page = web_page_module.newContent(portal_type="Web Page")
-    web_table = web_page_module.newContent(portal_type="Web Table")
-    web_illustration = web_page_module.newContent(portal_type="Web Illustration")
-    web_page.publish()
-    web_table.publish()
-    web_illustration.publish()
-    self.tic()
-    uid_list = [web_page.getUid(),
-               web_table.getUid(),
-               web_illustration.getUid()]
-    self.portal.REQUEST.set("uids", uid_list)
-    self.changeSkin("UNGDoc")
-    self.portal.web_site_module.ung.WebSection_deleteObjectList()
-    self.tic()
-    self.assertEqual(web_page.getValidationState(), "deleted")
-    self.assertEqual(web_table.getValidationState(), "deleted")
-    self.assertEqual(web_illustration.getValidationState(), "deleted")
-    self.portal.REQUEST.set("uids", uid_list)
-    id_list = [web_page.getId(),
-               web_table.getId(),
-               web_illustration.getId()]
-    self.changeSkin("UNGDoc")
-    self.portal.web_site_module.ung.WebSection_deleteObjectList()
-    self.tic()
-    self.assertFalse(id_list[0] in web_page_module.objectIds())
-    self.assertFalse(id_list[1] in web_page_module.objectIds())
-    self.assertFalse(id_list[2] in web_page_module.objectIds())
-
   def testERP5Site_userFollowUpWebPage(self):
     """Test if user is added in field Follow Up of Web Page"""
     self.changeSkin('UNGDoc')
