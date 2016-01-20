@@ -11,6 +11,10 @@
             <value>
               <list>
                 <string>default</string>
+                <string>image_display</string>
+                <string>image_format</string>
+                <string>image_pre_converted_only</string>
+                <string>image_quality</string>
               </list>
             </value>
         </item>
@@ -83,11 +87,27 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>text_content</string> </value>
+                    <value> <string>my_image_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewWebFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>image_display</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>image_format</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>image_pre_converted_only</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>image_quality</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -107,11 +127,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python:\'<img src="data:image/svg+xml,%s" alt="[Image preview]"/>\' % context.getTextContent("").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace(\'"\', "&quot;")
-
-]]></string> </value>
+            <value> <string>python: "data:%s,%s" % (context.getContentType("image/svg+xml"), context.getTextContent(""))</string> </value>
         </item>
       </dictionary>
     </pickle>
