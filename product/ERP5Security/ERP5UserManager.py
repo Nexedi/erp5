@@ -120,7 +120,7 @@ class ERP5UserManager(BasePlugin):
 
   def getPersonByReference(self, reference):
     def _getPersonRelativeUrlFromReference(reference):
-      person_url = self.REQUEST.get('_login_cache', {}).get(reference)
+      person_url = self.REQUEST.get('_person_cache', {}).get(reference)
       portal = self.getPortalObject()
       if person_url is not None:
         return person_url
@@ -240,6 +240,10 @@ class ERP5UserManager(BasePlugin):
 
     # authentication policy enabled, we need person object anyway
     login = self.getPortalObject().unrestrictedTraverse(login_url)
+
+    if login and '_person_cache' not in self.REQUEST:
+      self.REQUEST.set('_person_cache', {})
+      self.REQUEST['_person_cache'][user_reference] = login.getParent()
 
     if user_reference is None:
       # file a failed authentication attempt
