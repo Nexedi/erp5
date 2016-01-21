@@ -41,34 +41,34 @@ def getProtectedProperty(document, select):
 
 url_template_dict = {
   "form_action": "%(traversed_document_url)s/%(action_id)s",
-  "traverse_generator": "%(root_url)s/%(script_id)s?mode=traverse" + \
+  "traverse_generator": "%(root_url)s%(script_id)s?mode=traverse" + \
                        "&relative_url=%(relative_url)s&view=%(view)s",
-  "traverse_template": "%(root_url)s/%(script_id)s?mode=traverse" + \
+  "traverse_template": "%(root_url)s%(script_id)s?mode=traverse" + \
                        "{&relative_url,view}",
-  "search_template": "%(root_url)s/%(script_id)s?mode=search" + \
+  "search_template": "%(root_url)s%(script_id)s?mode=search" + \
                      "{&query,select_list*,limit*,sort_on*,local_roles*}",
-  "worklist_template": "%(root_url)s/%(script_id)s?mode=worklist",
-  "custom_search_template": "%(root_url)s/%(script_id)s?mode=search" + \
+  "worklist_template": "%(root_url)s%(script_id)s?mode=worklist",
+  "custom_search_template": "%(root_url)s%(script_id)s?mode=search" + \
                      "&relative_url=%(relative_url)s" \
                      "&form_relative_url=%(form_relative_url)s" \
                      "&list_method=%(list_method)s" \
                      "&default_param_json=%(default_param_json)s" \
                      "{&query,select_list*,limit*,sort_on*,local_roles*}",
-  "custom_search_template_no_editable": "%(root_url)s/%(script_id)s?mode=search" + \
+  "custom_search_template_no_editable": "%(root_url)s%(script_id)s?mode=search" + \
                      "&relative_url=%(relative_url)s" \
                      "&list_method=%(list_method)s" \
                      "&default_param_json=%(default_param_json)s" \
                      "{&query,select_list*,limit*,sort_on*,local_roles*}",
-  "new_content_action": "%(root_url)s/%(script_id)s?mode=newContent",
-  "bulk_action": "%(root_url)s/%(script_id)s?mode=bulk",
+  "new_content_action": "%(root_url)s%(script_id)s?mode=newContent",
+  "bulk_action": "%(root_url)s%(script_id)s?mode=bulk",
   # XXX View is set by default to empty
-  "document_hal": "%(root_url)s/%(script_id)s?mode=traverse" + \
+  "document_hal": "%(root_url)s%(script_id)s?mode=traverse" + \
                   "&relative_url=%(relative_url)s",
   "jio_get_template": "urn:jio:get:%(relative_url)s",
   "jio_search_template": "urn:jio:allDocs?%(query)s",
   # XXX Hardcoded sub websection
-  "login_template": "%(root_url)s/%(login)s",
-  "logout_template": "%(root_url)s/%(logout)s"
+  "login_template": "%(root_url)s%(login)s",
+  "logout_template": "%(root_url)s%(logout)s"
 }
 
 default_document_uri_template = url_template_dict["jio_get_template"]
@@ -382,7 +382,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
 
     if (editable_column_list):
       list_method_custom = url_template_dict["custom_search_template"] % {
-        "root_url": site_root.absolute_url(),
+        "root_url": site_root_absolute_url,
         "script_id": script.id,
         "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
         "form_relative_url": "%s/%s" % (form_relative_url, field.id),
@@ -396,7 +396,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       list_method_query_dict["parent_uid"] = traversed_document.getUid()
     else:
       list_method_custom = url_template_dict["custom_search_template_no_editable"] % {
-        "root_url": site_root.absolute_url(),
+        "root_url": site_root_absolute_url,
         "script_id": script.id,
         "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
         "list_method": list_method_name,
@@ -411,7 +411,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
 #       document = row.getObject()
 #       line = {
 #         "url": url_template_dict["document_hal"] % {
-#           "root_url": site_root.absolute_url(),
+#           "root_url": site_root_absolute_url,
 #           "relative_url": document.getRelativeUrl(),
 #           "script_id": script.id
 #         }
@@ -469,6 +469,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     action_to_call = "Base_callDialogMethod"
   else:
     action_to_call = form.action
+
   if (action_to_call == 'Base_edit') and (not portal.portal_membership.checkPermission('Modify portal content', traversed_document)):
     # prevent allowing editing if user doesn't have permission
     include_action = False
@@ -478,7 +479,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     response_dict['_actions'] = {
       'put': {
         "href": url_template_dict["form_action"] % {
-          "traversed_document_url": site_root.absolute_url() + "/" + traversed_document.getRelativeUrl(),
+          "traversed_document_url": site_root.absolute_url() + traversed_document.getRelativeUrl(),
           "action_id": action_to_call
         },
         "action": form.action,
@@ -488,7 +489,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
   # Form traversed_document
   response_dict['_links']['traversed_document'] = {
     "href": default_document_uri_template % {
-      "root_url": site_root.absolute_url(),
+      "root_url": site_root_absolute_url,
       "relative_url": traversed_document.getRelativeUrl(),
       "script_id": script.id
     },
@@ -644,6 +645,10 @@ else:
   site_root = portal
   view_action_type = "object_view"
 
+site_root_absolute_url = site_root.absolute_url()
+if not site_root_absolute_url.endswith("/"):
+  site_root_absolute_url += "/"
+
 context.Base_prepareCorsResponse(RESPONSE=response)
 
 # Check if traversed_document is the site_root
@@ -681,7 +686,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # Always inform about site root
       "site_root": {
         "href": default_document_uri_template % {
-          "root_url": site_root.absolute_url(),
+          "root_url": site_root_absolute_url,
           "relative_url": site_root.getRelativeUrl(),
           "script_id": script.id
         },
@@ -708,7 +713,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       response.setHeader(
         'WWW-Authenticate',
         'X-Delegate uri="%s"' % (url_template_dict["login_template"] % {
-          "root_url": site_root.absolute_url(),
+          "root_url": site_root_absolute_url,
           "login": login_relative_url
         })
       )
@@ -736,7 +741,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     if not is_portal:
       result_dict['_links']['type'] = {
         "href": default_document_uri_template % {
-          "root_url": site_root.absolute_url(),
+          "root_url": site_root_absolute_url,
           "relative_url": portal.portal_types[traversed_document.getPortalType()]\
                             .getRelativeUrl(), 
           "script_id": script.id
@@ -751,7 +756,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # Jio does not support fetching the root document for now
         result_dict['_links']['parent'] = {
           "href": default_document_uri_template % {
-            "root_url": site_root.absolute_url(),
+            "root_url": site_root_absolute_url,
             "relative_url": container.getRelativeUrl(), 
             "script_id": script.id
           },
@@ -780,7 +785,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         if erp5_action_key in (view_action_type, "view", "workflow", "object_new_content_action", "object_clone_action", "object_delete_action", "object_report_jio", "object_exchange_jio", "object_fast_input_jio", "object_search_jio", "object_action_jio"):
 
           erp5_action_list[-1]['href'] = url_template_dict["traverse_generator"] % {
-                "root_url": site_root.absolute_url(),
+                "root_url": site_root_absolute_url,
                 "script_id": script.id,
                 "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
                 "view": erp5_action_list[-1]['name']
@@ -909,7 +914,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
   #     }
       result_dict['_links']['raw_search'] = {
         "href": url_template_dict["search_template"] % {
-          "root_url": site_root.absolute_url(),
+          "root_url": site_root_absolute_url,
           "script_id": script.id
         },
         'name': 'Raw Search',
@@ -917,7 +922,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       }
       result_dict['_links']['traverse'] = {
         "href": url_template_dict["traverse_template"] % {
-          "root_url": site_root.absolute_url(),
+          "root_url": site_root_absolute_url,
           "script_id": script.id
         },
         'name': 'Traverse',
@@ -925,7 +930,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       }
       action_dict['add'] = {
         "href": url_template_dict["new_content_action"] % {
-          "root_url": site_root.absolute_url(),
+          "root_url": site_root_absolute_url,
           "script_id": script.id
         },
         'method': 'POST',
@@ -933,7 +938,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       }
       action_dict['bulk'] = {
         "href": url_template_dict["bulk_action"] % {
-          "root_url": site_root.absolute_url(),
+          "root_url": site_root_absolute_url,
           "script_id": script.id
         },
         'method': 'POST',
@@ -945,7 +950,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       if person is not None:
         result_dict['_links']['me'] = {
           "href": default_document_uri_template % {
-            "root_url": site_root.absolute_url(),
+            "root_url": site_root_absolute_url,
             "relative_url": person.getRelativeUrl(), 
             "script_id": script.id
           },
@@ -963,7 +968,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       elif relative_url == 'portal_workflow':
         result_dict['_links']['action_worklist'] = {
           "href": url_template_dict['worklist_template'] % {
-            "root_url": site_root.absolute_url(),
+            "root_url": site_root_absolute_url,
             "script_id": script.id
           }
         }
@@ -972,7 +977,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         if (logout_relative_url):
           result_dict['_links']['logout'] = {
             "href": url_template_dict['logout_template'] % {
-              "root_url": site_root.absolute_url(),
+              "root_url": site_root_absolute_url,
               "logout": logout_relative_url,
               "template": True
             }
@@ -1095,7 +1100,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         '_links': {
           'self': {
             "href": default_document_uri_template % {
-              "root_url": site_root.absolute_url(),
+              "root_url": site_root_absolute_url,
               # XXX ERP5 Site is not an ERP5 document
               "relative_url": getRealRelativeUrl(document) or document.getId(), 
               "script_id": script.id
@@ -1170,7 +1175,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     response.setStatus(201)
     response.setHeader("X-Location",
       default_document_uri_template % {
-        "root_url": site_root.absolute_url(),
+        "root_url": site_root_absolute_url,
         "relative_url": document.getRelativeUrl(),
         "script_id": script.id
       })
