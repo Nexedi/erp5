@@ -397,6 +397,25 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
 
     return result
 
+  def _add_trailing_slash(self, path):
+    path += "" if path.endswith("/") else "/"
+    return path
+
+  security.declareProtected(Permissions.View, 'absolute_url_path')
+  def absolute_url_path(self):
+    absolute_url_path = self.absolute_url(relative=1)
+    if not absolute_url_path.startswith("/"):
+      absolute_url_path = "/" + absolute_url_path
+    return absolute_url_path
+
+  security.declareProtected(Permissions.View, 'absolute_url')
+  def absolute_url(self, relative=0):
+    """
+      Return absolute_url with / in the end to avoid redirections when
+      accessing Web sections. Please check the method WebSection.__call__
+    """
+    return self._add_trailing_slash(Domain.absolute_url(self, relative=relative))
+
   security.declareProtected(Permissions.View, 'getSiteMapTree')
   def getSiteMapTree(self, **kw):
     """
