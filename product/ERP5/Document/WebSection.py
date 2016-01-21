@@ -226,6 +226,14 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
       if self.REQUEST.get(self.web_section_key, MARKER) is MARKER:
         self.REQUEST[self.web_section_key] = self.getPhysicalPath()
       self.REQUEST.set('current_web_section', self)
+
+      actual_url = self.REQUEST.get("ACTUAL_URL", "").strip()
+      if actual_url and actual_url in actual_url and not actual_url.endswith("/"):
+        query_string = self.REQUEST.get("QUERY_STRING", "")
+        query_str = "?%s" % query_string if query_string else query_string
+        return self.REQUEST.RESPONSE.redirect(
+          "".join([actual_url, "/", query_str]))
+
       if not self.REQUEST.get('editable_mode') and not self.REQUEST.get('ignore_layout'):
         document = None
         if self.isDefaultPageDisplayed():
@@ -402,6 +410,23 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         cache[key] = result
 
       return result
+
+    def _add_trailing_slash(self, path):
+      path += "" if path.endswith("/") else "/"
+      return path
+
+    def absolute_url_path(self):
+      absolute_url_path = self.absolute_url(relative=1)
+      if not absolute_url_path.startswith("/"):
+        absolute_url_path = "/" + absolute_url_path
+      return absolute_url_path
+
+    def absolute_url(self, relative=0):
+      """
+        Return absolute_url with / in the end to avoid redirections when
+        accessing Web sections. Please check the method WebSection.__call__
+      """
+      return self._add_trailing_slash(Domain.absolute_url(self, relative=relative))
 
     security.declareProtected(Permissions.View, 'getSiteMapTree')
     def getSiteMapTree(self, **kw):
