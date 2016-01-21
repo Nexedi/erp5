@@ -107,7 +107,6 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-\n
 /*! URI.js v1.12.0 http://medialize.github.com/URI.js/ */\n
 /* build contains: IPv6.js, punycode.js, SecondLevelDomains.js, URI.js, URI.fragmentQuery.js */\n
 (function(e,k){"object"===typeof exports?module.exports=k():"function"===typeof define&&define.amd?define(k):e.IPv6=k(e)})(this,function(e){var k=e&&e.IPv6;return{best:function(e){e=e.toLowerCase().split(":");var k=e.length,d=8;""===e[0]&&""===e[1]&&""===e[2]?(e.shift(),e.shift()):""===e[0]&&""===e[1]?e.shift():""===e[k-1]&&""===e[k-2]&&e.pop();k=e.length;-1!==e[k-1].indexOf(".")&&(d=7);var g;for(g=0;g<k&&""!==e[g];g++);if(g<d)for(e.splice(g,1,"0000");e.length<d;)e.splice(g,0,"0000");for(g=0;g<d;g++){for(var k=\n
@@ -9136,16 +9135,25 @@ return new Parser;\n
       .push(function (evt) {\n
         var form_data = JSON.parse(evt.target.result),\n
           data = new FormData(),\n
+          array,\n
           i,\n
-          key;\n
+          key,\n
+          value;\n
         for (key in form_data) {\n
           if (form_data.hasOwnProperty(key)) {\n
             if (Array.isArray(form_data[key])) {\n
-              for (i = 0; i < form_data[key].length; i += 1) {\n
-                data.append(key, form_data[key][i]);\n
-              }\n
+              array = form_data[key];\n
             } else {\n
-              data.append(key, form_data[key]);\n
+              array = [form_data[key]];\n
+            }\n
+            for (i = 0; i < array.length; i += 1) {\n
+              value = array[i];\n
+              if (typeof value === "object") {\n
+                data.append(key, jIO.util.dataURItoBlob(value.url),\n
+                            value.file_name);\n
+              } else {\n
+                data.append(key, value);\n
+              }\n
             }\n
           }\n
         }\n
@@ -11099,8 +11107,7 @@ return new Parser;\n
 \n
   jIO.addStorage(\'websql\', WebSQLStorage);\n
 \n
-}(jIO, RSVP, Blob, openDatabase));\n
-
+}(jIO, RSVP, Blob, openDatabase));
 
 ]]></string> </value>
         </item>
@@ -11237,7 +11244,7 @@ return new Parser;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.39047.2997.52514</string> </value>
+                <value> <string>948.40455.21934.24285</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -11255,7 +11262,7 @@ return new Parser;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453304148.91</float>
+                        <float>1453389823.29</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
