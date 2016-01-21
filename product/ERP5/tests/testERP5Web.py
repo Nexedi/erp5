@@ -236,6 +236,60 @@ class TestERP5Web(ERP5TypeTestCase):
 
     return webpage_list
 
+  def test_WebSection_add_trailing_slash_in_url(self):
+    """
+     When accessing an ERP5 web section without a trailing / in the URL, the
+     browser will calculate absolute URL from the parent document and not the web
+     site itself.
+
+     Example:
+      In http://foo.com/web_site_module/bar , the relative URL couscous.js will
+      be resolved http://foo.com/web_site_module/couscous.js If couscous.js is a
+      document from DMS (Web Page for example), such URL can not be resolved and
+      leads to a 404 error.
+
+     One solution to solve this is to redirect (302) the browser when accessing a
+     Web Section (Web Site is a web section) directly in ERP5.
+     Example:
+      http://foo.com/web_site_module/bar -> http://foo.com/web_site_module/bar/
+      But http://foo.com/web_site_module/bar/view should not redirect
+    """
+    # Web Site as context
+    website = self.setupWebSite()
+    response = self.publish(website.absolute_url_path()[:-1])
+    self.assertEqual(MOVED_TEMPORARILY, response.status)
+    response = self.publish(
+      "%s?ignore_layout:int=1" % website.absolute_url_path()[:-1])
+    self.assertEqual("%s?ignore_layout:int=1" % website.absolute_url(),
+      response.headers.get("location"))
+    self.assertEqual(MOVED_TEMPORARILY, response.status)
+    response = self.publish(
+      "%s/getTitle?ignore_layout:int=1" % website.absolute_url_path())
+    self.assertEqual(HTTP_OK, response.status)
+    self.assertEqual("test", response.body)
+    response = self.publish(
+      "%s/getTitle" % website.absolute_url_path())
+    self.assertEqual(HTTP_OK, response.status)
+    self.assertEqual("test", response.body)
+    response = self.publish(
+      "%s/a_non_existing_page" % website.absolute_url_path())
+    self.assertEqual(404, response.status)
+    # Web Section as context
+    websection = self.setupWebSection()
+    response = self.publish(
+      "%s?ignore_layout:int=1" % websection.absolute_url_path()[:-1])
+    self.assertEqual("%s?ignore_layout:int=1" % websection.absolute_url(),
+      response.headers.get("location"))
+    self.assertEqual(MOVED_TEMPORARILY, response.status)
+    response = self.publish(
+      "%s/getTitle?ignore_layout:int=1" % websection.absolute_url_path())
+    self.assertEqual(HTTP_OK, response.status)
+    self.assertEqual("1", response.body)
+    response = self.publish(
+      "%s/getTitle" % websection.absolute_url_path())
+    self.assertEqual(HTTP_OK, response.status)
+    self.assertEqual("1", response.body)
+
   def test_01_WebSiteRecatalog(self):
     """
       Test that a recataloging works for Web Site documents
@@ -440,11 +494,12 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(web_page_en, websection.getDefaultDocumentValue())
     # and make sure that the base meta tag which is generated
     # uses the web section rather than the portal
+    self.REQUEST.set("ACTUAL_URL", websection.absolute_url())
     html_page = websection()
     from Products.ERP5.Document.Document import Document
     base_list = re.findall(Document.base_parser, str(html_page))
     base_url = base_list[0]
-    self.assertEqual(base_url, "%s/%s/" % (websection.absolute_url(),
+    self.assertEqual(base_url, "%s%s/" % (websection.absolute_url(),
                                            web_page_en.getReference()))
 
   def test_06b_DefaultDocumentForWebSite(self):
@@ -477,11 +532,12 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(web_page_en, website.getDefaultDocumentValue())
     # and make sure that the base meta tag which is generated
     # uses the web site rather than the portal
+    self.REQUEST.set("ACTUAL_URL", website.absolute_url())
     html_page = website()
     from Products.ERP5.Document.Document import Document
     base_list = re.findall(Document.base_parser, str(html_page))
     base_url = base_list[0]
-    self.assertEqual(base_url, "%s/%s/" % (website.absolute_url(), web_page_en.getReference()))
+    self.assertEqual(base_url, "%s%s/" % (website.absolute_url(), web_page_en.getReference()))
 
   def test_07_WebSection_getDocumentValueList(self):
     """ Check getting getDocumentValueList from Web Section.
@@ -861,7 +917,7 @@ Hé Hé Hé!""", page.asText().strip())
     website_relative_url = website.absolute_url(relative=1)
     website_fr = self.portal.restrictedTraverse(
       'web_site_module/%s/fr' % website_id)
-    website_relative_url_fr = '%s/fr' % website_relative_url
+    website_relative_url_fr = '%sfr/' % website_relative_url
 
     websection_id = self.setupWebSection().getId()
     websection = self.portal.restrictedTraverse(
@@ -869,7 +925,7 @@ Hé Hé Hé!""", page.asText().strip())
     websection_relative_url = websection.absolute_url(relative=1)
     websection_fr = self.portal.restrictedTraverse(
       'web_site_module/%s/fr/%s' % (website_id, websection_id))
-    websection_relative_url_fr = '%s/%s' % (website_relative_url_fr,
+    websection_relative_url_fr = '%s%s/' % (website_relative_url_fr,
                                             websection.getId())
 
     page_ref = 'foo'
