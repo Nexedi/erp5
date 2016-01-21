@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts52791583.29</string> </value>
+            <value> <string>ts53368071.05</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -35,6 +35,7 @@
 \n
     <script type="text/javascript" src="embedapi.js"></script>\n
     <script type="text/javascript">\n
+      // <!--\n
         var svgCanvas = null;\n
 \n
         function init_embed() {\n
@@ -72,6 +73,7 @@
     function saveSvg() {      \n
       svgCanvas.getSvgString()(handleSvgData);\n
     }\n
+    // -->\n
     </script>\n
 \n
 \n
@@ -91,7 +93,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1940</int> </value>
+            <value> <int>1965</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

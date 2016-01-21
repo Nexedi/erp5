@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts52850649.25</string> </value>
+            <value> <string>ts53367911.6</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -55,17 +55,17 @@ methodDraw.addExtension("Arrows", function(S) {\n
       ]\n
     };\n
     \n
-    var prefix = \'se_arrow_\';\n
+    var prefix = \'se_arrow_\', arrowprefix;\n
     if (randomize_ids) {\n
-      var arrowprefix = prefix + nonce + \'_\';\n
+      arrowprefix = prefix + nonce + \'_\';\n
     } else {\n
-      var arrowprefix = prefix;\n
+      arrowprefix = prefix;\n
     }\n
 \n
     var pathdata = {\n
       fw: {d:"m0,0l10,5l-10,5l5,-5l-5,-5z", refx:8,  id: arrowprefix + \'fw\'},\n
       bk: {d:"m10,0l-10,5l10,5l-5,-5l5,-5z", refx:2, id: arrowprefix + \'bk\'}\n
-    }\n
+    };\n
     \n
     function setArrowNonce(window, n) {\n
         randomize_ids = true;\n
@@ -294,7 +294,8 @@ methodDraw.addExtension("Arrows", function(S) {\n
         var i = selElems.length;\n
         var marker_elems = [\'line\',\'path\',\'polyline\',\'polygon\'];\n
         \n
-        while(i--) {\n
+        while(i) {\n
+          i -= 1;\n
           var elem = selElems[i];\n
           if(elem && $.inArray(elem.tagName, marker_elems) != -1) {\n
             if(opts.selectedElement && !opts.multiselected) {\n
@@ -334,7 +335,7 @@ methodDraw.addExtension("Arrows", function(S) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8060</int> </value>
+            <value> <int>8082</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
