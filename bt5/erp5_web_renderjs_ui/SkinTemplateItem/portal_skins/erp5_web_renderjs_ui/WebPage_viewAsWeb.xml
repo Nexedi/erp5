@@ -79,7 +79,7 @@ else:\n
   if (mapping_dict is not None):\n
     web_content = web_page.TextDocument_substituteTextContent(web_page, web_content, mapping_dict=mapping_dict)\n
 \n
-  content_security_policy = "default-src \'none\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' data:; script-src \'self\' \'unsafe-eval\'; style-src \'self\' \'unsafe-inline\' data:; frame-src \'self\' data:"\n
+  content_security_policy = "default-src \'self\' data: blob:"\n
   if (web_section):\n
     content_security_policy = web_section.getLayoutProperty("configuration_content_security_policy", default=content_security_policy)\n
 \n
