@@ -137,6 +137,9 @@
       var gadget = this,\n
         input = gadget.element.querySelector(\'input\'),\n
         file = input.files[0];\n
+      if (file === undefined) {\n
+        return {};\n
+      }\n
       return new RSVP.Queue()\n
         .push(function () {\n
           return jIO.util.readBlobAsDataURL(file);\n
@@ -287,7 +290,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.40339.11731.59255</string> </value>
+                <value> <string>948.41920.59644.21196</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -305,7 +308,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453389723.25</float>
+                        <float>1453476561.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
