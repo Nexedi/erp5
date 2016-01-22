@@ -156,6 +156,12 @@ html.ui-mobile body .ui-header .ui-title .ui-btn {\n
   }\n
 }\n
 \n
+/* force all code to look like code */\n
+html.ui-mobile body div pre * {\n
+  font-family: inherit;\n
+  font-size: inherit;\n
+}\n
+\n
 /* from here on in % of whatever is set above */\n
 .ui-content-header-section .ui-content-title {\n
   font-size: 500%;\n
@@ -5209,7 +5215,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.45547.56510.49527</string> </value>
+                <value> <string>948.40163.31953.33774</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -5227,8 +5233,8 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1449763104.45</float>
-                        <string>GMT</string>
+                        <float>1453373898.88</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
