@@ -118,8 +118,8 @@
 \n
     // allow external use of triggerData, so that editor gadget can save\n
     // with its own shortcuts/buttons/whatever.\n
-    .allowPublicAcquisition(\'triggerData\', function () {\n
-      this.props.element.querySelector(\'button\').click();\n
+    .allowPublicAcquisition(\'triggerSubmit\', function () {\n
+      this.triggerSubmit();\n
     })\n
 \n
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
@@ -135,39 +135,26 @@
         format = \'text\';\n
       gadget.props.position = options.position || \'/\';\n
       gadget.props.resourceName = options.resource;\n
-      if (gadget.props.resourceName.endsWith(\'.txt\') ||\n
-          gadget.props.resourceName.endsWith(\'.html\')) {\n
-        return gadget.jio_getAttachment(gadget.props.position,\n
-                                        gadget.props.resourceName,\n
-                                        {format: format})\n
-          .push(function (data) {\n
-            // XXX: declare gadget here instead?\n
-            return gadget.getDeclaredGadget(\'codemirror\')\n
-              .push(function (editorGadget) {\n
-                gadget.props.editorGadget = editorGadget;\n
-                return editorGadget.render({\n
-                  data: data,\n
-                  resource: gadget.props.resourceName\n
-                });\n
+      return gadget.jio_getAttachment(gadget.props.position,\n
+                                      gadget.props.resourceName,\n
+                                      {format: format})\n
+        .push(function (data) {\n
+          return gadget.getDeclaredGadget(\'codemirror\')\n
+            .push(function (editorGadget) {\n
+              gadget.props.editorGadget = editorGadget;\n
+              return editorGadget.render({\n
+                data: data,\n
+                resource: gadget.props.resourceName\n
               });\n
-          })\n
-\n
-          .push(function () {\n
-            return gadget.updateHeader({\n
-              title: \'Editing \' + gadget.props.resourceName +\n
-                     \' at \' + gadget.props.position,\n
-              save_action: true\n
             });\n
-          });\n
-      }\n
+        })\n
 \n
-      // otherwise: unsupported format\n
-      return gadget.getDeclaredGadget(\'codemirror\')\n
-        .push(function (editorGadget) {\n
-          gadget.props.element.querySelector(\'.message\').textContent =\n
-            \'Format not supported (yet?).\';\n
-          // hide device if not considered editable\n
-          editorGadget.props.element.className = \'ui-screen-hidden\';\n
+        .push(function () {\n
+          return gadget.updateHeader({\n
+            title: \'Editing \' + gadget.props.resourceName +\n
+                   \' at \' + gadget.props.position,\n
+            save_action: true\n
+          });\n
         });\n
     })\n
 \n
@@ -334,7 +321,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.35950.62357.43776</string> </value>
+                <value> <string>948.41958.9547.3754</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -352,7 +339,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453137582.16</float>
+                        <float>1453478990.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

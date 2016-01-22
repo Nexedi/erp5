@@ -271,6 +271,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_content_security_policy</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -316,6 +326,10 @@
         <item>
             <key> <string>configuration_application_title</string> </key>
             <value> <string>ERP5</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_content_security_policy</string> </key>
+            <value> <string>default-src \'none\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 data:; script-src \'self\' \'unsafe-eval\'; style-src \'self\' \'unsafe-inline\' https://netdna.bootstrapcdn.com data:; frame-src \'self\' data: ; font-src \'self\' https://netdna.bootstrapcdn.com</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -592,7 +606,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.8646.48310.4590</string> </value>
+                <value> <string>948.37660.22124.61781</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -610,7 +624,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451480729.71</float>
+                        <float>1453220992.18</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

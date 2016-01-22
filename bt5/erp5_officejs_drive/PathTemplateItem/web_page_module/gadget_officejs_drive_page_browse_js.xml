@@ -130,39 +130,112 @@
     .declareAcquiredMethod("jio_allAttachments", "jio_allAttachments")\n
     .declareAcquiredMethod("redirect", "redirect")\n
 \n
+    .declareMethod("parse", function (text) {\n
+      //XXX use jison here instead of parsing manually\n
+      var command,\n
+        args = text.split(\' \'),\n
+        index;\n
+      // command is the first token\n
+      command = args.shift();\n
+      index = args.length;\n
+\n
+      /* begin from the end because removing some values from the list\n
+         while looping */\n
+      while (index--) {\n
+        // only keep useful args (no options, no emtpy string)\n
+        if (args[index] === \'\' || args[index].startsWith(\'-\')) {\n
+          args.splice(index, 1);\n
+        }\n
+      }\n
+      return {command: command, args: args};\n
+    })\n
+\n
+    .declareMethod("browse", function (command, args) {\n
+      var gadget = this,\n
+        position = args[0].split(\'/\'),\n
+        resource = position.pop();\n
+\n
+      function absolutePosition(current, requested) {\n
+        var pos;\n
+        if (requested.startsWith(\'/\')) {\n
+          pos = \'/\' + requested + \'/\';\n
+        } else {\n
+          pos = \'/\' + current + \'/\' + requested + \'/\';\n
+        }\n
+        return pos.replace(/\\/+/g, \'/\');\n
+      }\n
+\n
+      // if command given: proceed\n
+      if (command) {\n
+        switch (command) {\n
+        case \'cd\':\n
+        case \'ls\':\n
+          if (args.length === 1) {\n
+            return gadget.redirect({\n
+              position: absolutePosition(gadget.props.currentPosition, args[0])\n
+            });\n
+          }\n
+          throw (\'Usage of \' + command + \' requires a single argument.\');\n
+\n
+        case \'vim\':\n
+        case \'vi\':\n
+          if (args.length === 1) {\n
+            return gadget.redirect({\n
+              page: \'edit\',\n
+              position: absolutePosition(\n
+                gadget.props.currentPosition,\n
+                position.join(\'/\')\n
+              ),\n
+              resource: resource\n
+            });\n
+          }\n
+          throw (\'Usage of \' + command + \' requires a single argument.\');\n
+        default:\n
+          throw (\'Unknown command: \' + command);\n
+        }\n
+      }\n
+    })\n
 \n
     .declareMethod("render", function (options) {\n
       var gadget = this,\n
-        ul = gadget.props.element.querySelector(\'ul\'),\n
-        position = options.position || \'/\';\n
+        ul = gadget.props.element.querySelector(\'ul\');\n
 \n
-      if (!position.startsWith(\'/\')) {\n
-        position = \'/\' + position;\n
+      // redirect to root if no position given\n
+      if (!options.position) {\n
+        return gadget.redirect({\n
+          position: \'/\'\n
+        });\n
       }\n
-      if (!position.endsWith(\'/\')) {\n
-        position += \'/\';\n
-      }\n
-\n
-      gadget.props.element.querySelector(\'input\').value = position;\n
+      gadget.props.currentPosition = options.position;\n
+      gadget.props.element.querySelector(\'input\').value = \'\';\n
+      gadget.props.element.querySelector(\'.position\').value = options.position;\n
 \n
       // clean previous ul children\n
       while (ul.hasChildNodes()) {\n
         ul.removeChild(ul.firstChild);\n
       }\n
 \n
-      return gadget.jio_allAttachments(position)\n
+      return gadget.jio_allAttachments(options.position)\n
         .push(function (all) {\n
           var key,\n
             li,\n
-            link;\n
+            liContent,\n
+            resourceName;\n
           for (key in all) {\n
             if (all.hasOwnProperty(key)) {\n
               li = document.createElement(\'li\');\n
-              link = document.createElement(\'a\');\n
-              link.setAttribute(\'href\', \'#page=edit&resource=\' +\n
-                                key + \'&position=\' + position);\n
-              link.appendChild(document.createTextNode(key));\n
-              li.appendChild(link);\n
+              resourceName = document.createTextNode(key);\n
+              if (key.endsWith(\'.txt\') || key.endsWith(\'.js\') ||\n
+                  key.endsWith(\'.html\') || key.endsWith(\'.py\')) {\n
+                liContent = document.createElement(\'a\');\n
+\n
+                liContent.setAttribute(\'href\', \'#page=edit&resource=\' +\n
+                                  key + \'&position=\' + options.position);\n
+                liContent.appendChild(resourceName);\n
+              } else {\n
+                liContent = resourceName;\n
+              }\n
+              li.appendChild(liContent);\n
               ul.appendChild(li);\n
             }\n
           }\n
@@ -179,9 +252,13 @@
             \'submit\',\n
             true,\n
             function () {\n
-              gadget.redirect(\n
-                {position: gadget.props.element.querySelector(\'input\').value}\n
-              );\n
+              var input = gadget.props.element.querySelector(\'input\');\n
+              return gadget.parse(input.value)\n
+                .push(function (fullCommand) {\n
+                  var args = fullCommand.args,\n
+                    command = fullCommand.command;\n
+                  gadget.browse(command, args);\n
+                });\n
             }\n
           );\n
         });\n
@@ -326,7 +403,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.30407.28943.54340</string> </value>
+                <value> <string>948.41948.13894.58197</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -344,7 +421,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453118514.19</float>
+                        <float>1453478465.02</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
