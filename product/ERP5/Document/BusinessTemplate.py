@@ -1744,7 +1744,7 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
       xml_data += '\n <skin_folder_selection>'
       xml_data += '\n  <skin_folder>%s</skin_folder>' % key
       xml_data += '\n  <skin_selection>%s</skin_selection>' \
-                      % ','.join(skin_selection_list)
+                      % ','.join(sorted(skin_selection_list))
       xml_data += '\n </skin_folder_selection>'
     xml_data += '\n</registered_skin_selection>'
     return xml_data
