@@ -36,6 +36,11 @@ class TestERP5Administration(InventoryAPITestCase):
   def getTitle(self):
     return "ERP5Administration"
 
+  def beforeTearDown(self):
+    # InventoryAPITestCase.beforeTearDown clears everything.
+    # We do not want this on a ZODB test.
+    pass
+
   def getBusinessTemplateList(self):
     """
         Same list as for Inventory API and add erp5_administration
@@ -107,9 +112,7 @@ class TestERP5Administration(InventoryAPITestCase):
     self.tic()
     self.assertEqual('3', person.title)
 
-
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Administration))
   return suite
-
