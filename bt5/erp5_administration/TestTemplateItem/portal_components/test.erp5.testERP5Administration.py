@@ -112,6 +112,20 @@ class TestERP5Administration(InventoryAPITestCase):
     self.tic()
     self.assertEqual('3', person.title)
 
+  def test_missing_category_document_constraint(self):
+    person = self.portal.person_module.newContent(portal_type='Person')
+    # This category does not exist
+    person.setGroup('not/exist')
+
+    # constraint reports one error
+    consistency_error, = self.portal.portal_trash.newContent(
+      portal_type='Missing Category Document Constraint',
+      temp_object=True,
+    ).checkConsistency(person)
+    self.assertEquals(
+      'Category group/not/exist on object %s is missing.' % person.getRelativeUrl(),
+      str(consistency_error.getTranslatedMessage()))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Administration))
