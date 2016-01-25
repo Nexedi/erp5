@@ -53,6 +53,7 @@
             <value> <string>from Products.ERP5Type.Constraint import PropertyTypeValidity\n
 from Products.CMFActivity.ActiveResult import ActiveResult\n
 \n
+portal = context.getPortalObject()\n
 constraint_message_list = []\n
 \n
 if context.providesIConstraint():\n
@@ -60,14 +61,17 @@ if context.providesIConstraint():\n
   # of this name implement consistency checking on object\n
   return constraint_message_list\n
 \n
-traverse = context.getPortalObject().restrictedTraverse\n
+missing_category_document = portal.portal_trash.newContent(\n
+  portal_type=\'Missing Category Document Constraint\',\n
+  temp_object=True)\n
 property_type_validity = PropertyTypeValidity(id=\'type_check\', description=\'Type Validity Check\')\n
 \n
 constraint_message_list.extend(context.checkConsistency(fixit=fixit))\n
 constraint_message_list.extend(property_type_validity.checkConsistency(context, fixit=fixit))\n
+constraint_message_list.extend(missing_category_document.checkConsistency(context, fixit=fixit))\n
 \n
 if constraint_message_list:\n
-  traverse(active_process).postResult(ActiveResult(severity=100,\n
+  portal.restrictedTraverse(active_process).postResult(ActiveResult(severity=100,\n
                       constraint_message_list=constraint_message_list))\n
 </string> </value>
         </item>
