@@ -129,7 +129,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.Event_getNotificationMessageItemList(response_only=True)</string> </value>
+            <value> <string>python: context.Event_getNotificationMessageItemList(response_only=request.get(\'notification_message_response_only\', False))</string> </value>
         </item>
       </dictionary>
     </pickle>
