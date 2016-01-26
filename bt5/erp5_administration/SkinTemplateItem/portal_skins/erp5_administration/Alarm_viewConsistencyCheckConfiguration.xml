@@ -80,6 +80,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
+                        <string>my_incremental_check</string>
                         <string>my_catalog_query_string</string>
                         <string>my_module_list</string>
                       </list>
