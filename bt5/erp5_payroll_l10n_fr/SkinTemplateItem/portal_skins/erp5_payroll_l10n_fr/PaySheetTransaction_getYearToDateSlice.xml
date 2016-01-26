@@ -64,6 +64,7 @@ search_params = {\n
     \'portal_type\'         : \'Pay Sheet Transaction\',\n
     \'delivery.start_date\' : {\'range\': "minmax", \'query\': (from_date, to_date)},\n
     \'delivery.source_section_uid\' : context.getSourceSectionUid(),\n
+    \'delivery.destination_section_uid\' : context.getDestinationSectionUid(),\n
     \'simulation_state\'    : [\'stopped\', \'delivered\'],\n
 }\n
 \n

@@ -223,16 +223,24 @@ def unicodeDict(d):\n
   return d\n
 \n
 source_section = paysheet.getSourceSectionValue()\n
+career_args = {\'portal_type\': \'Career\',\n
+               \'parent_uid\': source_section.getUid(),\n
+               \'subordination_uid\': paysheet.getDestinationSectionUid(),\n
+               \'validation_state\': \'open\'}\n
+source_section_career_results = portal.portal_catalog(**career_args)\n
+\n
+source_section_career = (source_section_career_results[0].getObject()\n
+                         if len(source_section_career_results)\n
+                         else source_section.getDefaultCareerValue() or \'\')\n
 \n
 data_dict = {\n
   \'source_section_title\': source_section.getProperty(\'corporate_name\') or\\\n
                             source_section.getTitle(),\n
-  \'source_section_career_title\': getCareerId(paysheet.getSourceSectionValue() is not None\\\n
-          and source_section.getProperty(\'default_career_title\') or \'\'),\n
+  \'source_section_career_title\': getCareerId(source_section_career.getTitle()),\n
   \'source_section_default_career_start_date\': getHiringDateId(paysheet.getSourceSectionValue() is not None\\\n
-          and getOrderedDate(source_section.getProperty(\'default_career_start_date\')) or \'\'),\n
+          and getOrderedDate(source_section_career.getStartDate()) or \'\'),\n
   \'source_section_default_career_stop_date\': paysheet.getSourceSectionValue() is not None\\\n
-          and getOrderedDate(source_section.getProperty(\'default_career_stop_date\')) or \'\',\n
+          and getOrderedDate(source_section_career.getStopDate()) or \'\',\n
   \'source_section_default_career_coefficient\' : getCareerCoefficientId(paysheet.getSourceSectionValue() is not None\\\n
           and source_section.getProperty(\'career_salary_coefficient\') or \'\'),\n
   \'source_section_default_career_salary_level\' : getSalaryLevelId(paysheet.getSourceSectionValue() is not None\\\n
