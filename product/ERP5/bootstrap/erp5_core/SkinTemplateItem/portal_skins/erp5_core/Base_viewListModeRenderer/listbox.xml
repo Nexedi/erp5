@@ -162,7 +162,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>request/proxy_field_id | python: context.portal_selections.getSelectionParamsFor(\'list_mode_proxy_selection\').get(\'proxy_field_id\', \'listbox\')</string> </value>
+            <value> <string>request/proxy_field_id | python: context.portal_selections.getSelectionParamsFor(\'%s_list_mode_proxy_selection\' % context.REQUEST.get(\'selection_name\', \'\')).get(\'proxy_field_id\', \'listbox\')</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -175,7 +175,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>request/proxy_form_id | python: context.portal_selections.getSelectionParamsFor(\'list_mode_proxy_selection\').get(\'proxy_form_id\', \'Folder_viewContentList\')</string> </value>
+            <value> <string>request/proxy_form_id | python: context.portal_selections.getSelectionParamsFor(\'%s_list_mode_proxy_selection\' % context.REQUEST.get(\'selection_name\', \'\')).get(\'proxy_form_id\', \'Folder_viewContentList\')</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -201,7 +201,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>request/proxy_form_id | python: context.portal_selections.getSelectionParamsFor(\'list_mode_proxy_selection\').get(\'proxy_form_id\', \'Folder_viewContentList\')</string> </value>
+            <value> <string>request/proxy_form_id | python: context.portal_selections.getSelectionParamsFor(\'%s_list_mode_proxy_selection\' % context.REQUEST.get(\'selection_name\', \'\')).get(\'proxy_form_id\', \'Folder_viewContentList\')</string> </value>
         </item>
       </dictionary>
     </pickle>
