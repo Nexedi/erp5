@@ -1182,6 +1182,7 @@ class Base( CopyContainer,
     If an accessor exists for this property, the accessor will be called,
     default value will be passed to the accessor as first positional argument.
     """
+    __traceback_info__ = (key,)
     accessor_name = 'get' + UpperCase(key)
     aq_self = aq_base(self)
     if getattr(aq_self, accessor_name, None) is not None:
