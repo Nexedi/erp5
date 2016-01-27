@@ -101,7 +101,7 @@ class Transformation(MappedValue, VariatedMixin, Amount, AmountGeneratorMixin):
     def getQuantity(self, default=None):
       # Used for amount generation
       # (Transformation is defined for 1 unit of target resource)
-      return 1
+      return 1.
 
     # Predicate Value implementation
     #   asPredicate takes into account the resource
