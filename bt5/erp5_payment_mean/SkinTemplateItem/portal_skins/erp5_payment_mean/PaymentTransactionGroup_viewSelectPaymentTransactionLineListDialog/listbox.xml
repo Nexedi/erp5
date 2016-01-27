@@ -686,7 +686,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string:Base_viewListMode?proxy_form_id=${form/getId}&proxy_field_id=${field/getId}
+string:Base_viewListMode?proxy_form_id=${form/getId}&proxy_field_id=${field/getId}&proxy_field_selection_name=${field/selection_name}
 
 ]]></string> </value>
         </item>
