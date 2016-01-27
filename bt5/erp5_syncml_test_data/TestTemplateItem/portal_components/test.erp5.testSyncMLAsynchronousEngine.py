@@ -77,7 +77,9 @@ class testSyncMLAsynchronousEngine(TestERP5SyncMLMixin):
                                              "not_running"):
       self.sub.finish()
     # Use url of the current site
-    self.updateSynchronizationURL(object_list = [self.pub, self.sub])
+    self.updateSynchronizationURL(
+      url=self.portal.absolute_url().replace('//', '//syncml:syncml@'),
+      object_list = [self.pub, self.sub])
     # Update authentication
     user = password = "syncml"
     self.addSynchronizationUser(user, password)
