@@ -207,6 +207,7 @@ class SyncMLSubscription(XMLObject):
     """
     return "%s%%" % (self.getSourceValue().getPath().replace("_","\_"),)
 
+  security.declarePrivate('sendSyncCommand')
   def sendSyncCommand(self, min_gid, max_gid, message_id, activate_kw):
     """
     This methods is intented to be called by asynchronous engine in activity to
@@ -670,6 +671,7 @@ class SyncMLSubscription(XMLObject):
     self.activate(**final_activate_kw).sendMessage(xml=str(syncml_response))
 
 
+  security.declarePrivate('getDeletedSyncMLData')
   def getDeletedSyncMLData(self, syncml_response=None):
     """
     Retrieve & generate the syncml message for messages that were deleted

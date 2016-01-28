@@ -61,6 +61,8 @@ class IntegrationSite(Folder):
                       )
 
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getCategoryFromMapping')
   def getCategoryFromMapping(self, category, product=None, create_mapping=False,
                              create_mapping_line=False):
     """
@@ -144,6 +146,8 @@ class IntegrationSite(Folder):
       raise ValueError, "Mapping not defined for %s" % category
     return mapped_variation_category[-1]
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getMappingFromCategory')
   def getMappingFromCategory(self, category):
     """
       This method allows to retrieve through the mapping in the integration
@@ -180,6 +184,8 @@ class IntegrationSite(Folder):
       # individual variation
       return '/'.join([mapping.getSourceReference(), variation])
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getMappingFromProperty')
   def getMappingFromProperty(self, base_mapping, property_name):
     """
       This method allows to retrieve throuhh the mapping in the integration
