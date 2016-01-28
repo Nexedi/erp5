@@ -175,7 +175,7 @@
           field_json = result;\n
           return gadget.declareGadget(field_json.url, {\n
             scope: field_json.key,\n
-            sandbox: field_json.sandbox,\n
+            sandbox: field_json.sandbox || undefined,\n
             element: gadget_element\n
           });\n
         })\n
@@ -336,7 +336,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.39131.50045.63214</string> </value>
+                <value> <string>948.41569.55434.38451</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -354,7 +354,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453310168.81</float>
+                        <float>1453977502.69</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
