@@ -363,6 +363,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_content_security_policy</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -397,12 +407,17 @@
             <value>
               <tuple>
                 <string>aggregate/web_page_module/rjs_gadget_erp5_html</string>
+                <string>caching_policy/must-revalidate</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>configuration_application_title</string> </key>
             <value> <string>Gadget Interface Validator</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_content_security_policy</string> </key>
+            <value> <string>default-src \'none\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' data:; script-src \'self\' \'unsafe-eval\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -478,7 +493,7 @@
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
-            <value> <string>WebSection_viewHateoasPreference</string> </value>
+            <value> <string>WebSection_viewRenderJSPreference</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -741,7 +756,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.44751.34537.43673</string> </value>
+                <value> <string>948.50251.37668.4232</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -759,7 +774,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446476438.92</float>
+                        <float>1453976386.25</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
