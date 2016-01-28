@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts53132999.51</string> </value>
+            <value> <string>ts54008804.35</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2158117</int> </value>
+            <value> <int>2158105</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -54,7 +54,7 @@
  *\n
  * http://www.onlyoffice.com \n
  *\n
- * Version: 3.0.0 (build:864, rev:cb3d33b\n
+ * Version: 3.0.0 (build:866, rev:cb3d33b\n
 , date:Fri Dec 18 22:30:55 2015 +0300\n
 )\n
  */\n
@@ -4371,7 +4371,7 @@ jQuery.Callbacks = function( options ) {\n
 \t\t\t\t}\n
 \t\t\t\treturn this;\n
 \t\t\t},\n
-\t\t\t// Call all the callbacks with the gi
+\t\t\t// Call all the callbacks
 
 ]]></string> </value>
         </item>
@@ -4394,7 +4394,7 @@ jQuery.Callbacks = function( options ) {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-ven arguments\n
+ with the given arguments\n
 \t\t\tfire: function() {\n
 \t\t\t\tself.fireWith( this, arguments );\n
 \t\t\t\treturn this;\n
@@ -6780,7 +6780,7 @@ var rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\\w:]+)[^
 \trtagName = /<([\\w:]+)/,\n
 \trhtml = /<|&#?\\w+;/,\n
 \trnoInnerhtml = /<(?:script|style|link)/i,\n
-\tmanipulation_rche
+\tmanip
 
 ]]></string> </value>
         </item>
@@ -6803,7 +6803,7 @@ var rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\\w:]+)[^
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-ckableType = /^(?:checkbox|radio)$/i,\n
+ulation_rcheckableType = /^(?:checkbox|radio)$/i,\n
 \t// checked="checked" or checked\n
 \trchecked = /checked\\s*(?:[^=]|=\\s*.checked.)/i,\n
 \trscriptType = /^$|\\/(?:java|ecma)script/i,\n
@@ -9186,7 +9186,7 @@ jQuery.ajaxTransport(function( options ) {\n
 \t\t\t\t// For cross-domain requests, seeing as conditions for a preflight are\n
 \t\t\t\t// akin to a jigsaw puzzle, we simply never set it to be sure.\n
 \t\t\t\t// (it can always be set on a per-request basis or even using ajaxSetup)\n
-\t\t\t\t// For same-dom
+\t\t\t\t// 
 
 ]]></string> </value>
         </item>
@@ -9209,7 +9209,7 @@ jQuery.ajaxTransport(function( options ) {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-ain requests, won\'t change header if already provided.\n
+For same-domain requests, won\'t change header if already provided.\n
 \t\t\t\tif ( !options.crossDomain && !headers["X-Requested-With"] ) {\n
 \t\t\t\t\theaders["X-Requested-With"] = "XMLHttpRequest";\n
 \t\t\t\t}\n
@@ -11227,7 +11227,7 @@ if ( typeof window === "object" && typeof window.document === "object" ) {\n
   // Creating a Backbone.View creates its initial element outside of the DOM,\n
   // if an existing element is not provided...\n
   var View = Backbone.View = function(options) {\n
-    this.cid = _.uniqueId(\'view
+    this.cid = _.un
 
 ]]></string> </value>
         </item>
@@ -11250,7 +11250,7 @@ if ( typeof window === "object" && typeof window.document === "object" ) {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-\');\n
+iqueId(\'view\');\n
     options || (options = {});\n
     _.extend(this, _.pick(options, viewOptions));\n
     this._ensureElement();\n
@@ -13282,7 +13282,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
   }\n
 \n
   Tooltip.prototype.toggle = function (e) {\n
-    var self = e ? $(e.currentTarget)[this.type](this.getDelegateOptions()).data(\'bs.\' + this.type) : th
+    var self = e ? $(e.currentTarget)[this.type](this.getDelegateOptions()).data(\'bs.\' + thi
 
 ]]></string> </value>
         </item>
@@ -13305,7 +13305,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-is\n
+s.type) : this\n
     self.tip().hasClass(\'in\') ? self.leave(self) : self.enter(self)\n
   }\n
 \n
@@ -15113,7 +15113,7 @@ define(\'common/main/lib/view/Header\',["backbone", "text!common/main/lib/templa
             if (dc) {\r\n
                 dc.html(Common.Utils.String.htmlEncode(value));\r\n
             }\r\n
-            return
+      
 
 ]]></string> </value>
         </item>
@@ -15136,7 +15136,7 @@ define(\'common/main/lib/view/Header\',["backbone", "text!common/main/lib/templa
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
- value;\r\n
+      return value;\r\n
         },\r\n
         getDocumentCaption: function () {\r\n
             return this.documentCaption;\r\n
@@ -15159,7 +15159,7 @@ define(\'common/main/lib/view/Header\',["backbone", "text!common/main/lib/templa
             Common.Gateway.goBack(e.which == 2);\r\n
             Common.component.Analytics.trackEvent("Back to Folder");\r\n
         },\r\n
-        textBack: "Go to Documents"\r\n
+        textBack: "==="\r\n
     },\r\n
     Common.Views.Header || {}));\r\n
 });\n

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts52970863.18</string> </value>
+            <value> <string>ts54012564.88</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2069588</int> </value>
+            <value> <int>2069651</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -54,7 +54,7 @@
  *\n
  * http://www.onlyoffice.com \n
  *\n
- * Version: 3.0.0 (build:765, rev:cb3d33b\n
+ * Version: 3.0.0 (build:769, rev:cb3d33b\n
 , date:Fri Dec 18 22:30:55 2015 +0300\n
 )\n
  */\n
@@ -3536,7 +3536,8 @@ Expr = Sizzle.selectors = {\n
 \t\t"text": function( elem ) {\n
 \t\t\tvar attr;\n
 \t\t\t// IE6 and 7 will map elem.type to \'text\' for new HTML5 types (search, etc)\n
-\t\t\t// use getAttribute i
+\t\t\t// use getAttribute instead to test this case\n
+\t\t\treturn elem.nodeName.toLowerCase() 
 
 ]]></string> </value>
         </item>
@@ -3559,8 +3560,7 @@ Expr = Sizzle.selectors = {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-nstead to test this case\n
-\t\t\treturn elem.nodeName.toLowerCase() === "input" &&\n
+=== "input" &&\n
 \t\t\t\telem.type === "text" &&\n
 \t\t\t\t( (attr = elem.getAttribute("type")) == null || attr.toLowerCase() === elem.type );\n
 \t\t},\n
@@ -5920,7 +5920,9 @@ jQuery.event = {\n
 \t\t// Clone any incoming data and prepend the event, creating the handler arg list\n
 \t\tdata = data == null ?\n
 \t\t\t[ event ] :\n
-\t\t\tjQuery.makeArr
+\t\t\tjQuery.makeArray( data, [ event ] );\n
+\n
+\t\t// Allow special events to draw outsi
 
 ]]></string> </value>
         </item>
@@ -5943,9 +5945,7 @@ jQuery.event = {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-ay( data, [ event ] );\n
-\n
-\t\t// Allow special events to draw outside the lines\n
+de the lines\n
 \t\tspecial = jQuery.event.special[ type ] || {};\n
 \t\tif ( !onlyHandlers && special.trigger && special.trigger.apply( elem, data ) === false ) {\n
 \t\t\treturn;\n
@@ -8329,7 +8329,7 @@ jQuery.fn.load = function( url, params, callback ) {\n
 };\n
 \n
 // Attach a bunch of functions for handling common AJAX events\n
-jQuery.each( [ "ajaxStart",
+jQuery.each( [ "ajaxStart", "ajaxStop", "ajaxComplete", "ajaxError", "ajaxSuccess", "ajaxS
 
 ]]></string> </value>
         </item>
@@ -8352,7 +8352,7 @@ jQuery.each( [ "ajaxStart",
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
- "ajaxStop", "ajaxComplete", "ajaxError", "ajaxSuccess", "ajaxSend" ], function( i, type ){\n
+end" ], function( i, type ){\n
 \tjQuery.fn[ type ] = function( fn ){\n
 \t\treturn this.on( type, fn );\n
 \t};\n
@@ -10628,7 +10628,9 @@ if ( typeof window === "object" && typeof window.document === "object" ) {\n
 \n
     // Determine if the model has changed since the last `"change"` event.\n
     // If you specify an attribute name, determine if that attribute has changed.\n
-    hasChanged: function(attr) {
+    hasChanged: function(attr) {\n
+      if (attr == null) return !_.isEmpty(this.changed);\n
+     
 
 ]]></string> </value>
         </item>
@@ -10651,9 +10653,7 @@ if ( typeof window === "object" && typeof window.document === "object" ) {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-\n
-      if (attr == null) return !_.isEmpty(this.changed);\n
-      return _.has(this.changed, attr);\n
+ return _.has(this.changed, attr);\n
     },\n
 \n
     // Return an object containing all the attributes that have changed, or\n
@@ -12516,7 +12516,8 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
         || e.preventDefault()\n
         || (href = $this.attr(\'href\')) && href.replace(/.*(?=#[^\\s]+$)/, \'\') //strip for ie7\n
     var $target = $(target)\n
-    var data    =
+    var data    = $target.data(\'bs.collapse\')\n
+    var option  = data ? \'toggle\' 
 
 ]]></string> </value>
         </item>
@@ -12539,8 +12540,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
- $target.data(\'bs.collapse\')\n
-    var option  = data ? \'toggle\' : $this.data()\n
+: $this.data()\n
     var parent  = $this.attr(\'data-parent\')\n
     var $parent = parent && $(parent)\n
 \n
@@ -14386,6 +14386,9 @@ Common.Gateway = new(function () {\r\n
         "applyEditRights": function (data) {\r\n
             $me.trigger("applyeditrights", data);\r\n
         },\r\n
+        "save": function (data) {\r\n
+            $me.trigger("save", data);\r\n
+        },\r\n
         "processSaveResult": function (data) {\r\n
             $me.trigger("processsaveresult", data);\r\n
         },\r\n
@@ -14542,7 +14545,7 @@ define("gateway", ["jquery"], function(){});\n
  * logo when distributing the program. Pursuant to Section 7(e) we decline to\r\n
  * grant you any rights under trademark law for use of our trademarks.\r\n
  *\r\n
- * All the Product\'s GUI elements, including illustra
+ * All the Product\'s GUI elem
 
 ]]></string> </value>
         </item>
@@ -14565,7 +14568,7 @@ define("gateway", ["jquery"], function(){});\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-tions and icon sets, as\r\n
+ents, including illustrations and icon sets, as\r\n
  * well as technical writing content are licensed under the terms of the\r\n
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License\r\n
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode\r\n
@@ -15156,7 +15159,7 @@ define(\'common/main/lib/view/Header\',["backbone", "text!common/main/lib/templa
             Common.Gateway.goBack(e.which == 2);\r\n
             Common.component.Analytics.trackEvent("Back to Folder");\r\n
         },\r\n
-        textBack: "Go to Documents"\r\n
+        textBack: "==="\r\n
     },\r\n
     Common.Views.Header || {}));\r\n
 });\n
@@ -16142,7 +16145,7 @@ Common.Utils = new(function () {\r\n
     isSafari5_0 = isSafari && check(/version\\/5\\.0/),\r\n
     isSafari5 = isSafari && check(/version\\/5/),\r\n
     isIE = !isOpera && (check(/msie/) || check(/trident/)),\r\n
-    isIE7 = isIE && ((check(/msie 7
+    isIE7 = isIE && ((c
 
 ]]></string> </value>
         </item>
@@ -16165,7 +16168,7 @@ Common.Utils = new(function () {\r\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/) && docMode != 8 && docMode != 9 && docMode != 10) || docMode == 7),\r\n
+heck(/msie 7/) && docMode != 8 && docMode != 9 && docMode != 10) || docMode == 7),\r\n
     isIE8 = isIE && ((check(/msie 8/) && docMode != 7 && docMode != 9 && docMode != 10) || docMode == 8),\r\n
     isIE9 = isIE && ((check(/msie 9/) && docMode != 7 && docMode != 8 && docMode != 10) || docMode == 9),\r\n
     isIE10 = isIE && ((check(/msie 10/) && docMode != 7 && docMode != 8 && docMode != 9) || docMode == 10),\r\n
@@ -17710,7 +17713,7 @@ define(\'common/main/lib/component/MenuItem\',["common/main/lib/component/BaseVi
                     startCoords.pageX = touch.pageX;\r\n
                     startCoords.pageY = touch.pageY;\r\n
                     startTime = (new Date()).getTime();\r\n
-                    if (breakingProcess !== null) {\r
+                    if (breakingProcess 
 
 ]]></string> </value>
         </item>
@@ -17733,7 +17736,7 @@ define(\'common/main/lib/component/MenuItem\',["common/main/lib/component/BaseVi
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-\n
+!== null) {\r\n
                         clearInterval(breakingProcess);\r\n
                     }\r\n
                     e.stopPropagation();\r\n
@@ -19130,7 +19133,7 @@ define(\'common/main/lib/view/CopyWarningDialog\',["common/main/lib/component/Wi
                 }\r\n
                 var self = this;\r\n
                 clearTimeout(self.timeout);\r\n
-                self.t
+          
 
 ]]></string> </value>
         </item>
@@ -19153,7 +19156,7 @@ define(\'common/main/lib/view/CopyWarningDialog\',["common/main/lib/component/Wi
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-imeout = setTimeout(function () {\r\n
+      self.timeout = setTimeout(function () {\r\n
                     if (self.hoverState == "in") {\r\n
                         self.hide();\r\n
                     }\r\n
@@ -20478,7 +20481,7 @@ define(\'text!presentationeditor/main/app/template/ParagraphSettingsAdvanced.tem
  *\r\n
  * All the Product\'s GUI elements, including illustrations and icon sets, as\r\n
  * well as technical writing content are licensed under the terms of the\r\n
- * Creative Commons A
+ * Creati
 
 ]]></string> </value>
         </item>
@@ -20501,7 +20504,7 @@ define(\'text!presentationeditor/main/app/template/ParagraphSettingsAdvanced.tem
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-ttribution-ShareAlike 4.0 International. See the License\r\n
+ve Commons Attribution-ShareAlike 4.0 International. See the License\r\n
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode\r\n
  *\r\n
  */\r\n
@@ -21972,7 +21975,7 @@ define(\'common/main/lib/component/ListView\',["common/main/lib/component/DataVi
                 }\r\n
             };\r\n
             this.listenTo(this.tabList.store, "add", storechanged);\r\n
-            this.listenTo(this.tabLi
+            this.listenT
 
 ]]></string> </value>
         </item>
@@ -21995,7 +21998,7 @@ define(\'common/main/lib/component/ListView\',["common/main/lib/component/DataVi
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-st.store, "remove", storechanged);\r\n
+o(this.tabList.store, "remove", storechanged);\r\n
             this.listenTo(this.tabList.store, "reset", storechanged);\r\n
             this.radioLeft = new Common.UI.RadioBox({\r\n
                 el: $("#paragraphadv-radio-left"),\r\n
@@ -23136,7 +23139,7 @@ define(\'text!presentationeditor/main/app/template/TableSettingsAdvanced.templat
                 maxValue: 55.87,\r\n
                 minValue: 0\r\n
             });\r\n
-            this.s
+      
 
 ]]></string> </value>
         </item>
@@ -23159,7 +23162,7 @@ define(\'text!presentationeditor/main/app/template/TableSettingsAdvanced.templat
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-pnMarginTop.on("change", _.bind(function (field, newValue, oldValue, eOpts) {\r\n
+      this.spnMarginTop.on("change", _.bind(function (field, newValue, oldValue, eOpts) {\r\n
                 this._marginsChange(field, newValue, oldValue, eOpts, "cell", "Top");\r\n
                 if (this._changedProps) {\r\n
                     if (this._changedProps.get_CellMargins() === undefined) {\r\n
@@ -24410,8 +24413,7 @@ pnMarginTop.on("change", _.bind(function (field, newValue, oldValue, eOpts) {\r\
             });\r\n
             var menuHyperlinkTable = new Common.UI.MenuItem({\r\n
                 caption: me.hyperlinkText,\r\n
-                menu: new Common.UI.Menu({\r\n
-         
+                menu: new Common.UI.Menu(
 
 ]]></string> </value>
         </item>
@@ -24434,7 +24436,8 @@ pnMarginTop.on("change", _.bind(function (field, newValue, oldValue, eOpts) {\r\
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-           menuAlign: "tl-tr",\r\n
+{\r\n
+                    menuAlign: "tl-tr",\r\n
                     items: [menuEditHyperlinkTable, menuRemoveHyperlinkTable]\r\n
                 })\r\n
             });\r\n
@@ -25492,7 +25495,7 @@ define(\'common/main/lib/component/Button\',["common/main/lib/component/BaseView
                         if (me.options.hint) {\r\n
                             var tip = me.cmpEl.data("bs.tooltip");\r\n
                             if (tip) {\r\n
-             
+ 
 
 ]]></string> </value>
         </item>
@@ -25515,7 +25518,7 @@ define(\'common/main/lib/component/Button\',["common/main/lib/component/BaseView
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-                   if (tip.dontShow === undefined) {\r\n
+                               if (tip.dontShow === undefined) {\r\n
                                     tip.dontShow = true;\r\n
                                 }\r\n
                                 tip.hide();\r\n
@@ -26845,7 +26848,7 @@ define(\'common/main/lib/component/DimensionPicker\',["common/main/lib/component
                     areaUnHighLighted.width(((curColumns < me.minColumns) ? me.minColumns : ((curColumns + 1 > me.maxColumns) ? me.maxColumns : curColumns + 1)) + "em").height(((curRows < me.minRows) ? me.minRows : ((curRows + 1 > me.maxRows) ? me.maxRows : curRows + 1)) + "em");\r\n
                     rootEl.width(areaUnHighLighted.width());\r\n
                     areaStatus.html(curColumns + " x " + curRows);\r\n
-                    areaStatus.
+                   
 
 ]]></string> </value>
         </item>
@@ -26868,7 +26871,7 @@ define(\'common/main/lib/component/DimensionPicker\',["common/main/lib/component
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-width(areaUnHighLighted.width());\r\n
+ areaStatus.width(areaUnHighLighted.width());\r\n
                     me.trigger("change", me, curColumns, curRows, event);\r\n
                 }\r\n
             },\r\n
@@ -28248,7 +28251,7 @@ define(\'common/main/lib/component/SynchronizeTip\',["common/main/lib/component/
                         color: "000000",\r\n
                         effectId: 1\r\n
                     },\r\n
-                   
+       
 
 ]]></string> </value>
         </item>
@@ -28271,7 +28274,7 @@ define(\'common/main/lib/component/SynchronizeTip\',["common/main/lib/component/
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
- {\r\n
+             {\r\n
                         color: "000000",\r\n
                         effectId: 1\r\n
                     },\r\n
@@ -29646,8 +29649,7 @@ define(\'common/main/lib/component/SynchronizeTip\',["common/main/lib/component/
     PE.Views.SlideSizeSettings = Common.UI.Window.extend(_.extend({\r\n
         options: {\r\n
             width: 250,\r\n
-            header: true,\r\n
-
+            hea
 
 ]]></string> </value>
         </item>
@@ -29670,6 +29672,7 @@ define(\'common/main/lib/component/SynchronizeTip\',["common/main/lib/component/
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+der: true,\r\n
             style: "min-width: 250px;",\r\n
             cls: "modal-dlg",\r\n
             id: "window-slide-size-settings"\r\n
@@ -31016,7 +31019,7 @@ define(\'common/main/lib/component/SynchronizeTip\',["common/main/lib/component/
                     this.api.AddImage();\r\n
                 }\r\n
                 Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
-                Common.component.
+                Commo
 
 ]]></string> </value>
         </item>
@@ -31039,7 +31042,7 @@ define(\'common/main/lib/component/SynchronizeTip\',["common/main/lib/component/
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Analytics.trackEvent("ToolBar", "Image");\r\n
+n.component.Analytics.trackEvent("ToolBar", "Image");\r\n
             } else {\r\n
                 var me = this;\r\n
                 (new Common.Views.ImageFromUrlDialog({\r\n
@@ -32242,8 +32245,7 @@ define(\'text!presentationeditor/main/app/template/ImageSettingsAdvanced.templat
                 }) + "</div>", "</div>", \'<div class="separator horizontal"/>\', \'<div class="footer center">\', \'<button class="btn normal dlg-btn primary" result="ok" style="margin-right: 10px;  width: 86px;">\' + this.okButtonText + "</button>", \'<button class="btn normal dlg-btn" result="cancel" style="width: 86px;">\' + this.cancelButtonText + "</button>", "</div>"].join("")\r\n
             },\r\n
             options);\r\n
-            Common.Views.AdvancedSettingsWindow.prototype.initialize.call(this, this.options);\r\n
-   
+            Common.Views.AdvancedSettingsWindow.prototype.initialize.call(this, this.op
 
 ]]></string> </value>
         </item>
@@ -32266,7 +32268,8 @@ define(\'text!presentationeditor/main/app/template/ImageSettingsAdvanced.templat
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-         this.spinners = [];\r\n
+tions);\r\n
+            this.spinners = [];\r\n
             this._nRatio = 1;\r\n
             this._originalProps = this.options.imageProps;\r\n
         },\r\n
@@ -33547,7 +33550,7 @@ define(\'common/main/lib/component/ComboBorderSize\',["common/main/lib/component
                 labelText: this.textTotal\r\n
             });\r\n
             this.lockedControls.push(this.chTotal);\r\n
-            this.chBanded = new Common.UI.CheckB
+            this.chBanded = new Comm
 
 ]]></string> </value>
         </item>
@@ -33570,7 +33573,7 @@ define(\'common/main/lib/component/ComboBorderSize\',["common/main/lib/component
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-ox({\r\n
+on.UI.CheckBox({\r\n
                 el: $("#table-checkbox-banded"),\r\n
                 labelText: this.textBanded\r\n
             });\r\n
@@ -34975,7 +34978,7 @@ define(\'common/main/lib/component/Slider\',["common/main/lib/component/BaseView
                 if (me.disabled) {\r\n
                     return;\r\n
                 }\r\n
-                var 
+        
 
 ]]></string> </value>
         </item>
@@ -34998,7 +35001,7 @@ define(\'common/main/lib/component/Slider\',["common/main/lib/component/BaseView
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-index = e.data,\r\n
+        var index = e.data,\r\n
                 thumb = me.thumbs[index].thumb;\r\n
                 me._dragstart = e.pageX - thumb.offset().left - thumb.width() / 2;\r\n
                 me.setActiveThumb(index);\r\n
@@ -36692,8 +36695,7 @@ define(\'common/main/lib/component/MultiSliderGradient\',["common/main/lib/compo
                     },\r\n
                     {\r\n
                         color: "FFFFFF",\r\n
-                        effectId: 4\r\n
-      
+                        effectI
 
 ]]></string> </value>
         </item>
@@ -36716,7 +36718,8 @@ define(\'common/main/lib/component/MultiSliderGradient\',["common/main/lib/compo
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-              },\r\n
+d: 4\r\n
+                    },\r\n
                     {\r\n
                         color: "000000",\r\n
                         effectId: 5\r\n
@@ -37956,7 +37959,7 @@ define(\'common/main/lib/component/MultiSliderGradient\',["common/main/lib/compo
             this.colorsBack.updateColors(Common.Utils.ThemeColor.getEffectColors(), Common.Utils.ThemeColor.getStandartColors());\r\n
             this.colorsFG.updateColors(Common.Utils.ThemeColor.getEffectColors(), Common.Utils.ThemeColor.getStandartColors());\r\n
             this.colorsBG.updateColors(Common.Utils.ThemeColor.getEffectColors(), Common.Utils.ThemeColor.getStandartColors());\r\n
-            this.
+     
 
 ]]></string> </value>
         </item>
@@ -37979,7 +37982,7 @@ define(\'common/main/lib/component/MultiSliderGradient\',["common/main/lib/compo
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-colorsGrad.updateColors(Common.Utils.ThemeColor.getEffectColors(), Common.Utils.ThemeColor.getStandartColors());\r\n
+       this.colorsGrad.updateColors(Common.Utils.ThemeColor.getEffectColors(), Common.Utils.ThemeColor.getStandartColors());\r\n
         },\r\n
         _pt2mm: function (value) {\r\n
             return (value * 25.4 / 72);\r\n
@@ -39564,7 +39567,7 @@ define(\'text!presentationeditor/main/app/template/SlideSettings.template\',[],f
             this.cmbEffectType = new Common.UI.ComboBox({\r\n
                 el: $("#slide-combo-effect-type"),\r\n
                 cls: "input-group-nr",\r\n
-                style: "wi
+              
 
 ]]></string> </value>
         </item>
@@ -39587,7 +39590,7 @@ define(\'text!presentationeditor/main/app/template/SlideSettings.template\',[],f
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-dth: 100%;",\r\n
+  style: "width: 100%;",\r\n
                 menuStyle: "min-width: 190px;",\r\n
                 editable: false,\r\n
                 data: this._arrEffectType\r\n
@@ -40813,7 +40816,7 @@ define(\'presentationeditor/main/app/view/RightMenu\',["text!presentationeditor/
             this.imageSettings.setApi(api).on("editcomplete", _.bind(fire, this));\r\n
             this.chartSettings.setApi(api).on("editcomplete", _.bind(fire, this));\r\n
             this.tableSettings.setApi(api).on("editcomplete", _.bind(fire, this));\r\n
-            this.shapeSettings.setApi(api).on("editcomplete", _.
+            this.shapeSettings.setApi(api).on("editc
 
 ]]></string> </value>
         </item>
@@ -40836,7 +40839,7 @@ define(\'presentationeditor/main/app/view/RightMenu\',["text!presentationeditor/
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-bind(fire, this));\r\n
+omplete", _.bind(fire, this));\r\n
         },\r\n
         setMode: function (mode) {},\r\n
         onBtnMenuClick: function (btn, e) {\r\n
@@ -42056,7 +42059,7 @@ define(\'common/main/lib/view/Comments\',["text!common/main/lib/template/Comment
                                     this.setFocusToTextBox();\r\n
                                 } else {\r\n
                                     if (!showEditBox) {\r\n
-                                        t.fireEve
+                                     
 
 ]]></string> </value>
         </item>
@@ -42079,7 +42082,7 @@ define(\'common/main/lib/view/Comments\',["text!common/main/lib/template/Comment
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-nt("comment:closeEditing");\r\n
+   t.fireEvent("comment:closeEditing");\r\n
                                         record.set("editTextInPopover", true);\r\n
                                         t.fireEvent("comment:show", [commentId]);\r\n
                                         this.autoHeightTextBox();\r\n
@@ -43318,7 +43321,7 @@ define(\'common/main/lib/view/Chat\',["text!common/main/lib/template/Chat.templa
             this.txtSearch = this.$window.find("#sd-text-search");\r\n
             this.txtReplace = this.$window.find("#sd-text-replace");\r\n
             this.miHighlight.on("toggle", _.bind(this.onHighlight, this));\r\n
-            this.$window.find(
+            this.$
 
 ]]></string> </value>
         </item>
@@ -43341,7 +43344,7 @@ define(\'common/main/lib/view/Chat\',["text!common/main/lib/template/Chat.templa
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-".btn[result=back]").on("click", _.bind(this.onBtnClick, this, "back"));\r\n
+window.find(".btn[result=back]").on("click", _.bind(this.onBtnClick, this, "back"));\r\n
             this.$window.find(".btn[result=next]").on("click", _.bind(this.onBtnClick, this, "next"));\r\n
             this.$window.find(".btn[result=replace]").on("click", _.bind(this.onBtnClick, this, "replace"));\r\n
             this.$window.find(".btn[result=replaceall]").on("click", _.bind(this.onBtnClick, this, "replaceall"));\r\n
@@ -44586,7 +44589,7 @@ define(\'common/main/lib/component/LoadMask\',["common/main/lib/component/BaseVi
         btnHelpCaption: "Help...",\r\n
         btnReturnCaption: "Back to Document",\r\n
         btnToEditCaption: "Edit Document",\r\n
-        btnBackCaption: "Go to Documents",\r\n
+        btnBackCaption: "===",\r\n
         btnSettingsCaption: "Advanced Settings..."\r\n
     },\r\n
     PE.Views.FileMenu || {}));\r\n

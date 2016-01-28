@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts53141051.65</string> </value>
+            <value> <string>ts54011722.34</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2472560</int> </value>
+            <value> <int>2472536</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -54,7 +54,7 @@
  *\n
  * http://www.onlyoffice.com \n
  *\n
- * Version: 3.0.0 (build:968, rev:cb3d33b\n
+ * Version: 3.0.0 (build:971, rev:cb3d33b\n
 , date:Fri Dec 18 22:30:55 2015 +0300\n
 )\n
  */\n
@@ -3899,7 +3899,7 @@ function matcherFromTokens( tokens ) {\n
 \t\t\t\t\ti > 1 && elementMatcher( matchers ),\n
 \t\t\t\t\ti > 1 && toSelector(\n
 \t\t\t\t\t\t// If the preceding token was a descendant combinator, insert an implicit any-element `*`\n
-\t\t\t\t\t\ttokens.slice( 0, i - 1 ).concat({ value
+\t\t\t\t\t\ttokens.slice( 0
 
 ]]></string> </value>
         </item>
@@ -3922,7 +3922,7 @@ function matcherFromTokens( tokens ) {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-: tokens[ i - 2 ].type === " " ? "*" : "" })\n
+, i - 1 ).concat({ value: tokens[ i - 2 ].type === " " ? "*" : "" })\n
 \t\t\t\t\t).replace( rtrim, "$1" ),\n
 \t\t\t\t\tmatcher,\n
 \t\t\t\t\ti < j && matcherFromTokens( tokens.slice( i, j ) ),\n
@@ -6246,7 +6246,7 @@ jQuery.event = {\n
 \tsimulate: function( type, elem, event, bubble ) {\n
 \t\t// Piggyback on a donor event to simulate a different one.\n
 \t\t// Fake originalEvent to avoid donor\'s stopPropagation, but if the\n
-\t\t// simulated event prevents default then we do the same on the don
+\t\t// simulated event prevents default then w
 
 ]]></string> </value>
         </item>
@@ -6269,7 +6269,7 @@ jQuery.event = {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-or.\n
+e do the same on the donor.\n
 \t\tvar e = jQuery.extend(\n
 \t\t\tnew jQuery.Event(),\n
 \t\t\tevent,\n
@@ -8682,7 +8682,7 @@ jQuery.extend({\n
 \t\t\t// Timeout\n
 \t\t\tif ( s.async && s.timeout > 0 ) {\n
 \t\t\t\ttimeoutTimer = setTimeout(function() {\n
-\t\t\t\t\tjqXHR.abort("timeou
+
 
 ]]></string> </value>
         </item>
@@ -8705,7 +8705,7 @@ jQuery.extend({\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-t");\n
+\t\t\t\t\tjqXHR.abort("timeout");\n
 \t\t\t\t}, s.timeout );\n
 \t\t\t}\n
 \n
@@ -10882,7 +10882,7 @@ if ( typeof window === "object" && typeof window.document === "object" ) {\n
       options || (options = {});\n
       var i, l, index, model;\n
       for (i = 0, l = models.length; i < l; i++) {\n
-        model = models[i] 
+  
 
 ]]></string> </value>
         </item>
@@ -10905,7 +10905,7 @@ if ( typeof window === "object" && typeof window.document === "object" ) {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-= this.get(models[i]);\n
+      model = models[i] = this.get(models[i]);\n
         if (!model) continue;\n
         delete this._byId[model.id];\n
         delete this._byId[model.cid];\n
@@ -12850,8 +12850,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
         if (e.target !== e.currentTarget) return\n
         this.options.backdrop == \'static\'\n
           ? this.$element[0].focus.call(this.$element[0])\n
-          : this.hide.call(this)\n
-      },
+          : this.
 
 ]]></string> </value>
         </item>
@@ -12874,7 +12873,8 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
- this))\n
+hide.call(this)\n
+      }, this))\n
 \n
       if (doAnimate) this.$backdrop[0].offsetWidth // force reflow\n
 \n
@@ -14809,7 +14809,7 @@ define(\'text\',[\'module\'], function (module) {\n
             if (!hasLocation || useXhr(url, defaultProtocol, defaultHostName, defaultPort)) {\n
                 text.get(url, function (content) {\n
                     text.finishLoad(name, parsed.strip, content, onLoad);\n
-                }, function (err
+        
 
 ]]></string> </value>
         </item>
@@ -14832,7 +14832,7 @@ define(\'text\',[\'module\'], function (module) {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-) {\n
+        }, function (err) {\n
                     if (onLoad.error) {\n
                         onLoad.error(err);\n
                     }\n
@@ -15159,7 +15159,7 @@ define(\'common/main/lib/view/Header\',["backbone", "text!common/main/lib/templa
             Common.Gateway.goBack(e.which == 2);\r\n
             Common.component.Analytics.trackEvent("Back to Folder");\r\n
         },\r\n
-        textBack: "Go to Documents"\r\n
+        textBack: "==="\r\n
     },\r\n
     Common.Views.Header || {}));\r\n
 });\n
@@ -16351,7 +16351,7 @@ define(\'common/main/lib/component/Button\',["common/main/lib/component/BaseView
  * All the Product\'s GUI elements, including illustrations and icon sets, as\r\n
  * well as technical writing content are licensed under the terms of the\r\n
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License\r\n
- * terms at http://cre
+ * terms a
 
 ]]></string> </value>
         </item>
@@ -16374,7 +16374,7 @@ define(\'common/main/lib/component/Button\',["common/main/lib/component/BaseView
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-ativecommons.org/licenses/by-sa/4.0/legalcode\r\n
+t http://creativecommons.org/licenses/by-sa/4.0/legalcode\r\n
  *\r\n
  */\r\n
  (function (factory) {\r\n
@@ -17508,7 +17508,7 @@ Common.Utils.RGBColor = function (colorString) {\r\n
                     } else {\r\n
                         if (h < 180) {\r\n
                             rgb.g = t1;\r\n
-                 
+     
 
 ]]></string> </value>
         </item>
@@ -17531,7 +17531,7 @@ Common.Utils.RGBColor = function (colorString) {\r\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-           rgb.r = t2;\r\n
+                       rgb.r = t2;\r\n
                             rgb.b = t2 + t3;\r\n
                         } else {\r\n
                             if (h < 240) {\r\n
@@ -19007,7 +19007,7 @@ define(\'common/main/lib/component/Window\',["common/main/lib/component/BaseView
                             "-webkit-transform": "scale(1)",\r\n
                             "-moz-transition": "0.3s opacity, 0.3s -moz-transform",\r\n
                             "-moz-transform": "scale(1)",\r\n
-                            "-ms-transition": "0.3s opacity, 0
+                            "-ms-transition": "0.3
 
 ]]></string> </value>
         </item>
@@ -19030,7 +19030,7 @@ define(\'common/main/lib/component/Window\',["common/main/lib/component/BaseView
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-.3s -ms-transform",\r\n
+s opacity, 0.3s -ms-transform",\r\n
                             "-ms-transform": "scale(1)",\r\n
                             "-o-transition": "0.3s opacity, 0.3s -o-transform",\r\n
                             "-o-transform": "scale(1)",\r\n
@@ -20269,7 +20269,7 @@ define(\'common/main/lib/view/Comments\',["text!common/main/lib/template/Comment
                     arr.push({\r\n
                         start: offset,\r\n
                         end: len + offset,\r\n
-                        str: \'<a href="\' + ref + \'" target="_blank" data-can-copy="true">\' + subSt
+                        str: \'<a href="\' + ref + \'" target="_blank" data-can-copy="tru
 
 ]]></string> </value>
         </item>
@@ -20292,7 +20292,7 @@ define(\'common/main/lib/view/Comments\',["text!common/main/lib/template/Comment
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-r + "</a>"\r\n
+e">\' + subStr + "</a>"\r\n
                     });\r\n
                 }\r\n
                 return "";\r\n
@@ -21620,7 +21620,7 @@ define(\'common/main/lib/component/LoadMask\',["common/main/lib/component/BaseVi
         txtPages: "Pages",\r\n
         txtWords: "Words",\r\n
         txtParagraphs: "Paragraphs",\r\n
-        txtSymbols: "Sy
+        txt
 
 ]]></string> </value>
         </item>
@@ -21643,7 +21643,7 @@ define(\'common/main/lib/component/LoadMask\',["common/main/lib/component/BaseVi
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-mbols",\r\n
+Symbols: "Symbols",\r\n
         txtSpaces: "Symbols with spaces",\r\n
         txtLoading: "Loading..."\r\n
     },\r\n
@@ -22215,7 +22215,7 @@ mbols",\r\n
         btnHelpCaption: "Help...",\r\n
         btnReturnCaption: "Back to Document",\r\n
         btnToEditCaption: "Edit Document",\r\n
-        btnBackCaption: "Go to Documents",\r\n
+        btnBackCaption: "===",\r\n
         btnSettingsCaption: "Advanced Settings...",\r\n
         btnHistoryCaption: "Versions History"\r\n
     },\r\n
