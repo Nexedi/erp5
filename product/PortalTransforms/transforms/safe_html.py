@@ -217,7 +217,8 @@ class StrippingParser(HTMLParser):
                     else: raise IllegalHTML, 'Script event "%s" not allowed.' % k
                 elif v is None:
                     self.result.append(' %s' % k)
-                elif remove_script and hasScript(v):
+                elif remove_script and hasScript(v) and \
+                        not (k.lower() == 'src' and tag.lower() == 'img'):
                     if not self.raise_error: continue
                     else: raise IllegalHTML, 'Script URI "%s" not allowed.' % v
                 else:
