@@ -5,6 +5,7 @@ Assignment | edit_workflow
 Bank Account | edit_workflow
 Bank Account | validation_workflow
 Career | career_workflow
+Career | edit_workflow
 Chat Address | edit_workflow
 Credit Card | edit_workflow
 Credit Card | validation_workflow

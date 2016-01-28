@@ -17,7 +17,7 @@
  </chain>
  <chain>
   <type>Career</type>
-  <workflow>career_workflow</workflow>
+  <workflow>career_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Chat Address</type>
