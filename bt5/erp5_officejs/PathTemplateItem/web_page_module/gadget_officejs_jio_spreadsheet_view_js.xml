@@ -287,7 +287,7 @@
             "rjsunsafe/gadget_ooffice.html",\n
             {\n
               scope: "my_text_content",\n
-              sandbox: "dataurl",\n
+              sandbox: "iframe",\n
               element: gadget.props.element.querySelector(".document-content")\n
             }\n
           );\n
@@ -468,7 +468,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.36396.44642.6109</string> </value>
+                <value> <string>948.48209.45401.35362</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -486,7 +486,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453145109.87</float>
+                        <float>1453855902.65</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
