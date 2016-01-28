@@ -109,6 +109,25 @@ class TestSecurityMixin(ERP5TypeTestCase):
                     % (len(error_list), '\n\t'.join(['%s:%s %s' % x for x in sorted(error_list)]))
       self.fail(message)
 
+  def test_workflow_transition_protection(self):
+    """
+    This test will list all workflow transitions and check the existence of guard.
+    """
+    error_list = []
+    for wf in self.portal.portal_workflow.objectValues():
+      if wf.__class__.__name__ == 'InteractionWorkflowDefinition':
+        continue
+      for transition in wf.transitions.objectValues():
+        if getattr(transition, 'trigger_type', 1) == 0:
+          # Automatic transition without guard is safe
+          continue
+        if getattr(transition, 'guard', None) is None:
+          error_list.append('%s/transitions/%s' % (wf.getId(), transition.getId()))
+    if error_list:
+      message = '\nThe following %s workflow transitions are not guarded.\n\t%s' \
+                    % (len(error_list), '\n\t'.join(sorted(error_list)))
+      self.fail(message)
+
 class TestSecurity(TestSecurityMixin):
 
   def getTitle(self):
