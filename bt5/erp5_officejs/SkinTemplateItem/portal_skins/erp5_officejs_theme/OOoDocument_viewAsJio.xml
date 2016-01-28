@@ -80,7 +80,7 @@ ooffice_view</string> </value>
                         <string>my_language</string>
                         <string>my_version</string>
                         <string>my_portal_type</string>
-                        <string>my_modification_date</string>
+                        <string>your_modification_date</string>
                         <string>my_content_type</string>
                         <string>my_filename</string>
                         <string>my_data</string>
