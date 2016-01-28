@@ -220,6 +220,10 @@
                           <string>group</string>
                           <string>Group</string>
                         </tuple>
+                        <tuple>
+                          <string>site</string>
+                          <string>Site</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
