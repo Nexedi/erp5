@@ -54,7 +54,7 @@
 Update from time to time all time table lines to set end periodicity at\n
 end of following month\n
 """\n
-now = context.Base_getNowDate()\n
+now = context.Base_getNowDate().earliestTime()\n
 first_day_month_quantity = 0\n
 date_cursor = now\n
 while True:\n
