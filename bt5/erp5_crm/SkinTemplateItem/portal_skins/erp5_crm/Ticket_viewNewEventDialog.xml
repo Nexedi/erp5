@@ -84,6 +84,7 @@
                     <value>
                       <list>
                         <string>your_notification_message</string>
+                        <string>your_content_type</string>
                         <string>your_text_content</string>
                         <string>your_event_workflow_action</string>
                       </list>
@@ -103,7 +104,6 @@
                         <string>your_portal_type</string>
                         <string>your_resource</string>
                         <string>your_start_date</string>
-                        <string>your_content_type</string>
                       </list>
                     </value>
                 </item>
