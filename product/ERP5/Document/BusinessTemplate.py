@@ -4551,7 +4551,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
     name = posixpath.split(file_name)[1]
     if name == 'translation.po':
       text = file.read()
-      self._objects[file_name[:-3]] = text
+      self._objects[file_name[:-len(name)]] = text
     elif name == 'language.xml':
       xml = parse(file)
       name = xml.find('name').text
