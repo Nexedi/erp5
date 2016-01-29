@@ -706,7 +706,6 @@ class TestPackingListMixin(TestOrderMixin):
     packing_list = sequence.get('packing_list')
     self._solveDivergence(packing_list, 'quantity', 'Adopt Solver')
 
-  @UnrestrictedMethod
   def _solveDivergence(self, document, property, solver, **kw):
     """Solve divergence by using solver tool"""
     solver_process_tool = self.portal.portal_solver_processes
