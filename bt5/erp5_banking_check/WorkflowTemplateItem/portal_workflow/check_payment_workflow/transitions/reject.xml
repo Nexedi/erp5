@@ -29,7 +29,7 @@
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
@@ -104,23 +104,6 @@
         <item>
             <key> <string>text</string> </key>
             <value> <string>python:1</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="Guard" module="Products.DCWorkflow.Guard"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>permissions</string> </key>
-            <value>
-              <tuple>
-                <string>Modify portal content</string>
-              </tuple>
-            </value>
         </item>
       </dictionary>
     </pickle>
