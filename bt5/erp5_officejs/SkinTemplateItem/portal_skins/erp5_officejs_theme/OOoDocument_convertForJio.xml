@@ -51,7 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># XXX not work for readonly documents\n
-from Products.ERP5.Document.Document import NotConvertedError\n
+from Products.ERP5.Document.Document import NotConvertedError, ConversionError\n
 from Products.ERP5Type.Utils import sleep\n
 \n
 portal_type = context.getPortalType()\n
@@ -66,22 +66,30 @@ portal_type_empty_map = {\n
 portal_type_format_map = {\n
     "Spreadsheet": "xlsy",\n
     "Text": "docy",\n
-    # "Presentation": "ppty",\n
+    "Presentation": "ppty",\n
   }\n
 file_format = portal_type_format_map.get(portal_type, None)\n
 if file_format:\n
   if data:\n
     if ((filename and not filename.endswith(\'.\' + file_format)) or \n
           not content_type.startswith("application/yformat.")):\n
+      converted = False\n
       for try_count in range(3):\n
         try:\n
-          metadata, data = context.convert(format=file_format)\n
+          content_type, data = context.convert(format=file_format)\n
+          converted = True\n
           break\n
         except NotConvertedError:\n
+          data = \'ERRO;NotConvertedError;Please try reload this page again latter.\'\n
           sleep()\n
           continue\n
-      context.setData(data)\n
-      context.setContentType(metadata)\n
+        except ConversionError:\n
+          data = \'ERRO;ConversionError;Conversion error on Cloudooo server. Please contact support.\'\n
+      if converted:\n
+        context.setData(data)\n
+        context.setContentType(content_type)\n
+      else:\n
+        return data\n
   else:\n
     data = portal_type_empty_map.get(portal_type, None)\n
     if data:\n

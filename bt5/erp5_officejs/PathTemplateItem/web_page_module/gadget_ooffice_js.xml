@@ -332,6 +332,13 @@
         documentType = options.portal_type;\n
       } else {\n
         documentType = magic_to_format_map[options.value.substring(0, 5)];\n
+        if (documentType === undefined) {\n
+          g.props\n
+            .element\n
+            .getElementsByClassName(placeholder)[0]\n
+            .textContent = options.value;\n
+          return {};\n
+        }\n
       }\n
       return g.setFillStyle()\n
         .push(function (size) {\n
@@ -537,7 +544,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.36349.33632.18926</string> </value>
+                <value> <string>948.52265.56945.58436</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -555,7 +562,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453142306.9</float>
+                        <float>1454097524.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
