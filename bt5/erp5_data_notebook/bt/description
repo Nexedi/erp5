@@ -1,0 +1,5 @@
+Interaction between Jupyter(IPython Notebook) and ERP5.
+
+!WARNING!
+This business template is unsafe to install on a public server as one of the extensions uses eval and allows remote code execution. Proper security should be taken into account.
+!WARNING!
