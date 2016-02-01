@@ -206,7 +206,11 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         #LOG("Selection", 0, str((self.__dict__)))
         #LOG("Selection", 0, str(method))
         #LOG('Selection', 0, "self.invert_mode = %s" % repr(self.invert_mode))
-        kw = self.getParams()
+        if not params:
+          kw = self.params.copy()
+        else:
+          kw = params.copy()
+        kw.setdefault("ignore_unknown_columns", True)
         # Always remove '-C'-named parameter.
         kw.pop('-C', None)
         if self.invert_mode is not 0:
@@ -276,10 +280,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         """
         if not isinstance(self.params, dict):
           self.params = {}
-
-        params = self.params.copy()
-        params.setdefault("ignore_unknown_columns", True)
-        return params
+        return self.params.copy()
 
     security.declarePublic('getSortOrder')
     def getSortOrder(self):
