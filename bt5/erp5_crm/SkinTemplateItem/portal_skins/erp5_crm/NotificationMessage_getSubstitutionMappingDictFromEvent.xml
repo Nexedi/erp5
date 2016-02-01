@@ -56,16 +56,56 @@ portal = context.getPortalObject()\n
 hmac = portal.Base_getHMACHexdigest(key=portal.Base_getEventHMACKey(), message=event_value.getId())\n
 \n
 def getSubstitutionMappingDict():\n
-  kw.update(\n
-    destination_title=event_value.getDestinationTitle() or \'\',\n
-    destination_portal_type=event_value.getDestination() and event_value.getDestinationValue().getTranslatedPortalType(),\n
-    destination_social_title=event_value.getDestination() and event_value.getDestinationValue().getProperty(\'social_title_translated_title\') or \'\',\n
-    destination_reference=event_value.getDestination() and event_value.getDestinationValue().getReference() or \'\',\n
-    source_title=event_value.getSourceTitle() or \'\',\n
-    image_parameters = "/Base_openEvent?id=%s&hash=%s" %(event_value.getId(), hmac),\n
-    document_parameters = "/Base_readEvent?id=%s&hash=%s" %(event_value.getId(), hmac),\n
-    unsubscribe_parameters = "/Base_unsubscribeFromEvent?id=%s&hash=%s" %(event_value.getId(), hmac),\n
-  )\n
+  destination = event_value.getDestinationValue()\n
+  kw[\'event_value_source_title\'] = event_value.getSourceTitle()\n
+\n
+  if destination is not None:\n
+    kw[\'third_party_reference\'] = destination.getDestinationReference()\n
+    kw[\'address\'] = (destination.getDefaultAddressText() or \'\').upper()\n
+    kw[\'email\'] = destination.getDefaultEmailText() or \'\'\n
+    kw[\'telephone\'] = destination.getDefaultTelephoneText() or \'\'\n
+    kw[\'mobile\'] = destination.getMobileTelephoneText() or \'\'\n
+    kw[\'creation_date\'] = destination.getCreationDate()\n
+    kw[\'origin_campaign\'] = destination.getOriginReference()\n
+\n
+    if destination.getPortalType() == \'Person\':\n
+      kw[\'first_name\'] = destination.getFirstName()\n
+      kw[\'last_name\'] = destination.getLastName()\n
+      kw[\'social_title\'] = destination.getSocialTitleTranslatedTitle("")\n
+      kw[\'third_party_name\'] = destination.getTitle()\n
+      if destination.getSocialTitle():\n
+        kw[\'third_party_name\'] = "%s %s" % (destination.getSocialTitleTranslatedTitle() or \'\',\n
+                                                    destination.getTitle())\n
+    elif destination.getPortalType() == \'Organisation\':\n
+      kw[\'social_title\'] = str(translateString("Participant"))\n
+      kw[\'third_party_name\'] = destination.getCorporateName() or destination.getTitle()\n
+\n
+\n
+    # Backward compatibility\n
+    kw["destination_title"] = destination.getTitle()\n
+    kw["destination_portal_type"] = destination.getTranslatedPortalType()\n
+    kw["destination_social_title"] = destination.getProperty(\'social_title_translated_title\')\n
+    kw["destination_reference"] = destination.getReference()\n
+  else:\n
+    kw["destination_title"] = ""\n
+    kw["destination_portal_type"] = ""\n
+    kw["destination_social_title"] = ""\n
+    kw["destination_reference"] = ""\n
+\n
+  kw[\'event_value_start_date\'] = event_value.getStartDate()\n
+  kw[\'event_value_nature\'] = event_value.getResourceReference()\n
+  kw[\'event_value_reference\'] = event_value.getReference()\n
+  kw[\'ticket_reference\'] = event_value.getDefaultFollowUpReference()\n
+  hmac = portal.Base_getHMACHexdigest(key=portal.Base_getEventHMACKey(), message=event_value.getId())\n
+  kw["image_parameters"] = "/Base_openEvent?id=%s&hash=%s" %(event_value.getId(), hmac)\n
+  kw["newsletter_parameters"] = "/Base_readEvent?id=%s&hash=%s" %(event_value.getId(), hmac)\n
+  kw["unsubscribe_parameters"] = "/Base_unsubscribe?id=%s&hash=%s" %(event_value.getId(), hmac)\n
+\n
+  # Backward compatibility\n
+  kw["source_title"] = event_value.getSourceTitle() or \'\',\n
+  kw["document_parameters"] = "/Base_readEvent?id=%s&hash=%s" %(event_value.getId(), hmac),\n
+\n
+\n
   return kw\n
 \n
 if context.hasLanguage():\n
