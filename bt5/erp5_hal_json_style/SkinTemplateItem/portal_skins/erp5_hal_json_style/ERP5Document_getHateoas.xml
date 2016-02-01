@@ -127,6 +127,7 @@ def getRealRelativeUrl(document):\n
   return \'/\'.join(portal.portal_url.getRelativeContentPath(document))\n
 \n
 def getFormRelativeUrl(form):\n
+  __traceback_info__ = form,\n
   return portal.portal_catalog(\n
     portal_type="ERP5 Form",\n
     uid=form.getUid(),\n
