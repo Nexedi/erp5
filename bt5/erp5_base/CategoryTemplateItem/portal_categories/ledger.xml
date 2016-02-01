@@ -41,17 +41,17 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>journal</string>
+                <string>ledger</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Journal is used to split deliveries of the same type in different subsets.</string> </value>
+            <value> <string>Ledger is used to split movements, deliveries, or orders of the same type in different subsets. It will replace the "journal" base category which is less generic</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>journal</string> </value>
+            <value> <string>ledger</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -59,7 +59,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Journal</string> </value>
+            <value> <string>Ledger</string> </value>
         </item>
       </dictionary>
     </pickle>
