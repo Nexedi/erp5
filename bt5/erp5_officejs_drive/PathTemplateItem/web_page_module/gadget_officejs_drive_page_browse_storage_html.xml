@@ -134,8 +134,9 @@
   <body>\n
     <h1>Super OfficeJS Drive</h1>\n
     <form>\n
-    position: <input type="text" name="position">\n
+    <input type="text">\n
     </form>\n
+    <div><a class="error"></a></div>\n
     <ul>\n
     </ul>\n
   </body>\n

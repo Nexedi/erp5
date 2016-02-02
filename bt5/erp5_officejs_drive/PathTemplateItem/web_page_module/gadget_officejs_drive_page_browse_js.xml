@@ -167,32 +167,37 @@
 \n
       // if command given: proceed\n
       if (command) {\n
-        switch (command) {\n
-        case \'cd\':\n
-        case \'ls\':\n
-          if (args.length === 1) {\n
-            return gadget.redirect({\n
-              position: absolutePosition(gadget.props.currentPosition, args[0])\n
-            });\n
-          }\n
-          throw (\'Usage of \' + command + \' requires a single argument.\');\n
+        try {\n
+          switch (command) {\n
+          case \'cd\':\n
+            if (args.length === 1) {\n
+              return gadget.redirect({\n
+                position: absolutePosition(gadget.props.currentPosition, args[0])\n
+              });\n
+            }\n
+            throw new Error(\'Usage of \' + command + \' requires a single argument.\');\n
 \n
-        case \'vim\':\n
-        case \'vi\':\n
-          if (args.length === 1) {\n
-            return gadget.redirect({\n
-              page: \'edit\',\n
-              position: absolutePosition(\n
-                gadget.props.currentPosition,\n
-                position.join(\'/\')\n
-              ),\n
-              resource: resource\n
-            });\n
+          case \'vim\':\n
+          case \'vi\':\n
+            if (args.length === 1) {\n
+              return gadget.redirect({\n
+                page: \'edit\',\n
+                position: absolutePosition(\n
+                  gadget.props.currentPosition,\n
+                  position.join(\'/\')\n
+                ),\n
+                resource: resource\n
+              });\n
+            }\n
+            throw new Error(\'Usage of \' + command + \' requires a single argument.\');\n
+          default:\n
+            throw new Error(\'Unknown command: \' + command);\n
           }\n
-          throw (\'Usage of \' + command + \' requires a single argument.\');\n
-        default:\n
-          throw (\'Unknown command: \' + command);\n
-        }\n
+        } catch (e) {\n
+          gadget.props.element.querySelector(\'.error\').textContent = e.name +\n
+                                                                       ": " +\n
+                                                                       e.message;\n
+        }
       }\n
     })\n
 \n
@@ -208,7 +213,6 @@
       }\n
       gadget.props.currentPosition = options.position;\n
       gadget.props.element.querySelector(\'input\').value = \'\';\n
-      gadget.props.element.querySelector(\'.position\').value = options.position;\n
 \n
       // clean previous ul children\n
       while (ul.hasChildNodes()) {\n
@@ -230,7 +234,7 @@
                 liContent = document.createElement(\'a\');\n
 \n
                 liContent.setAttribute(\'href\', \'#page=edit&resource=\' +\n
-                                  key + \'&position=\' + options.position);\n
+                                       key + \'&position=\' + options.position);\n
                 liContent.appendChild(resourceName);\n
               } else {\n
                 liContent = resourceName;\n
