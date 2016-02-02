@@ -440,7 +440,7 @@ msgstr "Diese Aktion setzt den Zustand der gewählten Berufsetappe auf \"gestopp
 msgid "Action that will trigger the confirmed state of a workflow, for example for an accounting transaction or a sale packing list."
 msgstr "Ein Vorgang der den \"Bestätigt\" Zustand setzt, und die zugehörigen Aktionen auslöst. (z.B. für eine Buchung oder einen Lieferschein)"
 
-msgid "Action to be Triggered on the Response Event"
+msgid "Action to be triggered on the Response Event"
 msgstr "Aktion die bei Beantwortung des Ereignisses ausgeführt wird"
 
 msgid "Action which will disable the preference"
