@@ -151,9 +151,7 @@
     })\n
 \n
     .declareMethod("browse", function (command, args) {\n
-      var gadget = this,\n
-        position = args[0].split(\'/\'),\n
-        resource = position.pop();\n
+      var gadget = this;\n
 \n
       function absolutePosition(current, requested) {\n
         var pos;\n
@@ -179,6 +177,8 @@
 \n
           case \'vim\':\n
           case \'vi\':\n
+            var position = args[0].split(\'/\'),\n
+              resource = position.pop();\n
             if (args.length === 1) {\n
               return gadget.redirect({\n
                 page: \'edit\',\n
@@ -197,7 +197,7 @@
           gadget.props.element.querySelector(\'.error\').textContent = e.name +\n
                                                                        ": " +\n
                                                                        e.message;\n
-        }
+        }\n
       }\n
     })\n
 \n
