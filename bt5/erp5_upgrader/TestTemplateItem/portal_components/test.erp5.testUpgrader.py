@@ -30,6 +30,9 @@ import re
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5.Tool.TemplateTool import BusinessTemplateUnknownError
 from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5.genbt5list import main as genbt5list
+from Products.ERP5 import ERP5Site
+import os
 
 DETAIL_PATTERN = re.compile(r"(?P<relative_url>.*)\ \<\>\ " + \
       r"(?P<reference>\w+)\ \-\>\ (?P<new_reference>\w+)")
@@ -64,6 +67,12 @@ class TestUpgrader(ERP5TypeTestCase):
         validation_state='validated', title="User"):
       if person.getValidationState() == "validated":
         person.invalidate()
+    # update the bt5list will be updated to the version of the filesystem
+    bootstrap_path = os.environ.get('erp5_tests_bootstrap_path') or \
+      ERP5Site.getBootstrapDirectory()
+    bt5_path_list = os.environ['erp5_tests_bt5_path']
+    repository_list = [bt5_path_list, ]
+    genbt5list(dir_list=[bootstrap_path, bt5_path_list])
     self.tic()
 
   def stepClearCache(self, sequence=None):
