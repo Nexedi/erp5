@@ -62,10 +62,12 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>permissions</string> </key>
+            <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Modify portal content</string>
+                <string>Owner</string>
+                <string>Assignor</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
