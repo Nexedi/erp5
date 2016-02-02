@@ -69,6 +69,8 @@ bt5_installation_list = (\'erp5_full_text_mroonga_catalog\',\n
                          \'erp5_odt_style\',\n
                          \'erp5_rss_style\',\n
                          \'erp5_trade\',\n
+                         # jupiter notebook integration\n
+                         \'erp5_data_notebook\',\n
                          # to develop faster\n
                          \'erp5_ace_editor\',\n
                          \'erp5_forge\',\n
