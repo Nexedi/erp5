@@ -267,7 +267,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: "style=\'color:%s;\'" % {"FAILED":"red", "PASSED":"green"}.get(cell.string_index, "black")</string> </value>
+            <value> <string>python: "style=\'color:%s;\'" % {"FAILED":"red", "PASSED":"green"}.get(cell.getStringIndex("UNKNOWN"), "black")</string> </value>
         </item>
       </dictionary>
     </pickle>
