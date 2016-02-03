@@ -73,6 +73,8 @@ operator_value_deprocessor_dict = {
   'like': deprocessLikeValue
 }
 
+numeric_type_set = (long, float) # get mapped to int, so do not mention it
+
 class SearchKey(object):
 
   implements(ISearchKey)
@@ -266,16 +268,21 @@ class SearchKey(object):
     # Cast to list
     if isinstance(search_value, list_type_list):
       # Check list content (not empty, homogenous)
-      iter_search_value = iter(search_value)
+      # Note: neither is strictly required, but it helps spotting easy mistakes.
+      klass_set = {
+        int if x.__class__ in numeric_type_set else x.__class__
+        for x in search_value
+      }
       try:
-        reference_class = iter_search_value.next().__class__
-      except StopIteration:
-        raise ValueError, 'Value cannot be an empty list/tuple: %r' % \
-                          (search_value, )
-      for x in iter_search_value:
-        if x.__class__ != reference_class:
-          raise TypeError, 'List elements must be of the same class: %r' % \
-                           (search_value, )
+        reference_class, = klass_set
+      except ValueError:
+        if search_value:
+          raise TypeError(
+            'List elements must be of the same class: %r' % (search_value, )
+          )
+        raise ValueError(
+          'Value cannot be an empty list/tuple: %r' % (search_value, )
+        )
     else:
       assert logical_operator is None
       if isinstance(search_value, dict):
