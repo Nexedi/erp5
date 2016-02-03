@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>journal_category</string> </value>
+            <value> <string>ledger_category</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

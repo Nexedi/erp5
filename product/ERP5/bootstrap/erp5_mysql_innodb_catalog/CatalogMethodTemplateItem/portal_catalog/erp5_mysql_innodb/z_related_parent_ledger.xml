@@ -43,7 +43,7 @@ query_table="catalog"</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_related_parent_journal</string> </value>
+            <value> <string>z_related_parent_ledger</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
@@ -57,7 +57,7 @@ query_table="catalog"</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.journal.getUid()">\n
+<dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.ledger.getUid()">\n
 AND <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
 <dtml-var RELATED_QUERY_SEPARATOR>\n
 <dtml-var table_0>.uid = <dtml-var query_table>.parent_uid
