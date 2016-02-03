@@ -478,7 +478,7 @@
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
-            <value> <string>WebSection_viewHateoasPreference</string> </value>
+            <value> <string>WebSection_viewRenderJSPreference</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -741,7 +741,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.15127.49489.42257</string> </value>
+                <value> <string>948.59411.26615.29900</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -759,7 +759,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448031408.99</float>
+                        <float>1454525992.16</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
