@@ -30,6 +30,7 @@ import hashlib
 import json
 import validictory
 from Products.ERP5Type.Document import newTempFile
+from Products.ERP5Type.UnrestrictedMethod import super_user
 
 
 def WebSection_getDocumentValue(self, key, portal=None, language=None,\
@@ -99,7 +100,9 @@ def WebSection_setObject(self, id, ob, **kw):
   if data_set is None:
     data_set = portal.data_set_module.newContent(portal_type='Data Set',
                                                  reference=id)
-    data_set.publish()
+    with super_user():
+      # security check should be done already.
+      data_set.publish()
 
 
   reference = hashlib.sha512(data).hexdigest()
@@ -109,7 +112,9 @@ def WebSection_setObject(self, id, ob, **kw):
   ob.setReference(reference)
   if expiration_date is not None:
     ob.setExpirationDate(expiration_date)
-  ob.publish()
+  with super_user():
+    # security check should be done already.
+    ob.publish()
   return ob
 
 def WebSection_putFactory(self, name, typ, body):

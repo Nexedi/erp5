@@ -120,8 +120,10 @@ class TestShaDirSecurity(ShaDirMixin, ShaSecurityMixin, SecurityTestCase):
     data_set()
     data_set.view()
 
+    self.login()
     data_set.publish()
     self.tic()
+    self.changeUser(self.lucas_user)
     self.assertEqual('Published', data_set.getValidationStateTitle())
 
     self.assertUserHaveRoleOnDocument(self.lucas_user, 'Auditor', data_set)
@@ -147,6 +149,7 @@ class TestShaDirSecurity(ShaDirMixin, ShaSecurityMixin, SecurityTestCase):
     data_set = self.portal.data_set_module.newContent(
                            portal_type='Data Set',
                            reference=self.key)
+    self.login()
     data_set.publish()
     self.tic()
 
@@ -167,9 +170,11 @@ class TestShaDirSecurity(ShaDirMixin, ShaSecurityMixin, SecurityTestCase):
     document()
     document.view()
 
+    self.login()
     document.publishAlive()
     self.tic()
 
+    self.changeUser(self.lucas_user)
     self.assertEqual('Published Alive', document.getValidationStateTitle())
     self.assertUserHaveRoleOnDocument(self.lucas_user, 'Auditor', document)
 
@@ -191,6 +196,7 @@ class TestShaDirSecurity(ShaDirMixin, ShaSecurityMixin, SecurityTestCase):
     """
     self.changeUser(self.toto_user)
     document = self.portal.document_module.newContent(portal_type='Text')
+    self.login()
     document.publishAlive()
     self.tic()
 

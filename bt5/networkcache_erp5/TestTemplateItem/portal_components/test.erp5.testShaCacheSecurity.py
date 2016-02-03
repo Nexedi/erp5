@@ -129,18 +129,20 @@ class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
 
       It also must check if document can be published alive.
     """
-    self.changeUser(self.lucas_user)
     for module in ('image_module', 'document_module',):
       module = getattr(self.portal, module)
       for portal_type in module.getVisibleAllowedContentTypeList():
+        self.changeUser(self.lucas_user)
         document = module.newContent(portal_type=portal_type)
 
         document()
         document.view()
 
+        self.login()
         document.publishAlive()
         self.tic()
 
+        self.changeUser(self.lucas_user)
         self.assertEqual('Published Alive',
                             document.getValidationStateTitle())
 
@@ -181,6 +183,7 @@ class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
 
         self.changeUser(self.toto_user)
         document = module.newContent(portal_type=portal_type)
+        self.login()
         document.publishAlive()
         self.tic()
 

@@ -28,6 +28,7 @@
 
 
 import hashlib, httplib
+from Products.ERP5Type.UnrestrictedMethod import super_user
 
 
 def WebSection_getDocumentValue(self, key, portal=None, language=None,\
@@ -105,7 +106,9 @@ def WebSite_viewAsWebPost(self, *args, **kwargs):
   document = portal.portal_contributions.newContent(file=file,
     filename='shacache', discover_metadata=False, reference=sha512sum,
     content_type='application/octet-stream')
-  document.publish()
+  with super_user():
+    # security check should be done already.
+    document.publish()
 
   self.REQUEST.RESPONSE.setStatus(httplib.CREATED)
   return sha512sum
