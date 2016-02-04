@@ -90,7 +90,7 @@ if not language:\n
   # language, we can not do anything\n
   for old_document in portal_catalog(**search_kw):\n
     old_document = old_document.getObject()\n
-    if not old_document.getLanguage():\n
+    if old_document.getValidationState() in validation_state and not old_document.getLanguage():\n
       old_document.archive()\n
   return\n
 \n
@@ -98,7 +98,8 @@ if not language:\n
 search_kw[\'language\'] = language\n
 for old_document in portal_catalog(**search_kw):\n
   old_document = old_document.getObject()\n
-  old_document.archive()\n
+  if old_document.getValidationState() in validation_state:\n
+    old_document.archive()\n
 
 
 ]]></string> </value>

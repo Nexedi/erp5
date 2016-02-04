@@ -2813,6 +2813,12 @@ return 1
     self.assertEqual('archived', document_nolang_005.getValidationState())
     self.assertEqual('shared_alive', document_nolang_006.getValidationState())
 
+    # should ignore already archived document
+    document_nolang_007 = document_nolang_006.Base_createCloneDocument(batch_mode=1)
+    document_nolang_006.archive()
+    document_nolang_007.shareAlive()
+    self.tic()
+
   def testFileWithNotDefinedMimeType(self):
     upload_file = makeFileUpload('TEST-001-en.dummy')
     kw = dict(file=upload_file, synchronous_metadata_discovery=True,
