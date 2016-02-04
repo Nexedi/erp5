@@ -839,21 +839,42 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       if portal_memcached.default_memcached_plugin.getUrlString() != url_string:
         portal_memcached.default_memcached_plugin.setUrlString(url_string)
 
+    def _clearActivity(self, quiet=0):
+      """Clear activities if `erp5_tests_recreate_catalog` environment variable is
+      set. """
+      if int(os.environ.get('erp5_tests_recreate_catalog', 0)):
+        _start = time.time()
+        if not quiet:
+          ZopeTestCase._print('\nRecreating activity tables ... ')
+        portal = self.getPortal()
+        portal.portal_activities.manageClearActivities()
+        self.commit()
+        if not quiet:
+          ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start,))
+
     def _recreateCatalog(self, quiet=0):
-      """Clear activities and catalog and recatalog everything.
-      Test runner can set `erp5_tests_recreate_catalog` environnement variable,
-      in that case we have to clear catalog. """
+      """Recreate catalog if `erp5_tests_recreate_catalog` environment variable is
+      set. """
+      if int(os.environ.get('erp5_tests_recreate_catalog', 0)):
+        _start = time.time()
+        if not quiet:
+          ZopeTestCase._print('\nRecreating catalog ... ')
+        portal = self.getPortal()
+        portal.portal_catalog.manage_catalogClear()
+        self.commit()
+        if not quiet:
+          ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start,))
+
+    def _reindexSite(self, quiet=0):
+      """Reindex site if `erp5_tests_recreate_catalog` environment variable is
+      set. """
       if int(os.environ.get('erp5_tests_recreate_catalog', 0)):
         try:
           _start = time.time()
           if not quiet:
-            ZopeTestCase._print('\nRecreating catalog ... ')
+            ZopeTestCase._print('\nReindexing site ... ')
           portal = self.getPortal()
-          portal.portal_activities.manageClearActivities()
-          portal.portal_catalog.manage_catalogClear()
-          self.commit()
           portal.ERP5Site_reindexAll()
-          self.tic()
           if not quiet:
             ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start,))
         finally:
@@ -916,9 +937,12 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             install_kw[listbox_line.object_id] = listbox_line.choice_item_list[0][1]
         bt.install(light_install=light_install,
                    object_to_update=install_kw,
-                   update_catalog=bt.isCatalogUpdatable(),
                    update_translation=1,
                    check_dependencies=False)
+        if bt.isCatalogUpdatable() and (
+            int(os.environ.get('erp5_tests_recreate_catalog', 0)) or \
+            int(os.environ.get('erp5_load_data_fs', 0)) == 0):
+          self.portal.portal_catalog.manage_catalogClear()
         # Release locks
         self.commit()
         if not quiet:
@@ -1009,10 +1033,11 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               self.loadPromise()
 
             self._updateConnectionStrings()
-            self._recreateCatalog()
+            self._clearActivity()
             self._installBusinessTemplateList(business_template_list,
                                               light_install=light_install,
                                               quiet=quiet)
+            self._recreateCatalog()
             self._updateConversionServerConfiguration()
             self._updateMemcachedConfiguration()
             # Create a Manager user at the Portal level
@@ -1022,6 +1047,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
 
             self._callSetUpOnce()
+            self._reindexSite()
 
             # Enable reindexing
             # Do hot reindexing # Does not work
