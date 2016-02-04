@@ -1,3 +1,4 @@
+Category Tool | CategoryToolCategoryNameConstraint
 Template Tool | TemplateToolBusinessTemplateInstallationConstraint
 Template Tool | TemplateToolTableConsistencyConstraint
 Template Tool | TemplateToolWorkflowChainConsistencyConstraint
