@@ -10,7 +10,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>inventory_axis/section</string>
                 <string>inventory_axis/section_category</string>
               </tuple>
             </value>

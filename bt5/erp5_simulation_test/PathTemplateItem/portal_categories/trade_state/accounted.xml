@@ -57,7 +57,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_state/delivered</string>
                 <string>trade_state/accounted</string>
               </tuple>
             </value>

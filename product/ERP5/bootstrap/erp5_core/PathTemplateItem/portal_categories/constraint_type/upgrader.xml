@@ -57,10 +57,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>constraint_type/pre_upgrade</string>
-                <string>constraint_type/default</string>
-                <string>constraint_type/default</string>
-                <string>constraint_type/upgrader</string>
                 <string>constraint_type/upgrader</string>
               </tuple>
             </value>

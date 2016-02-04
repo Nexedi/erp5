@@ -57,7 +57,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>payline_transaction_resource/create_web_wallet</string>
                 <string>payline_transaction_resource/notify_wallet</string>
               </tuple>
             </value>

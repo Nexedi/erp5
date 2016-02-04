@@ -57,8 +57,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>product_line/Coin/coin_replication</string>
-                <string>product_line/Coin/coin_replication</string>
               </tuple>
             </value>
         </item>

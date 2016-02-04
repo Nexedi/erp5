@@ -10,7 +10,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>inventory_axis/mirror_node</string>
                 <string>inventory_axis/mirror_node_category</string>
               </tuple>
             </value>

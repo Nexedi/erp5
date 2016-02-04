@@ -56,9 +56,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>inventory_axis/mirror_node</string>
-                <string>inventory_axis/mirror_node_category</string>
-                <string>inventory_axis/mirror_node_category_strict_membership</string>
                 <string>inventory_axis/mirror_node_category_strict_membership</string>
               </tuple>
             </value>

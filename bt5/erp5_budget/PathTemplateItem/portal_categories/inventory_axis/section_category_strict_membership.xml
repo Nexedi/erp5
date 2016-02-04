@@ -56,9 +56,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>inventory_axis/section</string>
-                <string>inventory_axis/section_category</string>
-                <string>inventory_axis/section_category_strict</string>
               </tuple>
             </value>
         </item>

@@ -28,7 +28,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>business_field/accounting</string>
                 <string>business_field/invoicing</string>
               </tuple>
             </value>

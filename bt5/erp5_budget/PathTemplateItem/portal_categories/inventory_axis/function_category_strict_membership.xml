@@ -57,7 +57,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>inventory_axis/function</string>
                 <string>inventory_axis/function_category_strict_membership</string>
               </tuple>
             </value>

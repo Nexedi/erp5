@@ -57,8 +57,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>free_subscription_request_type/free_subscription_request_type</string>
-                <string>free_subscription_request_type/1</string>
                 <string>free_subscription_request_type/unsubscription</string>
               </tuple>
             </value>

@@ -57,7 +57,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>caching_policy/one-day-max-modification-date</string>
                 <string>caching_policy/one-hour-max-modification-date</string>
               </tuple>
             </value>

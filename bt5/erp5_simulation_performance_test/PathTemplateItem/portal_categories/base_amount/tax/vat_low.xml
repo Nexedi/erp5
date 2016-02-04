@@ -58,7 +58,6 @@
             <value>
               <tuple>
                 <string>base_amount/tax/vat_low</string>
-                <string>base_amount/tax/vat_low</string>
               </tuple>
             </value>
         </item>
