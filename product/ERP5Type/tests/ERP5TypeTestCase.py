@@ -865,6 +865,15 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         if not quiet:
           ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start,))
 
+    def _updateTranslationTable(self, quiet=0):
+      _start = time.time()
+      if not quiet:
+        ZopeTestCase._print('\nUpdating translation table ... ')
+        self.portal.ERP5Site_updateTranslationTable()
+        self.commit()
+        if not quiet:
+          ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start,))
+
     def _reindexSite(self, quiet=0):
       """Reindex site if `erp5_tests_recreate_catalog` environment variable is
       set. """
@@ -937,7 +946,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             install_kw[listbox_line.object_id] = listbox_line.choice_item_list[0][1]
         bt.install(light_install=light_install,
                    object_to_update=install_kw,
-                   update_translation=1,
                    check_dependencies=False)
         if bt.isCatalogUpdatable() and (
             int(os.environ.get('erp5_tests_recreate_catalog', 0)) or \
@@ -1038,6 +1046,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                                               light_install=light_install,
                                               quiet=quiet)
             self._recreateCatalog()
+            self._updateTranslationTable()
             self._updateConversionServerConfiguration()
             self._updateMemcachedConfiguration()
             # Create a Manager user at the Portal level
