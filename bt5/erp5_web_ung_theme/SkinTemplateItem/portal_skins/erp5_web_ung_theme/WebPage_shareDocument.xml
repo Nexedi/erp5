@@ -99,6 +99,7 @@ return "%s/?key=%s" % (base_url, context.getReference())\n
                 <string>Assignor</string>
                 <string>Auditor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
