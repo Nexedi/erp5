@@ -76,7 +76,7 @@ def getSubstitutionMappingDict():\n
         kw[\'third_party_name\'] = "%s %s" % (destination.getSocialTitleTranslatedTitle() or \'\',\n
                                                     destination.getTitle())\n
     elif destination.getPortalType() == \'Organisation\':\n
-      kw[\'social_title\'] = str(translateString("Participant"))\n
+      kw[\'social_title\'] = str(portal.Base_translateString("Participant"))\n
       kw[\'third_party_name\'] = destination.getCorporateName() or destination.getTitle()\n
 \n
 \n
