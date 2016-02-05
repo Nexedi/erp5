@@ -735,6 +735,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       light_install = self.enableLightInstall()
       self._installBusinessTemplateList(new_template_list,
                                         light_install=light_install)
+      self.portal.ERP5Site_updateTranslationTable()
       self.tic()
 
     def uninstallBusinessTemplate(self, *template_list):
