@@ -321,10 +321,8 @@ class NotificationTool(BaseTool):
           person_value = catalog_tool.getResultValue(portal_type=portal_type_list,
                                                      reference=person)
           if person_value is None:
-            # For backward compatibility. I recommend to use ValueError.(yusei)
-            raise IndexError, "Can't find person document which reference is '%s'" % person
-          else:
-            person = person_value
+            raise ValueError("Can't find person document which reference is '%s'" % person)
+          person = person_value
         to_person_list.append(person)
 
     # prepare low-level arguments if needed.
