@@ -64,14 +64,6 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>publication_section/erp_implementation</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -247,7 +239,7 @@ Date.ext={};Date.ext.util={};Date.ext.util.xPad=function(a,c,b){if(typeof(b)=="u
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.690.6828.44612</string> </value>
+                <value> <string>936.44673.53508.39355</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -265,7 +257,7 @@ Date.ext={};Date.ext.util={};Date.ext.util.xPad=function(a,c,b){if(typeof(b)=="u
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1408712224.7</float>
+                        <float>1407233455.14</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
