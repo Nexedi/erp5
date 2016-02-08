@@ -1,5 +1,6 @@
 Campaign | DefaultEventPath
 Campaign | DefaultOutcomePath
 Event Path | EventPath
+Mail Message | MailMessageConstraint
 Meeting | DefaultEventPath
 Support Request | Codification
