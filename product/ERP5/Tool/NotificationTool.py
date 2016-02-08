@@ -233,6 +233,7 @@ class NotificationTool(BaseTool):
                   attachment_list=None, attachment_document_list=None,
                   notifier_list=None, priority_level=None,
                   store_as_event=False,
+                  check_consistency=True,
                   message_text_format='text/plain',
                   event_keyword_argument_dict=None,
                   portal_type_list=None):
@@ -270,6 +271,13 @@ class NotificationTool(BaseTool):
 
       store_as_event -- whenever CRM is available, store
                         notifications as events
+
+      check_consistency -- Check that the created events match their constraints.
+                           If any of the event have an unsatisified constraint, a
+                           ValueError is raised.
+                           Note that if `store_as_event` is true, some draft
+                           events are created anyway, so caller may want to
+                           abort transaction.
 
       event_keyword_argument_dict -- additional keyword arguments which is used for
                                      constructor of event document.
@@ -317,12 +325,6 @@ class NotificationTool(BaseTool):
             raise IndexError, "Can't find person document which reference is '%s'" % person
           else:
             person = person_value
-        email_value = person.getDefaultEmailValue()
-        if email_value is None:
-          # For backward compatibility. I recommend to use ValueError.(yusei)
-          raise AttributeError, "Can't find default email address of %s" % person.getRelativeUrl()
-        if not email_value.asText():
-          raise AttributeError, "Default email address of %s is empty" % person.getRelativeUrl()
         to_person_list.append(person)
 
     # prepare low-level arguments if needed.
@@ -366,6 +368,12 @@ class NotificationTool(BaseTool):
       event.setTextContent(message)
       event.setAggregateValueList(attachment_document_list)
       event_list.append(event)
+
+    if check_consistency:
+      for event in event_list:
+        constraint_message_list = event.checkConsistency()
+        if constraint_message_list:
+          raise ValueError(constraint_message_list)
 
     for event in event_list:
       if event.isTempObject():
