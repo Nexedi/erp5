@@ -29,5 +29,17 @@ if not body:
 if not context.getStartDate():
   context.setStartDate(DateTime())
 
-context.portal_sms.send(text=body,recipient=to_url,sender=from_url,sender_title=from_title,message_type="text",
-                        test=download, document_relative_url=context.getRelativeUrl(), **kw)
+context.portal_sms.activate(
+  activity="SQLQueue",
+  # We do not retry these activities not to send SMS multiple times
+  max_retry=0,
+  conflict_retry=False,
+).send(
+  text=body,
+  recipient=to_url,
+  sender=from_url,
+  sender_title=from_title,
+  message_type="text",
+  test=download,
+  document_relative_url=context.getRelativeUrl(),
+  **kw)
