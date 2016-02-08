@@ -14,7 +14,7 @@
             <key> <string>alarm_notification_mode</string> </key>
             <value>
               <tuple>
-                <string>always</string>
+                <string>never</string>
               </tuple>
             </value>
         </item>
