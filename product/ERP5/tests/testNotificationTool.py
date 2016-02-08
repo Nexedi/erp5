@@ -384,11 +384,9 @@ class TestNotificationTool(ERP5TypeTestCase):
     sequence_list.play(self)
 
   def test_09_InvalideRecipient(self):
-    self.assertRaises(
-      IndexError,
-      self.portal.portal_notifications.sendMessage,
-      recipient='UnknowUser', subject='Subject', message='Message'
-    )
+    with self.assertRaises(ValueError):
+      self.portal.portal_notifications.sendMessage(
+          recipient='UnknowUser', subject='Subject', message='Message')
 
   def stepCheckPersonNotification(self, sequence=None,
                                   sequence_list=None, **kw):
