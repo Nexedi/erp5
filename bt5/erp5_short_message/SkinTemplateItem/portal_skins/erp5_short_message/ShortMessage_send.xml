@@ -81,8 +81,20 @@ if not body:\n
 if not context.getStartDate():\n
   context.setStartDate(DateTime())\n
 \n
-context.portal_sms.send(text=body,recipient=to_url,sender=from_url,sender_title=from_title,message_type="text",\n
-                        test=download, document_relative_url=context.getRelativeUrl(), **kw)\n
+context.portal_sms.activate(\n
+  queue="SQLQueue",\n
+  # We do not retry these activities not to send SMS multiple times\n
+  max_retry=0,\n
+  conflict_retry=False,\n
+).send(\n
+  text=body,\n
+  recipient=to_url,\n
+  sender=from_url,\n
+  sender_title=from_title,\n
+  message_type="text",\n
+  test=download,\n
+  document_relative_url=context.getRelativeUrl(),\n
+  **kw)\n
 </string> </value>
         </item>
         <item>
