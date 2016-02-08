@@ -369,11 +369,9 @@ class TestNotificationTool(ERP5TypeTestCase):
     """
     Check that notification fails when the destination hasn't a email adress
     """
-    self.assertRaises(
-      AttributeError,
-      self.portal.portal_notifications.sendMessage,
-      recipient='userWithoutEmail', subject='Subject', message='Message'
-    )
+    with self.assertRaises(ValueError):
+      self.portal.portal_notifications.sendMessage(
+          recipient='userWithoutEmail', subject='Subject', message='Message')
 
   def test_08_PersonWithoutEmail(self):
     sequence_list = SequenceList()
