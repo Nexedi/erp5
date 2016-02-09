@@ -92,13 +92,13 @@
 \n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//form[@class=\'filter_form\']</td>\n
+  <td>//input[@class=\'filter_button\']</td>\n
   <td></td>\n
 </tr>\n
 \n
 <tr>\n
   <td>click</td>\n
-  <td>//form[@class=\'filter_form\']//input</td>\n
+  <td>//input[@class=\'filter_button\']</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -195,7 +195,7 @@
 \n
 <tr>\n
   <td>click</td>\n
-  <td>//form[@class=\'filter_form\']//input</td>\n
+  <td>//input[@class=\'filter_button\']</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -274,7 +274,7 @@
 \n
 <tr>\n
   <td>click</td>\n
-  <td>//form[@class=\'filter_form\']//input</td>\n
+  <td>//input[@class=\'filter_button\']</td>\n
   <td></td>\n
 </tr>\n
 \n

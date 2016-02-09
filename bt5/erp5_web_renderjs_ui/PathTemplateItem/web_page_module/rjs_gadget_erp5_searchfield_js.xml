@@ -185,10 +185,10 @@
       var gadget = this,\n
         url,\n
         options = {},\n
-        sort_form = gadget.props.element.querySelector(".filter_form");\n
+        sort_button = gadget.props.element.querySelector(".filter_button");\n
       return loopEventListener(\n
-        sort_form,\n
-        "submit",\n
+        sort_button,\n
+        "click",\n
         false,\n
         function () {\n
           return new RSVP.Queue()\n
@@ -341,7 +341,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.25574.60857.20718</string> </value>
+                <value> <string>948.36257.33692.30037</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -359,7 +359,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448889581.09</float>
+                        <float>1453137078.14</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
