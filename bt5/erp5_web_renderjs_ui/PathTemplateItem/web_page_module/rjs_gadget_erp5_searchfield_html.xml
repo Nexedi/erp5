@@ -125,19 +125,15 @@
         <div class="ui-field-contain">\n
           <div class="bottom">\n
               <div class="ui-input-text ui-body-{{theme}} ui-input-has-icon ui-corner-all ui-shadow-inset ui-input-has-clear">\n
-                <form class="save_form">\n
-                  <input type="text" data-enhanced="true" value="{{widget_value}}" name="search" {{widget_status_attribute}} >\n
-                   <div class="ui-btn ui-input-clear ui-input-btn ui-corner-all ui-icon-search ui-btn-icon-notext" data-i18n="[node]header-submit">\n
--                   Submit<input data-enhanced="true" type="submit" data-i18n="[value]header-submit" value="Submit" {{widget_status_attribute}} />\n
-                  </div>\n
-                </form>\n
+                <input type="text" data-enhanced="true" value="{{widget_value}}" name="search" {{widget_status_attribute}} >\n
+                <div class="ui-btn ui-input-clear ui-input-btn ui-corner-all ui-icon-search ui-btn-icon-notext" data-i18n="[node]header-submit">\n
+-                 Submit<input data-enhanced="true" type="submit" data-i18n="[value]header-submit" value="Submit" {{widget_status_attribute}} />\n
+                </div>\n
               </div>\n
               <div class="ui-shadow-inset ui-btn ui-btn-inline ui-corner-all ui-btn-{{theme}} ui-btn-icon-notext ui-icon-filter ui-override-theme " >\n
-                <form class="filter_form">\n
-                  <div class="ui-input-btn">\n
-                    <input data-role="button" data-enhanced="true" type="submit" data-i18n="[value]" value=" ">\n
-                  </div>\n
-              </form>\n
+                <div class="ui-input-btn">\n
+                  <input class="filter_button" data-role="button" data-enhanced="true" type="submit" data-i18n="[value]" value=" ">\n
+                </div>\n
             </div>\n
          </div>\n
         </div>\n
@@ -285,7 +281,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.32333.16329.53265</string> </value>
+                <value> <string>948.36261.46161.37597</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -303,7 +299,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448969299.26</float>
+                        <float>1453137329.15</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
