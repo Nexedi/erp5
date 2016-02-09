@@ -1121,6 +1121,10 @@ html table thead th[colspan] {\n
   text-align: center;\n
 }\n
 \n
+html .ui-listbox-error {\n
+  text-align: center;\n
+}\n
+\n
 /* cell background */\n
 html table thead tr,\n
 html table tfoot tr,\n
@@ -5215,7 +5219,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.40163.31953.33774</string> </value>
+                <value> <string>949.1052.3508.62634</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -5233,7 +5237,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453373898.88</float>
+                        <float>1454957135.51</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -103,9 +103,9 @@
 
 /*jslint indent: 2, maxerr: 3, maxlen: 100, nomen: true */\n
 /*global window, document, rJS, RSVP, Handlebars, $, loopEventListener,\n
-  QueryFactory, SimpleQuery, ComplexQuery, Query*/\n
+  QueryFactory, SimpleQuery, ComplexQuery, Query, console*/\n
 (function (window, document, rJS, RSVP, Handlebars, $, loopEventListener,\n
-  QueryFactory, SimpleQuery, ComplexQuery, Query) {\n
+  QueryFactory, SimpleQuery, ComplexQuery, Query, console) {\n
   "use strict";\n
   var gadget_klass = rJS(window),\n
     filter_item_source = gadget_klass.__template_element\n
@@ -319,7 +319,14 @@
         query_list;\n
       if (gadget.props.extended_search) {\n
         //string to query\n
-        query_list = QueryFactory.create(gadget.props.extended_search);\n
+        try {\n
+          query_list = QueryFactory.create(gadget.props.extended_search);\n
+        } catch (error) {\n
+          //XXXX hack to not crash interface\n
+          //it catch all error, not only search criteria invalid error\n
+          console.warn(error);\n
+          return;\n
+        }\n
         if (query_list.operator === "OR") {\n
           or.checked = true;\n
           and.checked = false;\n
@@ -476,7 +483,7 @@
     });\n
 \n
 }(window, document, rJS, RSVP, Handlebars, $, loopEventListener,\n
-  QueryFactory, SimpleQuery, ComplexQuery, Query));
+  QueryFactory, SimpleQuery, ComplexQuery, Query, console));
 
 ]]></string> </value>
         </item>
@@ -613,7 +620,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.29484.5127.28433</string> </value>
+                <value> <string>949.2121.59518.17646</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -631,7 +638,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448903443.33</float>
+                        <float>1455022145.56</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
