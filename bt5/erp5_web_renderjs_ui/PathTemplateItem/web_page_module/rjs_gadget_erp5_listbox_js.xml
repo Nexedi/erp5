@@ -109,9 +109,9 @@
 
 /*jslint indent: 2, maxerr: 3, nomen: true */\n
 /*global window, document, rJS, URI, RSVP, loopEventListener,\n
-  SimpleQuery, ComplexQuery, Query, Handlebars*/\n
+  SimpleQuery, ComplexQuery, Query, Handlebars, console*/\n
 (function (window, document, rJS, URI, RSVP, loopEventListener,\n
-  SimpleQuery, ComplexQuery, Query, Handlebars) {\n
+  SimpleQuery, ComplexQuery, Query, Handlebars, console) {\n
   "use strict";\n
   var gadget_klass = rJS(window),\n
     listbox_hidden_thead_source = gadget_klass.__template_element\n
@@ -140,7 +140,12 @@
     listbox_source = gadget_klass.__template_element\n
                          .getElementById("listbox-template")\n
                          .innerHTML,\n
-    listbox_template = Handlebars.compile(listbox_source);\n
+    listbox_template = Handlebars.compile(listbox_source),\n
+\n
+    error_message_source = gadget_klass.__template_element\n
+                         .getElementById("error-message-template")\n
+                         .innerHTML,\n
+    error_message_template = Handlebars.compile(error_message_source);\n
 \n
 \n
   function renderListboxThead(gadget, template) {\n
@@ -248,6 +253,22 @@
     ));\n
   }\n
 \n
+\n
+  function renderErrorMessage(gadget) {\n
+    return gadget.getUrlFor({\n
+      command: \'store_and_change\',\n
+      options: {\n
+        "extended_search": ""\n
+      }\n
+    })\n
+      .push(function (url) {\n
+        return gadget.translateHtml(error_message_template(\n
+          {\n
+            \'reset_url\' : url\n
+          }\n
+        ));\n
+      });\n
+  }\n
 \n
   rJS(window)\n
     /////////////////////////////////////////////////////////////////\n
@@ -388,6 +409,7 @@
         select_list = [],\n
         dataset,\n
         counter,\n
+        queue,\n
         i;\n
 \n
       if (field_json.query === undefined) {\n
@@ -411,109 +433,122 @@
         select_list.push(field_json.column_list[i][0]);\n
       }\n
       select_list.push("uid");\n
-      return gadget.jio_allDocs({\n
+      queue = gadget.jio_allDocs({\n
         // XXX Not jIO compatible, but until a better api is found...\n
         "list_method_template": field_json.list_method_template,\n
         "query": query_string,\n
         "limit": [begin_from, lines + 1],\n
         "select_list": select_list,\n
         "sort_on": gadget.props.sort_list\n
-      }).push(function (result) {\n
-        var promise_list = [result];\n
-        counter = Math.min(result.data.total_rows, lines);\n
-        for (i = 0; i < counter; i += 1) {\n
-          promise_list.push(\n
-            gadget.getUrlFor({\n
-              command: \'index\',\n
-              options: {\n
-                jio_key: result.data.rows[i].id,\n
-                selection_index: begin_from + i,\n
-                query: query_string,\n
-                list_method_template: field_json.list_method_template,\n
-                "sort_list:json": gadget.props.sort_list\n
-              }\n
-            })\n
-          );\n
-        }\n
-        return RSVP.all(promise_list);\n
+      });\n
+      queue\n
+        .push(undefined, function (error) {\n
+          //XXXXX hack to not crash interface\n
+          //this will catch all error, not only search criteria invalid error\n
+          console.warn(error);\n
+          return renderErrorMessage(gadget)\n
+            .push(function (error_html) {\n
+              gadget.props.element.querySelector(".document_table").innerHTML = error_html;\n
+              queue.cancel();\n
+            });\n
+        })\n
+        .push(function (result) {\n
+          var promise_list = [result];\n
+          counter = Math.min(result.data.total_rows, lines);\n
+          for (i = 0; i < counter; i += 1) {\n
+            promise_list.push(\n
+              gadget.getUrlFor({\n
+                command: \'index\',\n
+                options: {\n
+                  jio_key: result.data.rows[i].id,\n
+                  selection_index: begin_from + i,\n
+                  query: query_string,\n
+                  list_method_template: field_json.list_method_template,\n
+                  "sort_list:json": gadget.props.sort_list\n
+                }\n
+              })\n
+            );\n
+          }\n
+          return RSVP.all(promise_list);\n
 \n
-      }).push(function (result_list) {\n
-        var j,\n
-          result = result_list[0],\n
-          value,\n
-          body_value = [],\n
-          tr_value = [],\n
-          tmp_url;\n
-        dataset = result;\n
-        for (i = 0; i < counter; i += 1) {\n
-          tmp_url = result_list[i + 1];\n
-          tr_value = [];\n
-          for (j = 0; j < field_json.column_list.length; j += 1) {\n
-            value = result.data.rows[i].value[field_json.column_list[j][0]] || "";\n
-            tr_value.push({\n
-              "type": value.type,\n
-              "editable": value.editable,\n
-              "href": tmp_url,\n
-              "text": value,\n
-              "line": i,\n
-              "column": j\n
+        }).push(function (result_list) {\n
+          var j,\n
+            result = result_list[0],\n
+            value,\n
+            body_value = [],\n
+            tr_value = [],\n
+            tmp_url;\n
+          dataset = result;\n
+          for (i = 0; i < counter; i += 1) {\n
+            tmp_url = result_list[i + 1];\n
+            tr_value = [];\n
+            for (j = 0; j < field_json.column_list.length; j += 1) {\n
+              value = result.data.rows[i].value[field_json.column_list[j][0]] || "";\n
+              tr_value.push({\n
+                "type": value.type,\n
+                "editable": value.editable,\n
+                "href": tmp_url,\n
+                "text": value,\n
+                "line": i,\n
+                "column": j\n
+              });\n
+            }\n
+            body_value.push({\n
+              "value": result.data.rows[i].value.uid,\n
+              "tr_value": tr_value\n
             });\n
           }\n
-          body_value.push({\n
-            "value": result.data.rows[i].value.uid,\n
-            "tr_value": tr_value\n
-          });\n
-        }\n
-        gadget.props.body_value = body_value;\n
-        gadget.props.result = result;\n
-        return renderListboxTbody(gadget);\n
-      }).push(function () {\n
-        var prev_param = {},\n
-          next_param = {};\n
-        function setNext() {\n
-          if (dataset.data.rows.length > lines) {\n
-            next_param[gadget.props.field_json.key + \'_begin_from\'] = begin_from + lines;\n
+          gadget.props.body_value = body_value;\n
+          gadget.props.result = result;\n
+          return renderListboxTbody(gadget);\n
+        }).push(function () {\n
+          var prev_param = {},\n
+            next_param = {};\n
+          function setNext() {\n
+            if (dataset.data.rows.length > lines) {\n
+              next_param[gadget.props.field_json.key + \'_begin_from\'] = begin_from + lines;\n
+            }\n
           }\n
-        }\n
 \n
-        if (begin_from === 0) {\n
-          setNext();\n
-        } else {\n
-          prev_param[gadget.props.field_json.key + \'_begin_from\'] = begin_from - lines;\n
-          setNext();\n
-        }\n
-        return RSVP.all([\n
-          gadget.getUrlFor({command: \'change\', options: prev_param}),\n
-          gadget.getUrlFor({command: \'change\', options: next_param})\n
-        ]);\n
+          if (begin_from === 0) {\n
+            setNext();\n
+          } else {\n
+            prev_param[gadget.props.field_json.key + \'_begin_from\'] = begin_from - lines;\n
+            setNext();\n
+          }\n
+          return RSVP.all([\n
+            gadget.getUrlFor({command: \'change\', options: prev_param}),\n
+            gadget.getUrlFor({command: \'change\', options: next_param})\n
+          ]);\n
 \n
-      }).push(function (url_list) {\n
-        var foot = {};\n
-        foot.colspan = field_json.column_list.length;\n
-        foot.default_colspan = foot.colspan;\n
-        foot.previous_classname = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child";\n
-        foot.previous_url = url_list[0];\n
-        foot.next_classname = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child";\n
-        foot.next_url = url_list[1];\n
-        if ((begin_from === 0) && (counter === 0)) {\n
-          foot.record = "No records";\n
-        } else if ((dataset.data.rows.length <= lines) && (begin_from === 0)) {\n
-          foot.record = counter + " Records";\n
-        } else {\n
-          foot.record = "Records " + (((begin_from + lines) / lines - 1) * lines + 1) + " - " + (((begin_from + lines) / lines - 1) * lines + counter);\n
-        }\n
+        }).push(function (url_list) {\n
+          var foot = {};\n
+          foot.colspan = field_json.column_list.length;\n
+          foot.default_colspan = foot.colspan;\n
+          foot.previous_classname = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child";\n
+          foot.previous_url = url_list[0];\n
+          foot.next_classname = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child";\n
+          foot.next_url = url_list[1];\n
+          if ((begin_from === 0) && (counter === 0)) {\n
+            foot.record = "No records";\n
+          } else if ((dataset.data.rows.length <= lines) && (begin_from === 0)) {\n
+            foot.record = counter + " Records";\n
+          } else {\n
+            foot.record = "Records " + (((begin_from + lines) / lines - 1) * lines + 1) + " - " + (((begin_from + lines) / lines - 1) * lines + counter);\n
+          }\n
 \n
-        if (begin_from === 0) {\n
-          foot.previous_classname += " ui-disabled";\n
-        }\n
-        if (dataset.data.rows.length <= lines) {\n
-          foot.next_classname += " ui-disabled";\n
-        }\n
-        gadget.props.foot = foot;\n
-        return renderListboxTfoot(gadget);\n
-      }).push(function (my_html) {\n
-        gadget.props.element.querySelector(".tfoot").innerHTML = my_html;\n
-      });\n
+          if (begin_from === 0) {\n
+            foot.previous_classname += " ui-disabled";\n
+          }\n
+          if (dataset.data.rows.length <= lines) {\n
+            foot.next_classname += " ui-disabled";\n
+          }\n
+          gadget.props.foot = foot;\n
+          return renderListboxTfoot(gadget);\n
+        }).push(function (my_html) {\n
+          gadget.props.element.querySelector(".tfoot").innerHTML = my_html;\n
+        });\n
+      return queue;\n
     })\n
 \n
 \n
@@ -657,7 +692,7 @@
     });\n
 \n
 }(window, document, rJS, URI, RSVP, loopEventListener,\n
-  SimpleQuery, ComplexQuery, Query, Handlebars));
+  SimpleQuery, ComplexQuery, Query, Handlebars, console));
 
 ]]></string> </value>
         </item>
@@ -794,7 +829,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.8931.54995.63897</string> </value>
+                <value> <string>949.2121.3637.17544</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -812,7 +847,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451497439.76</float>
+                        <float>1455022186.29</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

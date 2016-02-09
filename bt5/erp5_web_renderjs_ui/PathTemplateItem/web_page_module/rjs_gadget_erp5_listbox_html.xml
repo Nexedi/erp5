@@ -253,7 +253,18 @@
       </table>\n
     </div>\n
   </script>\n
-\n
+  \n
+  \n
+  \n
+  <script id="error-message-template" type="text/x-handlebars-template">\n
+    <div class="ui-listbox-error">\n
+\t\t   <a class="ui-btn ui-corner-all ui-btn-inline" href="{{reset_url}}">\n
+\t\t     <span style="color:red" data-i18n="Invalid Search Criteria">Invalid Search Criteria</span>\n
+\t\t     <span>-</span>\n
+         <span data-i18n="Reset">Reset</span>\n
+       </a>\n
+    </div>\n
+  </script>\n
 \n
   </head>\n
   <body>\n
@@ -397,7 +408,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.8903.55441.44066</string> </value>
+                <value> <string>949.1053.41653.819</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -415,7 +426,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451495552.88</float>
+                        <float>1454957159.48</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
