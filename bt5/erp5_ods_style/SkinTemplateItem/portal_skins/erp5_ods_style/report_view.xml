@@ -144,6 +144,25 @@
                 </table:table>\n
               </tal:block>\n
             </tal:block>\n
+\n
+            <!-- include the report header as last page -->\n
+            <table:table tal:attributes="table:name python:unicode(form.getProperty(\'title\'), \'utf8\')" i18n:attributes="table:name">\n
+              <table:table-column\n
+                    table:style-name=\'co2\'\n
+                    table:number-columns-repeated=\'100\'\n
+                    table:default-cell-style-name=\'Default\'/>\n
+              <table:table-row table:style-name=\'ro2\'>\n
+                <table:table-cell table:style-name="report-title"\n
+                                  office:value-type=\'string\'\n
+                                  table:number-columns-spanned=\'5\'\n
+                                  table:number-rows-spanned=\'1\'>\n
+                  <text:p i18n:translate="" tal:content="python: unicode(form.getProperty(\'title\'), \'utf8\')" ></text:p>\n
+                </table:table-cell>\n
+              </table:table-row>\n
+              <!-- fields from the report form itself -->\n
+              <tal:block metal:use-macro="here/form_view/macros/form_layout"/>\n
+            </table:table>\n
+\n
           </tal:block>\n
         </tal:block>\n
       </tal:block>\n
