@@ -98,7 +98,7 @@ def getSubstitutionMappingDict():\n
   hmac = portal.Base_getHMACHexdigest(key=portal.Base_getEventHMACKey(), message=event_value.getId())\n
   kw["image_parameters"] = "/Base_openEvent?id=%s&hash=%s" %(event_value.getId(), hmac)\n
   kw["newsletter_parameters"] = "/Base_readEvent?id=%s&hash=%s" %(event_value.getId(), hmac)\n
-  kw["unsubscribe_parameters"] = "/Base_unsubscribe?id=%s&hash=%s" %(event_value.getId(), hmac)\n
+  kw["unsubscribe_parameters"] = "/Base_unsubscribeFromEvent?id=%s&hash=%s" %(event_value.getId(), hmac)\n
 \n
   # Backward compatibility\n
   kw["source_title"] = event_value.getSourceTitle() or \'\',\n
