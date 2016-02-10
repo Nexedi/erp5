@@ -136,12 +136,24 @@
             </table:table>\n
           </tal:block>\n
           <tal:block tal:condition="sheet_per_report_section">\n
-            <tal:block tal:repeat="report_item python: report_item_list">\n
-              <tal:block tal:condition="python: report_item.getFormId()">\n
-                <table:table tal:attributes="table:name python: unicode(report_item.getTitle() or \'Sheet%s\' % repeat[\'report_item\'].index, \'utf-8\')">\n
+            <tal:block tal:condition="rendered_report_item_list">\n
+              <tal:block tal:repeat="report_item report_item_list">\n
+                <!-- FIXME: in deferred mode + sheet_per_report_section we do not have title -->\n
+                <table:table tal:attributes="table:name python: unicode(\'Sheet%s\' % repeat[\'report_item\'].index, \'utf-8\')">\n
                   <table:table-column table:style-name="co4" table:default-cell-style-name="text"/>\n
-                  <tal:block metal:use-macro="here/report_view/macros/make_report_item_table"/>\n
+                  <tal:block tal:replace="structure report_item"/>\n
                 </table:table>\n
+              </tal:block>\n
+            </tal:block>\n
+\n
+            <tal:block tal:condition="not: rendered_report_item_list">\n
+              <tal:block tal:repeat="report_item python: report_item_list">\n
+                <tal:block tal:condition="python: report_item.getFormId()">\n
+                  <table:table tal:attributes="table:name python: unicode(report_item.getTitle() or \'Sheet%s\' % repeat[\'report_item\'].index, \'utf-8\')">\n
+                    <table:table-column table:style-name="co4" table:default-cell-style-name="text"/>\n
+                    <tal:block metal:use-macro="here/report_view/macros/make_report_item_table"/>\n
+                  </table:table>\n
+                </tal:block>\n
               </tal:block>\n
             </tal:block>\n
 \n
