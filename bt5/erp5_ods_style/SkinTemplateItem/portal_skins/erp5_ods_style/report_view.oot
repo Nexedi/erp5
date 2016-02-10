@@ -92,14 +92,27 @@
             </table:table>
           </tal:block>
           <tal:block tal:condition="sheet_per_report_section">
-            <tal:block tal:repeat="report_item python: report_item_list">
-              <tal:block tal:condition="python: report_item.getFormId()">
-                <table:table tal:attributes="table:name python: unicode(report_item.getTitle() or 'Sheet%s' % repeat['report_item'].index, 'utf-8')">
+            <tal:block tal:condition="rendered_report_item_list">
+              <tal:block tal:repeat="report_item report_item_list">
+                <!-- FIXME: in deferred mode + sheet_per_report_section we do not have title -->
+                <table:table tal:attributes="table:name python: unicode('Sheet%s' % repeat['report_item'].index, 'utf-8')">
                   <table:table-column table:style-name="co4" table:default-cell-style-name="text"/>
-                  <tal:block metal:use-macro="here/report_view/macros/make_report_item_table"/>
+                  <tal:block tal:replace="structure report_item"/>
                 </table:table>
               </tal:block>
             </tal:block>
+
+            <tal:block tal:condition="not: rendered_report_item_list">
+              <tal:block tal:repeat="report_item python: report_item_list">
+                <tal:block tal:condition="python: report_item.getFormId()">
+                  <table:table tal:attributes="table:name python: unicode(report_item.getTitle() or 'Sheet%s' % repeat['report_item'].index, 'utf-8')">
+                    <table:table-column table:style-name="co4" table:default-cell-style-name="text"/>
+                    <tal:block metal:use-macro="here/report_view/macros/make_report_item_table"/>
+                  </table:table>
+                </tal:block>
+              </tal:block>
+            </tal:block>
+
             <!-- include the report header as last page -->
             <table:table tal:attributes="table:name python:unicode(form.getProperty('title'), 'utf8')" i18n:attributes="table:name">
               <table:table-column

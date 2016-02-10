@@ -149,6 +149,38 @@ class TestODSDeferredStyle(TestDeferredStyle):
   content_type = 'application/vnd.oasis.opendocument.spreadsheet'
   attachment_file_extension = '.ods'
 
+  def test_report_view_sheet_per_report_section(self):
+    """Test the sheet_per_report_section feature of erp5_ods_style.
+    """
+    self.loginAsUser('bob')
+    self.portal.changeSkin('Deferred')
+    response = self.publish(
+        '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s&sheet_per_report_section:int=1'
+        % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
+    self.tic()
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, message_text = last_message
+    self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
+    mail_message = email.message_from_string(message_text)
+    for part in mail_message.walk():
+      content_type = part.get_content_type()
+      file_name = part.get_filename()
+      if content_type == self.content_type:
+        # "History" is the title of Base_viewHistory form
+        file_name = part.get_filename()
+        expected_file_name = 'History%s' % self.attachment_file_extension
+        self.assertEqual(expected_file_name, file_name)
+        self.assertEqual('attachment; filename="%s"' % expected_file_name,
+                          part.get('Content-Disposition'))
+        data = part.get_payload(decode=True)
+        error_list = Validator().validate(data)
+        if error_list:
+          self.fail(''.join(error_list))
+        break
+    else:
+      self.fail('Attachment not found in email\n%s' % message_text)
+
 
 class TestODTDeferredStyle(TestDeferredStyle):
   skin = 'ODT'
