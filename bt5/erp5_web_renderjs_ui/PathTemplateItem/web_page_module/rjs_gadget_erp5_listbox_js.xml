@@ -409,6 +409,7 @@
         select_list = [],\n
         dataset,\n
         counter,\n
+        limit_options,\n
         queue,\n
         i;\n
 \n
@@ -433,11 +434,16 @@
         select_list.push(field_json.column_list[i][0]);\n
       }\n
       select_list.push("uid");\n
+      if (lines === 0) {\n
+        limit_options = undefined;\n
+      } else {\n
+        limit_options = [begin_from, lines + 1];\n
+      }\n
       queue = gadget.jio_allDocs({\n
         // XXX Not jIO compatible, but until a better api is found...\n
         "list_method_template": field_json.list_method_template,\n
         "query": query_string,\n
-        "limit": [begin_from, lines + 1],\n
+        "limit": limit_options,\n
         "select_list": select_list,\n
         "sort_on": gadget.props.sort_list\n
       });\n
@@ -454,7 +460,12 @@
         })\n
         .push(function (result) {\n
           var promise_list = [result];\n
-          counter = Math.min(result.data.total_rows, lines);\n
+          if (lines === 0) {\n
+            lines =  result.data.total_rows;\n
+            counter = result.data.total_rows;\n
+          } else {\n
+            counter = Math.min(result.data.total_rows, lines);\n
+          }\n
           for (i = 0; i < counter; i += 1) {\n
             promise_list.push(\n
               gadget.getUrlFor({\n
@@ -829,7 +840,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.2121.3637.17544</string> </value>
+                <value> <string>949.3576.234.9489</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -847,7 +858,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1455022186.29</float>
+                        <float>1455109014.98</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
