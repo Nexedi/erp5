@@ -70,9 +70,10 @@ class TestUpgrader(ERP5TypeTestCase):
     # update the bt5list will be updated to the version of the filesystem
     bootstrap_path = os.environ.get('erp5_tests_bootstrap_path') or \
       ERP5Site.getBootstrapDirectory()
-    bt5_path_list = os.environ['erp5_tests_bt5_path']
-    repository_list = [bt5_path_list, ]
-    genbt5list(dir_list=[bootstrap_path, bt5_path_list])
+    # the path list can contain several directories in projects
+    bt5_path_list = os.environ['erp5_tests_bt5_path'].split(',')
+    bt5_path_list.append(bootstrap_path)
+    genbt5list(dir_list=bt5_path_list)
     self.tic()
 
   def stepClearCache(self, sequence=None):
