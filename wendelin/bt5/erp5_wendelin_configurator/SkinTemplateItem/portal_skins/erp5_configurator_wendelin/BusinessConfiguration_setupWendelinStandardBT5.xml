@@ -58,10 +58,10 @@ bt5_installation_list = (\'erp5_full_text_mroonga_catalog\',\n
                          \'erp5_ingestion_mysql_innodb_catalog\',\n
                          \'erp5_ingestion\',\n
                          \'erp5_stock_cache\',\n
+                         \'erp5_knowledge_pad\', # it must be before erp5_web\n
                          \'erp5_web\',\n
                          \'erp5_dms\',\n
                          \'erp5_pdm\',\n
-                         \'erp5_knowledge_pad\',\n
                          \'erp5_trade\',\n
                          \'erp5_project\',\n
                          \'erp5_simulation\',\n
