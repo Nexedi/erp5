@@ -158,21 +158,9 @@
   <td>name=field_my_quantity</td>\n
   <td>42</td>\n
 </tr>\n
-<tr>\n
-  <td>click</td>\n
-  <td>name=submit</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>pause</td>\n
-  <td>3000</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>waitForElementPresent</td>\n
-  <td>//button[@data-i18n=\'Save\']</td>\n
-  <td></td>\n
-</tr>\n
+\n
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />\n
+\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/bar_module/Zuite_waitForActivities</td>\n
