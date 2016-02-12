@@ -82,6 +82,7 @@ import os
 
 from zLOG import LOG, WARNING
 import warnings
+from urlparse import urlparse
 
 # variable to inform about migration process
 migration_process_lock = "_migration_in_progress"
@@ -501,6 +502,28 @@ class FolderMixIn(ExtensionClass.Base):
     if method_id[0] == '_':
         raise AccessControl_Unauthorized(method_id)
     return self._recurseCallMethod(method_id, restricted=True, *args, **kw)
+
+  security.declarePublic('isURLAncestorOf')
+  def isURLAncestorOf(self, given_url):
+    """
+      This method returns True if the given_url is child of the url of
+      the document that the method is called on, False otherwise.
+
+      Note that the method compares the urls as strings and does
+      not access any document in given path,
+      hence it does not compute the inner acquisition path.
+    """
+    document_url = self.absolute_url()
+    parsed_given_url = urlparse(given_url)
+    parsed_document_url = urlparse(document_url)
+    # XXX note that the following check:
+    # - does not support relative urls
+    # - does not canonicalize domain name, e.g.
+    #   http://foo:80/erp5, http://foo/erp5 and http://foo:www/erp5
+    #   will not match.
+    return parsed_given_url.scheme == parsed_document_url.scheme and \
+        parsed_given_url.netloc == parsed_document_url.netloc and \
+        (parsed_given_url.path + '/').startswith((parsed_document_url.path + '/'))
 
 OFS_HANDLER = 0
 BTREE_HANDLER = 1
