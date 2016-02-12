@@ -92,7 +92,7 @@ for name in bt5_installation_list:\n
   configuration_save.addConfigurationItem("Standard BT5 Configurator Item",\n
                                           title=name, bt5_id=name,\n
                                           update_catalog=(name in bt5_update_catalog),\n
-                                          install_dependency=False,\n
+                                          install_dependency=True,\n
                                           )\n
 </string> </value>
         </item>
