@@ -248,7 +248,8 @@
   function renderListbox(gadget) {\n
     return gadget.translateHtml(listbox_template(\n
       {\n
-        "hide_class": gadget.props.hide_class\n
+        "hide_class": gadget.props.hide_class,\n
+        "title": gadget.props.field_json.title\n
       }\n
     ));\n
   }\n
@@ -840,7 +841,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.3576.234.9489</string> </value>
+                <value> <string>949.12124.31713.21350</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -858,7 +859,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1455109014.98</float>
+                        <float>1455620978.91</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

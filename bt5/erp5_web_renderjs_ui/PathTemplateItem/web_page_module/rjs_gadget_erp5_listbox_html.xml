@@ -239,7 +239,7 @@
             <button data-rel="hide" data-i18n="Hide Rows" name="Hide" type="submit" class="submit responsive ui-last-child ui-btn ui-icon-eye ui-btn-icon-left {{hide_class}}">Hide Rows</button>\n
           </div>\n
         </div>\n
-        <h1 data-i18n="0 items selected" class="ui-title ui-override-theme">0 items selected</h1>\n
+        <h1 data-i18n="{{title}}" class="ui-title ui-override-theme">{{title}}</h1>\n
         <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
           <div class="ui-controlgroup-controls">\n
             <button data-rel="Sort" data-i18n="Sort" name="Sort" type="submit" class="submit responsive ui-last-child ui-btn ui-icon-sort-amount-desc ui-btn-icon-left">Sort</button>\n
@@ -408,7 +408,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.1053.41653.819</string> </value>
+                <value> <string>949.10973.23622.18261</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -426,7 +426,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1454957159.48</float>
+                        <float>1455551894.43</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
