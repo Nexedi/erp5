@@ -50,7 +50,7 @@ Options:
                                http://.../erp5/portal_templates/asRepository
                              Default is INSTANCE_HOME/bt5 and its subfolders.
   --recreate_catalog={0|1}   Recreate the content of the SQL catalog. Default
-                             is to recreate, unless using --data_fs_path
+                             is not to recreate, unless using --data_fs_path
   --save                     Run unit tests in persistent mode (if unset,
                              existing Data.fs, dump.sql and *.bak static
                              folders are not modified). Tests are skipped
