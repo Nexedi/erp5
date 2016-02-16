@@ -99,13 +99,14 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, RSVP, loopEventListener */\n
+            <value> <string>/*global window, rJS, RSVP, document, loopEventListener */\n
 /*jslint indent: 2, maxerr: 3 */\n
-(function (window, rJS, RSVP, loopEventListener) {\n
+(function (window, rJS, RSVP, document, loopEventListener) {\n
   "use strict";\n
 \n
   rJS(window)\n
     .ready(function (gadget) {\n
+      gadget.props = {};\n
       return gadget.getElement()\n
         .push(function (element) {\n
           gadget.element = element;\n
@@ -114,6 +115,14 @@
     .declareAcquiredMethod("notifyValid", "notifyValid")\n
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")\n
     .declareAcquiredMethod("notifyChange", "notifyChange")\n
+    .declareMethod(\'renderAsText\', function (options) {\n
+      var gadget = this,\n
+        field_json = options.field_json || {},\n
+        text = document.createTextNode(field_json.value || field_json.default || "");\n
+      gadget.element.innerHTML = "";\n
+      gadget.element.appendChild(text);\n
+      gadget.props.renderAsText = true;\n
+    })\n
     .declareMethod(\'render\', function (options) {\n
       var input = this.element.querySelector(\'input\'),\n
         step = 0.00000001,\n
@@ -162,7 +171,9 @@
       // Check field validity when the value changes\n
       ////////////////////////////////////\n
       var field_gadget = this;\n
-\n
+      if (field_gadget.props.renderAsText) {\n
+        return;\n
+      }\n
       function notifyChange() {\n
         return RSVP.all([\n
           field_gadget.checkValidity(),\n
@@ -184,7 +195,9 @@
       // Inform when the field input is invalid\n
       ////////////////////////////////////\n
       var field_gadget = this;\n
-\n
+      if (field_gadget.props.renderAsText) {\n
+        return;\n
+      }\n
       function notifyInvalid(evt) {\n
         return field_gadget.notifyInvalid(evt.target.validationMessage);\n
       }\n
@@ -198,7 +211,7 @@
       );\n
     });\n
 \n
-}(window, rJS, RSVP, loopEventListener));</string> </value>
+}(window, rJS, RSVP, document, loopEventListener));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -319,7 +332,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -333,7 +346,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.63306.33653.13909</string> </value>
+                <value> <string>949.12193.52606.12288</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -351,7 +364,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423907635.25</float>
+                        <float>1455634120.41</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -180,9 +180,12 @@
           });\n
         })\n
         .push(function (cell_gadget) {\n
-          gadget.props.cell_gadget_list.push(cell_gadget);\n
           sub_field_json.editable = sub_field_json.editable && gadget.props.field_json.editable; // XXX \n
-          return cell_gadget.render({field_json: sub_field_json});\n
+          if (sub_field_json.editable || cell_gadget.renderAsText === undefined) {\n
+            gadget.props.cell_gadget_list.push(cell_gadget);\n
+            return cell_gadget.render({field_json: sub_field_json});\n
+          }\n
+          return cell_gadget.renderAsText({field_json: sub_field_json});\n
         });\n
     }\n
     for (i = 0; i < element_list.length; i += 1) {\n
@@ -498,7 +501,7 @@
               value = result.data.rows[i].value[field_json.column_list[j][0]] || "";\n
               tr_value.push({\n
                 "type": value.type,\n
-                "editable": value.editable,\n
+                "editable": value.editable && field_json.editable,\n
                 "href": tmp_url,\n
                 "text": value,\n
                 "line": i,\n
@@ -848,7 +851,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.12128.56104.7577</string> </value>
+                <value> <string>949.12277.57437.8942</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -866,7 +869,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1455621189.06</float>
+                        <float>1455630403.46</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

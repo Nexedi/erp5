@@ -103,8 +103,79 @@
 
 /*global window, rJS, RSVP, document, loopEventListener */\n
 /*jslint indent: 2 */\n
-(function (window, rJS, RSVP) {\n
+(function (window, rJS, RSVP, document, loopEventListener) {\n
   "use strict";\n
+  function getDateTimeValue(options) {\n
+    var tmp,\n
+      result = {},\n
+      date,\n
+      time = "",\n
+      leapyear,\n
+      timezone,\n
+      tmp_year,\n
+      tmp_month,\n
+      tmp_date,\n
+      tmp_hour,\n
+      tmp_minute,\n
+      lastDateOfMonth = [[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],\n
+                         [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]],//leapyear\n
+      value;\n
+    value = options.value || options.default || "";\n
+    if (value !== "") {\n
+      tmp = new Date(value);\n
+      //get date without timezone\n
+      tmp_date = tmp.getUTCDate();\n
+      tmp_month = tmp.getUTCMonth() + 1;\n
+      tmp_year = tmp.getUTCFullYear();\n
+\n
+      tmp_hour = tmp.getUTCHours();\n
+      tmp_minute = tmp.getUTCMinutes();\n
+\n
+      //timezone required\n
+      //convert time to GMT\n
+      timezone = parseInt(value.slice(-5), 10) / 100;\n
+\n
+      leapyear = (tmp_year % 4 === 0 && tmp_year % 100 !== 0) ? 1 : 0;\n
+      if (timezone !== 0) {\n
+        tmp_hour += timezone;\n
+        if (tmp_hour < 0) {\n
+          tmp_hour += 24;\n
+          tmp_date -= 1;\n
+          if (tmp_date === 0) {\n
+            tmp_month -= 1;\n
+            if (tmp_month === 0) {\n
+              tmp_month = 12;\n
+              tmp_year -= 1;\n
+            }\n
+            tmp_date = lastDateOfMonth[leapyear][tmp_month - 1];\n
+          }\n
+        } else if (tmp_hour > 23) {\n
+          tmp_hour -= 24;\n
+          tmp_date += 1;\n
+          if (tmp_date > lastDateOfMonth[leapyear][tmp_month - 1]) {\n
+            tmp_date = 1;\n
+            tmp_month += 1;\n
+            if (tmp_month > 12) {\n
+              tmp_month = 1;\n
+              tmp_year += 1;\n
+            }\n
+          }\n
+        }\n
+      }\n
+      if (options.date_only === 0) {\n
+        time = "T" + Math.floor(tmp_hour / 10) + tmp_hour % 10 + ":"\n
+              + Math.floor(tmp_minute / 10) +  (tmp_minute % 10) + ":00";\n
+      }\n
+      date = tmp_year + "-" + Math.floor(tmp_month / 10) + (tmp_month % 10) + "-"\n
+               +  Math.floor(tmp_date / 10) + (tmp_date % 10);\n
+      result = {\n
+        "date": date,\n
+        "time": time,\n
+        "timezone": timezone\n
+      };\n
+    }\n
+    return result;\n
+  }\n
   rJS(window)\n
     .ready(function (gadget) {\n
       return gadget.getElement()\n
@@ -115,29 +186,28 @@
     })\n
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")\n
     .declareAcquiredMethod("notifyValid", "notifyValid")\n
+    .declareMethod(\'renderAsText\', function (options) {\n
+      var gadget = this,\n
+        field_json = options.field_json || {},\n
+        result,\n
+        text;\n
+      result = getDateTimeValue(field_json);\n
+      text = document.createTextNode(result.date || "");\n
+      gadget.element.innerHTML = "";\n
+      gadget.element.appendChild(text);\n
+      gadget.props.renderAsText = true;\n
+    })\n
     .declareMethod(\'render\', function (options) {\n
       var input = this.element.querySelector(\'input\'),\n
-        date,\n
-        tmp,\n
-        timezone,\n
-        tmp_year,\n
-        tmp_month,\n
-        tmp_date,\n
-        tmp_hour,\n
-        tmp_minute,\n
         select,\n
-        time = "",\n
-        leapyear,\n
+        result,\n
         i,\n
         field_json = options.field_json || {},\n
-        lastDateOfMonth = [[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],\n
-                           [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]],//leapyear\n
         select_options = ["GMT-12", "GMT-11", "GMT-10", "GMT-9", "GMT-8", "GMT-7", "GMT-6",\n
                    "GMT-5", "GMT-4", "GMT-3", "GMT-2", "GMT-1", "GMT", "GMT+1",\n
                    "GMT+2", "GMT+3", "GMT+4", "GMT+5", "GMT+6", "GMT+7", "GMT+8",\n
                    "GMT+9", "GMT+10", "GMT+11", "GMT+12"],\n
-        select_option,\n
-        value = field_json.value || field_json.default || "";\n
+        select_option;\n
       this.props.field_json = field_json;\n
 \n
 \n
@@ -158,60 +228,14 @@
         input.setAttribute("type", "datetime-local");\n
       }\n
       //Change type to datetime/datetime local if configured in the field\n
-      if (value !== "") {\n
-        tmp = new Date(value);\n
-        //get date without timezone\n
-        tmp_date = tmp.getUTCDate();\n
-        tmp_month = tmp.getUTCMonth() + 1;\n
-        tmp_year = tmp.getUTCFullYear();\n
-\n
-        tmp_hour = tmp.getUTCHours();\n
-        tmp_minute = tmp.getUTCMinutes();\n
-\n
-        //timezone required\n
-        //convert time to GMT\n
-        timezone = parseInt(value.slice(-5), 10) / 100;\n
-\n
+      result = getDateTimeValue(field_json);\n
+      if (result.date) {\n
         if (field_json.timezone_style) {\n
-          select.selectedIndex = timezone + 12;\n
+          select.selectedIndex = result.timezone + 12;\n
         }\n
-        leapyear = (tmp_year % 4 === 0 && tmp_year % 100 !== 0) ? 1 : 0;\n
-        if (timezone !== 0) {\n
-          tmp_hour += timezone;\n
-          if (tmp_hour < 0) {\n
-            tmp_hour += 24;\n
-            tmp_date -= 1;\n
-            if (tmp_date === 0) {\n
-              tmp_month -= 1;\n
-              if (tmp_month === 0) {\n
-                tmp_month = 12;\n
-                tmp_year -= 1;\n
-              }\n
-              tmp_date = lastDateOfMonth[leapyear][tmp_month - 1];\n
-            }\n
-          } else if (tmp_hour > 23) {\n
-            tmp_hour -= 24;\n
-            tmp_date += 1;\n
-            if (tmp_date > lastDateOfMonth[leapyear][tmp_month - 1]) {\n
-              tmp_date = 1;\n
-              tmp_month += 1;\n
-              if (tmp_month > 12) {\n
-                tmp_month = 1;\n
-                tmp_year += 1;\n
-              }\n
-            }\n
-          }\n
-        }\n
-        if (field_json.date_only === 0) {\n
-          time = "T" + Math.floor(tmp_hour / 10) + tmp_hour % 10 + ":"\n
-              + Math.floor(tmp_minute / 10) +  (tmp_minute % 10) + ":00";\n
-        }\n
-        date = tmp_year + "-" + Math.floor(tmp_month / 10) + (tmp_month % 10) + "-"\n
-               +  Math.floor(tmp_date / 10) + (tmp_date % 10);\n
-\n
         input.setAttribute(\n
           \'value\',\n
-          date + time\n
+          result.date + result.time\n
         );\n
       }\n
       input.setAttribute(\'name\', field_json.key);\n
@@ -365,7 +389,9 @@
       // Inform when the field input is invalid\n
       ////////////////////////////////////\n
       var field_gadget = this;\n
-\n
+      if (field_gadget.props.renderAsText) {\n
+        return;\n
+      }\n
       function notifyInvalid(evt) {\n
         return field_gadget.notifyInvalid(evt.target.validationMessage);\n
       }\n
@@ -379,7 +405,7 @@
       );\n
     });\n
 \n
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, document, loopEventListener));
 
 ]]></string> </value>
         </item>
@@ -516,7 +542,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.49747.10334.23005</string> </value>
+                <value> <string>949.12193.27903.29320</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -534,7 +560,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1434544511.89</float>
+                        <float>1455634295.49</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

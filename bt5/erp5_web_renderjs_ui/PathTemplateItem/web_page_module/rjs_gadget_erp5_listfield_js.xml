@@ -122,6 +122,7 @@
 \n
   gadget_klass\n
     .ready(function (g) {\n
+      g.props = {};\n
       return g.getElement()\n
         .push(function (element) {\n
           g.element = element;\n
@@ -134,6 +135,14 @@
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("notifyValid", "notifyValid")\n
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")\n
+    .declareMethod(\'renderAsText\', function (options) {\n
+      var gadget = this,\n
+        field_json = options.field_json || {},\n
+        text = document.createTextNode(field_json.value || field_json.default || "");\n
+      gadget.element.innerHTML = "";\n
+      gadget.element.appendChild(text);\n
+      gadget.props.renderAsText = true;\n
+    })\n
     .declareMethod(\'render\', function (options) {\n
       var i,\n
         template,\n
@@ -206,7 +215,9 @@
       // Inform when the field input is invalid\n
       ////////////////////////////////////\n
       var field_gadget = this;\n
-\n
+      if (field_gadget.props.renderAsText) {\n
+        return;\n
+      }\n
       function notifyInvalid(evt) {\n
         return field_gadget.notifyInvalid(evt.target.validationMessage);\n
       }\n
@@ -357,7 +368,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.49457.43407.46148</string> </value>
+                <value> <string>949.12228.32176.27852</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -375,7 +386,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423135404.46</float>
+                        <float>1455634176.76</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
