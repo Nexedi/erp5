@@ -87,6 +87,65 @@
 \n
 <tr>\n
   <td>waitForElementPresent</td>\n
+  <td>//button[@data-i18n=\'Sort\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//button[@data-i18n=\'Sort\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//form[@class=\'plus\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//form[@class=\'plus\']//button</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@class=\'sort_item_container ui-controlgroup ui-corner_all\']/div[1]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+\n
+\n
+<tr>\n
+  <td>select</td>\n
+  <td>//div[@class=\'sort_item_container ui-controlgroup ui-corner_all\']/div[1]/div[2]//select</td>\n
+  <td>index=0</td>\n
+</tr>\n
+\n
+\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//form[@class="submit"]//button</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>link=Title 0</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
   <td>//button[@data-i18n=\'Hide Rows\']</td>\n
   <td></td>\n
 </tr>\n
@@ -159,10 +218,15 @@
 \n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>//tbody/tr[2]</td>\n
+  <td>//input[@value=\'1\']</td>\n
   <td></td>\n
 </tr>\n
 \n
+<tr>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//input[@value=\'2\']</td>\n
+  <td></td>\n
+</tr>\n
 \n
 \n
 <tr>\n
@@ -217,23 +281,24 @@
 \n
 \n
 <tr>\n
-  <td>verifyElementPresent</td>\n
-  <td>//tbody/tr/th</td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//input[@value=\'0\']</td>\n
   <td></td>\n
 </tr>\n
 \n
 \n
 <tr>\n
-  <td>verifyElementPresent</td>\n
-  <td>//tbody/tr[2]</td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//input[@value=\'1\']</td>\n
   <td></td>\n
 </tr>\n
 \n
 <tr>\n
-  <td>verifyElementPresent</td>\n
-  <td>//tbody/tr[3]</td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//input[@value=\'2\']</td>\n
   <td></td>\n
 </tr>\n
+\n
 \n
 \n
 \n

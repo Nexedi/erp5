@@ -109,9 +109,9 @@
 
 /*jslint indent: 2, maxerr: 3, nomen: true */\n
 /*global window, document, rJS, URI, RSVP, loopEventListener,\n
-  SimpleQuery, ComplexQuery, Query, Handlebars, console*/\n
+  SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory*/\n
 (function (window, document, rJS, URI, RSVP, loopEventListener,\n
-  SimpleQuery, ComplexQuery, Query, Handlebars, console) {\n
+  SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory) {\n
   "use strict";\n
   var gadget_klass = rJS(window),\n
     listbox_hidden_thead_source = gadget_klass.__template_element\n
@@ -631,7 +631,7 @@
                 thead_template,\n
                 tbody_template,\n
                 hide_button_html,\n
-                hide_elements;\n
+                hide_elements = [];\n
               if (gadget.props.foot.colspan === gadget.props.foot.default_colspan) {\n
                 thead_template = listbox_show_thead_template;\n
                 tbody_template = listbox_show_tbody_template;\n
@@ -641,30 +641,37 @@
                 //hide closed\n
                 //maybe submit\n
                 all_hide_elements = gadget.props.element.querySelectorAll(".hide_element");\n
-                hide_elements = gadget.props.element.querySelectorAll(".hide_element:checked");\n
-                //nothing selected, show all\n
-                if (hide_elements.length === 0) {\n
-                  return gadget.redirect({\n
-                    command: \'store_and_change\',\n
-                    options: {\n
-                      "extended_search": ""\n
-                    }\n
-                  });\n
+                for (i = 0; i < all_hide_elements.length; i += 1) {\n
+                  if (!all_hide_elements[i].checked) {\n
+                    hide_elements.push(all_hide_elements[i]);\n
+                  }\n
                 }\n
-\n
-                if (hide_elements.length < all_hide_elements.length) {\n
+                if (hide_elements.length) {\n
                   for (i = 0; i < hide_elements.length; i += 1) {\n
                     query_list.push(new SimpleQuery({\n
                       key: "catalog.uid",\n
                       type: "simple",\n
+                      operator: "!=",\n
                       value: hide_elements[i].getAttribute("value")\n
                     }));\n
                   }\n
-                  search_query = new ComplexQuery({\n
-                    operator: "OR",\n
-                    query_list: query_list,\n
-                    type: "complex"\n
-                  });\n
+                  if (gadget.props.extended_search) {\n
+                    search_query = QueryFactory.create(gadget.props.extended_search);\n
+                  }\n
+\n
+                  if (search_query instanceof ComplexQuery) {\n
+                    search_query.query_list = search_query.query_list.concat(query_list);\n
+                  } else {\n
+                    if (search_query) {\n
+                      //a SimpleQuery\n
+                      query_list.push(search_query);\n
+                    }\n
+                    search_query = new ComplexQuery({\n
+                      operator: "AND",\n
+                      query_list: query_list,\n
+                      type: "complex"\n
+                    });\n
+                  }\n
                   return gadget.redirect({\n
                     command: \'store_and_change\',\n
                     options: {\n
@@ -704,7 +711,7 @@
     });\n
 \n
 }(window, document, rJS, URI, RSVP, loopEventListener,\n
-  SimpleQuery, ComplexQuery, Query, Handlebars, console));
+  SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory));
 
 ]]></string> </value>
         </item>
@@ -841,7 +848,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.12124.31713.21350</string> </value>
+                <value> <string>949.12128.56104.7577</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -859,7 +866,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1455620978.91</float>
+                        <float>1455621189.06</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
