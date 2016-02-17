@@ -9,7 +9,7 @@ port=20000
 
 for pid in $ZOPE_PIDS;
  do
-  ip_port="$(netstat -lpn | grep $pid |awk '{print substr($0, 21, 17);}')";
+  ip_port="$(netstat -lpn --inet --inet6 | grep $pid/ |awk '{print substr($0, 21, 17);}')";
   #echo $pid, $ip_port, $port
 
   # socat
