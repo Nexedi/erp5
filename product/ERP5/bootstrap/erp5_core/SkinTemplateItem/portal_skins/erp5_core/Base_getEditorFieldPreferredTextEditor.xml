@@ -63,12 +63,12 @@ if not content_type:\n
   if getattr(context, \'getContentType\', None) is not None:\n
     content_type = context.getContentType() or \'text/html\'\n
 \n
-# If this is not HTML, fallback to TextArea\n
-if content_type != \'text/html\':\n
-  return \'text_area\'\n
+# If this is HTML, use preferred HTML editor or fallback to Textarea\n
+if content_type == \'text/html\':\n
+  return context.portal_preferences.getPreferredTextEditor() or \'text_area\'\n
 \n
-# Else return preferred value or TextArea if nothing defined\n
-return context.portal_preferences.getPreferredTextEditor() or \'text_area\'\n
+# Else use preferred source code editor or fallback to Textarea\n
+return context.portal_preferences.getPreferredSourceCodeEditor() or \'text_area\'\n
 </string> </value>
         </item>
         <item>
