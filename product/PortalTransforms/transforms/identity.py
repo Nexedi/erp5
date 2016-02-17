@@ -18,7 +18,7 @@ class IdentityTransform:
 
     def __init__(self, name=None, **kwargs):
         self.config = {
-            'inputs'       : ('text/x-rst',),
+            'inputs'       : ('text/x-rst', 'text/javascript', 'text/css'),
             'output'      : 'text/plain',
             }
         self.config_metadata = {
