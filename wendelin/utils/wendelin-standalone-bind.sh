@@ -9,6 +9,8 @@ port=20000
 
 for pid in $ZOPE_PIDS;
  do
+  # remove any trailing character in case PID is less than 5 digits
+  pid="$(echo ${pid} | sed 's/,//')"
   ip_port="$(netstat -lpn --inet --inet6 | grep $pid/ |awk '{print substr($0, 21, 17);}')";
   #echo $pid, $ip_port, $port
 
