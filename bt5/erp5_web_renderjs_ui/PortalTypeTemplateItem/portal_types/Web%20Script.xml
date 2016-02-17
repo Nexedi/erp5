@@ -65,9 +65,7 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>WebScript_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
@@ -96,6 +94,12 @@
                 <string>filename</string>
                 <string>source_project_title</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
