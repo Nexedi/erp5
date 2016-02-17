@@ -7,6 +7,7 @@ from OFS.Image import Image as OFSImage
 import sys
 import ast
 import types
+import inspect
 
 mime_type = 'text/plain'
 # IPython expects 2 status message - 'ok', 'error'
@@ -222,9 +223,11 @@ def Base_displayImage(self, image_object=None):
     if isinstance(image_object, OFSImage):
       figdata = base64.b64encode(image_object.getData())
       mime_type = image_object.getContentType()
-    else:
-      # For matplotlib objects
-      # XXX: Needs refactoring to handle cases
+
+    # Ensure that the object we are taking as `image_object` is basically a
+    # Matplotlib.pyplot module object from which we are seekign the data of the
+    # plot .
+    elif inspect.ismodule(image_object) and image_object.__name__=="matplotlib.pyplot":
 
       # Create a ByteFile on the server which would be used to save the plot
       figfile = StringIO()
