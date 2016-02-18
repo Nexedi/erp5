@@ -195,12 +195,16 @@ for name in relative:\n
     obj = obj.restrictedTraverse(name)\n
     now.append(name)\n
     if module:\n
-      try:\n
-        title = obj.getTranslatedTitleOrId()\n
-      except AttributeError:\n
-        title = obj.Title()\n
+      title = (\n
+        getattr(obj, "getTranslatedShortTitle", lambda: None)() or\n
+        getattr(obj, "getTranslatedTitleOrId", lambda: None)() or\n
+        obj.getTitle() or obj.getId()\n
+      )\n
     else:\n
-      title = obj.Title()\n
+      title = (\n
+        getattr(obj, "getShortTitle", lambda: None)() or\n
+        obj.getTitle() or obj.getId()\n
+      )\n
     if not name == \'talkback\':\n
         result.append( { \'id\'      : name\n
                        , \'title\'   : title\n
