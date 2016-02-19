@@ -471,6 +471,17 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
   @changeSkin('Hal')
   def test_getHateoasDocument_default_view(self):
     document = self._makeDocument()
+    document.Foo_view.listbox.ListBox_setPropertyList(
+      field_title = 'Foo Lines',
+      field_list_method = 'objectValues',
+      field_portal_types = 'Foo Line | Foo Line',
+      field_stat_method = 'portal_catalog',
+      field_stat_columns = 'quantity | Foo_statQuantity',
+      field_editable = 1,
+      field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date\ncatalog.uid|Uid',
+      field_editable_columns = 'id|ID\ntitle|Title\nquantity|quantity\nstart_date|Date',
+      field_search_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
+
     parent = document.getParentValue()
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view")
@@ -551,7 +562,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['list_method'], 'objectValues')
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['query'], 'urn:jio:allDocs?query=')
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['portal_type'], [['Foo Line', 'Foo Line']])
-    self.assertEqual(result_dict['_embedded']['_view']['listbox']['column_list'], [['id', 'ID'], ['title', 'Title'], ['quantity', 'Quantity'], ['start_date', 'Date']])
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['column_list'], [['id', 'ID'], ['title', 'Title'], ['quantity', 'Quantity'], ['start_date', 'Date'], ['catalog.uid', 'Uid']])
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['search_column_list'], [['id', 'ID'], ['title', 'Title'], ['quantity', 'Quantity'], ['start_date', 'Date']])
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['editable_column_list'], [['id', 'ID'], ['title', 'Title'], ['quantity', 'quantity'], ['start_date', 'Date']])
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['sort_column_list'], [['id', 'ID'], ['title', 'Title'], ['quantity', 'Quantity'], ['start_date', 'Date']])

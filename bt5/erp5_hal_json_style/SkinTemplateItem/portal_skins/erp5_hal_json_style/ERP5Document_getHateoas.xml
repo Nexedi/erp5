@@ -83,6 +83,12 @@ def byteify(string):\n
 \n
 def getProtectedProperty(document, select):\n
   try:\n
+    #see https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5Form/ListBox.py#L2293\n
+    try:\n
+      select = select[select.rindex(\'.\') + 1:]\n
+    except ValueError:\n
+      pass\n
+\n
     return document.getProperty(select, d=None)\n
   except (ConflictError, RuntimeError):\n
     raise\n
@@ -1025,9 +1031,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # XXX Proxy field are not correctly handled in traversed_document of web site\n
         listbox_form = getattr(traversed_document, listbox_field.aq_parent.id)\n
         for select in select_list:\n
-          # See Listbox.py getEditableField method\n
-          if listbox_form.has_field("%s_%s" % (listbox_field_id, select), include_disabled=1):\n
-            editable_field_dict[select] = listbox_form.get_field("%s_%s" % (listbox_field_id, select), include_disabled=1)\n
+          # See Listbox.py getValueList --> getEditableField & getColumnAliasList method\n
+          tmp = select.replace(\'.\', \'_\')\n
+          if listbox_form.has_field("%s_%s" % (listbox_field_id, tmp), include_disabled=1):\n
+            editable_field_dict[select] = listbox_form.get_field("%s_%s" % (listbox_field_id, tmp), include_disabled=1)\n
   \n
     for sql_document in sql_list:\n
       try:\n
