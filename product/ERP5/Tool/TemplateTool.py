@@ -469,7 +469,8 @@ class TemplateTool (BaseTool):
         else:
           shutil.rmtree(file_object_path)
 
-    def _importAndReExportBusinessTemplate(self, template_path):
+    security.declareProtected( 'Import/Export objects', 'importAndReExportBusinessTemplateFromPath' )
+    def importAndReExportBusinessTemplateFromPath(self, template_path):
       """
         Imports the template that is in the template_path and exports it to the
         same path.
@@ -525,7 +526,8 @@ class TemplateTool (BaseTool):
             if not os.path.exists((os.path.join(template_path, 'bt'))):
               LOG(business_template_id,0,'has no bt sub-folder, so it is skipped')
             else:
-              self.activate(activity='SQLQueue')._importAndReExportBusinessTemplate(template_path)
+              self.activate(activity='SQLQueue').\
+                importAndReExportBusinessTemplateFromPath(template_path)
 
     security.declareProtected(Permissions.ManagePortal, 'getFilteredDiff')
     def getFilteredDiff(self, diff):
