@@ -14,6 +14,110 @@ mime_type = 'text/plain'
 status = u'ok'
 ename, evalue, tb_list = None, None, None
 
+def Base_executeJupyter(self, python_expression=None, reference=None, title=None, request_reference=False, **kw):
+  context = self
+  portal = context.getPortalObject()
+  # Check permissions for current user and display message to non-authorized user 
+  if not portal.Base_checkPermission('portal_components', 'Manage Portal'):
+    return "You are not authorized to access the script"
+  
+  import json
+  
+  # Convert the request_reference argument string to their respeced boolean values
+  request_reference = {'True': True, 'False': False}.get(request_reference, False)
+  
+  # Return python dictionary with title and reference of all notebooks
+  # for request_reference=True
+  if request_reference:
+    data_notebook_list = portal.portal_catalog(portal_type='Data Notebook')
+    notebook_detail_list = [{'reference': obj.getReference(), 'title': obj.getTitle()} for obj in data_notebook_list]
+    return notebook_detail_list
+  
+  if not reference:
+    message = "Please set or use reference for the notebook you want to use"
+    return message
+  
+  # Take python_expression as '' for empty code from jupyter frontend
+  if not python_expression:
+    python_expression = ''
+  
+  # Get Data Notebook with the specific reference
+  data_notebook = portal.portal_catalog.getResultValue(portal_type='Data Notebook',
+                        reference=reference)
+  
+  # Create new Data Notebook if reference doesn't match with any from existing ones
+  if not data_notebook:
+    notebook_module = portal.getDefaultModule(portal_type='Data Notebook')
+    data_notebook = notebook_module.DataNotebookModule_addDataNotebook(
+      title=title,
+      reference=reference,
+      batch_mode=True
+    )
+  
+  # Add new Data Notebook Line to the Data Notebook
+  data_notebook_line = data_notebook.DataNotebook_addDataNotebookLine(
+    notebook_code=python_expression,
+    batch_mode=True
+  )
+  
+  # Get active_process associated with data_notebook object
+  process_id = data_notebook.getProcess()
+  active_process = portal.portal_activities[process_id]
+  # Add a result object to Active Process object
+  result_list = active_process.getResultList()
+  
+  # Get local variables saves in Active Result, local varibales are saved as
+  # persistent mapping object
+  old_local_variable_dict = result_list[0].summary
+  if not old_local_variable_dict:
+    old_local_variable_dict = context.Base_addLocalVariableDict()
+  
+  # Pass all to code Base_runJupyter external function which would execute the code
+  # and returns a dict of result
+  final_result = Base_compileJupyterCode(self, python_expression, old_local_variable_dict)
+  code_result = final_result['result_string']
+  new_local_variable_dict = final_result['local_variable_dict']
+  ename = final_result['ename']
+  evalue = final_result['evalue']
+  traceback = final_result['traceback']
+  status = final_result['status']
+  mime_type = final_result['mime_type']
+  
+  # Call to function to update persistent mapping object with new local variables
+  # and save the variables in the Active Result pertaining to the current Data Notebook
+  new_dict = context.Base_updateLocalVariableDict(new_local_variable_dict)
+  result_list[0].edit(summary=new_dict)
+  
+  result = {
+    u'code_result': code_result,
+    u'ename': ename,
+    u'evalue': evalue,
+    u'traceback': traceback,
+    u'status': status,
+    u'mime_type': mime_type
+  }
+  
+  # Catch exception while seriaizing the result to be passed to jupyter frontend
+  # and in case of error put code_result as None and status as 'error' which would
+  # be shown by Jupyter frontend
+  try:
+    serialized_result = json.dumps(result)
+  except UnicodeDecodeError:
+    result = {
+      u'code_result': None,
+      u'ename': u'UnicodeDecodeError',
+      u'evalue': None,
+      u'traceback': None,
+      u'status': u'error',
+      u'mime_type': mime_type
+    }
+    serialized_result = json.dumps(result)
+  
+  data_notebook_line.edit(notebook_code_result=code_result, mime_type=mime_type)
+  
+  return serialized_result
+
+
 def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   """
     Function to execute jupyter code and update the local_varibale dictionary.
@@ -122,6 +226,7 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
       for node in to_run_interactive:
         mod = ast.Interactive([node])
         code = compile(mod, '<string>', "single")
+        context = self
         exec(code, g, g)
 
       # Letting the code fail in case of error while executing the python script/code
@@ -189,6 +294,22 @@ def UpdateLocalVariableDict(self, existing_dict):
   for key, val in existing_dict['imports'].iteritems():
     new_dict['imports'][key] = val
   return new_dict
+  
+def Base_displayHTML(self, node):
+  """
+  External function to identify Jupyter display classes and render them as
+  HTML. There are many classes from IPython.core.display or IPython.lib.display 
+  that we can use to display media, like audios, videos, images and generic
+  HTML/CSS/Javascript. All of them hold their HTML representation in the
+  `_repr_html_` method.
+  """
+  if getattr(node, '_repr_html_'):
+    global mime_type
+    mime_type = 'text/html'
+    html = node._repr_html_()
+    print html
+    return
+    
 
 def Base_displayImage(self, image_object=None):
   """
@@ -324,3 +445,82 @@ def getError(self, previous=1):
   tb_list = [l+'\n' for l in error['tb_text'].split('\n')]
 
   return None
+  
+def storeIFrame(self, html, key):
+  memcached_tool = self.getPortalObject().portal_memcached
+  memcached_dict = memcached_tool.getMemcachedDict(key_prefix='pivottablejs', plugin_path='portal_memcached/default_memcached_plugin')
+  memcached_dict[key] = html
+  return True
+
+def erp5PivotTableUI(self, df, erp5_url):
+  from IPython.display import IFrame
+  template = """
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>PivotTable.js</title>
+
+      <!-- external libs from cdnjs -->
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/pivot.min.css">
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/pivot.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/d3_renderers.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/c3_renderers.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/export_renderers.min.js"></script>
+
+      <style>
+        body {font-family: Verdana;}
+        .node {
+         border: solid 1px white;
+         font: 10px sans-serif;
+         line-height: 12px;
+         overflow: hidden;
+         position: absolute;
+         text-indent: 2px;
+        }
+        .c3-line, .c3-focused {stroke-width: 3px !important;}
+        .c3-bar {stroke: white !important; stroke-width: 1;}
+        .c3 text { font-size: 12px; color: grey;}
+        .tick line {stroke: white;}
+        .c3-axis path {stroke: grey;}
+        .c3-circle { opacity: 1 !important; }
+      </style>
+    </head>
+    <body>
+      <script type="text/javascript">
+        $(function(){
+          if(window.location != window.parent.location)
+            $("<a>", {target:"_blank", href:""})
+              .text("[pop out]").prependTo($("body"));
+
+          $("#output").pivotUI( 
+            $.csv.toArrays($("#output").text()), 
+            { 
+              renderers: $.extend(
+                $.pivotUtilities.renderers, 
+                $.pivotUtilities.c3_renderers, 
+                $.pivotUtilities.d3_renderers,
+                $.pivotUtilities.export_renderers
+                ),
+              hiddenAttributes: [""]
+            }
+          ).show();
+         });
+      </script>
+      <div id="output" style="display: none;">%s</div>
+    </body>
+  </html>
+  """
+  html_string = template % df.to_csv()
+  from hashlib import sha512
+  key = sha512(html_string).hexdigest()
+  storeIFrame(self, html_string, key)
+  url = "%s/Base_displayPivotTableFrame?key=%s" % (erp5_url, key)
+  iframe = IFrame(src=url, width='100%', height='500')
+  return Base_displayHTML(self, iframe)
