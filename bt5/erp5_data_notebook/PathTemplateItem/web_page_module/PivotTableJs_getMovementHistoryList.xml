@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Page" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/team</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PivotTableJs_getMovementHistoryList</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Page</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>getMovementHistoryList</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+  <head>\n
+    <script type="text/javascript" src="http://localhost:2200/erp5/jquery/core/jquery.min.js"></script>\n
+    <script type="text/javascript" src="http://localhost:2200/erp5/jquery/ui/js/jquery-ui.min.js"></script>\n
+    <script type="text/javascript" src="http://evanplaice.github.io/jquery-csv/src/jquery.csv.js"></script>\n
+    \n
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">\n
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>\n
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>\n
+    \n
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/pivot.min.js"></script>\n
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/pivot.min.css">\n
+    \n
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/d3_renderers.min.js"></script>\n
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/c3_renderers.min.js"></script>\n
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/export_renderers.min.js"></script>\n
+    \n
+    <script type="text/javascript">\n
+      $(document).ready(function () {\n
+        $(\'#filter_button\').on(\'click\', function (){\n
+          var data = $(\'form\').serializeArray();\n
+          $(\'#pivottablejs\').html(\'Loading...\');\n
+\n
+          $.ajax({\n
+            type: "POST",\n
+            url: "http://localhost:2200/erp5/portal_skins/erp5_inventory_pandas/filterDataFrame?as_csv=True",\n
+            data: data,\n
+            success: function (response) {\n
+              var input = $.csv.toArrays(response);\n
+              $(\'#pivottablejs\').pivotUI(input, {\n
+                renderers: $.extend(\n
+                $.pivotUtilities.renderers, \n
+                $.pivotUtilities.c3_renderers, \n
+                $.pivotUtilities.d3_renderers,\n
+                $.pivotUtilities.export_renderers\n
+                ),\n
+                hiddenAttributes: [""],\n
+                rows: \'Sequence\',\n
+                cols: \'Data\'\n
+              });\n
+            },\n
+            error: function (response) {\n
+             $(\'#pivottablejs\').html(\'Error while requesting data from server.\');\n
+            }\n
+          })\n
+        });\n
+      });\n
+    </script>\n
+  </head>\n
+  <body>\n
+    <h1>Integration between Pandas-based Inventory API and PivotTableJS</h1>\n
+    <p><b>NOTE: for this protoype the code will use the Big Array object with title "Wendelin + Jupyter"</b></p>\n
+    \n
+    <form>\n
+      <fieldset>\n
+        <legend>Is accountable?</legend>\n
+        <input type="radio" name="is_accountable" value="1" checked> Yes\n
+        <input type="radio" name="is_accountable" value="0"> No\n
+      </fieldset>\n
+      \n
+      <fieldset>\n
+        <legend>Omit</legend>\n
+        <input type="checkbox" name="omit_input"> Omit Input\n
+        <input type="checkbox" name="omit_output"> Omit Output\n
+        <input type="checkbox" name="omit_asset_increase"> Omit Asset Increase\n
+        <input type="checkbox" name="omit_asset_decrease"> Omit Asset Decrease\n
+      </fieldset>\n
+      \n
+      <fieldset>\n
+        <legend>Simulation State</legend>\n
+        <p>Simulation State: <input name="simulation_state"></p>\n
+        <p>Input Simulation State: <input name="input_simulation_state"></p>\n
+        <p>Output Simulation State: <input name="output_simulation_state"></p>\n
+      </fieldset>\n
+      \n
+      <fieldset>\n
+        <legend>Dates</legend>\n
+        <p>From date (yyyy-mm-dd): <input name="from_date"></p>\n
+        <p>To date (yyyy-mm-dd): <input name="to_date"></p>\n
+      </fieldset>\n
+      \n
+      <button type="button" id="filter_button">Filter!</button>\n
+    </form>\n
+    \n
+    <div id="pivottablejs">\n
+    </div>\n
+  </body>\n
+</html>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Web Interface for getMovementHistoryList</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

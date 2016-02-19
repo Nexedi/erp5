@@ -14,6 +14,7 @@ mime_type = 'text/plain'
 status = u'ok'
 ename, evalue, tb_list = None, None, None
 
+
 def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   """
     Function to execute jupyter code and update the local_varibale dictionary.
@@ -122,6 +123,7 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
       for node in to_run_interactive:
         mod = ast.Interactive([node])
         code = compile(mod, '<string>', "single")
+        context = self
         exec(code, g, g)
 
       # Letting the code fail in case of error while executing the python script/code
@@ -189,6 +191,22 @@ def UpdateLocalVariableDict(self, existing_dict):
   for key, val in existing_dict['imports'].iteritems():
     new_dict['imports'][key] = val
   return new_dict
+  
+def Base_displayHTML(self, node):
+  """
+  External function to identify Jupyter display classes and render them as
+  HTML. There are many classes from IPython.core.display or IPython.lib.display 
+  that we can use to display media, like audios, videos, images and generic
+  HTML/CSS/Javascript. All of them hold their HTML representation in the
+  `_repr_html_` method.
+  """
+  if getattr(node, '_repr_html_'):
+    global mime_type
+    mime_type = 'text/html'
+    html = node._repr_html_()
+    print html
+    return
+    
 
 def Base_displayImage(self, image_object=None):
   """
@@ -324,3 +342,82 @@ def getError(self, previous=1):
   tb_list = [l+'\n' for l in error['tb_text'].split('\n')]
 
   return None
+  
+def storeIFrame(self, html, key):
+  memcached_tool = self.getPortalObject().portal_memcached
+  memcached_dict = memcached_tool.getMemcachedDict(key_prefix='pivottablejs', plugin_path='portal_memcached/default_memcached_plugin')
+  memcached_dict[key] = html
+  return True
+
+def erp5PivotTableUI(self, df, erp5_url):
+  from IPython.display import IFrame
+  template = """
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>PivotTable.js</title>
+
+      <!-- external libs from cdnjs -->
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/pivot.min.css">
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/pivot.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/d3_renderers.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/c3_renderers.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/export_renderers.min.js"></script>
+
+      <style>
+        body {font-family: Verdana;}
+        .node {
+         border: solid 1px white;
+         font: 10px sans-serif;
+         line-height: 12px;
+         overflow: hidden;
+         position: absolute;
+         text-indent: 2px;
+        }
+        .c3-line, .c3-focused {stroke-width: 3px !important;}
+        .c3-bar {stroke: white !important; stroke-width: 1;}
+        .c3 text { font-size: 12px; color: grey;}
+        .tick line {stroke: white;}
+        .c3-axis path {stroke: grey;}
+        .c3-circle { opacity: 1 !important; }
+      </style>
+    </head>
+    <body>
+      <script type="text/javascript">
+        $(function(){
+          if(window.location != window.parent.location)
+            $("<a>", {target:"_blank", href:""})
+              .text("[pop out]").prependTo($("body"));
+
+          $("#output").pivotUI( 
+            $.csv.toArrays($("#output").text()), 
+            { 
+              renderers: $.extend(
+                $.pivotUtilities.renderers, 
+                $.pivotUtilities.c3_renderers, 
+                $.pivotUtilities.d3_renderers,
+                $.pivotUtilities.export_renderers
+                ),
+              hiddenAttributes: [""]
+            }
+          ).show();
+         });
+      </script>
+      <div id="output" style="display: none;">%s</div>
+    </body>
+  </html>
+  """
+  html_string = template % df.to_csv()
+  from hashlib import sha512
+  key = sha512(html_string).hexdigest()
+  storeIFrame(self, html_string, key)
+  url = "%s/Base_displayPivotTableFrame?key=%s" % (erp5_url, key)
+  iframe = IFrame(src=url, width='100%', height='500')
+  return Base_displayHTML(self, iframe)
