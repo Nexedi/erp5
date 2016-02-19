@@ -99,6 +99,9 @@
   <td></td>\n
 </tr>\n
 \n
+\n
+\n
+\n
 <tr>\n
   <td>waitForElementPresent</td>\n
   <td>//a[@data-i18n="Add"]</td>\n
@@ -159,6 +162,54 @@
   <td>2022-12-21</td>\n
 </tr>\n
 \n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@title="Short Title"]</td>\n
+  <td>test_clone</td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>check</td>\n
+  <td>//input[@title="Frozen"]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name=\'field_my_local_title\']</td>\n
+  <td>label=First title</td>\n
+</tr>\n
+\n
+\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name=\'field_my_foo_category_title\']</td>\n
+  <td>a1</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>fireEvent</td>\n
+  <td>//input[@name=\'field_my_foo_category_title\']</td>\n
+  <td>input</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//li[@data-relative-url=\'portal_categories/foo_category/a/a1\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//li[@data-relative-url=\'portal_categories/foo_category/a/a1\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+\n
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />\n
 \n
 <tr>\n
@@ -180,16 +231,116 @@
 </tr>\n
 \n
 <tr>\n
-  <td>waitForTextPresent</td>\n
-  <td>2022-12-21</td>\n
+  <td>waitForElementPresent</td>\n
+  <td>//input[@title="Short Title"]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@title="Short Title"]</td>\n
+  <td>test_clone</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name=\'field_my_foo_category_title\']</td>\n
+  <td>a1</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@title=\'Frozen\']</td>\n
+  <td>on</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//select[@name=\'field_my_local_title\']</td>\n
+  <td>First title</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>storeValue</td>\n
+  <td>//input[@name=\'field_my_id\']</td>\n
+  <td>original_id</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//a[@data-i18n=\'Actions\']</td>\n
   <td></td>\n
 </tr>\n
 \n
 <tr>\n
-  <td>waitForTextPresent</td>\n
-  <td>2022-12-21</td>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Clone Document\']</td>\n
   <td></td>\n
 </tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//a[@data-i18n=\'Clone Document\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//button[@data-i18n=\'Proceed\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//button[@data-i18n=\'Proceed\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//input[@title="Short Title"]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//button[@data-i18n="Save"]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@title="Short Title"]</td>\n
+  <td>test_clone</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name=\'field_my_foo_category_title\']</td>\n
+  <td>a1</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@title=\'Frozen\']</td>\n
+  <td>on</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//select[@name=\'field_my_local_title\']</td>\n
+  <td>First title</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyNotValue</td>\n
+  <td>//input[@name=\'field_my_id\']</td>\n
+  <td>original_id</td>\n
+</tr>\n
+\n
 \n
 </tbody></table>\n
 </body>\n
@@ -207,7 +358,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testEditNotIndexedDocument</string> </value>
+            <value> <string>testCloneDocument</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
