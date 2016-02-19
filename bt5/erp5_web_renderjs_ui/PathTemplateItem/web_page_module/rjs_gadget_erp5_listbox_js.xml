@@ -173,17 +173,45 @@
     gadget.props.listbox_uid_dict = {};\n
     gadget.props.cell_gadget_list = [];\n
     function renderSubCell(element, sub_field_json) {\n
-      return gadget.getFieldTypeGadgetUrl(sub_field_json.type)\n
+      var options = {},\n
+        queue;\n
+      sub_field_json.editable = sub_field_json.editable && gadget.props.field_json.editable; // XXX \n
+      queue = gadget.getFieldTypeGadgetUrl(sub_field_json.type);\n
+      queue\n
         .push(function (gadget_url) {\n
-          return gadget.declareGadget(gadget_url, {\n
-            element: element\n
-          });\n
+          if (sub_field_json.editable) {\n
+            options = {\n
+              element: element\n
+            };\n
+          }\n
+          return gadget.declareGadget(gadget_url, options);\n
         })\n
         .push(function (cell_gadget) {\n
-          gadget.props.cell_gadget_list.push(cell_gadget);\n
-          sub_field_json.editable = sub_field_json.editable && gadget.props.field_json.editable; // XXX \n
+          if (sub_field_json.editable) {\n
+            gadget.props.cell_gadget_list.push(cell_gadget);\n
+          } else {\n
+            if (cell_gadget.getTextContent) {\n
+              queue\n
+                .push(function () {\n
+                  return cell_gadget.getTextContent();\n
+                })\n
+                .push(function (text_content) {\n
+                  var text = document.createTextNode(text_content);\n
+                  element.appendChild(text);\n
+                });\n
+            } else {\n
+              queue\n
+                .push(function () {\n
+                  return cell_gadget.getElement();\n
+                })\n
+                .push(function (cell_element) {\n
+                  element.appendChild(cell_element);\n
+                });\n
+            }\n
+          }\n
           return cell_gadget.render({field_json: sub_field_json});\n
         });\n
+      return queue;\n
     }\n
     for (i = 0; i < element_list.length; i += 1) {\n
       column = element_list[i].getAttribute("column");\n
@@ -498,7 +526,7 @@
               value = result.data.rows[i].value[field_json.column_list[j][0]] || "";\n
               tr_value.push({\n
                 "type": value.type,\n
-                "editable": value.editable,\n
+                "editable": value.editable && field_json.editable,\n
                 "href": tmp_url,\n
                 "text": value,\n
                 "line": i,\n
@@ -843,7 +871,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.16491.61409.54647</string> </value>
+                <value> <string>949.16516.37897.4249</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -861,7 +889,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1455884364.32</float>
+                        <float>1455899151.12</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

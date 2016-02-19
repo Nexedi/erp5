@@ -134,6 +134,10 @@
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("notifyValid", "notifyValid")\n
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")\n
+    .declareMethod(\'getTextContent\', function () {\n
+      var select = this.element.querySelector(\'select\');\n
+      return select.options[select.selectedIndex || 0].text;\n
+    })\n
     .declareMethod(\'render\', function (options) {\n
       var i,\n
         template,\n
@@ -357,7 +361,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.49457.43407.46148</string> </value>
+                <value> <string>949.15483.53582.15957</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -375,7 +379,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423135404.46</float>
+                        <float>1455899167.96</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

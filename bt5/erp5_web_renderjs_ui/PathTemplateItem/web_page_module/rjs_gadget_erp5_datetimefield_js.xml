@@ -103,7 +103,7 @@
 
 /*global window, rJS, RSVP, document, loopEventListener */\n
 /*jslint indent: 2 */\n
-(function (window, rJS, RSVP) {\n
+(function (window, rJS, RSVP, document, loopEventListener) {\n
   "use strict";\n
   rJS(window)\n
     .ready(function (gadget) {\n
@@ -115,6 +115,9 @@
     })\n
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")\n
     .declareAcquiredMethod("notifyValid", "notifyValid")\n
+    .declareMethod(\'getTextContent\', function () {\n
+      return this.element.querySelector(\'input\').getAttribute(\'value\') || "";\n
+    })\n
     .declareMethod(\'render\', function (options) {\n
       var input = this.element.querySelector(\'input\'),\n
         date,\n
@@ -379,7 +382,7 @@
       );\n
     });\n
 \n
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, document, loopEventListener));
 
 ]]></string> </value>
         </item>
@@ -516,7 +519,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.49747.10334.23005</string> </value>
+                <value> <string>949.15487.9675.47530</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -534,7 +537,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1434544511.89</float>
+                        <float>1455899218.47</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
