@@ -462,7 +462,8 @@ class TemplateTool (BaseTool):
       return self.getFilteredDiff(diff).toHTML()
 
     def _cleanUpTemplateFolder(self, folder_path):
-      for file_object in os.listdir(folder_path):
+      file_object_list = [x for x in os.listdir(folder_path)]
+      for file_object in file_object_list:
         file_object_path = os.path.join(folder_path, file_object)
         if os.path.isfile(file_object_path):
           os.unlink(file_object_path)
