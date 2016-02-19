@@ -114,6 +114,9 @@
     .declareAcquiredMethod("notifyValid", "notifyValid")\n
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")\n
     .declareAcquiredMethod("notifyChange", "notifyChange")\n
+    .declareMethod(\'textContent\', function () {\n
+      return this.element.querySelector(\'input\').getAttribute(\'value\');\n
+    })\n
     .declareMethod(\'render\', function (options) {\n
       var input = this.element.querySelector(\'input\'),\n
         field_json = options.field_json || {};\n
@@ -313,7 +316,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -327,7 +330,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.60759.64011.7748</string> </value>
+                <value> <string>949.15478.53453.47667</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -345,7 +348,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423754481.36</float>
+                        <float>1455822218.43</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -153,13 +153,6 @@
   <td></td>\n
 </tr>\n
 \n
-<tr>\n
-  <td>type</td>\n
-  <td>//input[@title="listbox_start_date"]</td>\n
-  <td>2022-12-21</td>\n
-</tr>\n
-\n
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />\n
 \n
 <tr>\n
   <td>click</td>\n
@@ -181,15 +174,23 @@
 \n
 <tr>\n
   <td>waitForTextPresent</td>\n
-  <td>2022-12-21</td>\n
+  <td>1</td>\n
   <td></td>\n
 </tr>\n
 \n
 <tr>\n
-  <td>waitForTextPresent</td>\n
-  <td>2022-12-21</td>\n
+  <td>verifyTextPresent</td>\n
+  <td>1</td>\n
   <td></td>\n
 </tr>\n
+\n
+<tr>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//input[@title="listbox_start_date"]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
 \n
 </tbody></table>\n
 </body>\n
@@ -207,7 +208,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testEditNotIndexedDocument</string> </value>
+            <value> <string>testListboxInNoEditableMode</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
