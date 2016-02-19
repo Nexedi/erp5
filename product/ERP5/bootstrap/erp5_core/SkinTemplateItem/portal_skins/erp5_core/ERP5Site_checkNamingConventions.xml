@@ -96,11 +96,13 @@ CLOSED_CLASS_WORD_LIST = """\n
   well what whatever when where whereas whether which while whilst who whoever\n
   whom whose with within without worth would yes you your yours yourself\n
   """.split()\n
-CLOSED_CLASS_WORD_LIST += (\n
+CLOSED_CLASS_WORD_SET = set(CLOSED_CLASS_WORD_LIST)\n
+assert len(CLOSED_CLASS_WORD_SET) == len(CLOSED_CLASS_WORD_LIST)\n
+SENTENCE_PART_LIST = (\n
   "doesn\'t",\n
 \n
   "according to", "ahead of", "apart from", "as long as", "as opposed to",\n
-  "away from", "by means of", "by way of", "contrary to", "depending on",\n
+  "away from", "be triggered on", "by means of", "by way of", "contrary to", "depending on",\n
   "due to", "each other", "even if", "even though", "even when", "given that",\n
   "in accordance with", "in addition to", "in case", "in charge of",\n
   "in conjunction with", "in connection with", "in favour of", "in front of",\n
@@ -111,8 +113,8 @@ CLOSED_CLASS_WORD_LIST += (\n
   "provided that", "relative to", "so long as", "subject to", "with regard to",\n
   "with respect to",\n
 )\n
-CLOSED_CLASS_WORD_SET = set(CLOSED_CLASS_WORD_LIST)\n
-assert len(CLOSED_CLASS_WORD_SET) == len(CLOSED_CLASS_WORD_LIST)\n
+SENTENCE_PART_SET = set(SENTENCE_PART_LIST)\n
+assert len(SENTENCE_PART_SET) == len(SENTENCE_PART_LIST)\n
 \n
 # List of allowed characters, usefull to detect non-english strings\n
 ALLOWED_CHARS = set("abcdefghijklmnopqrstuvwxyz0123456789%/. ()-_?&\'#,;")\n
@@ -172,6 +174,8 @@ def checkTitle(path, id, title, field=None, form=None):\n
   for c in title:\n
     if c.lower() not in ALLOWED_CHARS:\n
       return "%s : %s : %r character not allowed\\n" % (path, id, c)\n
+\n
+  title = re.sub(re.compile(r"\\b(" + "|".join(re.escape(x) for x in SENTENCE_PART_SET) + r")\\b"), "", title)\n
 \n
   word_list = title.split(\' \')\n
   for word in word_list:\n
