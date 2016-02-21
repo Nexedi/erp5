@@ -111,7 +111,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
 
       test_suite.newContent( portal_type= 'Test Suite Repository',
                         branch = 'master',
-                        git_url = 'http://git.erp5.org/repos/erp5.git',
+                        git_url = 'https://lab.nexedi.com/nexedi/erp5.git',
                         buildout_section_id  = 'erp5',
                         profile_path = 'software-release/software.cfg'
                         )
