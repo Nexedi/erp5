@@ -196,8 +196,7 @@ for name in relative:\n
     now.append(name)\n
     if module:\n
       title = (\n
-        getattr(obj, "getTranslatedShortTitle", lambda: None)() or\n
-        getattr(obj, "getTranslatedTitleOrId", lambda: None)() or\n
+        getattr(obj, "getCompactTranslatedTitle", lambda: None)() or\n
         obj.getTitle() or obj.getId()\n
       )\n
     else:\n
