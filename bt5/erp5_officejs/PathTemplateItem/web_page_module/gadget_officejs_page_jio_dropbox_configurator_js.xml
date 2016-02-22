@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_jio_configurator.js</string> </value>
+            <value> <string>gadget_officejs_page_jio_dropbox_configurator.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,11 +81,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_jio_configurator_js</string> </value>
+            <value> <string>gadget_officejs_page_jio_dropbox_configurator_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -99,35 +101,28 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/*global window, rJS, RSVP, URI, location,\n
-    loopEventListener*/\n
+            <value> <string>/*global window, rJS, RSVP, URI, location,\n
+    loopEventListener, btoa */\n
 /*jslint nomen: true, indent: 2, maxerr: 3*/\n
 (function (window, rJS, RSVP) {\n
   "use strict";\n
 \n
-  function setERP5Configuration(gadget) {\n
-    var old_date = new Date(),\n
-      configuration = {};\n
-    // We are looking for documents modified in the past 3 month\n
-    old_date = new Date(old_date.getFullYear(), old_date.getMonth() - 3);\n
-    configuration = {\n
+  function setjIODropboxConfiguration(gadget) {\n
+    var configuration = {\n
       type: "replicate",\n
       // XXX This drop the signature lists...\n
       query: {\n
-        query: \'portal_type:"Web Page" \'\n
+        query: \'portal_type:"Web Page" \',\n
         // XX Synchonizing the whole module is too much, here is a way to start quietly\n
-        // Supsended until modification_date is handled for synchronization\n
-          + \' AND modification_date:>="\'\n
-          + old_date.toISOString() + \'" \',\n
+        //+ \'AND local_roles: ("Owner") \'\n
+        //+ \'AND validation_state: ("draft", "released_alive", "shared_alive", "published_alive") \',\n
         limit: [0, 1234567890]\n
       },\n
-      use_remote_post: true,\n
-      conflict_handling: 1,\n
+      use_remote_post: false,\n
+      conflict_handling: 2,\n
       check_local_modification: true,\n
       check_local_creation: true,\n
-      check_local_deletion: false,\n
+      check_local_deletion: true,\n
       check_remote_modification: true,\n
       check_remote_creation: true,\n
       check_remote_deletion: true,\n
@@ -137,52 +132,30 @@
           type: "uuid",\n
           sub_storage: {\n
             type: "indexeddb",\n
-            database: "officejs-erp5"\n
+            database: "officejs-dav"\n
           }\n
         }\n
       },\n
       remote_sub_storage: {\n
-        type: "erp5",\n
-        url: (new URI("hateoas"))\n
-          .absoluteTo(location.href)\n
-          .toString(),\n
-        default_view_reference: "jio_view"\n
+        type: "query",\n
+        sub_storage: {\n
+          type: "drivetojiomapping",\n
+          sub_storage: {\n
+            type: "dropbox",\n
+            access_token : gadget.props.element.querySelector("input[name=\'dropbox_token\']").value,\n
+            root: "dropbox"\n
+          }\n
+        }\n
       }\n
     };\n
     return gadget.setSetting(\'jio_storage_description\', configuration)\n
       .push(function () {\n
-        return gadget.setSetting(\'jio_storage_name\', "ERP5");\n
+        return gadget.setSetting(\'jio_storage_name\', "Dropbox");\n
       })\n
       .push(function () {\n
         return gadget.reload();\n
       });\n
   }\n
-\n
-  function setLocalConfiguration(gadget) {\n
-    var configuration = {\n
-      type: "query",\n
-      sub_storage: {\n
-        type: "uuid",\n
-        sub_storage: {\n
-          type: "indexeddb",\n
-          database: "officejs"\n
-        }\n
-      }\n
-    };\n
-    return gadget.setSetting(\'jio_storage_description\', configuration)\n
-      .push(function () {\n
-        return gadget.reload();\n
-      });\n
-  }\n
-\n
-  function setDAVConfiguration(gadget) {\n
-    return gadget.redirect({page: \'jio_dav_configurator\'});\n
-  }\n
-\n
-  /* // Dropbox\n
-  function setDropboxConfiguration(gadget) {\n
-    return gadget.redirect({page: \'jio_dropbox_configurator\'});\n
-  } */\n
 \n
   var gadget_klass = rJS(window);\n
 \n
@@ -193,17 +166,25 @@
         .push(function (element) {\n
           g.props.element = element;\n
           g.props.deferred = RSVP.defer();\n
+          return g.getSetting(\'jio_storage_name\');\n
+        })\n
+        .push(function (jio_storage_name) {\n
+          if (jio_storage_name === "Dropbox") {\n
+            return g.getSetting(\'jio_storage_description\');\n
+          }\n
         });\n
     })\n
     .declareAcquiredMethod("updateHeader", "updateHeader")\n
-    .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("redirect", "redirect")\n
     .declareAcquiredMethod("reload", "reload")\n
+    .declareAcquiredMethod("getSetting", "getSetting")\n
     .declareAcquiredMethod("setSetting", "setSetting")\n
     .declareMethod("render", function () {\n
       var gadget = this;\n
       return gadget.updateHeader({\n
-        title: "Storage Configuration"\n
+        title: "Connect To Dropbox Storage",\n
+        back_url: "#page=jio_configurator",\n
+        panel_action: false\n
       }).push(function () {\n
         return gadget.props.deferred.resolve();\n
       });\n
@@ -220,55 +201,29 @@
           return gadget.props.deferred.promise;\n
         })\n
         .push(function () {\n
-          return RSVP.all([\n
-            loopEventListener(\n
-              gadget.props.element.querySelector(\'form.select-erp5-form\'),\n
-              \'submit\',\n
-              true,\n
-              function () {\n
-                return setERP5Configuration(gadget);\n
-              }\n
-            ),\n
-            loopEventListener(\n
-              gadget.props.element.querySelector(\'form.select-local-form\'),\n
-              \'submit\',\n
-              true,\n
-              function () {\n
-                return setLocalConfiguration(gadget);\n
-              }\n
-            ),\n
-            loopEventListener(\n
-              gadget.props.element.querySelector(\'form.select-dav-form\'),\n
-              \'submit\',\n
-              true,\n
-              function () {\n
-                return setDAVConfiguration(gadget);\n
-              }\n
-            ) /*, // Dropbox\n
-            loopEventListener(\n
-              gadget.props.element.querySelector(\'form.select-dropbox-form\'),\n
-              \'submit\',\n
-              true,\n
-              function () {\n
-                return setDropboxConfiguration(gadget);\n
-              }\n
-            ) */\n
-          ]);\n
+          return loopEventListener(\n
+            gadget.props.element.querySelector(\'form\'),\n
+            \'submit\',\n
+            true,\n
+            function () {\n
+              return setjIODropboxConfiguration(gadget);\n
+            }\n
+          );\n
         });\n
     });\n
 \n
 \n
-}(window, rJS, RSVP));
-
-]]></string> </value>
+}(window, rJS, RSVP));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS jIO Configurator Gadget JS</string> </value>
+            <value> <string>OfficeJS jIO Dropbox Configurator Page JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -328,7 +283,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>lucas_parsy</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -350,7 +305,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442575711.45</float>
+                        <float>1450434274.63</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -395,7 +350,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.20690.55610.35242</string> </value>
+                <value> <string>949.20661.60975.48759</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -413,7 +368,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1456134900.49</float>
+                        <float>1456133199.28</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -440,7 +395,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -470,7 +425,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442575642.12</float>
+                        <float>1450433833.8</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
