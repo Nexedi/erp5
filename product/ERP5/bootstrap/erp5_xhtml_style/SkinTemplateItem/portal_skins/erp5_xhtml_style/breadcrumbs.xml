@@ -190,27 +190,19 @@ portal = utool.getPortalObject()\n
 \n
 obj = portal\n
 now = []\n
-module = True\n
 for name in relative:\n
     obj = obj.restrictedTraverse(name)\n
     now.append(name)\n
-    if module:\n
-      title = (\n
-        getattr(obj, "getCompactTranslatedTitle", lambda: None)() or\n
-        obj.getTitle() or obj.getId()\n
-      )\n
-    else:\n
-      title = (\n
-        getattr(obj, "getShortTitle", lambda: None)() or\n
-        obj.getTitle() or obj.getId()\n
-      )\n
+    title = (\n
+      getattr(obj, "getCompactTranslatedTitle", lambda: None)() or\n
+      obj.getTitle() or obj.getId()\n
+    )\n
     if not name == \'talkback\':\n
         result.append( { \'id\'      : name\n
                        , \'title\'   : title\n
                        , \'url\'     : \'%s/%s/view%s\' % (portal_url, \'/\'.join(now), param)\n
                        }\n
                     )\n
-    module = False\n
 \n
 return result\n
 </string> </value>
