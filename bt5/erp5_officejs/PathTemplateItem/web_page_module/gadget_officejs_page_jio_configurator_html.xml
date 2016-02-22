@@ -144,6 +144,11 @@
             </form>\n
           </div>\n
           <div class="ui-block-c">\n
+            <!--form class="select-dropbox-form" style="margin-right: .3125em; margin-left: .3125em;">\n
+              <button class="ui-btn ui-btn-b" type="submit" data-i18n="Dropbox Storage">Dropbox Storage</button>\n
+            </form>\n
+          </div>\n
+          <div class="ui-block-d" -->\n
             <form class="select-local-form" style="margin-right: .3125em; margin-left: .3125em;">\n
               <button class="ui-btn ui-btn-b" type="submit" data-i18n="Local is Enough">Local is Enough</button>\n
             </form>\n
@@ -297,7 +302,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -311,7 +316,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.12629.17894.55808</string> </value>
+                <value> <string>949.20639.37177.22408</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -329,7 +334,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448032104.14</float>
+                        <float>1456135138.17</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
