@@ -2965,10 +2965,6 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     return modified_object_dict
 
   def export(self, context, bta, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate, export', 0, 'no SQL catalog was available')
-      return
     ObjectTemplateItem.export(self, context, bta, catalog_method_template_item=1)
 
   def install(self, context, trashbin, **kw):
