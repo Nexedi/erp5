@@ -111,9 +111,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*globals window, rJS, RSVP, loopEventListener, document */\n
+/*globals window, rJS, RSVP, jIO, loopEventListener, document */\n
 /*jslint indent: 2, nomen: true, maxlen: 80*/\n
-(function (window, rJS, RSVP, loopEventListener, document) {\n
+(function (window, rJS, RSVP, jIO, loopEventListener, document) {\n
   "use strict";\n
 \n
   var gadget_klass = rJS(window);\n
@@ -127,7 +127,9 @@
         });\n
     })\n
 \n
-    .declareAcquiredMethod("jio_allAttachments", "jio_allAttachments")\n
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
+\n
     .declareAcquiredMethod("redirect", "redirect")\n
 \n
     .declareMethod("parse", function (text) {\n
@@ -137,13 +139,12 @@
         index;\n
       // command is the first token\n
       command = args.shift();\n
-      index = args.length;\n
 \n
       /* begin from the end because removing some values from the list\n
          while looping */\n
-      while (index--) {\n
-        // only keep useful args (no options, no emtpy string)\n
-        if (args[index] === \'\' || args[index].startsWith(\'-\')) {\n
+      for (index = args.length ; index > 0 ; index --) {\n
+        // remove emply strings from argument list\n
+        if (args[index] === \'\') {\n
           args.splice(index, 1);\n
         }\n
       }\n
@@ -151,52 +152,66 @@
     })\n
 \n
     .declareMethod("browse", function (command, args) {\n
-      var gadget = this;\n
+      var gadget = this,\n
+        requireSingleArgError = new Error(\n
+          \'This command requires one argument.\'\n
+        );\n
 \n
       function absolutePosition(current, requested) {\n
         var pos;\n
         if (requested.startsWith(\'/\')) {\n
-          pos = \'/\' + requested + \'/\';\n
+          pos = \'/\' + requested;\n
         } else {\n
-          pos = \'/\' + current + \'/\' + requested + \'/\';\n
+          pos = current + \'/\' + requested;\n
         }\n
         return pos.replace(/\\/+/g, \'/\');\n
       }\n
-\n
       // if command given: proceed\n
+\n
       if (command) {\n
         try {\n
           switch (command) {\n
           case \'cd\':\n
             if (args.length === 1) {\n
               return gadget.redirect({\n
-                position: absolutePosition(gadget.props.currentPosition, args[0])\n
+                position: absolutePosition(gadget.props.currentPosition,\n
+                                           args[0] + \'/\')\n
               });\n
             }\n
-            throw new Error(\'Usage of \' + command + \' requires a single argument.\');\n
+            throw requireSingleArgError;\n
 \n
           case \'vim\':\n
           case \'vi\':\n
-            var position = args[0].split(\'/\'),\n
-              resource = position.pop();\n
             if (args.length === 1) {\n
               return gadget.redirect({\n
                 page: \'edit\',\n
-                position: absolutePosition(\n
-                  gadget.props.currentPosition,\n
-                  position.join(\'/\')\n
-                ),\n
-                resource: resource\n
+                resource: absolutePosition(gadget.props.currentPosition,\n
+                                           args[0]),\n
+                back: gadget.props.currentPosition\n
               });\n
             }\n
-            throw new Error(\'Usage of \' + command + \' requires a single argument.\');\n
+            throw requireSingleArgError;\n
+          case \'share\':\n
+            if (args.length === 1) {\n
+              return gadget.jio_getAttachment(absolutePosition(\n
+                gadget.props.currentPosition,\n
+                args[0]\n
+              ), \'enclosure\')\n
+                .push(function (resp) {\n
+                  return jIO.util.readBlobAsDataURL(resp);\n
+                })\n
+                .push(function (e) {\n
+                  gadget.props.element.querySelector(\'.output\').textContent = e.target.result;\n
+                });\n
+            }\n
+            throw requireSingleArgError;\n
           default:\n
             throw new Error(\'Unknown command: \' + command);\n
           }\n
         } catch (e) {\n
           gadget.props.element.querySelector(\'.error\').textContent = e.name +\n
-                                                                       ": " +\n
-                                                                       e.message;\n
+                                                                     ": " +\n
+                                                                     e.message;\n
         }\n
       }\n
     })\n
@@ -218,23 +233,27 @@
       while (ul.hasChildNodes()) {\n
         ul.removeChild(ul.firstChild);\n
       }\n
-\n
-      return gadget.jio_allAttachments(options.position)\n
+      return gadget.jio_allDocs({id: options.position})\n
         .push(function (all) {\n
           var key,\n
             li,\n
+            id,\n
             liContent,\n
             resourceName;\n
-          for (key in all) {\n
-            if (all.hasOwnProperty(key)) {\n
+          for (key in all.data.rows) {\n
+            if (all.data.rows.hasOwnProperty(key)) {\n
+              id = all.data.rows[key].value.id;\n
               li = document.createElement(\'li\');\n
-              resourceName = document.createTextNode(key);\n
-              if (key.endsWith(\'.txt\') || key.endsWith(\'.js\') ||\n
-                  key.endsWith(\'.html\') || key.endsWith(\'.py\')) {\n
+              resourceName = document.createTextNode(id);\n
+\n
+              if (id.endsWith(\'.txt\') || id.endsWith(\'.js\') ||\n
+                  id.endsWith(\'.html\') || id.endsWith(\'.py\') ||\n
+                  id.endsWith(\'_js\')) {\n
                 liContent = document.createElement(\'a\');\n
 \n
                 liContent.setAttribute(\'href\', \'#page=edit&resource=\' +\n
-                                       key + \'&position=\' + options.position);\n
+                                       [options.position, id].join(\'/\') +\n
+                                       \'&back=\' + options.position);\n
                 liContent.appendChild(resourceName);\n
               } else {\n
                 liContent = resourceName;\n
@@ -268,7 +287,7 @@
         });\n
     });\n
 \n
-}(window, rJS, RSVP, loopEventListener, document));
+}(window, rJS, RSVP, jIO, loopEventListener, document));
 
 ]]></string> </value>
         </item>
@@ -407,7 +426,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.41948.13894.58197</string> </value>
+                <value> <string>949.20889.54493.42188</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -425,7 +444,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453478465.02</float>
+                        <float>1456146835.69</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
