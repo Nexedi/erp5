@@ -128,17 +128,21 @@
     <script src="handlebars.js"></script>\n
     <script src="gadget_officejs_drive_page_browse.js"></script>\n
 \n
-\n
   </head>\n
 \n
   <body>\n
     <h1>Super OfficeJS Drive</h1>\n
+\n
     <form>\n
-    <input type="text">\n
+      <input type="text">\n
     </form>\n
-    <div><a class="error"></a></div>\n
-    <ul>\n
-    </ul>\n
+    <div>\n
+      <a class="error"></a>\n
+      <p class="output"></p>\n
+    </div>\n
+    <ul></ul>\n
+\n
+\n
   </body>\n
 </html>\n
 
@@ -280,7 +284,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.27123.59534.19558</string> </value>
+                <value> <string>949.798.48752.10376</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -298,7 +302,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452589359.42</float>
+                        <float>1454941615.65</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
