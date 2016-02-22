@@ -62,7 +62,6 @@ from zLOG import LOG, INFO, WARNING
 from base64 import decodestring
 import subprocess
 import time
-from distutils.dir_util import copy_tree
 
 WIN = os.name == 'nt'
 
@@ -494,14 +493,18 @@ class TemplateTool (BaseTool):
       try:
         import_template.export(path=export_dir, local=True)
         self._cleanUpTemplateFolder(template_path)
-        copy_tree(export_dir, template_path)
+        file_name_list = [x for x in os.listdir(export_dir)]
+        for file_name in file_name_list:
+          temp_file_path = os.path.join(export_dir, file_name)
+          destination_file_path = os.path.join(template_path, file_name)
+          shutil.move(temp_file_path, destination_file_path)
       except:
         raise
       finally:
         shutil.rmtree(export_dir)
 
-    security.declareProtected( 'Import/Export objects', 'importAndReExportBusinessTemplatesFromPath' )
-    def importAndReExportBusinessTemplatesFromPath(self, repository_list, REQUEST=None, **kw):
+    security.declareProtected( 'Import/Export objects', 'importAndReExportBusinessTemplateListFromPath' )
+    def importAndReExportBusinessTemplateListFromPath(self, repository_list, REQUEST=None, **kw):
       """
         Migrate business templates to new format where files like .py or .html
         are exported seprately than the xml.

@@ -873,7 +873,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
   def test_templateFolderIsCleanedUpInImportEndReexport(self):
     """
-      Test that when TemplateTool.importAndReExportBusinessTemplatesFromPath is
+      Test that when TemplateTool.importAndReExportBusinessTemplateListFromPath is
       invoked the template folder is cleaned.
 
       1. Create a bt and export it in a temporary folder
@@ -881,7 +881,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
       3. Add to the folder a sub-folder
       4. Add to the sub-folder a second text file
       5. Add a third file to portal_templates folder
-      6. Invoke TemplateTool.importAndReExportBusinessTemplatesFromPath in the
+      6. Invoke TemplateTool.importAndReExportBusinessTemplateListFromPath in the
       template folder
       7. Assert that only the template elements are present
     """
@@ -930,8 +930,8 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     text_file_in_portal_components = open(text_file_in_sub_folder_path, "w")
     text_file_in_portal_components.close()
     self.assertTrue(os.path.exists(text_file_in_portal_components_path))
-    # invoke importAndReExportBusinessTemplatesFromPath
-    self.template_tool.importAndReExportBusinessTemplatesFromPath(repository_list=['/tmp'])
+    # invoke importAndReExportBusinessTemplateListFromPath
+    self.template_tool.importAndReExportBusinessTemplateListFromPath(repository_list=['/tmp'])
     self.tic()
     # assert that unrelated objects were deleted
     self.assertFalse(os.path.exists(text_file_path))
