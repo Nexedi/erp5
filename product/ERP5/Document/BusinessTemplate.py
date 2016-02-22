@@ -4233,7 +4233,7 @@ class CatalogKeyTemplateItemBase(BaseTemplateItem):
       elif not self.is_bt_for_diff:
         raise NotFound, '%s %r not found in catalog' %(self.key_title, key)
     if len(key_list) > 0:
-      self._objects['%s/%s' % (self.__class__.__name__, self.key_list_title)] = key_list
+      self._objects[self.key_list_title] = key_list
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.xml'):
@@ -4300,9 +4300,10 @@ class CatalogKeyTemplateItemBase(BaseTemplateItem):
   def export(self, context, bta, **kw):
     if len(self._objects.keys()) == 0:
       return
-    for path in self._objects.keys():
-      xml_data = self.generateXml(path=path)
-      bta.addObject(xml_data, name=path)
+    for name in self._objects.keys():
+      path = self.__class__.__name__
+      xml_data = self.generateXml(path=name)
+      bta.addObject(xml_data, name=name, path=path)
 
 class CatalogUniqueKeyTemplateItemBase(CatalogKeyTemplateItemBase):
   # like CatalogKeyTemplateItemBase, but for keys which use
