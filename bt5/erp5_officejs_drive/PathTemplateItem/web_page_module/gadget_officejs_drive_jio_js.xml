@@ -101,9 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, jIO, XMLHttpRequestProgressEvent, UriTemplate */\n
+/*global window, rJS, jIO, alert, XMLHttpRequestProgressEvent, UriTemplate */\n
 /*jslint indent: 2, maxerr: 3 */\n
-(function (window, rJS, jIO, XMLHttpRequestProgressEvent, UriTemplate) {\n
+(function (window, rJS, jIO, alert, XMLHttpRequestProgressEvent, UriTemplate) {\n
   "use strict";\n
 \n
   // jIO call wrapper for redirection to authentication page if needed\n
@@ -113,10 +113,10 @@
       .push(undefined, function (error) {\n
         if (error instanceof XMLHttpRequestProgressEvent &&\n
             error.target.status === 401) {\n
-          if (gadget.state_parameter_dict.jio_storage_name === "ERP5") {\n
+          if (gadget.state_parameter_dict.jio_storage_name === "erp5") {\n
             return gadget.redirect({ page: "login" });\n
           }\n
-          if (gadget.state_parameter_dict.jio_storage_name === "DAV") {\n
+          if (gadget.state_parameter_dict.jio_storage_name === "dav") {\n
             var regexp = /^Nayookie login_url=(http[s]?:\\/\\/[\\/\\-\\[\\]{}()*+=:?&.,\\\\\\^$|#\\s\\w%]+)$/,\n
               auth_page = error.target.getResponseHeader(\'WWW-Authenticate\'),\n
               site;\n
@@ -126,9 +126,20 @@
               ).expand({back_url: window.location.href,\n
                         origin: window.location.protocol + \'//\' +\n
                                 window.location.host});\n
-              return gadget.redirect({ toExternal: true, url: site});\n
+              return gadget.redirect({ toExternal: true, url: site });\n
             }\n
           }\n
+        } else if (gadget.state_parameter_dict.jio_storage_name === "dav" &&\n
+                 error instanceof XMLHttpRequestProgressEvent &&\n
+                 error.target.status === 0) {\n
+          // XXX: need more precision, not all errors with 0 status should be redirected...\n
+          alert("Unable to access the WebDAV server. It may have an invalid" +\n
+                " SSL certificate, or is just not running.\\n" +\n
+                "You will be redirected to this server...");\n
+          return gadget.redirect({ toExternal: true,\n
+                                   url: gadget.state_parameter_dict.jio_storage_url +\n
+                                        \'/../redirect?back_url=\' + window.location.href\n
+                                 });\n
         }\n
         throw error;\n
       });\n
@@ -139,21 +150,23 @@
     .ready(function (gadget) {\n
       // Initialize the gadget local parameters\n
       // XXX Hardcoded\n
-      gadget.state_parameter_dict = {jio_storage_name: "DAV"};\n
+      gadget.state_parameter_dict = {jio_storage_name: "dav", // "erp5"\n
+                                     jio_storage_url: "https://localhost:5000/webdav"}; // for ERP5: <instance>/web_site_module/hateoas/\n
     })\n
 \n
     .declareAcquiredMethod("redirect", "redirect")\n
     .declareAcquiredMethod("getSetting", "getSetting")\n
 \n
     .declareMethod(\'createJio\', function (jio_options) {\n
-      if (jio_options !== \'XXX couscous\') {\n
-        jio_options = {\n
-          type: "dav",\n
-          // XXX Hardcoded\n
-          url: "https://localhost:5000/webdav",\n
-          with_credentials: true\n
-        };\n
-      }\n
+      jio_options = {\n
+        type: \'daverp5mapping\',\n
+        sub_storage: {\n
+          type: this.state_parameter_dict.jio_storage_name,\n
+          url: this.state_parameter_dict.jio_storage_url,\n
+          with_credentials: true, // webdav\n
+          default_view_reference: \'view\' // erp5\n
+        }\n
+      };\n
       this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);\n
     })\n
     .declareMethod(\'allDocs\', function () {\n
@@ -187,7 +200,7 @@
       return wrapJioCall(this, \'repair\', arguments);\n
     });\n
 \n
-}(window, rJS, jIO, XMLHttpRequestProgressEvent, UriTemplate));
+}(window, rJS, jIO, alert, XMLHttpRequestProgressEvent, UriTemplate));
 
 ]]></string> </value>
         </item>
@@ -324,7 +337,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.36185.35957.25497</string> </value>
+                <value> <string>949.20746.21257.48042</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -342,7 +355,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453132424.59</float>
+                        <float>1456138293.9</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -119,6 +119,9 @@
     <!-- custom script -->\n
     <script src="gadget_officejs_drive_jio.js" type="text/javascript"></script>\n
 \n
+    <!-- temporary file, to be included into jIO once clean and tested -->\n
+    <script src="gadget_officejs_drive_jio_superstorage.js" type="text/javascript"></script>\n
+\n
   </head>\n
   <body>\n
   </body>\n
@@ -259,7 +262,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.8664.63043.42717</string> </value>
+                <value> <string>949.758.22453.57804</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -277,7 +280,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451481186.3</float>
+                        <float>1456159009.84</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -98,9 +98,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*globals window, rJS, RSVP, loopEventListener*/\n
+            <value> <string>/*globals window, rJS, RSVP, loopEventListener, Blob*/\n
 /*jslint indent: 2, nomen: true, maxlen: 80*/\n
-(function (window, RSVP, rJS, loopEventListener) {\n
+(function (window, RSVP, rJS, loopEventListener, Blob) {\n
   "use strict";\n
 \n
   var gadget_klass = rJS(window);\n
@@ -133,11 +133,13 @@
     .declareMethod(\'render\', function (options) {\n
       var gadget = this,\n
         format = \'text\';\n
-      gadget.props.position = options.position || \'/\';\n
       gadget.props.resourceName = options.resource;\n
-      return gadget.jio_getAttachment(gadget.props.position,\n
-                                      gadget.props.resourceName,\n
-                                      {format: format})\n
+\n
+      return gadget.jio_getAttachment(\n
+        [gadget.props.resourceName].join(\'/\'),\n
+        \'enclosure\',\n
+        {format: format}\n
+      )\n
         .push(function (data) {\n
           return gadget.getDeclaredGadget(\'codemirror\')\n
             .push(function (editorGadget) {\n
@@ -149,11 +151,14 @@
             });\n
         })\n
 \n
+\n
         .push(function () {\n
           return gadget.updateHeader({\n
-            title: \'Editing \' + gadget.props.resourceName +\n
-                   \' at \' + gadget.props.position,\n
-            save_action: true\n
+            title: \'Editing \' + gadget.props.resourceName,\n
+            save_action: true,\n
+            panel_action: false,\n
+            back_url: (typeof options.back === \'string\' ?\n
+                       "#position=" + options.back : \'#\')\n
           });\n
         });\n
     })\n
@@ -173,10 +178,11 @@
             function () {\n
               return gadget.props.editorGadget.getData()\n
                 .push(function (data) {\n
+                  var blob = new Blob([data], {"type" : "text/plain"});\n
                   return gadget.jio_putAttachment(\n
-                    gadget.props.position,\n
                     gadget.props.resourceName,\n
-                    data\n
+                    \'enclosure\',\n
+                    blob\n
                   );\n
                 });\n
             }\n
@@ -184,11 +190,11 @@
         });\n
     });\n
 \n
-}(window, RSVP, rJS, loopEventListener));</string> </value>
+}(window, RSVP, rJS, loopEventListener, Blob));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Drive Save JS</string> </value>
+            <value> <string>OfficeJS Drive Edit JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -321,7 +327,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.41958.9547.3754</string> </value>
+                <value> <string>949.20738.20231.13619</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -339,7 +345,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453478990.59</float>
+                        <float>1456137983.0</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
