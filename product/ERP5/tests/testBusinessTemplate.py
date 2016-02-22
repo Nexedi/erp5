@@ -7546,10 +7546,6 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
       self.assertNotEqual(wf_history_dict.get('actor'), None)
       self.assertNotEqual(wf_history_dict.get('comment'), None)
 
-  def stepRemoveZodbDocument(self, sequence=None, **kw):
-    self.getPortalObject().portal_components.deleteContent(
-      sequence['document_id'])
-
   def stepCheckZodbDocumentExistsAndValidated(self, sequence=None, **kw):
     component = getattr(self.getPortalObject().portal_components,
                         sequence['document_id'], None)
