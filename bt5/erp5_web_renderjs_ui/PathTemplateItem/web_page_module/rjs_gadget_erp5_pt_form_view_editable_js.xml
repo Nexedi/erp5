@@ -144,7 +144,7 @@
       var erp5_document = options.erp5_document,\n
         form_gadget = this;\n
 \n
-      form_gadget.props.id = erp5_document._id;\n
+      form_gadget.props.id = options.jio_key;\n
       form_gadget.props.view = options.view;\n
       form_gadget.props.action = erp5_document._embedded._view._actions.put;\n
       form_gadget.props.form_id = erp5_document._embedded._view.form_id;\n
@@ -389,7 +389,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.17478.43228.61201</string> </value>
+                <value> <string>949.21059.54877.18039</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -407,7 +407,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452010729.12</float>
+                        <float>1456157158.25</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

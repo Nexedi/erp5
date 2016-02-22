@@ -229,7 +229,7 @@
       suboption_dict.hide_enabled = form_definition.hide_enabled;\n
 \n
       form_gadget.props.gadget_list = [];\n
-      form_gadget.props.id = erp5_document._id;\n
+      form_gadget.props.id = options.jio_key;\n
 \n
       function addGroup(group) {\n
         queue\n
@@ -536,7 +536,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.21381.44953.13482</string> </value>
+                <value> <string>948.41569.55434.38451</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -554,7 +554,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453367894.95</float>
+                        <float>1456157203.52</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
