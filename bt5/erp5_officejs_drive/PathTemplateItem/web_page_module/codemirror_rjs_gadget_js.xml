@@ -122,7 +122,14 @@
               keyMap: \'vim\',\n
               matchBrackets: true,\n
               showCursorWhenSelecting: true,\n
-              autofocus: false\n
+              tabSize: 4,\n
+              indentUnit: 4,\n
+              indentWithTabs: false,\n
+              extraKeys: {\n
+                "Alt-;": function (cm) {\n
+                  cm.setOption("fullScreen", !cm.getOption("fullScreen"));\n
+                }\n
+              }\n
             }\n
           );\n
         });\n
@@ -133,6 +140,8 @@
       CodeMirror.commands.save = function () {\n
         gadget.submitData();\n
       };\n
+      //console.log(gadget.props.element.querySelector(\'.editor\'));\n
+\n
     })\n
     .declareMethod(\'getData\', function () {\n
       return this.editor.getValue();\n
@@ -276,7 +285,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.29057.44332.28194</string> </value>
+                <value> <string>948.62231.37965.8123</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -294,7 +303,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453133523.32</float>
+                        <float>1454939611.03</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
