@@ -107,6 +107,7 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+\n
 /*! URI.js v1.12.0 http://medialize.github.com/URI.js/ */\n
 /* build contains: IPv6.js, punycode.js, SecondLevelDomains.js, URI.js, URI.fragmentQuery.js */\n
 (function(e,k){"object"===typeof exports?module.exports=k():"function"===typeof define&&define.amd?define(k):e.IPv6=k(e)})(this,function(e){var k=e&&e.IPv6;return{best:function(e){e=e.toLowerCase().split(":");var k=e.length,d=8;""===e[0]&&""===e[1]&&""===e[2]?(e.shift(),e.shift()):""===e[0]&&""===e[1]?e.shift():""===e[k-1]&&""===e[k-2]&&e.pop();k=e.length;-1!==e[k-1].indexOf(".")&&(d=7);var g;for(g=0;g<k&&""!==e[g];g++);if(g<d)for(e.splice(g,1,"0000");e.length<d;)e.splice(g,0,"0000");for(g=0;g<d;g++){for(var k=\n
@@ -7078,11 +7079,12 @@ return new Parser;\n
     }\n
 \n
     function checkSignatureDifference(queue, source, destination, id,\n
-                                      conflict_force, conflict_ignore) {\n
+                                      conflict_force, conflict_ignore,\n
+                                      getMethod) {\n
       queue\n
         .push(function () {\n
           return RSVP.all([\n
-            source.get(id),\n
+            getMethod(id),\n
             context._signature_sub_storage.get(id)\n
           ]);\n
         })\n
@@ -7130,6 +7132,35 @@ return new Parser;\n
         });\n
     }\n
 \n
+    function checkBulkSignatureDifference(queue, source, destination, id_list,\n
+                                          conflict_force, conflict_ignore) {\n
+      queue\n
+        .push(function () {\n
+          return source.bulk(id_list);\n
+        })\n
+        .push(function (result_list) {\n
+          var i,\n
+            sub_queue = new RSVP.Queue();\n
+\n
+          function getResult(j) {\n
+            return function (id) {\n
+              if (id !== id_list[j].parameter_list[0]) {\n
+                throw new Error("Does not access expected ID " + id);\n
+              }\n
+              return result_list[j];\n
+            };\n
+          }\n
+\n
+          for (i = 0; i < result_list.length; i += 1) {\n
+            checkSignatureDifference(sub_queue, source, destination,\n
+                               id_list[i].parameter_list[0],\n
+                               conflict_force, conflict_ignore,\n
+                               getResult(i));\n
+          }\n
+          return sub_queue;\n
+        });\n
+    }\n
+\n
     function pushStorage(source, destination, options) {\n
       var queue = new RSVP.Queue();\n
       if (!options.hasOwnProperty("use_post")) {\n
@@ -7146,6 +7177,7 @@ return new Parser;\n
           var i,\n
             local_dict = {},\n
             new_list = [],\n
+            change_list = [],\n
             signature_dict = {},\n
             key;\n
           for (i = 0; i < result_list[0].data.total_rows; i += 1) {\n
@@ -7188,9 +7220,17 @@ return new Parser;\n
             if (signature_dict.hasOwnProperty(key)) {\n
               if (local_dict.hasOwnProperty(key)) {\n
                 if (options.check_modification === true) {\n
-                  checkSignatureDifference(queue, source, destination, key,\n
-                                           options.conflict_force,\n
-                                           options.conflict_ignore);\n
+                  if (options.use_bulk_get === true) {\n
+                    change_list.push({\n
+                      method: "get",\n
+                      parameter_list: [key]\n
+                    });\n
+                  } else {\n
+                    checkSignatureDifference(queue, source, destination, key,\n
+                                             options.conflict_force,\n
+                                             options.conflict_ignore,\n
+                                             source.get.bind(source));\n
+                  }\n
                 }\n
               } else {\n
                 if (options.check_deletion === true) {\n
@@ -7198,6 +7238,12 @@ return new Parser;\n
                 }\n
               }\n
             }\n
+          }\n
+          if ((options.use_bulk_get === true) && (change_list.length !== 0)) {\n
+            checkBulkSignatureDifference(queue, source, destination,\n
+                                         change_list,\n
+                                         options.conflict_force,\n
+                                         options.conflict_ignore);\n
           }\n
         });\n
     }\n
@@ -9061,8 +9107,10 @@ return new Parser;\n
       });\n
   };\n
 \n
-  ERP5Storage.prototype.getAttachment = function (id, action) {\n
-\n
+  ERP5Storage.prototype.getAttachment = function (id, action, options) {\n
+    if (options === undefined) {\n
+      options = {};\n
+    }\n
     if (action === "view") {\n
       if (this._default_view_reference === undefined) {\n
         throw new jIO.util.jIOError(\n
@@ -9074,7 +9122,6 @@ return new Parser;\n
                                    {"_view": this._default_view_reference})\n
         .push(function (response) {\n
           var result = JSON.parse(response.target.responseText);\n
-          result._id = id;\n
           result.portal_type = result._links.type.name;\n
           // Remove all ERP5 hateoas links / convert them into jIO ID\n
 \n
@@ -9100,21 +9147,47 @@ return new Parser;\n
     if (action.indexOf(this._url) === 0) {\n
       return new RSVP.Queue()\n
         .push(function () {\n
-          return jIO.util.ajax({\n
-            "type": "GET",\n
-            "url": action,\n
-            "xhrFields": {\n
-              withCredentials: true\n
+          var start,\n
+            end,\n
+            range,\n
+            request_options = {\n
+              "type": "GET",\n
+              "dataType": "blob",\n
+              "url": action,\n
+              "xhrFields": {\n
+                withCredentials: true\n
+              }\n
+            };\n
+          if (options.start !== undefined ||  options.end !== undefined) {\n
+            start = options.start || 0;\n
+            end = options.end;\n
+            if (end !== undefined && end < 0) {\n
+              throw new jIO.util.jIOError("end must be positive",\n
+                                          400);\n
             }\n
-          });\n
+            if (start < 0) {\n
+              range = "bytes=" + start;\n
+            } else if (end === undefined) {\n
+              range = "bytes=" + start + "-";\n
+            } else {\n
+              if (start > end) {\n
+                throw new jIO.util.jIOError("start is greater than end",\n
+                                            400);\n
+              }\n
+              range = "bytes=" + start + "-" + end;\n
+            }\n
+            request_options.headers = {Range: range};\n
+          }\n
+          return jIO.util.ajax(request_options);\n
         })\n
         .push(function (evt) {\n
-          var result = JSON.parse(evt.target.responseText);\n
-          result._id = id;\n
-          return new Blob(\n
-            [JSON.stringify(result)],\n
-            {"type": evt.target.getResponseHeader("Content-Type")}\n
-          );\n
+          if (evt.target.response === undefined) {\n
+            return new Blob(\n
+              [evt.target.responseText],\n
+              {"type": evt.target.getResponseHeader("Content-Type")}\n
+            );\n
+          }\n
+          return evt.target.response;\n
         });\n
     }\n
     throw new jIO.util.jIOError("ERP5: not support get attachment: " + action,\n
@@ -11244,7 +11317,7 @@ return new Parser;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.40455.21934.24285</string> </value>
+                <value> <string>949.22191.39286.53384</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -11262,7 +11335,7 @@ return new Parser;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453389823.29</float>
+                        <float>1456225163.58</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
