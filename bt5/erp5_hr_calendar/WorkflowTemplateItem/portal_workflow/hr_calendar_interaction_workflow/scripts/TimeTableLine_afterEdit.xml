@@ -62,7 +62,7 @@ day_of_week = time_table_line.getDayOfWeek()\n
 quantity = time_table_line.getQuantity()\n
 if not(None in (day_of_week, quantity)):\n
   time_table_line.setPeriodicityWeekDayList([day_of_week])\n
-  start_date = DateTime("2014/04/01")\n
+  start_date = time_table_line.getParentValue().getStartDate(DateTime("2014/04/01"))\n
   while start_date.Day() != day_of_week:\n
     start_date = addToDate(start_date, day=1)\n
   time_table_line.setStartDate(start_date)\n
