@@ -103,6 +103,7 @@
                         <string>my_id</string>
                         <string>my_title</string>
                         <string>my_short_title</string>
+                        <string>my_reference</string>
                         <string>foo_category_title</string>
                         <string>my_foo_category_title</string>
                         <string>my_fake_category_title</string>
