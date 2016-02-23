@@ -99,9 +99,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, document, RSVP, loopEventListener, jQuery */\n
+            <value> <string>/*global window, rJS, document, RSVP, loopEventListener, jQuery, console */\n
 /*jslint indent: 2, maxerr: 3 */\n
-(function (window, rJS, document, RSVP, loopEventListener, $) {\n
+(function (window, rJS, document, RSVP, loopEventListener, $, console) {\n
   "use strict";\n
 \n
   rJS(window)\n
@@ -140,6 +140,7 @@
         this.property_dict.textarea_deferred.resolve(new_element);\n
       } else {\n
         new_element = document.createElement(\'pre\');\n
+        new_element.setAttribute("class",  "ui-content-non-editable");\n
         new_element.textContent = value;\n
       }\n
       this.property_dict.element.appendChild(new_element);\n
@@ -181,7 +182,7 @@
         });\n
     });\n
 \n
-}(window, rJS, document, RSVP, loopEventListener, jQuery));</string> </value>
+}(window, rJS, document, RSVP, loopEventListener, jQuery, console));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -316,7 +317,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.41930.30032.34201</string> </value>
+                <value> <string>949.22534.15625.46830</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -334,7 +335,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453477730.87</float>
+                        <float>1456317375.18</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

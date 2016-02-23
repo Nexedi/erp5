@@ -1125,6 +1125,13 @@ html .ui-listbox-error {\n
   text-align: center;\n
 }\n
 \n
+\n
+\n
+html .ui-content-non-editable {\n
+  word-wrap: break-word;\n
+  white-space: pre-line;\n
+}\n
+\n
 /* cell background */\n
 html table thead tr,\n
 html table tfoot tr,\n
@@ -5219,7 +5226,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.1052.3508.62634</string> </value>
+                <value> <string>949.22640.50771.7816</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -5237,7 +5244,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1454957135.51</float>
+                        <float>1456317267.11</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

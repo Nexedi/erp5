@@ -188,7 +188,7 @@
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//input[@title=\'ID\']</td>\n
+  <td>//div[@data-gadget-scope=\'field_my_id\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

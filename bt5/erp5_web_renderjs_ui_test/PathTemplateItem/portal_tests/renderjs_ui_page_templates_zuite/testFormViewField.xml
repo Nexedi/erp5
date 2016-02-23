@@ -92,9 +92,16 @@
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//input[@value=\'1\' and @name=\'field_my_id\' and @readonly=\'readonly\']</td>\n
+  <td>//div[@data-gadget-scope=\'field_my_id\']</td>\n
   <td></td>\n
 </tr>\n
+\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@data-gadget-scope=\'field_my_id\']</td>\n
+  <td>1</td>\n
+</tr>\n
+\n
 \n
 <!-- Listbox are always displayed without label -->\n
 <tr>\n

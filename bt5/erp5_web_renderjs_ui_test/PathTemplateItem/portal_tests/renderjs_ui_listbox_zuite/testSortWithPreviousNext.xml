@@ -190,8 +190,8 @@
 </tr>\n
 \n
 <tr>\n
-  <td>verifyValue</td>\n
-  <td>//input[@title="Title"]</td>\n
+  <td>verifyText</td>\n
+  <td>//div[@data-gadget-scope="field_my_title"]</td>\n
   <td>Title 3</td>\n
 </tr>\n
 \n
@@ -217,8 +217,8 @@
 </tr>\n
 \n
 <tr>\n
-  <td>verifyValue</td>\n
-  <td>//input[@title="Title"]</td>\n
+  <td>verifyText</td>\n
+  <td>//div[@data-gadget-scope="field_my_title"]</td>\n
   <td>Title 4</td>\n
 </tr>\n
 \n
@@ -244,8 +244,8 @@
 </tr>\n
 \n
 <tr>\n
-  <td>verifyValue</td>\n
-  <td>//input[@title="Title"]</td>\n
+  <td>verifyText</td>\n
+  <td>//div[@data-gadget-scope="field_my_title"]</td>\n
   <td>Title 3</td>\n
 </tr>\n
 \n
