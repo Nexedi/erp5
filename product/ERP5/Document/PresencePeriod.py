@@ -152,7 +152,7 @@ class PresencePeriod(Movement, PeriodicityMixin):
       second_duration = int(stop_date) - int(start_date)
       if second_duration > 0:
         # First date has to respect the periodicity config
-        next_start_date = self.getNextPeriodicalDate(start_date-1)
+        next_start_date = self.getNextPeriodicalDate(addToDate(start_date, day=-1))
         while (next_start_date is not None) and \
           (next_start_date <= periodicity_stop_date):
 
