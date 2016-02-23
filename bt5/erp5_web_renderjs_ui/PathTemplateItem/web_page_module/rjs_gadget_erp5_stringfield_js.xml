@@ -99,15 +99,16 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, RSVP, loopEventListener */\n
+            <value> <string>/*global window, rJS, RSVP, loopEventListener, document */\n
 /*jslint indent: 2, maxerr: 3 */\n
-(function (window, rJS, RSVP, loopEventListener) {\n
+(function (window, rJS, RSVP, loopEventListener, document) {\n
   "use strict";\n
 \n
   rJS(window)\n
     .ready(function (gadget) {\n
       return gadget.getElement()\n
         .push(function (element) {\n
+          gadget.props = {};\n
           gadget.element = element;\n
         });\n
     })\n
@@ -116,37 +117,47 @@
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")\n
     .declareAcquiredMethod("notifyChange", "notifyChange")\n
     .declareMethod(\'getTextContent\', function () {\n
-      return this.element.querySelector(\'input\').getAttribute(\'value\');\n
+      return this.props.value;\n
     })\n
     .declareMethod(\'render\', function (options) {\n
-      var input = this.element.querySelector(\'input\'),\n
+      var element,\n
+        text,\n
         field_json = options.field_json || {};\n
-      input.setAttribute(\n
-        \'value\',\n
-        field_json.value || field_json.default || ""\n
-      );\n
-      input.setAttribute(\'name\', field_json.key);\n
-      input.setAttribute(\'title\', field_json.title);\n
-      if (field_json.required === 1) {\n
-        input.setAttribute(\'required\', \'required\');\n
+      this.props.value = field_json.value || field_json.default || "";\n
+      this.props.editable = field_json.editable;\n
+      if (field_json.editable) {\n
+        element = document.createElement(\'input\');\n
+        element.setAttribute("type", "text");\n
+        element.setAttribute(\'value\', this.props.value);\n
+        element.setAttribute(\'name\', field_json.key);\n
+        element.setAttribute(\'title\', field_json.title);\n
+        if (field_json.required === 1) {\n
+          element.setAttribute(\'required\', \'required\');\n
+        }\n
+      } else {\n
+        element = document.createElement("p");\n
+        element.setAttribute("class", "ui-content-non-editable");\n
+        text = document.createTextNode(this.props.value);\n
+        element.appendChild(text);\n
       }\n
-      if (field_json.editable !== 1) {\n
-        input.setAttribute(\'readonly\', \'readonly\');\n
-        input.setAttribute(\'data-wrapper-class\', \'ui-state-readonly\');\n
-        // input.setAttribute(\'disabled\', \'disabled\');\n
-\n
-      }\n
+      this.element.appendChild(element);\n
     })\n
 \n
     .declareMethod(\'getContent\', function () {\n
-      var input = this.element.querySelector(\'input\'),\n
+      var input,\n
         result = {};\n
-      result[input.getAttribute(\'name\')] = input.value;\n
+      if (this.props.editable) {\n
+        input = this.element.querySelector(\'input\');\n
+        result[input.getAttribute(\'name\')] = input.value;\n
+      }\n
       return result;\n
     })\n
 \n
     .declareMethod(\'checkValidity\', function () {\n
       var result;\n
+      if (!this.props.editable) {\n
+        return true;\n
+      }\n
       result = this.element.querySelector(\'input\').checkValidity();\n
       if (result) {\n
         return this.notifyValid()\n
@@ -162,6 +173,9 @@
       // Check field validity when the value changes\n
       ////////////////////////////////////\n
       var field_gadget = this;\n
+      if (!field_gadget.props.editable) {\n
+        return;\n
+      }\n
 \n
       function notifyChange() {\n
         return RSVP.all([\n
@@ -184,7 +198,9 @@
       // Inform when the field input is invalid\n
       ////////////////////////////////////\n
       var field_gadget = this;\n
-\n
+      if (!field_gadget.props.editable) {\n
+        return;\n
+      }\n
       function notifyInvalid(evt) {\n
         return field_gadget.notifyInvalid(evt.target.validationMessage);\n
       }\n
@@ -198,7 +214,7 @@
       );\n
     });\n
 \n
-}(window, rJS, RSVP, loopEventListener));</string> </value>
+}(window, rJS, RSVP, loopEventListener, document));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -333,7 +349,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.15479.27859.47018</string> </value>
+                <value> <string>949.22535.16679.23876</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -351,7 +367,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1455899182.71</float>
+                        <float>1456317346.39</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

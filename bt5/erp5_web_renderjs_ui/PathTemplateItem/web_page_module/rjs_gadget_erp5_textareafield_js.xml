@@ -140,6 +140,7 @@
         this.property_dict.textarea_deferred.resolve(new_element);\n
       } else {\n
         new_element = document.createElement(\'pre\');\n
+        new_element.setAttribute("class",  "ui-content-non-editable");\n
         new_element.textContent = value;\n
       }\n
       this.property_dict.element.appendChild(new_element);\n
@@ -157,9 +158,6 @@
         value = field.textContent;\n
       }\n
       result[this.property_dict.name] = value;\n
-      console.log(result);\n
-      console.log(field);\n
-      console.log(this.property_dict.element);\n
       return result;\n
     })\n
 \n
@@ -316,7 +314,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.41930.30032.34201</string> </value>
+                <value> <string>949.24043.58938.21367</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -334,7 +332,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453477730.87</float>
+                        <float>1456336348.49</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -232,14 +232,14 @@
 \n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//input[@title="Short Title"]</td>\n
+  <td>//div[@data-gadget-scope="field_my_short_title"]</td>\n
   <td></td>\n
 </tr>\n
 \n
 \n
 <tr>\n
-  <td>verifyValue</td>\n
-  <td>//input[@title="Short Title"]</td>\n
+  <td>verifyText</td>\n
+  <td>//div[@data-gadget-scope="field_my_short_title"]</td>\n
   <td>test_clone</td>\n
 </tr>\n
 \n
@@ -262,8 +262,8 @@
 </tr>\n
 \n
 <tr>\n
-  <td>storeValue</td>\n
-  <td>//input[@name=\'field_my_id\']</td>\n
+  <td>storeText</td>\n
+  <td>//div[@data-gadget-scope=\'field_my_id\']</td>\n
   <td>original_id</td>\n
 </tr>\n
 \n
