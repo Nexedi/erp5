@@ -501,6 +501,29 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
       else:
         self.fail('line not found')
 
+  def test_only_validated_currency_exchange_line_applies(self):
+    euro = self.portal.currency_module.euro
+    usd = self.portal.currency_module.usd
+
+    euro_to_usd = euro.newContent(
+      portal_type='Currency Exchange Line',
+      price_currency_value=usd)
+    euro_to_usd.setBasePrice(1.10158)
+    self.tic()
+
+    context = self._getPriceContext(
+      categories=[
+        'resource/currency_module/euro',
+        'price_currency/currency_module/usd'])
+
+    exchange_ratio = euro.getPrice(context=context, )
+    self.assertEqual(None, exchange_ratio)
+
+    euro_to_usd.validate()
+    self.tic()
+    exchange_ratio = euro.getPrice(context=context, )
+    self.assertEqual(1.10158, exchange_ratio)
+
   def test_date_on_currency_exchange_line(self):
     euro = self.portal.currency_module.euro
     usd = self.portal.currency_module.usd
@@ -641,6 +664,35 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
                                    portal_type='Currency Exchange Cell')
     self.assertEqual(0.98, exchange_ratio)
 
+  def test_only_validated_currency_exchange_cell_applies(self):
+    euro = self.portal.currency_module.euro
+    usd = self.portal.currency_module.usd
+
+    euro_to_usd = euro.newContent(
+      portal_type='Currency Exchange Line',
+      price_currency_value=usd)
+    type_a_cell = euro_to_usd.getCell(
+      'currency_exchange_type/type_a',
+      'resource/%s' % euro.getRelativeUrl(),
+      'price_currency/%s' % usd.getRelativeUrl(),
+      base_id='path')
+    type_a_cell.setBasePrice(0.98)
+    self.tic()
+
+    context = self._getPriceContext(
+                    categories=['resource/%s' % euro.getRelativeUrl(),
+                                'price_currency/%s' % usd.getRelativeUrl(),
+                                'currency_exchange_type/type_a'])
+
+    exchange_ratio = euro.getPrice(context=context,
+                                   portal_type='Currency Exchange Cell')
+    self.assertEqual(None, exchange_ratio)
+
+    euro_to_usd.validate()
+    self.tic()
+    exchange_ratio = euro.getPrice(context=context,
+                                   portal_type='Currency Exchange Cell')
+    self.assertEqual(0.98, exchange_ratio)
 
   def test_date_on_currency_exchange_cell(self):
     euro = self.portal.currency_module.euro
