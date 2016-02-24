@@ -33,7 +33,7 @@
  </chain>
  <chain>
   <type>Currency Exchange Line</type>
-  <workflow>currency_exchange_line_interaction_workflow, edit_workflow, validation_workflow</workflow>
+  <workflow>currency_exchange_line_interaction_workflow, edit_workflow, reindex_object_interaction_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Email</type>
