@@ -79,6 +79,12 @@ class CurrencyExchangeTestCase(AccountingTestCase):
             'erp5_simulation_test'
             )
 
+  def _getPriceContext(self, **kw):
+    """Returns a temp movement that we can use for getPrice(context=
+    """
+    from Products.ERP5Type.Document import newTempMovement
+    return newTempMovement(self.portal, 'tmp', **kw)
+
 
 class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
   """
@@ -495,6 +501,51 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
       else:
         self.fail('line not found')
 
+  def test_date_on_currency_exchange_line(self):
+    euro = self.portal.currency_module.euro
+    usd = self.portal.currency_module.usd
+
+    euro_to_usd_before_2016 = euro.newContent(
+      portal_type='Currency Exchange Line',
+      stop_date=DateTime(2015, 12, 31, 23, 59),
+      base_price=0.5,
+      price_currency_value=usd)
+    euro_to_usd_before_2016.validate()
+    euro_to_usd_2016 = euro.newContent(
+      portal_type='Currency Exchange Line',
+      start_date=DateTime(2016, 1, 1),
+      stop_date=DateTime(2016, 12, 31, 23, 59),
+      base_price=0.6,
+      price_currency_value=usd)
+    euro_to_usd_2016.validate()
+    euro_to_usd_after_2016 = euro.newContent(
+      portal_type='Currency Exchange Line',
+      start_date=DateTime(2017, 1, 1),
+      base_price=0.7,
+      price_currency_value=usd)
+    euro_to_usd_after_2016.validate()
+    self.tic()
+
+    context_2015 = self._getPriceContext(
+      start_date=DateTime(2015, 1, 1),
+      categories=[
+        'resource/currency_module/euro',
+        'price_currency/currency_module/usd'])
+    self.assertEqual(0.5, euro.getPrice(context=context_2015))
+    context_2016 = self._getPriceContext(
+      start_date=DateTime(2016, 1, 1),
+      categories=[
+        'resource/currency_module/euro',
+        'price_currency/currency_module/usd'])
+    self.assertEqual(0.6, euro.getPrice(context=context_2016))
+    context_2017 = self._getPriceContext(
+      start_date=DateTime(2017, 1, 1),
+      categories=[
+        'resource/currency_module/euro',
+        'price_currency/currency_module/usd'])
+    self.assertEqual(0.7, euro.getPrice(context=context_2017))
+
+
 class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
   def afterSetUp(self):
     currency_exchange_type = \
@@ -589,6 +640,74 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
     exchange_ratio = euro.getPrice(context=context,
                                    portal_type='Currency Exchange Cell')
     self.assertEqual(0.98, exchange_ratio)
+
+
+  def test_date_on_currency_exchange_cell(self):
+    euro = self.portal.currency_module.euro
+    usd = self.portal.currency_module.usd
+
+    euro_to_usd_before_2016 = euro.newContent(
+      portal_type='Currency Exchange Line',
+      stop_date=DateTime(2015, 12, 31, 23, 59),
+      price_currency_value=usd)
+    type_a_cell = euro_to_usd_before_2016.getCell(
+      'currency_exchange_type/type_a',
+      'resource/%s' % euro.getRelativeUrl(),
+      'price_currency/%s' % usd.getRelativeUrl(),
+      base_id='path')
+    type_a_cell.setBasePrice(0.5)
+    euro_to_usd_before_2016.validate()
+
+    euro_to_usd_2016 = euro.newContent(
+      portal_type='Currency Exchange Line',
+      start_date=DateTime(2016, 1, 1),
+      stop_date=DateTime(2016, 12, 31, 23, 59),
+      price_currency_value=usd)
+    type_a_cell = euro_to_usd_2016.getCell(
+      'currency_exchange_type/type_a',
+      'resource/%s' % euro.getRelativeUrl(),
+      'price_currency/%s' % usd.getRelativeUrl(),
+      base_id='path')
+    type_a_cell.setBasePrice(0.6)
+    euro_to_usd_2016.validate()
+
+    euro_to_usd_after_2016 = euro.newContent(
+      portal_type='Currency Exchange Line',
+      start_date=DateTime(2017, 1, 1),
+      price_currency_value=usd)
+    type_a_cell = euro_to_usd_after_2016.getCell(
+      'currency_exchange_type/type_a',
+      'resource/%s' % euro.getRelativeUrl(),
+      'price_currency/%s' % usd.getRelativeUrl(),
+      base_id='path')
+    type_a_cell.setBasePrice(0.7)
+    euro_to_usd_after_2016.validate()
+    self.tic()
+
+    context_2015 = self._getPriceContext(
+      start_date=DateTime(2015, 1, 1),
+      categories=[
+        'resource/currency_module/euro',
+        'price_currency/currency_module/usd',
+        'currency_exchange_type/type_a'])
+    self.assertEqual(0.5,
+      euro.getPrice(context=context_2015, portal_type='Currency Exchange Cell'))
+    context_2016 = self._getPriceContext(
+      start_date=DateTime(2016, 1, 1),
+      categories=[
+        'resource/currency_module/euro',
+        'price_currency/currency_module/usd',
+        'currency_exchange_type/type_a'])
+    self.assertEqual(0.6,
+      euro.getPrice(context=context_2016, portal_type='Currency Exchange Cell'))
+    context_2017 = self._getPriceContext(
+      start_date=DateTime(2017, 1, 1),
+      categories=[
+        'resource/currency_module/euro',
+        'price_currency/currency_module/usd',
+        'currency_exchange_type/type_a'])
+    self.assertEqual(0.7,
+      euro.getPrice(context=context_2017, portal_type='Currency Exchange Cell'))
 
 
 def test_suite():

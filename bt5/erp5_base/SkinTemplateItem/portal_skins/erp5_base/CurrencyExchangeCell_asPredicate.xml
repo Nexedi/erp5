@@ -54,7 +54,7 @@
 currency = currency_exchange_line.getParentValue()\n
 \n
 return context.asContext(_range_criterion=dict(start_date=(currency_exchange_line.getStartDate(),\n
-                                                           currency_exchange_line.getStopDate())),\n
+                                                           currency_exchange_line.hasStopDate() and currency_exchange_line.getStopDate() or None)),\n
                          membership_criterion_base_category=[\'price_currency\', \'resource\', \'currency_exchange_type\'],\n
                          membership_criterion_category=[\'resource/%s\' % currency.getRelativeUrl(),\n
                                                         currency_exchange_line.getPriceCurrency(base=True),\n

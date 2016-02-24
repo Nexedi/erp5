@@ -51,7 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>start_date = context.getStartDate()\n
-stop_date = context.getStopDate()\n
+stop_date = context.hasStopDate() and context.getStopDate() or None\n
 identity_criterion = {\'start_date\':(start_date,stop_date)}\n
 return context.asContext(_range_criterion=identity_criterion,\n
                          membership_criterion_base_category=[\'price_currency\',\'resource\'],\n
