@@ -320,8 +320,10 @@ class TestUserManagement(ERP5TypeTestCase):
     self._assertUserDoesNotExists('the_user', 'secret')
     assi = pers.newContent(portal_type='Assignment')
     assi.open()
+    self.commit()
     self._assertUserExists('the_user', 'secret')
     assi.close()
+    self.commit()
     self._assertUserDoesNotExists('the_user', 'secret')
 
   def test_PersonNotIndexedNotCached(self):
