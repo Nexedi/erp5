@@ -1,5 +1,5 @@
 start_date = context.getStartDate()
-stop_date = context.getStopDate()
+stop_date = context.hasStopDate() and context.getStopDate() or None
 identity_criterion = {'start_date':(start_date,stop_date)}
 return context.asContext(_range_criterion=identity_criterion,
                          membership_criterion_base_category=['price_currency','resource'],
