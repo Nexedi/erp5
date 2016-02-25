@@ -64,13 +64,12 @@ return ComplexQuery(\n
           reference=\'!=None\'),\n
     Query(validation_state=\'embedded\', parent_uid=context.getUid()),\n
     operator=\'or\'),\n
-  Query(**kw),\n
   operator=\'and\')\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>document_type=None, **kw</string> </value>
+            <value> <string>document_type=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
