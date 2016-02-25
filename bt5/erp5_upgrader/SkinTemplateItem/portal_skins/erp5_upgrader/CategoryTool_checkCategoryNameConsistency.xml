@@ -70,29 +70,29 @@ if not upgrade_list:\n
 \n
 for old_category_name, new_category_name in upgrade_list:\n
 \n
-  sensitive_portal_types = []\n
+  sensitive_portal_type_list = []\n
   \n
   # We gather portal types having the new category defined as a property\n
   for portal_type in portal.portal_types.listTypeInfo():\n
     if new_category_name in portal_type.getInstancePropertyAndBaseCategoryList():\n
-      sensitive_portal_types.append(portal_type.getId())\n
+      sensitive_portal_type_list.append(portal_type.getId())\n
 \n
-  # if sensitive_portal_types is empty, we don\'t want to check all objects\n
-  if fixit and sensitive_portal_types:\n
+  # if sensitive_portal_type_list is empty, we don\'t want to check all objects\n
+  if fixit and sensitive_portal_type_list:\n
     updateRelatedCategory = portal.portal_categories.updateRelatedCategory\n
   \n
     # We list objects defined by the sensitive portal types\n
-    for obj in portal.portal_catalog(portal_type=sensitive_portal_types):\n
+    for obj in portal.portal_catalog(portal_type=sensitive_portal_type_list):\n
       obj = obj.getObject()\n
-      new_categories_list = []\n
-      obj_categories_list = obj.getCategoriesList()\n
-      for category in obj_categories_list:\n
+      new_category_list = []\n
+      object_category_list = obj.getCategoriesList()\n
+      for category in object_category_list:\n
         new_category = updateRelatedCategory(category, old_category_name, new_category_name)\n
-        new_categories_list.append(new_category)\n
-      if new_categories_list != obj_categories_list:\n
-        obj.setCategoriesList(new_categories_list)\n
+        new_category_list.append(new_category)\n
+      if new_category_list != object_category_list:\n
+        obj.setCategoriesList(new_category_list)\n
 \n
-  for portal_type in sensitive_portal_types:\n
+  for portal_type in sensitive_portal_type_list:\n
     error_list.append(\'Portal Type %s still contains the category %s\' % (portal_type, old_category_name))\n
 \n
 return error_list\n
