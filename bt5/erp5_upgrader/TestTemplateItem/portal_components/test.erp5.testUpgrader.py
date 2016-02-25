@@ -688,8 +688,6 @@ class TestUpgrader(ERP5TypeTestCase):
 
   def test_rename_category(self):
     """Check that the renaming category feature correctly updates objects"""
-    self.portal.portal_categories.Folder_reindexAll()
-    self.tic()
     sequence_list = SequenceList()
     sequence_string = """
       stepCreateOrganisationWithActivity
