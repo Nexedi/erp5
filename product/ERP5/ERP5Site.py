@@ -2208,6 +2208,12 @@ class ERP5Generator(PortalGenerator):
       addERP5Tool(p, 'portal_activities', 'Activity Tool')
       # Initialize Activities
       p.portal_activities.manageClearActivities()
+      # Reindex already existing tools
+      for e in p.objectValues():
+        try:
+          e.reindexObject()
+        except TypeError:
+          pass
 
     if not p.hasObject('content_type_registry'):
       self.setupMimetypes(p)
