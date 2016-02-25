@@ -173,9 +173,13 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
 
   def test_01_splitAndDefer(self, quiet=quiet, run=run_all_test):
     """
-      Change the quantity on an delivery line, then
-      see if the packing list is divergent and then
-      split and defer the packing list
+      Change the quantity on an delivery line, then see if the packing list
+      remains solved when we change a little bit the quantity (within the range
+      accepted by the quantity tester).
+
+      Then see if the packing list becomes divergent when the quantity is
+      heavily changed (outside the range accepted by the quantity tester).
+      Split and defer the packing list and check newly created packing list.
     """
     if not run: return
     sequence_list = SequenceList()
