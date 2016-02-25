@@ -51,8 +51,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># This script is called as a "script constraint"\n
-# It will replace an old category name by a new name, and update all related\n
-# objects.\n
+# It will replace an old base category name by a new name, and update all\n
+# related objects.\n
 # To get the list of changes, we use the same idea as in TemplateTool_checkBusinessTemplateInstallation :\n
 # we get a list of tuples containing the old names and new names from a Script (Python),\n
 # which should be overriden in the custom sites\' upgraders.\n
