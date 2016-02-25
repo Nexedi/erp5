@@ -59,24 +59,30 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
     Set a increased quantity on packing list lines
     """
     packing_list = sequence.get('packing_list')
-    quantity = self.default_quantity + delta
-    sequence.edit(line_quantity=quantity)
     for packing_list_line in packing_list.objectValues(
         portal_type=self.packing_list_line_portal_type):
-      packing_list_line.edit(quantity=quantity)
+      packing_list_line.edit(quantity=packing_list_line.getQuantity() + delta)
     sequence.edit(last_delta=delta)
 
   def stepIncreasePackingListLineQuantity2(self, sequence=None,
       sequence_list=None, **kw):
     return self._modifyPackingListLineQuantity(sequence, sequence_list, 2.0)
 
-  def stepDecreasePackingListLineQuantity1(self, sequence=None,
+  def stepDecreasePackingListLineQuantity3(self, sequence=None,
       sequence_list=None, **kw):
-    return self._modifyPackingListLineQuantity(sequence, sequence_list, -1.0)
+    return self._modifyPackingListLineQuantity(sequence, sequence_list, -3.0)
 
-  def stepDecreasePackingListLineQuantity10(self, sequence=None,
+  def stepDecreasePackingListLineQuantity4(self, sequence=None,
       sequence_list=None, **kw):
-    return self._modifyPackingListLineQuantity(sequence, sequence_list, -10.0)
+    return self._modifyPackingListLineQuantity(sequence, sequence_list, -4.0)
+
+  def stepDecreasePackingListLineQuantity9(self, sequence=None,
+      sequence_list=None, **kw):
+    return self._modifyPackingListLineQuantity(sequence, sequence_list, -9.0)
+
+  def stepDecreasePackingListLineQuantity1010(self, sequence=None,
+      sequence_list=None, **kw):
+    return self._modifyPackingListLineQuantity(sequence, sequence_list, -1010.0)
 
   def stepSplitAndDeferPackingList(self, sequence=None, sequence_list=None, **kw):
     """
@@ -130,12 +136,12 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
       else:
         packing_list2 = packing_list
     sequence.edit(new_packing_list=packing_list2)
-    for line in packing_list1.objectValues(
-          portal_type= self.packing_list_line_portal_type):
-      self.assertEqual(self.default_quantity-10,line.getQuantity())
-    for line in packing_list2.objectValues(
-          portal_type= self.packing_list_line_portal_type):
-      self.assertEqual(10,line.getQuantity())
+    line, = packing_list1.objectValues(
+          portal_type= self.packing_list_line_portal_type)
+    self.assertEqual(self.default_quantity-10,line.getQuantity())
+    line, = packing_list2.objectValues(
+          portal_type= self.packing_list_line_portal_type)
+    self.assertEqual(10,line.getQuantity())
 
   def _checkSolverState(self, sequence=None, sequence_list=None,
                         state='solved'):
@@ -171,6 +177,31 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
     self.assertEqual(1,
         len(portal_catalog(path=portal_simulation_path)))
 
+  def stepCheckPackingListSplittedTwoTimes(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test if packing list was splitted two times
+    """
+    order = sequence.get('order')
+    packing_list_list = self.getOrderedPackingListFromOrder(order)
+    packing_list1, packing_list2, packing_list3 = packing_list_list
+
+    sequence.edit(new_packing_list=packing_list2)
+    line, = packing_list1.objectValues(
+          portal_type= self.packing_list_line_portal_type)
+    self.assertEqual(self.default_quantity-10,line.getQuantity())
+    line, = packing_list2.objectValues(
+          portal_type= self.packing_list_line_portal_type)
+    self.assertEqual(6, line.getQuantity())
+    line, = packing_list3.objectValues(
+          portal_type= self.packing_list_line_portal_type)
+    self.assertEqual(4, line.getQuantity())
+    # Check the id in simulation is not too long after multiple splitting
+    simulation_movement, = line.getDeliveryRelatedValueList()
+    self.assertEqual('1_split_1', simulation_movement.getId())
+
+  def stepSetNewPackingListAsPackingList(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(packing_list=sequence.get('new_packing_list'))
+
   def test_01_splitAndDefer(self, quiet=quiet, run=run_all_test):
     """
       Change the quantity on an delivery line, then see if the packing list
@@ -180,6 +211,10 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
       Then see if the packing list becomes divergent when the quantity is
       heavily changed (outside the range accepted by the quantity tester).
       Split and defer the packing list and check newly created packing list.
+
+      Finally, split the new packing list to make sure we can split splitted
+      packing list. In the same time, check if we do not create very long
+      ids for simulation movements (this was the case before)
     """
     if not run: return
     sequence_list = SequenceList()
@@ -191,12 +226,12 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
                       stepTic \
                       stepCheckPackingListIsNotDivergent \
                       stepCheckPackingListIsSolved \
-                      stepDecreasePackingListLineQuantity1 \
+                      stepDecreasePackingListLineQuantity3 \
                       stepCheckPackingListIsCalculating \
                       stepTic \
                       stepCheckPackingListIsNotDivergent \
                       stepCheckPackingListIsSolved \
-                      stepDecreasePackingListLineQuantity10 \
+                      stepDecreasePackingListLineQuantity9 \
                       stepCheckPackingListIsCalculating \
                       stepTic \
                       stepCheckPackingListIsDiverged \
@@ -204,6 +239,19 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
                       stepCheckSolverIsSolving \
                       stepTic \
                       stepCheckPackingListSplitted \
+                      stepCheckPackingListIsSolved \
+                      stepCheckSolverIsSolved \
+                      stepSetNewPackingListAsPackingList \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckPackingListIsSolved \
+                      stepDecreasePackingListLineQuantity4 \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepSplitAndDeferPackingList \
+                      stepCheckSolverIsSolving \
+                      stepTic \
+                      stepCheckPackingListSplittedTwoTimes \
                       stepCheckPackingListIsSolved \
                       stepCheckSolverIsSolved \
                       '
@@ -219,16 +267,8 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
       Test if packing list was splitted
     """
     order = sequence.get('order')
-    packing_list_list = order.getCausalityRelatedValueList(
-                               portal_type=self.packing_list_portal_type)
-    self.assertEqual(2,len(packing_list_list))
-    packing_list1 = None
-    packing_list2 = None
-    for packing_list in packing_list_list:
-      if packing_list.getUid() == sequence.get('packing_list').getUid():
-        packing_list1 = packing_list
-      else:
-        packing_list2 = packing_list
+    packing_list_list = self.getOrderedPackingListFromOrder(order)
+    packing_list1, packing_list2 = packing_list_list
 
     destination_value = sequence.get('organisation3')
     self.assertEqual(packing_list1.getDestinationValue(), destination_value)
@@ -241,6 +281,13 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
     for line in packing_list2.objectValues(
           portal_type= self.packing_list_line_portal_type):
       self.assertEqual(10+1000,line.getQuantity())
+
+  def getOrderedPackingListFromOrder(self, order):
+    packing_list_list = order.getCausalityRelatedValueList(
+                               portal_type=self.packing_list_portal_type)
+    packing_list_list.sort(key=lambda x: int(x.getId()))
+    return packing_list_list
+
 
   def test_02_splitAndDeferAfterAcceptDecision(self, quiet=quiet, run=run_all_test):
     """
@@ -268,7 +315,7 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
                       stepTic \
                       stepCheckPackingListIsNotDivergent \
                       stepCheckPackingListIsSolved \
-                      stepDecreasePackingListLineQuantity10 \
+                      stepDecreasePackingListLineQuantity1010 \
                       stepCheckPackingListIsCalculating \
                       stepTic \
                       stepCheckPackingListIsDiverged \

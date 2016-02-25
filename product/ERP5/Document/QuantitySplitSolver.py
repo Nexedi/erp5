@@ -86,11 +86,12 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
       # Create split movements
       for (simulation_movement, split_quantity) in split_list:
         split_index = 0
-        new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
+        simulation_id = simulation_movement.getId().split("_split_")[0]
+        new_id = "%s_split_%s" % (simulation_id, split_index)
         applied_rule = simulation_movement.getParentValue()
         while getattr(aq_base(applied_rule), new_id, None) is not None:
           split_index += 1
-          new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
+          new_id = "%s_split_%s" % (simulation_id, split_index)
         # Copy at same level
         kw = _getPropertyAndCategoryList(simulation_movement)
         kw.update(delivery=None, quantity=split_quantity)
