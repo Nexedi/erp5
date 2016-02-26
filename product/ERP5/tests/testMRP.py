@@ -54,8 +54,8 @@ class TestMRPMixin(TestBPMMixin):
         reference=reference,
         test_method_id="SimulationMovement_test" + portal_type.replace(' ', ''))
       def newTester(p, t, **kw):
-        kw.setdefault("tested_property", (p,))
-        return rule.newContent(p  + "_tester", t + " Divergence Tester",
+        kw.setdefault("tested_property", p)
+        return rule.newContent(id=p  + "_tester", portal_type=t + " Divergence Tester",
                                title=p + " divergence tester", **kw)
       for x in ("aggregate",
                 "base_application",
