@@ -265,15 +265,21 @@
 \n
           })\n
           .push(function (evt) {\n
-            var location = evt.target.getResponseHeader("X-Location");\n
-            if (location === undefined || location === null) {\n
-              // No redirection, stay on the same document\n
-              return form_gadget.getUrlFor({command: \'change\', options: {view: "view", page: undefined}});\n
+            var location = evt.target.getResponseHeader("X-Location"),\n
+              back = evt.target.getResponseHeader("X-Back"),\n
+              list = [];\n
+            list.push(form_gadget.notifySubmitted());\n
+            if (back) {\n
+              list.push(form_gadget.redirect({command: \'history_previous\'}));\n
+            } else {\n
+              if (location === undefined || location === null) {\n
+                // No redirection, stay on the same document\n
+                list.push(form_gadget.redirect({command: \'change\', options: {view: "view", page: undefined}}));\n
+              } else {\n
+                list.push(form_gadget.redirect({command: \'push_history\', options: {jio_key: new URI(location).segment(2), editable: form_gadget.props.editable}}));\n
+              }\n
             }\n
-            return RSVP.all([\n
-              form_gadget.notifySubmitted(),\n
-              form_gadget.redirect({command: \'push_history\', options: {jio_key: new URI(location).segment(2), editable: form_gadget.props.editable}})\n
-            ]);\n
+            return RSVP.all(list);\n
           })\n
           .push(undefined, function (error) {\n
             if ((error.target !== undefined) && (error.target.status === 400)) {\n
@@ -435,7 +441,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.21381.44953.13482</string> </value>
+                <value> <string>949.31211.58058.54442</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -453,7 +459,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1456157173.13</float>
+                        <float>1456766179.45</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

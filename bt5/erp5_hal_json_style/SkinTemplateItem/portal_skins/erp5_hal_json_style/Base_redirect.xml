@@ -86,6 +86,8 @@ context.Base_prepareCorsResponse(RESPONSE=response)\n
 # http://en.wikipedia.org/wiki/Post/Redirect/Get\n
 response.setStatus(201)\n
 response.setHeader("X-Location", "urn:jio:get:%s" % context.getRelativeUrl())\n
+if back:\n
+  response.setHeader("X-Back", back)\n
 return\n
 
 
@@ -93,7 +95,7 @@ return\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\', keep_items={}, **kw</string> </value>
+            <value> <string>form_id=\'view\', keep_items={}, back=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

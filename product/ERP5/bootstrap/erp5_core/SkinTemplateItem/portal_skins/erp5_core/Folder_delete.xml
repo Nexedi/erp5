@@ -59,12 +59,17 @@ portal = context.getPortalObject()\n
 Base_translateString = portal.Base_translateString\n
 REQUEST = portal.REQUEST\n
 \n
-uids = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
-if portal.portal_selections.selectionHasChanged(md5_object_uid_list, uids):\n
-  message = Base_translateString("Sorry, your selection has changed.")\n
-elif uids:\n
+if object_uid is None:\n
+  uids = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
+  if portal.portal_selections.selectionHasChanged(md5_object_uid_list, uids):\n
+    message = Base_translateString("Sorry, your selection has changed.")\n
+else:\n
+  uids=object_uid\n
+\n
+if uids:\n
   # Check if there is some related objets.\n
   object_list = [x.getObject() for x in context.Folder_getDeleteObjectList(uid=uids)]\n
+\n
   object_used = sum([x.getRelationCountForDeletion() and 1 for x in object_list])\n
 \n
   if object_used > 0:\n
@@ -149,9 +154,11 @@ elif uids:\n
     portal.portal_selections.setSelectionCheckedUidsFor(selection_name, ())\n
 else:\n
   message = Base_translateString("Please select one or more items first.")\n
+if object_uid is None:\n
+  return REQUEST.RESPONSE.redirect("%s/%s?portal_status_message=%s"\n
+    % (context.absolute_url_path(), form_id, message))\n
 \n
-return REQUEST.RESPONSE.redirect("%s/%s?portal_status_message=%s"\n
-  % (context.absolute_url_path(), form_id, message))\n
+return context.Base_redirect(back=1)\n
 
 
 ]]></string> </value>
