@@ -39,6 +39,7 @@ class TestRenderJSUICore(ERP5TypeFunctionalTestCase):
       'erp5_web_renderjs_ui',
       'erp5_web_renderjs_ui_test',
       'erp5_ui_test_core',
+      'erp5_accounting',
     )
 
 def test_suite():
