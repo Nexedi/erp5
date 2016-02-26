@@ -242,7 +242,7 @@
     return gadget.translateHtml(template(\n
       {\n
         "body_value": gadget.props.body_value,\n
-        "show_ancher": gadget.props.field_json.show_anchor,\n
+        "show_anchor": gadget.props.field_json.show_anchor,\n
         "column_list": gadget.props.field_json.column_list\n
       }\n
     ))\n
@@ -535,6 +535,7 @@
             }\n
             body_value.push({\n
               "value": result.data.rows[i].value.uid,\n
+              "jump": tmp_url,\n
               "tr_value": tr_value\n
             });\n
           }\n
@@ -563,7 +564,7 @@
 \n
         }).push(function (url_list) {\n
           var foot = {};\n
-          foot.colspan = field_json.column_list.length;\n
+          foot.colspan = field_json.column_list.length + gadget.props.field_json.show_anchor;\n
           foot.default_colspan = foot.colspan;\n
           foot.previous_classname = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child";\n
           foot.previous_url = url_list[0];\n
@@ -871,7 +872,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.16516.37897.4249</string> </value>
+                <value> <string>949.25536.57875.14165</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -889,7 +890,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1455899151.12</float>
+                        <float>1456426686.64</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
