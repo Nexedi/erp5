@@ -159,8 +159,10 @@
        <tbody class="tbody">\n
         {{#each body_value}}\n
           <tr>\n
-           {{#if ../../show_anchor}}\n
-             <th class="ui-link ui-btn ui-corner-all ui-icon-carat-r ui-btn-icon-notext"></th>\n
+           {{#if ../show_anchor}}\n
+             <th>\n
+               <a class="ui-link ui-btn ui-corner-all ui-icon-carat-r ui-btn-icon-notext" href="{{jump}}" </a>\n
+             </th>\n
            {{/if}}\n
            {{#each tr_value}}\n
               <th>\n
@@ -189,12 +191,14 @@
        <tbody class="tbody">\n
         {{#each body_value}}\n
            <tr>\n
-            {{#if ../../show_anchor}}\n
-               <th class="ui-link ui-btn ui-corner-all ui-icon-carat-r ui-btn-icon-notext"></th>\n
-            {{/if}}\n
-            <th>\n
-              <input value="{{value}}" type="checkbox" checked="true" class="hide_element">\n
-            </th>\n
+             {{#if ../show_anchor}}\n
+                <th>\n
+                  <a class="ui-link ui-btn ui-corner-all ui-icon-carat-r ui-btn-icon-notext" href="{{jump}}" </a>\n
+                </th>\n
+             {{/if}}\n
+             <th>\n
+               <input value="{{value}}" type="checkbox" checked="true" class="hide_element">\n
+              </th>\n
            {{#each tr_value}}\n
               <th>\n
                 {{#if type}}\n
@@ -408,7 +412,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.10973.23622.18261</string> </value>
+                <value> <string>949.25555.60712.7731</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -426,7 +430,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1455551894.43</float>
+                        <float>1456426878.51</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
