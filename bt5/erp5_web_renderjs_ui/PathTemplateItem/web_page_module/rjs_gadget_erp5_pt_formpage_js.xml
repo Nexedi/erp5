@@ -131,6 +131,7 @@
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
     .declareAcquiredMethod("updateHeader", "updateHeader")\n
+    .declareAcquiredMethod("redirect", "redirect")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -146,59 +147,76 @@
         element = gadget.props.element,\n
         erp5_document,\n
         erp5_form,\n
+        queue,\n
         form_gadget;\n
 \n
       gadget.props.jio_key = options.jio_key;\n
       gadget.props.options = options;\n
 \n
-      return gadget.jio_getAttachment(options.jio_key, options.view)\n
+      queue = gadget.jio_getAttachment(options.jio_key, options.view);\n
+      queue\n
         .push(function (result) {\n
+          var uri;\n
+          if (!result._embedded) {\n
+            return gadget.jio_getAttachment(options.jio_key, "links")\n
+              .push(function (result) {\n
+                return gadget.redirect({command: \'change\', options: {\n
+                  view: result._links.view[0].href,\n
+                  editable: undefined,\n
+                  page: undefined\n
+                }});\n
+              });\n
+          }\n
           if (options.hasOwnProperty("form_validation_error")) {\n
             result._embedded._view = options.form_validation_error;\n
           }\n
-          var uri = new URI(result._embedded._view._links.form_definition.href);\n
+          uri = new URI(result._embedded._view._links.form_definition.href);\n
           erp5_document = result;\n
-          return gadget.jio_getAttachment(uri.segment(2), "view");\n
-        })\n
-        .push(function (result) {\n
-          erp5_form = result;\n
+          queue\n
+            .push(function () {\n
+              return gadget.jio_getAttachment(uri.segment(2), "view");\n
+            })\n
+            .push(function (result) {\n
+              erp5_form = result;\n
 \n
-          var url = "gadget_erp5_pt_" + erp5_form.pt;\n
-          // XXX Hardcoded specific behaviour for form_view\n
-          if ((options.editable !== undefined) && (erp5_form.pt === "form_view")) {\n
-            url += "_editable";\n
-          }\n
-          url += ".html";\n
+              var url = "gadget_erp5_pt_" + erp5_form.pt;\n
+              // XXX Hardcoded specific behaviour for form_view\n
+              if ((options.editable !== undefined) && (erp5_form.pt === "form_view")) {\n
+                url += "_editable";\n
+              }\n
+              url += ".html";\n
 \n
-          return gadget.declareGadget(url, {\n
-            scope: "fg"\n
-          });\n
-        })\n
-        .push(function (result) {\n
-          var sub_options = options.fg || {};\n
-          sub_options.erp5_document = erp5_document;\n
-          sub_options.form_definition = erp5_form;\n
-          sub_options.view = options.view;\n
-          sub_options.action_view = options.action_view;\n
-          sub_options.jio_key = options.jio_key;\n
-          sub_options.editable = options.editable;\n
+              return gadget.declareGadget(url, {\n
+                scope: "fg"\n
+              });\n
+            })\n
+            .push(function (result) {\n
+              var sub_options = options.fg || {};\n
+              sub_options.erp5_document = erp5_document;\n
+              sub_options.form_definition = erp5_form;\n
+              sub_options.view = options.view;\n
+              sub_options.action_view = options.action_view;\n
+              sub_options.jio_key = options.jio_key;\n
+              sub_options.editable = options.editable;\n
 \n
-          form_gadget = result;\n
-          return form_gadget.render(sub_options);\n
-        })\n
-        .push(function () {\n
-          return form_gadget.getElement();\n
-        })\n
-        .push(function (fragment) {\n
-          // Clear first to DOM, append after to reduce flickering/manip\n
-          while (element.firstChild) {\n
-            element.removeChild(element.firstChild);\n
-          }\n
-          element.appendChild(fragment);\n
-          if (options.hasOwnProperty("form_validation_error")) {\n
-            $(element).trigger("create");\n
-          }\n
+              form_gadget = result;\n
+              return form_gadget.render(sub_options);\n
+            })\n
+            .push(function () {\n
+              return form_gadget.getElement();\n
+            })\n
+            .push(function (fragment) {\n
+              // Clear first to DOM, append after to reduce flickering/manip\n
+              while (element.firstChild) {\n
+                element.removeChild(element.firstChild);\n
+              }\n
+              element.appendChild(fragment);\n
+              if (options.hasOwnProperty("form_validation_error")) {\n
+                $(element).trigger("create");\n
+              }\n
+            });\n
         });\n
+      return queue;\n
     })\n
 \n
     .allowPublicAcquisition("displayFormulatorValidationError", function (param_list) {\n
@@ -344,7 +362,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.17480.10033.55347</string> </value>
+                <value> <string>949.26608.26326.12817</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -362,7 +380,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452010103.81</float>
+                        <float>1456489995.58</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
