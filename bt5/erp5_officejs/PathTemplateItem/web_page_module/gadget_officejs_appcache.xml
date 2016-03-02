@@ -140,7 +140,6 @@ gadget_officejs_page_share_webrtc_jio.html\n
 gadget_officejs_page_sync.html\n
 gadget_officejs_page_text_editor_list.html\n
 gadget_officejs_router.html\n
-gadget_officejs_text_editor_application.html\n
 gadget_officejs_text_editor_application_panel.html\n
 gadget_translation.html\n
 gadget_officejs_webrtc_jio.html\n
@@ -159,7 +158,6 @@ gadget_officejs_page_share_webrtc_jio.js\n
 gadget_officejs_page_sync.js\n
 gadget_officejs_page_text_editor_list.js\n
 gadget_officejs_router.js\n
-gadget_officejs_text_editor_application.js\n
 gadget_officejs_text_editor_application_panel.js\n
 gadget_translation.js\n
 gadget_translation_data.js\n
@@ -287,7 +285,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -301,7 +299,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.17599.60668.4096</string> </value>
+                <value> <string>949.23979.35291.18500</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -319,7 +317,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452017315.91</float>
+                        <float>1456912025.89</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
