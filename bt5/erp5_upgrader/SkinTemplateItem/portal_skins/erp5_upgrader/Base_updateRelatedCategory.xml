@@ -50,56 +50,30 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># This script is called as a "script constraint"\n
-# It will replace an old base category name by a new name, and update all\n
-# related objects.\n
-# To get the list of changes, we use the same idea as in TemplateTool_checkBusinessTemplateInstallation :\n
-# we get a list of tuples containing the old names and new names from a Script (Python),\n
-# which should be overriden in the custom sites\' upgraders.\n
-# Because this script is called during the post-upgrade phase, we are\n
-# looking for the category by its new name.\n
+            <value> <string>portal = context.getPortalObject()\n
+updateRelatedCategory = portal.portal_categories.updateRelatedCategory\n
 \n
-portal = context.getPortalObject()\n
+new_category_list = []\n
+object_category_list = context.getCategoriesList()\n
 \n
-error_list = []\n
+new_category_name = kw[\'new_category_name\']\n
+old_category_name = kw[\'old_category_name\']\n
 \n
-upgrade_list = context.Base_getUpgradeCategoryNameList()\n
+for category in object_category_list:\n
+  new_category = updateRelatedCategory(category, old_category_name, new_category_name)\n
+  new_category_list.append(new_category)\n
 \n
-if not upgrade_list:\n
-  return []\n
-\n
-for old_category_name, new_category_name in upgrade_list:\n
-\n
-  sensitive_portal_type_list = []\n
-  \n
-  # We gather portal types having the new category defined as a property\n
-  for portal_type in portal.portal_types.listTypeInfo():\n
-    if new_category_name in portal_type.getInstancePropertyAndBaseCategoryList():\n
-      sensitive_portal_type_list.append(portal_type.getId())\n
-\n
-  # if sensitive_portal_type_list is empty, we don\'t want to check all objects\n
-  if fixit and sensitive_portal_type_list:\n
-    context.portal_catalog.searchAndActivate(\'Base_updateRelatedCategory\',\n
-      activate_kw=activate_kw,\n
-      portal_type=sensitive_portal_type_list,\n
-      method_kw={\'fixit\': fixit,\n
-                  \'old_category_name\': old_category_name,\n
-                  \'new_category_name\': new_category_name,}\n
-    )\n
-\n
-  for portal_type in sensitive_portal_type_list:\n
-    error_list.append(\'Portal Type %s still contains the category %s\' % (portal_type, old_category_name))\n
-\n
-return error_list\n
+if new_category_list != object_category_list:\n
+  context.setCategoriesList(new_category_list)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>fixit=False, activate_kw={}, **kw</string> </value>
+            <value> <string>fixit=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CategoryTool_checkCategoryNameConsistency</string> </value>
+            <value> <string>Base_updateRelatedCategory</string> </value>
         </item>
       </dictionary>
     </pickle>
