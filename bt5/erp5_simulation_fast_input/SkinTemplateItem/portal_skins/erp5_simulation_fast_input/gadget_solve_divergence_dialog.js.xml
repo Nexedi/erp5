@@ -122,7 +122,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
             );\n
           })\n
           .push(function (data) {\n
-            event.srcElement.parentElement.parentElement.querySelectorAll(\n
+            event.target.parentElement.parentElement.querySelectorAll(\n
               ".listbox-table-data-cell")[2].innerHTML = data.target.response;\n
           });\n
       }\n
