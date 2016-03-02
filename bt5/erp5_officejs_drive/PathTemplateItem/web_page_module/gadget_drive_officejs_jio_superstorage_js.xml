@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_drive_page_edit.js</string> </value>
+            <value> <string>gadget_officejs_drive_jio_superstorage.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -78,13 +78,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_drive_page_edit_js</string> </value>
+            <value> <string>gadget_drive_officejs_jio_superstorage_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -98,109 +96,148 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*globals window, rJS, RSVP, loopEventListener, Blob*/\n
-/*jslint indent: 2, nomen: true, maxlen: 80*/\n
-(function (window, RSVP, rJS, loopEventListener, Blob) {\n
+            <value> <string>/*jslint indent: 2, maxerr: 3, nomen: true*/\n
+/*global RSVP, Blob, jIO */\n
+\n
+(function (jIO) {\n
   "use strict";\n
 \n
-  var gadget_klass = rJS(window);\n
+  /**\n
+   * The jIO DavErp5Bridge extension\n
+   *\n
+   * @class DavErp5Bridge\n
+   * @constructor\n
+   */\n
+  function DavErp5BridgeStorage(spec) {\n
+    this._sub_storage = jIO.createJIO(spec.sub_storage);\n
+    this._sub_type = spec.sub_storage.type;\n
+  }\n
 \n
-  gadget_klass\n
-    .ready(function (g) {\n
-      g.props = {};\n
-      g.options = null;\n
-      return g.getElement()\n
-        .push(function (element) {\n
-          g.props.element = element;\n
-          // g.props.deferred = RSVP.defer();\n
+  function addSlashes(s) {\n
+    if (!s.startsWith(\'/\')) {\n
+      s = \'/\' + s;\n
+    }\n
+    if (!s.endsWith(\'/\')) {\n
+      s += \'/\';\n
+    }\n
+    return s;\n
+  }\n
+\n
+  function removeSlashes(s) {\n
+    while (s.startsWith(\'/\')) {\n
+      s = s.substr(1);\n
+    }\n
+    while (s.endsWith(\'/\')) {\n
+      s = s.substring(0, s.length - 1);\n
+    }\n
+    return s;\n
+  }\n
+\n
+  function getResourceAndPosition(id) {\n
+    var lastSlashIndex = id.lastIndexOf(\'/\'), //XXX what if the resource name contains \'/\' ?\n
+      position = id.substring(0, lastSlashIndex),\n
+      resource = id.substring(lastSlashIndex + 1);\n
+    return {position:  addSlashes(position),\n
+            resource: resource};\n
+  }\n
+\n
+  DavErp5BridgeStorage.prototype.hasCapacity = function (capacity) {\n
+    return (capacity === "list");\n
+  };\n
+\n
+  // called by allDocs method\n
+  DavErp5BridgeStorage.prototype.buildQuery = function (options) {\n
+    if (this._sub_type === \'dav\') {\n
+      return this._sub_storage.allAttachments(addSlashes(options.id))\n
+        .push(function (all) {\n
+          var dict = {},\n
+            key;\n
+          for (key in all) {\n
+            if (all.hasOwnProperty(key)) {\n
+              dict[key] = {\'value\': {\'id\': key, \'title\': key} };\n
+            }\n
+          }\n
+          return dict;\n
         });\n
-    })\n
+    }\n
+    if (this._sub_type === \'erp5\') {\n
+      return this._sub_storage.buildQuery({\n
+        limit: [0, 100],\n
+        select_list: [\'id\', \'title\'],\n
+        query: \'relative_url: "\' + removeSlashes(options.id) + \'/%"\'\n
+      });\n
+    }\n
+  };\n
 \n
-    // allow external use of triggerData, so that editor gadget can save\n
-    // with its own shortcuts/buttons/whatever.\n
-    .allowPublicAcquisition(\'triggerSubmit\', function () {\n
-      this.triggerSubmit();\n
-    })\n
-\n
-    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
-    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")\n
-    .declareAcquiredMethod("updateHeader", "updateHeader")\n
-\n
-    .declareMethod(\'triggerSubmit\', function () {\n
-      this.props.element.querySelector(\'button\').click();\n
-    })\n
-\n
-    .declareMethod(\'render\', function (options) {\n
-      var gadget = this,\n
-        format = \'text\';\n
-      gadget.props.resourceName = options.resource;\n
-\n
-      return gadget.jio_getAttachment(\n
-        [gadget.props.resourceName].join(\'/\'),\n
-        \'enclosure\',\n
-        {format: format}\n
-      )\n
-        .push(function (data) {\n
-          return gadget.getDeclaredGadget(\'codemirror\')\n
-            .push(function (editorGadget) {\n
-              gadget.props.editorGadget = editorGadget;\n
-              return editorGadget.render({\n
-                data: data,\n
-                resource: gadget.props.resourceName\n
-              });\n
-            });\n
-        })\n
-\n
-\n
-        .push(function () {\n
-          return gadget.updateHeader({\n
-            title: \'Editing \' + gadget.props.resourceName,\n
-            save_action: true,\n
-            panel_action: false,\n
-            back_url: (typeof options.back === \'string\' ?\n
-                       "#position=" + options.back : \'#\')\n
-          });\n
-        });\n
-    })\n
-\n
-    /////////////////////////////////////////\n
-    // Form submit\n
-    /////////////////////////////////////////\n
-    .declareService(function () {\n
-      var gadget = this;\n
-\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return loopEventListener(\n
-            gadget.props.element.querySelector(\'form\'),\n
-            \'submit\',\n
-            true,\n
-            function () {\n
-              return gadget.props.editorGadget.getData()\n
-                .push(function (data) {\n
-                  var blob = new Blob([data], {"type" : "text/plain"});\n
-                  return gadget.jio_putAttachment(\n
-                    gadget.props.resourceName,\n
-                    \'enclosure\',\n
-                    blob\n
-                  );\n
+  DavErp5BridgeStorage.prototype.getAttachment = function (id, name) {\n
+    var substorage = this._sub_storage,\n
+      data;\n
+    if (name === \'enclosure\') {\n
+      if (this._sub_type === \'dav\') {\n
+        data = getResourceAndPosition(id);\n
+        return substorage.getAttachment(data.position, data.resource);\n
+      }\n
+      if (this._sub_type === \'erp5\') {\n
+        id = removeSlashes(id);\n
+        return substorage.getAttachment(id, \'links\', {format: \'json\'})\n
+          .push(function (att) {\n
+            return att._links.action_object_method;\n
+          })\n
+          .push(function (action_object_method) {\n
+            if (action_object_method !== undefined) {\n
+              return substorage.getAttachment(\n
+                \'erp5\',\n
+                action_object_method.href, // XXX action_object_method could be a list\n
+                {\n
+                  format: "blob"\n
+                }\n
+              )\n
+                .push(function (attachmentContent) {\n
+                  return attachmentContent;\n
                 });\n
             }\n
-          );\n
-        });\n
-    });\n
+            throw new jIO.util.jIOError("Cannot find \'action_object_method\' link on this document.", 500);\n
+          });\n
+      }\n
+    } else {\n
+      throw new jIO.util.jIOError("Only support \'enclosure\' attachment", 400);\n
+    }\n
+  };\n
 \n
-}(window, RSVP, rJS, loopEventListener, Blob));</string> </value>
+  DavErp5BridgeStorage.prototype.putAttachment = function (id, name, text) {\n
+    var substorage = this._sub_storage,\n
+      data;\n
+    if (name === \'enclosure\') {\n
+      if (this._sub_type === \'dav\') {\n
+        data = getResourceAndPosition(id);\n
+        return substorage.putAttachment(data.position, data.resource, text);\n
+      }\n
+      if (this._sub_type === \'erp5\') {\n
+        data = new Blob([text], {"type" : "text/plain"});\n
+        id = removeSlashes(id);\n
+        return new RSVP.Queue()\n
+          .push(function () {\n
+            return jIO.util.readBlobAsDataURL(data);\n
+          })\n
+          .push(function (dataURI) {\n
+            return substorage.put(id, {file: {url: dataURI.target.result}});\n
+          });\n
+      }\n
+    }\n
+    throw new jIO.util.jIOError("Only support \'enclosure\' attachment", 400);\n
+  };\n
+\n
+  jIO.addStorage(\'daverp5mapping\', DavErp5BridgeStorage);\n
+\n
+}(jIO));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Drive Edit JS</string> </value>
+            <value> <string>OfficeJS Drive Jio super-storage</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -282,7 +319,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452092519.05</float>
+                        <float>1454938897.46</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -327,7 +364,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.20738.20231.13619</string> </value>
+                <value> <string>949.20767.26098.61730</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -345,7 +382,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1456137983.0</float>
+                        <float>1456139534.4</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -402,7 +439,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452088505.8</float>
+                        <float>1454937660.04</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

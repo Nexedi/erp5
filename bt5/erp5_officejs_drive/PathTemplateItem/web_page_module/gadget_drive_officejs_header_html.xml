@@ -75,15 +75,17 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_drive_jio.html</string> </value>
+            <value> <string>gadget_officejs_drive_header.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Jio access</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_drive_jio_html</string> </value>
+            <value> <string>gadget_drive_officejs_header_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -108,22 +110,48 @@
   <head>\n
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
     <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>Jio Gadget</title>\n
+    <title>OfficeJS Header</title>\n
 \n
     <!-- renderjs -->\n
     <script src="rsvp.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
-\n
-    <script src="jiodev.js" type="text/javascript"></script>\n
+    <script src="handlebars.js" type="text/javascript"></script>\n
+    <script src="gadget_global.js" type="text/javascript"></script>\n
 \n
     <!-- custom script -->\n
-    <script src="gadget_officejs_drive_jio.js" type="text/javascript"></script>\n
+    <script src="gadget_officejs_drive_header.js" type="text/javascript"></script>\n
 \n
-    <!-- temporary file, to be included into jIO once clean and tested -->\n
-    <script src="gadget_officejs_drive_jio_superstorage.js" type="text/javascript"></script>\n
+    <script id="header-title-link-template" type="text/x-handlebars-template"><a data-i18n="{{title}}" class="ui-btn ui-btn-icon-left ui-icon-arrow-down" href="{{url}}">{{title}}</a></script>\n
+    <script id="header-title-template" type="text/x-handlebars-template"><span data-i18n="{{title}}">{{title}}</span></script>\n
+\n
+    <script id="header-link-template" type="text/x-handlebars-template">\n
+       <a role="button" data-i18n="{{title}}" href="{{url}}" class="responsive ui-btn ui-icon-{{icon}} ui-btn-icon-left ui-first-child ui-last-child {{class}}">{{title}}</a>\n
+    </script>\n
+\n
+    <script id="header-button-template" type="text/x-handlebars-template">\n
+       <form><button name=\'{{name}}\' data-i18n="{{title}}" type=\'submit\' class=\'responsive ui-btn ui-icon-{{icon}} ui-btn-icon-left ui-first-child ui-last-child {{class}}\'>{{title}}</button></form>\n
+    </script>\n
 \n
   </head>\n
   <body>\n
+\n
+  <!--div data-role="header" data-theme="a" class="ui-header ui-bar-a" data-position="fixed" data-tap-toggle="false"-->\n
+  <div data-role="header" data-theme="a" class="ui-header ui-bar-a" data-tap-toggle="false">\n
+\n
+    <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">\n
+      <div class="ui-controlgroup-controls">\n
+      </div>\n
+    </div>\n
+    \n
+    <h1 class="ui-title"></h1>\n
+\n
+    <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
+      <div class="ui-controlgroup-controls">\n
+      </div>\n
+    </div>\n
+\n
+  </div>\n
+\n
   </body>\n
 </html>
 
@@ -131,7 +159,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Jio Gadget for OfficeJS Drive</string> </value>
+            <value> <string>Gadget OfficeJS Drive Header</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -217,7 +245,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451481199.7</float>
+                        <float>1451481035.68</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -262,7 +290,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.758.22453.57804</string> </value>
+                <value> <string>948.8662.2693.46592</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -280,7 +308,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1456159009.84</float>
+                        <float>1451481015.34</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -337,7 +365,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451481156.59</float>
+                        <float>1451480982.67</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

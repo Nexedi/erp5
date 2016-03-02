@@ -75,17 +75,15 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_drive_router.html</string> </value>
+            <value> <string>gadget_officejs_drive_jio.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Jio access</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_drive_router_html</string> </value>
+            <value> <string>gadget_drive_officejs_jio_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -110,14 +108,19 @@
   <head>\n
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
     <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>OfficeJS Router Gadget</title>\n
+    <title>Jio Gadget</title>\n
 \n
     <!-- renderjs -->\n
     <script src="rsvp.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
 \n
+    <script src="jiodev.js" type="text/javascript"></script>\n
+\n
     <!-- custom script -->\n
-    <script src="gadget_officejs_drive_router.js" type="text/javascript"></script>\n
+    <script src="gadget_officejs_drive_jio.js" type="text/javascript"></script>\n
+\n
+    <!-- temporary file, to be included into jIO once clean and tested -->\n
+    <script src="gadget_officejs_drive_jio_superstorage.js" type="text/javascript"></script>\n
 \n
   </head>\n
   <body>\n
@@ -128,7 +131,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS drive router Gadget</string> </value>
+            <value> <string>Jio Gadget for OfficeJS Drive</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -214,7 +217,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451480616.83</float>
+                        <float>1451481199.7</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -259,7 +262,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.8655.40298.25412</string> </value>
+                <value> <string>949.758.22453.57804</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -277,7 +280,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451480629.21</float>
+                        <float>1456159009.84</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -334,7 +337,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451480565.2</float>
+                        <float>1451481156.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

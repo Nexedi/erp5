@@ -24,7 +24,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -43,8 +42,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -71,7 +68,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_drive_jio.js</string> </value>
+            <value> <string>gadget_officejs_drive_page_edit.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,11 +78,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_drive_jio_js</string> </value>
+            <value> <string>gadget_drive_officejs_page_edit_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -99,118 +98,109 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/*global window, rJS, jIO, alert, XMLHttpRequestProgressEvent, UriTemplate */\n
-/*jslint indent: 2, maxerr: 3 */\n
-(function (window, rJS, jIO, alert, XMLHttpRequestProgressEvent, UriTemplate) {\n
+            <value> <string>/*globals window, rJS, RSVP, loopEventListener, Blob*/\n
+/*jslint indent: 2, nomen: true, maxlen: 80*/\n
+(function (window, RSVP, rJS, loopEventListener, Blob) {\n
   "use strict";\n
 \n
-  // jIO call wrapper for redirection to authentication page if needed\n
-  function wrapJioCall(gadget, method_name, argument_list) {\n
-    var storage = gadget.state_parameter_dict.jio_storage;\n
-    return storage[method_name].apply(storage, argument_list)\n
-      .push(undefined, function (error) {\n
-        if (error instanceof XMLHttpRequestProgressEvent &&\n
-            error.target.status === 401) {\n
-          if (gadget.state_parameter_dict.jio_storage_name === "erp5") {\n
-            return gadget.redirect({ page: "login" });\n
-          }\n
-          if (gadget.state_parameter_dict.jio_storage_name === "dav") {\n
-            var regexp = /^Nayookie login_url=(http[s]?:\\/\\/[\\/\\-\\[\\]{}()*+=:?&.,\\\\\\^$|#\\s\\w%]+)$/,\n
-              auth_page = error.target.getResponseHeader(\'WWW-Authenticate\'),\n
-              site;\n
-            if (regexp.test(auth_page)) {\n
-              site = UriTemplate.parse(\n
-                regexp.exec(auth_page)[1]\n
-              ).expand({back_url: window.location.href,\n
-                        origin: window.location.protocol + \'//\' +\n
-                                window.location.host});\n
-              return gadget.redirect({ toExternal: true, url: site });\n
+  var gadget_klass = rJS(window);\n
+\n
+  gadget_klass\n
+    .ready(function (g) {\n
+      g.props = {};\n
+      g.options = null;\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+          // g.props.deferred = RSVP.defer();\n
+        });\n
+    })\n
+\n
+    // allow external use of triggerData, so that editor gadget can save\n
+    // with its own shortcuts/buttons/whatever.\n
+    .allowPublicAcquisition(\'triggerSubmit\', function () {\n
+      this.triggerSubmit();\n
+    })\n
+\n
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
+    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")\n
+    .declareAcquiredMethod("updateHeader", "updateHeader")\n
+\n
+    .declareMethod(\'triggerSubmit\', function () {\n
+      this.props.element.querySelector(\'button\').click();\n
+    })\n
+\n
+    .declareMethod(\'render\', function (options) {\n
+      var gadget = this,\n
+        format = \'text\';\n
+      gadget.props.resourceName = options.resource;\n
+\n
+      return gadget.jio_getAttachment(\n
+        [gadget.props.resourceName].join(\'/\'),\n
+        \'enclosure\',\n
+        {format: format}\n
+      )\n
+        .push(function (data) {\n
+          return gadget.getDeclaredGadget(\'codemirror\')\n
+            .push(function (editorGadget) {\n
+              gadget.props.editorGadget = editorGadget;\n
+              return editorGadget.render({\n
+                data: data,\n
+                resource: gadget.props.resourceName\n
+              });\n
+            });\n
+        })\n
+\n
+\n
+        .push(function () {\n
+          return gadget.updateHeader({\n
+            title: \'Editing \' + gadget.props.resourceName,\n
+            save_action: true,\n
+            panel_action: false,\n
+            back_url: (typeof options.back === \'string\' ?\n
+                       "#position=" + options.back : \'#\')\n
+          });\n
+        });\n
+    })\n
+\n
+    /////////////////////////////////////////\n
+    // Form submit\n
+    /////////////////////////////////////////\n
+    .declareService(function () {\n
+      var gadget = this;\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return loopEventListener(\n
+            gadget.props.element.querySelector(\'form\'),\n
+            \'submit\',\n
+            true,\n
+            function () {\n
+              return gadget.props.editorGadget.getData()\n
+                .push(function (data) {\n
+                  var blob = new Blob([data], {"type" : "text/plain"});\n
+                  return gadget.jio_putAttachment(\n
+                    gadget.props.resourceName,\n
+                    \'enclosure\',\n
+                    blob\n
+                  );\n
+                });\n
             }\n
-          }\n
-        } else if (gadget.state_parameter_dict.jio_storage_name === "dav" &&\n
-                 error instanceof XMLHttpRequestProgressEvent &&\n
-                 error.target.status === 0) {\n
-          // XXX: need more precision, not all errors with 0 status should be redirected...\n
-          alert("Unable to access the WebDAV server. It may have an invalid" +\n
-                " SSL certificate, or is just not running.\\n" +\n
-                "You will be redirected to this server...");\n
-          return gadget.redirect({ toExternal: true,\n
-                                   url: gadget.state_parameter_dict.jio_storage_url +\n
-                                        \'/../redirect?back_url=\' + window.location.href\n
-                                 });\n
-        }\n
-        throw error;\n
-      });\n
-  }\n
-\n
-  rJS(window)\n
-\n
-    .ready(function (gadget) {\n
-      // Initialize the gadget local parameters\n
-      // XXX Hardcoded\n
-      gadget.state_parameter_dict = {jio_storage_name: "dav", // "erp5"\n
-                                     jio_storage_url: "https://localhost:5000/webdav"}; // for ERP5: <instance>/web_site_module/hateoas/\n
-    })\n
-\n
-    .declareAcquiredMethod("redirect", "redirect")\n
-    .declareAcquiredMethod("getSetting", "getSetting")\n
-\n
-    .declareMethod(\'createJio\', function (jio_options) {\n
-      jio_options = {\n
-        type: \'daverp5mapping\',\n
-        sub_storage: {\n
-          type: this.state_parameter_dict.jio_storage_name,\n
-          url: this.state_parameter_dict.jio_storage_url,\n
-          with_credentials: true, // webdav\n
-          default_view_reference: \'view\' // erp5\n
-        }\n
-      };\n
-      this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);\n
-    })\n
-    .declareMethod(\'allDocs\', function () {\n
-      return wrapJioCall(this, \'allDocs\', arguments);\n
-    })\n
-    .declareMethod(\'allAttachments\', function () {\n
-      return wrapJioCall(this, \'allAttachments\', arguments);\n
-    })\n
-    .declareMethod(\'get\', function () {\n
-      return wrapJioCall(this, \'get\', arguments);\n
-    })\n
-    .declareMethod(\'put\', function () {\n
-      return wrapJioCall(this, \'put\', arguments);\n
-    })\n
-    .declareMethod(\'post\', function () {\n
-      return wrapJioCall(this, \'post\', arguments);\n
-    })\n
-    .declareMethod(\'remove\', function () {\n
-      return wrapJioCall(this, \'remove\', arguments);\n
-    })\n
-    .declareMethod(\'getAttachment\', function () {\n
-      return wrapJioCall(this, \'getAttachment\', arguments);\n
-    })\n
-    .declareMethod(\'putAttachment\', function () {\n
-      return wrapJioCall(this, \'putAttachment\', arguments);\n
-    })\n
-    .declareMethod(\'removeAttachment\', function () {\n
-      return wrapJioCall(this, \'removeAttachment\', arguments);\n
-    })\n
-    .declareMethod(\'repair\', function () {\n
-      return wrapJioCall(this, \'repair\', arguments);\n
+          );\n
+        });\n
     });\n
 \n
-}(window, rJS, jIO, alert, XMLHttpRequestProgressEvent, UriTemplate));
-
-]]></string> </value>
+}(window, RSVP, rJS, loopEventListener, Blob));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Drive Jio Gadget JS</string> </value>
+            <value> <string>OfficeJS Drive Edit JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -266,7 +256,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -292,7 +282,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451481239.72</float>
+                        <float>1452092519.05</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -301,7 +291,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -337,7 +327,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.20746.21257.48042</string> </value>
+                <value> <string>949.20738.20231.13619</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -355,7 +345,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1456138293.9</float>
+                        <float>1456137983.0</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -412,7 +402,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451481208.9</float>
+                        <float>1452088505.8</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_drive_router.js</string> </value>
+            <value> <string>gadget_officejs_drive_jio.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_drive_router_js</string> </value>
+            <value> <string>gadget_drive_officejs_jio_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -101,130 +101,112 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, loopEventListener, document, RSVP */\n
-/*jslint nomen: true, indent: 2, maxerr: 3*/\n
-(function (window, rJS, loopEventListener, document, RSVP) {\n
+/*global window, rJS, jIO, alert, XMLHttpRequestProgressEvent, UriTemplate */\n
+/*jslint indent: 2, maxerr: 3 */\n
+(function (window, rJS, jIO, alert, XMLHttpRequestProgressEvent, UriTemplate) {\n
   "use strict";\n
 \n
-  var gadget_klass = rJS(window),\n
-    MAIN_PAGE_PREFIX = "gadget_officejs_drive",\n
-    DEFAULT_PAGE = "browse_storage",\n
-    REDIRECT_TIMEOUT = 5000;\n
-\n
-  function listenHashChange(gadget) {\n
-    function extractHashAndDispatch(evt) {\n
-      var hash = (evt.newURL || window.location.toString()).split(\'#\')[1],\n
-        subhashes,\n
-        subhash,\n
-        keyvalue,\n
-        index,\n
-        args = {};\n
-      if (hash !== undefined) {\n
-        subhashes = hash.split(\'&\');\n
-        for (index in subhashes) {\n
-          if (subhashes.hasOwnProperty(index)) {\n
-            subhash = subhashes[index];\n
-            if (subhash !== \'\') {\n
-              keyvalue = subhash.split(\'=\');\n
-              if (keyvalue.length === 2) {\n
-                args[decodeURIComponent(keyvalue[0])] = decodeURIComponent(keyvalue[1]);\n
-              }\n
+  // jIO call wrapper for redirection to authentication page if needed\n
+  function wrapJioCall(gadget, method_name, argument_list) {\n
+    var storage = gadget.state_parameter_dict.jio_storage;\n
+    return storage[method_name].apply(storage, argument_list)\n
+      .push(undefined, function (error) {\n
+        if (error instanceof XMLHttpRequestProgressEvent &&\n
+            error.target.status === 401) {\n
+          if (gadget.state_parameter_dict.jio_storage_name === "erp5") {\n
+            return gadget.redirect({ page: "login" });\n
+          }\n
+          if (gadget.state_parameter_dict.jio_storage_name === "dav") {\n
+            var regexp = /^Nayookie login_url=(http[s]?:\\/\\/[\\/\\-\\[\\]{}()*+=:?&.,\\\\\\^$|#\\s\\w%]+)$/,\n
+              auth_page = error.target.getResponseHeader(\'WWW-Authenticate\'),\n
+              site;\n
+            if (regexp.test(auth_page)) {\n
+              site = UriTemplate.parse(\n
+                regexp.exec(auth_page)[1]\n
+              ).expand({back_url: window.location.href,\n
+                        origin: window.location.protocol + \'//\' +\n
+                                window.location.host});\n
+              return gadget.redirect({ toExternal: true, url: site });\n
             }\n
           }\n
+        } else if (gadget.state_parameter_dict.jio_storage_name === "dav" &&\n
+                 error instanceof XMLHttpRequestProgressEvent &&\n
+                 error.target.status === 0) {\n
+          // XXX: need more precision, not all errors with 0 status should be redirected...\n
+          alert("Unable to access the WebDAV server. It may have an invalid" +\n
+                " SSL certificate, or is just not running.\\n" +\n
+                "You will be redirected to this server...");\n
+          return gadget.redirect({ toExternal: true,\n
+                                   url: gadget.state_parameter_dict.jio_storage_url +\n
+                                        \'/../redirect?back_url=\' + window.location.href\n
+                                 });\n
         }\n
-      }\n
-\n
-      return gadget.renderApplication({\n
-        args: args\n
+        throw error;\n
       });\n
-\n
-    }\n
-\n
-    var result = loopEventListener(window, \'hashchange\', false,\n
-                                   extractHashAndDispatch),\n
-      event = document.createEvent("Event");\n
-    event.initEvent(\'hashchange\', true, true);\n
-    event.newURL = window.location.toString();\n
-    window.dispatchEvent(event);\n
-    return result;\n
   }\n
 \n
-  gadget_klass\n
+  rJS(window)\n
 \n
     .ready(function (gadget) {\n
-      gadget.props = {\n
-        start_deferred: RSVP.defer()\n
-      };\n
+      // Initialize the gadget local parameters\n
+      // XXX Hardcoded\n
+      gadget.state_parameter_dict = {jio_storage_name: "dav", // "erp5"\n
+                                     jio_storage_url: "https://localhost:5000/webdav"}; // for ERP5: <instance>/web_site_module/hateoas/\n
     })\n
 \n
-    .declareMethod("getCommandUrlFor", function (options) {\n
-      var prefix = \'\',\n
-        result,\n
-        key;\n
-      result = "#";\n
-      for (key in options) {\n
-        if (options.hasOwnProperty(key) && options[key] !== undefined) {\n
-          // Don\'t keep empty values\n
-          result += prefix + encodeURIComponent(key) + "=" + encodeURIComponent(options[key]);\n
-          prefix = \'&\';\n
+    .declareAcquiredMethod("redirect", "redirect")\n
+    .declareAcquiredMethod("getSetting", "getSetting")\n
+\n
+    .declareMethod(\'createJio\', function (jio_options) {\n
+      jio_options = {\n
+        type: \'daverp5mapping\',\n
+        sub_storage: {\n
+          type: this.state_parameter_dict.jio_storage_name,\n
+          url: this.state_parameter_dict.jio_storage_url,\n
+          with_credentials: true, // webdav\n
+          default_view_reference: \'view\' // erp5\n
         }\n
-      }\n
-      return result;\n
-    })\n
-\n
-    .declareMethod(\'redirect\', function (options) {\n
-      if (options !== undefined && options.toExternal) {\n
-        window.location.replace(options.url);\n
-        return RSVP.timeout(REDIRECT_TIMEOUT); // timeout if not redirected\n
-      }\n
-      return this.getCommandUrlFor(options)\n
-        .push(function (hash) {\n
-          window.location.replace(hash);\n
-          // prevent returning unexpected response\n
-          // wait for the hash change to occur\n
-          // fail if nothing happens\n
-          return RSVP.timeout(REDIRECT_TIMEOUT);\n
-        });\n
-    })\n
-\n
-    .declareMethod(\'route\', function (options) {\n
-      var gadget = this,\n
-        args = options.args;\n
-      gadget.options = options;\n
-      if (args.page === undefined || args.page === \'\') {\n
-        args.page = DEFAULT_PAGE;\n
-      }\n
-\n
-      return {\n
-        url: MAIN_PAGE_PREFIX + \'_page_\' + args.page + ".html",\n
-        options: args\n
       };\n
+      this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);\n
     })\n
-\n
-    .declareAcquiredMethod(\'jio_get\', \'jio_get\')\n
-    .declareAcquiredMethod(\'renderApplication\', \'renderApplication\')\n
-\n
-    .declareMethod(\'start\', function () {\n
-      this.props.start_deferred.resolve();\n
+    .declareMethod(\'allDocs\', function () {\n
+      return wrapJioCall(this, \'allDocs\', arguments);\n
     })\n
-    .declareService(function () {\n
-      var gadget = this;\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return gadget.props.start_deferred.promise;\n
-        })\n
-        .push(function () {\n
-          return listenHashChange(gadget);\n
-        });\n
+    .declareMethod(\'allAttachments\', function () {\n
+      return wrapJioCall(this, \'allAttachments\', arguments);\n
+    })\n
+    .declareMethod(\'get\', function () {\n
+      return wrapJioCall(this, \'get\', arguments);\n
+    })\n
+    .declareMethod(\'put\', function () {\n
+      return wrapJioCall(this, \'put\', arguments);\n
+    })\n
+    .declareMethod(\'post\', function () {\n
+      return wrapJioCall(this, \'post\', arguments);\n
+    })\n
+    .declareMethod(\'remove\', function () {\n
+      return wrapJioCall(this, \'remove\', arguments);\n
+    })\n
+    .declareMethod(\'getAttachment\', function () {\n
+      return wrapJioCall(this, \'getAttachment\', arguments);\n
+    })\n
+    .declareMethod(\'putAttachment\', function () {\n
+      return wrapJioCall(this, \'putAttachment\', arguments);\n
+    })\n
+    .declareMethod(\'removeAttachment\', function () {\n
+      return wrapJioCall(this, \'removeAttachment\', arguments);\n
+    })\n
+    .declareMethod(\'repair\', function () {\n
+      return wrapJioCall(this, \'repair\', arguments);\n
     });\n
 \n
-}(window, rJS, loopEventListener, document, RSVP));
+}(window, rJS, jIO, alert, XMLHttpRequestProgressEvent, UriTemplate));
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS router drive Gadget JS</string> </value>
+            <value> <string>OfficeJS Drive Jio Gadget JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -310,7 +292,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451480674.43</float>
+                        <float>1451481239.72</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -355,7 +337,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.20338.16914.31027</string> </value>
+                <value> <string>949.20746.21257.48042</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -373,7 +355,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452181592.25</float>
+                        <float>1456138293.9</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -430,7 +412,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451480642.17</float>
+                        <float>1451481208.9</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

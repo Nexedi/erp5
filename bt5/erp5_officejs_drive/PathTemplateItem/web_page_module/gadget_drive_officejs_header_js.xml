@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_drive_header_js</string> </value>
+            <value> <string>gadget_drive_officejs_header_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -200,7 +200,7 @@
         return this.render(this.stats.options);\n
       }\n
     })\n
-/*\n
+\n
     .declareMethod(\'notifyChange\', function () {\n
       if (!this.stats.modified) {\n
         this.stats.modified = true;\n
@@ -221,7 +221,7 @@
         return this.render(this.stats.options);\n
       }\n
     })\n
-*/\n
+\n
     .declareMethod(\'render\', function (options) {\n
       var gadget = this,\n
         possible_left_link_list = [\n
@@ -535,7 +535,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.8663.4244.51182</string> </value>
+                <value> <string>948.38999.2493.25156</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -553,7 +553,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451481071.72</float>
+                        <float>1453391099.39</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

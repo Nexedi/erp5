@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_drive_panel.js</string> </value>
+            <value> <string>gadget_officejs_drive_router.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_drive_panel_js</string> </value>
+            <value> <string>gadget_drive_officejs_router_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -101,115 +101,130 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*jslint nomen: true, indent: 2, maxerr: 3 */\n
-/*global window, rJS, Handlebars, jQuery, RSVP, loopEventListener */\n
-(function (window, rJS, Handlebars, $, RSVP, loopEventListener) {\n
+/*global window, rJS, loopEventListener, document, RSVP */\n
+/*jslint nomen: true, indent: 2, maxerr: 3*/\n
+(function (window, rJS, loopEventListener, document, RSVP) {\n
   "use strict";\n
 \n
   var gadget_klass = rJS(window),\n
-    source_header = gadget_klass.__template_element\n
-                         .getElementById("panel-template-header")\n
-                         .innerHTML,\n
-    panel_template_header = Handlebars.compile(source_header),\n
-    source_body = gadget_klass.__template_element\n
-                         .getElementById("panel-template-body")\n
-                         .innerHTML,\n
-    panel_template_body = Handlebars.compile(source_body);\n
+    MAIN_PAGE_PREFIX = "gadget_officejs_drive",\n
+    DEFAULT_PAGE = "browse_storage",\n
+    REDIRECT_TIMEOUT = 5000;\n
+\n
+  function listenHashChange(gadget) {\n
+    function extractHashAndDispatch(evt) {\n
+      var hash = (evt.newURL || window.location.toString()).split(\'#\')[1],\n
+        subhashes,\n
+        subhash,\n
+        keyvalue,\n
+        index,\n
+        args = {};\n
+      if (hash !== undefined) {\n
+        subhashes = hash.split(\'&\');\n
+        for (index in subhashes) {\n
+          if (subhashes.hasOwnProperty(index)) {\n
+            subhash = subhashes[index];\n
+            if (subhash !== \'\') {\n
+              keyvalue = subhash.split(\'=\');\n
+              if (keyvalue.length === 2) {\n
+                args[decodeURIComponent(keyvalue[0])] = decodeURIComponent(keyvalue[1]);\n
+              }\n
+            }\n
+          }\n
+        }\n
+      }\n
+\n
+      return gadget.renderApplication({\n
+        args: args\n
+      });\n
+\n
+    }\n
+\n
+    var result = loopEventListener(window, \'hashchange\', false,\n
+                                   extractHashAndDispatch),\n
+      event = document.createEvent("Event");\n
+    event.initEvent(\'hashchange\', true, true);\n
+    event.newURL = window.location.toString();\n
+    window.dispatchEvent(event);\n
+    return result;\n
+  }\n
 \n
   gadget_klass\n
 \n
-    .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("jio_allAttachments", "jio_allAttachments")\n
-\n
-\n
-    // Assign the element to a variable\n
-    // Init local properties\n
-    .ready(function (g) {\n
-      g.props = {};\n
+    .ready(function (gadget) {\n
+      gadget.props = {\n
+        start_deferred: RSVP.defer()\n
+      };\n
     })\n
 \n
+    .declareMethod("getCommandUrlFor", function (options) {\n
+      var prefix = \'\',\n
+        result,\n
+        key;\n
+      result = "#";\n
+      for (key in options) {\n
+        if (options.hasOwnProperty(key) && options[key] !== undefined) {\n
+          // Don\'t keep empty values\n
+          result += prefix + encodeURIComponent(key) + "=" + encodeURIComponent(options[key]);\n
+          prefix = \'&\';\n
+        }\n
+      }\n
+      return result;\n
+    })\n
 \n
-    .ready(function (g) {\n
-      return g.getElement()\n
-        .push(function (element) {\n
-          g.props.element = element;\n
-          g.props.jelement = $(element.querySelector("div"));\n
+    .declareMethod(\'redirect\', function (options) {\n
+      if (options !== undefined && options.toExternal) {\n
+        window.location.replace(options.url);\n
+        return RSVP.timeout(REDIRECT_TIMEOUT); // timeout if not redirected\n
+      }\n
+      return this.getCommandUrlFor(options)\n
+        .push(function (hash) {\n
+          window.location.replace(hash);\n
+          // prevent returning unexpected response\n
+          // wait for the hash change to occur\n
+          // fail if nothing happens\n
+          return RSVP.timeout(REDIRECT_TIMEOUT);\n
         });\n
     })\n
 \n
-    .ready(function (g) {\n
-      g.props.jelement.panel({\n
-        display: "overlay",\n
-        position: "left",\n
-        theme: "d"\n
-        // animate: false\n
-      });\n
+    .declareMethod(\'route\', function (options) {\n
+      var gadget = this,\n
+        args = options.args;\n
+      gadget.options = options;\n
+      if (args.page === undefined || args.page === \'\') {\n
+        args.page = DEFAULT_PAGE;\n
+      }\n
+\n
+      return {\n
+        url: MAIN_PAGE_PREFIX + \'_page_\' + args.page + ".html",\n
+        options: args\n
+      };\n
     })\n
 \n
+    .declareAcquiredMethod(\'jio_get\', \'jio_get\')\n
+    .declareAcquiredMethod(\'renderApplication\', \'renderApplication\')\n
 \n
-    .ready(function (g) {\n
-      return g.translateHtml(panel_template_header() + panel_template_body())\n
-        .push(function (my_translated_or_plain_html) {\n
-          g.props.jelement.html(my_translated_or_plain_html);\n
-          g.props.jelement.trigger("create");\n
-        });\n
+    .declareMethod(\'start\', function () {\n
+      this.props.start_deferred.resolve();\n
     })\n
-\n
-    .declareMethod(\'toggle\', function () {\n
-      this.props.jelement.panel("toggle");\n
-    })\n
-\n
-    .declareMethod(\'close\', function () {\n
-      this.props.jelement.panel("close");\n
-    })\n
-\n
-    .declareMethod("render", function () {\n
-      return;\n
-    })\n
-\n
-    /////////////////////////////////////////////////////////////////\n
-    // declared services\n
-    /////////////////////////////////////////////////////////////////\n
     .declareService(function () {\n
-      var panel_gadget,\n
-        form_list,\n
-        event_list,\n
-        i,\n
-        len;\n
-\n
-\n
-      function formSubmit() {\n
-        panel_gadget.toggle();\n
-      }\n
-\n
-      panel_gadget = this;\n
-      form_list = panel_gadget.props.element.querySelectorAll(\'form\');\n
-      event_list = [];\n
-\n
-      // XXX: not robust - Will break when search field is active\n
-      for (i = 0, len = form_list.length; i < len; i += 1) {\n
-        event_list[i] = loopEventListener(\n
-          form_list[i],\n
-          \'submit\',\n
-          false,\n
-          formSubmit\n
-        );\n
-      }\n
-\n
+      var gadget = this;\n
       return new RSVP.Queue()\n
         .push(function () {\n
-          return RSVP.all(event_list);\n
+          return gadget.props.start_deferred.promise;\n
+        })\n
+        .push(function () {\n
+          return listenHashChange(gadget);\n
         });\n
     });\n
 \n
-\n
-}(window, rJS, Handlebars, jQuery, RSVP, loopEventListener));
+}(window, rJS, loopEventListener, document, RSVP));
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Drive Panel Gadget JS</string> </value>
+            <value> <string>OfficeJS router drive Gadget JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -295,7 +310,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451481429.4</float>
+                        <float>1451480674.43</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -340,7 +355,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.20339.21863.21947</string> </value>
+                <value> <string>948.20338.16914.31027</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -358,7 +373,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452181659.56</float>
+                        <float>1452181592.25</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -415,7 +430,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451481391.45</float>
+                        <float>1451480642.17</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

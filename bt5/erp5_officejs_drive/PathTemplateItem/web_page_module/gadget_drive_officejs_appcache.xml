@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Manifest" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24,6 +24,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -42,6 +43,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -67,12 +70,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_drive_page_edit.html</string> </value>
+            <value> <string>gadget_officejs_drive.appcache</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -82,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_drive_page_edit_html</string> </value>
+            <value> <string>gadget_drive_officejs_appcache</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -90,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -102,35 +101,70 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
-    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>OfficeJS Saving Gadget</title>\n
-\n
-    <!-- renderjs -->\n
-    <script src="rsvp.js" type="text/javascript"></script>\n
-    <script src="renderjs.js" type="text/javascript"></script>\n
-\n
-    <!-- custom script -->\n
-    <script src="gadget_officejs_drive_page_edit.js" type="text/javascript"></script>\n
-\n
-  </head>\n
-  <body>\n
-        <p class=message></p>\n
-        <form class="view-web-page-form">\n
-            <button type="submit"  class="ui-btn ui-btn-b ui-btn-inline ui-icon-edit ui-btn-icon-right ui-screen-hidden">Save</button>\n
-        </form>\n
-        <div data-gadget-url="gadget_codemirror.html" data-gadget-scope="codemirror"></div>\n
-  </body>\n
-</html>
+CACHE MANIFEST\n
+# generated on Fri, 10 Dec 2015 10:00:00 +0000\n
+# XXX + fonts .\n
+# images/ajax-loader.gif\n
+CACHE:\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?v=4.2.0\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
+URI.js\n
+erp5_launcher.html\n
+erp5_launcher.js\n
+gadget_erp5.css\n
+gadget_global.js\n
+gadget_jio.html\n
+#gadget_jio.js\n
+gadget_translation.html\n
+gadget_translation.js\n
+gadget_translation_data.js\n
+handlebars.js\n
+i18next.js\n
+#jiodev.js\n
+jquery.js\n
+jquerymobile.css\n
+jquerymobile.js\n
+renderjs.js\n
+rsvp.js\n
+#gadget_officejs_drive_page_edit.html\n
+#gadget_officejs_drive_page_edit.js\n
+#gadget_officejs_drive_page_browse_storage.html\n
+#gadget_officejs_drive_page_browse.js\n
+gadget_officejs_drive_panel.html\n
+gadget_officejs_drive_jio.js\n
+gadget_officejs_drive_jio.html\n
+#gadget_officejs_drive_header.js\n
+gadget_officejs_drive_panel.js\n
+#gadget_officejs_drive_header.html\n
+gadget_officejs_drive_router.html\n
+gadget_officejs_drive_router.js\n
+#gadget_codemirror.js\n
+#gadget_codemirror.html\n
+gadget_codemirror.css\n
+codemirror_theme_zenburn.css\n
+codemirror_mode_javascript.js\n
+codemirror_mode_clike.js\n
+codemirror_keymap_vim.js\n
+codemirror.js\n
+codemirror.css\n
+codemirror_addon_searchcursor.js\n
+codemirror_addon_edit_matchbrackets.js\n
+codemirror_addon_display_fullscreen.js\n
+codemirror_addon_display_fullscreen.css\n
+codemirror_addon_dialog.js\n
+codemirror_addon_dialog.css\n
+NETWORK:\n
+*
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Drive Edit</string> </value>
+            <value> <string>OfficeJS Drive AppCache</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -190,7 +224,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish</string> </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -216,7 +250,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452092504.6</float>
+                        <float>1451480906.31</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -225,7 +259,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>
@@ -261,7 +295,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.1983.24454.60228</string> </value>
+                <value> <string>948.40469.62111.29508</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -279,7 +313,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1456158941.46</float>
+                        <float>1453717169.19</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -336,7 +370,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452088715.52</float>
+                        <float>1451480806.58</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
