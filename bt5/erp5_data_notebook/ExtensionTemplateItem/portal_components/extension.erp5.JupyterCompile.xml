@@ -46,12 +46,22 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W: 55,  2: Using the global statement (global-statement)</string>
-                <string>W: 95,  8: Use of exec (exec-used)</string>
-                <string>W:119,  8: Use of exec (exec-used)</string>
-                <string>W:125,  8: Use of exec (exec-used)</string>
-                <string>W:220,  4: Using the global statement (global-statement)</string>
-                <string>W:320,  2: Using the global statement (global-statement)</string>
+                <string>W: 87,  2: Redefining name \'ename\' from outer scope (line 22) (redefined-outer-name)</string>
+                <string>W: 91,  2: Redefining name \'mime_type\' from outer scope (line 19) (redefined-outer-name)</string>
+                <string>W: 90,  2: Redefining name \'status\' from outer scope (line 21) (redefined-outer-name)</string>
+                <string>W: 89,  2: Redefining name \'traceback\' from outer scope (line 9) (redefined-outer-name)</string>
+                <string>W: 88,  2: Redefining name \'evalue\' from outer scope (line 22) (redefined-outer-name)</string>
+                <string>W:165,  2: Using the global statement (global-statement)</string>
+                <string>W:208,  8: Use of exec (exec-used)</string>
+                <string>W:265, 16: Redefining name \'mime_type\' from outer scope (line 19) (redefined-outer-name)</string>
+                <string>W:276, 10: Use of exec (exec-used)</string>
+                <string>W:285, 10: Use of exec (exec-used)</string>
+                <string>W:353, 10: Redefining name \'mime_type\' from outer scope (line 19) (redefined-outer-name)</string>
+                <string>W:353, 10: Unused variable \'mime_type\' (unused-variable)</string>
+                <string>W:363,  2: Unused variable \'etype\' (unused-variable)</string>
+                <string>W:363, 16: Unused variable \'tb\' (unused-variable)</string>
+                <string>W:440,  4: Redefining name \'mime_type\' from outer scope (line 19) (redefined-outer-name)</string>
+                <string>W:501,  2: Redefining name \'IFrame\' from outer scope (line 16) (redefined-outer-name)</string>
               </tuple>
             </value>
         </item>

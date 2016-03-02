@@ -2,12 +2,19 @@
 
 from cStringIO import StringIO
 from Products.ERP5Type.Globals import  PersistentMapping
-from OFS.Image import Image as OFSImage
+from erp5.portal_type import Image
+
 
 import sys
+import traceback
 import ast
 import types
-import inspect
+import base64
+
+from matplotlib.figure import Figure
+from IPython.core.display import DisplayObject
+from IPython.lib.display import IFrame
+
 
 mime_type = 'text/plain'
 # IPython expects 2 status message - 'ok', 'error'
@@ -117,7 +124,6 @@ def Base_executeJupyter(self, python_expression=None, reference=None, title=None
   
   return serialized_result
 
-
 def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   """
     Function to execute jupyter code and update the local_varibale dictionary.
@@ -160,7 +166,7 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   mime_type = 'text/plain'
   status = u'ok'
   ename, evalue, tb_list = None, None, None
-
+  
   # Other way would be to use all the globals variables instead of just an empty
   # dictionary, but that might hamper the speed of exec or eval.
   # Something like -- g = globals(); g['context'] = self;
@@ -183,7 +189,10 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   if jupyter_code:
   
     # Create ast parse tree
-    ast_node = ast.parse(jupyter_code)
+    try:
+      ast_node = ast.parse(jupyter_code)
+    except Exception as e:
+      return getErrorMessageForException(self, e, local_variable_dict)
     # Get the node list from the parsed tree
     nodelist = ast_node.body
 
@@ -215,29 +224,77 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
       old_stdout = sys.stdout
       result = StringIO()
       sys.stdout = result
+      
+      # Variables used at the display hook to get the proper form to display
+      # the last returning variable of any code cell.
+      #
+      display_data = {'result': '', 'mime_type': None}
+      
+      # This is where one part of the  display magic happens. We create an 
+      # instance of ProcessorList and add each of the built-in processors.
+      # The classes which each of them are responsiblefor rendering are defined
+      # in the classes themselves.
+      #
+      # The customized display hook will automatically use the processor
+      # of the matching class to decide how the object should be displayed.
+      #        
+      processor_list = ProcessorList()
+      processor_list.addProcessor(IPythonDisplayObjectProcessor)
+      processor_list.addProcessor(MatplotlibFigureProcessor)
+      processor_list.addProcessor(ERP5ImageProcessor)
+      processor_list.addProcessor(IPythonDisplayObjectProcessor)
+      
+      # Putting necessary variables in the `exec` calls context.
+      # 
+      # - result: is required to store the order of manual calls to the rendering
+      #   function;
+      #
+      # - display_data: is required to support mime type changes;
+      #
+      # - processor_list: is required for the proper rendering of the objects
+      #
+      g['_display_data'] = display_data
+      g['_processor_list'] = processor_list
+      
+      # Here's where the last part of the display magic happens. This is a 
+      # custom display hook to capture last returning variables and render 
+      # them in a different form.
+      #
+      def my_displayhook(value):
+        processor = processor_list.getProcessorFor(value)
+        result, mime_type = processor(value).process()
+        display_data['result'] += result
+        display_data['mime_type'] = mime_type
+      old_displayhook = sys.displayhook
+      sys.displayhook = my_displayhook
 
       # Execute the nodes with 'exec' mode
       for node in to_run_exec:
         mod = ast.Module([node])
         code = compile(mod, '<string>', "exec")
-        exec(code, g, g)
-
+        try:
+          exec(code, g, g)
+        except Exception as e:
+          return getErrorMessageForException(self, e, local_variable_dict)
+      
       # Execute the interactive nodes with 'single' mode
       for node in to_run_interactive:
         mod = ast.Interactive([node])
         code = compile(mod, '<string>', "single")
-        context = self
-        exec(code, g, g)
-
+        try:
+          exec(code, g, g)
+        except Exception as e:
+          return getErrorMessageForException(self, e, local_variable_dict)
       # Letting the code fail in case of error while executing the python script/code
       # XXX: Need to be refactored so to acclimitize transactions failure as well as
       # normal python code failure and show it to user on jupyter frontend.
       # Decided to let this fail silently in backend without letting the frontend
       # user know the error so as to let tranasction or its error be handled by ZODB
       # in uniform way instead of just using half transactions.
-
+      sys.displayhook = old_displayhook
       sys.stdout = old_stdout
-      result_string = result.getvalue()
+      mime_type = display_data['mime_type'] or mime_type
+      result_string = result.getvalue() + display_data['result']
 
     # Difference between the globals variable before and after exec/eval so that
     # we don't have to save unnecessary variables in database which might or might
@@ -272,6 +329,49 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   }
 
   return result
+  
+def renderAsHtml(self, something):
+  '''
+    renderAsHtml will render its parameter as HTML by using the matching 
+    display processor for that class. Some processors can be found in this
+    file. 
+  '''
+  # Ugly frame hack to access the processor list defined in the body of the
+  # kernel's code, where `exec` is called.
+  #
+  # At this point the stack should be, from top to the bottom:
+  #
+  #   3. Base_compileJupyterCode frame (where we want to change variable)
+  #   2. ExternalMethod call through `context.Base_renderAsHtml` in the notebook
+  #   1. renderAsHtml frame (where the function is)
+  # 
+  # So sys._getframe(2) is enough to get us up into the frame we want.
+  #
+  upper_frame = sys._getframe(2)
+  g = upper_frame.f_globals
+  processor = g['_processor_list'].getProcessorFor(something)
+  result, mime_type = processor(something).process()
+  g['result'].write(result)
+  g['_display_data']['mime_type'] = 'text/html'
+
+def getErrorMessageForException(self, exception, local_variable_dict):
+  '''
+    getErrorMessageForException receives an Expcetion object and a context for
+    code execution (local_variable_dict) and will return a dict as Jupyter
+    requires for error rendering.
+  '''
+  etype, value, tb = sys.exc_info()
+  traceback_text = traceback.format_exc().split('\n')[:-1]
+  return {
+    'status': 'error',
+    'result_string': None,
+    'local_variable_dict': local_variable_dict,
+    'mime_type': mime_type,
+    'evalue': str(value),
+    'ename': exception.__class__.__name__,
+    'traceback': traceback_text
+  }
+
 
 def AddNewLocalVariableDict(self):
   """
@@ -294,158 +394,103 @@ def UpdateLocalVariableDict(self, existing_dict):
   for key, val in existing_dict['imports'].iteritems():
     new_dict['imports'][key] = val
   return new_dict
+
+class ObjectProcessor(object):
+  '''
+    Basic object processor that stores the first parameters of the constructor
+    in the `subject` attribute and store the target classes for that processor.
+  '''
+  TARGET_CLASSES=None
   
-def Base_displayHTML(self, node):
-  """
-  External function to identify Jupyter display classes and render them as
-  HTML. There are many classes from IPython.core.display or IPython.lib.display 
-  that we can use to display media, like audios, videos, images and generic
-  HTML/CSS/Javascript. All of them hold their HTML representation in the
-  `_repr_html_` method.
-  """
-  if getattr(node, '_repr_html_'):
-    global mime_type
-    mime_type = 'text/html'
-    html = node._repr_html_()
-    print html
-    return
+  @classmethod
+  def getTargetClasses(cls):
+    return cls.TARGET_CLASSES
     
+  def __init__(self, something):
+    self.subject = something
 
-def Base_displayImage(self, image_object=None):
-  """
-  External function to display Image objects to jupyter frontend.
+class MatplotlibFigureProcessor(ObjectProcessor):
+  '''
+    MatplotlibFigureProcessor handles the rich display of 
+    matplotlib.figure.Figure objects. It displays them using an img tag with
+    the inline png image encoded as base64.
+  '''
+  TARGET_CLASSES=[Figure,]
 
-  XXX:  This function is intented to be called from Base_executeJupyter 
-        or Jupyter frontend.That's why printing string and returning None.
-        Also, it clears the plot for Matplotlib object after every call, so
-        in case of saving the plot, its essential to call Base_saveImage before
-        calling Base_displayImage.
-
-  Parameters
-  ----------
+  def process(self):
+    image_io = StringIO()
+    self.subject.savefig(image_io, format='png')
+    image_io.seek(0)
+    return self._getImageHtml(image_io), 'text/html'
   
-  image_object :Any image object from ERP5 
-                Any matplotlib object from which we can create a plot.
-                Can be <matplotlib.lines.Line2D>, <matplotlib.text.Text>, etc.
+  def _getImageHtml(self, image_io):
+    return '<img src="data:image/png;base64,%s" />' % base64.b64encode(image_io.getvalue())
+    
+class ERP5ImageProcessor(ObjectProcessor):
+  '''
+   ERP5ImageProcessor handles the rich display of ERP5's image_module object.
+   It gets the image data and content type and use them to create a proper img
+   tag.
+  '''
+  TARGET_CLASSES=[Image,]
   
-  Output
-  -----
+  def process(self):
+    from base64 import b64encode
+    figure_data = b64encode(self.subject.getData())
+    mime_type = self.subject.getContentType()
+    return '<img src="data:%s;base64,%s" />' % (mime_type, figure_data), 'text/html'
+
+class IPythonDisplayObjectProcessor(ObjectProcessor):
+  '''
+    IPythonDisplayObjectProcessor handles the display of all objects from the
+    IPython.display module, including: Audio, IFrame, YouTubeVideo, VimeoVideo, 
+    ScribdDocument, FileLink, and FileLinks. 
+    
+    All these objects have the `_repr_html_` method, which is used by the class
+    to render them.
+  '''
+  TARGET_CLASSES=[DisplayObject, IFrame]
   
-  Prints base64 encoded string of the plot on which it has been called.
+  def process(self):
+    html_repr = self.subject._repr_html_()
+    return html_repr, 'text/html' 
 
-  """
-  if image_object:
-
-    import base64
-    # Chanage global variable 'mime_type' to 'image/png'
-    global mime_type
-
-    # Image object in ERP5 is instance of OFS.Image object
-    if isinstance(image_object, OFSImage):
-      figdata = base64.b64encode(image_object.getData())
-      mime_type = image_object.getContentType()
-
-    # Ensure that the object we are taking as `image_object` is basically a
-    # Matplotlib.pyplot module object from which we are seekign the data of the
-    # plot .
-    elif inspect.ismodule(image_object) and image_object.__name__=="matplotlib.pyplot":
-
-      # Create a ByteFile on the server which would be used to save the plot
-      figfile = StringIO()
-      # Save plot as 'png' format in the ByteFile
-      image_object.savefig(figfile, format='png')
-      figfile.seek(0)
-      # Encode the value in figfile to base64 string so as to serve it jupyter frontend
-      figdata = base64.b64encode(figfile.getvalue())
-      mime_type = 'image/png'
-      # Clear the plot figures after every execution
-      image_object.close()
-
-    # XXX: We are not returning anything because we want this function to be called
-    # by Base_executeJupyter , inside exec(), and its better to get the printed string
-    # instead of returned string from this function as after exec, we are getting
-    # value from stdout and using return we would get that value as string inside
-    # an string which is unfavourable.
-    print figdata
-    return None
-
-def Base_saveImage(self, plot=None, reference=None, **kw):
-  """
-  Saves generated plots from matplotlib in ERP5 Image module
-
-  XXX:  Use only if bt5 'erp5_wendelin' installed
-        This function is intented to be called from Base_executeJupyter 
-        or Jupyter frontend.
-
-  Parameters
-  ----------
-  plot : Matplotlib plot object
+class GenericProcessor(ObjectProcessor):
+  '''
+    Generic processor to render objects as string.
+  '''
   
-  reference: Reference of Image object which would be generated
-             Id and reference should be always unique
+  def process(self):
+    return str(self.subject), 'text/plain'
+    
+class ProcessorList(object):
+  '''
+    ProcessorList is responsible to store all the processors in a dict using
+    the classes they handle as the key. Subclasses of these classes will have
+    the same processor of the eigen class. This means that the order of adding
+    processors is important, as some classes' processors may be overwritten in
+    some situations.
+    
+    The `getProcessorFor` method uses `something.__class__' and not 
+    `type(something)` because using the later onobjects returned by portal 
+    catalog queries will return an AcquisitionWrapper type instead of the 
+    object's real class.
+  '''
   
-  Output
-  ------
-  Returns None, but saves the plot object as ERP5 image in Image Module with
-  reference same as that of data_array_object.
+  def __init__(self, default=GenericProcessor):
+    self.processors = {}
+    self.default_processor = GenericProcessor
   
-  """
+  def addProcessor(self, processor):
+    classes = processor.getTargetClasses()
+    for klass in classes:
+      self.processors[klass] = processor
+      for subclass in klass.__subclasses__():
+        self.processors[subclass] = processor
+      
+  def getProcessorFor(self, something):
+    return self.processors.get(something.__class__, self.default_processor)
 
-  # As already specified in docstring, this function should be called from
-  # Base_executeJupyter or Jupyter Frontend which means that it would pass
-  # through exec and hence the printed result would be caught in a string and
-  # that's why we are using print and returning None.
-  if not reference:
-    print 'No reference specified for Image object'
-    return None
-  if not plot:
-    print 'No matplotlib plot object specified'
-    return None
-
-  filename = '%s.png'%reference
-  # Save plot data in buffer
-  buff = StringIO()
-  plot.savefig(buff, format='png')
-  buff.seek(0)
-  data = buff.getvalue()
-
-  import time
-  image_id = reference+str(time.time())
-  # Add new Image object in erp5 with id and reference
-  image_module = self.getDefaultModule(portal_type='Image')
-  image_module.newContent(
-    portal_type='Image',
-    id=image_id,
-    reference=reference,
-    data=data,
-    filename=filename)
-
-  return None
-
-def getError(self, previous=1):
-  """
-  Show error to the frontend and change status of code as 'error' from 'ok'
-  
-  Parameters
-  ----------
-  previous: Type - int. The number of the error you want to see.
-  Ex: 1 for last error
-      2 for 2nd last error and so on..
-
-  """
-  error_log_list = self.error_log._getLog()
-  if error_log_list:
-    if isinstance(previous, int):
-      # We need to get the object for last index of list
-      error = error_log_list[-previous]
-  global status, ename, evalue, tb_list
-  status = u'error'
-  ename = unicode(error['type'])
-  evalue = unicode(error['value'])
-  tb_list = [l+'\n' for l in error['tb_text'].split('\n')]
-
-  return None
-  
 def storeIFrame(self, html, key):
   memcached_tool = self.getPortalObject().portal_memcached
   memcached_dict = memcached_tool.getMemcachedDict(key_prefix='pivottablejs', plugin_path='portal_memcached/default_memcached_plugin')
@@ -522,5 +567,4 @@ def erp5PivotTableUI(self, df, erp5_url):
   key = sha512(html_string).hexdigest()
   storeIFrame(self, html_string, key)
   url = "%s/Base_displayPivotTableFrame?key=%s" % (erp5_url, key)
-  iframe = IFrame(src=url, width='100%', height='500')
-  return Base_displayHTML(self, iframe)
+  return IFrame(src=url, width='100%', height='500')
