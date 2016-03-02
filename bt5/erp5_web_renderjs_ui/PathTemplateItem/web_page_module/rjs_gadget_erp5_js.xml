@@ -123,6 +123,7 @@
       scope: MAIN_SCOPE\n
     })\n
       .push(function (page_gadget) {\n
+        gadget.props.m_options_string = JSON.stringify(options);\n
         if (page_gadget.render === undefined) {\n
           return [page_gadget];\n
         }\n
@@ -410,6 +411,21 @@
     })\n
     .allowPublicAcquisition(\'notifyChange\', function () {\n
       return route(this, "header", \'notifyChange\');\n
+    })\n
+\n
+    .allowPublicAcquisition(\'refresh\', function () {\n
+      var gadget = this;\n
+      return gadget.getDeclaredGadget(MAIN_SCOPE)\n
+        .push(function (main) {\n
+          if (main.render !== undefined) {\n
+            return main.render(JSON.parse(gadget.props.m_options_string))\n
+              .push(function () {\n
+                $(gadget.props.content_element).trigger("create");\n
+              });\n
+          }\n
+        }, function () {\n
+          return;\n
+        });\n
     })\n
 \n
     .allowPublicAcquisition("translate", function (argument_list) {\n
@@ -788,7 +804,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.30082.49058.20804</string> </value>
+                <value> <string>949.35490.40299.23381</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -806,7 +822,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1452766839.17</float>
+                        <float>1456908114.56</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
