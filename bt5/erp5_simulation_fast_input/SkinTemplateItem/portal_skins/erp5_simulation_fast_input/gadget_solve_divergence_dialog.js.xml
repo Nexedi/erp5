@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts49844688.61</string> </value>
+            <value> <string>ts56910329.62</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -91,9 +91,24 @@ function loopEventListener(target, type, useCapture, callback) {\n
     .ready(function (g) {\n
       return g.getElement().push(function (element) {\n
         g.props.element = element;\n
+        g.props.filling_count = 0;\n
       });\n
     })\n
-    .declareService(function (gadget) {\n
+    .declareService(function () {\n
+      var gadget = this;\n
+      return loopEventListener(\n
+          document.querySelector(\'form.main_form\'),\n
+          \'submit\',\n
+          false,\n
+          function (evt) {\n
+            if (gadget.props.filling_count == 0){\n
+              document.querySelector(\'#dialog_submit_button\').click();\n
+            }\n
+          }\n
+        );\n
+    })\n
+    .declareService(function () {\n
+      var gadget = this;\n
       console.log("location",location);\n
       var basedir = location.pathname.split(\'/\').slice(0, -1).join(\'/\') + \'/\',\n
         divergence_choice_list = [],\n
@@ -107,6 +122,10 @@ function loopEventListener(target, type, useCapture, callback) {\n
         console.log("fillDialog, event", event);\n
         console.log("fillDialog, value", event.target.value);\n
         var solver_decision_uid = event.target.name.split("_").pop();\n
+        gadget.props.filling_count += 1;\n
+        var button = document.querySelector(\'#dialog_submit_button\');\n
+        button.disabled = true;\n
+        button.setAttribute(\'style\', \'visibility:hidden\');\n
         return new RSVP.Queue()\n
           .push(function () {\n
             return jIO.util.ajax(\n
@@ -122,6 +141,12 @@ function loopEventListener(target, type, useCapture, callback) {\n
           .push(function (data) {\n
             event.target.parentElement.parentElement.querySelectorAll(\n
               ".listbox-table-data-cell")[2].innerHTML = data.target.response;\n
+            gadget.props.filling_count -= 1;\n
+            if (gadget.props.filling_count === 0) {\n
+              var button = document.querySelector(\'#dialog_submit_button\');\n
+              button.disabled = false;\n
+              button.setAttribute(\'style\', \'visibility:visible\');\n
+            }\n
           });\n
       }\n
 \n
@@ -151,7 +176,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4102</int> </value>
+            <value> <int>5018</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
