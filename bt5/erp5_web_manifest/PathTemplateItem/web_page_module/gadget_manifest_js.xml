@@ -116,6 +116,102 @@
   /////////////////////////////////////////////////////////////////\n
   // Some functions\n
   /////////////////////////////////////////////////////////////////\n
+  function mergeSubDict(dict) {\n
+    var subkey,\n
+      subkey2,\n
+      subresult2,\n
+      value,\n
+      result = {};\n
+    for (subkey in dict) {\n
+      if (dict.hasOwnProperty(subkey)) {\n
+        value = dict[subkey];\n
+        if (value instanceof Object) {\n
+          subresult2 = mergeSubDict(value);\n
+          for (subkey2 in subresult2) {\n
+            if (subresult2.hasOwnProperty(subkey2)) {\n
+              // XXX key should not have an . inside\n
+              if (result.hasOwnProperty(subkey + "." + subkey2)) {\n
+                throw new Error("Key " + subkey + "." +\n
+                                subkey2 + " already present");\n
+              }\n
+              result[subkey + "." + subkey2] = subresult2[subkey2];\n
+            }\n
+          }\n
+        } else {\n
+          if (result.hasOwnProperty(subkey)) {\n
+            throw new Error("Key " + subkey + " already present");\n
+          }\n
+          result[subkey] = value;\n
+        }\n
+      }\n
+    }\n
+    return result;\n
+  }\n
+\n
+  function listenHashChange(gadget) {\n
+\n
+    function extractHashAndDispatch(evt) {\n
+      var hash = (evt.newURL || window.location.toString()).split(\'#\')[1],\n
+        subhashes,\n
+        subhash,\n
+        keyvalue,\n
+        index,\n
+        options = {};\n
+      if (hash === undefined) {\n
+        hash = "";\n
+      } else {\n
+        hash = hash.split(\'?\')[0];\n
+      }\n
+\n
+      function optionalize(key, value, dict) {\n
+        var key_list = key.split("."),\n
+          kk,\n
+          i;\n
+        for (i = 0; i < key_list.length; i += 1) {\n
+          kk = key_list[i];\n
+          if (i === key_list.length - 1) {\n
+            dict[kk] = value;\n
+          } else {\n
+            if (!dict.hasOwnProperty(kk)) {\n
+              dict[kk] = {};\n
+            }\n
+            dict = dict[kk];\n
+          }\n
+        }\n
+      }\n
+\n
+      subhashes = hash.split(\'&\');\n
+      for (index in subhashes) {\n
+        if (subhashes.hasOwnProperty(index)) {\n
+          subhash = subhashes[index];\n
+          if (subhash !== \'\') {\n
+            keyvalue = subhash.split(\'=\');\n
+            if (keyvalue.length === 2) {\n
+\n
+              optionalize(decodeURIComponent(keyvalue[0]),\n
+                decodeURIComponent(keyvalue[1]),\n
+                options);\n
+\n
+            }\n
+          }\n
+        }\n
+      }\n
+\n
+      if (gadget.renderXXX !== undefined) {\n
+        return gadget.renderXXX(options);\n
+      }\n
+    }\n
+\n
+    var result = loopEventListener(window, \'hashchange\', false,\n
+                                   extractHashAndDispatch),\n
+      event = document.createEvent("Event");\n
+\n
+    event.initEvent(\'hashchange\', true, true);\n
+    event.newURL = window.location.toString();\n
+    window.dispatchEvent(event);\n
+    return result;\n
+  }\n
+\n
   function renderPage(gadget, page_name, options) {\n
     return gadget.declareGadget(page_name, {\n
       scope: "pg"\n
@@ -227,6 +323,24 @@
             }\n
           }\n
         });\n
+    })\n
+\n
+    .declareMethod("aq_pleasePublishMyState", function (options) {\n
+      var key,\n
+        first = true,\n
+        hash = "#";\n
+      options = mergeSubDict(options);\n
+      for (key in options) {\n
+        if (options.hasOwnProperty(key)) {\n
+          if (!first) {\n
+            hash += "&";\n
+          }\n
+          hash += encodeURIComponent(key) + "=" +\n
+            encodeURIComponent(options[key]);\n
+          first = false;\n
+        }\n
+      }\n
+      return hash;\n
     })\n
 \n
     /////////////////////////////////////////////////////////////////\n
@@ -428,7 +542,7 @@
     })\n
 \n
     // Render the page\n
-    .declareMethod(\'render\', function (options) {\n
+    .declareMethod(\'renderXXX\', function (options) {\n
       var gadget = this,\n
         header_gadget,\n
         panel_gadget,\n
@@ -534,6 +648,11 @@
         false,\n
         catchFormSubmit\n
       );\n
+    })\n
+\n
+\n
+    .declareService(function () {\n
+      return listenHashChange(this);\n
     });\n
 \n
 }(window, document, rJS, RSVP, jQuery, XMLHttpRequest, console, loopEventListener, location));
@@ -673,7 +792,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.12076.52922.48384</string> </value>
+                <value> <string>949.36660.60257.7577</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -691,8 +810,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432284452.69</float>
-                        <string>GMT</string>
+                        <float>1456920319.64</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
