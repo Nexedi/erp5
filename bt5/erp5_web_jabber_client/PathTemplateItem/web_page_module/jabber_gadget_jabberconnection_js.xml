@@ -101,8 +101,8 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*jslint nomen: true*/\n
 /*global window, rJS, Strophe, $iq, $pres, $msg, RSVP*/\n
+/*jslint indent: 2, maxerr: 3, nomen: true */\n
 \n
 (function (window, rJS, Strophe, $iq, $pres, $msg, RSVP) {\n
   "use strict";\n
@@ -117,7 +117,7 @@
     this.errors += 1;\n
     Strophe.warn("request errored, status: " + reqStatus +\n
                  ", number of errors: " + this.errors);\n
-    if (this.errors > 4) {\n
+    if (this.errors > 2) {\n
       this._onDisconnectTimeout();\n
       this._conn._changeConnectStatus(\n
         Strophe.Status.ERROR,\n
@@ -222,9 +222,9 @@
         result = gadget.notifyXMPPAttached();\n
       } else {\n
         if (status === Strophe.Status.ERROR) {\n
-          throw new Error("XMPP Connection Error");\n
+          result = gadget.notifyXMPPConnectionError();\n
         }\n
-        throw new Error("Unknown connection status: " + status);\n
+        result = gadget.notifyXMPPError(status);\n
       }\n
       return result;\n
     });\n
@@ -302,6 +302,10 @@
                            \'notifyXMPPDisconnected\')\n
     .declareAcquiredMethod(\'notifyXMPPDisconnecting\',\n
                            \'notifyXMPPDisconnecting\')\n
+    .declareAcquiredMethod(\'notifyXMPPConnectionError\',\n
+                           \'notifyXMPPConnectionError\')\n
+    .declareAcquiredMethod(\'notifyXMPPError\',\n
+                           \'notifyXMPPError\')\n
     .declareAcquiredMethod(\'notifyXMPPAttached\',\n
                            \'notifyXMPPAttached\')\n
     .declareAcquiredMethod(\'notifyXMPPMessageTextReceived\',\n
@@ -348,68 +352,68 @@
       })\n
 \n
     .declareMethod(\'fetchRoster\', function () {\n
-        var defer = RSVP.defer();\n
-        function jsonifyResponse(domElt) {\n
-          try {\n
-            var result = [],\n
-              elt,\n
-              json_elt,\n
-              len,\n
-              i,\n
-              len2,\n
-              j,\n
-              item_list = domElt.querySelectorAll("item");\n
-            len = item_list.length;\n
-            for (i = 0; i < len; i += 1) {\n
-              elt = item_list[i];\n
-              len2 = elt.attributes.length;\n
-              json_elt = {};\n
-              for (j = 0; j < len2; j += 1) {\n
-                json_elt[elt.attributes[j].name] = elt.attributes[j].value;\n
-              }\n
-              result.push(json_elt);\n
+      var defer = RSVP.defer();\n
+      function jsonifyResponse(domElt) {\n
+        try {\n
+          var result = [],\n
+            elt,\n
+            json_elt,\n
+            len,\n
+            i,\n
+            len2,\n
+            j,\n
+            item_list = domElt.querySelectorAll("item");\n
+          len = item_list.length;\n
+          for (i = 0; i < len; i += 1) {\n
+            elt = item_list[i];\n
+            len2 = elt.attributes.length;\n
+            json_elt = {};\n
+            for (j = 0; j < len2; j += 1) {\n
+              json_elt[elt.attributes[j].name] = elt.attributes[j].value;\n
             }\n
-            defer.resolve(result);\n
-          } catch (error) {\n
-          defer.reject(error);\n
+            result.push(json_elt);\n
           }\n
-       }\n
-       this.props.connection.sendIQ(\n
-         $iq({type: "get"}).c("query", {xmlns: Strophe.NS.ROSTER}),\n
-         jsonifyResponse,\n
-         defer.reject\n
-       );\n
-       return defer.promise;\n
-     })\n
+          defer.resolve(result);\n
+        } catch (error) {\n
+          defer.reject(error);\n
+        }\n
+      }\n
+      this.props.connection.sendIQ(\n
+        $iq({type: "get"}).c("query", {xmlns: Strophe.NS.ROSTER}),\n
+        jsonifyResponse,\n
+        defer.reject\n
+      );\n
+      return defer.promise;\n
+    })\n
 \n
     .declareMethod(\'resetPassword\', function (server, new_passwd) {\n
-        var defer = RSVP.defer();\n
-        function jsonifyResponse(domElt) {\n
-          try {\n
-            var result = [],\n
-              type = domElt.getAttribute(\'type\');\n
-            if(type === "result") {\n
-              result.push("Password Reset Success.");\n
-            }\n
-            else {\n
-              throw new Error("Password Reset Failure.");\n
-            }\n
-            defer.resolve(result);\n
-          } catch (error) {\n
-            defer.reject(error);\n
+      var defer = RSVP.defer(),\n
+        uid;\n
+      function jsonifyResponse(domElt) {\n
+        try {\n
+          var result = [],\n
+            type = domElt.getAttribute(\'type\');\n
+          if (type === "result") {\n
+            result.push("Password Reset Success.");\n
+          } else {\n
+            throw new Error("Password Reset Failure.");\n
           }\n
+          defer.resolve(result);\n
+        } catch (error) {\n
+          defer.reject(error);\n
         }\n
-        var uid = this.props.jid.split(\'@\')[0];\n
-        this.props.connection.sendIQ(\n
-          $iq({to: server, type: "set"})\n
+      }\n
+      uid = this.props.jid.split(\'@\')[0];\n
+      this.props.connection.sendIQ(\n
+        $iq({to: server, type: "set"})\n
           .c("query", {xmlns: "jabber:iq:register"})\n
           .c("username").t(uid).up()\n
           .c("password").t(new_passwd).up(),\n
-          jsonifyResponse,\n
-          defer.reject\n
-       );\n
-       return defer.promise;\n
-     })\n
+        jsonifyResponse,\n
+        defer.reject\n
+      );\n
+      return defer.promise;\n
+    })\n
     .declareMethod(\'sendPresence\', function () {\n
       this.props.connection.send(\n
         $pres().tree()\n
@@ -583,7 +587,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.7242.54723.60006</string> </value>
+                <value> <string>949.35404.19073.41659</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -601,8 +605,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1436191748.38</float>
-                        <string>GMT</string>
+                        <float>1456844917.63</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,20 +70,18 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_jabberconnection.html</string> </value>
+            <value> <string>gadget_jabberclient_panel.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Starting Point</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jabber_gadget_jabberconnection_html</string> </value>
+            <value> <string>jabber_gadget_panel_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -91,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -101,31 +99,125 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!doctype html>\n
-<html manifest="gadget_jabberconnection.appcache">\n
-  <head>\n
-    <meta charset="utf-8">\n
-    <title>Connection</title>\n
+            <value> <string>/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+/*global window, rJS, Handlebars, jQuery, RSVP, loopEventListener */\n
+(function (window, rJS, Handlebars, $, RSVP, loopEventListener) {\n
+  "use strict";\n
 \n
-    <script src="rsvp.js"></script>\n
-    <script src="renderjs.js"></script>\n
-    <script src="strophe.js"></script>\n
-    <script src="gadget_global.js" ></script>\n
+  /////////////////////////////////////////////////////////////////\n
+  // temlates\n
+  /////////////////////////////////////////////////////////////////\n
+  // Precompile templates while loading the first gadget instance\n
+  var gadget_klass = rJS(window),\n
+    source_header = gadget_klass.__template_element\n
+                         .getElementById("panel-template-header")\n
+                         .innerHTML,\n
+    panel_template_header = Handlebars.compile(source_header),\n
+    source_body = gadget_klass.__template_element\n
+                         .getElementById("panel-template-body")\n
+                         .innerHTML,\n
+    panel_template_body = Handlebars.compile(source_body);\n
 \n
-    <script src="gadget_jabberconnection.js"></script>\n
-  </head>\n
-  <body>\n
-  </body>\n
-</html>\n
-
-
-]]></string> </value>
+  gadget_klass\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
+\n
+    //////////////////////////////////////////////\n
+    // acquired method\n
+    //////////////////////////////////////////////\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
+\n
+    // Assign the element to a variable\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+          g.props.jelement = $(element.querySelector("div"));\n
+          g.props.render_deferred = RSVP.defer();\n
+        });\n
+    })\n
+\n
+    .ready(function (g) {\n
+      g.props.jelement.panel({\n
+        display: "overlay",\n
+        position: "left",\n
+        theme: "d"\n
+        // animate: false\n
+      });\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareMethod(\'toggle\', function () {\n
+      this.props.jelement.panel("toggle");\n
+    })\n
+    .declareMethod(\'close\', function () {\n
+      this.props.jelement.panel("close");\n
+    })\n
+\n
+    .declareMethod(\'render\', function () {\n
+      var g = this;\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return RSVP.all([\n
+            g.getUrlFor({command: \'display\', options: {page: "contact"}}),\n
+            g.getUrlFor({command: \'display\', options: {page: "subscribe"}}),\n
+            g.getUrlFor({command: \'display\', options: {page: "password"}})\n
+          ]);\n
+        })\n
+        .push(function (all_result) {\n
+          // XXX: Customize panel header!\n
+          var tmp = panel_template_header();\n
+          tmp += panel_template_body({\n
+            "contact_href": all_result[0],\n
+            "subscribe_href": all_result[1],\n
+            "password_href": all_result[2]\n
+          });\n
+          return tmp;\n
+        })\n
+        .push(function (my_translated_or_plain_html) {\n
+          g.props.jelement.html(my_translated_or_plain_html);\n
+          g.props.jelement.trigger("create");\n
+          g.props.render_deferred.resolve();\n
+        });\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared services\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareService(function () {\n
+      var panel_gadget = this;\n
+\n
+      function formSubmit() {\n
+        panel_gadget.toggle();\n
+      }\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return panel_gadget.props.render_deferred.promise;\n
+        })\n
+        .push(function () {\n
+          return loopEventListener(\n
+            panel_gadget.props.element.querySelector(\'form\'),\n
+            \'submit\',\n
+            false,\n
+            formSubmit\n
+          );\n
+        });\n
+\n
+    });\n
+\n
+}(window, rJS, Handlebars, jQuery, RSVP, loopEventListener));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>RenderJS Gadget Jabber Connection</string> </value>
+            <value> <string>Gadget JabberClient Panel JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -189,7 +281,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -211,8 +303,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1418208275.6</float>
-                        <string>GMT</string>
+                        <float>1456492692.96</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -256,7 +348,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.35389.52548.34798</string> </value>
+                <value> <string>949.26657.64277.54118</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -274,7 +366,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1456847737.11</float>
+                        <float>1456843167.64</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -301,7 +393,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -331,8 +423,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1418208067.51</float>
-                        <string>GMT</string>
+                        <float>1456492557.96</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

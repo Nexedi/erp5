@@ -99,14 +99,27 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
+            <value> <string encoding="cdata"><![CDATA[
+
+CACHE MANIFEST\n
+# generated on Mon, 2 Mar 2016 09:00:00 +0000\n
 \n
 CACHE:\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?v=4.2.0\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
+URI.js\n
+i18next.js\n
+gadget_translation.html\n
+gadget_translation.js\n
+gadget_translation_data.js\n
+erp5_launcher.html\n
+erp5_launcher.js\n
+gadget_erp5.css\n
 gadget_global.js\n
-gadget_jabberclient.js\n
-gadget_jabberclient.html\n
-gadget_jabberconnection.html\n
-gadget_jabberconnection.js\n
 gadget_jio.js\n
 gadget_jio.html\n
 handlebars.js\n
@@ -116,9 +129,38 @@ jquerymobile.css\n
 jquerymobile.js\n
 renderjs.js\n
 rsvp.js\n
-\n
+gadget_erp5_editor_panel.html\n
+gadget_erp5_editor_panel.js\n
+gadget_erp5_form.html\n
+gadget_erp5_form.js\n
+gadget_erp5_header.html\n
+gadget_erp5_header.js\n
+gadget_erp5_field_string.html\n
+gadget_erp5_field_string.js\n
+gadget_erp5_field_password.html\n
+gadget_erp5_field_password.js\n
+gadget_jabberclient_page_dialog.html\n
+gadget_jabberclient_page_dialog.js\n
+gadget_jabberclient_router.html\n
+gadget_jabberclient_router.js\n
+gadget_jabberclient_page_password.html\n
+gadget_jabberclient_page_password.js\n
+gadget_jabberclient_page_connect.html\n
+gadget_jabberclient_page_connect.js\n
+gadget_jabberclient_page_subscribe.js\n
+gadget_jabberclient_page_subscribe.html\n
+gadget_jabberclient_panel.html\n
+gadget_jabberclient_panel.js\n
+gadget_jabberclient_page_contact.js\n
+gadget_jabberclient_page_contact.html\n
+gadget_jabberclient_jio.html\n
+gadget_jabberclient_jio.js\n
+favicon.ico\n
+connection/\n
 NETWORK:\n
-*</string> </value>
+*
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -239,7 +281,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>normie</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -253,7 +295,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.44005.30137.52718</string> </value>
+                <value> <string>949.35452.57030.13636</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -271,7 +313,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442825498.81</float>
+                        <float>1456907697.62</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
