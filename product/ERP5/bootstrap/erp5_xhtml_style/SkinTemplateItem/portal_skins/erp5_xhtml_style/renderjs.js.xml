@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts20546947.22</string> </value>
+            <value> <string>ts57002898.12</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,33 +22,6 @@
             <key> <string>content_type</string> </key>
             <value> <string>application/javascript</string> </value>
         </item>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>precondition</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <int>75348</int> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Pdata" module="OFS.Image"/>
-    </pickle>
-    <pickle>
-      <dictionary>
         <item>
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
@@ -728,8 +701,61 @@ if (typeof document.contains !== \'function\') {\n
  * http://www.renderjs.org/documentation\n
  */\n
 (function (document, window, RSVP, DOMParser, Channel, MutationObserver,\n
-           Node) {\n
+           Node, FileReader, Blob) {\n
   "use strict";\n
+\n
+  function readBlobAsDataURL(blob) {\n
+    var fr = new FileReader();\n
+    return new RSVP.Promise(function (resolve, reject) {\n
+      fr.addEventListener("load", function (evt) {\n
+        resolve(evt.target.result);\n
+      });\n
+      fr.addEventListener("error", reject);\n
+      fr.readAsDataURL(blob);\n
+    }, function () {\n
+      fr.abort();\n
+    });\n
+  }\n
+\n
+  function ajax(url) {\n
+    var xhr;\n
+    function resolver(resolve, reject) {\n
+      function handler() {\n
+        try {\n
+          if (xhr.readyState === 0) {\n
+            // UNSENT\n
+            reject(xhr);\n
+          } else if (xhr.readyState === 4) {\n
+            // DONE\n
+            if ((xhr.status < 200) || (xhr.status >= 300) ||\n
+                (!/^text\\/html[;]?/.test(\n
+                  xhr.getResponseHeader("Content-Type") || ""\n
+                ))) {\n
+              reject(xhr);\n
+            } else {\n
+              resolve(xhr);\n
+            }\n
+          }\n
+        } catch (e) {\n
+          reject(e);\n
+        }\n
+      }\n
+\n
+      xhr = new XMLHttpRequest();\n
+      xhr.open("GET", url);\n
+      xhr.onreadystatechange = handler;\n
+      xhr.setRequestHeader(\'Accept\', \'text/html\');\n
+      xhr.withCredentials = true;\n
+      xhr.send();\n
+    }\n
+\n
+    function canceller() {\n
+      if ((xhr !== undefined) && (xhr.readyState !== xhr.DONE)) {\n
+        xhr.abort();\n
+      }\n
+    }\n
+    return new RSVP.Promise(resolver, canceller);\n
+  }\n
 \n
   var gadget_model_dict = {},\n
     javascript_registration_dict = {},\n
@@ -737,7 +763,8 @@ if (typeof document.contains !== \'function\') {\n
     gadget_loading_klass,\n
     loading_klass_promise,\n
     renderJS,\n
-    Monitor;\n
+    Monitor,\n
+    isAbsoluteOrDataURL = new RegExp(\'^(?:[a-z]+:)?//|data:\', \'i\');\n
 \n
   /////////////////////////////////////////////////////////////////\n
   // Helper functions\n
@@ -1278,6 +1305,33 @@ if (typeof document.contains !== \'function\') {\n
   }\n
 \n
   /////////////////////////////////////////////////////////////////\n
+  // privateDeclareDataUrlGadget\n
+  /////////////////////////////////////////////////////////////////\n
+  function privateDeclareDataUrlGadget(url, options, parent_gadget) {\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return ajax(url);\n
+      })\n
+      .push(function (xhr) {\n
+        // Insert a "base" element, in order to resolve all relative links\n
+        // which could get broken with a data url\n
+        var doc = (new DOMParser()).parseFromString(xhr.responseText,\n
+                                                    \'text/html\'),\n
+          base = doc.createElement(\'base\'),\n
+          blob;\n
+        base.href = url;\n
+        doc.head.insertBefore(base, doc.head.firstChild);\n
+        blob = new Blob([doc.documentElement.outerHTML],\n
+                        {type: "text/html;charset=UTF-8"});\n
+        return readBlobAsDataURL(blob);\n
+      })\n
+      .push(function (data_url) {\n
+        return privateDeclareIframeGadget(data_url, options, parent_gadget);\n
+      });\n
+  }\n
+\n
+  /////////////////////////////////////////////////////////////////\n
   // RenderJSGadget.declareGadget\n
   /////////////////////////////////////////////////////////////////\n
   RenderJSGadget\n
@@ -1312,6 +1366,8 @@ if (typeof document.contains !== \'function\') {\n
             method = privateDeclarePublicGadget;\n
           } else if (options.sandbox === "iframe") {\n
             method = privateDeclareIframeGadget;\n
+          } else if (options.sandbox === "dataurl") {\n
+            method = privateDeclareDataUrlGadget;\n
           } else {\n
             throw new Error("Unsupported sandbox options \'" +\n
                             options.sandbox + "\'");\n
@@ -1424,8 +1480,7 @@ if (typeof document.contains !== \'function\') {\n
   /////////////////////////////////////////////////////////////////\n
   renderJS.getAbsoluteURL = function (url, base_url) {\n
     var doc, base, link,\n
-      html = "<!doctype><html><head></head></html>",\n
-      isAbsoluteOrDataURL = new RegExp(\'^(?:[a-z]+:)?//|data:\', \'i\');\n
+      html = "<!doctype><html><head></head></html>";\n
 \n
     if (url && base_url && !isAbsoluteOrDataURL.test(url)) {\n
       doc = (new DOMParser()).parseFromString(html, \'text/html\');\n
@@ -1503,10 +1558,9 @@ if (typeof document.contains !== \'function\') {\n
   // renderJS.declareGadgetKlass\n
   /////////////////////////////////////////////////////////////////\n
   renderJS.declareGadgetKlass = function (url) {\n
-    var result,\n
-      xhr;\n
+    var result;\n
 \n
-    function parse() {\n
+    function parse(xhr) {\n
       var tmp_constructor,\n
         key,\n
         parsed_html;\n
@@ -1552,50 +1606,18 @@ if (typeof document.contains !== \'function\') {\n
       return gadget_model_dict[url];\n
     }\n
 \n
-    function resolver(resolve, reject) {\n
-      function handler() {\n
-        var tmp_result;\n
-        try {\n
-          if (xhr.readyState === 0) {\n
-            // UNSENT\n
-            reject(xhr);\n
-          } else if (xhr.readyState === 4) {\n
-            // DONE\n
-            if ((xhr.status < 200) || (xhr.status >= 300) ||\n
-                (!/^text\\/html[;]?/.test(\n
-                  xhr.getResponseHeader("Content-Type") || ""\n
-                ))) {\n
-              reject(xhr);\n
-            } else {\n
-              tmp_result = parse();\n
-              resolve(tmp_result);\n
-            }\n
-          }\n
-        } catch (e) {\n
-          reject(e);\n
-        }\n
-      }\n
-\n
-      xhr = new XMLHttpRequest();\n
-      xhr.open("GET", url);\n
-      xhr.onreadystatechange = handler;\n
-      xhr.setRequestHeader(\'Accept\', \'text/html\');\n
-      xhr.withCredentials = true;\n
-      xhr.send();\n
-    }\n
-\n
-    function canceller() {\n
-      if ((xhr !== undefined) && (xhr.readyState !== xhr.DONE)) {\n
-        xhr.abort();\n
-      }\n
-    }\n
-\n
     if (gadget_model_dict.hasOwnProperty(url)) {\n
       // Return klass object if it already exists\n
       result = RSVP.resolve(gadget_model_dict[url]);\n
     } else {\n
       // Fetch the HTML page and parse it\n
-      result = new RSVP.Promise(resolver, canceller);\n
+      result = new RSVP.Queue()\n
+        .push(function () {\n
+          return ajax(url);\n
+        })\n
+        .push(function (xhr) {\n
+          return parse(xhr);\n
+        });\n
     }\n
     return result;\n
   };\n
@@ -1621,10 +1643,9 @@ if (typeof document.contains !== \'function\') {\n
         required_js_list: []\n
       },\n
       i,\n
-      element,\n
-      isAbsoluteURL = new RegExp(\'^(?:[a-z]+:)?//\', \'i\');\n
+      element;\n
 \n
-    if (!url || !isAbsoluteURL.test(url)) {\n
+    if (!url || !isAbsoluteOrDataURL.test(url)) {\n
       throw new Error("The url should be absolute: " + url);\n
     }\n
 \n
@@ -1955,7 +1976,7 @@ if (typeof document.contains !== \'function\') {\n
           //1: loadSubGadgetDOMDeclaration\n
           //.....\n
           tmp_constructor.__ready_list.splice(1, 0, function () {\n
-            return root_gadget.__aq_parent(\'getTopURL\', [], 3000)\n
+            return root_gadget.__aq_parent(\'getTopURL\', [], 100)\n
               .then(function (topURL) {\n
                 var base = document.createElement(\'base\');\n
                 base.href = topURL;\n
@@ -2027,10 +2048,22 @@ if (typeof document.contains !== \'function\') {\n
   }\n
   bootstrap();\n
 \n
-}(document, window, RSVP, DOMParser, Channel, MutationObserver, Node));\n
-
+}(document, window, RSVP, DOMParser, Channel, MutationObserver, Node,\n
+  FileReader, Blob));
 
 ]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>76968</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
