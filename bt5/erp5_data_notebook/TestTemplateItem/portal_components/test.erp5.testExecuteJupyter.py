@@ -73,7 +73,9 @@ class TestExecuteJupyter(ERP5TypeTestCase):
 
   def testJupyterCompileErrorRaise(self):
     """
-    Test if JupyterCompile portal_component raises error on the server side.
+    Test if JupyterCompile portal_component correctly catches exceptions as 
+    expected by the Jupyter frontend as also automatically abort the current
+    transaction.
     Take the case in which one line in a statement is valid and another is not.
     """
     portal = self.getPortalObject()
@@ -365,19 +367,20 @@ import sys
     self.assertEquals(json.loads(result)['code_result'].rstrip(), 'imghdr')
     self.assertEquals(json.loads(result)['mime_type'].rstrip(), 'text/plain')
 
-  def testBaseDisplayImageERP5Image(self):
+  def testERP5ImageProcessor(self):
     """
-    Test the fucntioning of Base_displayImage external method of erp5_data_notebook
-    BT5 for ERP5 image object as parameter and change
+    Test the fucntioning of the ERP5ImageProcessor and the custom system 
+    display hook too. 
     """
     self.image_module = self.portal.getDefaultModule('Image')
     self.assertTrue(self.image_module is not None)
     # Create a new ERP5 image object
-    reference = 'testBase_displayImageReference'
+    reference = 'testBase_displayImageReference5'
+    data_template = '<img src="data:application/unknown;base64,%s" /><br />'
     data = 'qwertyuiopasdfghjklzxcvbnm<somerandomcharacterstosaveasimagedata>'
     self.image_module.newContent(
       portal_type='Image',
-      id='testBase_displayImageID',
+      id='testBase_displayImageID5',
       reference=reference,
       data=data,
       filename='test.png'
@@ -387,7 +390,7 @@ import sys
     # Call Base_displayImage from inside of Base_runJupyter
     jupyter_code = """
 image = context.portal_catalog.getResultValue(portal_type='Image',reference='%s')
-context.Base_displayImage(image_object=image)
+context.Base_renderAsHtml(image)
 """%reference
 
     local_variable_dict = {'imports' : {}, 'variables' : {}}
@@ -396,7 +399,7 @@ context.Base_displayImage(image_object=image)
       old_local_variable_dict=local_variable_dict
       )
 
-    self.assertEquals(result['result_string'].rstrip(), base64.b64encode(data))
+    self.assertEquals(result['result_string'].rstrip(), data_template % base64.b64encode(data))
     # Mime_type shouldn't be  image/png just because of filename, instead it is
     # dependent on file and file data
     self.assertNotEqual(result['mime_type'], 'image/png')
@@ -435,3 +438,33 @@ context.Base_displayImage(image_object=image)
       python_expression=jupyter_code2
       )
     self.assertEquals(json.loads(result)['code_result'].rstrip(), 'sys')
+    
+  def testPivotTableJsIntegration(self):
+    '''
+      This test ensures the PivotTableJs user interface is correctly integrated
+      into our Jupyter kernel.
+    '''
+    portal = self.portal
+    self.login('dev_user')
+    jupyter_code = '''
+class DataFrameMock(object):
+    def to_csv(self):
+        return "column1, column2; 1, 2;" 
+
+my_df = DataFrameMock()
+iframe = context.Base_erp5PivotTableUI(my_df)
+context.Base_renderAsHtml(iframe)
+'''
+    reference = 'Test.Notebook.PivotTableJsIntegration %s' % time.time()
+    notebook = self._newNotebook(reference=reference)
+    result = portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    json_result = json.loads(result)
+    
+    # The big hash in this string was previous calculated using the expect hash
+    # of the pivot table page's html.
+    pivottable_frame_display_path = 'Base_displayPivotTableFrame?key=853524757258b19805d13beb8c6bd284a7af4a974a96a3e5a4847885df069a74d3c8c1843f2bcc4d4bb3c7089194b57c90c14fe8dd0c776d84ce0868e19ac411'
+    self.assertTrue(pivottable_frame_display_path in json_result['code_result'])
+

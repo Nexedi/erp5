@@ -46,14 +46,14 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W: 58,  2: Using the global statement (global-statement)</string>
-                <string>W:104,  8: Use of exec (exec-used)</string>
-                <string>W:129, 10: Use of exec (exec-used)</string>
-                <string>W:146, 10: Use of exec (exec-used)</string>
-                <string>W:208,  2: Unused variable \'etype\' (unused-variable)</string>
-                <string>W:208, 16: Unused variable \'tb\' (unused-variable)</string>
-                <string>W:269,  4: Using the global statement (global-statement)</string>
-                <string>W:369,  2: Using the global statement (global-statement)</string>
+                <string>W: 85,  2: Redefining name \'traceback\' from outer scope (line 9) (redefined-outer-name)</string>
+                <string>W:197,  8: Use of exec (exec-used)</string>
+                <string>W:252,  8: Use of exec (exec-used)</string>
+                <string>W:264,  8: Use of exec (exec-used)</string>
+                <string>W:327, 10: Unused variable \'mime_type\' (unused-variable)</string>
+                <string>W:462,  2: Redefining name \'IFrame\' from outer scope (line 17) (redefined-outer-name)</string>
+                <string>W:  9,  0: Unused import traceback (unused-import)</string>
+                <string>W: 13,  0: Unused import transaction (unused-import)</string>
               </tuple>
             </value>
         </item>
