@@ -99,7 +99,7 @@ return error_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CategoryTool_checkCategoryNameConsistency</string> </value>
+            <value> <string>TemplateTool_checkCategoryNameConsistency</string> </value>
         </item>
       </dictionary>
     </pickle>

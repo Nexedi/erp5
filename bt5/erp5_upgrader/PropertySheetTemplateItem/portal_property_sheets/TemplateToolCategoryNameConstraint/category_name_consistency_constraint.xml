@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>script_id</string> </key>
-            <value> <string>CategoryTool_checkCategoryNameConsistency</string> </value>
+            <value> <string>TemplateTool_checkCategoryNameConsistency</string> </value>
         </item>
       </dictionary>
     </pickle>
