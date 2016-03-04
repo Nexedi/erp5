@@ -36,12 +36,13 @@ class ScriptConstraint(ConstraintMixin):
   meta_type = 'ERP5 Script Constraint'
   portal_type = 'Script Constraint'
 
-  def _createConsistencyMessage(self, object_relative_url, message):
-    # XXX If I put in the right place I have TypeError: 'NoneType' object is not callable
+  def _createConsistencyMessage(self, object_relative_url, message, mapping):
+    # XXX If I put in the right place I have TypeError: 'NoneType' object is not callable
     from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
     return ConsistencyMessage(self,
       object_relative_url=object_relative_url,
-      message=message)
+      message=message,
+      mapping=mapping)
 
   def _checkConsistency(self, obj, fixit=0, **kw):
     """
@@ -55,5 +56,12 @@ class ScriptConstraint(ConstraintMixin):
       raise RuntimeError('Script (%s) not found %s' % (script_id, self))
     object_relative_url = obj.getRelativeUrl()
     createConsistencyMessage = self._createConsistencyMessage
-    return [createConsistencyMessage(object_relative_url, message) \
-      for message in method(fixit=fixit, **kw)]
+    message_list = []
+    for item in method(fixit=fixit, **kw):
+      if isinstance(item, (tuple, list)) and len(item) == 2:
+        message, mapping = item
+      else:
+        message = item
+        mapping = {}
+      message_list.append(createConsistencyMessage(object_relative_url, message, mapping))
+    return message_list
