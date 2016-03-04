@@ -45,10 +45,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>R: 32, 0: Too many ancestors (49/7) (too-many-ancestors)</string>
-                <string>R: 32, 0: Too many public methods (398/20) (too-many-public-methods)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
