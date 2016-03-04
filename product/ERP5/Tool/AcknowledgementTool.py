@@ -123,7 +123,7 @@ class AcknowledgementTool(BaseTool):
       else:
         now = DateTime()
         # First look at all event that define the current user as destination
-        all_document_list = [x for x in \
+        all_document_list = [x.getObject() for x in \
            self.portal_catalog(portal_type = portal_type,
                 simulation_state = self.getPortalTransitInventoryStateList(),
 #               start_date = {'query':now,'range':'max'},
@@ -133,12 +133,14 @@ class AcknowledgementTool(BaseTool):
         # so not in a final state
         final_state_list = self.getPortalCurrentInventoryStateList()
         query = NegatedQuery(Query(simulation_state=final_state_list))
-        all_document_list.extend([x for x in \
-           self.portal_catalog(portal_type = portal_type,
+        for x in self.portal_catalog(portal_type = portal_type,
                 query=query,
 #               start_date = {'query':now,'range':'max'},
 #               stop_date = {'query':now,'range':'min'},
-                default_destination_uid=person_value.getUid())])
+                default_destination_uid=person_value.getUid()):
+          x = x.getObject()
+          if x not in all_document_list:
+            all_document_list.append(x)
         for document in all_document_list:
           # We filter manually on dates until a good solution is found for
           # searching by dates on the catalog
