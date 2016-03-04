@@ -32,6 +32,7 @@ import pprint
 import httplib
 import urlparse
 import base64
+import urllib
 
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
@@ -512,7 +513,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(0, person.getRelationCountForDeletion())
     def delete(assert_deleted, obj):
       redirect = self._Folder_delete(obj)
-      self.assertTrue(('Sorry, 1 item is in use.', 'Deleted.')[assert_deleted]
+      self.assertTrue((urllib.quote('Sorry, 1 item is in use.'), 'Deleted.')[assert_deleted]
                       in redirect, redirect)
       self.tic()
     delete(0, organisation)
@@ -541,7 +542,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     document_1.manage_permission('View', [], acquire=0)
     document_1.manage_permission('Access contents information', [], acquire=0)
     redirect = self._Folder_delete(document_2)
-    self.assert_('Sorry, 1 item is in use.' in redirect, redirect)
+    self.assert_(urllib.quote('Sorry, 1 item is in use.') in redirect, redirect)
     self.assertEqual(module.objectCount(), 2)
 
   def test_getPropertyForUid(self):
