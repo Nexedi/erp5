@@ -229,7 +229,7 @@
       .push(function (connect_gadget) {\n
         gadget.state_parameter_dict.connection_defer = RSVP.defer();\n
         gadget.state_parameter_dict.server = data.server;\n
-        gadget.state_parameter_dict.jio = data.jid;\n
+        gadget.state_parameter_dict.jid = data.jid;\n
         gadget.state_parameter_dict.passwd = data.passwd;\n
         return connect_gadget.connect(data.server, data.jid, data.passwd);\n
       })\n
@@ -680,7 +680,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.36450.33692.8430</string> </value>
+                <value> <string>949.36462.22852.4232</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -698,7 +698,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1456908380.9</float>
+                        <float>1457082886.14</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
