@@ -99,10 +99,10 @@
                         <string>my_dialog_mode_at_date</string>
                         <string>my_dialog_mode_from_date</string>
                         <string>my_dialog_mode_simulation_state_list</string>
-                        <string>my_dialog_mode_journal</string>
+                        <string>my_dialog_mode_ledger</string>
                         <string>my_report_mode_at_date</string>
                         <string>my_report_mode_from_date</string>
-                        <string>my_report_mode_journal</string>
+                        <string>my_report_mode_ledger</string>
                         <string>my_report_mode_simulation_state_list</string>
                         <string>my_dialog_mode_multiplier</string>
                         <string>my_report_mode_multiplier</string>

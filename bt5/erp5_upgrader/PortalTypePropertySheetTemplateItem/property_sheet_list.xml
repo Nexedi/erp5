@@ -1,6 +1,7 @@
 <property_sheet_list>
  <portal_type id="Template Tool">
   <item>TemplateToolBusinessTemplateInstallationConstraint</item>
+  <item>TemplateToolCategoryNameConstraint</item>
   <item>TemplateToolTableConsistencyConstraint</item>
   <item>TemplateToolWorkflowChainConsistencyConstraint</item>
  </portal_type>

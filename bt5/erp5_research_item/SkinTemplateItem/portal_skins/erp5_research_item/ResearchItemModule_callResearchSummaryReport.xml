@@ -58,8 +58,8 @@ if multiplier in (None, \'\'):\n
 inventory_kw["at_date"] = at_date\n
 inventory_kw["from_date"] = from_date\n
 inventory_kw["quantity"] = "<0"\n
-if journal:\n
-  inventory_kw["parent_journal_relative_url"] = "journal/%s" % journal\n
+if ledger:\n
+  inventory_kw["parent_ledger_relative_url"] = "ledger/%s" % ledger\n
 if multiplier is None:\n
   multiplier = 1\n
 \n
@@ -120,11 +120,11 @@ if len(summary_dict):\n
     for item_url in summary_dict[person_uid].keys():\n
       task_report_module_url = "%s/task_report_module/view?reset:int=1&default_source_uid=%s&title=%%" % (absolute_url, person_uid)\n
       if item_url == "None":\n
-        task_report_module_url += "&child_aggregate_relative_url=%%3dNULL&left_join_list=child_aggregate_relative_url&journal_relative_url=journal/%s" % \\\n
-                     (journal, )\n
+        task_report_module_url += "&child_aggregate_relative_url=%%3dNULL&left_join_list=child_aggregate_relative_url&ledger_relative_url=ledger/%s" % \\\n
+                     (ledger, )\n
       else:\n
-        task_report_module_url += "&child_aggregate_relative_url=%s&journal_relative_url=journal/%s" % \\\n
-                     (item_url, journal)\n
+        task_report_module_url += "&child_aggregate_relative_url=%s&ledger_relative_url=ledger/%s" % \\\n
+                     (item_url, ledger)\n
       person.edit(**{"%s_column_url" % item_url: task_report_module_url})\n
     person.setProperty("getColumnUrl", getColumnUrl)\n
     listbox_line_list.append(person)\n
@@ -158,7 +158,7 @@ context = context.asContext(column_list=column_list,\n
                             from_date=from_date,\n
                             simulation_state_list=simulation_state_list,\n
                             column_url_script_list=column_url_script_list,\n
-                            journal=journal,\n
+                            ledger=ledger,\n
                             multiplier=multiplier,\n
                             listbox_line_list=listbox_line_list)\n
                             \n
@@ -171,7 +171,7 @@ return context.ResearchItemModule_viewResearchSummaryReportData()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>at_date=None, from_date=None, simulation_state_list=None, journal=None, multiplier=None, batch_mode=False, **kw</string> </value>
+            <value> <string>at_date=None, from_date=None, simulation_state_list=None, ledger=None, multiplier=None, batch_mode=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

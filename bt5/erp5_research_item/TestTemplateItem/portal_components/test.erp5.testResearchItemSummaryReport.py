@@ -40,10 +40,10 @@ class TestResearchItemSummaryReport(TestTaskReportingMixin):
     """Make sure to initialize needed categories
     """
     super(TestResearchItemSummaryReport, self).afterSetUp()
-    journal_base_category = self.portal.portal_categories.journal
+    ledger_base_category = self.portal.portal_categories.ledger
     for category_id in ("operation", "research"):
-      if not journal_base_category.has_key(category_id):
-        journal_base_category.newContent(
+      if not ledger_base_category.has_key(category_id):
+        ledger_base_category.newContent(
              portal_type='Category', title=category_id.title(),
              reference=category_id, id=category_id)
 
@@ -71,7 +71,7 @@ class TestResearchItemSummaryReport(TestTaskReportingMixin):
             source_project='project_module/Project_1/Line_1',
             start_date=DateTime('2013/01/10'),
             stop_date=DateTime('2013/02/15'),
-            journal="research",
+            ledger="research",
             simulation_state="confirmed",
             **kw)
     return task
@@ -83,7 +83,7 @@ class TestResearchItemSummaryReport(TestTaskReportingMixin):
     report = self.portal.research_item_module.ResearchItemModule_callResearchSummaryReport
     def callReport():
       return report(from_date=from_date, at_date=at_date, batch_mode=True,
-                    journal="research", simulation_state_list=["confirmed"])
+                    ledger="research", simulation_state_list=["confirmed"])
     def getDataResult(result):
       data_list = []
       column_id_list = [x[0] for x in result.column_list]

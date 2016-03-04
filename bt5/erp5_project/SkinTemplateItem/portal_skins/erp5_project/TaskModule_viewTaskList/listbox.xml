@@ -106,8 +106,8 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>journal_translated_title</string>
-                          <string>Journal</string>
+                          <string>ledger_translated_title</string>
+                          <string>Ledger</string>
                         </tuple>
                         <tuple>
                           <string>outcome_description</string>
@@ -194,8 +194,8 @@
                           <string>Region</string>
                         </tuple>
                         <tuple>
-                          <string>journal</string>
-                          <string>Journal</string>
+                          <string>ledger</string>
+                          <string>Ledger</string>
                         </tuple>
                         <tuple>
                           <string>validated_project_domain</string>
@@ -255,8 +255,8 @@
                           <string>Region</string>
                         </tuple>
                         <tuple>
-                          <string>journal</string>
-                          <string>Journal</string>
+                          <string>ledger</string>
+                          <string>Ledger</string>
                         </tuple>
                       </list>
                     </value>
