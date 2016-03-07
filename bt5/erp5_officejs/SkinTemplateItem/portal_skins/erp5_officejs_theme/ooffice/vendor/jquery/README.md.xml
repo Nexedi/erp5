@@ -19,21 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>jQuery Component\n
-================\n
-\n
-Shim repository for the [jQuery](http://jquery.com).\n
-\n
-Package Managers\n
-----------------\n
-\n
-* [Bower](http://bower.io/): `jquery`\n
-* [Component](https://github.com/component/component): `components/jquery`\n
-* [Composer](http://packagist.org/packages/components/jquery): `components/jquery`\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

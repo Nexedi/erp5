@@ -25,18 +25,6 @@
             <value> <string>z_create_quantity_unit_conversion</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string>CREATE TABLE `quantity_unit_conversion` (\n
-  `uid` BIGINT UNSIGNED,\n
-  `resource_uid` BIGINT UNSIGNED NOT NULL,\n
-  `quantity_unit_uid` BIGINT UNSIGNED NOT NULL,\n
-  `quantity` REAL NOT NULL,\n
-  PRIMARY KEY (`resource_uid`, `quantity_unit_uid`),\n
-  KEY (`uid`)\n
-) ENGINE=InnoDB;\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

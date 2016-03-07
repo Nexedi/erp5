@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-portal = context.getPortalObject()\n
-selection_name = context.REQUEST.form[\'selection_name\']\n
-uids = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
-\n
-param_list = []\n
-for uid in uids:\n
-  param_list.append("child_resource_uid:list=%s" %(uid))\n
-\n
-portal.sale_packing_list_module.Base_redirect(\'view?%s\' %"&".join(param_list))\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

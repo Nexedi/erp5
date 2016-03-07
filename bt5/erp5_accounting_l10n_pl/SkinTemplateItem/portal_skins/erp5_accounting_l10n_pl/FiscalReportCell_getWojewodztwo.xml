@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>org=context.restrictedTraverse(context.REQUEST.organisation)\n
-adr=org.getAddress()\n
-woj=adr.getRegionValue()\n
-kraj=woj.getParent()\n
-return woj.getTitle(),kraj.getTitle()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

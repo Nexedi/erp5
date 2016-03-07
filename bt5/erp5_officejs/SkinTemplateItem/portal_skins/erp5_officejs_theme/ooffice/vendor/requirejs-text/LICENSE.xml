@@ -19,68 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>RequireJS is released under two licenses: new BSD, and MIT. You may pick the\n
-license that best suits your development needs. The text of both licenses are\n
-provided below.\n
-\n
-\n
-The "New" BSD License:\n
-----------------------\n
-\n
-Copyright (c) 2010-2011, The Dojo Foundation\n
-All rights reserved.\n
-\n
-Redistribution and use in source and binary forms, with or without\n
-modification, are permitted provided that the following conditions are met:\n
-\n
-  * Redistributions of source code must retain the above copyright notice, this\n
-    list of conditions and the following disclaimer.\n
-  * Redistributions in binary form must reproduce the above copyright notice,\n
-    this list of conditions and the following disclaimer in the documentation\n
-    and/or other materials provided with the distribution.\n
-  * Neither the name of the Dojo Foundation nor the names of its contributors\n
-    may be used to endorse or promote products derived from this software\n
-    without specific prior written permission.\n
-\n
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND\n
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n
-DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE\n
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\n
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\n
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\n
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\n
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
-\n
-\n
-\n
-MIT License\n
------------\n
-\n
-Copyright (c) 2010-2011, The Dojo Foundation\n
-\n
-Permission is hereby granted, free of charge, to any person obtaining a copy\n
-of this software and associated documentation files (the "Software"), to deal\n
-in the Software without restriction, including without limitation the rights\n
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n
-copies of the Software, and to permit persons to whom the Software is\n
-furnished to do so, subject to the following conditions:\n
-\n
-The above copyright notice and this permission notice shall be included in\n
-all copies or substantial portions of the Software.\n
-\n
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n
-THE SOFTWARE.\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

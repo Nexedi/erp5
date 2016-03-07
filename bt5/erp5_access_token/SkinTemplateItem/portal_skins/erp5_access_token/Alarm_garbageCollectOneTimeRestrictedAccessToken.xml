@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query\n
-from Products.ERP5Type.DateUtils import addToDate\n
-from DateTime import DateTime\n
-\n
-portal = context.getPortalObject()\n
-\n
-portal.portal_catalog.searchAndActivate(\n
-  portal_type="One Time Restricted Access Token",\n
-  validation_state="validated",\n
-  creation_date=Query(creation_date=addToDate(DateTime(), to_add={\'day\': -1}), range="max"),\n
-  method_id=\'invalidate\',\n
-  method_kw={"comment": "Unused for 1 day."},\n
-  activate_kw={\'tag\': tag},\n
-)\n
-\n
-context.activate(after_tag=tag).getId()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>tag, fixit, params</string> </value>
         </item>

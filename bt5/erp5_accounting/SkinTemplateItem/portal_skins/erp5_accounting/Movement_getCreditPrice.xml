@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>credit_price = getattr(brain, \'credit_price\', None)\n
-if credit_price is None:\n
-  if brain.isCancellationAmount():\n
-    credit_price = min(-(brain.total_price or 0), 0)\n
-  else:\n
-    credit_price = max(-(brain.total_price or 0), 0)\n
-return credit_price\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain, selection=None, **kwd</string> </value>
         </item>

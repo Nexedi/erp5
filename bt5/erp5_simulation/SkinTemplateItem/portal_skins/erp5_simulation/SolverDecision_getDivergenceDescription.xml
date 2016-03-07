@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.PythonScripts.standard import html_quote\n
-\n
-# even if we have several divergence testers, the first\n
-# one is enough for displaying the title.\n
-tester = context.getCausalityValue()\n
-return \'<div>%s</div><div><em>(%s)</em></div>\' % (\n
-    html_quote(tester.getTranslatedTitle()),\n
-    context.getExplanationMessage())\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

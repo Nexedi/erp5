@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>type_list = context.ERP5Site_getQuickSearchableTypeList()\n
-item_list = [(x, x) for x in type_list]\n
-\n
-return item_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

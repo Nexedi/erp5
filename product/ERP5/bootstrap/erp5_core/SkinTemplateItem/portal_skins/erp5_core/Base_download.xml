@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request = container.REQUEST\n
-response = request.RESPONSE\n
-\n
-from zExceptions import Unauthorized\n
-\n
-try:\n
-  return context.index_html(request, response, format=None, inline=inline)\n
-except Unauthorized:\n
-  msg = context.Base_translateString("You do not have enough permission for converting this document.")\n
-  return context.Base_redirect(keep_items=dict(portal_status_message=msg))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>inline=False</string> </value>
         </item>

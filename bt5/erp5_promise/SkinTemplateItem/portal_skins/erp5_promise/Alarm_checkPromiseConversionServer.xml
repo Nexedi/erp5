@@ -49,39 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFActivity.ActiveResult import ActiveResult\n
-\n
-portal = context.getPortalObject()\n
-portal_preferences = portal.portal_preferences\n
-promise_url = portal.getPromiseParameter(\'external_service\', \'cloudooo_url\')\n
-\n
-if promise_url is None:\n
-  return\n
-\n
-url = "cloudooo://%s:%s/" % (portal_preferences.getPreferredOoodocServerAddress(), portal_preferences.getPreferredOoodocServerPortNumber())\n
-\n
-active_result = ActiveResult()\n
-\n
-if promise_url != url:\n
-  severity = 1\n
-  summary = "Conversion Server not configured as expected"\n
-  detail = "Expect %s\\nGot %s" % (promise_url, url)\n
-else:\n
-  severity = 0\n
-  summary = "Nothing to do."\n
-  detail = ""\n
-\n
-active_result.edit(\n
-  summary=summary, \n
-  severity=severity, \n
-  detail=detail)\n
-\n
-\n
-context.newActiveProcess().postResult(active_result)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>tag, fixit=False, **kw</string> </value>
         </item>

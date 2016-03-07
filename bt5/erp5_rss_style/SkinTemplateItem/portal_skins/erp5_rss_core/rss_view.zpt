@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<rss version="2.0" metal:define-macro="master"
+                   xmlns:tal="http://xml.zope.org/namespaces/tal" 
+                   xmlns:metal="http://xml.zope.org/namespaces/metal"
+                   xmlns:dc="http://purl.org/dc/elements/1.1/" 
+                   xmlns:atom="http://www.w3.org/2005/Atom"
+                   xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+  <tal:block tal:define="dummy python: request.RESPONSE.setHeader('Content-Type', 'application/rss+xml;; charset=utf-8');
+                         rss_string string:RSS;
+                         dummy python: context.getPortalObject().portal_skins.changeSkin(rss_string);
+                         dummy python: request.set('portal_skin', rss_string);">
+    <tal:block tal:define="listbox_fields python: [field for field in form.get_fields() if (field.meta_type == 'ListBox' or field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type == 'ListBox')]" >
+
+  <channel>
+    <atom:link tal:attributes="href python:'%s/%s' % (here.absolute_url(), form.getId())" rel="self" type="application/rss+xml" />
+    <title tal:content="here/Title">TITLE</title>
+    <link tal:content="here/absolute_url">URL</link>
+    <description tal:content="python: here.getProperty('description')">DESCRIPTION</description>
+    <tal:block tal:repeat="listbox_field listbox_fields">
+      <tal:block tal:content="structure python: listbox_field.render()" />
+    </tal:block>
+  </channel>
+
+    </tal:block>
+  </tal:block>
+</rss>

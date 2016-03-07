@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>category_list = []\n
-for base_category in context.getDestinationArrowBaseCategoryList():\n
-  category = movement.getDefaultAcquiredCategoryMembership(base_category, base=1)\n
-  if category:\n
-    category_list.append(category)\n
-\n
-return category_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>movement</string> </value>
         </item>

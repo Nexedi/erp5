@@ -19,21 +19,6 @@
             <value> <string>text/plain</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>All Raphaël icons were retrieved from here:\r\n
-http://raphaeljs.com/icons/\r\n
-\r\n
-And fall under the MIT license:\r\n
-\r\n
-Copyright © 2008 Dmitry Baranovskiy\r\n
-\r\n
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\r\n
-\r\n
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\r\n
-\r\n
-The software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

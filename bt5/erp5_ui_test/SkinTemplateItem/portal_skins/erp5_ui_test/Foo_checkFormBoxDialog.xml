@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Redirect to Foo_viewFormBox"""\n
-msg = "%s %s %s %s" % (id, title, quantity, description)\n
-\n
-context.Base_redirect("Foo_viewFormBox", \n
-                      keep_items={\'portal_status_message\': msg})\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>id=None, title=None, quantity=None, description=None</string> </value>
         </item>

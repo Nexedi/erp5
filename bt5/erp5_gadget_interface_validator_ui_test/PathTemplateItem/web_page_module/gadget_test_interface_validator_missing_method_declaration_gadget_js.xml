@@ -98,38 +98,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, RSVP */\n
-/*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, rJS) {\n
-  "use strict";\n
-\n
-  rJS(window)\n
-    .ready(function (g) {\n
-      g.props = {};\n
-    })\n
-\n
-    .declareMethod("method1", function (param1, param2) {\n
-      return;\n
-    })\n
-\n
-// missing declaration of method2 and method3.\n
-/*\n
-    .declareMethod("method2", function (param1) {\n
-      return;\n
-    })\n
-\n
-    .declareMethod("method3", function () {\n
-      return;\n
-    })\n
-*/\n
-    .declareMethod("randommethod1", function (param1, param2, param3) {\n
-      return;\n
-    });\n
-\n
-}(window, rJS));</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Missing Method Declaration Test Gadget JS</string> </value>
         </item>

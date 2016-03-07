@@ -1,0 +1,1 @@
+return 'test_delivery_root_simulation_rule'

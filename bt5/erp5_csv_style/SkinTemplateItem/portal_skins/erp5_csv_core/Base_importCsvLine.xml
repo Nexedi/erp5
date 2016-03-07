@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if object_property_dict[\'uid\'] is None:\n
-  object = None\n
-else:\n
-  object = context.portal_catalog.getObject(object_property_dict[\'uid\'])\n
-\n
-if object == None:\n
-  object = context.newContent()\n
-\n
-# activity doesn\'t support security rights yet...\n
-for key in [\'uid\',\'id\']:\n
-  if object_property_dict.has_key(key):\n
-    object_property_dict.pop(key)\n
-\n
-object.edit(**object_property_dict)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>object_property_dict</string> </value>
         </item>

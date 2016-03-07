@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>tab_list = context.ERP5Site_getTabList()\n
-if tab_list:\n
-  # Obtain the selected tab from the request. This is typically a cookie.\n
-  selected_tab = context.REQUEST.get(\'erp5_site_selected_tab\', None)\n
-  for tab in tab_list:\n
-    if tab[\'id\'] == selected_tab:\n
-      break\n
-  else:\n
-    # If not matched, use the first one.\n
-    tab = tab_list[0]\n
-else:\n
-  tab = None\n
-\n
-# Renew a cookie, if possible.\n
-if tab is not None:\n
-  context.REQUEST.RESPONSE.setCookie(\'erp5_site_selected_tab\', tab[\'id\'])\n
-\n
-return tab\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -1,0 +1,1 @@
+return context.portal_activities.countMessageWithTag(context.BankAccount_getMessageTag(bank_account))

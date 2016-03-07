@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>context.getPortalObject().portal_skins.changeSkin(\'ODS\')\n
-request = container.REQUEST\n
-request.set(\'portal_skin\', \'ODS\') # Some TALES expressions checks this\n
-\n
-if target_language:\n
-  request[\'AcceptLanguage\'].set(target_language, 10)\n
-\n
-if print_mode == \'list_view\' or print_mode == \'list_view_separate_sheet\':\n
-  if print_mode == \'list_view_separate_sheet\':\n
-    request.set(\'sheet_per_report_section\', 1)\n
-  return context.Folder_viewContentListAsODSReport()\n
-\n
-return getattr(context, form_id)()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id=\'\', target_language=\'\', print_mode=\'\', **kw</string> </value>
         </item>

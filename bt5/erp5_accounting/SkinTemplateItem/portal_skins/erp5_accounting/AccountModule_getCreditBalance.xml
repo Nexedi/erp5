@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-total = context.AccountModule_getBalance(brain, selection, **kw)\n
-if total < 0.0:\n
-  return -total\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain=None, selection=None, **kw</string> </value>
         </item>

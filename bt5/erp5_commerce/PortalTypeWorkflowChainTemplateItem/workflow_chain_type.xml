@@ -1,10 +1,10 @@
 <workflow_chain>
  <chain>
-  <type>Currency</type>
+  <type>portal_type_workflow_chain/Currency</type>
   <workflow>-validation_workflow, commerce_validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Product</type>
+  <type>portal_type_workflow_chain/Product</type>
   <workflow>-validation_workflow, commerce_validation_workflow</workflow>
  </chain>
 </workflow_chain>

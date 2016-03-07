@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from AccessControl import getSecurityManager\n
-user=getSecurityManager().getUser()\n
-\n
-portal_types = context.getPortalObject().portal_types\n
-validated_type_list = portal_types.searchFolder(portal_type=\'EGov Type\', validation_state = \'validated\')\n
-access_permission= \'Access contents information\'\n
-view_permission = \'View\'\n
-\n
-portal_type_list = ()\n
-for ptype_title in [\'Person\', \'Organisation\']:\n
-  default_module = context.getDefaultModule(ptype_title)\n
-  if user.has_permission(access_permission,default_module) or user.has_permission(view_permission,default_module):\n
-    portal_type_list += (ptype_title,)\n
-  \n
-for ptype in validated_type_list:\n
-  default_module = context.getDefaultModule(ptype.getTitle())\n
-  if user.has_permission(access_permission,default_module) or user.has_permission(view_permission,default_module):\n
-    portal_type_list += (ptype.getTitle(),)\n
-\n
-return portal_type_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

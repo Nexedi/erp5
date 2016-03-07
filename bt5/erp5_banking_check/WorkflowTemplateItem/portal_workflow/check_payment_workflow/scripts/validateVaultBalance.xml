@@ -49,65 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-transaction = state_change[\'object\']\n
-# Compute the source form the vault choosen by\n
-# the accountant and find the counter with the\n
-# user logged in\n
-user_id = transaction.portal_membership.getAuthenticatedMember().getUserName()\n
-site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
-# context.log(\'validateVaultBalance site_list\',site_list)\n
-source = transaction.getSource()\n
-baobab_source = None\n
-for site in site_list:\n
-  site_value = context.portal_categories.getCategoryValue(site)\n
-  if site_value.getVaultType().endswith(\'guichet\') and source in site:\n
-    baobab_source = site + \'/encaisse_des_billets_et_monnaies/sortante\'\n
-    break\n
-\n
-if baobab_source is None:\n
-  msg = Message(domain="ui", message="Unable to determine counter from user assignement.")\n
-  raise ValidationFailed, (msg,)\n
-\n
-source = baobab_source\n
-source_object = context.portal_categories.getCategoryValue(source)\n
-\n
-# check again that we are in the good accounting date\n
-transaction.Baobab_checkCounterDateOpen(site=source_object, date=transaction.getStartDate())\n
-\n
-\n
-# check again that the counter is open\n
-\n
-context.Baobab_checkCounterOpened(source)\n
-\n
-resource = transaction.CashDelivery_checkCounterInventory(source = source, portal_type=\'Cash Delivery Line\', same_source=1)\n
-#transaction.log("call to CashDelivery_getCounterInventory return", resource)\n
-\n
-# Get price and total_price.\n
-price = transaction.getSourceTotalAssetPrice()\n
-cash_detail = transaction.getTotalPrice(portal_type = (\'Cash Delivery Line\',\'Cash Delivery Cell\'), fast=0)\n
-#transaction.log("price vs cash detail", str((price, cash_detail)))\n
-if resource == 3:\n
-  msg = Message(domain="ui", message="No banknote or coin defined.")\n
-  raise ValidationFailed, (msg,)\n
-elif resource == 2:\n
-  msg = Message(domain="ui", message="No resource defined.")\n
-  raise ValidationFailed, (msg,)\n
-elif price != cash_detail:\n
-  msg = Message(domain="ui", message="Amount differs from input.")\n
-  raise ValidationFailed, (msg,)\n
-elif resource == 1:\n
-  msg = Message(domain="ui", message="Insufficient Balance in counter.")\n
-  raise ValidationFailed, (msg,)\n
-\n
-\n
-transaction.Base_checkCheck(None, None, None, check=transaction.getAggregateValue())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

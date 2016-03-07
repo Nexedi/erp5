@@ -1,0 +1,308 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Delete</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Delete<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_deleteObjectList:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Please select one or more items to delete first.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//*[@class='listbox-data-line-0 DataA']//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_deleteObjectList:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+<!-- The listbox used to confirm deletion is a proxy to the previous listbox.
+It contains the same columns
+-->
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='listbox-label-line']/th[1]</td>
+  <td>ID</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='listbox-label-line']/th[2]</td>
+  <td>Title</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='listbox-label-line']/th[3]</td>
+  <td>Quantity</td>
+</tr>
+<!-- And an extra column to display the number of related objects. -->
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='listbox-label-line']/th[4]</td>
+  <td>Number of Related Objects</td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>assertText</td>
+  <td>//*[@id="listbox_data_line_0"]/div[2]//span[1]</td>
+  <td>Title</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//*[@id="listbox_data_line_0"]/div[3]//span[1]</td>
+  <td>Quantity</td>
+</tr>
+<!-- And an extra column to display the number of related objects. -->
+<tr>
+  <td>assertText</td>
+  <td>//*[@id="listbox_data_line_0"]/div[4]//span[1]</td>
+  <td>Number of Related Objects</td>
+</tr>
+</tal:block>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Deleted.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//a[not(@title)]</td>
+  <td>0</td>
+  <td>We suppose here that the workflow is configured in such way that deleted items can still be viewed.</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//a[not(@title)]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//a[not(@title)]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-3 DataB"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/getSimulationState</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>deleted</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]//a[not(@title)]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_deleteObjectList:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Sorry, you can not delete 1 item.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=0</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Add Foo Line</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Title 0</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=0</td>
+  <td></td>
+</tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Foo Lines</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>uids:list</td>
+  <td></td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Foos</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>uids:list</td>
+  <td></td>
+</tr>
+</tal:block>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_deleteObjectList:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Deleted.</td>
+  <td></td>
+</tr>
+
+<tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+  <td>clickAndWait</td>
+  <td>link=Title 0</td>
+  <td></td>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+  <td>clickAndWait</td>
+  <td>link=0</td>
+  <td></td>
+</tal:block>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=0</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>0 record</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

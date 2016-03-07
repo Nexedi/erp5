@@ -49,39 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Inventory requires reindexing when older movements become available, because\n
-# inventory generates deltas against the past stock, using a catalog. It is only\n
-# necessary to reindex Inventory documents instead of Inventory movements, because\n
-# Inventory reindexes its movements in a special way to the stock table by itself.\n
-#\n
-# FIXME: I think it would be better to replace this script with a good interactor\n
-# which reindexes future inventory documents.\n
-\n
-previous_tag = None\n
-portal = context.getPortalObject()\n
-\n
-# We have to reindex all inventory documents in the order of the dates.\n
-# Uids are used to make the ordering consistent, even when multiple documents have\n
-# the same date.\n
-for inventory in portal.portal_catalog(portal_type=portal.getPortalInventoryTypeList(),\n
-                                       limit=None,\n
-                                       sort_on=[(\'delivery.start_date\', \'ascending\'), (\'uid\', \'ascending\')],\n
-                                       sql_catalog_id=sql_catalog_id):\n
-  inventory = inventory.getObject()\n
-  tag = \'inventory_%i\' % inventory.getUid()\n
-  activate_kw = {\'tag\': tag}\n
-  if previous_tag is not None:\n
-    activate_kw[\'after_tag\'] = previous_tag\n
-  previous_tag = tag\n
-  inventory.reindexObject(activate_kw=activate_kw, sql_catalog_id=sql_catalog_id)\n
-\n
-if final_activity_tag is not None and previous_tag is not None:\n
-  # Dummy activity used to determine if the previously started activities are over.\n
-  context.activate(tag=final_activity_tag, after_tag=previous_tag).getId()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>sql_catalog_id=None, final_activity_tag=None, **kw</string> </value>
         </item>

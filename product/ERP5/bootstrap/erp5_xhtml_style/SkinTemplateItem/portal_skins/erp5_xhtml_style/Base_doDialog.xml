@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># prevent lose checked itens at listbox after click to print\n
-# For backward compatibility, do nothing if\n
-# Base_updateListboxSelection cannot be found.\n
-Base_updateListboxSelection = getattr(context, \'Base_updateListboxSelection\', None)\n
-if Base_updateListboxSelection is not None:\n
-  Base_updateListboxSelection()\n
-\n
-kw.update(context.REQUEST.form)\n
-keep_items=dict(\n
-    dialog_category=dialog_category,\n
-    form_id=form_id,\n
-    cancel_url=cancel_url,\n
-    object_path=object_path)\n
-\n
-return context.ERP5Site_redirect(select_dialog.split()[0], keep_items=keep_items, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>select_dialog, dialog_category, form_id, cancel_url, object_path, **kw</string> </value>
         </item>

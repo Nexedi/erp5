@@ -1,0 +1,124 @@
+<tal:block xmlns:draw='urn:oasis:names:tc:opendocument:xmlns:drawing:1.0' xmlns:office='urn:oasis:names:tc:opendocument:xmlns:office:1.0' xmlns:text='urn:oasis:names:tc:opendocument:xmlns:text:1.0' xmlns:ooo='http://openoffice.org/2004/office' xmlns:number='urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:meta='urn:oasis:names:tc:opendocument:xmlns:meta:1.0' xmlns:table='urn:oasis:names:tc:opendocument:xmlns:table:1.0' xmlns:dr3d='urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0' xmlns:fo='urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0' xmlns:style='urn:oasis:names:tc:opendocument:xmlns:style:1.0' xmlns:xforms='http://www.w3.org/2002/xforms' xmlns:form='urn:oasis:names:tc:opendocument:xmlns:form:1.0' xmlns:script='urn:oasis:names:tc:opendocument:xmlns:script:1.0' xmlns:ooow='http://openoffice.org/2004/writer' xmlns:svg='urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0' xmlns:chart='urn:oasis:names:tc:opendocument:xmlns:chart:1.0' xmlns:dom='http://www.w3.org/2001/xml-events' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:oooc='http://openoffice.org/2004/calc' xmlns:math='http://www.w3.org/1998/Math/MathML'  xmlns:tal='http://xml.zope.org/namespaces/tal'
+          xmlns:i18n='http://xml.zope.org/namespaces/i18n'
+          xmlns:metal='http://xml.zope.org/namespaces/metal'
+          tal:define='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'
+         office:version='1.0' metal:define-macro="style_macro">
+  <office:scripts/>
+  <office:font-face-decls>
+    <style:font-face svg:font-family='Arial' style:font-family-generic='swiss' style:name='Arial' style:font-pitch='variable'/>
+    <style:font-face svg:font-family="'DejaVu Sans'" style:font-family-generic='swiss' style:name='DejaVu Sans1' style:font-pitch='variable'/>
+    <style:font-face svg:font-family="'DejaVu Sans'" style:font-family-generic='system' style:name='DejaVu Sans' style:font-pitch='variable'/>
+    <style:font-face svg:font-family='Lucidasans' style:font-family-generic='system' style:name='Lucidasans' style:font-pitch='variable'/>
+  </office:font-face-decls>
+  <office:automatic-styles>
+    <style:style style:family='table-column' style:name='co1'>
+      <style:table-column-properties fo:break-before='auto' style:column-width='6.59cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='co2'>
+      <style:table-column-properties fo:break-before='auto' style:column-width='4.727cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='co3'>
+      <style:table-column-properties fo:break-before='auto' style:column-width='5.117cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='co4'>
+      <style:table-column-properties fo:break-before='auto' style:column-width='2.267cm'/>
+    </style:style>
+    
+    <style:style style:family='table-row' style:name='listbox_header_row'>
+      <style:table-row-properties fo:break-before='auto' style:use-optimal-row-height='true' style:row-height='1.5cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='listbox_data_row'>
+      <style:table-row-properties fo:break-before='auto' style:use-optimal-row-height='true' style:row-height='1.0cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='listbox_stat_row'>
+      <style:table-row-properties fo:break-before='auto' style:use-optimal-row-height='true' style:row-height='0.5cm'/>
+    </style:style>
+    
+    <style:style style:family='table-row' style:name='ro1'>
+      <style:table-row-properties fo:break-before='auto' style:use-optimal-row-height='true' style:row-height='2.91cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='ro2'>
+      <style:table-row-properties fo:break-before='auto' style:use-optimal-row-height='true' style:row-height='1.007cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='ro3'>
+      <style:table-row-properties fo:break-before='auto' style:use-optimal-row-height='true' style:row-height='0.877cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='ro4'>
+      <style:table-row-properties fo:break-before='auto' style:use-optimal-row-height='true' style:row-height='2cm'/> <!-- This will be the height of table header row -->
+    </style:style>
+    <style:style style:family='table-row' style:name='ro5'>
+      <style:table-row-properties fo:break-before='auto' style:use-optimal-row-height='false' style:row-height='0.644cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='ro6'>
+      <style:table-row-properties fo:break-before='auto' style:use-optimal-row-height='false' style:row-height='0.951cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='ro7'>
+      <style:table-row-properties fo:break-before='auto' style:use-optimal-row-height='true' style:row-height='0.587cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='ro8'>
+      <style:table-row-properties fo:break-before='auto' style:use-optimal-row-height='true' style:row-height='0.531cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='ro9'>
+      <style:table-row-properties fo:break-before='auto' style:use-optimal-row-height='true' style:row-height='0.496cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='ro10'>
+      <style:table-row-properties fo:break-before='auto' style:use-optimal-row-height='true' style:row-height='0.538cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='ro11'>
+      <style:table-row-properties fo:break-before='auto' style:use-optimal-row-height='true' style:row-height='0.453cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='ro12'>
+      <style:table-row-properties fo:break-before='auto' style:use-optimal-row-height='true' style:row-height='0.616cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='ro13'>
+      <style:table-row-properties fo:break-before='page' style:use-optimal-row-height='true' style:row-height='0.453cm'/>
+    </style:style>
+    <style:style style:family='table' style:name='ta1' style:master-page-name='Default'>
+      <style:table-properties style:writing-mode='lr-tb' table:display='true'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce1'>
+      <style:table-cell-properties fo:wrap-option='wrap'/>
+    </style:style>
+    <style:style style:parent-style-name='report-stat2' style:family='table-cell' style:name='ce2'>
+      <style:table-cell-properties fo:border-left='0.002cm solid #000000' fo:border-bottom='none' fo:border-right='none' fo:border-top='none'/>
+    </style:style>
+    <style:style style:parent-style-name='report-content-heading2-with-lines' style:family='table-cell' style:name='ce3'>
+      <style:table-cell-properties fo:border-left='none' fo:border-bottom='0.002cm solid #000000' fo:border-right='none' fo:border-top='0.002cm solid #000000'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce4'>
+      <style:table-cell-properties style:vertical-align='middle' style:repeat-content='false' style:text-align-source='fix' fo:border='none'/>
+      <style:paragraph-properties fo:text-align='center' fo:margin-left='0cm'/>
+      <style:text-properties fo:font-size='20pt'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce5'>
+      <style:table-cell-properties style:vertical-align='middle' style:repeat-content='false' style:text-align-source='fix' fo:border='none'/>
+      <style:paragraph-properties fo:text-align='center' fo:margin-left='0cm'/>
+    </style:style>
+    <number:date-style style:name="date_style" number:automatic-order="true">
+      <number:day number:style="long"/>
+      <number:text>/</number:text>
+      <number:month number:style="long"/>
+      <number:text>/</number:text>
+      <number:year number:style="long"/>
+      <number:text> </number:text>
+      <number:hours number:style="long"/>
+      <number:text>:</number:text>
+      <number:minutes number:style="long"/>
+      <number:text>:</number:text>
+      <number:seconds number:style="long"/>
+    </number:date-style>
+    <style:style style:name="date_with_time" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="date_style">
+      <style:table-cell-properties style:vertical-align='middle' style:repeat-content='false' style:text-align-source='fix' fo:border-right='0.002cm solid #000000' />
+    </style:style>
+    <tal:block tal:repeat="precision python: xrange(0,here.Base_getODSMaximumSupportedPrecision())">
+      <tal:block tal:define="figure_data_precision_style_name string:figure_data_precision_${precision}">
+        <number:number-style style:name="figure_data_precision_X" tal:attributes="style:name figure_data_precision_style_name">
+          <number:number number:decimal-places="X" number:min-integer-digits="1" number:grouping="true" tal:attributes="number:decimal-places precision"/>
+        </number:number-style>
+        <tal:block tal:repeat="style_prefix_name python: here.Base_getODSSupportedStylePrefixList()">
+          <style:style style:name="figure_X" style:family="table-cell" style:parent-style-name="figure" style:data-style-name="figure_data_precision_X" tal:attributes="style:name string:${style_prefix_name}figure_${precision}; style:data-style-name figure_data_precision_style_name ; style:parent-style-name string:${style_prefix_name}figure"/>
+        </tal:block>
+      </tal:block>
+    </tal:block>
+  </office:automatic-styles>
+</tal:block>

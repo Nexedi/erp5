@@ -19,46 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-.radiobox {\r\n
-    padding-left: 22px;\r\n
-    margin-bottom: 0;\r\n
-    .font-size-normal();\r\n
-    font-weight: normal;\r\n
-\r\n
-    input[type=button] {\r\n
-        .background-ximage(\'@{common-image-path}/@{common-controls}\', \'@{common-image-path}/@{common-controls2x}\', 100px);\r\n
-        background-repeat: no-repeat;\r\n
-        background-position: @radio-offset-x @radio-offset-y;\r\n
-        background-color: transparent;\r\n
-        border: none;\r\n
-        margin-left: -22px;\r\n
-        margin-right: 6px;\r\n
-        padding-bottom: 4px;\r\n
-        width: 16px;\r\n
-        height: 16px;\r\n
-        cursor: default;\r\n
-        vertical-align: top;\r\n
-\r\n
-        &.checked {\r\n
-            background-position: @radio-offset-x @radio-offset-y - 16px;\r\n
-        }\r\n
-\r\n
-        &.disabled {\r\n
-            background-position: @radio-offset-x - 48px @radio-offset-y;\r\n
-\r\n
-            &.checked {\r\n
-                background-position: @radio-offset-x - 48px @radio-offset-y - 16px;\r\n
-            }\r\n
-        }\r\n
-    }\r\n
-}
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

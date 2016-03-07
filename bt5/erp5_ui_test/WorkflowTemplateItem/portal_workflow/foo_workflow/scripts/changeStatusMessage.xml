@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This will be used for Selenium test, set a particular message\n
-to portal_status_message variable\n
-"""\n
-\n
-\n
-document = state_change[\'object\']\n
-request = document.REQUEST\n
-\n
-from Products.ERP5Type.Message import translateString\n
-\n
-request.set(\'portal_status_message\', translateString(\'Status Message Changed.\'))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

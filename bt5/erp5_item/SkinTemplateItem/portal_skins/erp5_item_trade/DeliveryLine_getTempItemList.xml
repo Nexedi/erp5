@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempDeliveryLine\n
-portal = context.getPortalObject()\n
-\n
-try:\n
-  count = int(context.REQUEST.get(\'field_your_item_count\', \'\'))\n
-except ValueError:\n
-  count = 10\n
-\n
-result = []\n
-\n
-for i in range(count):\n
-  obj = newTempDeliveryLine(portal, id="tmp_item_%s" % i, uid="new_item_%s" % i)\n
-  result.append(obj)\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

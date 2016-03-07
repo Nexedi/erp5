@@ -33,26 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<div>\n
-\n
-  <tal:block tal:replace="structure python: \n
-               here.portal_wizard.callRemoteProxyMethod(\'WizardTool_viewSuccessfulConfigurationMessageRenderer\')"/>\n
-\n
-  <a tal:attributes="href python: \'%s/login_form\' %here.getPortalObject().absolute_url()"> \n
-    <tal:block tal:replace="structure python: \n
-                 here.portal_wizard.callRemoteProxyMethod(\'WizardTool_viewSuccessfulConfigurationStartButtonMessageRenderer\')"/>\n
-  </a>\n
-\n
-</div>\n
-\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

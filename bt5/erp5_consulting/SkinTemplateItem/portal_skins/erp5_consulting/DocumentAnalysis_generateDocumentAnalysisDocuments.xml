@@ -49,39 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>first_level_transformation = \\\n
-{ \'portal_type\' : \'Document Analysis Document\'\n
-, \'data_key\'    : \'document_title\'\n
-, \'data\'        : [ { \'input_data_name\' : \'document_title\'\n
-                    , \'output_property\' : \'title\'\n
-                    }\n
-                  , { \'input_data_name\' : \'document_analysis_document_type\'\n
-                    , \'output_property\' : \'document_analysis_document_type\'\n
-                    }\n
-                  ]\n
-}\n
-\n
-second_level_transformation = \\\n
-{ \'portal_type\' : \'Document Analysis Document Item\'\n
-, \'data_key\'    : \'item_title\'\n
-, \'data\'        : [ { \'input_data_name\' : \'item_title\'\n
-                    , \'output_property\' : \'title\'\n
-                    }\n
-                  , { \'input_data_name\' : \'item_description\'\n
-                    , \'output_property\' : \'description\'\n
-                    }\n
-                  ]\n
-}\n
-\n
-fast_input_transformation_rules = [first_level_transformation, second_level_transformation]\n
-\n
-context.FastInput_generateTwoLevelObjectStructure( transformation_rules = fast_input_transformation_rules\n
-                                                 , listbox = listbox\n
-                                                 , destination = context.getObject())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox=[], **kw</string> </value>
         </item>

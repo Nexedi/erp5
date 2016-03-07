@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-Return a list of brains according to given catalog arguments.\n
-Only matches validated documents whose portal_type is part of "resource" group.\n
-"""\n
-portal = context.getPortalObject()\n
-return portal.portal_catalog(\n
-  validation_state=\'validated\',\n
-  portal_type=portal.getPortalResourceTypeList(),\n
-  **kw\n
-)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

@@ -1,6 +1,6 @@
 <workflow_chain>
  <chain>
-  <type>Video</type>
+  <type>portal_type_workflow_chain/Video</type>
   <workflow>document_publication_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

@@ -19,67 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-.open-dlg {\r\n
-\r\n
-  .body {\r\n
-    height: auto;\r\n
-    top: 34px;\r\n
-\r\n
-    & > div {\r\n
-      width: 100%;\r\n
-    }\r\n
-\r\n
-    .box > div {\r\n
-      display: inline-block;\r\n
-      height: 100%;\r\n
-    }\r\n
-\r\n
-    .content-panel {\r\n
-      vertical-align: top;\r\n
-      padding: 15px;\r\n
-      width: 100%;\r\n
-\r\n
-      .inner-content {\r\n
-        padding-left: 10px;\r\n
-        padding-right: 10px;\r\n
-      }\r\n
-\r\n
-      label {\r\n
-        .font-size-normal();\r\n
-        font-weight: normal;\r\n
-\r\n
-        &.input-label{\r\n
-          margin-bottom: 0;\r\n
-          vertical-align: middle;\r\n
-        }\r\n
-\r\n
-        &.header {\r\n
-          font-weight: bold;\r\n
-        }\r\n
-\r\n
-      }\r\n
-    }\r\n
-  }\r\n
-  .footer {\r\n
-    padding-top: 15px;\r\n
-\r\n
-    &.center {\r\n
-      text-align: center;\r\n
-    }\r\n
-\r\n
-    &.justify {\r\n
-      padding-left: 30px;\r\n
-      padding-right: 30px;\r\n
-    }\r\n
-  }\r\n
-}
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

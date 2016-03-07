@@ -33,27 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<div class=\'gadget_documentation\'>\n
-  <h4>Join ERP5 Network !</h4>\n
-  <p>\n
-    <a href="http://www.erp5.org"> Access ERP5 Community to get more information!!</a>\n
-  </p>\n
-\n
-  <h4>Case Studies</h4>\n
-  <p>Are you using ERP5 in your business? \n
-     If so please let us know if you would be \n
-     interested to provide us with some information \n
-     by sending an email to erp5-users@erp5.org</p>\n
-\n
-</div>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

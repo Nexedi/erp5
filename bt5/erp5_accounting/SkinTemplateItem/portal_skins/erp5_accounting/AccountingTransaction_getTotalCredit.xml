@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>is_source = context.AccountingTransaction_isSourceView()\n
-total_credit = 0\n
-for line in context.getMovementList(\n
-      portal_type=context.getPortalAccountingMovementTypeList()):\n
-  if is_source:\n
-    total_credit += line.getSourceInventoriatedTotalAssetCredit()\n
-  else:\n
-    total_credit += line.getDestinationInventoriatedTotalAssetCredit()\n
-\n
-return total_credit\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

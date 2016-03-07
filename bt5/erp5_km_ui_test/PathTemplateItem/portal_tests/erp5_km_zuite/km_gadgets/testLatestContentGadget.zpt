@@ -1,0 +1,148 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/getId"/>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
+</thead><tbody>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//li[@id='select-module-toolbox']/h3</td>
+   <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@class='menu-link' and @title='Documents']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//li[@id='action-document-toolbox']/h3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@class='menu-link' and @title='Add Drawing']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_title</td>
+  <td>test drawing</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_reference</td>
+  <td>test-drawing-document</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_version</td>
+  <td>001</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_language</td>
+  <td>en</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>subfield_field_my_group_list_default:list</td>
+  <td>label=Test Zuite Group/Section 1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>input-save-edit</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//li[@id='action-document-toolbox']/h3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@class='menu-link' and @title='Release Document']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Status changed</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Section 1</td>
+  <td></td>
+</tr>
+
+<!-- Add Latest Content Gadget -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site/1/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site/1/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_latest_documents&amp;mode=web_section&amp;default_pad_group=default_section_pad</td>
+  <td></td>
+</tr>
+<!-- Wait for activities to finish -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site/1/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>test drawing</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />
+
+</tbody></table>
+</body>
+</html>

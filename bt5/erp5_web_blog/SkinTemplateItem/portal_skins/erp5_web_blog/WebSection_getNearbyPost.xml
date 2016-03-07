@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-result = {"previous": None, "next": None}\n
-\n
-items = [x.getReference() for x in context.getWebSectionValue().getDocumentValueList()]\n
-\n
-try:\n
-  index = items.index(context.getReference())\n
-except:\n
-  return result\n
-\n
-if index > 0:\n
-  result["previous"] = items[0]\n
-if index+1 < len(items):\n
-  result["next"] = items[index+1]\n
-\n
-return result\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

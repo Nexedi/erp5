@@ -49,52 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># check that customer did not enter in form repeating user names\n
-reference_list = REQUEST.get(\'_original_field_your_reference\', [])\n
-for reference in reference_list:\n
-  if reference_list.count(reference) != 1:\n
-    # customer entered in form repeating user names\n
-    return 0\n
-\n
-portal = context.getPortalObject()\n
-reference = editor\n
-\n
-# check this is a not a reference from acl_user\n
-if portal.acl_users.getUserById(reference) is not None or  \\\n
-  portal.aq_parent.acl_users.getUserById(reference) is not None:\n
-    return 0\n
-\n
-# ... then check already created accounts\n
-if portal.portal_catalog.getResultValue(\n
-      reference = reference, \n
-      portal_type = "Person") is not None:\n
-  return 0\n
-\n
-# first check if a Business Configuration has not already "reserved" it\n
-# through a Person Configuration Item which when build will create a real\n
-# Nexedi ERP5 account.\n
-\n
-bc_key = REQUEST.get(\'business_configuration_key\', None)\n
-bc_path = None\n
-if bc_key is None:\n
-  configuration_save = portal.restrictedTraverse(REQUEST.get(\'configuration_save_url\'))\n
-  if configuration_save is not None:\n
-    bc_key = configuration_save.getParentValue().getRelativeUrl()\n
-\n
-if bc_key is not None:\n
-  bc_path = "NOT %%/%s/%%" % bc_key\n
-\n
-if portal.portal_catalog.getResultValue(\n
-                         reference = reference,\n
-                         portal_type=\'Person Configurator Item\',\n
-                         path = bc_path) is not None:\n
-  return 0\n
-\n
-return 1\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>editor, REQUEST</string> </value>
         </item>

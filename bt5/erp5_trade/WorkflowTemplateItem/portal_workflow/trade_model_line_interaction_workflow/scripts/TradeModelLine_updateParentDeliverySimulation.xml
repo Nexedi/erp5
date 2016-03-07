@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>delivery = state_change[\'object\'].getParentValue()\n
-if delivery.isDelivery:\n
-  delivery.updateSimulation(expand_related=1)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

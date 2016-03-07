@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>obj = state_change[\'object\']\n
-from DateTime import DateTime\n
-# we set h/m/s on min date and max date\n
-date = obj.getStopDateRangeMax()\n
-if date is not None:\n
-  date = DateTime("%8s 23:59:59" %(date.Date(),))\n
-  obj.setStopDateRangeMax(date)\n
-\n
-date = obj.getStopDateRangeMin()\n
-if date is not None:\n
-  date = DateTime("%8s 23:59:59" %(date.Date(),))\n
-  obj.setStopDateRangeMin(date)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

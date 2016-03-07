@@ -1,0 +1,98 @@
+<tal:block tal:replace="nothing"
+           xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+<!--
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+                   Vincent Pelletier <vincent@nexedi.com>
+                   Christophe Dumez <christophe@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+</tal:block>
+<tal:block metal:define-macro="master">
+  <tal:block
+   tal:define="object_uid           here/getUid | nothing;
+               object_path          here/getPath | nothing;
+               form                 nocall: form | nothing;
+               form_id              form/id | nothing;
+               form_action          python: form and form.action not in ('', None) and here.portal_membership.checkPermission('Modify portal content', here) and form.action or nothing;
+               local_parameter_list local_parameter_list | python: {};
+               dummy                python: local_parameter_list.update({'object_uid': object_uid, 'object_path': object_path, 'form_id': form_id});
+               title                string:${template/title_or_id} - ${here/Title};
+               ">
+<div class="div1 small">
+
+            <div class="title_index" align="middle">
+
+             <tal:block tal:repeat="item here/breadcrumbs">
+               <tal:block tal:condition="python: repeat['item'].index < 2">
+                 <a class="erp" tal:attributes="href item/url"
+                    tal:content="item/title"
+                    i18n:translate="" i18n:domain="ui"></a>
+               </tal:block>
+             <tal:block tal:condition="python: repeat['item'].index >= 2">
+               <a class="erp" tal:attributes="href item/url"
+                  tal:content="item/title"></a>
+             </tal:block>
+             <span class="mobil">/</span>
+           </tal:block>
+
+             <!--<span tal:content="python: context.getTitle()">MODULES</span>-->
+           </div>
+<!--
+    <div class="title" align="middle" tal:attributes="style python:'%s%s%s' % ('width:',len(context.getTitle())*8,'px')">
+      <span tal:content="python: context.getTitle()">Desmares Vincent</span>
+    </div>
+<div class="delimitation">
+</div>
+    <div class="group" align="middle" tal:attributes="style python:'%s%s%s' % ('width:',len(context.getParentValue().title)*8,'px')">
+      <span tal:content="python: context.getParentValue().title">Persons</span>
+    </div>
+<br> -->
+    <tal:block metal:use-macro="here/main_template/macros/master">
+      <tal:block metal:fill-slot="context_bar">
+        <div class="div3">
+          <tal:block metal:use-macro="here/context_box_render/macros/master" />
+        </div>
+      </tal:block>
+      <tal:block metal:fill-slot="main">
+        <div tal:define="actions actions/object_view | python: []">
+          <div class="content nomarg div4" align="middle"><!-- tal:attributes="class python: action == current_action and 'selected' or 'not_selected'" -->
+              <span tal:repeat="action actions">
+                <a tal:attributes="href python: here.ERP5Site_renderLink(action['url'], http_parameters); class python: action == current_action and 'link_selected' or 'link'"
+                   tal:content="action/name"  i18n:translate="" i18n:domain="ui"/>
+              </span>
+          </div>
+
+          <tal:block metal:define-slot="main"/>
+          <div class="save" align="middle" tal:condition="python: (not is_web_mode or editable_mode) and len(actions)">
+            <button class="button_save" tal:condition="form_action"
+                    type="submit"  title="Save"
+                    tal:attributes="name python: '%s:method' % (form_action, )"
+                    i18n:attributes="title" i18n:domain="ui">
+              <span  i18n:translate="" i18n:domain="ui">Save</span>
+            </button>
+          <a name="BOTTOM"></a>
+          </div>
+        </div>
+        <div id="context_bar">
+          <tal:block metal:use-macro="here/context_actions_render/macros/master" />
+        </div>
+      </tal:block>
+    </tal:block>
+</div>
+  </tal:block>
+</tal:block>

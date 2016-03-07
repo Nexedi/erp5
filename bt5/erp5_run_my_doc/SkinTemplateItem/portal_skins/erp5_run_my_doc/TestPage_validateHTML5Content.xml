@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-translateString = context.Base_translateString\n
-\n
-text_content = context.getTextContent()\n
-error_list = context.TestPage_validateContent(text_content)\n
-\n
-if len(error_list) > 0:\n
-  portal_status_message = " ".join(error_list)\n
-else:\n
-  portal_status_message = translateString("No error was found.")\n
-\n
-return context.Base_redirect(context.REQUEST.get("form_id", ""), \n
-                             keep_items=dict(portal_status_message=portal_status_message))\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

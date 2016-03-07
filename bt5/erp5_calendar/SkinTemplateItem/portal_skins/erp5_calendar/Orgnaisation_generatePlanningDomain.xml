@@ -49,42 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if depth != 0:\n
-  return []\n
-\n
-request = context.REQUEST\n
-object_path = request.get(\'object_path\')\n
-if object_path is None:\n
-  # Sometimes the object_path not comes with the request, when you edit for example.\n
-  object_path = request.get(\'URL1\').split(\'/\')[-1]\n
-\n
-def sorted(seq, comparator):\n
-  new_seq = seq[::]\n
-  new_seq.sort(comparator)\n
-  return new_seq\n
-\n
-def display_method(doc):\n
-  return doc.getTitle()\n
-\n
-domain_list = []\n
-organisation =  context.organisation_module.restrictedTraverse(object_path)\n
-for person in sorted(organisation.getSubordinationRelatedValueList(\n
-                       portal_type=\'Person\', checked_permission=\'View\'),\n
-                     lambda a, b: cmp(display_method(a), display_method(b))):\n
-  domain = parent.generateTempDomain(id=person.getId())\n
-  domain.edit(title = display_method(person),\n
-              membership_criterion_base_category = (\'source\', \'destination\'), \n
-              membership_criterion_category = (person.getRelativeUrl(),),\n
-              domain_generator_method_id = script.id,\n
-              uid = person.getUid())\n
-                \n
-  domain_list.append(domain)\n
-\n
-return domain_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>depth, parent, **kw</string> </value>
         </item>

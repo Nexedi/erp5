@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>\'\'\'\n
-  return the first coulour variation that have prototype property set to True\n
-  return None if no prototype is found\n
-\'\'\'\n
-\n
-colour_variation_list = context.contentValues(portal_type=\'Apparel Model Colour Variation\')\n
-prototype_list = [x for x in colour_variation_list if x.isPrototype()]\n
-if len(prototype_list):\n
-  return prototype_list[0]\n
-return None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

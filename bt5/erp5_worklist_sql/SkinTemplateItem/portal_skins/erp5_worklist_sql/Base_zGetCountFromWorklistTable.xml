@@ -69,22 +69,6 @@ group_by_expression</string> </value>
             <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-SELECT\n
-  <dtml-var select_expression>\n
-FROM\n
-  worklist_cache\n
-WHERE\n
-  <dtml-var where_expression>\n
-GROUP BY\n
-  <dtml-var group_by_expression>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

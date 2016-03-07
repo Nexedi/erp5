@@ -49,40 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# Indexing all transformation lines for all possible variations of a Resource can be very costly.\n
-# Avoid doing this in a single transaction, and split the operation.\n
-\n
-batch_size = 100\n
-current_batch = []\n
-current_size = 0\n
-\n
-for i, transformation in enumerate(getDefaultConversionTransformationValue):\n
-  if transformation is None:\n
-    continue\n
-  transformation_relative_url = transformation.getRelativeUrl()\n
-  variation_list_list = getTransformationVariationCategoryCartesianProduct[i]\n
-  size = len(transformation)*len(variation_list_list)\n
-\n
-  if size + current_size < batch_size:\n
-    current_batch.append((transformation_relative_url, variation_list_list))\n
-    current_size += size\n
-  else:\n
-    if current_batch:\n
-      context.activate(activity=\'SQLQueue\').SQLCatalog_catalogTransformation(current_batch)\n
-    current_batch = [(transformation_relative_url, variation_list_list)]\n
-    current_size = size\n
-\n
-\n
-if current_batch:\n
-  context.activate(activity=\'SQLQueue\').SQLCatalog_catalogTransformation(current_batch)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>getDefaultConversionTransformationValue, getTransformationVariationCategoryCartesianProduct</string> </value>
         </item>

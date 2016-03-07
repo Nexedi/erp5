@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-container = portal.system_event_module\n
-if object_id is not None and object_id in container:\n
-  return\n
-http_exchange = container.newContent(\n
-  id=object_id,\n
-  portal_type=\'HTTP Exchange\',\n
-  request=request,\n
-  response=response,\n
-  resource_value=None if notification_type is None else getattr(portal.portal_categories.http_exchange_resource.payline.notification, notification_type),\n
-  source_value=context,\n
-)\n
-# Notification ends in confirmed state, to be picked up by alarm (for security context switch)\n
-http_exchange.confirm()\n
-tag = script.id + \'-\' + http_exchange.getId()\n
-http_exchange.reindexObject(activate_kw={\'tag\': tag})\n
-portal.portal_alarms.handle_confirmed_http_exchanges.activate(after_tag=tag).activeSense()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>object_id, notification_type, request, response=None</string> </value>
         </item>

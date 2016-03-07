@@ -1,0 +1,200 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Form View Previous Link</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Default Module View</td></tr>
+</thead><tbody>
+
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Reset Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <!-- create a Foo -->
+      <td>${base_url}/foo_module/Foo_createObjects?start:int=1&amp;num:int=3</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Created Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td></td>
+</tr>
+
+<!-- Wait for gadget to be loaded -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Title 3</td>
+  <td></td>
+</tr>
+
+<!-- Enter a search query to create a selection parameter -->
+<tr>
+  <td>type</td>
+  <td>search</td>
+  <td>title</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@value='header-submit' and @type='submit']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextNotPresent</td>
+  <td>Title 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Title 1</td>
+  <td></td>
+</tr>
+
+<!-- Sort -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Sort']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Sort']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//form[@class='plus']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//form[@class='plus']/button</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]/div[2]//select</td>
+  <td>descending</td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//form[@class="submit"]//button</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextNotPresent</td>
+  <td>Title 3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Title 3</td>
+  <td></td>
+</tr>
+
+<!-- Go to the last element -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='field_listbox']//a[text()='Title 1' and contains(@href, '#!index')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Edit</td>
+  <td></td>
+</tr>
+
+<!-- Header has a link to the previous document in selection -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Previous' and contains(@href, '#!selection_previous')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Previous' and contains(@href, '#!selection_previous')]</td>
+  <td></td>
+</tr>
+
+<!-- It should redirect to the previous document -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Title 2</td>
+  <td></td>
+</tr>
+
+<!-- Header has a link to the previous document in selection -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Previous' and contains(@href, '#!selection_previous')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Previous' and contains(@href, '#!selection_previous')]</td>
+  <td></td>
+</tr>
+
+<!-- It should redirect to the previous document -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Title 3</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

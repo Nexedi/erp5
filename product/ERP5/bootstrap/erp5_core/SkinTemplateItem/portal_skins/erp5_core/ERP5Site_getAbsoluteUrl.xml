@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""This scripts return the public address of an ERP5 Site.\n
-It should be used wherever you want to display a link to a page in the web\n
-site (eg in automatic emails)\n
-"""\n
-return context.getPortalObject().absolute_url()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

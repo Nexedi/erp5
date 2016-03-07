@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
-contribution_registry = context.portal_contribution_registry\n
-\n
-base_list = []\n
-for attachment in context.getAttachmentInformationList():\n
-  # XXX this is for prevent get parts related to body or not related to\n
-  # Attachments\n
-  if attachment[\'uid\'] not in [\'part_1\', \'part_0\']:\n
-    filename  = context.getTitle()\n
-    if attachment.has_key("file_name"):\n
-       filename=attachment["file_name"]\n
-    pt = "File"\n
-    temp_base_id = \'index_\'.join([attachment["uid"], str(attachment["index"])])\n
-    base_list.append(newTempBase(context, id=temp_base_id,\n
-                                              uid=temp_base_id,\n
-                                              index= attachment["index"],\n
-                                              file_name=filename,\n
-                                              content_type=pt))\n
-\n
-return base_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

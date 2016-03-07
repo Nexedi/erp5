@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-portal_membership = portal.portal_membership\n
-knowledge_pad_module = portal.restrictedTraverse(\'knowledge_pad_module\', \n
-                                                 default = None)\n
-return knowledge_pad_module is not None and \\\n
-       portal_membership.checkPermission(\'Add portal content\',\n
-                                         knowledge_pad_module)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Base_isUserAllowedToUseKnowledgePad</string> </value>
         </item>

@@ -1,0 +1,113 @@
+<tal:block xmlns:draw='urn:oasis:names:tc:opendocument:xmlns:drawing:1.0' xmlns:office='urn:oasis:names:tc:opendocument:xmlns:office:1.0' xmlns:text='urn:oasis:names:tc:opendocument:xmlns:text:1.0' xmlns:ooo='http://openoffice.org/2004/office' xmlns:number='urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:meta='urn:oasis:names:tc:opendocument:xmlns:meta:1.0' xmlns:table='urn:oasis:names:tc:opendocument:xmlns:table:1.0' xmlns:dr3d='urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0' xmlns:fo='urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0' xmlns:style='urn:oasis:names:tc:opendocument:xmlns:style:1.0' xmlns:xforms='http://www.w3.org/2002/xforms' xmlns:form='urn:oasis:names:tc:opendocument:xmlns:form:1.0' xmlns:script='urn:oasis:names:tc:opendocument:xmlns:script:1.0' xmlns:ooow='http://openoffice.org/2004/writer' xmlns:svg='urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0' xmlns:chart='urn:oasis:names:tc:opendocument:xmlns:chart:1.0' xmlns:dom='http://www.w3.org/2001/xml-events' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:oooc='http://openoffice.org/2004/calc' xmlns:math='http://www.w3.org/1998/Math/MathML'  xmlns:tal='http://xml.zope.org/namespaces/tal'
+          xmlns:i18n='http://xml.zope.org/namespaces/i18n'
+          xmlns:metal='http://xml.zope.org/namespaces/metal'
+          tal:define='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'
+          office:version='1.0' metal:define-macro="master">
+  <tal:block metal:use-macro="here/style_macros/macros/style_macro"/>
+  <office:scripts/>
+
+  <office:body metal:define-macro="form_layout">
+  <office:spreadsheet>
+
+    <tal:block metal:define-macro="listbox">
+      <tal:block tal:define="render_prefix render_prefix | nothing;
+               listboxline_list python: listbox.get_value('default', render_format='list', REQUEST=request, render_prefix=render_prefix);
+               DateTime nocall: modules/DateTime/DateTime;
+               selection_name python: listbox.get_value('selection_name', REQUEST=request);
+               editable_columns python: listbox.get_value('editable_columns', REQUEST=request);
+               untranslatable_columns python: [x[0] for x in listbox.get_value('untranslatable_columns', REQUEST=request)];
+               editable_fields listbox/Listbox_getEditableFieldDict;
+               selection python: here.portal_selections.getSelectionFor(selection_name, REQUEST=request);
+               is_report_tree_mode selection/report_tree_mode | python: 0;
+               is_domain_tree_mode selection/domain_tree_mode | python: 0;
+               max_section_depth python: max([x.getSectionDepth() for x in listboxline_list]) + int(is_report_tree_mode);
+               listbox_line_structure python: here.Listbox_getReportTreeStructure(listbox_line_list=listboxline_list[1:], is_report_tree_mode=is_report_tree_mode, is_domain_tree_mode=is_domain_tree_mode, max_section_depth=max_section_depth);
+               listboxline python:listboxline_list[0];
+               first first | nothing;
+               global merge_report_section_list python: request.get('merge_report_section_list', False);
+               " i18n:domain="ui">
+
+            <tal:block tal:condition="python: listboxline.isTitleLine() and ( first or not merge_report_section_list )">
+
+              <tal:block tal:condition="display_header | nothing">
+                <tal:block tal:repeat="column_item listboxline/getColumnItemList">
+                  <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]">
+                    <table:table-column table:style-name='co2'
+                      table:default-cell-style-name='report-column-title'/>
+                  </tal:block>
+                </tal:block> 
+                
+                <table:table-header-rows>
+                  <table:table-row table:style-name='listbox_header_row'>
+                    <tal:block tal:condition="python: is_report_tree_mode">
+                      <table:table-cell table:style-name='report-column-title' table:number-columns-spanned='1' office:value-type='string' >
+                        <tal:block tal:condition="listboxline/getSectionName">
+                          <text:p tal:content="python: here.Localizer.erp5_ui.gettext(listboxline.getSectionName()).encode('utf-8')"/>
+                        </tal:block>
+                      </table:table-cell>
+                    </tal:block>
+                    <tal:block tal:condition="listboxline/isTitleLine">
+                      <tal:block tal:repeat="column_item listboxline/getColumnItemList">
+                        <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]">
+                          <tal:block tal:condition="python: column_property is not None" >
+                            <table:table-cell table:number-rows-spanned='1' table:style-name='report-column-title' table:number-columns-spanned='1' office:value-type='string' >
+                              <text:p i18n:translate="" i18n:domain="ui" tal:content="column_property">
+                              </text:p>
+                            </table:table-cell>
+                          </tal:block>
+                          <tal:block tal:condition="python: column_property is None">
+                            <table:table-cell  table:number-rows-spanned='1' table:style-name='report-column-title' table:number-columns-spanned='1' office:value-type='string'>
+                              <text:p tal:content="python: ''">
+                              </text:p>
+                            </table:table-cell>
+                          </tal:block>
+                        </tal:block>
+                      </tal:block>
+                    </tal:block>
+                  </table:table-row>
+                </table:table-header-rows>
+              </tal:block>
+
+              <tal:block tal:condition="not:display_header">
+                <table:table-row table:style-name='listbox_header_row'>
+                  <tal:block tal:repeat="empty_index python: xrange(0, max_section_depth)">
+                    <table:table-cell table:style-name='report-column-title'
+                                      table:number-columns-spanned='1'
+                                      office:value-type='string'>
+                    </table:table-cell>
+                  </tal:block>
+                  <tal:block tal:repeat="column_item listboxline/getColumnItemList">
+                    <tal:block tal:define="column_property python: column_item[1];
+                                           column_id python: column_item[0]">
+                      <table:table-cell table:number-rows-spanned='1' 
+                                        table:style-name='report-column-title'
+                                        table:number-columns-spanned='1'
+                                        office:value-type='string'>
+                        <text:p tal:content="column_property" tal:condition="python: column_id in untranslatable_columns"/>
+                        <text:p i18n:translate="" i18n:domain="ui" tal:content="column_property" tal:condition="python: column_id not in untranslatable_columns"/>
+                      </table:table-cell>
+                    </tal:block>
+                  </tal:block>
+                </table:table-row>
+              </tal:block> 
+            </tal:block>
+
+        <tal:block metal:use-macro="here/listbox_line_ods_macro/macros/listbox_line"/>
+        
+          <table:table-row metal:define-slot="table_bottom_line">
+            <tal:block tal:define="listboxline python: listboxline_list[0]">
+              <tal:block tal:repeat="column_item listboxline/getColumnItemList">
+                <tal:block tal:define="column_property python: column_item[1]; ">
+                  <tal:block tal:condition="python: column_property is not None">
+                    <table:table-cell table:style-name='table-bottom-line'/>
+                  </tal:block>
+                </tal:block>
+              </tal:block>
+            </tal:block>
+          </table:table-row>
+          
+        </tal:block>
+      </tal:block>
+  </office:spreadsheet>
+</office:body>
+</tal:block>

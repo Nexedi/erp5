@@ -1,0 +1,105 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Check Jump Actions on Drawing</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Check Jump Actions on Drawing</td></tr>
+</thead><tbody>
+
+<tr>
+        <td>store</td>
+        <td tal:content="here/portal_url">/erp5_portal</td>
+        <td>base_url</td>
+</tr>
+<tr>
+        <td>open</td>
+        <td>${base_url}/document_module/view</td>
+        <td></td>
+</tr>
+<tr>
+        <td>selectAndWait</td>
+        <td>select_action</td>
+        <td>label=Add Drawing</td>
+</tr>
+<tr>
+        <td>assertTextPresent</td>
+        <td>Object created.</td>
+        <td></td>
+</tr>
+<tr>
+        <td>selectAndWait</td>
+        <td>select_jump</td>
+        <td>label=Similarity Cloud</td>
+</tr>
+<tr>
+        <td>assertTextPresent</td>
+        <td>Similarity Cloud</td>
+        <td></td>
+</tr>
+<tr>
+        <td>selectAndWait</td>
+        <td>select_jump</td>
+        <td>label=Wiki Predecessors</td>
+</tr>
+<tr>
+        <td>assertTextPresent</td>
+        <td>Wiki Predecessors</td>
+        <td></td>
+</tr>
+<tr>
+        <td>selectAndWait</td>
+        <td>select_jump</td>
+        <td>label=Wiki Successors</td>
+</tr>
+<tr>
+        <td>assertTextPresent</td>
+        <td>Wiki Successors</td>
+        <td></td>
+</tr>
+<tr>
+        <td>selectAndWait</td>
+        <td>select_jump</td>
+        <td>label=Related Documents</td>
+</tr>
+<tr>
+        <td>assertTextPresent</td>
+        <td>Related Documents</td>
+        <td></td>
+</tr>
+<tr>
+        <td>selectAndWait</td>
+        <td>select_jump</td>
+        <td>label=Similar Documents</td>
+</tr>
+<tr>
+        <td>assertTextPresent</td>
+        <td>Similar Documents</td>
+        <td></td>
+</tr>
+<tr>
+        <td>selectAndWait</td>
+        <td>select_jump</td>
+        <td>label=Reference Documents</td>
+</tr>
+<tr>
+        <td>assertTextPresent</td>
+        <td>Reference Documents</td>
+        <td></td>
+</tr>
+<tr>
+        <td>selectAndWait</td>
+        <td>select_jump</td>
+        <td>label=All Related Documents</td>
+</tr>
+<tr>
+        <td>assertTextPresent</td>
+        <td>All Related Documents</td>
+        <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

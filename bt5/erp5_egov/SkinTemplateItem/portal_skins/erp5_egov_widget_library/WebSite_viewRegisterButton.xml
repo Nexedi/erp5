@@ -33,26 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<!-- ============================================================== -->\n
-<!--\n
-Description:\n
-  This macro render a invitation to becom vip member panel.\n
--->\n
-\n
-<tal:block metal:define-macro="main">\n
-  <div id="register_button">\n
-    <a href="captcha/CheckCaptcha/view" i18n:domain="ui" i18n:translate="">Register >></a>\n
-  </div>\n
-  <div class="clear"></div>\n
-</tal:block>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Returns Accounting Transactions where this bank account is payment.\n
-"""\n
-kw[\'payment_uid\'] = context.getUid()\n
-kw[\'node_category\'] = \'account_type/asset/cash/bank\'\n
-transaction_list = context.Node_getAccountingTransactionList(**kw)\n
-\n
-# As we are showing quantities and not asset prices, we use the precision\n
-# from this bank account currency\n
-if context.getPriceCurrency():\n
-  container.REQUEST.set(\'precision\',\n
-    context.getQuantityPrecisionFromResource(context.getPriceCurrency()))\n
-\n
-return transaction_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

@@ -1,0 +1,23 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block metal:define-macro="master">
+    <tal:block tal:define="form_action string:Base_doSelect;
+               form_id form/id;
+               list_mode python: True;
+               listmode_default_listbox python:getattr(form, 'listbox', None);
+               selection_name listmode_default_listbox/selection_name | nothing;
+               selection_index request/selection_index | python:0;
+               dummy python: selection_name and request.set('selection_name', selection_name);
+               local_parameter_list local_parameter_list | python: {};
+               dummy python: local_parameter_list.update({'selection_name': selection_name, 'selection_index': selection_index, 'form_id': form_id});
+               title here/getTranslatedTitle | here/Title">
+      <tal:block metal:use-macro="here/main_template/macros/master">
+        <tal:block metal:fill-slot="main">
+          <tal:block metal:define-slot="main" />
+          <input type="submit" name="Person_editPersonalInformation:method" value="Submit" class="ecommerce_submit"/>
+        </tal:block>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+</tal:block>

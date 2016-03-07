@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># use \'id\' for embedded document, and use \'reference\' for non-embedded document.\n
-# XXX the condition should be changed when we introduce Embedded Image / File portal type.\n
-if brain.getValidationState() == \'embedded\':\n
-  reference = brain.getId()\n
-else:\n
-  reference = brain.getReference()\n
-format = context.getPortalObject().portal_preferences.getPreferredImageFormat()\n
-return unicode("javascript:SelectFile(\'%s?format=%s\')" % (reference.replace("\'", "\\\\\'"), format), \'utf-8\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain, **kw</string> </value>
         </item>

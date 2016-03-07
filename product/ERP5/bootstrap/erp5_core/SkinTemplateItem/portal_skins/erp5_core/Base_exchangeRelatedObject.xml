@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># this script is intended to repair errors.\n
-# Let\'s say you use 2 objects, but this is the same one duplicated.\n
-# So you want to keep only one object, so you have to remove\n
-# all links to this old object and set the link on the new object.\n
-from_object = context.organisation[\'314\']\n
-to_object = context.person[\'121\']\n
-\n
-from_object_related_object_list = context.portal_categories.getRelatedValueList(from_object)\n
-for object in from_object_related_object_list:\n
-  print object.getDestinationSection()\n
-  object.setDestinationSectionValue(to_object)\n
-  object.recursiveImmediateReindexObject()\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

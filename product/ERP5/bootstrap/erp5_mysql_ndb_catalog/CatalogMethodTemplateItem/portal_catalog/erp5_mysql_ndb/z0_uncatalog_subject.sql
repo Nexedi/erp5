@@ -1,0 +1,1 @@
+DELETE FROM subject WHERE <dtml-sqltest uid op=eq type=int>

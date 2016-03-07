@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>def generic_sort(a,b):\n
-  result = 0\n
-  for k,v in sort_order:\n
-    a_value = a.getProperty(k)\n
-    b_value = b.getProperty(k)\n
-    result = cmp(a_value,b_value)\n
-    if result:\n
-      if v in (\'DESC\', \'desc\', \'descending\', \'reverse\'):\n
-        return -result\n
-      else:\n
-        return result\n
-  return result \n
-\n
-unordered_list = map(lambda x: x.getObject(), unordered_list)\n
-unordered_list.sort(generic_sort)\n
-return unordered_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>unordered_list=[], sort_order=()</string> </value>
         </item>

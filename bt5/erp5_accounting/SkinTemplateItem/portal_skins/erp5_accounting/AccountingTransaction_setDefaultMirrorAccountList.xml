@@ -49,40 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Auto-fill mirror accounts in transaction lines automatically, if necessary.\n
-portal = context.getPortalObject()\n
-movement_data_list = []\n
-has_source = False\n
-has_destination = False\n
-for movement in context.contentValues(portal_type=portal.getPortalAccountingMovementTypeList()):\n
-  source_account = movement.getSourceValue(portal_type=\'Account\')\n
-  destination_account = movement.getDestinationValue(portal_type=\'Account\')\n
-  if source_account is not None:\n
-    has_source = True\n
-  if destination_account is not None:\n
-    has_destination = True\n
-  # Interested in movements which lack one side only.\n
-  if (source_account is not None) ^ (destination_account is not None):\n
-    movement_data_list.append((movement, source_account, destination_account))\n
-\n
-# If both are true or we have an internal invoice, mirror accounting is used\n
-if (has_source and has_destination) or\\\n
-     context.getPortalType() == \'Internal Invoice Transaction\':\n
-  for movement, source_account, destination_account in movement_data_list:\n
-    if source_account is None:\n
-      account = destination_account\n
-      base_category = \'source\'\n
-    else:\n
-      account = source_account\n
-      base_category = \'destination\'\n
-    \n
-    mirror_account = account.getDefaultDestination()\n
-    if mirror_account:\n
-      movement.setProperty(base_category, mirror_account)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

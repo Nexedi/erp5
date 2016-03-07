@@ -49,35 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>d = {}\n
-d[\'A\'] = d[\'J\'] = \'1\'\n
-d[\'B\'] = d[\'K\'] = d[\'S\'] = \'2\'\n
-d[\'C\'] = d[\'L\'] = d[\'T\'] = \'3\'\n
-d[\'D\'] = d[\'M\'] = d[\'U\'] = \'4\'\n
-d[\'E\'] = d[\'N\'] = d[\'V\'] = \'5\'\n
-d[\'F\'] = d[\'O\'] = d[\'W\'] = \'6\'\n
-d[\'G\'] = d[\'P\'] = d[\'X\'] = \'7\'\n
-d[\'H\'] = d[\'Q\'] = d[\'Y\'] = \'8\'\n
-d[\'I\'] = d[\'R\'] = d[\'Z\'] = \'9\'\n
-\n
-old_rib = account_nb[-2:]\n
-\n
-new_account_nb = ""\n
-for nb in list(account_nb)[:-2]:\n
-  if d.has_key(nb):\n
-    new_account_nb += d[nb]\n
-  else:\n
-    new_account_nb += nb\n
-\n
-new_account_nb += "00"\n
-new_account_nb = long(new_account_nb)\n
-rib = 97 - new_account_nb % 97\n
-\n
-return (str(rib) == str(old_rib))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>account_nb</string> </value>
         </item>

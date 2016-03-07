@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-\n
-\n
-def getLanguageList(site):\n
-  language_list = [(\'\', \'\'),]\n
-  # First check if there is a specific method\n
-  if getattr(site, "IntegrationSite_getPluginLanguageList", None):\n
-    language_list += [(l.title,l.id) for l in getattr(site, \'IntegrationSite_getPluginLanguageList\')()]\n
-  else:\n
-    # Otherwise use list from localizer\n
-    language_list += [(x["name"], x["code"]) for x in site.Localizer.get_all_languages()]\n
-  return language_list\n
-\n
-\n
-getLanguageList = CachingMethod(getLanguageList, \\\n
-                                id = \'IntegrationSite_getLanguageList\', \\\n
-                                cache_factory = \'erp5_ui_long\')\n
-\n
-\n
-return getLanguageList(context)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

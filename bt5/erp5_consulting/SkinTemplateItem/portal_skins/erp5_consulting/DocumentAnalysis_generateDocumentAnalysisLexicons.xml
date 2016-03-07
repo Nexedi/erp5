@@ -49,51 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>first_level_transformation = \\\n
-{ \'portal_type\' : \'Document Analysis Lexicon\'\n
-, \'data_key\'    : \'lexicon_title\'\n
-, \'data\'        : [ { \'input_data_name\' : \'lexicon_title\'\n
-                    , \'output_property\' : \'title\'\n
-                    }\n
-                  , { \'input_data_name\' : \'lexicon_source_type\'\n
-                    , \'output_property\' : \'lexicon_source_type\'\n
-                    }\n
-                  ]\n
-}\n
-\n
-second_level_transformation = \\\n
-{ \'portal_type\' : \'Document Analysis Lexicon Item\'\n
-, \'data_key\'    : \'item_title\'\n
-, \'data\'        : [ { \'input_data_name\' : \'item_title\'\n
-                    , \'output_property\' : \'title\'\n
-                    }\n
-                  , { \'input_data_name\' : \'item_description\'\n
-                    , \'output_property\' : \'description\'\n
-                    }\n
-                  , { \'input_data_name\' : \'type\'\n
-                    , \'output_property\' : \'lexicon_item_type\'\n
-                    }\n
-                  , { \'input_data_name\' : \'ubm\'\n
-                    , \'output_property\' : \'lexicon_item_ubm\'\n
-                    }\n
-                  , { \'input_data_name\' : \'class\'\n
-                    , \'output_property\' : \'item_class\'\n
-                    }\n
-                  , { \'input_data_name\' : \'propertysheet\'\n
-                    , \'output_property\' : \'item_property_sheet\'\n
-                    }\n
-                  ]\n
-}\n
-\n
-fast_input_transformation_rules = [first_level_transformation, second_level_transformation]\n
-\n
-context.FastInput_generateTwoLevelObjectStructure( transformation_rules = fast_input_transformation_rules\n
-                                                 , listbox = listbox\n
-                                                 , destination = context.getObject())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox=[], **kw</string> </value>
         </item>

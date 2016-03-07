@@ -1,0 +1,31 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+           tal:define="is_gadget_mode python:int(request.get('is_gadget_mode', 0));
+                       dummy python: context.REQUEST.RESPONSE.setHeader('Content-Type', 
+                                                                        'text/html;; charset=utf-8');">
+
+  <!-- switch based on mode -->
+  <tal:block tal:condition="not:is_gadget_mode"
+             metal:define-macro="master">
+    <tal:block metal:use-macro="here/view_main/macros/master">
+      <tal:block metal:fill-slot="main">
+        <tal:block metal:use-macro="here/form_render/macros/master" />
+       </tal:block>
+    </tal:block>
+  </tal:block>
+
+  <tal:block tal:condition="is_gadget_mode"
+             tal:define="global preferred_html_style_developper_mode python: 0;
+                         global preferred_html_style_translator_mode     
+                                      preferred_html_style_developper_mode;
+                         original_editable_mode python: request.get('editable_mode', 0);
+                         dummy python: request.set('editable_mode', 1);">
+    <!-- Set unconditionally editable_mode to True and return back to original after
+         form is rendered. -->
+    <tal:block  metal:use-macro="here/form_render/macros/master" />
+    
+    <tal:block  tal:define="dummy python: request.set('editable_mode',
+                                                      original_editable_mode) "/>
+  </tal:block>
+</tal:block>

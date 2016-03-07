@@ -1,0 +1,89 @@
+/*global window, rJS, RSVP, Handlebars */
+/*jslint nomen: true, indent: 2, maxerr: 3 */
+(function (window, rJS, RSVP, Handlebars) {
+  "use strict";
+
+  /////////////////////////////////////////////////////////////////
+  // temlates
+  /////////////////////////////////////////////////////////////////
+  var gadget_klass = rJS(window),
+
+    front_full_source = gadget_klass.__template_element
+                         .getElementById("front-full-template")
+                         .innerHTML,
+    front_full_template = Handlebars.compile(front_full_source);
+
+  /////////////////////////////////////////////////////////////////
+  // api
+  /////////////////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////////////////
+  // some methods
+  /////////////////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////////////////
+  // RJS
+  /////////////////////////////////////////////////////////////////
+  gadget_klass
+
+    /////////////////////////////////////////////////////////////////
+    // ready
+    /////////////////////////////////////////////////////////////////
+    .ready(function (my_gadget) {
+      my_gadget.property_dict = {};
+    })
+
+    .ready(function (my_gadget) {
+      return my_gadget.getElement()
+        .push(function (element) {
+          my_gadget.property_dict.element = element;
+        });
+    })
+
+    /////////////////////////////////////////////////////////////////
+    // published methods
+    /////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////
+    // acquired methods
+    /////////////////////////////////////////////////////////////////
+    .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod(
+      "whoWantToDisplayThisFrontPage",
+      "whoWantToDisplayThisFrontPage"
+    )
+    /////////////////////////////////////////////////////////////////
+    // published methods
+    /////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////
+    // declared methods
+    /////////////////////////////////////////////////////////////////
+    .declareMethod("render", function () {
+      var gadget = this;
+
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.whoWantToDisplayThisFrontPage("commandments"),
+            gadget.whoWantToDisplayThisFrontPage("contents"),
+            gadget.whoWantToDisplayThisFrontPage("components")
+          ]);
+        })
+        .push(function (result_list) {
+          return gadget.translateHtml(front_full_template({
+            "url_commandments": result_list[0],
+            "url_contents": result_list[1],
+            "url_components": result_list[2]
+          }));
+        })
+        .push(function (my_translated_html) {
+          gadget.property_dict.element.innerHTML = my_translated_html;
+        });
+    });
+
+    /////////////////////////////////////////////////////////////////
+    // declared service
+    /////////////////////////////////////////////////////////////////
+
+}(window, rJS, RSVP, Handlebars));

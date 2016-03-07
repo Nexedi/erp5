@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-module = portal.accounting_module\n
-\n
-module.manage_delObjects(list(module.objectIds()))\n
-\n
-module.setProperty(\'current_content_script\', script.getId())\n
-\n
-# test depends on this\n
-return "Accounting Transactions Created."\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>month_count=1, add_draft_transactions=1, transaction_state=\'validated\'</string> </value>
         </item>

@@ -1,0 +1,7 @@
+<tal:block 
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  tal:define="line_list here/query;
+              label_list here/getLabelValueList;
+              real_context here/getContext;"
+><tal:block tal:replace="structure python: real_context.Listbox_asICal(label_list, line_list)"/></tal:block>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<office:document-content 
+  xmlns:draw='http://openoffice.org/2000/drawing' 
+  xmlns:office='http://openoffice.org/2000/office' 
+  xmlns:text='http://openoffice.org/2000/text' 
+  xmlns:number='http://openoffice.org/2000/datastyle' 
+  xmlns:chart='http://openoffice.org/2000/chart' 
+  xmlns:table='http://openoffice.org/2000/table' 
+  xmlns:dr3d='http://openoffice.org/2000/dr3d' 
+  xmlns:fo='http://www.w3.org/1999/XSL/Format' 
+  xmlns:style='http://openoffice.org/2000/style' 
+  xmlns:form='http://openoffice.org/2000/form' 
+  xmlns:script='http://openoffice.org/2000/script' 
+  xmlns:svg='http://www.w3.org/2000/svg' 
+  xmlns:xlink='http://www.w3.org/1999/xlink' 
+  xmlns:math='http://www.w3.org/1998/Math/MathML' 
+  office:class='text' 
+  office:version='1.0' 
+  xmlns:tal='http://xml.zope.org/namespaces/tal'
+  xmlns:i18n='http://xml.zope.org/namespaces/i18n'
+  tal:define="render_text python: lambda txt, attr_dict={}: context.Base_viewFieldLibrary.my_text_area_field.render_odt(value=txt, attr_dict=attr_dict)">
+  <office:script/>
+  <office:font-decls>
+    <style:font-decl style:name="Tahoma1" fo:font-family="Tahoma"/>
+    <style:font-decl style:name="Lucida Sans Unicode" fo:font-family="&apos;Lucida Sans Unicode&apos;" style:font-pitch="variable"/>
+    <style:font-decl style:name="Mincho" fo:font-family="Mincho" style:font-pitch="variable"/>
+    <style:font-decl style:name="Tahoma" fo:font-family="Tahoma" style:font-pitch="variable"/>
+    <style:font-decl style:name="Times New Roman" fo:font-family="&apos;Times New Roman&apos;" style:font-family-generic="roman" style:font-pitch="variable"/>
+    <style:font-decl style:name="Arial" fo:font-family="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/>
+  </office:font-decls>
+  <office:automatic-styles>
+    <style:style style:name="Image body" style:family="paragraph" style:parent-style-name="Text body" style:class="extra">
+      <style:properties fo:text-align="center" />
+    </style:style>
+  
+    <style:style style:name="Tableau1" style:family="table"> 
+      <style:properties style:width="16.999cm" table:align="margins"/>
+    </style:style>
+    
+    <style:style style:name="Tableau1.A" style:family="table-column"> 
+      <style:properties style:column-width="1cm" style:rel-column-width="800*"/>
+    </style:style> 
+    <style:style style:name="Tableau1.B" style:family="table-column"> 
+      <style:properties style:column-width="2.5cm" style:rel-column-width="2500*"/>
+    </style:style> 
+    <style:style style:name="Tableau1.C" style:family="table-column"> 
+      <style:properties style:column-width="8cm" style:rel-column-width="5380*"/> 
+    </style:style> 
+    <style:style style:name="Tableau1.D" style:family="table-column"> 
+      <style:properties style:column-width="2.5cm" style:rel-column-width="1600*"/> 
+    </style:style> 
+    <style:style style:name="Tableau1.E" style:family="table-column"> 
+      <style:properties style:column-width="2.5cm" style:rel-column-width="2000*"/>
+    </style:style>
+        
+    <style:style style:name="Tableau1.A1" style:family="table-cell">
+      <style:properties fo:padding="0.097cm" fo:border-left="0.002cm solid #000000" fo:border-right="none" fo:border-top="0.002cm solid #000000" fo:border-bottom="0.002cm solid #000000"/>
+    </style:style>
+      
+    <style:style style:name="Tableau1.D1" style:family="table-cell">
+      <style:properties fo:padding="0.097cm" fo:border="0.002cm solid #000000"/>
+    </style:style>
+    
+    <style:style style:name="Tableau1.A2" style:family="table-cell">
+      <style:properties fo:padding="0.097cm" fo:border-left="0.002cm solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.002cm solid #000000"/>
+    </style:style>
+    
+    <style:style style:name="Tableau1.D2" style:family="table-cell">
+      <style:properties fo:padding="0.097cm" fo:border-left="0.002cm solid #000000" fo:border-right="0.002cm solid #000000" fo:border-top="none" fo:border-bottom="0.002cm solid #000000"/>
+    </style:style>
+    
+  
+    <style:style style:name="P1" style:family="paragraph" style:parent-style-name="Table Heading">
+      <style:properties style:font-name="Arial" fo:font-size="10pt" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
+    </style:style>
+    
+    <style:style style:name="P2" style:family="paragraph" style:parent-style-name="Table Contents"><style:properties style:font-name="Arial" fo:font-size="10pt" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
+    </style:style>
+  
+  </office:automatic-styles>
+  <office:body>
+    <text:sequence-decls>
+      <text:sequence-decl text:display-outline-level='0' text:name='Illustration'/>
+      <text:sequence-decl text:display-outline-level='0' text:name='Table'/>
+      <text:sequence-decl text:display-outline-level='0' text:name='Text'/>
+      <text:sequence-decl text:display-outline-level='0' text:name='Drawing'/>
+    </text:sequence-decls>
+    
+    <text:p text:style-name='Text body'>Nexedi SA</text:p>
+    
+    <div tal:omit-tag='' tal:repeat='usecase  python:here.searchFolder(portal_type="Use Case",sort_on=(("int_index",),), validation_state="validated") or (context,)'>
+        <text:h text:style-name='Heading 2' text:level='2' i18n:domain="ui" i18n:translate="">Use Case : <span tal:replace='usecase/getTitle'>Title</span></text:h>
+        
+        <text:p text:style-name='Text body' tal:replace="structure python: render_text(usecase.getDescription(), {'{http://openoffice.org/2000/text}style-name': 'Text body'})">Use Case Description</text:p>
+        
+        <tal:block tal:condition="python:usecase.contentValues(filter={'portal_type':'Image'})">
+          <text:h text:style-name='Heading 3' text:level='3' i18n:domain="ui" i18n:translate="">Related Requirement Processes</text:h>
+          
+          <tal:block tal:repeat="image python:usecase.contentValues(filter={'portal_type':'Image'})">  
+            <text:p text:style-name="Text body" tal:content="image/getDescription"
+                    tal:condition="image/getDescription">Description</text:p>
+            <text:p text:style-name="Image body" fo:text-align="center">
+            <draw:image draw:style-name="fr1" draw:name="Image1" text:anchor-type="as-char"
+              draw:z-index="0" xlink:href="#Pictures/0001.png" 
+              svg:width="12cm"
+              svg:height="7.516cm" 
+              xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"
+              tal:attributes="xlink:href python:request.oo_builder.addImage(image.index_html(None,None));
+                              svg:height python:'%scm' % (12 * float(image.height()) / max(float(image.width()),0))" />
+            </text:p>
+          </tal:block>
+          
+        </tal:block>
+        
+        
+        <text:h text:style-name='Heading 3' text:level='3'>Actors</text:h>
+        <text:p text:style-name="Text body" i18n:domain="ui" i18n:translate="">Actors involved in this Use Case are listed below:</text:p>
+        <table:table table:style-name='Tableau1' table:name='Tableau1'>
+          <table:table-column table:style-name="Tableau1.A"/>
+          <table:table-column table:style-name="Tableau1.B"/>
+          <table:table-column table:style-name="Tableau1.E"/>
+          <table:table-header-rows>
+            <table:table-row>
+              <table:table-cell table:value-type='string' table:style-name='Tableau1.A1'>
+                <text:p text:style-name='P1' i18n:domain="ui" i18n:translate="">Title</text:p>
+              </table:table-cell>
+              <table:table-cell table:value-type='string' table:style-name='Tableau1.A1'>
+                <text:p text:style-name='P1' i18n:domain="ui" i18n:translate="">Description</text:p>
+              </table:table-cell>
+              <table:table-cell table:value-type='string' table:style-name='Tableau1.D1'>
+                <text:p text:style-name='P1' i18n:domain="ui" i18n:translate="">Role</text:p>
+              </table:table-cell>
+            </table:table-row>
+          </table:table-header-rows>
+          
+          <table:table-row tal:repeat='actor python:usecase.contentValues(filter={"portal_type":"Use Case Actor"})'>
+            <table:table-cell table:value-type='string' table:style-name='Tableau1.A2'>
+              <text:p text:style-name='P2' tal:content='actor/getTitle'>Title</text:p>
+            </table:table-cell>
+            <table:table-cell table:value-type='string' table:style-name='Tableau1.A2'>
+
+            <text:p text:style-name='P2' tal:replace="structure python: render_text(actor.getDescription(), {'{http://openoffice.org/2000/text}style-name': 'P2'})">Description</text:p>
+            </table:table-cell>
+            <table:table-cell table:value-type='string' table:style-name='Tableau1.D2'>
+              <text:p text:style-name='P2'
+                      tal:repeat="role python: actor.getUseCaseActorRoleTitleList()"
+                      tal:content='role'>Role</text:p>
+            </table:table-cell>
+          </table:table-row>
+        </table:table>
+        
+        <text:h text:style-name='Heading 3' text:level='3' i18n:domain="ui" i18n:translate="">Scenarii</text:h>
+        <div tal:omit-tag='' tal:repeat='scenario  python:usecase.searchFolder(portal_type="Use Case Scenario", sort_on=(("int_index", "ASC"), ("id", "ASC")))'>
+        
+          <text:h text:style-name='Heading 4' text:level='4' i18n:domain="ui" i18n:translate="">Scenario <span tal:replace='repeat/scenario/number'>1</span> : <span tal:replace='python: scenario.getObject().getTitle()'>Scenario Title</span></text:h>
+        
+          <text:p text:style-name='Text body' tal:replace="structure python: render_text(scenario.getObject().getDescription(), {'{http://openoffice.org/2000/text}style-name': 'Text body'})">Description</text:p>
+        
+        <table:table table:style-name='Tableau1' table:name='Tableau1'>
+          
+          <table:table-column table:style-name="Tableau1.A"/>
+          <table:table-column table:style-name="Tableau1.B"/>
+          <table:table-column table:style-name="Tableau1.C"/>
+          <table:table-column table:style-name="Tableau1.D"/>
+          <table:table-column table:style-name="Tableau1.E"/>
+          
+          <table:table-header-rows>
+            <table:table-row>
+              <table:table-cell table:value-type='string' table:style-name='Tableau1.A1'>
+                <text:p text:style-name='P1' i18n:domain="ui" i18n:translate="">No</text:p>
+              </table:table-cell>
+              <table:table-cell table:value-type='string' table:style-name='Tableau1.A1'>
+                <text:p text:style-name='P1' i18n:domain="ui" i18n:translate="">Title</text:p>
+              </table:table-cell>
+              <table:table-cell table:value-type='string' table:style-name='Tableau1.A1'>
+                <text:p text:style-name='P1' i18n:domain="ui" i18n:translate="">Description</text:p>
+              </table:table-cell>
+              <table:table-cell table:value-type='string' table:style-name='Tableau1.A1'>
+                <text:p text:style-name='P1' i18n:domain="ui" i18n:translate="">Actor</text:p>
+              </table:table-cell>
+              <table:table-cell table:value-type='string' table:style-name='Tableau1.D1'>
+                <text:p text:style-name='P1' i18n:domain="ui" i18n:translate="">Requirements</text:p>
+              </table:table-cell>
+            </table:table-row>
+          </table:table-header-rows>
+          <table:table-row tal:repeat="step python: scenario.getObject().searchFolder(portal_type='Use Case Scenario Step', sort_on=(('int_index', 'ASC'), ('id', 'ASC')))">
+            <table:table-cell table:value-type='string' table:style-name='Tableau1.A2'>
+              <text:p text:style-name='P2' tal:content='repeat/step/number'>Index</text:p>
+            </table:table-cell>
+            <table:table-cell table:value-type='string' table:style-name='Tableau1.A2'>
+              <text:p text:style-name='P2' tal:content='python: step.getObject().getTitle()'>Index</text:p>
+            </table:table-cell>
+            <table:table-cell table:value-type='string' table:style-name='Tableau1.A2'>
+              <text:p text:style-name='P2' tal:replace="structure python: render_text(step.getObject().getDescription(), {'{http://openoffice.org/2000/text}style-name': 'P2'})">Description</text:p>
+            </table:table-cell>
+            <table:table-cell table:value-type='string' table:style-name='Tableau1.A2'>
+              <text:p text:style-name='P2' tal:content='python: step.getObject().getSourceSectionTitle()'>Actor</text:p>
+            </table:table-cell>
+            <table:table-cell table:value-type='string' table:style-name='Tableau1.D2'>
+              <tal:block tal:condition="python: step.getObject().getRequirementList()">
+                <text:p text:style-name='P2'
+                        tal:repeat="ref python: step.getObject().getRequirementTitleList()"
+                        tal:content='ref'>Actor</text:p>                    
+              </tal:block>
+              <tal:block tal:condition="python:not step.getObject().getRequirementList()">
+                <text:p text:style-name='P2'>N.A.</text:p> 
+              </tal:block>
+            </table:table-cell>
+          </table:table-row>
+        </table:table>
+        </div>
+
+         
+
+            
+    </div>
+  </office:body>
+</office:document-content>

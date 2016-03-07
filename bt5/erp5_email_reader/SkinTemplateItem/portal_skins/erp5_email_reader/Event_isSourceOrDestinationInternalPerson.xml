@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>for o in context.getSourceValueList(portal_type=\'Person\'):\n
-  if o.getRole() == \'internal\':\n
-    return True\n
-\n
-for o in context.getDestinationValueList(portal_type=\'Person\'):\n
-  if o.getRole() == \'internal\':\n
-    return True\n
-\n
-return False\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

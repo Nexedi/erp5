@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>content_information = context.getContentInformation()\n
-page_number = int(content_information.get(\'Pages\', 0))\n
-page_list=range(page_number)\n
-frame=[]\n
-for i in page_list:\n
-   frame.append(i)\n
-return frame\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-\n
-person_list = portal.portal_catalog(portal_type="Person",\n
-  select_list=[\'relative_url\'],\n
-  validation_state="validated")\n
-\n
-message_list = ["%s should be invalidated" % person.relative_url for person in person_list]\n
-\n
-if message_list and fixit:\n
-  portal.portal_catalog.searchAndActivate(method_id="invalidate",\n
-    portal_type="Person", validation_state="validated")\n
-\n
-return message_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>fixit=False, **kw</string> </value>
         </item>

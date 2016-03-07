@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return context.getResourceValue().getPrice(\n
-    context=context.asContext(categories=[context.getResource(base=True),\n
-                                          context.getSourceSectionValue().getPriceCurrency(base=True)],\n
-                              start_date=context.getStartDate()))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

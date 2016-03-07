@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from json import dumps\n
-table_dict = {}\n
-\n
-connection = context\n
-\n
-# make sure connection is open\n
-connection()\n
-\n
-for table in connection.manage_test("SHOW TABLES"):\n
-  table_dict[table[0]] = []\n
-  for column in connection.manage_test("SHOW COLUMNS FROM `%s`" % table[0]):\n
-    table_dict[table[0]].append(column[0])\n
-    table_dict[table[0]].append("`%s`" % column[0])\n
-\n
-container.REQUEST.RESPONSE.setHeader(\'content-type\', \'application/json\')\n
-return dumps(table_dict)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -19,32 +19,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAEtElEQVRoBd2aS6hVVRiAu1mWmQkJ
-Zkal9IIyQcsXIalQiBo1kDsIbaTR0JkDyYmIgkSTcCAOMnBUUINLBEUmGUZphI8GZZQTTYJUMCMt
-b9+na+M9++679znn7rUf/fB59uvstb691llr/fs6MDw8fEuTYoCgPlPhInUrvXK3NkzW+jwLu2FS
-jLo1RpiGvR3BRfABzABbuvRohHCQfQ67fRBN1qd3m//UGcjeRfkLYS/MhmsQLWptYWT9nS6HHfAw
-RK9PbS2M7L0ILoFt8DRUUpdKCkGmI5C9mwO27CA8BZXVI3oXQqYjQjd+koPKvgQTOy6IvFPZk9Uj
-yK5g8zV4BSqVpbzquhKyys2FLTAfKpelzPijooUEWQeot8Ep6A6oJaJ3aWQnYGbL7oFHwP3aIuqg
-FWQXYLcfHoNaZX3KsVvY0di18f0wALVHFOHQsi4mhmAmNELWp116l0bWezowKduYlqUu16PUFkbW
-FM98Nlo3poz7rDnvBs752WuU1sJBNmqKRxmTEVwH77G9Oez35uxblPFCiaZ4y+AU/Au+mumXq3z3
-AExO14tjLkc/gb/hDLwFU9LX5e0Xdmme4i5ualfNC5MBk4BoKR71MJVcA8kqbTrbL8OfsBW6ikJh
-7mIXurPgbs6vVqib+xXcaszTKzjj+DAtXGGZPuB1PIxjtKrjRmF0U0HfICpTWyDkUtR00gFr5Lhj
-/Z0JBrnmU6Qvsp0bI7+ce2HNJ++h/Hngw0+HvW8pOO8XRluEHZ3/gCtjGPkgNtHKhT22FcJ01V8R
-egdOgCN0OvzJvQAOZLnRCmENkD7Ix2742v2McCZZlXG841BrhEOtHYkPgXN9OuzOi9MH0/utEqaV
-LyFwHH5Mi7BvgvJgxvGOQ60SDjU/x6f0FW0U7ks0+VIbhZ13i1Z+id+ozzYKP4SF9BWtEmZh4Suj
-Z+B6TpwyduT+JnVs1G6rhKn9RngRsl4G/sPxLyE3WiNM676KibK+I0uHrWt+/P9oYWRnIbMeHoWJ
-kI7LHBhinr6QPpHeb0sLm+T/BdfSAuGY8/LHGedGHWqFMC33OzW3u2blu2ZQh2GsNTanbkZhOsWl
-FpKVody8y42k3CQ95t+MXEevBFPBZB621Y/CzrDsZDM/uhH+jFsUvdNS1LlxDmT9xjg8vkDoFL/l
-Q9zF//TyBDgqfw87OPcDn90FF5fx1tJpwgHlC7A39PvG0u/lvbV0HjZFPA9fwfO91n/cskmBFG62
-8jgcBp9+v9JjClsWsRo2wZKk7F4+SxMOlVH6ARiPdK5wL3JZ15Y6SlOATXAG1oJ5qwuCRkWpwpqN
-kF7OrlNFo6RLFx4h7XQ2CM6fdtNGRBRhzUJLn2XT7n0QGiEdTRjBRPo3Nt8Ap5HLUGtEFdaMlnb9
-+wtsgCGoVTq6MIKJ9Gk2d8IB8K8ItUQlwprR0i5GjsGb8C7UIl2ZMIJKO0WdhA/hc6hculJhBJU2
-nXOqeh9ckZnxVBbdZEulV0ZpMp+PuPFP4ebL+PQvhNGj8hZOjEJL+5veDkfAlo8etQlrFn7Tdm+n
-LLt3dOlahRFMpH9m83X4DqKuvWsXRlBpsyx/zy5Dv4Vo0o0QRjCRjp5a/gdmyt3WeXXylQAAAABJ
-RU5ErkJggg==</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

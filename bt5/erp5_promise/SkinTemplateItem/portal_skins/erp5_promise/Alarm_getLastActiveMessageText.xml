@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-process_list = context.Alarm_getReportResultList()\n
-if len(process_list) > 0:\n
-  return "%s (%s)" % (process_list[0].summary, process_list[0].detail)\n
-\n
-return "Unknown"\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

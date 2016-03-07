@@ -19,31 +19,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAEmElEQVRoBe2bS6hVVRjHPeXteUsK
-s7yQEpZpSTSo6IHcHjR2UhTVxAQR8zEomjQIFZpGEymkgbOghgUNpCZRYhYRalJQUJYOFDTxmXr7
-/Q57H/bZ7r3W9eI5+3HPBz/P2eu1v/967bW/c+1MTU3NKbJOp3Mj6fNhGdwKxQXJqIl18ONfOAhH
-0XWm0C8FZ6HQODwPH8FRuASKbQL6qs8fwrMwntXm97zYJRR6D45AEwSGfPwn0bIkK7onmMyl8Dmc
-hVBDTcpTi5qWpqK7gkmYgJ3gGmiSoOn4qia1TXSnNF/G4G04DNNpoIllDqFtM1wLc+6BPdCkzelK
-O11tu2HiGv55Cu4Gt/W2mtoWw3MKfhBuh7abGh9Q8Dy4ru1qE43zFDyrbCS47cM9GuG2j/DciEBf
-IvbB+YJyj5LmDv89pEfSgmJDTfKV9mG4reyuMcHfUHEdZ9Bj+QZ4X/6CNEWvg/2U8fRTqeHTnTjw
-KawscyS2hu2QshOYdeXmQBmyhmOI1U9HODiIMcHD8XaIdxkJHmJnV3KrWTfCwQWeDIH7QdnGZRHz
-YmWSpgb60fUjdoeY4BU08A78B1nRF7i+H26CjWC0pGrTv1tgUciRmGCjmG9AVqzt+cw1XGL6y8k1
-H7Ww4DKNCTYs8j54ksqL3kaakc534VcwjFK13YUDxueWlzkSE/w3Fb/mEGVwu89YtJtIMGzyFeyj
-TOWC8cmT1hooteDwUyvUIY649T3dVG7umjihLy61UosJLq3Y1IyR4KaO3HT9jo3wdF75Kt+sMmL1
-JehzaFOynRtgPvtBvmNsNA3t+hvyAspULdxNa0HGL75ebjHBk1T5EhSYfQ57beN2yMdgRCRfhqSh
-WXpvd+g7QneNCT5F5d/A0csK9toXf3+I+wtOQNWmaI+6Hi+vL3MmJvg7Kq6F47kGLnLt766PwJvw
-A9RhSi/Cj53wOBRaTLDCLnKKOpevzZq1RzXzzlV90sIfZ+BZCHZ8fjOifJ9lp3FfRuYi1kam6MC/
-6kvQ5zo5O/De8AYjwTPo5nQtz6DqVa8S9SW2aXU9SjaEnndsUNmGu+smX6ZXeHhfXLvRGRsTfC+N
-vA6GdHqbAeIM+SwGDx6vwBMQvRllBmkOgr/yT8Rusp0CFp4NbI+NsCGeD8AQT962knAfbIE6hHic
-gUY83oIZh3gOUXkXS7YoxLOBPE82u6BOIZ7V+FNqsXUXmgH2qPVHIZ7S7q1BRmyEa+Di1XVhJDjX
-nwu5Ho8cKoJvJ7n2Bn3pe3BwT3FT8vlbZv69xEvwCaKP8JmK89NNSzPUM0Z+mtdNHPI/zlR/dVgF
-ZY8k/bug4D/hJBgpyJs9tgWegYPgiUvzpOUz2AjDejgMVZo6lsHToM9FpsY/zPAPUw5A209aanzM
-qfAL/AjGr9pqalPjgfS/AExysRecsm0bacNUapvsvuQlb3pGH1+F36FNgt2onMEvwlhPcCLaxf4a
-/AxuSk0Xroaf4AXoqLFPcCLaQLah1x1wDJoqWt/VoJa5qVg/u8pJ7DOeqT5uVoC98yQ8BEWPLZJr
-Yz52nJ3fwmfgG9xpPvvsf7/BkxiAAq0LAAAAAElFTkSuQmCC</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

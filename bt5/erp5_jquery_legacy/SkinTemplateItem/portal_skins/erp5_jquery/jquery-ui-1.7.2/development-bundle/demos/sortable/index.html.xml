@@ -33,39 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<!doctype html>\n
-<html lang="en">\n
-<head>\n
-\t<title>jQuery UI Sortable Demos</title>\n
-\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
-</head>\n
-<body>\n
-\n
-<div class="demos-nav">\n
-\t<h4>Examples</h4>\n
-\t<ul>\n
-\t\t<li class="demo-config-on"><a href="default.html">Default functionality</a></li>\n
-\t\t<li><a href="placeholder.html">Drop placeholder</a></li>\n
-\t\t<li><a href="connect-lists.html">Connect lists</a></li>\n
-\t\t<li><a href="connect-lists-through-tabs.html">Connect lists through tabs</a></li>\n
-\t\t<li><a href="empty-lists.html">Handle empty lists</a></li>\n
-\t\t<li><a href="items.html">Include / exclude items</a></li>\n
-\t\t<li><a href="delay-start.html">Delay start</a></li>\n
-\t\t<li><a href="display-grid.html">Display as grid</a></li>\t\t\n
-\t\t<li><a href="portlets.html">Portlets</a></li>\n
-\t</ul>\n
-</div>\n
-\n
-</body>\n
-</html>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>index.html</string> </value>
         </item>

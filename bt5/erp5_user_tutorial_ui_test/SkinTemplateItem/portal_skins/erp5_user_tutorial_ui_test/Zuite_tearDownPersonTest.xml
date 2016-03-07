@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-howto_dict = context.Zuite_getHowToInfo()\n
-\n
-# remove the person of the test if existing\n
-person_list = context.portal_catalog(portal_type=\'Person\', \n
-                                     title=(howto_dict[\'person_howto_title\'], howto_dict[\'person_howto_title2\'],))\n
-if person_list is not None:\n
-  portal.person_module.deleteContent([x.getId() for x in person_list])\n
-\n
-# remove the organisation of the test if existing\n
-organisation_list = context.Zuite_checkPortalCatalog(portal_type=\'Organisation\', max_count=1,\n
-                                                     title=howto_dict[\'person_howto_organisation_title\'])\n
-if organisation_list is not None:\n
-  portal.organisation_module.deleteContent(organisation_list[0].getId())\n
-\n
-return "Clean Ok"\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

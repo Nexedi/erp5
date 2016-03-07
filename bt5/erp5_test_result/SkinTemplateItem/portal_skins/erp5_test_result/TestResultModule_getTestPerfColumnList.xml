@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>field = context.TestResultModule_viewTestPerfResultChartDialog.your_column_list\n
-column_dict = dict((v,k) for k,v in field.get_value(\'items\'))\n
-\n
-column_list = context.REQUEST.get(\'field_\' + field.id)\n
-if isinstance(column_list, str):\n
-  column_list = column_list,\n
-\n
-return [(x, column_dict[x]) for x in column_list]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

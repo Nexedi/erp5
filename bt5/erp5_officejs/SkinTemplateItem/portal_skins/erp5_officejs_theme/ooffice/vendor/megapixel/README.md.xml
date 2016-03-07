@@ -19,31 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string># Mega pixel image rendering library for iOS6 Safari\n
-\n
-Fixes iOS6 Safari\'s image file rendering issue for large size image (over mega-pixel), which causes unexpected subsampling when drawing it in canvas.\n
-By using this library, you can safely render the image with proper stretching.\n
-\n
-About iOS Safari\'s resource limitation and subsampling, see following link:\n
-[http://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariWebContent/CreatingContentforSafarioniPhone/CreatingContentforSafarioniPhone.html#//apple_ref/doc/uid/TP40006482-SW15](http://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariWebContent/CreatingContentforSafarioniPhone/CreatingContentforSafarioniPhone.html#//apple_ref/doc/uid/TP40006482-SW15)\n
-\n
-Although it mainly focuses fixing iOS Safari related issues, it can be safely used in the envionments other than iOS6.\n
-\n
-\n
-## Usage\n
-\n
-See ./test directory.\n
-\n
-\n
-## FAQ\n
-Q. Photos from iPhone is rotated and not in correct orientation.\n
-A. Orientation of jpeg file is recorded in EXIF format. This library won\'t detect exif information automatically. To detect the information in JavaScript, use exif.js (https://github.com/jseidelin/exif-js).\n
-\n
-\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

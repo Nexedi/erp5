@@ -1,0 +1,2 @@
+return context.AccountingTransactionModule_viewPaySheetTransactionListAsODT(
+  document_list=context.portal_selections.getSelectionCheckedValueList('accounting_selection',context.REQUEST))

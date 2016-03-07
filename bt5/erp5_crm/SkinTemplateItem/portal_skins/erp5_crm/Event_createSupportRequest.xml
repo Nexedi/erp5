@@ -49,33 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># this script allow to create a new object from this current one\n
-\n
-current_object = context.getObject()\n
-module = context.getPortalObject().support_request_module\n
-\n
-# Create a new object\n
-new_id = str(module.generateNewId())\n
-context.portal_types.constructContent(type_name=\'Support Request\',\n
-        container=module,\n
-        id=new_id\n
-)\n
-new_object = module[new_id]\n
-\n
-\n
-# If we do this before, each added line will take 20 times more time\n
-# because of programmable acquisition\n
-new_object.edit(\n
-        title=current_object.getTitle(),\n
-        causality_value=context,\n
-        client_value_list = current_object.getSourceValueList()\n
-)\n
-# Now create the relation between the current object and the new one\n
-current_object.setFollowUpValueList([new_object])\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

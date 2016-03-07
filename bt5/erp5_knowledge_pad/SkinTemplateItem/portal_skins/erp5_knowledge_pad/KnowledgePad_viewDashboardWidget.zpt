@@ -1,0 +1,31 @@
+<div id="page_wrapper"
+    tal:define="layout here/KnowledgePad_getBoxColumnLayout;
+                real_context python: options.get('real_context', None);
+                cancel_url python: options.get('cancel_url', None);
+                isAnonymousKnowledgePadUsed python: request.get('is_anonymous_knowledge_pad_used',False);
+                isAnon python: here.portal_membership.isAnonymousUser();
+                is_anonymous_user python: isAnon or isAnonymousKnowledgePadUsed;
+                is_tab_empty here/KnowledgePad_isEmpty;
+                columns python: options.get('columns', 3);
+                column_css_class python: test(is_anonymous_user, 
+                                              'portal-column portal-column-undraggable', 
+                                              'portal-column');">
+
+    <!-- No gadgets message -->
+    <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget_message"/> 
+    
+    <!-- Render pad columns -->
+    <tal:block tal:repeat="column_index python: range(0, columns)">
+      <div tal:condition="python: columns>=1+column_index"
+           tal:attributes="class column_css_class;
+                          id string:portal-column-${column_index}">
+
+        <tal:block tal:condition="python: len(layout)>=1+column_index"
+                   tal:replace="structure python:
+                               here.KnowledgePad_viewColumnWidget(section_layout=layout[column_index],
+                                                                  real_context=real_context,
+                                                                  cancel_url=cancel_url)"/>
+      </div>
+    </tal:block>
+
+</div>

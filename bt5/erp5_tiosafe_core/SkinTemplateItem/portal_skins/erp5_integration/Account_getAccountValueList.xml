@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Find the list of objects to synchronize by calling the catalog.\n
-\n
-  Possibly look up a single object based on its ID, GID\n
-"""\n
-account_list = []\n
-if not id:\n
-  for account in context.portal_catalog(portal_type=\'Account\'):\n
-    if account.getReference() and account.getValidationState() != \'deleted\':\n
-      account_list.append(account)\n
-  return account_list\n
-account = getattr(context.account_module, id)\n
-if account.getReference() and account.getValidationState() != \'deleted\':\n
-  account_list.append(account)\n
-return account_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>id="", gid=""</string> </value>
         </item>

@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-howto_dict = context.Zuite_getHowToInfo()\n
-\n
-# check if there is already the euro curency on the instance\n
-\n
-invoice = context.portal_catalog.getResultValue(\n
-                                   portal_type=\'Sale Invoice Transaction\',\n
-                                   title=\'ZUITE-TEST-SALEORDER-PRODUCT-001\',)\n
-if portal.portal_workflow.isTransitionPossible(invoice, "start"):\n
-  invoice.start()\n
-if not start_only:\n
-  invoice.stop()\n
-  invoice.deliver()\n
-# Clear cache\n
-portal.portal_caches.clearAllCache()\n
-\n
-return "Init Ok"\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>clean=True,start_only=False</string> </value>
         </item>

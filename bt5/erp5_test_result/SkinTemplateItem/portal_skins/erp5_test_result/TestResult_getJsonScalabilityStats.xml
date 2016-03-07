@@ -49,37 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.PythonScripts.standard import Object\n
-import json\n
-\n
-# Get result lines\n
-test_result_lines = context.objectValues(portal_type="Test Result Line", sort_on=\'int_index\')\n
-\n
-# Create a dict containing stats for each test\n
-tests = []\n
-count = 0\n
-for tl in test_result_lines:\n
-  # Get and parse stdout to a dict\n
-  stdout = tl.getProperty(\'stdout\')\n
-  if stdout:\n
-    count = count + 1\n
-    stdout_lines = filter(None, stdout.split(\'\\n\'))\n
-    current_stats = dict( [(l.split("=")[0].replace(" ", "_"), \\\n
-                     l.split("=")[1].isdigit() and int(l.split("=")[1]) or str(l.split("=")[1])) \\\n
-                     for l in stdout_lines ])\n
-\n
-    tests.append(current_stats)\n
-\n
-test_suite = context.getPortalObject().test_suite_module.searchFolder(title=context.getTitle())[0]\n
-\n
-xs = map(int, test_suite.getGraphCoordinate())\n
-\n
-\n
-return json.dumps({"test": tests, "xs": xs})\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

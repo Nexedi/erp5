@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>context.setSpecialiseValueList(relation_value_list, portal_type=portal_type)\n
-\n
-if relation_value_list:\n
-  context.PaySheetTransaction_applyModel(force=1)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>relation_value_list, portal_type</string> </value>
         </item>

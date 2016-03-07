@@ -19,13 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>$icons-default-path       : \'../img/icons/icons-retina.png\';\n
-$icons-setting-list-image : \'../img/icons/list-retina.png\';\n
-\n
-@import \'application-base\';</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

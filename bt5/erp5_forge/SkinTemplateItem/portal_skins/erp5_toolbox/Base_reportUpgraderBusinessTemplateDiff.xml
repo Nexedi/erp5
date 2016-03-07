@@ -49,48 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># It should be ran in an alarm thank to a property sheet constraint.\n
-from ZODB.POSException import ConflictError\n
-from Products.ZSQLCatalog.SQLCatalog import SimpleQuery\n
-\n
-if fixit:\n
-  return ["Cannot fix automatically, please do it manually. (Or deactivate the constraint to force upgrade.)"]\n
-\n
-portal = context.getPortalObject()\n
-\n
-bt_title_list, keep_bt_title_list = context.Base_getUpgradeBusinessTemplateList()\n
-keep_bt_title_set = set(keep_bt_title_list)\n
-bt_title_list = [\n
-  title\n
-  for _, title in portal.portal_templates.resolveBusinessTemplateListDependency(bt_title_list)\n
-  if title not in keep_bt_title_set\n
-]\n
-\n
-bt_list = [\n
-  bt\n
-  for bt in portal.portal_catalog(\n
-    portal_type="Business Template",\n
-    query=SimpleQuery(title=bt_title_list, comparison_operator=\'=\'),\n
-  )\n
-  if bt.getInstallationState() == "installed"\n
-]\n
-\n
-diff_list = []\n
-for bt in bt_list:\n
-  try:\n
-    diff = bt.BusinessTemplate_getDiffWithZODBAsText()\n
-    if diff:\n
-      diff_list += ["===== %s =====" % bt.getTitle()] + diff.splitlines()\n
-  except ConflictError:\n
-    raise\n
-  except Exception as e:\n
-    diff_list += ["===== %s =====" % bt.getTitle(), repr(e)]\n
-\n
-return diff_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>fixit=False, **kw</string> </value>
         </item>

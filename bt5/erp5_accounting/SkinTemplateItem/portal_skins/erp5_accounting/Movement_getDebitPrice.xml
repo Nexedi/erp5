@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>debit_price = getattr(brain, \'debit_price\', None)\n
-if debit_price is None:\n
-  if brain.isCancellationAmount():\n
-    debit_price = min(brain.total_price, 0)\n
-  else:\n
-    debit_price = max(brain.total_price, 0)\n
-return debit_price\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain, selection=None, **kwd</string> </value>
         </item>

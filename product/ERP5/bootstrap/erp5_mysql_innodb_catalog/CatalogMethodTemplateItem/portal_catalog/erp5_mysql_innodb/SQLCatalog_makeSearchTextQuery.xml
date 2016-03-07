@@ -49,34 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Search text query generator. Accepts a string and returns a ComplexQuery.\n
-  For example:\n
-\n
-  search_text = DMS reference:bt5-dms version:001 language:bg mine:yes (portal_type:Presentation OR portal_type:File) created:12m contributor_title:%tyagov%\n
-  \n
-  will parse search_text and generate a complexQuery which will return all documents which:\n
-  - have full_text searchable text containing "DMS"\n
-  - have reference equal to bt5-dms\n
-  - have portal_type "Presentation" OR "File"\n
-  - are created within last 12 months\n
-  - are owned by current logged in user\n
-  - are contributed by given Person\'s title\n
-  - etc ..\n
-"""\n
-if \'full_text\' in context.sql_search_tables:\n
-  column = \'SearchableText\'\n
-else:\n
-  column = \'title\'\n
-node = context.Base_getAdvancedSearchSyntaxTreeNode(value, column=column)\n
-if node is None:\n
-  return context.buildSingleQuery(column, value)\n
-else:\n
-  return context.buildQueryFromAbstractSyntaxTreeNode(node, column, ignore_unknown_columns=True)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>value</string> </value>
         </item>

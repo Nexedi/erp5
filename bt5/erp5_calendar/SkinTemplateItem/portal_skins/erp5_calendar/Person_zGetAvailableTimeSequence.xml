@@ -54,23 +54,6 @@ resource:list</string> </value>
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-in period_list prefix="loop">\n
-  (\n
-    <dtml-var expr="Person_zGetAvailableTime(from_date=loop_key, to_date=loop_item, \n
-                                             node=node, portal_type=portal_type,\n
-                                             resource=resource,\n
-                                             src__=1)">\n
-  )\n
-  <dtml-unless sequence-end> UNION ALL </dtml-unless> \n
-</dtml-in>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

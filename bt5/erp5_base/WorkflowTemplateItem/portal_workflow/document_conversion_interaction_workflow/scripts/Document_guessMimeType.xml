@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>document = state_change[\'object\']\n
-portal = document.getPortalObject()\n
-\n
-filename = document.getFilename()\n
-content_type = portal.mimetypes_registry.lookupExtension(filename)\n
-\n
-if content_type is not None:\n
-  document.setContentType(str(content_type))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

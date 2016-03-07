@@ -1,0 +1,150 @@
+<tal:block define="dummy python: request.RESPONSE.setHeader('Content-Type', 'text/css;; charset=utf-8')"/>
+/* From http://www.jonathantneal.com/examples/invoice/style.css */
+/* reset */
+
+*
+{
+  border: 0;
+  box-sizing: content-box;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  vertical-align: top;
+}
+
+/* heading */
+
+h1 { font: bold 100% sans-serif; letter-spacing: 0.5em; text-align: center; text-transform: uppercase; }
+
+/* table */
+table { page-break-inside: avoid}
+tr { page-break-inside:avoid ,page-break-after:avoid,page-break-before:avoid}
+table { font-size: 75%; table-layout: fixed; width: 100%; }
+table { border-collapse: separate; border-spacing: 2px; }
+th, td { border-width: 1px; padding: 0.5em; position: relative; text-align: left; }
+th, td { border-radius: 0.25em; border-style: solid; }
+th { background: #EEE; border-color: #BBB; }
+td { border-color: #DDD; }
+
+/* page */
+
+html { font: 16px/1 'Open Sans', sans-serif; overflow: auto; padding: 0.5in; }
+html { background: #999; cursor: default; }
+
+body { box-sizing: border-box; min-height: 11in; margin: 0 auto; overflow: hidden; padding: 0.5in; width: 8.5in; }
+body { background: #FFF; border-radius: 1px; box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5); }
+
+/* header */
+
+header { margin: 0 0 3em; }
+header:after { clear: both; content: ""; display: table; }
+
+header h1 {background: #EEE; border-style: solid; border-color: #DDD; border-radius: 0.25em; margin: 0 0 1em; padding: 0.5em 0; }
+header address { float: left; font-size: 75%; font-style: normal; line-height: 1.25; margin: 0 1em 1em 0; }
+header address p { margin: 0 0 0.25em; }
+header span, header img { display: block; float: right; }
+header span { margin: 0 0 1em 1em; max-height: 25%; max-width: 60%; position: relative; }
+header img { max-height: 100%; max-width: 100%; }
+header input { cursor: pointer; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; height: 100%; left: 0; opacity: 0; position: absolute; top: 0; width: 100%; }
+
+/* article */
+
+article, article address, table.meta { margin: 0 0 2em; }
+article:after { clear: both; content: ""; display: table; }
+/* article h1 { clip: rect(0 0 0 0); position: absolute; } */
+article h2:after { 
+  content: ":";
+  font-size: 1em;
+}
+
+article address { float: left; font-size: 125%; font-weight: bold; }
+
+
+/* table detail */
+table.detail { clear: both; width: 100%; margin: 0 0 2em;}
+table.detail td:nth-child(1) { text-align: right; width: 10%;  background: #EEE; border-color: #BBB; }
+table.detail td:nth-child(2) { text-align: left; width: 28%; }
+table.detail td:nth-child(3) { text-align: right; width: 10%;  background: #EEE; border-color: #BBB; }
+table.detail td:nth-child(4) { text-align: left; width: 28%; }
+table.detail td:nth-child(5) { height:100%; text-align: left; width: 24%; padding: 0px;}
+
+/* inner table in detail*/
+table.inner-table {
+  height:100%;
+  border-collapse: collapse;
+  border-style: hidden;
+}
+table.inner-table td:nth-child(1) { width: 10%;  background: #EEE; border-color: #BBB; }
+table.inner-table td:nth-child(2) { width: 10%; }
+
+/* table items */
+
+table.inventory { clear: both; width: 100%; margin: 0 0 2em; }
+table.inventory th { font-weight: bold; text-align: center; }
+
+table.inventory th:nth-child(1) { width: 5%; }
+table.inventory th:nth-child(2) { width: 15%; }
+table.inventory th:nth-child(3) { width: 15%; }
+table.inventory th:nth-child(4) { width: 18%; }
+table.inventory th:nth-child(5) { width: 10%; }
+table.inventory th:nth-child(6) { width: 7%; }
+table.inventory th:nth-child(7) { width: 7%; }
+table.inventory th:nth-child(8) { width: 10%; }
+table.inventory th:nth-child(9) { width: 13%; }
+
+table.inventory td:nth-child(1) { text-align: right; }
+table.inventory td:nth-child(2) { text-align: left; }
+table.inventory td:nth-child(3) { text-align: left; }
+table.inventory td:nth-child(4) { text-align: left; }
+table.inventory td:nth-child(5) { text-align: right; }
+table.inventory td:nth-child(6) { text-align: right; }
+table.inventory td:nth-child(7) { text-align: right; }
+table.inventory td:nth-child(8) { text-align: right; }
+table.inventory td:nth-child(9) { text-align: right; }
+
+
+/* table balance */
+
+table.balance { float: right; width: 46%; margin: 0 0 2em; }
+table.balance th, table.balance td { width: 50%; text-align: right;}
+table.balance{ clear: both; }
+table.balance th{ width: 37.5%; }
+table.balance td{ width: 12.5%; }
+
+/* table tax */
+
+table.tax { float: right; clear: both; width: 50%; }
+table.tax th { font-weight: bold; text-align: center; }
+table.tax td { text-align: right; }
+table.tax { margin: 0 0 2em; }
+
+/* aside */
+
+aside h1 { border: none; border-width: 0 0 1px; margin: 0 0 1em; }
+aside h1 { border-color: #999; border-bottom-style: solid; }
+
+/* bottom */
+
+footer {
+  font-size: 0.50em;
+  width: 100%;
+  clear: both;
+  text-align: right;
+  margin-top: 3em;
+}
+
+@media print {
+  * { -webkit-print-color-adjust: exact; }
+  html { background: none; padding: 0; }
+  body { box-shadow: none; margin: 0; }
+  span:empty { display: none; }
+}
+
+@page { margin: 0; }

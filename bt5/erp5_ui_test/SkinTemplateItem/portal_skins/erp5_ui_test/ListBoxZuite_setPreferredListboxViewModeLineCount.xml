@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>preference = context.portal_preferences.erp5_ui_test_preference\n
-preference.setPreferredListboxViewModeLineCount(count)\n
-context.portal_caches.clearAllCache()\n
-return \'OK:%s\' % count\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>count=1</string> </value>
         </item>

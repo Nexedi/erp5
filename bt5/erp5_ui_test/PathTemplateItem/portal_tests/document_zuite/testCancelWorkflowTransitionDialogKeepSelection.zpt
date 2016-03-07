@@ -1,0 +1,100 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Cancelling Workflow Transition Dialog Keeps Selection</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Cancelling Workflow Transition Dialog Keeps Selection.</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=0</td>
+  <td></td>
+</tr>
+<!-- check that we have prev & next buttons for selection -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@id='context_bar']//a[@title='Previous']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@id='context_bar']//a[@title='Next']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Dummy Workflow Action</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_cancel:method</td>
+  <td/>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td></td>
+  <td/>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@id='context_bar']//a[@title='Previous']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@id='context_bar']//a[@title='Next']</td>
+  <td></td>
+</tr>
+
+<!-- actually change page, and make sure it does not returns an error page -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id='context_bar']//a[@title='Next']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td tal:content="string:glob:${here/portal_url}/foo_module/1/Foo_view*" />
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Site Error</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>

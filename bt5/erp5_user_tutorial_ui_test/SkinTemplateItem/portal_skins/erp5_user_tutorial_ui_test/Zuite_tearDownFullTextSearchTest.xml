@@ -49,37 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-howto_dict = portal.Zuite_getHowToInfo()\n
-\n
-# delete Person\n
-person_list = portal.portal_catalog(portal_type=\'Person\',\n
-                                    title=howto_dict[\'full_text_person_title\'],\n
-                                    reference=howto_dict[\'full_text_person_reference\'],\n
-                                    local_roles=\'Owner\')\n
-if person_list:\n
-  portal.person_module.manage_delObjects([person_list[0].getObject().getId()])\n
-\n
-# delete Organisation\n
-organisation_list = portal.portal_catalog(portal_type=\'Organisation\',\n
-                                          title=howto_dict[\'full_text_organisation_title\'],\n
-                                          local_roles=\'Owner\')\n
-if organisation_list:\n
-  portal.organisation_module.manage_delObjects([organisation_list[0].getObject().getId()])\n
-\n
-# delete Currency\n
-currency = portal.portal_catalog.getResultValue(portal_type=\'Currency\',\n
-                                                title=howto_dict[\'dig_currency_title\'],\n
-                                                local_roles=\'Owner\')\n
-\n
-if currency is not None:\n
-  portal.currency_module.deleteContent(currency.getId())\n
-\n
-return "Clean Ok"\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

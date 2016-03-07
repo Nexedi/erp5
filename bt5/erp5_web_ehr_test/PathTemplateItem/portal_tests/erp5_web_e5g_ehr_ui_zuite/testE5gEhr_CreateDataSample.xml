@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal =  context.getPortalObject()\n
-\n
-"""Delete objects we are about to create """\n
-for i in range(start, start + num):\n
-  if getattr(portal.position_announcement_module, \'announcement_\' + str(i), None) is not None:\n
-    portal.position_announcement_module.deleteContent(\'announcement_\' + str(i))\n
-  if getattr(portal.position_opportunity_module, \'opportunity_\' + str(i), None) is not None:\n
-    portal.position_opportunity_module.deleteContent(\'opportunity_\' + str(i))\n
-  if getattr(portal.position_module, \'position_\' + str(i), None) is not None:\n
-    portal.position_module.deleteContent(\'position_\' + str(i))\n
-\n
-"""Create objects with given parameters"""\n
-for i in range(start, start + num):\n
-  portal.position_announcement_module.newContent(id = \'announcement_\' + str(i), title = \'Super Announcement Title %d\' % i, portal_type=\'Position Announcement\')\n
-  portal.position_opportunity_module.newContent(id = \'opportunity_\' + str(i), title = \'Super Opportunity %d\' % i, portal_type=\'Position Opportunity\')\n
-  portal.position_module.newContent(id = \'position_\' + str(i), title = \'Super Position %d\' % i, portal_type=\'Position\')\n
-\n
-return \'Created Successfully.\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>start = 0, num = 1</string> </value>
         </item>

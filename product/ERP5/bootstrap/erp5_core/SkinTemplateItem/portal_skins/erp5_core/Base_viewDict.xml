@@ -49,43 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-def escape(data):\n
-  """\n
-    Escape &, <, and > in a string of data.\n
-    This is a copy of the xml.sax.saxutils.escape function.\n
-  """\n
-  # must do ampersand first\n
-  data = data.replace("&", "&amp;")\n
-  data = data.replace(">", "&gt;")\n
-  data = data.replace("<", "&lt;")\n
-  return data\n
-\n
-from pprint import pformat\n
-\n
-ret = \'<html><body><table width=100%>\\n\'\n
-\n
-dict = context.showDict().items()\n
-dict.sort()\n
-i = 0\n
-for k,v in dict:\n
-  if (i % 2) == 0:\n
-    c = \'#88dddd\'\n
-  else:\n
-    c = \'#dddd88\'\n
-  i += 1\n
-  ret += \'<tr bgcolor="%s"><td >%s</td><td><pre>%s</pre></td></tr>\\n\' % (escape(c), escape(k), escape(pformat(v)))\n
-\n
-ret += \'</table></body></html>\\n\'\n
-\n
-return ret\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<tal:block
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+>
+  <!--  Version: dreikelvin CSS Framework 3.5                 -->
+  <!--  Type:    Design with sidebar                          -->
+  <!--  Date:    July 24, 2009                                -->
+  <!--  Design:  http://design.dreikelvin.de/                 -->
+  <!--  License: Author & Copyright: Robert Jung 2008         -->
+  <tal:block metal:define-macro="master">
+    <tal:block tal:define="
+      website python: here.getWebSiteValue();
+      portal_path python: website.absolute_url();
+      section python: here.getWebSectionValue();
+      section_url python: section.absolute_url();
+      editable python: request.get('editable_mode', 0);
+      list_mode list_mode | nothing;
+      dialog_mode dialog_mode | nothing;
+      has_no_layout python: layout_form is None;
+      dummy python: request.set('dialog_mode', dialog_mode);
+      dummy python: request.set('list_mode', list_mode);
+      aggregate python: has_no_layout or layout_form.Form_getGroupList(['right', 'bottom', 'menu', 'path', 'splash', 'headline', 'footer']);
+      aggregate python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};
+      right_area python:aggregate.get('right', []);
+      menu_area python:aggregate.get('menu', []);
+      path_area python:aggregate.get('path', []);
+      splash_area python:aggregate.get('splash', []);
+      headline_area python:aggregate.get('headline', []);
+      footer_area python:aggregate.get('footer', []);
+      bottom_area python:aggregate.get('bottom', []);
+      right_list python:len(right_area) and layout_form.get_fields_in_group(right_area[0]['goid']);
+      is_right_area_empty python:right_list == 0 or len(right_list) == 0;
+      is_front_layout python: layout_form is not None and layout_form.id == 'erp5_km_minimal_front_layout';
+      subject_list python:here.getSubjectList() or here.getLayoutProperty('subject_list') or [];
+      description python:here.getDescription() or here.getLayoutProperty('description') or '';
+      global header_title python:here == website and website.getTranslatedTitleOrId() or '%s | %s' % (here.getTranslatedTitleOrId(), website.getTranslatedTitleOrId());
+      global css_list_template python:[
+        portal_path + '/erp5_listbox.css',
+        portal_path + '/erp5_web_toolbar.css',
+        portal_path + '/erp5_knowledge_box.css',
+        portal_path + '/km_css/km.css',
+        portal_path + '/km_css/gadget.css',
+        portal_path + '/km_css/km_listbox.css',
+        portal_path + '/km_custom.css'
+      ];
+      global js_list python:[
+            portal_path + '/km_js/erp5_km.js',
+      ];
+      global_definitions_macros here/global_definitions/macros;
+    ">
+      <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
+      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+      <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+        <head>
+          <tal:block metal:use-macro="global_definitions_macros/header_boilerplate" />
+          <tal:block metal:use-macro="global_definitions_macros/render_css_js" />
+          <meta name="robots" content="index, follow" />
+        </head>
+        <body tal:attributes="class body_css_class|nothing">
+          <form
+            id="main_form"
+            class="main_form"
+            onsubmit="changed=false; return true"
+            enctype="multipart/form-data"
+            tal:attributes="
+              action url;
+              method python:str(path('form/method | string:post')).lower();
+            "
+          >
+            <fieldset id="hidden_fieldset" class="hidden_fieldset">
+              <input tal:condition="form_action | nothing"
+                     id="hidden_button" class="hidden_button" type="submit" value="dummy"
+                     tal:attributes="name string:${form_action}:method" />
+              <tal:block metal:use-macro="global_definitions_macros/http_definitions" />
+            </fieldset>
+            <tal:block metal:use-macro="here/aggregate_render/macros/populate_request"/>
+  <!--[if lt IE 7]>
+  <div style='border: 1px solid #F7941D; background: #FEEFDA; text-align: center; clear: both; height: 75px; position: relative;'>
+    <div style='width: 640px; margin: 0 auto; text-align: left; padding: 0; overflow: hidden; color: black;'>
+      <div style='width: 75px; float: left;'><img src='http://www.ie6nomore.com/files/theme/ie6nomore-warning.jpg' alt='Warning!'/></div>
+      <div style='width: 249px; float: left; font-family: Arial, sans-serif;'>
+        <div style='font-size: 14px; font-weight: bold; margin-top: 12px;'>You are using an outdated browser</div>
+        <div style='font-size: 12px; margin-top: 6px; line-height: 12px;'>For a better experience using this site, please upgrade to a modern web browser.</div>
+      </div>
+      <div style='width: 75px; float: left;'><a href='http://www.firefox.com' target='_blank'><img src='http://www.ie6nomore.com/files/theme/ie6nomore-firefox.jpg' style='border: none;' alt='Get Firefox 3.5'/></a></div>
+      <div style='width: 75px; float: left;'><a href='http://www.browserforthebetter.com/download.html' target='_blank'><img src='http://www.ie6nomore.com/files/theme/ie6nomore-ie8.jpg' style='border: none;' alt='Get Internet Explorer 8'/></a></div>
+      <div style='width: 73px; float: left;'><a href='http://www.apple.com/safari/download/' target='_blank'><img src='http://www.ie6nomore.com/files/theme/ie6nomore-safari.jpg' style='border: none;' alt='Get Safari 4'/></a></div>
+      <div style='width: 73px; float: left;'><a href='http://www.google.com/chrome' target='_blank'><img src='http://www.ie6nomore.com/files/theme/ie6nomore-chrome.jpg' style='border: none;' alt='Get Google Chrome'/></a></div>
+      <div style='position: absolute; left: 620px; top: 3px; font-family: courier new; font-weight: bold;'><a href='#' onclick='javascript:this.parentNode.parentNode.parentNode.style.display="none"; return false;'><img src='http://www.ie6nomore.com/files/theme/ie6nomore-cornerx.jpg' style='border: none;' alt='Close this notice'/></a></div>
+    </div>
+  </div>
+  <![endif]-->
+            <div id="mainwrapper">
+              <!-- HEADER -->
+              <div id="header">
+                <!--index here//-->
+                <h1 id="index"><a href="/" title="ERP5" name="top">ERP5</a></h1>
+                <!--index here//-->
+                <div id="menu" tal:define="dummy  python: request.set('editable_mode', True)">
+                  <tal:block tal:condition="python: layout_form is not None">
+                    <tal:block tal:repeat="aggregate python: [('menu', menu_area)]">
+                      <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                    </tal:block>
+                  </tal:block>
+                </div>
+                <!-- Satus Messages, Breadcrumb, Language Box -->
+                <tal:block tal:condition="python: layout_form is not None">
+                  <tal:block tal:repeat="aggregate python: [('path', path_area)]">
+                    <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                  </tal:block>
+                </tal:block>
+              </div>
+              <div id="center" class="center_fluid" tal:define="dummy  python: request.set('editable_mode', True)">
+                <!-- Headline Box -->
+                <tal:block tal:condition="python: layout_form is not None">
+                  <tal:block tal:repeat="aggregate python: [('headline', headline_area)]">
+                    <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                  </tal:block>
+                </tal:block>
+                <!-- Splash Box -->
+                <tal:block tal:condition="python: layout_form is not None
+                       and len(splash_area)
+                       and len(layout_form.get_fields_in_group(splash_area[0]['goid'])) ">
+                  <tal:block tal:repeat="aggregate python: [('splash', splash_area)]">
+                    <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                  </tal:block>
+                </tal:block>
+                  <!-- Layout form rendering -->
+                  <div id="km_left" 
+                       tal:attributes="class python:'alone' * is_right_area_empty;
+                                       id python:is_front_layout * 'km_front' or 'km_left'">
+                    <div id="master">
+                      <div id="main_content" tal:attributes="class python:(list_mode and 'list_mode') or 'view_mode'"
+                                             tal:define="dummy  python: request.set('editable_mode', editable)">
+                        <tal:block metal:define-slot="main"/>
+                      </div>
+                    </div>
+                    <!-- Layout form rendering -->
+                    <tal:block tal:condition="python: layout_form is not None">
+                      <!-- Bottom Area -->
+                      <!-- Layout form rendering -->
+                      <tal:block tal:condition="python: layout_form is not None">
+                        <tal:block tal:repeat="aggregate python: [('bottom', bottom_area)]">
+                          <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                        </tal:block>
+                      </tal:block>
+                    </tal:block>
+                  </div>
+                  <!-- Layout form rendering -->
+                  <tal:block tal:condition="python: layout_form is not None and not is_right_area_empty">
+                    <!-- Right Area -->
+                    <!-- Layout form rendering -->
+                    <tal:block tal:condition="python: layout_form is not None">
+                      <tal:block tal:repeat="aggregate python: [('right', right_area)]">
+                        <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                      </tal:block>
+                    </tal:block>
+                  </tal:block>
+                </div>
+                <!-- Top Bar: navigation and search -->
+                <!-- Layout form rendering -->
+              </div>
+              <tal:block tal:condition="python: layout_form is not None">
+                <tal:block tal:repeat="aggregate python: [('footer', footer_area)]">
+                  <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                </tal:block>
+              </tal:block>
+          </form>
+        </body>
+      </html>
+    </tal:block>
+  </tal:block>
+</tal:block>

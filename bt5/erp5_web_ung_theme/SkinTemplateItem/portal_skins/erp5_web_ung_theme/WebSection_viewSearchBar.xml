@@ -33,58 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block tal:define="websection here/getWebSectionValue;\n
-                       enctype string:multipart/form-data;\n
-                       portal_path python:websection.absolute_url();\n
-                       has_editor python: here.absolute_url() != portal_path;">\n
-<a class="ung_docs" tal:attributes="href python: portal_path + \'/unfoldDomain?unfoldDomain=ung_domain/all_documents.0&\' + \n
-                                                               \'form_id=erp5_web_ung_layout&\' + \n
-                                                               \'list_selection_name=ung_document_list_selection\'">\n
- <img src="ung_images/ung-logo.gif">\n
-</a>\n
-<a id=\'loading_message\'>Loading...</a>\n
-<tal:block tal:condition="python: not has_editor">\n
-  <form class="search_box">\n
-    <input type="text" name="field_your_search_text" class="field" />\n
-    <input id=\'search_button\' tal:attributes="value python: here.Base_translateString(\'Search Docs\')"\n
-        type="submit" value="Search Docs"/> \n
-  </form> \n
-</tal:block> \n
- <tal:block tal:condition="python: has_editor">\n
- <a name="document_title" tal:content="here/getTitle"/>\n
- <a name="document_state" tal:content="here/getValidationStateTitle"/>\n
- <div id="edit_document" title="Rename Document">\n
-  <form>\n
-   <fieldset>\n
-    <label for="name">Insert a new name:</label>\n
-    <input type="text" class="title" id="name" name="name" value=""><br>\n
-    <div id="more_property">\n
-     <label for="short_title">Short Title:</label>\n
-     <input type="text" class="short_title" id="short_title" name="short_title" value=""><br>\n
-     <label for="version">Version:</label>\n
-     <input type="text" class="version" id="version" name="version" value=""><br>\n
-     <label for="language">Language:</label>\n
-     <input type="text" class="language" id="language" name="language" value=""><br>\n
-     <label for="sort_index">Sort Index:</label>\n
-     <input type="text" class="sort_index" id="sort_index" name="sort_index" value=""><br>\n
-     <label for="keyword_list">Keywords:</label>\n
-     <textarea id="keyword_list" rows="2" cols="20" value="">\n
-     </textarea> \n
-    </div>\n
-    <p class="more_properties" id="more_properties">Edit More Properties</p>\n
-    <p class="hide_properties" id="hide_properties">Hide Properties</p>\n
-   </fieldset>\n
-  </form>\n
- </div>\n
-</tal:block>\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

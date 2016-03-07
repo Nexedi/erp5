@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>section = context.REQUEST.get(\'current_web_section\', context)\n
-\n
-membership_criterion_category = section.getMembershipCriterionCategory()\n
-if membership_criterion_category is not None:\n
-  membership_criterion_category = membership_criterion_category.replace(\'follow_up/\', \'destination_project/\')\n
-\n
-if section.getMembershipCriterionBaseCategoryList() == [\'follow_up\']:\n
-  section = section.asContext(membership_criterion_base_category = [\'destination_project\'],\n
-                              membership_criterion_category=[membership_criterion_category])\n
-\n
-return section.countResults(*args, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

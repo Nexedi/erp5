@@ -54,20 +54,6 @@ table_2\n
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-var table_2>.uid = <dtml-var table_0>.category_uid\n
-AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.skill.getUid()">\n
-AND <dtml-var table_0>.uid = <dtml-var table_1>.uid\n
-AND <dtml-var table_1>.parent_uid = catalog.uid\n
-AND <dtml-var table_1>.portal_type = \'Career\'\n
-\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

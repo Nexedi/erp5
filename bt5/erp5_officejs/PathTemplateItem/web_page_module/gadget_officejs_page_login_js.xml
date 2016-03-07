@@ -100,60 +100,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>/*globals window, document, RSVP, rJS, promiseEventListener*/\n
-/*jslint indent: 2, maxlen: 80, nomen: true*/\n
-(function (window, document, RSVP, rJS, promiseEventListener) {\n
-  "use strict";\n
-\n
-  /////////////////////////////////////////////////////////////////\n
-  // templates\n
-  /////////////////////////////////////////////////////////////////\n
-  rJS(window)\n
-    .ready(function (g) {\n
-      g.props = {};\n
-      return g.getElement()\n
-        .push(function (element) {\n
-          g.props.element = element;\n
-        });\n
-    })\n
-\n
-    .declareAcquiredMethod("updateHeader", "updateHeader")\n
-    .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareMethod("render", function () {\n
-      var gadget = this;\n
-      return gadget.updateHeader({\n
-        title: "Connect"\n
-      });\n
-    })\n
-\n
-    .declareAcquiredMethod("redirect", "redirect")\n
-    .declareService(function () {\n
-      var gadget = this;\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          gadget.props.element.querySelector("input[type=text]")\n
-                              .focus();\n
-          return promiseEventListener(\n
-            gadget.props.element.querySelector(\'form.login-form\'),\n
-            \'submit\',\n
-            false\n
-          );\n
-        })\n
-        .push(function (evt) {\n
-          gadget.props.element.querySelector("button")\n
-                              .disabled = true;\n
-          var login = evt.target.elements[0].value,\n
-            passwd = evt.target.elements[1].value;\n
-          document.cookie = "__ac=" + window.btoa(login + ":" + passwd) +\n
-                            "; path=/";\n
-          return gadget.redirect({page:"sync"});\n
-        });\n
-    });\n
-\n
-}(window, document, RSVP, rJS, promiseEventListener));</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>OfficeJS Login Page JS</string> </value>
         </item>

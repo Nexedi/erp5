@@ -49,60 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-obj = state_change[\'object\']\n
-\n
-wf_h = obj.Base_getWorkflowHistory()\n
-wf_h = wf_h[\'check_deposit_workflow\'][\'item_list\']\n
-\n
-manual_validation = 0\n
-\n
-for h in wf_h:\n
-  obj.log("state", h[3])\n
-  if h[3] == "plan":\n
-    manual_validation = 0\n
-    break\n
-  if h[3] == "accept":\n
-    manual_validation = 1\n
-    break\n
-\n
-bank_account_dict = {}\n
-\n
-if manual_validation:\n
-  return\n
-else:\n
-  # check balance for each line\n
-  for check_operation_line in obj.contentValues(filter = {\'portal_type\' : \'Check Operation Line\'}):\n
-    source_bank_account = check_operation_line.getSourcePaymentValue()\n
-    # Test if the account balance is sufficient.\n
-    account_path = source_bank_account.getRelativeUrl()\n
-    if bank_account_dict.has_key(account_path):\n
-      check_price = bank_account_dict[account_path] + check_operation_line.getPrice()      \n
-    else:\n
-      check_price = check_operation_line.getPrice()\n
-    bank_account_dict[account_path] = check_price\n
-    error = obj.BankAccount_checkBalance(account_path, check_operation_line.getPrice())\n
-    \n
-    if error[\'error_code\'] == 1:\n
-      msg = Message(domain=\'ui\', message="Bank account $account is not sufficient on line $line.",\n
-                    mapping={"account": source_bank_account.getInternalBankAccountNumber(), "line" : check_operation_line.getId()})\n
-      raise ValidationFailed, (msg,)\n
-    elif error[\'error_code\'] == 2:\n
-      msg = Message(domain=\'ui\', message="Bank account $account is not valid on $line.",\n
-                    mapping={"account": source_bank_account.getInternalBankAccountNumber(), "line" : check_operation_line.getId()})\n
-      raise ValidationFailed, (msg,)\n
-    elif error[\'error_code\'] != 0:\n
-      msg = Message(domain=\'ui\', message="Unknown error code.")\n
-      raise ValidationFailed, (msg,)\n
-\n
-\n
-context.validateSourceAndDestination(state_change)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

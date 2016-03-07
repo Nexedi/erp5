@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if selection_name is not None:\n
-\n
-  reference_variation_category_list = context.portal_selections.getSelectionParamsFor(selection_name)[\'reference_variation_category_list\']\n
-  from Products.ERP5Type.Document import newTempAmount\n
-  tmp_context = newTempAmount(context, "temp_context",\n
-                              quantity=1.0,\n
-                              variation_category_list=reference_variation_category_list,\n
-                              resource=context.getRelativeUrl()) \n
-   \n
-  aal = context.getAggregatedAmountList(tmp_context)\n
-\n
-  result = aal.getTotalDuration()\n
-  return result\n
-\n
-\n
-else:\n
-  return None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection=None, selection_name=None</string> </value>
         </item>

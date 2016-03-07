@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-if active_process_path is not None:\n
-\n
-  failed_line_count = len(context.Base_getReportFailedResultList(\n
-                                       active_process_path=active_process_path))\n
-  if failed_line_count > 0: \n
-    return \'Import Report: %s line(s) failed over %s\' % \\\n
-              (len(context.Base_getReportFailedResultList(active_process_path=active_process_path)), \n
-               len(context.Base_getReportResultList(active_process_path=active_process_path)))\n
-  else: \n
-    return \'%s lines imported sucessfully\' % \\\n
-                      len(context.Base_getReportResultList(active_process_path=active_process_path))\n
-\n
-raise AttributeError, \'Unable to get the active process\'\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>active_process_path=None</string> </value>
         </item>

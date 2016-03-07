@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>\'\'\'\n
-  Add an active process in the selection \n
-\'\'\'\n
-user_name = context.portal_membership.getAuthenticatedMember().getId()\n
-\n
-active_process_info = {\n
-  \'import_module\': context.getTitle(),\n
-  \'import_user_name\': user_name,\n
-  \'import_date_time\': DateTime(),\n
-}\n
-\n
-selection = context.portal_selections.getSelectionParamsFor(\'file_import_parameters_selection\')\n
-selection[active_process_path] = active_process_info\n
-context.portal_selections.setSelectionParamsFor(\'file_import_parameters_selection\', selection)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>active_process_path, **kw</string> </value>
         </item>

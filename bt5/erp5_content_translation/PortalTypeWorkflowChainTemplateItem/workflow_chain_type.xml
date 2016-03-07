@@ -1,6 +1,6 @@
 <workflow_chain>
  <chain>
-  <type>Person</type>
+  <type>portal_type_workflow_chain/Person</type>
   <workflow>content_translation_interaction_workflow, content_translation_workflow</workflow>
  </chain>
 </workflow_chain>

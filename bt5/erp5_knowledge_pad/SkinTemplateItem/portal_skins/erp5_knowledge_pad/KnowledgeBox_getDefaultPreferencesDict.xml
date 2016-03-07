@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>box = context\n
-preferences = {}\n
-\n
-# get default properties from Gadget only if edit form is available\n
-gadget = box.getSpecialiseValue()\n
-edit_form_id = gadget.getEditFormId()\n
-\n
-if edit_form_id is not None:\n
-  edit_form = getattr(context, edit_form_id, None)\n
-  if edit_form is not None:\n
-    fields = filter(lambda x: x.getId().startswith(\'my_\'), edit_form.objectValues())\n
-    for field in fields:\n
-      field_id = field.getId().replace(\'my_\', \'\')\n
-      # box has higher priority so check it first\n
-      field_value = getattr(box, field_id, getattr(gadget, field_id, None))\n
-      if(field.meta_type.startswith(\'Multi\') and not same_type(field_value, []) and not same_type(field_value, ()) and field_value != None):\n
-        preferences[field_id] = [field_value]\n
-      else:\n
-        preferences[field_id] = field_value\n
-return preferences\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

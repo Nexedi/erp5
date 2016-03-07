@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-domain_list = []\n
-\n
-if depth == 0:\n
-  preferred_group = context.portal_preferences.getPreferredSectionCategory()\n
-  if preferred_group:\n
-\n
-    person_sql_list = context.portal_catalog(\n
-      portal_type=\'Person\', group_relative_url=preferred_group)\n
-\n
-    for person in person_sql_list:\n
-      person = person.getObject()\n
-      domain = parent.generateTempDomain(id=\'sub%s\' % person.getId())\n
-      domain.edit(title = person.getTitle(),\n
-                  membership_criterion_base_category = (\'source\', ), \n
-                  membership_criterion_category = (\'source/%s\' % person.getRelativeUrl(),),\n
-                  domain_generator_method_id = script.id,\n
-                  uid = person.getUid())\n
-                    \n
-      domain_list.append(domain)\n
-\n
-return domain_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>depth, parent, **kw</string> </value>
         </item>

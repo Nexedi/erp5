@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>my_category_list =[]\n
-for y in base_category_list :\n
-    my_category_list += [x[1] for x in context.portal_categories[y].getCategoryChildTitleItemList(base=1)[1:]]\n
-return my_category_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>base_category_list=(\'emission_letter\',\'cash_status\',\'variation\')</string> </value>
         </item>

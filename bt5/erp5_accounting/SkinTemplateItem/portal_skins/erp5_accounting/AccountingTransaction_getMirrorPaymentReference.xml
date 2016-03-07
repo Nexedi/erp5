@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if selection_name is None:\n
-  # TODO: this should definitivly be REQUEST chached\n
-  selection_name = \'accounting_selection\'\n
-\n
-section_category=context.portal_selections.getSelectionParamsFor(selection_name).get(\'section_category\')\n
-if not section_category:\n
-  return\n
-\n
-if brain is not None:\n
-  transaction = brain.getObject()\n
-else:\n
-  transaction = context\n
-\n
-source_section = transaction.getSourceSectionValue()\n
-if source_section is not None and source_section.isMemberOf(section_category):\n
-  return transaction.getDestinationPaymentReference()\n
-return transaction.getSourcePaymentReference()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain=None, selection=None, selection_name=None, **kw</string> </value>
         </item>

@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script is invoked at the end of ingestion process.\n
-  The default behaviour is to receive messages so that they\n
-  are marked as \'New\' and appear in the worklist.\n
-"""\n
-context.setReportNumber(context.getTitle().split(\' \').pop())\n
-context.receive()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

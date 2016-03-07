@@ -169,33 +169,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-portal = context.getPortalObject()\n
-kw = {}\n
-expire_interval = portal.portal_preferences.getPreferredMaxUserInactivityDuration()\n
-if expire_interval in (\'\', None):\n
-  ac_renew = float(\'inf\')\n
-else:\n
-  expire_interval /= 86400. # seconds -> days\n
-  now = DateTime()\n
-  kw[\'expires\'] = (now + expire_interval).toZone(\'GMT\').rfc822()\n
-  ac_renew = (now + expire_interval / 2).millis()\n
-portal.portal_sessions[portal.Base_getAutoLogoutSessionKey()][\'ac_renew\'] = ac_renew\n
-resp.setCookie(\n
-  name=cookie_name,\n
-  value=cookie_value,\n
-  path=\'/\',\n
-  secure=getattr(portal, \'REQUEST\', {}).get(\'SERVER_URL\', \'\').startswith(\'https:\'),\n
-  http_only=True,\n
-  **kw\n
-)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>resp, cookie_name, cookie_value</string> </value>
         </item>

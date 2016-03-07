@@ -1,0 +1,74 @@
+<tal:block tal:replace="nothing"
+           xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+<!--
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+                   Vincent Pelletier <vincent@nexedi.com>
+                   Christophe Dumez  <christophe@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+XXX: each case must be handled separatelly in this precise representation :
+ - both top fields must be in the same div, so they must be identified
+   strictly by their name.
+ - the middle field is rendered like the two top ones, but outside of the
+   top block.
+ - the bottom block is rendered in another way (without its group name) so it
+   must be rendered separatelly.
+This leads to minor code duplication, but it's still code duplication.
+
+Breaks strict compatibility:
+  * Groups must be named one of "left", "right", "center", "bottom" otherwise they will not
+      be rendered.
+  * Group order doesn't matter. Case is sensitive.
+
+It is possible to specify a group id and a group title by naming a group following the
+  "group id (Group Title)" pattern. In this case the group id will be used as fieldset css
+  class and as tag id. The group title will be used as a legend for the fieldset. If no group
+  title is found, we use group id as title.
+-->
+</tal:block>
+
+
+<tal:block metal:define-macro="master">
+  <tal:block
+    tal:define="
+                dummy        python: request.set('here', here);
+                group_list   python: form.Form_getGroupTitleAndId();
+                gid_list     python: ' '.join([x['gid'] for x in group_list if x!='hidden']);
+                field_render nocall: here/field_render/macros/field_render">
+    <tal:block tal:repeat="group group_list">
+      <tal:block tal:define="gid     group/gid;">
+        <fieldset tal:condition="python: gid.find('hidden') < 0"
+                  tal:attributes="class gid;"
+                  tal:define="gtitle group/gtitle"
+                  class="border">
+          <legend tal:condition="python: gtitle != 'bottom' and gtitle != 'left' and gtitle != 'right' and gtitle != 'center'" tal:content="group/gtitle" class="group_title"/>
+          <div class="infield">
+            <tal:block tal:repeat="field python: form.get_fields_in_group(group['goid'])">
+              <tal:block metal:use-macro="field_render"/>
+            </tal:block>
+          </div>
+        </fieldset>
+       <p tal:condition="python: gid.find('right') >= 0 or (gid.find('left') >= 0 and 'right' not in gid_list)" class="clear"/>
+      </tal:block>
+      <p class="clear">&nbsp;</p>
+      </tal:block>
+      <div class="div_gtt" align="middle">
+        <a class="link_white" tal:attributes="href python: '%s%s%s%s' % (context.REQUEST.URL0,'?', context.REQUEST.QUERY_STRING,'#TOP')" i18n:translate="" i18n:domain="ui">////////// Top of page \\\\\\\\\\</a>
+       </div>
+  </tal:block>
+</tal:block>

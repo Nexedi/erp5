@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return context.ERP5Site_checkCatalogTable(\n
-  active_process=context.newActiveProcess().getPath(),\n
-  activity_count=activity_count,\n
-  bundle_object_count=bundle_object_count,\n
-  **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>activity_count=1, bundle_object_count=100, **kw</string> </value>
         </item>

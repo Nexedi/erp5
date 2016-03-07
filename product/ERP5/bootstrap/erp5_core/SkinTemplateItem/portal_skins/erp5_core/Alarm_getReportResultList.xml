@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Returns the list of results of the specified process\n
-  or of the last process if nothing specified.\n
-"""\n
-\n
-if active_process is None:\n
-  active_process = context.getLastActiveProcess()\n
-else:\n
-  active_process = context.getPortalObject().restrictedTraverse(active_process)\n
-\n
-result_list = []\n
-\n
-if active_process is not None:\n
-  result_list = [x for x in active_process.getResultList()]\n
-  # High severity will be displayed first\n
-  result_list.sort(key=lambda x: -x.severity)\n
-\n
-return result_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>active_process=None, **kw</string> </value>
         </item>

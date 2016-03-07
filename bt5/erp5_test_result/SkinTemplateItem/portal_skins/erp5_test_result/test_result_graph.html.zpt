@@ -1,0 +1,345 @@
+<html>
+  <head>
+<style>
+body {
+  font: 10px sans-serif;
+  text-align:center;
+  margin-top: 50px;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.bar {
+  fill: steelblue;
+}
+.x.axis path {
+  display: none;
+}
+.bullet .title { font-size: 14px; font-weight: bold; }
+</style>
+
+ <script src="http://d3js.org/d3.v3.js"></script>
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
+
+ 
+ </head>
+  <body>
+  <script>
+  
+
+  //get data from erp5
+  var current_url = $(document)[0].baseURI;
+  var test_result_url = current_url.substr(0, current_url.lastIndexOf('/'));
+  var url = test_result_url+"/TestResult_getJsonScalabilityStats";
+  json = $.ajax({
+     async: false,
+     url: url,
+     dataType:"json",
+     success: function(data) {
+       ret = data;
+     }
+   }).responseText;
+  stats = JSON.parse(json);
+  xs = stats.xs;
+
+if (xs.length != stats.test.length){
+  bracket_left = '<';
+  bracket_right = '>';
+  bracket_right_end = '/>';
+  text = bracket_left+"h1 style='color:red'"+bracket_right+"The number of configuration to test ("+xs.length+", defined on test suite document) is \
+not equal to the number of tested configurations for this test result document ("+stats.test.length+").<br> \
+x-scale may not be respected."+bracket_left+"h1"+bracket_right_end;
+  document.write(text)
+  for(var i=xs.length; i<stats.test.length; i++){
+    xs[i]=xs[xs.length-1]+1;
+  }
+}
+
+if (xs[0]>1){
+  document.write("*Speedup and efficiency determined using case n="+xs[0]+" as perfect.");
+}
+
+x_max = xs[stats.test.length-1];
+// just for fun..
+//x_max = xs[xs.length-1]+xs[xs.length-1]/4;
+// polynomial interpolation using Lagrande method
+var n = stats.test.length;
+// compute and assign value to display
+for(var i=0; i<n; i++) {
+  stats.test[i]["value"] = 3600 * stats.test[i].created_docs / stats.test[i].duration;
+}
+// Lagrange interpolation
+var L=[];
+for (var i=0; i<n; i++) {
+  L[i] = 1;
+  for (var j = 0; j<n; j++) {
+    if(j != i) {
+      L[i] *= xs[i]-xs[j];
+    }
+  }
+  L[i] = 1/L[i];
+}
+function determinate(z,interpolation){
+  var a = 0;
+  var b = 0;
+  var c = 0;
+  for (var i=0; i<n; i++) {
+    if (z == xs[i]) return stats.test[i].value;
+    a = L[i] / (z-xs[i]);
+    b += a * stats.test[i].value;
+    c += a;
+  }
+  if (interpolation){
+    return  b / c;
+  }
+  return 0;
+}
+//used to display histogram
+var obj = [];
+for(var x=xs[0]; x<=x_max; x++){
+  obj[x] = determinate(x,1);
+}
+//used to plot curve
+var obj_raw = [];
+for(var x=xs[0]; x<=x_max; x++){
+  obj_raw[x] = determinate(x,0);
+}
+var data = [obj_raw];
+var data2 = [obj];
+
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x0 = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+var x1 = d3.scale.ordinal();
+
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+function getMaxCoef(){
+  var max_coef = 0;
+  for(var i=0; i<stats.test.length; i++){
+    var coef = 1.0*(3600 * stats.test[i].created_docs / stats.test[i].duration) / xs[i];
+    if (coef > max_coef){
+      max_coef = coef;
+    }
+  }
+  return max_coef;
+}
+function getColor(name, value){
+  var perfect_value = getMaxCoef()*name;
+  var relative_distance = 100*(perfect_value - value) / perfect_value;
+  return "rgba("+(parseInt((255.0*relative_distance)/x_max))+","+(parseInt(255-(255.0*relative_distance)/x_max))+",50,0.8)";  
+}
+
+var xAxis = d3.svg.axis()
+    .scale(x0)
+    .orient("bottom")
+    .tickValues('')
+
+var commasFormatter = d3.format(".2s")
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .tickFormat(function(d) { return commasFormatter(d); });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    
+  var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "State"; });
+  data.forEach(function(d) {
+    d.ages = ageNames.map(function(name) { return {name: name, value: +d[name]}; });
+  });
+
+  // Domain interval
+  x0.domain(data.map(function(d) { return d.State; }));
+  x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);
+  //y.domain([0, d3.max(data, function(d) { return d3.max(d.ages, function(d) { return d.value; }); })]);
+  y.domain([0, getMaxCoef()*xs[stats.test.length-1]]);
+
+  // Trace axis
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("x", width/2)
+      .attr("y", 28)
+      .attr("dx", ".71em")
+      .style("text-anchor", "end")
+      .text("X coordinate (count value)");
+  
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Documents per hour");
+
+
+
+  // Trace perfect scalability: x1*x
+  var a = data2[0][xs[0]]/xs[0];
+  svg.append("line")
+    .attr("x1", x1(xs[0])+x0(0))
+    .attr("y1", y(a*xs[0]))
+    .attr("x2", x1(x_max)+x0(0))
+    .attr("y2", y(a*x_max))
+    .attr("stroke-width", 2)
+    .attr("stroke", "black");
+    
+  // Trace perfect all scalability: xi*x | max(
+  var max_a = 0;
+  for(var i=xs[0]; i<x_max; i++){
+    var temp = data2[0][xs[i]]/xs[i];
+    if(temp > max_a){
+      max_a = temp;
+    }
+  }
+  // There is a better perfect scalability than given by the first test.
+  if(a < max_a){
+    svg.append("line")
+      .attr("x1", x1(xs[0])+x0(0))
+      .attr("y1", y(max_a*xs[0]))
+      .attr("x2", x1(x_max)+x0(0))
+      .attr("y2", y(max_a*x_max))
+      .attr("stroke-width", 1)
+      .attr("stroke", "red");
+  }
+  
+  //smoothed curve data computation
+  var v_1 = [];
+  var v_2 = [];
+  var data_smoothed = [];
+  
+  // copy of the vector
+  for(var x=xs[0]; x<=x_max; x++){
+    v_1[x] = obj[x];
+  }
+  // smooth
+  for(var i=0; i<x_max*2; i++){
+    v_2[xs[0]] = v_1[xs[0]];
+    for(var x=xs[0]+1; x<=x_max-1; x++){
+      v_2[x] = v_1[x]/2 + v_1[x-1]/4 + v_1[x+1]/4;
+    }
+    v_2[x_max] = v_1[x_max];
+    for(var x=xs[0]; x<=x_max; x++){
+      v_1[x] = v_2[x];
+    }
+    data_smoothed = [v_1]; 
+    // Trace smoothed curve
+    var mod_val = parseInt(x_max/5);
+    if ( 2 > mod_val ) mod_val = 2;
+    if(i % mod_val ==0){
+      for(var j=2; j<data2[0].length; j++){
+        
+        var smoothed_curve_color =  getColor(j-1, data_smoothed[0][j]);
+
+        svg.append("line")
+        .attr("x1", x1(j-1)+x0(0))
+        .attr("y1", y(data_smoothed[0][j-1]))
+        .attr("x2", x1(j)+x0(0))
+        .attr("y2", y(data_smoothed[0][j]))
+        .attr("stroke-width", 1)
+        .attr("stroke", smoothed_curve_color)
+      }
+    }
+  }
+      
+  // Trace histogram
+  var state = svg.selectAll(".state")
+      .data(data)
+    .enter().append("g")
+      .attr("class", "g")
+      .attr("transform", function(d) { return "translate(" + x0(d.State) + ",0)"; });
+
+  // Bars
+  state.selectAll("rect")
+      .data(function(d) { return d.ages; })
+    .enter().append("rect")
+      .attr("width", x1.rangeBand())
+      .attr("x", function(d) { return x1(d.name); })
+      .attr("y", function(d) { return y(d.value); }) 
+      .attr("height", function(d) { return height - y(d.value); })
+      .style("fill", function(d) { return getColor(d.name, d.value); });
+
+  for(var i=0; i<stats.test.length; i++){
+    var title = svg.append("g")
+    title.append("text")
+        .attr("width", x1.rangeBand())
+        .attr("x", function(d) { return x1(xs[i])+x0(0); })
+        .attr("y", function(d) { return height; }) 
+        .attr("dy", "1.0em")
+        .attr("class", "title")
+        .text(xs[i]+"\n("+(i+1)+")");
+  } 
+
+  // trace smoothed curve
+  for(var j=2; j<data2[0].length; j++){
+
+    var smoothed_curve_color =  getColor(j-1, data_smoothed[0][j]);
+
+    
+    svg.append("line")
+    .attr("x1", x1(j-1)+x0(0))
+    .attr("y1", y(data_smoothed[0][j-1]))
+    .attr("x2", x1(j)+x0(0))
+    .attr("y2", y(data_smoothed[0][j]))
+    .attr("stroke-width", 2)
+    .attr("stroke", smoothed_curve_color)
+  }
+
+  // Add number of docs per hour on the top of bars
+  for(var j=1; j<data2[0].length; j++){
+    if(data[0][j] > 0){
+      svg.append("text")
+      .attr("x", x1(j)+x0(0))
+      .attr("y", y(data[0][j]))
+      .attr("dy", "1.0em")
+      .attr("stroke-width", 2)
+      .attr("class", "title")
+      .text(data[0][j]);
+    }
+  }
+
+
+      
+</script>
+
+
+
+<!-- speedup / efficiency -->
+<table border="1">
+<tr><th>n</th><th>Speedup</th><th>Efficiency</th></tr>
+
+<script type="text/javascript">
+bracket_left = '<';
+
+F1 = (3600 * stats.test[0].created_docs / stats.test[0].duration)/xs[0];
+for(var i=0; i<stats.test.length; i++){
+  document.write(bracket_left+"tr>");
+  docs = 3600 * stats.test[i].created_docs / stats.test[i].duration;
+  speedup = docs/F1;
+  document.write(bracket_left+"td>"+xs[i]+bracket_left+"/td>");
+  document.write(bracket_left+"td>"+speedup.toFixed(2)+bracket_left+"/td>");
+  document.write(bracket_left+"td>"+parseInt(100*speedup/xs[i])+"%"+bracket_left+"/td>");
+}
+</script>
+</table>
+
+  </body>
+</html>

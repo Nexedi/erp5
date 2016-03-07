@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-This script filter this kind of xml changes :\n
--      <tuple>\n
--        <global name="ActionInformation" module="Products.CMFCore.ActionInformation"/>\n
--        <tuple/>\n
--      </tuple>\n
-+      <global name="ActionInformation" module="Products.CMFCore.ActionInformation"/>\n
-"""\n
-\n
-if len(old_line_list) == 4 and len(new_line_list) == 1 and \\\n
-   old_line_list[0] == \'<tuple>\' and \\\n
-   old_line_list[2] == \'<tuple/>\' and \\\n
-   old_line_list[3] ==\'</tuple>\' and \\\n
-   old_line_list[1]== new_line_list[0]:\n
-    return True\n
-\n
-\n
-return False\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>old_line_list, new_line_list</string> </value>
         </item>

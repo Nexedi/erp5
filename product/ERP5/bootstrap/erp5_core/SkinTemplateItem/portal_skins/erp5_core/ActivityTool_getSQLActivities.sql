@@ -1,0 +1,1 @@
+SELECT priority as pri, MIN(timediff(NOW(), date)) AS min, AVG(timediff(NOW() , date)) AS avg, MAX(timediff(NOW() , date)) AS max FROM <dtml-var table> GROUP BY priority;

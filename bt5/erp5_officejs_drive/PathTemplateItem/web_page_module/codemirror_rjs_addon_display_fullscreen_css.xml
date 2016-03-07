@@ -98,15 +98,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>.CodeMirror-fullscreen {\n
-  position: fixed;\n
-  top: 0; left: 0; right: 0; bottom: 0;\n
-  height: auto;\n
-  z-index: 9;\n
-}</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Codemirror Addon Display Fullscreen CSS</string> </value>
         </item>

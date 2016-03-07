@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># try to get the repository URL, else redirect to the dialog for creating a working copy in one of the configured repositories\n
-from Products.ERP5VCS.WorkingCopy import NotAWorkingCopyError\n
-try:\n
-  return context.getVcsTool().getRemoteUrl()\n
-except NotAWorkingCopyError:\n
-  from ZTUtils import make_query\n
-  from zExceptions import Redirect\n
-  dialog = context.BusinessTemplate_viewCreateWorkingCopy\n
-  context_url = context.absolute_url_path()\n
-  query_string = make_query(\n
-    cancel_url=context_url,\n
-    portal_status_message=dialog.description\n
-  )\n
-  raise Redirect("%s/%s?%s" % (context_url, dialog.getId(), query_string))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

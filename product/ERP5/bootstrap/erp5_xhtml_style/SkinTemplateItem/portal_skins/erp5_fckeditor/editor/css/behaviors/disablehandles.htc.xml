@@ -23,29 +23,6 @@
             <value> <string>text/x-unknown-content-type</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<public:component lightweight="true">\r\n
-\r\n
-<script language="javascript">\r\n
-\r\n
-function CancelEvent()\r\n
-{\r\n
-\treturn false ;\r\n
-}\r\n
-\r\n
-this.onresizestart = CancelEvent ;\r\n
-this.onbeforeeditfocus = CancelEvent ;\r\n
-\r\n
-</script>\r\n
-\r\n
-</public:component>\r\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

@@ -19,29 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>{\n
-  "name": "sockjs",\n
-  "version": "0.3.4",\n
-  "main": "sockjs.js",\n
-  "ignore": [\n
-    "**/.*",\n
-    "node_modules",\n
-    "components"\n
-  ],\n
-  "homepage": "https://github.com/myguidingstar/bower-sockjs",\n
-  "_release": "0.3.4",\n
-  "_resolution": {\n
-    "type": "version",\n
-    "tag": "0.3.4",\n
-    "commit": "ae96e770ab85caf9073a8806a9dcd7c0ce316623"\n
-  },\n
-  "_source": "git://github.com/myguidingstar/bower-sockjs.git",\n
-  "_target": "~0.3.2",\n
-  "_originalSource": "sockjs"\n
-}</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

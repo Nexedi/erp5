@@ -23,32 +23,6 @@
             <value> <string>application/x-javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/* Turkish initialisation for the jQuery UI date picker plugin. */\n
-/* Written by Izzet Emre Erkan (kara@karalamalar.net). */\n
-jQuery(function($){\n
-\t$.datepicker.regional[\'tr\'] = {\n
-\t\tcloseText: \'kapat\',\n
-\t\tprevText: \'&#x3c;geri\',\n
-\t\tnextText: \'ileri&#x3e\',\n
-\t\tcurrentText: \'bugün\',\n
-\t\tmonthNames: [\'Ocak\',\'Şubat\',\'Mart\',\'Nisan\',\'Mayıs\',\'Haziran\',\n
-\t\t\'Temmuz\',\'Ağustos\',\'Eylül\',\'Ekim\',\'Kasım\',\'Aralık\'],\n
-\t\tmonthNamesShort: [\'Oca\',\'Şub\',\'Mar\',\'Nis\',\'May\',\'Haz\',\n
-\t\t\'Tem\',\'Ağu\',\'Eyl\',\'Eki\',\'Kas\',\'Ara\'],\n
-\t\tdayNames: [\'Pazar\',\'Pazartesi\',\'Salı\',\'Çarşamba\',\'Perşembe\',\'Cuma\',\'Cumartesi\'],\n
-\t\tdayNamesShort: [\'Pz\',\'Pt\',\'Sa\',\'Ça\',\'Pe\',\'Cu\',\'Ct\'],\n
-\t\tdayNamesMin: [\'Pz\',\'Pt\',\'Sa\',\'Ça\',\'Pe\',\'Cu\',\'Ct\'],\n
-\t\tdateFormat: \'dd.mm.yy\', firstDay: 1,\n
-\t\tisRTL: false};\n
-\t$.datepicker.setDefaults($.datepicker.regional[\'tr\']);\n
-});
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

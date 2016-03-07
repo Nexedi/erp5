@@ -57,20 +57,6 @@
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string>CREATE TABLE translation (\n
-  language VARCHAR(255),\n
-  message_context VARCHAR(50),\n
-  portal_type VARCHAR(255),\n
-  original_message VARCHAR(255),\n
-  translated_message VARCHAR(255),\n
-  KEY `message` (`translated_message`),\n
-  KEY `original_message` (`original_message`),\n
-  KEY `type_translated_message` (`portal_type`,`translated_message`)\n
-) ENGINE=InnoDB;\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

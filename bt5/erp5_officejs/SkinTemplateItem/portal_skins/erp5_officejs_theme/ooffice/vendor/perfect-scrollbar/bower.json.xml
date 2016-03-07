@@ -19,39 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-{\n
-  "name": "perfect-scrollbar",\n
-  "version": "0.4.9",\n
-  "homepage": "http://noraesae.github.io/perfect-scrollbar/",\n
-  "authors": [\n
-    "Hyeonje Alex Jun <noraesae@yuiazu.net>"\n
-  ],\n
-  "description": "Tiny but perfect jQuery scrollbar plugin",\n
-  "main": [\n
-    "min/perfect-scrollbar-0.4.9.min.css",\n
-    "min/perfect-scrollbar-0.4.9.min.js",\n
-    "min/perfect-scrollbar-0.4.9.with-mousewheel.min.js"\n
-  ],\n
-  "license": "MIT",\n
-  "ignore": [\n
-    "**/.*",\n
-    "node_modules",\n
-    "bower_components",\n
-    "test",\n
-    "tests"\n
-  ],\n
-  "dependencies": {\n
-    "jquery": "2.x"\n
-  }\n
-}\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

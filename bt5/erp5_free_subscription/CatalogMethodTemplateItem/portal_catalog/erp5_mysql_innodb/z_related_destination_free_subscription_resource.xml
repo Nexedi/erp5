@@ -25,36 +25,6 @@ query_table="catalog"</string> </value>
             <value> <string>z_related_destination_free_subscription_resource</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.destination.getUid()">\n
-AND <dtml-var table_1>.uid = <dtml-var table_0>.uid\n
-AND <dtml-var table_1>.portal_type = \'Free Subscription\'\n
-AND <dtml-var table_1>.validation_state = \'validated\'\n
-\n
-<dtml-var RELATED_QUERY_SEPARATOR>\n
-<dtml-var table_0>.category_uid = <dtml-var query_table>.uid\n
-\n
-<dtml-var RELATED_QUERY_SEPARATOR>\n
-<dtml-var table_0>.uid = <dtml-var table_2>.uid\n
-AND <dtml-var table_2>.base_category_uid = <dtml-var "portal_categories.resource.getUid()">\n
-\n
-<dtml-var RELATED_QUERY_SEPARATOR>\n
-<dtml-var table_2>.category_uid = <dtml-var table_4>.uid\n
-AND <dtml-var table_4>.portal_type = \'Service\'\n
-\n
-<dtml-var RELATED_QUERY_SEPARATOR>\n
-<dtml-var table_3>.uid = <dtml-var table_1>.uid\n
-<dtml-let now="DateTime()">\n
-  AND ( <dtml-var table_3>.effective_date is NULL OR <dtml-var table_3>.effective_date <= <dtml-sqlvar now type="datetime"> ) \n
-  AND ( <dtml-var table_3>.expiration_date is NULL OR <dtml-var table_3>.expiration_date >= <dtml-sqlvar now type="datetime"> )\n
-</dtml-let>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

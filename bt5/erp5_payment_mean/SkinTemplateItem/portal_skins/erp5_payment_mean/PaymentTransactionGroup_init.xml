@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
-\n
-context.setStopDate(DateTime())\n
-me = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
-if me is not None:\n
-  context.setSourceAdministrationValue(me)\n
-  section = me.getDefaultCareerSubordinationValue()\n
-  if section is not None:\n
-    context.setSourceSectionValue(section)\n
-    context.setPriceCurrency(section.getPriceCurrency())\n
-new_id = context.portal_ids.generateNewLengthId(id_group = "PTGR",  default=1)\n
-reference = "PTGR-%06d" % (new_id)\n
-context.setSourceReference(reference)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

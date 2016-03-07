@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>def currency_cmp(a, b):\n
-  a_type = a[0][0]\n
-  b_type = b[0][0]\n
-  tmp_cmp = cmp(a_type, b_type)\n
-  if tmp_cmp != 0:\n
-    return tmp_cmp\n
-  a_value = int(a[0].split()[2])\n
-  b_value = int(b[0].split()[2])\n
-  tmp_cmp= cmp(b_value, a_value)\n
-  if tmp_cmp != 0:\n
-    return tmp_cmp\n
-  a_year = int(a[1])\n
-  b_year = int(b[1])\n
-  return cmp(a_year, b_year)\n
-\n
-list.sort(currency_cmp)\n
-return list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>list</string> </value>
         </item>

@@ -1,0 +1,106 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/getId"/>
+</head>
+<body >
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+	<td>openAndWait</td>
+	<td>${base_url}/view</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Add tab</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>add_new_tab_dialog_link</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>new_pad_title</td>
+	<td>test tab person</td>
+</tr>
+<tr>
+	<td>keyPressAndWait</td>
+	<td>new_pad_title</td>
+	<td>\13</td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>test tab person</td>
+	<td></td>
+</tr>
+<!-- check adding gadgets  By clicking -->
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Add gadgets</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Your tab is empty.</td>
+	<td></td>
+</tr>
+<!--  add "Persons" gadget to front-->
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">Wait for activities</span>
+
+<tr>
+	<td>openAndWait</td>
+	<td>${base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/erp5_persons</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>transition_message</td>
+	<td>regexp:knowledge_pad_module/.*</td>
+</tr>
+<tr>
+	<td>storeText</td>
+	<td>transition_message</td>
+	<td>erp5_persons_url</td>
+</tr>
+<tr>
+	<td>openAndWait</td>
+	<td>${base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${erp5_persons_url}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeText</td>
+	<td>transition_message</td>
+	<td>erp5_persons_id</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//th[@class="listbox-table-header-cell"][1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//th[@class="listbox-table-header-cell"][1]</td>
+	<td>Name</td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>//th[@class="listbox-table-header-cell"][1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//th[@class="listbox-table-header-cell"][2]</td>
+	<td>Email</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

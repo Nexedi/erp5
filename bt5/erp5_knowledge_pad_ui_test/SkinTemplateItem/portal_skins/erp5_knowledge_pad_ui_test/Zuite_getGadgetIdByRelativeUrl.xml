@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  XXX: Turn relative url into dom_id and pass through page with portal_status_message.\n
-  This is used in Selenium tests and is a bit dirty way to have it handled.\n
-"""\n
-context.REQUEST.set(\'portal_status_message\', knowledge_box_url.replace(\'/\',\'_\'))\n
-return context.view()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>knowledge_box_url</string> </value>
         </item>

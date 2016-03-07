@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>""" \n
-  Make sure the objects about to be created do not exist already\n
-"""\n
-\n
-portal = context.getPortalObject()\n
-\n
-for x in portal.discussion_thread_module.objectValues():\n
-  if x.getTitle() == "Thread 1":\n
-    portal.discussion_thread_module.deleteContent(x.getId())\n
-  if x.getTitle() == "Thread 2":\n
-    portal.discussion_thread_module.deleteContent(x.getId())\n
-  if x.getTitle() == "Thread 3":\n
-    portal.discussion_thread_module.deleteContent(x.getId())\n
-\n
-return \'Reset Successfully.\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""This is the action for the Base_viewPrintDialog.\n
-"""\n
-# prevent lose checked itens after click to print\n
-context.Base_updateListboxSelection()\n
-\n
-if target_language:\n
-  container.REQUEST[\'AcceptLanguage\'].set(target_language, 10)\n
-\n
-if print_mode == \'list_view\':\n
-  return context.Folder_viewContentListReport()\n
-\n
-return getattr(context, form_id)()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id, print_mode=\'\', target_language=\'\', **kw</string> </value>
         </item>

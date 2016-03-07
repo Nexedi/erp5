@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
-form = context.REQUEST.form\n
-\n
-# find project by title\n
-test_suite = form.get(\'test_suite\', None)\n
-project = context.ERP5Site_getProjectFromTestSuite(test_suite)\n
-\n
-# create test result object\n
-# test_report = context.newContent( # Dangerous\n
-test_report = context.getPortalObject().test_result_module.newContent(\n
-  id=form.get(\'test_report_id\'),\n
-  portal_type=\'Test Result\',\n
-  title=test_suite,\n
-  string_index=form.get(\'result\'),\n
-  source_project_value=project)\n
-\n
-# update security\n
-test_report.updateLocalRolesOnSecurityGroups()\n
-\n
-test_report.start(date=DateTime(form.get(\'launch_date\')))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

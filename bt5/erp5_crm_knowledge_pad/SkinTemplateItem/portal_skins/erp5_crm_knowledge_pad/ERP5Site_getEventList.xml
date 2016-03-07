@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-\n
-event_list = []\n
-person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
-\n
-if person is not None:\n
-  # XXX Wrong way to filter the same person in source OR destination.\n
-  event_list.extend(portal.event_module.searchFolder(source_relative_url=person.getRelativeUrl(), **kw))\n
-  event_list.extend(portal.event_module.searchFolder(destination_relative_url=person.getRelativeUrl(), **kw))\n
-  return event_list\n
-\n
-return portal.event_module.searchFolder(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

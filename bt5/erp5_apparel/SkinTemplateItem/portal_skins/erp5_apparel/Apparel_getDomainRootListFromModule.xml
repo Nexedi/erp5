@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal_type = context.getPortalType().lower().replace(\' \', \'_\').replace(\'_module\', \'\')\n
-domain_root_list = []\n
-\n
-base_category_list = context.portal_preferences.getPreference(\'preferred_%s_variation_base_category_list\' % portal_type)\n
-for base_category in base_category_list:\n
-  base_category_title = context.portal_categories.restrictedTraverse(base_category).getTitle()\n
-  domain_root_list.append((base_category, base_category_title))\n
-\n
-return domain_root_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

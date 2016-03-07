@@ -1,0 +1,98 @@
+<html>
+<head><title>Test for Account GAP Parallel listfield</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test Account GAP Parallel listfield.
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounts</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- {{{ Add an account -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Add Account</td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Object created.</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+
+<tr>
+  <td>type</td>
+  <td>field_my_title</td>
+  <td>Dummy Account for UI Test</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_my_account_type</td>
+  <td>label=Asset</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>GAP - Another Standards</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>subfield_field_my_gap_list_my_country/my_accounting_standards</td>
+  <td>label=1 - Equity Accounts</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>subfield_field_my_gap_list_my_country/my_accounting_standards</td>
+  <td>my_country/my_accounting_standards/1</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>subfield_field_my_gap_list_another_country/another_standards</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>subfield_field_my_gap_list_another_country/another_standards</td>
+  <td>label=1 - Dummy Account</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>subfield_field_my_gap_list_my_country/my_accounting_standards</td>
+  <td>my_country/my_accounting_standards/1</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>subfield_field_my_gap_list_another_country/another_standards</td>
+  <td>another_country/another_standards/1</td>
+</tr>
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

@@ -33,33 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<div>\n
-\n
-  <h3 i18n:translate=""\n
-      i18n:domain="ui">Configuration is over. Enjoy your new ERP5 system!</h3>\n
-\n
-  <p i18n:translate=""\n
-     i18n:domain="ui">\n
-    Please click link below. \n
-    You will be redirected to a form in which you can login using \n
-    one of yours newly created ERP5 user accounts.\n
-  </p>\n
-\n
-  <a tal:attributes="href python: \'%s/login_form\' %here.getPortalObject().absolute_url()">\n
-    <tal:replace i18n:translate=""\n
-                 i18n:domain="ui">Start using your new ERP5 system</tal:replace>\n
-  </a>\n
-\n
-</div>\n
-\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

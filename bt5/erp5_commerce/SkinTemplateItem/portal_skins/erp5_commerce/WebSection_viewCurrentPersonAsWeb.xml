@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>context.REQUEST.set(\'editable_mode\', 1)\n
-person_object = context.getWebSiteValue().SaleOrder_getShoppingCartCustomer()\n
-return context.getWebSectionValue().restrictedTraverse(person_object.getRelativeUrl()).Person_viewAsWeb(context.REQUEST)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

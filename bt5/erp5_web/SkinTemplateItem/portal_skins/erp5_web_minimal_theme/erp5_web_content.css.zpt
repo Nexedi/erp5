@@ -1,0 +1,18 @@
+<tal:block replace="nothing"
+           xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"/>
+
+<tal:block define="dummy python: request.RESPONSE.setHeader('Content-Type', 'text/css;; charset=utf-8')"/>
+
+
+/*========================================================================================
+  Content CSS (View mode)
+
+  The default behaviour is to use the editable mode CSS.
+  However, to change the appearance between view mode and editable mode,
+  it is possible to define here a different CSS.
+
+========================================================================================*/
+
+<tal:block tal:replace="structure python:here.restrictedTraverse('erp5_web_editable_content.css')()"/>

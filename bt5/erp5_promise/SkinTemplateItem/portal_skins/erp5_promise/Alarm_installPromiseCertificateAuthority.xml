@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-\n
-portal_certificate_authority = getattr(portal, \'portal_certificate_authority\', None)\n
-promise_ca_path = portal.getPromiseParameter(\'portal_certificate_authority\', \'certificate_authority_path\')\n
-\n
-if portal_certificate_authority is None:\n
-   portal.manage_addProduct[\'ERP5\'].manage_addTool(\'ERP5 Certificate Authority Tool\', None)\n
-   portal_certificate_authority = getattr(portal, \'portal_certificate_authority\')\n
-\n
-portal_certificate_authority.manage_editCertificateAuthorityTool(\n
-   certificate_authority_path=promise_ca_path)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

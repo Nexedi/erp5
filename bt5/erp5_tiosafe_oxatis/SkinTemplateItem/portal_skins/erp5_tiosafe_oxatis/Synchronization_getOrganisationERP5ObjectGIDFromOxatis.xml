@@ -49,11 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return context.Synchronization_getERP5ObjectGIDFromIntegrationSite(object, site_id=\'oxatis\', module_id="organisation_module",reverse=reverse)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>object=None, reverse=False</string> </value>
         </item>

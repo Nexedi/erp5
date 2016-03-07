@@ -49,38 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>source = context.getSourceSectionValue()\n
-section_category = context.portal_preferences\\\n
-         .getPreferredAccountingTransactionSectionCategory()\n
-section_category_strict = context.portal_preferences\\\n
-         .getPreferredAccountingSectionCategoryStrict()\n
-\n
-# If the source is an organisation member of the preferred section category,\n
-# then we\'ll show the source view\n
-if source is not None and section_category:\n
-  if source.getPortalType() == \'Person\':\n
-    return False\n
-  if source.isMemberOf(section_category,\n
-                       strict_membership=section_category_strict):\n
-    return True\n
-\n
-# Else, if the destination is an organisation member of the preferred section category,\n
-# then we\'ll not show source view\n
-destination = context.getDestinationSectionValue()\n
-if destination is not None and section_category:\n
-  if destination.getPortalType() == \'Person\':\n
-    return True\n
-  if destination.isMemberOf(section_category,\n
-                            strict_membership=section_category_strict):\n
-    return False\n
-\n
-# If we reach this point, none of the sections are member of the preferred section\n
-# category, we\'ll then show source view, default for this script\n
-return True\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,46 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-import re\n
-REQUEST = context.REQUEST\n
-RESPONSE = REQUEST.RESPONSE\n
-from ZTUtils import make_query\n
-\n
-portal = context.getPortalObject()\n
-\n
-if (came_from is None):\n
-  came_from = context.getPermanentURL(context)\n
-\n
-portal.portal_skins.updateSkinCookie()\n
-portal.setupCurrentSkin(REQUEST)\n
-\n
-if (portal.portal_membership.isAnonymousUser()):\n
-  RESPONSE.expireCookie(\'__ac\', path=\'/\')\n
-  url = \'%s/login_form?portal_status_message=%s\' % (context.absolute_url(), context.Base_translateString(\'Login and/or password is incorrect.\'))\n
-  url = came_from and \'%s&came_from=%s\' % (url, came_from) or url;\n
-  RESPONSE.redirect(url)\n
-else:\n
-  # XXX Hardcoded behaviour for JS app.\n
-  # Expect came_from to be an URL template\n
-  person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
-  url_parameter = "n.me"\n
-  pattern = \'{[&|?]%s}\' % url_parameter\n
-  if (person is None):\n
-    came_from = re.sub(pattern, \'\', came_from)\n
-  else:\n
-    prefix = "&" if "&%s" % url_parameter in came_from else "?"\n
-    came_from = re.sub(pattern, \'%s%s\' % (prefix, make_query({url_parameter: person.getRelativeUrl()})), came_from)\n
-  # RESPONSE.redirect(came_from or context.getPermanentURL(context));\n
-  RESPONSE.setHeader(\'Location\', came_from or context.getPermanentURL(context))\n
-  RESPONSE.setStatus(303)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>came_from=None</string> </value>
         </item>

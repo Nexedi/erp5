@@ -1,0 +1,32 @@
+<tal:block replace="nothing">
+  <!--
+  This widget displays download widget of a document.
+ 
+  -->
+</tal:block>
+
+<div class="share-document-list-container"
+     tal:define="document_url context/Document_getPermanentUrl;
+                 document_title context/getTitle" i18n:domain="ui">
+    <ul>
+     <li class="separator">
+        <a i18n:translate='' 
+           tal:attributes="href python: './Document_viewSendLinkByEmailDialog?cancel_url=%s' % (document_url)">
+        Email 
+        </a>
+      </li>
+      <li class="separator">
+        <a i18n:translate='' 
+           tal:attributes="href python: 'http://www.facebook.com/share.php?u=%s&t=%s' % (document_url,document_title)">
+        Facebook 
+        </a>
+      </li>
+      <li class="separator">
+        <a i18n:translate='' 
+           tal:attributes="href python: 'http://www.twitter.com/home?status=%s%s%s' % (document_title,'%20-%20',document_url)">
+        Twitter 
+        </a>
+      </li>
+
+    </ul>
+</div>

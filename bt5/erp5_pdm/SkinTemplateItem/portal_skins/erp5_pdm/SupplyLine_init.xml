@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># XXX Set a resource for the supply line inside a resource\n
-parent_value = context.getParentValue()\n
-if parent_value.getPortalType() in context.getPortalResourceTypeList():\n
-  context.setResourceValue(parent_value)\n
-# Predicate ?\n
-context.setMappedValuePropertyList([\n
-                    \'base_price\', \'additional_price\',\n
-                    \'discount_ratio\', \'exclusive_discount_ratio\',\n
-                    \'surcharge_ratio\', \'variable_additional_price\',\n
-                    \'non_discountable_additional_price\',\n
-                    \'priced_quantity\', \'base_unit_price\',\n
-])\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

@@ -1,0 +1,156 @@
+<html>
+<head><title>Test for jump methods from Organisation</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test for jump methods from an Organisation.
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Organisations</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- Jump menu from Destination Section Organisation {{{
+When using jump from an Organisation, it jumps to accounting
+module, filtered with all transactions with this entity at source
+section or destination section
+-->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Organisations</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>5 records</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Client 2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_jump</td>
+  <td>Accounting</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+<!-- check amounts for lines -->
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[9]/a</td>
+  <td>3300.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[10]/a</td>
+  <td>3300.0</td>
+</tr>
+<!-- }}} -->
+
+<!-- Jump menu from My Organisation {{{
+-->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Organisations</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>5 records</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=My Organisation</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_jump</td>
+  <td>Accounting</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>0 records</td>
+</tr>
+<!-- }}} -->
+
+<!-- Jump menu from Source Section Organisation {{{
+We have a purchase with `Supplier` Organisation
+-->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Organisations</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>5 records</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Supplier</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_jump</td>
+  <td>Accounting</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+<!-- check amounts for lines -->
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[9]/a</td>
+  <td>7700.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[10]/a</td>
+  <td>7700.0</td>
+</tr>
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

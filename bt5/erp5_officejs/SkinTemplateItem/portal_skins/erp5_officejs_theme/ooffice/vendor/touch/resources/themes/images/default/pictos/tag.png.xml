@@ -19,36 +19,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">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</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># TODO: pre-select entries in fast input for checkbooks already present on context.\n
-# Resuires modification to fast input listbox and checking all portal types using this script.\n
-# See CashContainer_initFastInputForm.\n
-\n
-context.REQUEST.form[\'list_start\'] = 0\n
-return context.CheckbookDelivery_fastInputForm()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

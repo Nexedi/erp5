@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-updateRelatedCategory = portal.portal_categories.updateRelatedCategory\n
-\n
-new_category_list = []\n
-object_category_list = context.getCategoriesList()\n
-\n
-new_category_name = kw[\'new_category_name\']\n
-old_category_name = kw[\'old_category_name\']\n
-\n
-for category in object_category_list:\n
-  new_category = updateRelatedCategory(category, old_category_name, new_category_name)\n
-  new_category_list.append(new_category)\n
-\n
-if new_category_list != object_category_list:\n
-  context.setCategoriesList(new_category_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>fixit=0, **kw</string> </value>
         </item>

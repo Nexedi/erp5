@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>assert context.getFollowUp() is None, context.getFollowUp()\n
-\n
-http_exchange_resource = context.getPortalObject().portal_categories.http_exchange_resource\n
-resource = context.getResourceValue()\n
-while True:\n
-  codification = resource.getCodification()\n
-  if codification:\n
-    break\n
-  parent = resource.getParentValue()\n
-  if parent == http_exchange_resource:\n
-    raise ValueError(\'No codification found from %r upward\' % (context.getResource(), ))\n
-  assert resource is not parent, context.getResource()\n
-  resource = parent\n
-\n
-follow_up = getattr(context, \'HTTPExchange_getFollowUpFor\' + codification)()\n
-if follow_up is not None:\n
-  context.setFollowUpValue(follow_up)\n
-  follow_up.getTypeBasedMethod(\'inquiry\')()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

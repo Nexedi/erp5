@@ -33,38 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html lang="en">\n
-<head>\n
-\t<meta charset="UTF-8" />\n
-\t<title>jQuery UI Effect Demos</title>\n
-\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
-</head>\n
-<body>\n
-\n
-<div class="demos-nav">\n
-\t<h4>Examples</h4>\n
-\t<ul>\n
-\t\t<li class="demo-config-on"><a href="default.html">Effect showcase</a></li>\n
-\t\t<li><a href="easing.html">Easing showcase</a></li>\n
-\t\t<!-- WIP\n
-\t\t<li class="demo-config-on"><a href="scale.html">Scale effect</a></li>\n
-\t\t<li class="demo-config-on"><a href="size.html">Size effect</a></li>\n
-\t\t<li class="demo-config-on"><a href="transfer.html">Transfer effect</a></li>\n
-\t\t-->\n
-\t</ul>\n
-</div>\n
-\n
-</body>\n
-</html>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>index.html</string> </value>
         </item>

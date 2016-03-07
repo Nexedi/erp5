@@ -49,40 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from DateTime import DateTime\n
-from Products.ERP5Security.ERP5UserManager import getUserByLogin\n
-\n
-person_list = getUserByLogin(context, login)\n
-if not person_list:\n
-  return False, []\n
-\n
-person = person_list[0]\n
-if person.getPassword(format=\'palo_md5\') != password:\n
-  return False, []\n
-\n
-now = DateTime()\n
-group_set = set()\n
-for assignment in person.contentValues(portal_type=\'Assignment\'):\n
-  if assignment.getValidationState() == \'open\' and (\n
-    assignment.getStartDate() is None or\n
-    assignment.getStartDate() <= now <= assignment.getStopDate()):\n
-\n
-    # XXX below is sample implementation, as it must match the groups defined in PALO\n
-    if assignment.isMemberOf("function/palo"):\n
-      group_set.add(assignment.getGroupReference())\n
-\n
-    if assignment.isMemberOf("function/palo_admin"):\n
-      group_set.add("admin")\n
-\n
-return True, list(group_set)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>login, password</string> </value>
         </item>

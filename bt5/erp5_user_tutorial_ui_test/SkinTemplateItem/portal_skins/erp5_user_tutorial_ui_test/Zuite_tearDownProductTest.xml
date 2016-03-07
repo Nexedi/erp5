@@ -49,34 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-\n
-howto_dict = context.Zuite_getHowToInfo()\n
-\n
-# remove the currency if it was created by us before\n
-currency = context.portal_catalog.getResultValue(portal_type=\'Currency\',\n
-                                                 title=howto_dict[\'product_howto_currency_title\'],\n
-                                                 local_roles = \'Owner\')\n
-if currency is not None:\n
-  context.currency_module.deleteContent(currency.getId())\n
-\n
-# remove the product of the test if existing\n
-product_list = context.Zuite_checkPortalCatalog(portal_type=\'Product\', max_count=1,\n
-                                                title=context.Zuite_getHowToInfo()[\'product_howto_product_title\'])\n
-if product_list is not None:\n
-  portal.product_module.deleteContent(product_list[0].getId())\n
-\n
-# remove the organisation of the test if existing\n
-organisation_list = context.Zuite_checkPortalCatalog(portal_type=\'Organisation\', max_count=1,\n
-                                                     title=context.Zuite_getHowToInfo()[\'product_howto_organisation_title\'])\n
-if organisation_list is not None:\n
-  portal.organisation_module.deleteContent(organisation_list[0].getId())\n
-\n
-return "Clean Ok"\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

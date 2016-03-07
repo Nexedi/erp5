@@ -49,43 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFActivity.ActiveResult import ActiveResult\n
-\n
-portal = context.getPortalObject()\n
-\n
-portal_certificate_authority = getattr(portal, \'portal_certificate_authority\', None)\n
-promise_ca_path = portal.getPromiseParameter(\'portal_certificate_authority\', \'certificate_authority_path\')\n
-if promise_ca_path is None:\n
-  severity = 0\n
-  summary = "Nothing to do."\n
-  detail = ""\n
-else:\n
-  if portal_certificate_authority is None:\n
-    severity = 1\n
-    summary = "Certificate Authority Tool is not present"\n
-    detail = ""\n
-\n
-  elif portal_certificate_authority.certificate_authority_path != promise_ca_path:\n
-    severity = 1\n
-    summary = "Certificate Authority Tool (OpenSSL)is not configured as Expected"\n
-    detail = "Expect %s\\nGot %s" % (portal_certificate_authority.certificate_authority_path, promise_ca_path)\n
-\n
-  else:\n
-    severity = 0\n
-    summary = "Nothing to do."\n
-    detail = ""\n
-\n
-active_result = ActiveResult()\n
-active_result.edit(\n
-  summary=summary, \n
-  severity=severity,\n
-  detail=detail)\n
-\n
-context.newActiveProcess().postResult(active_result)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>tag, fixit=False, **kw</string> </value>
         </item>

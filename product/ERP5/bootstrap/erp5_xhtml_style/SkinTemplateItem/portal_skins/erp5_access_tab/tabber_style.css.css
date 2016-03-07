@@ -1,0 +1,125 @@
+/*========================================================================================
+**  tabber.js default style
+**========================================================================================*/
+
+#tab_box > li.non_selected a span {
+  padding: 5px 8px 3px 0px !important;
+}
+
+#tab_box > li.selected a span {
+  padding: 5px 8px 4px 0px !important;
+}
+
+#tab_box > li a span img {
+  margin: -2px;
+  padding-right: 3px;
+}
+
+/* $Id: example.css,v 1.5 2006/03/27 02:44:36 pat Exp $ */
+
+/*--------------------------------------------------
+  REQUIRED to hide the non-active tab content.
+  But do not hide them in the print stylesheet!
+  --------------------------------------------------*/
+.tabberlive .tabbertabhide {
+ display: none;
+}
+
+/*--------------------------------------------------
+  .tabber = before the tabber interface is set up
+  .tabberlive = after the tabber interface is set up
+  --------------------------------------------------*/
+.tabber {
+}
+.tabberlive {
+}
+
+/*--------------------------------------------------
+  ul.tabbernav = the tab navigation list
+  li.tabberactive = the active tab
+  --------------------------------------------------*/
+ul.tabbernav {
+ margin: 0;
+ padding: 3px 0;
+ border-bottom: 1px solid #778;
+}
+
+ul.tabbernav li {
+ list-style: none;
+ margin: 0;
+ display: inline;
+}
+
+ul.tabbernav li a {
+ padding: 3px .5em;
+ margin-left: 3px;
+ border: 1px solid #778;
+ border-bottom: none;
+ background: #dde;
+ text-decoration: none;
+ font-weight: bold;
+}
+
+ul.tabbernav li a:link    {color: #448}
+ul.tabbernav li a:visited {color: #667}
+
+ul.tabbernav li a:hover
+{
+ color: #000;
+ background: #aae;
+ border-color: #227;
+}
+
+.index_html ul.tabbernav li a,
+.index_html ul.tabbernav,
+.index_html .tabberlive .tabbertab {
+  border-color:#5b7c9b;
+}
+
+.index_html ul.tabbernav li a {
+ background: #BDD0E0;
+}
+
+.index_html ul.tabbernav li a:hover{
+ background: #BDD0E0;
+}
+
+ul.tabbernav li.tabberactive a
+{
+ background-color: #fff;
+ border-bottom: 1px solid #fff;
+}
+
+ul.tabbernav li.tabberactive a:hover
+{
+ color: #000;
+ background: white;
+ border-bottom: 1px solid white;
+}
+
+/*--------------------------------------------------
+  .tabbertab = the tab content
+  Add style only after the tabber interface is set up (.tabberlive)
+  --------------------------------------------------*/
+.tabberlive .tabbertab {
+ padding:5px;
+ border: 1px solid #778;
+ border-top: 0;
+ background-color: white;
+}
+
+/* If desired, hide the heading since a heading is provided by the tab */
+.tabberlive .tabbertab h2 {
+ display: none;
+}
+.tabberlive .tabbertab h3 {
+ display: none;
+}
+
+table.access_tab_table {
+  width:100%;
+}
+
+table tr td {
+  vertical-align:top;
+}

@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This is to enable customization of obtaining the principal group a person is assigned to,\n
-which is required for proper categorisation of a document contributed by the person.\n
-Default implementation return a group of an organisation acquired through default_career.\n
-Can be changed to return a group from an assignment, or any other way.\n
-"""\n
-\n
-return context.getGroup()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>sourceline_list = context.searchFolder(portal_type="Container Line")\n
-if len(sourceline_list) == 0 :\n
-   return None\n
-\n
-resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\') ,id = resourceId)\n
-resource_list = resource_list[0].getObject().getId()\n
-sourceline_list = [x.getObject() for x in sourceline_list if x.getObject().getResourceId() == resource_list]\n
-if len(sourceline_list) == 0 :\n
-   return None\n
-else:\n
-   return sourceline_list[0]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>resourceId=None</string> </value>
         </item>

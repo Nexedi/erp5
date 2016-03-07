@@ -1,0 +1,134 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Previous Next Selection In Website</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Previous Next Selection In Website</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_erp5_web_common/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/WebSiteModule_createTestSite?id=test_web_site&amp;title=Test Web Site</td>
+  <td></td>
+  <td>Create a new site</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/Zuite_waitForActivities</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module?reset:int=1&amp;ignore_layout:int=1&amp;id=test%</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//tr/td[3]/a[text()="Test Web Site"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertLocation</td>
+  <td>regexp:${base_url}/web_site_module/test_web_site(\?|$)</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+ 
+<td>${base_url}/web_site_module/WebSiteModule_createTestSite/?id=test_web_site_2&amp;title=Test Web Site II</td>
+  <td></td>
+  <td>Create a second site</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/Zuite_waitForActivities</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module?reset:int=1&amp;ignore_layout:int=1&amp;id=test%</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//tr/td[3]/a[text()="Test Web Site II"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertLocation</td>
+  <td>regexp:${base_url}/web_site_module/test_web_site_2(\?|$)</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id='context_bar']//a[@title="Previous"]</td>
+  <td></td>
+</tr>
+<tr>
+ <td>assertTitle</td>
+ <td>Web Site - Test Web Site | ERP5</td>
+ <td></td>
+</tr>
+<tr>
+  <td>assertLocation</td>
+  <td>regexp:${base_url}/web_site_module/test_web_site/WebSite_view(\?|$)</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module?reset:int=1&amp;ignore_layout:int=1&amp;id=test%</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//tr/td[3]/a[text()="Test Web Site"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id='context_bar']//a[@title="Next"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTitle</td>
+  <td>Web Site - Test Web Site II | ERP5</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertLocation</td>
+  <td>regexp:${base_url}/web_site_module/test_web_site_2/WebSite_view(\?|$)</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

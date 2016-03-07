@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-transaction = state_change[\'object\']\n
-\n
-source_section = transaction.getSourceSection()\n
-\n
-# check again that we are in the good accounting date in site destination\n
-transaction.Baobab_checkCounterDateOpen(site=source_section, date=transaction.getStopDate())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

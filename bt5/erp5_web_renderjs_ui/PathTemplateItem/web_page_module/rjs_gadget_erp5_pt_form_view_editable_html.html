@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title>ERP5 PT Form View</title>
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="URI.js" type="text/javascript"></script>
+
+    <!-- custom script -->
+    <script src="gadget_global.js" type="text/javascript"></script>
+    <script src="gadget_erp5_pt_form_view_editable.js" type="text/javascript"></script>
+
+  </head>
+  <body>
+  
+    <!--div data-gadget-url="gadget_erp5_tab_list.html"
+              data-gadget-scope="erp5_tab"
+               data-gadget-sandbox="public">
+    </div-->
+
+    <!-- XXX action, method, fieldset -->
+    <!-- XXX needs a theme -->
+    <form class="save_form ui-body-c" novalidate>
+      <button type="submit" class="ui-btn ui-btn-b ui-btn-inline
+        ui-icon-edit ui-btn-icon-right ui-screen-hidden"></button>
+
+      <div data-gadget-url="gadget_erp5_form.html"
+              data-gadget-scope="erp5_form"
+              data-gadget-sandbox="public">
+      </div>
+    </form>
+  </body>
+</html>

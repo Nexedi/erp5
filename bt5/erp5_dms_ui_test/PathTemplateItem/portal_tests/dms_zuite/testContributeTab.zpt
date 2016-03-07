@@ -1,0 +1,374 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>testContributeTab (expected failure)</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">testContributeTab (expected failure)</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/person_module/Zuite_setupDMS</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done</td>
+  <td></td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">
+Wait for activities</span>
+
+<!-- Contribute ODP document -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.isElementPresent("file")</td>
+  <td>60000</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>file</td>
+  <td tal:content="python: here.Zuite_getFilenameLocation('tiolive-ERP5.Freedom.TioLive-001-en.odp')"></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_contribute:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_reference</td>
+  <td>tiolive-ERP5.Freedom.TioLive</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_title</td>
+  <td>TioLive, ERP5, Freedom</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_language</td>
+  <td>en</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_version</td>
+  <td>001</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>tiolive-ERP5.Freedom.TioLive-001-en.odp</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Presentation</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Converting</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeEval</td>
+  <td>selenium.getLocation().split("?")[0]</td>
+  <td>document_location</td>
+</tr>
+
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">
+Wait for activities</span>
+
+<!-- 
+  Contributing it one more time should update existing document by reference, version, language 
+-->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.isTextPresent("Project")</td>
+  <td>60000</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>file</td>
+  <td tal:content="python: here.Zuite_getFilenameLocation('tiolive-ERP5.Freedom.TioLive-001-en.odp')"></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_contribute:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td>regexp:${document_location}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Presentation updated successfully</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_reference</td>
+  <td>tiolive-ERP5.Freedom.TioLive</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_title</td>
+  <td>TioLive, ERP5, Freedom</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_language</td>
+  <td>en</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_version</td>
+  <td>001</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>tiolive-ERP5.Freedom.TioLive-001-en.odp</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Presentation</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Converted</td>
+  <td></td>
+</tr>
+
+<!-- Contribute PDF -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.isTextPresent("Project")</td>
+  <td>60000</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>file</td>
+  <td tal:content="python: here.Zuite_getFilenameLocation('tiolive-ERP5.Freedom.TioLive.PDF-001-en.pdf')"></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_contribute:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_reference</td>
+  <td>tiolive-ERP5.Freedom.TioLive.PDF</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_title</td>
+  <td>TioLive, ERP5, Freedom</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_language</td>
+  <td>en</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_version</td>
+  <td>001</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>PDF</td>
+  <td></td>
+</tr>
+
+<!-- Contribute Image -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.isTextPresent("Project")</td>
+  <td>60000</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>file</td>
+  <td tal:content="python: here.Zuite_getFilenameLocation('tiolive-ERP5.Freedom.TioLive.Logo-001-en.png')"></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_contribute:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_reference</td>
+  <td>tiolive-ERP5.Freedom.TioLive.Logo</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_title</td>
+  <td>tiolive-ERP5.Freedom.TioLive.Logo-001-en</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_language</td>
+  <td>en</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_version</td>
+  <td>001</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Image Thumbnail</td>
+  <td></td>
+</tr>
+
+<!-- Contribute Spreadsheet -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.isTextPresent("Project")</td>
+  <td>60000</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>file</td>
+  <td tal:content="python: here.Zuite_getFilenameLocation('tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods')"></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_contribute:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_reference</td>
+  <td>tiolive-ERP5.Freedom.TioLive.Spreadsheet</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_title</td>
+  <td>TioLive Spreadsheet</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_language</td>
+  <td>en</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_version</td>
+  <td>001</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Spreadsheet</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Converting</td>
+  <td></td>
+</tr>
+
+<!-- Contribute Drawing -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.isTextPresent("Project")</td>
+  <td>60000</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>file</td>
+  <td tal:content="python: here.Zuite_getFilenameLocation('tiolive-ERP5.Freedom.TioLive.Drawing-001-en.odg')"></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_contribute:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_reference</td>
+  <td>tiolive-ERP5.Freedom.TioLive.Drawing</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_title</td>
+  <td>TioLive Drawing</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_language</td>
+  <td>en</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_version</td>
+  <td>001</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>tiolive-ERP5.Freedom.TioLive.Drawing-001-en.odg</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Drawing</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Converting</td>
+  <td></td>
+</tr>
+
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">
+Wait for activities</span>
+
+</tbody></table>
+</body>
+</html>

@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>day_dict = {}\n
-for line in context.objectValues():\n
-  day_dict[line.getDayOfWeek()] = line.getQuantity()\n
-\n
-return day_dict\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

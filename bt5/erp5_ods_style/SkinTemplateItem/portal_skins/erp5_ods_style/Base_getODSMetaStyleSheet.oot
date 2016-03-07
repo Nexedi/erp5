@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<office:document-meta xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:ooo="http://openoffice.org/2004/office" xmlns:metal="http://xml.zope.org/namespaces/metal" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:i18n="http://xml.zope.org/namespaces/i18n" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:tal="http://xml.zope.org/namespaces/tal" office:version="1.2" tal:attributes="dummy python:request.RESPONSE.setHeader('Content-Type', 'text/html;; charset=utf-8')">
+  <office:meta i18n:domain="ui" tal:define="user context/ERP5Site_getAuthenticatedMemberPersonValue;
+                                            username python:(user is None) and context.getPortalObject().portal_membership.getAuthenticatedMember() or user.getTitle()">
+    <meta:generator>ERP5</meta:generator>
+    <meta:creation-date tal:content="python:modules['DateTime'].DateTime().ISO8601()">2007-07-04T15:43:50</meta:creation-date>
+    <meta:initial-creator tal:content="username"/>
+    <dc:date>2012-03-01T13:44:50</dc:date>
+    <meta:editing-cycles>1</meta:editing-cycles>
+    <meta:editing-duration>PT16H44M42S</meta:editing-duration>
+    <dc:title tal:content="context/title_or_id" i18n:translate=""/>
+    <dc:creator tal:content="username"/>
+    <meta:document-statistic meta:table-count="2" meta:image-count="0" meta:object-count="0" meta:page-count="2" meta:paragraph-count="33" meta:word-count="141" meta:character-count="1187"/>
+    <meta:user-defined meta:name="Info 1"/>
+    <meta:user-defined meta:name="Info 2"/>
+    <meta:user-defined meta:name="Info 3"/>
+    <meta:user-defined meta:name="Info 4"/>
+  </office:meta>
+</office:document-meta>

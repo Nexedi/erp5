@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>kw.update(\n
-  portal_type=\'Free Subscription\',\n
-  default_destination_uid=context.getUid())\n
-\n
-return context.getPortalObject().portal_catalog(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

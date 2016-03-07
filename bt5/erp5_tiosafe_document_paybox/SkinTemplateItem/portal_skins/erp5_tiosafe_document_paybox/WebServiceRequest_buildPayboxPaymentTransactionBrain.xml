@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>brain_list = []\n
-transaction_dict = {}\n
-transaction_dict[\'title\'] = parameter_dict[\'title\']\n
-transaction_dict[\'id\'] = parameter_dict[\'id\']\n
-transaction_dict[\'reference\'] = parameter_dict[\'reference\']\n
-transaction_dict[\'start_date\'] = parameter_dict[\'start_date\']\n
-transaction_dict[\'stop_date\'] = parameter_dict[\'stop_date\']\n
-transaction_dict[\'payment_mode\'] = parameter_dict[\'payment_mode\']\n
-\n
-brain_list = [brain(context=context,\n
-\t      object_type=context.getDestinationObjectType(),\n
-              **transaction_dict),]\n
-\n
-\n
-return brain_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>parameter_dict, brain</string> </value>
         </item>

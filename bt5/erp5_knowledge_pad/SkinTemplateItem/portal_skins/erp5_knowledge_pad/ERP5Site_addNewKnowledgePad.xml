@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>pad = context.knowledge_pad_module.newContent(portal_type=\'Knowledge Pad\',\n
-                                              title = pad_title)\n
-# for web mode\n
-if mode in (\'web_front\', \'web_section\',):\n
-  # in Web Mode we can have a temporary Web Site objects created based on current language\n
-  real_context = context.Base_getRealContext()\n
-  pad.setPublicationSectionValue(real_context)\n
-\n
-# set it as active\n
-context.ERP5Site_toggleActiveKnowledgePad(pad, mode=mode, redirect=False)\n
-\n
-# See ERP5Site_createDefaultKnowledgePadListForUser\n
-pad.immediateReindexObject()\n
-\n
-if redirect_url:\n
-  return context.REQUEST.RESPONSE.redirect(redirect_url)\n
-else:\n
-  # adding is done though either AJAX call or programatically\n
-  return pad.getRelativeUrl()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>pad_title, mode=None, redirect_url=None</string> </value>
         </item>

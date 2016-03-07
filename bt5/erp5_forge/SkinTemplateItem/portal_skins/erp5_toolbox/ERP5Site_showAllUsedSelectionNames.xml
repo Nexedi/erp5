@@ -49,64 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># This tool is able to check, if selection_name in listboxes in forms\n
-# are unique "enough".\n
-# It shall print nothing on properly made site, which will mean\n
-# that one selection_name is set in unique named form.\n
-# Script supports same-named form in many portal_skins.\n
-# but only if selection name appears more then once.\n
-# It is based on ERP5Site_checkXhtmlForm\n
-# To check your installation run it as:\n
-#  portal_skins/ERP5Site_showAllUsedSelectionNames\n
-#   default invocation\n
-#  portal_skins/ERP5Site_showAllUsedSelectionNames?all_selections=1\n
-#   will show even proper selections, you can check if selection_name\n
-#   is same in other skins for some form\n
-\n
-o = context\n
-\n
-def recurse(o, callback, seldict):\n
-  for obj in o.objectValues():\n
-    if obj.meta_type == \'ERP5 Form\':\n
-      callback(obj,seldict)\n
-    elif obj.meta_type == \'Folder\':\n
-      recurse(obj, callback, seldict)\n
-\n
-def callback(o,seldict):\n
-  pt = o.pt\n
-  listbox_count = 0\n
-  if len(o.get_fields()) != 0:\n
-    if pt not in (\'documentation_template\', \'sort_list_dialog\', \'configure_list_dialog\'):\n
-      for group in o.get_groups(include_empty = 1):\n
-        fields = o.get_fields_in_group(group)\n
-        for field in fields:\n
-          if field.meta_type == \'ListBox\':\n
-            listbox_count = listbox_count + 1\n
-            form_name = o.absolute_url() # TODO it could be done much better\n
-            # assumes that name of form is unique enough\n
-            form_name = form_name[form_name.rfind(\'/\')+1:]\n
-            if seldict.has_key(field.get_value(\'selection_name\')):\n
-              old_list = seldict[field.get_value(\'selection_name\')]\n
-              if form_name not in old_list:\n
-                old_list.append(form_name)\n
-              seldict[field.get_value(\'selection_name\')] = old_list # TODO update to reimplement\n
-            else:\n
-              old_list = [form_name]\n
-              seldict[field.get_value(\'selection_name\')] = old_list\n
-\n
-seldict = {}\n
-recurse(o, callback, seldict)\n
-\n
-for selection_name in seldict.keys():\n
-  if len(seldict[selection_name]) != 1 or all_selections:\n
-    print "\'%s\' [%s]"%(selection_name,len(seldict[selection_name]))\n
-    for form_name in seldict[selection_name]:\n
-      print "\\t%s"%(form_name,)\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>all_selections=0</string> </value>
         </item>

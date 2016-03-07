@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># XXX: Using reference to select a rule (for a root applied rule) is wrong\n
-#      and should be replaced by predicate and workflow state.\n
-return False\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>predicate=None</string> </value>
         </item>

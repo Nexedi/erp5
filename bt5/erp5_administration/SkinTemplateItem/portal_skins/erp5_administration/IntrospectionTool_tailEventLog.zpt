@@ -1,0 +1,98 @@
+<html>
+  <head>
+    <script type="text/javascript">
+      var request;
+      var url;
+      function init(my_url){
+      url = my_url;
+      try {
+        request = new XMLHttpRequest();
+      } catch (trymicrosoft) {
+        try {
+          request = new ActiveXObject("Msxml2.XMLHTTP");
+        } catch (othermicrosoft) {
+          try {
+            request = new ActiveXObject("Microsoft.XMLHTTP");
+          } catch (failed) {
+            request = null;
+            } 
+          }
+        }
+      if (request == null) {
+        alert("Error creating request object!");
+      }
+
+      }
+
+      function getLog(timer) {
+      request.open("GET", url, true);
+      request.onreadystatechange = updatePage;
+      request.send(null);
+      startTail(timer);
+      }
+
+      function startTail(timer, url) {
+        if (timer == "stop") {
+          stopTail();
+        } else {
+          t= setTimeout("getLog()",500);
+        }
+      }
+
+      function stopTail() {
+        clearTimeout(t);
+        var pause = "The log viewer has been paused. To begin viewing logs again, click the Start Viewer button.";
+        logDiv = document.getElementById("log");
+        var newNode=document.createTextNode(pause);
+        logDiv.replaceChild(newNode,logDiv.childNodes[0]);
+      }
+
+      function updatePage() {
+        var logDiv = document.getElementById("log"), logLine; today = new Date();
+        var message_div = document.getElementById("message");
+        var current_value;
+        var regexp = document.getElementById("regexp").value;
+        if (request.readyState == 4) {
+          if (request.status == 200) {
+            var currentLogValue = request.responseText.split("\n");
+            var logLine = ' ';
+            for (i=0; i < currentLogValue.length - 1; i++) {
+              current_value = currentLogValue[i];
+              add_line = true;
+              if (regexp !== "") {
+                if (current_value.match(regexp) === null) {
+                  add_line = false;
+                }
+              }
+              if (add_line === true) {
+                logLine += currentLogValue[i] + '\n';
+              }
+            }
+            logDiv.innerHTML=logLine;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            message_div.innerHTML="Date : " + today.toTimeString();
+          } else {
+            logLine = "Error! Request status is " + request.status;
+            message_div.innerHTML=logLine;
+            
+            }
+        }
+      }
+    </script>
+   </head>
+  <span tal:define="global tailer python:context.getPortalObject().portal_introspections.absolute_url()+'/tailEventLog'">
+  <body tal:attributes="onload string:init('$tailer')">
+    <div id="toolbar">
+      <button tal:attributes="onclick string:getLog('start')">Start Log</button>
+      <button onclick="stopTail();">Stop Log</button>
+      <label>Regexp</label><input type="text" id="regexp" size="20">
+      <span id="message">Press Start...</span>
+    </div>
+    <textarea id="log" style="border:solid 1px #dddddd; margin-left:25px; font-size:9px;
+                         padding-left:5px; padding-right:10px; padding-top:10px; padding-bottom:20px;
+                         margin-top:10px; margin-bottom:10px; height:90%; width:90%; text-align:left;">
+      This is the Event Log Viewer. To begin viewing the log live in this window, click Start Viewer. To stop the window refreshes, click Pause Viewer.
+    </textarea>
+  </body>
+  </span>
+</html>

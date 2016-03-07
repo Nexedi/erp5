@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>kept_names = (\'editable_mode\', \'ignore_layout\',            # erp5_web\n
-              \'selection_name\', \'selection_index\',         # list mode\n
-              \'selection_key\',                             # list mode\n
-              \'bt_list\',                                   # business template installation system\n
-              \'ignore_hide_rows\',\n
-             )\n
-# Dialog mode is absent from the kept_name list on purpose :\n
-# none of its variable should ever get transmited because\n
-# it\'s the deepest level of navigation.\n
-# Cancel url is always overwritten, except when rendering\n
-# a dialog. So this is safe to propagate it.\n
-\n
-return dict((item for item in parameter_list.items() if item[0] in kept_names))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>parameter_list</string> </value>
         </item>

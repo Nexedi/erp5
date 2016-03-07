@@ -49,33 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>for builder in sorted(context.getPortalObject().portal_deliveries.contentValues(),\n
-                  key=lambda x:x.getTitle()):\n
-  print builder.getId()\n
-  print "  Title: %s" % (builder.getTitle())\n
-  print "  Simulation Select Method: %s" % (builder.getSimulationSelectMethodId())\n
-  print "  Delivery Select Method: %s" % (builder.getDeliverySelectMethodId())\n
-  print "  After Generation Script: %s" % (builder.getDeliveryAfterGenerationScriptId())\n
-  print\n
-\n
-  for mg in sorted(builder.contentValues(), key=lambda x:x.getTitle()):\n
-    print builder.getId()\n
-    print " ", "\\n  ".join([x for x in (\n
-      "Id: %s" % mg.getId(),\n
-      "Title: %s" % mg.getTitle(),\n
-      "Type: %s" % mg.getPortalType(),\n
-      "Collect Order Group: %s" % mg.getCollectOrderGroup(),\n
-      "Tested Properties: %r" % mg.getTestedPropertyList(),\n
-      "Update Always: %r" % mg.isUpdateAlways(),\n
-\n
-      )])\n
-    print\n
-\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

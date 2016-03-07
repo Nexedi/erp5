@@ -37,26 +37,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-/****************************************************************/\n
-/*   Use this file to customize KM CSS                         */\n
-/*                                                              */\n
-/*                                                              */\n
-/****************************************************************/\n
-\n
-<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
-\n
-\n
-/*  Place your definitions after this line */\n
-\n
-\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

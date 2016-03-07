@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>test_result = sci[\'object\']\n
-kw = sci[\'kwargs\']\n
-stop_date = kw.get(\'date\') or DateTime()\n
-test_result.setStopDate(stop_date)\n
-if test_result.getPortalType() == \'Test Result Node\':\n
-  cmdline = kw.get(\'command\', getattr(test_result, \'cmdline\', \'\'))\n
-  edit_kw = {}\n
-  if same_type(cmdline, []):\n
-    cmdline = \' \'.join(map(repr, cmdline))\n
-  if cmdline:\n
-    edit_kw[\'cmdline\'] = cmdline\n
-  for key in (\'stdout\', \'stderr\'):\n
-    key_value = kw.get(key, getattr(test_result, key, \'\'))\n
-    if key_value:\n
-      edit_kw[key] = key_value\n
-  test_result.edit(**edit_kw)\n
-else:\n
-  context.TestResult_complete(sci)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>sci</string> </value>
         </item>

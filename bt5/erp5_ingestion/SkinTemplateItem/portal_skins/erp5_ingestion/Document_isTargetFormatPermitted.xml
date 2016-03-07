@@ -49,41 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This script provides a facility to permit conversion by format.\n
-"""\n
-\n
-###Below is an example which pure auditors can only view in non editable\n
-### formats (pdf, html, txt, png, etc.)\n
-###\n
-from AccessControl import getSecurityManager\n
-user = getSecurityManager().getUser()\n
-role_list = user.getRolesInContext(context)\n
-## \n
-\n
-# Users involved in the document may view it in editable mode\n
-if "Associate" in role_list or "Assignee" in role_list or\\\n
-    "Assignor" in role_list or "Manager" in role_list or "Owner" in role_list:\n
-  return True\n
-# Reject original format\n
-if format is None:\n
-  return False\n
-##\n
-# All users with view permission may view the document \n
-# in read only mode\n
-if format in (\'html\', \'stripped-html\', \'text\', \'txt\', \'pdf\', \'png\', \'jpg\', \'gif\'):\n
-  return True\n
-if format.endswith(\'pdf\'):\n
-  return True\n
-if format.endswith(\'html\'):\n
- return True\n
-##\n
-## # All other formats are prohibitted\n
-return False\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>format=None</string> </value>
         </item>

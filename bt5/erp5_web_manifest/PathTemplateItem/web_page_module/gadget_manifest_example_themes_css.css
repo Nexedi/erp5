@@ -1,0 +1,5 @@
+.ui-content-section p {
+  min-height: 3em;
+  max-height: 3em;
+  margin: 0;
+}

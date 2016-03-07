@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>getResultValue = context.portal_catalog.getResultValue\n
-\n
-from Products.ERP5Type.Utils import Email_parseAddressHeader\n
-\n
-result = []\n
-for name, recipient in Email_parseAddressHeader(text):\n
-  if recipient:\n
-    email = getResultValue(url_string={\'query\':recipient, \'key\':\'ExactMatch\'}, portal_type=\'Email\', parent_portal_type=\'Person\')\n
-    if email is None:\n
-      email = getResultValue(url_string={\'query\':recipient, \'key\':\'ExactMatch\'}, portal_type=\'Email\', parent_portal_type=\'Organisation\')\n
-    if email is not None:\n
-      result.append(email.getParentValue())\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>text</string> </value>
         </item>

@@ -49,39 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-current_object = context.getObject()\n
-assignment_list = current_object.getDestinationFormRelatedValueList()\n
-for assignment in assignment_list:\n
-  if current_object.getPortalType()==\'M0\':\n
-    legal_form = current_object.getLegalForm().lower()\n
-  elif current_object.getPortalType()==\'M2\':\n
-    legal_form = current_object.getNewLegalForm().lower()\n
-  else:\n
-    portal = context.getPortalObject()\n
-    rccm = current_object.getCorporateRegistrationCode()\n
-    pers_result = context.ERP5RegistryOhada_getRelatedPersonList()\n
-    if len(pers_result) < 1:\n
-      raise ValidationFailed, \'There is no Person corresponding to the corporate registration code %s\' % rccm\n
-    person = pers_result[0].getObject()\n
-    #legal_form = person.getSocialForm()\n
-  if assignment.getFunction()==\'entreprise/associe\' :\n
-    if legal_form == \'gie\':\n
-      assignment.getFunctionValue().setTitle(\'Membre du GIE\')\n
-    elif legal_form == \'sarl\':\n
-      assignment.getFunctionValue().setTitle(\'Associé de SARL\')\n
-    elif legal_form == \'sa\': \n
-      assignment.getFunctionValue().setTitle(\'Actionnaire de SA\')\n
-\n
-return assignment_list\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

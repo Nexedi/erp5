@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Get the user id of the context owner.\n
-local_role_list = context.get_local_roles()\n
-for group, role_list in local_role_list:\n
-  if \'Owner\' in role_list:\n
-    return group\n
-raise ValueError, \'Context (%s) has no owner (see local roles).\' % (repr(context), )\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

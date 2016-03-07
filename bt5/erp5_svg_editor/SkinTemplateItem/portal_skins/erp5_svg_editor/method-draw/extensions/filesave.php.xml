@@ -23,57 +23,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<?php\n
-/*\n
- * filesave.php\n
- * To be used with ext-server_opensave.js for SVG-edit\n
- *\n
- * Licensed under the Apache License, Version 2\n
- *\n
- * Copyright(c) 2010 Alexis Deveria\n
- *\n
- */\n
- \n
-if(!isset($_POST[\'output_svg\']) && !isset($_POST[\'output_png\'])) {\n
-  die(\'post fail\');\n
-}\n
-\n
-$file = \'\';\n
-\n
-$suffix = isset($_POST[\'output_svg\'])?\'.svg\':\'.png\';\n
-\n
-if(isset($_POST[\'filename\']) && strlen($_POST[\'filename\']) > 0) {\n
-  $file = $_POST[\'filename\'] . $suffix;\n
-} else {\n
-  $file = \'image\' . $suffix;\n
-}\n
-\n
-if($suffix == \'.svg\') {\n
-  $mime = \'image/svg+xml\';\n
-  $contents = rawurldecode($_POST[\'output_svg\']);\n
-} else {\n
-  $mime = \'image/png\';\n
-  $contents = $_POST[\'output_png\'];\n
-  $pos = (strpos($contents, \'base64,\') + 7);\n
-  $contents = base64_decode(substr($contents, $pos));\n
-}\n
-\n
- header("Cache-Control: public");\n
- header("Content-Description: File Transfer");\n
- header("Content-Disposition: attachment; filename=" . $file);\n
- header("Content-Type: " .  $mime);\n
- header("Content-Transfer-Encoding: binary");\n
- \n
- echo $contents;\n
- \n
-?>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

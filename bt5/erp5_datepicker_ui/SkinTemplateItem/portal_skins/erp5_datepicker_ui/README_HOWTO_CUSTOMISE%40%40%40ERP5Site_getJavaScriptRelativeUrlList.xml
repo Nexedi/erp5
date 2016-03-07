@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-\n
- To extend your current ERP5Site_getJavaScriptRelativeUrlList,\n
- first, find ERP5Site_getJavaScriptRelativeUrlList,\n
- then put \'erp5_datepicker_ui.js\' at the last.\n
- \n
- The following is an example. To enable datepicker, you must include\n
- \'erp5_datepicker_ui.js\' in the list.\n
-\n
-"""\n
-js_list = (\'jquery/core/jquery.min.js\', \'erp5.js\', \'erp5_datepicker_ui.js\')\n
-return js_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

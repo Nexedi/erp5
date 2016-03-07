@@ -49,36 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-business_template = state_change[\'object\']\n
-listbox = state_change.kwargs.get(\'listbox\')\n
-update_catalog = state_change.kwargs.get(\'update_catalog\')\n
-update_translation = state_change.kwargs.get(\'update_translation\')\n
-workflow_action = state_change.kwargs.get(\'workflow_action\')\n
-\n
-object_to_update = {}\n
-if listbox is not None and len(listbox) > 0:\n
-  for item in listbox:\n
-    if item[\'choice\']:\n
-      # Choice parameter is now selected with a MultiCheckBoxField with only one element\n
-      # Business Template need to get a string and not a list\n
-      object_to_update[item[\'listbox_key\']] = item[\'choice\'][0]\n
-    else:\n
-      object_to_update[item[\'listbox_key\']] = "nothing"\n
-\n
-if workflow_action == \'install_action\':\n
-  business_template.install(force=0, object_to_update=object_to_update, \\\n
-                            update_catalog=update_catalog, update_translation=update_translation)\n
-elif workflow_action == \'reinstall_action\':\n
-  business_template.reinstall(force=0, object_to_update=object_to_update, \\\n
-                              update_catalog=update_catalog, update_translation=update_translation)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

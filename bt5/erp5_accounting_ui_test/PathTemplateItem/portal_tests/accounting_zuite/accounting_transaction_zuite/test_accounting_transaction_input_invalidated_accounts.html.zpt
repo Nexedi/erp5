@@ -1,0 +1,130 @@
+<html>
+<head><title>Test for Accounting Transaction</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Invalidated accounts are not proposed in the drop down where you select
+accounts.
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+<!-- Setup {{{ -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/AccountingZuite_markChanged</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<!-- invalidate an account.
+-->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounts</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Receivable</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>label=Invalidate Account</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- Force clearing cache -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_caches/manage_clearAllCache</td>
+  <td></td>
+</tr>
+<!-- Add a new accounting transaction and check this invalidated account cannot
+be selected {{{ -->
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Add Accounting Transaction</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]/select/option[contains(text(), '41 - Receivable')]</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+
+<!-- Check that this account is still in the list for already posted transactions {{{ -->
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Client 1 Sale Invoice</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]/select</td>
+  <td>account_module/receivable</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]/select/option[contains(text(), '41 - Receivable')]</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>cash = context.portal_categories.account_type.asset.cash\n
-account_type_related_list = cash.getAccountTypeRelatedValueList(portal_type=\'Account\')\n
-\n
-return [x.Account_getFormattedTitle() for x in account_type_related_list]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -1,0 +1,38 @@
+<tal:block replace="nothing"><!--
+    This macro is recursive and display lists of lists to display the breadcrumb as a tree.
+    TODO: merge it with site map (similar code)
+-->
+</tal:block>
+<tal:block metal:define-macro="renderBreadcrumbItem">
+  <ul tal:define="remaining_items remaining_items | nothing"
+      tal:condition="remaining_items">
+    <li tal:define="current_item    python: remaining_items[0];
+                    remaining_items python: remaining_items[1:]">
+      <a tal:attributes="href  python: current_item[1].getPermanentURL(current_item[1]);
+                         class python: len(remaining_items) == 0 and 'selected' or ''"
+          tal:content="python: current_item[0]"/>
+      <tal:block metal:use-macro="here/breadcrumb/macros/renderBreadcrumbItem"/>
+    </li>
+  </ul>
+</tal:block>
+
+<tal:block tal:define="is_web_section_default_document request/is_web_section_default_document|nothing;
+                       current_web_section python:request.get('current_web_section', None)
+                                                  or here.getWebSectionValue()">
+  <!-- Initialize the recursive loop starting from context or from web section -->
+  <div class="breadcrumb" tal:define="remaining_items python: here.getBreadcrumbItemList(here)"
+                          tal:condition="not:is_web_section_default_document">
+    <tal:block metal:use-macro="here/breadcrumb/macros/renderBreadcrumbItem"/>
+  </div>
+  <div class="breadcrumb" tal:define="remaining_items python: here.getBreadcrumbItemList(current_web_section)"
+                          tal:condition="is_web_section_default_document">
+    <tal:block metal:use-macro="here/breadcrumb/macros/renderBreadcrumbItem"/>
+  </div>
+</tal:block>
+
+<span style="float:right;" tal:condition="python:not here.portal_membership.isAnonymousUser()">
+Logged in as: <a style="color:blue;" tal:define="user here/portal_membership/getAuthenticatedMember"
+                 tal:content="user"
+                 tal:attributes="href python:'WebSite_redirectToUserView?%s&user=%s' % (
+                                 request.get('http_parameters', None), user)">userid</a>
+</span>

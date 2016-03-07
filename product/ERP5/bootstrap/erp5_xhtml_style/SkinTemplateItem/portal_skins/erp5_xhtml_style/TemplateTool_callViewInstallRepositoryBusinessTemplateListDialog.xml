@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>kw.update(context.REQUEST.form)\n
-# Clear selection\n
-context.portal_selections.setSelectionCheckedUidsFor(\'template_tool_install_selection\', [])\n
-# Then call the listbox\n
-kw.update(context.REQUEST.form)\n
-return context.ERP5Site_redirect("%s/%s" % (context.absolute_url(), \'TemplateTool_viewInstallRepositoryBusinessTemplateListDialog\'), keep_items={\'dialog_category\': dialog_category, \'form_id\': form_id, \'cancel_url\': cancel_url}, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>dialog_category=None, form_id=None, cancel_url=None, **kw</string> </value>
         </item>

@@ -19,36 +19,6 @@
             <value> <string>text/html</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta charset="utf-8">\n
-    <meta name="viewport" content="width=device-width, initial-scale=1">\n
-    <title>Fieldset</title>\n
-<!--\n
-    <script src="rsvp.js" type="text/javascript"></script>\n
-    <script src="renderjs.js" type="text/javascript"></script>\n
--->\n
-    <script src="../lib/handlebars.min.js" type="text/javascript"></script>\n
-    <script src="../lib/jquery.js" type="text/javascript"></script>\n
-\n
-    <script id="label-template" type="text/x-handlebars-template">\n
-      <label for="{{for}}">{{name}}</label>\n
-    </script>\n
-\n
-    <script src="fieldset.js" type="text/javascript"></script>\n
-  </head>\n
-  <body>\n
-  </body>\n
-</html>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

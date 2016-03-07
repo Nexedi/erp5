@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-text_content = "<svg width=\'640\' height=\'480\' xmlns=\'http://www.w3.org/2000/svg\'> \\\n
-<g><title>Layer 1</title> \\\n
-<ellipse ry=\'46\' rx=\'47\' id=\'svg_1\' cy=\'93\' cx=\'138\' stroke-width=\'5\' stroke=\'#000000\' fill=\'#FF0000\'/> \\\n
-</g></svg>"\n
-context.setTextContent(text_content)\n
-\n
-return "Done."\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

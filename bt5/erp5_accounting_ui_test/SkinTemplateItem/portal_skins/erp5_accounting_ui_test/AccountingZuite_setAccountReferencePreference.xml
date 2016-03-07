@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>preference = context.portal_preferences.accounting_zuite_preference\n
-preference.edit(preferred_account_number_method=\'account_reference\')\n
-\n
-return "Preference Set"\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

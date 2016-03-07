@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This script gets the person characteristics and then calls the script that \n
-finds the most suitable candidate\n
-"""\n
-person_first_name = context.getFirstName()\n
-person_last_name = context.getLastName()\n
-person_start_date = context.getStartDate()\n
-person_birthplace = context.getDefaultBirthplaceAddressCity()\n
-person_title = context.getTitle()\n
-\n
-return context.PersonModule_getBestCandidateList(person_first_name,person_last_name,person_title,\n
-                                                 person_start_date,person_birthplace)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

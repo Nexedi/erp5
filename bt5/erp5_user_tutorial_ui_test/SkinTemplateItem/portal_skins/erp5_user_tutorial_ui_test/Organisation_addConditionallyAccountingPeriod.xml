@@ -49,33 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-my_organisation = context\n
-real_organisation = my_organisation.Organisation_getMappingRelatedOrganisation()\n
-\n
-# conditionally add accounting period\n
-used_test_date = DateTime(\'%s/01/01\' % context.Zuite_getHowToInfo()[\'now\'].strftime(\'%Y\')).earliestTime()\n
-found_period = False\n
-for accounting_period in real_organisation.contentValues(portal_type=\'Accounting Period\'):\n
-  if accounting_period.getSimulationState() == \'started\':\n
-    if accounting_period.getStartDate().earliestTime() <= used_test_date <= accounting_period.getStopDate().latestTime():\n
-      found_period = True\n
-      break\n
-if not found_period:\n
-  test_accounting_period = real_organisation.newContent(\n
-    portal_type = \'Accounting Period\',\n
-    title = context.Zuite_getHowToInfo()[\'optional_new_accounting_period_title\'],\n
-    start_date = used_test_date - 1,\n
-    stop_date = used_test_date + 3650\n
-  )\n
-  test_accounting_period.start()\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

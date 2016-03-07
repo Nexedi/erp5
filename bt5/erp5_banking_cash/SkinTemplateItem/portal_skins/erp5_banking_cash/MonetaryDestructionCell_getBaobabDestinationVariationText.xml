@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>variation = context.getVariationText()\n
-result = variation.replace(\'retired\', \'new_not_emitted\')\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kwd</string> </value>
         </item>

@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Returns the quantity divided by the max quantity"""\n
-q = context.getQuantity()\n
-max_q = 0.0\n
-for x in context.getParentValue().contentValues():\n
-  max_q += x.getTotalQuantity()\n
-\n
-try:\n
-  return q/max_q\n
-except ZeroDivisionError:\n
-  # This means that the Quantity and the max quantity  are 0\n
-  return 1.0\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

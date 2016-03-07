@@ -1,0 +1,25 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+           tal:define="is_gadget_mode python: int(request.get('is_gadget_mode', 0));
+                       dummy python: context.REQUEST.RESPONSE.setHeader(
+                                                             'Content-Type', 
+                                                             'text/html;; charset=utf-8');">
+
+  <tal:block tal:define="ignore_layout  request/ignore_layout | nothing;
+                         layout_form_id request/layout_form_id | here/getApplicableLayout | nothing;
+                         layout_form python: layout_form_id and getattr(here, layout_form_id, None) 
+                                             or None;
+                         is_web_mode  python: (layout_form is not None) and (not ignore_layout);
+                         dummy python: request.set('editable_mode_', True);
+                         dummy python: request.set('is_web_mode', is_web_mode);
+                         dummy python: here.Base_setRequestEnvironmentVariableList(
+                                         options = options);">
+
+    <tal:block tal:define="global preferred_html_style_developper_mode python: 0;
+                           global preferred_html_style_translator_mode preferred_html_style_developper_mode ">
+      <tal:block  metal:use-macro="here/form_render/macros/master" />
+    </tal:block>
+
+  </tal:block>
+</tal:block>

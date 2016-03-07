@@ -51,13 +51,6 @@
             <value> <int>10</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string>SELECT *\n
-FROM catalog \n
-WHERE portal_type = \'Assignment\'\n
-ORDER BY Date</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Registre du personnel</string> </value>
         </item>

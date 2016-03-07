@@ -49,37 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Get Person details (i.e. group, site, etc..) from its Career.\n
-"""\n
-\n
-from Products.ERP5Type.Cache import CachingMethod\n
-\n
-def getPersonCareerDict(user_name):\n
-  portal = context.getPortalObject()\n
-  result = {\'group_list\': [],\n
-            \'site_list\': [],\n
-            }\n
-  person = portal.ERP5Site_getAuthenticatedMemberPersonValue(user_name=user_name)\n
-  if person is None:\n
-    return result\n
-\n
-  group = person.getGroup()\n
-  organisation = person.getSubordinationValue()\n
-  if group is not None:\n
-    result[\'group_list\'] = [group]\n
-  if organisation is not None:\n
-    result[\'site_list\'] = organisation.getSiteList()\n
-  return result\n
-\n
-getPersonCareerDict = CachingMethod(getPersonCareerDict,\n
-                                    ("ERP5Site_getPersonCareerDict",),\n
-                                    cache_factory=\'erp5_content_short\')\n
-return getPersonCareerDict(user_name)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>user_name=None</string> </value>
         </item>

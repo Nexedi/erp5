@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>last_affectation_list = context.Item_getAffectationList(**kw)\n
-if len(last_affectation_list):\n
-  last_affectation = last_affectation_list[0]\n
-  if last_affectation.delivery_uid is not None:\n
-    portal = context.getPortalObject()\n
-    movement = portal.portal_catalog.getObject(last_affectation.delivery_uid)\n
-    variation_list = [x[0] for x in movement.getVariationCategoryItemList()]\n
-    variation = \',\'.join(variation_list)\n
-    return variation\n
-\n
-return []\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

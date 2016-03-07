@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Return by default previous user input\n
-\n
-python_expression = context.REQUEST.get(\'python_expression\', None)\n
-if python_expression: \n
-  return python_expression\n
-\n
-# Else return this string, which could be made more dynamic in the future\n
-# to take into account the context\n
-\n
-\n
-return """kw={\'portal_type\': \'Person\'}\n
-return context.portal_catalog(**kw)"""\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

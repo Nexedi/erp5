@@ -33,40 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-  <tal:block tal:define="actions python: here.getPortalObject().portal_actions.listFilteredActionsFor(here)">\n
-        <span class="select_favorite"\n
-                tal:define="ordered_global_actions python:here.getOrderedGlobalActionList(actions[\'global\']);\n
-                user_actions actions/user;"\n
-                tal:attributes="onchange string:submitAction(this.form,\'Base_doFavorite\')">\n
-          <tal:block tal:repeat="action ordered_global_actions">\n
-            <span tal:condition="action/disabled"\n
-                    disabled="disabled">-- <tal:block tal:content="action/title" i18n:translate="" i18n:domain="ui" /> --</span>\n
-            <tal:block tal:condition="not:action/disabled"\n
-                       tal:define="name python: action.get(\'name\', \'\');\n
-                       index python: name.find(\' (\');">\n
-                       <span tal:condition="python: index &gt;= 0">\n
-                         <a href="link" tal:attributes="href action/url"><tal:block tal:content="python: name[:index]" i18n:translate="" i18n:domain="ui"></tal:block><tal:block tal:replace="python: name[index:]" /></a></span>\n
-                       <span tal:condition="python: index &lt; 0">\n
-                         <a href="link" tal:attributes="href action/url"\n
-                      tal:content="action/name"\n
-                      i18n:translate="" i18n:domain="ui"></a></span>\n
-            </tal:block>\n
-          </tal:block>\n
-        </span>\n
-  </tal:block>\n
-</tal:block>\n
-\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

@@ -1,0 +1,79 @@
+<tal:block tal:replace="nothing"
+           xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+<!--
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+                   Vincent Pelletier <vincent@nexedi.com>
+                   Christophe Dumez <christophe@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+IDEAS:
+ - Add callbacks to ERP5Form object (selection ?) to gather needed fields -> put them in http_parameter_list.
+-->
+</tal:block>
+
+<tal:block metal:define-macro="master">
+<tal:block tal:define="global_definitions_macros here/global_definitions/macros">
+<tal:block metal:use-macro="global_definitions_macros/header_definitions"/>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head tal:define="dummy python:request.RESPONSE.setHeader('Content-Type', 'text/html;; charset=utf-8')">
+    <base tal:attributes="href python: '%s/' % (url, )"/>
+    <meta name="generator" content="ERP5"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title tal:content="title | string:ERP5"/>
+    <tal:block tal:repeat="css css_list">
+      <link tal:attributes="href css" type="text/css" rel="stylesheet"/>
+    </tal:block>
+    <tal:block tal:repeat="js js_list">
+      <script tal:attributes="src js" type="text/javascript">
+      </script>
+    </tal:block>
+  </head>
+  <body onload="applyHiddenType(); simple_aff()">
+<!--     <tal:block tal:replace="structure request"/> -->
+    <form id="main_form"
+          tal:attributes="enctype form/enctype | nothing;
+                          action url;
+                          method form/method | string:post">
+      <!-- Hidden button as explained in http://ppewww.ph.gla.ac.uk/~flavell/www/formquestion.html -->
+      <!-- We should probably call the default method instead -->
+      <input tal:condition="form_action | nothing"
+             id="hidden_button" type="submit" value="dummy"
+             tal:attributes="name python: '%s:method' % (form_action, )" />
+      <tal:block metal:use-macro="global_definitions_macros/http_definitions"/>
+      <div id="bars">
+        <div id="main_bar">
+          <span class="first">
+            <span id="favourites">
+        <div id="context_bar">
+          <tal:block metal:define-slot="context_bar"/>
+        </div>
+      </div>
+        <div tal:content="structure here/REQUEST/portal_status_message | nothing" id="transition_message"/>
+      </div>
+      <div id="master">
+        <tal:block metal:define-slot="main"/>
+      </div>
+      <div id="context_bar"> <tal:block metal:define-slot="context_actions"/></div>
+    </form>
+  </body>
+</html>
+</tal:block>
+</tal:block>

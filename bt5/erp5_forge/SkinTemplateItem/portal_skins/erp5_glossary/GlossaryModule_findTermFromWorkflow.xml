@@ -49,43 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-result = context.GlossaryModule_getTermDictListFromWorkflow(template_list)\n
-\n
-if export_tsv:\n
-  for i in result:\n
-    print \'\\t\'.join(map(lambda x:\'"%s"\'%x, (i[\'reference\'], i[\'language\'],\n
-                                            i[\'business_field\'],\n
-                                            i[\'title\'], i[\'description\'], i[\'workflow_id\'])))\n
-  return printed\n
-else:\n
-  portal_catalog = context.portal_catalog\n
-  for i in result:\n
-    item_list = portal_catalog(portal_type=\'Glossary Term\',\n
-                               reference=i[\'reference\'], language_id=i[\'language\'],\n
-                               business_field_title=i[\'business_field\'],\n
-                               validation_state="!=deleted")\n
-    if len(item_list)>0:\n
-      continue\n
-\n
-    new_id = context.generateNewId()\n
-    context.newContent(id=new_id, portal_type=\'Glossary Term\',\n
-                       container=context,\n
-                       reference=i[\'reference\'], language=i[\'language\'],\n
-                       business_field=i[\'business_field\'],\n
-                       title=i[\'title\'], description=i[\'description\'],\n
-                       comment=i[\'workflow_id\'])\n
-\n
-\n
-portal_status_message = context.Base_translateString(\'Terms created.\')\n
-context.Base_redirect(keep_items={\'portal_status_message\':portal_status_message})\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>template_list, export_tsv=False, REQUEST=None, **kw</string> </value>
         </item>

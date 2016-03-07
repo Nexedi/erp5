@@ -26,15 +26,6 @@
               <dictionary/>
             </value>
         </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string>.cm-s-ambiance.CodeMirror {\n
-  -webkit-box-shadow: none;\n
-  -moz-box-shadow: none;\n
-  box-shadow: none;\n
-}\n
-</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

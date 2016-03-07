@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Deletes a previously created balance transaction\n
-"""\n
-accounting_period = sci[\'object\']\n
-\n
-# we only proceed for top level accounting periods\n
-if accounting_period.getParentValue().getPortalType() == accounting_period.getPortalType():\n
-  return\n
-\n
-accounting_period.activate().AccountingPeriod_deleteBalanceTransaction()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>sci</string> </value>
         </item>

@@ -19,44 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-.multi-slider-gradient {\r\n
-    height: 35px;\r\n
-    background: transparent;\r\n
-\r\n
-    .thumb {\r\n
-        top: 18px;\r\n
-        .background-ximage(\'@{common-image-path}/@{common-controls}\', \'@{common-image-path}/@{common-controls2x}\', 100px);\r\n
-        background-position: @multislide-thumb-offset-x @multislide-thumb-offset-y;\r\n
-\r\n
-        &.active {\r\n
-            background-position: @multislide-thumb-offset-x @multislide-thumb-offset-y - 30px;\r\n
-        }\r\n
-    }\r\n
-\r\n
-    .track {\r\n
-        background: #ededed; /* Old browsers */\r\n
-        background: -webkit-gradient(linear, left top, right top, color-stop(0%,#000000), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */\r\n
-        background: -webkit-linear-gradient(left, #000000 0%,#ffffff 100%); /* Chrome10+,Safari5.1+ */\r\n
-        background: -moz-linear-gradient(left, #000000 0%,#ffffff 100%); /* FF3.6+ */\r\n
-        background: -o-linear-gradient(left,  #000000 0%,#ffffff 100%); /* Opera 11.10+ */\r\n
-        background: -ms-linear-gradient(left,  #000000 0%,#ffffff 100%); /* IE10+ */\r\n
-        background: linear-gradient(to right,  #000000 0%,#ffffff 100%); /* W3C */\r\n
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=\'#000000\', endColorstr=\'#ffffff\',GradientType=1 ); /* IE6-9 */\r\n
-\r\n
-        background-position: 0 0;\r\n
-        outline: 1px solid rgba(162, 162, 162, 1);\r\n
-    }\r\n
-}\r\n
-\r\n
-\r\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

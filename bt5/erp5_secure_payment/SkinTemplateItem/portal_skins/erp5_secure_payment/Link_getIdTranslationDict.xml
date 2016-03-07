@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Get translation id dict based on parent portal type"""\n
-parent_portal_type = context.getParentValue().getPortalType().replace(\' \',\'\')\n
-method = getattr(context, "%s_getLinkIdTranslationDict" % parent_portal_type, None)\n
-\n
-if not method:\n
-  return {}\n
-\n
-return method()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Call the FooModule_zGetModifiedFooList zsql method"""\n
-kw[\'context\'] = context\n
-return context.FooModule_zGetModifiedFooList(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

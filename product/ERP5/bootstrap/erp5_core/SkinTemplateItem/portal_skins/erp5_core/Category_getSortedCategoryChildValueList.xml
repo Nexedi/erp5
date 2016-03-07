@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Log import log\n
-# this script is no longer needed.\n
-log(\'Category_getSortedCategoryChildValueList\', \'use getCategoryChildValueList method\')\n
-\n
-value_list = filter(lambda o: o.getRelativeUrl() != context.getRelativeUrl(),context.getCategoryChildValueList())\n
-sort_id=\'int_index\'\n
-value_list.sort(key=lambda x: x.getProperty(sort_id))\n
-return value_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

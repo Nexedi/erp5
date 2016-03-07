@@ -1,0 +1,1 @@
+select id_group, last_id from portal_ids

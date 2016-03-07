@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  Do actual conversion of any Image type.\n
-"""\n
-if quality is None:\n
-  # it\'s required so fall back to system preferences as\n
-  # directly accessed over URL will do the same\n
-  quality = context.getDefaultImageQuality(format)\n
-\n
-if not context.getContentType("").startswith(\'image/\'):\n
-  context.log(\'Image_preConvert\', \'%s is not an image, skipping preconversion\' % context.getRelativeUrl())\n
-  return \n
-\n
-# UI uses \'large\' display\n
-display_list.append(\'large\')\n
-# Usually links in web page contain image as <img src="url?format=png"> without display\n
-display_list.append(None)\n
-\n
-context.Base_preConvert(format, quality, display_list)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>format, quality=None, display_list=[]</string> </value>
         </item>

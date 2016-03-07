@@ -19,31 +19,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAEkklEQVRoBe2byYsVVxSHfR2HOERF
-EmdtlUYUTCCSKIrDwl5oNqIYUUEIgjtB/wFFQQS3QVeJZKUbBTeCoCIunGkExygqUeOAEyZGnE37
-fU2VFO1rfd3v3rKEOvD1rar33rnnd88dqrxlpbW1tVteVqlUvqCu4TAhqfMi5W1ieJOcxy8UnAco
-qcBPcAxsZfHYaw15xGAd3aksL2ukosUwCY5DA3wLi+A8XIfolqfgiaixK5+FDWDG18EwsJt//oIZ
-s2ZRs/veg/swGeaCNhpa4JkneVjwDCNSn2ZtBvwAijarR+EAKHgNaHfgEFyCXKziQA5lidgp+NsE
-szN+reQg/ApfwjzQ9sA+Yviv7SyPP6FmR2J1yXES2gkKlKdgN/4/OT9M2Ryqzq74SccYcdRtZs7u
-6jLzAszo/IRdyTUbZCo9oQ/lJ7GQY7gXCgaDYv6CbWRgP2U3BDoLO0s3wTgYAZchdwuZYRuvX6Lg
-JeWjjJrnHIv19YCQDY272i1kxY7XG6CwobCIzHr+LzRDE9jVXW9f8tlMSnvEVbhIb/B38a0rA7/a
-b4jU7H0Hu8EJS3HX4DTYGF5zaVoK6+EheO0SrIS+1fyGvmaQQYzAnIkdl3+AIuy6jWAjOKF5zc/u
-whQYBNoYcM0eCdEtZJf2IeQZXXUvUdttl4NCnMT2wQ44Bz9C0HrxV7MFrxjRr6jdbizvGQ1iY3jn
-NRX6w004CbcgugW906o1WkQP4LsuU05aV+By0lAcxrUgghFQIcxhsAx8MPD8Q/aaD1+AD/6Oddfw
-juaTC3z2O/xJo7jc1Wc4qfsfAIjgG1gFPvU484bERvkNJoaItaNWxX+nrCfftps6G4e2dLn7OoTj
-UJOWNxfOwC5LI8EM69uG6IqZVbu8fvS9HfRdtwUZw0bBMFbcKBgOrrFL4GfwKcqufgKcjb2jyo5x
-jxthVlJStN2gbKH8Gx7DFbqzNy91W6gMOw84oVwVxHtrOR28GUkF+/S0Ff6B9oJnc83GUrjmI2UL
-PoNktc1j8ieY4KxTjh13Cs2a4t8gwvKdJTO8s7bdNzV/m22U9HrdZahJq5ZAOhLg9Y4+q8Vvp76T
-p+BOBRbry6XgWC1bFL9lhouSiVhxlBmO1bJF8VtmuCiZiBVHmeFYLVsUv2WGi5KJWHGUGY7VskXx
-W2a4KJmIFUeZ4VgtWxS/ZYaLkolYcZQZjtWyRfFbZrgomYgVR1EynN1miaW1zW9egj8kyG0W95V9
-EyC6xRSc9a0YN8iqCXebdQQMgdSi7Tdlg0orC1G6me2WZyrwK459X2sMtDffHJgEbqRrboY/AH0E
-t1iC3cQ+A2nQZmwO/ML26FhoSPA1hmWwEHqD5tapv3XnP7gFewOgfWQIauLaZlBMam6aK+YAPIGZ
-MA18Xys13+FawT5yS3ohaInjut/iqeaDIJ2IFsB1sGvXgq81rIaB1XyGuBZFbBoYgfeDpXALPibY
-/wawFoakv49RRhVswJjvWq6C8+DrDtWE3+T6RhgQQ2TWZ7QxTPDvjPHssjQefEuvGb4Hlykb4Qjs
-gVMElk5ynMaxtynf0d4aZUvHAAAAAElFTkSuQmCC</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

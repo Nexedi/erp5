@@ -1,0 +1,25 @@
+<body>
+  <tal:block metal:define-macro="master">
+     <tal:block tal:define="website here/getWebSiteValue;
+                            enctype string:multipart/form-data;
+                            portal_path python:website.absolute_url();
+                            editable request/editable_mode | python: 0;
+                            list_mode list_mode | nothing;
+                            dialog_mode dialog_mode | nothing;
+                            has_no_layout python: layout_form is None;
+                            dummy python: request.set('dialog_mode', dialog_mode);
+                            dummy python: request.set('list_mode', list_mode);
+                            global css_list_template python:['__REPLACE_CSS__'];
+                            global js_list python:[ '__REPLACE_JS__' ];
+">
+        <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">
+          <tal:block metal:fill-slot="layout">
+
+  <!-- SPLIT -->
+
+          </tal:block>
+        </tal:block>
+     </tal:block>
+  </tal:block>
+
+</body>

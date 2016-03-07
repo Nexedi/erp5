@@ -49,36 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-portal_type = \'Person\'\n
-module = portal.getDefaultModule(portal_type)\n
-\n
-sender_list = [entity.getRelativeUrl() for entity\\\n
-               in context.Base_getEntityListFromFromHeader(default_email_text or \'\')]\n
-\n
-if sender_list:\n
-  context.setSourceList(sender_list)\n
-  message = portal.Base_translateString(\'Sender found from ${person_module_translated_title}.\',\n
-                                        mapping={\'person_module_translated_title\': module.getTranslatedTitle()})\n
-  return context.Base_redirect(form_id=kw.get(\'form_id\', \'view\'),\n
-                               keep_items={\'portal_status_message\': message})\n
-\n
-\n
-person = module.newContent(portal_type=portal_type,\n
-                           default_email_text=default_email_text,\n
-                           default_telephone_text=default_telephone_text,\n
-                           first_name=first_name,\n
-                           last_name=last_name)\n
-\n
-context.setSourceValue(person)\n
-\n
-message = portal.Base_translateString(\'Sender Person Created.\')\n
-return context.Base_redirect(form_id=kw.get(\'form_id\', \'view\'),\n
-                             keep_items={\'portal_status_message\': message})\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>default_email_text=None, default_telephone_text=None, first_name=None, last_name=None, **kw</string> </value>
         </item>

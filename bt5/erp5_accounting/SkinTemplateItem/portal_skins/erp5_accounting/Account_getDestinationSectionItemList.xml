@@ -49,40 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>node_uid=None\n
-if not account:\n
-  if (hasattr(context, \'getPortalType\') and context.getPortalType() == \'Account\') :\n
-    node_uid = context.getUid()\n
-elif same_type(account, \'\') :\n
-  account = context.getPortalObject().restrictedTraverse(account)\n
-  node_uid = account.getUid()\n
-\n
-\n
-ptype_translated_dict = {}\n
-def translatePortalType(ptype) :\n
-  """Translate portal_type without retrieving the object from ZODB."""\n
-  if not ptype_translated_dict.has_key(ptype) :\n
-    ptype_translated_dict[ptype] = context.Base_translateString(ptype)\n
-  return ptype_translated_dict[ptype]\n
-\n
-section_uid = []\n
-if section_category:\n
-  section_uid = context.Base_getSectionUidListForSectionCategory(\n
-            section_category, strict_membership=section_category_strict_membership)\n
-\n
-\n
-item_list = [("", "")]\n
-for entity in context.Account_zDistinctSectionList(node_uid=node_uid,\n
-                                                   section_uid=section_uid):\n
-  item_list.append(("%s (%s)" % ( entity[\'title\'],\n
-                                  translatePortalType(entity[\'portal_type\'])),\n
-                                  entity[\'relative_url\']))\n
-\n
-return item_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>account=\'\', section_category=\'\', section_category_strict_membership=True</string> </value>
         </item>

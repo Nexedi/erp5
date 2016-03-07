@@ -23,26 +23,6 @@
             <value> <string>text/css</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-.defaultTreeTable{\n
-\t\t\tmargin : 0;\n
-\t\t\tpadding : 0;\n
-\t\t\tborder : 0;\n
-}\n
-.containerTableStyle { overflow : auto; font-size : 12px;}\n
-/* folders & files names */\n
-.standartTreeRow{ font-family : Verdana, Geneva, Arial, Helvetica, sans-serif; \tfont-size : 12px; -moz-user-select: none; text-align: left;}\n
-.selectedTreeRow{ background-color : blue; color:white; font-family : Verdana, Geneva, Arial, Helvetica, sans-serif; \t\tfont-size : 12px;  -moz-user-select: none;  }\n
-.standartTreeImage{ overflow:hidden; border:0; padding:0; margin:0; }\n
-.hiddenRow { width:1px;   overflow:hidden;  }\n
-.dragSpanDiv{\tfont-size : 12px; }\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

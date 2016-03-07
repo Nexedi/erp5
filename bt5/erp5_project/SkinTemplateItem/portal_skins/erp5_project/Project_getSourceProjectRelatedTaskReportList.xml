@@ -49,65 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-source_project_uid_list = [x.uid for x in context.portal_catalog(\n
-     relative_url=\'%s/%%\' % context.getRelativeUrl())] + [context.getUid()]\n
-\n
-from Products.ZSQLCatalog.SQLCatalog import Query\n
-\n
-sql_kw = {}\n
-if kw.has_key(\'from_date\') and kw[\'from_date\'] is not None:\n
-  query_kw = {\'delivery.start_date\' : kw[\'from_date\'],\n
-              \'range\' : \'min\'}\n
-  sql_kw[\'delivery.start_date\'] = Query(**query_kw)\n
-if kw.has_key(\'at_date\') and kw[\'at_date\'] is not None:\n
-  query_kw = {\'delivery.stop_date\' : kw[\'at_date\'],\n
-              \'range\' : \'ngt\'}\n
-  sql_kw[\'delivery.stop_date\'] = Query(**query_kw)\n
-\n
-# Make sure to not include "confirmed tasks" in any case, because in\n
-# this case we must take task reports\n
-if kw.has_key(\'simulation_state\') and len(kw[\'simulation_state\']) > 0 :\n
-  task_simulation_state = [x for x in kw[\'simulation_state\'] if x != \'confirmed\']\n
-  task_report_simulation_state = kw[\'simulation_state\']\n
-else:\n
-  task_simulation_state = context.getPortalDraftOrderStateList() + \\\n
-                          context.getPortalPlannedOrderStateList()\n
-  task_report_simulation_state = ""\n
-\n
-task_list = [x.getObject() for x in \\\n
-  context.portal_catalog(selection_report=selection_report, \n
-                         portal_type=\'Task\',\n
-                         source_project_uid = source_project_uid_list,\n
-                         simulation_state = task_simulation_state,\n
-                         **sql_kw)]\n
-task_list.extend([x.getObject() for x in \\\n
-  context.portal_catalog(selection_report=selection_report, \n
-                         portal_type=\'Task Report\',\n
-                         source_project_uid = source_project_uid_list,\n
-                         simulation_state = task_report_simulation_state,\n
-                         **sql_kw)])\n
-task_line_list = []\n
-for task in task_list:\n
-  task_line_list.extend(task.objectValues(portal_type=(\'Task Line\', \'Task Report Line\')))\n
-\n
-\n
-def sortTaskLine(a, b):\n
-  result = cmp(a.getStartDate(), b.getStartDate())\n
-  if result == 0:\n
-    result = cmp(a.getTitle(), b.getTitle())\n
-  return result\n
-\n
-task_line_list.sort(sortTaskLine)\n
-\n
-return task_line_list\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection=None, selection_report=None, **kw</string> </value>
         </item>

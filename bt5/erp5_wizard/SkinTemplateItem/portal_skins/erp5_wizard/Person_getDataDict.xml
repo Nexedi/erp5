@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return {\'reference\': person.getReference(),\n
-      \'validation_state\': person.getValidationState(),\n
-      \'email\': person.getDefaultEmailText(),\n
-      \'erp5_uid\': context.ERP5Site_getExpressInstanceUid()}\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>person=None</string> </value>
         </item>

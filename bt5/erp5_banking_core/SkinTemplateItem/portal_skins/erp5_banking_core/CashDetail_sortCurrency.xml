@@ -49,41 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-def sortLine(a_Source,b_Source):\n
-   if a_Source.getPortalType() in (\'Coin\', \'Banknote\'):\n
-      a = a_Source\n
-      b = b_Source\n
-   else :\n
-      a = a.getResourceValue()\n
-      b = b.getResourceValue()\n
-   if a.getPortalType() == b.getPortalType() :\n
-      if a.getBasePrice() > b.getBasePrice() :\n
-         return -1\n
-      elif a.getBasePrice() < b.getBasePrice() :\n
-         return 1\n
-      else :\n
-         if int(a.getVariation()) < int(b.getVariation()) :\n
-            return 1         \n
-         elif int(a.getVariation()) > int(b.getVariation()) :\n
-            return -1\n
-         else :\n
-            return 0\n
-   elif a.getPortalType() == \'Banknote\':\n
-      return -1\n
-   else:\n
-      return 1\n
-\n
-\n
-listCurrency.sort(sortLine)\n
-return listCurrency\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>listCurrency,</string> </value>
         </item>

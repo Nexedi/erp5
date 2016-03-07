@@ -49,46 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if real_context is None:\n
-  real_context = context\n
-layout = []\n
-added_box_ids = []\n
-all_box_ids = []\n
-boxes = context.contentValues(portal_type = \'Knowledge Box\', \n
-                              checked_permission = \'View\')\n
-isAnon = context.portal_membership.isAnonymousUser()\n
-validation_state_map = {1: (\'public\',),\n
-                        0: (\'visible\', \'invisible\', \'public\',)}\n
-boxes = filter(lambda x: x.getValidationState() in validation_state_map[isAnon] and x.test(real_context), boxes)\n
-for box in boxes:\n
-  all_box_ids.append(box.getId())\n
-\n
-user_layout = getattr(context, \'user_layout\', None)\n
-# read layout from pad\n
-if user_layout is not None:\n
-  sections = user_layout.split(\'##\')\n
-  for section in sections:\n
-    section_layout = []\n
-    boxes = filter(lambda x: x.strip()!=\'\', section.split(\'|\'))\n
-    for box in boxes:\n
-      box_id = box.replace(\'box_\',\'\').replace(\'_main\',\'\')\n
-      ## must exists\n
-      if box_id in all_box_ids:\n
-        section_layout.append(box_id)\n
-        added_box_ids.append(box_id)\n
-    layout.append(section_layout)\n
-else:\n
-  return [all_box_ids]\n
-\n
-# add new boxes to first column\n
-for box_id in all_box_ids:\n
-  if not box_id in added_box_ids:\n
-    layout[0].append(box_id)\n
-return layout\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>real_context=None</string> </value>
         </item>

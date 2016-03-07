@@ -1,0 +1,205 @@
+body{
+	font-family:sans-serif;
+	font-size:13px;
+	color:black;
+}
+
+.mbmenu{
+  display:none;
+}
+.rootVoices{
+	background-color:#f3f3f3;
+	padding:5px;
+	padding-bottom:0;
+}
+.rootVoices td.rootVoice {
+	background-color:transparent;
+	width:120px;
+	line-height:18px;
+	font-family:Arial,Helvetica,sans-serif;
+	color: gray;
+	font-size:12px;
+	padding:8px;
+	padding-left:10px;
+	cursor: pointer;
+}
+.rootVoices td.selected{
+	background-color:gray;
+	color:#ffffff;
+	cursor: pointer;
+	font-size:14px;
+}
+
+.menuShadow{
+	padding:2px;
+	padding-bottom:0px;
+	left:-2;
+	top:1px;
+}
+
+.menuContainer{
+	background-color:gray;
+}
+
+.menuContainer .line{
+	background-color:white;
+	width:100%;
+	padding-left:-5;
+}
+
+.menuContainer .line.title {
+	text-align:right;
+}
+
+.menuContainer .line.title a{
+	color:dimgray;
+	font-size:14px;
+}
+
+.menuContainer td a{
+	text-decoration:none;
+	color: #000000;
+}
+
+.menuContainer td.voice{
+	border-top:1px solid #f3f3f3;
+	font-family:Arial,Helvetica,sans-serif;
+	font-size:12px;
+	padding:5px;
+}
+
+.menuContainer .separator{
+	background-color:#f1f1f1;
+	height:1px;
+}
+.menuContainer td.img{
+	border-top:1px solid #f3f3f3;
+	font-family:Arial,Helvetica,sans-serif;
+	text-align:center;
+	font-size:12px;
+	color: #c3c3c3;
+	background-color:#f9f9f9;
+	width:24px;
+	padding:5px;
+}
+.menuContainer td.img img{
+	width:20px;
+}
+.menuContainer .textBox{
+	padding: 5px;
+	font-family:Arial,Helvetica,sans-serif;
+	font-size:12px;
+	background-color:#ffffff;
+	color: #c3c3c3;
+}
+.menuContainer .selected td{
+	background-color:#f3f3f3;
+	background-image:url("../images/bgnd_sel_2.jpg")
+}
+.menuContainer .selected td a{
+	color:#000;
+  display:block;
+}
+.menuContainer .disabled td, .menuContainer .disabled td a {
+	color: #cccccc;
+}
+.menuContainer .subMenuOpener{
+	background-image:url("../images/menuArrow.gif");
+	background-repeat:no-repeat;
+	background-position:right;
+}
+
+/*
+vertical menu
+*/
+
+
+/**/
+
+.rootVerticalVoices{
+	background-color:#333;
+	padding:0px;
+}
+.rootVerticalVoices td.rootVoice {
+/*border-top:1px solid #666;*/
+	width:130px;
+	font-family:Arial,Helvetica,sans-serif;
+	color: gray;
+	font-size:13px;
+	padding:7px;
+	cursor: pointer;
+}
+.rootVerticalVoices td.selected{
+	background-image:url("../images/bgnd_sel_4.png");
+	color:#ffffff;
+	cursor: pointer;
+}
+
+
+.verticalMenu{
+	background-color:#000;
+	/*
+ The menu container style must be set via the options paramiter
+ within the function call due to a Safari bug interpreting css on the fly...
+ */
+}
+.verticalMenu .line{
+	background-color:#333;
+	width:100%;
+	padding-left:-5px;
+}
+.verticalMenu td a{
+	text-decoration:none;
+	color: #d3d3d3;
+}
+.verticalMenu td.voice{
+	border-top:0px solid #666;
+	font-family:Arial,Helvetica,sans-serif;
+	font-size:12px;
+	padding:5px;
+}
+.verticalMenu .separator{
+	background-color:#666;
+	height:1px;
+}
+.verticalMenu td.img{
+	border-top:0px solid #666;
+	font-family:Arial,Helvetica,sans-serif;
+	text-align:center;
+	font-size:12px;
+	color: #c3c3c3;
+	background-color:#333;
+	width:24px;
+	padding:5px;
+}
+.verticalMenu td.img img{
+	width:20px;
+}
+.verticalMenu .textBox{
+	padding: 10px;
+	font-family:Arial,Helvetica,sans-serif;
+	font-size:12px;
+	color: #c3c3c3;
+}
+.verticalMenu .selected td{
+	background-image:url("../images/bgnd_sel_4.png");
+}
+.verticalMenu .selected td a{
+	color:#fff;
+}
+.verticalMenu .disabled td, .verticalMenu .disabled td a {
+	color: #666;
+}
+
+
+.verticalMenu .subMenuOpener{
+	background-image:url("../images/menuArrow_w.gif");
+	background-repeat:no-repeat;
+	background-position:right;
+}
+
+.verticalMenu .menuShadow{
+	background:black;
+	padding:5px;
+}
+

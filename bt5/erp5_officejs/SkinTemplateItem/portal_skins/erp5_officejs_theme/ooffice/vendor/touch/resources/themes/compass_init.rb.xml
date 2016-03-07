@@ -19,20 +19,6 @@
             <value> <string>application/x-ruby</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string># This file registers the sencha-touch framework with compass\n
-# It\'s a magic name that compass knows how to find.\n
-dir = File.dirname(__FILE__)\n
-require File.join(dir, \'lib\', \'theme_images.rb\')\n
-\n
-# Include compass-recipes\n
-require File.join(File.dirname(__FILE__), \'vendor\', \'compass-recipes\', \'config\')\n
-\n
-Compass::BrowserSupport.add_support(\'repeating-linear-gradient\', \'webkit\', \'moz\', \'o\', \'ms\')\n
-Compass::Frameworks.register \'sencha-touch\', dir\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

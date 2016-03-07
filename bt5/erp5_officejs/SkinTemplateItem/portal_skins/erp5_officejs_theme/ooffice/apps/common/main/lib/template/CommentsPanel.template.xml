@@ -19,27 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<div id="comments-box">\r\n
-    <div id="comments-messages"/>\r\n
-    <div id="comments-add-link-ct">\r\n
-        <label id="comment-btn-new" class="btn"><%=textAddCommentToDoc%></label>\r\n
-    </div>\r\n
-    <div id="comments-new-comment-ct" style="display: none;">\r\n
-        <div id="comments-inner-ct">\r\n
-            <textarea id="comment-msg-new" placeholder="<%=textEnterCommentHint%>"/>\r\n
-            <button id="comment-btn-add" class="btn normal dlg-btn primary"><%=textAddComment%></button>\r\n
-            <button id="comment-btn-cancel" class="btn normal dlg-btn"><%=textCancel%></button>\r\n
-        </div>\r\n
-    </div>\r\n
-</div>\r\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

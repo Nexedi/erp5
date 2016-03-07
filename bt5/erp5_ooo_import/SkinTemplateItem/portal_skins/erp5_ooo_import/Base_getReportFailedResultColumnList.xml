@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal_object = context.getPortalObject()\n
-\n
-if active_process_path is None:\n
-  return []\n
-\n
-active_process = context.getPortalObject().restrictedTraverse(active_process_path)\n
-result_list = [[x.method_id, x.result] for x in active_process.getResultList()]\n
-\n
-result_list.sort()\n
-\n
-for [method_id, result] in result_list:\n
-  if not result[\'success\']:\n
-    return [(x,x) for x in result[\'object\'].keys()]\n
-\n
-return []\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>active_process_path=None, **kw</string> </value>
         </item>

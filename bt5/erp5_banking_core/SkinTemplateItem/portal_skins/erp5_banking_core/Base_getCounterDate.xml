@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Retrieve the last counter date for a given date\n
-\n
-from DateTime import DateTime\n
-if start_date is None:\n
-  start_date = DateTime()\n
-\n
-counter_date_list = context.portal_catalog(portal_type=\'Counter Date\', \n
-                site_uid=site_uid, \n
-                start_date={\'query\':start_date,\'range\':\'ngt\'},\n
-                sort_on=[(\'start_date\',\'descending\')], limit=1)\n
-counter_date = None\n
-if len(counter_date_list)==1:\n
-  counter_date = counter_date_list[0]\n
-return counter_date\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>site_uid=None, start_date=None</string> </value>
         </item>

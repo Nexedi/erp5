@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  A script which actually creates and returns the query object.\n
-"""\n
-\n
-query_module = context.getPortalObject().query_module \n
-query = query_module.newContent(description=description, \n
-                                title=context.getPortalType(),\n
-                                agent_value=context)\n
-query.updateLocalRolesOnSecurityGroups()\n
-query.post()\n
-return query\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>description</string> </value>
         </item>

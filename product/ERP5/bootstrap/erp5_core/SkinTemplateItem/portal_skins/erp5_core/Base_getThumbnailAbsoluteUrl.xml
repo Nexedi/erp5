@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script tries to produce a thumbnail for any\n
-  document which supports thumbnails. If more document \n
-  types provide a thumbnail, this script must be extended.\n
-\n
-  TODO:\n
-  - this should be part of the Document class API ?\n
-  - display of thumbnail must be configurable (yes/no, size)\n
-    ideally with some AJAX  in listbox ?\n
-  - pregenerate thumbails (as part of Document API too, for example\n
-    in relation with metadata discovery, within an activity)\n
-"""\n
-portal_type = context.getPortalType()\n
-\n
-if portal_type in (\'Drawing\', \'Image\', \'PDF\', \'Presentation\', \'Spreadsheet\', \'Text\', \'Web Page\'):\n
-  return context.absolute_url()\n
-\n
-if portal_type in (\'Person\', \'Organisation\', \'Credential Update\', \\\n
-                    \'Component\', \'Product\',) and context.getDefaultImageAbsoluteUrl() is not None:\n
-  return context.getDefaultImageAbsoluteUrl()\n
-\n
-return None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  return firstname plus lastname of the owner of document if the document belong\n
-  to a registred person in person_module otherwise it\'s an anonymous requester\n
-"""\n
-owner = context.owner_info()[\'id\']\n
-owner_object = context.portal_catalog.getResultValue(portal_type=\'Person\', reference=owner)\n
-\n
-owner_name = \'Requester\'\n
-\n
-if owner_object is not None:\n
-   if  owner_object.getFirstName() + owner_object.getLastName() != \'\':\n
-     owner_name = "%s %s" % (owner_object.getFirstName(), owner_object.getLastName())\n
-   else:\n
-     owner_name = owner\n
-return owner_name\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

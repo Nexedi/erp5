@@ -19,45 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>{\n
-    "name": "components/jquery",\n
-    "description": "jQuery JavaScript Library",\n
-    "type": "component",\n
-    "homepage": "http://jquery.com",\n
-    "license": "MIT",\n
-    "support": {\n
-        "irc": "irc://irc.freenode.org/jquery",\n
-        "issues": "http://bugs.jquery.com",\n
-        "forum": "http://forum.jquery.com",\n
-        "wiki": "http://docs.jquery.com/",\n
-        "source": "https://github.com/jquery/jquery"\n
-    },\n
-    "authors": [\n
-        {\n
-            "name": "John Resig",\n
-            "email": "jeresig@gmail.com"\n
-        }\n
-    ],\n
-    "require": {\n
-        "robloach/component-installer": "*"\n
-    },\n
-    "extra": {\n
-        "component": {\n
-            "scripts": [\n
-                "jquery.js"\n
-            ],\n
-            "files": [\n
-                "jquery.min.js",\n
-                "jquery-migrate.js",\n
-                "jquery-migrate.min.js"\n
-            ]\n
-        }\n
-    }\n
-}\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

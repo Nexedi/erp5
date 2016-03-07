@@ -98,62 +98,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, CKEDITOR*/\n
-/*jslint nomen: true, maxlen:80, indent:2*/\n
-(function (rJS, CKEDITOR) {\n
-  "use strict";\n
-\n
-  rJS(window)\n
-    .ready(function (g) {\n
-      g.props = {};\n
-    })\n
-    .ready(function (g) {\n
-      return g.getElement()\n
-        .push(function (element) {\n
-          var textarea = element.querySelector(\'textarea\');\n
-          g.props.element = element;\n
-          g.props.ckeditor = CKEDITOR.replace(\n
-            textarea,\n
-            {\n
-              removeButtons: \'NewPage,Preview\',\n
-              removePlugins: \'\',\n
-              disableNativeSpellChecker: false\n
-            }\n
-          );\n
-          g.props.ckeditor.addCommand(\'saveRJS\', {\n
-            readOnly: 1,\n
-            exec: function () {\n
-              return g.submitContent();\n
-            }\n
-          });\n
-          g.props.ckeditor.ui.addButton(\'Save\', {\n
-            label: "Save",\n
-            command: \'saveRJS\',\n
-            toolbar: \'document,1\'\n
-          });\n
-          g.props.ckeditor.on(\'maximize\', function () {\n
-            return g.maximize();\n
-          });\n
-        });\n
-    })\n
-    .declareAcquiredMethod("submitContent", "triggerSubmit")\n
-    .declareAcquiredMethod("maximize", "triggerMaximize")\n
-    .declareMethod(\'render\', function (options) {\n
-      this.props.key = options.key || "text_content";\n
-      this.props.ckeditor.setData(options.value || "");\n
-      return {};\n
-    })\n
-\n
-    .declareMethod(\'getContent\', function () {\n
-      var result = {};\n
-      result[this.props.key] = this.props.ckeditor.getData();\n
-      return result;\n
-    });\n
-\n
-}(rJS, CKEDITOR));</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>CKEditor Gadget JS</string> </value>
         </item>

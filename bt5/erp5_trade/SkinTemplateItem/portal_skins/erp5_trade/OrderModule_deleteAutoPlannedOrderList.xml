@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Delete all orders in auto_planned state.\n
-"""\n
-id_list = [order.getId() for order in \n
-            context.searchFolder(portal_type=context.getPortalOrderTypeList(),\n
-                                 simulation_state=(\'auto_planned\',))]\n
-if id_list:\n
-  context.manage_delObjects(id_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

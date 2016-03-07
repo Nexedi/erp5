@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal_skins = context.getPortalObject().portal_skins\n
-skin_folder = portal_skins.manage_addProduct[\'OFSP\'].manage_addFolder(skin_folder_id)\n
-\n
-# Add the new skin folder at the top of portal_skins.\n
-for skin_name, selection in portal_skins.getSkinPaths():\n
-  new_selection = (\'%s,\' % skin_folder_id + selection).replace(",,",",")\n
-  portal_skins.manage_skinLayers(skinpath = (new_selection,) , \n
-                                 skinname = skin_name, \n
-                                 add_skin = 1)\n
-\n
-return getattr(portal_skins, skin_folder_id)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>skin_folder_id</string> </value>
         </item>

@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-request = context.REQUEST\n
-total_line = int(kw.get(\'total_line\',\'0\')) or int(request.get(\'total_line\',\'0\'))\n
-title = kw.get(\'rss_title\', None) or request.get(\'rss_title\',\'No title\')\n
-portal_selection = getattr(context,\'portal_selections\')\n
-selection = portal_selection.getSelectionFor(kw.get(\'selection_name\',None) or request.get(\'selection_name\',\'\'))\n
-params = selection.getParams()\n
-readItemList = params.get(\'rss_read_item:list\', {})\n
-readItemCount = len(readItemList)\n
-unreadItemCount = total_line - readItemCount\n
-if unreadItemCount > 0:\n
-  return title +\' (\'+str(unreadItemCount)+\')\'\n
-return title\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

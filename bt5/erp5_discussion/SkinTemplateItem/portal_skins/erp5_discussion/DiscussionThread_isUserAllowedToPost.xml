@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Evaluate if user is allowed to create new Discussion Post in context.\n
- \n
-"""\n
-return context.portal_membership.checkPermission(\'Add portal content\', context) or \\\n
-         (context.getValidationState() in (\'published\', \'published_alive\', \\\n
-                                          \'shared\', \'shared_alive\', \\\n
-                                          \'released\', \'released_alive\',))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>DiscussionThread_isUserAllowedToPost</string> </value>
         </item>

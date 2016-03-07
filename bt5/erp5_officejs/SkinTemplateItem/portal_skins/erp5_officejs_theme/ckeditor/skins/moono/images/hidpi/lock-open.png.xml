@@ -19,33 +19,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAE+ElEQVRYw51WTWwTVxD+5u3bbLzG
-P2DF4BY1KMARkAG5DkWoBw5VBeSIVFopJVWkiGtzqNRD1R6qKucqUtUDB0C0l157QDkUSlEErZA4
-IKGoUiWUxBCI43/vvjc9eNdsnLWzZiQf/Nae+eb7Zr599OT2bbxNUJ9zHjKPHLaoEAKGECDyILBX
-0vvOzFBaQ2sdCUxkAEQEKQTisRhSto0RKcFaQ2kNAB1QQqDtuijX66g1GnC1BvNgGJEAEAApBBK2
-jVwmAyoWD0OIqczBg8WjR4++T0IYz549e/Ty+fOHcJxb/ODByurGBir1+q4gIgEQQiA+OuoX/+zT
-q1d/TNp2XCnVZeD4kSMXhGFc2KrV5qlY/JLv3/8JzKjswoSIAsDwuqdi8Zsvrl27nrTtOCsFMMMA
-YACA1tCuiz2WFZ+enV2MTU3dyu3bh4RtQwrRd2gjAQjEDz9fv/5tpdFoaCKQYcAwTRimCSEliAis
-NUwAl6emLtOZM7O5TAbxWAxChJeiKGtoeBJkkknYqRQon39vdGzs6+bm5r9wnN8AlAGc+/jSpe/f
-zeXGWSkwESqNRu3XGzfylaWlldVXr9B23bebAa01as0m2q4Lu1ZDZWnpP8s0Z4UQEN70w7Z/oWPH
-fv/o4sV/Dh44MA5mJGw7Dik/sUzzO0EEwk6fiASAgc5uOw4c10W10ehS6ntDwrbBjx+X6cSJrz6f
-mbnFSkEDSO/ff5oHeMJQRsTMUJ7RdIfK60xrjbhlAcAfjXYbJhGU1hgfHz+ltH5jWD0xcAgJ4Za7
-7YwZDMBRCq+rVfDy8upmtQrHdaGUQjqdzrG3qr5bDmRgh916BXYLIoLrulDNJurNJvaYJgBAKQXD
-MDBimm+kDEiyA4AQArZlIRWPw5ISzAyO4OsEQBoGjFgMZmDvLSlhJRJ4xzBQa7VQrtVQb7W6BrZj
-DUekRDadRvr8+bNjExMLRw4fLugBGvaCt6REIhbDqOz01nJd1NptPHn6dHl9ZWV+886de6XNze5K
-bmOAPCotKTE2MbHwwcmTBQLQ1TBCCKLOanp6j0gJU0pM5vOFP5kXLCknKbCSoVvAzJg4dKgAZkgh
-AMOIDCCYo9sUAOXl7H0nyJB/AsxwHAfKdSEM4827/y2DmaGUguM43fz9AXihmaH9Deijfy+wfm88
-DuTrjXAARJ1k3od3PKbOb4i6ILrFmcOB+Oc9oPsyoJTqfAJFggCb7bbz18OHN7dKpUUASGazc5On
-T18ZHRkxexnzJVBKRWDAn9BA58GOfDAPHj26Wb57dwZbW50HyeRM+tw5fDg5OR0mB3tn5NXYVQKt
-FHQIA0QECIHy+voiKhWslkoAgBwRyuvri5p5Gj03IGbu5oskAaEzNNxvCAeYkj872wD4IHwGoswA
-+0lChpC1RjKbnUMqNZPzD1MpJLPZOa01KGQQuc9wDpZAayilQofw1PHjV/YUi6htbCwCQDyTmSvk
-81e0d1fsLa61Hk6CIOIw5CNSmmcLhWkA00FpuMdoehmIJAERdY0jbHV8FnqTDTItPx9F8gEirK6t
-LR/Yu7fQr6Ohggiu1lhdW1seKIE/rU3HQfPFi/m/mRf2Z7OFoMuFJd/tGRFhvVRabr18Od90nG0e
-s4MBpTVeV6vYWlq6N2qak32TD8kAADQdB6+r1e5lJBSA1hr1ZhOtdhvU5yo9dP0Au/6VzI//AS5i
-z037U6xIAAAAAElFTkSuQmCC</string> </value>
-        </item>
-        <item>
             <key> <string>height</string> </key>
             <value> <int>32</int> </value>
         </item>

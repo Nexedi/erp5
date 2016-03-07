@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-\n
-def getLatestModificationDate():\n
-  document = context.getPortalObject().portal_catalog(\n
-    portal_type=("Web Section", "Web Site",) + context.getPortalDocumentTypeList(),\n
-    sort_on=((\'modification_date\', \'descending\'),),\n
-    select_list=(\'modification_date\',),\n
-    limit=1,\n
-    )\n
-  if document:\n
-    return document[0].modification_date\n
-  return getattr(context, \'getModificationDate\', context.modified)()\n
-\n
-getLatestModificationDate = CachingMethod(\n
-  getLatestModificationDate,\n
-  id="Base_getWebDocumentDrivenModificationDate",\n
-  cache_factory="erp5_content_short",\n
-  )\n
-\n
-return getLatestModificationDate()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

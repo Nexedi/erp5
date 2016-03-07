@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  Do actual conversion of Web Page. As it involves cloudoo use serialization tag and activity.\n
-"""\n
-portal = context.getPortalObject()\n
-\n
-format_kw = {\'format\': format,\n
-            \'quality\': quality}\n
-for display in display_list:\n
-  format_kw[\'display\'] = display\n
-  context.activate(serialization_tag=\'pre_convert\').convert(**format_kw)\n
-\n
-# try to convert all relative referenced (i.e. by <img> tag) documents\n
-context.activate().WebPage_preConvertReferencedImageList(**format_kw)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>format, quality, display_list</string> </value>
         </item>

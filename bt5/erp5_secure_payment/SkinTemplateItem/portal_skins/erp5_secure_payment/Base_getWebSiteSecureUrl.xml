@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Return the secure url of current web site based on layout configuration"""\n
-\n
-website = context.getWebSiteValue()\n
-return website.getLayoutProperty(\'layout_secure_url\', website.getAbsoluteUrl())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

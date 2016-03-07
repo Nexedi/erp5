@@ -102,48 +102,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
-    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>ERP5 Page Tab</title>\n
-\n
-    <!-- renderjs -->\n
-    <script src="rsvp.js" type="text/javascript"></script>\n
-    <script src="renderjs.js" type="text/javascript"></script>\n
-\n
-    <script src="handlebars.js" type="text/javascript"></script>\n
-\n
-    <!-- custom script -->\n
-    <script src="gadget_global.js" type="text/javascript"></script>\n
-    <script src="gadget_erp5_page_tab.js" type="text/javascript"></script>\n
-\n
-    <script id="table-template" type="text/x-handlebars-template">\n
-      <section class="ui-content-header-plain">\n
-        <h3 class="ui-content-title ui-body-c" data-i18n="[last]{{definition_i18n}}">\n
-          <span class="ui-icon ui-icon-custom ui-icon-{{definition_icon}}">&nbsp;</span>\n
-          {{definition_title}}\n
-        </h3>\n
-      </section>\n
-      <ul data-role="listview" data-theme="c" data-inset="true" class="document-listview">\n
-        {{#each documentlist}}\n
-          <li><a data-i18n="{{title}}" class="ui-body-inherit" href="{{link}}">{{title}}</a></li>\n
-        {{/each}}\n
-      </ul>\n
-    </script>\n
-\n
-  </head>\n
-  <body>\n
-  </body>\n
-</html>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Gadget ERP5 Tab</string> </value>
         </item>

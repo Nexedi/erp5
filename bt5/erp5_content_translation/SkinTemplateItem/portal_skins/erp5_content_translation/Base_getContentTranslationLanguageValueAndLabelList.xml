@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import translateString\n
-language_column_list = [(i[\'id\'], translateString(i[\'title\']))\n
-                        for i in context.Localizer.get_languages_map()]\n
-language_column_list.sort()\n
-return language_column_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

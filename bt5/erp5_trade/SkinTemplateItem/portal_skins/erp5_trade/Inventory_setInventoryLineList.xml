@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>context.Delivery_setFastInputLineList(line_portal_type="Inventory Line",\n
-                                       cell_portal_type="Inventory Cell",\n
-                                       listbox=listbox,\n
-                                       form_id=form_id,\n
-                                       no_inventory=True,\n
-                                       **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox=[], form_id=\'view\',**kw</string> </value>
         </item>

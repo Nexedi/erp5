@@ -1,0 +1,43 @@
+<tal:block tal:replace="nothing"
+           xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+<!--
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+                   Christophe Dumez <christophe@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+</tal:block>
+<tal:block metal:use-macro="here/view_main/macros/master">
+  <tal:block metal:fill-slot="main">
+
+<tal:block tal:define="dict python: context.getVcsTool().info()">
+<div style="text-align: center; color: black;"><h1>Working Copy Informations</h1></div>
+    <div style="text-align: center"><table style="border-style: solid; border-width: 1px; margin-left:auto; margin-right:auto; width: 60%; text-align: left; color: black;">
+    <tr><td style="font-weight: bold">Repository URL</td><td tal:content="python:dict['url']">url</td></tr>
+    <tr><td style="font-weight: bold">Repository UUID</td><td tal:content="python:dict['uuid']">uuid</td></tr>
+    <tr><td style="font-weight: bold">Revision</td><td tal:content="python:dict['revision']">revision</td></tr>
+    <tr><td style="font-weight: bold">Node Type</td><td tal:content="python:dict['kind']">type</td></tr>
+    <tr><td style="font-weight: bold">Last Commit Author</td><td tal:content="python:dict['commit_author']">last author</td></tr>
+    <tr><td style="font-weight: bold">Last Commit Revision</td><td tal:content="python:dict['commit_revision']">last revision</td></tr>
+    <tr><td style="font-weight: bold">Last Commit Time</td><td tal:content="python:dict['commit_time']">last time</td></tr>
+    </table></div>
+<br/>
+<div style="text-align: center"><button onclick="history.back()" value="back" name="back" type="button">Back</button>
+</div>
+</tal:block>
+</tal:block>
+</tal:block>

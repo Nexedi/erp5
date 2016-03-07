@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Define Recipents\n
-project = context.getDestinationProjectValue()\n
-portal = context.getPortalObject()\n
-if project is not None:\n
-  recipient_list = [ i.getParentValue() for i in project.getDestinationProjectRelatedValueList(portal_type="Assignment")]\n
-else:\n
-  recipient_list = context.getDestinationValueList() + context.getSourceValueList()\n
-\n
-#If highest level of severity is reach, send Notifications also to source_decision\n
-if context.getBugSeverityUid():\n
-  bug_severity_list = portal.portal_categories.bug_severity.getCategoryChildValueList(sort_on=\'int_index\')\n
-  if bug_severity_list and\\\n
-     bug_severity_list[-1].getUid() ==\\\n
-     context.getBugSeverityUid():\n
-    recipient_list.extend(context.getSourceDecisionValueList())\n
-return recipient_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

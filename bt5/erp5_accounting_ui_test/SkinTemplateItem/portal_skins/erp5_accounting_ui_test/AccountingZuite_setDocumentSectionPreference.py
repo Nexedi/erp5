@@ -1,0 +1,6 @@
+preference = context.portal_preferences.accounting_zuite_preference
+preference.setPreferredAccountingTransactionSectionCategory('group/demo_group')
+preference.setPreferredSectionCategory('group/demo_group')
+preference.setPreferredAccountingTransactionSourceSection('organisation_module/my_organisation')
+
+return str((preference.getPreferredSectionCategory(), preference.getPreferredAccountingTransactionSectionCategory()))

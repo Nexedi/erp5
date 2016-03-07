@@ -49,33 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>import json\n
-\n
-form = context.REQUEST.form\n
-portal = context.getPortalObject()\n
-\n
-if len(portal.portal_catalog(portal_type="Person",\n
-                             reference=form.get("login_name"))):\n
-  return json.dumps(None)\n
-\n
-person = portal.person_module.newContent(portal_type="Person")\n
-person.edit(first_name=form.get("firstname"),\n
-            last_name=form.get("lastname"),\n
-            email_text=form.get("email"),\n
-            password=form.get("password"),\n
-            reference=form.get("login_name"))\n
-\n
-assignment = person.newContent(portal_type=\'Assignment\')\n
-assignment.setFunction("ung_user")\n
-assignment.open()\n
-\n
-person.validate()\n
-\n
-return json.dumps(True)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

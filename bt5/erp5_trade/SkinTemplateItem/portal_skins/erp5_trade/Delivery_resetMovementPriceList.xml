@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># This script sets zero to the prices of all movements, so that\n
-# prices will be recalculated.\n
-\n
-portal = context.getPortalObject()\n
-# We do not want to reset all kinds of movements (e.g. Accounting Movements).\n
-portal_type_list = portal.getPortalInvoiceMovementTypeList() \\\n
-  + portal.getPortalOrderMovementTypeList() \\\n
-  + portal.getPortalDeliveryMovementTypeList()\n
-for movement in context.getMovementList(portal_type=portal_type_list):\n
-  movement.edit(price=None, base_unit_price=None)\n
-\n
-if not batch_mode:\n
-  message = context.Base_translateString(\'Prices reset.\')\n
-  return context.Base_redirect(form_id,\n
-          keep_items=dict(portal_status_message=message))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id=\'view\', batch_mode=0, **kw</string> </value>
         </item>

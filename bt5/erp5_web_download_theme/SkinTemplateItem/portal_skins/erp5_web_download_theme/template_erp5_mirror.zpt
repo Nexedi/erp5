@@ -1,0 +1,40 @@
+<!-- ERP5 WEB INTEGRATION -->
+<tal:block metal:define-macro="master">
+  <tal:block tal:define="website here/getWebSiteValue;
+                        enctype string:multipart/form-data;
+                        portal_path website/absolute_url;
+                        section here/getWebSectionValue;
+                        section_url section/absolute_url;
+                        has_no_layout python: layout_form is None;
+                        aggregate python: has_no_layout or layout_form.Form_getGroupList(
+                                          ['section']);
+                        aggregate python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};
+                        section_area python:aggregate.get('section', []);
+                        has_section_area python:len(section_area);
+                        global css_list_template python: [];
+                        global js_list python: [];">
+
+    <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">
+      <tal:block metal:fill-slot="head">
+        <style>
+          label,legend,#hidden_fieldset, div.breadcrumb + span{display:none};
+        <style>
+      </tal:block>
+      <tal:block metal:fill-slot="layout">
+        <tal:block metal:use-macro="here/aggregate_render/macros/populate_request"/>        
+            <!--section here//-->
+            <!-- ERP5 layout form rendering code -->                  
+            <tal:block tal:condition="has_section_area">
+              <tal:block tal:condition="python: layout_form is not None"
+                         tal:define="wrapper_class string:section_area">
+                <tal:block tal:repeat="aggregate python: [('section', section_area, )]">
+                    <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render">
+                    </tal:block>
+                </tal:block>
+              </tal:block>    
+            </tal:block>
+            <!--section here//-->                                          
+      </tal:block>        
+    </tal:block>    
+  </tal:block>        
+</tal:block>

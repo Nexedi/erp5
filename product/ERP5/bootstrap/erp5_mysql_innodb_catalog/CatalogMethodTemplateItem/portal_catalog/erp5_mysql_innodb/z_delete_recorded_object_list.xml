@@ -51,23 +51,6 @@
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-comment>Do not delete rows really, but just mark them as "played" to avoid dead locks</dtml-comment>\n
-UPDATE\n
-  record\n
-SET\n
-  played = 1\n
-WHERE\n
-<dtml-in uid_list>\n
-  uid = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
-</dtml-in>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

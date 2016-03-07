@@ -49,48 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>try:\n
-  return container.REQUEST.other[script.id]\n
-except KeyError:\n
-  pass\n
-\n
-if not use_list:\n
-  return []\n
-\n
-portal = context.getPortalObject()\n
-translateString = portal.Base_translateString\n
-\n
-if portal_type is None:\n
-  portal_type = portal.getPortalResourceTypeList()\n
-\n
-use_uid = [context.portal_categories.resolveCategory(use).getUid()\n
-              for use in use_list]\n
-\n
-result = [(\'\', \'\')]\n
-\n
-for resource in context.portal_catalog.searchResults(\n
-               portal_type=portal_type,\n
-               default_use_uid=use_uid,\n
-               validation_state=validation_state,\n
-               sort_on=((\'portal_type\', \'asc\'),\n
-                        (\'title\', \'asc\'))) :\n
-  if show_default_quantity_unit and resource.getQuantityUnit():\n
-    result.append(\n
-     (\'%s (%s)\' % (resource.getTitle(),\n
-                   translateString(resource.getQuantityUnitTitle()),),\n
-      resource.getRelativeUrl()))\n
-  else:\n
-    result.append(\n
-     (resource.getTitle(),\n
-      resource.getRelativeUrl()))\n
-\n
-container.REQUEST.other[script.id] = result\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>use_list, validation_state=\'validated\', portal_type=None, show_default_quantity_unit=True</string> </value>
         </item>

@@ -1,0 +1,27 @@
+# Manually force restricted mode in the ERP5Document_getHateoas
+# Can not be done quickly with Security handling, as it redirects the request to the login form
+
+new_skin_name = "Hal"
+context.getPortalObject().portal_skins.changeSkin(new_skin_name)
+if REQUEST is None:
+  REQUEST = context.REQUEST
+REQUEST.set('portal_skin', new_skin_name)
+
+return context.ERP5Document_getHateoas(
+  REQUEST=REQUEST,
+  response=response,
+  view=view,
+  mode=mode,
+  query=query,
+  select_list=select_list,
+  limit=limit,
+  form=form,
+  relative_url=relative_url,
+  list_method=list_method,
+  default_param_json=default_param_json,
+  form_relative_url=form_relative_url,
+  bulk_list=bulk_list,
+  sort_on=sort_on,
+  local_roles=local_roles,
+  restricted=1
+)

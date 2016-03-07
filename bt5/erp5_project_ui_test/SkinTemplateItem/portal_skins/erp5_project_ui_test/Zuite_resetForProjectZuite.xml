@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Reset selections\n
-selection_tool = context.getPortalObject().portal_selections\n
-selection_tool.setSelectionFor(\'project_module_selection\', None)\n
-\n
-return "Reset Successfully."\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

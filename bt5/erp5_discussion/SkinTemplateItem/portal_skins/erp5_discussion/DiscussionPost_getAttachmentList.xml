@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Return list of attachments for a post.\n
-  We use proxy roles as not in all cases current user is allowed to get attachments but still we need\n
-  to provide a link to them which when used will ask for login.\n
-"""\n
-result = []\n
-for successor in context.getSuccessorValueList():\n
-  result.append({\'title\': successor.getTitle(),\n
-                 \'url\': successor.absolute_url()})\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

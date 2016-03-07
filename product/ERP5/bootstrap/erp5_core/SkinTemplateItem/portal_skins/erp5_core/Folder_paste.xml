@@ -49,33 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-\n
-if context.cb_dataValid:\n
-  object_list = context.cb_dataItems()\n
-  try:\n
-    portal_type_set = set(x.getPortalType() for x in object_list)\n
-  except AttributeError:\n
-    error_message = \'Sorry, you can not paste these items here.\'\n
-  else:\n
-    if portal_type_set.issubset(context.getVisibleAllowedContentTypeList()):\n
-      try:\n
-        new_item_list = context.manage_pasteObjects(portal.REQUEST[\'__cp\'])\n
-      except KeyError:\n
-        error_message = \'Nothing to paste.\'\n
-      else:\n
-        #new_id_list = [i[\'new_id\'] for i in new_item_list]\n
-        error_message = \'Items paste in progress.\'\n
-    else:\n
-      error_message = \'Sorry, you can not paste these items here.\'\n
-else:\n
-  error_message = \'Copy or cut one or more items to paste first.\'\n
-return context.Base_redirect(form_id, keep_items=dict(\n
-  portal_status_message=portal.Base_translateString(error_message)))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id</string> </value>
         </item>

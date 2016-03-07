@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>open_order = sci[\'object\']\n
-\n
-if not open_order.getReference():\n
-  return\n
-\n
-this_uid = open_order.getUid()\n
-\n
-# archive previously active open order with same reference\n
-for open_order in sci.getPortal().portal_catalog.searchResults(\n
-                          portal_type=open_order.getPortalType(),\n
-                          reference=open_order.getReference(),\n
-                          validation_state=\'validated\'):\n
-  if this_uid != open_order.uid:\n
-    open_order.getObject().archive()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>sci</string> </value>
         </item>

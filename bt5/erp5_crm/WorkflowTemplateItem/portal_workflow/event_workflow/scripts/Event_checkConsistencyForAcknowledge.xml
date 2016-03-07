@@ -49,33 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import translateString\n
-\n
-container.Event_checkConsistency(sci)\n
-\n
-portal = sci.getPortal()\n
-portal_workflow = portal.portal_workflow\n
-event = sci[\'object\']\n
-\n
-follow_up_ticket_type = portal_workflow.getInfoFor(event,\n
-                                                   \'follow_up_ticket_type\',\n
-                                                   wf_id=\'event_workflow\')\n
-\n
-follow_up_ticket_title = portal_workflow.getInfoFor(event,\n
-                                                    \'follow_up_ticket_title\',\n
-                                                    wf_id=\'event_workflow\')\n
-\n
-if follow_up_ticket_type not in ["", None] and \\\n
-     follow_up_ticket_title not in ["", None]:\n
-  return \n
-\n
-if not event.getFollowUp():\n
-  raise ValidationFailed(translateString(\'Follow up must be set to acknowledge an Event.\'))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>sci</string> </value>
         </item>

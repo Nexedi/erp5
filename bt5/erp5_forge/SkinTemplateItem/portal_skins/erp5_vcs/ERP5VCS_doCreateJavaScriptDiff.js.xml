@@ -53,17 +53,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return \'\'\'function doCommit(form){\n
-      submitAction(form,\'BusinessTemplate_doVcsCommit\');\n
-  }\n
-\n
-  function goBack(){\n
-    open(\'BusinessTemplate_viewVcsStatus?do_extract:int=0\', \'_self\');\n
-  }\'\'\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

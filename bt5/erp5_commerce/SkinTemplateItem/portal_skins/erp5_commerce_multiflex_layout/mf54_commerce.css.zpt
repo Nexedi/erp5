@@ -1,0 +1,166 @@
+<tal:block define="dummy python: request.RESPONSE.setHeader('Content-Type', 'text/css;; charset=utf-8')"/>
+<tal:block define="
+  site_url python:here.getWebSiteValue().absolute_url();
+  has_right_column python:bool(here.getLayoutProperty('layout_right_column', False));
+  body_color python:here.getLayoutProperty('layout_body_color', 'rgb(240,240,240)');
+  primary_color python:here.getLayoutProperty('layout_primary_color', 'rgb(200,200,200)');
+  secondary_color python:here.getLayoutProperty('layout_secondary_color', 'rgb(225,225,225)');
+  header_color python:here.getLayoutProperty('layout_header_color', 'rgb(218,218,218)');
+  menu_color python:here.getLayoutProperty('layout_menu_color', 'rgb(235,235,235)');
+  font_list python:here.getLayoutProperty('layout_font_list', 'Century Gothic, verdana, arial, sans-serif');
+  container_width python:here.getLayoutProperty('layout_container_width', 978);
+  border_width python:here.getLayoutProperty('layout_border_width', 10);
+  main_width python:container_width - 2 * border_width;
+  right_column python:here.getLayoutProperty('layout_right_column', False);
+  right_column_width python:here.getLayoutProperty('layout_right_column_width', 270);
+  right_column_padding python:here.getLayoutProperty('layout_right_column_padding', 12);
+  main_content_width python:main_width - (right_column_padding + right_column_width) * ((has_right_column or 0) and 1);
+  sitename_width python:here.getLayoutProperty('layout_sitename_width', 300);
+  header_background_image python:here.getLayoutProperty('layout_header_background_image', 
+                                                        'mf54_image/bg_header.jpg');
+  header_background_image python:'%s/%s' % (site_url, header_background_image);
+  site_logo python:here.getLayoutProperty('layout_site_logo', 
+                                          'mf54_image/bg_logo.gif');
+  site_logo python:'%s/%s' % (site_url, site_logo);
+  content_bottom_background_image python:here.getLayoutProperty('layout_content_bottom_background_image', 
+            'mf54_image/bg_corner_content_%s1col_bottom.gif' % ((not has_right_column and 'nosidebar_') or ''));
+  content_bottom_background_image python:'%s/%s' % (site_url, content_bottom_background_image);
+  content_top_background_image python:here.getLayoutProperty('layout_content_bottom_background_image', 
+            'mf54_image/bg_corner_content_%s1col_top.gif' % ((not has_right_column and 'nosidebar_') or ''));
+  content_top_background_image python:'%s/%s' % (site_url, content_top_background_image);
+
+">
+
+.main_content h2 {margin:0px;}
+.main_content h3 {font-size:120% !important; color:#FF0000;}
+div.portal_status_message h3 {margin:0px;}
+
+fieldset.left {padding:10px;}
+fieldset.left div.field {margin-top:5px; margin-bottom: 10px;}
+fieldset.left label {width: 135px !important; font-size: 120% !important; color:#505050; float:left;  width: <tal:block tal:replace="python: main_content_width / 5"/>px;}
+fieldset.left label a {display:none;}
+fieldset.right {padding:10px;}
+fieldset.right div.field {margin-top:5px; margin-bottom: 10px;}
+fieldset.right label {width: 135px !important; font-size: 120% !important; color:#505050; float:left; width:<tal:block tal:replace="python: main_content_width / 5"/>px;}
+fieldset.right label a {display:none;}
+fieldset.center {padding:10px;}
+fieldset.center div.field {margin-top:5px; margin-bottom: 10px;}
+fieldset.center label {font-size: 120% !important; color:#505050; float:left; width:<tal:block tal:replace="python: main_content_width / 5"/>px;}
+fieldset.center label a {display:none;}
+
+div.subcontent-box.cartbox fieldset.widget div.field label {display: none;}
+div.subcontent-box.cartbox h1.group_title {background: url(./mf54_image/icon_celltitle_cart.png) no-repeat; background-position:229px 5px;}
+div.subcontent-box.loginbox fieldset.widget div.field div p {font-weight: bold;color: #646464;}
+div.subcontent-box.loginbox fieldset.widget div.field div {text-align:center;}
+div.subcontent-box.loginbox fieldset.widget div.field div a {font-size:12px; font-weight: bold;color: #646464; margin-left: 8px;}
+div.subcontent-box.cartbox fieldset.widget div.field table {background-color:green; margin:0px; width:100%; padding:5px;}
+div.subcontent-box.cartbox fieldset.widget div.field table tr td {background-color:#FFFFFF; border:none;}
+div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_top {border-bottom: dashed 1px #cccccc;}
+div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_middle {border-bottom: solid 1px #dddddd;}
+div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_bottom {}
+div.subcontent-box.cartbox fieldset.widget div.field table tr {background-color:blue;}
+div.subcontent-box.cartbox fieldset.widget div.field table tr td div.cart_right {float:right; text-align:right;}
+div.subcontent-box.cartbox fieldset.widget div.field table tr td div.cart_left {float:left; text-align:left;}
+div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_bottom div.cart_left {float:left; text-align:left; margin:3px;}
+div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_bottom div.cart_left a {font-weight: bold; font-size:105%;}
+div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_bottom div.cart_right {float:right; text-align:right; padding:2px;}
+div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_bottom div.cart_right a {font-weight: bold; font-size:121%;}
+
+.sidemenu1 ul {border:none;}
+
+div.selected-product {height : 110px; width:<tal:block tal:replace="main_content_width"/>px; padding-left:25px; margin-bottom:10px;}
+div.selected-product div {float:left; width:100px; height:100px; text-align:center; padding-right: 25px;}
+div.selected-product img {border:solid 1px <tal:block tal:replace="primary_color"/>; padding:0px; margin-left:10px; margin-right:10px; margin-top:5px; margin-bottom:2px;}
+div.selected-product img:hover {border:solid 2px <tal:block tal:replace="primary_color"/>; padding:0px; margin-top:4px; margin-left:9px; margin-right:9px; margin-bottom:1px;}
+div.selected-product div div {width:50px; height:50px; vertical-align:middle; text-align:center; border:solid 1px <tal:block tal:replace="primary_color"/>; padding:0px; margin-left:10px; margin-right:10px; margin-top:5px; margin-bottom:2px;}
+div.selected-product div div:hover {border:solid 2px <tal:block tal:replace="primary_color"/>; padding:0px; margin-top:4px; margin-left:9px; margin-right:9px; margin-bottom:1px;}
+
+.cart_item_name {width:180px;}
+.headline     {float:left; width:<tal:block tal:replace="main_width"/>px;}
+
+
+.resource_left {float:left; width:<tal:block tal:replace="python: (main_content_width / 3) * 2"/>px;}
+.resource_right {float:right; background-color:red; width:<tal:block tal:replace="python: main_content_width / 3"/>px; background-color:<tal:block tal:replace="body_color"/>;}
+.resource_center {clear:both; background-color:<tal:block tal:replace="body_color"/>; padding:10px;}
+div.resource_image {float:left;}
+div.resource_image img {border:none; margin-left:5px;}
+div.no_image {float:left; width:75px; height:75px; border:solid 1px <tal:block tal:replace="primary_color"/>; text-align:center; margin: 10px; margin-top:0px;}
+div.no_image label {display:none;}
+fieldset.resource_left div.hiddenLabel label {display:none;}
+fieldset.resource_left div.hiddenLabel div.input {float:left; width:<tal:block tal:replace="python: main_content_width / 3"/>px; padding:0px}
+fieldset.resource_left div.hiddenLabel div.input span.hiddenLabel {font: 20px bold Verdana,sans-serif; padding-top:10px;}
+div.resource_image label {display:none;}
+.resource_right div.hidden label {display:none;}
+.resource_right div.field label a {display:none;}
+.resource_right div.field label {height:20px; width:100px; float:left; padding:0px;}
+.resource_right div.field div.input {height:20px; width:100px; float:right; padding:0px}
+.resource_right div.field {margin:5px}
+.resource_right {margin-bottom:10px;}
+.resource_center div.hiddenLabel div.input input {}
+.resource_center div.field label a {display:none;}
+.resource_center div.hiddenLabel label {margin-left:15px;padding:0px;}
+.product_description_header {margin: 5px; margin-left:15px;}
+.product_description {display:none;}
+.product_description_close {margin: 5px; margin-left:15px;}
+.content a[title="Edit this form"] {display:none;}
+.content {padding-top:10px;}
+.product_list_left     {float:left;width:<tal:block tal:replace="python: main_content_width - 260"/>px;}
+.product_list_right     {float:right; width:240px; padding:10px;}
+.product_list_left a img {border:1px solid <tal:block tal:replace="secondary_color"/>; margin-left:10px;}
+.product_list_left a img:hover {border:1px solid <tal:block tal:replace="primary_color"/>; margin-left:10px;}
+.product_list {border-top: 1px solid #FFFFFF; border-bottom: 1px solid #FFFFFF;}
+.product_list_bis {background-color:<tal:block tal:replace="body_color"/>; border-top: 1px solid <tal:block tal:replace="body_color"/>;border-bottom: 1px solid <tal:block tal:replace="body_color"/>;}
+.product_list:hover {border-top: 1px solid <tal:block tal:replace="primary_color"/>; border-bottom: 1px solid <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="secondary_color"/>;}
+.product_list_bis:hover {border-top: 1px solid <tal:block tal:replace="primary_color"/>;border-bottom: 1px solid <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="secondary_color"/>;}
+
+div.shopping_cart_renderer div.input {padding:0px;}
+
+.shopping_cart_renderer_title {float:left; margin-top:8px;}
+.shopping_cart_renderer_remove {float:right; margin-top:3px;}
+.shopping_cart_renderer_remove a img {border:none;}
+.shopping_cart_renderer_remove a img:hover {border:none;}
+
+.shopping_cart_renderer_shipping label a {display:none;}
+.shopping_cart_renderer_submit label a {display:none;}
+
+select.shopping_cart_renderer_shipping {float:right;}
+input.shopping_cart_renderer_submit {float:right;}
+
+
+div.shopping_cart_renderer_shipping {clear:both; height:20px; margin-bottom:20px; margin-top:20px; padding-left:20px; padding-right:20px; padding-top:3px; padding-bottom:3px; background-color: <tal:block tal:replace="body_color"/>;}
+.shopping_cart_renderer_shipping label {float:left; width: <tal:block tal:replace="python: main_content_width / 4"/>px; height:20px;padding:0px;}
+.shopping_cart_renderer_shipping div {height:20px; padding:0px}
+div.shopping_cart_renderer_submit {clear:both; height:20px; margin-bottom:20px; padding-left:20px; padding-right:20px; padding-top:3px;  padding-bottom:3px; background-color: <tal:block tal:replace="body_color"/>;}
+.shopping_cart_renderer_submit label {float:left; width: <tal:block tal:replace="python: main_content_width / 8"/>px; height:20px;padding:0px;}
+.shopping_cart_renderer_submit div {margin-left:10px; height:20px; padding:0px}
+
+.mf_commerce_text {font: 12px <tal:block tal:replace="python: ','.join(font_list)"/>}
+.mf_commerce_text_bold {font: bold 12px <tal:block tal:replace="python: ','.join(font_list)"/>;}
+.mf_commerce_text_small {font: 8px <tal:block tal:replace="python: ','.join(font_list)"/>;}
+.mf_commerce_text_description {font: 10px <tal:block tal:replace="python: ','.join(font_list)"/>;}
+
+div.hiddenLabel label {display:none;}
+fieldset.editable div.input {padding:0px;}
+
+.main_content table {width:100%; margin: 0px 0px 10px 0px}
+.main_content table th {border:none; background-color:<tal:block tal:replace="body_color"/>;}
+.main_content table tr {border:none; border-bottom:dashed 1px <tal:block tal:replace="menu_color"/>; background-color:#FFF;}
+.main_content table td {border:none; background-color:#FFF;}
+.main_content table tr.thead_bottom {border:none; background-color:<tal:block tal:replace="menu_color"/>;}
+.main_content table tr.thead_top {border:none; background-color:<tal:block tal:replace="secondary_color"/>;}
+.main_content table tr.thead_bottom td {border: solid 1px <tal:block tal:replace="primary_color"/>;border-width: 1px 0px 1px 0px;}
+.main_content table tr.tfoot {border:none;}
+.main_content table caption {margin-top:10px; text-align:center; padding-bottom:10px;}
+.main_content button.sort_button {float:left;}
+.main_content th img {clear:none; border:none; margin-left:5px;}
+.main_content .pageNavigation input {vertical-align:middle;}
+.main_content table td.td_check_all {background-color:<tal:block tal:replace="body_color"/>;}
+
+.ecommerce_submit {margin:10px; margin-left:20px;}
+
+.main_content table tr.shopping_cart_end_lines {border:none;}
+.main_content table tr.shopping_cart_end_lines td {border:none;}
+.main_content table tr.shopping_cart_end_lines td.used {border-bottom:solid 1px #CCC;}
+
+
+</tal:block>

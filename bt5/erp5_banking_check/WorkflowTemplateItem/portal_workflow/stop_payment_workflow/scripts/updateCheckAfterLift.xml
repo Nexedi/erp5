@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># We will make sure that the check will be usable again\n
-transaction = state_change[\'object\']\n
-\n
-line_list = transaction.getMovementList()\n
-portal_workflow = transaction.portal_workflow\n
-\n
-for line in line_list:\n
-  aggregate_list = line.getAggregateValueList()\n
-  for aggregate in aggregate_list:\n
-    if aggregate.getPortalType()==\'Check\':\n
-      aggregate.setStopDate(transaction.getStartDate())\n
-      portal_workflow.doActionFor(aggregate,\'confirm_action\',wf=\'check_workflow\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script should returns a list of tuples, each containing 2 elements \n
-   - The current name of the category, which was set before the upgrade\n
-   - The new name of the category\n
-"""\n
-\n
-return None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

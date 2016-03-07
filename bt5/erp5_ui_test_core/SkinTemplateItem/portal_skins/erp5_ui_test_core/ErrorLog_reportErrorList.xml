@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>for error_entry in context.error_log.getLogEntries():\n
-  for key in error_entry:\n
-    if key not in ["tb_text", "tb_html", \'req_html\']:\n
-      print \'%s : %s\' % (key, error_entry[key])\n
-  print \'------------- Traceback ------------\'\n
-  print error_entry["tb_text"]\n
-  print "="*79\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

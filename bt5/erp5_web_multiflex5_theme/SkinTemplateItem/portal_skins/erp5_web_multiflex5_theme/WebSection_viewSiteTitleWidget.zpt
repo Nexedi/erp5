@@ -1,0 +1,38 @@
+<tal:block replace="nothing">
+  <!--
+  This widget displays the title of curent Web Site.
+
+  Although the title represents the web site title,
+  it is actually taken from the 'layout_header_title' 
+  property of the current section so that it is 
+  possible to override certain sections of the site
+  with special titles (ex. Some Site - BETA SECTION)
+
+  The motto is taken from the 'layout_header_motto'
+  property of the section for similar reasons.
+
+  The URL points to the site root.
+
+  TODO:
+    - make sure translation is possible or working
+  -->
+</tal:block>
+
+<tal:block tal:define="current_web_section python:request.get('current_web_section', here);
+                       current_web_section_header_title python:current_web_section.getLayoutProperty('layout_header_title');
+                       current_web_site python:request.get('current_web_site', here);">
+  <a class="sitelogo"
+     href="#"
+     i18n:translate="" i18n:domain="ui" i18n:attributes="title"
+     tal:attributes="href current_web_site/absolute_url;
+                     title python:current_web_site.getLayoutProperty('layout_header_title')"></a> <!-- Make a script for search an image who have the site in follow_up / install DMS-->
+  <div class="sitename">
+  <h1><a href="#"
+         i18n:translate="" i18n:domain="ui" i18n:attributes="title"
+         tal:content="current_web_section_header_title"
+         tal:attributes="href current_web_site/absolute_url;
+                         title current_web_section_header_title">Site Name</a></h1>
+  <h2 i18n:translate="" i18n:domain="ui" i18n:attributes="title"
+      tal:content="python:current_web_section.getLayoutProperty('layout_header_motto')"
+      tal:attributes="title python:current_web_section.getLayoutProperty('layout_header_motto')">Open Source Designs</h2>
+</tal:block>

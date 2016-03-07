@@ -104,46 +104,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!doctype html>\n
-<html>\n
-  <head>\n
-    <meta charset="utf-8">\n
-    <meta name="viewport" content="width=device-width, initial-scale=1">\n
-\n
-    <title>OfficeJS Logout Page</title>\n
-\n
-    <script src="rsvp.js"></script>\n
-    <script src="renderjs.js"></script>\n
-    <script src="handlebars.js"></script>\n
-    <script src="gadget_global.js" ></script>\n
-\n
-    <script id="page-template" type="text/x-handlebars-template">\n
-      <div class="ui-grid-b ui-responsive">\n
-        <div class="ui-block-a"></div>\n
-        <div class="ui-block-b">\n
-          <form class="logout-form">\n
-            <input data-inline="true" type="submit" data-i18n="[value]Confirm" value="Confirm" data-theme="b">\n
-          </form>\n
-        </div>\n
-        <div class="ui-block-c"></div>\n
-      </div>\n
-    </script>\n
-\n
-    <script src="gadget_officejs_page_logout.js"></script>\n
-\n
-  </head>\n
-\n
-  <body>\n
-  </body>\n
-</html>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>OfficeJS Logout Page</string> </value>
         </item>

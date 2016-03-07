@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>translateString = context.Base_translateString\n
-\n
-portal_type = \'Payment Transaction Group\'\n
-removed = False\n
-for line in context.getMovementList(\n
-        portal_type=context.getPortalAccountingMovementTypeList()):\n
-\n
-  payment_transaction_group = line.getAggregateValue(portal_type=portal_type)\n
-  if payment_transaction_group is not None and \\\n
-       payment_transaction_group.getValidationState() not in (\'delivered\',):\n
-    line.setAggregateValue(None)\n
-    removed = True\n
-\n
-message = translateString(\'No valid payment transaction group found\')\n
-if removed:\n
-  message = translateString(\'Removed from payment transaction group\')\n
-\n
-return context.Base_redirect(\'view\', keep_items=dict(portal_status_message=message))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

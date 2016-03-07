@@ -23,37 +23,6 @@
             <value> <string>application/x-javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-﻿/* Arabic Translation for jQuery UI date picker plugin. */\n
-/* Khaled Al Horani -- koko.dw@gmail.com */\n
-/* خالد الحوراني -- koko.dw@gmail.com */\n
-/* NOTE: monthNames are the original months names and they are the Arabic names, not the new months name فبراير - يناير and there isn\'t any Arabic roots for these months */\n
-jQuery(function($){\n
-\t$.datepicker.regional[\'ar\'] = {\n
-\t\tcloseText: \'إغلاق\',\n
-\t\tprevText: \'&#x3c;السابق\',\n
-\t\tnextText: \'التالي&#x3e;\',\n
-\t\tcurrentText: \'اليوم\',\n
-\t\tmonthNames: [\'كانون الثاني\', \'شباط\', \'آذار\', \'نيسان\', \'آذار\', \'حزيران\',\n
-\t\t\'تموز\', \'آب\', \'أيلول\',\t\'تشرين الأول\', \'تشرين الثاني\', \'كانون الأول\'],\n
-\t\tmonthNamesShort: [\'1\',\'2\',\'3\',\'4\',\'5\',\'6\',\'7\',\'8\',\'9\',\'10\',\'11\',\'12\'],\n
-\t\tdayNames: [\'السبت\', \'الأحد\', \'الاثنين\', \'الثلاثاء\', \'الأربعاء\', \'الخميس\', \'الجمعة\'],\n
-\t\tdayNamesShort: [\'سبت\', \'أحد\', \'اثنين\', \'ثلاثاء\', \'أربعاء\', \'خميس\', \'جمعة\'],\n
-\t\tdayNamesMin: [\'سبت\', \'أحد\', \'اثنين\', \'ثلاثاء\', \'أربعاء\', \'خميس\', \'جمعة\'],\n
-\t\tweekHeader: \'أسبوع\',\n
-\t\tdateFormat: \'dd/mm/yy\',\n
-\t\tfirstDay: 0,\n
-  \t\tisRTL: true,\n
-\t\tshowMonthAfterYear: false,\n
-\t\tyearSuffix: \'\'};\n
-\t$.datepicker.setDefaults($.datepicker.regional[\'ar\']);\n
-});
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

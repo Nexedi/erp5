@@ -49,44 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Run upgrader\n
-"""\n
-portal = context.getPortalObject()\n
-portal_alarms = portal.portal_alarms\n
-\n
-def launchUpgraderAlarm(alarm_id, after_tag=None):\n
-  """ Get the alarm and use sense and solve """\n
-  if after_tag is None:\n
-    after_tag = []\n
-  upgrader_alarm = getattr(portal_alarms, alarm_id, None)\n
-  if upgrader_alarm is not None and (force or upgrader_alarm.sense()):\n
-    # call solve method\n
-    tag = alarm_id\n
-    activate_kw = dict(tag=tag)\n
-    activate_kw["after_tag"] = after_tag\n
-    method_id = upgrader_alarm.getSolveMethodId()\n
-    if method_id not in (None, \'\'):\n
-      method = getattr(upgrader_alarm.activate(**activate_kw), method_id)\n
-      method(force=force, activate_kw=activate_kw)\n
-    return [tag] + after_tag\n
-  return after_tag\n
-\n
-previous_tag = launchUpgraderAlarm(\'upgrader_check_pre_upgrade\')\n
-\n
-previous_tag = launchUpgraderAlarm(\'upgrader_check_upgrader\',\n
-                                   after_tag=previous_tag)\n
-\n
-previous_tag = launchUpgraderAlarm(\'upgrader_check_post_upgrade\',\n
-                                   after_tag=previous_tag)\n
-\n
-# Nothing else to do, so we can disable.\n
-context.setEnabled(False)\n
-return\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>force=0, **kw</string> </value>
         </item>

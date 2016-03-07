@@ -49,57 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-\n
-def hashVariationCategoryItemList(item_list=None, value_list=None,\n
-                                  default_sub_field_property_dict=None, is_right_display=None):\n
-  # Define a dictionary where we store the subfields to display. \n
-  sub_field_dict = {}\n
-  split_depth = 1\n
-\n
-  # Maximum size of the ListField\n
-  maximum_list_size = 1\n
-\n
-  # Try to assign each item to a sub field.\n
-  for item in item_list:\n
-    # Get value of the item\n
-    item_value = item[int(not is_right_display)]\n
-    # Hash key from item_value\n
-    item_split = item_value.split(\'/\')\n
-    item_key = \'/\'.join(item_split[:split_depth])\n
-    base_category = item_split[0]\n
-    # Create a new subfield if necessary\n
-    if not sub_field_dict.has_key(item_key):\n
-      # Create property dict (key are field parameters)\n
-      sub_field_property_dict = default_sub_field_property_dict.copy()\n
-      sub_field_property_dict[\'key\'] = item_key\n
-      sub_field_property_dict[\'title\'] = context.portal_categories[base_category].getTranslatedTitle()\n
-      sub_field_property_dict[\'required\'] = 0\n
-      sub_field_property_dict[\'field_type\'] = \'ListField\'\n
-      sub_field_property_dict[\'size\'] = 1\n
-      sub_field_property_dict[\'item_list\'] = []\n
-      sub_field_property_dict[\'value\'] = []\n
-      sub_field_dict[item_key] = sub_field_property_dict\n
-    # Put the value in the correct sub field.\n
-    sub_field_dict[item_key][\'item_list\'].append(item)\n
-    context.log(\'hash\', \'item = %r\' % (item,))\n
-    sub_field_property_dict[\'size\'] = min(len(sub_field_dict[item_key][\'item_list\']) , maximum_list_size )\n
-    context.log(\'hash\', \'item_value = %r, value_list = %r\' % (item_value, value_list))\n
-    if item_value in value_list:\n
-      sub_field_dict[item_key][\'value\'] = item_value\n
-  # Return the list of subfield configuration.\n
-  return sub_field_dict.values()\n
-\n
-hashVariationCategoryItemList = CachingMethod(hashVariationCategoryItemList,\n
-                                              id=\'Checkbook_hashVariationCategoryItemList\',\n
-                                              cache_factory=\'erp5_ui_medium\')\n
-return hashVariationCategoryItemList(item_list=item_list, value_list=value_list,\n
-                                     default_sub_field_property_dict=default_sub_field_property_dict,\n
-                                     is_right_display=is_right_display)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>item_list, value_list, default_sub_field_property_dict={}, is_right_display=0</string> </value>
         </item>

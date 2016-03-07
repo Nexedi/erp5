@@ -49,36 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This script notify the user that the form has been submitted\n
-"""\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-\n
-\n
-translateString = context.Base_translateString\n
-portal_catalog = context.portal_catalog\n
-\n
-form = state_change[\'object\']\n
-\n
-# Build the message and translate it\n
-msg = []\n
-subject = translateString("Your application has been submitted successfully under the reference") + " : " + form.getId()\n
-msg.append(subject)\n
-msg.append(translateString("An Agent will review your application shortly. You will be notified by email whenever your application will start being processed. To further track your application, connect and login any time to the following site"))\n
-msg.append(context.getWebSiteValue().getAbsoluteUrl())\n
-msg.append(translateString("And use the login") + " : " + form.getReference())\n
-msg.append(translateString("and the password") + " : " + form.getPassword())\n
-\n
-msg = "\\n".join(msg)\n
-\n
-# We can now notify the accoutant through the notification tool\n
-context.portal_notifications.sendMessage(recipient=form.getReference(), \n
-    subject=subject, message=msg, portal_type_list=(\'Subscription Form\'),\n
-    store_as_event=True)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

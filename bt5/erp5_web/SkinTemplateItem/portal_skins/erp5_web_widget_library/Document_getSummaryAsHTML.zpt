@@ -1,0 +1,48 @@
+<tal:block 
+  tal:define="document_url here/absolute_url;
+              thumbnail_url here/Base_getThumbnailAbsoluteUrl;
+              icon here/getIconURL;
+              title here/getTitle;
+              modification_date python: here.Base_FormatDate(here.getModificationDate(),hour_minute=1);
+              image_conversion_dict here/Base_getImageArgumentDict;
+              dummy python: image_conversion_dict.update(**{'display':'thumbnail'});
+              image_conversion_arguments python: '&'.join(['%s=%s' % (k, v) for k, v in image_conversion_dict.items()]);
+              description python: here.getDescription();
+              box_relative_url python: request.get('box_relative_url', '');
+              dom_id python: modules['base64'].urlsafe_b64encode('%s-%s' %(box_relative_url, here.getUid())).rstrip('=')">
+  <div class="document-gadget-quick-preview">
+  <div class="teaser"
+       tal:attributes="onclick string:$('#${dom_id}').toggle();">
+    <img alt="Icon" class="icon"
+         tal:attributes="src icon" />
+
+    <span class="document-title"
+          tal:content="title"/>
+
+    <span class="modification-date"
+          tal:content="modification_date"/>
+
+  </div>
+
+  <!-- Hidden thumbnail & description -->
+  <div class="body" style="display:none;"
+       tal:attributes="id dom_id">
+    <a target="_blank" 
+       tal:attributes="href string:${document_url}/view">
+      <img alt="Thumbnail" class="document-thumbnail"
+         tal:condition="python: thumbnail_url is not None"
+         tal:attributes="src string:${thumbnail_url}/index_html?${image_conversion_arguments}"/>
+      <br/>
+      <span class="description"
+            tal:content="description"/>
+    </a>
+    <br/>
+    <a target="_blank" 
+       class="document-link"
+       title="Original Document"
+       i18n:translate="" i18n:domain="ui" i18n:attributes="title"
+       tal:attributes="href string:${document_url}/view">Show original item</a>
+  </div>
+  </div>
+  
+</tal:block>

@@ -49,12 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>context.newContent(id=id, title=title, portal_type=\'Web Section\')\n
-return "Created Successfully."\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>id=None, title=None</string> </value>
         </item>

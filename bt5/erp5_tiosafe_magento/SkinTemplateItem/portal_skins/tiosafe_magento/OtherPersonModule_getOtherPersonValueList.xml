@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Find the list of objects to synchronize by calling the catalog.\n
-\n
-  Possibly look up a single object based on its ID, GID\n
-"""\n
-person_list = []\n
-if not id:\n
-  for person in context.portal_catalog(portal_type=\'Person\'):\n
-    person = person.getObject()\n
-    if person.getDefaultEmailText() and \\\n
-        person.getValidationState() not in [\'invalidated\', \'deleted\'] and \\\n
-        person.getTitle() != \'Unknown\':\n
-      person_list.append(person)\n
-  return person_list\n
-# work on the defined person (id is not None)\n
-person = getattr(context.person_module, id)\n
-if person.getDefaultEmailText() and \\\n
-    person.getValidationState() not in [\'invalidated\', \'deleted\'] and \\\n
-    person.getTitle() != \'Unknown\':\n
-  person_list.append(person)\n
-return person_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>context_document, id="", gid=""</string> </value>
         </item>

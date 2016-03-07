@@ -1,0 +1,55 @@
+<tal:block tal:condition="python: options.get('current_state') is None">
+  <div id="logged_in_as">
+    Hello, <tal:block tal:condition="not: here/portal_membership/isAnonymousUser">
+             <span tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />
+           </tal:block>
+  </div>
+  <tal:block tal:replace="structure python: options.get('form_html')" /> 
+</tal:block>
+
+<tal:block tal:condition="python: options.get('current_state') is not None">
+  <tal:block  tal:define="business_configuration python: options.get('business_configuration');
+                          state_info python: here.BusinessConfiguration_getUIDescription(business_configuration);
+                          current_state_title python: options.get('current_state').getTitle() ;
+                          current_state_info python: filter(lambda x: x['state'] == current_state_title, state_info)[0];
+                          form_title python: current_state_info['title'];
+                          form_description python: current_state_info['description']">
+
+  <h2 i18n:translate=""
+      i18n:domain="ui"
+      tal:content="form_title"/>
+  <div style="padding-left: 0.5em; font-weight: 120%;">
+    <b i18n:translate=""
+       i18n:domain="ui"
+       tal:content="form_description"/>
+  </div>
+
+  <div class="content editable">
+    <table style="width: 100%;">
+      <tr>
+        <td style="width: 20%; vertical-align: top; padding-top: 0em;">
+          <h3 i18n:translate=""
+              i18n:domain="ui">Installation steps</h3>
+          <ul>
+            <tal:block tal:repeat="state state_info">
+              <li tal:condition="python: state['title'] not in ['Payment']"> 
+                   <b tal:condition="python: current_state_title==state['state']"
+                      i18n:translate=""
+                      i18n:domain="ui"
+                      tal:content="state/title"/>
+                   <span tal:condition="python: current_state_title!=state['state']"
+                         i18n:translate=""
+                         i18n:domain="ui"
+                         tal:content="state/title"/>
+              </li>
+            </tal:block>
+          </ul>
+        </td>
+        <td style="vertical-align: top; padding-top: 1.5em; padding-left: 2em;"> 
+          <tal:block tal:replace="structure python: options.get('form_html')" /> 
+        </td>
+      </tr>
+    </table>
+  </div>
+  </tal:block>
+</tal:block>

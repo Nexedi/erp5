@@ -1,0 +1,81 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Title Line</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test that and Editable Column has no Link</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+  <td>Create a new object</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0</td>
+  <td></td>
+  <td>Go to first line</td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Add Foo Line</td>
+  <td>Create a subobject</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Object created.</td>
+  <td></td>
+  <td>Verify that subobject was created</td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+  <td>Wait for reindexing</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0</td>
+  <td></td>
+  <td>Go to first line</td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//a[@href='${base_url}/foo_module/0/1?selection_index=0&amp;selection_name=foo_line_selection&amp;reset:int=1']</td>
+  <td></td>
+  <td>Make sure no a tag is present in ListBox</td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]/a/input</td>
+  <td></td>
+  <td>Make sure no input tag is present in ListBox</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input</td>
+  <td></td>
+  <td>Make sure there is an input tag in line 1 col 1</td>
+</tr>
+</tbody></table>
+</body>
+</html>

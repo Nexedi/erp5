@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>delivery = state_change[\'object\']\n
-\n
-# Make sure to delete what was already created\n
-for line in delivery.objectValues(portal_type=\'Checkbook Reception Line\'):\n
-  for aggregate in line.getAggregateValueList():\n
-    if aggregate.portal_type == \'Checkbook\':\n
-      for check in aggregate.objectValues():\n
-        delivery.portal_workflow.doActionFor(check, \'delete_action\')\n
-    delivery.portal_workflow.doActionFor(aggregate, \'delete_action\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

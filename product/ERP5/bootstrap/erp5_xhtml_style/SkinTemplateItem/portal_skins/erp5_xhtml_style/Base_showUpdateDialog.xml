@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>kw.update(context.REQUEST.form)\n
-kw[\'dialog_method\'] = update_method\n
-return context.Base_callDialogMethod(**kw) #XXX: is enable_pickle=1 required ?\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>update_method, **kw</string> </value>
         </item>

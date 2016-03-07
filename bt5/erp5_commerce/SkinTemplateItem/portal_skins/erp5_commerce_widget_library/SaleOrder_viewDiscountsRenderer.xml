@@ -33,27 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block tal:define="discount_info here/Person_getApplicableDiscountInformation;">\n
-\n
-  <h2>\n
-    <span tal:replace="python: here.Base_translateString(\'Discounts\')"/>\n
-  </h2>\n
-\n
-  <p tal:condition="python: discount_info is not None"> \n
-    <!-- Render discount information -->\n
-  </p>\n
-\n
-  <p tal:condition="python: discount_info is None">No discounts.</p>\n
-\n
-</tal:block>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

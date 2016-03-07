@@ -1,38 +1,38 @@
 <workflow_chain>
  <chain>
-  <type>Check Deposit</type>
+  <type>portal_type_workflow_chain/Check Deposit</type>
   <workflow>check_deposit_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Check Payment</type>
+  <type>portal_type_workflow_chain/Check Payment</type>
   <workflow>check_payment_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Checkbook Delivery</type>
+  <type>portal_type_workflow_chain/Checkbook Delivery</type>
   <workflow>checkbook_delivery_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Checkbook Reception</type>
+  <type>portal_type_workflow_chain/Checkbook Reception</type>
   <workflow>checkbook_reception_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Checkbook Usual Cash Transfer</type>
+  <type>portal_type_workflow_chain/Checkbook Usual Cash Transfer</type>
   <workflow>checkbook_usual_cash_transfer_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Checkbook Vault Transfer</type>
+  <type>portal_type_workflow_chain/Checkbook Vault Transfer</type>
   <workflow>checkbook_vault_transfer_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Stop Payment</type>
+  <type>portal_type_workflow_chain/Stop Payment</type>
   <workflow>edit_workflow, stop_payment_workflow</workflow>
  </chain>
  <chain>
-  <type>Traveler Check Purchase</type>
+  <type>portal_type_workflow_chain/Traveler Check Purchase</type>
   <workflow>edit_workflow, traveler_check_purchase_workflow</workflow>
  </chain>
  <chain>
-  <type>Traveler Check Sale</type>
+  <type>portal_type_workflow_chain/Traveler Check Sale</type>
   <workflow>edit_workflow, traveler_check_sale_workflow</workflow>
  </chain>
 </workflow_chain>

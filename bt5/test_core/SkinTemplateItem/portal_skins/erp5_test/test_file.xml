@@ -19,12 +19,6 @@
             <value> <string>text/x-unknown-content-type</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>test1\n
-test2\n
-test3</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

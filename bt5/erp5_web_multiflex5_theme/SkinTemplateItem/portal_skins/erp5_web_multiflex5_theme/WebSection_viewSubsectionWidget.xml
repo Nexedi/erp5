@@ -37,18 +37,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block tal:define="sitemap_root python:request.get(\'current_web_section\', here);\n
-                       depth python:here.getLayoutProperty(\'layout_subsection_depth\', 1)">\n
-<tal:block metal:use-macro="here/sitemap_renderer/macros/master" />\n
-</tal:block>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

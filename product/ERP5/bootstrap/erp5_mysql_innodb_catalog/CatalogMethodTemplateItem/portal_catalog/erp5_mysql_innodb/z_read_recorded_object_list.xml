@@ -51,23 +51,6 @@
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-SELECT\n
-  uid, path\n
-FROM\n
-  record\n
-WHERE\n
-  played = 0\n
-  AND catalog = <dtml-sqlvar catalog type="int"> \n
-ORDER BY\n
-  date\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

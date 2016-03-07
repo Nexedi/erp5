@@ -19,22 +19,6 @@
             <value> <string>application/javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>/*globals svgEditor*/\r\n
-\r\n
-svgEditor.setConfig({\r\n
-// extensions: [\r\n
-//\t\'ext-eyedropper.js\',\r\n
-//\t\'ext-shapes.js\',\r\n
-//\t\'ext-polygon.js\',\r\n
-//\t\'ext-star.js\'\r\n
-//],\r\n
-//emptyStorageOnDecline: true\r\n
-\tallowedOrigins: [window.location.origin] // May be \'null\' (as a string) when used as a file:// URL\r\n
-});\r\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

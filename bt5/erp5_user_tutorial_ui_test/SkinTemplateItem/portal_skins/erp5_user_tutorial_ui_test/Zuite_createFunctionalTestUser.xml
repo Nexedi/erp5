@@ -49,40 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
- Creates the functional test user, validate and open assignment.\n
-"""\n
-portal = context.getPortalObject()\n
-howto_dict = context.Zuite_getHowToInfo()\n
-\n
-functional_test_username = howto_dict[\'functional_test_username\']\n
-person = getattr(portal.person_module, functional_test_username, None)\n
-if person is None:\n
-  person = portal.person_module.newContent(portal_type=\'Person\',\n
-                                           id=functional_test_username,\n
-                                           title=functional_test_username)\n
-\n
-  person.edit(reference=functional_test_username,\n
-              password=howto_dict[\'functional_test_user_password\'],\n
-              default_email_text=howto_dict[\'functional_test_user_email\'])\n
-\n
-  person.validate()\n
-\n
-  assignment = person.newContent(portal_type=\'Assignment\',\n
-                                 start_date=\'01/01/2011\',\n
-                                 stop_date=\'01/01/2111\',\n
-                                 function=\'company/manager\')\n
-  assignment.open()\n
-\n
-  # XXX (lucas): These tests must be able to run on an instance without security.\n
-  for role in (\'Assignee\', \'Assignor\', \'Associate\', \'Auditor\', \'Owner\'):\n
-    portal.acl_users.zodb_roles.assignRoleToPrincipal(role, functional_test_username)\n
-\n
-return \'Done.\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

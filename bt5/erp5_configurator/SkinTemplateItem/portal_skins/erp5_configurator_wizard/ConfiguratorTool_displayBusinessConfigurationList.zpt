@@ -1,0 +1,48 @@
+<table>
+  <tbody>
+    <tal:block define="business_configuration_list python: here.ConfiguratorTool_getAvailableBusinessConfigurationList()">
+
+      <div tal:condition="python: not business_configuration_list">
+        <h3 i18n:translate="" i18n:domain="ui"> There is no Business Configuration Available. </h3>
+      </div>
+
+      <tal:block condition="business_configuration_list">
+        <tal:block repeat="business_configuration_tuple business_configuration_list">
+          <tr>
+            <tal:block repeat="bc business_configuration_tuple">
+              <tal:block define="bc_id python: bc.getId();
+                                 bc_title python: bc.getTitle();
+                                 bc_description python: bc.getResourceValue().getDescription();
+                                 bc_absolute_url python: bc.absolute_url();
+                                 bc_default_image python: bc.getResourceValue().getDefaultImageValue();
+                                 bc_default_image_absolute_url python: bc.getResourceValue().getDefaultImageAbsoluteUrl();">
+                <td>
+                  <div tal:attributes="id python: 'business_configuration_%s' % bc_id;
+                                       class string:box;">
+
+                    <span tal:attributes="id string:business-configuration-title" tal:content="bc_title" />
+
+                    <img tal:condition="bc_default_image"
+                         tal:attributes="src python: '%s?format=png' % bc_default_image_absolute_url" />
+
+                    <span tal:condition="bc_description"
+                          tal:attributes="id string:span-business-configuration-description;
+                                          title bc_description;"
+                          tal:content="bc_description" />
+
+                    <button id="dialog-submit-button"
+                            accesskey="V"
+                            tal:attributes="value python: bc.getRelativeUrl()"
+                            type="submit"
+                            name="field_your_business_configuration">Configure</button>
+                  </div>
+                </td>
+              </tal:block>
+            </tal:block>
+          </tr>
+        </tal:block>
+
+      </tal:block>
+    </tal:block>
+  </tbody>
+</table>

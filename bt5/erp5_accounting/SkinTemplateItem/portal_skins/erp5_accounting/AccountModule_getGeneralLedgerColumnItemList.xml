@@ -49,39 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return (\n
-  (\'Movement_getNodeGapId\', \'Account Code\'),\n
-  (\'node_translated_title\', \'Account Name\'),\n
-  (\'section_title\', \'Section\'),\n
-  (\'mirror_section_title\', \'Third Party\'),\n
-  (\'date\', \'Operation Date\'),\n
-  (\'modification_date\', \'Modification Date\'),\n
-  (\'Movement_getSpecificReference\', \'Transaction Reference\'),\n
-  (\'Movement_getExplanationTranslatedPortalType\', \'Type\'),\n
-  (\'Movement_getExplanationTitle\', \'Title\'),\n
-  (\'Movement_getExplanationReference\', \'Document Reference\'),\n
-) + context.accounting_module.AccountModule_getAnalyticColumnList() + (\n
-  (\'debit_price\', \'Debit\'),\n
-  (\'credit_price\', \'Credit\'),\n
-  (\'total_price\', \'Balance\'),\n
-  (\'Movement_getSectionPriceCurrency\', \'Accounting Currency\'),\n
-  \n
-  (\'debit\', \'Transaction Currency Debit\'),\n
-  (\'credit\', \'Transaction Currency Credit\'),\n
-  (\'total_quantity\', \'Transaction Currency Balance\'),\n
-  (\'resource_reference\', \'Transaction Currency\'),\n
-  \n
-  (\'Movement_getPaymentTitle\', \'Section Bank Account\',),\n
-  (\'payment_mode_translated_title\', \'Payment Mode\',),\n
-  \n
-  (\'grouping_reference\', \'Grouping Reference\'),\n
-  (\'grouping_date\', \'Grouping Date\'),\n
-  (\'getTranslatedSimulationStateTitle\', \'State\'),\n
-)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

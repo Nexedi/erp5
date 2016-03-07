@@ -44,19 +44,6 @@
             <value> <string>IdTool_zGetLastId</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-SELECT\n
-  last_id AS `LAST_INSERT_ID()`\n
-FROM portal_ids\n
-WHERE\n
-  `id_group` = <dtml-sqlvar id_group type="string">\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

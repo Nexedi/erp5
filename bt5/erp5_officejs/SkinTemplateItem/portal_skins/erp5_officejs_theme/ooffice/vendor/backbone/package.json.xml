@@ -19,42 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-{\n
-  "name"          : "backbone",\n
-  "description"   : "Give your JS App some Backbone with Models, Views, Collections, and Events.",\n
-  "url"           : "http://backbonejs.org",\n
-  "keywords"      : ["model", "view", "controller", "router", "server", "client", "browser"],\n
-  "author"        : "Jeremy Ashkenas <jeremy@documentcloud.org>",\n
-  "dependencies"  : {\n
-    "underscore"  : ">=1.4.3"\n
-  },\n
-  "devDependencies": {\n
-    "phantomjs": "1.9.0-1",\n
-    "docco": "0.6.1",\n
-    "coffee-script": "1.6.1"\n
-  },\n
-  "scripts": {\n
-    "test": "phantomjs test/vendor/runner.js test/index.html?noglobals=true && coffee test/model.coffee",\n
-    "build": "uglifyjs backbone.js --mangle --source-map backbone-min.map -o backbone-min.js",\n
-    "doc": "docco backbone.js && docco examples/todos/todos.js examples/backbone.localstorage.js",\n
-    "lint": "jsl -nofilelisting -nologo -conf docs/jsl.conf -process backbone.js"\n
-  },\n
-  "main"          : "backbone.js",\n
-  "version"       : "1.1.0",\n
-  "license"       : "MIT",\n
-  "repository": {\n
-    "type": "git",\n
-    "url": "https://github.com/jashkenas/backbone.git"\n
-  }\n
-}\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

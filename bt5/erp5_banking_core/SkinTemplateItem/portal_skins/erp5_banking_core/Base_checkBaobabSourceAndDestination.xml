@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-object_to_check_list = [context]\n
-object_to_check_list.extend(context.getMovementList())\n
-\n
-for object in object_to_check_list:\n
-  baobab_source = object.getBaobabSource()\n
-  baobab_destination = object.getBaobabDestination()\n
-\n
-  for node_url in (baobab_source,baobab_destination):\n
-    if node_url is not None:\n
-      #context.log(\'node_url\', node_url)\n
-      try:\n
-        node = context.portal_categories.restrictedTraverse(node_url)\n
-      except KeyError:\n
-        context.log(\'Error on \', (context.getRelativeUrl(),node_url))\n
-        msg = Message(domain=\'ui\',message=\'Sorry, wrong source or destination\')\n
-        raise ValidationFailed, (msg,)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

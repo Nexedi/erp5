@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>requeriment_list_value = context.getRequirementValueList()\n
-#requeriment_list_title = context.getRequirementTitleList()\n
-requeriment_string_list = []\n
-\n
-for req in requeriment_list_value:\n
-    resource_path = \'/\'.join(req.getPath().split(\'/\')[2:])\n
-    requeriment_string_list.append([req.getTitle(), resource_path ])\n
-\n
-return requeriment_string_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

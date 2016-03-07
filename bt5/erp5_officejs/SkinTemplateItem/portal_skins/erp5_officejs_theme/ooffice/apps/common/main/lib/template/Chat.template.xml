@@ -19,27 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<div id="chat-box">\r\n
-    <div id="chat-users">\r\n
-        <div id="chat-user-ct"></div>\r\n
-    </div>\r\n
-    <div id="chat-messages">\r\n
-        <div id="chat-message-ct"></div>\r\n
-    </div>\r\n
-    <div id="chat-options">\r\n
-        <div id="chat-options-ct">\r\n
-            <textarea id="chat-msg-text"></textarea>\r\n
-            <button id="chat-msg-btn-add" class="btn normal dlg-btn primary"><%=scope.textSend%></button>\r\n
-        </div>\r\n
-    </div>\r\n
-</div>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

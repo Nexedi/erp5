@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>result = []\n
-\n
-def getContentValues(item, parent_id):\n
- cv_list = item.contentValues()\n
- for cv in cv_list:\n
-  custom_id = "%s-%s"%(parent_id, cv.id)\n
-  result.append((cv,custom_id))\n
-  getContentValues(cv, custom_id )\n
-\n
-getContentValues(context, str(context.id) )\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

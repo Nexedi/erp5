@@ -1,0 +1,32 @@
+<tal:block replace="nothing">
+  <!--
+  This widget displays the breadcrumbs of the current context.
+
+  TODO:
+    - make sure translation is possible or working
+  -->
+</tal:block>
+
+<tal:block tal:define="current_web_section python:request.get('current_web_section', here);
+                       web_site python:current_web_section.getWebSiteValue();
+                       web_site_url python:web_site.absolute_url();
+                       sitemap_section_id python:current_web_section.getLayoutProperty('layout_sitemap_section_id', '');
+                       sitemap_section python:web_site.restrictedTraverse(sitemap_section_id)">
+<div class="navglobal">
+<ul>
+<tal:block tal:condition="sitemap_section_id">
+<li><a href="#" i18n:translate="" i18n:domain="ui"
+       tal:attributes="href python:'%s' % sitemap_section.absolute_url()">Sitemap</a></li>
+</tal:block>
+<tal:block tal:condition="here/portal_membership/isAnonymousUser">
+<li><a href="#" i18n:translate="" i18n:domain="ui"
+       tal:attributes="href python:'%s/login_form' % web_site_url">Login</a></li>
+</tal:block>
+<tal:block tal:condition="not:here/portal_membership/isAnonymousUser">
+<li><a tal:attributes="href python:'%s/logout' % web_site_url">
+    <tal:block i18n:translate="" i18n:domain="ui">Logout</tal:block>
+    (<tal:block tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />)</a></li>
+</tal:block>
+</ul>
+</div>
+</tal:block>

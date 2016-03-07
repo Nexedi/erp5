@@ -1,0 +1,11 @@
+<tal:block 
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  tal:define="line_list here/query;
+              label_list here/getLabelValueList;
+              real_context here/getContext;
+              feed_data python: real_context.Listbox_asRSS(label_list, line_list);">
+  <item tal:repeat="item_info feed_data/listItemInfos" >
+    <tal:block tal:replace="structure item_info"/>
+  </item>
+</tal:block>

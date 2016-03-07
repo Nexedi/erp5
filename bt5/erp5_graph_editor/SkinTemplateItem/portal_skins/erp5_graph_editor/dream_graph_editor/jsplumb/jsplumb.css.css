@@ -1,0 +1,116 @@
+.graph_container {
+    position: relative;
+    font-size: 80%;
+    border: 1px solid #999;
+
+    min-width: 400px;
+    min-height: 400px;
+
+    overflow: hidden;
+    background-color: #eaedef;
+    text-align: center;
+}
+
+.selected {
+    color: #bd0b0b!important
+}
+
+.window,
+.label {
+    background-color: #fff;
+    text-align: center;
+    z-index: 23;
+    cursor: pointer;
+    box-shadow: 2px 2px 19px #aaa;
+    -o-box-shadow: 2px 2px 19px #aaa;
+    -webkit-box-shadow: 2px 2px 19px #aaa;
+    -moz-box-shadow: 2px 2px 19px #aaa
+}
+path,
+._jsPlumb_endpoint {
+    cursor: pointer
+}
+._jsPlumb_endpoint_drop_allowed {
+    border: 4px solid #123456;
+    box-shadow: 6px 6px 19px #444;
+    -o-box-shadow: 6px 6px 19px #444;
+    -webkit-box-shadow: 6px 6px 19px #444;
+    -moz-box-shadow: 6px 6px 19px #444
+}
+._jsPlumb_connector {
+    z-index: 18
+}
+._jsPlumb_endpoint {
+    z-index: 19
+}
+._jsPlumb_overlay {
+    z-index: 23
+}
+._jsPlumb_connector._jsPlumb_hover {
+    z-index: 21!important
+}
+._jsPlumb_endpoint._jsPlumb_hover {
+    z-index: 22!important
+}
+._jsPlumb_overlay {
+    border: 1px solid #346789;
+    opacity: .8;
+    filter: alpha(opacity=80);
+    background-color: #fff;
+    color: #000;
+    font-family: helvetica;
+    padding: .5em
+}
+.window,
+.dummy_window {
+    border: 1px solid #d3d3d3;
+    width: 80px;
+    height: 80px;
+    box-sizing: border-box;
+    position: absolute;
+    color: #000;
+    font-family: serif;
+    font-style: italic;
+    padding-top: .9em;
+    font-size: .9em;
+    cursor: move;
+    font-size: 11px;
+    -webkit-transition: background-color .1s ease-in;
+    -moz-transition: background-color .1s ease-in;
+    transition: background-color .1s ease-in;
+    border-radius: 5px
+}
+.window:hover {
+    background-color: #5c96bc;
+    background-image: none;
+    color: #fff
+}
+.dummy_window {
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden
+}
+.ep {
+    position: absolute;
+    bottom: 37%;
+    right: 5px;
+    width: 1em;
+    height: 1em;
+    background-color: orange;
+    cursor: pointer;
+    box-shadow: 0 0 2px #000;
+    -webkit-transition: -webkit-box-shadow .25s ease-in;
+    -moz-transition: -moz-box-shadow .25s ease-in;
+    transition: box-shadow .25s ease-in
+}
+._jsPlumb_source_hover,
+._jsPlumb_target_hover,
+.dragHover {
+    background-color: #1e8151;
+    background-image: none;
+    color: #fff
+}
+path {
+    cursor: pointer
+}

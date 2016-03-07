@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>related_document_list = []\n
-request = context.REQUEST\n
-document =request.get(\'current_web_document\', context)\n
-isDocument = document.isDocument()\n
-if not isDocument:\n
-  # only document may have relations\n
-  return []\n
-\n
-# XXX: make Document_getRelatedDocumentList accept lists (and strings)\n
-for relation_id in relation_id_list:\n
-  related_document_list.extend([x for x in document.Document_getRelatedDocumentList(relation_id=relation_id) \\\n
-                                  if x not in related_document_list])\n
-return related_document_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>relation_id_list=[],**kw</string> </value>
         </item>

@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>security_parameter_dict = context.WebSite_getPaypalSecurityParameterDict()\n
-if security_parameter_dict is None:\n
-  return None\n
-security_parameter_dict[\'TOKEN\'] = token\n
-security_parameter_dict[\'METHOD\'] = \'GetExpressCheckoutDetails\'\n
-\n
-response_parameter_dict = context.WebSection_submitPaypalNVPRequest(parameter_dict=security_parameter_dict,\n
-                                                                  nvp_url=context.WebSite_getPaypalUrl(api=\'nvp\', alternative_url=alternative_url))\n
-return response_parameter_dict\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>token, alternative_url=None</string> </value>
         </item>

@@ -33,68 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
-<head>\n
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title tal:content="template/getId"/>\n
-</head>\n
-<body tal:define="file_name string:tiolive-ERP5.Freedom.TioLive.MultiplePages.PDF-001-en.pdf;\n
-                  full_filename_location python: here.Zuite_getFilenameLocation(file_name)">\n
-<table cellpadding="1" cellspacing="1" border="1">\n
-<thead>\n
-<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
-</thead><tbody>\n
-\n
-<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
-\n
-<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />\n
-\n
-<tr>\n
-  <td>openAndWait</td>\n
-  <td>${base_url}/web_site_module/km_test_web_site/document_module/view?reset:int=1</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>Folder_create:method</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>Documents</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>type</td>\n
-  <td>field_my_title</td>\n
-  <td>new document</td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>input-save-edit</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyValue</td>\n
-  <td>field_my_title</td>\n
-  <td>new document</td>\n
-</tr>\n
-\n
-<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>\n
-\n
-<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
-\n
-</tbody></table>\n
-</body>\n
-</html>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

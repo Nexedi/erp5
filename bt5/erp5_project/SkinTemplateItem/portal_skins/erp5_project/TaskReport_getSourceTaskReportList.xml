@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Log import log\n
-log(\'task_list\',\'starting\')\n
-task_module = context.getDefaultModule(\'Task Report\')\n
-log(\'task_list\',\'next1\')\n
-task_list = []\n
-if not kw.has_key(\'parent_uid\'):\n
-  kw[\'parent_uid\'] = task_module.getUid()\n
-log(\'task_list\',\'next2\')\n
-log(\'context.getPath()\',context.getPath())\n
-\n
-task_list = [x.getObject() for x in context.portal_catalog(**kw)]\n
-log(\'task_list\',task_list)\n
-#return context.searchFolder(**kw)\n
-return task_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

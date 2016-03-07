@@ -49,46 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-# This script is used to the automatic printing\n
-# It is called after the validation of the registry officer\n
-request_eform = state_change[\'object\']\n
-request = request_eform.REQUEST\n
-response = request.RESPONSE\n
-printer_name = request_eform.portal_preferences.getPreferredPrinterName()\n
-form_pdf_portal_type = request_eform.getPortalType()\n
-pdf_view_name = \'%s_view%sAsPdf\' % (form_pdf_portal_type, form_pdf_portal_type)\n
-form_view_pdf = getattr(request_eform, pdf_view_name, None)\n
-if form_view_pdf is None:\n
-  raise ValidationFailed, \'PDF view %s not found\' % pdf_view_name\n
-\n
-signed_pdf_name = context.addBackgroundOnPdfFile(form_view_pdf.generatePDF(),\n
-                                                 getattr(context,\'signature.pdf\'))\n
-\n
-context.printFile(printer_name = printer_name,\n
-                  file_path_to_print = signed_pdf_name,\n
-                  use_ps_file = True,\n
-                  nb_copy = 4)\n
-\n
-# print sub forms (as M0 Bis)\n
-form_bis_result = request_eform.searchFolder(portal_type=\'%s Bis\' % form_pdf_portal_type)\n
-form_bis_list = [form.getObject() for form in form_bis_result]\n
-for form_bis in form_bis_list:\n
-  form_portal_type = form_bis.getPortalType().replace(\' \', \'\')\n
-  view_name = \'%s_view%sAsPdf\' % (form_portal_type, form_portal_type)\n
-  form_pdf_view = getattr(form_bis, view_name, None)\n
-  if form_pdf_view is None:\n
-    raise ValidationFailed, \'PDF view %s not found\' % form_pdf_view\n
-  form_bis_signed_pdf_name = context.addBackgroundOnPdfFile(form_pdf_view.generatePDF(),\n
-                                                            getattr(context,\'signature.pdf\'))\n
-  context.printFile(printer_name = printer_name,\n
-                    file_path_to_print = signed_pdf_name,\n
-                    use_ps_file = True,\n
-                    nb_copy = 4)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

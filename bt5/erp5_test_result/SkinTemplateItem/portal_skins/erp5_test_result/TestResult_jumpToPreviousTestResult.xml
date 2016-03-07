@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>previous_test = context.TestResult_getPrevious()\n
-if previous_test is None:\n
-  message = \'No Previous Test Result\'\n
-else:\n
-  context = previous_test\n
-  message = \'Previous Test Result\'\n
-\n
-redirect = container.REQUEST.RESPONSE.redirect\n
-from ZTUtils import make_query\n
-return redirect(\'%s/%s?%s\' % (\n
-                context.absolute_url_path(),\n
-                form_id, make_query(selection_name=selection_name,\n
-                                    selection_index=selection_index,\n
-                                    portal_status_message=message)))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection_name=\'\', selection_index=\'0\', form_id=\'view\', **kw</string> </value>
         </item>

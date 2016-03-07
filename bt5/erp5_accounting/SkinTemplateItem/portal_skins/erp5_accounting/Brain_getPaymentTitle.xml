@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request = container.REQUEST\n
-payment_title = \'\'\n
-try:\n
-  return request.other[context.payment_uid]\n
-except KeyError:\n
-  if context.payment_uid:\n
-    payment = context.getPortalObject().portal_catalog.getobject(context.payment_uid)\n
-    if payment is not None:\n
-      payment_title = payment.getTitle()\n
-  \n
-request.other[context.payment_uid] = payment_title\n
-return payment_title\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

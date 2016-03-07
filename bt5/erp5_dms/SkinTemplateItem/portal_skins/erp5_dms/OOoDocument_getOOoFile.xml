@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-Public interface to getBaseData API method - invokes index_html\n
-to return the file in the base-data format.\n
-"""\n
-request = context.REQUEST\n
-response = request.RESPONSE\n
-response.setHeader(\'Content-disposition\', \'attachment; filename="%s"\' % context.getStandardFilename())\n
-return context.index_html(request, response, format=\'base-data\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

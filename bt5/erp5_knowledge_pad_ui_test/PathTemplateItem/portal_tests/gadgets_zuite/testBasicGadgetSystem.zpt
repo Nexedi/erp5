@@ -1,0 +1,222 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Express Access Tab</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
+</thead><tbody>
+
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/init"> init</span>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_setupGadgets</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view</td>
+  <td></td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Hide tabs</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Add tab</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Add gadgets</td>
+  <td></td>
+</tr>
+<!-- check adding gadgets by pressing enter -->
+<tr>
+  <td>click</td>
+  <td>add_new_tab_dialog_link</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>new_pad_title</td>
+  <td>test tab ENTER</td>
+</tr>
+<tr>
+  <td>keyPressAndWait</td>
+  <td>new_pad_title</td>
+  <td>\13</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>test tab ENTER</td>
+  <td></td>
+</tr>
+
+<!-- check adding gadgets  By clicking -->
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>add_new_tab_dialog_link</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>new_pad_title</td>
+  <td>test tab XXXXX</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id="add_new_tab_dialog"]/button[2]</td>
+  <td></td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Your tab is empty.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Please use link (Add gadgets) to prepare it yourself.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Add gadgets</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Gadgets</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-check-all"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Google Calendar </td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>ERP5 Worklists</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Feed Reader</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Persons</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Documentation</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Clock</td>
+  <td></td>
+</tr>
+<!-- Renaming pad -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//span[@title="Settings"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>new_knowledge_pad_title</td>
+  <td>ZZZZZZZZZZ</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@id="rename_tab_dialog_rename_button"]</td>
+  <td></td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
+
+<!-- Test removing pad -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//span[@title="Remove"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertConfirmation</td>
+  <td>Are you sure you want to remove this pad from your home?</td>
+  <td></td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextNotPresent</td>
+  <td>ZZZZZZZZZZ</td>
+  <td></td>
+</tr>
+
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
+
+</tbody></table>
+</body>
+</html>

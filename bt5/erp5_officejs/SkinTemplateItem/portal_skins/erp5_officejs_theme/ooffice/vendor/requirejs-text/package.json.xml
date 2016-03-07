@@ -19,42 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>{\n
-    "name": "text",\n
-    "version": "2.0.10",\n
-    "description": "An AMD loader plugin for loading text resources.",\n
-    "categories": [\n
-        "Loader plugins"\n
-    ],\n
-    "main": "text.js",\n
-    "github": "https://github.com/requirejs/text",\n
-    "bugs": {\n
-        "web": "https://github.com/requirejs/text/issues"\n
-    },\n
-    "repositories": [\n
-        {\n
-            "type": "git",\n
-            "url": "https://github.com/requirejs/text.git"\n
-        }\n
-    ],\n
-    "licenses": [\n
-        {\n
-            "type": "MIT",\n
-            "url": "http://www.opensource.org/licenses/mit-license.php"\n
-        },\n
-        {\n
-            "type": "BSD New",\n
-            "url": "http://opensource.org/licenses/BSD-3-Clause"\n
-        }\n
-    ],\n
-    "volo": {\n
-        "url": "https://raw.github.com/requirejs/text/{version}/text.js"\n
-    }\n
-}\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

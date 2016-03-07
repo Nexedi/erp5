@@ -49,41 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>\'\'\'Returns all validated accounts \'\'\'\n
-from Products.ERP5Type.Cache import CachingMethod\n
-\n
-portal = context.getPortalObject()\n
-\n
-def getAccountItemList(section_category,\n
-                       section_category_strict,\n
-                       from_date,\n
-                       lang):\n
-\n
-  account_list = [(\'\', \'\')]\n
-  for account in portal.account_module.searchFolder(\n
-                           portal_type=\'Account\',\n
-                           select_list=["relative_url"],\n
-                           validation_state=(\'validated\',)):\n
-    account_list.append((\n
-      account.Account_getFormattedTitle(),\n
-      account.relative_url,))\n
-\n
-  account_list.sort(key=lambda x: x[0])\n
-\n
-  return account_list\n
-\n
-getAccountItemList = CachingMethod(getAccountItemList,\n
-                                   id=script.getId(),\n
-                                   cache_factory=\'erp5_content_long\')\n
-\n
-return getAccountItemList(section_category,\n
-                          section_category_strict,\n
-                          lang=portal.Localizer.get_selected_language(),\n
-                          from_date=from_date)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>section_category, section_category_strict, from_date</string> </value>
         </item>

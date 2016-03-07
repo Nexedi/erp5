@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># no more pdf reports\n
-return context.AccountingTransactionModule_viewProfitAndLossAsOO(context.REQUEST)\n
-\n
-if context.REQUEST.format_raportu==\'pdf\':\n
-  return context.AccountingTransactionModule_viewProfitAndLossAsPdf(context.REQUEST)\n
-if context.REQUEST.format_raportu==\'oo\':\n
-  return context.AccountingTransactionModule_viewProfitAndLossAsOO(context.REQUEST)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

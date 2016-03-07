@@ -33,45 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<!doctype html>\n
-<html lang="en">\n
-<head>\n
-\t<title>jQuery UI Datepicker - Display inline</title>\n
-\t<link type="text/css" href="../../themes/base/ui.all.css" rel="stylesheet" />\n
-\t<script type="text/javascript" src="../../jquery-1.3.2.js"></script>\n
-\t<script type="text/javascript" src="../../ui/ui.core.js"></script>\n
-\t<script type="text/javascript" src="../../ui/ui.datepicker.js"></script>\n
-\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
-\t<script type="text/javascript">\n
-\t$(function() {\n
-\t\t$("#datepicker").datepicker();\n
-\t});\n
-\t</script>\n
-</head>\n
-<body>\n
-\n
-<div class="demo">\n
-\n
-Date: <div id="datepicker"></div>\n
-\n
-</div><!-- End demo -->\n
-\n
-<div class="demo-description">\n
-\n
-<p>Display the datepicker embedded in the page instead of in an overlay.  Simply call .datepicker() on a div instead of an input.</p>\n
-\n
-</div><!-- End demo-description -->\n
-\n
-</body>\n
-</html>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>inline.html</string> </value>
         </item>

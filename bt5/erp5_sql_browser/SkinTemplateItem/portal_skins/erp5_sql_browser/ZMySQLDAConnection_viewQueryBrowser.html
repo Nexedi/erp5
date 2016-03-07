@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SQL Browser</title>
+
+    <script type="text/javascript" src="jquery/core/jquery-1.9.min.js"></script>
+    <script type="text/javascript" src="jquery/ui/js/jquery-ui.min.js"></script>
+
+    <!-- "local" handsontable TODO make a bt ? -->
+    <script src="sql_browser/handsontable.full.js"></script>
+    <link rel="stylesheet" media="screen" href="sql_browser/handsontable.full.css">
+
+    <!-- "local" jquery noty -->
+    <script type="text/javascript" src="sql_browser/jquery.noty.packaged.js"></script>
+
+    <!-- "local" c3.js (0.4.10) and d3.js (3.5.5) -->
+    <link rel="stylesheet" type="text/css" href="sql_browser/c3.min.css">
+    <script type="text/javascript" src="sql_browser/d3.min.js"></script>
+    <script type="text/javascript" src="sql_browser/c3.min.js"></script>
+
+    <!-- PivotTable.js libs from erp5_pivot_table -->
+    <link rel="stylesheet" type="text/css" href="pivottable/pivot.css">
+    <script type="text/javascript" src="pivottable/pivot.js"></script>
+    <script type="text/javascript" src="pivottable/gchart_renderers.js"></script>
+    <script type="text/javascript" src="pivottable/c3_renderers.js"></script>
+
+
+    <!-- code mirror from erp5_code_mirror bt5 -->
+    <script type="text/javascript" src="codemirror/lib/codemirror.js"></script>
+    <link rel="stylesheet" href="codemirror/lib/codemirror.css">
+    <script type="text/javascript" src="codemirror/mode/sql/sql.js"></script>
+    <script type="text/javascript" src="codemirror/addon/cm_edit/matchbrackets.js"></script>
+    <link rel="stylesheet" href="codemirror/addon/dialog/dialog.css">
+    <script type="text/javascript" src="codemirror/addon/dialog/dialog.js"></script>
+    <script type="text/javascript" src="codemirror/addon/search/searchcursor.js"></script>
+    <script type="text/javascript" src="codemirror/addon/search/search.js"></script>
+    <link rel="stylesheet" href="codemirror/addon/hint/show-hint.css">
+    <script src="codemirror/addon/hint/show-hint.js"></script>
+    <script src="codemirror/addon/hint/anyword-hint.js"></script>
+    <script src="codemirror/addon/hint/sql-hint.js"></script>
+
+
+    <style>
+      .CodeMirror {height: 80px;}
+      .CodeMirror-hints {z-index: 100;} /* above handsontable header */
+      body {font-family: Verdana;}
+      .c3-line {stroke-width: 3px;}
+      .c3 circle {stroke: white;}
+      .c3 text { font-size: 12px;}
+      .c3 text { font-size: 12px;}
+      .tick line {stroke: white;}
+    </style>
+  </head>
+
+  <body>
+    <script type="text/javascript">
+      $(function() {
+        var editor,
+            ht = new Handsontable(document.getElementById('table_container'), { data: [[0]], rowHeaders: true, colHeaders: true}),
+            redraw = function(){
+
+              var derivers = $.pivotUtilities.derivers;
+              var renderers = $.extend($.pivotUtilities.renderers,
+                                       $.pivotUtilities.c3_renderers);
+              var dateFormat = $.pivotUtilities.derivers.dateFormat;
+              var sortAs = $.pivotUtilities.sortAs;
+              var tpl = $.pivotUtilities.aggregatorTemplates;
+              var sum = $.pivotUtilities.aggregatorTemplates.sum;
+              var numberFormat = $.pivotUtilities.numberFormat;
+              var intFormat = numberFormat({digitsAfterDecimal: 0});
+              var notification = noty({type: "info", text: "Refreshing data", layout: "bottom"});
+
+              $.getJSON("ZMySQLDAConnection_getQueryResultAsJSON", {query: editor.getValue()}, function(mps) {
+
+                ht.clear();
+                if (mps.length > 1) {
+                  ht.updateSettings({
+                    data: mps.slice(1),
+                    colHeaders: mps[0]
+                  });
+                } else {
+                  ht.updateSettings({ data: [[0]], colHeaders: true})
+                }
+
+
+                $("#output").pivotUI(mps, {
+                  renderers: renderers,
+
+                  hiddenAttributes: [],
+
+                  onRefresh: function(config) {
+                      // TODO save properties
+                    var config_copy = JSON.parse(JSON.stringify(config));
+                    //delete some values which are functions
+                    delete config_copy["aggregators"];
+                    delete config_copy["renderers"];
+                    delete config_copy["derivedAttributes"];
+                    //delete some bulky default values
+                    delete config_copy["rendererOptions"];
+                    delete config_copy["localeStrings"];
+                    $("#config_json").text(JSON.stringify(config_copy, undefined, 2));
+                  }
+                });
+                notification.close();
+              }
+                       ).fail(function(jqXHR, textStatus, errorThrown) {
+                notification.close();
+                noty({type: "error", text: jqXHR.responseText, timeout: 5000, layout: "bottom" });
+              });
+            };
+
+        $(function() {
+          editor = CodeMirror.fromTextArea(document.getElementById("query"), {
+            lineNumbers: true,
+            viewportMargin: Infinity,
+            extraKeys: {"Ctrl-Space": "autocomplete", "Ctrl-Enter": redraw, "Alt-Space": redraw},
+            mode: "text/x-mariadb"
+          });
+          $.getJSON("ZMySQLDAConnection_getSchemaAsJSON").then(
+            function(schema) {
+              CodeMirror.commands.autocomplete = function(cm) {
+                CodeMirror.showHint(cm, CodeMirror.hint.sql, {
+                  tables: schema
+                } );
+              }
+            });
+
+          $('button[name="Query"]').click(redraw);
+
+          // TODO: save presets in JIO
+          // ( also include pivot table config in preset )
+          $('button[name="Save"]').click(function(){alert("TODO");});
+
+          $('#presets')
+          .append($('<option>', {
+            value: "select * from message_queue where processing_node = -2",
+            text: 'Select failed message_queue activities'
+          }))
+          .append($('<option>', {
+            value: "update message_queue set processing_node=-1\n  where processing_node=-2\  and method_id='XXX'",
+            text: 'Restart message_queue'
+          })).change(function(){editor.setValue($("#presets").val()); redraw();});
+
+          redraw();
+        });
+      });
+    </script>
+<!--
+    Presets: <select id="presets"><option selected="selected" value=""></option></select>
+    <button name="Save">Save Preset</button>
+    <br/>
+-->
+<textarea name="query" id="query"></textarea>
+    <button name="Query">Run Query</button>
+
+
+    <div id="table_container" style="margin: 10px; height: 300px; overflow: hidden; z-index: 1;"></div>
+    <div id="output" style="margin: 10px;"></div>
+
+    <!-- TODO: debug saved configuration -->
+    <div style="display: none">
+      <pre id="config_json"></pre>
+    </div>
+
+  </body>
+
+</html>

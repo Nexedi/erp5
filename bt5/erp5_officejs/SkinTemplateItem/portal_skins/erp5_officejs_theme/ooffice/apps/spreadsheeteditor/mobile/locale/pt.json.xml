@@ -19,39 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>{\r\n
-  "SSE.controller.Main.convertationErrorText": "Conversão falhou.",\r\n
-  "SSE.controller.Main.convertationTimeoutText": "Tempo limite de conversão excedido.",\r\n
-  "SSE.controller.Main.criticalErrorExtText": "Pressione \\"OK\\" para recarregar visualização da página.",\r\n
-  "SSE.controller.Main.criticalErrorTitle": "Erro",\r\n
-  "SSE.controller.Main.downloadErrorText": "Download falhou.",\r\n
-  "SSE.controller.Main.errorDefaultMessage": "Código do erro: %1",\r\n
-  "SSE.controller.Main.errorKeyEncrypt": "Descritor de chave desconhecido",\r\n
-  "SSE.controller.Main.errorKeyExpire": "Descritor de chave expirado",\r\n
-  "SSE.controller.Main.errorUsersExceed": "O número de usuários permitidos pelo plano de preços foi excedido",\r\n
-  "SSE.controller.Main.notcriticalErrorTitle": "Aviso",\r\n
-  "SSE.controller.Main.printText": "Imprimindo...",\r\n
-  "SSE.controller.Main.textAnonymous": "Anônimo",\r\n
-  "SSE.controller.Main.textLoadingDocument": "Carregando documento",\r\n
-  "SSE.controller.Main.unknownErrorText": "Erro desconhecido.",\r\n
-  "SSE.controller.Main.unsupportedBrowserErrorText ": "Seu navegador não é suportado.",\r\n
-  "SSE.controller.Main.uploadImageExtMessage": "Formato de imagem desconhecido.",\r\n
-  "SSE.controller.Main.uploadImageFileCountMessage": "Sem imagens carregadas.",\r\n
-  "SSE.controller.Main.uploadImageSizeMessage": "Tamanho limite máximo da imagem excedido.",\r\n
-  "SSE.view.OpenCsvPanel.txtDelimiter": "Delimitador",\r\n
-  "SSE.view.OpenCsvPanel.txtEncoding": "Codificação",\r\n
-  "SSE.view.OpenCsvPanel.txtHint": "Insira a informação acima.",\r\n
-  "SSE.view.OpenCsvPanel.txtSpace": "Espaço",\r\n
-  "SSE.view.OpenCsvPanel.txtTab": "Aba",\r\n
-  "SSE.view.OpenCsvPanel.txtTitle": "Escolha as opções de abertura CSV",\r\n
-  "SSE.view.phone.toolbar.Search.searchText": "Pesquisar",\r\n
-  "SSE.view.phone.toolbar.View.doneText": "Concluído",\r\n
-  "SSE.view.tablet.toolbar.Search.searchText": "Pesquisar",\r\n
-  "SSE.view.tablet.toolbar.View.doneText": "Concluído"\r\n
-}</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

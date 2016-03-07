@@ -45,32 +45,6 @@ AAAAAIABAAAAAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLBQYAAAAAAQABAEMAAACkAQAAAAA=</string
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<?xml version=\'1.0\' encoding=\'utf-8\'?>\n
-<office:document-meta xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:ooo="http://openoffice.org/2004/office" xmlns:metal="http://xml.zope.org/namespaces/metal" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:i18n="http://xml.zope.org/namespaces/i18n" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:tal="http://xml.zope.org/namespaces/tal" office:version="1.2" tal:attributes="dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')">\n
-  <office:meta i18n:domain="ui" tal:define="user context/ERP5Site_getAuthenticatedMemberPersonValue;\n
-                                            username python:(user is None) and context.getPortalObject().portal_membership.getAuthenticatedMember() or user.getTitle()">\n
-    <meta:generator>ERP5</meta:generator>\n
-    <meta:creation-date tal:content="python:modules[\'DateTime\'].DateTime().ISO8601()">2007-07-04T15:43:50</meta:creation-date>\n
-    <meta:initial-creator tal:content="username"/>\n
-    <dc:date>2012-03-01T13:44:50</dc:date>\n
-    <meta:editing-cycles>1</meta:editing-cycles>\n
-    <meta:editing-duration>PT16H44M42S</meta:editing-duration>\n
-    <dc:title tal:content="context/title_or_id" i18n:translate=""/>\n
-    <dc:creator tal:content="username"/>\n
-    <meta:document-statistic meta:table-count="2" meta:image-count="0" meta:object-count="0" meta:page-count="2" meta:paragraph-count="33" meta:word-count="141" meta:character-count="1187"/>\n
-    <meta:user-defined meta:name="Info 1"/>\n
-    <meta:user-defined meta:name="Info 2"/>\n
-    <meta:user-defined meta:name="Info 3"/>\n
-    <meta:user-defined meta:name="Info 4"/>\n
-  </office:meta>\n
-</office:document-meta>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/xml</string> </value>
         </item>

@@ -1,0 +1,47 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Manifest UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_tests/erp5_web_manifest_ui_zuite/testManifest_PreferenceReset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/manifest/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Guidelines for Developing Web Applications</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//p[@class="custom-subtitle ui-content-subtitle"]</td>
+  <td>Guidelines for Developing Web Applications</td>
+</tr>
+
+
+</tbody>
+</table>
+</body>
+</html>

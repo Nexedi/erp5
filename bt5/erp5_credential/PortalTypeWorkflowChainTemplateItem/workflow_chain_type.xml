@@ -1,14 +1,14 @@
 <workflow_chain>
  <chain>
-  <type>Credential Recovery</type>
+  <type>portal_type_workflow_chain/Credential Recovery</type>
   <workflow>credential_interaction_workflow, credential_validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Credential Request</type>
+  <type>portal_type_workflow_chain/Credential Request</type>
   <workflow>credential_interaction_workflow, credential_validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Credential Update</type>
+  <type>portal_type_workflow_chain/Credential Update</type>
   <workflow>credential_interaction_workflow, credential_validation_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

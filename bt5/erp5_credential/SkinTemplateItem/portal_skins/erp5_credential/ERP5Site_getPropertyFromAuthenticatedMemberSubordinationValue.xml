@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Get property on the Organisation of current user\n
-Parameter:\n
-  property_name -- property to get, Mandatory (String, Example: \'title\')\n
-"""\n
-person = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
-if person is not None:\n
-  organisation = person.getDefaultCareerSubordinationValue()\n
-  if organisation is not None:\n
-    return organisation.getProperty(property_name, None)\n
-return None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>property_name</string> </value>
         </item>

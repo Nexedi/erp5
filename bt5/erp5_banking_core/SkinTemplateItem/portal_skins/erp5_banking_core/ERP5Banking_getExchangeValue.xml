@@ -49,34 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-rate = None\n
-method = getattr(context, \'getCurrencyExchangeRate\', None)\n
-if method is not None:\n
-  rate = method()\n
-if rate is None:\n
-  rate_list = context.CurrencyExchange_getExchangeRateList(from_currency=from_currency,\n
-                 to_currency=to_currency, \n
-                 currency_exchange_type=currency_exchange_type,\n
-                 start_date=start_date)\n
-  if len(rate_list) > 0:\n
-    rate = rate_list[0]\n
-\n
-price = context.getSourceTotalAssetPrice()\n
-\n
-if None in (rate, price):\n
-  return None\n
-\n
-price = float(price)\n
-\n
-return round(rate * price)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>from_currency=None,to_currency=None, currency_exchange_type=None, start_date=None</string> </value>
         </item>

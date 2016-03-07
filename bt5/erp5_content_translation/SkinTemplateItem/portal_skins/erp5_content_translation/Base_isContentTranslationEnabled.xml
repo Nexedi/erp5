@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>try:\n
-  return context.getTypeInfo().getContentTranslationDomainPropertyNameList() and True\n
-except:\n
-  # First time after cache is cleared, something is wrong and does not work.\n
-  return False\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

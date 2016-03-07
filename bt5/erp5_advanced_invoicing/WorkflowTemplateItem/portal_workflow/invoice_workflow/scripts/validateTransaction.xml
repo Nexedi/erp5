@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Validates the transaction for both source and destination section.\n
-\n
-XXX why proxy role ???\n
-"""\n
-transaction = state_change[\'object\']\n
-\n
-# Check constraints\n
-transaction.Base_checkConsistency()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

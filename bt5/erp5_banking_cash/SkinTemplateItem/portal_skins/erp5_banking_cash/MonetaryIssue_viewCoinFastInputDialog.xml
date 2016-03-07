@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>cash_detail_dict = {\'line_portal_type\'           : \'Monetary Issue Line\'\n
-                    , \'operation_currency\'       : context.Baobab_getPortalReferenceCurrencyID()\n
-                    , \'cash_status_list\'         : [\'new_not_emitted\',]\n
-                    , \'emission_letter_list\'     : [\'not_defined\',]\n
-                    , \'variation_list\'           : context.Baobab_getResourceVintageList(coin=1)\n
-                    , \'currency_cash_portal_type\': [\'Coin\',]\n
-                    , \'read_only\'                : False\n
-                    , \'column_base_category\'     : \'variation\'\n
-                    }\n
-\n
-return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
-                                                          , cash_detail_dict = cash_detail_dict\n
-                                                          , destination = context.getObject().absolute_url()\n
-                                                          )\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -21,18 +21,6 @@ table_1</string> </value>
             <value> <string>z_related_payment_transaction_line_payment_mode</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
-AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.payment_mode.getUid()">\n
-AND <dtml-var table_0>.uid in (<dtml-var query_table>.uid, <dtml-var query_table>.parent_uid)\n
-\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

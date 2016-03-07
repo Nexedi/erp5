@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>""" Called after test results are saved under ERP5 from workflow transition. """\n
-\n
-recipient_list = []\n
-include_link = 1\n
-\n
-project = context.getSourceProjectValue()\n
-if project is not None:\n
-  source_administration = project.getSourceAdministrationValue()\n
-  if source_administration is not None:\n
-    recipient_list = [source_administration.getDefaultEmailText()]\n
-\n
-# send emails\n
-if recipient_list:\n
-  context.TestResult_sendEmailNotification(mail_to=recipient_list,\n
-                                           mail_from=\'nobody@svn.erp5.org\',\n
-                                           include_link=include_link,\n
-                                           include_diff=True)\n
-  print \'Successfully sent to: \', recipient_list\n
-print \'OK\'\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>supply_line = state_change[\'object\']\n
-price_parameter = \'surcharge_ratio\'\n
-base_id = \'path_%s\' % price_parameter\n
-supply_line.updateQuantityPredicate(price_parameter)\n
-supply_line.updateCellRange(base_id=base_id)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

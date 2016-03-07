@@ -1,0 +1,149 @@
+/* 
+  quick and dirty. Integrate into main css if this is to be used more often
+  Taken from http://demos.jquerymobile.com/1.4.5/listview-grid/
+*/
+@media (max-width: 48em) {
+  .ui-shopbox .ui-shopbox-wrapper .ui-listview {
+    margin: 0;  
+  }
+}
+/* First breakpoint is 48em (768px). 3 column layout. Tiles 250x250 pixels incl. margin at the breakpoint. */
+@media (min-width: 48em) {
+  .ui-shopbox .ui-shopbox-wrapper {
+    padding: .5625em; /* 9px */
+  }
+  .ui-shopbox .ui-listview li {
+      float: left;
+      width: 30.9333%; /* 33.3333% incl. 2 x 1.2% margin */
+      height: 14.5em; /* 232p */
+      margin: .5625em 1.2%;
+  }
+  .ui-shopbox-wrapper .ui-listview li > .ui-btn {
+      -webkit-box-sizing: border-box; /* include padding and border in height so we can set it to 100% */
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      height: 100%;
+  }
+  .ui-shopbox .ui-listview li.ui-li-has-thumb .ui-li-thumb {
+      height: auto; /* To keep aspect ratio. */
+      max-width: 100%;
+      max-height: none;
+  }
+  /* Make all list items and anchors inherit the border-radius from the UL. */
+  .ui-shopbox .ui-listview li,
+  .ui-shopbox .ui-listview li .ui-btn,
+  .ui-shopbox .ui-listview .ui-li-thumb {
+      -webkit-border-radius: inherit;
+      border-radius: inherit;
+  }
+  /* Hide the icon */
+  .ui-shopbox .ui-listview .ui-btn-icon-right:after {
+      display: none;
+  }
+  /* Make text wrap. */
+  .ui-shopbox .ui-listview h2,
+  .ui-shopbox .ui-listview p {
+      white-space: normal;
+      overflow: visible;
+      position: absolute;
+      left: 0;
+      right: 0;
+  }
+  /* Text position */
+  .ui-shopbox .ui-listview h2 {
+      margin: 0;
+      padding: .125em 1em;
+      bottom: 50%;
+      font-weight: bold;
+  }
+  .ui-shopbox .ui-listview p {
+      margin: 0;
+      padding: 0 1.25em;
+      min-height: 50%;
+      bottom: 0;
+  }
+  .ui-listview .ui-li-has-thumb h2 {
+      bottom: 35%;
+  }
+  .ui-listview .ui-li-has-thumb p {
+      min-height: 35%;
+      max-height: 35%;
+  }
+  /* ui-li-aside has class .ui-li-desc as well so we have to override some things. */
+  .ui-shopbox .ui-listview .ui-li-aside {
+    padding: .125em .625em;
+    width: auto;
+    min-height: 0;
+    top: 0;
+    left: auto;
+    bottom: auto;
+    -webkit-border-top-right-radius: inherit;
+    border-top-right-radius: inherit;
+    -webkit-border-bottom-left-radius: inherit;
+    border-bottom-left-radius: inherit;
+    -webkit-border-bottom-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  /* If you want to add shadow, don't kill the focus style. */
+  .ui-shopbox .ui-listview li {
+    -moz-box-shadow: 0px 0px 9px #111;
+    -webkit-box-shadow: 0px 0px 9px #111;
+    box-shadow: 0px 0px 9px #111;
+  }
+  /* Images mask the hover bg color so we give desktop users feedback by applying the focus style on hover as well. */
+  .ui-shopbox .ui-listview li > .ui-btn:hover {
+    -moz-box-shadow: 0px 0px 12px #33ccff;
+    -webkit-box-shadow: 0px 0px 12px #33ccff;
+    box-shadow: 0px 0px 12px #33ccff;
+  }
+  /* Animate focus and hover style, and resizing. */
+  .ui-shopbox .ui-listview li,
+  .ui-shopbox .ui-listview .ui-btn {
+    -webkit-transition: all 500ms ease;
+    -moz-transition: all 500ms ease;
+    -o-transition: all 500ms ease;
+    -ms-transition: all 500ms ease;
+    transition: all 500ms ease;
+  }
+}
+/* Second breakpoint is 63.75em (1020px). 4 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
+@media (min-width: 63.75em) {
+    .ui-shopbox .ui-shopbox-wrapper {
+      padding: .625em; /* 10px */
+    }
+    /* Set a max-width for the last breakpoint to prevent too much stretching on large screens.
+    By setting the max-width equal to the breakpoint width minus padding we keep square tiles. */
+    .ui-shopbox .ui-listview {
+      max-width: 62.5em; /* 1000px */
+      margin: 0 auto;
+    }
+    /* Because of the 1000px max-width the width will always be 230px (and margin left/right 10px),
+    but we stick to percentage values for demo purposes. */
+    .ui-shopbox .ui-listview li {
+      width: 23%;
+      height: 230px;
+      margin: .625em 1%;
+    }
+}
+
+/* Third breakpoint is 77.5em (1240px). 5 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
+@media (min-width: 77.5em) {
+    .ui-shopbox .ui-shopbox-wrapper {
+      padding: .625em; /* 10px */
+    }
+    /* Set a max-width for the last breakpoint to prevent too much stretching on large screens.
+    By setting the max-width equal to the breakpoint width minus padding we keep square tiles. */
+    .ui-shopbox .ui-listview {
+      max-width: 76.25em; /* 1220px */
+      margin: 0 auto;
+    }
+    /* Because of the 1000px max-width the width will always be 230px (and margin left/right 10px),
+    but we stick to percentage values for demo purposes. */
+    .ui-shopbox .ui-listview li {
+      width: 18%;
+      height: 230px;
+      margin: .625em 1%;
+    }
+}
+
+/* For this demo we used images with a size of 310x310 pixels. Just before the second breakpoint the images reach their max width: 1019px - 2 x 9px padding = 1001px x 30.9333% = ~310px */

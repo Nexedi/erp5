@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>REQUEST = container.REQUEST\n
-RESPONSE = REQUEST.RESPONSE\n
-\n
-selection_name = kw[\'list_selection_name\']\n
-uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
-\n
-ret_url = \'/\'.join([context.absolute_url(), REQUEST.get(\'form_id\', \'view\')])\n
-\n
-if len(uids) == 0:\n
-  RESPONSE.redirect("%s?portal_status_message=No+Business+Template+Specified" % ret_url)\n
-  return\n
-\n
-id_list = []\n
-for uid in uids:\n
-  repository, id = context.decodeRepositoryBusinessTemplateUid(uid)\n
-  bt = context.download(\'/\'.join([repository, id]))\n
-  id_list.append(bt.getId())\n
-\n
-RESPONSE.redirect("%s?portal_status_message=Business+Templates+Downloaded+As:+%s" % (ret_url, \',+\'.join(id_list)))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

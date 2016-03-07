@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>\'\'\'Returns the list of templates contained in this preferences.\n
-\n
-This is a specific case, because template document are not catalogued, and if\n
-this listbox were using contentValues as list method the the view mode to list\n
-mode proxy would use searchFolder in this case (see\n
-ERP5Form/Extensions/ListBox_getListModeProxyListMethodName.py for the detail),\n
-and searchFolder won\'t returns any document, as they are not in catalog.\n
-\'\'\'\n
-return context.contentValues(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

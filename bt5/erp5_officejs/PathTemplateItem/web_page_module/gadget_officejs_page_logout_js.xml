@@ -100,69 +100,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>/*globals window, RSVP, rJS, promiseEventListener, document, Handlebars*/\n
-/*jslint indent: 2, maxlen: 80, nomen: true*/\n
-(function (window, RSVP, rJS, promiseEventListener, document, Handlebars) {\n
-  "use strict";\n
-\n
-  /////////////////////////////////////////////////////////////////\n
-  // templates\n
-  /////////////////////////////////////////////////////////////////\n
-  var gadget_klass = rJS(window),\n
-    templater = gadget_klass.__template_element,\n
-\n
-    template = Handlebars.compile(\n
-      templater.getElementById("page-template").innerHTML\n
-    );\n
-\n
-  gadget_klass\n
-    .ready(function (g) {\n
-      g.props = {};\n
-      return g.getElement()\n
-        .push(function (element) {\n
-          g.props.element = element;\n
-        });\n
-    })\n
-\n
-    .declareAcquiredMethod("updateHeader", "updateHeader")\n
-    .declareAcquiredMethod("translateHtml", "translateHtml")\n
-\n
-    .declareMethod("render", function () {\n
-      var gadget = this;\n
-      return gadget.updateHeader({\n
-        title: "Logout"\n
-      })\n
-        .push(function () {\n
-          return gadget.translateHtml(template());\n
-        })\n
-        .push(function (html) {\n
-          gadget.props.element.innerHTML = html;\n
-        });\n
-    })\n
-\n
-    .declareAcquiredMethod("redirect", "redirect")\n
-    .declareService(function () {\n
-      var gadget = this;\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return promiseEventListener(\n
-            gadget.props.element.querySelector(\'form.logout-form\'),\n
-            \'submit\',\n
-            false\n
-          );\n
-        })\n
-        .push(function () {\n
-          gadget.props.element.querySelector("input[type=submit]")\n
-                              .disabled = true;\n
-          document.cookie = "__ac=; path=/";\n
-          return gadget.redirect({});\n
-        });\n
-    });\n
-\n
-}(window, RSVP, rJS, promiseEventListener, document, Handlebars));</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>OfficeJS Logout Page JS</string> </value>
         </item>

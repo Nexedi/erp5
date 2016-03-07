@@ -1,0 +1,247 @@
+<html>
+<head><title>Test for Account module main lisbox</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test search columns of Account Module
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList">
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+<!-- Setup {{{ -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounts</td>
+</tr>
+<!-- }}} -->
+
+<!-- 10 accounts -> 10 records in the list {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>10 records</td>
+</tr>
+<!-- }}} -->
+
+<!-- Filter on preferred_gap_id {{{ -->
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-search-line']/th[2]/input</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+<!-- column values -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]/a</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]/a</td>
+  <td>Equity</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[4]/a</td>
+  <td>Validated</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]/a</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[6]/a</td>
+  <td>0.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[7]/a</td>
+  <td>20000.0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[8]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[9]/a</td>
+  <td>20000.0</td>
+</tr>
+
+<!-- stat -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[5]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[6]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[7]</td>
+  <td>20000.00</td>
+</tr>
+<!-- XXX Currently no stat for Debit Balance and Credit Balance -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[8]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- Filter on title {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-search-line']/th[3]/input</td>
+  <td>Equity</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+<!-- column values -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]/a</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]/a</td>
+  <td>Equity</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[4]/a</td>
+  <td>Validated</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]/a</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[6]/a</td>
+  <td>0.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[7]/a</td>
+  <td>20000.0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[8]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[9]/a</td>
+  <td>20000.0</td>
+</tr>
+
+<!-- stat -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[5]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[6]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[7]</td>
+  <td>20000.00</td>
+</tr>
+<!-- XXX Currently no stat for Debit Balance and Credit Balance -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[8]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

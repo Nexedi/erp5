@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>search_kw = {}\n
-portal = context.getPortalObject()\n
-financial_section_list = context.getVariationCategoryList(base_category_list=(\'financial_section\'))\n
-for financial_section in financial_section_list:\n
-  search_kw.setdefault(\'financial_section_uid\', []).append(\n
-    portal.portal_categories.restrictedTraverse(financial_section).getUid())\n
-\n
-account_list = [a.getObject() for a in portal.account_module.searchFolder(\n
-               validation_state=\'validated\', **search_kw)]\n
-\n
-account_list.sort(key=lambda account: account.Account_getFormattedTitle())\n
-return account_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

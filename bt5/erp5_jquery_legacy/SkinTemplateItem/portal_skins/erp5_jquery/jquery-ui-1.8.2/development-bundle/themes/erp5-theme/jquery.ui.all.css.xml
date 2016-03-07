@@ -26,12 +26,6 @@
               <dictionary/>
             </value>
         </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string>@import "jquery.ui.base.css";\n
-@import "jquery.ui.theme.css";\n
-</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

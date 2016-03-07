@@ -1,0 +1,151 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/getId"/>
+</head>
+<body >
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
+</thead><tbody>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//li[@id='select-module-toolbox']/h3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@class='menu-link' and @title='Persons']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//li[@id='action-document-toolbox']/h3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@class='menu-link' and @title='Add Person']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Object created</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_first_name</td>
+  <td>Test person</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>hidden_button</td>
+  <td></td>
+</tr>
+<!-- Wait for activities to finish -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>link=My Contacts</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>listbox_title</td>
+  <td>%Test pers%</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>hidden_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Test person</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Everybody</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>listbox_title</td>
+  <td>%test pers%</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>hidden_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Test person</td>
+  <td></td>
+</tr>
+<!-- Add "My Contacts" gadget -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_my_contacts&amp;mode=web_front</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.isTextPresent("My Contacts")</td>
+  <td>10000</td> 
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.isTextPresent("Test person")</td>
+  <td>20000</td> 
+</tr>
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />
+
+</tbody></table>
+</body>
+</html>

@@ -49,34 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Returns the section this document is part. \n
-  When selecting the section we return the highest \n
-  possible root section the current document belongs to.\n
-  So if  we have:\n
-    - \'WebSite/S1/S2/S3/Document1\'\n
-  script will return \'S1\'\n
-\n
-  This script is used to generate the menus.\n
-"""\n
-site = context.getWebSiteValue()\n
-section = context.getWebSectionValue()\n
-\n
-# document isn\'t part of section but accessed from the root of the site\n
-if section is site: \n
-  return None\n
-\n
-# This document is part of a section. Look for all parents and\n
-# return the last one before the site root\n
-current_section = section\n
-while current_section.getPortalType() != "Web Site":\n
-  section = current_section\n
-  current_section = current_section.getParentValue()\n
-return section\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

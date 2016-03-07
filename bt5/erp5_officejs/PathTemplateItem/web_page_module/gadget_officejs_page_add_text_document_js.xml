@@ -100,67 +100,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>/*globals window, RSVP, rJS*/\n
-/*jslint indent: 2, nomen: true, maxlen: 80*/\n
-(function (window, RSVP, rJS) {\n
-  "use strict";\n
-\n
-  var gadget_klass = rJS(window);\n
-\n
-  gadget_klass\n
-    .ready(function (g) {\n
-      g.props = {};\n
-      return g.getElement()\n
-        .push(function (element) {\n
-          g.props.element = element;\n
-          g.props.deferred = RSVP.defer();\n
-        });\n
-    })\n
-\n
-    .declareAcquiredMethod("post", "jio_post")\n
-    .declareAcquiredMethod("redirect", "redirect")\n
-    .declareAcquiredMethod("updateHeader", "updateHeader")\n
-\n
-    .declareMethod("render", function (options) {\n
-      var gadget = this;\n
-      gadget.props.options = options;\n
-\n
-      return gadget.updateHeader({\n
-        title: "New Web Page"\n
-      })\n
-        .push(function () {\n
-          gadget.props.deferred.resolve();\n
-        });\n
-    })\n
-\n
-    .declareService(function () {\n
-      var gadget = this;\n
-\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return gadget.props.deferred.promise;\n
-        })\n
-        .push(function () {\n
-          var doc = {\n
-            // XXX Hardcoded\n
-            parent_relative_url: "web_page_module",\n
-            portal_type: "Web Page"\n
-          };\n
-          return gadget.post(doc);\n
-        })\n
-        .push(function (data) {\n
-          return gadget.redirect({\n
-            jio_key: data,\n
-            page: "view"\n
-          });\n
-        });\n
-\n
-    });\n
-\n
-}(window, RSVP, rJS));</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>OfficeJS Add Text Document JS</string> </value>
         </item>

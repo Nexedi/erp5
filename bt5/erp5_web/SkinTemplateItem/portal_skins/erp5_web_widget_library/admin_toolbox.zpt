@@ -1,0 +1,182 @@
+<!-- Floating Panel -->
+
+<!-- header_definitions must be re-called and is_web_mode redefined because calling
+     the current page template through editor_field in the form layout seems to reset
+     the context needed by action drop-down list.
+
+     TODO: Is this case should be handle by automatically by erp5_xhtml_style ?
+           More translation is required.
+-->
+
+<tal:block
+  tal:define="is_web_mode  python: True;
+              actions      request/actions | python:
+                           here.Base_filterDuplicateActions(
+                             here.portal_actions.listFilteredActionsFor(here));
+              dummy        python:request.set('actions', actions);
+              portal_url   python: (here.getWebSiteValue() or here.getPortalObject()).absolute_url();
+              portal_type  here/getPortalType">
+
+  <!-- XXX is this really useful - called how many times ?? - tried to removed but failed -->
+  <!-- <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/> -->
+
+
+  <!-- Edit button menu -->
+  <div class="adminSection">
+    <h3 i18n:translate="" i18n:domain="ui">Edit</h3>
+    <ul tal:define="edit_link_list python: here.Base_getAdminToolboxEditShortcutList()">
+      <li tal:repeat="link edit_link_list">
+        <a tal:attributes="href python: link['url']">
+          <img tal:attributes="src   python: link['icon'];
+                               title python: link['label'];
+                               alt   python: '%s Icon' % link['label'];"/>
+          <tal:block tal:replace="python: link['title']"/>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- A pop-up menu with all actions which can be applied to
+       the current object and which have no button equivalent
+
+       We need to setup the actions variable from the request because
+       this template is called from outside the main rendering process
+
+       XXX - the location of context_box_render is hardcoded.
+  -->
+  <div class="adminSection">
+    <h3><tal:block tal:content="portal_type"/> Actions</h3>
+    <tal:block metal:use-macro="here/portal_skins/erp5_xhtml_style/context_box_render/macros/action"/>
+  </div>
+
+  <!-- Document creation panel.
+  
+       This part is displayed for any document apart Web Site and Web Section.
+       But if Web Site and Web Section have a default page, then it will be displayed anyway
+       in order to let the user clone the default page.
+
+       XXX - This is not so good to create new content in a section
+             Behaviour should be to create content in section / site
+  -->
+  <div class="adminSection"
+       tal:condition="python: here.isDocument">
+      <h3>
+        <span id="create_new_document_title"></span>
+        <span id="clone_document_title">
+          <tal:block 
+            tal:replace="python: 'Clone %s' % portal_type"/>
+        </span>
+      </h3>
+
+      <fieldset style="display:block;">
+
+        <div class="field">
+          <label i18n:translate="" i18n:domain="ui">Title</label>
+          <div class="input">
+            <input class="input" size="12" 
+                    type="text" name="clone_title"
+                    tal:attributes="value here/getTitle | nothing"/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label i18n:translate="" i18n:domain="ui">Reference</label>
+          <div class="input">
+            <input class="input" size="12" 
+                    type="text" name="clone_reference"
+                    tal:attributes="value here/getReference | nothing"/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label i18n:translate="" i18n:domain="ui">Version</label>
+          <div class="input">
+            <input class="input" size="5" 
+                    type="text" name="clone_version"
+                    tal:attributes="value here/getVersion | nothing"/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label i18n:translate="" i18n:domain="ui">Language</label>
+          <div class="input">
+            <input class="input" size="5"  
+                    type="text" name="clone_language"
+                    tal:attributes="value here/getLanguage | nothing"/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label i18n:translate="" i18n:domain="ui">Portal type</label>
+          <div class="input">
+            <select class="input" name="clone_portal_type" 
+                    size="1" onchange="setCreationMode(this)">
+              <option value="None" selected="selected">&mdash; Same as Current &mdash;</option>
+              <option tal:repeat="portal_type python: here.getPortalWebDocumentTypeList()"
+                      tal:content="portal_type"
+                      tal:attributes="value portal_type"
+                      i18n:translate="" i18n:domain="ui">portal_type</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field hiddenLabel">
+          <label> </label>
+          <div class="input">
+            <button id="clone_action_button" 
+                    title='Clone &amp; Edit'
+                    name="Base_cloneContent:method">
+              <img src="admin_toolbox_clone_document.png" id="clone_action_icon" alt="clone action icon"
+                   tal:attributes="src string:$portal_url/admin_toolbox_clone_document.png" />
+              <span id="duplicate_document_action">Clone &amp; Edit</span>
+            </button>
+          </div>
+        </div>
+
+      </fieldset>
+
+      <script type="text/javascript" tal:content="string:
+        // preload action icons
+        if (document.images) {
+          clone_icon = new Image();
+          new_icon   = new Image();
+          clone_icon.src = '$portal_url/admin_toolbox_clone_document.png';
+          new_icon.src   = '$portal_url/admin_toolbox_new_document.png';
+        }
+
+        function setCreationMode (sel) {
+          // default is cloning
+          var action      = 'clone';
+          var action_name = 'Clone &amp; Edit';
+          var icon        = 'admin_toolbox_clone_document.png';
+          var name        = 'Base_cloneContent:method';
+          var clone_display = 'inline';
+          var new_title   = '';
+
+          // a portal type is given, so create a new document
+          var portal_type = sel.options[sel.selectedIndex].value;
+          if (portal_type != 'None') {
+            action      = 'new'
+            action_name = 'Create New &amp; Edit';
+            icon        = 'admin_toolbox_new_document.png';
+            name        = 'Base_newContent:method';
+            clone_display = 'none';
+            new_title   = 'Create New Document';
+          }
+
+          // update action dependent values
+          document.getElementById('create_new_document_title').innerHTML = new_title;
+          document.getElementById('clone_document_title'     ).style.display = clone_display;
+          document.getElementById('duplicate_document_action').innerHTML = action_name;
+
+          // replace the action icon
+          document.getElementById('clone_action_icon').src = eval(action + '_icon.src');
+
+          // update action button title
+          var button   = document.getElementById('clone_action_button');
+          button.title = action_name;
+          button.name  = name;
+        }
+      " />
+  </div>
+</tal:block>

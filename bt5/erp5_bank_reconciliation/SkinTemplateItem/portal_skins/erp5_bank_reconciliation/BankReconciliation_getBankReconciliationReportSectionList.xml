@@ -49,41 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Form.Report import ReportSection\n
-request = container.REQUEST\n
-\n
-if context.getSourcePayment():\n
-  # As we are showing quantities and not asset prices, we use the precision\n
-  # from this bank account currency.\n
-  request.set(\'precision\',\n
-      context.getQuantityPrecisionFromResource(\n
-        context.getSourcePaymentValue().getPriceCurrency()))\n
-\n
-report_section_list = [\n
-  ReportSection(form_id=\'BankReconciliation_view\',\n
-                path=context.getPhysicalPath()),\n
-]\n
-\n
-if request.get(\'show_reconcilied\', True):\n
-  report_section_list.append(\n
-    ReportSection(form_id=\'BankReconciliation_viewBankReconciliationReportSection\',\n
-                  path=context.getPhysicalPath(),\n
-                  selection_name="bank_reconciliation_report_selection",\n
-                  selection_params={\'title\': \'Reconciled Transactions\',\n
-                                    \'mode\': \'unreconcile\'}))\n
-if request.get(\'show_non_reconcilied\', True):\n
-  report_section_list.append(\n
-    ReportSection(form_id=\'BankReconciliation_viewBankReconciliationReportSection\',\n
-                  selection_name="bank_reconciliation_report_selection",\n
-                  path=context.getPhysicalPath(),\n
-                  selection_params={\'title\': \'Not Reconciled Transactions\',\n
-                                    \'mode\': \'reconcile\'}))\n
-\n
-return report_section_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

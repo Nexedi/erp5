@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># This method outputs the skin properties in the format that you can\n
-# easily get diff like the following:\n
-# ---\n
-# CSV,erp5_access_tab\n
-# CSV,custom\n
-# CSV,erp5_csv_style\n
-# CSV,erp5_csv_core\n
-# ...\n
-# ---\n
-skin_tool = context.getPortalObject().portal_skins\n
-for name, layers in skin_tool.getSkinPaths():\n
-  for layer in layers.split(\',\'):\n
-    print \'%s,%s\' % (name, layer)\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

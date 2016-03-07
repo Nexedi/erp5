@@ -26,18 +26,6 @@
               <dictionary/>
             </value>
         </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string>.CodeMirror-search-match {\n
-  background: gold;\n
-  border-top: 1px solid orange;\n
-  border-bottom: 1px solid orange;\n
-  -moz-box-sizing: border-box;\n
-  box-sizing: border-box;\n
-  opacity: .5;\n
-}\n
-</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

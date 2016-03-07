@@ -1,0 +1,355 @@
+<html>
+<head><title>Test for Accounting module main listbox</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Accounting Transaction Module Displays empty Transactions
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
+
+<!-- setup {{{ -->
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<!-- }}} -->
+
+<!-- empty transactions are displayed in the list -->
+<!-- Check default values {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<!-- 4 item by default -->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+
+<!-- Add empty transaction {{{ -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Add Accounting Transaction</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Object created.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/AccountingZuite_markChanged</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/accounting_module/view</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- Check new values (1 more item (values 0)) {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>5 records</td>
+</tr>
+<!-- column properties -->
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[3]
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[4]
+  </td>
+  <td>Accounting Transaction</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[5]
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[6]
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[7]
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[8]
+  </td>
+  <td>Draft</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[9]
+  </td>
+  <td>0.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[10]
+  </td>
+  <td>0.0</td>
+</tr>
+<!-- }}} -->
+
+<!-- same but with deleting lines -->
+
+<!-- Add empty transaction and delete its lines {{{ -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Add Accounting Transaction</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Object created.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>goBackAndWait</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Accounting Transaction Lines</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-check-all"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_deleteObjectList:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Deleted.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>0 records</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/accounting_module/view</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- Check new values (1 more item (values 0)) {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>6 records</td>
+</tr>
+<!-- column properties line 0 -->
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[3]
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[4]
+  </td>
+  <td>Accounting Transaction</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[5]
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[6]
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[7]
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[8]
+  </td>
+  <td>Draft</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[9]
+  </td>
+  <td>0.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[10]
+  </td>
+  <td>0.0</td>
+</tr>
+<!-- column properties line 1 (order for lines 0 and 1 is unknown as we sort on date) -->
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-1 DataB']/td[3]
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-1 DataB']/td[4]
+  </td>
+  <td>Accounting Transaction</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-1 DataB']/td[5]
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-1 DataB']/td[6]
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-1 DataB']/td[7]
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-1 DataB']/td[8]
+  </td>
+  <td>Draft</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-1 DataB']/td[9]
+  </td>
+  <td>0.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-1 DataB']/td[10]
+  </td>
+  <td>0.0</td>
+</tr>
+<!-- }}} -->
+
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

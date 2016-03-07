@@ -49,11 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return context.DocumentConnector_readDocument(reference=reference, table="Product", line_id=product_id)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>reference, product_id=None</string> </value>
         </item>

@@ -21,14 +21,6 @@ result</string> </value>
             <value> <string>Resource_zInsertInventoryCacheResult</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-Insert into inventory_cache(`query`, `date`, `result`) values (<dtml-sqlvar query type="string">, <dtml-sqlvar date type="datetime">, <dtml-sqlvar result type="string">)
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

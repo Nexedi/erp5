@@ -1,0 +1,317 @@
+<tal:block
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  tal:define="field_id here/getId;
+              form_id python: here.getForm().id;
+              selection_name here/getSelectionName;
+              requested_selection_name here/getRequestedSelectionName;
+              selection_index here/getSelectionIndex;
+              selection here/getSelection;
+              portal_url_string here/getPortalUrlString;
+              real_context here/getContext;
+              context_url real_context/absolute_url;
+              md5_string here/getMD5Checksum;
+              line_list here/query;
+              is_domain_tree_mode here/isDomainTreeMode;
+              is_report_tree_mode here/isReportTreeMode;
+              is_domain_tree_supported here/isDomainTreeSupported;
+              is_report_tree_supported here/isReportTreeSupported;
+              show_anchor_column here/showAnchorColumn;
+              show_select_column here/showSelectColumn;
+              show_search_line here/showSearchLine;
+              search_value_list python: here.getSearchValueList();
+              label_value_list python: here.getLabelValueList();
+              selected_search_field request/select_search_field | nothing;
+              ">
+  <!-- ListBox starts here.  -->
+  <input type="hidden" name="list_selection_name" value="default" tal:attributes="value selection_name" />
+  <input tal:condition="md5_string" type="hidden" name="md5_object_uid_list" value="checksum" tal:attributes="value md5_string" />
+
+  <tal:replace tal:content="nothing">
+    Because TAL cannot accept unbalanced tags, the support for a domain tree is realized by a macro.
+    The macro ListBoxContainer is a no-op, if not in domain tree mode. Otherwise, the macro constructs
+    a domain tree and extracts the body in an extra table.
+  </tal:replace>
+
+  <tal:block tal:define="expand python: 0">
+    <tal:block metal:define-macro="ListBoxContainer">
+      <tal:block tal:condition="expand">
+        <div tal:condition="is_domain_tree_mode"
+          style="width: 100%;"
+          tal:define="selected_domain_path here/getSelectedDomainPath">
+          <div>
+            <div valign="top">
+              <select name="domain_root_url" onchange="submitAction(this.form, 'context/portal_selections/setDomainRoot')"
+                tal:attributes="onchange string:submitAction(this.form, '${context_url}/portal_selections/setDomainRoot')">
+                <tal:block tal:repeat="c here/getDomainRootList">
+                  <option value="base_domain"
+                    tal:define="path python: c[0]; title python: c[1]"
+                    tal:attributes="selected python: path == selected_domain_path; value path"
+                    tal:content="title"
+                    i18n:translate="" i18n:domain="ui">Base Domain</option>
+                </tal:block>
+              </select>
+             <div id="listbox_domain_tree_table"
+                tal:attributes="id string:${field_id}_domain_tree_table"
+                tal:define="report_tree_list python: here.makeReportTreeList(report_path = selected_domain_path, unfolded_list = selection.getDomainList(), is_report_opened = False, sort_on=(('int_index', 'ASC'),));
+                            total_depth python: max([report_tree.depth for report_tree in report_tree_list] + [-1])">
+                <div tal:repeat="report_tree report_tree_list">
+                  <tal:block tal:repeat="i python: range(report_tree.depth)">
+                    <div width="16" nowrap="nowrap">&nbsp;</div>
+                  </tal:block>
+                  <div colspan="1" style="text-align: left; vertical-align: top; white-space: nowrap;"
+                    tal:attributes="colspan python: total_depth - report_tree.depth + 1">
+                    <a href="method"
+                      tal:condition="report_tree/is_open"
+                      tal:attributes="href string:foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">-&nbsp;<b tal:content="report_tree/obj/getCompactTranslatedTitle">Domain</b></a>
+                    <a href="method"
+                      tal:condition="not: report_tree/is_open"
+                      tal:attributes="href string:unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">+&nbsp;<tal:block tal:content="report_tree/obj/getCompactTranslatedTitle">Domain</tal:block></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="vertical-align: top">
+              <tal:block metal:define-slot="ListBoxBody" />
+            </div>
+          </div>
+        </div>
+        <tal:block tal:condition="not: is_domain_tree_mode">
+          <tal:block metal:define-slot="ListBoxBody" />
+        </tal:block>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+
+  <tal:block tal:define="expand python: 1">
+    <tal:block metal:use-macro="template/macros/ListBoxContainer">
+      <tal:block metal:fill-slot="ListBoxBody">
+        <div style="padding: 0px; margin: 0px;">
+          <div class="top_list">
+            <div id="listbox_title_line" tal:attributes="id string:${field_id}_title_line" class="List_top">
+                <!-- <tal:block tal:define="global field_id string:${field_id}" /> -->
+            <span id="listbox_record_number"
+                  tal:attributes="id string:${field_id}_record_number"
+                  i18n:translate="" i18n:domain="ui"><tal:block tal:replace="here/total_size" i18n:name="number">0</tal:block> record(s)</span>
+            <span id="listbox_item_number"
+                  tal:attributes="id string:${field_id}_item_number; class string:listbox_item_number"
+                  i18n:translate="" i18n:domain="ui"> - <tal:block tal:replace="python: len(here.getCheckedUidList())" i18n:name="number">0</tal:block> item(s) selected</span>
+                 <input type="hidden" tal:attributes="id string:${field_id}_listMax; name string:${field_id}_listMax; value python: len(search_value_list)">
+                 <input type="hidden" tal:attributes="id string:${field_id}_itemMax; name string:${field_id}_itemMax; value python: len(line_list)">
+                 <br />
+                 <span tal:attributes="id string:${field_id}_check; name string:${field_id}_check; onclick string:simple_aff(this.id)" class="div_short_mode" i18n:translate="" i18n:domain="ui">Toggle Detailed Mode</span>
+
+              <select id="listbox_page_selection" name="list_start" title="Change Page" size="1"
+                  onchange="submitAction(this.form, 'context/${field_id}_setPage')"
+                  tal:define="lines here/getMaxLineNumber"
+                  tal:attributes="id string:${field_id}_page_selection;
+                                  onchange string:submitAction(this.form, '${context_url}/${field_id}_setPage')"
+                  i18n:domain="ui" i18n:attributes="title">
+                  <option value="0"
+                    tal:repeat="p python: range(0, here.total_pages)"
+                    tal:attributes="selected python: p == here.current_page;
+                                    value python: p * lines"
+                    i18n:domain="ui" i18n:translate=""><tal:block tal:replace="python: p + 1" i18n:name="page">0</tal:block> of <tal:block tal:replace="here/total_pages" i18n:name="total_pages">1</tal:block></option>
+                </select>
+                <span style="float:right; text-align: right;"><!-- class="navigation_buttons" -->
+                  <input tal:condition="python: here.current_page > 0"
+                         id="listbox_previous_page" type="image" src="1leftarrowv.png"
+                         title="Previous Page" name="previousPage:method"
+                         tal:attributes="id string:${field_id}_previous_page;
+                         name string:${field_id}_previousPage:method;
+                         src string:${portal_url_string}/images/1leftarrowv.png;
+                         class string:listbox_previous_page"
+                         i18n:domain="ui" i18n:attributes="title" />
+
+                   <input tal:condition="python: here.current_page < here.total_pages - 1"
+                          id="listbox_next_page" type="image" src="1rightarrowv.png"
+                          title="Next Page" name="nextPage:method"
+                          tal:attributes="id string:${field_id}_next_page;
+                          name string:${field_id}_nextPage:method;
+                          src string:${portal_url_string}/images/1rightarrowv.png;
+                          class string:listbox_next_page"
+                          i18n:domain="ui" i18n:attributes="title" />&nbsp;&nbsp;
+                  <br />
+                  <tal:block tal:condition="python: len(line_list)>0">
+                  <input id="listbox_check_all" type="image"
+                  name="checkAll:method" value="1"
+                  src="checkall.png" alt="Check All" title="Check All"
+                  class="listbox_check_all"
+                  tal:attributes="id string:${field_id}_check_all;
+                  name string:${field_id}_checkAll:method;
+                  src string:${portal_url_string}/images/checkall.png"
+                  i18n:domain="ui" i18n:attributes="title" />&nbsp;<input id="listbox_uncheck_all" type="image" name="uncheckAll:method" value="1"
+                  src="%(portal_url_string)s/images/decheckall.png" style="border: 0" alt="Uncheck All" title="Uncheck All" class="listbox_uncheck_all"
+                  tal:attributes="id string:${field_id}_uncheck_all;
+                  name string:${field_id}_uncheckAll:method;
+                  src string:${portal_url_string}/images/decheckall.png"
+                  i18n:domain="ui" i18n:attributes="title" />&nbsp;&nbsp;&nbsp;
+                  </tal:block>
+                </span>
+            </div>
+          </div>
+        </div>
+        <div class="main_div_list">
+            <div id="listbox_label_line" tal:attributes="id string:${field_id}_label_line">
+              <div tal:condition="is_report_tree_mode"
+                class="Data" style="width: 50px; text-align: left; vertical-align: middle;">
+                <select name="report_root_url"
+                  onchange="submitAction(this.form, 'context/portal_selections/setReportRoot')"
+                  tal:attributes="onchange string:submitAction(this.form, '${context_url}/portal_selections/setReportRoot')">
+                  <tal:block tal:repeat="c here/getReportRootList">
+                    <option value="base_domain"
+                      tal:define="path python: c[0]; title python: c[1]"
+                      tal:attributes="selected python: path == here.getSelectedReportPath(); value path"
+                      tal:content="title" i18n:domain="ui" i18n:translate="">Domain</option>
+                  </tal:block>
+                </select>
+              </div>
+              <tal:block tal:define="global tab_title python: range(len(label_value_list))"/>
+              <tal:block tal:repeat="value label_value_list">
+                  <tal:block tal:define="title python: value[1];
+                                         foo repeat/value/index;
+                                         bidule python: tab_title.insert(foo, title);">
+                  </tal:block>
+              </tal:block>
+            </div>
+            <div tal:condition="python: show_search_line or is_report_tree_mode"
+              id="listbox_search_line"
+              tal:attributes="id python: show_search_line and ('%s_search_line' % field_id) or ('%s_report_depth_line' % field_id)">
+              <tal:block tal:condition="is_report_tree_mode">
+                <div style="width: 50px; text-align: left; vertical-align: middle" colspan="1"
+                  tal:attributes="colspan python: show_search_line and 1 or (len(here.getSelectedColumnList()) + show_select_column + 1)"
+                  tal:define="index python: selection_index is not None and '&amp;selection_index=%s' % selection_index or '';
+                              is_report_opened python: int(not here.getSelection().isReportOpened());
+                              url here/getUrl"><tal:block tal:repeat="i python: range(0, 6)">&nbsp;<a href="?selection_name=default&amp;selection_index=0&amp;report_depth:int=0"
+                            tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}&amp;report_depth:int=${i}"
+                            tal:content="i">0</a></tal:block>&nbsp;-&nbsp;<a href="?selection_name=default&amp;selection_index=0&amp;is_report_opened:int=0"
+                                tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}&amp;is_report_opened:int=${is_report_opened}"
+                                tal:content="python: is_report_opened and 'Show' or 'Hide'"
+                                i18n:domain="ui" i18n:translate="">Show</a>
+                </div>
+              </tal:block>
+               <div name="selection_mui" style="padding-bottom: 5px;">
+
+                    <select id="select_search_field" onchange="javascript: showSearchSelectedColumn();" name="select_search_field">
+                      <tal:block tal:repeat="valueX search_value_list">
+                        <tal:block tal:define="
+                                     aliasX python: valueX[0];
+                                     paramX python: valueX[1];
+                                     search_fieldX python: valueX[2];
+                                     foo2 repeat/valueX/index">
+                         <option tal:condition="aliasX" tal:content="python: tab_title[foo2]" i18n:domain="ui" i18n:translate="" tal:attributes="value python: aliasX; selected python: aliasX==selected_search_field"></option>
+                        </tal:block>
+                      </tal:block>
+                    </select>
+                    <input type="hidden" value="0" id="search_value_list_count"
+                           tal:attributes="value python: len(search_value_list)" />
+
+                    <input id="listbox_select" class="listbox_select" type="image" name="Base_doSelect:method" alt="Action" title="Action" tal:attributes="src string:${portal_url_string}/images/exec16.png"/>
+                  <tal:block tal:condition="show_search_line"
+                             tal:repeat="value search_value_list">
+                     <div tal:condition="python: value[0]"
+                         tal:define="alias python: value[0];
+                                     param python: value[1];
+                                     search_field python: value[2];
+                                     foo repeat/value/index"
+                         tal:attributes="id repeat/value/index">
+                       <span tal:condition="alias">
+                        <tal:block tal:condition="python: search_field is not None"
+                                   tal:replace="structure python: search_field.render(value = param, key = alias)" />
+                        <input style="width: 40%;" name="id" size="8" value=""
+                               tal:attributes="name alias; value param; id python: '%s%s' % ('input', foo)" type="text"/>
+                       </span>
+                    </div>
+                  </tal:block>	      
+              </div>
+            </div>
+
+            <tal:block tal:repeat="line line_list" tal:define="checked_uid_set here/getCheckedUidSet">
+              <div id="listbox_data_line_0" class="DataA"
+                tal:define="css python: test(repeat['line'].index % 2, 'DataB', 'DataA')"
+                tal:attributes="id string:${field_id}_data_line_${repeat/line/index}; class css">
+                <div tal:condition="is_report_tree_mode" class="DataA" align="left" valign="middle"
+                  tal:attributes="class css"
+                  tal:define="section_name python: line.getDomainTitle()">
+                  <a tal:condition="section_name"
+                    href="portal_selections/foldReport?report_url=base_domain&amp;form_id=form&amp;list_selection_name=default"
+                    tal:define="method_id python: line.isOpen() and 'foldReport' or 'unfoldReport'"
+                    tal:attributes="href string:portal_selections/${method_id}?report_url=${line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name}"
+                    tal:content="structure python: '%s%s&nbsp;%s' % ('&nbsp;&nbsp;' * line.getDepth(), line.isOpen() and '-' or '+', section_name)" />
+                </div>
+              <tal:block tal:repeat="valueY line/render">
+                  <div tal:define="
+                                  val repeat/valueY/index;
+                                  valueb python: label_value_list[val];
+                                  html python: valueY[0];
+                                  original_value python: valueY[1];
+                                  error python: valueY[2];
+                                  sql python: valueb[0];
+                                  title python: valueb[1];
+                                  sort_order python: valueb[2];
+                                  foo repeat/valueY/index;
+                                  foo2 repeat/line/index;
+                                  data_short python: real_context.resumeData(original_value);">
+                    <input tal:condition="not: repeat/valueY/index"
+                      type="hidden" value="1" name="listbox_uid:list"
+                      tal:attributes="value python: line.getUid() or '';
+                                      name string:${field_id}_uid:list" />
+                  <div class="left_data"
+                         tal:condition="not: repeat/valueY/index"
+                         tal:define="object_url python: '%s/view' % line.getObject().getAbsoluteUrl()">
+                      <!-- XXX it should be possible to test isSummary() form_id=='Base_viewRelatedObjectList' and-->
+                       <input tal:condition="python: not form_id=='Base_viewWorkflowHistory' and line.getObject() is not None"  type="checkbox" value="checked" id="listbox_cb_1" name="uids:list"
+                              tal:attributes="checked python: line.getUid() in checked_uid_set;
+                                              value line/getUid; id string:${field_id}_cb_${line/getUid}" />
+                       <a tal:condition="python: not form_id=='Base_viewWorkflowHistory'" href="#"  tal:attributes="href string:${object_url}?selection_index=${selection_index}&amp;selection_name=${selection_name}&amp;ignore_layout:int=0&amp;reset:int=1; title python: line.getObject().getRelativeUrl()"><img src="document_icon.gif" tal:attributes="src string:${portal_url_string}/images/line_clickable.png" i18n:translate="" i18n:domain="ui"/></a>
+                      <span tal:condition="original_value" tal:replace="structure html">value</span>
+                  </div>
+                   <div tal:attributes="id python: '%s_%s%s%s' % (field_id, foo2, 'data', foo)">
+                     <div class="left_data" tal:condition="repeat/valueY/index">
+                       <span style="color: green; font-size: 12px;" tal:content="title" i18n:domain="ui" i18n:translate=""> ID
+                       </span>
+                       <span style="color: green;">&nbsp;:&nbsp;</span>
+                       <tal:block tal:condition="show_search_line">
+                         <span tal:condition="python: isinstance(original_value,(float, int, long))"
+                               id="data_short" tal:content="python: original_value" />
+                         <span tal:condition="python: not isinstance(original_value,(float, int, long))"
+                               id="data_short" tal:content="data_short" />
+                       </tal:block>
+                       <tal:block tal:condition="not:show_search_line">
+                         <span tal:replace="structure html">value</span>
+                       </tal:block>
+                      </div>
+                  </div>
+                </div>
+              </tal:block>
+            </div>
+          </tal:block>
+          <div tal:condition="here/showStat" id="listbox_stat_line"
+              tal:attributes="id string:${field_id}_stat_line">
+              <div tal:condition="is_report_tree_mode" class="Data">&nbsp;</div>
+              <div tal:condition="show_select_column" class="Data">&nbsp;</div>
+                <tal:block tal:condition="python: label_value_list is not None" tal:repeat="valueZ here/getStatValueList">
+                   <div class="left_data" tal:define="
+                    original_value python: valueZ[0];
+                    processed_value python: valueZ[1];
+                    foo repeat/valueZ/index">
+                    <span tal:condition="python: original_value is not None" style="color: green; font-size: 12px;" tal:content="python: label_value_list[foo][1]" i18n:domain="ui" i18n:translate=""> ID
+                  </span>
+                  <span tal:condition="python: original_value is not None"  style="color: green;">&nbsp;:&nbsp;</span>
+                  <tal:block tal:condition="python: original_value is not None">
+                    <span align="right"
+                        tal:define="original_value python: valueZ[0]; processed_value python: valueZ[1]"
+                        tal:attributes="align python: isinstance(original_value, (float, int, long)) and 'right' or 'left'"
+                        tal:content="structure processed_value" />
+                  </tal:block>
+                </div>
+              </tal:block>
+           </div>
+        </div>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+  <!-- ListBox ends here.  -->
+
+</tal:block>

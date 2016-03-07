@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-option_category = context.getOptionList()\n
-option_base_category = []\n
-if len(option_category) > 0:\n
-  option_base_category = [option_category[0].split(\'/\')[0]]\n
-\n
-new_context = context.asContext(\n
-    membership_criterion_category=option_category,\n
-    membership_criterion_base_category=option_base_category)\n
-return new_context\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
-if len(uids) == 0:\n
-#   uids = map(lambda x:x.uid, context.portal_selections.callSelectionFor(selection_name))\n
-  uids = [x.uid for x in context.portal_selections.callSelectionFor(selection_name)]\n
-object_list =  list(context.portal_catalog(parent_uid=uids, portal_type = "Email"))\n
-for o in object_list:\n
-  o_value = o.getObject()\n
-  if o is not None:\n
-    print o_value.getUrlString()\n
-\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection_name</string> </value>
         </item>

@@ -33,27 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<!-- ============================================================== -->\n
-<!--\n
-Description:\n
-  This macro render an explanation of why it\'s important to become a member.\n
--->\n
-\n
-<tal:block metal:define-macro="main">\n
-  <div class="become_member_head section_explanation" i18n:translate="" i18n:domain="ui">\n
-    The ERP5 EGov portal allows to make on-line administratives formalities.\n
-    It is possible to make requests without being registred (anonymous request).\n
-    However the registration is deeply advised.\n
-  </div>\n
-</tal:block>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>context.setResource(\'currency_module/\' + context.Baobab_getPortalReferenceCurrencyID())\n
-\n
-context.setDestination(context.getBaobabDestination())\n
-\n
-movement = context.newContent(portal_type=\'Banking Operation Line\',\n
-                       id=\'movement\',\n
-                       source=\'account_module/bank_account\', # Set default source\n
-                       destination=\'account_module/bank_account\', # Set default destination\n
-                       )\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

@@ -33,39 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<!-- ============================================================== -->\n
-<!--\n
-Description:\n
-  This macro render an explanation of why it\'s important to become a member.\n
--->\n
-\n
-<tal:block metal:define-macro="main">\n
-  <div class="become_member_body section_explanation">\n
-    <tal:block  i18n:translate="" i18n:domain="ui">Once register you can benefit from following avantages :\n
-    </tal:block>\n
-    <ul>\n
-      <li  i18n:translate="" i18n:domain="ui">Preferences control and selection the means of procedures follow-up (email, sms)</li>\n
-      <li  i18n:translate="" i18n:domain="ui">Overview on all pending cases</li>\n
-      <li  i18n:translate="" i18n:domain="ui">Re-use easy documents already used in a procedure</li>\n
-      <li  i18n:translate="" i18n:domain="ui">Check the authencity of the documents</li>\n
-      <li  i18n:translate="" i18n:domain="ui">Accomplishment of all administratives procedures on the same platform</li>\n
-      <li  i18n:translate="" i18n:domain="ui">Time-saving: no longer a need to move to line up in the reception desk</li>\n
-    </ul>\n
-  </div>\n
-  <tal:block metal:use-macro="here/WebSite_viewRegisterButton/macros/main"/>\n
-  <br />\n
-  <br />\n
-  <br />\n
-  <a href="lien" tal:attributes="href python:\'%s/%s\' % (context.absolute_url(), \'view\')"\n
-    i18n:translate="" i18n:domain="ui">Go back to the homepage</a>\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

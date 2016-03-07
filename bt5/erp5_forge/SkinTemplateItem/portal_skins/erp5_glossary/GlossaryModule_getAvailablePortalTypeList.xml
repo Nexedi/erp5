@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal_type_list = [x for x in context.portal_types.objectIds() \\\n
-                    if not x.endswith(\' Module\')]\n
-portal_type_list.sort()\n
-return portal_type_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

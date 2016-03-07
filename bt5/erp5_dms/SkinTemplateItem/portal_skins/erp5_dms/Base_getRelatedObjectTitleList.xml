@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-get related object title list in a security-aware way (without throwing exception\n
-if I don\'t have permissions to access the object)\n
-"""\n
-\n
-object_list = context.Base_getRelatedObjectValueList(base_category, portal_type_list)\n
-\n
-title_list = [o.getTitle() for o in object_list]\n
-\n
-return filter(lambda t:t!=\'\', title_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>base_category, portal_type_list=None</string> </value>
         </item>

@@ -1,0 +1,13 @@
+<tal:block replace="nothing">
+  <!--
+  This widget displays the list of tags
+  -->
+</tal:block>
+
+<ul tal:define="current_web_section python:request.get('current_web_section', here)">
+ <li tal:repeat="line here/query">
+<tal:block tal:define="render_result line/render">
+<a tal:attributes="href python: '%s?subject=%s' % (current_web_section.absolute_url(), render_result[0][1])" tal:content="python: render_result[0][1]"></a>
+</tal:block>
+ </li>
+</ul>

@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>catalog_kw = {\n
-  \'portal_type\' : \'Python Script\',\n
-  \'callable_type_relative_url\' : \'callable_type/script/diff_filter\',\n
-  \'select_dict\' : {\'id\':None},\n
-}\n
-\n
-return context.portal_catalog(**catalog_kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

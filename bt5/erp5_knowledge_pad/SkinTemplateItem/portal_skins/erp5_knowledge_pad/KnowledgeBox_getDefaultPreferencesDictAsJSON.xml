@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>user_preferences = context.KnowledgeBox_getDefaultPreferencesDict()\n
-print user_preferences\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>KnowledgeBox_getDefaultPreferencesDictAsJSON</string> </value>
         </item>

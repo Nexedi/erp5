@@ -1,0 +1,469 @@
+<html>
+<head><title>Test for Accounting module main listbox</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Accounting Transaction Module Search Columns
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+
+<!-- setup {{{ -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<!-- }}} -->
+
+<!-- filter on title  {{{ -->
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-search-line']/th[2]/input</td>
+  <td>Client 1 Sale Invoice</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<!-- list filtered with 1 item-->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+<!-- check amounts for lines -->
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[9]/a
+</td>
+  <td>2200.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[10]/a
+</td>
+  <td>2200.0</td>
+</tr>
+<!-- check source and destination section -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Client 1 Sale Invoice</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_title</td>
+  <td>Client 1 Sale Invoice</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_destination_section_title</td>
+  <td>Client 1</td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<!-- }}} -->
+
+<!-- filter on title, matching is "fuzzy", {{{
+as title is a search key -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@value='listbox.operation_date:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-search-line']/th[2]/input</td>
+  <td>%Client%</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<!-- list filtered with 2 items -->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[3]/a
+</td>
+  <td>Client 1</td>
+</tr>
+<!-- check amounts for lines -->
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[9]/a
+</td>
+  <td>2200.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[10]/a
+</td>
+  <td>2200.0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-1 DataB']/td[3]/a
+</td>
+  <td>Client 2</td>
+</tr>
+<!-- check amounts for lines -->
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-1 DataB']/td[9]/a
+</td>
+  <td>3300.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-1 DataB']/td[10]/a
+</td>
+  <td>3300.0</td>
+</tr>
+<!-- }}} --> 
+
+<!-- filter on Third Party (Sale) {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@value='listbox.operation_date:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-search-line']/th[3]/input</td>
+  <td>Client%</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td><!-- alterative way of search -->
+  <td></td>
+</tr>
+<!-- list filtered with 2 items -->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[3]/a
+</td>
+  <td>Client 1</td>
+</tr>
+<!-- check amounts for lines -->
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[9]/a
+</td>
+  <td>2200.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[10]/a
+</td>
+  <td>2200.0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-1 DataB']/td[3]/a
+</td>
+  <td>Client 2</td>
+</tr>
+<!-- second line -->
+<!-- check amounts for lines -->
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-1 DataB']/td[9]/a
+</td>
+  <td>3300.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-1 DataB']/td[10]/a
+</td>
+  <td>3300.0</td>
+</tr>
+<!-- }}} --> 
+
+<!-- filter on Third Party (Purchase) {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-search-line']/th[3]/input</td>
+  <td>Supplier</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[3]/a
+</td>
+  <td>Supplier</td>
+</tr>
+<!-- check amounts for lines -->
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[9]/a
+</td>
+  <td>7700.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[10]/a
+</td>
+  <td>7700.0</td>
+</tr>
+<!-- check source and destination section -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=First Purchase Invoice</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_title</td>
+  <td>First Purchase Invoice</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_source_section_title</td>
+  <td>Supplier</td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<!-- }}} --> 
+
+<!-- filter on Transaction Type {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-search-line']/th[4]/input</td>
+  <td>Accounting Transaction</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[2]/a
+</td>
+  <td>Accounts opening</td>
+</tr>
+<!-- check amounts for lines -->
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[9]/a
+</td>
+  <td>20000.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[10]/a
+</td>
+  <td>20000.0</td>
+</tr>
+<!-- }}} --> 
+
+<!-- filter on Date {{{ -->
+<!-- try equal -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-search-line']/th[5]/input</td>
+  <td>2005/01/02</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[2]/a
+</td>
+  <td>Client 1 Sale Invoice</td>
+</tr>
+<!-- check amounts for lines -->
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[9]/a
+</td>
+  <td>2200.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[10]/a
+</td>
+  <td>2200.0</td>
+</tr>
+
+<!-- unset search parameters, to make sure it's not kept -->
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-search-line']/th[5]/input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+
+
+<!-- try less than -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-search-line']/th[5]/input</td>
+  <td>&lt;= 2005/01/01</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[2]/a
+</td>
+  <td>Accounts opening</td>
+</tr>
+<!-- check amounts for lines -->
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[9]/a
+</td>
+  <td>20000.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[10]/a
+</td>
+  <td>20000.0</td>
+</tr>
+
+<!-- unset search parameters, to make sure it's not kept -->
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-search-line']/th[5]/input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+
+<!-- }}} --> 
+
+<!-- TODO: filter on *Translated* Transaction Type
+XXX shall we really test i18n issues here?
+-->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

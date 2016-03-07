@@ -49,45 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Updates attributes of an Zope document\n
-# which is in a class inheriting from ERP5 Base\n
-\n
-\n
-from Products.Formulator.Errors import ValidationError, FormValidationError\n
-\n
-request = context.REQUEST\n
-field_sort_type = request.form.get(\'field_sort_type\', None)\n
-form = context.Folder_viewSortOnDialog\n
-\n
-try:\n
-  # No validation for now\n
-  # Direct access to field (BAD)\n
-  sort_on = []\n
-  i = 0\n
-  for k in field_sort_on:\n
-    if k != \'None\':\n
-      if field_sort_type is None:\n
-        v = field_sort_order[i]\n
-        sort_on += [(k,v)]\n
-      else:\n
-        v = field_sort_order[i]\n
-        t = field_sort_type[i]\n
-        sort_on += [(k, v, t)]\n
-    i += 1\n
-  context.portal_selections.setSelectionSortOrder(selection_name, sort_on)\n
-except FormValidationError, validation_errors:\n
-  # Pack errors into the request\n
-  field_errors = form.ErrorFields(validation_errors)\n
-  request.set(\'field_errors\', field_errors)\n
-  return form(request)\n
-else:\n
-  redirect_url = context.portal_selections.getSelectionListUrlFor(selection_name)\n
-\n
-request[ \'RESPONSE\' ].redirect( redirect_url )\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id,selection_name,field_sort_on,field_sort_order</string> </value>
         </item>

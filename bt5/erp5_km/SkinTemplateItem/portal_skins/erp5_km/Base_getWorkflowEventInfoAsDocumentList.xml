@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
-\n
-request = context.REQUEST\n
-portal = context.getPortalObject()\n
-\n
-# we can use current_web_document in case it\'s "embedded" into a Web Section\n
-document = request.get(\'current_web_document\', context)\n
-\n
-event_document_list = []\n
-event_list = document.Base_getWorkflowEventInfoList()\n
-for event in event_list:\n
-  event_document = newTempBase(context, \'Event Info\')\n
-  event_document.edit(**{\'date\': event.time,\n
-                         \'action\': event.action,\n
-                         \'actor\': event.actor\n
-                        })\n
-  event_document_list.append(event_document)\n
-\n
-return event_document_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

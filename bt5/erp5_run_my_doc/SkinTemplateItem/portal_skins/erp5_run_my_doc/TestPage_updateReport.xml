@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Update the test report\n
-"""\n
-\n
-result_list = context.restrictedTraverse(\'/erp5/portal_tests/\' + zuite_id).objectValues(\'Zuite Results\')\n
-result_list = sorted(result_list, key=lambda x: x.getId())\n
-context.setTestReport(sorted(result_list[-1].objectValues(), key=lambda x: x.getId())[-1])\n
-\n
-return context.Base_redirect(\'TestPage_viewTestReport\', portal_status_message=context.Base_translateString(\'Test Report updated\'))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>zuite_id</string> </value>
         </item>

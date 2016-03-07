@@ -37,50 +37,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block replace="nothing">\n
-  <!--\n
-  This widget displays the login information about the user\n
-  and a login / logout link.\n
-\n
-  TODO:\n
-    - make sure translation is possible or working\n
-    - using CSS styling of icons (no reference to image directly please)\n
-    - check if anonymous mode works\n
-    - is login_form appropriate here ? or another one ?\n
-  -->\n
-</tal:block>\n
-\n
-<tal:block tal:define="current_web_site python:request.get(\'current_web_site\', here);\n
-                       portal_path python:request.get(\'current_web_site_url\', current_web_site.absolute_url());\n
-                       user_name python: here.portal_membership.getAuthenticatedMember();\n
-                       is_anonymous_user here/portal_membership/isAnonymousUser">\n
-\n
-<tal:block tal:condition="not:is_anonymous_user">\n
-  <a id="login-logout-link" \n
-     href="#" tal:attributes="href string:${portal_path}/WebSite_logout"\n
-    i18n:domain="ui"\n
-    title="Log out"\n
-    i18n:attributes="title"\n
-    tal:content="user_name"/>\n
-</tal:block>\n
-\n
-<tal:block tal:condition="python: is_anonymous_user and current_web_site.isUserAllowedLogin()">\n
-  <a id="login-logout-link" \n
-     href="#" \n
-     tal:attributes="href string:${portal_path}/login_form"\n
-     i18n:translate="" i18n:domain="ui"\n
-     i18n:attributes="title"\n
-     title="Log in">Log in</a>\n
-</tal:block>\n
-\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

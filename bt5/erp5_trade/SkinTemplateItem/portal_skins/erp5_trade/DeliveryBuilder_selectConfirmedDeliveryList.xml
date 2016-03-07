@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal_type = context.getDeliveryPortalType()\n
-# make sure that the result of the simulation state is update to date, so check getSimulationState manually\n
-return [x.getObject() for x in context.portal_catalog(portal_type=portal_type,simulation_state=\'confirmed\') \n
-            if x.getObject().getSimulationState()==\'confirmed\']\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

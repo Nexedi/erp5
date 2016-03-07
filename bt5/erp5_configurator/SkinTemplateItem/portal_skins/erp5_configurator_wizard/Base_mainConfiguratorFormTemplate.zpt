@@ -1,0 +1,17 @@
+<div>
+
+  <h3> <span tal:replace="structure python: here.Base_translateString(options.get('form_title', ''))"/>
+       <span tal:replace="structure python: options.get('current_form_number')"/> / 
+       <span tal:replace="structure python: options.get('max_form_numbers')"/>
+  </h3> 
+  
+   <div class="field required error" 
+        title="" 
+        tal:condition="python:options.get('form_message')!=None">     
+    <span class="error" 
+          tal:content="structure python: options.get('form_message')" />
+  </div>
+
+  <tal:block tal:replace="structure python: options.get('form_html')" />
+
+</div>

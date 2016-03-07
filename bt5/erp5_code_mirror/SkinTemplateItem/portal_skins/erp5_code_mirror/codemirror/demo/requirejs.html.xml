@@ -33,65 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<!doctype html>\n
-\n
-<head>\n
-  <title>CodeMirror: HTML completion demo</title>\n
-  <meta charset="utf-8"/>\n
-  <link rel=stylesheet href="../doc/docs.css">\n
-\n
-  <link rel="stylesheet" href="../lib/codemirror.css">\n
-  <link rel="stylesheet" href="../addon/hint/show-hint.css">\n
-  <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.14/require.min.js"></script>\n
-  <style type="text/css">\n
-    .CodeMirror {border-top: 1px solid #888; border-bottom: 1px solid #888;}\n
-  </style>\n
-</head>\n
-\n
-<body>\n
-  <div id=nav>\n
-    <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
-    <ul>\n
-      <li><a href="../index.html">Home</a>\n
-      <li><a href="../doc/manual.html">Manual</a>\n
-      <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
-    </ul>\n
-    <ul>\n
-      <li><a class=active href="#">HTML completion</a>\n
-    </ul>\n
-  </div>\n
-\n
-  <article>\n
-    <h2>RequireJS module loading demo</h2>\n
-\n
-    <p>This demo does the same thing as\n
-    the <a href="html5complete.html">HTML5 completion demo</a>, but\n
-    loads its dependencies\n
-    with <a href="http://requirejs.org/">Require.js</a>, rather than\n
-    explicitly. Press <strong>ctrl-space</strong> to activate\n
-    completion.</p>\n
-\n
-    <div id="code"></div>\n
-\n
-    <script type="text/javascript">\n
-      require(["../lib/codemirror", "../mode/htmlmixed/htmlmixed",\n
-               "../addon/hint/show-hint", "../addon/hint/html-hint"], function(CodeMirror) {\n
-        editor = CodeMirror(document.getElementById("code"), {\n
-          mode: "text/html",\n
-          extraKeys: {"Ctrl-Space": "autocomplete"},\n
-          value: document.documentElement.innerHTML\n
-        });\n
-      });\n
-    </script>\n
-  </article>\n
-</body>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

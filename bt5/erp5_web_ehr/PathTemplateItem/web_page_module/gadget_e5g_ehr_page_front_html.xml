@@ -99,30 +99,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta charset="utf-8" />\n
-    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>E-HR Frontpage</title>\n
-\n
-    <!-- renderjs -->\n
-    <script src="rsvp.js" type="text/javascript"></script>\n
-    <script src="renderjs.js" type="text/javascript"></script>\n
-\n
-    <!-- custom script -->\n
-    <script src="gadget_e5g_ehr_page_front.js" type="text/javascript"></script>\n
-\n
-  </head>\n
-  <body></body>\n
-</html>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Gadget E5G Ehr Frontpage</string> </value>
         </item>

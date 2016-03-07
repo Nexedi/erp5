@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>context.getWebSiteValue().Base_redirect(form_id=\'ERP5Site_viewSearchResult\', \n
-                keep_items=dict(reset=1, portal_type=list(context.getPortalDocumentTypeList()),\n
-                                owner=context.getReference()))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

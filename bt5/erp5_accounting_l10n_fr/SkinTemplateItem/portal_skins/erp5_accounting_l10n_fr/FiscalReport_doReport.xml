@@ -49,12 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># redirect to the given report\n
-return getattr(context, report).generatePDF(REQUEST=context.REQUEST, RESPONSE=context.REQUEST.RESPONSE)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>report</string> </value>
         </item>

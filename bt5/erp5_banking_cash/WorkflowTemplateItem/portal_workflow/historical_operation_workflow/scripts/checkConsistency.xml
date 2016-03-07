@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-delivery = state_change[\'object\']\n
-\n
-total_cash = delivery.getTotalPrice(fast=0,portal_type=(\'Cash Delivery Line\',\'Cash Delivery Cell\'))\n
-\n
-if len(delivery.objectValues(portal_type="Cash Delivery Line")) == 0:\n
-  msg=Message(domain=\'ui\',message=\'No resource defined.\')\n
-  raise ValidationFailed, (msg,)\n
-\n
-if total_cash != delivery.getSourceTotalAssetPrice():\n
-  msg=Message(domain=\'ui\',message=\'Amount differs from cash total.\')\n
-  raise ValidationFailed, (msg,)\n
-\n
-historical_operation_type = delivery.getHistoricalOperationTypeValue()\n
-if historical_operation_type is None:\n
-  msg=Message(domain=\'ui\',message=\'You must define an historical operation type.\')\n
-  raise ValidationFailed, (msg,)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

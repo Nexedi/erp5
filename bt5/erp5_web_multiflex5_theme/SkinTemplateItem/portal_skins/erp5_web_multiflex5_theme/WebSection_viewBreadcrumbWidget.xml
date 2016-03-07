@@ -39,37 +39,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block replace="nothing">\n
-  <!--\n
-  This widget displays the breadcrumbs of the current context.\n
-\n
-  TODO:\n
-    - make sure translation is possible or working\n
-  -->\n
-</tal:block>\n
-\n
-<tal:block tal:define="current_web_section python:request.get(\'current_web_section\', here);\n
-                       current_web_document python:request.get(\'current_web_document\', here);\n
-                       is_web_section_default_document python:request.get(\'is_web_section_default_document\',False);\n
-                       breadcrumb_list python: current_web_section.getBreadcrumbItemList(current_web_document);">\n
-<ul>\n
-  <li class="nobullet" \n
-      i18n:translate=""\n
-      i18n:domain="ui">You are here:</li>\n
-  <li tal:repeat="breadcrumb python:breadcrumb_list[:(is_web_section_default_document and -1 or None)]">\n
-    <a href="#" tal:attributes="href python:breadcrumb[1].absolute_url();\n
-                                title python:breadcrumb[2];"      \n
-                tal:content="python:breadcrumb[0]">Title</a>\n
-  </li>\n
-</ul>\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

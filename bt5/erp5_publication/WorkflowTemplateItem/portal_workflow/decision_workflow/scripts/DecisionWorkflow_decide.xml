@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>decision = state_change[\'object\']\n
-\n
-# Get parent object\n
-parent_decision = decision.getParentValue()\n
-\n
-# Set it to decide if decision was forwarded\n
-# Must be improved to count number of subdecisions and support multiple forward\n
-if parent_decision.getValidationState() == \'forwarded\':\n
-  parent_decision.decide()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

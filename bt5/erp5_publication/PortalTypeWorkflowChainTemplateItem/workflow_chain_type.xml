@@ -1,10 +1,10 @@
 <workflow_chain>
  <chain>
-  <type>Publication</type>
+  <type>portal_type_workflow_chain/Publication</type>
   <workflow>decision_workflow</workflow>
  </chain>
  <chain>
-  <type>Publication Decision</type>
+  <type>portal_type_workflow_chain/Publication Decision</type>
   <workflow>decision_workflow</workflow>
  </chain>
 </workflow_chain>

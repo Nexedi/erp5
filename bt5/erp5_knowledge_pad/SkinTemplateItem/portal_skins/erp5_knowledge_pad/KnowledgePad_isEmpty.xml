@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-Is Knowledge Pad empty (i.e. no gadgets inside).\n
-Use current Pad\'s layout.\n
-"""\n
-layout = context.KnowledgePad_getBoxColumnLayout()\n
-return not sum([len(x) for x in layout])\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>KnowledgePad_isEmpty</string> </value>
         </item>

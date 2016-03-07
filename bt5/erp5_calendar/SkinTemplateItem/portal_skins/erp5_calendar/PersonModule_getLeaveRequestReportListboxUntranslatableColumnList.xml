@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.PythonScripts.standard import Object\n
-request = container.REQUEST\n
-portal = context.getPortalObject()\n
-stool = portal.portal_simulation\n
-\n
-from_date = request[\'from_date\']\n
-to_date = request[\'to_date\']\n
-\n
-# get all resources used for leave requests\n
-resource_list = []\n
-for inventory in stool.getInventoryList(\n
-                          from_date=from_date,\n
-                          to_date=to_date,\n
-                          portal_type=\'Leave Request Period\',\n
-                          group_by_resource=1):\n
-  resource_list.append(\n
-          (inventory.resource_relative_url,\n
-           portal.portal_categories.restrictedTraverse(\n
-                inventory.resource_relative_url).getTitle()))\n
-\n
-return resource_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

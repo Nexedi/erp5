@@ -1,0 +1,9 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           tal:define="info_dict context/ERP5Site_getCategorizedModuleActionInformationDict;
+                       module_category_list info_dict/view;
+                       dummy python:module_category_list.sort();
+                       dummy python: request.RESPONSE.setHeader('Content-Type', 
+                                                       'text/html;; charset=utf-8');">
+  <tal:block metal:use-macro="context/ERP5Site_renderActionList/macros/table"/>
+</tal:block>

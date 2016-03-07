@@ -49,47 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.PythonScripts.standard import Object\n
-portal = context.getPortalObject()\n
-\n
-line_list = []\n
-detail_line_list = portal\\\n
-    .AccountingTransactionModule_getDetailedAgedBalanceLineList(\n
-               at_date, section_category, section_category_strict,\n
-               simulation_state, period_list, account_type, detail=False, **kw)\n
-\n
-period_id_list = [\'period_future\']\n
-for idx, period in enumerate(period_list):\n
-  period_id_list.append(\'period_%s\' % idx)\n
-period_id_list.append(\'period_%s\' % (idx + 1))\n
-\n
-# Initialize to something that will not be equals to \n
-# detail_line.mirror_section_uid below.\n
-# In case we have used an account with mirror section,\n
-# then mirror_section_uid will be None\n
-previous_mirror_section_uid = -1\n
-\n
-for detail_line in detail_line_list:\n
-  if previous_mirror_section_uid != detail_line.mirror_section_uid:\n
-    line = Object(uid=\'new_\',\n
-                  mirror_section_title=detail_line.mirror_section_title,\n
-                  total_price=0)\n
-    line_list.append(line)\n
-    previous_mirror_section_uid = detail_line.mirror_section_uid\n
-  line[\'total_price\'] = detail_line.total_price + line[\'total_price\']\n
-\n
-  for period_id in period_id_list:\n
-    previous_value = line.get(period_id, 0)\n
-    added_value = detail_line.get(period_id, 0)\n
-    new_value = previous_value + added_value\n
-    if previous_value or new_value:\n
-      line[period_id] = new_value\n
-\n
-return line_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>at_date, section_category, section_category_strict, simulation_state, period_list, account_type, **kw</string> </value>
         </item>

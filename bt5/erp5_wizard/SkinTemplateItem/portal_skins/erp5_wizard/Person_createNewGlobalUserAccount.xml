@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-\n
-if person is None:\n
-  person = context\n
-\n
-kw = context.Person_getDataDict(person=person)\n
-kw[\'password\'] = password\n
-\n
-# explicitly check if username is unique\n
-if portal.Base_validatePersonReference(kw[\'reference\'], context.REQUEST):\n
-  # create user in Authentification Server\n
-  kw[\'start_assignment\'] = len(person.Person_getAvailableAssignmentValueList())\n
-  portal.portal_wizard.callRemoteProxyMethod(\n
-                         \'WitchTool_createNewGlobalUserAccountFromExpressInstance\', \\\n
-                         use_cache = 0, \\\n
-                         ignore_exceptions = 0, \\\n
-                         **kw)\n
-else:\n
-  # user reference is NOT unique (valid) in Nexedi ERP5\n
-  raise ValueError, "User reference not unique"\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>password=None, person=None, **kw</string> </value>
         </item>

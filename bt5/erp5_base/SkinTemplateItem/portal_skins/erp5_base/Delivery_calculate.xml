@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-if portal.portal_workflow.isTransitionPossible(context, \'calculate\'):\n
-  context.calculate(**kw)\n
-else:\n
-  # Make sure no other node is moving the delivery\n
-  # to \'diverged\' or \'solved\' state.\n
-  context.serializeCausalityState()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

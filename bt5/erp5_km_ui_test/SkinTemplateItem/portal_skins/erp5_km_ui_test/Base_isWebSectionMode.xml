@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Is a web section rendered. (it\'s not a list_mode or dialog_mode\')\n
-"""\n
-return context.REQUEST.get(\'current_web_section\') is not None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

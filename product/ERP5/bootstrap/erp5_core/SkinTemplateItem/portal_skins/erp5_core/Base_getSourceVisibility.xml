@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># controls the visibility of "developper mode" links in ERP5 web interface\n
-# (edit form, edit field, edit portal type, ...) for object\n
-\n
-if object is None:\n
- object = context\n
-\n
-return context.portal_preferences.getPreferredHtmlStyleDevelopperMode() and context.portal_membership.checkPermission(\'View management screens\', object)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>object=None</string> </value>
         </item>

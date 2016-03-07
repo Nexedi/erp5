@@ -19,33 +19,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAFBUlEQVRoBe2aSYgcVRiAp8dJ3A0a
-lRiNo3FGXFAJUYNiFC8eIoIiCHqIEiWuJ5eDoCAIgqjgTSRuF8WDeNCDZg6CEEVET0FxwQVFCBIV
-UXGZze/r2E3sedX16lW9nobpH76p7qr//cvb+9W0FhcXx1aSjK+kZM11oqmEW63WYdhaDYfDJEzB
-NLRghp70PtfsQhyH4MRYVsGxcDYYywkwXythjB+DkQ1gYlfC+bAJdCr2IMfML5A1YWI5BR8nwVbY
-DOfAGdCJw4pPa2GMn0rZS+AK2AbWnpXXSZSPXVngU62K7VoKfCCWC7h9KVwPW+DgOJYM2UqBYHwt
-Bu+Aa8EatLxdp117XAcmxGKSO+FyWAcOJyu8r0QnjIMbsHQ3XASHwpLa4152IQ6H0V1wC2wEc4iu
-8NKEcXA0Bh+E2+A4KK1FdLIIsTgBPQkOpSMgOlF0D4jrcBFoaPR5+AucfFKYp9x9RT5i72PjKvgI
-5iAljnaZwhamNo/C8MOwA5ZViOVcAngBTq4bSDBhHDgRPQ6OlWUVYnG5eRlqJ2siRRPPTTxzzC6r
-kKwz71Pg0tOILEkYJ5NYtivrbLnlVgJwfW1M/pcwyToDPwQbG/NwoBdVntmJ5XhiuBcql+0Xe+8Y
-dqdyDVSf7sNevuP2n/BT+HHfu7fz1B1dE/IrRoxhoTfhndw8saaH7yn/HHwM34JL2s8QLbTuFMo3
-Qt1hNYON12Ev7IeF7hrMl9PhS0he4yj7GriEjMeuryE9yrvR+QdSY/mbsg6Hdb32D07YruxGP9XJ
-M5Rd2+ug6nds2OverBGHQ2gHBCu9nTAPdfIYpCb7FWWnqyYX0sfOWeDYT43lUcquDtn23jgPFX9t
-bG1/qv5nliKvYMzh0IS4wVifaGgf5V4lFodDUDoJO1FdGNQov/kFKrvK1co1/lsWjSN1KXqHsp/2
-89RJ2FnRY5EU+YwatQs2IUdixFOTFHHpeZtYHAqFMk6tum8+r1Cj/wMnCGu1KVmDoc2Jxlx29pSV
-tYVNeLpMseC5a2zfLlRQrui2664/FlJkH437TVlBE9bJmWWKBc9NuKnJShduJ+3WKfJ1TKFOC58W
-oxzQmaNWfwjcT73lXJIi8xSKTtikPb9NkU9SCoXKMJe4f/e8KkVM2CWpVEx2Q6lWscLvxY8qP3Ep
-Sp1LdNZ3du5EUzfhjp2mrsaTIibr/rlU3FLWkQl6oq9WQoHOMr4LdzwFTlP3Anbp/cQSOslsEUe3
-J9ZN+DIcvQW9v5/9PksAH3J9AocxPw+ttNQu7Tn5I3A/LImFONyU7CKON7iOXQd2iRwsYPdZmMBZ
-95dZ6DM6Bv0e5IhDmz/C1daqh9u5xNq+GWIP4Qwsl/j+62kT9m1CTlmF8YtzOqhgeyo02VQoH62a
-unuKdhCrOKiEc3bV2FzbeoNKuFJQOZVHCees3WGwPWrhYWiFnDGMWjhn7Q6D7VELD0Mr5Ixh1MI5
-a3cYbI9aeBhaIWcMoxbOWbvDYHvUwsPQCjljsIUH0cq9R6dFOcXqFZUvvW+y/v9SbvFcOEbmYpRq
-6Myb8Az42jOXeOr/boTxWXR2g2fZOcRztQ807DHqA/AH6NRabgJt/QZ3QvBfiHoP5NGbhD3ge6Im
-YujY0N7nsMX3LmO8ijDpbbAdfD9Tt5btObbsS7AbHzqOEmJZj+I9sAlslbonnr5O8rXui8Sxt50w
-X1aMDGKGHqrK/Be7tMaH/CIpvwAAAABJRU5ErkJggg==</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

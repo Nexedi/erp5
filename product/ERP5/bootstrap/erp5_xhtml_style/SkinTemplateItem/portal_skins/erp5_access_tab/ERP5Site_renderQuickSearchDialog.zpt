@@ -1,0 +1,26 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  tal:define="dummy python: request.RESPONSE.setHeader('Content-Type', 
+                                                       'text/html;; charset=utf-8');">
+  <div tal:define="search_default_text python:here.Base_translateString('Search')">
+    <input class="quick_search_field" type="text" onkeypress="submitFormOnEnter(event, this.form, 'ERP5Site_processAdvancedSearch');"
+      value="Search" tal:attributes="value string:${search_default_text};
+                                     onfocus string:if (this.value=='${search_default_text}') this.value='';"
+      onfocus="this.value='';"
+      class="input-text" name="top_your_search_text" size="40" accesskey="4"/>
+    <select size="1" class="input" name="top_your_search_portal_type">
+      <option value="" selected="selected" i18n:translate="" i18n:domain="ui">Everything</option>
+      <option value="all" i18n:translate="" i18n:domain="ui">All Documents</option>
+      <option tal:repeat="ptype here/getPortalDocumentTypeList"
+              tal:attributes="value ptype"
+              tal:content="python:ptype"
+              i18n:translate="" i18n:domain="ui">
+        Standard Type
+      </option>
+      <option value="Person" i18n:translate="" i18n:domain="ui">Person</option>
+      <option value="Organisation" i18n:translate="" i18n:domain="ui">Organisation</option>
+    </select>
+    <input type="submit" name="ERP5Site_processAdvancedSearch:method" value="Search"
+                         i18n:attributes="value" i18n:domain="ui"/>
+  </div>
+</tal:block>

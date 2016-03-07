@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>\'\'\'This script return the list of all function that is possible to assign the application\'\'\'\n
-\n
-# XXX we must make filter using informations from the request form\n
-\n
-return context.portal_categories.function.getCategoryChildTitleItemList()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

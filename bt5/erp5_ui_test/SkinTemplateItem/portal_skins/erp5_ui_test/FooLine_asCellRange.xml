@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if matrixbox:\n
-  return [(\'c\', \'C\'), (\'d\', \'D\')], [(\'three\', \'Three\'), (\'four\', \'Four\')], \n
-return [\'c\', \'d\'], [\'three\', \'four\'],\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>matrixbox, base_id=\'cell\'</string> </value>
         </item>

@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>requirement = context\n
-reference_list = []\n
-\n
-# return reference if defined:\n
-reference = requirement.getReference()\n
-if reference: return reference\n
-\n
-# browse requirements parents until base found\n
-# assemble list of default reference items\n
-while requirement.getPortalType() == "Requirement":\n
-  reference = requirement.getReference()\n
-  reference_list.append(reference or str(requirement.getProperty(\'int_index\', \'\') or \'\') or requirement.getId())\n
-  requirement = requirement.getParentValue()\n
-  # Quick exit if some parent requirement defines a reference\n
-  if reference:\n
-    reference_list.reverse()\n
-    return \'-\'.join(reference_list)\n
-\n
-# Append default reference (R)\n
-reference_list.append(reference or \'R\')\n
-reference_list.reverse()\n
-return \'-\'.join(reference_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

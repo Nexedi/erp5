@@ -1,14 +1,14 @@
 <workflow_chain>
  <chain>
-  <type>Position</type>
+  <type>portal_type_workflow_chain/Position</type>
   <workflow>edit_workflow, position_workflow</workflow>
  </chain>
  <chain>
-  <type>Position Announcement</type>
+  <type>portal_type_workflow_chain/Position Announcement</type>
   <workflow>edit_workflow, publication_workflow</workflow>
  </chain>
  <chain>
-  <type>Position Opportunity</type>
+  <type>portal_type_workflow_chain/Position Opportunity</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

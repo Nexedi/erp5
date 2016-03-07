@@ -19,39 +19,6 @@
             <value> <string>text/html</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\r\n
-<html>\r\n
-<head>\r\n
-    <title>ONLYOFFICE Documents</title>\r\n
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\r\n
-    <meta http-equiv="X-UA-Compatible" content="IE=9"/>\r\n
-    <meta name="description" content="" />\r\n
-    <meta name="keywords" content="" />\r\n
-    <style type="text/css"></style>\r\n
-</head>\r\n
-<body>\r\n
-    <script type="text/javascript" src="../../../vendor/jquery/jquery.min.js"></script>\r\n
-    <script type="text/javascript" src="../../../vendor/requirejs/require.js"></script>\r\n
-    <script type="text/javascript" src="../../../vendor/sockjs/sockjs.min.js"></script>\r\n
-    <script type="text/javascript" src="../../../vendor/xregexp/xregexp-all-min.js"></script>\r\n
-\t<script type="text/javascript" src="../../../sdk/Common/AllFonts.js"></script>\r\n
-    <script type="text/javascript" src="../../../sdk/Word/sdk-all.js"></script>\r\n
-    <div id="editor_sdk">\r\n
-    <script type="text/javascript">\r\n
-        var editor = new asc_docs_api("editor_sdk");\r\n
-        editor.SetFontsPath("../../../sdk/Fonts/");\r\n
-        editor.LoadFontsFromServer();\r\n
-    </script>\r\n
-</body>\r\n
-</html>\r\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

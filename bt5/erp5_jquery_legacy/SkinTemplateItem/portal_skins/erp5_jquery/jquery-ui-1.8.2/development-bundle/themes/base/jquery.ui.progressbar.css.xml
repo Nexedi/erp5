@@ -26,13 +26,6 @@
               <dictionary/>
             </value>
         </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string>/* Progressbar\n
-----------------------------------*/\n
-.ui-progressbar { height:2em; text-align: left; }\n
-.ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; }</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

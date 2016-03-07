@@ -49,42 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>def sortCurrencyCashList(currency_cash_list):\n
-  """Sort a list of currency cash objects\n
-  """\n
-  def sortLines(a_source, b_source):\n
-    """This method helps sorting supported by Python\'s standard function.\n
-    """\n
-    # Get the currency cash objects. They can be defined as resources.\n
-    if a_source.getPortalType() in (\'Coin\', \'Banknote\'):\n
-      a = a_source\n
-      b = b_source\n
-    else :\n
-      a = a_source.getResourceValue()\n
-      b = b_source.getResourceValue()\n
-\n
-    # Second, compare the portal types.\n
-    result = cmp(a.getPortalType(), b.getPortalType())\n
-    if result != 0:\n
-      return result\n
-\n
-    # First, compare the base prices (such as 1000 and 2000 Francs CFA).\n
-    result = - cmp(a.getBasePrice(), b.getBasePrice())\n
-    if result != 0:\n
-      return result\n
-\n
-    # Last, compare the variations (such as the years 1994 and 2003).\n
-    result = cmp(a.getVariation(), b.getVariation())\n
-    return result\n
-\n
-  currency_cash_list.sort(sortLines)\n
-  return currency_cash_list\n
-\n
-return sortCurrencyCashList(currency_cash_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>currency_cash_list</string> </value>
         </item>

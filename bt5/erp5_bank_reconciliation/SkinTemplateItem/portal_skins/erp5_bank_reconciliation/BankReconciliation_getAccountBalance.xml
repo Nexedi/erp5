@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>kw = {\n
-  \'section_uid\': context.getSourceSectionUid(),\n
-  \'payment_uid\': context.getSourcePaymentUid(),\n
-  \'node_category\': \'account_type/asset/cash/bank\',\n
-  \'simulation_state\': (\'stopped\', \'delivered\', ),\n
-  \'portal_type\': context.getPortalAccountingMovementTypeList()\n
-}\n
-\n
-if context.getStopDate():\n
-  kw[\'at_date\'] = context.getStopDate().latestTime()\n
-\n
-return context.portal_simulation.getInventory(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

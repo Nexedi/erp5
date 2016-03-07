@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-we search for docs that reference us in any way (reference only or more specific)\n
-by making a union of a number of searches\n
-we can return raw set, the class will get objects and make the records unique\n
-and make sure we get latest/most relevant version\n
-should be reimplemented in SQL some sunny day.\n
-"""\n
-reference = context.getReference()\n
-if reference is None or not context.isSearchableReference():\n
-  # empty or not following format preference\n
-  return ()\n
-\n
-return context.Base_zGetImplicitPredecessorValueList(reference=reference)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*a,**kw</string> </value>
         </item>

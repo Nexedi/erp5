@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>content_information = context.getContentInformation()\n
-page_number = int(content_information.get(\'Pages\', 0))\n
-page_number =page_number-1\n
-return page_number\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -19,66 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-\r\n
-.tooltip {\r\n
-    &.in {\r\n
-        opacity: 1;\r\n
-    }\r\n
-\r\n
-    &.arrow-free {\r\n
-        &.top    { margin-top: 0; }\r\n
-    //    &.right  { margin-left:  3px; padding: 0 @tooltip-arrow-width; }\r\n
-        &.bottom { margin-top: 0; }\r\n
-    //    &.left   { margin-left: -3px; padding: 0 @tooltip-arrow-width; }\r\n
-    }\r\n
-\r\n
-    &.top-left .tooltip-arrow,\r\n
-    &.top-right .tooltip-arrow {\r\n
-        bottom: 1px;\r\n
-        border-width: 5px 5px 0;\r\n
-        border-top-color: @body-bg;\r\n
-    }\r\n
-\r\n
-    &.top-left .tooltip-arrow,\r\n
-    &.bottom-left .tooltip-arrow {\r\n
-        left: 5px;\r\n
-    }\r\n
-\r\n
-    &.top-right .tooltip-arrow,\r\n
-    &.bottom-right .tooltip-arrow {\r\n
-        right: 5px;\r\n
-    }\r\n
-\r\n
-    &.bottom-left .tooltip-arrow,\r\n
-    &.bottom-right .tooltip-arrow {\r\n
-        top: 1px;\r\n
-        border-width: 0 5px 5px;\r\n
-        border-bottom-color: @body-bg;\r\n
-    }\r\n
-}\r\n
-\r\n
-.tooltip-inner {\r\n
-    font-size: 11px;\r\n
-    background-color: @body-bg;\r\n
-    color: @gray-deep;\r\n
-    padding: 5px 12px;\r\n
-    border: 1px solid rgba(0, 0, 0, 0.15);\r\n
-    .box-shadow(0 6px 12px rgba(0, 0, 0, 0.175));\r\n
-    background-clip: padding-box;\r\n
-\r\n
-    white-space: pre-wrap;\r\n
-    text-align: left;\r\n
-    word-wrap: break-word;\r\n
-    max-width: 300px;\r\n
-}\r\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

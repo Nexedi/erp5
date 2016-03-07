@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-\n
-#get cached description\n
-# TODO\n
-\n
-#get live description\n
-web_page = portal.portal_catalog(portal_type=\'Web Page\',\n
-                                 default_follow_up_uid=context.getUid(),\n
-                                 default_publication_section_uid=context.restrictedTraverse(\'portal_categories/publication_section/website/product/short_description\').getUid(),\n
-                                 #src__=1,\n
-                                 )\n
-if web_page is None or len(web_page) == 0:\n
-  return context.Base_translateString("No more information for this product.")\n
-return web_page[0].getObject().asStrippedHTML()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>type=\'short\', cached=True</string> </value>
         </item>

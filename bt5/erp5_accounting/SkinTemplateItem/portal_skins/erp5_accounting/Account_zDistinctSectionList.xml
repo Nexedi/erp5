@@ -103,56 +103,6 @@ simulation_state:list</string> </value>
             <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery())">\n
-SELECT DISTINCT\n
-  catalog.relative_url,\n
-  catalog.path,\n
-  catalog.title,\n
-  catalog.portal_type,\n
-  catalog.validation_state\n
-FROM\n
-  <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
-   <dtml-if "table_key not in (\'stock\', \'catalog\')">\n
-     <dtml-var table_item> AS <dtml-var table_key>,\n
-   </dtml-if>\n
-  </dtml-in>\n
-  catalog,\n
-  stock\n
-WHERE\n
-  stock.mirror_section_uid = catalog.uid\n
-<dtml-if node_uid>\n
-  AND stock.node_uid = <dtml-sqlvar node_uid type="string">\n
-</dtml-if>\n
-<dtml-if at_date>\n
-  AND stock.date <= <dtml-sqlvar at_date type="datetime">\n
-</dtml-if>\n
-<dtml-if simulation_state>\n
-  AND ( stock.simulation_state IN (<dtml-in simulation_state><dtml-sqlvar sequence-item type="string">\n
-                <dtml-unless sequence-end>, </dtml-unless></dtml-in>) )\n
-</dtml-if>\n
-\n
-<dtml-if section_uid>\n
-  AND (\n
-    stock.section_uid IN ( <dtml-in section_uid><dtml-sqlvar sequence-item type="int">\n
-        <dtml-unless sequence-end>, </dtml-unless> </dtml-in> )\n
-  )\n
-</dtml-if>\n
-\n
-  AND stock.portal_type in ( <dtml-in getPortalAccountingMovementTypeList><dtml-sqlvar\n
-    sequence-item type="string"><dtml-unless sequence-end>, </dtml-unless></dtml-in> )\n
-<dtml-if "query[\'where_expression\']">\n
-  AND <dtml-var "query[\'where_expression\']">\n
-</dtml-if>\n
-ORDER BY\n
-  catalog.portal_type, catalog.title\n
-</dtml-let>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

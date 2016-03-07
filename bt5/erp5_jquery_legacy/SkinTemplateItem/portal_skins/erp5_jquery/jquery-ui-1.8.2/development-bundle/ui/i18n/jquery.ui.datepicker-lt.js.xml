@@ -23,36 +23,6 @@
             <value> <string>application/x-javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/* Lithuanian (UTF-8) initialisation for the jQuery UI date picker plugin. */\n
-/* @author Arturas Paleicikas <arturas@avalon.lt> */\n
-jQuery(function($){\n
-\t$.datepicker.regional[\'lt\'] = {\n
-\t\tcloseText: \'Uždaryti\',\n
-\t\tprevText: \'&#x3c;Atgal\',\n
-\t\tnextText: \'Pirmyn&#x3e;\',\n
-\t\tcurrentText: \'Šiandien\',\n
-\t\tmonthNames: [\'Sausis\',\'Vasaris\',\'Kovas\',\'Balandis\',\'Gegužė\',\'Birželis\',\n
-\t\t\'Liepa\',\'Rugpjūtis\',\'Rugsėjis\',\'Spalis\',\'Lapkritis\',\'Gruodis\'],\n
-\t\tmonthNamesShort: [\'Sau\',\'Vas\',\'Kov\',\'Bal\',\'Geg\',\'Bir\',\n
-\t\t\'Lie\',\'Rugp\',\'Rugs\',\'Spa\',\'Lap\',\'Gru\'],\n
-\t\tdayNames: [\'sekmadienis\',\'pirmadienis\',\'antradienis\',\'trečiadienis\',\'ketvirtadienis\',\'penktadienis\',\'šeštadienis\'],\n
-\t\tdayNamesShort: [\'sek\',\'pir\',\'ant\',\'tre\',\'ket\',\'pen\',\'šeš\'],\n
-\t\tdayNamesMin: [\'Se\',\'Pr\',\'An\',\'Tr\',\'Ke\',\'Pe\',\'Še\'],\n
-\t\tweekHeader: \'Wk\',\n
-\t\tdateFormat: \'yy-mm-dd\',\n
-\t\tfirstDay: 1,\n
-\t\tisRTL: false,\n
-\t\tshowMonthAfterYear: false,\n
-\t\tyearSuffix: \'\'};\n
-\t$.datepicker.setDefaults($.datepicker.regional[\'lt\']);\n
-});
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>category_list = []\n
-\n
-# Add the variations list\n
-for category in context.getVariationCategoryList():\n
-  category_list.append(category)\n
-\n
-# TODO: check if individual variations are take away\n
-category_list.sort()\n
-\n
-return category_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

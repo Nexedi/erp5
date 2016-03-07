@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>for folder in context.objectValues(("ERP5 Folder",)):\n
-  print "#### Exporting the folder %s ####" % folder.id\n
-  folder.exportAll(dir=\'/var/lib/zope/\')\n
-\n
-print "#### Exporting the folder %s ####" % \'portal_catalog\'\n
-context.manage_exportObject(id=\'portal_catalog\')\n
-\n
-print "#### Exporting the folder %s ####" % \'portal_categories\'\n
-context.manage_exportObject(id=\'portal_categories\')\n
-\n
-print "#### Exporting the folder %s ####" % \'portal_types\'\n
-context.manage_exportObject(id=\'portal_types\')\n
-\n
-print "work done"\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_exportAll</string> </value>
         </item>

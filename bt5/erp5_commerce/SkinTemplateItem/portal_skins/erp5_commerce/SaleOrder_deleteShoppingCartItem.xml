@@ -185,25 +185,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Delete a shopping cart item.\n
-"""\n
-\n
-translateString = context.Base_translateString\n
-shopping_cart = context.SaleOrder_getShoppingCart()\n
-\n
-if field_my_order_line_id is not None:\n
-  shopping_cart.manage_delObjects(field_my_order_line_id)\n
-  portal_status_message = "Successfully removed from shopping cart."\n
-else:\n
-  portal_status_message = "Please select an item."\n
-\n
-context.Base_redirect(\'SaleOrder_viewAsWeb\', \\\n
-                      keep_items={\'portal_status_message\': translateString(portal_status_message, mapping={})})\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>field_my_order_line_id = None</string> </value>
         </item>

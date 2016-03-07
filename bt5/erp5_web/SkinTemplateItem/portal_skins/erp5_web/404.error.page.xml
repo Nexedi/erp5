@@ -33,27 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">\n
-<html>\n
-<head>\n
-<meta http-equiv="content-type" content="text/html; charset=utf-8">\n
-<title>404 Not Found</title>\n
-</head>\n
-  <img style="width:150px" alt="ERP5 Logo" src="images/erp5_logo.png"/> \n
-<body>\n
-  <h1>Not Found</h1>\n
-  The requested URL <code><tal:block tal:content="request/URL">/fdsqflkjdsqflkjdslkjf</tal:block></code> was not found on this server. \n
-  <hr />\n
-</body>\n
-</html>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

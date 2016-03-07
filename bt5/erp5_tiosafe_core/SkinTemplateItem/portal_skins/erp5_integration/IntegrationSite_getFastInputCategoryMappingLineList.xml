@@ -49,33 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
-portal = context.getPortalObject()\n
-getobject = portal.portal_catalog.getobject\n
-request = context.REQUEST\n
-integration_site = context\n
-result = []\n
-line_list = context.getCategoryMappingChildValueList()\n
-len_line_list = len(line_list)\n
-if len_line_list!=0:\n
-  for line in line_list:\n
-    container = integration_site\n
-    parent = line.getParent()\n
-    if line.getPortalType() == "Integration Category Mapping" and parent is not None:\n
-      container = parent\n
-    obj=container.newContent(portal_type=line.getPortalType(),\n
-                          id= "%s" % "_".join(line.getRelativeUrl().split("/")[2:]),\n
-                          uid="new_%s" % "_".join(line.getRelativeUrl().split("/")[2:]),\n
-                          temp_object=1,\n
-                          is_indexable=0,)\n
-    obj.edit(source_reference=line.getSourceReference(),\n
-          destination_reference=line.getDestinationReference())\n
-    result.append(obj)\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string> **kw</string> </value>
         </item>

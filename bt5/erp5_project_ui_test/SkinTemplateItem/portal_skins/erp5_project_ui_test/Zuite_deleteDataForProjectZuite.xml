@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>project_module = context.getPortalObject().project_module\n
-for month in (1, 2, 3):\n
-  try:\n
-    project_module.manage_delObjects(ids=[\'test_project_%s\' % month])\n
-  except:\n
-    pass\n
-return "Deleted Successfully."\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

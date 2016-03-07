@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-document = context\n
-from DateTime import DateTime\n
-current_date = DateTime()\n
-if document.getStartDate() is None or document.getStartDate() > current_date:\n
-  document.setStartDate(current_date)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

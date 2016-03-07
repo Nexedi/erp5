@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal_tests = container.portal_tests\n
-if test_zuite_relative_url is not None:\n
-  # we care for a specific test zuite\n
-  portal_tests = portal_tests.restrictedTraverse(test_zuite_relative_url,\\\n
-                                                 portal_tests)\n
-# remove test results from previous test runs\n
-portal_tests.manage_delObjects([x.getId() \\\n
-          for x in portal_tests.objectValues(\'Zuite Results\')])\n
-print "OK"\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>test_zuite_relative_url=None</string> </value>
         </item>

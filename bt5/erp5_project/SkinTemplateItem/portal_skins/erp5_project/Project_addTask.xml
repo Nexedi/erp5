@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Add a task in task_module. \n
-context_obj = context.getObject()\n
-task = context.task_module.newContent( portal_type = \'Task\')\n
-\n
-# Set the source_project \n
-task.setSourceProjectValue(context_obj)\n
-\n
-return context.REQUEST.RESPONSE.redirect(task.absolute_url() + \'?portal_status_message=Created+Task.\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

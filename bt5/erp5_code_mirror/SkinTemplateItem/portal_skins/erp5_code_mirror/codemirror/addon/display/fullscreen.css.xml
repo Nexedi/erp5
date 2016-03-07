@@ -26,16 +26,6 @@
               <dictionary/>
             </value>
         </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string>.CodeMirror-fullscreen {\n
-  position: fixed;\n
-  top: 0; left: 0; right: 0; bottom: 0;\n
-  height: auto;\n
-  z-index: 9;\n
-}\n
-</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

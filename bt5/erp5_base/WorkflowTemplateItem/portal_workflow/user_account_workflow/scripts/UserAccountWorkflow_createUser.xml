@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>kwargs = state_change[\'kwargs\']\n
-person = state_change[\'object\']\n
-\n
-person.edit(password=kwargs[\'password\'], reference=kwargs[\'reference\'])\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

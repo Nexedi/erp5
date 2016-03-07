@@ -185,68 +185,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Do whatever is necessary to finalize an order.\n
-  This script is called after customer completes shopping.\n
-"""\n
-from DateTime import DateTime\n
-request = context.REQUEST\n
-web_site = context.getWebSiteValue()\n
-isAnon = context.portal_membership.isAnonymousUser()\n
-translateString = context.Base_translateString\n
-shopping_cart = context.SaleOrder_getShoppingCart()\n
-shopping_cart_item_list = shopping_cart.SaleOrder_getShoppingCartItemList(include_shipping=True)\n
-customer = shopping_cart.SaleOrder_getShoppingCartCustomer()\n
-buyer = shopping_cart.SaleOrder_getShoppingCartBuyer()\n
-\n
-if isAnon:\n
-  # create first an account for user\n
-  msg = translateString("You need to create an account to continue. If you already have please login.")\n
-  web_site.Base_redirect(\'login_form\', \\\n
-                      keep_items={\'portal_status_message\': msg})\n
-  return\n
-\n
-#Check if payment is sucessfull\n
-if buyer is None:\n
-  raise ValueError, "Impossible to finalize and order not payed"\n
-\n
-portal_type = "Sale %s" % shopping_cart.getPortalType()\n
-module = context.getDefaultModule(portal_type)\n
-sale_order = module.newContent(portal_type=portal_type,\n
-                                          destination_value = customer,\n
-                                          destination_section_value = customer,\n
-                                          destination_decision_value = customer,\n
-                                          source_section_value = buyer,\n
-                                          source_value = buyer,\n
-                                          start_date = DateTime(),\n
-                                          received_date = DateTime(),\n
-                                          comment = shopping_cart.getComment(),\n
-                                          # set order default currency,\n
-                                          default_price_currency = web_site.WebSite_getShoppingCartDefaultCurrency().getRelativeUrl(),\n
-                                          # set trade condition\n
-                                          specialise_value = web_site.SaleOrder_getDefaultTradeCondition()\n
-                                          )\n
-\n
-for order_line in shopping_cart_item_list:\n
-  resource = order_line.getResourceValue()\n
-  sale_order.newContent(portal_type = order_line.getPortalType(),\n
-                        resource = order_line.getResource(),\n
-                        aggregate_list = order_line.getAggregateList(),\n
-                        quantity = order_line.getQuantity(),\n
-                        price = order_line.getPrice(),\n
-                        title = resource.getTitle())\n
-\n
-# order it\n
-sale_order.order()\n
-\n
-# clean up shopping cart\n
-context.SaleOrder_getShoppingCart(action=\'reset\')\n
-\n
-context.Base_redirect(\'SaleOrder_viewThankYouMessage\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

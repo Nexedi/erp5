@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import  translateString\n
-\n
-return [\n
-  (\'\', \'\'),\n
-  (translateString(\'List of Documents\'), \'list\'),\n
-  (translateString(\'Default Print of Each Document\'), \'list_view\'),\n
-]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

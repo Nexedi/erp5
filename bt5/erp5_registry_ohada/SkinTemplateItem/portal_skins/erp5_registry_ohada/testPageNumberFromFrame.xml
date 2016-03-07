@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>content_information = context.getContentInformation()\n
-number_of_pages = int(content_information.get(\'Pages\', 1))\n
-max = number_of_pages - 1\n
-page_list=range(number_of_pages)\n
-result=[]\n
-for i in page_list:\n
-  result.append(context)\n
-result[0].setFrame(0)\n
-result[1].setFrame(1)\n
-result[2].setFrame(2)\n
-return result[0].getFrame()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

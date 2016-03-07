@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Do not re-index security recursively if contained objects don\'t acquire roles\n
-#\n
-# After all, recursively re-indexing a module in a production system\n
-# with lots of content could mean hours of non-usable overloaded system.\n
-type_tool = context.getPortalObject().portal_types \n
-for portal_type_name in context.getTypeInfo().getTypeAllowedContentTypeList():\n
-  portal_type = type_tool[portal_type_name]\n
-  if portal_type.getTypeAcquireLocalRole():\n
-    reindex = context.recursiveReindexObject\n
-    break\n
-else:\n
-  reindex = context.reindexObject\n
-\n
-return reindex(*args, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

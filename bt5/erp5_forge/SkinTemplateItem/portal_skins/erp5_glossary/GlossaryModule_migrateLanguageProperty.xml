@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># This script set language property according to existing language category.\n
-for i in context.getPortalObject().glossary_module.objectValues():\n
-  lang_list = [x.split(\'/\')[1] for x in i.categories if x.startswith(\'language/\')]\n
-  if len(lang_list):\n
-    lang = lang_list[0]\n
-    i.setLanguage(lang)\n
-    i.setCategoryList([x for x in i.categories if not x.startswith(\'language/\')])\n
-    print i.getPath(), lang\n
-print \'Migration finished.\'\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

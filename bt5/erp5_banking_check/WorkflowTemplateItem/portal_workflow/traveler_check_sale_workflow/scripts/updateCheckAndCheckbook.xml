@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># We will need to create all checks for all checkbooks\n
-# Then all of them should be set as confirmed\n
-transaction = state_change[\'object\']\n
-\n
-line_list = transaction.getMovementList()\n
-\n
-for line in line_list:\n
-  aggregate_list = line.getAggregateValueList()\n
-  for aggregate in aggregate_list:\n
-    if aggregate.getPortalType()==\'Check\':\n
-      aggregate.setStartDate(transaction.getStartDate())\n
-      aggregate.setDestinationPayment(transaction.getDestinationPayment())\n
-      aggregate.confirm()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

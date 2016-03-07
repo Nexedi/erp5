@@ -1,0 +1,12 @@
+/****************************************************************/
+/*   Use this file to customize KM CSS                         */
+/*                                                              */
+/*                                                              */
+/****************************************************************/
+
+<tal:block define="dummy python: request.RESPONSE.setHeader('Content-Type', 'text/css;; charset=utf-8')"/>
+
+
+/*  Place your definitions after this line */
+
+

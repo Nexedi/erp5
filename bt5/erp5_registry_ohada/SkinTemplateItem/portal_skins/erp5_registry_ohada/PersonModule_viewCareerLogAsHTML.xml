@@ -33,56 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<html>\n
-  <head>\n
-    <title tal:content="template/title">The title</title>\n
-  </head>\n
-  <body>\n
-    \n
-    <img src="logo.png" />\n
-\n
-    <h2 align="center"><span tal:condition="template/title"\n
-              tal:replace="template/title">optional template id</span></h2>\n
-   \n
-    <table width="100%" border="1">\n
-     <tr>\n
-          <th i18n:domain="ui" i18n:translate="">Name</th>\n
-          <th i18n:domain="ui" i18n:translate="">Birthdate</th>\n
-          <th i18n:domain="ui" i18n:translate="">Nationality</th>\n
-          <th i18n:domain="ui" i18n:translate="">Gender</th>\n
-          <th i18n:domain="ui" i18n:translate="">Skills</th>\n
-          <th i18n:domain="ui" i18n:translate="">Assignment</th>\n
-          <th i18n:domain="ui" i18n:translate="">Finish</th>\n
-          <th i18n:domain="ui" i18n:translate="">Start</th>\n
-          <th i18n:domain="ui" i18n:translate="">Description</th>\n
-     </tr>\n
-      <!--<tr tal:repeat="item python:here.Base_sortObjectListLikeSQL(here.Person_zGetPersonCareerLog(),((\'start_date\',\'ASC\'),))">\n
-         <span tal:define="my_assignment python:item.getObject();\n
-                                   my_person python:my_assignment.getParentValue()"\n
-                    >\n
-          <td valign="top"><a tal:content="my_person/getTitle" \n
-                       tal:attributes="href python:\'%s/Person_viewProfile\' % my_person.getRelativeUrl()" /></td>\n
-          <td valign="top" ><font size="-2" tal:content="my_assignment/getStartDate"/></td>\n
-          <td valign="top" ><font size="-2" tal:content="my_assignment/getDefaultNationality"/></td>\n
-          <td valign="top" ><font size="-2" tal:content="my_assignment/getGender"/></td>\n
-          <td valign="top"><font size="-2"><ul><li tal:repeat="skill my_assignment/getSkillList"\n
-                            tal:content="skill"></li></ul></font></td>\n
-          <td valign="top"><a tal:content="item/getTitle" tal:attributes="href item/getPath"/></td>\n
-          <td valign="top"><font size="-2" tal:content="my_assignment/getStartDate"/></td>\n
-          <td valign="top"><font size="-2" tal:content="my_assignment/getStopDate"/></td>\n
-          <td valign="top"><font size="-2" tal:content="item/Description"/></td>\n
-        </span>\n
-      </tr>-->\n
-    </table>\n
-  </body>\n
-</html>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

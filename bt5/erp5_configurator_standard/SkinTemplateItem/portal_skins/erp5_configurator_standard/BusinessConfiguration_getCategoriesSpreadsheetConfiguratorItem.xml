@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>categories_spreadsheet_configuration_save_relative_url = \\\n
-      context.getGlobalConfigurationAttr(\'categories_spreadsheet_configuration_save_relative_url\')\n
-\n
-assert categories_spreadsheet_configuration_save_relative_url, \\\n
-  "Global attr categories_spreadsheet_configuration_save_relative_url is not set"\n
-categories_spreadsheet_configuration_save = context.getPortalObject().restrictedTraverse(\n
-   categories_spreadsheet_configuration_save_relative_url)\n
-\n
-categories_spreadsheet_list = categories_spreadsheet_configuration_save.contentValues(\n
-        filter=dict(portal_type="Categories Spreadsheet Configurator Item"))\n
-\n
-assert len(categories_spreadsheet_list) == 1, \\\n
-        \'Unexpected Categories Spreadsheets: %r\' % categories_spreadsheet_list\n
-\n
-return categories_spreadsheet_list[0]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

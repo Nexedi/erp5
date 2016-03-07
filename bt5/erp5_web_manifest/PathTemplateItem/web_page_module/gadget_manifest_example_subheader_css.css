@@ -1,0 +1,7 @@
+.ui-header .ui-controlgroup, .ui-panel .ui-header .ui-controlgroup {
+  min-width: inherit;
+  max-width: none;
+}
+.ui-header .ui-controlgroup-horizontal .ui-controlgroup-controls a.ui-btn {
+  width: auto;
+}

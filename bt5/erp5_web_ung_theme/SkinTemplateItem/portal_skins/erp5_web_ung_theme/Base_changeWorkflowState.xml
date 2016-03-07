@@ -49,12 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if action_name is not None:\n
-  context.portal_workflow.doActionFor(context, action_name)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>action_name=None</string> </value>
         </item>

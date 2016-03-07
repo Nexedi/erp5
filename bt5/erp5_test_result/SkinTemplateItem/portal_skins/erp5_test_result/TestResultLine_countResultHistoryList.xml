@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Count all previous test result line for the same test, same\n
-test suite, but for older revisions.\n
-"""\n
-\n
-test_result = context.getParentValue()\n
-query_params = {\'portal_type\': \'Test Result\',\n
-                \'title\': dict(query=test_result.getTitle(), key=\'ExactMatch\'),\n
-                \'simulation_state\': (\'stopped\', \'public_stopped\', \'failed\'),\n
-                }\n
-return context.portal_catalog.countResults(**query_params)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

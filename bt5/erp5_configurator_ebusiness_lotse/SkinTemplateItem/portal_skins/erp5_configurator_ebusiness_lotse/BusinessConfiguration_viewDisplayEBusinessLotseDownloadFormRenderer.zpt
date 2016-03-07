@@ -1,0 +1,17 @@
+<h4 i18n:translate=""
+    i18n:domain="ui"> The eBusiness Lotse Configuration is going to be installed.</h4>
+
+
+<p i18n:translate=""
+    i18n:domain="ui">
+After the configuration process finished, you can login with the following user:
+     <li> Login : user </li>
+     <li> Password : test </li>
+</p>
+
+
+<p i18n:translate=""
+    i18n:domain="ui">
+  Please proceed using Install button below. 
+  In the next page you will receive automatically updated installation status report.
+</p>

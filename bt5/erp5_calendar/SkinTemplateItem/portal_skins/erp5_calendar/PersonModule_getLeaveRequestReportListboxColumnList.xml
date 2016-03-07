@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>column_item_list = [ (\'person_career_reference\', \'Employee Number\'),\n
-                     (\'person_title\', \'Name\'), ]\n
-\n
-non_translatable_column_item_list = context\\\n
-        .PersonModule_getLeaveRequestReportListboxUntranslatableColumnList()\n
-non_translatable_column_item_list.sort(lambda a,b: cmp(a[1], b[1]))\n
-\n
-column_item_list.extend(non_translatable_column_item_list)\n
-column_item_list.append((\'total\', \'Total\'))\n
-return column_item_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

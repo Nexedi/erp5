@@ -20,18 +20,6 @@
             <value> <string>z_related_children</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-comment>\n
-table_0 : catalog as children\n
-</dtml-comment>\n
-<dtml-var table_0>.parent_uid = catalog.uid\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

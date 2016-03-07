@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Return the \'side-specific\' reference, ie. the source reference or\n
-destination reference.\n
-"""\n
-delivery = brain.getObject().getExplanationValue()\n
-if brain.section_uid != brain.mirror_section_uid:\n
-  if delivery.getSourceSectionUid() == brain.section_uid:\n
-    return delivery.getSourceReference()\n
-  return delivery.getDestinationReference()\n
-\n
-# If we have a movement which exists for both section uid and mirror section uid,\n
-# we can only guess what reference should be used.\n
-if round(brain.total_quantity - brain.getObject().getQuantity(), 5) == 0:\n
-  return delivery.getDestinationReference()\n
-\n
-return delivery.getSourceReference()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain, selection=None, **kwd</string> </value>
         </item>

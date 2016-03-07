@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>module = context.getDefaultModule(portal_type=\'Person\')\n
-result = module.searchFolder(reference=user_name)\n
-\n
-if len(result) == 1:\n
-  return result[0]\n
-\n
-return None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>user_name</string> </value>
         </item>

@@ -53,31 +53,6 @@ SearchableText\r\n
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-let portal="getPortalObject()">\n
-<dtml-let catalog="portal.portal_catalog.getSQLCatalog(getId())">\n
-REPLACE INTO\n
-  <dtml-var expr="getattr(catalog, \'sphinx_index\', getattr(portal, \'sphinx_index\', \'erp5\'))">\n
-VALUES\n
-<dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-(\n
-  <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
-  <dtml-sqlvar expr="(SearchableText[loop_item] or \'\')" type="string">,\n
-  <dtml-sqlvar expr="uid[loop_item]" type="int">\n
-)\n
-<dtml-if sequence-end>\n
-<dtml-else>\n
-,\n
-</dtml-if>\n
-</dtml-in>\n
-</dtml-let>\n
-</dtml-let>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

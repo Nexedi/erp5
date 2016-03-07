@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import translateString\n
-portal = context.getPortalObject()\n
-request = portal.REQUEST\n
-\n
-portal.portal_selections.setSelectionStats(selection_name, [], REQUEST=request)\n
-portal.portal_selections.setSelectionColumns(selection_name, [], REQUEST=request)\n
-\n
-return context.Base_redirect(form_id, keep_items=dict(\n
-  portal_status_message=translateString("List Setting Reseted.")))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id, selection_name, *args, **kw</string> </value>
         </item>

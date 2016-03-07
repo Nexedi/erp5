@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># By default, there are three cache_managers, http_cache and anonymous_http_cache and user_ram_cache.\n
-cache_manager_id = \'http_cache\'\n
-result = []\n
-\n
-def setCache(skin):\n
-  for o in skin.objectValues():\n
-    id = o.id\n
-    if callable(id): id = id()\n
-    if o.meta_type in (\'Image\', \'File\', \'Filesystem Image\', \'Filesystem File\') or id.endswith(\'.css\') or id.endswith(\'.js\'):\n
-      if o.ZCacheable_getManagerId() != cache_manager_id:\n
-        o.ZCacheable_setManagerId(cache_manager_id)\n
-        result.append(o.absolute_url(relative=1))\n
-    elif o.meta_type == \'Folder\':\n
-      setCache(o)\n
-\n
-for skin in context.portal_skins.objectValues():\n
-  setCache(skin)\n
-\n
-return "\\n".join(result)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

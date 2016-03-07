@@ -1,0 +1,225 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/getId"/>
+</head>
+<body >
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
+</thead><tbody>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />
+
+<!-- Logout -->
+<tr>
+	<td>openAndWait</td>
+	<td>${base_url}/web_site_module/km_test_web_site</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>login-logout-link</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>You have been logged out</td>
+	<td></td>
+</tr>
+
+
+<!-- Register an account -->
+<tr>
+	<td>clickAndWait</td>
+	<td>login-logout-link</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>field_your_first_name</td>
+	<td>testx</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>field_your_last_name</td>
+	<td>testy</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>field_your_default_email_text</td>
+	<td>test@test.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>field_your_default_telephone_text</td>
+	<td>00123456789</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>field_your_default_address_street_address</td>
+	<td>Lille</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>field_your_default_address_city</td>
+	<td>Lille</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>field_your_default_address_zip_code</td>
+	<td>4101</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>field_your_password</td>
+	<td>a</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>field_your_password_confirm</td>
+	<td>a</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>WebSite_createWebSiteAccount:action</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Your account was successfully created</td>
+	<td></td>
+</tr>
+
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
+<!-- Login as new user is now longer possible to test as by default it requires to manually 
+or through an alarm to "accept" created Credential Request. -->
+<!--
+<tr>
+	<td>openAndWait</td>
+	<td>${base_url}/web_site_module/km_test_web_site</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>login-logout-link</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>__ac_name</td>
+	<td>test@test.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>__ac_password</td>
+	<td>a</td>
+</tr>
+
+<tr>
+	<td>clickAndWait</td>
+	<td>WebSite_login:method</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>test@test.com</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>You are not allowed to use knowledge pad system due to security restrictions.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>login-logout-link</td>
+	<td></td>
+</tr>
+-->
+
+<!-- Try to register again same account, should not be possible -->
+<tr>
+	<td>openAndWait</td>
+	<td>${base_url}/web_site_module/km_test_web_site</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>login-logout-link</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>field_your_first_name</td>
+	<td>testx</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>field_your_last_name</td>
+	<td>testy</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>field_your_default_email_text</td>
+	<td>test@test.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>field_your_password</td>
+	<td>a</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>field_your_password_confirm</td>
+	<td>a</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>WebSite_createWebSiteAccount:action</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Email is already used into the system. Please try new one.</td>
+	<td></td>
+</tr>
+
+
+<!-- Login Again as test runner user -->
+<tr>
+	<td>clickAndWait</td>
+	<td>login-logout-link</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>__ac_name</td>
+	<td>ERP5TypeTestCase</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>__ac_password</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>WebSite_login:method</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>ERP5TypeTestCase</td>
+	<td></td>
+</tr>
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />
+
+</tbody></table>
+</body>
+</html>
+

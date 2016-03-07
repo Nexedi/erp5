@@ -23,36 +23,6 @@
             <value> <string>application/x-javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/* Armenian(UTF-8) initialisation for the jQuery UI date picker plugin. */\n
-/* Written by Levon Zakaryan (levon.zakaryan@gmail.com)*/\n
-jQuery(function($){\n
-\t$.datepicker.regional[\'hy\'] = {\n
-\t\tcloseText: \'Փակել\',\n
-\t\tprevText: \'&#x3c;Նախ.\',\n
-\t\tnextText: \'Հաջ.&#x3e;\',\n
-\t\tcurrentText: \'Այսօր\',\n
-\t\tmonthNames: [\'Հունվար\',\'Փետրվար\',\'Մարտ\',\'Ապրիլ\',\'Մայիս\',\'Հունիս\',\n
-\t\t\'Հուլիս\',\'Օգոստոս\',\'Սեպտեմբեր\',\'Հոկտեմբեր\',\'Նոյեմբեր\',\'Դեկտեմբեր\'],\n
-\t\tmonthNamesShort: [\'Հունվ\',\'Փետր\',\'Մարտ\',\'Ապր\',\'Մայիս\',\'Հունիս\',\n
-\t\t\'Հուլ\',\'Օգս\',\'Սեպ\',\'Հոկ\',\'Նոյ\',\'Դեկ\'],\n
-\t\tdayNames: [\'կիրակի\',\'եկուշաբթի\',\'երեքշաբթի\',\'չորեքշաբթի\',\'հինգշաբթի\',\'ուրբաթ\',\'շաբաթ\'],\n
-\t\tdayNamesShort: [\'կիր\',\'երկ\',\'երք\',\'չրք\',\'հնգ\',\'ուրբ\',\'շբթ\'],\n
-\t\tdayNamesMin: [\'կիր\',\'երկ\',\'երք\',\'չրք\',\'հնգ\',\'ուրբ\',\'շբթ\'],\n
-\t\tweekHeader: \'ՇԲՏ\',\n
-\t\tdateFormat: \'dd.mm.yy\',\n
-\t\tfirstDay: 1,\n
-\t\tisRTL: false,\n
-\t\tshowMonthAfterYear: false,\n
-\t\tyearSuffix: \'\'};\n
-\t$.datepicker.setDefaults($.datepicker.regional[\'hy\']);\n
-});
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Returns the event that caused this ticket.\n
-\n
-Either defined explictly through causality relation or simply the first event.\n
-"""\n
-portal = context.getPortalObject()\n
-\n
-causality = context.getCausalityValue(portal_type=portal.getPortalEventTypeList())\n
-if causality is not None:\n
-  return causality\n
-\n
-# XXX for folder workflow action dialog\n
-if context.isTempObject():\n
-  context = portal.restrictedTraverse(context.getRelativeUrl())\n
-\n
-event_list = portal.portal_catalog(\n
-  portal_type=portal.getPortalEventTypeList(),\n
-  default_follow_up_uid=context.getUid(),\n
-  limit=1,\n
-  sort_on=((\'delivery.start_date\', \'ASC\'),),\n
-)\n
-if event_list:\n
-  return event_list[0].getObject()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-\n
-def getCurrencyList(exclude_reference_currency=0):\n
-  currency_value_list = context.currency_module.objectValues()\n
-  if exclude_reference_currency:\n
-    reference_id = context.Baobab_getPortalReferenceCurrencyID()\n
-    currency_value_list = [x for x in currency_value_list if x.getId() != reference_id]\n
-  currency_list = [(\'%s - %s\' % (x.getReference(), x.getTitle()), x.getRelativeUrl())\n
-    for x in currency_value_list]\n
-\n
-  currency_list.insert(0, (\'\',\'\'))\n
-  return currency_list\n
-\n
-getCurrencyList = CachingMethod(getCurrencyList, id = \'CurrencyExchange_getCurrencyList\', \n
-                                cache_factory = "erp5_ui_medium")\n
-return getCurrencyList(exclude_reference_currency=exclude_reference_currency)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>exclude_reference_currency=0</string> </value>
         </item>

@@ -1,0 +1,87 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test set a membership criterion predicate</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test set a membership criterion predicate for fallback category</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_erp5_web_common/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/WebSiteModule_createTestSite?id=test_web_site&amp;title=Test Web Site</td>
+  <td></td>
+  <td>Create a new site</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/Zuite_waitForActivities</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/test_web_site/Predicate_view?ignore_layout=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Predicate</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>field_my_membership_criterion_base_category_list</td>
+	<td>label=destination_region</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//button[@name='Predicate_edit:method']</td>
+	<td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Input data has errors.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>subfield_field_my_membership_criterion_category_list_0</td>
+	<td>label=region/test_web_region</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//button[@name='Predicate_edit:method']</td>
+	<td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Input data has errors.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+	<td>assertSelectedValue</td>
+	<td>//select[@name='subfield_field_my_membership_criterion_category_list_0']</td>
+	<td>destination_region/region/test_web_region</td>
+</tr>
+</tbody></table>
+</body>
+</html>

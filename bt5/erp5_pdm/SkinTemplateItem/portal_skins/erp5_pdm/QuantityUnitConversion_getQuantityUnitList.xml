@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>unit = context.getQuantityUnit()\n
-quantity_unit = unit.rsplit("/", 1)[0]\n
-\n
-\n
-category = context.portal_categories.getCategoryValue(quantity_unit, \'quantity_unit\')\n
-\n
-pref = context.portal_preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\')\n
-\n
-candidates = getattr(category, pref)(recursive=True, local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\')\n
-\n
-return candidates\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

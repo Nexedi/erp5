@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>for skin_folder in context.getPortalObject().portal_skins.objectValues(\'Folder\'):\n
-  for skin in skin_folder.objectValues():\n
-    print ";".join((skin_folder.getId(), skin.getId(), skin.meta_type))\n
-    \n
-return \'\\n\'.join(sorted(printed.splitlines()))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

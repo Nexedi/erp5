@@ -49,37 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-kw = {}\n
-request = container.REQUEST\n
-for k in \'added\', \'modified\', \'removed\':\n
-  file_list = request.get(k, ())\n
-  # XXX: ERP5VCS_doCreateJavaScriptStatus should send lists\n
-  if isinstance(file_list, basestring):\n
-    file_list = file_list != \'none\' and filter(None, file_list.split(\',\')) or ()\n
-  kw[k] = file_list\n
-\n
-changelog = request.get(\'changelog\', \'\')\n
-if not changelog.strip():\n
-  from Products.ERP5Type.Message import translateString\n
-  error_msg = "Please set a ChangeLog message."\n
-  request.set(\'portal_status_message\', translateString(error_msg))\n
-  request.set(\'cancel_url\', context.absolute_url() +\n
-    \'/BusinessTemplate_viewVcsStatus?do_extract:int=0\'\n
-    \'&portal_status_message=Commit%20cancelled.\')\n
-  return context.asContext(**kw).BusinessTemplate_viewVcsChangelog()\n
-\n
-try:\n
-  return context.getVcsTool().commit(changelog, **kw)\n
-except Exception, error:\n
-  return context.BusinessTemplate_handleException(error, script.id)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

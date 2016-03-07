@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>modified = state_change[\'object\']\n
-\n
-scope = modified.getParentValue()\n
-if scope.getPortalType() == "Quantity Unit Conversion Group":\n
-  scope = scope.getParentValue()\n
-\n
-if scope.getPortalType() != "Product":\n
-  # This was a global definition.\n
-  # Its change implies that all local definitions need reindexation\n
-  # Even resources that do NOT override definitions need indexation.\n
-  context.QuantityUnitConversionModule_invalidateUniversalDefinitionDict()\n
-  context.product_module.recursiveReindexObject()\n
-else:\n
-  scope.reindexObject()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

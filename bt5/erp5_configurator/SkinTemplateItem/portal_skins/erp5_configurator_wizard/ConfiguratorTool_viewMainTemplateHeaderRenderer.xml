@@ -33,23 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<div style="padding: 0.1em; \n
-            margin: 0.5em; \n
-            border:1px solid #3D5474;\n
-            background-color: #BAD0F0;">\n
-  <h1 i18n:translate=""\n
-      i18n:domain="ui"\n
-      style="padding: 0.4em;\n
-             padding-left: 0.3em; \n
-             margin: 0em;" > ERP5 Configuration </h1>\n
-</div>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

@@ -1,0 +1,15 @@
+<tal:block
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  tal:define="pagination here/WebPage_getBlogArticlePagination;
+              prev python:pagination[0];
+              next python:pagination[1];
+              web_section_url python:here.getWebSectionValue().absolute_url();">
+  <div class="blog-previous-article">
+    <a href="prev_url" tal:condition="python:prev is not None" tal:content="prev/title | prev/reference" tal:attributes="href python:'%s/%s' % (web_section_url, prev.reference)" />
+  </div>
+  <div class="blog-next-article">
+    <a href="next_url" tal:condition="python:next is not None" tal:content="next/title | next/reference" tal:attributes="href python:'%s/%s' % (web_section_url, next.reference)" />
+  </div>
+</tal:block>

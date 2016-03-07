@@ -56,8 +56,7 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
- This script is part of ERP5 Web.\n
- It is used to get title of an object published in an ERP5 based Web Site and is used\n
- for building ERP5 Web UI.\n
-\n
- Title can be acquired from following sources (their priority may depend):\n
- - translated_short_title\n
- - short_title\n
- - translated_title_or_id\n
- - title_or_id\n
- - title\n
- - auto generated\n
-\n
-  XXX: move this script as an API of ERP5Type?\n
-"""\n
-return context.getProperty(\'translated_short_title\', None) or \\\n
-                   context.getProperty(\'short_title\', None) or \\\n
-                   context.getProperty(\'translated_title_or_id\', None) or \\\n
-                   context.getProperty(\'title_or_id\', None) or \\\n
-                   context.title\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

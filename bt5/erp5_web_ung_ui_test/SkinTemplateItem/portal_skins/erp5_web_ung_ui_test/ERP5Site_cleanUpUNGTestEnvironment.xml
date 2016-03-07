@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-ung_website = portal.web_site_module.ung\n
-\n
-pad_list = portal.portal_catalog(portal_type="Knowledge Pad",\n
-                                 publication_section_uid=ung_website.getUid())\n
-\n
-for pad in pad_list:\n
-  pad_object = context.restrictedTraverse(pad.getPath())\n
-  portal.knowledge_pad_module.deleteContent(pad_object.getId())\n
-\n
-person_list = portal.portal_catalog(portal_type="Person",\n
-                                    reference=["ung_user", "ung_user2"])\n
-\n
-for person in person_list:\n
-  person_object = context.restrictedTraverse(person.getPath())\n
-  portal.person_module.deleteContent(person_object.getId())\n
-\n
-return True\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

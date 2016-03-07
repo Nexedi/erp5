@@ -23,36 +23,6 @@
             <value> <string>application/x-javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-﻿/* Thai initialisation for the jQuery UI date picker plugin. */\n
-/* Written by pipo (pipo@sixhead.com). */\n
-jQuery(function($){\n
-\t$.datepicker.regional[\'th\'] = {\n
-\t\tcloseText: \'ปิด\',\n
-\t\tprevText: \'&laquo;&nbsp;ย้อน\',\n
-\t\tnextText: \'ถัดไป&nbsp;&raquo;\',\n
-\t\tcurrentText: \'วันนี้\',\n
-\t\tmonthNames: [\'มกราคม\',\'กุมภาพันธ์\',\'มีนาคม\',\'เมษายน\',\'พฤษภาคม\',\'มิถุนายน\',\n
-\t\t\'กรกฏาคม\',\'สิงหาคม\',\'กันยายน\',\'ตุลาคม\',\'พฤศจิกายน\',\'ธันวาคม\'],\n
-\t\tmonthNamesShort: [\'ม.ค.\',\'ก.พ.\',\'มี.ค.\',\'เม.ย.\',\'พ.ค.\',\'มิ.ย.\',\n
-\t\t\'ก.ค.\',\'ส.ค.\',\'ก.ย.\',\'ต.ค.\',\'พ.ย.\',\'ธ.ค.\'],\n
-\t\tdayNames: [\'อาทิตย์\',\'จันทร์\',\'อังคาร\',\'พุธ\',\'พฤหัสบดี\',\'ศุกร์\',\'เสาร์\'],\n
-\t\tdayNamesShort: [\'อา.\',\'จ.\',\'อ.\',\'พ.\',\'พฤ.\',\'ศ.\',\'ส.\'],\n
-\t\tdayNamesMin: [\'อา.\',\'จ.\',\'อ.\',\'พ.\',\'พฤ.\',\'ศ.\',\'ส.\'],\n
-\t\tweekHeader: \'Wk\',\n
-\t\tdateFormat: \'dd/mm/yy\',\n
-\t\tfirstDay: 0,\n
-\t\tisRTL: false,\n
-\t\tshowMonthAfterYear: false,\n
-\t\tyearSuffix: \'\'};\n
-\t$.datepicker.setDefaults($.datepicker.regional[\'th\']);\n
-});
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

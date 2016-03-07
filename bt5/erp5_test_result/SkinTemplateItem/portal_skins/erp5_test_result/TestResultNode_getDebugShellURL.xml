@@ -49,11 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return "https://[%s]:8080" % context.getProperty(\'stdout\')[context.getProperty(\'stdout\').index(\'[\')+1:context.getProperty(\'stdout\').index(\']\')]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

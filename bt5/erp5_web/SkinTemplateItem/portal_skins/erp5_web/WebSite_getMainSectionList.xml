@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Returns the list of alls visible Web Sections for Web Site.\n
-  This script is used to generate the memus.\n
-"""\n
-site = context.getWebSiteValue()\n
-section_list = site.contentValues(portal_type=\'Web Section\', sort_on=\'int_index\', checked_permission=\'View\')\n
-return filter(lambda x: x.isVisible(), section_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

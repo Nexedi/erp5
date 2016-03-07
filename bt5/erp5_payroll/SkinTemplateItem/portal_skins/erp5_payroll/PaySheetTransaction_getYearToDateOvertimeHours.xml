@@ -49,33 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-accounting_module = portal.accounting_module\n
-\n
-from_date=DateTime(context.getStartDate().year(), 1, 1)\n
-to_date=context.getStartDate()\n
-\n
-search_params = \\\n
-  { \n
-   \'portal_type\'         : \'Pay Sheet Transaction\',\n
-   \'delivery.start_date\' : {\'range\': "minmax", \'query\': (from_date, to_date)},\n
-   \'delivery.source_section_uid\' : context.getSourceSectionUid(),\n
-   \'delivery.destination_section_uid\' : context.getDestinationSectionUid(),\n
-   \'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
-  }\n
-\n
-paysheet_list = accounting_module.searchFolder( **search_params)\n
-\n
-nb_heures_supp = 0\n
-for paysheet in paysheet_list:\n
-  nb_heures_supp += paysheet.PaySheetTransaction_getMovementQuantityFromCategory(\n
-    \'base_contribution/base_amount/payroll/report/overtime\')\n
-\n
-return nb_heures_supp\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

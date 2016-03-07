@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>current_language = context.Localizer.get_selected_language()\n
-localized_style_sheet_name = "%s_l10n_%s" % (parameter, current_language)\n
-localized_style_sheet = getattr(context, localized_style_sheet_name, None)\n
-if localized_style_sheet is not None:\n
-  return localized_style_sheet\n
-else:\n
-  return getattr(context, parameter)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>parameter</string> </value>
         </item>

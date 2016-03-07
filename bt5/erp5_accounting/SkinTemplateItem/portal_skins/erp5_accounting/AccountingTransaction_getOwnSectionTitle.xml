@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if brain is not None:\n
-  transaction = brain.getObject()\n
-else:\n
-  transaction = context\n
-\n
-if transaction.AccountingTransaction_isSourceView():\n
-  own_section = transaction.getSourceSectionValue()\n
-else:\n
-  own_section = transaction.getDestinationSectionValue()\n
-\n
-if own_section is not None:\n
-  return own_section.getTitle()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain=None, selection=None, selection_name=None, **kw</string> </value>
         </item>

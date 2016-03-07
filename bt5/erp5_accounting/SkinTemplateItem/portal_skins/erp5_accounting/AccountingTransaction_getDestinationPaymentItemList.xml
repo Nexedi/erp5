@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return context.AccountModule_getBankAccountItemList(\n
-        organisation=context.getDestinationSection(),\n
-        skip_invalidated_bank_accounts=\n
-                    (context.getSimulationState() != \'delivered\'))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

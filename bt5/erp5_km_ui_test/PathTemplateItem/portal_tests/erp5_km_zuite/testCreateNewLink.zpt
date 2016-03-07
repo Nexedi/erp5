@@ -1,0 +1,122 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/getId"/>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=New Link</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_url</td>
+  <td>http://www.erp5.com/login_form</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Web Page</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>successfully</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_version</td>
+  <td>001</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_language</td>
+  <td>en</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Draft</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>ERP5</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_reference</td>
+  <td>Front-page-ERP5.com-Test</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>hidden_button</td>
+  <td></td>
+</tr>
+
+<!-- Wait for activities to finish -->
+<!--
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr> 
+-->
+
+<!-- Test bad link -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=New Link</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_url</td>
+  <td>http://www.erp5.com/nosuch_view</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Not Found</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />
+
+</tbody></table>
+</body>
+</html>

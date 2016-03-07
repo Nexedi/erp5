@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>\'\'\'Adds accounting transaction lines in an accounting transaction\n
-and redirects to the accounting transaction view which is easier to\n
-use.\n
-\'\'\'\n
-from Products.ERP5Type.Message import translateString\n
-request = container.REQUEST\n
-\n
-for i in range(line_count):\n
-  context.newContent(portal_type=line_portal_type)\n
-\n
-request.set(\'portal_status_message\',\n
-    translateString(\'Accounting Transaction Lines added.\'),)\n
-return getattr(context, form_id)()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id=\'view\', line_portal_type=\'Accounting Transaction Line\', line_count=1</string> </value>
         </item>

@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Get the id of the user which last passed given transition on given workflow.\n
-workflow_item_list = context.Base_getWorkflowHistoryItemList(workflow_id, display=0)\n
-workflow_item_list.reverse()\n
-for workflow_item in workflow_item_list:\n
-  if workflow_item.getProperty(\'action\') == transition_id:\n
-    return workflow_item.getProperty(\'actor\')\n
-return None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>workflow_id, transition_id</string> </value>
         </item>

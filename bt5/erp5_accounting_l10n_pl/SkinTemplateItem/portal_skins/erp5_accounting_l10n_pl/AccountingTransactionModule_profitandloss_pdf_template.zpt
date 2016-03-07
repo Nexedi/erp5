@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<template bottommargin='2cm' showboundary='0' topmargin='2cm' 
+          rightmargin='2cm' tal:define='portal python:here.portal_url.getPortalObject()' 
+          filename='journal.pdf' pagesize='A4' allowsplitting='1' landscape='0' leftmargin='2cm'>
+
+  <pagetemplate startframe='content' id='FirstPage'>
+    <static>
+      <infostring align="left" x="1cm" y= "29cm" size="8" font="Helvetica" color="(0,0,0)"
+                  tal:content="python: here.Base_translateString('ui', 'Printed by %(user)s at %(date)s') % {'user':user.getUserName(), 'date':DateTime()}" >Printed by</infostring>
+      <infostring align="left" x="18cm" y= "0.5cm" size="10" font="Helvetica" color="(0,0,0)" >Page %(page)s</infostring>
+    </static>
+    <frame showBoundary='0' leftpadding='0.1cm' height='23.94cm' width='17.59cm' rightpadding='0.1cm' y='2cm' x='2cm' nextid='content' toppadding='0.2cm' id='content' bottompadding='0.5cm'/>
+  </pagetemplate>
+
+  <stylesheet>
+    <paragraphstyle name="Title" parent="Normal" fontname="Helvetica-Bold" fontsize="32" align="CENTER"/>
+    <tablestyle name='default'>
+      <stylecmd expr="('GRID', (0,0), (-1,-1), 0.1, colors.black)"/>
+    </tablestyle>
+    <paragraphstyle name="TableStandard" parent="Normal" fontname="Helvetica" fontsize="8" alignment="left" />
+    <paragraphstyle name="TableStandardLeftAligned" parent="Normal" fontname="Helvetica" fontsize="7" alignment="left" />
+    <paragraphstyle name="TableStandardRightAligned" parent="Normal" fontname="Helvetica" fontsize="7" alignment="right" />
+    <paragraphstyle name="TableHeader" parent="Normal" fontname="Helvetica-Oblique" fontsize="9" alignment="left" />
+    <paragraphstyle name="TableLastLine" parent="Normal" fontname="Helvetica-Oblique" fontsize="11" alignment="left" />
+      
+    <tablestyle name='transaction_header'>
+      <stylecmd expr="('LINEBELOW', (2,0), (2,0), 0.1, colors.black)"/> 
+      <stylecmd expr="('LINEBELOW', (-3,0), (-3,0), 0.1, colors.black)"/> 
+      <stylecmd expr="('LINEBEFORE', (0,0),(2,0), 0.1, colors.black)"/>
+      <stylecmd expr="('LINEAFTER', (-3,0),(-1,0), 0.1, colors.black)"/>
+      <stylecmd expr="('ALIGN', (0,0),(-1,-1), 'LEFT')"/>
+      <stylecmd expr="('VALIGN', (0,0),(-1,-1), 'BOTTOM')"/>
+    </tablestyle>
+    <tablestyle name='transaction_body'>
+      <stylecmd expr="('LINEBEFORE', (0,0),(2,0), 0.1, colors.black)"/>
+      <stylecmd expr="('LINEAFTER', (-3,0),(-1,0), 0.1, colors.black)"/>
+      <stylecmd expr="('ALIGN', (-2,0), (-1,-1), 'LEFT')"/>
+      <stylecmd expr="('LEFTPADDING',(0,0),(-1,-1),20)"/>
+     </tablestyle>
+    <tablestyle name='transaction_footer'>
+      <stylecmd expr="('LINEBEFORE', (0,0),(2,0), 0.1, colors.black)"/>
+      <stylecmd expr="('LINEAFTER', (-3,0),(-1,0), 0.1, colors.black)"/>
+      <stylecmd expr="('FONT', (0,0), (-1,-1), 'Times-Italic', 10)"/>
+    </tablestyle>
+
+    <tablestyle name="top_of_page">
+      <stylecmd expr="('FONT', (0,0), (-1,-1), 'Helvetica', 8)"/>
+      <stylecmd expr="('BOX', (0,0), (-1,0), 1, colors.black)"/>
+      <stylecmd expr="('BOX', (0,1), (-1,-1), 1, colors.black)"/>
+      <stylecmd expr="('BACKGROUND', (0,0), (-1,0), (0.9,0.9,0.9))"/>
+      <stylecmd expr="('ALIGN', (0,0), (-1,-1), 'CENTER')"/>
+      <stylecmd expr="('VALIGN', (0,0), (-1,-1), 'TOP')"/>
+      <stylecmd expr="('LEFTPADDING', (0,0), (-1,-1), 1)"/>
+      <stylecmd expr="('RIGHTPADDING', (0,0), (-1,-1), 1)"/>
+      <stylecmd expr="('BOTTOMPADDING', (0,0), (-1,-1), 0)"/>
+      <stylecmd expr="('TOPPADDING', (0,0), (-1,-1), 1)"/>
+    </tablestyle>
+
+    <tablestyle name="AttributesTable">
+      <stylecmd expr="('INNERGRID', (0,0), (-1,-1), 1, (0.5,0.5,0.5))"/>
+      <stylecmd expr="('FONT', (0,0), (-1,-1), 'Helvetica', 8)"/>
+      <stylecmd expr="('BOX', (0,0), (-1,-1), 1, colors.black)"/>
+      <stylecmd expr="('BACKGROUND', (0,0), (0,-1), (0.9,0.9,0.9))"/>
+      <stylecmd expr="('ALIGN', (0,0), (-1,-1), 'CENTER')"/>
+      <stylecmd expr="('VALIGN', (0,0), (-1,-1), 'TOP')"/>
+    </tablestyle>
+
+  </stylesheet>
+</template>

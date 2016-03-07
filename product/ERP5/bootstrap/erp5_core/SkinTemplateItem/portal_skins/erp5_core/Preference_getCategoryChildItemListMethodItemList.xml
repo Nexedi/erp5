@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import translateString\n
-\n
-return [\n
-   (\'\', \'\'),\n
-   (translateString(\'Logical Path\'), \'getCategoryChildTranslatedLogicalPathItemList\', ),\n
-   (translateString(\'Logical Compact Path\'), \'getCategoryChildTranslatedCompactLogicalPathItemList\', ),\n
-   (translateString(\'Indented Title\'), \'getCategoryChildTranslatedIndentedTitleItemList\', ),\n
-   (translateString(\'Indented Compact Title\'), \'getCategoryChildTranslatedIndentedCompactTitleItemList\', ),\n
-]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -33,23 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<div class="history-widget">\n
-  <table id="#workflow_history" tal:define="history here/Base_getWorkflowEventInfoList">\n
-    <tr tal:repeat="event history">\n
-      <td tal:content="python: here.Base_FormatDate(event.time)"/>\n
-      <td tal:content="event/action"/>\n
-      <td tal:content="event/actor"/>\n
-    </tr>\n
-  </table>\n
-</div>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

@@ -1,0 +1,106 @@
+<html>
+<head><title>Test for Accounting module main listbox</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test Accounting module listbox supports filtering
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+<!-- Setup {{{ -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<!-- }}} -->
+
+<!-- 4 records in the list {{{ -->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+<!-- }}} -->
+
+<!-- Filter {{{ -->
+<tr>
+  <td>click</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[1]/input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_filter:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+<tr> <!-- maybe too low level -->
+  <td>assertAttribute</td>
+  <td>//button[@name="Folder_filter:method"]/@class</td>
+  <td>filter_on</td>
+</tr>
+<!-- }}} -->
+
+<!-- check content of known lines {{{ -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td>2005/01/01</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]</td>
+  <td>Accounts opening</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[9]
+</td>
+  <td>20000.00</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[10]
+</td>
+  <td>20000.00</td>
+</tr>
+
+<!-- }}} -->
+
+<!-- Filter {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_filter:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+<tr> <!-- maybe too low level -->
+  <td>assertAttribute</td>
+  <td>//button[@name="Folder_filter:method"]/@class</td>
+  <td>filter</td>
+</tr>
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

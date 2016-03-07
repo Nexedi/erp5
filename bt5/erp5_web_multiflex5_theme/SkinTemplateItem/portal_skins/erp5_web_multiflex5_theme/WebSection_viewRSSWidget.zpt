@@ -1,0 +1,28 @@
+<tal:block replace="nothing">
+  <!--
+  This widget displays the breadcrumbs of the current context.
+
+  TODO:
+    - make sure translation is possible or working
+  -->
+</tal:block>
+
+<tal:block tal:define="site_url python:here.getWebSiteValue().absolute_url();
+                       news_area_section_id python:here.getLayoutProperty('news_area_section_id', '');">
+<div class="navbutton">
+<ul>
+<tal:block tal:condition="news_area_section_id">
+<li><a href="#" title="RSS"
+       tal:attributes="href string:${site_url}/${news_area_section_id}/WebSection_viewContentListAsRSS">
+  <img src="./mf54_image/icon_rss.png" alt="RSS-Button"
+       tal:attributes="src string:${site_url}/mf54_image/icon_rss.png" /></a></li>
+</tal:block>
+<tal:block tal:condition="not:news_area_section_id">
+<li><a href="#" title="RSS"
+       tal:attributes="href string:${site_url}/WebSection_viewContentListAsRSS">
+  <img src="./mf54_image/icon_rss.png" alt="RSS-Button"
+       tal:attributes="src string:${site_url}/mf54_image/icon_rss.png" /></a></li>
+</tal:block>
+</ul>
+</div>
+</tal:block>

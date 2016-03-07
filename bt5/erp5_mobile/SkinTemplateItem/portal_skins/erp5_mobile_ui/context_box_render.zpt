@@ -1,0 +1,103 @@
+<tal:block tal:replace="nothing"
+	xmlns:tal="http://xml.zope.org/namespaces/tal"
+	xmlns:metal="http://xml.zope.org/namespaces/metal"
+	xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+<!--
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+Vincent Pelletier <vincent@nexedi.com>
+Christophe Dumez <christophe@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+XXX: Folder_filter accesses selection directly
+-->
+</tal:block>
+<tal:block metal:define-macro="master">
+      <span class="first"
+        tal:define="search_actions actions/object_search | nothing;
+        exchange_actions actions/object_exchange | nothing;
+        report_actions actions/object_report | nothing;
+        button_actions actions/object_button | nothing;
+        fast_input_actions actions/object_fast_input | nothing;
+        sort_actions actions/object_sort | nothing;
+        ui_actions actions/object_ui | nothing;
+        print_actions actions/object_print | nothing;
+        list_mode list_mode | nothing">
+
+              <div class="div_prev" id="div_prev">
+
+          <tal:block tal:condition="not: list_mode | nothing">
+            <tal:block tal:condition="request/selection_index | nothing">
+              <!-- Navigation buttons starts here -->
+               <span class="tool_buttons">
+                 <div class="div_navigation" align="center" id="div_navigation">
+                  <a class="jump_first" title="First"
+                                   tal:attributes="href python: 'portal_selections/viewFirst?%s' % (http_parameters, )"
+                                   i18n:attributes="title" i18n:domain="ui">
+                    <span class="image"></span>
+                    <span class="description" i18n:translate="" i18n:domain="ui">First</span>
+                  </a> 
+                  <a class="jump_previous" title="Previous"
+                     tal:attributes="href python: 'portal_selections/viewPrevious?%s' % (http_parameters, )"
+                     i18n:attributes="title" i18n:domain="ui">
+                    <span class="image"></span>
+                    <span class="description" i18n:translate="" i18n:domain="ui">Previous</span>
+                  </a>
+                  <a class="list_mode" title="List Mode" tal:attributes="href python: here.portal_selections.getSelectionListUrlFor(request['selection_name'])"
+                     i18n:attributes="title" i18n:domain="ui">
+                    <span class="image"></span>
+                    <span class="description" i18n:translate="" i18n:domain="ui">List Mode</span>
+                  </a>
+                  <a class="jump_next" title="Next"
+                     tal:attributes="href python: 'portal_selections/viewNext?%s' % (http_parameters, )"
+                     i18n:attributes="title" i18n:domain="ui">
+                    <span class="image"></span>
+                    <span class="description" i18n:translate="" i18n:domain="ui">Next</span>
+                  </a>
+                   <a class="jump_last" title="Last"
+                                   tal:attributes="href python: 'portal_selections/viewLast?%s' % (http_parameters, )"
+                                   i18n:attributes="title" i18n:domain="ui">
+                    <span class="image"></span>
+                    <span class="description" i18n:translate="" i18n:domain="ui">Last</span>
+                  </a>
+               </div>
+              </span>
+              <script>
+                loadDivSize();
+              </script>
+              <div id="shortcuts" class="shortcuts" >
+                <a tal:condition="python: here.getPortalType() in ['Person',]"
+                   class="import_export"
+                   title="Import / Export"
+                   tal:attributes="href python:here.ERP5Site_renderLink('Person_exportPersonAsvCard',http_parameters)"
+                   i18n:attributes="title" i18n:domain="ui">
+                  <button class="button" i18n:translate="" i18n:domain="ui">
+                    <span class="link" i18n:translate="" i18n:domain="ui">Export as vCard</span>
+                  </button>
+                </a>
+      <button class="button" i18n:translate="" i18n:domain="ui">
+                    <span class="link" i18n:translate="" i18n:domain="ui">&nbsp;</span>
+                </button>
+
+              </div>
+              <script>
+                affShortcuts ();
+              </script>
+            </tal:block>
+             </tal:block>
+            </div>
+
+</span>
+</tal:block>

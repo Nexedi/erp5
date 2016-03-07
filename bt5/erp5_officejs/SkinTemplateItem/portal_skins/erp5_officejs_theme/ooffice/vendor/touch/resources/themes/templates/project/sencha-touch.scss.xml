@@ -19,26 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>@import \'sencha-touch/default/all\';\n
-\n
-// You may remove any of the following modules that you\n
-// do not use in order to create a smaller css file.\n
-@include sencha-panel;\n
-@include sencha-buttons;\n
-@include sencha-sheet;\n
-@include sencha-picker;\n
-@include sencha-tabs;\n
-@include sencha-toolbar;\n
-@include sencha-toolbar-forms;\n
-@include sencha-indexbar;\n
-@include sencha-list;\n
-@include sencha-layout;\n
-@include sencha-carousel;\n
-@include sencha-form;\n
-@include sencha-msgbox;</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

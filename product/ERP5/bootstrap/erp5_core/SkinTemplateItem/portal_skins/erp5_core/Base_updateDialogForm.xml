@@ -49,36 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from string import zfill\n
-request = context.REQUEST\n
-\n
-from string import zfill\n
-\n
-for k in kw.keys():\n
-  v = kw[k]\n
-  if k.endswith(\'listbox\'):\n
-    listbox = {}\n
-    listbox_key = "%s_key" % k\n
-    if v is not None:\n
-      i = 1\n
-      for line in v:\n
-        if line.has_key(listbox_key):\n
-          key = \'%s\' % line[listbox_key]\n
-        else:\n
-          key = str(zfill(i,3))\n
-        listbox[key] = line\n
-        i+=1\n
-      request.set(k,listbox)\n
-  else:\n
-    request.set(\'your_%s\' % k, v)\n
-    request.set(\'%s\' % k, v)\n
-    # for backward compatibility, we keep my_ for dialog\n
-    # using old naming conventions\n
-    request.set(\'my_%s\' % k, v)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

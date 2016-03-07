@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>def getResourceVariationCategory():\n
-  pass\n
-\n
-if variation != \'variation/not_defined\' and variation.replace(\'variation/\',\'\') not in resource_object.getVariationList():\n
-  variation_not_defined = 1\n
-  break\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>resource_object, variation, emission_letter</string> </value>
         </item>

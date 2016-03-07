@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-transaction = state_change[\'object\']\n
-\n
-\n
-source = transaction.getBaobabSource()\n
-destination = transaction.getBaobabDestination()\n
-\n
-msg = None\n
-if source == destination:\n
-  msg = Message(domain="ui", message="Sorry, the source and the destination must be different")\n
-\n
-line_list = transaction.objectValues()\n
-if len(line_list)==0:\n
-  msg = Message(domain="ui", message="Sorry, you must select at least one check or checkbook")\n
-\n
-at_date = transaction.getStartDate()\n
-transaction.CheckbookDelivery_checkAggregateStockList(at_date=at_date, node_url = source)\n
-\n
-if msg is not None:\n
-  raise ValidationFailed, (msg,)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

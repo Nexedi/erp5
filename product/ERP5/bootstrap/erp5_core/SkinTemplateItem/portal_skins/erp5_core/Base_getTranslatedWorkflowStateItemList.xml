@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Returns the state item list of a given workflow.\n
-wf_id : the id of workflow. It can be string, list or tuple.\n
-\n
-This script is deprecated, it is much recommended to use\n
-ERP5Site_getWorkflowStateItemList by passing the portal type instead.\n
-"""\n
-\n
-Base_translateString = context.Base_translateString\n
-\n
-if same_type(wf_id, []) or same_type(wf_id, ()):\n
-  workflow_id_list = wf_id\n
-else:\n
-  workflow_id_list = [wf_id]\n
-\n
-result = []\n
-for state_title, state_id in context.Base_getWorkflowStateItemList(workflow_id_list=workflow_id_list):\n
-  translated_state_title = Base_translateString(state_title)\n
-  result.append((translated_state_title, state_id))\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>wf_id</string> </value>
         </item>

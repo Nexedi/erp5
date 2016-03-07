@@ -23,65 +23,6 @@
             <value> <string>application/javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
-// Distributed under an MIT license: http://codemirror.net/LICENSE\n
-\n
-(function() {\n
-  "use strict";\n
-\n
-  var mode = CodeMirror.getMode({indentUnit: 2}, "text/x-less");\n
-  function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1), "less"); }\n
-\n
-  MT("variable",\n
-     "[variable-2 @base]: [atom #f04615];",\n
-     "[qualifier .class] {",\n
-     "  [property width]: [variable percentage]([number 0.5]); [comment // returns `50%`]",\n
-     "  [property color]: [variable saturate]([variable-2 @base], [number 5%]);",\n
-     "}");\n
-\n
-  MT("amp",\n
-     "[qualifier .child], [qualifier .sibling] {",\n
-     "  [qualifier .parent] [atom &] {",\n
-     "    [property color]: [keyword black];",\n
-     "  }",\n
-     "  [atom &] + [atom &] {",\n
-     "    [property color]: [keyword red];",\n
-     "  }",\n
-     "}");\n
-\n
-  MT("mixin",\n
-     "[qualifier .mixin] ([variable dark]; [variable-2 @color]) {",\n
-     "  [property color]: [variable darken]([variable-2 @color], [number 10%]);",\n
-     "}",\n
-     "[qualifier .mixin] ([variable light]; [variable-2 @color]) {",\n
-     "  [property color]: [variable lighten]([variable-2 @color], [number 10%]);",\n
-     "}",\n
-     "[qualifier .mixin] ([variable-2 @_]; [variable-2 @color]) {",\n
-     "  [property display]: [atom block];",\n
-     "}",\n
-     "[variable-2 @switch]: [variable light];",\n
-     "[qualifier .class] {",\n
-     "  [qualifier .mixin]([variable-2 @switch]; [atom #888]);",\n
-     "}");\n
-\n
-  MT("nest",\n
-     "[qualifier .one] {",\n
-     "  [def @media] ([property width]: [number 400px]) {",\n
-     "    [property font-size]: [number 1.2em];",\n
-     "    [def @media] [attribute print] [keyword and] [property color] {",\n
-     "      [property color]: [keyword blue];",\n
-     "    }",\n
-     "  }",\n
-     "}");\n
-})();\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

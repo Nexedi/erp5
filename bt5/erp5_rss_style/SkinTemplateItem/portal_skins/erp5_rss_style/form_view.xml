@@ -33,20 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<?xml version="1.0"?>\n
-<tal:block \n
-  xmlns:tal="http://xml.zope.org/namespaces/tal" \n
-  xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-  metal:use-macro="here/rss_view/macros/master" >\n
-</tal:block>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/xml; charset=utf-8</string> </value>
         </item>

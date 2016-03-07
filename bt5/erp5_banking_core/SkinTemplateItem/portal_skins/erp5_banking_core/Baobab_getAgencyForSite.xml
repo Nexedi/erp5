@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-if isinstance(site, str):\n
-  site = portal.portal_categories.site.restrictedTraverse(site)\n
-return portal.organisation_module["site_%3s" % (site.getCodification(), )]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>site</string> </value>
         </item>

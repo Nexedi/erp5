@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-portal_type = context.getPortalType()\n
-icon_portal_type_dict = {"Web Table": "table.jpg", \n
-                         "Web Illustration": "svg.png",\n
-                         "Web Page": "document.gif"}\n
-return "<img src=\'ung_images/%s\'/>" % icon_portal_type_dict.get(portal_type)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

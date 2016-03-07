@@ -49,12 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>preference_tool = context.getPortalObject().portal_preferences\n
-context.setSourceSection(preference_tool.getPreferredAccountingTransactionSourceSection())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

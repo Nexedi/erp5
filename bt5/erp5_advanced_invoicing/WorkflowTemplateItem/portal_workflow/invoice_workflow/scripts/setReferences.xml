@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Set automatic references on the document.\n
-"""\n
-\n
-transaction = state_change[\'object\']\n
-\n
-# Get sections.\n
-source_section = transaction.getSourceSection()\n
-\n
-# Invoice Reference is automatically filled only for Sale Invoice.\n
-if transaction.getPortalType() == \'Sale Invoice\':\n
-  if not transaction.getReference():\n
-    invoice_id_group = (\'accounting\', \'invoice\', source_section)\n
-    invoice_reference = transaction.generateNewId(id_group=invoice_id_group,\n
-                                                  default=1)\n
-    transaction.setReference(invoice_reference)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

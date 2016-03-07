@@ -185,23 +185,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script will find applicable taxes for customer based on his/hers location.\n
-  For example.\n
-    - B2B in EU in same country, tax \n
-    - B2B in EU in different country, no tax \n
-    - B2B and B2P from EU to outside EU, no tax \n
-    - B2P in EU, tax\n
-"""\n
-\n
-return {\'VAT\': {\'translated_title\':context.Base_translateString(\'VAT\'),\n
-                \'percent\': 20.,\n
-               },\n
-       }\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

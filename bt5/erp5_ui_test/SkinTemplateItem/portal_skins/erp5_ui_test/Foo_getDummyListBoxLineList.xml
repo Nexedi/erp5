@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Returns a list of temp base objects"""\n
-from Products.ERP5Type.Document import newTempBase\n
-portal_object = context.getPortalObject()\n
-return [newTempBase(portal_object, str(x), a=x, b=x) for x in xrange(10)]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

@@ -33,60 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
-<head>\n
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Manifest UI</title>\n
-</head>\n
-<body>\n
-<table cellpadding="1" cellspacing="1" border="1">\n
-<thead>\n
-<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>\n
-</thead><tbody>\n
-<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
-\n
-<!-- Clean Up -->\n
-<tr>\n
-  <td>open</td>\n
-  <td>${base_url}/portal_tests/erp5_web_manifest_ui_zuite/testManifest_PreferenceReset</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertTextPresent</td>\n
-  <td>Reset Successfully.</td>\n
-  <td></td>\n
-</tr>\n
-\n
-<!-- Initialize -->\n
-<tr>\n
-  <td>open</td>\n
-  <td>${base_url}/web_site_module/manifest/</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>waitForTextPresent</td>\n
-  <td>Guidelines for Developing Web Applications</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//p[@class="custom-subtitle ui-content-subtitle"]</td>\n
-  <td>Guidelines for Developing Web Applications</td>\n
-</tr>\n
-\n
-\n
-</tbody>\n
-</table>\n
-</body>\n
-</html>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

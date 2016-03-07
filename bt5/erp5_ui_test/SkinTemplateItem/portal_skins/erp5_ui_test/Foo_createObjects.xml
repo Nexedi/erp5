@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Create sub object for Foo"""\n
-from DateTime import DateTime\n
-date = DateTime(\'2009/01/01\')\n
-for i in range(start, start + num):\n
-  context.newContent(id = str(i), title = \'Title %d\' % i, start_date = date)\n
-  date += 1\n
-\n
-return \'Created Successfully.\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>start=0, num=10</string> </value>
         </item>

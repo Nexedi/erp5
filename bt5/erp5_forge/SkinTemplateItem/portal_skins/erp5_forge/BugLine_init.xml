@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Set preferred text format\n
-portal = context.getPortalObject()\n
-edit_kw = {\'content_type\': portal.portal_preferences.getPreferredTextFormat(),\n
-           \'start_date\': DateTime(),\n
-           \'destination_value_list\': context.BugLine_getRecipientValueList()}\n
-\n
-# Define a Reporter as Source Trade\n
-person = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
-if person is not None:\n
-  edit_kw[\'source_value\'] = person\n
-\n
-context.edit(**edit_kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

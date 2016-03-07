@@ -19,53 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-{\n
-  "name": "bootstrap",\n
-  "version": "3.0.3",\n
-  "main": [\n
-    "./dist/js/bootstrap.js",\n
-    "./dist/css/bootstrap.css",\n
-    "./dist/fonts/glyphicons-halflings-regular.eot",\n
-    "./dist/fonts/glyphicons-halflings-regular.svg",\n
-    "./dist/fonts/glyphicons-halflings-regular.ttf",\n
-    "./dist/fonts/glyphicons-halflings-regular.woff"\n
-  ],\n
-  "ignore": [\n
-    "**/.*",\n
-    "_*",\n
-    "docs-assets",\n
-    "examples",\n
-    "/fonts",\n
-    "js/tests",\n
-    "CNAME",\n
-    "CONTRIBUTING.md",\n
-    "Gruntfile.js",\n
-    "browserstack.json",\n
-    "composer.json",\n
-    "package.json",\n
-    "*.html"\n
-  ],\n
-  "dependencies": {\n
-    "jquery": ">= 1.9.0"\n
-  },\n
-  "homepage": "https://github.com/twbs/bootstrap",\n
-  "_release": "3.0.3",\n
-  "_resolution": {\n
-    "type": "version",\n
-    "tag": "v3.0.3",\n
-    "commit": "6d03173a1aad98e75f7d33e65b411c519176c59a"\n
-  },\n
-  "_source": "git://github.com/twbs/bootstrap.git",\n
-  "_target": "~3.0.3",\n
-  "_originalSource": "bootstrap"\n
-}
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Translate message into another language.\n
-  If \'lang\' is omitted a selected user interface language is used.\n
-  Can use any of existing message catalogs (default is \'ui\').\n
-"""\n
-\n
-from Products.CMFCore.utils import getToolByName\n
-translation_service = getToolByName(context, \'Localizer\', None)\n
-if translation_service is not None :\n
-  try:\n
-    if not encoding:\n
-      return translation_service.translate(catalog, msg, lang=lang, **kw)\n
-    msg = translation_service.translate(catalog, msg, lang=lang, **kw)\n
-    if same_type(msg, u\'\'):\n
-      msg = msg.encode(encoding)\n
-    return msg\n
-  except AttributeError: # This happens in unit testing, because it is not able to find something with get_context()\n
-    pass\n
-\n
-return msg\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>msg, catalog="ui", encoding=\'utf8\', lang=None, **kw</string> </value>
         </item>

@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
-\n
-current_date_string = DateTime().strftime(\'%Y-%m-%d\')\n
-start_date = DateTime(\'%s 00:00\' % current_date_string)\n
-stop_date = DateTime(\'%s 23:59\' % current_date_string)\n
-context.setStartDate(start_date)\n
-context.setStopDate(stop_date)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

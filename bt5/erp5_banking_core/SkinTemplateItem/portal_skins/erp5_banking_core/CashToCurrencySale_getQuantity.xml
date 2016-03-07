@@ -49,44 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-rate_list = context.CurrencyExchange_getExchangeRateList()\n
-rate = None\n
-if len(rate_list) > 0:\n
- rate = rate_list[1]\n
-if rate is None:\n
-  return None\n
-\n
-base_price = context.getSourceTotalAssetPrice()\n
-if base_price is None:\n
-  return None\n
-\n
-price = rate * base_price\n
-\n
-commission_ratio = context.getDiscountRatio()\n
-commission_price = context.getDiscount()\n
-if commission_ratio is not None and commission_ratio !=0 and commission_price is not None and commission_price !=0:\n
-  return None\n
-if (commission_ratio is None or commission_ratio == 0) and (commission_price is None or commission_price == 0):\n
-  return None\n
-\n
-if commission_ratio is not None:\n
-  commission_value = commission_ratio * price\n
-\n
-if commission_price is not None:\n
-  commission_value = commission_price\n
-\n
-\n
-quantity = price + commission_value\n
-context.setQuantity(quantity)\n
-return quantity\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

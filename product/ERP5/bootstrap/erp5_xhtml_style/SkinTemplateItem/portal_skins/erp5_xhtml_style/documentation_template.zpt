@@ -1,0 +1,295 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block tal:replace="nothing">
+<!--
+XXX: for now, curent action is passed as a parameter to the right form, which is gathered from the action.
+A good way might be to centralize all action in a single page template that would fill itself (metal:use-macro) according to the action id it was given.
+-->
+  </tal:block>
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+  <tal:block metal:define-macro="render_listbox">
+    <tal:block tal:define="field_names field_names | python: ();
+               toggleable_field_name toggleable_field_name | python: nothing;
+               zope_structured_text_field_names zope_structured_text_field_names | python: ();
+               structured_text_field_names structured_text_field_names | python: ();
+               structured_text_field_names python: structured_text_field_names+zope_structured_text_field_names;">
+      <tal:block tal:repeat="field_name field_names">
+        <tal:block tal:condition="python: form.has_field(field_name)">
+          <tal:block tal:define="listbox python: form.get_field(field_name);
+                     listboxline_list python: listbox.get_value('default', render_format='list', REQUEST=request);">
+            <div class="frame">
+              <div tal:attributes="class listbox/css_class">
+                <div class="frame_title" tal:content="listbox/title"></div>
+                <div class="listbox_description" tal:content="python: listbox.get_value('description')"></div>
+                <tal:block tal:condition="python: len(listboxline_list) &gt; 1">
+                  <tal:block tal:repeat="listboxline python: listboxline_list">
+                    <tal:block tal:define="lineid python: '%s_%s' % (listbox.id,repeat['listboxline'].index)">
+                      <div class="listbox_titleline" tal:condition="python: listboxline.isTitleLine()">
+                        <tal:block tal:repeat="column_id python: listboxline.getColumnItemList()">
+                          <div tal:content="python: column_id[1]"
+                               tal:attributes="class python: column_id[0]" />
+                        </tal:block>
+                      </div>
+                      <div class="listbox_dataline" tal:condition="python: listboxline.isDataLine()"
+                           tal:attributes="onclick python: toggleable_field_name and 'toggle(\'%s\')' % (lineid) or nothing;
+                           id python: 'toggle_%s_%s' % (listbox.id, repeat['listboxline'].index);">
+                        <tal:block tal:repeat="column_id python: listboxline.getColumnItemList()">
+                          <tal:block tal:define="is_structured_text python: column_id[0] in structured_text_field_names;
+                                     is_toggleable python: column_id[0] == toggleable_field_name;
+                                     content python: (column_id[1] is None) and (' ') or (column_id[1]);
+                                     content python: column_id[0] in zope_structured_text_field_names and modules['Products'].PythonScripts.standard.structured_text(content) or content;">
+                            <div tal:attributes="class python: column_id[0]; id python: is_toggleable and lineid or None; name python: is_toggleable and 'toggleable' or None"><tal:block tal:condition="is_structured_text"><a tal:condition="repeat/column_id/start" class="anchor" tal:content="structure content" tal:attributes="id python: 'a_%s_%s' % (listbox.id, repeat['listboxline'].index)"></a><tal:block tal:condition="not: repeat/column_id/start" tal:replace="structure content" /></tal:block><tal:block tal:condition="not: is_structured_text"><a tal:condition="repeat/column_id/start" class="anchor" tal:content="content" tal:attributes="id python: 'a_%s_%s' % (listbox.id, repeat['listboxline'].index)"></a><tal:block tal:condition="not: repeat/column_id/start" tal:replace="content" /></tal:block></div>
+                          </tal:block>
+                        </tal:block>
+                      </div>
+                    </tal:block>
+                  </tal:block>
+                </tal:block>
+              </div>
+            </div>
+          </tal:block>
+        </tal:block>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+  <html>
+    <tal:block metal:use-macro="here/global_definitions/macros/header_definitions" />
+    <head>
+      <title></title>
+      <style type="text/css">
+a img {
+  border: none;
+}
+
+ul {
+  margin: 0;
+}
+
+p, li {
+  margin: 0;
+  padding: 0;
+}
+
+span.toggle {
+  border: 1px solid #000;
+}
+
+span.toggle:hover {
+  background: #0F0;
+}
+
+div.frame {
+  margin-bottom : 1em;
+  border: 1px solid #000;
+}
+
+div.frame_title {
+  text-align: center;
+  width: 100%;
+  background: #555;
+  color: #FFF;
+  border-bottom: 1px solid #000;
+}
+
+div.quick_links_group {
+  display: table-row;
+}
+
+div.quick_links_group div,
+div.quick_links_group ul {
+  display: table-cell;
+}
+
+div.quick_links_group div {
+  white-space: nowrap;
+}
+
+div.quick_links_group ul {
+  list-style: none;
+  padding-left: 1em;
+}
+
+div.quick_links_group li {
+  display: inline;
+}
+
+/* Table mode */
+
+div.table div.listbox_dataline,
+div.table div.listbox_titleline {
+  display: table-row;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+div.table div.listbox_titleline div {
+  text-align: center;
+}
+
+div.table div.listbox_dataline div,
+div.table div.listbox_titleline div {
+  display: table-cell;
+  padding: 2px;
+}
+
+div.table div.listbox_titleline div {
+  font-weight: bold;
+}
+
+/* List mode */
+
+div.list div.listbox_titleline {
+  display: none;
+}
+
+div.accessors div,
+div.list div.listbox_dataline div {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+div.accessors div.title,
+div.list div.listbox_dataline div.title {
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+  display: inline;
+}
+
+div.list div.listbox_dataline div.argument {
+  display: inline;
+  margin-left: 0;
+}
+
+div.list div.listbox_dataline div.type {
+  display: inline;
+  font-style: italic;
+}
+
+/* Global styles (that apply both to list and table modes) */
+
+table div.description,
+table div.source_path,
+div.listbox_dataline div.description,
+div.listbox_dataline div.source_path,
+div.listbox_dataline div.source_code,
+div.listbox_dataline div.content {
+  font-family: monospace;
+  white-space: pre;
+  overflow: auto;
+}
+
+div.listbox_dataline div.source_code {
+  border-left: 1px dotted #000;
+  background: #FFF;
+}
+
+div.listbox_description {
+  margin: 0.5em;
+  font-size: 70%;
+  white-space: pre;
+  color: #555;
+}
+
+div.listbox_dataline {
+  margin: 0.5em;
+/*   margin-bottom: 1em; */
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border: 1px solid #FFF;
+}
+
+div.listbox_dataline:hover {
+  background: #EEE;
+  border-color: #999;
+}
+    </style>
+    </head>
+    <body onload="toggle_all()">
+      <script type="text/javascript"><!--
+        function toggle_all() {
+          my_elements = document.getElementsByName("toggleable");
+          for(i=0; i<my_elements.length; i++) {
+            toggle(my_elements[i].id);
+          }
+        }
+        function toggle(id) {
+          with(document.getElementById(id).style) {
+            if (display == "") {
+              display = "none";
+              with(document.getElementById("toggle_"+id).style) {
+                backgroundColor = "";
+                borderColor = "";
+              }
+            } else {
+              display = "";
+              with(document.getElementById("toggle_"+id).style) {
+                backgroundColor = "#EEE";
+                borderColor = "#999";
+              }
+            }
+          }
+        }
+     //--></script>
+      <span class="toggle" onclick="toggle_all()">Toggle all</span>
+      <tal:block tal:define="dummy python: request.set('here',here)">
+        <div class="frame">
+          <div class="frame_title">General information</div>
+          <table>
+            <tal:block tal:repeat="field_name python: ('my_title', 'argument_list', 'inheritance_list', 'my_type', 'my_source_path', 'my_description')">
+              <tal:block tal:condition="python: form.has_field(field_name)">
+                <tal:block tal:define="field python: form.get_field(field_name)">
+                  <tal:block metal:use-macro="here/field_render/macros/field_render" />
+                </tal:block>
+              </tal:block>
+            </tal:block>
+          </table>
+        </div>
+        <div class="frame">
+          <div class="frame_title">Quick links</div>
+          <tal:block tal:repeat="field_name python: ('my_static_property_list', 'my_dynamic_property_list', 'my_dynamic_category_list', 'my_static_method_list', 'my_dynamic_method_list', 'my_dynamic_accessor_list')">
+            <tal:block tal:condition="python: form.has_field(field_name)">
+              <div class="quick_links_group" tal:define="field python: form.get_field(field_name)">
+                <div tal:content="field/title"></div>
+                <ul>
+                  <li tal:repeat="item python: field.get_value('list_method')()">
+                    <a tal:attributes="href python: '#a_%s_%s' % (field_name,repeat['item'].index+1)"
+                      tal:content="item/getTitle"></a>
+                  </li>
+                </ul>
+              </div>
+            </tal:block>
+          </tal:block>
+        </div>
+        <tal:block tal:define="field_names python: ('my_static_property_list',);
+                               structured_text_field_names python: ('title',);">
+          <tal:block metal:use-macro="here/documentation_template/macros/render_listbox" />
+        </tal:block>
+        <tal:block tal:define="field_names python: ('my_dynamic_property_list',);
+                               structured_text_field_names python: ('title',);">
+          <tal:block metal:use-macro="here/documentation_template/macros/render_listbox" />
+        </tal:block>
+        <tal:block tal:define="field_names python: ('my_dynamic_category_list',)">
+          <tal:block metal:use-macro="here/documentation_template/macros/render_listbox" />
+        </tal:block>
+        <tal:block tal:define="field_names python: ('my_static_method_list',);
+                               structured_text_field_names python: ('title',);
+                               zope_structured_text_field_names python: ('description',);
+                               toggleable_field_name python: 'source_code';">
+          <tal:block metal:use-macro="here/documentation_template/macros/render_listbox" />
+        </tal:block>
+        <tal:block tal:define="field_names python: ('my_dynamic_method_list',);
+                               structured_text_field_names python: ('title',);
+                               zope_structured_text_field_names python: ('description',);">
+          <tal:block metal:use-macro="here/documentation_template/macros/render_listbox" />
+        </tal:block>
+        <tal:block tal:define="field_names python: ('my_dynamic_accessor_list',);
+                               structured_text_field_names python: ('accessors',);
+                               toggleable_field_name python: 'accessors';">
+          <tal:block metal:use-macro="here/documentation_template/macros/render_listbox" />
+        </tal:block>
+      </tal:block>
+    </body>
+  </html>
+</tal:block>

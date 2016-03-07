@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Do actual conversion of any Image type.\n
-"""\n
-context.Base_preConvert(format, quality, display_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>format, quality, display_list</string> </value>
         </item>

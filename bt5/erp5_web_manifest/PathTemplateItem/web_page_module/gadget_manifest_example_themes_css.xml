@@ -95,14 +95,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>.ui-content-section p {\n
-  min-height: 3em;\n
-  max-height: 3em;\n
-  margin: 0;\n
-}</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Gadget Manifest Example Themes CSS</string> </value>
         </item>

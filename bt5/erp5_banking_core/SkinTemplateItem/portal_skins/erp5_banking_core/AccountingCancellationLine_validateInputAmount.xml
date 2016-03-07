@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-if editor in (None, \'\') : \n
-  return 1\n
-\n
-if int(editor) > 0:\n
-  return 0\n
-\n
-return 1\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>editor, request</string> </value>
         </item>

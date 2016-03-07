@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>packing_list_content = context\n
-\n
-for simulation_movement in packing_list_content.getDeliveryRelatedValueList():\n
-  simulation_movement.reindexObject()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

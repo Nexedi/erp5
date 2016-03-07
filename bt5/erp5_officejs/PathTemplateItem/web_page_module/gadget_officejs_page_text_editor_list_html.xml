@@ -104,33 +104,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!doctype html>\n
-<html>\n
-  <head>\n
-\n
-    <meta charset="utf-8">\n
-    <meta name="viewport" content="width=device-width, initial-scale=1">\n
-\n
-    <title>OfficeJS Text Editor List</title>\n
-\n
-    <script src="rsvp.js"></script>\n
-    <script src="renderjs.js"></script>\n
-    <script src="gadget_officejs_page_text_editor_list.js"></script>\n
-\n
-  </head>\n
-\n
-  <body>\n
-    <div data-gadget-url="gadget_officejs_widget_listbox.html" data-gadget-scope="listbox"></div>\n
-  </body>\n
-</html>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>OfficeJS Text Editor List</string> </value>
         </item>

@@ -1,0 +1,59 @@
+<tal:block tal:replace="nothing">
+  <!--
+  This widget is left for backward compatibility  as the information it 
+  renders is rendered in Document_viewRelationListWidget which 
+  should be default and only one.
+  -->
+</tal:block>
+
+<tal:block tal:define="
+  default_section_document python: request.get('current_web_document', here);
+  isDocument python: default_section_document.isDocument;">  
+
+  <tal:block tal:condition="isDocument">
+    <tal:block tal:define="related_wiki_successor_document_list python:
+                             default_section_document.Document_getRelatedDocumentList(
+                                     relation_id='wiki_successor');
+                           related_wiki_predecessor_document_list python:
+                             default_section_document.Document_getRelatedDocumentList(
+                                     relation_id='wiki_predecessor');
+                           all_wiki_related_document_list python:
+                             list(related_wiki_successor_document_list) +
+                             list(related_wiki_predecessor_document_list)">
+
+      <div class="related_docs" tal:condition="related_wiki_successor_document_list">
+        <div class="title" i18n:translate="" i18n:domain="ui">Wiki successors</div>
+        <ul>
+          <li tal:repeat="doc related_wiki_successor_document_list">
+            <a tal:content="doc/getTitleOrId" 
+                tal:attributes="href python:doc.absolute_url()+'/view'"/>
+          </li>
+        </ul>
+      </div>
+
+      <div class="related_docs" tal:condition="related_wiki_predecessor_document_list">
+        <div class="title" i18n:translate="" i18n:domain="ui">Wiki predecessors</div>
+        <ul>
+          <li tal:repeat="doc related_wiki_predecessor_document_list">
+            <a tal:content="doc/getTitleOrId" 
+                tal:attributes="href python:doc.absolute_url()+'/view'"/>
+          </li>
+        </ul>
+      </div>
+
+      <div class="related_docs" tal:condition="not: all_wiki_related_document_list">
+        <div class="title" i18n:translate="" i18n:domain="ui">
+          No related wiki documents found.
+        </div>
+      </div>
+
+    </tal:block>
+  </tal:block>
+
+  <tal:block tal:condition="not: isDocument">
+    <div class="title" i18n:translate="" i18n:domain="ui">
+      No related wiki documents found.
+    </div>
+  </tal:block>
+
+</tal:block>

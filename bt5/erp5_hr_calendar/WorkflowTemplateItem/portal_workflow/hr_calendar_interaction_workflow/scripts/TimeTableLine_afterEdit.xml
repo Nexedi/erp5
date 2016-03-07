@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># A Time Table Line is a generic Presence Period with some UI simplification.\n
-# In the UI, only day of week and quantity is defined. Therefore we will\n
-# automatically set a good start and stop date to make generic code working\n
-\n
-from DateTime import DateTime\n
-from Products.ERP5Type.DateUtils import addToDate\n
-time_table_line = state_change["object"]\n
-\n
-day_of_week = time_table_line.getDayOfWeek()\n
-quantity = time_table_line.getQuantity()\n
-if not(None in (day_of_week, quantity)):\n
-  time_table_line.setPeriodicityWeekDayList([day_of_week])\n
-  start_date = time_table_line.getParentValue().getStartDate(DateTime("2014/04/01"))\n
-  while start_date.Day() != day_of_week:\n
-    start_date = addToDate(start_date, day=1)\n
-  time_table_line.setStartDate(start_date)\n
-  stop_date = addToDate(start_date, hour=quantity)\n
-  time_table_line.setStopDate(stop_date)\n
-# after change, make sure to update group calendars through the usual alarm\n
-context.getPortalObject().portal_alarms.update_time_table_end_periodicity.activate(\n
-  priority=5).activeSense()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

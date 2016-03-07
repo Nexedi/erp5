@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>event = context.Base_createCloneDocument(batch_mode=True)\n
-event.setFollowUp(follow_up_relative_url)\n
-return event\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>follow_up_relative_url</string> </value>
         </item>

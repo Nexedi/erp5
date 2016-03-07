@@ -1,0 +1,150 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>testPortalContributionsToolNewFile (expected failure)</title>
+</head>
+<body tal:define="file_name string:tiolive-ERP5.DMS.TioLive-001-en.odp;
+                  full_filename_location python: here.Zuite_getFilenameLocation(file_name)">
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">testPortalContributionsToolNewFile (expected failure)</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>setTimeout</td>
+  <td>60000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/portal_contributions/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>label=Contribute File</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_file</td>
+  <td tal:content="full_filename_location"></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Presentation</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>successfully</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td tal:content="file_name"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>link=Documents</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_reference</td>
+  <td>tiolive-ERP5.DMS.TioLive</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_title</td>
+  <td>TioLive, ERP5, Freedom</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_language</td>
+  <td>en</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_version</td>
+  <td>001</td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">
+Wait for activities</span>
+<!-- check update with same filename -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/portal_contributions/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>label=Contribute File</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_file</td>
+  <td tal:content="full_filename_location"></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Presentation updated successfully</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td tal:content="file_name"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>link=Documents</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>link=Documents</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_reference</td>
+  <td>tiolive-ERP5.DMS.TioLive</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_title</td>
+  <td>TioLive, ERP5, Freedom</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_language</td>
+  <td>en</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_version</td>
+  <td>001</td>
+</tr>
+
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">
+Wait for activities</span>
+
+</tbody></table>
+</body>
+</html>

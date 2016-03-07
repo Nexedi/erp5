@@ -1,30 +1,30 @@
 <workflow_chain>
  <chain>
-  <type>Base Category</type>
+  <type>portal_type_workflow_chain/Base Category</type>
   <workflow>category_publication_workflow</workflow>
  </chain>
  <chain>
-  <type>Base Domain</type>
+  <type>portal_type_workflow_chain/Base Domain</type>
   <workflow>category_publication_workflow</workflow>
  </chain>
  <chain>
-  <type>Category</type>
+  <type>portal_type_workflow_chain/Category</type>
   <workflow>category_publication_workflow</workflow>
  </chain>
  <chain>
-  <type>Domain</type>
+  <type>portal_type_workflow_chain/Domain</type>
   <workflow>category_publication_workflow</workflow>
  </chain>
  <chain>
-  <type>Web Page</type>
+  <type>portal_type_workflow_chain/Web Page</type>
   <workflow>document_conversion_interaction_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow, publication_workflow</workflow>
  </chain>
  <chain>
-  <type>Web Section</type>
+  <type>portal_type_workflow_chain/Web Section</type>
   <workflow>category_publication_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Web Site</type>
+  <type>portal_type_workflow_chain/Web Site</type>
   <workflow>category_publication_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

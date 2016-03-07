@@ -1,0 +1,13 @@
+// .CodeMirror, .codemirror_gadget {
+  // FIXME: hardcoded value
+//   height: 50em;
+// }
+
+.CodeMirror {
+  // border: 1px solid #eee;
+  height: 60em;
+}
+// .CodeMirror-scroll {
+//  overflow-y: hidden;
+//   overflow-x: auto;
+// }

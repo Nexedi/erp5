@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request_eform = state_change[\'object\']\n
-portal = request_eform.getPortalObject()\n
-rccm =request_eform.getReference()\n
-result_list = portal.portal_catalog(parent_uid=portal.organisation_module.getUid(),\n
-                                    reference=rccm)\n
-for object in result_list:\n
-  organisation_module = portal.organisation_module\n
-  login = object.getId()\n
-  org = organisation_module[login]\n
-  org.Base_DoWorkflowAction(action_name = \'activer_entreprise_action\',\n
-                            wf_id = \'business_life_cycle_workflow\')\n
-\n
-return \'Organisation Updated\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

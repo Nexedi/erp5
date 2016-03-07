@@ -185,20 +185,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>""" \n
-  This script is called by external payment system.\n
-  Here you can check if payment was successfull or not.\n
-"""\n
-\n
-# XXX: implement external payment check\n
-\n
-# XXX: finalize order\n
-\n
-# XXX: redirect\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

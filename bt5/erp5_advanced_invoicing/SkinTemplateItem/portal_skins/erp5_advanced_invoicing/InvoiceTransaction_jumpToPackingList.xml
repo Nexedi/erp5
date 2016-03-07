@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# string:${object_url}/Base_jumpToRelatedObject?base_category=causality&related:int=0&portal_type=Sale+Packing+List\n
-\n
-invoice = context.getCausalityValue(portal_type=invoice_type)\n
-invoice.Base_jumpToRelatedObject(base_category=base_category, related=related, portal_type=portal_type)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>base_category, portal_type=(), invoice_type=(), related=1, selection_name="", selection_index=0, form_id=\'view\', target_form_id=None, jump_from_relative_url=None</string> </value>
         </item>

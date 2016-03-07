@@ -1,0 +1,52 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+<tal:block tal:replace="nothing"><!--
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+                   Vincent Pelletier <vincent@nexedi.com>
+                   Christophe Dumez <christophe@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+--></tal:block>
+<tal:block tal:define="title here/Title">
+<tal:block metal:use-macro="here/main_template/macros/master">
+  <tal:block metal:fill-slot="main">
+    <tal:block tal:condition="here/portal_membership/isAnonymousUser">
+        <tal:block tal:define="dummy python: request.RESPONSE.redirect('%s/login_form' % url)" />
+    </tal:block>
+    <div tal:condition="python: not here.portal_membership.isAnonymousUser()"
+         class="index_html">
+      <h2 i18n:translate="" i18n:domain="ui">Welcome to ERP5</h2>
+      <table border="1">
+        <tr tal:define="module_list here/ERP5Site_getModuleItemList;
+                        module_len python: len(module_list);
+                        col_size python: 12;
+                        col_len python: module_len % col_size and (module_len + col_size) / col_size or (module_len) / col_size">
+          <td><a href="http://www.erp5.org/"><img src="images/erp5_logo.png" alt="ERP5 Logo" /></a></td>
+          <tal:block tal:repeat="col_no python:range(col_len)">
+            <td valign="top" class="ModuleShortcut">
+              <tal:block tal:repeat="module python:module_list[col_size*col_no:min(col_size*(col_no+1),module_len)] ">
+                <div><a tal:content="python: module[0]"
+                        tal:attributes="href python: module[1] + '/view'"></a></div>
+              </tal:block>
+            </td>
+          </tal:block>
+        </tr>
+      </table>
+    </div>
+  </tal:block>
+</tal:block>
+</tal:block>
+</tal:block>

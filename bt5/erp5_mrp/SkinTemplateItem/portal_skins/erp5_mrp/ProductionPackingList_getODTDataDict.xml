@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>def getSourceReference(line):\n
-  return \'\'\n
-\n
-def getSubLineList(obj):\n
-  sub_list = []\n
-  for x in obj.contentValues(portal_type=context.getPortalDeliveryMovementTypeList(),\n
-      sort_on=[(\'int_index\', \'ascending\'), (\'reference\', \'ascending\')]):\n
-    if x.getPortalType() in obj.getPortalTaxMovementTypeList():\n
-      continue\n
-    sub_list.append(x)\n
-    sub_list.extend(getSubLineList(x))\n
-  return sub_list\n
-\n
-return context.Delivery_getODTDataDict(getSourceReference, getSubLineList)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

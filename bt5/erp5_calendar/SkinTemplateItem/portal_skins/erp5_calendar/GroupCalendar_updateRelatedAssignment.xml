@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-Reindex all related group calendar assignments in case there is\n
-any change. This is needed because group calendar properties affect the\n
-values reindexed in stock by group calendar assignments\n
-\n
-We could have possibly millions of assignments linked to the same group\n
-calendar, therefore make sure to use method that would well scale\n
-"""\n
-group_calendar = context\n
-portal = group_calendar.getPortalObject()\n
-portal.portal_catalog.searchAndActivate(method_id="reindexObject",\n
-        activate_kw={\'priority\': 3},\n
-        specialise_uid=group_calendar.getUid(),\n
-        portal_type="Group Calendar Assignment")\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

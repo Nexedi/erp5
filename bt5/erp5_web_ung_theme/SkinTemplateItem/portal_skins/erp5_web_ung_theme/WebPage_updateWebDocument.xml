@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from json import dumps\n
-\n
-catalog_object = context.portal_catalog.getResultValue(path=document_path)\n
-document = context.restrictedTraverse(catalog_object.getPath())\n
-\n
-context.setTextContent(document.asStrippedHTML())\n
-context.setTitle(document.getTitle())\n
-\n
-if document.getTitle() != context.getTitle() or document.getId() == context.getTitle():\n
-  return dumps(dict(status=400))\n
- \n
-return dumps(dict(status=200))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>document_path</string> </value>
         </item>

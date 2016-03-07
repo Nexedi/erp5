@@ -1,0 +1,37 @@
+<tal:block replace="nothing">
+  <!--
+  This widget displays the login information about the user
+  and a login / logout link.
+
+  TODO:
+    - make sure translation is possible or working
+    - using CSS styling of icons (no reference to image directly please)
+    - check if anonymous mode works
+    - is login_form appropriate here ? or another one ?
+  -->
+</tal:block>
+
+<tal:block tal:define="current_web_site python:request.get('current_web_site', here);
+                       portal_path python:request.get('current_web_site_url', current_web_site.absolute_url());
+                       user_name python: here.portal_membership.getAuthenticatedMember();
+                       is_anonymous_user here/portal_membership/isAnonymousUser">
+
+<tal:block tal:condition="not:is_anonymous_user">
+  <a id="login-logout-link" 
+     href="#" tal:attributes="href string:${portal_path}/WebSite_logout"
+    i18n:domain="ui"
+    title="Log out"
+    i18n:attributes="title"
+    tal:content="user_name"/>
+</tal:block>
+
+<tal:block tal:condition="python: is_anonymous_user and current_web_site.isUserAllowedLogin()">
+  <a id="login-logout-link" 
+     href="#" 
+     tal:attributes="href string:${portal_path}/login_form"
+     i18n:translate="" i18n:domain="ui"
+     i18n:attributes="title"
+     title="Log in">Log in</a>
+</tal:block>
+
+</tal:block>

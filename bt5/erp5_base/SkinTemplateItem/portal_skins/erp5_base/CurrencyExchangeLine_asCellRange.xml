@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>currency_exchange_type_list = context.portal_categories.currency_exchange_type.getCategoryChildRelativeUrlList() \n
-resource_list = [\'resource/%s\' % context.getParentValue().getRelativeUrl()]\n
-price_currency_list = [context.getPriceCurrency(base=True)]\n
-\n
-return (currency_exchange_type_list, resource_list, price_currency_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*argv, **kw</string> </value>
         </item>

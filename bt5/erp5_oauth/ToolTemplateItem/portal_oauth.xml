@@ -14,7 +14,7 @@
             <value>
               <object>
                 <klass>
-                  <global id="1.1" name="_reconstructor" module="copy_reg"/>
+                  <global id="1.1" name="_dt_reconstructor" module="DateTime.DateTime"/>
                 </klass>
                 <tuple>
                   <global name="OAuthConsumer" module="Products.ERP5TioSafe.Tool.OAuthTool"/>
@@ -121,7 +121,7 @@
                     <value>
                       <object>
                         <klass>
-                          <global id="2.1" name="_reconstructor" module="copy_reg"/>
+                          <global id="2.1" name="_dt_reconstructor" module="DateTime.DateTime"/>
                         </klass>
                         <tuple>
                           <global name="OAuthSignatureMethod_HMAC_SHA1" module="Products.ERP5TioSafe.Tool.OAuthTool"/>

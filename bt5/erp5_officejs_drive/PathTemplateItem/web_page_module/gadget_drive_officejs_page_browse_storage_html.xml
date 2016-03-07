@@ -112,44 +112,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!doctype html>\n
-<html>\n
-  <head>\n
-    <meta charset="utf-8">\n
-    <meta name="viewport" content="width=device-width, initial-scale=1">\n
-\n
-    <title>OfficeJS Add Text Document</title>\n
-\n
-    <script src="rsvp.js"></script>\n
-    <script src="renderjs.js"></script>\n
-    <script src="handlebars.js"></script>\n
-    <script src="gadget_officejs_drive_page_browse.js"></script>\n
-\n
-  </head>\n
-\n
-  <body>\n
-    <h1>Super OfficeJS Drive</h1>\n
-\n
-    <form>\n
-      <input type="text">\n
-    </form>\n
-    <div>\n
-      <a class="error"></a>\n
-      <p class="output"></p>\n
-    </div>\n
-    <ul></ul>\n
-\n
-\n
-  </body>\n
-</html>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>OfficeJS Drive Page Browse Storage</string> </value>
         </item>

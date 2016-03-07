@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-content_information = context.getContentInformation()\n
-number_of_pages = int(content_information.get(\'Pages\', 1))\n
-max = number_of_pages - 1\n
-selection_index = int(selection_index)\n
-\n
-if selection_index > max:\n
-  return max\n
-elif -max > selection_index:\n
-  return 0\n
-elif selection_index < 0:\n
-  return max + selection_index + 1\n
-else:\n
-  return selection_index\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection_index</string> </value>
         </item>

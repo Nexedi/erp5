@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFCore.utils import getToolByName\n
-\n
-tool = getToolByName(context, \'portal_skins\')\n
-skin_folders = tool.objectValues()\n
-\n
-fiscal_report_list = []\n
-\n
-for folder in skin_folders:\n
-  folder_id = folder.id\n
-  if folder_id.startswith(\'erp5_accounting_l10n_\') or folder_id.startswith(\'custom\'):\n
-    # Assume all PDFForm in the folder are Fiscal Reports\n
-    for object in folder.objectValues():\n
-      if object.meta_type == \'ERP5 PDF Form\':\n
-        fiscal_report_list.append((object.title, object.getId()))\n
-\n
-# Sort by title\n
-fiscal_report_list.sort(lambda x,y: cmp(x[0], y[0]))\n
-\n
-return fiscal_report_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

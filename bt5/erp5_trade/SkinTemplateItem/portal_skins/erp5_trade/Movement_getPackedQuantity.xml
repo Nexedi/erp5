@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-movement = context\n
-delivery_uid = movement.getExplanationUid()\n
-resource_uid = movement.getResourceUid()\n
-variation_text = movement.getVariationText()\n
-packed_quantity = 0\n
-\n
-sql_list = movement.Movement_zGetPackedQuantity(\n
-                       explanation_uid=delivery_uid,\n
-                       resource_uid=resource_uid,\n
-                       variation_text=variation_text)\n
-\n
-if len(sql_list)>0 :\n
-  if sql_list[0].quantity is not None :\n
-    return float(sql_list[0].quantity)\n
-\n
-return packed_quantity\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

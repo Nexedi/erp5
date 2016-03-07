@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Redirect user to the path\n
-Parameters:\n
-redirect_path -- Specify where redirect user, use \'paypal.payment.faild\' as default"""\n
-\n
-context.REQUEST.RESPONSE.redirect("%s/%s" % (context.Base_getWebSiteSecureUrl(), \n
-                                             redirect_path))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>redirect_path=\'paypal.payment.failed\', **kw</string> </value>
         </item>

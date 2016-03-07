@@ -1,0 +1,32 @@
+<tal:block define="dummy python:request.RESPONSE.setHeader('Content-Type', 'application/xml;; charset=utf-8')"><?xml version='1.0' encoding='UTF-8'?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
+        xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <tal:block tal:define="sitemap_root python:request.get('current_web_site', here);
+                       depth python:here.getLayoutProperty('layout_sitemap_depth', 5)">
+    <tal:block metal:define-macro="master"
+           tal:define="menu_item_list python:sitemap_root.getSiteMapTree(depth=depth)">
+      <tal:block tal:repeat="menu_item menu_item_list">
+        <tal:block tal:condition="not:nocall:menu_item/subsection">
+          <url>
+            <loc tal:content="menu_item/url" />
+          </url>
+        </tal:block>
+        <tal:block tal:condition="nocall:menu_item/subsection">
+          <url>
+            <loc tal:content="menu_item/url" />
+          </url>
+          <tal:block metal:define-macro="generateTree">
+            <url tal:repeat="item menu_item/subsection">
+              <loc tal:content="item/url" />
+              <tal:recurse define="menu_item item" tal:condition="nocall:item/subsection">
+                <metal:call use-macro="here/WebSection_viewSiteMapAsXML/macros/generateTree" />
+              </tal:recurse>
+            </url>
+          </tal:block>
+        </tal:block>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+</urlset>
+</tal:block>

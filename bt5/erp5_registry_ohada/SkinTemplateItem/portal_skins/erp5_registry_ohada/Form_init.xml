@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Currently, we set a default group (for the prototype application)\n
-# This should disappear once the application is extended\n
-context.setGroup(\'dacs/trhc/greffe/civil\')\n
-context.setSite(\'dakar/pikine_guediawaye/tribunal\')\n
-\n
-# We need to update security now since \n
-# we just changed the group value and security\n
-# assignment was alreay called. An interaction\n
-# workflow would probably be better or, even \n
-# simpler, calling updateLocalRolesOnSecurityGroups\n
-# after submission since there is no need for\n
-# Assignor to access drafts.\n
-# XXX Rework needed\n
-context.updateLocalRolesOnSecurityGroups()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

@@ -49,38 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-is_asynchronous_gadget = options.get(\'box\', None) is None;\n
-\n
-# determine parent_web_section_url\n
-if is_asynchronous_gadget and \\\n
-   getattr(context, \'getWebSectionValue\', None) is not None and \\\n
-   getattr(context, \'getDefaultDocumentValue\', None) is not None:\n
-\n
-  # current_web_section\n
-  parent_web_section = context.restrictedTraverse(\n
-                             request.get(\'parent_web_section_url\', \'\'), None)\n
-  if parent_web_section is not None and context.meta_type == \'ERP5 Form\':\n
-    current_web_section = parent_web_section\n
-  else:\n
-    current_web_section = context.getWebSectionValue()\n
-  request.set(\'current_web_section\', current_web_section)\n
-\n
-  # current_web_document \n
-  if request.get(\'current_web_document\', None) is None:\n
-    if context.getDefaultDocumentValue() is not None:\n
-      current_web_document = context.getDefaultDocumentValue()\n
-    else:\n
-      current_web_document = context\n
-    request.set(\'current_web_document\', current_web_document)\n
-\n
-  # is_web_section_default_document\n
-  request.set(\'is_web_section_default_document\',\n
-              request.get(\'is_web_section_default_document\', 0))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>options</string> </value>
         </item>

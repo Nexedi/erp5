@@ -49,12 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># It is easier to stay in the transaction as the user can edit lines at the transaction.\n
-return dict(redirect_url=transaction.absolute_url() + \'/\' + form_id)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>transaction, form_id=\'view\', **kw</string> </value>
         </item>

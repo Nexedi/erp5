@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-if request.get(\'form\', None) is not None:\n
-  context.REQUEST[\'form\'][\'field_your_text_output\']=""\n
-  context.REQUEST[\'form\'][\'text_output\']=""\n
-return context.ComponentTool_viewLiveTestDialog(\n
-  text_output="")\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>debug=None,verbose=None,test=None,run_only=None,**kw</string> </value>
         </item>

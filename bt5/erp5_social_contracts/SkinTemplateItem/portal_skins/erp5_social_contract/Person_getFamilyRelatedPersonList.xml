@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Utils import convertToUpperCase\n
-related_person_list = []\n
-known_person_uid = {}\n
-\n
-for base_category in [\'natural_parent\', \'legal_parent\', \'insurance_coverage\'] :\n
-  relation_title = context.getPortalObject().portal_categories[base_category].getTranslatedTitle()\n
-  relation_method = getattr(context, "get%sRelatedValueList" % convertToUpperCase(base_category))\n
-  for person in relation_method( portal_type = \'Person\' ) :\n
-    if person.getUid() not in known_person_uid :\n
-      known_person_uid[person.getUid()] = 1\n
-      related_person_list.append(person.asContext(relation_title = relation_title))\n
-\n
-return related_person_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection=None, **kw</string> </value>
         </item>

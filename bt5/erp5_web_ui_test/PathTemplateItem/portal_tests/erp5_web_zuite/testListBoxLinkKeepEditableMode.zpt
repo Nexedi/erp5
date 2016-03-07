@@ -1,0 +1,83 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test ListBox Link in Editable Mode</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+  <tr><td rowspan="1" colspan="3">Test Save Web Page and View</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_erp5_web_common/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/WebSiteModule_createTestSite?id=test_web_site&amp;title=Test Web Site</td>
+  <td></td>
+  <td>Create a new site</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/test_web_site/WebSection_createTestWebSection?id=test_web_section</td>
+  <td></td>
+  <td>Create a new section</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/Zuite_waitForActivities</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/test_web_site/WebSite_view?editable_mode:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Save & Edit</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//td[@class="listbox-table-data-cell"]//a[text()="test_web_section"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Save & Edit</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTitle</td>
+  <td>Web Section - test_web_section | ERP5</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertLocation</td>
+  <td>${base_url}/web_site_module/test_web_site/test_web_section*</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

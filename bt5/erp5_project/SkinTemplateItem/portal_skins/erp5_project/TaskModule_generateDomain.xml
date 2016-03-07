@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-domain_list = []\n
-\n
-if depth == 0:\n
-  module = context.task_module\n
-\n
-  domain = parent.generateTempDomain(id=\'sub%s\' % module.getId())\n
-  domain.edit(title=module.getTitle(),\n
-              membership_criterion_base_category=(\'parent\', ), \n
-              membership_criterion_category=(module.getRelativeUrl(),),\n
-              domain_generator_method_id=script.id,\n
-              uid=module.getUid())\n
-  return [domain]\n
-else:\n
-  return []\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>depth, parent, **kw</string> </value>
         </item>

@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This is a script which should be overwritten for every Web Site (i.e. in its skin folder).\n
-  It provides a way so gadget system can be used in infinite Web Sites.\n
-  This happens by using a unique pad_group prefix per Web Site.\n
-  In future this will be improved so prefix could be acquired from Web Site itself (WIP).\n
-  By default do NOT modify default pad group.\n
-"""\n
-return default_pad_group\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>default_pad_group</string> </value>
         </item>

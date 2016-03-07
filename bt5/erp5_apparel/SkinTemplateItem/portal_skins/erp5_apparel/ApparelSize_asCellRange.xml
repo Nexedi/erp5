@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if matrixbox == 1:\n
-  column = [  (\'apparel_morpho_type/\'+x.getId(),x.getTranslatedTitle()) for x in context.getApparelMorphoTypeValueList()]\n
-  line = [ (\'size/\'+x.getId(),x.getTranslatedTitle()) for x in context.getSizeValueList()]\n
-else:\n
-  column = [  \'apparel_morpho_type/\'+x.getId() for x in context.getApparelMorphoTypeValueList()]\n
-  line = [ \'size/\'+x.getId() for x in context.getSizeValueList()]\n
-\n
-tab = []\n
-\n
-cell_range = [line, column, tab]\n
-\n
-return cell_range\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>matrixbox=0, base_id=None, display_base_category=1, **kw</string> </value>
         </item>

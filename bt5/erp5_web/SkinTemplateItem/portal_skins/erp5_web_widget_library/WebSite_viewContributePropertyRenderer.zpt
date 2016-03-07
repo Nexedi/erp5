@@ -1,0 +1,54 @@
+<tal:block replace="nothing">
+  This is used in contribute tab to distinguish implemented/not implemented "file" features
+</tal:block>
+
+<span metal:define-macro="file_feature">
+  <a tal:condition="impl" href="javascript:void 0" 
+     onclick="fileImplemented()" 
+     tal:content="title"/>
+  <a tal:condition="python:not impl" 
+     href="javascript:void 0" 
+     onclick="fileNotImplemented()" 
+     tal:content="title" 
+     style="color:grey"/>
+</span>
+
+<tal:block replace="nothing">
+  This is used in main panel to fill properties for contributing document or external resource
+</tal:block>
+
+<div metal:define-macro="contribute_properties"
+     tal:define="contribute_prefix contribute_prefix | string:">
+  <div>
+    <label for="classification" value="" 
+           i18n:translate="" i18n:domain="ui">Classification</label>
+
+    <select size="1" 
+            name="classification" 
+            id="classification"
+            tal:attributes="name string:${contribute_prefix}classification">
+      <option value="" value="" 
+              i18n:translate="" i18n:domain="ui">-- Select Classification --</option>
+      <option 
+        tal:repeat="item python:[c for c in here.portal_categories.classification.getCategoryChildTranslatedCompactLogicalPathItemList()[1:] if len(c[1].split('/'))>1]" 
+        tal:content="python:item[0]" 
+        tal:attributes="value python:item[1]"> Agricultural Development</option>
+    </select>
+  </div>
+
+  <div tal:condition="here/Base_hasProjectModuleViewPermission">
+    <label for="source_project" value="" 
+           i18n:translate="" i18n:domain="ui">Project</label>
+    <select size="1" id="source_project" name="source_project"
+            tal:attributes="name string:${contribute_prefix}source_project">
+      <option value="" value="" 
+              i18n:translate="" i18n:domain="ui">-- Select Project --</option>
+      <option tal:repeat="item python:[(o.getTitle(),o.getRelativeUrl()) for o in 
+                                       here.project_module.searchFolder(sort_on='title')]"
+              tal:content="python:item[0]" 
+              tal:attributes="value python:item[1]">
+        Agricultural Development
+      </option>
+    </select>
+  </div>
+</div>   

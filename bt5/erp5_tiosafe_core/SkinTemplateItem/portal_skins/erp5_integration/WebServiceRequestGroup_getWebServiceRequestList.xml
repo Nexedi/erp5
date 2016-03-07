@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>result = []\n
-for web_service_request in context.getParentValue().contentValues(\n
-    portal_type=\'Web Service Request\'):\n
-  result.append(web_service_request.getId())\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

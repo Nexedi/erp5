@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># this script set the email of the form using the accountant email :\n
-form = state_change[\'object\']\n
-email = form.getAccountantEmail()\n
-form.setDefaultEmailText(email)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

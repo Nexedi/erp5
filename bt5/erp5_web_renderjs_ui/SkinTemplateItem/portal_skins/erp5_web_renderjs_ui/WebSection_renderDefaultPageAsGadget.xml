@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if REQUEST is None:\n
-  REQUEST = context.REQUEST\n
-if response is None:\n
-  response = REQUEST.RESPONSE\n
-\n
-default_web_page = context\n
-web_section = REQUEST.get("current_web_section")\n
-\n
-\n
-return default_web_page.WebPage_viewAsWeb(mapping_dict={\n
-  "frontpage_gadget": web_section.getLayoutProperty("configuration_frontpage_gadget_url", default=""),\n
-  "application_title": web_section.getLayoutProperty("configuration_application_title", default="ERP5"),\n
-  "action_view": web_section.getLayoutProperty("configuration_view_action_category", default="object_view"),\n
-  "default_view_reference": web_section.getLayoutProperty("configuration_default_view_action_reference", default="view"),\n
-  "hateoas_url": web_section.getLayoutProperty("configuration_hateoas_url", default="hateoas/"),\n
-  "panel_gadget": web_section.getLayoutProperty("configuration_panel_gadget_url", default="gadget_erp5_panel.html"),\n
-  "router_gadget": web_section.getLayoutProperty("configuration_router_gadget_url", default="gadget_erp5_router.html"),\n
-  "header_gadget": web_section.getLayoutProperty("configuration_header_gadget_url", default="gadget_erp5_header.html"),\n
-  "jio_gadget": web_section.getLayoutProperty("configuration_jio_gadget_url", default="gadget_jio.html"),\n
-  "translation_gadget": web_section.getLayoutProperty("configuration_translation_gadget_url", default="gadget_translation.html"),\n
-  "manifest_url": web_section.getLayoutProperty("configuration_manifest_url", default="gadget_erp5.appcache")\n
-})\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>REQUEST=None, response=None</string> </value>
         </item>

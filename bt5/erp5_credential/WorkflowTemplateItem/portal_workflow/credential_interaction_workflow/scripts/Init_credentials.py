@@ -1,0 +1,3 @@
+script.Credential_dateInit(state_change)
+script.Credential_setCameFrom(state_change)
+script.Call_alarmActiveSense(state_change)

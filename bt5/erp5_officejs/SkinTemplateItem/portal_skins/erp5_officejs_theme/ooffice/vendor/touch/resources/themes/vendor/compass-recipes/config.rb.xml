@@ -19,28 +19,6 @@
             <value> <string>application/x-ruby</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>##\n
-# Compass Recipes\n
-# Configuration files mainly used for tests\n
-#\n
-http_path = \'/\'\n
-css_dir = \'.\'\n
-sass_dir = \'.\'\n
-\n
-line_comments = false\n
-relative_assets = true\n
-\n
-additional_import_paths = [\n
-    \'./stylesheets\',\n
-    \'./tests\'\n
-]\n
-\n
-# just for testing extension\n
-require File.join(File.dirname(__FILE__), \'lib\', \'compass-recipes\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

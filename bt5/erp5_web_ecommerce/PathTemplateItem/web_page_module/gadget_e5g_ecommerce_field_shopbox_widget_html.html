@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title>e5g Ecommerce Compact Shopbox Widget</title>
+
+    <link rel="stylesheet" href="gadget_e5g_ecommerce_field_shopbox_widget.css">
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="handlebars.js"></script>
+    
+    <script id="shopbox-widget-list" type="text/x-handlebars-template">
+      <div class="ui-shopbox">
+        <div class="ui-shopbox-wrapper">
+          <ul data-role="listview" data-inset="true">
+            {{#each item_list}}
+            <li>
+              <a href="{{item_link}}">
+                <img src="{{item_default_src}}" class="ui-li-thumb" />
+                <h2>{{item_title}}</h2>
+                <p>{{item_description}}</p>
+                <p class="ui-li-aside">{{item_price}}</p>
+              </a>
+            </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </script>
+    
+    <script id="shopbox-widget-list-paginate" type="text/x-handlebars-template">
+      
+    </script>
+
+    <script id="shopbox-widget-list-search" type="text/x-handlebars-template">
+      
+    </script>
+
+    <!-- custom script -->
+    <script src="gadget_global.js"></script>
+    <script src="gadget_e5g_ecommerce_field_shopbox_widget.js" type="text/javascript"></script>
+
+    </head>
+  <body>
+    <div class="custom-grid-wrap">
+      <div class="custom-grid ui-corner-all ui-body-inherit ui-shadow ui-corner-all">
+        <div class="ui-body-c ui-corner-all">
+
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

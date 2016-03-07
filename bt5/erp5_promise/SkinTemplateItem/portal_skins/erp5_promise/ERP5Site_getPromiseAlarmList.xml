@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>alarm_tool = context.getPortalObject().portal_alarms\n
-kw["id"] = "promise_%"\n
-\n
-alarm_list = []\n
-for alarm in alarm_tool.searchFolder(**kw):\n
-  alarm.activeSense()\n
-  if alarm.sense():\n
-    alarm_list.append(alarm)\n
-\n
-return alarm_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

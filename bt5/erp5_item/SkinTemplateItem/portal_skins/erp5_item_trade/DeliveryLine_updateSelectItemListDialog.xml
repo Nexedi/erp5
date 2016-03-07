@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-portal = context.getPortalObject()\n
-\n
-# FIXME: this is a workaround, because if listbox is present in request.form, \n
-#   editable fields will be empty when re-displaying the dialog.\n
-request.form.pop(\'listbox\', None)\n
-request.other.pop(\'listbox\', None)\n
-\n
-return getattr(context, dialog_id)(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>dialog_id, listbox=[], **kw</string> </value>
         </item>

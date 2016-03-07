@@ -1,0 +1,177 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>testAttachDocument (expected failure)</title>
+</head>
+<body tal:define="file_name string:tiolive-ERP5.DMS.TioLive-001-en.odp;
+                  full_filename_location python: here.Zuite_getFilenameLocation(file_name);
+                  person_full_name string:DMS tester">
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">testAttachDocument (expected failure)</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/person_module/Zuite_setupDMS</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done</td>
+  <td></td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">
+Wait for activities</span>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/person_module/view?reset:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_create:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_first_name</td>
+  <td>DMS</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_last_name</td>
+  <td>tester</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>hidden_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeAttribute</td>
+  <td>//div[@id="breadcrumb"]/a[3]@href</td>
+  <td>person_url</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//img[@alt='Attach Document']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_file</td>
+  <td tal:content="full_filename_location"></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_title</td>
+  <td>test_title</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_short_title</td>
+  <td>test_short_title</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_description</td>
+  <td>test_description</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Presentation</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>successfully</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td tal:content="file_name"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>link=Documents</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_reference</td>
+  <td>tiolive-ERP5.DMS.TioLive</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_title</td>
+  <td>test_title</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_short_title</td>
+  <td>test_short_title</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_description</td>
+  <td>test_description</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_follow_up_title_list</td>
+  <td tal:content="person_full_name"></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_language</td>
+  <td>en</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_version</td>
+  <td>001</td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
+
+<!-- Check Person has it in his Documents tab -->
+<tr>
+  <td>openAndWait</td>
+  <td>${person_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Documents</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>tiolive-ERP5.DMS.TioLive</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>test_description</td>
+  <td></td>
+</tr>v
+<tr>
+  <td>verifyTextPresent</td>
+  <td>test_title</td>
+  <td></td>
+</tr>
+
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">
+Wait for activities</span>
+
+</tbody></table>
+</body>
+</html>

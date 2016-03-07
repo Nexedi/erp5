@@ -26,17 +26,6 @@
               <dictionary/>
             </value>
         </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string>@import url("ui.core.css");\n
-@import url("ui.resizable.css");\n
-@import url("ui.accordion.css");\n
-@import url("ui.dialog.css");\n
-@import url("ui.slider.css");\n
-@import url("ui.tabs.css");\n
-@import url("ui.datepicker.css");\n
-@import url("ui.progressbar.css");</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

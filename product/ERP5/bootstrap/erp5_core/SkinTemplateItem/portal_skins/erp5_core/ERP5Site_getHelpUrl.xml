@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>help = context.getPortalTypeName()\n
-if workflow_action is not None: # First, the workflow transition case.\n
-  help = \'%s_%s\' % (help, workflow_action)\n
-elif current_action is not None: # Then, we are able to get the action.\n
-  help = \'%s_%s\' % (help, current_action[\'id\'])\n
-elif current_form_id is not None: # Otherwise, get the form we are in.\n
-  help = \'%s_%s\' % (help, current_form_id)\n
-return \'%s/%s\' % (context.portal_preferences.getPreferredHtmlStyleDocumentationBaseUrl(), help)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>current_action=\'\', current_form_id=None, workflow_action=\'\'</string> </value>
         </item>

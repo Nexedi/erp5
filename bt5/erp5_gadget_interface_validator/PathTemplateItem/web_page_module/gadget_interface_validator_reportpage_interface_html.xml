@@ -102,31 +102,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <title>Gadget Interface Validator Reportpage Interface</title>\n
-  </head>\n
-  <body>\n
-    <h1>Gadget Interface Validator Reportpage Interface</h1>\n
-    <h3>Interface to display the interface validation report of an application.</h3>\n
-    <dl>\n
-      <dt>reportPageDummyMethod1</dt>\n
-      <dd>Defining the prototype for a report page dummy method</dd>\n
-      <dl>\n
-        <dt data-parameter-required="required" data-parameter-type="int">param1</dt>\n
-        <dd>An integer parameter</dd>\n
-      </dl>\n
-    </dl>\n
-  </body>\n
-</html>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Gadget Interface Validator Reportpage Interface</string> </value>
         </item>

@@ -49,62 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This script notify the user that the form has been submitted\n
-"""\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from AccessControl import getSecurityManager\n
-\n
-form = state_change[\'object\']\n
-portal = form.getPortalObject()\n
-\n
-translateString = portal.Base_translateString\n
-portal_catalog = portal.portal_catalog\n
-\n
-\n
-\n
-u = getSecurityManager().getUser()\n
-recipient = portal.portal_catalog.getResultValue(portal_type=\'Person\', reference=u)\n
- \n
-\n
-# Build the message and translate it\n
-msg = []\n
-\n
-form_id = form.getId()\n
-procedure=translateString(form.getPortalType())\n
-\n
-\n
-wf_info=form.Egov_getProcedureWorkflowStateInfo(\'egov_universal_workflow\',\'pending\')\n
-date_of_submission=wf_info[\'time\'].strftime(\'%d/%m/%y %H:%M\')\n
-\n
-subject = translateString("[E-government] Your ${procedure}  reference: ${form_id} has been submitted", \n
-                           mapping = dict(procedure=procedure, form_id=form_id))\n
-\n
-msg_content=""" \n
-\n
-Your ${procedure} has been transmitted under the reference : ${form_id}, at ${date_of_submission}.\n
-\n
-The procedure is pending and will continue after your payment.\n
-\n
-E-government TEAM\n
-\n
-"""\n
-\n
-msg_content = translateString(msg_content,\n
-                              mapping=dict(procedure=procedure, \n
-                                           form_id=form_id,\n
-                                           date_of_submission=date_of_submission\n
-                                          )\n
-                             )\n
-\n
-# We can now notify the accoutant through the notification tool\n
-portal.portal_notifications.sendMessage(recipient=recipient, \n
-    subject=subject, message=msg_content, portal_type_list=[\'%s\' % form.getPortalType(),],\n
-    store_as_event=True)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

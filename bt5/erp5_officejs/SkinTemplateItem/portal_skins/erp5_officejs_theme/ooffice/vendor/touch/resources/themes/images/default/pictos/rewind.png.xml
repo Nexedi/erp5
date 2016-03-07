@@ -19,33 +19,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAFN++nkAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
-bWFnZVJlYWR5ccllPAAABPhJREFUeNpi/P//PwM+wMRAAKAoYGRk1Abi/0j8/wxQK1SB+D82zAhS
-gKwLqxVARSCFjDBBZDYjxb4ACCC8JjCR4v+/SOyTML8j+3c/EpthG65AAeuE6l4L8S6YbQ4PMbJc
-CxBABEOKslBkZNTBIc4E9xCSxwyA+B+yr5Hk0EOGQQ2I/+AMLnwYzdYtOBQ6obsGQzMWL6xBdjaS
-uBfBeCIEAAKItlE1cJqBiYERh7gTvpBejiOknXFGFRAswpG6vPDlt8U4Eog5nlTGsJKspAnVbEZx
-2gYCfSD+i64AKneAYMaAKtTDFmBQuX1EZQwgsMQWVcj5eoimbYAAosjZA+bqkWUxsBhRAeKF+BoU
-WPSYAfFeeHOFGAwEykC8DIh/Y8t1OPQ4QHMj8TUNEGgA8Qog/kGoPICqZ4JadJjUMgRUfa/CVo7Q
-CDOsp5NFeFsE1kC8jgyDtlNkMZZ4tsDbJMReKrsC8SmKLMbiEGNoO+kPkakalOAcgfgQRRZjMRiU
-IHeSqMceiA+OltV0AwABNBrUoxaPWozeomAHYjkS9fCTbTFQMysQxwCZt6A1GjF6hIC4Esh8DBtT
-IbV8TgTiB0gFfiQB9bxA3AHEb1FaLERaxgnE8UD8CEsVF4lDjxAQNwPxJ6xNJQIWgjqq6UB8GU/d
-GommRwKIG4H4Od42Gg4L2YE4FYgfEtGaiITqEQDiJiD+QFTjEM1CViAGJZobJDRjQCFSDcSfidUD
-txiaulNxxCEh/INUPbCKKQmaxOnWwoRZ/ITeTVuQxaAgVgfiMiB+TdcyEy2vlgLxXRJ9AGr+viA5
-qLFkJT4gzoWGADEGhQGxMBC3EJuy8RYg0LxcRIRvIpH0gCqATiB+R7bFSIbxAHE2npQfiUUPKASq
-cIUA0WU1UhooxFIURuLRAyrNGtBLM5IsRnMAKAruEVM7IZXfDbBoI8titOoOlAt8SdAjCCrPwXMi
-o+3qUYuHncUAAdq1upSGgSCcraEWWyuK2EAFbRUf/CEkWH9qbS3xD7yBN/AYHkZ8EProo+ARPIGP
-nsEH0RnyVULJ1mg2q7a7MKSU0tlvduab2Zn8mlePnaUNYAPYADaA/w1gIUSBpE5yRXJHciEbF6fU
-M0vSIbkmeeTvbE0AGQwPWXmY3CLxSDbQauDVe1eQH0lNxQq7+DsQn6QS/Y2dEcA8PWoAd2yFw2AH
-1yFVOnIordl4R1b46sYWLg/SZStSzi2TJSsc1pySNKxwQKfakNy54pemAhhyG6ATLzuFi65HAPJz
-UTUnkJoyXJMnWDw8WkG77sfLTqiYr4VVkkOSM3RLHYUh8QY9fJl24Z4txGMxEuvZ1NI4QRcn17TC
-F602VSoeWPf4bw+GzKq5JPrvChZAMm1Ydx/slh+lHMyAbQJ7g+BfG4fCQ8BdOyCfXZCCGEWwny4d
-rYBggAMwI8fUgoa9vKrM0YkBx5AXty3rYOcAKaKawV54jPGE3HoCdi5pBxxjgCnk3w7IjWOfU8lE
-yr1c0j5uIxXUDDytC+GytKwdsCQ/e2D1Jj7X0gCW6HFw6g3wjDdYI2sBLKmMlhEC58jjcwkqsKGA
-JSWmi9Nv45JQ+opslQOO2dgkTmMPselLCotvAR5SggaQ2BI0c8ASEuwXOF1wwXxawDF6mFdWIwbg
-UJjWDjhmY0W45gvt4zkjHTkQnk86Hkxf2gA2gA1gA/gvrw9U3k3v0Kr7hQAAAABJRU5ErkJggg==</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

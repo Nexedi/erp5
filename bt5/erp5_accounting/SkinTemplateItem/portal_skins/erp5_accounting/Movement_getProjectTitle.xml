@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>project_uid = context.project_uid\n
-\n
-title_dict = container.REQUEST.get(\n
-                \'Movement_getProjectTitle.project_title_dict\') or {}\n
-if project_uid in title_dict:\n
-  return title_dict[project_uid]\n
-\n
-movement = context.getObject()\n
-if movement.getSourceProjectUid() == project_uid:\n
-  reference = movement.getSourceProjectReference()\n
-  if reference:\n
-    return \'%s - %s\' % (reference, movement.getSourceProjectTranslatedTitle())\n
-  return movement.getSourceProjectTranslatedTitle()\n
-\n
-reference = movement.getDestinationProjectReference()\n
-if reference:\n
-  return \'%s - %s\' % (reference, movement.getDestinationProjectTranslatedTitle())\n
-return movement.getDestinationProjectTranslatedTitle()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

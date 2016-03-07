@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Change the `current_content_script` property on accounting module, \n
-so that the next test knows that we have modified the test data.\n
-"""\n
-context.getPortalObject().accounting_module.setProperty(\n
-                      \'current_content_script\', \'modified\')\n
-return \'Done.\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

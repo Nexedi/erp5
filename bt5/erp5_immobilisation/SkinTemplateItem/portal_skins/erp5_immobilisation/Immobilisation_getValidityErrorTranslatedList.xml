@@ -49,38 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Return a list of translated strings corresponding to errors for this movement validity\n
-Base_translateString = context.Base_translateString\n
-\n
-def translateString(msg):\n
-  try:\n
-    msg = msg.get(\'msg\')\n
-    mapping = msg.get(\'mapping\')\n
-  except AttributeError:\n
-    mapping = None\n
-  if translate is None:\n
-    return msg\n
-  translate_kw = {\'catalog\':\'content\'}\n
-  if mapping is not None:\n
-    translate_kw[\'mapping\'] = mapping\n
-  return Base_translateString(msg, **translate_kw)\n
-\n
-\n
-error_list = context.checkImmobilisationConsistency(to_translate=1)\n
-if len(error_list) == 0:\n
-  return [Base_translateString(\'Valid\')]\n
-\n
-translated_list = []\n
-for error in error_list:\n
-  object = context.getPortalObject().restrictedTraverse(error[0])\n
-  string = translateString(error[3])\n
-  object_title = object.getTitle() or object.getId()\n
-  translated_list.append(\'%s : %s\' % (object_title, string))\n
-return translated_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

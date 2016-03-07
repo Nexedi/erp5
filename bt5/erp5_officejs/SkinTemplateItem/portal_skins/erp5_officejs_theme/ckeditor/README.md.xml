@@ -19,53 +19,6 @@
             <value> <string>application/x-genesis-rom</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-CKEditor 4\n
-==========\n
-\n
-Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.  \n
-http://ckeditor.com - See LICENSE.md for license information.\n
-\n
-CKEditor is a text editor to be used inside web pages. It\'s not a replacement\n
-for desktop text editors like Word or OpenOffice, but a component to be used as\n
-part of web applications and websites.\n
-\n
-## Documentation\n
-\n
-The full editor documentation is available online at the following address:\n
-http://docs.ckeditor.com\n
-\n
-## Installation\n
-\n
-Installing CKEditor is an easy task. Just follow these simple steps:\n
-\n
- 1. **Download** the latest version from the CKEditor website:\n
-    http://ckeditor.com. You should have already completed this step, but be\n
-    sure you have the very latest version.\n
- 2. **Extract** (decompress) the downloaded file into the root of your website.\n
-\n
-**Note:** CKEditor is by default installed in the `ckeditor` folder. You can\n
-place the files in whichever you want though.\n
-\n
-## Checking Your Installation\n
-\n
-The editor comes with a few sample pages that can be used to verify that\n
-installation proceeded properly. Take a look at the `samples` directory.\n
-\n
-To test your installation, just call the following page at your website:\n
-\n
-\thttp://<your site>/<CKEditor installation path>/samples/index.html\n
-\n
-For example:\n
-\n
-\thttp://www.example.com/ckeditor/samples/index.html\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return not (value and (\n
-  request.other[\'field_my_acquisition_object_id_list\'] or\n
-  request.other[\'field_my_acquisition_base_category_list\']))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>value, request</string> </value>
         </item>

@@ -23,45 +23,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!doctype html>\n
-<?php\n
-/*\n
- * fileopen.php\n
- * To be used with ext-server_opensave.js for SVG-edit\n
- *\n
- * Licensed under the Apache License, Version 2\n
- *\n
- * Copyright(c) 2010 Alexis Deveria\n
- *\n
- */\n
-  // Very minimal PHP file, all we do is Base64 encode the uploaded file and\n
-  // return it to the editor\n
-  \n
-  $file = $_FILES[\'svg_file\'][\'tmp_name\'];\n
-  \n
-  $output = file_get_contents($file);\n
-  \n
-  $type = $_REQUEST[\'type\'];\n
-  \n
-  $prefix = \'\';\n
-  \n
-  // Make Data URL prefix for import image\n
-  if($type == \'import_img\') {\n
-    $info = getimagesize($file);\n
-    $prefix = \'data:\' . $info[\'mime\'] . \';base64,\';\n
-  }\n
-?>\n
-<script>\n
-window.top.window.methodDraw.processFile("<?php echo $prefix . base64_encode($output); ?>", "<?php echo htmlentities($type); ?>");\n
-</script>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

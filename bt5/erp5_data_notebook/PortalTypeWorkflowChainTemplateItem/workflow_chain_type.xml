@@ -1,6 +1,6 @@
 <workflow_chain>
  <chain>
-  <type>Data Notebook</type>
+  <type>portal_type_workflow_chain/Data Notebook</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

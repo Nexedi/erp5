@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># XXX This is a hack which allow to delete non indexed Template\n
-# Never call listFolderContents in a place where there could be million of\n
-# documents!\n
-if context.getPortalType() == \'Preference\':\n
-  result = []\n
-  uid_list = kw.get(\'uid\', [])\n
-  for i in context.listFolderContents():\n
-    if i.getUid() in uid_list:\n
-      result.append(i)\n
-  return result\n
-else:\n
-  return context.portal_catalog(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

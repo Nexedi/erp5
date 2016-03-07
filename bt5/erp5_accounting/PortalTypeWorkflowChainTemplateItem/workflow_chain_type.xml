@@ -1,66 +1,66 @@
 <workflow_chain>
  <chain>
-  <type>Account</type>
+  <type>portal_type_workflow_chain/Account</type>
   <workflow>account_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Accounting Period</type>
+  <type>portal_type_workflow_chain/Accounting Period</type>
   <workflow>accounting_period_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Accounting Transaction</type>
+  <type>portal_type_workflow_chain/Accounting Transaction</type>
   <workflow>accounting_workflow, delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Accounting Transaction Balance Constraint</type>
+  <type>portal_type_workflow_chain/Accounting Transaction Balance Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Accounting Transaction Line</type>
+  <type>portal_type_workflow_chain/Accounting Transaction Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Accounting Transaction Root Simulation Rule</type>
+  <type>portal_type_workflow_chain/Accounting Transaction Root Simulation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Balance Transaction</type>
+  <type>portal_type_workflow_chain/Balance Transaction</type>
   <workflow>accounting_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Cash Register</type>
+  <type>portal_type_workflow_chain/Cash Register</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Internal Invoice Transaction</type>
+  <type>portal_type_workflow_chain/Internal Invoice Transaction</type>
   <workflow>accounting_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Invoice Root Simulation Rule</type>
+  <type>portal_type_workflow_chain/Invoice Root Simulation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Payment Simulation Rule</type>
+  <type>portal_type_workflow_chain/Payment Simulation Rule</type>
   <workflow>edit_workflow, rule_interaction_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Payment Transaction</type>
+  <type>portal_type_workflow_chain/Payment Transaction</type>
   <workflow>accounting_workflow, delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Purchase Invoice Transaction</type>
+  <type>portal_type_workflow_chain/Purchase Invoice Transaction</type>
   <workflow>accounting_workflow, delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Purchase Invoice Transaction Line</type>
+  <type>portal_type_workflow_chain/Purchase Invoice Transaction Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Sale Invoice Transaction</type>
+  <type>portal_type_workflow_chain/Sale Invoice Transaction</type>
   <workflow>accounting_workflow, delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Sale Invoice Transaction Line</type>
+  <type>portal_type_workflow_chain/Sale Invoice Transaction Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

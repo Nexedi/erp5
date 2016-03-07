@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# call web section\'s render to get document value list.\n
-context.getWebSectionValue().WebSection_viewBlogFrontPage()\n
-\n
-document_value_list = context.REQUEST.get(\'cached_document_value_list\', [])\n
-prev = None\n
-next = None\n
-if document_value_list:\n
-  reference_list = [x.reference for x in document_value_list]\n
-  try:\n
-    i = reference_list.index(context.getReference())\n
-  except ValueError:\n
-    i = 0\n
-  if i - 1 >= 0:\n
-    prev = document_value_list[i - 1]\n
-  if i + 1 < len(reference_list):\n
-    next = document_value_list[i + 1]\n
-return prev, next\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

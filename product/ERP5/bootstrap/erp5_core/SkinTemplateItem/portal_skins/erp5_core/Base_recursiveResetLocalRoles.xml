@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>for local_role in context.get_local_roles():\n
-  context.manage_delLocalRoles((local_role[0],))\n
-\n
-for subobj in context.objectValues():\n
-  subobj.Base_recursiveResetLocalRoles()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

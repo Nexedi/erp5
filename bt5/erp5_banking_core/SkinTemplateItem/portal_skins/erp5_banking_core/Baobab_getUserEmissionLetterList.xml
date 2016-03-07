@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># XXX must use a cache for this method\n
-\n
-emission_letter_dict = {}\n
-user_site_list = []\n
-if site == None :\n
-  if user is not None:\n
-    user_site_list = context.Baobab_getUserAssignedSiteList(user)\n
-  else:\n
-    user_site_list = context.Baobab_getUserAssignedSiteList()\n
-else :\n
-  user_site_list.append(site)\n
-\n
-return context.Baobab_getEmissionLetterList(site_list=user_site_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>user=None, site = None</string> </value>
         </item>

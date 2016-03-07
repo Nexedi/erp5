@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>solver_process = state_change[\'object\'].getParentValue()\n
-if solver_process.getValidationState() == \'draft\':\n
-  solver_process.startSolving()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

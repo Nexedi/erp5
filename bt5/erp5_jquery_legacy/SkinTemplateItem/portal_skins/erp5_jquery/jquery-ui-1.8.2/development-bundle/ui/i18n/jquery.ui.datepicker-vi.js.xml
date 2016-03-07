@@ -23,37 +23,6 @@
             <value> <string>application/x-javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-﻿/* Vietnamese initialisation for the jQuery UI date picker plugin. */\n
-/* Translated by Le Thanh Huy (lthanhhuy@cit.ctu.edu.vn). */\n
-jQuery(function($){\n
-\t$.datepicker.regional[\'vi\'] = {\n
-\t\tcloseText: \'Đóng\',\n
-\t\tprevText: \'&#x3c;Trước\',\n
-\t\tnextText: \'Tiếp&#x3e;\',\n
-\t\tcurrentText: \'Hôm nay\',\n
-\t\tmonthNames: [\'Tháng Một\', \'Tháng Hai\', \'Tháng Ba\', \'Tháng Tư\', \'Tháng Năm\', \'Tháng Sáu\',\n
-\t\t\'Tháng Bảy\', \'Tháng Tám\', \'Tháng Chín\', \'Tháng Mười\', \'Tháng Mười Một\', \'Tháng Mười Hai\'],\n
-\t\tmonthNamesShort: [\'Tháng 1\', \'Tháng 2\', \'Tháng 3\', \'Tháng 4\', \'Tháng 5\', \'Tháng 6\',\n
-\t\t\'Tháng 7\', \'Tháng 8\', \'Tháng 9\', \'Tháng 10\', \'Tháng 11\', \'Tháng 12\'],\n
-\t\tdayNames: [\'Chủ Nhật\', \'Thứ Hai\', \'Thứ Ba\', \'Thứ Tư\', \'Thứ Năm\', \'Thứ Sáu\', \'Thứ Bảy\'],\n
-\t\tdayNamesShort: [\'CN\', \'T2\', \'T3\', \'T4\', \'T5\', \'T6\', \'T7\'],\n
-\t\tdayNamesMin: [\'CN\', \'T2\', \'T3\', \'T4\', \'T5\', \'T6\', \'T7\'],\n
-\t\tweekHeader: \'Tu\',\n
-\t\tdateFormat: \'dd/mm/yy\',\n
-\t\tfirstDay: 0,\n
-\t\tisRTL: false,\n
-\t\tshowMonthAfterYear: false,\n
-\t\tyearSuffix: \'\'};\n
-\t$.datepicker.setDefaults($.datepicker.regional[\'vi\']);\n
-});\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

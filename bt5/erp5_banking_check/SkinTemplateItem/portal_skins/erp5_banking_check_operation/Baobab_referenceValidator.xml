@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if editor in (None, \'\'): \n
-  return 1\n
-\n
-reference = editor\n
-\n
-bank_account_list = context.portal_catalog(portal_type="Bank Account", string_index=reference)\n
-\n
-if len(bank_account_list) != 1:\n
-  return 0\n
-\n
-return 1\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>editor, request</string> </value>
         </item>

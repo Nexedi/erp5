@@ -55,25 +55,6 @@ translated_message</string> </value>
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-INSERT INTO translation VALUES \n
-<dtml-in prefix="loop" expr="_.range(_.len(language))">\n
-(\n
-  <dtml-sqlvar expr="language[loop_item]" type="string">,\n
-  <dtml-sqlvar expr="message_context[loop_item]" type="string">,\n
-  <dtml-sqlvar expr="portal_type[loop_item]" type="string">,\n
-  <dtml-sqlvar expr="original_message[loop_item]" type="string">,\n
-  <dtml-sqlvar expr="translated_message[loop_item]" type="string">\n
-)\n
-<dtml-if sequence-end><dtml-else>,</dtml-if>\n
-</dtml-in>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

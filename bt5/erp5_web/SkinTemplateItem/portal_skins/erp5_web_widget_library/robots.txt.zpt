@@ -1,0 +1,10 @@
+<tal:block tal:define="dummy python:context.REQUEST.RESPONSE.setHeader('Content-Type', 'text/plain');
+                       web_site python:context.getWebSiteValue()"
+           tal:condition="python:web_site is not None">
+Sitemap: <tal:block tal:content="python:web_site.absolute_url()"/>/WebSite_viewSiteMapAsXML
+<tal:block tal:condition="web_site/isStaticLanguageSelection"
+           tal:repeat="language web_site/getAvailableLanguageList"
+           tal:define="default_language web_site/getDefaultAvailableLanguage">
+<tal:block tal:condition="python:language != default_language">
+Sitemap: <tal:block tal:content="python:web_site.absolute_url()"/>/<tal:block tal:content="language" />/WebSite_viewSiteMapAsXML
+</tal:block></tal:block></tal:block>

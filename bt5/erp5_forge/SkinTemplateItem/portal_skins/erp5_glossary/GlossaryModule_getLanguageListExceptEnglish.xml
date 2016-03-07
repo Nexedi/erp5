@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return [(label, value)\n
-        for label, value in context.portal_categories.language.getCategoryChildCompactLogicalPathItemList(local_sort_id="int_index")\n
-        if value!=\'en\']\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

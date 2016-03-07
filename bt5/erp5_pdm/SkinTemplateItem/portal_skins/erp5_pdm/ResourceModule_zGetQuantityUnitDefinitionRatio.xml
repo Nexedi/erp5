@@ -20,17 +20,6 @@ quantity_unit_uid</string> </value>
             <value> <string>ResourceModule_zGetQuantityUnitDefinitionRatio</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-select quantity from quantity_unit_conversion\n
-where \n
-  <dtml-sqltest resource_uid type="int"> and\n
-  <dtml-sqltest quantity_unit_uid type="int">
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

@@ -1,0 +1,17 @@
+<tal:block replace="nothing">
+  <!--
+  This widget displays buttons used to add or stick widgets
+  -->
+</tal:block>
+
+<span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/global_definitions"/>
+
+<tal:block tal:condition="here/Base_canUserAddGadget">
+  <ul tal:condition="python: active_knowledge_pad is not None"
+      class="widget_management_box">
+    <li>
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget"> Add Gadgets</span>
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/stick"> Stick/Unstick</span>
+    </li>
+  </ul>
+</tal:block>

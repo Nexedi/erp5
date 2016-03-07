@@ -21,10 +21,6 @@ getQuantityUnitConversionDefinitionRowList\r\n
             <value> <string>z_catalog_quantity_unit_conversion_list</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

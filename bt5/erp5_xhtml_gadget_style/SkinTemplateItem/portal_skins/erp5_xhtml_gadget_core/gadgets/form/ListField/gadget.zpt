@@ -1,0 +1,7 @@
+<tal:block tal:define="field_name request/field_name | options/field_name">
+
+  <select tal:attributes="name field_name"
+          size="1">
+  </select>
+
+</tal:block>

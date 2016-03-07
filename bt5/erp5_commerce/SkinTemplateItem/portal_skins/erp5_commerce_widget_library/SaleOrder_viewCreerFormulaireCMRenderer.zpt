@@ -1,0 +1,29 @@
+<tal:block tal:define="base_url context/absolute_url;
+                       TPE python: options.get('TPE', 'my_merchant_key_location');
+                       montant python: options.get('total', here.SaleOrder_getShoppingCartTotalPrice(include_shipping=True,
+                                                                                                     include_taxes=True,
+                                                                                                     include_currency=True));
+                       reference python: options.get('reference', here.SaleOrder_getShoppingCartId());                      
+                       url_retour  python: options.get('shop_url', 'http://www.my-shop.com');
+                       url_retour_ok python: '%s/%s?payment_successful=1&portal_status_message=Payment accepted.' 
+                                              %(base_url, 
+                                                options.get('url_return_ok', 'Base_externalPaymentHandler'));
+                       url_retour_err python: '%s/%s?payment_successful=0&portal_status_message=Payment rejected.' 
+                                              %(base_url, 
+                                                options.get('url_return_err', 'Base_externalPaymentHandler'));
+                       langue python: options.get('language', 'en');
+                       code_societe python: options.get('code_societe', 'my_shop_code');
+                       texte_bouton python: options.get('text_button', 'Secure Online Payment of %s' %montant);
+                       texte_libre python: options.get('text_free', '');">
+
+  <span tal:replace="structure python: here.payment.CreerFormulaireCM(TPE = TPE,
+                                                              montant = montant,
+                                                              reference = reference,
+                                                              texte_libre=texte_libre,
+                                                              url_retour = url_retour,
+                                                              url_retour_ok =url_retour_ok,
+                                                              url_retour_err = url_retour_err,
+                                                              langue = langue,
+                                                              texte_bouton= texte_bouton,
+                                                              code_societe = code_societe)"/>
+</tal:block>

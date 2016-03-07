@@ -1,0 +1,1 @@
+[<tal:block tal:content="python:','.join([field.render() for field in form.get_fields() if (field.meta_type == 'ListBox' or field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type == 'ListBox')])" />]

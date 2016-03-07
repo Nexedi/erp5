@@ -41,64 +41,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-#!/usr/bin/env node\n
-\n
-// Simple command-line code highlighting tool. Reads code from stdin,\n
-// spits html to stdout. For example:\n
-//\n
-//   echo \'function foo(a) { return a; }\' | bin/source-highlight -s javascript\n
-//   bin/source-highlight -s \n
-\n
-var fs = require("fs");\n
-\n
-var CodeMirror = require("../addon/runmode/runmode.node.js");\n
-require("../mode/meta.js");\n
-\n
-var sPos = process.argv.indexOf("-s");\n
-if (sPos == -1 || sPos == process.argv.length - 1) {\n
-   console.error("Usage: source-highlight -s language");\n
-   process.exit(1);\n
-}\n
-var lang = process.argv[sPos + 1].toLowerCase(), modeName = lang;\n
-CodeMirror.modeInfo.forEach(function(info) {\n
-  if (info.mime == lang) {\n
-    modeName = info.mode;\n
-  } else if (info.name.toLowerCase() == lang) {\n
-    modeName = info.mode;\n
-    lang = info.mime;\n
-  }\n
-});\n
-\n
-if (!CodeMirror.modes[modeName])\n
-  require("../mode/" + modeName + "/" + modeName + ".js");\n
-\n
-function esc(str) {\n
-  return str.replace(/[<&]/g, function(ch) { return ch == "&" ? "&amp;" : "&lt;"; });\n
-}\n
-\n
-var code = fs.readFileSync("/dev/stdin", "utf8");\n
-var curStyle = null, accum = "";\n
-function flush() {\n
-  if (curStyle) process.stdout.write("<span class=\\"" + curStyle.replace(/(^|\\s+)/g, "$1cm-") + "\\">" + esc(accum) + "</span>");\n
-  else process.stdout.write(esc(accum));\n
-}\n
-\n
-CodeMirror.runMode(code, lang, function(text, style) {\n
-  if (style != curStyle) {\n
-    flush();\n
-    curStyle = style; accum = text;\n
-  } else {\n
-    accum += text;\n
-  }\n
-});\n
-flush();
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

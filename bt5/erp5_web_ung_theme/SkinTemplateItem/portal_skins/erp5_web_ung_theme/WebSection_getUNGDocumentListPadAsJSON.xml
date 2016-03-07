@@ -49,50 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Render an entire Pad and needed JavaScript code.\n
-  Used to make instant Pad switching.\n
-"""\n
-from json import dumps\n
-\n
-pad = context.restrictedTraverse(pad_relative_url)\n
-\n
-# render Pad\'s html\n
-body = pad.KnowledgePad_viewDashboardWidget(real_context=context,\n
-                                            columns=1)\n
-\n
-\n
-# \'keep_items\' to be used as \'params\' to \'updater\' javascript method call\n
-portal_type_list = ["Web Page", "Web Illustration", "Web Table"]\n
-keep_items = dict(SearchableText=\'\',\n
-                  portal_type=portal_type_list)\n
-\n
-# generate needed JavaScript code (even for \'public\' boxes)\n
-javascript_list = []\n
-for box in pad.objectValues():\n
-  gadget = box.getSpecialiseValue()\n
-  gadget_type = gadget.getRenderType()\n
-  if box.getValidationState() in [\'visible\', \'invisible\', \'public\'] \\\n
-        and gadget_type==\'asynchronous\' and gadget.getValidationState()!=\'invisible\':\n
-    edit_form_id=gadget.getEditFormId()\n
-    view_form_id=gadget.getViewFormId()\n
-    base_url = \'%s/%s\' %(context.absolute_url(), view_form_id) \n
-    box_dom_id = box.getRelativeUrl().replace(\'/\', \'_\')\n
-    view_form_dom_id = \'%s_content\' %box_dom_id;\n
-    javascript_code = pad.KnowledgePad_generateAjaxCall(base_url, box, \\\n
-                            view_form_dom_id, params=keep_items, \\\n
-                            ignore_security_check=1)\n
-    javascript_list.append(javascript_code)\n
-javascript = \'\'.join(javascript_list)\n
-\n
-result = {\'body\': body,\n
-          \'javascript\':  javascript}\n
-\n
-return dumps(result)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>pad_relative_url, mode</string> </value>
         </item>

@@ -1,0 +1,8 @@
+<tal:block tal:define="current_url python: context.getAbsoluteUrl();
+                       site_url python:request.get('current_web_site_url',current_url)">
+<a href=".?format=pdf">
+<img alt="pdf icon" title="Download as PDF" src="./cloudooo_image/download_pdf.png" 
+     tal:attributes="src string:${site_url}//cloudooo_image/download_pdf.png">
+</a>
+
+</tal:block>

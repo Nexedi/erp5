@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Returns the list of documents which belong to\n
-  the current user or to the user provided as\n
-  a parameter.\n
-\n
-  WARNING: implementation depends on the fact\n
-  that owner is being indexed.\n
-"""\n
-if user is None:\n
-  user = context.portal_membership.getAuthenticatedMember()  \n
-\n
-kw[\'portal_type\'] = context.getPortalMyDocumentTypeList()\n
-kw[\'owner\'] = user\n
-\n
-if not kw.has_key(\'validation_state\'):\n
-  kw[\'validation_state\'] = "!=embedded"\n
-\n
-return context.portal_catalog(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>user=None, **kw</string> </value>
         </item>

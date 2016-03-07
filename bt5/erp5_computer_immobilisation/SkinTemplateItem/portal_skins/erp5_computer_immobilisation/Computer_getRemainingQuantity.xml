@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script is used to allow Customisation How Available Item \n
-  (Computer Partitions) are accountable into Computers.\n
-\n
-  By default use Simple Item API. \n
-"""\n
-return context.getRemainingQuantity()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

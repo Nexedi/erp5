@@ -19,17 +19,6 @@
             <value> <string>z_delete_data_from_path</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-DELETE FROM syncml\n
-WHERE\n
-  path = <dtml-sqlvar path type="string">\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

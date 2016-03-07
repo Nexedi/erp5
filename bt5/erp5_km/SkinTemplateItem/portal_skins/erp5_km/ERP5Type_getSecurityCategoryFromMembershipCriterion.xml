@@ -49,42 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This script returns a list of dictionaries which represent\n
-the security groups to define a local role. It extracts\n
-the categories from the current membership criterion\n
-of a Predicate. It is useful in the following cases:\n
-\n
-- assign a security group to a Web Section\n
-  based on the member ship criterion.\n
-\n
-The parameters are\n
-\n
-  base_category_list -- list of acceptable base categories\n
-                        (used to filter part of the criteria)\n
-  user_name          -- the user identifier (not used)\n
-  object             -- object which we want to assign roles to\n
-  portal_type        -- portal type of object\n
-"""\n
-\n
-category_list = []\n
-\n
-if object is None:\n
-  return []\n
-\n
-criterion_list = object.getMembershipCriterionCategoryList()\n
-for criterion in criterion_list:\n
-  id_list = criterion.split(\'/\')\n
-  base_category = id_list[0]\n
-  if base_category in base_category_list:\n
-    category = \'/\'.join(id_list[1:])\n
-    category_list.append({base_category : category})\n
-\n
-return category_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>base_category_list, user_name, object, portal_type</string> </value>
         </item>

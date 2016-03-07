@@ -33,22 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block replace="nothing"><!--\n
-  This widget display a list of sub documents (Web Pages generally) which\n
-  are published and linked with the current section through Predicate.\n
--->\n
-</tal:block>\n
-<ul tal:repeat="document python:here.getDocumentValueList()">\n
-  <li><a tal:attributes="href python:here.WebSection_getPermanentURL(document)"\n
-         tal:content="python: document.Document_getStandardFileName()"/></li>\n
-</ul>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

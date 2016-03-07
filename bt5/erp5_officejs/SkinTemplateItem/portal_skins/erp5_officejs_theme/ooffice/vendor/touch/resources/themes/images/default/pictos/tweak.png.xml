@@ -19,33 +19,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAE+UlEQVRoBd2bX4gVVRzHvduqm/+y
-LHI13eufhyLqpXb3yUcRxHcFJQl89A9RJv57EQLpYdvKHkKC9inoqRS0XHUFYdnKwgdBEP+tiEEU
-RpHEmm6f73jPOnd2ZvbM3HNmZzzwYf6dOff3uefvzN2tjY+Pz6hiqtVqM4n7RXgN5sK/MAJ/4vQf
-2/gk4aqBSSccht9BNWb4lf1DsDDJqYqyKxD6NiRpZMPbAa4vipOulDASkv1pClkjfpp8nVHpyggT
-/Er4zlLWSH9P/iVh6UoIE7Rq9hwYkSxb1fTzRrr0wgTbBUM5Zc0X8wX3z5d0qYUJsgd+blFW0g9h
-L8ysBdbslS0xz6oZfw1vOortKuX0tjkqzGkxyGqAOgquZBXfauho116ZErJ14vkS1oDrNKdUNdxo
-xqpZH7Jabv5dmhr20GejreMsJ+6VYpQmEA1QJ8FMI663/1D2BqhNuzBBaIAaAteSprwxyt4JbdM+
-DxNEF/iUvU/5eqoKpt9pFSYIV4sKU5PRrWR3hGWnTZgg1Gdtn3qiIjbHWlnthqckGabpIHzB1z5B
-rIJBsAk8Tx5NP+9Ce5xDocIE8TScgTwiNvdogPoQJvpsVLrohYfm/eXgI6kZfwQHkNSXE5uKXng8
-IArhOklQfbYfV4knp2iV+zwminWgZmfTPG3z6AuUbGyfjfp47cME8Ry8BEthE1wHWxGbfJp6dsGk
-0Tgqao69CRNEHc6CXp3eAhuBLHkk27SoMFJpWy/CBLIahj1Imi9E3WI7JI7GSdK+hI96lJW0+myw
-Nk4SSzrvXJhAXgYfTViiGqDeA6sBKk7ax7Sk33sWgeukPvsx9CGSPvWkfHLRC4+UUFIvSbAP9rci
-q0/wUcMKzuXiQk1ZzViLCu23lHwIjxLRbXilhcjucK+mtGfhFHzmQpZymBwjj0+tHlNkDQ6Cfq9V
-jWRlkHuWwmzQw0bmqSfNISiMQp0mXsi9QIGn4fWMBd8lfzcBX8t4n3V254MWsipzK9Sto3ic8Qd2
-/3h86H7PaR9GVn+G8A58AHnK1nSmMrylPEHFBtOQ1QpI/TdPuRrdvwI1a38prYPbXiO6WbAPFHTc
-IHWc899A0kD2F9f0piLXctE2TuVreZQmyA7YA1oJxcmqX9aDD3vU3M9zrKXnb3ADNCq/BU5H46Qv
-oSVhglTNfgpJsppDA1kTAMdz4FV4A7Tuzr0uNmVm2eYWJlDJptXsOa53ZQmmiLy5hBHRSKo+OwZx
-zXhSzRYhY/MZmYUR1ApIfz6g9XKc7I+cb2rGNoEUlSeTMCJaVLwPSaPtBa5ppZSp3CLzWweGiJqx
-ZJMGKC32lxUZfJ7PshJuyKoZ34O4ZizZep4Air5nSmFE5sF+SFpUnKiKrL7cxKcllorLEemG9fA2
-6LEvmjRAbaSgm9ELpT2ONikC1cqpHy5BXPM15/R3jJVoxmHHSU0aiW1TiEp4CLrCBVVlv0kYiV4Y
-BVOLcdszXK9czZoKmRBGQq9TJBMnac5pSlprbq7iNnjjwQCl59fNsAbS0hUuXk7LUPZrgTBB9sBh
-mOptwzC1ervsUmnxtVO7+klTo7JeryQlNelfQI+ClU8DGJg+GrfV24hPIPE/RarUl9V3V0BSusgF
-vfHXl/LEpAWYfA7R2j3CucVVqj2bWINpCbFnQtI32N8Cc20KqFqeibV0Y/DSj1bHkBhh+0Sm/wH+
-bnnII2oXeQAAAABJRU5ErkJggg==</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

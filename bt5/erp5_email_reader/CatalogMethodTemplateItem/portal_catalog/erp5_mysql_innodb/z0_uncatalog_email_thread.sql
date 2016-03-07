@@ -1,0 +1,1 @@
+DELETE FROM email_thread WHERE <dtml-sqltest uid op=eq type=int>

@@ -1,0 +1,111 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test EG5 eproject UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test EG5 eproject UI</td></tr>
+</thead>
+<tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_tests/erp5_web_e5g_eproject_ui_zuite/testE5gEproject_PreferenceReset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<!-- skin list -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_skins/erp5_hal_json_style/ERP5Site_reindexSkinList/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>skins ok</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+  <td></td>
+</tr>
+
+<!-- create sample data -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_tests/erp5_web_e5g_eproject_ui_zuite/testE5gEproject_CreateDataSample</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+  <td></td>
+</tr>
+
+
+<!-- Initialize -->
+<!-- DISABLE FOR NOW -->
+<!--
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/e5g_eproject/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>E-Project</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@data-i18n="E-Project"]</td>
+  <td>E-Project</td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Super Task</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//a[@href="#jio_key=project_module%2Fproject_0&amp;view=view"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//a[@href="#jio_key=task_module%2Ftask_0&amp;view=view"]</td>
+  <td>Super Task 0</td>
+</tr>
+-->
+
+</tbody>
+</table>
+</body>
+</html>

@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# Define the condition for the bloc is frozen or not.\n
-# The Bloc is frozen when:\n
-# - it\'s a Simulation Movement\n
-# - The user is not allowed to edit it\n
-# - it\'s a part of a block \n
-# - the object is from secondary layer\n
-\n
-return (not context.portal_membership.checkPermission(\'Modify portal content\', block.parent_activity.object)) or \\\n
-            (block.property_dict[\'sec_layer\']) or \\\n
-            (not ((block.position_x.relative_begin > 0) and \\\n
-                   (block.position_x.relative_end < 1) and \\\n
-                   (block.property_dict[\'stat\'] == 0)))\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>block</string> </value>
         </item>

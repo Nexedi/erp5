@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># This script must be overloaded to allow automatic creation of checks.\n
-# A use case for this functionnality is to cover the transition time  between\n
-# initial site installation and the time all processed checks a re supposed\n
-# to be known to the system beforehand, ie emitted during the site lifespan.\n
-\n
-# Return True is the creation is allowed.\n
-# Return False otherwise.\n
-return False\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

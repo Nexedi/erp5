@@ -49,38 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-""" display value in the cell according to (french) fiscality rules """\n
-context.log(cell_name, cell_value)\n
-\n
-if same_type(cell_value, 0) or same_type(cell_value, 0.0) : \n
-  number = cell_value\n
-  if number == 0 : \n
-    return ""\n
-\n
-  negative = number < 0\n
-  amount = str(abs(number))\n
-  indexes = range(len(amount))\n
-  indexes.reverse()\n
-  string = \'\'\n
-  count = 0\n
-  for i in indexes :\n
-    if not count % 3 :\n
-      string = \' \' + string\n
-    string = amount[i] + string\n
-    count += 1\n
-  if negative :\n
-    string = "(%s)"%string.strip()\n
-  return string\n
-else :\n
-  return cell_value\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>cell_value, cell_name</string> </value>
         </item>

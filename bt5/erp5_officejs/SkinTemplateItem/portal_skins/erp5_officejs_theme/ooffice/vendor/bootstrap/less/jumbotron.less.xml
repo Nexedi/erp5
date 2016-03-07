@@ -19,60 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-//\n
-// Jumbotron\n
-// --------------------------------------------------\n
-\n
-\n
-.jumbotron {\n
-  padding: @jumbotron-padding;\n
-  margin-bottom: @jumbotron-padding;\n
-  font-size: @jumbotron-font-size;\n
-  font-weight: 200;\n
-  line-height: (@line-height-base * 1.5);\n
-  color: @jumbotron-color;\n
-  background-color: @jumbotron-bg;\n
-\n
-  h1,\n
-  .h1 {\n
-    line-height: 1;\n
-    color: @jumbotron-heading-color;\n
-  }\n
-  p {\n
-    line-height: 1.4;\n
-  }\n
-\n
-  .container & {\n
-    border-radius: @border-radius-large; // Only round corners at higher resolutions if contained in a container\n
-  }\n
-\n
-  .container {\n
-    max-width: 100%;\n
-  }\n
-\n
-  @media screen and (min-width: @screen-sm-min) {\n
-    padding-top:    (@jumbotron-padding * 1.6);\n
-    padding-bottom: (@jumbotron-padding * 1.6);\n
-\n
-    .container & {\n
-      padding-left:  (@jumbotron-padding * 2);\n
-      padding-right: (@jumbotron-padding * 2);\n
-    }\n
-\n
-    h1,\n
-    .h1 {\n
-      font-size: (@font-size-base * 4.5);\n
-    }\n
-  }\n
-}\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

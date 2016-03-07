@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># return site of the user and possible counter on wich user can be assigned\n
-# XXX: this script should be named "Assignment_getPossibleSiteList", as it is not used anywhere else\n
-destination_value = context.getDestinationValue()\n
-if destination_value is None:\n
-  # must have an organisation defined to limit site diplayed\n
-  return [[\'\', \'\']]\n
-\n
-site_list = context.Delivery_getVaultItemList(\n
-  user_site=0,\n
-  vault_type=(\n
-    \'site\',\n
-    \'site/surface/banque_interne/guichet\',\n
-    \'site/surface/gros_paiement/guichet\',\n
-    \'site/surface/gros_versement/guichet\',\n
-    \'site/surface/operations_diverses/guichet\',\n
-  ),\n
-  first_level=1,\n
-  strict_membership=1,\n
-  leaf_node=0,\n
-  base_site=destination_value.getSite(),\n
-)\n
-return site_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

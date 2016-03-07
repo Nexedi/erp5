@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFActivity.ActiveResult import ActiveResult\n
-portal = context.getPortalObject()\n
-\n
-tracking_list = list(reversed(portal.portal_simulation.getCurrentTrackingList(aggregate_uid=context.getUid())))\n
-\n
-for previous_brain, next_brain in zip(tracking_list, tracking_list[1:]):\n
-  previous_delivery = portal.portal_catalog.getObject(previous_brain.delivery_uid)\n
-  next_delivery = portal.portal_catalog.getObject(next_brain.delivery_uid)\n
-  \n
-  if previous_delivery.getDestination() != next_delivery.getSource():\n
-    portal.restrictedTraverse(active_process).postResult(\n
-     ActiveResult(summary=script.getId(),\n
-         detail=\'%s has tracking error\' % context.getRelativeUrl(),\n
-         result=\'\',\n
-         severity=100))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>active_process, fixit=0, **kw</string> </value>
         </item>

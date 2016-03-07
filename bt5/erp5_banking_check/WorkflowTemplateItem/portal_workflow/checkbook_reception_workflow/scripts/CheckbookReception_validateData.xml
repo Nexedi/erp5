@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-object = state_change[\'object\']\n
-\n
-# Check that the destination is not empty\n
-destination = object.getDestination()\n
-if destination is None:\n
-  message = Message(domain="ui",message="Please select a destination")\n
-  raise ValidationFailed, (message,)\n
-\n
-# Check that the destination is not empty\n
-description = object.getDescription()\n
-if description in (None, \'\'):\n
-  message = Message(domain="ui",message="Please set a description")\n
-  raise ValidationFailed, (message,)\n
-\n
-# Check that there is a least one line\n
-if len(object.objectValues())==0:\n
-  message = Message(domain="ui",message="Please enter some check or checkbooks")\n
-  raise ValidationFailed, (message,)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

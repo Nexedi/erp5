@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-\n
-accounting_currency_reference_cache = container.REQUEST.get(\'%s.cache\' % script.id, {})\n
-def getAccountingCurrencyReference(section_relative_url):\n
-  try:\n
-    return accounting_currency_reference_cache[section_relative_url]\n
-  except KeyError:\n
-    reference = \'\'\n
-    if section_relative_url:\n
-      section = portal.restrictedTraverse(section_relative_url, None)\n
-      if section is not None:\n
-        reference = section.getProperty(\'price_currency_reference\')\n
-    accounting_currency_reference_cache[section_relative_url] = reference\n
-    return reference\n
-    \n
-return getAccountingCurrencyReference(brain.section_relative_url)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain, *args, **kw</string> </value>
         </item>

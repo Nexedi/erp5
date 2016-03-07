@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Initialize a KM site.\n
-"""\n
-portal = context.getPortalObject()\n
-\n
-# setup DMS settings\n
-portal.Zuite_setupDMS()\n
-\n
-if site_id:\n
-  portal.web_site_module[site_id].edit(layout_force_anonymous_gadget=1)\n
-\n
-# clear cache so UI is regenarated\n
-portal.portal_caches.clearAllCache()\n
-\n
-return "Created Successfully."\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>site_id=None, title=None</string> </value>
         </item>

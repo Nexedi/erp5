@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal_types = context.getPortalObject().portal_types\n
-portal_type_list = portal_types.searchFolder(portal_type=\'EGov Type\', validation_state = \'validated\')\n
-\n
-portal_type_anon_list = ()\n
-portal_type_auth_list = ()\n
-for portal_type in portal_type_list:\n
-  if portal_type.getStepAuthentication():\n
-    portal_type_auth_list += (portal_type.getTitle(),)\n
-  else:\n
-      portal_type_anon_list += (portal_type.getTitle(),)\n
-if context.portal_membership.isAnonymousUser():\n
-  return portal_type_anon_list\n
-return portal_type_auth_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

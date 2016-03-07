@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>all_career_step_list = context.contentValues(portal_type=\'Career\',\n
-                                             checked_permission=\'View\')\n
-\n
-career_step_list = []\n
-# only keep "active" career steps (and related to this organisation if given)\n
-for career_step in all_career_step_list :\n
-  if (subordination_relative_url is None or \\\n
-      career_step.getSubordination() == subordination_relative_url) and \\\n
-     career_step.getStartDate() and \\\n
-     career_step.getValidationState() not in (\'cancelled\', \'deleted\'):\n
-      career_step_list.append(career_step)\n
-    \n
-# sort them by start date\n
-career_step_list.sort(key=lambda x: x.getStartDate())\n
-for career_step in career_step_list :\n
-  # TODO: take the first date of the last active career range.\n
-  # for now, we only return the first one.\n
-  return career_step.getStartDate()\n
-\n
-raise ValueError, \'No Career Step Defined.\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>subordination_relative_url=None</string> </value>
         </item>

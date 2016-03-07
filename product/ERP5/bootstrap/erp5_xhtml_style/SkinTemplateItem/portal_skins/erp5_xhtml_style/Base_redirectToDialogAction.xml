@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-if \'?\' in dialog_action_url:\n
-  dialog_action_url = \'%s&form_id=%s\' % (dialog_action_url, form_id)\n
-else:\n
-  dialog_action_url = \'%s?form_id=%s\' % (dialog_action_url, form_id)\n
-\n
-\n
-if format:\n
-  # Add format parameter if not null\n
-  dialog_action_url += \'&format=%s\' % (format,)\n
-return container.REQUEST.RESPONSE.redirect(dialog_action_url)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>dialog_action_url, form_id=\'\', format=None</string> </value>
         </item>

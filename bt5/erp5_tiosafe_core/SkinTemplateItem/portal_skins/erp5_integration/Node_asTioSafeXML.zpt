@@ -1,0 +1,34 @@
+<node xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal" tal:attributes="type here/getPortalType"><tal:block
+    tal:condition="python: here.getPortalType() == 'Person'"><tal:block
+    tal:condition="python: getattr(here, 'first_name', None) and here.getFirstName()">
+  <firstname tal:content="here/getFirstName" /></tal:block><tal:block
+    tal:condition="python: getattr(here, 'last_name', None) and here.getLastName()">
+  <lastname tal:content="here/getLastName" /></tal:block></tal:block><tal:block
+    tal:condition="python: here.hasTitle() and here.getPortalType() !='Person'">
+  <title tal:content="here/getTitle" /></tal:block><tal:block
+    tal:condition="here/getDefaultEmailText">
+  <email tal:content="python: here.getDefaultEmailText()" /></tal:block><tal:block
+    tal:condition="python: getattr(here, 'start_date', None) and here.getStartDate()">
+  <birthday tal:content="python: here.getStartDate()" /></tal:block><tal:block
+    tal:condition="python: getattr(here, 'default_telephone', None) and here.default_telephone.getTelephoneNumber()">
+  <phone tal:content="python: here.default_telephone.getTelephoneNumber()" /></tal:block><tal:block
+    tal:condition="python: getattr(here, 'mobile_telephone', None) and here.mobile_telephone.getTelephoneNumber()">
+  <cellphone tal:content="python: here.mobile_telephone.getTelephoneNumber()" /></tal:block><tal:block
+    tal:condition="python: getattr(here, 'default_fax', None) and here.default_fax.getTelephoneNumber()">
+  <fax tal:content="python: here.default_fax.getTelephoneNumber()" /></tal:block>
+  <address tal:repeat="address here/Node_getAddressList"><tal:block
+      tal:condition="address/getStreetAddress">
+    <street tal:content="address/getStreetAddress" /></tal:block><tal:block
+      tal:condition="address/getZipCode">
+    <zip tal:content="address/getZipCode" /></tal:block><tal:block
+      tal:condition="address/getCity">
+    <city tal:content="address/getCity" /></tal:block><tal:block
+      tal:condition="address/getRegion">
+    <country tal:content="address/getRegion" /></tal:block>
+  </address>
+  <category tal:repeat="role here/Node_getRoleList" tal:content="role"/><tal:block
+    tal:condition="python: here.getPortalType() == 'Person' and
+    here.getSubordinationTitle()">
+  <relation tal:define="context_path options/context_document" tal:content="python: here.Node_getRelation(context_document=context_path)"/></tal:block>
+</node>

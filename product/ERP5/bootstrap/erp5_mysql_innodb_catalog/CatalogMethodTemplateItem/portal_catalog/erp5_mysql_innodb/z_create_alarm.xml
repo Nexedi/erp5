@@ -57,19 +57,6 @@
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string># Host:\n
-# Database: test\n
-# Table: \'catalog\'\n
-#\n
-CREATE TABLE `alarm` (\n
-  `uid` BIGINT UNSIGNED NOT NULL,\n
-  `alarm_date` DATETIME,\n
-  PRIMARY KEY  (`uid`)\n
-) ENGINE=InnoDB;\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

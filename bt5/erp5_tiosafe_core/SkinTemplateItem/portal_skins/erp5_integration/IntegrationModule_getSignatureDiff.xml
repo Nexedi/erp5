@@ -49,33 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>im = context\n
-pub = im.getSourceSectionValue()\n
-pub_sub_list = pub.objectValues()\n
-if not len(pub_sub_list):\n
-  raise ValueError, "%s sub in pub %s for im %s" %(len(pub_sub_list), pub.getPath(), im.getPath())\n
-else:\n
-  pub_sub = pub_sub_list[0]\n
-#pub_sub = im.getSourceSectionValue().objectValues()[0]\n
-\n
-sub = im.getDestinationSectionValue()\n
-\n
-pub_xml = []\n
-sub_xml = []\n
-\n
-for sign in sub.objectValues():\n
-  pub_sign = pub_sub.get(sign.getId(), "No signature")\n
-  pub_xml.append(pub_sign.getData(\'\'))\n
-  sub_xml.append(sign.getData(\'\'))\n
-\n
-pub_xml = \'\\n\'.join(pub_xml)\n
-sub_xml = \'\\n\'.join(sub_xml)\n
-\n
-return context.diffXML(sub_xml, pub_xml)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

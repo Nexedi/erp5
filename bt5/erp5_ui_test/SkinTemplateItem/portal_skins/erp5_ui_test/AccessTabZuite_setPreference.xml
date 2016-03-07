@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Set a preference"""\n
-preference_tool = context.portal_preferences\n
-preference = getattr(preference_tool, "access_tab_test_preference", None)\n
-\n
-if preference is None:\n
-  preference = preference_tool.newContent(id="access_tab_test_preference",\\\n
-                                              portal_type="Preference")\n
-\n
-if preference.getPreferenceState() != "enabled":\n
-   preference.enable()\n
-\n
-return \'Set Preference Successfully.\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -50,52 +50,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:metal="http://xml.zope.org/namespaces/metal">\n
-  <tal:block metal:define-macro="init">\n
-    <tr>\n
-      <td>setTimeout</td>\n
-      <td>90000</td>\n
-      <td></td>\n
-    </tr>\n
-    <tr>\n
-      <td>store</td>\n
-      <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>\n
-      <td>base_url</td>\n
-    </tr>\n
-    <tr> <!-- reset language to en, in case previous test failed and left the language changed -->\n
-      <td>open</td>\n
-      <td>${base_url}/Base_doLanguage?select_language=en</td>\n
-      <td></td>\n
-    </tr>\n
-  </tal:block>\n
-\n
-<tal:block metal:define-macro="wait_for_activities">\n
-  <!-- Wait for activities to finish -->\n
-  <tr>\n
-    <td>openAndWait</td>\n
-    <td>${base_url}/Zuite_waitForActivities</td>\n
-    <td></td>\n
-  </tr>\n
-  <tr>\n
-    <td>verifyTextPresent</td>\n
-    <td>Done.</td>\n
-    <td></td>\n
-  </tr> \n
-</tal:block>\n
-\n
-<tal:block metal:define-macro="expected_failure_for_anonymous_selection">\n
-  <tal:block tal:condition="here/portal_selections/isAnonymous"> (expected failure)</tal:block>\n
-</tal:block>\n
-\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

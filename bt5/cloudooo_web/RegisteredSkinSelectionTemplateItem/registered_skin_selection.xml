@@ -1,11 +1,11 @@
 <registered_skin_selection>
  <skin_folder_selection>
   <skin_folder>cloudooo_erp5_base</skin_folder>
-  <skin_selection>View,Cloudooo</skin_selection>
+  <skin_selection>Cloudooo,View</skin_selection>
  </skin_folder_selection>
  <skin_folder_selection>
   <skin_folder>cloudooo_erp5_ingestion</skin_folder>
-  <skin_selection>View,Cloudooo</skin_selection>
+  <skin_selection>Cloudooo,View</skin_selection>
  </skin_folder_selection>
  <skin_folder_selection>
   <skin_folder>cloudooo_web</skin_folder>

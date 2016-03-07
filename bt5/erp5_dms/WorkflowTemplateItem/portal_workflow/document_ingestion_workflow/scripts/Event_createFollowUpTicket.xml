@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># this script allows to create a new follow up ticket for\n
-# the current event if the event isn\'t already linked with\n
-# an existing ticket\n
-\n
-event = state_change[\'object\']\n
-\n
-if not(len(event.getFollowUpValueList())):\n
-  history = event.portal_workflow.getInfoFor(event, \'history\', wf_id=\'event_workflow\')\n
-\n
-  for history_item in history[::-1]:\n
-    if history_item[\'action\'] == \'assign_action\':\n
-      follow_up_ticket_type = history_item[\'follow_up_ticket_type\']\n
-      follow_up_ticket_title = history_item[\'follow_up_ticket_title\']\n
-      break\n
-\n
-  event.Event_createFollowUpTicket(follow_up_ticket_title, follow_up_ticket_type)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

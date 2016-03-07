@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
-\n
-if not person:\n
-  return None\n
-\n
-web_page = portal.portal_catalog.getResultValue(reference=reference)\n
-\n
-follow_up_list = web_page.getFollowUpList()\n
-if person.getRelativeUrl() not in follow_up_list:\n
-  value_list = follow_up_list\n
-  value_list.append(person)\n
-  web_page.setFollowUpValueList(value_list)\n
-\n
-return web_page\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>reference</string> </value>
         </item>

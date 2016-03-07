@@ -33,40 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/global_definitions"/>\n
-\n
-<tal:block \n
-  tal:define="current_web_section python: context.REQUEST.get(\'current_web_section\', here);\n
-              current_web_section python:\n
-                  test(current_web_section.getPortalType()==\'Web Site\', here, current_web_section);\n
-              current_web_section_url python: current_web_section.absolute_url();\n
-              cancel_url string:${current_web_section_url}/view">\n
-\n
-      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/>\n
-\n
-      <div class="portal-column"\n
-           tal:condition="python:active_knowledge_pad is not None"\n
-           tal:attributes="class python: test(isAnon or isAnonymousKnowledgePadUsed, \n
-                                              \'portal-column-undraggable\', \n
-                                              \'portal-column\');\n
-                           id python: \'portal-column-%s\' %pad_column">\n
-\n
-        <tal:block define="layout python:active_knowledge_pad.KnowledgePad_getBoxColumnLayout(real_context=here)"\n
-                   condition="python: len(layout)>=pad_column+1"\n
-                   replace="structure python:\n
-                  active_knowledge_pad.KnowledgePad_viewColumnWidget(section_layout=layout[pad_column],  \n
-                                                                     real_context=here,\n
-                                                                     cancel_url=cancel_url)"/>\n
-    </div>\n
-\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

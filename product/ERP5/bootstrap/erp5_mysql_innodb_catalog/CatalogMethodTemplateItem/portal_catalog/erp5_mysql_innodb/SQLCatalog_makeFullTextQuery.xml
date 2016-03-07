@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Default full text searchable key implementation.\n
-"""\n
-from Products.ZSQLCatalog.SQLCatalog import ComplexQuery\n
-from Products.ZSQLCatalog.SQLCatalog import Query\n
-\n
-query = ComplexQuery(Query(title=value),\n
-                     Query(reference=value),\n
-                     operator="OR")\n
-return query\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>value</string> </value>
         </item>

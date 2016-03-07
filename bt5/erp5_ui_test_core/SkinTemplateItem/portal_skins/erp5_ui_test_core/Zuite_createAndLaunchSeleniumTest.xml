@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  test_list is composed by [(full_test_html , title), ]\n
-\n
-"""\n
-\n
-zuite = context.getPortalObject().portal_tests.Zuite_addZuite(zuite_id)\n
-\n
-for text, title in test_list:\n
-  zuite.Zuite_addTest(None, title, text)\n
-\n
-return zuite.Base_redirect("core/TestRunner.html?auto=true&test=..%2Ftest_suite_html&resultsUrl=..%2FpostResults")\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>test_list, zuite_id</string> </value>
         </item>

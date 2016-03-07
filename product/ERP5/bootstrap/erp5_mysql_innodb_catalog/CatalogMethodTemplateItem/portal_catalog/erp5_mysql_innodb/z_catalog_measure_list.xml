@@ -52,40 +52,6 @@ getMeasureRowList</string> </value>
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-DELETE FROM `measure` WHERE\n
-  <dtml-sqltest uid column="resource_uid" type="int" multiple>;\n
-\n
-<dtml-let measure_list="[]">\n
-  <dtml-in getMeasureRowList prefix="loop">\n
-    <dtml-call expr="loop_item and measure_list.extend(loop_item)">\n
-  </dtml-in>\n
-\n
-  <dtml-if measure_list>\n
-    <dtml-var sql_delimiter>\n
-\n
-REPLACE INTO `measure`\n
-VALUES\n
-    <dtml-in measure_list prefix="loop">\n
-(\n
-  <dtml-sqlvar expr="loop_item[\'uid\']" type="int">,\n
-  <dtml-sqlvar expr="loop_item[\'resource_uid\']" type="int">,\n
-  <dtml-sqlvar expr="loop_item[\'variation\']" type="string">,\n
-  <dtml-sqlvar expr="loop_item[\'metric_type_uid\']" type="int">,\n
-  <dtml-sqlvar expr="loop_item[\'quantity\']" type="float">\n
-)\n
-<dtml-unless sequence-end>,</dtml-unless>\n
-    </dtml-in>\n
-\n
-  </dtml-if>\n
-</dtml-let>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

@@ -1,0 +1,8 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+           tal:define="configured_status_dict here/ERP5Site_getConfiguredStatusDict;
+                       express_mode configured_status_dict/express_mode;
+                       dummy python: request.RESPONSE.setHeader('Content-Type', 
+                                                                'text/html;; charset=utf-8');">
+  <tal:block replace="structure python:here.ERP5Site_getExpressSupportHTML(express_mode)"></tal:block>
+</tal:block>

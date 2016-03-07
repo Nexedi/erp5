@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>\'\'\'Returns the function of this career or person.\n
-\n
-We can only select leaves for career of person functions, so we don\'t show the\n
-function if the function is a node in the function tree (this happens when\n
-function is acquired from the subordination organisation).\n
-\'\'\'\n
-function_value = context.getFunctionValue()\n
-if function_value is None or len(function_value):\n
-  return None\n
-return context.getFunction()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

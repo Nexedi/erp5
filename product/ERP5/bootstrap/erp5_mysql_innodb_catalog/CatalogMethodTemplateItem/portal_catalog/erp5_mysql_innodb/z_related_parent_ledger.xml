@@ -54,17 +54,6 @@ query_table="catalog"</string> </value>
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.ledger.getUid()">\n
-AND <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
-<dtml-var RELATED_QUERY_SEPARATOR>\n
-<dtml-var table_0>.uid = <dtml-var query_table>.parent_uid
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

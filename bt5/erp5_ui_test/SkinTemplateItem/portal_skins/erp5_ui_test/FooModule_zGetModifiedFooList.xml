@@ -111,24 +111,6 @@
             <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-SELECT\n
-  uid, path, CONCAT(\'Foo \', title) AS title\n
-FROM\n
-  catalog\n
-WHERE\n
-  portal_type = \'Foo\'\n
-  AND parent_uid = <dtml-var "context.getUid()">\n
-ORDER BY\n
-  id\n
-LIMIT 1000\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

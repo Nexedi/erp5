@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Image" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="Image" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24,15 +21,6 @@
         <item>
             <key> <string>content_type</string> </key>
             <value> <string>image/png</string> </value>
-        </item>
-        <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAABAAAAAABCAYAAABADtw1AAAA9UlEQVRYw9WWUQ7DIAxDk3QX35V2
-nZ2leF9sWqXyKiw0jT9kCI5xCHl/PBXGSGt3RFTGT883R2b+lkDFX4/l6mnxCWBA8gfh0jj+Ldf6
-E/mXl38F6bNWX/d5cs/v8h3X9bliH+Kz9/iOrx1wDfGUF5/GhuuaxR/zC5nxIf+mS/rM+gPza1rr
-D6qPkOUPrj9Z/nLju/zL7JD0Pq/+39Dpov7cPP7UP1toKs5nXtZ+5TbGgX+HT/kd6pTz+Z63rPF6
-1SV9zvAEft0epzjmM47fgF//AMzmx7jnj8T7TU9/t36xe6+t713j/ErlxXffD9CP9KH2Q/tfNH32
-Eo97AggAAAAASUVORK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>

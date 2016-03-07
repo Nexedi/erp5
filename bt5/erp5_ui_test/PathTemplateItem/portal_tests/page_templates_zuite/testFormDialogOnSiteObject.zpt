@@ -1,0 +1,81 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      tal:define="value_a string: DumbValueA;
+                  value_b string: DumbValueB;
+                  other_value_a string: OtherValueA;
+                  other_value_b string: OtherValueB;">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test form_dialog called on a site object and Base_callDialogMethod executed from this dialog</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test form_dialog called on a site object and Base_callDialogMethod executed from this dialog</td></tr>
+</thead><tbody>
+<!--
+  This test checks that a dialog can be displayed and used on the site object.
+  This is used, for example, to create a module.
+-->
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/FooModule_viewSearchDialog"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_id</td>
+  <td tal:content="value_a"></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_title</td>
+  <td tal:content="value_b"></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@name='Base_callDialogMethod:method']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>listbox_id</td>
+  <td tal:content="value_a"></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>listbox_title</td>
+  <td tal:content="value_b"></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/FooModule_viewSearchDialog"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_id</td>
+  <td tal:content="other_value_a"></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_title</td>
+  <td tal:content="other_value_b"></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@name='Base_callDialogMethod:method']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>listbox_id</td>
+  <td tal:content="other_value_a"></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>listbox_title</td>
+  <td tal:content="other_value_b"></td>
+</tr>
+</body>
+</html>

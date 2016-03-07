@@ -1,0 +1,213 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Dynamic MatrixBox Cell Creation</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Dynamic MatrixBox Cell Creation</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/MatrixBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?create_line:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/1/FooLine_viewDynamicMatrixBox</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>field_matrixbox_quantity_cell_0_0_0</td>
+  <td>1.0</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_matrixbox_quantity_cell_0_0_0</td>
+  <td>1.0</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_matrixbox_quantity_cell_0_1_0</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_matrixbox_quantity_cell_1_0_0</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_matrixbox_quantity_cell_1_1_0</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/1/Folder_viewContentList?reset:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[4]</td>
+  <td>Foo Line</td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]/div[3]//span[@id='data_short']</td>
+  <td>Foo Line</td>
+</tr>
+</tal:block>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/1/FooLine_viewDynamicMatrixBox</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_matrixbox_quantity_cell_0_1_0</td>
+  <td>2.0</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_matrixbox_quantity_cell_0_0_0</td>
+  <td>1.0</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_matrixbox_quantity_cell_0_1_0</td>
+  <td>2.0</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_matrixbox_quantity_cell_1_0_0</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_matrixbox_quantity_cell_1_1_0</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/1/Folder_viewContentList?reset:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+
+<!-- Matrix box editable fields can use the cell coordinates as "cell_index" in their TALES-->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/1/cell_0_0/getTitle</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>['c', 'four']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/1/cell_0_1/getTitle</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>['c', 'three']</td>
+  <td></td>
+</tr>
+
+<!-- Matrix box global properties fields can be used to edit all cells with the
+same values.
+The field must be in the 'bottom' group for this to work.
+-->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/1/cell_0_0/getFooCategoryTitleList</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>['a', 'b']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/1/cell_0_1/getFooCategoryTitleList</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>['a', 'b']</td>
+  <td></td>
+</tr>
+
+</tbody>
+</table>
+</body>
+</html>

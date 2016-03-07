@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>web_site = context.getWebSiteValue()\n
-search_area_web_section_id = web_site.getLayoutProperty(\'search_area_web_section_id\',\n
-                                                        default=None)\n
-if search_area_web_section_id:\n
-  search_section = web_site[search_area_web_section_id]\n
-else:\n
-  search_section = web_site\n
-\n
-search_section.Base_redirect(form_id=\'WebSite_viewMemberList\', \n
-                keep_items=dict(reset=1,\n
-                                search_section_path=context.getRelativeUrl()))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

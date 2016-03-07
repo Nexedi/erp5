@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-portal = context.getPortalObject()\n
-\n
-user_name = context.portal_membership.getAuthenticatedMember().getUserName()\n
-\n
-person_or_organisation_list = portal.portal_catalog(\\\n
-                                portal_type=[\'Organisation\', \'Person\'], \n
-                                reference=user_name)\n
-\n
-if len(person_or_organisation_list) > 0:\n
-  return True\n
-return False\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

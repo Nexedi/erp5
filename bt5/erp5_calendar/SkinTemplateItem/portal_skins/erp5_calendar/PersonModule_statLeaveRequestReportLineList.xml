@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.PythonScripts.standard import Object\n
-request = container.REQUEST\n
-\n
-return [Object( uid=\'new_0\',\n
-                total=request[\'total_time\'],\n
-                **request[\'total_time_per_resource\']) ]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

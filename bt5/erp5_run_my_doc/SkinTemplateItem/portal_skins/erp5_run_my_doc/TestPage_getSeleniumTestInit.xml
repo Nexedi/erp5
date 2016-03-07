@@ -49,42 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-request = context.REQUEST\n
-\n
-url = request.get(\'url\', None)\n
-if url is not None:\n
-  html_init = """<tr>\n
-          <td>store</td>\n
-          <td>%s</td>\n
-          <td>base_url</td>\n
-        </tr>\n
-""" % url\n
-else:\n
-  html_init = """<span metal:use-macro="container/Zuite_CommonTemplate/macros/init" style="display: none;">init</span>"""\n
-\n
-html_init += """        <tr>\n
-          <td>store</td>\n
-          <!-- ERP5TypeTestCase is the default for any UnitTest -->\n
-          <td>%s</td>\n
-          <td>base_user</td>\n
-         </tr>\n
-""" % request.get(\'user\', "ERP5TypeTestCase")\n
-\n
-html_init += """        <tr>\n
-          <td>store</td>\n
-          <td>%s</td>\n
-          <td>base_password</td>\n
-         </tr>""" % request.get(\'password\', "")\n
-\n
-return html_init\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

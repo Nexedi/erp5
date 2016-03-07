@@ -1,0 +1,67 @@
+<html>
+<head><title>Test for Accounting module main lisbox</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Accounting Transaction Module and transactions with employees, which acquire
+the group category from their subordination
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionListWithPersons">
+
+<!-- setup {{{ -->
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<!-- }}} -->
+
+<!-- transactions from the person are not displayed in the list -->
+<!-- Check default values {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<!-- 1 item by default -->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+<!-- third party -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]</td>
+  <td>John Smith</td>
+</tr>
+
+<!-- transaction reference -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[7]</td>
+  <td>source_reference</td>
+</tr>
+
+<!-- transaction debit & credit -->
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[9]</td>
+  <td>1100.00</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[10]</td>
+  <td>1100.00</td>
+</tr>
+ 
+<!-- }}} -->
+
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

@@ -1,0 +1,48 @@
+<tal:block tal:define="section_list python:options.get('section_list');
+                       collapse_depth python:options.get('collapse_depth')" >
+
+  <tal:block tal:repeat="section section_list">
+
+    <ul tal:define="exists_subsections python: section['subsection'] is not None;
+                    show_collapse python: collapse_depth==section['level'] and exists_subsections;
+                    class_name string:level-${section/level};
+                    class python: test(show_collapse, 'collapse-list-node %s' %class_name , class_name);
+                    subsection_html python: here.WebSection_viewSubsectionRenderer(section_list = section['subsection'],
+                                                                                   collapse_depth=collapse_depth);"
+        tal:attributes="class class">
+
+      <li>
+        <a class="section-link"
+           tal:condition="not: show_collapse"
+           tal:content="section/translated_title"
+           tal:attributes="href section/url;
+                           title section/translated_title">
+        </a>
+
+      <tal:block tal:condition="show_collapse"
+                 tal:define="section_dom_id python: section['url'].replace('http://', '').replace('/', '_').replace(':', '_').replace('.', '_');
+                             image_dom_id string:image_${section_dom_id};">
+
+        <img src="images/tree_closed.png" 
+             tal:attributes="id image_dom_id;
+                             onclick string:toggleSection('${section_dom_id}', '${image_dom_id}')"/>
+        <span tal:content="section/translated_title"
+              class="collapse-link"
+              tal:attributes="onclick string:toggleSection('${section_dom_id}', '${image_dom_id}');
+                              title section/translated_title"/>
+        <div class="collapse-content"
+             style="display:none;"
+             tal:attributes="id section_dom_id"
+             tal:content="structure subsection_html"/>
+       
+      </tal:block>
+
+      <span tal:condition="not: show_collapse"
+            tal:replace="structure subsection_html"/>
+
+      </li>
+
+    </ul>
+  </tal:block>
+
+</tal:block>

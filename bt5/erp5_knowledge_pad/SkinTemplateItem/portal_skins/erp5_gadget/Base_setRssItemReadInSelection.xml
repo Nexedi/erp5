@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal_selection = getattr(context,\'portal_selections\')\n
-params = portal_selection.getSelectionParamsFor(selection_name)\n
-rss_read_item_list = params.get(\'rss_read_item_list\', [])\n
-params[\'rss_read_item_list\'] = rss_read_item_list\n
-if item not in rss_read_item_list:\n
-  rss_read_item_list.append(item)\n
-portal_selection.setSelectionParamsFor(selection_name, params)\n
-return item\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection_name,item</string> </value>
         </item>

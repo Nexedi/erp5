@@ -1,0 +1,107 @@
+.business_configuration_list {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.box {
+  background: #eaf8fc;
+  background-image: -moz-linear-gradient(#fff, #d4e8ec);
+  background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #d4e8ec),color-stop(1, #fff));
+
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+
+  border-width: 1px;
+  border-style: solid;
+  border-color: #c4d9df #a4c3ca #83afb7;
+  width: 250px;
+  height: 300px;
+  padding: 10px;
+  margin: 15px 20px 5px;
+  overflow: hidden; /* Clear floats */
+}
+
+.box span#business-configuration-title, span#business-configuration-title:hover {
+  display: block;
+  background-color: transparent;
+  width: 100%;
+  text-align: center;
+
+  font-family:arial, sans-serif;
+  font-size:12px;
+  font-weight:bold;
+  letter-spacing:1px;
+  list-style-type:none;
+  margin-bottom:10px;
+
+  text-transform:uppercase;
+
+}
+
+.box span:hover {
+  background-color: transparent;
+}
+
+.box img {
+  background-color: transparent;
+  padding:1px;
+  border:2px solid #ccc;
+  height: 150px;
+  max-width: 225px;
+  margin-top: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.box img:hover {
+  border: 2px solid #d4e8ec;
+}
+
+.box span#span-business-configuration-description {
+  background-color: transparent;
+  font-size: 10px;
+  float: left;
+  padding-top: 15px;
+  padding-left: 15px;
+}
+
+.box button {
+  display: block;
+  margin-top: 65px;
+  margin-left: auto;
+  margin-right: auto;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 22px;
+  color: #ffffff;
+  padding: 5px 35px;
+  background: -moz-linear-gradient(
+    top,
+    #fff3db 0%,
+    #ffc821 25%,
+    #ff3c00);
+  background: -webkit-gradient(
+    linear, left top, left bottom, 
+    from(#fff3db),
+    color-stop(0.25, #ffc821),
+    to(#ff3c00));
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border: 1px solid #b85f00;
+  -moz-box-shadow:
+    0px 1px 3px rgba(000,000,000,0.5),
+    inset 0px -1px 0px rgba(255,255,255,0.7);
+  -webkit-box-shadow:
+    0px 1px 3px rgba(000,000,000,0.5),
+    inset 0px -1px 0px rgba(255,255,255,0.7);
+  text-shadow:
+    0px -1px 1px rgba(000,000,000,0.3),
+    0px 1px 0px rgba(255,255,255,0.3);
+}
+
+.box button:hover {
+  border: 1px solid #d4e8ec;
+}

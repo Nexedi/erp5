@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title>Listbox Compact Widget</title>
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="handlebars.js"></script>
+
+    <script id="listbox-widget-header" type="text/x-handlebars-template">
+      <div class="ui-header ui-table-header ui-bar-c ui-corner-all">
+        {{#if left_link_list}}
+          <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">
+            <div class="ui-controlgroup-controls">
+            {{#each left_link_list}}
+              <a href="{{link_href}}" data-i18n="{{link_title}} class="ui-responsive ui-btn ui-btn-icon-right ui-icon-carat-r ui-first-child ui-last-child">{{link_title}}</a>
+            {{/each}}
+            </div>
+          </div>
+        {{/if}}
+        <h1 class="ui-title">{{listbox_title}}</h1>
+        {{#if right_link_list}}
+          <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">
+            <div class="ui-controlgroup-controls">
+            {{#each right_link_list}}
+              <a href="{{link_href}}" data-i18n="{{link_title}}" class="ui-responsive ui-btn ui-btn-icon-right ui-icon-carat-r ui-first-child ui-last-child">{{link_title}}</a>
+            {{/each}}
+          </div>
+        </div>
+        {{/if}}
+      </div>
+    </script>
+
+    <script id="listbox-widget-table" type="text/x-handlebars-template">
+      <table class="ui-responsive ui-body-c ui-table-inset custom-force-list">
+        <thead class="ui-bar-inherit">
+          <tr>
+            {{#each column_list}}
+              <th>{{column_title}}</th>
+            {{/each}}
+          </tr>
+        </thead>
+        {{> listbox-widget-table-partial}}
+        <tfoot class="ui-bar-inherit"></tfoot>
+      </table>
+    </script>
+
+    <script id="listbox-widget-table-partial" type="text/x-handlebars-template">
+      <tbody>
+      {{#each table_row_list}}
+        <tr>
+        {{#each table_cell_list}}
+          <td><a class="ui-link" href="{{cell_href}}">{{cell_title}}</a></td>
+        {{/each}}
+        </tr>
+      {{/each}}
+      </tbody>
+    </script>
+
+    <!-- custom script -->
+    <script src="gadget_global.js"></script>
+    <script src="gadget_e5g_ecrm_field_listbox_widget.js" type="text/javascript"></script>
+
+    </head>
+  <body>
+    <div class="custom-grid-wrap">
+      <div class="custom-grid ui-corner-all ui-body-inherit ui-shadow ui-corner-all">
+        <div class="ui-body-c ui-corner-all"></div>
+      </div>
+    </div>
+  </body>
+</html>

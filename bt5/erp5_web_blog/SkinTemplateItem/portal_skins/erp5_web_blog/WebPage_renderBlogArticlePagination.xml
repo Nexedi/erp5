@@ -33,28 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block\n
-  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-  xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
-  tal:define="pagination here/WebPage_getBlogArticlePagination;\n
-              prev python:pagination[0];\n
-              next python:pagination[1];\n
-              web_section_url python:here.getWebSectionValue().absolute_url();">\n
-  <div class="blog-previous-article">\n
-    <a href="prev_url" tal:condition="python:prev is not None" tal:content="prev/title | prev/reference" tal:attributes="href python:\'%s/%s\' % (web_section_url, prev.reference)" />\n
-  </div>\n
-  <div class="blog-next-article">\n
-    <a href="next_url" tal:condition="python:next is not None" tal:content="next/title | next/reference" tal:attributes="href python:\'%s/%s\' % (web_section_url, next.reference)" />\n
-  </div>\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

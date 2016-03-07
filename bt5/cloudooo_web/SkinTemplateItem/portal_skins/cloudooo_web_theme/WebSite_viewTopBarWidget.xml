@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -42,29 +39,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<tal:comment replace="nothing">\n
-  This widget displays the top bar of Web Site\n
-</tal:comment>\n
-\n
-\n
-<tal:block tal:define="current_web_site_url python:request.get(\'current_web_site_url\', \'\');\n
-                       current_web_site python:request.get(\'current_web_site\', here);\n
-                       isAnon python: context.portal_membership.isAnonymousUser()">\n
-\n
-<a tal:attributes="href python: isAnon and current_web_site_url or current_web_site_url + \'/WebSite_logout\'">\n
- <div id="logo">\n
-  </div>\n
-</a>\n
-\n
-</tal:block>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>
@@ -75,6 +49,10 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>WebSite_viewTopBarWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

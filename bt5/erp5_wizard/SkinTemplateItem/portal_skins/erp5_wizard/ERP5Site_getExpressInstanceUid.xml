@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># ERP5 Site is set by erp5_site_global_id\n
-# but fallback to erp5_sql_connection.connection_string for old sites\n
-portal = context.getPortalObject()\n
-erp5_site_global_id = getattr(portal, \'erp5_site_global_id\', None)\n
-\n
-if erp5_site_global_id is None:\n
-  erp5_site_global_id = portal.erp5_sql_connection.connection_string.split("@")[0]\n
-\n
-return erp5_site_global_id\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

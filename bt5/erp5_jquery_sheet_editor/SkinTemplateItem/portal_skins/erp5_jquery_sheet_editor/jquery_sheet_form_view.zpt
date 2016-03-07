@@ -1,0 +1,31 @@
+<tal:block tal:replace="nothing">
+</tal:block>
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block metal:define-macro="master"
+             tal:define="css_list_jquery_template python:['jquery/plugin/sheet/jquery.sheet.css',
+                                  'jquery/plugin/colorpicker/jquery.colorPicker.css',
+                                  'jquery.sheet.erp5.css',
+                                  'jquery_sheet_theme/sheet_default_theme.css',
+];
+                        js_list_jquery_template python:['jquery/core/jquery.js',
+                                                  'jquery/plugin/sheet/jquery.sheet.js',
+                                                  'jquery/plugin/mbmenu/mbMenu.min.js',
+                                                  'jquery/ui/js/jquery-ui.js',
+                                                  'jquery/plugin/jqchart/jgcharts.min.js',
+                                                  'jquery/plugin/colorpicker/jquery.colorPicker.min.js',
+                                                  'jquery/plugin/elastic/jquery.elastic.min.js',
+                                                  'jquery/plugin/sheet/jquery.sheet.erp5.js',
+];
+                         global css_list css_list | python:[];
+                         global js_list js_list | python:[];
+                         dummy  python:css_list.extend(css_list_jquery_template);
+                         dummy  python:js_list.extend(js_list_jquery_template);">
+    <tal:block metal:use-macro="here/view_main/macros/master">
+      <tal:block metal:fill-slot="main">
+        <tal:block metal:use-macro="here/form_render/macros/master" />
+      </tal:block>
+    </tal:block>
+  </tal:block>
+</tal:block>

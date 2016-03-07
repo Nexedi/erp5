@@ -100,30 +100,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!doctype html>\n
-<html manifest="gadget_jabberconnection.appcache">\n
-  <head>\n
-    <meta charset="utf-8">\n
-    <title>Connection</title>\n
-\n
-    <script src="rsvp.js"></script>\n
-    <script src="renderjs.js"></script>\n
-    <script src="strophe.js"></script>\n
-    <script src="gadget_global.js" ></script>\n
-\n
-    <script src="gadget_jabberconnection.js"></script>\n
-  </head>\n
-  <body>\n
-  </body>\n
-</html>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>RenderJS Gadget Jabber Connection</string> </value>
         </item>

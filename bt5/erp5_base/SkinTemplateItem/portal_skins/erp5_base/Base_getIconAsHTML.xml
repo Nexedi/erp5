@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""Create html to display icon of object)"""\n
-icon = context.getIcon()\n
-is_document = getattr(context, "isDocument", False) and context.getPortalType() != "Web Page"\n
-\n
-html = "<img src=\'%s\' alt=\'Object Icon\' />" % icon\n
-\n
-if (is_document):\n
-  download_url = "%s/Base_download" % context.absolute_url()\n
-  html = "<a href=\'%s\' title=\'Download Document\'>%s</a>" % (download_url, html)\n
-\n
-return html\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

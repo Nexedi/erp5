@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-Returns a document by its reference in a gadget.\n
-"""\n
-\n
-request = context.REQUEST\n
-portal = context.getPortalObject()\n
-\n
-if box_relative_url:\n
-  box = portal.restrictedTraverse(box_relative_url)\n
-preferences = box.KnowledgeBox_getDefaultPreferencesDict()\n
-reference=preferences.get(\'preferred_document_reference\', None)\n
-if reference is not None:\n
-  web_page_list = context.getDocumentValueList(reference=reference, all_languages=True,\n
-                                         portal_type=\'Web Page\')\n
-  if len(web_page_list):\n
-    return \'<div class="web-page-renderer">%s</div>\' %web_page_list[0].getObject().asStrippedHTML()\n
-\n
-return \'No document\'\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>box_relative_url=None, box=None, **kw</string> </value>
         </item>

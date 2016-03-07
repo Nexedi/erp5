@@ -1,0 +1,116 @@
+<tal:block tal:define="NEWS_LEN NEWS_LEN | python:10;
+                       TASK_LEN TASK_LEN | python:10;">
+<tal:block metal:define-macro="act">
+ <tal:block tal:define="tasks python: list(here.WebSite_getPendingEventInfoList())[:TASK_LEN];">
+    <div class="boxHeader" >
+      <a tal:attributes="href string: search_area/WebSite_viewPendingEventList"
+         tal:content="python:here.Base_translateString('Action: (${task_count} total.)', mapping={'task_count':len(tasks)})" />
+    </div>
+    <div class="boxContent">
+      <ul>
+         <li tal:repeat="doc tasks">
+         <tal:block tal:condition="python:doc is not None">
+          <a tal:define="url python: '%s/view' % doc.absolute_url()"
+            tal:attributes="href url">
+            <span tal:replace="python: doc.getTranslatedPortalType()"/>:
+            <span tal:replace="doc/getTitle"/>
+            <span tal:condition="python: hasattr(doc, 'getVersion') and doc.getVersion()" 
+                        tal:replace="python: 'ver. %s' % doc.getVersion()"/>
+            (<span tal:content="python: (getattr(doc, 'getTranslatedValidationStateTitle',None) and doc.getTranslatedValidationStateTitle()) or (getattr(doc, 'getSimulationStateTitle', None) and doc.getTranslatedSimulationStateTitle())" 
+                    tal:attributes="class doc/getTranslatedValidationStateTitle|doc/getTranslatedSimulationStateTitle|nothing"/>)
+          </a>
+         </tal:block>
+        </li>
+      </ul>
+      <a tal:condition="python: len(tasks) > TASK_LEN" 
+        tal:attributes="href string: search_area/WebSite_viewPendingEventList" value="" i18n:translate="" i18n:domain="ui">More tasks...</a>
+    </div>
+  </tal:block>
+</tal:block>
+
+<tal:block metal:define-macro="learn">
+  <tal:block tal:define="news_list python: here.WebSite_getLatestContentValueList(limit=NEWS_LEN)">
+    <div class="boxHeader">
+      <a  i18n:translate="" i18n:domain="ui"
+        tal:attributes="href string: search_area/WebSite_viewLatestContentList">
+        Learn
+      </a>
+    </div>
+    <div class="boxContent">
+      <ul>
+        <li tal:repeat="newsitem python: news_list">
+          <a tal:define="url python: '%s/view' % newsitem.absolute_url()"
+            tal:attributes="href url">
+            <tal:block tal:replace="python: here.Base_getDiffBetweenDateAndNow(newsitem.getCreationDate())"
+                       tal:on-error="string:"/>&mdash;
+            <tal:block tal:replace="newsitem/getTitleOrId"
+                       tal:on-error="string:"/>
+          </a>
+          <tal:block tal:replace="python: '(%s)' % newsitem.getTranslatedPortalType()"
+                     tal:on-error="string:"/>
+        </li>
+      </ul>
+      <tal:block tal:replace="nothing">this is a dummy</tal:block>
+      <a tal:condition="python: len(news_list) > NEWS_LEN-1"
+              tal:attributes="href string: search_area/WebSite_viewLatestContentList" value="" i18n:translate="" i18n:domain="ui">More news...</a>
+    </div>
+  </tal:block>
+</tal:block>
+
+<tal:block metal:define-macro="evaluate">
+  <tal:block tal:define="stats here/WebSite_calculateStatistics;
+                         persons_stats stats/persons;
+                         document_stats stats/documents;">
+    <div class="boxHeader" value="" i18n:translate="" i18n:domain="ui">
+      Evaluate
+    </div>
+    <div class="boxContent">
+      <h5>Documents (overall)</h5>
+      <ul>
+        <li>Published: <span tal:content="document_stats/total_documents_published"/></li>
+        <li>Released: <span tal:content="document_stats/total_documents_released"/></li>
+        <li>Shared: <span tal:content="document_stats/total_documents_shared"/></li>
+        <li>Draft: <span tal:content="document_stats/total_documents_draft"/></li>
+        <li>Total: <span tal:content="document_stats/total_documents"/></li>
+      </ul>
+
+      <h5>Documents (classified)</h5>
+        <ul>
+          <li tal:repeat="classification python:document_stats['classifications'].items()">
+            <tal:block tal:define="classification_obj python: here.restrictedTraverse('portal_categories/classification/%s' %classification[0])">
+            <span tal:content="classification_obj/getTitle"/>: 
+            <span tal:content="python: classification[1]"/>
+            </tal:block>
+          </li>
+        </ul>
+
+      <h5>Most productive</h5>
+      <ul tal:define="group python: document_stats['documents_groups_sorted'][0];
+                      group_obj python: here.restrictedTraverse('portal_categories/group/%s' %group[0]);
+                      person python: document_stats['documents_owners_sorted'][0];
+                      person_obj python: here.ERP5Site_getAuthenticatedMemberPersonValue(person[0]);">
+        <li><b>Person:</b> 
+             <a href="" tal:attributes="href person_obj/absolute_url">
+               <span tal:content="person_obj/getTitle"/>
+              (<span tal:content="python: person[1]"/>)
+             </a>
+        </li>
+        <li><b>Devision:</b> 
+             <a href="" tal:attributes="href group_obj/absolute_url">
+               <span tal:content="group_obj/getTitle"/>
+              (<span tal:content="python: group[1]"/>)
+             </a>
+        </li>
+      </ul>
+
+      <h5>Human Resources</h5>
+      <ul>
+        <li>Total: <span tal:content="persons_stats/total_persons"/></li>
+        <li>Validated: <span tal:content="persons_stats/total_persons_validated"/></li>
+        <li>Draft: <span tal:content="persons_stats/total_persons_draft"/></li>
+      </ul>
+
+    </div>
+  </tal:block>
+</tal:block>
+</tal:block>

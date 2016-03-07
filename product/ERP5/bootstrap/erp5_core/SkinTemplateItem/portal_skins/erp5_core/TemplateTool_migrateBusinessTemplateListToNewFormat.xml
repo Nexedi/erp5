@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if not repository_list:\n
-  return context.Base_redirect(keep_items={\'portal_status_message\': \'No \'+\n
-       \'repository was defined\'})\n
-context.portal_templates.importAndReExportBusinessTemplateListFromPath(repository_list)\n
-return context.Base_redirect(keep_items={\'portal_status_message\': \'Migration \'+\n
-       \'started, please check your portal activities\'})\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>repository_list, **kw</string> </value>
         </item>

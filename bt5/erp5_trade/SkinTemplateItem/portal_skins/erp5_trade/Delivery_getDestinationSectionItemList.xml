@@ -49,36 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Log import log\n
-log(\'Deprecated: use Base_getPreferredSectionItemList instead.\')\n
-\n
-section_cat = context.portal_preferences.getPreferredSectionCategory()\n
-if section_cat in (None, \'\') : \n
-  section_cat = context.getPortalDefaultSectionCategory()\n
-\n
-section_cat_obj = None\n
-result = []\n
-\n
-if section_cat is not None:\n
-  # get the organisations belonging to this group\n
-  section_cat_obj = context.portal_categories.resolveCategory(section_cat)\n
-\n
-if section_cat_obj is not None:\n
-  result = section_cat_obj.getGroupRelatedValueList(portal_type=\'Organisation\',\n
-                                                    checked_permission=\'View\')\n
-  result = [r for r in result\n
-            if r.getProperty(\'validation_state\') not in (\'invalidated\', \'deleted\')]\n
-\n
-current_destination_section = context.getDestinationSectionValue()\n
-if current_destination_section is not None and current_destination_section not in result:\n
-  result.append(current_destination_section)\n
-\n
-# convert to ListField format\n
-return [(\'\', \'\')] + [(i.getTitle(), i.getRelativeUrl()) for i in result]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

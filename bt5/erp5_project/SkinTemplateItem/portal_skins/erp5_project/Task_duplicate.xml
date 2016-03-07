@@ -49,49 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.DateUtils import addToDate\n
-\n
-task_portal_type = \'Task\'\n
-task_module = context.getDefaultModule(task_portal_type)\n
-\n
-cb_data = task_module.manage_copyObjects([context.getId()])\n
-copied, = task_module.manage_pasteObjects(cb_data)\n
-pasted_task = task_module[copied[\'new_id\']]\n
-\n
-# Get task dates\n
-start_date = pasted_task.getStartDate()\n
-stop_date = pasted_task.getStopDate()\n
-duration = int(stop_date) - int(start_date)\n
-second_to_add = int(next_date) - int(start_date)\n
-\n
-for line in pasted_task.getMovementList():\n
-  # Get task line dates\n
-  if line.hasStartDate():\n
-    line_start_date = line.getStartDate()\n
-  else:\n
-    line_start_date = start_date\n
-\n
-  if line.hasStopDate():\n
-    line_stop_date = line.getStopDate()\n
-  else:\n
-    line_stop_date = stop_date\n
-\n
-  line_duration = int(line_stop_date) - int(line_start_date)\n
-  # Line dates are different from task dates\n
-  next_line_start_date = addToDate(line_start_date, second=second_to_add)\n
-  line.edit(\n
-    start_date=next_line_start_date,\n
-    stop_date=addToDate(next_line_start_date, second=line_duration),\n
-  )\n
-\n
-pasted_task.edit(\n
-  start_date=next_date,\n
-  stop_date=addToDate(next_date, second=duration),\n
-)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>next_date</string> </value>
         </item>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title>Web Manifest Components Gadget</title>
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+
+    <!-- custom script -->
+    <script src="gadget_manifest_page_commandments.js" type="text/javascript"></script>
+
+  </head>
+  <body>
+    
+    <section class="ui-body-a ui-linear ui-content-header-section">
+        <h1 class="ui-content-title">Commandments</h1>
+        <p class="ui-content-subtitle">Opinionated Guidelines for Developing Web Applications.</p>
+        <div class="ui-controlgroup ui-controlgroup-horizontal ui-content-menu">
+          <div class="ui-controlgroup-controls">
+            <a href="#" class="ui-btn ui-btn-icon-notext ui-body-inherit ui-icon-envelope ui-icon-custom ui-first-child">Email</a>
+            <a href="#" class="ui-btn ui-btn-icon-notext ui-body-inherit ui-icon-cloud-download ui-icon-custom ui-last-child">Download</a>
+          </div>
+        </div>
+    </section>
+
+    <section class="ui-body-c ui-content-section">
+      <section>
+        <div class="custom-icongrid ui-grid-c">
+          <div class="ui-block-a align-center"><i class="xl ui-icon-mobile-phone"></i></div>
+          <div class="ui-block-b align-center"><i class="xl fade ui-icon-tablet"></i></div>
+          <div class="ui-block-c align-center"><i class="xl fade ui-icon-laptop"></i></div>
+          <div class="ui-block-d align-center"><i class="xl fade ui-icon-desktop"></i></div>
+        </div>
+        <h4 class="custom-manifest-subtitle align-center">1. Smallest Size First</h4>
+        <p class="m align-center">
+        - Applications should support multiple devices (smartphone, tablet,
+        desktop, ...) but be designed for smallest size first -
+        </p>
+      </section>
+      
+      <hr class="custom-hr" />
+    
+      <section>
+        <div class="custom-icongrid ui-grid-a">
+          <div class="ui-block-a align-center"><i class="xl ui-icon-file-o"></i></div>
+          <div class="ui-block-b align-center"><i class="xl fade ui-icon-copy"></i></div>
+        </div>
+        <h4 class="custom-manifest-subtitle align-center">2. Single Codebase</h4>
+        <p class="m align-center">
+        - A single codebase should tailor to all devices/platforms -
+        </p>
+      </section>
+          
+      <hr class="custom-hr" />
+      
+      <section>
+        <div class="custom-icongrid ui-grid-a">
+          <div class="ui-block-a align-center"><i class="xl ui-icon-paw"></i></div>
+          <div class="ui-block-b align-center"><i class="xl fade ui-icon-keyboard-o"></i></div>
+        </div>
+        <h4 class="custom-manifest-subtitle align-center">3. Interaction over Typing</h4>
+        <p class="m align-center">
+        - The smaller the device the more cumbersome typing is.
+        Enforce interactions vs requiring users to type -
+        </p>
+      </section>
+          
+      <hr class="custom-hr" />
+      
+      <section>
+        <div class="custom-icongrid ui-grid-a">
+          <div class="ui-block-a align-center"><i class="xl ui-icon-group"></i></div>
+          <div class="ui-block-b align-center"><i class="xl fade ui-icon-cogs"></i></div>
+        </div>
+        <h4 class="custom-manifest-subtitle align-center">4. Usability over Functionality</h4>
+        <p class="m align-center">
+        - Ease of use dictatetes application design, not functionalities
+          provided -
+        </p>
+      </section>
+      
+      <hr class="custom-hr" />
+      
+      <section>
+        <div class="custom-icongrid ui-grid-a">
+          <div class="ui-block-a align-center"><i class="xl ui-icon-signal ui-icon-flip-horizontal"></i></div>
+          <div class="ui-block-b align-center"><i class="xl ui-icon-align-justify fade ui-icon-rotate-90"></i></div>
+        </div>
+        <h4 class="custom-manifest-subtitle align-center">5. Embrace Path of Least Interaction</h4>
+        <p class="m align-center">
+        - The less interactions are necessary to complete an action, the better -
+        </p>
+      </section>
+         
+      <hr class="custom-hr" />
+      
+      <section>
+        <div class="custom-icongrid ui-grid-a">
+          <div class="ui-block-a align-center"><i class="xl ui-icon-rotate-right"></i></div>
+          <div class="ui-block-b align-center"><i class="xl fade ui-icon-random"></i></div>
+        </div>
+        <h4 class="custom-manifest-subtitle align-center">6. Embrace Interaction Flow</h4>
+        <p class="m align-center">
+        - Interaction elements are positioned within the "flow" of
+        application usage (eg. form save after form) -
+        </p>
+      </section>
+          
+      <hr class="custom-hr" />
+      
+      <section>
+        <div class="custom-icongrid ui-grid-a">
+          <div class="ui-block-a align-center"><i class="xl ui-icon-file-picture-o"></i></div>
+          <div class="ui-block-b align-center"><i class="xl ui-icon-file-o fade"></i></div>
+        </div>
+        <h4 class="custom-manifest-subtitle align-center">7. Key Interactions Visible without Scrolling</h4>
+        <p class="m align-center">
+        - The key interactions of a page are accessible without the user
+        having to scroll -
+        </p>
+      </section>
+      
+      <hr class="custom-hr" />
+      
+      <section>
+        <div class="custom-icongrid ui-grid-a">
+          <div class="ui-block-a align-center"><i class="xl ui-icon-file-picture-o turq"></i></div>
+          <div class="ui-block-b align-center"><i class="xl fade ui-icon-file-picture-o"></i></div>
+        </div>
+        <h4 class="custom-manifest-subtitle align-center">8. Highlight Key Interaction</h4>
+        <p class="m align-center">
+        - The key interaction is highlighted for ease of navigation -
+        </p>
+      </section>
+      
+      <hr class="custom-hr" />
+      
+      <section>
+        <div class="custom-icongrid ui-grid-a">
+          <div class="ui-block-a align-center"><i class="xl ui-icon-cog fa-spin"></i></div>
+          <div class="ui-block-b align-center"><i class="xl ui-icon-cogs fade"></i></div>
+        </div>
+        <h4 class="custom-manifest-subtitle align-center">9. Animate Only If Possible</h4>
+        <p class="m align-center">
+        - Use animations only if they work. Partially working animations ruin look &amp; feel!! -
+        </p>
+      </section>
+      
+      <hr class="custom-hr" />
+      
+      <section>
+        <div class="custom-icongrid ui-grid-c">
+          <div class="ui-block-a align-center"><i class="xl ui-icon-file-picture-o"></i></div>
+          <div class="ui-block-b align-center"><i class="xl ui-icon-file-picture-o fade"></i></div>
+          <div class="ui-block-c align-center"><i class="xl ui-icon-file-picture-o turq"></i></div>
+          <div class="ui-block-d align-center"><i class="xl ui-icon-file-picture-o orange"></i></div>
+        </div>
+        <h4 class="custom-manifest-subtitle align-center">10. Four Themes: Light + Dark + Color + Active</h4>
+        <p class="m align-center">
+        - Each theme with a main and light color (total eight colors) -
+        </p>
+      </section>
+      
+      <hr class="custom-hr" />
+      
+      <section>
+        <div class="custom-icongrid ui-grid-c">
+          <div class="ui-block-a align-center"><i class="xl ui-icon-font middle"></i></div>
+          <div class="ui-block-b align-center"><i class="l ui-icon-font middle"></i></div>
+          <div class="ui-block-c align-center"><i class="m ui-icon-font middle"></i></div>
+          <div class="ui-block-d align-center"><i class="s ui-icon-font middle"></i></div>
+        </div>
+        <h4 class="custom-manifest-subtitle align-center">11. One Font, Four Sizes, Two Weights</h4>
+        <p class="m align-center">
+        - Applications use a single font in up to four sizes and two weights - 
+        </p>
+      </section>
+      
+      <hr class="custom-hr" />
+      
+      <section>
+        <div class="custom-icongrid align-center"><i class="xl ui-icon-bolt"></i></div>
+        <h4 class="custom-manifest-subtitle align-center">12. Max Two breakpoints per device</h4>
+        <p class="m align-center">
+          - One or two breakpoints per device (smartphone, tablet, desktop, ...)
+          must suffice -
+        </p>
+      </section>
+      
+      <hr class="custom-hr" />
+      
+      <section>
+        <div class="custom-icongrid align-center"><i class="xl ui-icon-flag"></i></div>
+        <h4 class="custom-manifest-subtitle align-center">13. Flat Single Color Icons</h4>
+        <p class="m align-center">
+        - Iconsets must be single color, flat icons -
+        </p>
+      </section>
+    </section>
+    
+  </body>
+</html>
+
+ 
+ 

@@ -95,13 +95,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>html .ui-header .ui-title {\n
-  margin: 0 59% 0 1%;\n
-  text-align: left;\n
-}</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Gadget Manifest Example Header Alternative CSS</string> </value>
         </item>

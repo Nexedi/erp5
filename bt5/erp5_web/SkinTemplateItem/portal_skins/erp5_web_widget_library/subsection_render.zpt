@@ -1,0 +1,12 @@
+<tal:block replace="nothing"><!--
+  This widget displays the list of Sections contained in the current context.
+--></tal:block>
+
+<ul><tal:block tal:repeat="section python:here.contentValues(portal_type='Web Section', 
+                                                             checked_permission='View')">
+  <li>
+    <a tal:attributes="href python: section.absolute_url_path()"
+       tal:content="python: section.getProperty('translated_short_title', None)
+                            or section.getTranslatedTitleOrId()"/>
+  </li>
+</tal:block></ul>

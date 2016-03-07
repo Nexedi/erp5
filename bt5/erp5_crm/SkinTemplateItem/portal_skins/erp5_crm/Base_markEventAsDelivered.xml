@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-if portal.Base_getHMACHexdigest(portal.Base_getEventHMACKey(), event_id) != hmac:\n
-  from zExceptions import Unauthorized\n
-  raise Unauthorized\n
-  \n
-event = portal.event_module[event_id]\n
-if portal.portal_workflow.isTransitionPossible(event, \'deliver\'):\n
-  event.deliver()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>event_id, hmac</string> </value>
         </item>

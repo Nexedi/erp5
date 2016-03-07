@@ -33,49 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<!-- ============================================================== -->\n
-<!--\n
-Description:\n
-  This macro render a tabbed search panel.\n
--->\n
-\n
-<tal:block metal:define-macro="main">\n
-  <tal:block tal:define="global web_site_url web_site_url | nothing"/>\n
-  <tal:block tal:condition="not:web_site_url">\n
-    <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
-  </tal:block>\n
-  <div class="tabber">\n
-    <div class="tabbertab">\n
-      <h2 i18n:translate="" i18n:domain="ui">Login</h2>\n
-      <div>\n
-        <div class="fields">\n
-          <p><tal:block i18n:translate="" i18n:domain="ui">Login</tal:block></p>\n
-          <p><tal:block i18n:translate="" i18n:domain="ui">Password</tal:block></p>\n
-        </div>\n
-        <div class="fields">\n
-          <p><input type="text" size="20" id="__ac_name" name="__ac_name" autocomplete="off"/></p>\n
-          <p><input type="password" size="20" id="password" name="__ac_password" autocomplete="off"/></p>\n
-        </div>\n
-      </div>\n
-      <div class="clear"></div>\n
-      <div id="track_button">\n
-        <input i18n:domain="ui" i18n:attributes="value" type="submit"\n
-        name="WebSite_login:method"\n
-        value="Login"/>\n
-      </div>\n
-      <div class="clear"></div>\n
-    </div>\n
-  </div>\n
-  <div class="clear"></div>\n
-</tal:block>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if REQUEST is not None:\n
-  from zExceptions import Unauthorized\n
-  raise Unauthorized(script.id)\n
-\n
-if context.getSimulationState() == "draft":\n
-  from Products.ERP5Type.Message import translateString\n
-  context.confirm(comment=translateString(\'Initialised by Delivery Builder.\'))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>REQUEST=None</string> </value>
         </item>

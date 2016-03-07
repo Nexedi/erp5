@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>#cash_status = [\'valid\',\'new_emitted\']\n
-cash_status = [\'valid\']\n
-\n
-cash_detail_dict = {\'line_portal_type\'          : \'Cash Delivery Line\'\n
-                    , \'operation_currency\'       : context.Baobab_getPortalReferenceCurrencyID()\n
-                    , \'cash_status_list\'          : cash_status\n
-                    , \'emission_letter_list\'      : context.Baobab_getUserEmissionLetterList()\n
-                    , \'variation_list\'           : context.Baobab_getResourceVintageList(coin=1, banknote=1)\n
-                    , \'currency_cash_portal_type\'  :  None\n
-                    , \'read_only\'           : False\n
-                    , \'column_base_category\'               : \'variation\'\n
-                    }\n
-\n
-return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
-                                                          , cash_detail_dict = cash_detail_dict\n
-                                                          , destination = context.getObject().absolute_url())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

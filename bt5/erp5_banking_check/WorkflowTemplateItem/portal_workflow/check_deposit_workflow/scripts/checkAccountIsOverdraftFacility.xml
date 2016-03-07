@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-txn = state_change[\'object\']\n
-\n
-for line in  txn.contentValues(filter = {\'portal_type\' : \'Check Operation Line\'}):\n
-  \n
-  account = line.getSourcePaymentValue()\n
-\n
-  if account is None:\n
-    msg = Message(domain=\'ui\', message="No account defined on line")\n
-    raise ValidationFailed, (msg,)\n
-\n
-  if not account.isOverdraftFacility():\n
-    msg = Message(domain=\'ui\', message="Can\'t sent to manual validation because of not overdraft facility for this bank account")\n
-    raise ValidationFailed, (msg,)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

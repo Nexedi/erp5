@@ -1,0 +1,175 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Gadget Interface Validation</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Gadget Interface Validation UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>store</td>
+  <td>gadget_interface_validator</td>
+  <td>application_title</td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/${application_title}/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//form[@class='interface-validation-form']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='Submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=appcache_url</td>
+  <td>${application_title}_test.appcache</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='Submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//table</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//tr[@id='${application_title}_test_correct_implemented_gadget']//td[@class='validation_status final']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@id='${application_title}_test_correct_implemented_gadget']//td[@class='validation_status final']</td>
+  <td>Success</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//tr[@id='${application_title}_test_invalid_interface_gadget']//td[@class='validation_status final']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@id='${application_title}_test_invalid_interface_gadget']//td[@class='validation_status final']</td>
+  <td>Failure</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//tr[@id='${application_title}_test_nonexistent_gadget']//td[@class='validation_status final']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@id='${application_title}_test_nonexistent_gadget']//td[@class='validation_status final']</td>
+  <td>Error with gadget loading</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//tr[@id='${application_title}_test_invalid_interface_gadget']//td[@class='validation_status final']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//tr[@id='${application_title}_test_invalid_interface_gadget_errordata']//td[@class='errordata']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@id='${application_title}_test_invalid_interface_gadget_errordata']//td[@class='errordata']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//tr[@id='${application_title}_test_invalid_interface_gadget']//td[@class='validation_status final']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//tr[@id='${application_title}_test_invalid_interface_gadget_errordata']//td[@class='errordata']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Interface Validation Form']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Interface Validation Form']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//form[@class='interface-validation-form']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=appcache_url</td>
+  <td>${application_title}_invalid.appcache</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='Submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Error</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Error</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Home']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//form[@class='interface-validation-form']</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

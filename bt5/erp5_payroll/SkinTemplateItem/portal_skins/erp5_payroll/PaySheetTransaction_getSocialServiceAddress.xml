@@ -49,39 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-\'\'\'\n
-  return the address line of the Social Service wich indice is line_number\n
-  if the line_number is None, return all the address lines\n
-\'\'\'\n
-\n
-social_insurance_annotation_line_value = \\\n
-    context.getSocialInsuranceAnnotationLineValue()\n
-if social_insurance_annotation_line_value is not None:\n
-  organisation = social_insurance_annotation_line_value.getSourceValue()\n
-else:\n
-  return \'\'\n
-\n
-street_address = \'%s\\n%s\\n%s %s\' % \\\n
-                              (organisation.getTitle() or \'\',\n
-                               organisation.getDefaultAddressStreetAddress(\'\'),\n
-                               organisation.getDefaultAddressZipCode(\'\'),\n
-                               organisation.getDefaultAddressCity(\'\'),)\n
-\n
-# return the good lines\n
-if line_number is None:\n
-  return street_address\n
-elif len(street_address.split(\'\\n\')) >= line_number:\n
-  return street_address.split(\'\\n\')[line_number]\n
-else:\n
-  return \'\'\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>line_number=None</string> </value>
         </item>

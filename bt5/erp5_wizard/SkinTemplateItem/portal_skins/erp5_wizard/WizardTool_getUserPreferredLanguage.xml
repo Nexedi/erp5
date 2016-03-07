@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>REQUEST = context.REQUEST\n
-\n
-# First, find a cookie already made before.\n
-COOKIE_NAME = \'configurator_user_preferred_language\'\n
-user_preferred_language = REQUEST.cookies.get(COOKIE_NAME, None)\n
-if user_preferred_language is not None:\n
-  # user already have explicitly selected language\n
-  return user_preferred_language\n
-\n
-# use language from browser\'s settings\n
-configuration_language_list = []\n
-for item in context.WizardTool_getConfigurationLanguageList():\n
-  configuration_language_list.append(item[1])\n
-http_accept_language = REQUEST.get(\'HTTP_ACCEPT_LANGUAGE\', \'en\')\n
-\n
-for language_set in http_accept_language.split(\',\'):\n
-  language_tag = language_set.split(\';\')[0]\n
-  language = language_tag.split(\'-\')[0]\n
-  if language in configuration_language_list:\n
-    return language\n
-return \'en\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

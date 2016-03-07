@@ -57,16 +57,6 @@
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string>CREATE TABLE roles_and_users (\n
-  uid INT UNSIGNED,\n
-  allowedRolesAndUsers VARCHAR(255),\n
-  KEY `uid` (`uid`),\n
-  KEY `allowedRolesAndUsers` (`allowedRolesAndUsers`)\n
-)  ENGINE=InnoDB;\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

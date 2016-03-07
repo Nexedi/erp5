@@ -37,31 +37,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block replace="nothing"\n
-           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-           xmlns:i18n="http://xml.zope.org/namespaces/i18n"/>\n
-\n
-<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
-\n
-\n
-/*========================================================================================\n
-  Content CSS (View mode)\n
-\n
-  The default behaviour is to use the editable mode CSS.\n
-  However, to change the appearance between view mode and editable mode,\n
-  it is possible to define here a different CSS.\n
-\n
-========================================================================================*/\n
-\n
-<tal:block tal:replace="structure python:here.restrictedTraverse(\'erp5_web_editable_content.css\')()"/>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

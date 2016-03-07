@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if clean:\n
-  context.Zuite_tearDownPersonAndOrganisationLinkingTest()\n
-\n
-portal = context.getPortalObject()\n
-person = portal.person_module.newContent(portal_type=\'Person\',\n
-                                         first_name=context.Zuite_getHowToInfo()[\'link_howto_person_first_name\'],\n
-                                         last_name=context.Zuite_getHowToInfo()[\'link_howto_person_last_name\'])\n
-person.validate()\n
-\n
-organisation = portal.organisation_module.newContent(portal_type=\'Organisation\',\n
-                                                     title=context.Zuite_getHowToInfo()[\'link_howto_organisation_title\'],\n
-                                                     corporate_name=context.Zuite_getHowToInfo()[\'link_howto_organisation_title\'])\n
-organisation.validate()\n
-\n
-portal.portal_caches.clearAllCache()\n
-\n
-return "Init Ok"\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>clean=True</string> </value>
         </item>

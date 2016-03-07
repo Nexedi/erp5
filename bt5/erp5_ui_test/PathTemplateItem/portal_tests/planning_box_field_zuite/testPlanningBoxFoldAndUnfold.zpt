@@ -1,0 +1,176 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Planning Box Field </title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test PlanningBox Fold And Unfold<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+</thead><tbody>
+<!-- Planning Box is not displayed in mobile skin
+     So this test is skipped -->
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_createObjects?num:int=3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_editObjectLineDates</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Modified Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//img[@alt='Planning']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>PlanningBoxError</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_1"]</td>
+  <td>[+] Title 0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_2"]</td>
+  <td>[+] Title 1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_3"]</td>
+  <td>[+] Title 2</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>id=group_1_info</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>id=group_2_info</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>id=group_3_info</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>id=group_1_info</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>id=group_2_info</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>id=group_3_info</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id='axis_y_depth']/a</td>
+  <td>3</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id='axis_y_depth']/a</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id='axis_y_depth']/a</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id='axis_y_depth']/a</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_1_activity_1_block_1"]/div[@class="planning_box_center"]</td>
+  <td>Title 0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_2_activity_1_block_1"]/div[@class="planning_box_center"]</td>
+  <td>Title 1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_3_activity_1_block_1"]/div[@class="planning_box_center"]</td>
+  <td>Title 2</td>
+</tr>
+</tal:block>
+
+</tbody></table>
+</body>
+</html>
+

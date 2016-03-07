@@ -23,13 +23,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>jGraduate - A jQuery plugin for picking gradients\n
-\n
-Licensed under the Apache License 2.  See LICENSE for more information.\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

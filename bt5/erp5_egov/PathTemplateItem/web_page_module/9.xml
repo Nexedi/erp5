@@ -116,12 +116,6 @@
             <value> <string>Captcha</string> </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>text_format</string> </key>
             <value> <string>text/html</string> </value>
         </item>

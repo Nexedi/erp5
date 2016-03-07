@@ -33,30 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<div>\n
-\n
-  <h3> <span tal:replace="structure python: here.Base_translateString(options.get(\'form_title\', \'\'))"/>\n
-       <span tal:replace="structure python: options.get(\'current_form_number\')"/> / \n
-       <span tal:replace="structure python: options.get(\'max_form_numbers\')"/>\n
-  </h3> \n
-  \n
-   <div class="field required error" \n
-        title="" \n
-        tal:condition="python:options.get(\'form_message\')!=None">     \n
-    <span class="error" \n
-          tal:content="structure python: options.get(\'form_message\')" />\n
-  </div>\n
-\n
-  <tal:block tal:replace="structure python: options.get(\'form_html\')" />\n
-\n
-</div>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

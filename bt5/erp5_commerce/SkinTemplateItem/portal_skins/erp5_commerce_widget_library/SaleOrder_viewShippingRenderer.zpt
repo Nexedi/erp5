@@ -1,0 +1,26 @@
+<tal:block tal:define="shipping here/SaleOrder_getSelectedShippingResource;
+                       web_site here/getWebSiteValue;">
+  <h2>
+    <span tal:replace="python: here.Base_translateString('Shipping')"/>
+  </h2>
+
+  <tal:block tal:condition="python: shipping is None">
+    <h3> <span tal:replace="python: here.Base_translateString('You have not selected shipping')"/></h3>
+    <p> 
+      <strong>
+        <span tal:replace="python: here.Base_translateString('Your current cart selection requires shipping. Please select shipping from')"/>
+        <a tal:attributes="href python: '%s/cart' % web_site.absolute_url()">here</a>.
+      </strong>
+    </p>
+  </tal:block>
+
+  <tal:block tal:condition="python: shipping is not None">
+    <p>
+      <span tal:replace="shipping_obj/getTitle"/> : 
+      <b>
+        <span tal:replace="shipping/getPrice"/>
+        <span tal:replace="python: web_site.WebSite_getShoppingCartDefaultCurrency().getTitle()"/>
+      </b>
+    </p>
+  </tal:block>
+</tal:block>

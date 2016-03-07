@@ -49,38 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
- Validate persons on remote master server. \n
-\n
- Only validate remote person/assigments if person \n
- has reference and valid assigments. \n
-"""\n
-from Products.ERP5Type.Log import log\n
-if person is None:\n
-  person = context\n
-\n
-reference = person.getReference()\n
-assignment_len = len(person.Person_getAvailableAssignmentValueList())\n
-if reference is not None and assignment_len > 0:\n
-  # validate user in Nexedi ERP5 only if its a loggable user in current instance\n
-  kw = context.Person_getDataDict(person=person)\n
-  context.portal_wizard.callRemoteProxyMethod(\n
-                       \'WitchTool_validateGlobalUserAccountFromExpressInstance\', \\\n
-                       use_cache = 0, \\\n
-                       ignore_exceptions = 0, \\\n
-                       **kw)\n
-else:\n
-  log("Unable to validate remote global account for "\\\n
-      "%s (reference=%s , len(assignment_list)=%s)" % (person.getRelativeUrl(), \n
-                                                       reference, assignment_len))\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>person=None, **kw</string> </value>
         </item>

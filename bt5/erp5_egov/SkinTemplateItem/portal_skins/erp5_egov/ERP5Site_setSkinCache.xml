@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>cache_manager_id = \'http_cache\'\n
-result = []\n
-\n
-def setCache(skin):\n
-  for o in skin.objectValues():\n
-    id = o.id\n
-    if callable(id): id = id()\n
-    if o.meta_type in (\'Image\', \'File\') or id.endswith(\'.css\') or id.endswith(\'.js\'):\n
-      o.ZCacheable_setManagerId(cache_manager_id)\n
-      result.append(id)\n
-    elif o.meta_type == \'Folder\':\n
-      setCache(o)\n
-\n
-for skin in context.portal_skins.objectValues():\n
-  setCache(skin)\n
-\n
-return "\\n".join(result)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

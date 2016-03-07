@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># By default, the destination of a monetary destruction must\n
-# be None in order to destroy ressources\n
-destination = None\n
-\n
-if context.getParentValue().isDematerialization() \\\n
-  and context.getSource() is not None \\\n
-  and context.getSourceSection() is not None:\n
-  # We must in this case set the destination to a particular vault\n
-  site = context.Baobab_getVaultSite(context.getSource())\n
-  site_relative_url = site.getRelativeUrl()\n
-  section_id = context.getSourceSectionId()\n
-  destination = "%s/%s/%s" % (site_relative_url,\n
-                              "caveau/serre/encaisse_des_billets_neufs_non_emis_en_transit_allant_a",\n
-                              section_id)\n
-return destination\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

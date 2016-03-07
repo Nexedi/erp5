@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-resource_id = context.Baobab_getPortalReferenceCurrencyID()\n
-\n
-currency_cash_list = [x.getObject() for x in context.currency_cash_module.objectValues() if x.getPortalType() == "Banknote" and x.getObject().getPriceCurrencyId() == resource_id and len(x.getObject().getVariationList())>0]\n
-\n
-return [("", None)]+[(x.getTranslatedTitle(), x.getId()) for x in currency_cash_list]\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

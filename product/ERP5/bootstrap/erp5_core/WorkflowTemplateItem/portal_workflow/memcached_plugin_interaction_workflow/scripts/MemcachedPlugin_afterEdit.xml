@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>document = state_change[\'object\']\n
-cache_plugin_list = document.getSpecialiseRelatedValueList(portal_type=\'Distributed Ram Cache\')\n
-from Products.CMFCore.utils import getToolByName\n
-if cache_plugin_list:\n
-  cache_tool = getToolByName(document.getPortalObject(), \'portal_caches\')\n
-  if cache_tool is not None:\n
-    cache_tool.updateCache()\n
-\n
-selection_tool = document.getPortalObject().portal_selections\n
-if selection_tool.getStorage() == document.getRelativeUrl():\n
-  selection_tool.clearCachedContainer()\n
-if selection_tool.getAnonymousStorage() == document.getRelativeUrl():\n
-  selection_tool.clearCachedContainer(is_anonymous=True)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

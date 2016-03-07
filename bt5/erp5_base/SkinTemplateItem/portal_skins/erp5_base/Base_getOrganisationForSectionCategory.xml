@@ -49,40 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Returns the main organisation for a section_category.\n
-\n
-"""\n
-portal = context.getPortalObject()\n
-\n
-def getOrganisationForSectionCategory(section_category):\n
-  section = portal.portal_categories.restrictedTraverse(section_category)\n
-\n
-  mapping = section.getMappingRelatedValue(portal_type=\'Organisation\',\n
-                           checked_permission=\'Access contents information\')\n
-  if mapping is not None:\n
-    return mapping.getRelativeUrl()\n
-  \n
-  organisation_list = section.getGroupRelatedValueList(portal_type=\'Organisation\',\n
-                              strict_membership=1,\n
-                              checked_permission=\'Access contents information\') + \\\n
-                      section.getGroupRelatedValueList(portal_type=\'Organisation\',\n
-                              checked_permission=\'Access contents information\') \n
-\n
-  for organisation in organisation_list:\n
-    if organisation.getProperty(\'validation_state\', \'unset\') not in (\'deleted\', \'cancelled\'):\n
-      return organisation.getRelativeUrl()\n
-\n
-\n
-from Products.ERP5Type.Cache import CachingMethod\n
-getOrganisationForSectionCategory = CachingMethod(getOrganisationForSectionCategory,\n
-                                                  id=script.getId())\n
-organisation_url = getOrganisationForSectionCategory(section_category)\n
-if organisation_url:\n
-  return portal.restrictedTraverse(organisation_url, None)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>section_category</string> </value>
         </item>

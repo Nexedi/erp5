@@ -49,34 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Special domains for foo"""\n
-domain_list = []\n
-\n
-if depth == 0:\n
-  url = \'foo_category\'\n
-else:\n
-  url = parent.getProperty(\'membership_criterion_category\')\n
-\n
-#context.log(script.id, \'parent = %r, context = %r, url = %r, depth = %r\' % (parent, context, url, depth))\n
-\n
-category_list = context.portal_categories.getCategoryValue(url).contentValues()\n
-for category in category_list:\n
-  domain = parent.generateTempDomain(id = category.getId())\n
-  domain.edit(title = category.getTitle(),\n
-              membership_criterion_base_category = (\'foo_category\',), \n
-              membership_criterion_category = (category.getRelativeUrl(),),\n
-              domain_generator_method_id = script.id,\n
-              uid = category.getUid())\n
-\n
-  domain_list.append(domain)\n
-\n
-#context.log(script.id, \'parent = %r, category_list = %r, domain_list = %r\' % (parent, category_list, domain_list))\n
-\n
-return domain_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>depth, parent, **kw</string> </value>
         </item>

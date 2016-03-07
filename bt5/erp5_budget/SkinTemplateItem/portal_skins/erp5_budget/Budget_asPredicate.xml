@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return context.asContext(\n
-             _range_criterion = {\'start_date\': (context.getStartDateRangeMin(),\n
-                                                context.getStartDateRangeMax())\n
-                               })\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

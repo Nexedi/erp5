@@ -50,44 +50,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:metal="http://xml.zope.org/namespaces/metal">\n
-  <tal:block metal:define-macro="init">\n
-    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
-    <tr>\n
-      <td>open</td>\n
-      <td>${base_url}/foo_module/ListBoxZuite_reset</td>\n
-      <td></td>\n
-    </tr>\n
-    <tr>\n
-      <td>assertTextPresent</td>\n
-      <td>Reset Successfully.</td>\n
-      <td></td>\n
-    </tr>\n
-    <tr>\n
-      <td>open</td>\n
-      <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
-      <td></td>\n
-    </tr>\n
-    <tr>\n
-      <td>assertTextPresent</td>\n
-      <td>Done.</td>\n
-      <td></td>\n
-    </tr>\n
-    <tr>\n
-      <td>open</td>\n
-      <td>${base_url}/foo_module</td>\n
-      <td></td>\n
-    </tr>\n
-  </tal:block>\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

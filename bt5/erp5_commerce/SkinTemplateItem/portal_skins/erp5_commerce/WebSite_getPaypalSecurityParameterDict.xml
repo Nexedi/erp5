@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if context.getLayoutProperty(\'ecommerce_test_environment_enabled\', False):\n
-  security_parameter_dict = {\'USER\':context.getLayoutProperty(\'ecommerce_paypal_sandbox_username\', None),\n
-                             \'PWD\':context.getLayoutProperty(\'ecommerce_paypal_sandbox_password\', None),\n
-                             \'SIGNATURE\':context.getLayoutProperty(\'ecommerce_paypal_sandbox_signature\', None),\n
-                             }\n
-else:\n
-  security_parameter_dict = {\'USER\':context.getLayoutProperty(\'ecommerce_paypal_username\', None),\n
-                             \'PWD\':context.getLayoutProperty(\'ecommerce_paypal_password\', None),\n
-                             \'SIGNATURE\':context.getLayoutProperty(\'ecommerce_paypal_signature\', None),\n
-                             }\n
-\n
-security_parameter_dict[\'VERSION\'] = \'58.0\'\n
-\n
-for parameter in security_parameter_dict:\n
-  if parameter is None:\n
-    return None\n
-return security_parameter_dict\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

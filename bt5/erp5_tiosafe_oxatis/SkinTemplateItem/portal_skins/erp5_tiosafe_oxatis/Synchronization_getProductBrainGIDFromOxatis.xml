@@ -49,11 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return context.Synchronization_getBrainGIDFromIntegrationSite(object, site_id=\'oxatis\', module_id="product_module")\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>object</string> </value>
         </item>

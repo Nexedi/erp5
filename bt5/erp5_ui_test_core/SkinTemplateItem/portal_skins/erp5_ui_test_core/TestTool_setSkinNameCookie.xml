@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if skin_name:\n
-  context.REQUEST.RESPONSE.setCookie(\'portal_skin\', skin_name)\n
-else:\n
-  context.REQUEST.RESPONSE.expireCookie(\'portal_skin\')\n
-return context.REQUEST.RESPONSE.redirect(context.absolute_url())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>skin_name=\'\'</string> </value>
         </item>

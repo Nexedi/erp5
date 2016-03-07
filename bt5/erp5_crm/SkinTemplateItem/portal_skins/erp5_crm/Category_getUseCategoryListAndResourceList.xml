@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-return context.objectValues(), portal.portal_catalog(\n
-  portal_type=portal.getPortalResourceTypeList(),\n
-  strict_use_uid=context.getUid(),\n
-  validation_state=\'validated\',\n
-)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

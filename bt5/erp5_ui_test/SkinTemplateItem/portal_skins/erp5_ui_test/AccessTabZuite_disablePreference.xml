@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Disable erp5_ui_test_preference preference"""\n
-preference_tool = context.portal_preferences\n
-preference = getattr(preference_tool, "access_tab_test_preference", None)\n
-if preference is not None:\n
-  preference.disable()\n
-  # enable the erp5_ui_test_preference again....\n
-  erp5_ui_test_preference = getattr(context.portal_preferences, "erp5_ui_test_preference", None)\n
-  if erp5_ui_test_preference is not None and \\\n
-       erp5_ui_test_preference.getPreferenceState() in (\'draft\', \'disabled\'):\n
-    erp5_ui_test_preference.enable()\n
-  \n
-return \'Disabled Preference Successfully.\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

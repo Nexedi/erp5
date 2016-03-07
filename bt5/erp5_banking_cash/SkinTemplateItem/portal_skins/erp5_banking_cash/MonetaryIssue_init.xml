@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>site_list = context.Baobab_getUserAssignedSiteList()\n
-if len(site_list) == 0:\n
-  context.log("MonetaryIsssue_init", "unabled to determine site")\n
-\n
-site = site_list[0]\n
-site = context.Baobab_getVaultSite(site)\n
-context.setSource("%s/caveau/serre/encaisse_des_billets_neufs_non_emis" %(site.getRelativeUrl(),))\n
-context.setDestination("%s/caveau/reserve/encaisse_des_billets_et_monnaies" %(site.getRelativeUrl(),))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kwd</string> </value>
         </item>

@@ -620,14 +620,6 @@
             <value> <string>Base_zExecuteSQL</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-var sql_expression>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Execute passed SQL code</string> </value>
         </item>

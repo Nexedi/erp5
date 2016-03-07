@@ -161,34 +161,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<?xml version="1.0" encoding="iso-8859-1"?>\n
-<tal:block \n
-  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
-  i18n:domain="ui"\n
-  tal:define="line_list here/query;\n
-              label_list here/getLabelValueList;\n
-              real_context here/getContext;\n
-              feed_data python: real_context.Listbox_asRSS(label_list, line_list);">\n
-\n
-<rss version="2.0">\n
-    <channel>\n
-        <title tal:content="here/getTitle"></title>\n
-        <lastBuildDate tal:content="python: DateTime().rfc822()"></lastBuildDate>\n
-        <link tal:content="real_context/WebSite_getUrl"></link>\n
-        <item tal:repeat="item_info feed_data/listItemInfos" ><tal:block tal:replace="structure item_info"/></item>\n
-    </channel>\n
-</rss>\n
-\n
-\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/xml; charset=utf-8</string> </value>
         </item>

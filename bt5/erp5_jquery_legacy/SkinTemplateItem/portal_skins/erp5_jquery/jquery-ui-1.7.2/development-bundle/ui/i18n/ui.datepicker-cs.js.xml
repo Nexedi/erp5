@@ -23,33 +23,6 @@
             <value> <string>application/x-javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-﻿/* Czech initialisation for the jQuery UI date picker plugin. */\n
-/* Written by Tomas Muller (tomas@tomas-muller.net). */\n
-jQuery(function($){\n
-\t$.datepicker.regional[\'cs\'] = {\n
-\t\tcloseText: \'Zavřít\',\n
-\t\tprevText: \'&#x3c;Dříve\',\n
-\t\tnextText: \'Později&#x3e;\',\n
-\t\tcurrentText: \'Nyní\',\n
-\t\tmonthNames: [\'leden\',\'únor\',\'březen\',\'duben\',\'květen\',\'červen\',\n
-        \'červenec\',\'srpen\',\'září\',\'říjen\',\'listopad\',\'prosinec\'],\n
-\t\tmonthNamesShort: [\'led\',\'úno\',\'bře\',\'dub\',\'kvě\',\'čer\',\n
-\t\t\'čvc\',\'srp\',\'zář\',\'říj\',\'lis\',\'pro\'],\n
-\t\tdayNames: [\'neděle\', \'pondělí\', \'úterý\', \'středa\', \'čtvrtek\', \'pátek\', \'sobota\'],\n
-\t\tdayNamesShort: [\'ne\', \'po\', \'út\', \'st\', \'čt\', \'pá\', \'so\'],\n
-\t\tdayNamesMin: [\'ne\',\'po\',\'út\',\'st\',\'čt\',\'pá\',\'so\'],\n
-\t\tdateFormat: \'dd.mm.yy\', firstDay: 1,\n
-\t\tisRTL: false};\n
-\t$.datepicker.setDefaults($.datepicker.regional[\'cs\']);\n
-});\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

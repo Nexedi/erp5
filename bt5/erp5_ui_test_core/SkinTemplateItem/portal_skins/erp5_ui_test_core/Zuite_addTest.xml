@@ -49,35 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  Include a page template contains a into a Zuite\n
-"""\n
-if REQUEST:\n
-  raise RuntimeError("You can not call this script from the URL")\n
-\n
-assert context.getPortalType() == "Test Tool", "bad context"\n
-\n
-if test_id is None or test_id == \'\':\n
-  test_id = \'\'.join(list(filter(lambda a: a not in ["\'",\'_\', \'-\',\'.\',\' \',\'~\', \':\', \'/\', \'?\', \'#\', \'[\', \']\', \'@\', \'!\', \'$\', \'&\', \'(\', \')\', \'*\',\'+\',\';\',\'=\'], title)))\n
-\n
-if test_id not in context.objectIds():\n
-  factory = context.manage_addProduct[\'PageTemplates\']\n
-  factory.manage_addPageTemplate(test_id, title=title, text=text, REQUEST=None)\n
-  test = getattr(context, test_id, None)\n
-else:\n
-  test = getattr(context, test_id, None)\n
-  context.Zuite_editZPT(test, text)\n
-  test.setTitle(text)\n
-\n
-return test\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>test_id, title, text, REQUEST=None</string> </value>
         </item>

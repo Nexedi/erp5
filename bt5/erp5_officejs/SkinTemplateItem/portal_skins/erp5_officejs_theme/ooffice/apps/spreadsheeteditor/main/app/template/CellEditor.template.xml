@@ -19,24 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<div class="ce-group-name">\r\n
-    <input id="ce-cell-name" class="aslabel form-control" type="text">\r\n
-    <button id="ce-func-label" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon">&nbsp;</span></button>\r\n
-</div>\r\n
-<div class="ce-group-expand">\r\n
-    <button id="ce-btn-expand" type="button" class="btn"><span class="caret">&nbsp;</span></button>\r\n
-</div>\r\n
-<div class="ce-group-content">\r\n
-    <textarea id="ce-cell-content" class="form-control" spellcheck="false" rows="1" cols="20"></textarea>\r\n
-</div>\r\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

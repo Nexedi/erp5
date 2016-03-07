@@ -33,27 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-  <div>\n
-     \n
- \n
-    <h3>Please click <a tal:attributes = "href python: \'m0_module/Base_doAction?select_action=add M0 &form_id=%s&cancel_url=%s\' %(template.id, template.absolute_url())"> \n
-      here </a> to apply. New application form will be presented to you.\n
-    </h3>\n
-  \n
-\n
-  <tal:block tal:condition="python: here.getPortalType()==\'M0\'">\n
-    <h3> Please fill form </h3>\n
-  </tal:block>\n
-\n
-</div>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>movement = context.getObject()\n
-funding_uid = context.funding_uid\n
-\n
-title_dict = container.REQUEST.get(\n
-      \'Movement_getFundingTitle.funding_title_dict\') or {}\n
-if funding_uid in title_dict:\n
-  return title_dict[funding_uid]\n
-\n
-if movement.getSourceFundingUid() == funding_uid:\n
-  reference = movement.getSourceFundingReference()\n
-  if reference:\n
-    return \'%s - %s\' % (reference, movement.getSourceFundingTranslatedTitle())\n
-  return movement.getSourceFundingTranslatedTitle()\n
-\n
-reference = movement.getDestinationFundingReference()\n
-if reference:\n
-  return \'%s - %s\' % (reference, movement.getDestinationFundingTranslatedTitle())\n
-return movement.getDestinationFundingTranslatedTitle()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

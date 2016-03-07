@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Compatibility script for old portal type Base_printPdf actions.\n
-"""\n
-from Products.ERP5Type.Log import log\n
-portal = context.getPortalObject()\n
-log(\'Deprecated Base_printPdf action called on a %s. \'\n
-    \'Remove this action to use global print action.\' % context.getPortalType())\n
-\n
-portal.changeSkin(\'Print\')\n
-return getattr(context, form_id)()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id=\'\'</string> </value>
         </item>

@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>parser_dict = parser_dict[\'object\'][1]\n
-data_list = []\n
-for dictionnary in result:\n
-  property_dict = {}\n
-  for k, v in dictionnary.items():\n
-    k = parser_dict.get(k)\n
-    if k is not None:\n
-      k = k[0]\n
-      if same_type(v, ""):\n
-        property_dict[k] = unicode(v)\n
-      else:\n
-        property_dict[k] = v\n
-  data_list.append(property_dict)\n
-return data_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>result, parser_dict</string> </value>
         </item>

@@ -49,41 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.ZSQLCatalog.SQLCatalog import Query\n
-from DateTime import DateTime\n
-now = DateTime()\n
-#Clean-up invalidated Test Nodes and\n
-# invalidate inactive ones \n
-list_node = context.portal_catalog(\n
-       portal_type="Test Node",\n
-       )\n
-old_date = now-1.0/24*11\n
-for test_node in list_node:\n
-  test_node = test_node.getObject()\n
-  ping_date = test_node.getPingDate()\n
-  validation_state = test_node.getValidationState()\n
-  if validation_state == \'validated\':\n
-    if ping_date is not None:\n
-      if ping_date <= old_date:\n
-        test_node.invalidate()\n
-  elif validation_state == \'invalidated\':\n
-    if test_node.getSpecialise():\n
-      test_node.getSpecialiseValue().cleanupInvalidatedTestNode(test_node)\n
-\n
-portal = context.getPortalObject()\n
-\n
-distributor_list = portal.portal_task_distribution.objectValues()\n
-for distributor in distributor_list: \n
-  distributor.activate().optimizeConfiguration()\n
-return list_node\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,34 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from json import dumps\n
-\n
-# sometime instead of real knowledge pad object we may get just its relative url \n
-# and actually that\'s what we care for\n
-if not isinstance(box, str):\n
-  box_relative_url = box.getRelativeUrl()\n
-else:\n
-  box_relative_url = box\n
-\n
-editable_mode = context.REQUEST.get(\'editable_mode\', 0)\n
-if editable_mode:\n
-  editable_mode = 1\n
-else:\n
-  editable_mode = 0\n
-\n
-js_update_code = """updater(\'%s\', \'%s\', \'%s\', \'%s\', %s, field_prefix=\'%s\');""" %(url, box_relative_url, dom_id, \n
-                                                              editable_mode, dumps(params), field_prefix)\n
-if box.getValidationState()==\'invisible\':\n
-  # we can generate \n
-  javascript_code = """invisible_gadgets["%s"]="%s";""" %(dom_id, js_update_code)\n
-else:\n
-  javascript_code = js_update_code\n
-\n
-return javascript_code\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>url, box, dom_id, params={}, ignore_security_check=0, field_prefix=\'\'</string> </value>
         </item>

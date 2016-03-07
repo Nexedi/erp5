@@ -19,20 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>desc "Use Uglify JS to compress Underscore.js"\n
-task :build do\n
-  sh "uglifyjs underscore.js -c \\"evaluate=false\\" --comments \\"/    .*/\\" -m --source-map underscore-min.map -o underscore-min.js"\n
-end\n
-\n
-desc "Build the docco documentation"\n
-task :doc do\n
-  sh "docco underscore.js"\n
-end\n
-\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

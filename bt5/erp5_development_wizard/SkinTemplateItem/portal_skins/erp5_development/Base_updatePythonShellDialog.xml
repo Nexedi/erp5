@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Update Form\n
-"""\n
-\n
-return context.Base_redirect(\'Base_viewPythonShellDialog\',\n
-              keep_items = dict(python_expression=python_expression))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>python_expression, **kw</string> </value>
         </item>

@@ -49,11 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return context.getPortalObject().Base_redirect(redirect_url, keep_items, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>redirect_url=None, keep_items=(), **kw</string> </value>
         </item>

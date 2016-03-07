@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>selection_name = \'%s_list_mode_proxy_selection\' % proxy_field_selection_name\n
-selection_tool = context.getPortalObject().portal_selections\n
-\n
-selection_tool.setSelectionParamsFor(selection_name,\n
-                              dict(proxy_form_id=proxy_form_id,\n
-                                   proxy_field_id=proxy_field_id))\n
-\n
-return context.Base_viewListModeRenderer(REQUEST=container.REQUEST)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>proxy_field_selection_name=\'\', proxy_form_id=\'\', proxy_field_id=\'listbox\'</string> </value>
         </item>

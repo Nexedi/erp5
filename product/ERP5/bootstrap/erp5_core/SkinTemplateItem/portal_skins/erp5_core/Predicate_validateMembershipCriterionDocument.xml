@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># XXX the name of this script is bad as the context is not a predicate\n
-\n
-category_list = request.get(\'field_my_membership_criterion_base_category_list\', [])\n
-if not same_type(category_list, []):\n
-  category_list = [category_list]\n
-multimembership_criterion_base_category_list = request.get(\'field_my_multimembership_criterion_base_category_list\', [])\n
-if not same_type(multimembership_criterion_base_category_list, []):\n
-  multimembership_criterion_base_category_list = [multimembership_criterion_base_category_list]\n
-category_list += [i for i in multimembership_criterion_base_category_list \\\n
-                  if i not in category_list]\n
-portal_categories = context.getPortalObject().portal_categories\n
-\n
-for item in item_list:\n
-  base_category, relative_url = item.split(\'/\', 1)\n
-  if base_category not in category_list or \\\n
-      portal_categories.restrictedTraverse(relative_url, None) is None:\n
-    return 0\n
-return 1\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>item_list, request</string> </value>
         </item>

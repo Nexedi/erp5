@@ -1,0 +1,151 @@
+<html>
+<head><title>Test for Creating Payment Transactions related to some Invoices</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test for Creating Payment Transactions related to some Invoices
+</td></tr>
+<!-- XXX we do not need init method here ! -->
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+<!-- Setup {{{ -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/AccountingZuite_markChanged</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<!-- }}} -->
+
+<!-- Select {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Show All']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-search-line']/th[4]/input</td>
+  <td>Sale Invoice Transaction</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+<!-- }}} -->
+
+<!-- select create payment action {{{ -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Create Related Payments</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_your_node</td>
+  <td>label=5 - Bank</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_your_payment_mode</td>
+  <td>label=Cash</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_your_payment</td>
+  <td>label=My default bank account</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Payments creation for 2 on 2 invoices in progress.</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- show the dialog again, to check it remembers values {{{ -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Create Related Payments</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_node</td>
+  <td>account_module/bank</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_payment_mode</td>
+  <td>cash</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_payment</td>
+  <td>organisation_module/my_organisation/my_bank</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_cancel:method</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- Check accounting transactions are created {{{ -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/accounting_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Show All']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>6 records</td>
+</tr>
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

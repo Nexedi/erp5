@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Return the current action to know which tab is selected\n
-\n
-for action in actions.get(\'object_view\', []):\n
-  if current_url == action[\'url\'].split(\'?\')[0]:\n
-    return action\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>current_url, actions</string> </value>
         </item>

@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Prints all fields that are in \'not assigned\' group.\n
-This happens after updating a form where some fields have been added locally.\n
-"""\n
-\n
-for form_path, form in context.ZopeFind(\n
-            context.portal_skins, obj_metatypes=[\'ERP5 Form\'], search_sub=1):\n
-  try:\n
-    groups = form.get_groups()\n
-  except AttributeError, e:\n
-    print "%s is broken: %s" % (form_path, e)\n
-  if \'not_assigned\' in groups:\n
-    print \'Not assigned fields in %s: %s\' % (form_path,\n
-      [f.getId() for f in form.get_fields_in_group(\'not_assigned\')])\n
-\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

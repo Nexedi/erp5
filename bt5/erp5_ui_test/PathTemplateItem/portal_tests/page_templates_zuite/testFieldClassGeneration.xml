@@ -33,62 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
-<head>\n
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Exchange Actions</title>\n
-</head>\n
-<body>\n
-<table cellpadding="1" cellspacing="1" border="1">\n
-<thead>\n
-<tr><td rowspan="1" colspan="3">Test field class generation</td></tr>\n
-</thead><tbody>\n
-<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />\n
-<tr>\n
-  <td>open</td>\n
-  <td>${base_url}/foo_module/1/view</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>type</td>\n
-  <td>field_my_quantity</td>\n
-  <td>A</td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>//button[@name=\'Base_edit:method\']</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertElementPresent</td>\n
-  <td>//div[contains(@class, \'error\')][.//@name=\'field_my_quantity\']</td>\n
-  <td></td>\n
-</tr>\n
-\n
-<!-- cleanup -->\n
-<tr>\n
-  <td>type</td>\n
-  <td>field_my_quantity</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>//button[@name=\'Base_edit:method\']</td>\n
-  <td></td>\n
-</tr>\n
-\n
-\n
-</body>\n
-</html>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

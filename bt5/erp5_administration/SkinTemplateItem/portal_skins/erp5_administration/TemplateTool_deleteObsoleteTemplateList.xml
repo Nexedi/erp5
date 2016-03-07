@@ -49,35 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-portal_templates = context.getPortalObject().portal_templates\n
-delete_list = []\n
-bt_list = portal_templates.objectValues()\n
-for bt in bt_list:\n
-  bt_id = bt.getId()\n
-  installation_state = bt.getInstallationState()\n
-  if installation_state in (\'deleted\', \'replaced\'):\n
-    delete_list.append(bt_id)\n
-  elif installation_state == \'not_installed\':\n
-    title = bt.getTitle()\n
-    modification_date = bt.getModificationDate()\n
-    for x in bt_list:\n
-      if (x.getTitle() == title and\n
-          x.getInstallationState() in (\'installed\', \'not_installed\') and\n
-          x.getModificationDate() > modification_date):\n
-        delete_list.append(bt_id)\n
-        break\n
-\n
-print \'Deleted id list:%r\' % delete_list\n
-portal_templates.manage_delObjects(delete_list)\n
-return printed\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

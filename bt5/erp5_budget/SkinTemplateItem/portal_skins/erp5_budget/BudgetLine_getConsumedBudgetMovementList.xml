@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if not cell_index:\n
-  return []\n
-\n
-kw.update(context.BudgetLine_getInventoryQueryDictForCellIndex(\n
-            cell_index=cell_index,\n
-            engaged_budget=engaged_budget))\n
-\n
-return context.getPortalObject().portal_simulation.getMovementHistoryList(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>cell_index=None, engaged_budget=False, **kw</string> </value>
         </item>

@@ -49,34 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>import json\n
-#from Products.ERP5Type.Log import log\n
-# use JSON.parse as json.loads and JSON.stringify as json.dumps\n
-\n
-context.REQUEST.response.setHeader("Access-Control-Allow-Origin", "*")\n
-\n
-jio = context.JIO_class()\n
-\n
-try: doc = jio.jsonUtf8Loads(context.REQUEST.form["doc"])\n
-except KeyError:\n
-  return jio.sendError(jio.createBadRequestDict("Cannot get document", "No document information received"))\n
-\n
-try: mode = str(context.REQUEST.form["mode"])\n
-except KeyError: mode = "generic"\n
-jio.setMode(mode)\n
-\n
-try:\n
-  response_json = jio.putDocumentAttachment(doc)\n
-except (ValueError, TypeError, KeyError) as e:\n
-  return jio.sendError(jio.createConflictDict("Cannot put attachment", str(e)))\n
-# except TypeError as e:\n
-#   return jio.sendError(jio.createBadRequestDict("Cannot put attachment", str(e)))\n
-\n
-return jio.sendSuccess(response_json)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

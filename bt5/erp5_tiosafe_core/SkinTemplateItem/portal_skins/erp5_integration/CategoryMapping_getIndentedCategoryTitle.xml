@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>NBSP_UTF8 = u\'\\xA0\'.encode(\'utf-8\')\n
-def getCategoryLevel(category=None):\n
-    if getattr(category.getParent(), "getDestinationReference", None) is None:\n
-      return 0\n
-    return  1 + getCategoryLevel(category.getParent())\n
-level = getCategoryLevel(context.getParent())\n
-return "%s%s" % (NBSP_UTF8 * 8 * level, context.getSourceReference())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

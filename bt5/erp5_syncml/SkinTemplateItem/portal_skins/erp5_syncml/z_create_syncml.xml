@@ -25,17 +25,6 @@
             <value> <string>z_create_syncml</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string>CREATE TABLE `syncml` (\n
-  `path` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT \'\',\n
-  `gid` varchar(255) COLLATE utf8_unicode_ci DEFAULT \'\',\n
-  `data` LONGBLOB NULL,\n
-  PRIMARY KEY (`path`),\n
-  KEY `gid` (`gid`,`path`)\n
-) ENGINE=InnoDB;\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

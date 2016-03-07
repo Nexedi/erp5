@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Pre convert to know good defaults.\n
-  Use type based methods to allow finer granularity (for example in case of PDF we support many frames inside a document).\n
-"""\n
-portal = context.getPortalObject()\n
-\n
-if not context.Base_isConvertible():\n
-  # no need to convert any non convertible types\n
-  return\n
-\n
-if kw=={}:\n
-  # use default set of system preferences\n
-  format = portal.portal_preferences.getPreferredImageFormat()\n
-  quality = portal.portal_preferences.getPreferredImageQuality()\n
-  # thumbnail is required always\n
-  display_list = ["thumbnail"]\n
-  kw = dict(format=format, quality=quality, display_list = display_list)\n
-\n
-method = context.getTypeBasedMethod(\'preConvert\')\n
-return method(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

@@ -1,0 +1,76 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test ParallelListField add Dynamic Lines (expected failure)</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test ParallelListField add Dynamic Lines (expected failure)</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/1/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>default_subfield_field_my_extensible_parallel_list_field_default:list:int</td>
+  <td>0</td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='input'][1]/select[@class='extensible_parallel_list_field']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@class='input'][2]/select[@class='extensible_parallel_list_field']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//div[@class='input'][1]/select[@class='extensible_parallel_list_field']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//div[@class='input'][1]/select[@class='extensible_parallel_list_field']</td>
+  <td>label=A</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='input'][2]/select[@class='extensible_parallel_list_field']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//div[@class='input'][2]/select[@class='extensible_parallel_list_field']</td>
+  <td>label=B</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//div[@class='input'][1]/select[@class='extensible_parallel_list_field']</td>
+  <td>A</td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//div[@class='input'][2]/select[@class='extensible_parallel_list_field']</td>
+  <td>B</td>
+</tr>
+</tbody></table>
+</body>
+</html>

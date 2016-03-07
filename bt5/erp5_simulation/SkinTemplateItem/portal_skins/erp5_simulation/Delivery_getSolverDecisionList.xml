@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>solver_process = context.Delivery_getSolverProcess()\n
-# XXX should omit \'solved\' decision?\n
-return solver_process.SolverProcess_getSolverDecisionList()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

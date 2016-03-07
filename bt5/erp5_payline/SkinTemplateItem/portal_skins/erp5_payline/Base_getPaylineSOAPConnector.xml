@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Proxy role auditor so new subscribers can find connector\n
-web_service, = context.getPortalObject().portal_web_services.searchFolder(\n
-  portal_type=\'Payline SOAP Connector\',\n
-  validation_state=\'validated\',\n
-  reference=reference,\n
-  limit=2,\n
-)\n
-web_service = web_service.getObject()\n
-assert web_service.getReference() == reference, (web_service.getPath(), reference)\n
-return web_service\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>reference</string> </value>
         </item>

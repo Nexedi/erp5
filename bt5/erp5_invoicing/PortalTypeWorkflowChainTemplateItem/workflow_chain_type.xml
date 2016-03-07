@@ -1,22 +1,22 @@
 <workflow_chain>
  <chain>
-  <type>Invoice Cell</type>
+  <type>portal_type_workflow_chain/Invoice Cell</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Invoice Line</type>
+  <type>portal_type_workflow_chain/Invoice Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, movement_resource_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>Invoice Simulation Rule</type>
+  <type>portal_type_workflow_chain/Invoice Simulation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Invoice Transaction Simulation Rule</type>
+  <type>portal_type_workflow_chain/Invoice Transaction Simulation Rule</type>
   <workflow>edit_workflow, rule_interaction_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Trade Model Simulation Rule</type>
+  <type>portal_type_workflow_chain/Trade Model Simulation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
 </workflow_chain>

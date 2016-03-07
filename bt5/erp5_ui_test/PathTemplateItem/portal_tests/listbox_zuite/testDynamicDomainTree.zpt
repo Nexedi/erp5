@@ -1,0 +1,274 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Dynamic Domain Tree</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Dynamic Domain Tree</td></tr>
+</thead><tbody>
+<!-- Domain tree are not avalaible in mobile skin 
+     So this part is skipped -->
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_domain_tree=checked;field_domain_root_list=foo_domain%7CFoo%20Domain</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>domain_root_url</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-tree-domain-tree-mode"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>domain_root_url</td>
+  <td>Foo Domain</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-closed"]</td>
+  <td>a</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//button[@class="tree-closed"]</td>
+  <td>b</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>10 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[2]</td>
+  <td>2</td>
+</tr>
+<!-- Click on + a -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-closed"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>domain_root_url</td>
+  <td>Foo Domain</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-open"]</td>
+  <td>a</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//button[@class="tree-closed"]</td>
+  <td>a1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[3]//button[@class="tree-closed"]</td>
+  <td>a2</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[4]//button[@class="tree-closed"]</td>
+  <td>b</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>7 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[2]</td>
+  <td>3</td>
+</tr>
+<!-- Click on + a2 -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[3]//button[@class="tree-closed"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>domain_root_url</td>
+  <td>Foo Domain</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-open"]</td>
+  <td>a</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//button[@class="tree-closed"]</td>
+  <td>a1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[3]//button[@class="tree-open"]</td>
+  <td>a2</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[4]//button[@class="tree-closed"]</td>
+  <td>b</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>
+  <td>3</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]</td>
+  <td>7</td>
+</tr>
+<!-- Click on - a -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-open"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>domain_root_url</td>
+  <td>Foo Domain</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-closed"]</td>
+  <td>a</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//button[@class="tree-closed"]</td>
+  <td>b</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>10 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]</td>
+  <td>1</td>
+</tr>
+<!-- Reset -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>domain_root_url</td>
+  <td>Foo Domain</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-closed"]</td>
+  <td>a</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//button[@class="tree-closed"]</td>
+  <td>b</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>10 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[2]</td>
+  <td>2</td>
+</tr>
+</tal:block>
+</tbody></table>
+</body>
+</html>

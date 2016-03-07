@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>url = context.getPortalObject().absolute_url()\n
-portal_object = context.getPortalObject()\n
-acl_users = portal_object.acl_users\n
-if not acl_users.getUserById(\'tiosafe_sync_user\'):\n
-  acl_users.zodb_users.manage_addUser(\n
-      user_id=\'tiosafe_sync_user\',\n
-      login_name=\'tiosafe_sync_user\',\n
-      password=\'tiosafe_sync_user\',\n
-      confirm=\'tiosafe_sync_user\',\n
-  )\n
-  acl_users.zodb_roles.assignRoleToPrincipal(\'Manager\', \'tiosafe_sync_user\')\n
-\n
-\n
-for im in context.objectValues(portal_type="Integration Module"):\n
-  sub = im.getDestinationSectionValue()\n
-  pub = im.getSourceSectionValue()\n
-  pub.edit(url_string=url)\n
-  sub.edit(url_string=url, subscription_url_string=url, user_id=\'tiosafe_sync_user\', password="tiosafe_sync_user")\n
-\n
-message = context.Base_translateString("Synchronization update to url ${url}.", mapping=dict(url=url))\n
-return context.Base_redirect(keep_items=dict(portal_status_message=message))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""This script is similar to ERP5Type_getSecurityCategoryFromContent, but it\n
-uses acquisition to get categories.\n
-\n
-Note that if you design a security with acquired categories you may have problems\n
-to regenerate security dynamically when thoses acquired values are modified on other\n
-documents from which we acquire those values, just because this "other document" doesn\'t\n
-know which documents are acquiring values.\n
-\n
-If unsure, you should use ERP5Type_getSecurityCategoryFromContent.\n
-"""\n
-category_list = []\n
-\n
-if object is None:\n
-  return []\n
-\n
-for base_category in base_category_list:\n
-  category_list.append({base_category: object.getAcquiredCategoryMembershipList(base_category)})\n
-\n
-return category_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>base_category_list, user_name, object, portal_type</string> </value>
         </item>

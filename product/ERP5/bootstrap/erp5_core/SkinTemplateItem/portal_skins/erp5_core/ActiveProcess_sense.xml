@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>for result in context.getResultList():\n
-  if result is None:\n
-    continue # Workaround for bogus results\n
-  # This is useful is result is returned as a Return instance\n
-  if result.isError():\n
-    return True\n
-  # This is the default case\n
-  if getattr(result, \'result\', False):\n
-    return True\n
-return False\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

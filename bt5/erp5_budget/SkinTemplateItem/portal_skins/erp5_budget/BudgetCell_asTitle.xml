@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>cat_value = context.getPortalObject().portal_categories.getCategoryValue\n
-return \'/\'.join([cat_value(x).getTitle() \\\n
-  for x in context.getMembershipCriterionCategoryList()])\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Obsolete compatibility script.\n
-"""\n
-from Products.ERP5Type.Log import log\n
-log("Obsolete script, please use BaseType_copyRoleList instead")\n
-\n
-print \'cloning role information from\'\n
-print from_type\n
-if to_type_list == ():\n
-  to_type_list = (to_type,)\n
-\n
-print "to", to_type_list\n
-\n
-context.portal_types[from_type].BaseType_copyRoleList(remove_existing_roles=True,\n
-                                                      portal_type_list=to_type_list)\n
-\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>from_type, to_type_list=(), to_type=None</string> </value>
         </item>

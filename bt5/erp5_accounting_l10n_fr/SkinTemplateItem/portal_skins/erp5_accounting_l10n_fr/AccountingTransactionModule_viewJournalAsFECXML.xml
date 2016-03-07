@@ -33,18 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<journal xmlns:tal="http://xml.zope.org/namespaces/tal">\n
-  <JournalCode tal:content="options/portal_type/getCompactTranslatedTitle"></JournalCode>\n
-  <JournalLib tal:content="options/portal_type/getTranslatedTitle"></JournalLib>\n
-  <tal:block tal:repeat="result options/result_list"><tal:block tal:replace="structure python: result.detail.decode(\'zlib\')"/></tal:block>\n
-</journal>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/xml</string> </value>
         </item>

@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This script returns a dictionary of possible values for Unify Solver.\n
-"""\n
-solver_decision = context.getCausalityValue()\n
-tester = solver_decision.getCausalityValue()\n
-value_list_dict = {}\n
-for property_id in tester.getTestedPropertyList():\n
-  value_list = []\n
-  for simulation_movement in context.getDeliveryValueList():\n
-    movement = simulation_movement.getDeliveryValue()\n
-    value = movement.getProperty(property_id)\n
-    if value not in value_list:\n
-      value_list.append(value)\n
-    simulation_movement_list = movement.getDeliveryRelatedValueList()\n
-    value = simulation_movement.getProperty(property_id)\n
-    if value not in value_list:\n
-      value_list.append(value)\n
-  value_list_dict[property_id] = [(x, str(x)) for x in value_list]\n
-return value_list_dict\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return context.getPortalObject().portal_catalog(\n
-    portal_type=\'Glossary Term\',\n
-    reference=context.getReference(),\n
-    uid=\'!=%d\' % context.getUid(),\n
-    language=context.getLanguage(),\n
-    business_field_uid=context.getBusinessFieldUid(),\n
-    validation_state=(\'draft\', \'validated\'),\n
-    **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

@@ -26,12 +26,6 @@
               <dictionary/>
             </value>
         </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string>@import "ui.base.css";\n
-@import "ui.theme.css";\n
-</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

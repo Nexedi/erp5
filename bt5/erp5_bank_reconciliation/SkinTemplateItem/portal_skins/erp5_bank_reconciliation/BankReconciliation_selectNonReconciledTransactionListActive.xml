@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import translateString\n
-\n
-context.getPortalObject().setPlacelessDefaultReindexParameters(activate_kw=dict(tag=tag))\n
-\n
-# XXX maybe we want to distribute this more.\n
-# At the moment we cannot use searchAndActivate from Inventory API query\n
-for line in context.BankReconciliation_getAccountingTransactionLineList():\n
-  line.AccountingTransactionLine_setBankReconciliation(context, \n
-      message=translateString("Select Non Reconciled Transactions"))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>tag</string> </value>
         </item>

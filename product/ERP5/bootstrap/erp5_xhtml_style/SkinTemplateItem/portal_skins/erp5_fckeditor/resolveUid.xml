@@ -169,34 +169,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFCore.utils import getToolByName\n
-from Products.PythonScripts.standard import html_quote\n
-\n
-request = context.REQUEST\n
-response = request.RESPONSE\n
-\n
-uuid = traverse_subpath.pop(0)\n
-#reference_tool = getToolByName(context, \'reference_catalog\')\n
-#obj = reference_tool.lookupObject(uuid)\n
-catalog_tool = getToolByName(context, \'portal_catalog\')\n
-obj = catalog_tool.getObject(uuid)\n
-if not obj:\n
-    return context.standard_error_message(error_type=404,\n
-     error_message=\'\'\'The link you followed appears to be broken\'\'\')\n
-    \n
-if traverse_subpath:\n
-    traverse_subpath.insert(0, obj.absolute_url())\n
-    target = \'/\'.join(traverse_subpath)\n
-else:\n
-    target = obj.absolute_url()\n
-\n
-if request.QUERY_STRING:\n
-    target += \'?\' + request.QUERY_STRING\n
-return response.redirect(target, status=301)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># prevent lose checked itens after click to print\n
-# For backward compatibility, do nothing if\n
-# Base_updateListboxSelection cannot be found.\n
-Base_updateListboxSelection = getattr(context, \'Base_updateListboxSelection\', None)\n
-if Base_updateListboxSelection is not None:\n
-  Base_updateListboxSelection()\n
-\n
-if select_jump is None:\n
-  select_jump = context.REQUEST.form["Base_doJump"]\n
-\n
-if select_jump == \'\':\n
-  return\n
-\n
-request = container.REQUEST\n
-return context.ERP5Site_redirect(select_jump,\n
-     keep_items=dict(form_id=request.get(\'form_id\', \'view\')), **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>select_jump=None, **kw</string> </value>
         </item>

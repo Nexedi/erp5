@@ -49,51 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# base_id possible value: \'quantity\', \'variation\'\n
-\n
-get_variation_base_category_method_dict = {\n
-  \'quantity\': \'getQVariationBaseCategoryList\',\n
-  \'variation\': \'getVVariationBaseCategoryList\'\n
-}\n
-\n
-cell_range = []\n
-transformation = context.getParentValue()\n
-\n
-# Those value are define on property sheet of portal type\n
-line_base_category = transformation.getVariationBaseCategoryLine()\n
-column_base_category = transformation.getVariationBaseCategoryColumn()\n
-\n
-base_category_list = transformation.getVariationBaseCategoryList()\n
-tab_base_category_list = filter(lambda x: x not in [line_base_category, \n
-                                     column_base_category], base_category_list)\n
-\n
-for c in ([line_base_category, column_base_category] + tab_base_category_list):\n
-  # try to display line first, then column, and finally others\n
-  if c in getattr(context, \n
-                  get_variation_base_category_method_dict[base_id])():\n
-    # base category was selected by user\n
-    if matrixbox == 1:\n
-      # XXX matrixbox is right_display (not as listfield) \n
-      # => invert display and value in item\n
-      cell_range.append(map(lambda x: (x[1],x[0]), \n
-                        transformation.getVariationCategoryItemList\n
-                                (base_category_list=(c,))))\n
-    else:\n
-      cell_range.append(transformation.getVariationCategoryList(\n
-                                             base_category_list=(c,)))\n
-\n
-# Remove empty range\n
-cell_range = filter(lambda x: x != [], cell_range)\n
-\n
-return cell_range\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>matrixbox=0, base_id=None</string> </value>
         </item>

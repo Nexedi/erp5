@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>source = context.getSource()\n
-site = context.Baobab_getVaultSite(source)\n
-\n
-if \'devise\' in source:\n
-  return  "%s/caveau/auxiliaire/encaisse_des_devises/%s" %(site.getRelativeUrl(), source.split("/")[-1])\n
-else:\n
-  return  "%s/caveau/auxiliaire/%s" %(site.getRelativeUrl(), source.split("/")[-1])\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

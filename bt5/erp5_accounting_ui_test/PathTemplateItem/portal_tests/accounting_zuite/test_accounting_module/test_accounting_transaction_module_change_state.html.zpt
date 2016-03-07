@@ -1,0 +1,144 @@
+<html>
+<head><title>Test changing state in accounting module</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test changing state in accounting module (with custom search)
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+<!-- Setup {{{ -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<!-- }}} -->
+
+<!-- search -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-search-line']/th[5]/input</td>
+  <td>2005/01/01</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+<!-- Change state -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Change State</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number workflow_action_listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='workflow_action_listbox-data-line-0 DataA']/td[1]/a</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='workflow_action_listbox-data-line-0 DataA']/td[2]/a</td>
+  <td>Accounting Transaction</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='workflow_action_listbox-data-line-0 DataA']/td[3]/a</td>
+  <td>Posted to General Ledger</td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>//tr[@class='workflow_action_listbox-data-line-0 DataA']/td[5]/select</td>
+  <td>label=Cancel Transaction</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Workflow modification in progress.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/AccountingZuite_markChanged</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/accounting_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class="listbox-search-line"]/th[5]/input</td>
+  <td>2005/01/01</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[8]/a</td>
+  <td>Cancelled</td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

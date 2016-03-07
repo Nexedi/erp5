@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>kw = { \'portal_type\':\'Amortisation Transaction\',\n
-       \'simulation_state\': context.getPortalUpdatableAmortisationTransactionStateList() }\n
-\n
-return_list = [line.getObject() for line in context.portal_catalog(**kw)]\n
-#for line in return_list:\n
-#  t = line.getObject()\n
-#context.log(\'return_list\',return_list)\n
-return return_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>movement_list=None</string> </value>
         </item>

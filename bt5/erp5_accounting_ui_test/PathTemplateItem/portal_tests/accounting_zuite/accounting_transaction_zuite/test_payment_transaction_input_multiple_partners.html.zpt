@@ -1,0 +1,176 @@
+<html>
+<head><title>Test for Payment Transaction with Multiple partners</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test Simple view of an Accounting Transaction with Multiple partners
+</td></tr>
+<!-- XXX we do not need init method here ! -->
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+<!-- Setup {{{ -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/AccountingZuite_markChanged</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<!-- }}} -->
+
+<!-- Add a payment transaction and check the default view {{{ -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Add Payment Transaction</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_my_source_section</td>
+  <td>organisation_module/my_organisation</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_my_destination_section_title</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_my_resource</td>
+  <td>currency_module/euro</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>3 records</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]/select</td>
+  <td>label=5 - Bank</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[3]/select</td>
+  <td>label=41 - Receivable</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[3]/select</td>
+  <td>label=40 - Payable</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_destination_section_title</td>
+  <td>Client 1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='Base_edit:method']</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- Check values we just entered {{{ -->
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_my_source_section</td>
+  <td>organisation_module/my_organisation</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_my_destination_section_title</td>
+  <td>Client 1</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_my_resource</td>
+  <td>currency_module/euro</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]/select</td>
+  <td>account_module/bank</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[3]/select</td>
+  <td>account_module/receivable</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[3]/select</td>
+  <td>account_module/payable</td>
+</tr>
+<!-- }}} -->
+
+<!-- Edit the party on a line {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Payable</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_destination_section_title</td>
+  <td>Supplier</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='Base_edit:method']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[3]/span[1]</td> <!-- FIXME -->
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- Check new column is here {{{ -->
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[4]</td>
+  <td>Client 1</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[4]</td>
+  <td>Client 1</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[4]</td>
+  <td>Supplier</td>
+</tr>
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

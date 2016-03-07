@@ -1,0 +1,170 @@
+<html>
+<head><title>Test for Organisation transaction lisbox</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test Transactions related to an Organisation, with multiple pages and date range
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionListSalesAndPayments">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Organisations</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- {{{ Select Client 1 Organisation and check transaction list -->
+<tr>
+  <td>type</td>
+  <!-- title -->
+  <td>//tr[@class='listbox-search-line']/th[2]/input</td>
+  <td>Client 1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Client 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Transactions</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>56 records</td>
+</tr>
+
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
+  <td>446600.00</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[10]</td>
+  <td>446600.00</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[12]</td>
+  <td>0.0</td>
+</tr>
+<!-- }}} -->
+
+<!-- {{{ check second page -->
+<tr>
+  <td>assertValue</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>keyPressAndWait</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>\13</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>56 records</td>
+</tr>
+<!-- check first line -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[1]</td>
+  <td>Client 1 Sale Invoice</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]</td>
+  <td>My Organisation</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]</td>
+  <td>2005/01/16</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[4]</td>
+  <td>Sale Invoice Transaction</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td>41</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[8]</td>
+  <td>Posted to General Ledger</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[9]</td>
+  <td>17600.00</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[10]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[11]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[12]</td>
+  <td>17600.00</td>
+</tr>
+<!-- this is the same as the last net_balance from the previous page -->
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[13]</td>
+  <td>133100.00</td>
+</tr>
+
+<!-- Stats should not change -->
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
+  <td>446600.00</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[10]</td>
+  <td>446600.00</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[12]</td>
+  <td>0.0</td>
+</tr>
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

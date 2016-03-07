@@ -1,0 +1,31 @@
+<tal:block replace="nothing">
+  <!--
+  This widget displays the list of Sections contained in the current context.
+  It uses the properties defined on sections to decide whether sections
+  -->
+</tal:block>
+
+<tal:block tal:define="current_web_site python:request.get('current_web_site', here);
+                       exclude_default_document python: context.getLayoutProperty('layout_navigation_default_visible') == 0;
+                       include_site_default_page python: context.getLayoutProperty('layout_navigation_home_visible') == 1;
+                       menu_item_list python:current_web_site.WebSection_getSiteMapTree(depth=3, exclude_default_document=exclude_default_document, include_site_default_page = include_site_default_page);
+                       web_site_url python:current_web_site.absolute_url()">
+  <ul>
+    <li tal:repeat="menu_item menu_item_list">
+      <tal:block tal:condition="not:nocall:menu_item/subsection"><a tal:attributes="href menu_item/url" tal:content="menu_item/translated_title">Menu</a></tal:block>
+      <tal:block tal:condition="nocall:menu_item/subsection">
+      <a tal:attributes="href menu_item/url"><tal:block tal:replace="menu_item/translated_title">Drop-down Menu</tal:block><!--[if IE 7]><!--></a><!--<![endif]-->
+      <!--[if lte IE 6]><table><tr><td><![endif]-->
+      <ul metal:define-macro="generateTree">
+        <li tal:repeat="item menu_item/subsection">
+          <a href="#" tal:attributes="href item/url" tal:content="item/translated_title">Menu subitem 1</a>
+          <tal:recurse define="menu_item item" tal:condition="nocall:item/subsection">
+            <metal:call use-macro="here/WebSection_viewNavigationWidget/macros/generateTree" />
+          </tal:recurse>
+        </li>
+      </ul>
+      <!--[if lte IE 6]></td></tr></table></a><![endif]-->
+      </tal:block>
+    </li>
+  </ul>
+</tal:block>

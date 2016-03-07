@@ -49,34 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>knowledge_pad = context.restrictedTraverse(knowledge_pad_url)\n
-knowledge_pad_module = knowledge_pad.getParentValue()\n
-\n
-# copy/paste\n
-cp = knowledge_pad_module.manage_copyObjects(ids=[knowledge_pad.getId()])\n
-new_id = context.knowledge_pad_module.manage_pasteObjects(\n
-                                   cb_copy_data=cp)[0][\'new_id\']\n
-new_knowledge_pad = knowledge_pad_module[new_id]\n
-\n
-# set publication section\n
-new_knowledge_pad.setPublicationSectionValue(context)\n
-new_knowledge_pad.visible()\n
-\n
-# because workflow state(i.e. visibility is set to default(invisible)\n
-# set manually with respect to original\n
-for original_box in knowledge_pad.objectValues(portal_type="Knowledge Box"):\n
-  destination_box = new_knowledge_pad[original_box.getId()]\n
-  if original_box.getValidationState() == \'visible\':\n
-    destination_box.visible()\n
-  elif original_box.getValidationState() == \'deleted\':\n
-    destination_box.delete()\n
-\n
-return context.Base_redirect(cancel_url, keep_items={\n
-  "portal_status_message": context.Base_translateString(\'Sticked.\')})\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>knowledge_pad_url, cancel_url=\'view\'</string> </value>
         </item>

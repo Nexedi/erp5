@@ -19,21 +19,6 @@
             <value> <string>application/javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>/**\n
- * @license Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.\n
- * For licensing, see LICENSE.md or http://ckeditor.com/license\n
- */\n
-\n
-CKEDITOR.editorConfig = function( config ) {\n
-\t// Define changes to default configuration here. For example:\n
-\t// config.language = \'fr\';\n
-\t// config.uiColor = \'#AADC6E\';\n
-  config.resize_dir = \'both\';\n
-};\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

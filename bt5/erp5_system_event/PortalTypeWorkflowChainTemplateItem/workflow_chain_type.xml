@@ -1,14 +1,14 @@
 <workflow_chain>
  <chain>
-  <type>Authentication Event</type>
+  <type>portal_type_workflow_chain/Authentication Event</type>
   <workflow>edit_workflow, system_event_workflow</workflow>
  </chain>
  <chain>
-  <type>HTTP Exchange</type>
+  <type>portal_type_workflow_chain/HTTP Exchange</type>
   <workflow>edit_workflow, system_event_workflow</workflow>
  </chain>
  <chain>
-  <type>Password Event</type>
+  <type>portal_type_workflow_chain/Password Event</type>
   <workflow>edit_workflow, system_event_workflow</workflow>
  </chain>
 </workflow_chain>

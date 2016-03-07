@@ -33,61 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<html class="ui-mobile">\n
-  <head>\n
-    <meta charset="UTF-8">\n
-    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">\n
-    <title tal:content="python: here.getPortalObject().getTitle()"></title>\n
-    <link rel="stylesheet" href="gadget_erp5.css">\n
-    <link rel="stylesheet" href="jquerymobile.css">\n
-  </head>\n
-  <body class="ui-mobile-viewport ui-overlay-a" tal:define="form_action string:portal_password/mailPasswordResetRequest;">\n
-    <div class="ui-hidden-accessible gadget-container"></div>\n
-    <div data-role="page" data-url="/" tabindex="0" class="ui-page ui-page-theme-a ui-page-header-fixed ui-page-active" style="padding-top: 36px; min-height: 939px;">\n
-      <div data-role="header" class="gadget-header ui-header ui-bar-a ui-header-fixed slidedown" data-theme="a" data-position="fixed" data-tap-toggle="false" role="banner">\n
-      <span>\n
-        <h1 class="ui-title" tal:content="python: here.getPortalObject().getTitle()"></h1>\n
-        <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
-         <div class="ui-controlgroup-controls">\n
-         </div>\n
-        </div>\n
-      </span>\n
-      <div class="ui-navbar ui-subheader ui-grid-container ui-body-a" role="navigation">\n
-\t\t    <ul class="ui-grid-d"></ul>\n
-      </div>\n
-      </div>\n
-      <div role="main" class="ui-content gadget-content">\n
-      <article class="ui-content ui-body-c">\n
-        <section class="ui-content-header-plain">\n
-          <h3 class="ui-content-title ui-body-c" data-i18n="Reset your password">Reset your password</h3>\n
-        </section>\n
-        <section class="ui-body-c ui-content-section">\n
-          <form class="login-form" method="post" tal:attributes="action python: context.absolute_url()">\n
-            <div class="ui-field-contain">\n
-              <label data-i18n="Login">Login<span></span></label>\n
-              <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset"><input autofocus type="text" name="user_login" placeholder="Ex: john" value="" required=""></div>\n
-            </div>\n
-            <br/>\n
-            <div class="ui-btn ui-input-btn ui-btn-b ui-corner-all ui-shadow ui-btn-inline">Validate<input data-theme="b" data-inline="true" type="submit" data-i18n="[value]Validate" value="Validate" data-icon="check" tal:attributes="name python: \'%s:method\' % (form_action, )"/></div>\n
-            <input type="hidden" name="url" tal:attributes="value python: context.absolute_url()" />\n
-            <input tal:condition="exists: request/came_from"\n
-                   type="hidden" name="came_from"\n
-                   tal:attributes="value request/came_from" />\n
-          </form>\n
-         </section>\n
-      </article>\n
-    </div>\n
-    </div>\n
-    <div class="ui-loader ui-corner-all ui-body-a ui-loader-default"><h1>loading</h1></div><div class="ui-panel-dismiss"></div>\n
-  </body>\n
-</html>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

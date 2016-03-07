@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""This script returns ththe Discussion Thread object that is associated to this context.\n
-Or the first if many.\n
-If there is no Discussion Thread, return None.\n
-Need a proxy to work correctly with anonymous user"""\n
-\n
-discussion = context.getFollowUpRelated(portal_type = "Discussion Thread")\n
-\n
-if discussion is not None:\n
-  discussion = context.restrictedTraverse(discussion, None)\n
-\n
-return discussion\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>allow = False\n
-def match(criterion_list, reference_list):\n
-  for criterion in criterion_list:\n
-    if criterion in reference_list:\n
-      return True\n
-  return False\n
-\n
-if not allow and role_list is not None:\n
-  from AccessControl import getSecurityManager\n
-  roles = getSecurityManager().getUser().getRoles()\n
-  allow = match(roles, role_list)\n
-\n
-if not allow and function_list is not None or group_list is not None:\n
-  if function_list is None:\n
-    function_list = []\n
-  if group_list is not None:\n
-    function_list.extend(context.Baobab_getFunctionList(group_list=group_list))\n
-  user_function_list = context.Baobab_getUserAssignedFunctionList()\n
-  allow = match(user_function_list, function_list)\n
-return allow\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>group_list=None, role_list=None, function_list=None</string> </value>
         </item>

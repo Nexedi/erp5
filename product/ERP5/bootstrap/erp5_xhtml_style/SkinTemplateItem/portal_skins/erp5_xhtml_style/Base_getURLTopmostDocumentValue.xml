@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  this method is designed to get the topmost traversed url in an ERP5\n
-  instance. By default it returns the portal. Overload this script if\n
-  the portal is not the topmost traversed document in your setup.\n
-"""\n
-return context.getPortalObject()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

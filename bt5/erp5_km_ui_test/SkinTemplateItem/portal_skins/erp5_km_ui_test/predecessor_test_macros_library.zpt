@@ -1,0 +1,37 @@
+<tal:block metal:define-macro="discussions">
+  <div class="bottomPosts Discussions"
+       tal:define="web_site here/getWebSiteValue;
+                   absolute_url here/getAbsoluteUrl;
+                   relative_url here/getRelativeUrl;
+                   discussion_thread_section here/WebSite_getDefaultForumWebSectionValue;
+                   discussion_thread_list here/WebSection_getLatestDiscussionThreadList">
+    <h2>
+      <a title="Show more" tal:attributes="href string:${discussion_thread_section/absolute_url}">Discussions</a>
+      <a class="txtButn" title="Show more"
+         tal:attributes="href string:${discussion_thread_section/absolute_url}/WebSection_viewCreateNewDiscussionThreadDialog?cancel_url=${absolute_url}&amp;predecessor_url=${relative_url}">New</a>
+    </h2>
+    
+    <div class="row" tal:repeat="discussion_thread discussion_thread_list">
+      <tal:block tal:define="discussion_post discussion_thread/DiscussionThread_getLastPost;
+                             author_dict discussion_post/DiscussionPost_getAuthorDict;
+                             is_author_link_available python:author_dict['author_url'] is not None;
+                             base_url python: '%s/%s/%s' %(web_site.absolute_url(), discussion_thread_section.getId(), discussion_thread.getReference())">
+     
+        <div class="date">
+          <span tal:replace="python: discussion_post.getModificationDate().strftime('%d-%m')"/>
+          <span tal:content="python: discussion_post.getModificationDate().strftime('%Y')"/>
+        </div>
+        <div class="text">
+          <h3>
+            <a title="Show post"
+              tal:attributes="href python: '%s/view?list_start=%s&amp;reset=1#%s' %(base_url, discussion_post.getId(), discussion_post.getUid())"
+              tal:content="discussion_post/getTitle"/> 
+            <em>by <spam tal:replace="author_dict/author_title"/></em>
+          </h3>
+          <span tal:replace="structure python: discussion_post.getTextContent()"/>
+        </div>
+      </tal:block>
+    </div>
+    <div class="clear"></div>
+  </div>
+</tal:block>

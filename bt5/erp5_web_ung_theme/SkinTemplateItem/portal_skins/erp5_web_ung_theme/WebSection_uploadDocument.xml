@@ -49,34 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal_type_dict = {"Web Page": ["Text", "web_page_template"],\n
-                    "Web Table": ["Spreadsheet", "web_table_template"],\n
-                    "Web Illustration": ["Drawing", "web_illustration_template"]}\n
-\n
-portal_type = context.REQUEST.form.get("portal_type")\n
-document = context.Base_contribute(file=file, \n
-                       url=None, \n
-                       portal_type=portal_type_dict.get(portal_type)[0], \n
-                       synchronous_metadata_discovery=None, \n
-                       redirect_to_document=False, \n
-                       attach_document_to_context=False, \n
-                       use_context_for_container=False, \n
-                       redirect_url=None, \n
-                       cancel_url=None, \n
-                       batch_mode=False,\n
-                       max_repeat=0, \n
-                       editable_mode=1,\n
-                       follow_up_list=None, \n
-)\n
-\n
-return context.ERP5Site_createNewWebDocument(template=portal_type_dict.get(portal_type)[1],\n
-                                             selection_action=portal_type,\n
-                                             document_path=document.getPath(),\n
-                                             upload_document=1)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>file, **kw</string> </value>
         </item>

@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Log import log\n
-log("ERP5Type_getSecurityCategoryFromArrow is deprecated, "\n
-    "use ERP5Type_getSecurityCategoryFromContent instead")\n
-\n
-return context.ERP5Type_getSecurityCategoryFromContent(\n
-    base_category_list, user_name, object, portal_type)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>base_category_list, user_name, object, portal_type</string> </value>
         </item>

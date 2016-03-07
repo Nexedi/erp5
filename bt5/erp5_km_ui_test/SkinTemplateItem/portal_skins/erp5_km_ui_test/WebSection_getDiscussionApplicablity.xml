@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-    Determine whether the document being viewed is a web page or the default\n
-    page of a web section. If it is, related discussions can be displayed\n
-"""\n
-document = context\n
-portal_type = document.getPortalType()\n
-\n
-if portal_type == \'Web Page\':\n
-  return context.getReference()\n
-  \n
-if portal_type == \'Web Section\':\n
-  default_page = document.getAggregate()\n
-  if default_page is not None:\n
-    default_page_document = context.restrictedTraverse(default_page)\n
-    return default_page_document.getReference()\n
-\n
-return None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

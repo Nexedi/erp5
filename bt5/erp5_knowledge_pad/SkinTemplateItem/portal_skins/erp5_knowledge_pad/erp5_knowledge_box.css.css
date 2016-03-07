@@ -1,0 +1,476 @@
+#gadget_area_wrapper {
+  margin-top: 0.5em;
+}
+
+#page_wrapper {
+  text-align: left;
+  margin: 0em;
+  padding: 0em;
+  padding-top: 0em;
+  background-color: inherit; 
+  min-height: 500px;
+  width: 100%;
+  float:left;
+  margin-top: 0.5em;
+}
+
+#loading-wrapper{  
+  position:absolute;  
+  width:250px;  
+  top:80px;  
+  left:50%;  
+  margin-left:-150px;  
+  text-align:center;  
+  padding:7px 0 0 0; 
+  background-color: #FFF; 
+  z-index:1000;
+}  
+#loading-wrapper p{
+  font-weight: bold;
+  font-size: 90%;
+}
+.invisible-gadget{
+  display:none;
+}
+/* 3 columng gadget layout */
+div.portal-column {
+  float: left;
+  width:32.9%; 
+  margin-right:3px;
+  min-height: 200px;
+}
+
+/* Boxes */
+div.block {
+  margin:1px 1px 3px;
+  padding: 0px;
+  width: 100%;
+}
+div.pad-actions{
+   float:left;
+}
+h3.handle {
+  margin: 0;
+  padding: 0 0 0 9px;
+  font-size: 14px;
+  color: #fff;
+  border-radius: 10px 10px 0 0;
+  -moz-border-radius: 10px 10px 0 0;
+  -webkit-border-top-left-radius: 10px;
+  -webkit-border-top-right-radius: 10px;
+  border: 1px solid #3D6474;
+}
+
+h3.handle span.handle {
+  display: block;
+  min-height:20px;
+  padding: 4px 4px 0 0;
+}
+
+div.block h3 span.gadget_title{
+  min-width: 100px;
+}
+
+/* Minimize, Edit, Remove images */
+span.clickable_image{
+  cursor: pointer; 
+  margin-top: 5px;
+  display: block;
+  float: left;
+}
+
+#tabs li span.rename_tab_dialog_image{
+  background: url("icon_edit.gif") no-repeat;
+  padding-right: 6px;
+}
+
+#tabs li span.remove_tab_dialog_image{
+  background: url("icon_remove.gif") no-repeat;
+  padding-right: 6px;
+}
+
+a.clickable-block{
+  display: block;
+  float: right;
+  width: 15px;
+  height: 15px;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  padding: 0em;
+  margin: 0;
+}
+
+a.block-remove {
+  background-image: url(icon_remove.gif); 
+}
+
+a.block-minimize {
+  background-image: url(icon_minimize.gif); 
+}
+
+a.block-edit-form {
+  background-image: url(icon_edit.gif); 
+}
+
+.block-hover {
+  border: 2px dashed #f00;
+}
+
+span.handle,
+h3.handle {
+  cursor: move;
+}
+
+/* In edit form disable border */
+div.edit-form fieldset{
+  border: 0px solid black;
+}
+
+div.edit-form button{
+  margin-top: 0.5em;
+}
+
+div.edit-form {
+  padding-top: 0.5em; 
+  padding-left: 1em;
+  padding-bottom: 0.5em;
+  border: solid black;
+  border-width: 0 1px 1px 1px;
+  background-color: #BDD0F0;
+  overflow: auto;
+  width:auto;
+}
+
+/* Tabs for Knowledge Pads */ 
+#pad-navigation-wrapper{
+  margin-top:10px;
+  border-bottom:1px solid #3D6474;
+  height:25px;
+  width:100%;
+}
+
+#tabs {
+  padding-left: 0em;
+  float: left;
+  width:78%;
+}
+
+#tabs ul {
+  margin : 0em;
+  padding: 0em;
+  width: 100%;
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
+}
+
+li.tab {
+  display: block;
+  font-size: 12px;
+  float: left;
+  height: 24px;
+  padding-right: 5px;
+  background-color: #BDD0F0;
+  cursor: pointer;
+  border: 1px solid #3D6474;
+  margin-right: 1px;
+}
+
+#tabs li span{
+  padding: 0px 10px;
+  display: block;
+  float: left;
+  height: 19px;
+  padding-top: 5px;
+}
+
+/* Selected tabs should be 1px higher in order to hide border at bottom */
+li.tab_selected {
+  font-weight: bold;
+  background-color: #DAE6F6; 
+  border-bottom: 1px solid #DAE6F6;
+}
+
+/* without this declaration IE will hide draggable elements!*/
+.content .field{
+  position: static;
+  clear:both;
+}
+
+/* Dialogs */
+div.toggable_dialog{
+  display: none;
+  left: 400px;
+  position: absolute;
+  top: 75px;
+  z-index: 10000;
+  border: 5px solid #BDD0F0;
+  background-color: #97B0D1;
+  padding: 0em 1em 0.5em 1em;
+}
+#add-gadgets{
+  cursor: pointer;
+}
+#add_new_tab_dialog_link{
+  cursor: pointer; 
+  font-weight: bold;
+  background: transparent;
+  display: block;
+  float: left;
+  font-weight: bold;
+  height: 19px;
+  padding-top: 5px;
+  padding-left: 5px;
+  margin-left: 5px;
+  border-style: none;
+}
+
+#create_own_pad_dialog_link{
+  cursor: pointer; 
+  background: url("images/configure.png") no-repeat !important;
+  display: block;
+  float: left;
+  height: 22px!important;
+  width:22px!important;
+  padding-top: 5px;
+  padding-left: 5px;
+  margin-left: 5px;
+  border-style: none;
+}
+
+#tabs_switcher{
+  cursor: pointer; 
+  font-weight: bold;
+  background: transparent;
+  padding-top: 5px;
+  border-style: none;
+  margin: 0em;
+  width: 10%;
+  float:left
+}
+
+#add_new_gadget_link{
+  font-weight: bold;
+  height: 20px;
+  text-align:right; 
+  padding-top:5px;
+  float:right;
+  width:12%;
+}
+
+/* Draggable Area */
+div.draggable_wrapper{
+  background-color: #FFFFFF;
+}
+
+div.wait_block {
+  text-align: center;
+  padding: 2em;
+}
+
+div.box_inner_content {
+  background-color:#FFFFFF;
+  padding: 0.1em;
+  clear:left;
+  overflow: visible;
+}
+
+div.box_inner_content ol{
+  margin-top: 0em;
+}
+
+/* seperate gadget tables from rest of ERP5*/
+div.block div.content{
+  padding: 0px;
+}
+
+div.block table,
+div.block table tr, 
+div.block table tr td{
+  border: none;
+}
+
+/* lisbox style should be square for gadgets */
+div.block ul{
+  list-style-type: square;
+}
+
+
+/* 
+
+  Gadget listbox CSS
+
+*/
+div.block table.listbox .right{
+  float:right;
+}
+
+div.block table.listbox .left{
+  float:left;
+}
+div.block .listbox-head{
+  margin-left:0;
+}
+div.block div.listbox-head-spacer{
+  display:none;
+}
+div.block div.listbox-head-content {
+/*  background: none;*/
+  background-color: #E3EAFA;
+  border: none;
+  margin-left:0;
+  padding-left: 10px;
+  border-top-left-radius: 0;
+  -moz-border-top-left-radius: 0;
+  -webkit-border-top-left-radius: 0;
+}
+div.block table.listbox tr{
+  margin-top:2px;
+}
+div.block table.listbox tr.DataB {
+  background-color:#FFF;
+}
+
+div.block div.input{
+  margin-left:0em;
+}
+
+#add-stick-gadget-tool-section{
+  margin-bottom: 1.5em;
+}
+
+/* labels in forms inserted into a gadget should be visible
+  indedepndantly from fact that master form may use hiddenLabel */
+div.block div.hidden_label label, 
+div.block div.hiddenLabel label{
+  display: none;
+}
+
+/* 
+  Gadgets CSS - use to define gadget specific CSS.
+
+*/
+
+div.block .right{
+  float:right;
+  margin-left:5px;
+}
+
+
+div.block div.box_inner_content div.worklist_list ul {
+  list-style-image:url(bullet.png);
+  margin:0;
+  padding-bottom:0.5em;
+  padding-left:2em;
+  padding-top:0.5em;
+}
+
+div.block div.worklist_list ul li{
+  overflow: visible;
+  margin-bottom:5px;
+  background-color:white;
+}
+
+div.block div.worklist_list a{
+  color:black;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+div.block div.worklist_list ul li a:hover{
+  text-decoration:none;
+}
+
+/* Some gadgets share same Document_getSummaryAsHTML or RssFeed_getSummaryAsHTML */
+div.document-gadget-quick-preview div.teaser{
+  cursor: pointer;
+  margin-bottom: 3px;
+}
+
+div.document-gadget-quick-preview div.teaser img{
+  vertical-align:top;
+  max-width: 150px;
+}
+
+div.document-gadget-quick-preview span.document-title,
+div.document-gadget-quick-preview span.modification-date{
+  font-size:1em;
+  color: #000;
+}
+
+/* Some items can be marked as read and we need a way to visualize it */
+div.document-gadget-quick-preview div.read span.document-title,
+div.document-gadget-quick-preview div.read span.modification-date{
+  color: #969696;
+}
+
+div.document-gadget-quick-preview a.document-link{
+  color:#000;
+  font-weight:bold;
+}
+
+/* Rss Feed reader gadget needs no listbox headers or 
+show number of records  or show 'No results' as listbox title is used for this */
+div.gadget-rss-reader table.listbox thead,
+div.gadget-rss-reader div.listbox-number-of-records,
+div.gadget-rss-reader table.listbox td.listbox-table-no-result-row,
+div.gadget-rss-reader div.listbox-title{
+  display: none;
+}
+div.gadget-rss-reader-message{
+  font-weight:bold;
+}
+div.gadget-rss-reader .listbox-head-content{
+  height:auto;
+}
+div.gadget-rss-reader .listbox-body,
+div.gadget-rss-reader .listbox-head{
+  margin-left:4px;
+  width:auto;
+}
+
+div.gadget-rss-reader div.read{
+  background-color:#ececec;
+}
+
+div.gadget-rss-reader span.modification-date{
+  color: #969696;
+}
+
+div.gadget-rss-reader a.document-link {
+  color:#000;
+}
+
+div.gadget-rss-reader a.listbox_title {
+  text-decoration: underline;
+  font-weight:bold;
+}
+
+div.rss-description{
+  margin-top:4px;
+}
+
+div.teaser .thumbnail-image{
+  margin-top:0px;
+  margin-right:4px;
+  margin-bottom:4px;
+  float:left;
+}
+div.teaser .icon {
+  vertical-align:middle;
+}
+
+/* RSS logo */
+div.gadget-rss-reader-logo img{
+  float:right;
+  margin:4px;
+  width:auto;
+}
+div.gadget-rss-reader div.listbox-head-content {
+  background-color: transparent;
+  padding-left:0px;
+}
+div.gadget-rss-reader .body {
+  float:left;
+}

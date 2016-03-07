@@ -1,0 +1,81 @@
+<tal:block 
+  tal:define="title here/field_title;
+              date here/field_date|nothing;
+              description here/field_content;
+              image here/field_img;
+              other_links here/field_others_links;
+              link here/field_link;
+              md5  here/field_md5;
+              box_relative_url python: request.get('box_relative_url', '');
+              box python: here.restrictedTraverse(box_relative_url);
+              preference_dict python: box.KnowledgeBox_getDefaultPreferencesDict();
+              show_feed_summary python: preference_dict.get('preferred_show_feed_summary');
+              show_feed_summary python: test(show_feed_summary is None, 1, show_feed_summary);
+              dom_id python: ('%s-%s' %(box_relative_url.replace('/','_'), md5));
+              selection_name python: context.Base_getListboxGadgetSelectionName(box_relative_url);
+              selection_params python: context.portal_selections.getSelectionParamsFor(selection_name);
+              read_item_list python:selection_params.get('rss_read_item_list', []);
+              is_read python: md5 in read_item_list;">
+
+  <div class="document-gadget-quick-preview"
+       tal:define="is_external_rss_image_available python: image not in ((), None, [])">
+
+    <div class="teaser"
+         tal:attributes="class python: test(is_read, 'teaser read', 'teaser unread');"
+         tal:condition="not: show_feed_summary">
+
+      <a target="_blank" 
+         class="document-direct-link"
+         title="Original Document"
+         i18n:domain="ui" i18n:attributes="title"
+         tal:attributes="href link">
+
+        <img class="thumbnail-image"
+             tal:condition="is_external_rss_image_available"
+             tal:attributes="src python: image[0]" alt="Thumbnail"/>
+
+        <img tal:condition="not: is_external_rss_image_available"
+           src="web_page.png"/>
+
+        <span class="document-title"
+              tal:content="title"/> - 
+        <span class="modification-date"
+              tal:content="date"/>
+      </a>
+
+    </div>
+
+    <div class="teaser"
+         tal:condition="show_feed_summary"
+         tal:attributes="class python: test(is_read, 'teaser read', 'teaser unread');
+                         onclick string:if(this.className!='teaser read'){this.className='teaser read';;$.get('Base_setRssItemReadInSelection', {'selection_name':'${selection_name}','item':'${md5}'})};;$('#${dom_id}').toggle();">
+
+      <img class="thumbnail-image"
+           tal:condition="is_external_rss_image_available"
+           tal:attributes="src python: image[0]" alt="Thumbnail"/>
+
+      <img tal:condition="not: is_external_rss_image_available"
+           src="web_page.png"/>
+
+      <span class="document-title"
+            tal:content="title"/> - 
+      <span class="modification-date"
+            tal:content="date"/>
+    </div>
+
+    <!-- Hidden description -->
+    <div class="body" 
+         style="display:none;"
+         tal:condition="show_feed_summary"
+         tal:attributes="id dom_id">
+      <div class="rss-description"
+            tal:content="structure description"/>
+      <a target="_blank" 
+         class="document-link"
+         title="Original Document"
+         i18n:translate="" i18n:domain="ui" i18n:attributes="title"
+         tal:attributes="href link">Show original item</a>
+    </div>
+  </div>
+  
+</tal:block>

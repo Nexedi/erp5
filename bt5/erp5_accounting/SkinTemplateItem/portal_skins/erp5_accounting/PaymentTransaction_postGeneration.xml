@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import translateString\n
-\n
-payment_transaction = context\n
-\n
-# initialize accounting_workflow to planned state\n
-if payment_transaction.getSimulationState() == "draft":\n
-  payment_transaction.plan(comment=translateString("Initialised by Delivery Builder."))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>related_simulation_movement_path_list=None, **kw</string> </value>
         </item>

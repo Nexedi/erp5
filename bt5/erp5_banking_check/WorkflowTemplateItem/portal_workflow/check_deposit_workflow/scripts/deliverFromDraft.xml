@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>context.validateConsistency(state_change)\n
-context.checkCheckBeforeDelivery(state_change)\n
-context.createCheckDepositLine(state_change)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

@@ -23,36 +23,6 @@
             <value> <string>application/x-javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/* Latvian (UTF-8) initialisation for the jQuery UI date picker plugin. */\n
-/* @author Arturas Paleicikas <arturas.paleicikas@metasite.net> */\n
-jQuery(function($){\n
-\t$.datepicker.regional[\'lv\'] = {\n
-\t\tcloseText: \'Aizvērt\',\n
-\t\tprevText: \'Iepr\',\n
-\t\tnextText: \'Nāka\',\n
-\t\tcurrentText: \'Šodien\',\n
-\t\tmonthNames: [\'Janvāris\',\'Februāris\',\'Marts\',\'Aprīlis\',\'Maijs\',\'Jūnijs\',\n
-\t\t\'Jūlijs\',\'Augusts\',\'Septembris\',\'Oktobris\',\'Novembris\',\'Decembris\'],\n
-\t\tmonthNamesShort: [\'Jan\',\'Feb\',\'Mar\',\'Apr\',\'Mai\',\'Jūn\',\n
-\t\t\'Jūl\',\'Aug\',\'Sep\',\'Okt\',\'Nov\',\'Dec\'],\n
-\t\tdayNames: [\'svētdiena\',\'pirmdiena\',\'otrdiena\',\'trešdiena\',\'ceturtdiena\',\'piektdiena\',\'sestdiena\'],\n
-\t\tdayNamesShort: [\'svt\',\'prm\',\'otr\',\'tre\',\'ctr\',\'pkt\',\'sst\'],\n
-\t\tdayNamesMin: [\'Sv\',\'Pr\',\'Ot\',\'Tr\',\'Ct\',\'Pk\',\'Ss\'],\n
-\t\tweekHeader: \'Nav\',\n
-\t\tdateFormat: \'dd-mm-yy\',\n
-\t\tfirstDay: 1,\n
-\t\tisRTL: false,\n
-\t\tshowMonthAfterYear: false,\n
-\t\tyearSuffix: \'\'};\n
-\t$.datepicker.setDefaults($.datepicker.regional[\'lv\']);\n
-});
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

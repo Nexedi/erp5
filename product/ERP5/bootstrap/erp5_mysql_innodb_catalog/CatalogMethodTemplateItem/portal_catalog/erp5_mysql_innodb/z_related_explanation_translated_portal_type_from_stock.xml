@@ -53,20 +53,6 @@ RELATED_QUERY_SEPARATOR=" AND "</string> </value>
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-var table_1>.message_context = "portal_type"\n
- AND <dtml-var table_1>.language = <dtml-sqlvar "Localizer.get_selected_language()" type="string">\n
- \n
-<dtml-var RELATED_QUERY_SEPARATOR>\n
-\n
-<dtml-var table_1>.original_message = <dtml-var table_0>.portal_type\n
- AND <dtml-var table_0>.uid = stock.explanation_uid
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

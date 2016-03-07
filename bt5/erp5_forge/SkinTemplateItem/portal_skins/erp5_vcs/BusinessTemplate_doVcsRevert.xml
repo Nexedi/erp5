@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>other_file_list = []\n
-if modified != \'none\':\n
-  other_file_list += modified.split(\',\')\n
-if removed != \'none\':\n
-  other_file_list += removed.split(\',\')\n
-\n
-added_file_list = added != \'none\' and added.split(\',\') or ()\n
-\n
-if added_file_list or other_file_list:\n
-  context.getVcsTool().revertZODB(added_file_list=added_file_list, other_file_list=other_file_list)\n
-  context.REQUEST.set(\'portal_status_message\', \'Changes reverted successfully.\')\n
-else:\n
-  context.REQUEST.set(\'portal_status_message\', \'Nothing to revert.\')\n
-\n
-return context.BusinessTemplate_viewVcsStatus()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>added=\'\', modified=\'\', removed=\'\', **kw</string> </value>
         </item>

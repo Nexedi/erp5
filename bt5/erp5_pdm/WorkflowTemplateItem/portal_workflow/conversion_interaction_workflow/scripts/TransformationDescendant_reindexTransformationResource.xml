@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>transformation = state_change[\'object\']\n
-\n
-# The script can be called from a Line or from a Cell\n
-# Find the Transformation ancestor\n
-while transformation.getPortalType() != "Transformation":\n
-  transformation = transformation.getParentValue()\n
-\n
-resource = transformation.getResourceValue()\n
-if resource is not None:\n
-  activate_kw=dict(after_path=transformation.getPath())\n
-  resource.reindexObject(activate_kw=activate_kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

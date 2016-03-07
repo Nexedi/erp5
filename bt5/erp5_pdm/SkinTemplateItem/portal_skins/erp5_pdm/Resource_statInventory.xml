@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.PythonScripts.standard import Object\n
-obj = Object(uid="new_")\n
-obj["node_title"] = ""\n
-obj["section_title"] = ""\n
-obj["variation_text"] = ""\n
-obj["getCurrentInventory"] = context.getCurrentInventory(selection_domain=kw.get(\'selection_domain\', None))\n
-obj["getAvailableInventory"] = context.getAvailableInventory(selection_domain=kw.get(\'selection_domain\', None))\n
-obj["inventory"] = context.getFutureInventory(selection_domain=kw.get(\'selection_domain\', None))\n
-\n
-return [obj,]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

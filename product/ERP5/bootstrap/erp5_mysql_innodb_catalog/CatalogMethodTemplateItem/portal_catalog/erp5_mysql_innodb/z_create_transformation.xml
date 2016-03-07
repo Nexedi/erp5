@@ -25,19 +25,6 @@
             <value> <string>z_create_transformation</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string>CREATE TABLE `transformation` (\n
-  `uid` bigint(20) unsigned NOT NULL,\n
-  `variation_text` varchar(255) default \'\',\n
-  `transformed_uid` bigint(20) unsigned NOT NULL,\n
-  `transformed_variation_text` varchar(255) default \'\',\n
-  `quantity` double,\n
-  KEY `resource` (`uid`, `variation_text`),\n
-  KEY `transformed_resource` (`transformed_uid`, `transformed_variation_text`)\n
-) ENGINE=InnoDB;\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

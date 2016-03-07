@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>project = context.ERP5Site_getProjectFromTestSuite(project_title)\n
-\n
-# create test result object\n
-benchmark_report = context.newContent(\n
-  portal_type=\'Benchmark Result\',\n
-  title=title,\n
-  source_project_value=project,\n
-  command_line=command_line)\n
-\n
-# update security\n
-benchmark_report.updateLocalRolesOnSecurityGroups()\n
-\n
-from DateTime import DateTime\n
-benchmark_report.start(date=DateTime())\n
-\n
-return benchmark_report\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>title, project_title, command_line, start_date</string> </value>
         </item>

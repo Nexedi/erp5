@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>item_list = [(\'\', \'\')]\n
-portal = context.getPortalObject()\n
-getobject = portal.portal_catalog.getobject\n
-\n
-for x in portal.portal_simulation.getInventoryList(\n
-                              portal_type=(\'Pay Sheet Cell\',\n
-                                           \'Pay Sheet Line\'),\n
-                              group_by_resource=1):\n
-  resource_uid = x.resource_uid\n
-  if resource_uid:\n
-    resource = getobject(resource_uid)\n
-    item_list.append((resource.getTitle(),\n
-                      resource.getRelativeUrl()))\n
-\n
-item_list.sort(key=lambda x: x[0])\n
-return item_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

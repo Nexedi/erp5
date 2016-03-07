@@ -1,0 +1,86 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Simple Relation Field, using the save button</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Simple Relation Field, using the save
+button</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=0</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_foo_category_title</td>
+  <td>a1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<!-- no amiguity, the relation is edited directly. -->
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_foo_category_title</td>
+  <td>a1</td>
+</tr>
+
+<!-- and a link is shown (XXX move in another test?) -->
+<tr>
+  <td>verifyElementPresent</td>
+  <!-- XXX RelationStringField generated HTML must be tweaked to ease testing.
+  -->
+  <td tal:content="string: //img[@src='${here/portal_url}/images/jump.png']"/>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td tal:content="string: //img[@src='${here/portal_url}/images/jump.png']"/>
+  <td></td>
+</tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td tal:content="string:regexp:${here/portal_url}/portal_categories/foo_category/a/a1(\?|$$)" />
+  <td/>
+</tr>
+</tbody></table>
+</body>
+</html>

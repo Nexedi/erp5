@@ -1,0 +1,13 @@
+<tal:block metal:define-macro="init_test_environment">
+  <tr>
+    <td>store</td>
+    <td tal:content="python:
+        here.REQUEST.get('URL')[0:here.REQUEST.get('URL').find('/portal_tests/')]">erp5</td>
+    <td>base_url</td>
+  </tr>
+  <tr>
+    <td>open</td>
+    <td>${base_url}/login_form</td>
+    <td></td>
+  </tr>
+</tal:block>

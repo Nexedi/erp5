@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
-\n
-translation_list = [\n
-  newTempBase(context, \'property_domain_dict/\'+k, uid=k,\n
-              property_name=v.getPropertyName(),\n
-              domain_name=v.getDomainName())\n
-  for k, v in context.getPropertyTranslationDomainDict().items()]\n
-\n
-translation_list.sort(key=lambda x: x.getId())\n
-return translation_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

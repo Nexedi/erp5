@@ -23,22 +23,6 @@ RELATED_QUERY_SEPARATOR=" AND "</string> </value>
             <value> <string>z_related_aggregate_bank_reconciliation</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
-AND <dtml-var table_1>.portal_type = "Bank Reconciliation"\n
-AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.aggregate.getUid()">\n
-<dtml-if table_2><dtml-comment>This related key can also be used with a criterion on delivery.date, in this case we join with a 3rd table</dtml-comment>\n
-  <dtml-var RELATED_QUERY_SEPARATOR>\n
-  <dtml-var table_2>.uid = <dtml-var table_1>.uid\n
-</dtml-if>\n
-<dtml-var RELATED_QUERY_SEPARATOR>\n
-<dtml-var table_0>.uid = <dtml-var query_table>.uid
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

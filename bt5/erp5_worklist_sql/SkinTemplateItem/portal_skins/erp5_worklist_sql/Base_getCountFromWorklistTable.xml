@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Wrapper for Base_zGetCountFromWorklistTable\n
-\n
-where_expression = context.getPortalObject().portal_catalog.buildSQLQuery(query=query, query_table=None)[\'where_expression\']\n
-\n
-return context.Base_zGetCountFromWorklistTable(\n
-  where_expression=where_expression,\n
-  select_expression=select_expression,\n
-  group_by_expression=group_by_expression,\n
-  **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>query, select_expression, group_by_expression, **kw</string> </value>
         </item>

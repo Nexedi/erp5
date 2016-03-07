@@ -23,38 +23,6 @@
             <value> <string>application/x-javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-﻿/* Bulgarian initialisation for the jQuery UI date picker plugin. */\n
-/* Written by Stoyan Kyosev (http://svest.org). */\n
-jQuery(function($){\n
-    $.datepicker.regional[\'bg\'] = {\n
-        closeText: \'затвори\',\n
-        prevText: \'&#x3c;назад\',\n
-        nextText: \'напред&#x3e;\',\n
-\t\tnextBigText: \'&#x3e;&#x3e;\',\n
-        currentText: \'днес\',\n
-        monthNames: [\'Януари\',\'Февруари\',\'Март\',\'Април\',\'Май\',\'Юни\',\n
-        \'Юли\',\'Август\',\'Септември\',\'Октомври\',\'Ноември\',\'Декември\'],\n
-        monthNamesShort: [\'Яну\',\'Фев\',\'Мар\',\'Апр\',\'Май\',\'Юни\',\n
-        \'Юли\',\'Авг\',\'Сеп\',\'Окт\',\'Нов\',\'Дек\'],\n
-        dayNames: [\'Неделя\',\'Понеделник\',\'Вторник\',\'Сряда\',\'Четвъртък\',\'Петък\',\'Събота\'],\n
-        dayNamesShort: [\'Нед\',\'Пон\',\'Вто\',\'Сря\',\'Чет\',\'Пет\',\'Съб\'],\n
-        dayNamesMin: [\'Не\',\'По\',\'Вт\',\'Ср\',\'Че\',\'Пе\',\'Съ\'],\n
-\t\tweekHeader: \'Wk\',\n
-        dateFormat: \'dd.mm.yy\',\n
-\t\tfirstDay: 1,\n
-        isRTL: false,\n
-\t\tshowMonthAfterYear: false,\n
-\t\tyearSuffix: \'\'};\n
-    $.datepicker.setDefaults($.datepicker.regional[\'bg\']);\n
-});\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

@@ -19,50 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-{\n
-    "name": "browser",\n
-    "title": "jQuery Browser",\n
-    "description": "A jQuery plugin for browser detection.",\n
-    "keywords": [\n
-        "browser",\n
-        "detection",\n
-        "mobile",\n
-        "html5",\n
-        "support"\n
-    ],\n
-    "version": "0.0.5",\n
-    "author": {\n
-        "name": "Gabriel Cebrian. Initial implementation by the jQuery Team",\n
-        "url": "https://github.com/gabceb/jquery-browser-plugin/wiki/Authors"\n
-    },\n
-    "maintainers": [\n
-        {\n
-            "name": "Gabriel Cebrian",\n
-            "email": "gabceb@gmail.com",\n
-            "url": "http://about.me/gabceb"\n
-        }\n
-    ],\n
-    "licenses": [\n
-        {\n
-            "type": "MIT",\n
-            "url": "http://opensource.org/licenses/MIT"\n
-        }\n
-    ],\n
-    "bugs": "https://github.com/gabceb/jquery-browser-plugin/issues",\n
-    "homepage": "https://github.com/gabceb/jquery-browser-plugin",\n
-    "docs": "https://github.com/gabceb/jquery-browser-plugin",\n
-    "download": "https://github.com/gabceb/jquery-browser-plugin",\n
-    "dependencies": {\n
-        "jquery": ">=1.5"\n
-    }\n
-}
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

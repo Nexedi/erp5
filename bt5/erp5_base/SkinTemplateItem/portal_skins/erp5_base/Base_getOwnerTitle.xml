@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Returns the name of the owner of current document\n
-"""\n
-owner_id_list = [i[0] for i in context.get_local_roles() if \'Owner\' in i[1]]\n
-if owner_id_list:\n
-  from Products.ERP5Security.ERP5UserManager import getUserByLogin\n
-  found_user_list = getUserByLogin(context.getPortalObject(), tuple(owner_id_list))\n
-  if found_user_list:\n
-    return found_user_list[0].getTitle()\n
-  return owner_id_list[0]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -1,0 +1,134 @@
+<tal:block replace="nothing">
+  <!--
+  This widget displays the list of KM actions which range
+  from browsing to querying latest documents or to adding
+  files, pages and links.
+  -->
+</tal:block>
+<tal:block tal:define="current_web_site python:request.get('current_web_site', here);
+                       portal_path python:request.get('current_web_site_url', current_web_site.absolute_url());
+                       current_web_section_url python:request.get('current_web_section_url', portal_path);
+                       search_area_url python: '%s%s' % (portal_path, current_web_site.getLayoutProperty('layout_search_area_web_section_id', default=''));
+                       is_anonymous here/portal_membership/isAnonymousUser;
+                       anonymous_navigation_menu python:is_anonymous and current_web_site.getLayoutProperty('layout_anonymous_navigation_menu');
+                       static_navigation_menu python: anonymous_navigation_menu or  current_web_site.getLayoutProperty('layout_member_navigation_menu');">
+
+<ul class="nav">
+  <li class="home-link"><a href="#" tal:attributes="href portal_path" id="home-link">Home</a></li>
+
+  <tal:block tal:replace="structure here/WebSite_viewBrowseNavigationMenuWidget"/>
+  <tal:block tal:condition="not: static_navigation_menu">
+  <li class="collapse-menu" 
+      tal:condition="not:anonymous_navigation_menu">
+    <a href="#" tal:attributes="href string:${search_area_url}/ERP5Site_viewSearchResult">
+      Documents<!--[if IE 7]><!-->
+    </a><!--<![endif]-->
+<!--[if lte IE 6]><table><tr><td><![endif]-->
+    <ul>
+      <li tal:condition="not:is_anonymous">
+        <a href="#" i18n:translate="" i18n:domain="ui" tal:attributes="href string:${search_area_url}/WebSite_viewMyContentList?reset:int=1">
+          My Documents
+        </a>
+      </li>
+      <li>
+        <a href="#" i18n:translate="" i18n:domain="ui" tal:attributes="href string:${search_area_url}/WebSite_viewLatestAdditionList?reset:int=1">
+          Latest Additions
+        </a>
+      </li>
+      <li>
+        <a href="#" i18n:translate="" i18n:domain="ui" tal:attributes="href string:${search_area_url}/WebSite_viewLatestChangeList?reset:int=1">
+          Recent Changes
+        </a>
+      </li>
+      <li>
+        <a i18n:translate="" i18n:domain="ui" tal:attributes="href string:${search_area_url}/Base_viewAdvancedSearchDialog">
+          Search
+        </a>
+      </li>
+      <tal:block tal:condition="python: here.Base_checkPermission('portal_contributions', 'Add portal content')">
+        <li>
+          <a href="#" i18n:translate="" i18n:domain="ui" tal:attributes="href string:${current_web_section_url}/Base_viewContributeFileDialog">
+            New Document
+          </a>
+        </li>
+        <li>
+          <a href="#" i18n:translate="" i18n:domain="ui" tal:attributes="href string:${current_web_section_url}/Base_viewContributeLinkDialog">
+            New Link
+          </a>
+        </li>
+      </tal:block>
+    </ul>
+    <!--[if lte IE 6]></td></tr></table></a><![endif]-->
+  </li>
+  <li class="collapse-menu" tal:condition="python: here.Base_checkPermission('person_module', 'View')">
+    <a href="#" i18n:translate="" i18n:domain="ui"
+      tal:attributes="href string:${portal_path}/person_module/PersonModule_viewPersonList">Contacts<!--[if IE 7]><!--></a><!--<![endif]-->
+<!--[if lte IE 6]><table><tr><td><![endif]-->
+    <ul>
+      <li><a href="#" i18n:translate="" i18n:domain="ui"
+             tal:condition="not:is_anonymous"
+             tal:attributes="href python:'%s/person_module/view?reset:int=1&owner=%s' % (portal_path, here.portal_membership.getAuthenticatedMember().getUserName())">My Contacts</a></li>
+      <li><a href="#" i18n:translate="" i18n:domain="ui"
+             tal:attributes="href string:${portal_path}/person_module/view?reset:int=1">Everybody</a></li>
+    </ul>
+<!--[if lte IE 6]></td></tr></table></a><![endif]--></li>
+
+  <tal:block tal:define="actions python: here.getPortalObject().portal_actions.listFilteredActionsFor(here);
+                         ordered_global_actions python: [x for x in getattr(here, 'portal_workflow').listActionInfos()];
+                         absolute_url  context/absolute_url;
+                         count python: reduce(lambda x, y: x+(y.has_key('count') and y['count'] or 0), ordered_global_actions, 0);
+                         portal_url python: context.portal_url();">
+    <li class="collapse-menu"
+        tal:condition="not:is_anonymous">
+      <a href="#" i18n:translate="" i18n:domain="ui">
+        <tal:block i18n:translate="" i18n:domain="ui">Tasks</tal:block>
+      </a>
+      <ul tal:condition="ordered_global_actions">
+        <li tal:repeat="action ordered_global_actions">
+          <tal:block tal:condition="python: action.get('disabled') == 1 and action.has_key('workflow_id')">
+            <a class="workflow_title" href='#'>-- <tal:bock i18n:translate="" i18n:domain="ui" tal:content="action/title"/> --</a>
+          </tal:block>
+          <tal:block tal:condition="python: action.get('disabled') != 1 and action.has_key('workflow_id')"
+                        tal:define="name python: action.get('name', '');
+                        index python: name.find(' (');">
+            <a href="#" tal:condition="python: index &gt;= 0"
+                    tal:attributes="href python: action['url'].replace(portal_url, portal_path)">
+              <tal:block tal:content="python: name[:index]" i18n:translate="" i18n:domain="ui">
+              </tal:block><tal:block tal:replace="python: name[index:]" />
+            </a>
+            <a href="#" tal:condition="python: index &lt; 0"
+                    tal:attributes="href python: action['url'].replace(portal_url, portal_path)"
+                    tal:content="action/name"
+                    i18n:translate="" i18n:domain="ui">
+           </a>
+          </tal:block>
+        </li>
+      </ul>
+    </li>
+  </tal:block>
+
+  <li class="collapse-menu"
+      tal:condition="not:is_anonymous">
+    <a href="#" i18n:translate="" i18n:domain="ui">Settings</a>
+    <ul>
+      <li>
+        <a tal:attributes="href string:${portal_path}/WebSite_redirectToUserView"
+            i18n:translate="" 
+            i18n:domain="ui">My Profile</a>
+      </li>
+      <li>
+      <a href="ERP5Site_viewNewPersonCredentialUpdateDialog" 
+         i18n:translate="" 
+         i18n:domain="ui">My Credentials</a>
+      </li>
+      <li>
+      <a href="WebSite_redirectToUserPreference" 
+         i18n:translate="" 
+         i18n:domain="ui">My Preferences</a>
+      </li>
+    </ul>
+  </li>
+  </tal:block>
+</ul>
+
+</tal:block>

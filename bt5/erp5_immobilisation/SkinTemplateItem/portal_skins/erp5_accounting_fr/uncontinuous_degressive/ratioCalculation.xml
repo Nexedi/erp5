@@ -49,37 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if initial_remaining_annuities is None or current_annuity is None:\n
-  context.log(\'Error in uncontinuous degressive ratioCalculation :\',\n
-            \'initial_remaining_annuities (%s) or current_annuity (%s) is None\' % (initial_remaining_annuities, current_annuity))\n
-  return None\n
-degressive_coef = kw.get(\'initial_degressive_coefficient\', None)\n
-if not degressive_coef:\n
-  context.log(\'Error in uncontinuous degressive ratioCalculation :\',\n
-            \'initial_degressive_coefficient (%s) is None or 0\' % degressive_coef)\n
-  return None\n
-  \n
-\n
-# Calculate the ratio for each annuity\n
-annuity_ratio_list = []\n
-first_linear_ratio = 1./initial_remaining_annuities\n
-degressive_ratio = first_linear_ratio * degressive_coef\n
-\n
-for i in range(int(initial_remaining_annuities)):\n
-  linear_ratio = 1. / (initial_remaining_annuities - i)\n
-  applied_ratio = max(linear_ratio, degressive_ratio)\n
-  annuity_ratio_list.append(applied_ratio)\n
-\n
-try:\n
-  return annuity_ratio_list[current_annuity]\n
-except IndexError:\n
-  context.log(\'Error in uncontinuous degressive ratioCalculation :\',\n
-              \'current_annuity (%s) exceeds initial_remaining_annuities (%s)\' % (current_annuity, initial_remaining_annuities))\n
-  return None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>initial_remaining_annuities=None, start_remaining_annuities=None, stop_remaining_annuities=None, current_annuity=None, start_remaining_durability=None, stop_remaining_durability=None, **kw</string> </value>
         </item>

@@ -1,0 +1,98 @@
+<span class="rootVoice" menu="menu_menuInstance" style="width: 15px;">MENU</span>
+
+<div id="menu_menuInstance" class="menu">
+  <a menu="menuFile_menuInstance">File</a>
+  <a menu="menuView_menuInstance">View</a>
+  <a menu="menuEdit_menuInstance">Edit</a>
+</div>
+
+<div id="menuFile_menuInstance" class="menu">
+  <a onclick="sheetInstance.newSheet(); return false;" title="Creates a new spreadsheet.">New</a>
+  <a onclick="sheetInstance.s.fnOpen(); return false;" title="Open a new spreadsheet.">Open</a>
+</div>
+
+<div id="menuView_menuInstance" class="menu">
+  <a onclick="sheetInstance.viewSource(true); return false;" title="Shows the HTML that makes up the current spreadsheet.">Pretty Source</a>
+  <a onclick="sheetInstance.viewSource(false); return false;" title="Shows the compact HTML that makes up the current spreadsheet.">Compact Source</a>
+  <a onclick="sheetInstance.print(sheetInstance.HTMLtoPrettySource(jQuery(sheetInstance.exportSheet.xml(true))[0])); return false;">As XML</a>
+  <a onclick="sheetInstance.print(JSON.stringify(sheetInstance.exportSheet.json())); return false;">As JSON</a>
+  <a menu="menuViewFunctionReference_menuInstance">Function Reference</a>
+  <a onclick="sheetInstance.toggleFullScreen();">Toggle Full Screen View</a>
+</div>
+
+<div id="menuViewFunctionReference_menuInstance" class="menu">
+  <a>Usage Example: =SUM(SUM(A1:B1) + SUM(D7))</a>
+  <a>=(TRUE(N(A1)) || FALSE(N(B1)))</a>
+  <a title="Returns the absolute value of a number">ABS()</a>
+  <a title="Returns a rounded number">AVG(), AVERAGE()</a>
+  <a title="Returns a number rounded up based on a multiple of significance">CEILING()</a>
+  <a title="Counts the number of cells that contain a value">COUNT()</a>
+  <a title="Counts full days from a specific date - format(YYYY,MM,DD)">DAYSFROM()</a>
+  <a title="Converts a number to text, using a currency format - options(number, decimals, symbol)">DOLLAR()</a>
+  <a title="Returns a logical value of FALSE">FALSE()</a>
+  <a title="Returns a text representation of a number rounded to a specified number of decimal places - options(number, decimals, useCommas)">FIXED()</a>
+  <a title="Returns a number rounded down based on a multiple of significance">FLOOR()</a>
+  <a title="Creates and executes a javascript function. example: FN(alert('Hello World')), this will execute when sheet compiles.">FN()</a>
+  <a title="Returns the integer portion of a number">INT()</a>
+  <a title="Returns the largest value from the numbers provided">MAX()</a>
+  <a title="Returns the smallest value from the numbers provided">MIN()</a>
+  <a title="Converts a value to a number">N()</a>
+  <a title="Gets full date of today">NOW()</a>
+  <a title="Returns the mathematical constant called pi, which is 3.14159265358979">PI()</a>
+  <a title="Returns the result of a number raised to a given power">POWER(x, y)</a>
+  <a title="Returns a random number that is greater than or equal to 0 and less than 1">RAND(), RND()</a>
+  <a title="Returns a number rounded to a specified number of digits">ROUND()</a>
+  <a title="Returns all of the values in each of the specified cells and added together">SUM()</a>
+  <a title="Gets full date of today">TODAY()</a>
+  <a title="Returns a logical value of TRUE">TRUE()</a>
+  <a title="Converts a text value that represents a number to a number">VALUE()</a>
+</div>
+
+<div id="menuEdit_menuInstance" class="menu">
+  <a onclick="sheetInstance.merge(); return false;">Merge</a>
+  <a onclick="sheetInstance.unmerge(); return false;">Un-Merge</a>
+  <a menu="menuEditColumn_menuInstance">Column</a>
+  <a menu="menuEditRow_menuInstance">Row</a>
+  <a menu="menuEditSheet_menuInstance">Sheet</a>
+  <a onclick="sheetInstance.cellFind(); return false;">Find</a>
+  <a onclick="sheetInstance.getTdRange(null, sheetInstance.obj.formula().val()); return false;">Get Cell Range</a>
+  <a menu="menuEditGetCellRangeAndWrap_menuInstance">Get Cell Range And Wrap With Function</a>
+  <a onclick="sheetInstance.cellUndoable.undoOrRedo(true); return false;">Undo</a>
+  <a onclick="sheetInstance.cellUndoable.undoOrRedo(); return false;">Redo</a>
+  <a onclick="sheetInstance.toggleState(); return false;">Toggle State</a>
+</div>
+
+<div id="menuEditColumn_menuInstance" class="menu">
+  <a onclick="sheetInstance.controlFactory.addColumn(null, null, ':last'); return false;" title="Adds an additional column to the right of the spreadsheet.">Add Column</a>
+  <a onclick="sheetInstance.controlFactory.addColumnMulti(); return false;" title="Adds an additional columns to the right of the spreadsheet.">Add Multi-Columns</a>
+  <a onclick="sheetInstance.deleteColumn(); return false;" title="Deletes the current column thats highlighted.">Delete Column</a>
+  <a onclick="sheetInstance.controlFactory.addColumn(null, true); return false;" title="Inserts an additional column after currently selected column.">Insert Column Before</a>
+  <a onclick="sheetInstance.controlFactory.addColumn(); return false;" title="Inserts an additional column after currently selected column.">Insert Column After</a>
+  <a onclick="sheetInstance.fillUpOrDown(); return false;" title="Fill down current cell value.">Fill Down</a>
+  <a onclick="sheetInstance.fillUpOrDown(true); return false;" title="Fill up current cell value.">Fill Up</a>
+  <!--<a onclick="sheetInstance.toggleHide.columnAll();" title="Unhides all the hidden columns.">Show All</a>
+  <a onclick="sheetInstance.toggleHide.column();" title="Hides or shows the currently selected column.">Toggle Hide Column</a>-->
+</div>
+<div id="menuEditRow_menuInstance" class="menu">
+  <a onclick="sheetInstance.controlFactory.addRow(null, null, ':last'); return false;" title="Adds an additional row to bottom of the spreadsheet.">Add Row</a>
+  <a onclick="sheetInstance.controlFactory.addRowMulti(); return false;" title="Adds an additional rows to bottom of the spreadsheet.">Add Multi-Rows</a>
+  <a onclick="sheetInstance.deleteRow(); return false;" title="Delets the current row thats highlighted.">Delete Row</a>
+  <a onclick="sheetInstance.controlFactory.addRow(null, true); return false;" title="Inserts an additional row after currently selected row.">Insert Row Before</a>
+  <a onclick="sheetInstance.controlFactory.addRow(); return false;" title="Inserts an additional row after currently selected row.">Insert Row After</a>
+  <!--<a onclick="sheetInstance.toggleHide.rowAll();" title="Unhides all the hidden rows.">Show All</a>
+  <a onclick="sheetInstance.toggleHide.row();" title="Hides or shows the currently selected row.">Toggle Hide Row</a>-->
+</div>
+<div id="menuEditSheet_menuInstance" class="menu">
+  <a onclick="sheetInstance.addSheet(); return false;" title="Add new spreadsheet.">Add Spreadsheet</a>
+  <a onclick="sheetInstance.deleteSheet(); return false;" title="Delete the current spreadsheet.">Delete Spreadsheet</a>
+  <a onclick="sheetInstance.calc(sheetInstance.obj.tableBody()); return false;" title="Recompiles the current sheet">Refresh Calculations</a>
+  <a onclick="sheetInstance.sheetTitle(); return false;" title="Change the title of the sheet.">Title</a>
+</div>
+
+<div id="menuEditGetCellRangeAndWrap_menuInstance" class="menu">
+  <a onclick="sheetInstance.getTdRange(null, sheetInstance.obj.formula().val(), 'SUM'); return false;" title="Wrap with SUM">SUM()</a>
+  <a onclick="sheetInstance.getTdRange(null, sheetInstance.obj.formula().val(), 'CEILING'); return false;" title="Wrap with CEILING">CEILING()</a>
+  <a onclick="sheetInstance.getTdRange(null, sheetInstance.obj.formula().val(), 'COUNT'); return false;" title="Wrap with COUNT">COUNT()</a>
+  <a onclick="sheetInstance.getTdRange(null, sheetInstance.obj.formula().val(), 'MAX'); return false;" title="Wrap with MAX">MAX()</a>
+  <a onclick="sheetInstance.getTdRange(null, sheetInstance.obj.formula().val(), 'MIN'); return false;" title="Wrap with MIN">MIN()</a>
+</div>

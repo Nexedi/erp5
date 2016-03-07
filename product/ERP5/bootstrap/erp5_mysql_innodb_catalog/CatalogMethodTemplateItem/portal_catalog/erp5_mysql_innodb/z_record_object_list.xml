@@ -52,26 +52,6 @@ catalog</string> </value>
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-INSERT INTO\n
-  record (path, catalog, played, date)\n
-VALUES\n
-<dtml-in path_list>\n
-(\n
-  <dtml-sqlvar sequence-item type="string">,\n
-  <dtml-sqlvar catalog type="int">,\n
-  0,\n
-  NOW()\n
-)\n
-<dtml-if sequence-end><dtml-else>,</dtml-if>\n
-</dtml-in>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

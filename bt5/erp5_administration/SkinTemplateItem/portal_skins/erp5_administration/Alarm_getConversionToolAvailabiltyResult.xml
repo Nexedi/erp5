@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if process is None:\n
-  return False\n
-result_list = process.getResultList()\n
-return result_list and bool(result_list[0].getProperty(\'severity\')) or False\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>process=None</string> </value>
         </item>

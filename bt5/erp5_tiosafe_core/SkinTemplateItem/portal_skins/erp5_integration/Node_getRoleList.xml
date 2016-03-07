@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>""" Retrieve the role list of the Node. """\n
-role_list = []\n
-\n
-for role in context.getRoleList():\n
-  role_list.append("role/%s" %(role))\n
-\n
-role_list.sort()\n
-\n
-return role_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

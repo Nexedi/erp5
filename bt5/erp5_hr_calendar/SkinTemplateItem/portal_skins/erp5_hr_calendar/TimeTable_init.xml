@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Create a first line to retrieve list of days\n
-int_index = 0\n
-line = context.newContent(int_index=int_index)\n
-day_list = line.getWeekDayList()\n
-line.edit(day_of_week=day_list[0])\n
-tag = "%s_reindex" % context.getRelativeUrl()\n
-\n
-# Create other lines\n
-for day in day_list[1:]:\n
-  int_index+=1\n
-  context.newContent(int_index=int_index, day_of_week=day,\n
-                     activate_kw={"tag": tag})\n
-# after indexing, make sure to update periodicity stop date\n
-context.getPortalObject().portal_alarms.update_time_table_end_periodicity.activate(\n
-  after_tag=tag, priority=5).activeSense()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

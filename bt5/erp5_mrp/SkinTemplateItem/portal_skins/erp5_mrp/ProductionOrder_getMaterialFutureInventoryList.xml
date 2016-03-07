@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Returns list of products\' inventories used in consumption for production"""\n
-kwargs[\'resource_portal_type\'] = context.getPortalObject().getPortalProductTypeList()\n
-return context.ProductionOrder_getConsumptionMovementList(*args,**kwargs)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args,**kwargs</string> </value>
         </item>

@@ -49,56 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># This script indexes the preferred Transformation to produce\n
-# a variation of a product.\n
-# transformation_item_list is a list of:\n
-#   transformation, variation_list_list\n
-# transformation is a transformation to index, while variation_list_list\n
-# is a list of variation categories that are relevant for the produced resource\n
-\n
-\n
-from Products.ERP5Type.Document import newTempMovement\n
-\n
-# List of dictionaries:\n
-#   { id:resource_id,\n
-#     variation_text: resource_variation_text,\n
-#     row_dict_list: list of rows to insert; each row is represented as a dict.}\n
-row_dict_dict_list = []\n
-\n
-portal = context.getPortalObject()\n
-for transformation_relative_url, variation_list_list in transformation_item_list:\n
-  transformation = portal.restrictedTraverse(transformation_relative_url)\n
-  resource = transformation.getResourceValue()\n
-\n
-  if resource is None:\n
-    continue\n
-  for variation_list in variation_list_list:\n
-    movement = newTempMovement(resource, \'temp\',\n
-                               specialise_value=transformation,\n
-                               variation_category_list=variation_list,\n
-                               resource_value=resource,\n
-                               quantity=1.0)\n
-    base_row = dict(uid=resource.getUid(), variation_text=movement.getVariationText())\n
-\n
-    row_dict_list = []\n
-    for amount in movement.getAggregatedAmountList():\n
-      transformed_resource_uid = amount.getResourceUid()\n
-      quantity = amount.getQuantity()\n
-      if transformed_resource_uid is not None and quantity is not None:\n
-        row_dict = base_row.copy()\n
-        row_dict.update(transformed_uid=transformed_resource_uid,\n
-                        transformed_variation_text=amount.getVariationText(),\n
-                        quantity=quantity)\n
-        row_dict_list.append(row_dict)\n
-\n
-    base_row[\'row_dict_list\'] = row_dict_list\n
-    row_dict_dict_list.append(base_row)\n
-\n
-context.z_catalog_transformation_list(row_dict_dict_list=row_dict_dict_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>transformation_item_list</string> </value>
         </item>

@@ -1,0 +1,9 @@
+<div class="history-widget">
+  <table id="#workflow_history" tal:define="history here/Base_getWorkflowEventInfoList">
+    <tr tal:repeat="event history">
+      <td tal:content="python: here.Base_FormatDate(event.time)"/>
+      <td tal:content="event/action"/>
+      <td tal:content="event/actor"/>
+    </tr>
+  </table>
+</div>

@@ -19,69 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-//\n
-// Pager pagination\n
-// --------------------------------------------------\n
-\n
-\n
-.pager {\n
-  padding-left: 0;\n
-  margin: @line-height-computed 0;\n
-  list-style: none;\n
-  text-align: center;\n
-  .clearfix();\n
-  li {\n
-    display: inline;\n
-    > a,\n
-    > span {\n
-      display: inline-block;\n
-      padding: 5px 14px;\n
-      background-color: @pagination-bg;\n
-      border: 1px solid @pagination-border;\n
-      border-radius: @pager-border-radius;\n
-    }\n
-\n
-    > a:hover,\n
-    > a:focus {\n
-      text-decoration: none;\n
-      background-color: @pagination-hover-bg;\n
-    }\n
-  }\n
-\n
-  .next {\n
-    > a,\n
-    > span {\n
-      float: right;\n
-    }\n
-  }\n
-\n
-  .previous {\n
-    > a,\n
-    > span {\n
-      float: left;\n
-    }\n
-  }\n
-\n
-  .disabled {\n
-    > a,\n
-    > a:hover,\n
-    > a:focus,\n
-    > span {\n
-      color: @pager-disabled-color;\n
-      background-color: @pagination-bg;\n
-      cursor: not-allowed;\n
-    }\n
-  }\n
-\n
-}\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

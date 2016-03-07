@@ -98,40 +98,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, RSVP */\n
-/*jslint indent: 2, maxerr: 3 */\n
-(function (window, rJS) {\n
-  "use strict";\n
-\n
-  rJS(window)\n
-    .ready(function (gadget) {\n
-      return gadget.getElement()\n
-        .push(function (element) {\n
-          gadget.element = element;\n
-        });\n
-    })\n
-\n
-    .declareMethod(\'render\', function (options) {\n
-      var input = this.element.querySelector(\'input\'),\n
-        field_json = options.field_json || {};\n
-      input.checked = field_json.value || field_json.default;\n
-      input.setAttribute(\'name\', field_json.key);\n
-      input.setAttribute(\'title\', field_json.title);\n
-      if (field_json.editable === 0) {\n
-        input.setAttribute("class", "ui-btn ui-state-readonly");\n
-      }\n
-    })\n
-\n
-    .declareMethod(\'getContent\', function () {\n
-      var input = this.element.querySelector(\'input\'),\n
-        result = {};\n
-      result[input.getAttribute(\'name\')] = (input.checked ? 1 : 0);\n
-      return result;\n
-    });\n
-}(window, rJS));</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Gadget ERP5 CheckBoxField JS</string> </value>
         </item>

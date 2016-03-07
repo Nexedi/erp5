@@ -49,33 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Helper script used by many scripts Item_get*(Value|Title) used for UI\n
-It helps to improve consistency between all those scripts\n
-\n
- fallback_on_future: if True return future Tracking List if current Tracking List is empty\n
-"""\n
-portal = context.getPortalObject()\n
-\n
-default_at_date = False\n
-if at_date is None:\n
-  default_at_date = True\n
-  at_date = DateTime()\n
-\n
-sql_kw = {\'item\': context.getRelativeUrl(),\n
-          \'at_date\': at_date}\n
-\n
-affectation_list = portal.portal_simulation.getCurrentTrackingList(**sql_kw)\n
-\n
-if fallback_on_future and not affectation_list:\n
-  if default_at_date:\n
-    del sql_kw[\'at_date\']\n
-  affectation_list = portal.portal_simulation.getFutureTrackingList(**sql_kw)\n
-\n
-return affectation_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>at_date=None, fallback_on_future=True, **kw</string> </value>
         </item>

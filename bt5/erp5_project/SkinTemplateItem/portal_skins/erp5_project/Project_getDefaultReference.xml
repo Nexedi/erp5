@@ -49,39 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>project = context\n
-reference_list = []\n
-\n
-# return reference if defined:\n
-reference = project.getReference()\n
-if reference: return reference\n
-\n
-# Set marker for milestone\n
-project_item_type = project.getPortalType()\n
-\n
-# browse projects parents until base found\n
-# assemble list of default reference items\n
-while project.getPortalType() in ( "Project Line", "Project Milestone"):\n
-  reference = project.getReference()\n
-  reference_list.append(reference or str(project.getProperty(\'int_index\', \'\') or \'\') or project.getId())\n
-  project = project.getParentValue()\n
-  # Quick exit if some parent project defines a reference\n
-  if reference:\n
-    reference_list.reverse()\n
-    return \'-\'.join(reference_list)\n
-\n
-# Add M for milestone\n
-if project_item_type == "Project Milestone":\n
-  reference_list.append(\'M\')\n
-\n
-# Append default reference (P)\n
-reference_list.append(reference or \'P\')\n
-reference_list.reverse()\n
-return \'-\'.join(reference_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

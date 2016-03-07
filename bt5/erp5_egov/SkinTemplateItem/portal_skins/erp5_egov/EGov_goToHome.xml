@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request=context.REQUEST\n
-portal = context.getPortalObject()\n
-\n
-# get module url\n
-absolute_url = portal.web_site_module.ecitizen.absolute_url()\n
-\n
-redirect_url = absolute_url\n
-\n
-result = request[\'RESPONSE\'].redirect(redirect_url) \n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

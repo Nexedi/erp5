@@ -1,0 +1,98 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/getId"/>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_search_text</td>
+  <td>Pouet</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@name='ERP5Site_viewQuickSearchResultList:method']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Search Results</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Summary</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']//span[@class='search_result_title']</td>
+  <td>test_km_web_site_page</td>
+</tr>
+<!-- Test listbox sub search -->
+<tr>
+  <td>verifyValue</td>
+  <td>search_text</td>
+  <td>Pouet</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_your_search_text</td>
+  <td>Pouet</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>search_text</td>
+  <td>Poueet</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@name='Base_doSelect:method']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>No result</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>search_text</td>
+  <td>Poueet</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>search_text</td>
+  <td>Pouet</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@name='Base_doSelect:method']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']//span[@class='search_result_title']</td>
+  <td>test_km_web_site_page</td>
+</tr>
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />
+
+</tbody></table>
+</body>
+</html>

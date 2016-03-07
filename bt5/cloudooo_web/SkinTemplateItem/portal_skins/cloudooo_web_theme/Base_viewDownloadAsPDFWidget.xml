@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -36,21 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<tal:block tal:define="current_url python: context.getAbsoluteUrl();\n
-                       site_url python:request.get(\'current_web_site_url\',current_url)">\n
-<a href=".?format=pdf">\n
-<img alt="pdf icon" title="Download as PDF" src="./cloudooo_image/download_pdf.png" \n
-     tal:attributes="src string:${site_url}//cloudooo_image/download_pdf.png">\n
-</a>\n
-\n
-</tal:block>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>
@@ -61,6 +43,10 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>Base_viewDownloadAsPDFWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

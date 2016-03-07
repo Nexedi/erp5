@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>source = context.getSource()\n
-if source is not None:\n
-  if source.endswith(\'/entrante\'):\n
-    source = source[:-len(\'/entrante\')]\n
-  if source.endswith(\'/sortante\'):\n
-    source = source[:-len(\'/sortante\')]\n
-  site = context.Baobab_getVaultSite(source).getRelativeUrl()\n
-  if \'devise\' in source:\n
-    return  "%s/surface/caisse_courante/%s" % (site, "/".join(source.split("/")[-2:]))\n
-  else:\n
-    return  "%s/surface/caisse_courante/encaisse_des_billets_et_monnaies" % site\n
-return source\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

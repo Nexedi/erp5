@@ -49,37 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from zExceptions import Unauthorized\n
-\n
-if context.portal_membership.isAnonymousUser():\n
-  raise Unauthorized("You are not allowed to use this script")\n
-\n
-request = context.REQUEST\n
-template_name = template or request.get("template")\n
-if template_name is None:\n
-  return None\n
-\n
-template_relative_url = "portal_preferences/ung_preference/%s" % template_name\n
-# Create the new content in appropriate module\n
-portal = context.getPortalObject()\n
-template = portal.restrictedTraverse(template_relative_url)\n
-preference = template.getParentValue()\n
-\n
-preference.manage_copyObjects(ids=[template.getId()], REQUEST=request, RESPONSE=None)\n
-new_content_list = portal.web_page_module.manage_pasteObjects(request[\'__cp\'])\n
-new_content_id = new_content_list[0][\'new_id\']\n
-new_content = portal.web_page_module[new_content_id]\n
-new_content.makeTemplateInstance()\n
-\n
-portal_type = new_content.getPortalType()\n
-module = portal.getDefaultModule(portal_type)\n
-\n
-kw["webpage_path"] = new_content.getPath()\n
-return new_content.Base_redirect(keep_items = dict(editable_mode=1, **kw))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>template=None, **kw</string> </value>
         </item>

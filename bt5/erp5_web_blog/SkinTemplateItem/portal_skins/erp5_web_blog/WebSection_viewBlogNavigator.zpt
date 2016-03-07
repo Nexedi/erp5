@@ -1,0 +1,12 @@
+<tal:block tal:define="nearby python: context.WebSection_getNearbyPost();
+                       section python: context.getWebSectionValue().absolute_url() + '/';
+                       previous nearby/previous;
+                       next nearby/next">
+
+<span class="blog_navigator">
+<a href="nowhere.html" tal:condition="python: previous is not None" tal:attributes="href python: section + previous">Previous</a>
+&nbsp;
+<a href="elsewhere.html" tal:condition="python: next is not None" tal:attributes="href python: section + next">Next</a>
+</span>
+
+</tal:block>

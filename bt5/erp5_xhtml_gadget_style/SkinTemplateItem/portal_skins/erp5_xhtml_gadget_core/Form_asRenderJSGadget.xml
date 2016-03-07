@@ -37,54 +37,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block  tal:define="group_list here/Form_getGroupTitleAndId;\n
-                        form_id here/getId;\n
-                        portal here/getPortalObject;\n
-                        portal_url portal/absolute_url">\n
-\n
-  <tal:block tal:repeat="group group_list">\n
-\n
-        <tal:block tal:define="gid group/gid;">\n
-\n
-          <fieldset tal:attributes="class python:gid +\' editable\';">\n
-\n
-            <tal:block tal:repeat="field python: here.get_fields_in_group(group[\'goid\'])">\n
-\n
-              <tal:block tal:define="title field/title;\n
-                                     field_name python: \'field_%s\' %field.getId();\n
-                                     proxied_field python: test(field.meta_type==\'ProxyField\', field.getRecursiveTemplateField(), field);\n
-                                     field_type python: proxied_field.meta_type;\n
-                                     is_listbox python: field_type==\'ListBox\'">\n
-\n
-                <div class="field">\n
-                  <label tal:content="title" tal:condition="not:is_listbox"/>\n
-                  <div class="input">\n
-\n
-                    <!-- render gadget asynchronously -->\n
-                    <div tal:attributes="data-gadget string:${portal_url}/gadgets/form/${field_type}/gadget?field_name=${field_name}&form_id=${form_id};\n
-                                         id string:${form_id}_${field_name};"></div>\n
-\n
-                  </div>\n
-                </div>\n
-\n
-              </tal:block>\n
-\n
-            </tal:block>\n
-\n
-           </fieldset>\n
-\n
-        </tal:block>\n
-\n
-  </tal:block>\n
-\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

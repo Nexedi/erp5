@@ -49,35 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>""" Return a list of sections from the tax type definition.\n
-\n
-XXX this script is overkill, we could directly iterate on tax return line instead.\n
-"""\n
-\n
-tax_type_definition = context.portal_types[context.getPortalType()]\n
-\n
-section_list = []\n
-for tax_return_line in tax_type_definition.contentValues(\n
-      portal_type=\'Tax Return Line\',\n
-      sort_on=(\'float_index\',),):\n
-  section_list.append(  \n
-    dict(section_title=tax_return_line.getTitle(),\n
-         selection_params=dict(\n
-           base_contribution_list=tax_return_line.getBaseContributionList(base=1),\n
-           portal_type=tax_return_line.getPropertyList(\'line_portal_type\'),\n
-           delivery_portal_type=tax_return_line.getPropertyList(\'delivery_portal_type\'),\n
-           column_list=[item for item in enumerate(tax_return_line.getBaseContributionTranslatedTitleList())],\n
-           multiplier=tax_return_line.getProperty(\'multiplier\'),\n
-           total_price=tax_return_line.getProperty(\'asset_price\'),\n
-           only_accountable=tax_return_line.getProperty(\'only_accountable\'),\n
-           journal_list=None,\n
-         )))\n
-\n
-return section_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

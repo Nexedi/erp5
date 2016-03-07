@@ -26,13 +26,6 @@
               <dictionary/>
             </value>
         </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string>/* Selectable\n
-----------------------------------*/\n
-.ui-selectable-helper { border:1px dotted black }\n
-</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

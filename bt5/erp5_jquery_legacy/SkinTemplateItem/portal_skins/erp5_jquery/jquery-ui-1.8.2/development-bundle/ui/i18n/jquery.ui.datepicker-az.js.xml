@@ -23,36 +23,6 @@
             <value> <string>application/x-javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-﻿/* Azerbaijani (UTF-8) initialisation for the jQuery UI date picker plugin. */\n
-/* Written by Jamil Najafov (necefov33@gmail.com). */\n
-jQuery(function($) {\n
-\t$.datepicker.regional[\'az\'] = {\n
-\t\tcloseText: \'Bağla\',\n
-\t\tprevText: \'&#x3c;Geri\',\n
-\t\tnextText: \'İrəli&#x3e;\',\n
-\t\tcurrentText: \'Bugün\',\n
-\t\tmonthNames: [\'Yanvar\',\'Fevral\',\'Mart\',\'Aprel\',\'May\',\'İyun\',\n
-\t\t\'İyul\',\'Avqust\',\'Sentyabr\',\'Oktyabr\',\'Noyabr\',\'Dekabr\'],\n
-\t\tmonthNamesShort: [\'Yan\',\'Fev\',\'Mar\',\'Apr\',\'May\',\'İyun\',\n
-\t\t\'İyul\',\'Avq\',\'Sen\',\'Okt\',\'Noy\',\'Dek\'],\n
-\t\tdayNames: [\'Bazar\',\'Bazar ertəsi\',\'Çərşənbə axşamı\',\'Çərşənbə\',\'Cümə axşamı\',\'Cümə\',\'Şənbə\'],\n
-\t\tdayNamesShort: [\'B\',\'Be\',\'Ça\',\'Ç\',\'Ca\',\'C\',\'Ş\'],\n
-\t\tdayNamesMin: [\'B\',\'B\',\'Ç\',\'С\',\'Ç\',\'C\',\'Ş\'],\n
-\t\tweekHeader: \'Hf\',\n
-\t\tdateFormat: \'dd.mm.yy\',\n
-\t\tfirstDay: 1,\n
-\t\tisRTL: false,\n
-\t\tshowMonthAfterYear: false,\n
-\t\tyearSuffix: \'\'};\n
-\t$.datepicker.setDefaults($.datepicker.regional[\'az\']);\n
-});
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

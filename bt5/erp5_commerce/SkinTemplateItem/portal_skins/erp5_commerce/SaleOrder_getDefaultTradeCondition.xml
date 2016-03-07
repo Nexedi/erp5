@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Return the default trade condition"""\n
-default = "sale_trade_condition_module/default_trade_condition"\n
-\n
-website = context.getWebSiteValue()\n
-if website:\n
-  default = website.getLayoutProperty(\'ecommerce_default_trade_condition\', default)\n
-\n
-return context.getPortalObject().restrictedTraverse(default)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

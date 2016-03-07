@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>sub = context.restrictedTraverse(context_document)\n
-while sub.getParentValue().getPortalType() !=  "Synchronization Tool":\n
-  sub = sub.getParentValue()\n
-\n
-im = sub.Base_getRelatedObjectList(portal_type=\'Integration Module\')[0].getObject()\n
-org_module = im.getParentValue().organisation_module\n
-org_pub = org_module.getSourceSectionValue()\n
-gid = org_pub.getGidFromObject(context.getSubordinationValue(), encoded=False)\n
-\n
-return str(gid)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>context_document</string> </value>
         </item>

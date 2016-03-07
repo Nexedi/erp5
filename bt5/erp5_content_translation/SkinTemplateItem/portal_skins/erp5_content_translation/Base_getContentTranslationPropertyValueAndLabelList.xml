@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>result = []\n
-for property_name in context.getTypeInfo().getContentTranslationDomainPropertyNameList():\n
-  original_text = context.getProperty(property_name)\n
-  if original_text:\n
-    result.append((property_name, original_text))\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

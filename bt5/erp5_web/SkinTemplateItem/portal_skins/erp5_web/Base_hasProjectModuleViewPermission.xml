@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This scruipt is used by widgets which require access to \n
-  the project module. Anonymous users are usually not\n
-  allowed to list projects. To prevent raising \n
-  exceptions, we use this script as a precondition.\n
-"""\n
-return context.getPortalObject().restrictedTraverse(\'project_module\', None) is not None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

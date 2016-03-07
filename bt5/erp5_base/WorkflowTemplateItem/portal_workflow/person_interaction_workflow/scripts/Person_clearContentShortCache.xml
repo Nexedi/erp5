@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># XXX-Luke: Seb pointed out that this is very bad idea to clear cache.\n
-document = state_change[\'object\']\n
-if document.getReference() is not None:\n
-  cache_tool = document.getPortalObject().portal_caches\n
-  cache_tool.clearCache(cache_factory_list=(\'erp5_content_short\', ),\n
-                        before_commit=True)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

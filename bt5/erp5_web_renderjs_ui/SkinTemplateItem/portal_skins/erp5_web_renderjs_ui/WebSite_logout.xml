@@ -169,21 +169,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Default logout handler, overwritten to give website specific portal status message.\n
-"""\n
-website = context.getWebSiteValue()\n
-REQUEST = context.REQUEST\n
-if REQUEST.has_key(\'portal_skin\'):\n
-  context.portal_skins.clearSkinCookie()\n
-REQUEST.RESPONSE.expireCookie(\'__ac\', path=\'/\')\n
-REQUEST.RESPONSE.setHeader(\'Location\', came_from or context.getPermanentURL(context))\n
-REQUEST.RESPONSE.setStatus(303)\n
-# REQUEST.RESPONSE.redirect(came_from or context.getPermanentURL(context));\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>came_from=\'\', **kw</string> </value>
         </item>

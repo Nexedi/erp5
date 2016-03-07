@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Base_updateListboxSelection cannot be found.\n
-Base_updateListboxSelection = getattr(context, \'Base_updateListboxSelection\', None)\n
-if Base_updateListboxSelection is not None:\n
-  Base_updateListboxSelection()\n
-\n
-context.REQUEST.set("proxy_listbox_id", select_dialog )\n
-\n
-# Reset selection when changing the listbox (request parameters will be kept)\n
-stool = context.getPortalObject().portal_selections\n
-stool.setSelectionFor("Base_viewRelatedObjectList", None)\n
-return context.Base_viewRelatedObjectList(REQUEST=context.REQUEST)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>select_dialog</string> </value>
         </item>
