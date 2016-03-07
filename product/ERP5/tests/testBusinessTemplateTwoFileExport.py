@@ -53,6 +53,7 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
     return ['erp5_core_proxy_field_legacy',
                             'erp5_property_sheets',
                             'erp5_jquery',
+                            'erp5_jquery_ui',
                             'erp5_full_text_mroonga_catalog',
                             'erp5_base',
                             'erp5_core',
@@ -62,7 +63,10 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
                             'erp5_web',
                             'erp5_hal_json_style',
                             'erp5_dms',
-                            'erp5_web_renderjs_ui'
+                            'erp5_web_renderjs_ui',
+                            'erp5_slideshow_style',
+                            'erp5_knowledge_pad',
+                            'erp5_run_my_doc'
                             ]
 
   def afterSetUp(self):
@@ -870,6 +874,83 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     self._checkTwoFileImportExportForDocumentInDocumentModule(spreadsheet_document_kw,
                                                               '.xlsx')
+
+  def test_twoFileImportExportForTestPage(self):
+    """Test Business Template Import And Export With A Test Page Document"""
+    test_page_data = """<html></html>"""
+
+    test_page_data_kw = {"title": "test_page",
+                         "text_content": test_page_data,
+                         "portal_type": "Test Page",
+                         "content_type": "text/html"}
+
+    test_page = self.portal.test_page_module.newContent(**test_page_data_kw)
+    test_page_data_kw['id'] = test_page_id = test_page.getId()
+
+    self.template.edit(template_path_list=['test_page_module/'+test_page_id,])
+
+    test_page_document_path = os.path.join(self.cfg.instancehome, self.export_dir,
+                                     'PathTemplateItem', 'test_page_module',
+                                      test_page_id)
+
+    import_template = self._exportAndReImport(
+                                  test_page_document_path+".xml",
+                                  test_page_document_path+".html",
+                                  test_page_data_kw["text_content"],
+                                  ["text_content"])
+
+    self.portal.test_page_module.manage_delObjects([test_page_id])
+
+    import_template.install()
+
+    test_page = self.portal.test_page_module[test_page_id]
+
+    for property_id, property_value in test_page_data_kw.iteritems():
+      self.assertEqual(getattr(test_page, property_id), property_value)
+
+  def test_twoFileImportExportForERP5PythonScript(self):
+    """Test Business Template Import And Export With Python Script"""
+    skin_folder_id = 'dummy_test_folder'
+    if skin_folder_id in self.portal.portal_skins.objectIds():
+      self.portal.portal_skins.manage_delObjects([skin_folder_id])
+
+    self.portal.portal_skins.manage_addProduct['OFSP'].manage_addFolder(skin_folder_id)
+    skin_folder = self.portal.portal_skins[skin_folder_id]
+
+    python_script_id = 'dummy_test_script'
+    if python_script_id in skin_folder.objectIds():
+      skin_folder.manage_delObjects([python_script_id])
+
+    python_script = self.portal.portal_types.\
+      getTypeInfo("Python Script").constructInstance(
+        container=skin_folder,
+        id=python_script_id)
+
+    python_script.ZPythonScript_edit('', "context.setTitle('foo')")
+
+    python_script_kw = {"id": python_script_id,
+                        "_body": "context.setTitle('foo')\n",}
+
+    self.template.edit(template_skin_id_list=[skin_folder_id+'/'+python_script_id,])
+
+    python_script_path = os.path.join(self.cfg.instancehome, self.export_dir,
+                                             'SkinTemplateItem', 'portal_skins',skin_folder_id,python_script_id)
+
+
+    import_template = self._exportAndReImport(
+                                  python_script_path+".xml",
+                                  python_script_path+".py",
+                                  python_script_kw["_body"],
+                                  ['_body','_code'])
+
+    self.portal.portal_skins[skin_folder_id].manage_delObjects([python_script_id])
+
+    import_template.install()
+
+    python_script_page = self.portal.portal_skins[skin_folder_id][python_script_id]
+
+    for property_id, property_value in python_script_kw.iteritems():
+      self.assertEqual(getattr(python_script_page, property_id), property_value)
 
   def test_templateFolderIsCleanedUpInImportEndReexport(self):
     """
