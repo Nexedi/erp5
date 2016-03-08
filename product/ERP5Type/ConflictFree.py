@@ -83,7 +83,10 @@ class ConflictFreeLog(Persistent):
         return dict(new_state, _log=saved_state['_log'][d:] + new_state['_log'])
       # Another node rotated before us. Revert our rotation.
       # Both the head and its predecessor conflict.
-      i = 0
+      # The following computed value is normally 0, except:
+      # - if the another node rotated during a conflict resolution
+      # - and if this is not the first conflict resolution.
+      i = len(old_state['_log']) - d
     else:
       # We didn't rotate. Just add our items to saved head.
       # Only the head conflicts.
