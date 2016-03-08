@@ -811,7 +811,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     # Try to guess the extension based on the title of the document
     title = getattr(document, "title", None)
     if title:
-      mime_type = mime.guess_type(document.title)
+      mime_type = mime.guess_type(title)
       if mime_type[0]:
         extension = guess_extension(mime_type[0])
         return extension
