@@ -765,12 +765,17 @@ class ObjectTemplateItem(BaseTemplateItem):
     - '.bin' is returned for binary files
     - '.txt' is returned for text
     """
+    # Try to guess the extension based on the content_type of the document
     # XXX Zope items like DTMLMethod would not
     # implement getContentType method
     extension = None
     binary = 'not_identified'
+    content_type = None
     if hasattr(document, 'getContentType'):
       content_type = document.getContentType()
+    elif isinstance(document, ERP5BaseBroken):
+      content_type = getattr(document, "content_type", None)
+    if content_type:
       lookup_result = self.getMimetypesRegistryLookupResultOfContenType(content_type)
       if lookup_result:
         # return first registered Extension (if any)
@@ -793,15 +798,19 @@ class ObjectTemplateItem(BaseTemplateItem):
       return extension
     # Try to guess the extension based on the reference of the document
     mime = MimeTypes()
+    reference = None
     if hasattr(document, 'getReference'):
       reference = document.getReference()
-      if reference:
-        mime_type = mime.guess_type(reference)
-        if mime_type[0]:
-          extension = guess_extension(mime_type[0])
-          return extension
+    elif isinstance(document, ERP5BaseBroken):
+      reference = getattr(document, "reference", None)
+    if reference:
+      mime_type = mime.guess_type(reference)
+      if mime_type[0]:
+        extension = guess_extension(mime_type[0])
+        return extension
     # Try to guess the extension based on the title of the document
-    if hasattr(document, 'title'):
+    title = getattr(document, "title", None)
+    if title:
       mime_type = mime.guess_type(document.title)
       if mime_type[0]:
         extension = guess_extension(mime_type[0])
