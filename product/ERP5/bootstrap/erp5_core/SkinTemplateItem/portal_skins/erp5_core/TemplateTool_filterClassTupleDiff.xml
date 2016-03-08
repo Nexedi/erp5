@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-if len(old_line_list) == 4 and len(new_line_list) == 1 and \\\n
-   old_line_list[0] == \'<tuple>\' and \\\n
-   old_line_list[2] == \'<tuple/>\' and \\\n
-   old_line_list[3] ==\'</tuple>\' and \\\n
-   old_line_list[1]== new_line_list[0]:\n
-    return True\n
-\n
-return False\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>old_line_list, new_line_list</string> </value>
         </item>
