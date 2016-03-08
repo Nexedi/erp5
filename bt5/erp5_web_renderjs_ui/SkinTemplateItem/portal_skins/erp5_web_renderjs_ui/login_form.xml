@@ -81,11 +81,11 @@
 \n
             <div class="ui-field-contain">\n
               <label data-i18n="Login">Login<span></span></label>\n
-              <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset"><input autofocus type="text" name="__ac_name" placeholder="Ex: john" value="" required=""></div>\n
+              <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset"><input autofocus type="text" name="__ac_name" value="" required=""></div>\n
             </div>\n
             <div class="ui-field-contain">\n
               <label data-i18n="Password">Password<span></span></label>\n
-              <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset"><input type="password" name="__ac_password" placeholder="Ex: A1bcF$99" value="" required=""></div>\n
+              <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset"><input type="password" name="__ac_password" value="" required=""></div>\n
             </div>\n
             <div class="ui-field-contain">\n
               <label></label>\n
