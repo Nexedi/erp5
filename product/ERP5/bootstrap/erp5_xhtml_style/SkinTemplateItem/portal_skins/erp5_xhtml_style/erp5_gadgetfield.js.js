@@ -33,7 +33,10 @@
     /////////////////////////////////////////////////////////////////
     // Init local properties
     .ready(function (g) {
-      g.props = {};
+      g.props = {
+        maximize_classname: "ui-content-maximize",
+        maximize_classname_search_regexp: /(?:^|\s)ui-content-maximize(?:\s|$)/
+      };
     })
 
     // Assign the element to a variable
@@ -46,6 +49,46 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+    .allowPublicAcquisition('requestMaximize', function (_, gadget_scope) {
+      return this.getDeclaredGadget(gadget_scope).push(function (gadget) {
+        return gadget.getElement();
+      }).push(function (element) {
+        if (this.props.maximize_restore_state) {
+          return;  // do not raise, like html5 requestFullScreen
+        }
+        this.props.maximize_restore_state = {
+          gadget_scope: gadget_scope,
+          scrollTop: window.pageYOffset,
+          scrollLeft: window.pageXOffset
+        };
+        element.className = (element.className || "") +
+          " " + this.props.maximize_classname;
+      }.bind(this));
+    })
+    .allowPublicAcquisition('leaveMaximize', function (_, gadget_scope) {
+      return this.getDeclaredGadget(gadget_scope).push(function (gadget) {
+        return gadget.getElement();
+      }).push(function (element) {
+        if (!this.props.maximize_restore_state ||
+            this.props.maximize_restore_state.gadget_scope !== gadget_scope) {
+          return;  // do not raise, like html5 requestFullScreen
+        }
+        var maximized_element_list = this.props.element.querySelectorAll(
+          "." + this.props.maximize_classname
+        );
+        if ([].indexOf.call(maximized_element_list, element) < 0) {
+          return;  // do not raise, like html5 requestFullScreen
+        }
+        element.className = (element.className || "")
+          .replace(this.props.maximize_classname_search_regexp, " ")
+          .replace(/(?:^\s+|\s+$)/g, ""); // remove trailing spaces
+        window.scrollTo(
+          this.props.maximize_restore_state.scrollLeft,
+          this.props.maximize_restore_state.scrollTop
+        );
+        delete this.props.maximize_restore_state;
+      }.bind(this));
+    })
     .declareService(function () {
       var g = this,
         i,
