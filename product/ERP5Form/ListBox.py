@@ -2461,6 +2461,12 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
                 editable_field.generate_field_key(key=key), request)
             except (KeyError, AttributeError):
               display_value = original_value
+            if isinstance(editable_field.widget, Widget.MultiItemsWidget) and \
+                not isinstance(display_value, list):
+              if display_value:
+                display_value = [display_value]
+              else:
+                display_value = []
           # If error on current field, we should display message
           if key in error_dict:
             error_text = error_dict[key].error_text
