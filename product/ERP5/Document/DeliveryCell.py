@@ -160,6 +160,14 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
     def isMovement(self):
       return 1
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                             'isMovingItem')
+    def isMovingItem(self, item):
+      type_based_script = self._getTypeBasedMethod('isMovingItem')
+      if type_based_script:
+        return type_based_script(item)
+      return self.isAccountable()
+
     # Override getQuantityUnitXXX to negate same methods defined in
     # Amount class. Because cell must acquire quantity unit from line
     # not from resource.
