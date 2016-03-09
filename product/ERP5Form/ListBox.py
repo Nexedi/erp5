@@ -2461,7 +2461,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
                 editable_field.generate_field_key(key=key), request)
             except (KeyError, AttributeError):
               display_value = original_value
-            if isinstance(editable_field.widget, Widget.MultiItemsWidget) and \
+            if isinstance(editable_field.getRecursiveTemplateField().widget,
+                          Widget.MultiItemsWidget) and \
                 not isinstance(display_value, list):
               if display_value:
                 display_value = [display_value]
