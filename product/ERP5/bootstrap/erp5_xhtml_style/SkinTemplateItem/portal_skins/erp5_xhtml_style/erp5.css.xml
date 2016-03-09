@@ -1196,6 +1196,15 @@ span.search button .image {\n
   padding: 5px;\n
 }\n
 \n
+/* fit content section to window size and in foreground */\n
+.ui-content-maximize {\n
+  position: fixed !important;\n
+  top: 0; left: 0; right: 0; bottom: 0;\n
+  height: 100vh;\n
+  width: 100vw;\n
+  z-index: 2000;\n
+}\n
+\n
 /* Search results list\n
 ------------------------------------------------*/\n
 \n
