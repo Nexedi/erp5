@@ -2456,11 +2456,15 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
             # user if any. However, it's only possible if keys are unique,
             # so this is skipped if there's no uid.
             # This duplicates some work done by field.render
+            field_key = editable_field.generate_field_key(key=key)
             try:
               display_value = editable_field._get_user_input_value(
-                editable_field.generate_field_key(key=key), request)
+                field_key, request)
             except (KeyError, AttributeError):
-              display_value = original_value
+              if request.get('default_' + field_key) is None:
+                display_value = original_value
+              else:
+                display_value = None
             if isinstance(editable_field.getRecursiveTemplateField().widget,
                           Widget.MultiItemsWidget) and \
                 not isinstance(display_value, list):
