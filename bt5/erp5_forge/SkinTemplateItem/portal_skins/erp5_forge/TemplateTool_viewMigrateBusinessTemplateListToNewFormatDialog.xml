@@ -71,7 +71,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_repository_list</string>
+                        <string>your_repository_list</string>
                       </list>
                     </value>
                 </item>

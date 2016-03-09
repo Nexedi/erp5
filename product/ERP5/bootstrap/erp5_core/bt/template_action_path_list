@@ -125,7 +125,6 @@ Template Tool | download_from_repository
 Template Tool | import
 Template Tool | install_from_repository
 Template Tool | jump_trash_bins
-Template Tool | migrate_business_template_list
 Template Tool | update
 Template Tool | upgrade_from_repository
 Template Tool | view
