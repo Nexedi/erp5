@@ -148,6 +148,8 @@
             // XXX Hardcoded
             data.dialog_id = form_gadget.props.form_id['default'];
             data.dialog_method = form_gadget.props.action.action;
+            //XXX hack for redirect, difined in form
+            form_gadget.props.redirect_to_parent = content_dict.field_your_redirect_to_parent;
             for (key in content_dict) {
               if (content_dict.hasOwnProperty(key)) {
                 data[key] = content_dict[key];
@@ -162,15 +164,21 @@
 
           })
           .push(function (evt) {
-            var location = evt.target.getResponseHeader("X-Location");
-            if (location === undefined || location === null) {
-              // No redirection, stay on the same document
-              return form_gadget.getUrlFor({command: 'change', options: {view: "view", page: undefined}});
+            var location = evt.target.getResponseHeader("X-Location"),
+              list = [];
+            list.push(form_gadget.notifySubmitted());
+
+            if (form_gadget.props.redirect_to_parent) {
+              list.push(form_gadget.redirect({command: 'history_previous'}));
+            } else {
+              if (location === undefined || location === null) {
+                // No redirection, stay on the same document
+                list.push(form_gadget.redirect({command: 'change', options: {view: "view", page: undefined}}));
+              } else {
+                list.push(form_gadget.redirect({command: 'push_history', options: {jio_key: new URI(location).segment(2), editable: form_gadget.props.editable}}));
+              }
             }
-            return RSVP.all([
-              form_gadget.notifySubmitted(),
-              form_gadget.redirect({command: 'push_history', options: {jio_key: new URI(location).segment(2), editable: form_gadget.props.editable}})
-            ]);
+            return RSVP.all(list);
           })
           .push(undefined, function (error) {
             if ((error.target !== undefined) && (error.target.status === 400)) {

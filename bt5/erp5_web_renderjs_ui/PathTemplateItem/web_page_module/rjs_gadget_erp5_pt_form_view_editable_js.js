@@ -49,7 +49,8 @@
       return form_gadget.getDeclaredGadget("erp5_form")
         .push(function (erp5_form) {
           var form_options = options.erp5_form || {},
-            new_content_action;
+            new_content_action,
+            delete_action;
 
           form_options.erp5_document = options.erp5_document;
           form_options.form_definition = options.form_definition;
@@ -62,6 +63,13 @@
             new_content_action = "";
           }
 
+
+          delete_action = options.erp5_document._links.action_object_delete_action;
+          if (delete_action !== undefined) {
+            delete_action = form_gadget.getUrlFor({command: 'change', options: {view: delete_action.href, editable: undefined}});
+          } else {
+            delete_action = "";
+          }
           return RSVP.all([
             erp5_form.render(form_options),
             form_gadget.getUrlFor({command: 'change', options: {}}),
@@ -69,7 +77,8 @@
             form_gadget.getUrlFor({command: 'change', options: {page: "action", editable: true}}),
             form_gadget.getUrlFor({command: 'change', options: {page: "breadcrumb", editable: true}}),
             new_content_action,
-            form_gadget.getUrlFor({command: 'history_previous'})
+            form_gadget.getUrlFor({command: 'history_previous'}),
+            delete_action
           ]);
         })
         .push(function (all_result) {
@@ -78,7 +87,7 @@
             tab_url: all_result[2],
             cut_url: "",
             actions_url: all_result[3],
-            delete_url: "",
+            delete_url: all_result[7],
             add_url: all_result[5],
             // view_url: all_result[1],
             selection_url: all_result[6],
