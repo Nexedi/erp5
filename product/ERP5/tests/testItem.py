@@ -113,6 +113,7 @@ class TestItemMixin(TestSaleInvoiceMixin):
       title = "PPL%s" % pac_list.getId(),
       start_date = self.datetime + 20,
       stop_date = self.datetime + 10,
+      specialise_value = portal.business_process_module.erp5_default_business_process,
     )
 
     if organisation is not None:
@@ -904,7 +905,6 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     self.assertEqual(12, packing_list_line.getQuantity())
 
 
-  @newSimulationExpectedFailure
   def test_select_item_dialog_variation(self):
     organisation = self.createOrganisation(title='Organisation IV')
     resource = self.createVariatedResource()
@@ -1039,6 +1039,7 @@ class TestItemScripts(ERP5TypeTestCase):
                   source_section_value=self.mirror_section,
                   destination_value=self.node,
                   destination_section_value=self.section,
+                  specialise_value=self.portal.business_process_module.erp5_default_business_process,
                   start_date=DateTime() - 1,)
     line = packing_list.newContent(
                   portal_type='Sale Packing List Line',
@@ -1051,7 +1052,6 @@ class TestItemScripts(ERP5TypeTestCase):
     return line
 
   # with line
-  @newSimulationExpectedFailure
   def test_Item_getResourceValue(self):
     self.assertEqual(None, self.item.Item_getResourceValue())
     line = self._makeSalePackingListLine()
@@ -1059,7 +1059,6 @@ class TestItemScripts(ERP5TypeTestCase):
     self.assertEqual(None, self.item.Item_getResourceValue(
                                 at_date=DateTime() - 2))
 
-  @newSimulationExpectedFailure
   def test_Item_getResourceTitle(self):
     self.assertEqual(None, self.item.Item_getResourceTitle())
     line = self._makeSalePackingListLine()
@@ -1067,7 +1066,6 @@ class TestItemScripts(ERP5TypeTestCase):
     self.assertEqual(None, self.item.Item_getResourceTitle(
                                 at_date=DateTime() - 2))
 
-  @newSimulationExpectedFailure
   def test_Item_getCurrentOwnerValue(self):
     self.assertEqual(None, self.item.Item_getCurrentOwnerValue())
     line = self._makeSalePackingListLine()
@@ -1075,7 +1073,6 @@ class TestItemScripts(ERP5TypeTestCase):
     self.assertEqual(None,
         self.item.Item_getCurrentOwnerValue(at_date=DateTime() - 2))
 
-  @newSimulationExpectedFailure
   def test_Item_getCurrentOwnerTitle(self):
     self.assertEqual(None, self.item.Item_getCurrentOwnerTitle())
     line = self._makeSalePackingListLine()
@@ -1083,7 +1080,6 @@ class TestItemScripts(ERP5TypeTestCase):
     self.assertEqual(None,
         self.item.Item_getCurrentOwnerTitle(at_date=DateTime() - 2))
 
-  @newSimulationExpectedFailure
   def test_Item_getCurrentSiteValue(self):
     self.assertEqual(None, self.item.Item_getCurrentSiteValue())
     line = self._makeSalePackingListLine()
@@ -1091,7 +1087,6 @@ class TestItemScripts(ERP5TypeTestCase):
     self.assertEqual(None, self.item.Item_getCurrentSiteValue(
                                             at_date=DateTime() - 2))
 
-  @newSimulationExpectedFailure
   def test_Item_getCurrentSiteTitle(self):
     self.assertEqual(None, self.item.Item_getCurrentSiteTitle())
     line = self._makeSalePackingListLine()
@@ -1108,6 +1103,7 @@ class TestItemScripts(ERP5TypeTestCase):
                   source_section_value=self.mirror_section,
                   destination_value=self.node,
                   destination_section_value=self.section,
+                  specialise_value=self.portal.business_process_module.erp5_default_business_process,
                   start_date=DateTime() - 1,)
     line = packing_list.newContent(
                   portal_type='Sale Packing List Line',
@@ -1124,7 +1120,6 @@ class TestItemScripts(ERP5TypeTestCase):
     packing_list.deliver()
     return cell
 
-  @newSimulationExpectedFailure
   def test_Item_getVariationCategoryList(self):
     self.assertEqual([], self.item.Item_getVariationCategoryList())
     self._makeSalePackingListCellWithVariation()
@@ -1132,7 +1127,6 @@ class TestItemScripts(ERP5TypeTestCase):
     self.assertEqual([],
         self.item.Item_getVariationCategoryList(at_date=DateTime() - 2))
 
-  @newSimulationExpectedFailure
   def test_Item_getVariationRangeCategoryItemList(self):
     self.assertEqual([], self.item.Item_getVariationRangeCategoryItemList())
     self._makeSalePackingListCellWithVariation()
