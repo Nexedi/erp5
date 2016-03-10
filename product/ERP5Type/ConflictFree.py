@@ -76,20 +76,21 @@ class ConflictFreeLog(Persistent):
     # May be called for the head and its predecessor.
     old_tail_count = old_state.get('_tail_count', 0)
     d = new_state.get('_tail_count', 0) - old_tail_count
+    # Added elements by us:
+    added = new_state['_log'][
+      # The following computed value is also non-zero
+      # if we rotated during a previous conflict resolution.
+      len(old_state['_log']) - d
+      :]
     if d:
       if old_tail_count == saved_state.get('_tail_count', 0):
         # We are the first one to rotate. Really rotate.
         # Only the head conflicts in this case.
-        return dict(new_state, _log=saved_state['_log'][d:] + new_state['_log'])
+        return dict(new_state, _log=saved_state['_log'][d:] + added)
       # Another node rotated before us. Revert our rotation.
       # Both the head and its predecessor conflict.
-      # The following computed value is normally 0, except:
-      # - if the another node rotated during a conflict resolution
-      # - and if this is not the first conflict resolution.
-      i = len(old_state['_log']) - d
-    else:
+    #else:
       # We didn't rotate. Just add our items to saved head.
       # Only the head conflicts.
-      i = len(old_state['_log'])
-    saved_state['_log'].extend(new_state['_log'][i:])
+    saved_state['_log'] += added
     return saved_state
