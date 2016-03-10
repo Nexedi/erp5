@@ -99,7 +99,7 @@
     /////////////////////////////////////////////////////////////////
     .allowPublicAcquisition('requestMaximize', function (_, subgadget_scope) {
       var gadget = this, subgadget;
-      return this.getDeclaredGadget(gadget_scope).push(function (g) {
+      return this.getDeclaredGadget(subgadget_scope).push(function (g) {
         subgadget = g;
         return g.getElement();
       }).push(function (element) {
@@ -108,7 +108,7 @@
     })
     .allowPublicAcquisition('leaveMaximize', function (_, subgadget_scope) {
       var gadget = this, subgadget;
-      return this.getDeclaredGadget(gadget_scope).push(function (g) {
+      return this.getDeclaredGadget(subgadget_scope).push(function (g) {
         subgadget = g;
         return g.getElement();
       }).push(function (element) {
@@ -117,7 +117,7 @@
     })
     .allowPublicAcquisition('toggleMaximize', function (_, subgadget_scope) {
       var gadget = this, subgadget;
-      return this.getDeclaredGadget(gadget_scope).push(function (g) {
+      return this.getDeclaredGadget(subgadget_scope).push(function (g) {
         subgadget = g;
         return g.getElement();
       }).push(function (element) {
