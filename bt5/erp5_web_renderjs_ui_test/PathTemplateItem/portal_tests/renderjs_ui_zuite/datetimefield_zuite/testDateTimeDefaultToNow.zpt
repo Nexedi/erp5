@@ -2,12 +2,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test RenderJS UI</title>
+<title>Test RenderJS UI: DateTimeField Default to now</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI: DateTimeField Default to now</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 
@@ -78,59 +78,23 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name='field_my_stop_date']</td>
+  <td>//input[@name='field_my_start_date']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>type</td>
-  <td>//input[@name='field_my_stop_date']</td>
-  <td>9915-14-21T11:00</td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Tabs']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='DateTimeField']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='DateTimeField']</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='field_my_stop_date']</td>
-  <td></td>
+  <td>storeEval</td>
+  <td>(new Date()).toISOString().substring(0, 10);</td>
+  <td>now</td>
 </tr>
 
 
 <tr>
   <td>verifyValue</td>
-  <td>//input[@name='field_my_stop_date']</td>
-  <td></td>
+  <td>//input[@name='field_my_start_date']</td>
+  <td>glob:${now}*</td>
 </tr>
+
 </tbody></table>
 </body>
 </html>

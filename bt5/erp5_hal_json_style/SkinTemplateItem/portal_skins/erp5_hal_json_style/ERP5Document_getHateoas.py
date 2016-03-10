@@ -185,6 +185,8 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "hidden_day_is_last_day": field.get_value('hidden_day_is_last_day'),
     }
     date_value = getFieldDefault(traversed_document, field, result["key"], value)
+    if not date_value and field.get_value('default_now'):
+      date_value = DateTime()
     if same_type(date_value, DateTime()):
       # Serialize DateTime
       date_value = date_value.rfc822()
