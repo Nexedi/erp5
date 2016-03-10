@@ -36,8 +36,7 @@
       scrollTop: window.pageYOffset,
       scrollLeft: window.pageXOffset
     };
-    element.className = (element.className || "") +
-      " " + gadget.props.maximize_classname;
+    element.classList.add("ui-content-maximize");
     // XXX tell sub gadget that now it is maximized (call subgadget.onMaximizeChange?)
     //     this way the parent gadget can decide to set the sub gadget unmaximized later
     //     for instance: if the user clicks on a button that changes the ui, the maximized
@@ -50,15 +49,12 @@
         gadget.props.maximize_restore_state.gadget_scope !== subgadget_scope) {
       return false;  // do not raise, like html5 requestFullScreen
     }
-    var maximized_element_list = gadget.props.element.querySelectorAll(
-      "." + gadget.props.maximize_classname
-    );
+    var maximized_element_list =
+        gadget.props.element.querySelectorAll(".ui-content-maximize");
     if ([].indexOf.call(maximized_element_list, element) < 0) {
       return false;  // do not raise, like html5 requestFullScreen
     }
-    element.className = (element.className || "")
-      .replace(gadget.props.maximize_classname_search_regexp, " ")
-      .replace(/(?:^\s+|\s+$)/g, ""); // remove trailing spaces
+    element.classList.remove("ui-content-maximize");
     window.scrollTo(
       gadget.props.maximize_restore_state.scrollLeft,
       gadget.props.maximize_restore_state.scrollTop
@@ -81,10 +77,7 @@
     /////////////////////////////////////////////////////////////////
     // Init local properties
     .ready(function (g) {
-      g.props = {
-        maximize_classname: "ui-content-maximize",
-        maximize_classname_search_regexp: /(?:^|\s)ui-content-maximize(?:\s|$)/
-      };
+      g.props = {};
     })
 
     // Assign the element to a variable
