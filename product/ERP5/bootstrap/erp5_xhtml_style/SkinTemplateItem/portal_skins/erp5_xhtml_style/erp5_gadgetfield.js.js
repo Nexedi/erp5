@@ -27,62 +27,52 @@
     return new RSVP.Promise(resolver, canceller);
   }
 
-  function requestMaximize(param_dict, element) {
-    if (this.props.maximize_restore_state) {
+  function gadgetRequestMaximize(gadget, subgadget, subgadget_scope, element) {
+    if (gadget.props.maximize_restore_state) {
       return false;  // do not raise, like html5 requestFullScreen
     }
-    this.props.maximize_restore_state = {
-      gadget_scope: param_dict.gadget_scope,
+    gadget.props.maximize_restore_state = {
+      gadget_scope: subgadget_scope,
       scrollTop: window.pageYOffset,
       scrollLeft: window.pageXOffset
     };
     element.className = (element.className || "") +
-      " " + this.props.maximize_classname;
-    // XXX tell sub gadget that now it is maximized (call param_dict.gadget.onMaximizeChange?)
+      " " + gadget.props.maximize_classname;
+    // XXX tell sub gadget that now it is maximized (call subgadget.onMaximizeChange?)
     //     this way the parent gadget can decide to set the sub gadget unmaximized later
     //     for instance: if the user clicks on a button that changes the ui, the maximized
     //                   gadget should have to be unmaximized.
     return true;
   }
 
-  function leaveMaximize(param_dict, element) {
-    if (!this.props.maximize_restore_state ||
-        this.props.maximize_restore_state.gadget_scope !== param_dict.gadget_scope) {
+  function gadgetLeaveMaximize(gadget, subgadget, subgadget_scope, element) {
+    if (!gadget.props.maximize_restore_state ||
+        gadget.props.maximize_restore_state.gadget_scope !== subgadget_scope) {
       return false;  // do not raise, like html5 requestFullScreen
     }
-    var maximized_element_list = this.props.element.querySelectorAll(
-      "." + this.props.maximize_classname
+    var maximized_element_list = gadget.props.element.querySelectorAll(
+      "." + gadget.props.maximize_classname
     );
     if ([].indexOf.call(maximized_element_list, element) < 0) {
       return false;  // do not raise, like html5 requestFullScreen
     }
     element.className = (element.className || "")
-      .replace(this.props.maximize_classname_search_regexp, " ")
+      .replace(gadget.props.maximize_classname_search_regexp, " ")
       .replace(/(?:^\s+|\s+$)/g, ""); // remove trailing spaces
     window.scrollTo(
-      this.props.maximize_restore_state.scrollLeft,
-      this.props.maximize_restore_state.scrollTop
+      gadget.props.maximize_restore_state.scrollLeft,
+      gadget.props.maximize_restore_state.scrollTop
     );
-    delete this.props.maximize_restore_state;
-    // XXX tell sub gadget that now it is unmaximized (call param_dict.gadget.onMaximizeChange?)
+    delete gadget.props.maximize_restore_state;
+    // XXX tell sub gadget that now it is unmaximized (call subgadget.onMaximizeChange?)
     return true;
   }
 
-  function toggleMaximize(param_dict, element) {
-    if (this.props.maximize_restore_state) {
-      return leaveMaximize.call(this, param_dict, element);
+  function gadgetToggleMaximize(gadget, subgadget, subgadget_scope, element) {
+    if (gadget.props.maximize_restore_state) {
+      return gadgetLeaveMaximize(gadget, subgadget, subgadget_scope, element);
     }
-    return requestMaximize.call(this, param_dict, element);
-  }
-
-  function makeMaximizeMethod(fn) {
-    return function (_, gadget_scope) {
-      var param_dict = {gadget_scope: gadget_scope};
-      return this.getDeclaredGadget(gadget_scope).push(function (gadget) {
-        param_dict.gadget = gadget;
-        return gadget.getElement();
-      }).push(fn.bind(this, param_dict));
-    };
+    return gadgetRequestMaximize(gadget, subgadget, subgadget_scope, element);
   }
 
   rJS(window)
@@ -107,9 +97,33 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .allowPublicAcquisition('requestMaximize', makeMaximizeMethod(requestMaximize))
-    .allowPublicAcquisition('leaveMaximize', makeMaximizeMethod(leaveMaximize))
-    .allowPublicAcquisition('toggleMaximize', makeMaximizeMethod(toggleMaximize))
+    .allowPublicAcquisition('requestMaximize', function (_, subgadget_scope) {
+      var gadget = this, subgadget;
+      return this.getDeclaredGadget(gadget_scope).push(function (g) {
+        subgadget = g;
+        return g.getElement();
+      }).push(function (element) {
+        return gadgetRequestMaximize(gadget, subgadget, subgadget_scope, element);
+      });
+    })
+    .allowPublicAcquisition('leaveMaximize', function (_, subgadget_scope) {
+      var gadget = this, subgadget;
+      return this.getDeclaredGadget(gadget_scope).push(function (g) {
+        subgadget = g;
+        return g.getElement();
+      }).push(function (element) {
+        return gadgetLeaveMaximize(gadget, subgadget, subgadget_scope, element);
+      });
+    })
+    .allowPublicAcquisition('toggleMaximize', function (_, subgadget_scope) {
+      var gadget = this, subgadget;
+      return this.getDeclaredGadget(gadget_scope).push(function (g) {
+        subgadget = g;
+        return g.getElement();
+      }).push(function (element) {
+        return gadgetToggleMaximize(gadget, subgadget, subgadget_scope, element);
+      });
+    })
     .declareService(function () {
       var g = this,
         i,
