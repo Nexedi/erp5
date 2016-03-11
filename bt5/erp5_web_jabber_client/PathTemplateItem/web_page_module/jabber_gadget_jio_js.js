@@ -43,6 +43,30 @@
     return gadget.state_parameter_dict.my_jid + '-' + jid;
   }
 
+  function enqueueDefer(gadget, callback) {
+    var deferred = gadget.props.current_deferred;
+
+    // Unblock queue
+    if (deferred !== undefined) {
+      deferred.resolve("Another event added");
+    }
+
+    // Add next callback
+    try {
+      gadget.props.service_queue.push(callback);
+    } catch (error) {
+      throw new Error("Connection gadget already crashed... " +
+                      gadget.props.service_queue.rejectedReason.toString());
+    }
+
+    // Block the queue
+    deferred = RSVP.defer();
+    gadget.props.current_deferred = deferred;
+    gadget.props.service_queue.push(function () {
+      return deferred.promise;
+    });
+  }
+
   function getLog(gadget, jid, options) {
     return wrapJioCall(gadget, 'getAttachment', [getStorageIdFromJid(gadget, jid), 'enclosure', options])
       .push(undefined, function (error) {
@@ -55,11 +79,21 @@
   }
 
   function addLog(gadget, jid, text, is_incoming) {
-    return getLog(gadget, jid, {format: 'text'})
-      .push(function (result) {
-        var new_history = result + getLogString(text, is_incoming);
-        return wrapJioCall(gadget, 'putAttachment', [getStorageIdFromJid(gadget, jid), 'enclosure', new_history]);
-      });
+    var deferred = RSVP.defer();
+    enqueueDefer(gadget, function () {
+      return getLog(gadget, jid, {format: 'text'})
+        .push(function (result) {
+          var new_history = result + getLogString(text, is_incoming);
+          return wrapJioCall(gadget, 'putAttachment', [getStorageIdFromJid(gadget, jid), 'enclosure', new_history]);
+        })
+        .push(function () {
+          deferred.resolve();
+          return true;
+        });
+    });
+    return new RSVP.Queue().push(function () {
+      return deferred.promise;
+    });
   }
 
   function dropConnectionGadget(gadget) {
@@ -160,6 +194,9 @@
   }
 
   rJS(window)
+    .ready(function (g) {
+      g.props = {};
+    })
 
     .allowPublicAcquisition("notifyXMPPConnecting", function () {
       return;
@@ -429,6 +466,22 @@
           });
       }
       throw new Error('Unsupported putAttachment: ' + id + ' ' + name);
+    })
+
+    .declareService(function () {
+      // queue for addLog
+      var context = this;
+
+      context.props.service_queue = new RSVP.Queue();
+      enqueueDefer(context);
+
+      return new RSVP.Queue()
+        .push(function () {
+          return context.props.service_queue;
+        })
+        .push(function () {
+          throw new Error("Service should not have been stopped!");
+        });
     })
 
     .declareService(function () {
