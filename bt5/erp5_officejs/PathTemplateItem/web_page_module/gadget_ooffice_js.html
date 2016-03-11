@@ -1,6 +1,6 @@
-/*global window, rJS, DocsAPI, _*/
+/*global window, rJS, RSVP, DocsAPI, console, document*/
 /*jslint nomen: true, maxlen:80, indent:2*/
-(function (rJS, DocsAPI, _) {
+(function (rJS, RSVP, DocsAPI) {
   "use strict";
   // Document Editor event handlers
   //function onRequestHistory() {
@@ -107,11 +107,6 @@
     }
   }
 
-  function onDocumentStateChange(event) {
-    var isModified = event.data;
-    console.log(isModified);
-  }
-
   function onError(event) {
     console.log(event.data);
     // critical error happened
@@ -120,7 +115,7 @@
 
   rJS(window)
     .ready(function (g) {
-      g.props = {};
+      g.props = {save_defer: null};
     })
     .ready(function (g) {
       return g.getElement()
@@ -128,6 +123,7 @@
           g.props.cfg = {
             mode: 'edit',
             lang: 'en',
+            canAutosave: false,
             canCoAuthoring: false,
             canBackToFolder: true,
             canCreateNew: true,
@@ -204,62 +200,106 @@
           g.props.element = element;
         });
     })
-    .declareAcquiredMethod("submitContent", "triggerSubmit")
-    .declareAcquiredMethod("maximize", "triggerMaximize")
+    .declareAcquiredMethod("triggerSubmit", "triggerSubmit")
+    .declareAcquiredMethod("triggerMaximize", "triggerMaximize")
+    .declareAcquiredMethod("setFillStyle", "setFillStyle")
     .declareMethod('render', function (options) {
-      console.log(options.value);
-      this.props.docEditor = new DocsAPI.DocEditor('oospreadsheet_gadget', {
-        //type: urlParams['type'],
-        width: '100%',
-        height: '100%',
-        //documentType: urlParams['doctype'],
-        document: {
-          //key: undefined,
-          //url: undefined,
-          title: options.title,
-          //fileType: undefined,
-          //vkey: undefined,
-          data: options.value || "",
-          permissions: {
-            edit: true,
-            download: true,
-            reader: true
-          }
-        },
-        editorConfig: this.props.cfg,
-        events: {
-          'onReady': onDocEditorReady,
-          'onBack': _.bind(function (event) {
-            this.maximize();
-          }, this),
-          'onDocumentStateChange': onDocumentStateChange,
-          'onRequestEditRights': _.bind(function (event) {
-            // occurs whenever the user tryes to enter edit mode
-            this.props.docEditor.applyEditRights(true,
-              "Someone is editing this document right now." +
-              " Please try again later.");
-          }, this),
-          //'onRequestHistory': onRequestHistory,
-          //'onRequestHistoryData': onRequestHistoryData,
-          //'onRequestHistoryClose': onRequestHistoryClose,
-          'onSave': _.bind(function (event) {
-            this.props.data = event.data;
-            this.submitContent();
-            return true;
-            // if you want to async save process return false
-            // and call api.processSaveResult when ready
-          }, this),
-          'onError': onError
+      var placeholder = 'oospreadsheet_gadget',
+        g = this,
+        documentType,
+        magic_to_format_map = {
+          'DOCY;' : 'text',
+          'XLSY;' : 'spreadsheet',
+          'PPTY;' : 'presentation'
+        };
+      if (options.value === undefined) {
+        options.value = '';
+        documentType = options.portal_type;
+      } else {
+        documentType = magic_to_format_map[options.value.substring(0, 5)];
+        if (documentType === undefined) {
+          g.props
+            .element
+            .getElementsByClassName(placeholder)[0]
+            .textContent = options.value;
+          return {};
         }
-      });
-      this.props.key = options.key || "text_content";
-      return {};
+      }
+      return g.setFillStyle()
+        .push(function (size) {
+          g.props.docEditor = new DocsAPI.DocEditor(placeholder, {
+            //type: urlParams['type'],
+            width: size.width,
+            height: size.height,
+            documentType: documentType,
+            document: {
+              //key: undefined,
+              //url: undefined,
+              title: options.title,
+              //fileType: undefined,
+              //vkey: undefined,
+              data: options.value || "",
+              permissions: {
+                edit: true,
+                download: true,
+                reader: true
+              }
+            },
+            editorConfig: g.props.cfg,
+            events: {
+              'onReady': onDocEditorReady,
+              'onBack': function (event) {
+                g.triggerMaximize()
+                  .push(function (size) {
+                    var iframe = g.props.element.querySelector('iframe');
+                    iframe.style.height = size.height;
+                    iframe.style.width = size.width;
+
+                  });
+              },
+              // 'onDocumentStateChange': function (event) {
+              //   if (!event.data) {
+              //     save_button.click();
+              //   }
+              // },
+              'onRequestEditRights': function (event) {
+                // occurs whenever the user tryes to enter edit mode
+                g.props.docEditor.applyEditRights(true,
+                  "Someone is editing this document right now." +
+                  " Please try again later.");
+              },
+              //'onRequestHistory': onRequestHistory,
+              //'onRequestHistoryData': onRequestHistoryData,
+              //'onRequestHistoryClose': onRequestHistoryClose,
+              'onSave': function (event) {
+                var result = {};
+                if (g.props.save_defer === null) {
+                  g.triggerSubmit();
+                } else {
+                  result[g.props.key] = event.data;
+                  g.props.save_defer.resolve(result);
+                  g.props.save_defer = null;
+                }
+                return true;
+                // if you want to async save process return false
+                // and call api.processSaveResult when ready
+                // g.props.docEditor.processSaveResult();
+              },
+              'onError': onError
+            }
+          });
+          g.props.key = options.key || "text_content";
+          g.props.value = options.value;
+          // g.fullscreen();
+          return {};
+        });
     })
 
     .declareMethod('getContent', function () {
-      var result = {};
-      result[this.props.key] = this.props.data;
-      return result;
+      var g = this;
+      g.props.save_defer = RSVP.defer();
+      g.props.docEditor.save();
+      return g.props.save_defer.promise;
     });
 
-}(rJS, DocsAPI, _));
+}(rJS, RSVP, DocsAPI));

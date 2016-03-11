@@ -283,6 +283,16 @@
             });
         };
 
+        var _save = function(result, message) {
+            _sendCommand({
+                command: 'save',
+                data: {
+                    result: result,
+                    message: message
+                }
+            });
+        };
+
         var _processSaveResult = function(result, message) {
             _sendCommand({
                 command: 'processSaveResult',
@@ -361,6 +371,7 @@
             showError           : _showError,
             showMessage         : _showMessage,
             applyEditRights     : _applyEditRights,
+            save                : _save,
             processSaveResult   : _processSaveResult,
             processRightsChange : _processRightsChange,
             refreshHistory      : _refreshHistory,

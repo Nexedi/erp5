@@ -13,7 +13,7 @@
       type: "replicate",
       // XXX This drop the signature lists...
       query: {
-        query: 'portal_type:"Web Page" '
+        query: 'portal_type: ( "Web Page", "Spreadsheet", "Text" ) '
         // XX Synchonizing the whole module is too much, here is a way to start quietly
         // Supsended until modification_date is handled for synchronization
           + ' AND modification_date:>="'

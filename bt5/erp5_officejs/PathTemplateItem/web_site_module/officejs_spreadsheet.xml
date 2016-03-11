@@ -363,6 +363,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_content_security_policy</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -405,6 +415,10 @@
             <value> <string>Spreedsheet Editor</string> </value>
         </item>
         <item>
+            <key> <string>configuration_content_security_policy</string> </key>
+            <value> <string>default-src \'none\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' data:; script-src \'self\' \'unsafe-eval\'; style-src \'self\' \'unsafe-inline\' https://netdna.bootstrapcdn.com data:; font-src \'self\' https://netdna.bootstrapcdn.com data:; frame-src \'self\' data:</string> </value>
+        </item>
+        <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
             <value>
               <none/>
@@ -412,9 +426,7 @@
         </item>
         <item>
             <key> <string>configuration_frontpage_gadget_url</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>officejs_spreadsheet_list</string> </value>
         </item>
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
@@ -442,7 +454,9 @@
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
-            <value> <string>gadget_translation.html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_view_action_category</string> </key>
@@ -478,7 +492,7 @@
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
-            <value> <string>WebSection_viewHateoasPreference</string> </value>
+            <value> <string>WebSection_viewRenderJSPreference</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -741,7 +755,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.15127.49489.42257</string> </value>
+                <value> <string>948.60739.18559.47820</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -759,7 +773,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448031408.99</float>
+                        <float>1454605674.85</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

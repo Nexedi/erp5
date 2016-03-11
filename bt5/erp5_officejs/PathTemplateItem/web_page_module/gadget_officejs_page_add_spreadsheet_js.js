@@ -42,7 +42,9 @@
           var doc = {
             // XXX Hardcoded
             parent_relative_url: "document_module",
-            portal_type: "Spreadsheet"
+            portal_type: "Spreadsheet",
+            content_type: "application/yformat.xlsy",
+            filename: ".xlsy"
           };
           return gadget.post(doc);
         })

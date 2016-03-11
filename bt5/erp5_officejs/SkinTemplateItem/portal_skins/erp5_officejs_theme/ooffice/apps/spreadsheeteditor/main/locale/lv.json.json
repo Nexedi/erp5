@@ -64,7 +64,7 @@
   "Common.Views.CopyWarningDialog.textToPaste": "lai ielīmētu",
   "Common.Views.DocumentAccessDialog.textLoading": "Loading...",
   "Common.Views.DocumentAccessDialog.textTitle": "Sharing Settings",
-  "Common.Views.Header.textBack": "Iet uz Dokumenti",
+  "Common.Views.Header.textBack": "===",
   "Common.Views.ImageFromUrlDialog.cancelButtonText": "Atcelt",
   "Common.Views.ImageFromUrlDialog.okButtonText": "OK",
   "Common.Views.ImageFromUrlDialog.textUrl": "Ielīmēt attēla URL:",

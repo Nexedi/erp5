@@ -73,7 +73,7 @@
         })
         .push(function (listbox) {
           return listbox.render({
-            search_page: 'text_editor_list',
+            search_page: 'spreadsheet_list',
             search: options.search,
             column_list: [{
               select: 'title',

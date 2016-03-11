@@ -109,7 +109,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Text Editor List JS</string> </value>
+            <value> <string>OfficeJS Spreadsheet Editor List JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -228,7 +228,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -242,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.15135.4474.14216</string> </value>
+                <value> <string>947.62699.17216.34952</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448023655.58</float>
+                        <float>1450792665.01</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
