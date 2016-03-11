@@ -22,6 +22,7 @@
       );
     }
   };
+  Strophe.addNamespace('RECEIPTS', 'urn:xmpp:receipts');
 
   var gadget_klass = rJS(window);
 
@@ -55,9 +56,11 @@
     enqueueDefer(gadget, function () {
 
       var to = Strophe.getBareJidFromJid(message.getAttribute('to')),
-        from = Strophe.getBareJidFromJid(message.getAttribute('from')),
+        from = message.getAttribute('from'),
+        id = message.getAttribute('id'),
         type = message.getAttribute('type'),
-        body = message.querySelector('body');
+        body = message.querySelector('body'),
+        req = message.getElementsByTagName('request');
 
       if (type !== "chat") {
         throw new Error("Unsupported message type: " + type);
@@ -66,8 +69,18 @@
         throw new Error("Expected message to: " + to);
       }
       if (body !== null) {
-        return gadget.notifyXMPPMessageTextReceived(from, to,
-                                                    body.textContent);
+        if (gadget.props.connection !== undefined && id !== null && req.length > 0) {
+          // xep-0184 send delivery receipt
+          gadget.props.connection.send(
+            $msg({from: gadget.props.connection.jid, to: from})
+              .c("received", {xmlns: Strophe.NS.RECEIPTS, id: id})
+          );
+        }
+        return gadget.notifyXMPPMessageTextReceived(
+          Strophe.getBareJidFromJid(from),
+          to,
+          body.textContent
+        );
       }
     });
     return true;
@@ -342,9 +355,10 @@
     })
 
     .declareMethod('sendMessage', function (jid, text) {
-      this.props.connection.send(
-        $msg({to: jid, type: "chat"}).c('body').t(text)
-      );
+      var con = this.props.connection;
+      con.send($msg({id: con.getUniqueId(), to: jid, type: "chat"})
+              .c('body').t(text).up()
+              .c('request', {'xmlns': Strophe.NS.RECEIPTS}));
     });
 
 }(window, rJS, Strophe, $iq, $pres, $msg, RSVP));
