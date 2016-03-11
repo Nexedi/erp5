@@ -844,9 +844,9 @@ class ObjectTemplateItem(BaseTemplateItem):
     """
     if len(self._objects.keys()) == 0:
       return
-    path = self.__class__.__name__+ '/'
+    path = self.__class__.__name__ + '/'
     for key, obj in self._objects.iteritems():
-      class_name=obj.__class__.__name__ 
+      class_name = obj.__class__.__name__
       property_and_extension_exported_separately_dict = self.getPropertyAndExtensionExportedSeparatelyDict(obj, key)
       # Back compatibility with filesystem Documents
       if isinstance(obj, str):
