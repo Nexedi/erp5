@@ -194,6 +194,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
 
   elif meta_type in ("RelationStringField", "MultiRelationStringField"):
     portal_type_list = field.get_value('portal_type')
+    jump_reference_list = None
     if portal_type_list:
       portal_type_list = [x[0] for x in portal_type_list]
 
