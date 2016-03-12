@@ -27,6 +27,19 @@
     return new RSVP.Promise(resolver, canceller);
   }
 
+  function getMaxHeight(wrap_obj) {
+    var height;
+    if (wrap_obj) {
+      height = window.innerHeight - wrap_obj.offsetTop - 280;
+    } else {
+      height = window.innerHeight;
+    }
+    if (height < 400) {
+      height = 400;
+    }
+    return height + "px";
+  }
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // ready
@@ -46,6 +59,53 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+    .allowPublicAcquisition('setFillStyle', function () {
+      var gadget = this,
+        iframe = gadget.props.element.querySelector('iframe'),
+        height = getMaxHeight(iframe),
+        width = "100%";
+      iframe.setAttribute(
+        'style',
+        'width: ' + width + '; border: 0 none; height: ' + height
+      );
+      return {height: height, width: width};
+    })
+    .allowPublicAcquisition('triggerMaximize', function () {
+      var gadget = this,
+        fullscreen_classname = "ui-content-fullscreen",
+        info,
+        wrap = gadget.props.element.querySelector('iframe'),
+        subiframe = wrap.contentDocument.querySelector('iframe');
+      if (wrap.className.search(" " + fullscreen_classname) === -1) {
+        gadget.props.fullScreenRestore = {
+          scrollTop: window.pageYOffset,
+          scrollLeft: window.pageXOffset,
+          width: wrap.width,
+          height: wrap.height
+        };
+
+        wrap.style.width = "100%";
+        wrap.style.height = getMaxHeight();
+        wrap.className += " " + fullscreen_classname;
+        document.documentElement.style.overflow = "hidden";
+      } else {
+        wrap.className = wrap.className
+          .replace(new RegExp("\\s*" + fullscreen_classname + "\\b"), "");
+        document.documentElement.style.overflow = "";
+        info = gadget.props.fullScreenRestore;
+        // wrap.style.width = info.width;
+        wrap.style.width = "100%";
+        wrap.style.height = getMaxHeight(wrap);
+        window.scrollTo(info.scrollLeft, info.scrollTop);
+      }
+      if (subiframe) {
+        subiframe.style.height = wrap.style.height;
+      }
+    })
+
+    .allowPublicAcquisition('triggerSubmit', function () {
+      return document.querySelector("button[name='Base_edit:method']").click();
+    })
     .declareService(function () {
       var g = this,
         i,
