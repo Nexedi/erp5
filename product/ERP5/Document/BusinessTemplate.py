@@ -2496,7 +2496,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
             # another business template.
             LOG('BusinessTemplate', WARNING, 'workflow %s not found '\
                        'in chain for portal_type %s' % (workflow_name, portal_type))
-        self._objects.setdefault(portal_type, []).append(workflow)
+        self._objects.setdefault('portal_type_workflow_chain/' + portal_type, []).append(workflow)
       elif not self.is_bt_for_diff:
         raise NotFound, 'No workflow chain found for portal type %s. This '\
                         'is probably a sign of a missing dependency.'\
