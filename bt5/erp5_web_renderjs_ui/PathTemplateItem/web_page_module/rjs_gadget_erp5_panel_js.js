@@ -70,6 +70,7 @@
             g.getUrlFor({command: 'display', options: {page: "history"}}),
             g.getUrlFor({command: 'display', options: {page: "preference"}}),
             g.getUrlFor({command: 'display', options: {page: "logout"}}),
+            g.getUrlFor({command: 'display', options: {page: "search"}}),
             g.getUrlFor({command: 'display', options: {page: "worklist"}})
           ]);
         })
@@ -82,7 +83,8 @@
             "preference_href": all_result[2],
             // "language_list": language_list,
             "logout_href": all_result[3],
-            "worklist_href": all_result[4]
+            "search_href": all_result[4],
+            "worklist_href": all_result[5]
           });
           return tmp;
         })
