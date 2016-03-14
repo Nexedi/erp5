@@ -154,8 +154,12 @@
               + "," + select_list[1][select_list[1].selectedIndex].value + ",";
             sort_query[i] = sort_item_query;
           }
-          sort_query[i] = "";
-          options[gadget.props.key] = sort_query;
+          if (i === 0) {
+            options[gadget.props.key] = undefined;
+          } else {
+            sort_query[i] = "";
+            options[gadget.props.key] = sort_query;
+          }
           return gadget.redirect({
             command: 'change',
             options: options

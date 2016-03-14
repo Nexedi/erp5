@@ -70,5 +70,39 @@
  
   </tal:block>
 
+  <tal:block metal:define-macro="submit_search_filter">
+
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//form[@class='plus']</td>
+      <td></td>
+    </tr>
+
+    <tr>
+     <td>waitForElementPresent</td>
+     <td>//button[@data-i18n='Submit']</td>
+     <td></td>
+    </tr>
+
+    <tr>
+     <td>click</td>
+     <td>//button[@data-i18n='Submit']</td>
+     <td></td>
+    </tr>
+
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//a[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+      <td></td>
+    </tr>
+
+  </tal:block>
+
 
 </tal:block>
