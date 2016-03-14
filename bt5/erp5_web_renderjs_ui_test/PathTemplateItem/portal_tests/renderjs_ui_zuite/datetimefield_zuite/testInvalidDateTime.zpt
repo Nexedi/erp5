@@ -78,13 +78,13 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name='field_my_start_date']</td>
+  <td>//input[@name='field_my_stop_date']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>type</td>
-  <td>//input[@name='field_my_start_date']</td>
+  <td>//input[@name='field_my_stop_date']</td>
   <td>9915-14-21T11:00</td>
 </tr>
 
@@ -121,14 +121,14 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name='field_my_start_date']</td>
+  <td>//input[@name='field_my_stop_date']</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>verifyValue</td>
-  <td>//input[@name='field_my_start_date']</td>
+  <td>//input[@name='field_my_stop_date']</td>
   <td></td>
 </tr>
 </tbody></table>
