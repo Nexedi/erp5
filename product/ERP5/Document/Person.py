@@ -96,11 +96,12 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
         first name, middle name and last name
       """
       if not self.title:
-        return ' '.join([x for x in (self.getFirstName(),
-                                     self.getMiddleName(),
-                                     self.getLastName()) if x])
-      else:
-        return self.title
+        title = ' '.join([x for x in (self.getFirstName(),
+                                      self.getMiddleName(),
+                                      self.getLastName()) if x])
+        if title:
+          return title
+      return super(Person, self).getTitle(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTranslatedTitle')
@@ -110,11 +111,12 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
         first name, middle name and last name
       """
       if not self.title:
-        return ' '.join([x for x in (self.getTranslatedFirstName(**kw),
-                                     self.getTranslatedMiddleName(**kw),
-                                     self.getTranslatedLastName(**kw)) if x])
-      else:
-        return self.title
+        title = ' '.join([x for x in (self.getTranslatedFirstName(**kw),
+                                      self.getTranslatedMiddleName(**kw),
+                                      self.getTranslatedLastName(**kw)) if x])
+        if title:
+          return title
+      return super(Person, self).getTranslatedTitle(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'title_or_id')
@@ -124,7 +126,10 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'hasTitle')
     def hasTitle(self):
-      return not not self.getTitle()
+      return self.hasFirstName() or \
+          self.hasLastName() or \
+          self.hasMiddleName() or \
+          self._baseHasTitle()
 
     def _setReference(self, value):
       """
