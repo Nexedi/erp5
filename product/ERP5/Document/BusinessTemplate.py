@@ -2520,16 +2520,6 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
   def export(self, context, bta, **kw):
     if not self._objects:
       return
-    # 'portal_type_workflow_chain/' is added in _importFile
-    # and if the template is not built,
-    # it should be removed here from the key
-    new_objects = PersistentMapping()
-    for key, value in self._objects.iteritems():
-      new_key = deepcopy(key)
-      if 'portal_type_workflow_chain/' in key:
-        new_key = new_key.replace('portal_type_workflow_chain/', '')
-      new_objects[new_key] = value
-    self._objects = new_objects
     # export workflow chain
     xml_data = self.generateXml()
     bta.addObject(xml_data, name='workflow_chain_type',
@@ -2639,9 +2629,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
       object_key_list = self._objects.keys()
     for object_key in object_key_list:
       path_splitted = object_key.split('/', 1)
-      if len(path_splitted) < 2:
-        continue
-      portal_type = path_splitted[1]
+      portal_type = path_splitted[-1]
       path = '%s%s' % (self._chain_string_prefix, portal_type)
       if path in chain_dict:
         workflow_id_list = chain_dict[path].\
@@ -2660,14 +2648,6 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
 
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
-    new_dict = PersistentMapping()
-    # Fix key from installed bt if necessary
-    for key, value in installed_item._objects.iteritems():
-      if not 'portal_type_workflow_chain/' in key:
-        key = 'portal_type_workflow_chain/%s' % (key)
-      new_dict[key] = value
-    if new_dict:
-      installed_item._objects = new_dict
     for path in self._objects:
       if path in installed_item._objects:
         # compare object to see it there is changes
@@ -2700,10 +2680,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     for chain in chain_list:
       portal_type = chain.find('type').text
       workflow_chain = chain.find('workflow').text or ''
-      if 'portal_type_workflow_chain/' not in portal_type:
-        key = 'portal_type_workflow_chain/%s' % (portal_type,)
-      else:
-        key = portal_type
+      key = portal_type
       result_dict[key] = workflow_chain.split(self._chain_string_separator)
     self._objects = result_dict
 
