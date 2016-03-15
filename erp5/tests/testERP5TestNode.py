@@ -232,11 +232,13 @@ extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
 [rep1]
 repository = %(temp_dir)s/testnode/foo/rep1
 branch = master
+revision =
 develop = false
 
 [rep2]
 repository = %(temp_dir)s/testnode/foo/rep2
 branch = foo
+revision =
 develop = false
 """ % {'temp_dir': self._temp_dir}
     else:
@@ -250,11 +252,13 @@ extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
 repository = <obfuscated_url>/rep1/rep1.git
 revision = %(revision1)s
 ignore-ssl-certificate = true
+develop = false
 
 [rep2]
 repository = <obfuscated_url>/rep2/rep2.git
 revision = %(revision2)s
 ignore-ssl-certificate = true
+develop = false
 """ % {'temp_dir': self._temp_dir, 'revision1': revision1, 'revision2': revision2}
     self.assertEquals(expected_profile, profile.read())
     profile.close()
