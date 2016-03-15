@@ -125,6 +125,14 @@
                           <string>creation_date</string>
                           <string>Creation Date</string>
                         </tuple>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Int Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>test_node</string>
+                          <string>Nodes Quantity</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
