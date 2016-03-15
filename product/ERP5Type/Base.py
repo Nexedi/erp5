@@ -2349,8 +2349,8 @@ class Base( CopyContainer,
     Returns the first non-null value from the following:
     - "getCompactTitle" type based method
     - short title
-    - reference
     - title
+    - reference
     - id
     """
     method = self._getTypeBasedMethod('getCompactTitle')
@@ -2360,8 +2360,8 @@ class Base( CopyContainer,
     if self.hasShortTitle():
       r = self.getShortTitle()
       if r: return r
-    return (self.getProperty('reference') or
-            getattr(self, '_baseGetTitle', str)() or
+    return (getattr(self, '_baseGetTitle', str)() or
+            self.getProperty('reference') or
             self.getId())
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -2373,9 +2373,9 @@ class Base( CopyContainer,
     - "getCompactTitle" type based method
     - translated short title
     - short title
-    - reference
     - translated title
     - title
+    - reference
     - id
     """
     method = self._getTypeBasedMethod('getCompactTranslatedTitle')
@@ -2391,10 +2391,10 @@ class Base( CopyContainer,
       if r: return r
       r = self.getShortTitle()
       if r: return r
-    return (self.getProperty('reference') or
-            # No need to test existence since all Base instances have this method
+    return (# No need to test existence since all Base instances have this method
             # Also useful whenever title is calculated
             self._baseGetTranslatedTitle() or
+            self.getProperty('reference') or
             self.getId())
 
   # This method allows to sort objects in list is a more reasonable way
