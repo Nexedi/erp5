@@ -393,6 +393,11 @@ from the distributor.")
               self.registerSuiteLog(test_result, node_test_suite)
               self.checkRevision(test_result,node_test_suite)
               node_test_suite.edit(test_result=test_result)
+              # get cluster configuration for this test suite, this is needed to
+              # know slapos parameters to user for creating instances
+              node_test_suite.edit(cluster_configuration=Utils.deunicodeData(
+                json.loads(self.test_suite_portal.generateConfiguration(
+                   node_test_suite.test_suite_title))['configuration_list'][0]))
               # Now prepare the installation of SlapOS and create instance
               status_dict = runner.prepareSlapOSForTestSuite(node_test_suite)
               # Give some time so computer partitions may start

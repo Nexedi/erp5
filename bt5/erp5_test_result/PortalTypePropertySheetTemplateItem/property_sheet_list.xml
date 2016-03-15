@@ -48,6 +48,7 @@
  <portal_type id="Test Suite">
   <item>Arrow</item>
   <item>Reference</item>
+  <item>ScalabilityTestSuite</item>
   <item>SortIndex</item>
   <item>TestSuite</item>
   <item>TestSuiteConstraint</item>

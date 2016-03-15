@@ -58,7 +58,6 @@ class SlapOSInstance(object):
   def _checkData(self):
     pass
     
-    
 class NodeTestSuite(SlapOSInstance):
   """
   
