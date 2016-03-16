@@ -117,6 +117,8 @@ def resetRegisteredWorkflowMethod(portal_type=None):
   for method in workflow_method_registry:
     method.reset(portal_type=portal_type)
 
+  del workflow_method_registry[:]
+
 class WorkflowMethod(Method):
 
   def __init__(self, method, id=None, reindex=1):
