@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>kw[\'language_title\'] = kw.get(\'language_title\', \'\') or \'%\'\n
-kw[\'business_field_title\'] = kw.get(\'business_field_title\', \'\') or \'%\'\n
-return context.getPortalObject().GlossaryModule_zGetDuplicateGlossaryTermList(selection_params=kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

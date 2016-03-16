@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  THis script is called from UI for creating a global account. In case of remote server failure\n
-  return 0 which will stop user and show an explanation message.\n
-"""\n
-try:\n
-  return int(context.WizardTool_isPersonReferenceGloballyUnique(editor, request, ignore_users_from_same_instance))\n
-except:\n
-  return 0\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>editor, request, ignore_users_from_same_instance=0</string> </value>
         </item>

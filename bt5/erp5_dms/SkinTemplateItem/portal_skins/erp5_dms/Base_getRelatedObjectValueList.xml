@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-get related object value list in a security-aware way (without throwing exception\n
-if I don\'t have permissions to access the object)\n
-"""\n
-\n
-category_list = context.getPropertyList(base_category)\n
-if category_list is None:\n
-  return []\n
-\n
-def getValueIfAvailable(category):\n
-  ob = context.restrictedTraverse(category, None)\n
-  return ob \n
-\n
-object_list = [getValueIfAvailable(category) for category in category_list]\n
-object_list = [o for o in object_list if o is not None]\n
-\n
-if portal_type_list is not None:\n
-  object_list = [o for o in object_list if o.portal_type in portal_type_list]\n
-\n
-return object_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>base_category, portal_type_list=None</string> </value>
         </item>

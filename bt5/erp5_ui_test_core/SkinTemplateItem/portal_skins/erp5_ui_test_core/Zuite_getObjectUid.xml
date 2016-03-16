@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Get object\'s uid.\n
-"""\n
-return context.portal_catalog.getResultValue(**kw).getUid()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

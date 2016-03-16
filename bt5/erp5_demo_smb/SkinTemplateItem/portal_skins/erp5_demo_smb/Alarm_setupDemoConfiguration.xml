@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Log import log\n
-log(\'Launching activities to setup the demo configuration!\')\n
-\n
-kw = {}\n
-installed_business_template_list = context.portal_templates.getInstalledBusinessTemplateTitleList()\n
-\n
-if \'erp5_configurator_standard\' not in installed_business_template_list:\n
-  kw = context.Alarm_installBusinessTemplateList()\n
-\n
-log(\'Finished to launch the activities to setup the demo configuration!\')\n
-context.setEnabled(False)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

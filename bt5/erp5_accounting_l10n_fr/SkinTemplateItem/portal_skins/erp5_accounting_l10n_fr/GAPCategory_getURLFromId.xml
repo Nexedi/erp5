@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Translates a short account number (eg 280) to a full gap category url (eg gap/2/28/280).\n
-"""\n
-\n
-number = gap_id.strip()\n
-\n
-gap_url = gap_base\n
-for i in range(len(number)):\n
-  gap_url += number[:i+1] + \'/\'\n
-\n
-return gap_url[:-1]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>gap_id, gap_base=\'gap/fr/pcg/\'</string> </value>
         </item>

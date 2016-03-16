@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if validation_state==None or workflow_id==None:\n
-  return \'\'\n
-\n
-portal_workflow = context.getPortalObject().portal_workflow\n
-history_list = context.portal_workflow.getInfoFor(ob=context, \n
-                                          name=\'history\', wf_id=workflow_id)\n
-wf_detail={}\n
-for history_line in history_list:\n
-  if history_line.has_key(\'validation_state\') and history_line[\'validation_state\']==validation_state:\n
-    wf_detail=history_line\n
-\n
-return wf_detail\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>workflow_id=None, validation_state=None, **kw</string> </value>
         </item>

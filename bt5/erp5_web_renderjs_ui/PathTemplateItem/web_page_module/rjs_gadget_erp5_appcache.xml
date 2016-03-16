@@ -108,7 +108,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CACHE MANIFEST\n
-# generated on Mon, 22 Jan 2016 16:00:00 +0000\n
+# generated on Mon, 14 Mar 2016 17:00:00 GMT\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -183,6 +183,8 @@ gadget_erp5_page_logout.html\n
 gadget_erp5_page_logout.js\n
 gadget_erp5_page_preference.html\n
 gadget_erp5_page_preference.js\n
+gadget_erp5_page_search.html\n
+gadget_erp5_page_search.js\n
 gadget_erp5_page_tab.html\n
 gadget_erp5_page_tab.js\n
 gadget_erp5_page_worklist.html\n
@@ -352,7 +354,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.41978.9652.21913</string> </value>
+                <value> <string>949.54244.51148.7697</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -370,7 +372,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453480160.29</float>
+                        <float>1457975347.2</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

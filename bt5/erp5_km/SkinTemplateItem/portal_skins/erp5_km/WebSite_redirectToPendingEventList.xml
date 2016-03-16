@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  TODO:\n
-    - Rename Event to Task everywhere\n
-"""\n
-\n
-\n
-context.getWebSiteValue().Base_redirect(form_id=\'WebSite_viewPendingEventList\', \n
-                keep_items=dict(reset=1,\n
-                                search_section_path=context.getRelativeUrl()))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

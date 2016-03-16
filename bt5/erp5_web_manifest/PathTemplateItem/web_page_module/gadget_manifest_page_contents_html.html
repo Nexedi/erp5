@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title>Web Manifest Frontpage Gadget</title>
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+
+    <!-- custom script -->
+    <script src="gadget_manifest_page_contents.js" type="text/javascript"></script>
+
+  </head>
+  <body>
+    
+    <section class="ui-body-a ui-linear ui-content-header-section">
+        <h1 class="ui-content-title">Content</h1>
+        <p class="ui-content-subtitle">Guidelines on Typography and Content Creation.</p>
+    </section>
+
+    <section class="ui-body-c ui-content-section">
+      <h3 class="ui-content-header-inline">Overview</h3>
+      <p>
+        Usability of web applications is not only determined by functionality and UI components
+        but also through the way actual content is displayed. Following is a brief
+        overview of things to keep in mind when presenting content.
+      </p>
+    </section>
+    
+    <section class="ui-content-header-plain">
+      <h3 class="ui-content-title ui-body-c">
+        <span class="ui-icon ui-icon-custom ui-icon-header">&nbsp;</span>
+        Text Structure
+      </h3>
+    </section>
+    
+    <section class="ui-body-c ui-content-section ui-grid-container ui-responsive">
+      <h3 class="ui-content-header-inline">Usage of Fonts</h3>
+      <p>
+        Not resorting to the default fonts provided by the browser can already 
+        make a huge difference. Free webfonts are easily integratable (for example
+        Google WebFonts) and available via CDN.
+      </p>
+      <p>
+        When working with fonts make sure to have the font in all necessary version
+        available (cross-browser support) and try to limit usage to a few types (font-weight 400, 700 (bold))
+        for example. This will keep download size of fonts small.
+      </p>
+    </section>
+    
+    <section class="ui-body-c ui-content-section ui-grid-container ui-responsive">
+      <h3 class="ui-content-header-inline">Text Decoration</h3>
+      <p>
+        There are a number of CSS properties available to modify text content 
+        (for example see uppercase/lowercase-ing text or letter-spacing). These
+        can easily be used to differentiate elements which would otherwise maybe
+        be difficult to distinguish (for example label &amp; static input fields).
+      </p>
+      <p>
+        When doing so, it is always good to define a "theme" with certain rules
+        upfront and then implement the defined text decorations throughout the application.
+      </p>
+    </section>
+    
+    <section class="ui-body-c ui-content-section ui-grid-container ui-responsive">
+      <h3 class="ui-content-header-inline">Content Structuring</h3>
+      <p>
+        To keep text readable it should be structured to not overwhelm the user
+        with long passages of text. Adding subheaders and subsections can provide
+        useful information about the section following and aid the user in better
+        comprehending the presented content.
+      </p>
+      <p>
+        Subjective readability is also determined by a host of other factos, such
+        as the number of characters per line, the font-size used or the line-spacing.
+        While there is no defined standard on what is appropriate, numerous online resources
+        point to content characteristics, which foster text readability.
+      </p>
+    </section>
+    
+  </body>
+</html>

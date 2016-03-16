@@ -1,0 +1,11 @@
+<tal:block replace="nothing"><!--
+  This widget display a list of sub documents (Web Pages generally) which
+  are published and linked with the current section through Predicate.
+-->
+</tal:block>
+
+<ul tal:repeat="document python:here.getDocumentValueList()">
+  <li><a tal:attributes="href python:here.getPermanentUrl(document)"
+         tal:content="python: document.getProperty('translated_short_title', None)
+                              or document.getTranslatedTitleOrId()"/></li>
+</ul>

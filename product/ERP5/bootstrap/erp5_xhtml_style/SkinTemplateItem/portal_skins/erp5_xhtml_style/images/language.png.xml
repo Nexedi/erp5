@@ -23,33 +23,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAFB0lEQVQ4y63VeVAUdBTA8bcssrAg
-rOwCy7IHi5xCYiDkgQembh6DoqboeCE6ho3iEYpXaspQNmKTOTgQ1uDoCJqoWKZmOt4migoooqTY
-kDqpDJIC4vLtj7LJ0qayP35/vd/7/PGOeQLI854MP+AbMefUuUFrrtYnrq9tGrWh7rFl0q78F/3/
-S/6LAurhu+e/d6iNkz/Albtw4iYMzr7RLCJuLwVL703hMRkXH0zb1kzNfSi7BbbVtS0ionkpGBAR
-cYp790rD/ho4XgvxmTf+HxiQ1xZWNey8DPuuQc9l11sV0etnqOIKFki3zbHSs9jhP8NR8y41bL4A
-Oy7B0LwWUrbZmVUCI/ObsCR9Wy1hmb7/CX5l5qWG3DNQVAHLD0LmIdh4FvZeg9RisI47+qOIOP5r
-OHR6RUP2ccg/Cz1WP8CY+HV19JI6e+ZhKKoE24ZW2oWuSP9beLGI9R1RTFwh6sy54jBjtkhQwJTy
-hlWH4MOjEJh6pUVENI4h6+YMyrNTcAGmF4Ou//bS58KLlEpNvoPhu0uKIG4ZY7gT3Z/bwb2oVoYQ
-mHT6ScZ+WH4ILClVLSKiEf/PAiKWN7L+DKR9Cb6JR27/uRySoVIptzma79R16UVTbi71ixZxLy2N
-1u3badm8mY6jTjJzD6TvA8PE32C/3JjOmU18cBwmFT7Efdiqu5IgUc/AaWrXhBpNKG1btvAoK4sK
-h45sdbLU3zBGQGEhljdLSSmG1BLQJV3+tRTWvIy49XZeXTWNjhv7MfJYOr32JqN/P7LBMdFlLiAy
-y02Tcd0YATk5PFqyhCPtLAx0cYk66WimeeVK9InnGLsN3toDPnMacQreWKIZU91kSk9izJkFnKg/
-z7zLa/mktojCW/sxZnd9IhHKQJms0Rh3OBubr+pDKHe1kOtmat3pbH5Y6eJHS3o6moSLjNgCto2Q
-sAk6r4GY7CoiNtk4Un+CaeeXoRqlfZRyfilljWX0/moc0tM5WQCZrNWOL2hvplSp55olhJ9sNhqT
-kmhNTcXUdz+GFaAcVYvz1Hq8FtlRj1/C2NK5lNwtIWLLQCTO/e1O+X1JLluIOSvKLlZVpKTq9V33
-qXztN8LCeTx6NPfi46nU+HFW4cmjYcO4PmIyQz3G00kdli0ypp/I1NnOb1jLx5WmkVOXg3lDDGJ1
-jZRunsNU/b12SqBbrIgoZG0HY0WNxQpDhnA3OppvnLzbZuh8i/eqvGmKj4chQyhV6Ujw8kp+2nHH
-Pvp18YdHs/T7pcTuGYREes0DxCXBUOSZarmniNIlSqGrz+P6Tp2ge3eqtD7M8jbsmu7v779XpaU5
-Ohq6d+eUk4YEvX7C76PUwz/ekteFSZXJvH58JLqMgBb3JL+qwK2xdN5nw9lmKJfPNfqmOh8fCA6m
-VqejyFXX+oWr1l7u2p62oCAIDuZUO1c+1vndS7H4L3+Kuw03VXfcFUv/Mhu9Tg8g8mA84Qf64D3f
-9ETM3kNlscF0+oyjCrunJ21aLffd3Wnw8OCaiwvX1WrQavlZo6FGrWaTh64twtPTDRAJDe6gHmA8
-75VlwrcgEN0aM5pJhkaF1W8yIDLYavX/yFvfeFihpFIUVIiCYwoln3bQPdntrKZMFFwWBafEgSwf
-35si0u6ZDbNYwiQoKEX8/Hr/MSaAdDUYvCcEBOQtMJnOzbBYDgwOCFgc7uUVHmcy9ZtitRbMM5tP
-j7Fac8J0uuB/ekx/AWqrX4QwHI9pAAAAAElFTkSuQmCC</string> </value>
-        </item>
-        <item>
             <key> <string>height</string> </key>
             <value> <int>22</int> </value>
         </item>

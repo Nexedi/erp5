@@ -23,50 +23,6 @@
             <value> <string>text/x-unknown-content-type</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<public:component lightweight="true">\r\n
-\r\n
-<public:attach event="oncontentready" onevent="ShowBorders()" />\r\n
-<public:attach event="onpropertychange" onevent="OnPropertyChange()" />\r\n
-\r\n
-<script language="javascript">\r\n
-\r\n
-var oClassRegex = /\\s*FCK__ShowTableBorders/ ;\r\n
-\r\n
-function ShowBorders()\r\n
-{\r\n
-\tif ( this.border == 0 )\r\n
-\t{\r\n
-\t\tif ( !oClassRegex.test( this.className ) )\r\n
-\t\t\tthis.className += \' FCK__ShowTableBorders\' ;\r\n
-\t}\r\n
-\telse\r\n
-\t{\r\n
-\t\tif ( oClassRegex.test( this.className ) )\r\n
-\t\t{\r\n
-\t\t\tthis.className = this.className.replace( oClassRegex, \'\' ) ;\r\n
-\t\t\tif ( this.className.length == 0 )\r\n
-\t\t\t\tthis.removeAttribute( \'className\', 0 ) ;\r\n
-\t\t}\r\n
-\t}\r\n
-}\r\n
-\r\n
-function OnPropertyChange()\r\n
-{\r\n
-\tif ( event.propertyName == \'border\' || event.propertyName == \'className\' )\r\n
-\t\tShowBorders.call(this) ;\r\n
-}\r\n
-\r\n
-</script>\r\n
-\r\n
-</public:component>\r\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

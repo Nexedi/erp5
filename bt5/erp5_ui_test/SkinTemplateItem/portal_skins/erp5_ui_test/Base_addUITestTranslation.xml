@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>catalog = context.getPortalObject().Localizer[catalog_id]\n
-catalog.gettext(message)\n
-catalog.message_edit(message=message, language=language, translation=translation, note=None)\n
-return "Translation of %s updated" % (message, )\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>message, translation, language, catalog_id=\'erp5_ui\'</string> </value>
         </item>

@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-\n
-check_result = context.checkConsistency()\n
-message_list = []\n
-\n
-for err in check_result:\n
-  if getattr(err, \'getTranslatedMessage\', None) is not None:\n
-    message_list.append(err.getTranslatedMessage())\n
-  else:\n
-    # backward compatibility:\n
-    message_list.append(err[3])\n
-\n
-if message_list:\n
-  raise ValidationFailed, message_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

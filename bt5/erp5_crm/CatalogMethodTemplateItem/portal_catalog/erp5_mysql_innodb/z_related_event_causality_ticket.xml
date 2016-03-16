@@ -22,32 +22,6 @@ table_3</string> </value>
             <value> <string>z_related_event_causality_ticket</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-var table_3>.uid = <dtml-var table_2>.category_uid\n
-AND <dtml-var table_1>.uid = <dtml-var table_2>.uid\n
-AND <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
-AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.causality.getUid()">\n
-AND catalog.uid = <dtml-var table_0>.uid\n
-AND (<dtml-in "portal_catalog.getPortalEventTypeList()">\n
-  <dtml-if sequence-start>\n
-    <dtml-var table_1>.portal_type = \'<dtml-var sequence-item>\'\n
-  <dtml-else>\n
-    OR <dtml-var table_1>.portal_type = \'<dtml-var sequence-item>\'\n
-  </dtml-if>\n
-</dtml-in>)\n
-AND\n
-  (SELECT count(*) from category as sub_category\n
-    WHERE sub_category.uid = catalog.uid\n
-    AND sub_category.base_category_uid = <dtml-var "portal_categories.follow_up.getUid()">\n
-    AND sub_category.category_uid = <dtml-var table_3>.uid\n
-    LIMIT 1 ) = 0\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

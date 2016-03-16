@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>""" \n
-  Return reference of the default currency used in Shopping Cart.\n
-"""\n
-website = context.getWebSiteValue()\n
-if website:\n
-  return website.WebSite_getShoppingCartDefaultCurrency().getReference()\n
-else:\n
-  return \'\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return [{\'uid\' : x.uid, \'start_date\' : x.start_date, \n
-  \'source_section_title\' : x.source_section_title, \n
-  \'destination_section_title\' : x.destination_section_title} for x in row_list]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>row_list</string> </value>
         </item>

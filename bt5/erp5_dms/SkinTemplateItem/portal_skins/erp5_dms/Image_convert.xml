@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-Processes requests for conversion of and Image to a desired format.\n
-Requires format and desired filename (adds extension if missing).\n
-Sets headers and uses native Zope method to produce output.\n
-"""\n
-\n
-request = context.REQUEST\n
-fname = request.get(\'filename\')\n
-format = request.get(\'format\')\n
-\n
-if fname is None or format is None:\n
-  return\n
-if not fname.endswith(\'.\' + format):\n
-  fname += \'.\' + format\n
-\n
-request.RESPONSE.setHeader(\'Content-type\', \'application/\' + format)\n
-request.RESPONSE.setHeader(\'Content-disposition\', \'attachment; filename="%s"\' % fname)\n
-return context.index_html(request, request.RESPONSE, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

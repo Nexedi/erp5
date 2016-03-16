@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>params = context.portal_selections.getSelectionParamsFor(selection_name)\n
-\n
-params[\'stat\'] = 1\n
-params[\'omit_input\'] = 1\n
-params[\'omit_output\'] = 0\n
-\n
-if (params.get(\'operation_date\') or {}).get(\'query\'):\n
-  buildSQLQuery = context.portal_catalog.buildSQLQuery\n
-  params[\'source_section_where_expression\'] = buildSQLQuery(\n
-            **{\'delivery.start_date\': params[\'operation_date\']})[\'where_expression\']\n
-  params[\'destination_section_where_expression\'] = buildSQLQuery(\n
-            **{\'delivery.stop_date\': params[\'operation_date\']})[\'where_expression\']\n
-  del params[\'operation_date\']\n
-\n
-result = context.AccountingTransactionModule_zGetAccountingTransactionList(\n
-              selection=selection,\n
-              selection_params=params, **params)\n
-row = result[0]\n
-return float(\'%.02f\' % (row.total_price and - row.total_price or 0.0))\n
-# vim: syntax=python\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection=None, selection_name=None, **kw</string> </value>
         </item>

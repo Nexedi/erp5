@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-""" \n
-  This script is called by drag and drop javascript framework\n
-  when user click on \'Minimize\' button.\n
-"""\n
-# format to Zope relative URL (\'knowledge_pad_module_3_4\' -> \'knowledge_pad_module/3/4\')\n
-splitted_box_relative_url = box_relative_url.split(\'_\')\n
-box = context.restrictedTraverse(\'knowledge_pad_module/%s/%s\' %(splitted_box_relative_url[-2], \n
-                                                               splitted_box_relative_url[-1]))\n
-state = box.getValidationState()\n
-if state == \'visible\':\n
-  box.invisible()\n
-elif state == \'invisible\':\n
-  box.visible()\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>box_relative_url</string> </value>
         </item>

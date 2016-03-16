@@ -1,0 +1,36 @@
+<tal:block tal:condition="python: not here.getPortalObject().portal_membership.isAnonymousUser()">
+  <tal:block tal:define="customer here/SaleOrder_getShoppingCartCustomer">
+    <br />
+    <h2>Customer Information</h2>
+    <table>
+      <tr>
+        <td>Name:</td>
+        <td><span tal:content="customer/getTitle"/></td>
+      </tr>
+      <tr>
+        <td>Email:</td>
+        <td> <span tal:content="customer/getDefaultEmailText"/></td>
+      </tr>
+      <tr>
+        <td>Telephone:</td>
+        <td> <span tal:content="customer/getDefaultTelephoneText"/></td>
+      </tr>
+      <tr>
+        <td>Address:</td>
+        <td><span tal:content="customer/getDefaultAddressStreetAddress"/></td>
+      </tr>
+      <tr>
+        <td>City:</td>
+        <td><span tal:content="customer/getDefaultAddressCity"/></td>
+      </tr>
+      <tr>
+        <td>ZIP:</td>
+        <td><span tal:content="customer/getDefaultAddressZipCode"/></td>
+      </tr>
+      <tr>
+        <td>Country:</td>
+        <td><span tal:content="customer/getDefaultAddressRegionTitle"/></td>
+      </tr>
+    </table>
+  </tal:block>
+</tal:block>

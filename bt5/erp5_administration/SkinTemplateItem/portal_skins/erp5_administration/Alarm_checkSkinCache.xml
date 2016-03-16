@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>ap = context.newActiveProcess()\n
-\n
-context.activate(\n
-  active_process=ap.getRelativeUrl(),\n
-  tag=tag,\n
-  ).Alarm_checkSkinCacheActive(fixit=fixit)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>tag, fixit=False</string> </value>
         </item>

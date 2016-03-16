@@ -19,20 +19,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAFQAAAAgCAYAAACM2F8WAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
-jwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41
-LjExR/NCNwAAAcJJREFUaEPtlVuOwyAQBHO4fOX+9/HSiNG2RxU/MR8RLZVWFITxTCLva1mWSUdQ
-Tq7zer/fyy8zOnWg+jsCaxL3e2MDxf0HmAPtzH+Tv8roxED1d4ueZ4bWa6Ffk6OQdxTyzhxoQyHv
-KOSdOdCGQt5RyDvzHdo7MVD/VomeZ4bWa6Ffk6OQdxTyzhxoQyHvKOSdOdCGQt5RyDvzHdo7NOXJ
-DVBOroNych2UDr2XNsA7zgB3boF3nORM6PMrUDrx4Afo0mDcc4CeAyWfUcivQOnEgx9gDrSA0jn6
-4L0aHF2voJDPKORXoHRGNzi6XkEhn1HIr0DpnGiwQntnGF2voJC/BEqHGizrT/MZ+dXZs7R7snus
-XkHJ7lOgyOezK1A67cF9Hc2tzrW92mT2Z8h3677sbO92vYLi6ximu0DZrIfSyc3E2p3t1f3szxD3
-57U727tdr6BsrTMK+QpKJxr6ts7cbXB0vYKytc4o5CsondZQsNvA3v4eVmtIvYIn1vmMo5CvoHRa
-U059p+VzQl77tHeUVsN5tB7w+DuUiH8UGXm85yj6PPBYvS/EUHN2vzyUk+ugDPTtX4Xu24PuOQrd
-N57l9QdmArGAwOgDoQAAAABJRU5ErkJggg==</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

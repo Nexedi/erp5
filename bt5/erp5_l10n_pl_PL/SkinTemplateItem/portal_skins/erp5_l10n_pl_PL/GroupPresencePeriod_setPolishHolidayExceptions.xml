@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script sets all standard (non-movable) holidays for polish calendar\n
-  on context Group Calendar Period.\n
-  Year defaults to current year.\n
-"""\n
-if year is None:\n
-  year = DateTime().year()\n
-part_holiday_list = [\'01-01\',\'05-01\',\'05-03\',\'08-15\',\'11-01\',\'11-11\',\'12-25\',\'12-26\']\n
-holiday_list = [\'-\'.join((str(year),holiday))  for holiday in part_holiday_list]\n
-\n
-for day in holiday_list:\n
-   holiday = DateTime(day)\n
-   context.newContent(portal_type = \'Calendar Exception\',\n
-                      exception_date = holiday)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>year=None</string> </value>
         </item>

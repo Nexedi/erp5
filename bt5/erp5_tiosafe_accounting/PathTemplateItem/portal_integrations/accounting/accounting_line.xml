@@ -2,66 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
-        <tuple/>
-      </tuple>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>_arg</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_data</string> </key>
-                        <value>
-                          <dictionary>
-                            <item>
-                                <key> <string>id_account</string> </key>
-                                <value>
-                                  <dictionary>
-                                    <item>
-                                        <key> <string>default</string> </key>
-                                        <value> <string></string> </value>
-                                    </item>
-                                  </dictionary>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>id_accounting</string> </key>
-                                <value>
-                                  <dictionary>
-                                    <item>
-                                        <key> <string>default</string> </key>
-                                        <value> <string></string> </value>
-                                    </item>
-                                  </dictionary>
-                                </value>
-                            </item>
-                          </dictionary>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>_keys</string> </key>
-                        <value>
-                          <list>
-                            <string>id_accounting</string>
-                            <string>id_account</string>
-                          </list>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
         <item>
             <key> <string>_col</string> </key>
             <value>
@@ -219,109 +163,6 @@ id_account=""</string> </value>
         <item>
             <key> <string>max_rows_</string> </key>
             <value> <int>1000000</int> </value>
-        </item>
-        <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-SELECT\n
-  IF (journal_code in (\'PI\', \'PC\'), \'\', CONCAT(\'Account \', account_code)) AS source_accounting,\n
-  IF (journal_code in (\'PI\', \'PC\'), CONCAT(\'Account \', account_code), \'\') AS destination_accounting,\n
-  \'Currency Euro\' AS resource,\n
-  IF (journal_code in (\'PI\', \'PC\'), debit - credit, credit - debit) AS quantity,\n
-  CONCAT(\'<dtml-var getPath>/accounting_module/\', transaction_reference, \' \', journal_code, \' \', date) AS path,\n
-  CONCAT(\'Accounting \', transaction_reference, \' \', journal_code, \' \', date) AS reference\n
-FROM\n
-  NOMACTX\n
-<dtml-if expr="id_accounting or id_account">\n
-WHERE\n
-  <dtml-if expr="id_accounting">\n
-    CONCAT(transaction_reference, \' \', journal_code, \' \', date) = <dtml-sqlvar type="string" expr="id_accounting">\n
-  </dtml-if>\n
-  <dtml-if expr="id_accounting and id_account">\n
-    AND\n
-  </dtml-if>\n
-  <dtml-if expr="id_account">\n
-    account_code = <dtml-sqlvar type="string" expr="id_account">\n
-  </dtml-if>\n
-</dtml-if>\n
-ORDER BY\n
-  transaction_reference ASC,\n
-  journal_code ASC,\n
-  date ASC\n
-
-
-]]></string> </value>
-        </item>
-        <item>
-            <key> <string>template</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="__newobj__" module="copy_reg"/>
-                </klass>
-                <tuple>
-                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
-                </tuple>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>__name__</string> </key>
-                        <value> <string encoding="cdata"><![CDATA[
-
-<string>
-
-]]></string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_vars</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>globals</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                    <item>
-                        <key> <string>raw</string> </key>
-                        <value> <string encoding="cdata"><![CDATA[
-
-SELECT\n
-  IF (journal_code in (\'PI\', \'PC\'), \'\', CONCAT(\'Account \', account_code)) AS source_accounting,\n
-  IF (journal_code in (\'PI\', \'PC\'), CONCAT(\'Account \', account_code), \'\') AS destination_accounting,\n
-  \'Currency Euro\' AS resource,\n
-  IF (journal_code in (\'PI\', \'PC\'), debit - credit, credit - debit) AS quantity,\n
-  CONCAT(\'<dtml-var getPath>/accounting_module/\', transaction_reference, \' \', journal_code, \' \', date) AS path,\n
-  CONCAT(\'Accounting \', transaction_reference, \' \', journal_code, \' \', date) AS reference\n
-FROM\n
-  NOMACTX\n
-<dtml-if expr="id_accounting or id_account">\n
-WHERE\n
-  <dtml-if expr="id_accounting">\n
-    CONCAT(transaction_reference, \' \', journal_code, \' \', date) = <dtml-sqlvar type="string" expr="id_accounting">\n
-  </dtml-if>\n
-  <dtml-if expr="id_accounting and id_account">\n
-    AND\n
-  </dtml-if>\n
-  <dtml-if expr="id_account">\n
-    account_code = <dtml-sqlvar type="string" expr="id_account">\n
-  </dtml-if>\n
-</dtml-if>\n
-ORDER BY\n
-  transaction_reference ASC,\n
-  journal_code ASC,\n
-  date ASC\n
-
-
-]]></string> </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

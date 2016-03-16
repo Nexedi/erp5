@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-request = context.REQUEST\n
-bc = context.business_configuration_module.newContent(\n
-  resource = context.getRelativeUrl()\n
-)\n
-\n
-request.set("field_your_business_configuration", bc.getRelativeUrl())\n
-\n
-return portal.portal_configurator.login(REQUEST=request)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

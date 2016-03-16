@@ -19,51 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-{\n
-  "name": "perfect-scrollbar",\n
-  "title": "perfect-scrollbar",\n
-  "description": "Tiny but perfect jquery scrollbar plugin.",\n
-  "version": "0.4.9",\n
-  "author": {\n
-    "name": "Hyeonje Alex Jun",\n
-    "email": "noraesae@yuiazu.net",\n
-    "url": "https://github.com/noraesae/"\n
-  },\n
-  "licenses": [\n
-    {\n
-      "type": "MIT",\n
-      "url": "https://github.com/noraesae/perfect-scrollbar#license"\n
-    }\n
-  ],\n
-  "dependencies": {\n
-    "jquery": ">=1.8"\n
-  },\n
-  "keywords": [\n
-    "ui",\n
-    "scroll",\n
-    "scrollbar"\n
-  ],\n
-  "homepage": "http://noraesae.github.com/perfect-scrollbar/",\n
-  "docs": "https://github.com/noraesae/perfect-scrollbar/",\n
-  "download": "http://noraesae.github.com/perfect-scrollbar/",\n
-  "demo": "http://noraesae.github.com/perfect-scrollbar/",\n
-  "bugs": "https://github.com/noraesae/perfect-scrollbar/issues/",\n
-  "maintainers": [\n
-    {\n
-      "name": "Hyeonje Alex Jun",\n
-      "email": "noraesae@yuiazu.net",\n
-      "url": "https://github.com/noraesae/"\n
-    }\n
-  ]\n
-}\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

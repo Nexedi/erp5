@@ -57,18 +57,6 @@
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string>CREATE TABLE `content_translation` (\n
-  `uid` BIGINT UNSIGNED NOT NULL,\n
-  `property_name` VARBINARY(100),\n
-  `content_language` VARBINARY(100),\n
-  `translated_text` TEXT,\n
-  PRIMARY KEY (`uid`, `property_name`, `content_language`),\n
-  FULLTEXT KEY (`translated_text`)\n
-) ENGINE=MyISAM;\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

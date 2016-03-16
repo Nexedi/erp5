@@ -19,35 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<div class="layout-region">\n
-    <div id="viewport-vbox-layout" class="layout-ct vbox">\n
-        <div id="header" class="layout-item"></div>\n
-        <div id="toolbar" class="layout-item"></div>\n
-        <div class="layout-item">\n
-            <div id="viewport-hbox-layout" class="layout-ct hbox">\n
-                <div id="left-menu" class="layout-item" style="width: 40px;"></div>\n
-                <div id="file-menu-panel" class="left-menu-full-ct" style="display:none;"></div>\n
-                <div id="about-menu-panel" class="left-menu-full-ct" style="display:none;"></div>\n
-                <div class="layout-item">\n
-                    <div class="layout-ct vbox">\n
-                        <div id="cell-editing-box" class="layout-item" style="height:18px;"></div>\n
-                        <div id="editor_sdk" class="layout-item" style="min-height: 100px;"></div>\n
-                    </div>\n
-                </div>\n
-                <div id="right-menu" class="layout-item"></div>\n
-            </div>\n
-        </div>\n
-        <div id="statusbar" class="layout-item"></div>\n
-    </div>\n
-</div>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

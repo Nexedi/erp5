@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-\n
-def display(x):\n
-  try:\n
-    pcg_id = x.getGap().split(\'/\')[-1]\n
-  except:\n
-    pcg_id = None\n
-  account_title = x.getTitle()\n
-  display = "%s - %s" % (pcg_id, account_title)\n
-  return display\n
-\n
-def sort_method(x, y):\n
-  return cmp(x[0], y[0])\n
-\n
-def getList():\n
-  list = map(lambda o: (display(o), \'account_module/%s\' % o.getId()), context.account_module.objectValues())\n
-  list.sort(sort_method)\n
-  return list\n
-\n
-\n
-getList = CachingMethod(getList, \'getList\')\n
-return [(\'\',\'\')] + getList()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

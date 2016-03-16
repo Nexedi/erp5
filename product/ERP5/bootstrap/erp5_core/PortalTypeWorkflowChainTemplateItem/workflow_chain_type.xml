@@ -1,158 +1,158 @@
 <workflow_chain>
  <chain>
-  <type>Acquired Property</type>
+  <type>portal_type_workflow_chain/Acquired Property</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Action Information</type>
+  <type>portal_type_workflow_chain/Action Information</type>
   <workflow>base_type_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Alarm</type>
+  <type>portal_type_workflow_chain/Alarm</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Attribute Blacklisted Constraint</type>
+  <type>portal_type_workflow_chain/Attribute Blacklisted Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Attribute Equality Constraint</type>
+  <type>portal_type_workflow_chain/Attribute Equality Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Attribute Unicity Constraint</type>
+  <type>portal_type_workflow_chain/Attribute Unicity Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Base Category</type>
+  <type>portal_type_workflow_chain/Base Category</type>
   <workflow>dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Base Domain</type>
+  <type>portal_type_workflow_chain/Base Domain</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Base Type</type>
+  <type>portal_type_workflow_chain/Base Type</type>
   <workflow>base_type_interaction_workflow, dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Business Template</type>
+  <type>portal_type_workflow_chain/Business Template</type>
   <workflow>business_template_building_workflow, business_template_installation_workflow</workflow>
  </chain>
  <chain>
-  <type>Category</type>
+  <type>portal_type_workflow_chain/Category</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Category Acquired Membership State Constraint</type>
+  <type>portal_type_workflow_chain/Category Acquired Membership State Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Category Existence Constraint</type>
+  <type>portal_type_workflow_chain/Category Existence Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Category Membership Arity Constraint</type>
+  <type>portal_type_workflow_chain/Category Membership Arity Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Category Membership State Constraint</type>
+  <type>portal_type_workflow_chain/Category Membership State Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Category Property</type>
+  <type>portal_type_workflow_chain/Category Property</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Category Related Membership Arity Constraint</type>
+  <type>portal_type_workflow_chain/Category Related Membership Arity Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Category Related Membership State Constraint</type>
+  <type>portal_type_workflow_chain/Category Related Membership State Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Category Tool</type>
+  <type>portal_type_workflow_chain/Category Tool</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Content Existence Constraint</type>
+  <type>portal_type_workflow_chain/Content Existence Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Distributed Ram Cache</type>
+  <type>portal_type_workflow_chain/Distributed Ram Cache</type>
   <workflow>distributed_ram_cache_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Document</type>
+  <type>portal_type_workflow_chain/Document</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Document Component</type>
+  <type>portal_type_workflow_chain/Document Component</type>
   <workflow>component_validation_workflow, dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Domain</type>
+  <type>portal_type_workflow_chain/Domain</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Dynamic Category Property</type>
+  <type>portal_type_workflow_chain/Dynamic Category Property</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Extension Component</type>
+  <type>portal_type_workflow_chain/Extension Component</type>
   <workflow>component_validation_workflow, dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Mapped Value</type>
+  <type>portal_type_workflow_chain/Mapped Value</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Memcached Plugin</type>
+  <type>portal_type_workflow_chain/Memcached Plugin</type>
   <workflow>memcached_plugin_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Predicate</type>
+  <type>portal_type_workflow_chain/Predicate</type>
   <workflow>edit_workflow, rule_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Preference</type>
+  <type>portal_type_workflow_chain/Preference</type>
   <workflow>edit_workflow, preference_workflow</workflow>
  </chain>
  <chain>
-  <type>Property Existence Constraint</type>
+  <type>portal_type_workflow_chain/Property Existence Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Property Sheet</type>
+  <type>portal_type_workflow_chain/Property Sheet</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Property Sheet Tool</type>
+  <type>portal_type_workflow_chain/Property Sheet Tool</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Property Type Validity Constraint</type>
+  <type>portal_type_workflow_chain/Property Type Validity Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Standard Property</type>
+  <type>portal_type_workflow_chain/Standard Property</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>String Attribute Match Constraint</type>
+  <type>portal_type_workflow_chain/String Attribute Match Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>System Preference</type>
+  <type>portal_type_workflow_chain/System Preference</type>
   <workflow>edit_workflow, preference_workflow</workflow>
  </chain>
  <chain>
-  <type>TALES Constraint</type>
+  <type>portal_type_workflow_chain/TALES Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Test Component</type>
+  <type>portal_type_workflow_chain/Test Component</type>
   <workflow>component_validation_workflow, dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

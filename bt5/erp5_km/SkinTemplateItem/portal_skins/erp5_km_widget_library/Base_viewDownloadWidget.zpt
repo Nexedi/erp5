@@ -1,0 +1,48 @@
+<tal:block replace="nothing">
+  <!--
+  This widget displays download widget of a document.
+ 
+  -->
+</tal:block>
+
+<div class="download-document-format-list-container"
+     tal:define="target_format_item_list python: here.getTargetFormatItemList();
+                 document_url here/absolute_url;
+                 list_index python: 5">
+ <span i18n:domain="erp5_ui" 
+       i18n:translate=""
+       onclick="javascript:$('div.download-document-format-list-menu').toggle();"> Download</span>
+  <div class="download-document-format-list-menu" style="opacity: 0.999999; display: none;">
+    <ul>
+      <li class="separator"
+          tal:attributes="class python: test(len(target_format_item_list), 'separator','')">
+        <a tal:attributes="href string:${document_url}/Base_download"
+           i18n:domain="erp5_ui" 
+           i18n:translate=""
+           title="Download in original format">Original</a>
+      </li>
+      <li tal:repeat="target_format_item python: target_format_item_list[:list_index]">
+        <a tal:attributes="href python: '%s?format=%s' %(document_url, target_format_item[1]);
+                           title python: 'Download in %s format' %target_format_item[0];"
+           tal:content="python: target_format_item[0]"/>
+      </li>
+      <!-- Show more than list_index in initially hidden div -->
+      <tal:block tal:condition="python: len(target_format_item_list)>list_index">
+        <div class="download-document-format-list-menu-hidden" style="opacity: 0.999999; display: none;">
+          <li tal:repeat="target_format_item python: target_format_item_list[list_index:]">
+            <a tal:attributes="href python: '%s?format=%s' %(document_url, target_format_item[1]);
+                               title python: 'Download in %s format' %target_format_item[0];"
+               tal:content="python: target_format_item[0]"/>
+          </li>
+        </div>
+        <li class="toggle-hidden-format-dialog-selection-link">
+          <span onclick="javascript:toggleHiddenFormatDialogSelection();"
+                i18n:domain="erp5_ui" 
+                i18n:translate=""
+                title="Show more download formats"> More... </span>
+        </li>
+      </tal:block>
+    </ul>
+  </div>
+
+</div>

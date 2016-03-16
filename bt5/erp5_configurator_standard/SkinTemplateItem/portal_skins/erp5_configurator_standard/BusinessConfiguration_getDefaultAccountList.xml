@@ -49,36 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-\n
-cachedMethod = CachingMethod(context.ConfigurationTemplate_readOOCalcFile, script.getId())\n
-result = {}\n
-filename = "standard_default_accounts.ods"\n
-object_list = cachedMethod(filename)\n
-\n
-for item in object_list:\n
-  for k in item.keys():\n
-    if k.startswith(\'gap_\'):\n
-      gap_id = k[len(\'gap_\'):]\n
-      account_list = result.setdefault(gap_id, [])\n
-      new_item = item.copy()\n
-      new_item[\'gap\'] = new_item.pop(k)\n
-      if (\'title_%s\' % gap_id) in new_item:\n
-        new_item[\'title\'] = new_item[\'title_%s\' % gap_id]\n
-      \n
-      # clean all localisation columns\n
-      for k in list(new_item.keys()):\n
-        if k.startswith(\'gap_\') or k.startswith(\'title_\'):\n
-          new_item.pop(k)\n
-\n
-      account_list.append(new_item)\n
-      continue\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

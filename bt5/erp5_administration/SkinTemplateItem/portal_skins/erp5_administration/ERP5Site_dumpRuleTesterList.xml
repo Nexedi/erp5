@@ -49,41 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>for rule in sorted(context.getPortalObject().portal_rules.contentValues(),\n
-                  key=lambda x:x.getTitle()):\n
-  if rule.getValidationState() != \'validated\':\n
-    continue\n
-  print rule.getId()\n
-  print "  Title: %s" % (rule.getTitle())\n
-  print "  Trade Phases: %r" % (rule.getTradePhaseList())\n
-  print "  Test Method Id: %s" % (rule.getTestMethodId())\n
-  print "  Membership Criteria: %r" % (rule.getMembershipCriterionBaseCategoryList())\n
-  print "  Membership Criterion Category: %r" % (rule.getMembershipCriterionCategoryList())\n
-  print\n
-\n
-  for tester in sorted(rule.contentValues(), key=lambda x:x.getTitle()):\n
-    print rule.getId()\n
-    print " ", "\\n  ".join([x for x in (\n
-      "Id: %s" % tester.getId(),\n
-      "Title: %s" % tester.getTitle(),\n
-      "Type: %s" % tester.getPortalType(),\n
-      "Updating: %s" % tester.isUpdatingProvider(),\n
-      "Divergence: %s" % tester.isDivergenceProvider(),\n
-      "Matching: %s" % tester.isMatchingProvider(),\n
-\n
-      "Test Method Id: %s" % tester.getTestMethodId(),\n
-      "Membership Criteria: %r" %\n
-        (tester.getMembershipCriterionBaseCategoryList()),\n
-      "Membership Criterion Category: %r" %\n
-        (tester.getMembershipCriterionCategoryList()),\n
-      )])\n
-    print\n
-\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

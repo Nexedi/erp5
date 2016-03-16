@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># This script is intented to be called on a form\n
-\n
-ps = context.getPortalObject().portal_property_sheets[property_sheet_id]\n
-\n
-for prop in ps.objectValues(portal_type="Standard Property"):\n
-  field_id = "my_%s" %prop.getReference()\n
-  if getattr(context, field_id, None) is None:\n
-    print "will add %s" %(field_id)\n
-    if prop.getElementaryType() == "string":\n
-      context.manage_addField(field_id, prop.getReference(), "StringField")\n
-    elif prop.getElementaryType() == "boolean":\n
-      context.manage_addField(field_id, prop.getReference(), "CheckBoxField")\n
-    else:\n
-      print "unkown type", prop.getElementaryType()\n
-\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>property_sheet_id</string> </value>
         </item>

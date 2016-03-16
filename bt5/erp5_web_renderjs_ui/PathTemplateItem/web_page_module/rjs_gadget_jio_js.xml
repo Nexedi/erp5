@@ -98,66 +98,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, jIO, FormData */\n
-/*jslint indent: 2, maxerr: 3 */\n
-(function (window, rJS, jIO) {\n
-  "use strict";\n
-\n
-  rJS(window)\n
-\n
-    .ready(function (gadget) {\n
-      // Initialize the gadget local parameters\n
-      gadget.state_parameter_dict = {};\n
-    })\n
-\n
-    .declareMethod(\'createJio\', function (jio_options) {\n
-      this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);\n
-    })\n
-    .declareMethod(\'allDocs\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.allDocs.apply(storage, arguments);\n
-    })\n
-    .declareMethod(\'allAttachments\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.allAttachments.apply(storage, arguments);\n
-    })\n
-    .declareMethod(\'get\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.get.apply(storage, arguments);\n
-    })\n
-    .declareMethod(\'put\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.put.apply(storage, arguments);\n
-    })\n
-    .declareMethod(\'post\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.post.apply(storage, arguments);\n
-    })\n
-    .declareMethod(\'remove\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.remove.apply(storage, arguments);\n
-    })\n
-    .declareMethod(\'getAttachment\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.getAttachment.apply(storage, arguments);\n
-    })\n
-    .declareMethod(\'putAttachment\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.putAttachment.apply(storage, arguments);\n
-    })\n
-    .declareMethod(\'removeAttachment\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.removeAttachment.apply(storage, arguments);\n
-    })\n
-    .declareMethod(\'repair\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.repair.apply(storage, arguments);\n
-    });\n
-\n
-}(window, rJS, jIO));</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Jio Gadget JS</string> </value>
         </item>

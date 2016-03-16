@@ -26,33 +26,6 @@
               <dictionary/>
             </value>
         </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string>.mt-output .mt-token {\n
-  border: 1px solid #ddd;\n
-  white-space: pre;\n
-  font-family: "Consolas", monospace;\n
-  text-align: center;\n
-}\n
-\n
-.mt-output .mt-style {\n
-  font-size: x-small;\n
-}\n
-\n
-.mt-output .mt-state {\n
-  font-size: x-small;\n
-  vertical-align: top;\n
-}\n
-\n
-.mt-output .mt-state-row {\n
-  display: none;\n
-}\n
-\n
-.mt-state-unhide .mt-output .mt-state-row {\n
-  display: table-row;\n
-}\n
-</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

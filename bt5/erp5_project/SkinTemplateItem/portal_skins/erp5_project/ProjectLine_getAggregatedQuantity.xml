@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>quantity = 0.0\n
-\n
-for p in context.contentValues(portal_type = "Project Line"):\n
-  quantity += p.ProjectLine_getAggregatedQuantity()\n
-\n
-# By default, take the total of children\n
-if quantity: return quantity\n
-\n
-# if children define nothing, use our own value\n
-# This is compatible with spreadsheet calculation\n
-return context.getQuantity()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

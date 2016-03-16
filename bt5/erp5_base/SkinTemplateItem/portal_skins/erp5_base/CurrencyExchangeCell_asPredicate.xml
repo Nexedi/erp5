@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>currency_exchange_line = context.getParentValue()\n
-currency = currency_exchange_line.getParentValue()\n
-\n
-return context.asContext(_range_criterion=dict(start_date=(currency_exchange_line.getStartDate(),\n
-                                                           currency_exchange_line.getStopDate())),\n
-                         membership_criterion_base_category=[\'price_currency\', \'resource\', \'currency_exchange_type\'],\n
-                         membership_criterion_category=[\'resource/%s\' % currency.getRelativeUrl(),\n
-                                                        currency_exchange_line.getPriceCurrency(base=True),\n
-                                                        context.getCurrencyExchangeType(base=True)])\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

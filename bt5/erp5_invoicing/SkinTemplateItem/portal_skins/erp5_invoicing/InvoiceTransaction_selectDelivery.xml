@@ -49,37 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>#\n
-#  This method is used by the invoice_transaction_builder\n
-# delivery builder to select the Invoice Transaction \n
-# in which creating new Invoice Transaction Lines.\n
-#\n
-\n
-deliveries_keys = {}\n
-for movement in movement_list:\n
-  ar = movement.getParentValue()\n
-  line = None\n
-\n
-  # case of trade model movement\n
-  if ar.getParentValue().getParentValue().getSpecialiseValue().getPortalType() == \'Trade Model Simulation Rule\':\n
-    line = ar.getParentValue().getParentValue().getParentValue().getDeliveryValue()\n
-\n
-  # in case of invoice rule (ie. starting from Invoice)\n
-  if line is None:\n
-    line = ar.getParentValue().getOrderValue()\n
-\n
-  # in case of invoicing rule (ie. starting from Order)\n
-  if line is None:\n
-    line = movement.getParentValue().getParentValue().getDeliveryValue()\n
-\n
-  if line is not None:\n
-    deliveries_keys[line.getExplanationValue()] = 1\n
-\n
-return filter(lambda x : x is not None, deliveries_keys.keys())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>movement_list, **kw</string> </value>
         </item>

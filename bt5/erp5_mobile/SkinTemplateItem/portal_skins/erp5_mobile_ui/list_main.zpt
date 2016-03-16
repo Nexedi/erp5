@@ -1,0 +1,172 @@
+<tal:block tal:replace="nothing"
+           xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+<!--
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+                   Vincent Pelletier <vincent@nexedi.com>
+                   Christophe Dumez <christophe@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+</tal:block>
+<tal:block metal:define-macro="master">
+  <tal:block tal:define="form_action string:Base_doSelect;
+                         form_id form/id;
+                         list_mode python: True;
+                         listmode_default_listbox python: here.ERP5Site_getListbox(form=form);
+                         selection_name listmode_default_listbox/selection_name;
+                         selection_index request/selection_index | python:0;
+                         dummy python: selection_name and request.set('selection_name', selection_name);
+
+                         local_parameter_list local_parameter_list | python: {};
+                         dummy python: local_parameter_list.update({'selection_name': selection_name, 'selection_index': selection_index, 'form_id': form_id});
+                         title string:${here/Title}">
+      <div class="div1_list"> 
+      <input type="hidden" id="listmode" tal:attributes="value python: '1'">
+       <tal:block metal:use-macro="here/main_template/macros/master">
+        <tal:block metal:fill-slot="context_bar">
+           <div class="title_index" align="middle">
+
+             <tal:block tal:repeat="item here/breadcrumbs">
+               <tal:block tal:condition="python: repeat['item'].index < 2">
+                 <a class="erp" tal:attributes="href item/url"
+                    tal:content="item/title"
+                    i18n:translate="" i18n:domain="ui"></a>
+               </tal:block>
+             <tal:block tal:condition="python: repeat['item'].index >= 2">
+               <a class="erp" tal:attributes="href item/url"
+                  tal:content="item/title"></a>
+             </tal:block>
+             <span class="mobil">/</span>
+           </tal:block>
+
+             <!--<span tal:content="python: context.getTitle()">MODULES</span>-->
+           </div>
+
+<!--         <div class="aff_options">
+          <a class="list_mode link" title="List Mode" onclick="affOptions()">
+              <span class="mobil" i18n:translate="" i18n:domain="ui"> < Options ></span> 
+          </a>
+         </div>   -->
+
+<!--          <div class="div_prev">
+            <span class="first"
+                  tal:define="search_actions actions/object_search | nothing;
+                  exchange_actions actions/object_exchange | nothing;
+                  report_actions actions/object_report | nothing;
+                  button_actions actions/object_button | nothing;
+                  sort_actions actions/object_sort | nothing;
+                  ui_actions actions/object_ui | nothing;
+                  print_actions actions/object_print | nothing">
+              <tal:block tal:condition="list_mode | nothing"></tal:block>
+  
+              <div id="actions">
+                <select name="select_action"
+                        tal:attributes="onchange string:submitAction(this.form,'${url}/Base_doAction')"                     tal:define="document_template_list here/getDocumentTemplateList | nothing">
+                  <option selected="selected" value=""
+                          i18n:translate="" i18n:domain="ui">Action...
+                  </option>
+                  <tal:block tal:repeat="content here/allowedContentTypes | nothing">
+                    <tal:block tal:condition="python: not content.getId() in here.portal_types.getTypeInfo(here).getHiddenContentTypeList()">
+                      <option tal:attributes="value python: 'add ' + content.getId()"
+                    i18n:translate="" i18n:domain="ui">Add
+                        <tal:block tal:content="content/Title"
+                                  i18n:name="portal_type" i18n:translate="" i18n:domain="ui">
+                        </tal:block>
+                      </option>
+                    </tal:block>
+                  </tal:block>
+                  <tal:block tal:condition="document_template_list">
+                    <option disabled="disabled">-- 
+                      <tal:block i18n:translate="" i18n:domain="ui">Templates</tal:block> --
+                    </option>
+                    <tal:block tal:repeat="document_template document_template_list">
+                      <option tal:attributes="value python:'template ' + document_template.getRelativeUrl()"
+                      i18n:translate="" i18n:domain="ui">Add
+                        <tal:block tal:content="document_template/getTitle"
+                                i18n:name="document_template"></tal:block>
+                      </option>
+                    </tal:block>
+                  </tal:block>
+                  <option disabled="disabled">-- 
+                    <tal:block i18n:translate="" i18n:domain="ui">Workflows</tal:block> --
+                  </option>
+                  <tal:block tal:repeat="action actions/workflow">
+                    <option tal:content="action/name"
+                            tal:attributes="value python: 'workflow ' + action['url']"
+                            i18n:translate="" i18n:domain="ui"></option>
+                  </tal:block>
+                  <option disabled="disabled">-- 
+                    <tal:block i18n:translate="" i18n:domain="ui">Object</tal:block> --
+                  </option>
+                  <tal:block tal:repeat="action actions/object_action | nothing">
+                    <option tal:content="action/name"
+                            tal:attributes="value python: 'object ' + action['url']"
+                            i18n:translate="" i18n:domain="ui"></option>
+                  </tal:block>
+                  <tal:block tal:replace='nothing'>
+
+                    <option disabled="disabled">--
+                      <tal:block i18n:translate="" i18n:domain="ui">folder</tal:block> --
+                    </option>
+                    <tal:block tal:repeat="action actions/folder">
+                      <option tal:content="action/name"
+                              tal:attributes="value python: 'folder ' + action['url']"
+                              i18n:translate="" i18n:domain="ui"></option>
+                    </tal:block>
+                  </tal:block>
+                </select>
+
+              </div>
+            </span>
+           </div>-->
+
+
+<!--
+           <div class="breadcrumb" id="breadcrumb">
+             <tal:block tal:repeat="item here/breadcrumbs">
+               <tal:block tal:condition="python: repeat['item'].index < 2">
+                 <a class="mobil" tal:attributes="href item/url"
+                    tal:content="item/title"
+                    i18n:translate="" i18n:domain="ui"></a>
+               </tal:block>
+             <tal:block tal:condition="python: repeat['item'].index >= 2">
+               <a class="link mobil" tal:attributes="href item/url"
+                  tal:content="item/title"></a>
+             </tal:block>
+             <span class="mobil">/</span>
+           </tal:block>
+         </div>  -->
+         <div class="options_list" id="options_list" align="middle">
+           <button class="button" type="submit" title="New"
+              tal:attributes="name python: hasattr(here.aq_parent, 'getLastId') and 'Base_createNewDocument:method' or 'Folder_create:method'"
+              i18n:attributes="title" i18n:domain="ui">
+             <span class="image"></span>
+             <span class="description" i18n:translate="" i18n:domain="ui">New</span>
+           </button>
+        </div>
+        <tal:block metal:use-macro="here/context_box_render/macros/master" />
+        </tal:block>
+        <tal:block metal:fill-slot="main">
+          <tal:block metal:define-slot="main"/>
+        </tal:block>
+        <tal:block metal:fill-slot="context_actions">
+          <tal:block metal:use-macro="here/context_actions_render/macros/master" />
+        </tal:block>
+      </tal:block>
+    </div>
+  </tal:block>
+</tal:block>

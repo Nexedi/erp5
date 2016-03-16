@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>organisation_id = context.restrictedTraverse(request[\'organisation\']).getUid()\n
-account = context.portal_categories.restrictedTraverse(\'account_module/\'+account_name)\n
-\n
-extstr = \'\'\n
-if column == 2:\n
-  extstr=\'2\'\n
-\n
-return context.portal_simulation.getInventory(\n
-node_uid = account.getUid(),\n
-section_id = organisation_id,\n
-at_date=request[\'at_date\'+extstr],\n
-from_date=request[\'from_date\'+extstr])\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>account_name, request, column=1</string> </value>
         </item>

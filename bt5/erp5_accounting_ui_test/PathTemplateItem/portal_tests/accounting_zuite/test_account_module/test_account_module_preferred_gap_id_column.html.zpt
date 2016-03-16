@@ -1,0 +1,122 @@
+<html>
+<head><title>Test for Account module main lisbox</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test `preferred_gap_id` column of Account Module
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList">
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+<!-- Setup {{{ -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounts</td>
+</tr>
+<!-- }}} -->
+
+<!-- 10 accounts -> 10 records in the list {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>10 records</td>
+</tr>
+<!-- }}} -->
+
+<!-- Filter on preferred_gap_id {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <!-- sort by preferred_gap_id -->
+  <td>clickAndWait</td>
+  <td>//button[@value='listbox.preferred_gap_id:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-search-line']/th[2]/input</td>
+  <td>4</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]/a</td>
+  <td>40</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[2]/a</td>
+  <td>41</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[2]/a</td>
+  <td>4456</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[2]/a</td>
+  <td>4457</td>
+</tr>
+<!-- }}} -->
+
+<!-- sort by preferred_gap_id DESC {{{ -->
+<tr>
+  <!-- sort by preferred_gap_id -->
+  <td>clickAndWait</td>
+  <td>//button[@value='listbox.preferred_gap_id:desc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]/a</td>
+  <td>4457</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[2]/a</td>
+  <td>4456</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[2]/a</td>
+  <td>41</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[2]/a</td>
+  <td>40</td>
+</tr>
+<!-- }}} -->
+
+<tr>
+  <!-- make sure we end up sorting in ASCENDING-->
+  <td>clickAndWait</td>
+  <td>//button[@value='listbox.preferred_gap_id:asc']</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

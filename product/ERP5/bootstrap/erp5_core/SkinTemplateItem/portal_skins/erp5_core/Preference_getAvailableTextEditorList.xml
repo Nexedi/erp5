@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>text_editor_list = [("Plain Text", "text_area"), ("FCK Editor", "fck_editor")]\n
-\n
-if getattr(context.portal_skins, "erp5_xinha_editor", None) is not None:\n
-  text_editor_list.append(("Xinha Editor", "xinha"))\n
-\n
-\n
-if getattr(context.portal_skins, "erp5_ace_editor", None) is not None:\n
-  text_editor_list.append(("Ace Editor", "ace"))\n
-\n
-if getattr(context.portal_skins, "erp5_code_mirror", None) is not None:\n
-  text_editor_list.append(("Code Mirror", "codemirror"))\n
-\n
-return text_editor_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

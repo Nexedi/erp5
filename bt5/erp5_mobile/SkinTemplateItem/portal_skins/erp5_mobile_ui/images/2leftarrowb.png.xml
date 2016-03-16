@@ -23,21 +23,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAOCAYAAAAmL5yKAAACb0lEQVQoz2NgwAHY2e0VuLhUExgY
-uCQwZSW5uLi04hkYOM1waDdXUFCIPSoiYvqPhYXHGk2SQ1Y2dqKsrMcfVlbuZiyaJeQdHCp3lpdv
-+K+p6fUNzRYudfWEvqKilf9dXYt+sbHxlKNp5le0siretW7d5f9Llpz7Lyfn9AkoCDOATVExsr+n
-Z9v//fsf/3dwyP4KFCpDcZmlZf7ujRsv/b98+d3/srK1/yUlLUEGaAMxq6JiVFdv79Z/d+58/j95
-8uH/enrRX5mY4AboKzg5VezYsOHS/4sXX/3v7T3wPz5+3n9paYtXQEljHZ305v7+bX9u3Hj3f/78
-U/9zclb919cHGcABMkBJ1cQk68jy5ef+nz//8n9Pz57/2dnL/0dGTv8vJmb0TVTU4nRT04a/V6++
-+z937vH/+fkr/ycmLgIbwMICNkDEWFHR51Vi4qz/5eXr/9fWbgYrghrwh4dH9WtgYMf/kpK1/2tq
-Nv8vKlr9PylpIdALUTADGJgZGITceHnt71pZVQMVrAF7ITNzCdALZiAvBLCzG2/S1s78n5Ky4H9X
-177/lZWbgS6IQg4DcAw48PHZ3Le3r/tfV7ftf2np2v/y8l4fGBh41UAph4PDYLu+fjbQdav+Nzfv
-/m9mlgU0QLIMLRqFXAUF7e5bW1f/9/bu/S8l5fAJKR3IcnEZ7QEZ4uc3CZhGYoBe4Ec3AATEnAUE
-7O9qamb+FxY2+cLCwoKUkNiVuLgM9qiqJv2XlfX5AQsDLEDKmY/P4gU3t9p/oCIrtFyiwMNjtI+f
-3+Q/IyN7IwNuIOLJyMg7B5ja1DDl+JSZmYVmMTAwhQEAB0jzAFW1jp4AAAAASUVORK5CYII=</string> </value>
-        </item>
-        <item>
             <key> <string>height</string> </key>
             <value> <int>14</int> </value>
         </item>

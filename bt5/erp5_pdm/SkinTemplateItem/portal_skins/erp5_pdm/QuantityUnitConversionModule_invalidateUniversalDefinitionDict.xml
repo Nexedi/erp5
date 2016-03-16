@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-def foo(): pass\n
-cached = CachingMethod(foo,\n
-                       "getUniversalQuantityUnitDefinitionDict",\n
-                       cache_factory="erp5_content_long")\n
-\n
-cached.delete()\n
-\n
-context.QuantityUnitConversionModule_getUniversalDefinitionDict()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

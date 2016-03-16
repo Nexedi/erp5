@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Stop respective account for a company employee.\n
-"""\n
-portal = context.getPortalObject()\n
-\n
-career = state_change[\'object\']\n
-person = career.getParentValue()\n
-\n
-default_email_text = person.Person_getDefaultExternalEmailText()\n
-username, domain = default_email_text.split(\'@\', 2)\n
-if domain in portal.portal_preferences.getPreferredManagedExternalDomainNameList():\n
-  # find external Email Account instance and invalidate it\n
-  kw = {\'email.url_string\': default_email_text,\n
-        \'default_source_uid\': person.getUid(),\n
-        \'portal_type\': \'Email Account\',\n
-        \'validation_state\': \'validated\'}\n
-  email_account = portal.portal_catalog.getResultValue(**kw)\n
-  if email_account is not None:\n
-    email_account.invalidate()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

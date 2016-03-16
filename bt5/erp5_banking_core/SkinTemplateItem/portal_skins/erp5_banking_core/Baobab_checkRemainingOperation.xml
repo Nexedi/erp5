@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Make sure there is not any operation wich is not finished yet\n
-# This is usefull when we close a counter date\n
-\n
-document_list = context.CounterDate_getRemainingOperationList(site=site)\n
-\n
-\n
-for document in document_list:\n
-  from Products.ERP5Type.Message import Message\n
-  from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-  portal_type = document.getTranslatedPortalType()\n
-  reference = document.getSourceReference()\n
-  if reference is None:\n
-    reference = Message(domain=\'ui\',message=\'Not defined\')\n
-  message = Message(domain="ui", \n
-                message="Sorry, the $portal_type (reference:$reference) is not finished",\n
-                mapping={\'portal_type\':portal_type,\'reference\':reference})\n
-  raise ValidationFailed,message\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>site=None</string> </value>
         </item>

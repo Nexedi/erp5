@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>source = context.getSource()\n
-if source is not None:\n
-  if source.endswith(\'surface\'):\n
-    source = \'%s/%s\' % (source,\'caisse_courante/encaisse_des_billets_et_monnaies\')\n
-  if source.endswith(\'caveau\'):\n
-    source = \'%s/%s\' % (source,\'auxiliaire/encaisse_des_billets_et_monnaies\')\n
-return source\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

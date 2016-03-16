@@ -49,43 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Returns the dict of parameters that have to be passed to getInventory/getMovementHistoryList\n
-for the cell_index. This script returns parameters even if the cell does not exist.\n
-"""\n
-\n
-portal = context.getPortalObject()\n
-budget_model = context.getParentValue().getSpecialiseValue()\n
-\n
-budget_cell = context.getCell(*cell_index)\n
-\n
-if budget_cell is None:\n
-  # if cell does not exist, use a temporary cell at those coordinates\n
-  budget_cell = context.newContent(portal_type=\'Budget Cell\', temp_object=True)\n
-  budget_cell.edit(\n
-     mapped_value_property_list=(\'quantity\',),\n
-     membership_criterion_base_category_list\n
-        =[bc for bc in context.getVariationBaseCategoryList() if bc not\n
-                in context.getMembershipCriterionBaseCategoryList()],\n
-     membership_criterion_category_list=cell_index)\n
-\n
-kw = budget_model.getInventoryQueryDict(budget_cell)\n
-\n
-if engaged_budget:\n
-  kw.setdefault(\'stock_explanation_simulation_state\',\n
-                  portal.getPortalReservedInventoryStateList() +\n
-                  portal.getPortalCurrentInventoryStateList() +\n
-                  portal.getPortalTransitInventoryStateList())\n
-\n
-# those are simulation state parameters equivalent to getCurrentInventoryQuery that can be passed to getMovementHistoryList\n
-kw.setdefault(\'simulation_state\', portal.getPortalCurrentInventoryStateList() + portal.getPortalTransitInventoryStateList())\n
-kw.setdefault(\'transit_simulation_state\', portal.getPortalTransitInventoryStateList())\n
-kw.setdefault(\'omit_transit\', False)\n
-\n
-return kw\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>cell_index=(), engaged_budget=False</string> </value>
         </item>

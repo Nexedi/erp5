@@ -1,0 +1,145 @@
+<tal:block tal:replace="nothing"
+           xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+<!--
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+                   Vincent Pelletier <vincent@nexedi.com>
+                   Christophe Dumez <christophe@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+</tal:block>
+<tal:block tal:define="title here/Title">
+  <tal:block metal:use-macro="here/main_template/macros/master">
+    <tal:block metal:fill-slot="main">
+      <tal:block tal:condition="here/portal_membership/isAnonymousUser">
+        <tal:block tal:define="dummy python: request.RESPONSE.redirect('%s/login_form' % url)" />
+      </tal:block>
+      <div class="div1">
+        <div class="title_index" align="middle">
+          <span class="erp">ERP5</span>
+        </div>
+        <div class="window">
+          <div class="modules"><br>
+            <span class="link2" i18n:translate="" i18n:domain="ui">Main menu</span>
+            <!--
+            <tal:block tal:condition="not: here/portal_membership/isAnonymousUser">
+              <span class="link2" i18n:translate="" i18n:domain="ui">of</span>
+              <span class="link2" tal:content="python:here.portal_catalog(reference=here.portal_membership.getAuthenticatedMember().getUserName(), portal_type='Person')[0].getObject().getTitle()+' :'" />
+            </tal:block>
+            -->
+          </div>
+
+          <div id="navigation_bar">
+            <div id="favourites" class="mod_badg">
+              <select name="select_favorite"
+                      onchange="submitAction(this.form,'Base_doFavorite')"
+                      tal:define="ordered_global_actions python:here.getOrderedGlobalActionList(actions['global']);
+                                  user_actions actions/user;">
+                <option selected="selected" value=""
+                        i18n:translate="" i18n:domain="ui">My favourites</option>
+                <tal:block tal:repeat="action ordered_global_actions">
+                  <option tal:condition="action/disabled"
+                          disabled="disabled">-- <tal:block tal:content="action/title" i18n:translate="" i18n:domain="ui" /> --</option>
+                  <tal:block tal:condition="not:action/disabled"
+                            tal:define="name python: action.get('name', '');
+                                        index python: name.find(' (');">
+                    <option tal:condition="python: index >= 0"
+                            tal:attributes="value action/url"><tal:block tal:content="python: name[:index]" i18n:translate="" i18n:domain="ui"></tal:block><tal:block tal:replace="python: name[index:]" /></option>
+                    <option tal:condition="python: index < 0"
+                            tal:attributes="value action/url"
+                            tal:content="action/name"
+                            i18n:translate="" i18n:domain="ui"></option>
+                  </tal:block>
+                </tal:block>
+                <tal:block tal:condition="user_actions">
+                  <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">User</tal:block> --</option>
+                  <option tal:repeat="action user_actions"
+                          tal:content="action/name"
+                          tal:attributes="value action/url"
+                          i18n:translate="" i18n:domain="ui"></option>
+                </tal:block>
+              </select>
+              <button type="submit" name="Base_doFavorite:method" title="Select Favorite"
+                      i18n:attributes="title" i18n:domain="ui">
+                <span class="image"></span>
+                <span class="description"
+                      i18n:translate="" i18n:domain="ui">Select Favorite</span>
+              </button>
+            </div>
+  
+            <div id="modules" class="mod_badg">
+              <select name="select_module"
+                      onchange="submitAction(this.form,'Base_doModule')">
+                      tal:define="module_list here/ERP5Site_getModuleItemList;">
+                <option selected="selected" value="" i18n:translate="" i18n:domain="ui">ERP5 Modules</option>
+                <option tal:repeat="module here/ERP5Site_getModuleItemList"
+                        tal:attributes="value python: module[1]"
+                        tal:content="python: module[0]"
+                        tal:omit-tag="nothing"/>
+              </select>
+              <button type="submit" name="Base_doModule:method" title="Select Module"
+                      i18n:attributes="title" i18n:domain="ui">
+                <span class="image"></span>
+                <span class="description"
+                      i18n:translate="" i18n:domain="ui">Select Module</span>
+              </button>
+            </div>
+  
+            <div id="language" class="mod_badg">
+              <select name="select_language"
+                      onchange="submitAction(this.form,'Base_doLanguage')">
+                <option value=""
+                        i18n:translate="" i18n:domain="ui">My language</option>
+                <option tal:repeat="language python: here.Localizer.get_languages_map()"
+                        tal:omit-tag="nothing"
+                        tal:attributes="value language/id;
+                                        selected python: language['selected'] and 'selected' or nothing;"
+                        tal:content="python: here.Localizer.erp5_ui.gettext(language['title'], lang=language['id'])" />
+              </select>
+              <button type="submit" name="Base_doLanguage:method" title="Select Language"
+                      i18n:attributes="title" i18n:domain="ui">
+                <span class="image"></span>
+                <span class="description"
+                      i18n:translate="" i18n:domain="ui">Select Language</span>
+              </button>
+            </div>
+  
+            <div id="search" class="option">
+              <input type="text" name="field_your_search_text"/>
+              <button type="submit" name="Base_searchResultList:method" title="Search"
+                      i18n:attributes="title" i18n:domain="ui">
+                <span class="image"></span>
+                <span class="description"
+                      i18n:translate="" i18n:domain="ui">Search</span>
+              </button>
+            </div>
+
+          </div>
+
+<!--          <div class="option" align="right">
+            <span class="link2"></span>
+            <tal:block tal:condition="not: here/portal_membership/isAnonymousUser">
+              <span class="modu" i18n:translate="" i18n:domain="ui">Logged In as :</span>
+              <span class="link2" tal:content="python:here.portal_membership.getAuthenticatedMember().getUserName()" />
+            </tal:block>
+            <span class="link2"></span>
+          </div> -->
+        </div>
+      </div> 
+    </tal:block>
+  </tal:block>
+</tal:block>

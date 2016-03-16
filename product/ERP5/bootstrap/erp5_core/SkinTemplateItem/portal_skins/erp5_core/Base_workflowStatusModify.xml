@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.CMFCore.WorkflowCore import WorkflowException\n
-\n
-o = context.getObject()\n
-\n
-if 1: # keep indentation\n
-  try : \n
-    context.portal_workflow.doActionFor( o,\n
-     workflow_action,\n
-     comment=comment,\n
-     **kw)\n
-  except WorkflowException:\n
-    pass\n
-  except ValidationFailed, message:\n
-    if getattr(message, \'msg\', None) and same_type(message.msg, []):\n
-      message = \'. \'.join(\'%s\' % x for x in message.msg)\n
-    if not batch :\n
-      context.REQUEST.RESPONSE.redirect(\n
-                 "%s/view?portal_status_message=%s" %\n
-                 (context.absolute_url(), message))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>workflow_action=None, comment=\'\', batch=1, **kw</string> </value>
         </item>

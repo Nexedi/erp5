@@ -57,22 +57,6 @@
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string># Host:\n
-# Database: test\n
-# Table: \'catalog_full_text\'\n
-#\n
-CREATE TABLE `catalog_full_text` (\n
-  `uid` BIGINT UNSIGNED NOT NULL,\n
-  `title` varchar(255) default \'\',\n
-  `description` text,\n
-  PRIMARY KEY  (`uid`),\n
-  FULLTEXT `title` (`title`),\n
-  FULLTEXT `description` (`description`)\n
-) ENGINE=MyISAM;\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

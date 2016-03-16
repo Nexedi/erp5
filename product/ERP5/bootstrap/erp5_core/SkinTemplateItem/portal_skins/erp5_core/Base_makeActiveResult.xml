@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFActivity.ActiveResult import ActiveResult\n
-active_result = ActiveResult()\n
-severity = len(error_list)\n
-if severity == 0:\n
-  summary = "No error"\n
-else:\n
-  summary = "Error"\n
-active_result.edit(summary=summary, severity=severity, detail=\'\\n\'.join(error_list))\n
-return active_result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>title, error_list</string> </value>
         </item>

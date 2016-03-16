@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Find the list of objects to synchronize by calling the catalog.\n
-\n
-  Possibly look up a single object based on its ID, GID\n
-"""\n
-accounting_list = []\n
-if not id:\n
-  for accounting in context.accounting_module.objectValues():\n
-    if accounting.getReference() and accounting.getStartDate() and accounting.getSimulationState() != \'deleted\':\n
-      accounting_list.append(accounting)\n
-  return accounting_list\n
-accounting = getattr(context.accounting_module, id)\n
-if accounting.getReference() and accounting.getStartDate() and accounting.getSimulationState() != \'deleted\':\n
-  accounting_list.append(accounting)\n
-return accounting_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>id="", gid=""</string> </value>
         </item>

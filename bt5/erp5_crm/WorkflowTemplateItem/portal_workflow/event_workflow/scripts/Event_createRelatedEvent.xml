@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># this script allows to create a new related event quickly\n
-\n
-portal = state_change.getPortal()\n
-portal_workflow = portal.portal_workflow\n
-event = state_change[\'object\']\n
-\n
-title = portal_workflow.getInfoFor(event,\n
-                                   \'related_event_title\',\n
-                                   wf_id=\'event_workflow\')\n
-\n
-description = portal_workflow.getInfoFor(event,\n
-                                         \'related_event_description\',\n
-                                         wf_id=\'event_workflow\')\n
-\n
-portal_type = portal_workflow.getInfoFor(event,\n
-                                         \'related_event_portal_type\',\n
-                                         wf_id=\'event_workflow\')\n
-\n
-event.Event_createRelatedEvent(portal_type, title, description)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

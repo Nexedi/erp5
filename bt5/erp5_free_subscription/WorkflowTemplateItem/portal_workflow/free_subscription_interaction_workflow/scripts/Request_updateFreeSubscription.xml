@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request = state_change["object"]\n
-\n
-if request.getFreeSubscriptionRequestType() == "unsubscription":\n
-  free_subscription = request.getFollowUpValue()\n
-  if free_subscription.getValidationState() != "invalidated":\n
-    free_subscription.invalidate()\n
-elif request.getFreeSubscriptionRequestType() == "subscription":\n
-  from DateTime import DateTime\n
-  portal = request.getPortalObject()\n
-  free_subscription = portal.free_subscription_module.newContent(\n
-    source=request.getSource(),\n
-    destination=request.getDestination(),\n
-    resource=request.getResource(),\n
-    effective_date=DateTime())\n
-  free_subscription.validate()\n
-  request.setFollowUpValue(free_subscription)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

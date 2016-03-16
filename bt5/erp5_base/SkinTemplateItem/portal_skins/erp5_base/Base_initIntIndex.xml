@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Initialise int_index of object\n
-"""\n
-\n
-parent = context.getParentValue()\n
-portal_type = context.getPortalType()\n
-\n
-index = len(parent.contentValues(filter={"portal_type": portal_type}))\n
-\n
-context.edit(int_index=index)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

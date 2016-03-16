@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Returns the total price declared as immobilised for all aggregated items\n
-from DateTime import DateTime\n
-\n
-millis = DateTime(\'2000/01/01 12:00:00.001\') - DateTime(\'2000/01/01 12:00:00\')\n
-\n
-self = context\n
-stop_date = self.getStopDate() + millis\n
-if stop_date is None:\n
-  return None\n
-item_list = []\n
-for line in self.contentValues():\n
-  try:\n
-    item_list += line.getAggregateValueList()\n
-  except:\n
-    pass\n
-price = 0\n
-for item in item_list:\n
-  try:\n
-    price += item.getLastImmobilisationInitialPrice(at_date=stop_date, **kw)\n
-  except:\n
-    pass\n
-return price\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

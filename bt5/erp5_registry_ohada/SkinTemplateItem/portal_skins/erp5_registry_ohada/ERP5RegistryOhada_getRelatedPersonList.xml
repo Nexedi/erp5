@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-current_object = context.getObject()\n
-context.log(current_object)\n
-context.log(current_object.getDestinationRelatedValueList())\n
-person_list = [assignment.getParentValue() for assignment in current_object.getDestinationFormRelatedValueList()]\n
-return person_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

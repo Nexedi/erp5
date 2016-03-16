@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Log import log\n
-from Products.ZSQLCatalog.SQLCatalog import Query\n
-\n
-# warn by logging (not possible use python\'s warn module in restricted environment)\n
-log("\'quick_search_text\' and \'advanced_search_text\' scriptable keys are deprecated. Use \'search_text\' instead.")\n
-return Query(search_text=value)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>value</string> </value>
         </item>

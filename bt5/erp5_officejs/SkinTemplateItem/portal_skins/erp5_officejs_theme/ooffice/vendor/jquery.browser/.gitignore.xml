@@ -19,26 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>lib-cov\n
-*.seed\n
-*.log\n
-*.csv\n
-*.dat\n
-*.out\n
-*.pid\n
-*.gz\n
-\n
-pids\n
-logs\n
-results\n
-\n
-npm-debug.log\n
-node_modules\n
-\n
-.DS_STORE</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

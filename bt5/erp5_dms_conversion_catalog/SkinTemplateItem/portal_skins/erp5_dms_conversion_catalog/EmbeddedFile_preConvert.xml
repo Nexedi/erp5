@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Embedded file can be an Image of a File so it needs special \n
-  handling  base on content type.\n
-"""\n
-if \'image\' in context.getContentType():\n
-  return context.Image_preConvert(format=format, \n
-                                  quality=quality, \n
-                                  display_list = display_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>format, quality, display_list</string> </value>
         </item>

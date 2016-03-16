@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Stay there with a "Nothing" portal status message"""\n
-kw.update(context.REQUEST.form)\n
-return context.ERP5Site_redirect(context.absolute_url(), keep_items={\'portal_status_message\': \'"Nothing" action is done.\'}, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

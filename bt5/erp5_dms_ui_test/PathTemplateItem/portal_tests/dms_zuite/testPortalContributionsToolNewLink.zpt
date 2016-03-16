@@ -1,0 +1,54 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Express Access Tab</title>
+</head>
+<body tal:define="link_url string:http://www.erp5.org">
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/portal_contributions/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>label=Contribute Link</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_url</td>
+  <td tal:content="link_url"></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Web Page created successfully</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Community</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Solution</td>
+  <td></td>
+</tr>
+
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">Wait for activities</span>
+
+</tbody></table>
+</body>
+</html>

@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>property_dict = {}\n
-property_dict[\'multimembership_criterion_base_category_list\'] = (\'resource\',\'source\',\'destination\',\'group\',\'source_section\',\'destination_section\')\n
-property_dict[\'criterion_property_list\'] = (\'start_date\',\'stop_date\')\n
-return  property_dict\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args,**kw</string> </value>
         </item>

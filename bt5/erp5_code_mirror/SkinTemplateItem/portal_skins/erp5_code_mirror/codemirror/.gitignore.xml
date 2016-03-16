@@ -22,18 +22,6 @@
               <dictionary/>
             </value>
         </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string>/node_modules\n
-/npm-debug.log\n
-test.html\n
-.tern-*\n
-*~\n
-*.swp\n
-.idea\n
-*.iml\n
-</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

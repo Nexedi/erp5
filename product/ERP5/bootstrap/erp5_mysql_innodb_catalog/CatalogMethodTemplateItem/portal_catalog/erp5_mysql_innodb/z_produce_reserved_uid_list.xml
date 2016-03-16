@@ -52,34 +52,6 @@ instance_id</string> </value>
             <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-INSERT INTO\n
-  catalog (id, path)\n
-VALUES\n
-<dtml-in "_.range(count - 1)">\n
-( <dtml-sqlvar instance_id type="string"> , \'reserved\' ) ,\n
-</dtml-in>\n
-( <dtml-sqlvar instance_id type="string"> , \'reserved\' );\n
-\n
-<dtml-var "\'\\0\'">\n
-\n
-SELECT   \n
-  uid\n
-FROM \n
-  catalog \n
-WHERE\n
-  path = \'reserved\'\n
-AND\n
-  id = <dtml-sqlvar instance_id type="string">\n
-LIMIT\n
-  10000\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

@@ -19,39 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/**\r\n
- *  description of styles for the \'.separator\' element\r\n
- *\r\n
- *  Created by Maxim Kadushkin 1/22/14\r\n
- *  Copyright (c) 2014 Ascensio System SIA. All rights reserved.\r\n
- *\r\n
-*/\r\n
-\r\n
-.separator {\r\n
-    display: inline-block;\r\n
-    position: inherit;\r\n
-    border-left: 1px solid @gray-dark;\r\n
-    vertical-align: top;\r\n
-    padding: 0;\r\n
-    width: 0;\r\n
-\r\n
-    &.horizontal {\r\n
-        height: 0;\r\n
-        display: block;\r\n
-\r\n
-        border-left: none;\r\n
-        border-right: none;\r\n
-        border-top: 1px solid @gray-dark;\r\n
-    }\r\n
-}\r\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

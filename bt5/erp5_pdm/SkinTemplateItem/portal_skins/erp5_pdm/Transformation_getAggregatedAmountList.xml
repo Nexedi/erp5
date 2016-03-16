@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempAmount\n
-tmp_context = newTempAmount(context, "temp_context",\n
-                            quantity=1.0,\n
-                            variation_category_list=reference_variation_category_list,\n
-                            resource=context.getRelativeUrl()) \n
-price_currency = kw.get(\'price_currency\', None)\n
-\n
-result = context.getAggregatedAmountList(tmp_context)\n
-final_result = []\n
-for line in result:\n
-  resource = line.getResourceValue()\n
-  sender_value = None\n
-  if resource is not None:\n
-    sender = line.getResourceValue().getPurchaseSupplyLineSource()\n
-  line.setCategoryMembership(\'source\', sender)\n
-  line.setCategoryMembership(\'price_currency\', price_currency)\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>reference_variation_category_list, **kw</string> </value>
         </item>

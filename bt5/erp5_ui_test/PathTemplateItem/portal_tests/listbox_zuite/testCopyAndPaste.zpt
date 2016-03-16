@@ -1,0 +1,142 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Copy and Paste</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Copy and Paste</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_copy:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Please select one or more items to copy first.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_copy:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Items copied.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_paste:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Items paste in progress.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//a[not(@title)]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/0/Base_viewHistory</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number x0_listbox-current-page-total-number"]</td>
+  <td>2 records</td> <!-- Creation + paste notification -->
+</tr>
+
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="x0_listbox-data-line-1 DataB"]/td[5]</td>
+  <td>regexp:Object copied from /.*/foo_module/0$</td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]//a[not(@title)]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]//a[not(@title)]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]//a[not(@title)]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-3 DataB"]</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

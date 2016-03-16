@@ -19,15 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>source :rubygems\n
-\n
-gem "bundle"\n
-gem "rake"\n
-gem "compass"\n
-gem "git"</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

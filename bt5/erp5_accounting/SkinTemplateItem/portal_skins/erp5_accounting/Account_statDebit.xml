@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Total debit of all accounting transactions having this\n
-account as a node\n
-"""\n
-kw[\'node_uid\'] = context.getUid()\n
-kw[\'omit_asset_decrease\'] = 1\n
-kw.update(kw[\'selection\'].getParams())\n
-\n
-return context.Node_statAccountingBalance(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

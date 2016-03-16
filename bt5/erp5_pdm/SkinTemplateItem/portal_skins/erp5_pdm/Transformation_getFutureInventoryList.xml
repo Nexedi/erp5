@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Returns the future inventory list of all the Transformed Resources.\n
-"""\n
-def getTransformationResourceList():\n
-  resource_dict = {}\n
-  for m in context.contentValues(\n
-     filter={\'portal_type\': [\'Transformation Optional Resource\', \'Transformation Transformed Resource\']}):\n
-    r = m.getResource()\n
-    if r is not None:\n
-      resource_dict[r] = 1\n
-  return resource_dict.keys()\n
-\n
-resource_list = getTransformationResourceList()\n
-if not resource_list:\n
-  # When there is no resource, we have nothing to do.\n
-  return []\n
-portal = context.getPortalObject()\n
-simulation_tool = portal.portal_simulation\n
-kw[\'resource\'] = resource_list\n
-return simulation_tool.getFutureInventoryList(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

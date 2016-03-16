@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># This is the standard version of text content substitution mapping method.\n
-# This script returns commonly used keywords, and can be specified in Web Pages\n
-# to substitute URLs embedded into the texts.\n
-#\n
-# Note: Please do not add rarely used ones into this script, because it becomes\n
-# just an overhead for most pages. If you need more, it is better to create\n
-# your own script instead.\n
-\n
-website = context.getWebSiteValue()\n
-if website is None:\n
-  # handle the case when substitution happens on web page module context (i.e. reindex, or mass pre conversion)\n
-  # then fall back to ERP5 site as a Web Site\n
-  website = context.getPortalObject()\n
-  return dict(website_url=website.absolute_url(),\n
-              websection_url=website.absolute_url(),\n
-              webpage_url=context.absolute_url())\n
-else:\n
-  websection = context.getWebSectionValue()\n
-  return dict(website_url=website.absolute_url(),\n
-              websection_url=websection.absolute_url(),\n
-              webpage_url=websection.getPermanentURL(context))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

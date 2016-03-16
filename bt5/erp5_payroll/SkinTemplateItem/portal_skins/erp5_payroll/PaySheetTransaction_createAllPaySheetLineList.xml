@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>\'\'\'\n
-  this script is the conductor. All other scripts that permit to create a \n
-  paysheet are called here\n
-\'\'\'\n
-import pprint\n
-\n
-# Delete all objects in the paysheet\n
-id_list = []\n
-for paysheet_item in context.objectValues(portal_type= \\\n
-  [\'Pay Sheet Transaction Line\', \'Pay Sheet Line\']):\n
-  # Delete lines which now became outdated and keep the sub-objects\n
-  id_list.append(paysheet_item.getId())\n
-context.manage_delObjects(id_list)\n
-\n
-# create Pay Sheet Lines\n
-context.createPaySheetLineList(listbox=listbox)\n
-\n
-if not(kw.has_key(\'skip_redirect\') and kw[\'skip_redirect\'] == True):\n
-  # Return to pay sheet default view\n
-  from ZTUtils import make_query\n
-  redirect_url = \'%s/%s?%s\' % (context.absolute_url(), \'view\', make_query())\n
-  return context.REQUEST.RESPONSE.redirect(redirect_url)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox=[], **kw</string> </value>
         </item>

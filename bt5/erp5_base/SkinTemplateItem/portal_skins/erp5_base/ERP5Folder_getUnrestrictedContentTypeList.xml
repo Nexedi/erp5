@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-Get portal type list allowed in module through Types Tool\n
-"""\n
-return context.getTypeInfo().getTypeAllowedContentTypeList()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

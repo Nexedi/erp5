@@ -1,10 +1,10 @@
 <workflow_chain>
  <chain>
-  <type>EGov Type</type>
+  <type>portal_type_workflow_chain/EGov Type</type>
   <workflow>edit_workflow, portal_type_interaction_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Meta EGov Type</type>
+  <type>portal_type_workflow_chain/Meta EGov Type</type>
   <workflow>edit_workflow, portal_type_interaction_workflow, validation_workflow</workflow>
  </chain>
 </workflow_chain>

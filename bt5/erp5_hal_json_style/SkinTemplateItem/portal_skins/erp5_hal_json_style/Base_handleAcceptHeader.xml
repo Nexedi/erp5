@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from zExceptions import Unauthorized\n
-if REQUEST is not None:\n
-  raise Unauthorized\n
-\n
-result = None\n
-accept = context.Base_getRequestHeader(\'Accept\', default=\'\')\n
-for accepted_type in accepted_type_list:\n
-  if accepted_type in accept:\n
-    # XXX Really simple and stupid matching.\n
-    # Better test to ensure best matching type\n
-    result = accepted_type\n
-    break\n
-\n
-if (result is None) and (\'*/*\' in accept):\n
-  result = accepted_type_list[0]\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>accepted_type_list, REQUEST=None</string> </value>
         </item>

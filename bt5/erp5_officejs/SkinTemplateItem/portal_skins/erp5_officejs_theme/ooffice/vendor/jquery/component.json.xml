@@ -19,25 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>{\n
-  "name": "jquery",\n
-  "repo": "components/jquery",\n
-  "version": "2.0.3",\n
-  "description": "jQuery component",\n
-  "keywords": [\n
-    "jquery",\n
-    "component"\n
-  ],\n
-  "main": "jquery.js",\n
-  "scripts": [\n
-    "jquery.js"\n
-  ],\n
-  "license": "MIT"\n
-}\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

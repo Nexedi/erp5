@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-html_status_report = str(portal.portal_configurator.getInstallationStatusReport(active_process_id=2))\n
-message_list = ["Configuration is over. Enjoy your new ERP5 system!",\n
-                "Please click link below.",\n
-                "You will be redirected to a form in which you can login using",\n
-                "one of yours newly created ERP5 user accounts."]\n
-\n
-for message in message_list:\n
-  if not message in html_status_report:\n
-    return \'False\'\n
-\n
-return \'True\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

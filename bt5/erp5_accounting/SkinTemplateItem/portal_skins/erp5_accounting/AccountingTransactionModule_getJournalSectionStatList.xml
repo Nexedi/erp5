@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.PythonScripts.standard import Object\n
-request = container.REQUEST\n
-portal = context.getPortalObject()\n
-\n
-return [ Object(\n
-           debit=request.get(\n
-      \'AccountingTransactionModule_getJournalSectionLineList.total_debit\'),\n
-           credit=request.get(\n
-      \'AccountingTransactionModule_getJournalSectionLineList.total_credit\')) ]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection, **kw</string> </value>
         </item>

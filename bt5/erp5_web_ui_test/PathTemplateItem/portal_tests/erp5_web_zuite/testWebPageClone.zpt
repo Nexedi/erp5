@@ -1,0 +1,93 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Previous Next Selection In Website</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Web Page Clone</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_erp5_web_common/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/WebSiteModule_createTestSite?id=test_web_site&amp;title=Test Web Site</td>
+  <td></td>
+  <td>Create a new site</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_page_module/WebPageModule_createTestWebPage?id=test_web_page&amp;reference=test_page&amp;publish:int=1</td>
+  <td></td>
+  <td>Create a new site</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_page_module/WebPageModule_createTestWebPage?id=test_web_page_2&amp;reference=test_page_2</td>
+  <td></td>
+  <td>Create a new site</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/Zuite_waitForActivities</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/test_web_site/web_page_module/test_web_page_2/test_page</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name="clone_version"]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name="Base_cloneContent:method"]</td>
+  <td></td>
+</tr>
+<tr>
+   <td>assertTextPresent</td>
+   <td>Created Clone Web Page.</td>
+   <td></td>
+</tr>
+<tr>
+  <td>assertTitle</td>
+  <td>Web Page - test_page | ERP5</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertLocation</td>
+  <td>regexp:${base_url}/web_site_module/test_web_site/web_page_module/[^/]+(/view)+\?portal_status_message=Created%20Clone%20Web%20Page.&amp;editable_mode:int=1</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

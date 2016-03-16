@@ -21,32 +21,6 @@ table_2</string> </value>
             <value> <string>z_related_source_or_source_decision_or_destination_or_destination_decision</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-comment>\n
-table_0 : category as source or destination or source_decision or destination_decision\n
-table_1 : catalog as category\n
-table_2 : catalog as object_uid\n
-</dtml-comment>\n
-\n
-( \n
-  <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.source.getUid()">\n
-  OR \n
-  <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.destination.getUid()">\n
-  OR\n
- <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.source_decision.getUid()">\n
-  OR \n
-  <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.destination_decision.getUid()">\n
-)\n
-AND\n
-<dtml-var table_0>.category_uid = <dtml-var table_2>.uid AND\n
-<dtml-var table_0>.uid = <dtml-var table_1>.uid AND\n
-<dtml-var table_1>.uid = catalog.uid
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

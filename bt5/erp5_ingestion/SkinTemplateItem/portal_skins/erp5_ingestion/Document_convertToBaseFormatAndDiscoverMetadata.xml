@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This is a convenient method to call both convertToBaseFormat and\n
-  discoverMetadata in good order in the same transaction. \n
-  This method guarantees order of calling methods.\n
-"""\n
-\n
-if context.isSupportBaseDataConversion():\n
-  context.convertToBaseFormat()\n
-\n
-return context.discoverMetadata(filename=filename,\n
-                                user_login=user_login,\n
-                                input_parameter_dict=input_parameter_dict)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>filename=None, user_login=None, input_parameter_dict=None</string> </value>
         </item>

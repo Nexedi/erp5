@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Owner Proxy Role allows anonymous users to create events\n
-through web sites.\n
-"""\n
-portal = context.getPortalObject()\n
-# Set preferred text format and reference\n
-context.setContentType(portal.portal_preferences.getPreferredTextFormat())\n
-context.Event_generateReference()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

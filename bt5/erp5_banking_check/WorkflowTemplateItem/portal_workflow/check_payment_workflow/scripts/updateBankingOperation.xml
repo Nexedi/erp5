@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Note: this script is executed with the proxy role Manager, because this script needs\n
-#       to use checkbook_module.\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-transaction = state_change[\'object\']\n
-bank_account = transaction.getDestinationPaymentValue()\n
-check_number = transaction.getAggregateFreeText()\n
-\n
-# Already done before in validateConsistency\n
-#check = transaction.Base_checkOrCreateCheck(reference=check_number)\n
-#if not check.Check_isValid():\n
-#  raise ValidationFailed, Message(domain=\'ui\', message=\'Check is in an invalid state\')\n
-\n
-line = transaction.get(\'movement\')\n
-if line is not None and line.getPortalType() == \'Banking Operation Line\':\n
-  # This is a single currency operation, so it is not necessary to convert the price.\n
-  line.setSourceDebit(transaction.getSourceTotalAssetPrice())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

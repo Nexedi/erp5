@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Returns true if the reconciled balance at the begin date of this bank reconciliation\n
-matches the previous account balance.\n
-"""\n
-precision = 3\n
-if context.getSourcePayment():\n
-  precision = context.getQuantityPrecisionFromResource(\n
-        context.getSourcePaymentValue().getPriceCurrency())\n
-\n
-at_date = context.getStartDate()\n
-assert at_date\n
-\n
-return round(context.getQuantityRangeMin(), precision) \\\n
-  == round(context.BankReconciliation_getReconciledAccountBalance(\n
-                 at_date=at_date), precision)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Create objects with given parameters"""\n
-from DateTime import DateTime\n
-category_list = (\'a\', \'b\', \'a/a1\', \'a/a2\')\n
-big_category_list = (\'c1\', \'c10\', \'c2\', \'c20\', \'c3\', \'c4\')\n
-\n
-for i in range(start, start + num):\n
-  category = category_list[i % len(category_list)]\n
-  foo = context.newContent(id = str(i), title = \'Title %d\' % i, quantity = 10.0 - float(i),\n
-                    foo_category = category, portal_type=portal_type)\n
-  if set_dates:\n
-    foo.setStartDate(DateTime(i, i, i))\n
-  if create_line:\n
-    foo.newContent()\n
-  if big_category_related:\n
-    big_category = big_category_list[i %len(category_list)]\n
-    foo.setFooBigCategory(big_category)\n
-\n
-return \'Created Successfully.\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>start=0, num=10, set_dates=0, portal_type=\'Foo\', create_line=0, big_category_related=False</string> </value>
         </item>

@@ -49,42 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-import json\n
-\n
-context.REQUEST.response.setHeader(\'Access-Control-Allow-Origin\', \'*\')\n
-\n
-error = []\n
-#We should verify if the project actually exists\n
-if context.getTitle() is None:\n
- error.append(\'ERROR: No project associated!\')\n
-if context.getTestSuite() is None:\n
- error.append(\'ERROR: No test-suite associated!\')\n
-if context.getTestSuiteTitle() is None:\n
- error.append(\'ERROR: No test-suite-title associated!\')\n
-vcs_repository_list = context.objectValues(portal_type="Test Suite Repository")\n
-if len(vcs_repository_list) == 0 :\n
- error.append("No vcs_repository_list! (minimum 1)")\n
-else:\n
- profile_count = 0\n
- for vcs_list in vcs_repository_list: \n
-   for property_name in [\'git_url\',\'buildout_section_id\',\'branch\']:\n
-    property_value = vcs_list.getProperty(property_name)\n
-    if property_value is None:\n
-     error.append(\'ERROR: No \'+property_name+\'!\')\n
-   if not(vcs_list.getProperty(\'profile_path\') is None):\n
-    profile_count += 1\n
- if profile_count == 0:\n
-    error.append(\'ERROR: No profile_path in any vcs_repository! (minimum 1)\')\n
-\n
-return len(error) >0\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

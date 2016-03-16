@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  XXX: Return list of Persons who belong to a position.\n
-"""\n
-kw[\'portal_type\'] = \'Career\'\n
-kw[\'agent_uid\'] = context.getUid()\n
-return context.portal_catalog(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

@@ -1,0 +1,50 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/getId"/>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
+</thead><tbody>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Powered by Python, Zope and ERP5</td>
+  <td></td>
+</tr> 
+<tr>
+  <td>verifyTextPresent</td>
+  <td>erp5.com</td>
+  <td></td>
+</tr> 
+<tr>
+  <td>verifyTextPresent</td>
+  <td> erp5.org</td>
+  <td></td>
+</tr> 
+<tr>
+  <td>verifyTextPresent</td>
+  <td>nexedi.com</td>
+  <td></td>
+</tr> 
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />
+
+</tbody></table>
+</body>
+</html>
+

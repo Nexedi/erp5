@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>assert context.getSimulationState() == \'started\' and context.getPortalType() == \'Accounting Period\'\n
-id_list = []\n
-for balance_transaction in context.getCausalityRelatedValueList(\n
-                     portal_type=\'Balance Transaction\'):\n
-  id_list.append(balance_transaction.getId())\n
-  assert balance_transaction.getParentValue().getId() == \'accounting_module\'\n
-\n
-if id_list:\n
-  balance_transaction.getParentValue().manage_delObjects(id_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

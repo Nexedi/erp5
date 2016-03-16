@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Returns the default portal type for response events.\n
-\n
-This script is here so that we can easily customized depending on the context event, ticket or user preferences.\n
-"""\n
-\n
-return context.getPortalType()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

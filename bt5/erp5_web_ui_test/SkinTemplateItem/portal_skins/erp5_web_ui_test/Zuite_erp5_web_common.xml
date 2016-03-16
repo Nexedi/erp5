@@ -33,44 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:metal="http://xml.zope.org/namespaces/metal">\n
-  <tal:block metal:define-macro="init">\n
-    <tr>\n
-      <td>store</td>\n
-      <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>\n
-      <td>base_url</td>\n
-    </tr>\n
-    <tr>\n
-      <td>open</td>\n
-      <td>${base_url}/web_site_module/WebSiteModule_resetWebZuite</td>\n
-      <td></td>\n
-    </tr>\n
-    <tr>\n
-      <td>assertTextPresent</td>\n
-      <td>Reset Successfully.</td>\n
-      <td></td>\n
-    </tr>\n
-    <tr>\n
-      <td>open</td>\n
-      <td>${base_url}/web_site_module/Zuite_waitForActivities</td>\n
-      <td></td>\n
-    </tr>\n
-    <tr>\n
-      <td>assertTextPresent</td>\n
-      <td>Done.</td>\n
-      <td></td>\n
-    </tr>\n
-  </tal:block>\n
-</tal:block>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

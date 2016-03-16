@@ -652,26 +652,6 @@
             <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-SELECT catalog.*\n
-FROM (SELECT metric_type_uid,\n
-             COUNT(DISTINCT resource_uid) AS resource_count\n
-      FROM measure\n
-      WHERE <dtml-sqltest resource_uid type="int" multiple>\n
-      GROUP BY metric_type_uid\n
-     ) AS measure,\n
-     catalog\n
-WHERE catalog.uid = measure.metric_type_uid\n
-  AND <dtml-sqltest column="measure.resource_count"\n
-                    expr="_.len(resource_uid)"\n
-                    type="int">\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

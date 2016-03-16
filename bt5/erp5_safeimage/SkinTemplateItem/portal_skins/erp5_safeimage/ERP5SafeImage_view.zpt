@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>SafeImage</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/default_style.css" type="text/css">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+  </head>
+  <body>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container-fluid">
+        <div class="row-fluid">
+          <div class="span10">
+            <ul class="nav">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span3">
+        <div class="well">
+          <ul class="nav nav-list">
+            <li class="nav-header">Images</li>
+          </ul>
+        </div>
+      </div>
+      <section class="span9" id="main">
+        <!--Body content-->
+      </section>
+    </div>
+  </div>
+  <tal:block tal:define="portal_url python:here.getPortalObject().absolute_url()">
+    <script type="text/javascript" 
+    tal:attributes="src python: '%s/%s' % (portal_url,'js/template.js')"></script>
+    <script type="text/javascript" 
+    tal:attributes="src python: '%s/%s' % (portal_url,'jquery/core/jquery.js')"></script>
+    <script type="text/javascript" 
+    tal:attributes="src python: '%s/%s' % (portal_url,'urlHandler.js')"></script>
+    <script type="text/javascript" 
+    tal:attributes="src python: '%s/%s' % (portal_url,'ICanHaz.min.js')"></script>
+    <script type="text/javascript" 
+    tal:attributes="src python: '%s/%s' % (portal_url,'openlayers/OpenLayers.js')"></script>
+    <script type="text/javascript" 
+    tal:attributes="src python: '%s/%s' % (portal_url,'js/CanvasImage.js')"></script>
+    <script type="text/javascript" 
+    tal:attributes="src python: '%s/%s' % (portal_url,'js/ERP5_OpenLayers.js')"></script>
+    <script type="text/javascript" 
+    tal:attributes="src python: '%s/%s' % (portal_url,'js/form.js')"></script>
+    <script type="text/javascript" 
+    tal:attributes="src python: '%s/%s' % (portal_url,'js/safeimage.js')"></script>
+    <script type="text/javascript" 
+    tal:attributes="src python: '%s/%s' % (portal_url,'js/pixastic.js')"></script>
+  </tal:block>
+  </body>
+</html>

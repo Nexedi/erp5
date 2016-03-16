@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-Script used by PlanningBox to round block bounds to the\n
-closest integer value.\n
-"""\n
-return int(value + 0.5)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>value, axis=\'begin\'</string> </value>
         </item>

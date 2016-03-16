@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if context.portal_membership.isAnonymousUser():\n
-  return False\n
-\n
-choice = context.getLayoutProperty(\'layout_display_toolbar_widget\',\'display\')\n
-\n
-if choice == \'display\':\n
-  return True\n
-\n
-from AccessControl import getSecurityManager\n
-u=getSecurityManager().getUser()\n
-\n
-if choice == \'webmaster\':\n
-  website = context.getWebSiteValue()\n
-  return \'Assignor\' in u.getRolesInContext(website)\n
-\n
-if choice == \'context\':\n
-  return \'Assignor\' in u.getRolesInContext(context)\n
-\n
-return False\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

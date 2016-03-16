@@ -1,0 +1,69 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Login Form</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Login Form</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_erp5_web_common/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/WebSiteModule_createTestSite?id=test_web_site&amp;title=Test Web Site</td>
+  <td></td>
+  <td>Create a new site</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/Zuite_waitForActivities</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/test_web_site/login_form</td>
+  <td></td>
+  <td>Login into the site</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>__ac_name</td>
+  <td>test_webmaster</td>
+  <td>Enter login</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>__ac_password</td>
+  <td>test_webmaster</td>
+  <td>Enter password</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>name=logged_in:method</td>
+  <td></td>
+  <td>Click login</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class='headline']</td>
+  <td>Test Web Site</td>
+  <td>Make sure login within ERP5 Web</td>
+</tr>
+</tbody></table>
+</body>
+</html>

@@ -33,36 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html>\n
-<head>\n
-        <meta charset="UTF-8"> \n
-        <script type="text/javascript" src="jquery-1.7.2.js"></script>\n
-        <script type="text/javascript">\n
-                $(document).ready(function(){\n
-                        $.get(\'http://localhost:12001/erp5/portal_skins/erp5_tile/ERP5Site_getTileImageMetadataList\', function(data) {\n
-                                $(\'#result\').html(data);\n
-                                alert(\'Load was performed.\');\n
-                        });\n
-                                                           \n
-\n
-                });\n
-        </script>\n
-</head>\n
-<body> \n
-\n
-        <button>Get JSON data</button>\n
-        <div id="result"></div>\n
-\n
-</body>\n
-</html>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

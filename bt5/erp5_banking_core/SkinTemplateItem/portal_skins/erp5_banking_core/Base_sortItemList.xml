@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>def sort_title(a,b):\n
-  return cmp(a[0],b[0])\n
-\n
-begin = []\n
-if keep_first:\n
-  begin.append(my_list[0])\n
-  my_list = my_list[1:]\n
-my_list.sort(sort_title)\n
-return begin + my_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>my_list,keep_first=0,**kw</string> </value>
         </item>

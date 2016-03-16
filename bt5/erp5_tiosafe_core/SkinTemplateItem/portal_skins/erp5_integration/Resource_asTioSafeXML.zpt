@@ -1,0 +1,17 @@
+<resource xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal" tal:attributes="type here/getPortalType"><tal:block
+    tal:condition="here/getTitle">
+  <title tal:content="here/getTitle" /></tal:block><tal:block
+    tal:condition="here/getReference">
+  <reference tal:content="here/getReference" /></tal:block><tal:block
+    tal:condition="here/getEan13Code">
+  <ean13 tal:content="here/getEan13Code" /></tal:block><tal:block
+    tal:condition="here/getDescription">
+  <description tal:content="here/getDescription" /></tal:block>
+  <category tal:repeat="category here/Resource_getCategoryList" tal:content="category" />
+  <mapping tal:repeat="mapping here/Resource_getMappingList">
+    <category tal:repeat="category mapping/category" tal:content="category" /><tal:block
+      tal:condition="mapping/reference">
+    <reference tal:content="mapping/reference" /></tal:block>
+  </mapping>
+</resource>

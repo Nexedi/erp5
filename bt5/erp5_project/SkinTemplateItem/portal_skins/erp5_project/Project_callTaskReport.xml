@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>use_ods_style = 1\n
-if getattr(context.portal_skins, \'erp5_ods_style\', None) is None:\n
-  use_ods_style = 0\n
-\n
-request = container.REQUEST\n
-if use_ods_style:\n
-  context.getPortalObject().portal_skins.changeSkin(\'ODS\')\n
-  request.set(\'portal_skin\', \'ODS\') # Some TALES expressions checks this\n
-  request.set(\'reset\', 1) # Some TALES expressions checks this\n
-\n
-if target_language:\n
-  request[\'AcceptLanguage\'].set(target_language, 10)\n
-\n
-form_report = getattr(context, print_mode)\n
-return form_report(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id=\'\', target_language=\'\', print_mode=\'\', **kw</string> </value>
         </item>

@@ -33,24 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<html>\n
-  <body>\n
-    <tal:block metal:define-macro="master">\n
-      <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n
-      <tal:block metal:fill-slot="layout">\n
-        <tal:block metal:define-slot="main"/>\n
-        </tal:block>\n
-      </tal:block>\n
-    </tal:block>\n
-  </body>\n
-</html>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

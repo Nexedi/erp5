@@ -1,0 +1,185 @@
+<!--
+    Description:
+    This macro render a contribution upload panel.
+    -->
+
+<tal:block metal:define-macro="main">
+<tal:block tal:define="global web_site_url web_site_url | nothing"/>
+<tal:block tal:condition="not:web_site_url">
+  <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>
+</tal:block>
+
+<!-- Contribute file tab -->
+
+<div class="tabber" id="mytabber2">
+<form action="Base_contribute" 
+      enctype="multipart/form-data" 
+      method="post"
+      name="contribute_file_form">
+  <div class="tabbertab">
+    <h2 i18n:translate="" 
+       i18n:domain="ui">Contribute</h2>
+    <div class="fieldset">
+      <div>
+        <label for="portal_type" 
+               i18n:translate="" 
+               i18n:domain="ui">Type</label>
+        <select size="1" 
+                name="portal_type" 
+                id="portal_type" 
+                onchange="toggleMakeTemplateButton(this);">
+          <option value="" 
+                  i18n:translate="" 
+                  i18n:domain="ui">-- Select Document Type --</option>
+          <tal:block tal:repeat="ptype here/getPortalTemplateDocumentTypeList">
+            <option tal:content="ptype" 
+                    tal:attributes="value ptype"
+                    value="" 
+                    i18n:translate="" 
+                    i18n:domain="ui"/>
+          </tal:block>
+          <option value="" 
+                  i18n:translate="" 
+                  i18n:domain="ui">-- Any Other Document Type --</option>
+        </select>
+        <input type="hidden" 
+               name="synchronous_metadata_discovery" 
+               value="1"/>
+        <input type="hidden" 
+               name="redirect_to_document" 
+               value="1"/>
+        <input type="file" 
+               name="file" size="30" />
+      </div>
+
+      <div style="float:left"
+           tal:define="contribute_prefix string:">
+        <div metal:use-macro="here/WebSite_viewContributePropertyRenderer/macros/contribute_properties"/>
+      </div>
+      
+      <div style="float:right; margin-top:10px;">
+      <a onclick="setMailString();"  
+         id="mail_contribute_button"
+         tal:define="ingestion_address here/portal_preferences/getPreferredDocumentEmailIngestionAddress|nothing"
+         tal:condition="ingestion_address"
+         tal:attributes="href string:${ingestion_address}?subject=Contribution&body=">
+        <img src="send_by_mail" border="0"/>
+        <tal:block  
+          i18n:translate="" 
+          i18n:domain="ui">Click here to contribute by email.</tal:block></a>
+
+      <input i18n:domain="ui" 
+             i18n:attributes="value" 
+             type="submit" 
+             name="Base_contribute:method" 
+             value="Contribute"/>
+    </div>
+    </div>
+    
+    <div class="clear"></div>
+</div>
+</form>
+  
+<!-- Contribute link tab -->
+<div class="tabbertab">
+<form action="Base_contribute" 
+      enctype="multipart/form-data" 
+      method="post"
+      name="contribute_url_form">
+  <h2 i18n:translate="" i18n:domain="ui">Link</h2>
+  <div class="fieldset tabbertabcont">
+    <div>
+      <label for="url" 
+             i18n:translate="" 
+             i18n:domain="ui">URL</label>
+      <input type="text" 
+             name="url" 
+             id="url" 
+             size="80" 
+             value="http://" />
+      <a href="" 
+         target="_blank" 
+         onclick="return setLink(this)" 
+         value="" 
+         i18n:translate="" 
+         i18n:domain="ui">Preview</a>
+    </div>
+    <tal:block tal:define="contribute_prefix string:">
+      <div metal:use-macro="here/WebSite_viewContributePropertyRenderer/macros/contribute_properties"/>
+    </tal:block>
+    <div>
+      <label for="description" 
+             i18n:translate="" 
+             i18n:domain="ui">Description</label>
+      <textarea cols="80" 
+                rows="2" 
+                name="description"></textarea>
+     </div>
+   </div>
+
+        <input type="hidden" 
+               name="redirect_url" 
+               tal:attributes="value python: here.getWebSiteValue().absolute_url()"/>   
+   <input i18n:domain="ui" 
+          i18n:attributes="value" 
+          style="float:right" 
+          type="submit" 
+          name="Base_contribute:method" 
+          value="Contribute"/>
+   <div class="clear"></div>
+  </form>
+ </div>
+  
+  <div class="tabbertab"
+    tal:define="user here/portal_membership/getAuthenticatedMember">
+    <h2 value="" i18n:translate="" i18n:domain="ui">File</h2>
+
+    <tal:block tal:repeat="file_group python:[
+              dict(
+               portal_type_list = here.getPortalTicketTypeList(),
+               id = 'ticket',
+               title = 'Forms and Requests:',
+              ),
+              dict(
+               portal_type_list = here.getPortalNodeTypeList(),
+               id = 'node',
+               title = 'People and Projects:',
+              ),
+              dict(
+               portal_type_list = here.getPortalWebDocumentTypeList(),
+               id = 'web',
+               title = 'Online Content:',
+              ),
+              dict(
+               portal_type_list = here.getPortalFileDocumentTypeList() + here.getPortalTemplateDocumentTypeList(),
+               id = 'content',
+               title = 'Offline Content:',
+              ),
+]">
+
+      <div class="filebox" id="administration" class="tabbertabcont" tal:attributes="id file_group/id">
+        <ul>
+          <li class="listheader" value="" tal:content="file_group/title"
+              i18n:translate="" i18n:domain="ui">Forms and Requests:</li>
+          <ul tal:condition="not:file_group/portal_type_list">
+            <i i18n:translate="" i18n:domain="ui">Not available</i>
+          </ul>
+          <ul tal:condition="file_group/portal_type_list">
+            <tal:block tal:repeat="portal_type file_group/portal_type_list">
+              <li tal:condition="python:here.ERP5Site_isNewContentAllowed(portal_type, user)">
+                <a tal:content="portal_type"
+                  i18n:translate="" i18n:domain="ui"
+                  tal:attributes="href string:ERP5Site_newContent?portal_type=${portal_type}">Toto</a>
+              </li>
+            </tal:block>
+          </ul>
+        </ul>
+      </div>
+
+    </tal:block>
+
+    <div class="clear"></div>
+  </div>
+</div>
+
+</tal:block>

@@ -49,41 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-def sortLine(a_Source,b_Source):\n
-   #listContain can take \'None\' , \'E\' : List contain "Emission Letter", \'C\': List contain "Cash Status" or \'B\' : Both off them\n
-   listContain = default_listContain\n
-   if (a_Source[\'resourceId\'] == a_Source[\'resourceId\']) or (listContain is not None):\n
-      if listContain == \'C\' or listContain == \'B\':\n
-         if a_Source[cashStatus] > b_Source[cashStatus]:\n
-            return -1\n
-         elif a_Source[cashStatus] < b_Source[cashStatus]:\n
-            return 0\n
-         else:\n
-           if listContain == \'C\':\n
-              return -1\n
-           else:\n
-              listContain = \'E\'\n
-      if listContain == \'E\':\n
-         if a_Source[emissionLetter] >= b_Source[emissionLetter]:\n
-            return -1\n
-         else :\n
-            return 0\n
-   elif a_Source[\'listbox_key\'] > b_Source[\'listbox_key\']:\n
-      return -1\n
-   else:\n
-      return 0\n
-\n
-\n
-listCurrency.sort(sortLine)\n
-return listCurrency\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox,</string> </value>
         </item>

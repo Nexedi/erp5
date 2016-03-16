@@ -53,20 +53,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-\n
-navigation_box_render = context.ERP5Site_navigationBox\n
-navigation_box_render = CachingMethod(navigation_box_render,\n
-    ("ERP5Site_renderCachedNavigationBox",\n
-     context.portal_membership.getAuthenticatedMember().getUserName(),\n
-     context.Localizer.get_selected_language(),\n
-     context.portal_url(),\n
-    ),cache_factory=\'erp5_ui_short\')\n
-return navigation_box_render()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

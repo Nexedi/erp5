@@ -1,0 +1,1 @@
+[<tal:block tal:content="python:', '.join([form['listbox'].render()])" />]

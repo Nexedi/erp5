@@ -74,34 +74,6 @@
             </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAL4AAAAhCAYAAABnRBELAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A
-/wD/oL2nkwAAAAlwSFlzAAALEgAACxIB0t1+/AAAAAd0SU1FB9kDGA8BIALBtFMAAAAZdEVYdENv
-bW1lbnQAQ3JlYXRlZCB3aXRoIEdJTVBXgQ4XAAAE4UlEQVR42u2cQUgjZxiG35QcRtjC9JbCFoy4
-sCMKJih0Bj3seDJhD4142MgutKGF1raw67JQTS/buL3oqfG0bguFWFiIhS1a6OL2kGU8tOihoIct
-ZmELEfYwgR5mQOHtYYyadaMxriY23wNCJjPz/d/8efPP5z/vHx9JLj8tQhCaCX/phd6nSm8ITcHy
-0yLekm4QmhERviDCPw3mxofg8/kauhN8Ph+MfgMD/QbCvQaS95drinPbbEObbsAFsPrdtKirkT/z
-0j+3p1Hj5+9HMbmdxIPPDJBsaOHv5udu4vN+DfadFWSGgzXHGXinBUu2Iwpr0BofJGnlbJ4KtkN6
-Sih723mWodkZot4Xon49VXU4J5+l2ROi2acz1BfnmrO3D0qQmS/i1DsD1D/MHivNA/m9SFMJJMpi
-p69FGPtqhSRZeJKi1qlT7w4ydtciSWaGIwRAvU+ndTNGADSvmBQaDytn80jhAyj7q4VXzxtrVTj1
-zFNt9nqEswWnqjgT7SqXXnrHbjyMUNsRYqmN2RcO6awR/sCJ8iMdAkrZ/nR+L8e176e4ZJPcKpS1
-tT9OrX0lnI3w/fW41cz848JuVwAAsR8Xqj5v+rmLJx+YO1sulJYCgNDu/sRFBYAGbG+eLMFtF/Ar
-ZW8lWve2lQsuklfCwAXl5G0JdaEuwleO2L/+7QgSi3m0vB3G0mJ67zy/Aitn1dRmpZivo/h8Ckog
-UTHn6I0kUnkHsQDg87WIis4j9Sh1JtpVpv7y2lz42GQqX32pk1r1ziv8NsHUsv1Gyoyy450CE+0q
-RxcLFeOpfrCwRdp/pAiAToUcHKkqzm+pc5LZmPmIgWTes0N0aB1QL6VhPTKR/HUG5lUDC6oCXBqC
-1apUFS/5+AGiVw0sqCpcBJF5/OZmoox+wyugii7MW1lMDQYql2rXQgj1GojGpjHWE4ARf4CVufI7
-xGh3AB29BqxlCwG/DLBNNZ0pCI06nSlPboWmRIQviPAFQYQvCCL82jkPJrXNXyYR7grD6DfQ0TWA
-ub/3FuacVe6N3kci/GOQvx/Fk/duN3wnmPEkZnIrsHIWrB9CSN1aFGWI8GsnOJzF7Kf6wRH290l0
-dBkwQm0Y+qZ6C7D7fB4DvWHPPtw/gnV334jZ0oa5L0dgdL0L46P5Y+Vpu0Ch6AVTe6aw9iheftcq
-xf1k/shr8LW0YSYexdD46qH5Fv+cQTjYAcMcwMideVHiWVOPJ7eVTF71MqlZX8cIv0pzOMH0w6UD
-uXtxNwi/WpVRrWRoOyzf0YsKJ3aeQtvLY2JqawaTWq0mr9Myqel3s7BvrCL7cxZz41FM/5TGxnzi
-lbhBYLtY1TWUDG2H5ZvZdFHo9h4aqu+nAMjClf/9iK8pYLbg7Nh/D8Zcuxen3qfTHBwt98goalVt
-HCcmSTr/7t9YI/zKkXErXcP+14flq/j3eXm2bBnxm8GPX8nkVQ+TmvMyQ0WN0N4qLULJUlEjR8at
-xqh2WL6JgMLU+s6+nJQ6DSf8k5Ad1Kld1giA2mWN+lWvfs5cDzHQrTNx1+JYT4Cha7PVr8Dq1Ki/
-bgXWCdyZS/cS1DpDXtxOnekqvlCVrmH/MYfla+emqLVq1K+YjN3MUPGL8M9S+GJSE5oOMakJMo8v
-CCJ8QRDhC4IIXxBE+IJwXtm1LMhv5AvNxH/NvPP2ocs4kgAAAABJRU5ErkJggg==</string> </value>
-        </item>
-        <item>
             <key> <string>default_source_reference</string> </key>
             <value> <string>version.png</string> </value>
         </item>

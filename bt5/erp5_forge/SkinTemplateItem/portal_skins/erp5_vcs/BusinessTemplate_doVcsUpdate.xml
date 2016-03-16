@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-try:\n
-  new_bt = context.getVcsTool().update(keep)\n
-except Exception, error:\n
-  return context.BusinessTemplate_handleException(\n
-    error, script.id, form_id=form_id, keep=keep)\n
-\n
-request = context.REQUEST\n
-request.set(\'portal_status_message\', \'Working copy updated successfully.\')\n
-return request.RESPONSE.redirect(\n
-  \'%s/BusinessTemplate_viewInstallationDialog?workflow_action=install_action&form_id=%s\'\n
-  % (new_bt.absolute_url_path(), form_id))\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id=\'view\', keep=False</string> </value>
         </item>

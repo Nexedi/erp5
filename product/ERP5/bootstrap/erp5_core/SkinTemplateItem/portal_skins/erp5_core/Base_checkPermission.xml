@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Check for a permission on an object specified by a given path\n
-# for current user. Return true only if the user is allowed.\n
-\n
-portal = context.getPortalObject()\n
-ob = portal.restrictedTraverse(path, None)\n
-if ob is not None:\n
-  return portal.portal_membership.checkPermission(permission, ob)\n
-return False\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>path, permission</string> </value>
         </item>

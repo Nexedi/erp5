@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># this script compare a given vault to the one of the assignment of the current user\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-site_list = context.Baobab_getUserAssignedSiteList()\n
-for site in site_list:\n
-  if site in vault:\n
-    return\n
-\n
-msg = Message(domain = "ui", message="Vault differ between initialisation and transition")\n
-raise ValidationFailed, (msg,)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>vault</string> </value>
         </item>

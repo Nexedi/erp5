@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Returns true if the text content of this Event is editable.\n
-\n
-  The underlying idea is that once the content of an event has\n
-  been placed in a MIME envelope and set as the default file\n
-  of the Event, the event is considered as frozen and can not \n
-  be modified.\n
-"""\n
-return getattr(context, \'hasFile\', None) is not None and not context.hasFile() \\\n
-  and (context.getPortalType() != \'Mail Message\' \\\n
-       or context.getSimulationState() not in (\'started\', \'stopped\', \'delivered\'))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

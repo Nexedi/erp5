@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Return the list of gap roots that can be used.\n
-# gap category is typically organized such as : \n
-#  gap / country / gap_name\n
-# so we always use as "root" the category of depth 2.\n
-\n
-results = []\n
-countries = context.portal_categories.gap.objectValues()\n
-for country in countries : \n
-  for gap in country.objectValues() :\n
-    title = gap.getParentValue().getTitle() + \'/\'+ gap.getTitle()\n
-    path = gap.getRelativeUrl()\n
-    if not include_gap_in_path : \n
-      path = path.replace(\'gap/\', \'\')\n
-\n
-    results += [(title, path)]\n
-\n
-if include_empty_item == 1:\n
-  results = [(\'\', \'\')] + results\n
-\n
-return results\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>include_gap_in_path=1, include_empty_item=0</string> </value>
         </item>

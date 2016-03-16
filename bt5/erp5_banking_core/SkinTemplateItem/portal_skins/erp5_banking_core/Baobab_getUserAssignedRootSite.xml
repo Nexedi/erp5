@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>new_site = context.Baobab_getUserAssignment(user_id=user_id).getSiteValue()\n
-while new_site.getVaultType() != \'site\':\n
-  new_site = new_site.getParentValue()\n
-if not object:\n
-  new_site = new_site.getRelativeUrl()\n
-return new_site\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>user_id=None, object=False</string> </value>
         </item>

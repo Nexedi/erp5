@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-portal = context.getPortalObject()\n
-context.REQUEST.RESPONSE.setHeader(\'content-type\', \'text/plain\')\n
-context.REQUEST.RESPONSE.setHeader(\'Location\', \'%s/ERP5Site_getTextFileWithFileName?filename=%s&seed=%s\' % (portal.absolute_url(), filename, seed))\n
-context.REQUEST.RESPONSE.setStatus(302)\n
-return \'\'\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>filename, seed=None</string> </value>
         </item>

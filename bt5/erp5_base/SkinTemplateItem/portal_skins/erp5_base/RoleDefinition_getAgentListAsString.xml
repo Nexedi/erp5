@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-   Used by Base_viewLocalPermissionList to display all agents set locally\n
-   (by adding Role Definition objects) and their roles, in a listbox.\n
-"""\n
-return \', \'.join(context.getAgentTitleList([]))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

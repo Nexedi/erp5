@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Reset report sleections"""\n
-\n
-manage_deleteSelection = context.getPortalObject().portal_selections.manage_deleteSelection\n
-for index in xrange(3):\n
-  try:\n
-    manage_deleteSelection(\'x%s_foo_dummy_listbox_selection\' % (index, ))\n
-  except KeyError:\n
-    pass\n
-return "Done."\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

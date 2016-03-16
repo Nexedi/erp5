@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request  = context.REQUEST\n
-\n
-from ZTUtils import make_query\n
-kw = { \'portal_skin\' : \'CSV\',\n
-       \'export_only\' : export_only }\n
-\n
-redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+form_id, \n
-                             make_query(kw) )\n
-\n
-return request[ \'RESPONSE\' ].redirect( redirect_url )\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id=\'\', export_only=1</string> </value>
         </item>

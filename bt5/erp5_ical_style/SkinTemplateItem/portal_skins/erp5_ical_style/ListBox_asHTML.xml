@@ -161,20 +161,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block \n
-  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
-  tal:define="line_list here/query;\n
-              label_list here/getLabelValueList;\n
-              real_context here/getContext;"\n
-><tal:block tal:replace="structure python: real_context.Listbox_asICal(label_list, line_list)"/></tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/calendar; charset=utf-8</string> </value>
         </item>

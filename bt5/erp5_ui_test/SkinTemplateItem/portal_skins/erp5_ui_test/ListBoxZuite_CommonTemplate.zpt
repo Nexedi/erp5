@@ -1,0 +1,46 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <tal:block metal:define-macro="init">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+    <tr>
+      <td>open</td>
+      <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Reset Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/foo_module</td>
+      <td></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="checkCurrentPage">
+    <tr>
+      <td>assertValue</td>
+      <!--<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+        <td tal:content="python: 'id=%s_set_page' % (prefix, )"></td>
+      </tal:block>
+      <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+        <td tal:content="python: 'id=%s_page_selection' % (prefix, )"></td>
+      </tal:block> 
+      <td tal:content="string: //input[@class=&quot;${prefix}_set_page&quot;]"></td>
+      -->
+      <td tal:content="python: test(prefix=='listbox', '//input[@class=&quot;%s_set_page&quot;]' %prefix, '//input[@class=&quot;listbox_set_page %s_set_page&quot;]' %prefix)"></td>
+      <td tal:content="set_page"></td>
+    </tr>
+  </tal:block>
+</tal:block>

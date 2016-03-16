@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>""" This script returns the number of Discussion Post objects from the Discussion Thread \n
- object that is associated to this context.\n
- If there is no Discussion Thread, 0 is returned."""\n
-discussion = context.DiscussionThread_getContextThread()\n
-\n
-if discussion == None:\n
-  return 0\n
-\n
-return len(discussion.searchFolder(portal_type=\'Discussion Post\'))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

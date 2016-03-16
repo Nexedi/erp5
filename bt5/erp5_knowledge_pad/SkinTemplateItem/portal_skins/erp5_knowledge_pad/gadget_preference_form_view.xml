@@ -33,44 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-           xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
-           tal:define="is_gadget_mode python:int(request.get(\'is_gadget_mode\', 0));\n
-                       dummy python: context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \n
-                                                                        \'text/html;; charset=utf-8\');">\n
-\n
-  <!-- switch based on mode -->\n
-  <tal:block tal:condition="not:is_gadget_mode"\n
-             metal:define-macro="master">\n
-    <tal:block metal:use-macro="here/view_main/macros/master">\n
-      <tal:block metal:fill-slot="main">\n
-        <tal:block metal:use-macro="here/form_render/macros/master" />\n
-       </tal:block>\n
-    </tal:block>\n
-  </tal:block>\n
-\n
-  <tal:block tal:condition="is_gadget_mode"\n
-             tal:define="global preferred_html_style_developper_mode python: 0;\n
-                         global preferred_html_style_translator_mode     \n
-                                      preferred_html_style_developper_mode;\n
-                         original_editable_mode python: request.get(\'editable_mode\', 0);\n
-                         dummy python: request.set(\'editable_mode\', 1);">\n
-    <!-- Set unconditionally editable_mode to True and return back to original after\n
-         form is rendered. -->\n
-    <tal:block  metal:use-macro="here/form_render/macros/master" />\n
-    \n
-    <tal:block  tal:define="dummy python: request.set(\'editable_mode\',\n
-                                                      original_editable_mode) "/>\n
-  </tal:block>\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

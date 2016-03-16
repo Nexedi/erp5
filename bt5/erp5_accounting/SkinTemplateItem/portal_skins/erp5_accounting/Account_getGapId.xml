@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># This script returns the gap id for this account according to the current gap\n
-# XXX This script is badly name, as it does not truly return a category ID.\n
-# XXX Instead, the purpose of this script is more to return an account number to display\n
-\n
-preference_tool = context.getPortalObject().portal_preferences\n
-\n
-number_method = preference_tool.getPreferredAccountNumberMethod()\n
-\n
-if number_method == \'account_reference\' and not gap_root:\n
-  reference = context.getReference()\n
-  if reference:\n
-    return reference\n
-\n
-## elif number_method == \'gap_id\':\n
-# GAP id is the default rendering\n
-current_gap = gap_root or preference_tool.getPreferredAccountingTransactionGap() or \'\'\n
-for gap in context.getGapValueList(): \n
-  if current_gap in gap.getPath(): \n
-    return gap.getReference() or gap.getId()\n
-return \'\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>gap_root=None</string> </value>
         </item>

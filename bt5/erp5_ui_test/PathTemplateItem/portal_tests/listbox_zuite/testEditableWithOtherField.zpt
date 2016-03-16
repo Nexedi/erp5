@@ -1,0 +1,86 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Listbox displayed with some other fields in the page</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Listbox displayed with some other fields in the page</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?create_line=1</td>
+  <td></td>
+  <td>Create a new object</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewListBoxWithOtherField</td>
+  <td></td>
+  <td>Open our form</td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td>Title 0</td>
+  <td>This field does not conflict with listbox editable field</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]/input[@type="text"]</td>
+  <td>1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]/input[@type="text"]</td>
+  <td>0</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]/input[@type="text"]</td>
+  <td>XXX</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='Base_edit:method']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td>Title 0</td>
+  <td>This field does not conflict with listbox editable field</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]/input[@type="text"]</td>
+  <td>1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]/input[@type="text"]</td>
+  <td>XXX</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>

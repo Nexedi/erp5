@@ -1,0 +1,18 @@
+<tal:block tal:define="base_cat_list here/portal_preferences/getPreferredDocumentBaseCategoryList">
+  <div class="related_docs" tal:repeat="base_cat base_cat_list">
+    <tal:block
+      tal:define="base_cat_value python:here.portal_categories.resolveCategory(base_cat);
+                  base_cat_title base_cat_value/title;
+                  cat python:here.getProperty(base_cat);
+                  ">
+      <tal:block tal:condition="cat">
+        <div class="title" tal:content="base_cat_title"/>
+        <ul>
+          <li tal:define="cat_value python:here.portal_categories.resolveCategory('group/a')">
+            <span tal:replace="python:cat_value.getTitle()"/>
+          </li>
+        </ul>
+      </tal:block>
+    </tal:block>
+  </div>
+</tal:block>

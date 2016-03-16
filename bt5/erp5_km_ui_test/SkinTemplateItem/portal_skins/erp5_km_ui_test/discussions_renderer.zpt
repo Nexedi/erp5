@@ -1,0 +1,1 @@
+<tal:block metal:use-macro="here/predecessor_test_macros_library/macros/discussions"/>

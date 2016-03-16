@@ -33,25 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block tal:define="nearby python: context.WebSection_getNearbyPost();\n
-                       section python: context.getWebSectionValue().absolute_url() + \'/\';\n
-                       previous nearby/previous;\n
-                       next nearby/next">\n
-\n
-<span class="blog_navigator">\n
-<a href="nowhere.html" tal:condition="python: previous is not None" tal:attributes="href python: section + previous">Previous</a>\n
-&nbsp;\n
-<a href="elsewhere.html" tal:condition="python: next is not None" tal:attributes="href python: section + next">Next</a>\n
-</span>\n
-\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

@@ -1,0 +1,41 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Portal Status Message</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Portal Status Message</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/foo_module/1/view?portal_status_message=Dummy+Portal+Status+Message">/erp5/foo_module/1/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Dummy Portal Status Message</td>
+  <td></td>
+</tr>
+<!-- we also test our custom command: -->
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Dummy Portal Status Message</td>
+  <td></td>
+</tr>
+<!-- when we follow a link, psm must be empty. -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=View</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td></td>
+  <td></td>
+</tr>
+</body>
+</html>

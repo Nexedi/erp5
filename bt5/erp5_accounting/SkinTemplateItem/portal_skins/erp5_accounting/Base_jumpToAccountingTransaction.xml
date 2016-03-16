@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Usage: .../Base_jumpToAccountingTransaction?from_entity=1\n
-#\n
-# Use from_account to display only transaction related to the account you come from, and from_entity if you come from an organisation or person\n
-\n
-redirect_kw = dict(reset=1,\n
-                   ignore_hide_rows=True)\n
-\n
-if from_account:\n
-  redirect_kw[\'node\'] = [context.getRelativeUrl()]\n
-elif from_entity:\n
-  redirect_kw[\'entity\'] = context.getRelativeUrl()\n
-\n
-return context.getPortalObject().accounting_module.Base_redirect(\n
-              \'view\', keep_items=redirect_kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>from_account=None, from_entity=None</string> </value>
         </item>

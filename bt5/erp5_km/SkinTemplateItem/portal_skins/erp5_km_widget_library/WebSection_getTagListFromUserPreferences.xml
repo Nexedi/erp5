@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>box_relative_url = context.REQUEST.get(\'box_relative_url\', None)\n
-box = context.restrictedTraverse(box_relative_url)\n
-preferences = box.KnowledgeBox_getDefaultPreferencesDict()\n
-preferred_tag = preferences.get(\'preferred_tag\', None)\n
-if preferred_tag is not None:\n
-  subject_list_from_preferences=[x for x in preferred_tag.split(\' \') if x!=\'\']\n
-  if subject_list_from_preferences:\n
-    return context.portal_catalog(subject=["%%%s%%" %tag for tag in subject_list_from_preferences])\n
-return []\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

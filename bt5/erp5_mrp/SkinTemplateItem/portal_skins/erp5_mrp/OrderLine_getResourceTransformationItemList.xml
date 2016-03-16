@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>resource = context.getResourceValue()\n
-\n
-result = []\n
-if include_empty:\n
-  result.append((\'\',\'\'))\n
-\n
-if resource is not None:\n
-  portal = context.getPortalObject()\n
-  kw = {\'validation_state\': \'!=invalidated\'} if skip_invalidated else {}\n
-  result.extend((transformation.title, transformation.relative_url)\n
-    for transformation in portal.portal_catalog(\n
-      select_list=(\'title\', \'relative_url\'),\n
-      portal_type=portal.getPortalTransformationTypeList(),\n
-      strict_resource_uid=resource.getUid(),\n
-      sort_on=(\'title\', \'relative_url\'),\n
-      **kw))\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>include_empty=1, skip_invalidated=1</string> </value>
         </item>

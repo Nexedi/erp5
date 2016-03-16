@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-if format in (\'svg\',):\n
-  image_pixels = context.getHeight()* context.getWidth()\n
-  max_pixels = 128*128 # default thumbnail size\n
-  if image_pixels > max_pixels:\n
-    # image is too big to be handled safely by ERP5 as it can lead to \n
-    # really high memory consumptions\n
-    return 0\n
-return 1\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>format, **kw</string> </value>
         </item>

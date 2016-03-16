@@ -1,0 +1,8 @@
+<h4 i18n:translate=""
+    i18n:domain="ui"> You are going to install your selected configuration.</h4>
+
+<p i18n:translate=""
+    i18n:domain="ui">
+  Please proceed using Install button below. 
+  In the next page you will receive automatically updated installation status report.
+</p>

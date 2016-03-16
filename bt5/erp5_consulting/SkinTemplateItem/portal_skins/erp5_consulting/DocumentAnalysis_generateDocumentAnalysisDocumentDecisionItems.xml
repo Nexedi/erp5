@@ -49,39 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>context_obj = context.getObject()\n
-\n
-role_type = \'Document Analysis Document Decision Item\'\n
-\n
-# this list contain all items\n
-items = []\n
-\n
-# get the user information\n
-for line in listbox:\n
-  if line.has_key(\'listbox_key\') and line[\'item_title\'] not in (\'\', None):\n
-    line_id = int(line[\'listbox_key\'])\n
-    item = {}\n
-    item[\'id\'] = line_id\n
-    item[\'title\'] = line[\'item_title\']\n
-    item[\'description\'] = line[\'item_description\']\n
-    items.append(item)\n
-\n
-# sort the list by id to have the same order of the user\n
-items.sort(lambda x, y: cmp(x[\'id\'], y[\'id\']))\n
-\n
-# create corresponding objects\n
-for item in items:\n
-  context_obj.newContent( portal_type        = role_type\n
-                        , title              = item[\'title\']\n
-                        , description        = item[\'description\']\n
-                        )\n
-\n
-# return to the feature module\n
-return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=\' + role_type.replace(\' \', \'+\') + \'(s)+added.\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox=[], **kw</string> </value>
         </item>

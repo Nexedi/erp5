@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Initialize an unique reference on direct debit mandate, and set an initial version.\n
-"""\n
-reference = context.getPortalObject().portal_ids.generateNewId(\n
-  id_group=\'direct_debit_mandate.reference\',\n
-  id_generator=\'uid\',\n
-  default=1)\n
-\n
-context.setReference(\'%05d\' % reference)\n
-context.setVersion(\'001\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

@@ -49,33 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>parent = context.getParentValue()\n
-portal_type = context.getPortalType()\n
-\n
-step = 10 # XXX configure this ?\n
-index = 0\n
-\n
-siblings = [x for x in parent.contentValues(checked_permission=\'View\',\n
-                   filter={"portal_type": portal_type}) if x.getIntIndex()]\n
-\n
-if len(siblings):\n
-  index = max([r.getIntIndex() for r in siblings])\n
-\n
-index = index + step\n
-\n
-if parent.getPortalType() == portal_type:\n
-  reference = "%s.%s" % (parent.getReference(), index)\n
-else:\n
-  reference = str(index)\n
-\n
-context.edit(\n
-  int_index=index,\n
-  reference=reference,\n
-)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

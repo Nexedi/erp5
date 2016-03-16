@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-Returns the list of acquisition parents\n
-Does not take into account security\n
-"""\n
-\n
-result = []\n
-document = context\n
-\n
-while document is not None:\n
-  result.append(document)\n
-  if document.getPortalType() == upper_portal_type:\n
-    document = None   # Don\'t go higher\n
-  else:\n
-    document = document.aq_parent\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>upper_portal_type=\'ERP5 Site\'</string> </value>
         </item>

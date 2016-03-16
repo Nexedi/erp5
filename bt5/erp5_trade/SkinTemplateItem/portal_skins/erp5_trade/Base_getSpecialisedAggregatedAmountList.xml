@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>specialise = context.getSpecialiseValue(portal_type=(\'Purchase Trade Condition\',\n
-                                                     \'Sale Trade Condition\',\n
-                                                     \'Internal Trade Condition\',))\n
-\n
-if specialise is not None:\n
-  rounding = kwargs.get(\'rounding\', False)\n
-  return specialise.getAggregatedAmountList(context, rounding=rounding)\n
-\n
-return []\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kwargs</string> </value>
         </item>

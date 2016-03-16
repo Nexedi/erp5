@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>preference_tool = context.getPortalObject().portal_preferences\n
-\n
-preference = preference_tool.getActivePreference()\n
-\n
-if preference is not None and preference.getPriority() == 3: # XXX: 3 is Priority.USER\n
-  preference.setPreferredTextEditor(\'text_area\')\n
-\n
-return \'Init Ok.\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

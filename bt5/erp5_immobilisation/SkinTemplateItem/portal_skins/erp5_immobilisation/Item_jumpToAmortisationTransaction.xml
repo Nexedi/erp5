@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Jump to the amortisation transactions related to current item\n
-\n
-search_list = context.getCausalityRelatedValueList(portal_type = \'Amortisation Transaction\')\n
-selection_uid_list = [x.getUid() for x in search_list]\n
-\n
-request=context.REQUEST\n
-if len(selection_uid_list) != 0 : \n
-  kw = {\'uid\': selection_uid_list}\n
-  context.portal_selections.setSelectionParamsFor(\'Base_jumpToRelatedObjectList\', kw)\n
-  request.set(\'uids\', selection_uid_list)\n
-  return context.Base_jumpToRelatedObjectList(\n
-        uids=selection_uid_list, REQUEST=request)\n
-\n
-redirect_url = \'%s/view?%s\' % (context.getPath(),\n
-            \'portal_status_message=No+Related+Amortisation+Transaction+For+Current+Item\')\n
-return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

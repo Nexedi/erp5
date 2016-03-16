@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>try:\n
-  files_list = context.REQUEST[\'uids\']\n
-except KeyError:\n
-  message = \'You MUST select at least one file.\'\n
-else:\n
-  context.getVcsTool().resolved(files_list)\n
-  message = \'Conflicted files resolved successfully.\'\n
-\n
-return context.BusinessTemplate_viewConflicted()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

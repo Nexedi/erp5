@@ -1,0 +1,2 @@
+<tal:block metal:use-macro="here/global_definitions/macros/header_definitions" />
+<tal:block metal:use-macro="here/ERP5Site_contextBox/macros/master" />

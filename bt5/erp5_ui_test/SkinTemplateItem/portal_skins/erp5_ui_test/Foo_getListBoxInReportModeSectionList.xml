@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Return a list of Report Section"""\n
-from Products.ERP5Form.Report import ReportSection\n
-kw = {\n
-  \'path\': context.getPhysicalPath(),\n
-  \'form_id\': \'Foo_viewDummyListBox\',\n
-  \'level\': 1,\n
-#  \'listbox_display_mode\': \'FlatListMode\',\n
-#  \'selection_params\': {},\n
-  \'temporary_selection\': False,\n
-}\n
-return [ReportSection(**kw) for x in xrange(3)]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

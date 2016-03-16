@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return [\n
-  \'security_uid\', \'simulation_state\',\n
-  \'validation_state\', \'portal_type\', \'owner\', \'viewable_owner\', \'parent_uid\',\n
-  \'title\',\'opportunity_state\', \'causality_state\', \'invoice_state\',\n
-  \'payment_state\', \'event_state\', \'immobilisation_state\', \'reference\',\n
-  \'grouping_reference\', \'source_reference\', \'destination_reference\',\n
-  \'string_index\', \'int_index\', \'float_index\', \'has_cell_content\',\n
-  \'creation_date\', \'modification_date\'\n
-]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

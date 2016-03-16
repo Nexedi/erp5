@@ -1,0 +1,78 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Not Existing Selection</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Not Existing Selection</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Base_checkSelectionExists?selection_name=foo_line_selection</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td></td>
+  <td>False</td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>0 records</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td></td>
+</tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr> 
+</tal:block>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

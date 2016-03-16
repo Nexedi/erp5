@@ -49,12 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>vat_return = sci[\'object\']\n
-vat_return.activate().VatReturn_setAggregateList()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>sci</string> </value>
         </item>

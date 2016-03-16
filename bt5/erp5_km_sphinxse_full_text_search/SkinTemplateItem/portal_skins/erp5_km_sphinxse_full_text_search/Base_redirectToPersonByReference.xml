@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script will redirect (HTTP redirect) to respective ERP5 Person object by reference.\n
-  This script is used in "NO ZODB" approach mode although it can be used in other UI parts\n
-  as well.\n
-"""\n
-person = context.ERP5Site_getAuthenticatedMemberPersonValue(reference)\n
-if person is not None:\n
-  person.Base_redirect(form_id=\'view\')\n
-else:\n
-  # logged in user (or anonymous) can\'t access or no such user exists\n
-  context.Base_redirect(\n
-    form_id = \'view\',\n
-    keep_items = {\'portal_status_message\': \n
-                     context.Base_translateString(\'You can not access person object.\')})\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>reference</string> </value>
         </item>

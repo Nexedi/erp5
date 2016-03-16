@@ -1,0 +1,17 @@
+table th, table td {
+  line-height: 1.5em;
+  text-align: left;
+  padding: .4em .25em;
+  vertical-align: middle;
+}
+
+@media (max-width: 62em) {
+  html table tbody tr td:first-child, tbody tr th:first-child {
+    line-height: 1em;
+    padding-bottom: 0;
+  }
+}
+
+html body table.ui-responsive thead th {
+  color: white;
+}

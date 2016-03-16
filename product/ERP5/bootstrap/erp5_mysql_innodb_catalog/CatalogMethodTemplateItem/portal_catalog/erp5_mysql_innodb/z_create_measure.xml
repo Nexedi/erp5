@@ -51,19 +51,6 @@
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string>CREATE TABLE `measure` (\n
-  `uid` BIGINT UNSIGNED NOT NULL,\n
-  `resource_uid` BIGINT UNSIGNED NOT NULL,\n
-  `variation` VARCHAR(255),\n
-  `metric_type_uid` BIGINT UNSIGNED NOT NULL,\n
-  `quantity` REAL NOT NULL,\n
-  PRIMARY KEY (`uid`, `variation`),\n
-  KEY (`metric_type_uid`)\n
-) ENGINE=InnoDB;\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

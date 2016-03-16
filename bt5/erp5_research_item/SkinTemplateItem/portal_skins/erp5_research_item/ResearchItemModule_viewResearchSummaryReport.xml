@@ -82,7 +82,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>your_journal</string>
+                        <string>your_ledger</string>
                         <string>your_simulation_state_list</string>
                       </list>
                     </value>

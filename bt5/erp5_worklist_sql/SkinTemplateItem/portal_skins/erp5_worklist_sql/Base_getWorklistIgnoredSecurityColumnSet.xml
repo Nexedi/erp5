@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Be careful when returning column names here.\n
-# A legitimate use case is when you have a lot of users (ex: customer accounts)\n
-# *and* the number of rows in your worklist table is proportional to the number\n
-# of such users *and* such users will not see worklists.\n
-# If you ignore all security columns, no security will be applied anymore on\n
-# worklist listing (document security will of course still apply).\n
-return ()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

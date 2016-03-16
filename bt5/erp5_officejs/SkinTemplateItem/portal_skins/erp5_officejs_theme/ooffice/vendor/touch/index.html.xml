@@ -19,32 +19,6 @@
             <value> <string>text/html</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html>\n
-    <head>\n
-        <meta http-equiv="refresh" content="1;url=examples/">\n
-\n
-        <title>Welcome to Sencha Touch 2</title>\n
-\n
-        <script type="text/javascript">\n
-            var mobile = (/iphone|ipad|ipod|android|blackberry|mini|windows\\sce|palm/i.test(navigator.userAgent.toLowerCase()));\n
-            if (mobile) {\n
-                window.location = "examples/";\n
-            } else {\n
-                window.location = "docs/";\n
-            }\n
-        </script>\n
-    </head>\n
-    <body></body>\n
-</html>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

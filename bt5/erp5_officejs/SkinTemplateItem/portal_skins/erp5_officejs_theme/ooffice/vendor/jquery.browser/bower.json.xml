@@ -19,27 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-{\n
-\t"name": "jquery.browser",\n
-\t"version": "0.0.6",\n
-\t"homepage": "https://github.com/gabceb/jquery-browser-plugin",\n
-\t"authors": ["Gabriel Cebrian <gabceb@gmail.com>", "jQuery Team <https://github.com/gabceb/jquery-browser-plugin/wiki/Authors>"],\n
-\t"description": "A jQuery plugin for browser detection.",\n
-\t"main": "dist/jquery.browser.js",\n
-\t"keywords": ["browser", "jquery", "desktop", "detect"],\n
-\t"license": "MIT",\n
-\t"dependencies": {\n
-    \t"jquery": ">=1.5"\n
-    }\n
-}\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

@@ -19,11 +19,6 @@
             <value> <string>image/gif</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">R0lGODlhEgASAJEAAP///4SEhAAAAP///yH5BAUUAAMALAAAAAASABIAAAItnI+py+0P4wm01haA
-3iDgLWwek2mhNi6ZwLLd4KVGCZwvCYofh2KWJQkKh8ECADs=</string> </value>
-        </item>
-        <item>
             <key> <string>height</string> </key>
             <value> <int>18</int> </value>
         </item>

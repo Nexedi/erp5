@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>query_params = {\'delivery.start_date\': dict(query=context.getStartDate(), range=\'max\'),\n
-                \'portal_type\': context.getPortalType(),\n
-                \'title\': dict(query=context.getTitle(), key=\'ExactMatch\'),\n
-                \'simulation_state\': (\'stopped\', \'public_stopped\', \'failed\'),\n
-                \'sort_on\': ((\'delivery.start_date\', \'descending\'),),}\n
-\n
-test_list = context.getParentValue().searchFolder(limit=1, **query_params)\n
-if test_list:\n
-  return test_list[0].getObject()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>TestResult_getPrevious</string> </value>
         </item>

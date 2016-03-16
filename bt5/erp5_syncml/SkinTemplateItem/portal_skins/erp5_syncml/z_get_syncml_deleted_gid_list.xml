@@ -20,20 +20,6 @@ source_path</string> </value>
             <value> <string>z_get_syncml_deleted_gid_list</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-SELECT gid \n
-FROM syncml\n
-WHERE\n
- path like <dtml-sqlvar signature_path type="string">\n
-AND\n
- gid not in (SELECT gid FROM syncml WHERE\n
-            path like <dtml-sqlvar source_path type="string">)
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

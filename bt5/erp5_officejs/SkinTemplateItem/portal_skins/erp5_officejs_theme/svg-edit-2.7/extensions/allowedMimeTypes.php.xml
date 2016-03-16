@@ -19,24 +19,6 @@
             <value> <string>application/x-php</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<?php\n
-\n
-$allowedMimeTypesBySuffix = array(\n
-    \'svg\' => \'image/svg+xml;charset=utf-8\',\n
-    \'png\' => \'image/png\',\n
-    \'jpeg\' => \'image/jpeg\',\n
-    \'bmp\' => \'image/bmp\',\n
-    \'webp\' => \'image/webp\'\n
-);\n
-\n
-?>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

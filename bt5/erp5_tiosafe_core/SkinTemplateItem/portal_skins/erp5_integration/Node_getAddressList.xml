@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>""" Retrieve the address list of the node. """\n
-\n
-return context.contentValues(portal_type=\'Address\',\n
-                             sort_on=\'int_index\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

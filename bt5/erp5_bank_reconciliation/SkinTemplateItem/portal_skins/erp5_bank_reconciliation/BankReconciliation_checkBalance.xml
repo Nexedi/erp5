@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Returns true if the reconciled balance matches the account balance.\n
-"""\n
-precision = 3\n
-if context.getSourcePayment():\n
-  precision = context.getQuantityPrecisionFromResource(\n
-        context.getSourcePaymentValue().getPriceCurrency())\n
-\n
-return round(context.getQuantityRangeMax(), precision) \\\n
-  == round(context.BankReconciliation_getReconciledAccountBalance(), precision)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

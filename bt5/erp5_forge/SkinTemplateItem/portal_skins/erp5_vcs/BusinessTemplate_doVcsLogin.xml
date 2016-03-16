@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>context.getVcsTool().setLogin(auth, user, password)\n
-\n
-return context.restrictedTraverse(caller)(**caller_kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>user, password, auth, caller, caller_kw={}, added=(), modified=(), removed=(), changelog=None, **kw</string> </value>
         </item>

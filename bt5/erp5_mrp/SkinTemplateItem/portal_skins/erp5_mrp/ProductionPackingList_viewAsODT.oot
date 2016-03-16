@@ -1,0 +1,619 @@
+<office:document-content xmlns:office='urn:oasis:names:tc:opendocument:xmlns:office:1.0' xmlns:text='urn:oasis:names:tc:opendocument:xmlns:text:1.0' xmlns:number='urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0' xmlns:meta='urn:oasis:names:tc:opendocument:xmlns:meta:1.0' xmlns:tal='http://xml.zope.org/namespaces/tal' xmlns:table='urn:oasis:names:tc:opendocument:xmlns:table:1.0' xmlns:style='urn:oasis:names:tc:opendocument:xmlns:style:1.0' xmlns:script='urn:oasis:names:tc:opendocument:xmlns:script:1.0' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:math='http://www.w3.org/1998/Math/MathML' xmlns:draw='urn:oasis:names:tc:opendocument:xmlns:drawing:1.0' xmlns:form='urn:oasis:names:tc:opendocument:xmlns:form:1.0' xmlns:ooo='http://openoffice.org/2004/office' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:chart='urn:oasis:names:tc:opendocument:xmlns:chart:1.0' xmlns:i18n='http://xml.zope.org/namespaces/i18n' xmlns:dr3d='urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0' xmlns:fo='urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0' xmlns:xforms='http://www.w3.org/2002/xforms' xmlns:dom='http://www.w3.org/2001/xml-events' xmlns:ooow='http://openoffice.org/2004/writer' xmlns:svg='urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0' xmlns:metal='http://xml.zope.org/namespaces/metal' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:oooc='http://openoffice.org/2004/calc' tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")' office:version='1.0'
+                         tal:define='data_dict here/ProductionPackingList_getODTDataDict'>
+  <office:scripts/>
+  <office:font-face-decls>
+    <style:font-face svg:font-family='StarSymbol' style:name='StarSymbol' style:font-charset='x-symbol'/>
+    <style:font-face svg:font-family="'DejaVu Sans'" style:name='DejaVu Sans1' style:font-pitch='variable'/>
+    <style:font-face svg:font-family="'Times New Roman'" style:font-family-generic='roman' style:name='Times New Roman' style:font-pitch='variable'/>
+    <style:font-face svg:font-family='Arial' style:font-family-generic='swiss' style:name='Arial1' style:font-pitch='variable'/>
+    <style:font-face svg:font-family='Arial' style:font-family-generic='swiss' style:name='Arial' style:font-pitch='variable' style:font-adornments='Normalny'/>
+    <style:font-face svg:font-family="'DejaVu Sans'" style:font-family-generic='swiss' style:name='DejaVu Sans' style:font-pitch='variable'/>
+    <style:font-face svg:font-family="'DejaVu Sans'" style:font-family-generic='system' style:name='DejaVu Sans2' style:font-pitch='variable'/>
+  </office:font-face-decls>
+  <office:automatic-styles>
+    <style:style style:family='table' style:name='Tableau1'>
+      <style:table-properties fo:margin-left='0.021cm' fo:margin-right='-0.014cm' fo:break-before='page' table:align='margins' style:width='18.994cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau1.A'>
+      <style:table-column-properties style:rel-column-width='2690*' style:column-width='0.78cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau1.B'>
+      <style:table-column-properties style:rel-column-width='7254*' style:column-width='2.103cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau1.C'>
+      <style:table-column-properties style:rel-column-width='7151*' style:column-width='2.073cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau1.D'>
+      <style:table-column-properties style:rel-column-width='24052*' style:column-width='6.971cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau1.E'>
+      <style:table-column-properties style:rel-column-width='4546*' style:column-width='1.318cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau1.F'>
+      <style:table-column-properties style:rel-column-width='3493*' style:column-width='1.012cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau1.G'>
+      <style:table-column-properties style:rel-column-width='5757*' style:column-width='1.669cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau1.H'>
+      <style:table-column-properties style:rel-column-width='4722*' style:column-width='1.369cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau1.I'>
+      <style:table-column-properties style:rel-column-width='5870*' style:column-width='1.7cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='Tableau1.1'>
+      <style:table-row-properties style:min-row-height='2.759cm'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau1.A1'>
+      <style:table-cell-properties fo:padding='0cm' fo:background-color='transparent' fo:border='none'>
+        <style:background-image/>
+      </style:table-cell-properties>
+    </style:style>
+    <style:style style:family='table' style:name='Tableau2'>
+      <style:table-properties fo:margin-left='0cm' fo:margin-right='0.019cm' table:align='margins' style:width='18.974cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau2.A'>
+      <style:table-column-properties style:rel-column-width='5326*' style:column-width='1.542cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau2.B'>
+      <style:table-column-properties style:rel-column-width='20270*' style:column-width='5.868cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau2.C'>
+      <style:table-column-properties style:rel-column-width='4344*' style:column-width='1.258cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau2.D'>
+      <style:table-column-properties style:rel-column-width='20214*' style:column-width='5.853cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau2.E'>
+      <style:table-column-properties style:rel-column-width='15381*' style:column-width='4.454cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='Tableau2.1'>
+      <style:table-row-properties style:row-height='2.251cm'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau2.A1'>
+      <style:table-cell-properties fo:padding='0.097cm' fo:border-right='none' fo:border-top='0.018cm solid #000000' fo:border-left='0.018cm solid #000000' fo:border-bottom='0.018cm solid #000000' style:vertical-align='middle'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau2.E1.1'>
+      <style:table-column-properties style:rel-column-width='6760*' style:column-width='1.958cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau2.E1.2'>
+      <style:table-column-properties style:rel-column-width='8621*' style:column-width='2.496cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='Tableau2.E1.1'>
+      <style:table-row-properties style:row-height='0.75cm'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau2.E1.2.1'>
+      <style:table-cell-properties style:vertical-align='middle' fo:padding='0.097cm' fo:border='0.018cm solid #000000'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau2.E1.1.2'>
+      <style:table-cell-properties fo:padding='0.097cm' fo:border-right='none' fo:border-top='none' fo:border-left='0.018cm solid #000000' fo:border-bottom='0.018cm solid #000000' style:vertical-align='middle'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau2.E1.2.2'>
+      <style:table-cell-properties fo:padding='0.097cm' fo:border-right='0.018cm solid #000000' fo:border-top='none' fo:border-left='0.018cm solid #000000' fo:border-bottom='0.018cm solid #000000' style:vertical-align='middle'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau1.A2'>
+      <style:table-cell-properties fo:padding='0.049cm' fo:border-right='none' fo:border-top='none' fo:background-color='transparent' fo:border-left='none' fo:border-bottom='0.018cm solid #000000'>
+        <style:background-image/>
+      </style:table-cell-properties>
+    </style:style>
+    <style:style style:family='table-row' style:name='Tableau1.3'>
+      <style:table-row-properties style:min-row-height='0.75cm'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau1.A3'>
+      <style:table-cell-properties fo:padding='0cm' fo:border-right='none' fo:border-top='none' fo:background-color='transparent' fo:border-left='none' fo:border-bottom='0.018cm solid #000000' style:vertical-align='middle'>
+        <style:background-image/>
+      </style:table-cell-properties>
+    </style:style>
+    <style:style style:family='table-row' style:name='Tableau1.4'>
+      <style:table-row-properties style:row-height='4.83cm'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau1.A4'>
+      <style:table-cell-properties style:vertical-align='middle' fo:padding='0cm' fo:background-color='transparent' fo:border='none'>
+        <style:background-image/>
+      </style:table-cell-properties>
+    </style:style>
+    <style:style style:family='table' style:name='Tableau3'>
+      <style:table-properties style:may-break-between-rows='false' table:align='margins' style:width='18.994cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau3.A'>
+      <style:table-column-properties style:rel-column-width='10535*' style:column-width='3.053cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau3.B'>
+      <style:table-column-properties style:rel-column-width='5493*' style:column-width='1.593cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau3.C'>
+      <style:table-column-properties style:rel-column-width='34451*' style:column-width='9.985cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau3.D'>
+      <style:table-column-properties style:rel-column-width='9165*' style:column-width='2.656cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='Tableau3.E'>
+      <style:table-column-properties style:rel-column-width='5891*' style:column-width='1.707cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='Tableau3.1'>
+      <style:table-row-properties style:row-height='0.25cm'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau3.A1'>
+      <style:table-cell-properties style:vertical-align='middle' fo:padding='0.097cm' fo:border='none'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='Tableau3.2'>
+      <style:table-row-properties style:row-height='0.75cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='Tableau3.3'>
+      <style:table-row-properties style:row-height='2cm'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau3.A2'>
+      <style:table-cell-properties style:vertical-align='middle' fo:padding='0cm' fo:border='none'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau3.D2'>
+      <style:table-cell-properties fo:padding='0.097cm' fo:border-right='none' fo:border-top='0.018cm solid #000000' fo:border-left='0.018cm solid #000000' fo:border-bottom='0.018cm solid #000000' style:vertical-align='middle'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau3.E2'>
+      <style:table-cell-properties style:vertical-align='middle' fo:padding='0.097cm' fo:border='0.018cm solid #000000'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau3.D3'>
+      <style:table-cell-properties fo:padding='0.097cm' fo:border-right='none' fo:border-top='none' fo:border-left='0.018cm solid #000000' fo:border-bottom='0.018cm solid #000000' style:vertical-align='middle'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau3.E3'>
+      <style:table-cell-properties fo:padding='0.097cm' fo:border-right='0.018cm solid #000000' fo:border-top='none' fo:border-left='0.018cm solid #000000' fo:border-bottom='0.018cm solid #000000' style:vertical-align='middle'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='Tableau3.6'>
+      <style:table-row-properties style:row-height='0.45cm'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau3.A6'>
+      <style:table-cell-properties fo:padding='0.097cm' fo:border-right='none' fo:border-top='0.018cm solid #000000' fo:border-left='0.018cm solid #000000' fo:border-bottom='none' style:vertical-align='middle'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau3.B6'>
+      <style:table-cell-properties fo:padding='0.097cm' fo:border-right='none' fo:border-top='0.018cm solid #000000' fo:border-left='none' fo:border-bottom='none' style:vertical-align='middle'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau3.E6'>
+      <style:table-cell-properties fo:padding='0.097cm' fo:border-right='0.018cm solid #000000' fo:border-top='0.018cm solid #000000' fo:border-left='none' fo:border-bottom='none' style:vertical-align='middle'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='Tableau3.7'>
+      <style:table-row-properties style:row-height='1.499cm'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='Tableau3.A7'>
+      <style:table-cell-properties fo:border-left='0.018cm solid #000000' fo:border-right='0.018cm solid #000000' fo:border-bottom='0.018cm solid #000000' fo:padding='0.097cm' fo:border-top='none'/>
+    </style:style>
+    <style:style style:parent-style-name='Table_20_Heading' style:family='paragraph' style:name='P1'>
+      <style:text-properties fo:font-style='normal' style:font-style-asian='normal' style:font-size-complex='7pt' style:font-size-asian='7pt' style:font-style-complex='normal' style:font-weight-complex='normal' style:font-weight-asian='normal' fo:font-size='7pt' fo:font-weight='normal'/>
+    </style:style>
+    <style:style style:parent-style-name='Table_20_Heading' style:family='paragraph' style:name='P2'>
+      <style:paragraph-properties fo:text-align='start' style:justify-single-word='false'/>
+    </style:style>
+    <style:style style:parent-style-name='Table_20_Contents' style:family='paragraph' style:name='P3'>
+      <style:paragraph-properties fo:text-align='justify' style:justify-single-word='false'/>
+    </style:style>
+    <style:style style:parent-style-name='Text_20_body' style:family='paragraph' style:name='P4'>
+      <style:text-properties style:font-size-complex='6pt' style:font-size-asian='6pt' style:font-weight-complex='normal' style:font-weight-asian='normal' fo:font-size='6pt' fo:font-weight='normal'/>
+    </style:style>
+  </office:automatic-styles>
+  <office:body>
+    <office:text>
+      <text:variable-decls>
+        <text:variable-decl text:name='ds_title' office:value-type='string'/>
+        <text:variable-decl text:name='ds_address' office:value-type='string'/>
+        <text:variable-decl text:name='ds_telfax' office:value-type='string'/>
+        <text:variable-decl text:name='ds_email' office:value-type='string'/>
+        <text:variable-decl text:name='ds_vatid' office:value-type='string'/>
+        <text:variable-decl text:name='purchase_order' office:value-type='string'/>
+        <text:variable-decl text:name='purchase_order_tr' office:value-type='string'/>
+        <text:variable-decl text:name='page' office:value-type='string'/>
+        <text:variable-decl text:name='of' office:value-type='string'/>
+      </text:variable-decls>
+      <text:sequence-decls>
+        <text:sequence-decl text:display-outline-level='0' text:name='Illustration'/>
+        <text:sequence-decl text:display-outline-level='0' text:name='Table'/>
+        <text:sequence-decl text:display-outline-level='0' text:name='Text'/>
+        <text:sequence-decl text:display-outline-level='0' text:name='Drawing'/>
+      </text:sequence-decls>
+      <table:table table:style-name='Tableau1' table:name='Tableau1'>
+        <table:table-column table:style-name='Tableau1.A'/>
+        <table:table-column table:style-name='Tableau1.B'/>
+        <table:table-column table:style-name='Tableau1.C'/>
+        <table:table-column table:style-name='Tableau1.D'/>
+        <table:table-column table:style-name='Tableau1.E'/>
+        <table:table-column table:style-name='Tableau1.F'/>
+        <table:table-column table:style-name='Tableau1.G'/>
+        <table:table-column table:style-name='Tableau1.H'/>
+        <table:table-column table:style-name='Tableau1.I'/>
+        <table:table-header-rows>
+          <table:table-row table:style-name='Tableau1.1'>
+            <table:table-cell table:style-name='Tableau1.A1'
+                              table:number-columns-spanned='9'
+                              office:value-type='string'>
+              <table:table table:style-name='Tableau2' table:name='Tableau2'>
+                <table:table-column table:style-name='Tableau2.A'/>
+                <table:table-column table:style-name='Tableau2.B'/>
+                <table:table-column table:style-name='Tableau2.C'/>
+                <table:table-column table:style-name='Tableau2.D'/>
+                <table:table-column table:style-name='Tableau2.E'/>
+                <table:table-header-rows>
+                  <table:table-row table:style-name='Tableau2.1'>
+                    <table:table-cell table:style-name='Tableau2.A1'
+                                      office:value-type='string'>
+                      <tal:block tal:define="orig_string string:Supplier;
+                                 en_string python:here.Base_translateString(orig_string, lang='en');
+                                 my_string python:here.Base_translateString(orig_string);">
+                        <text:p text:style-name='Table_20_Heading'>
+                          <tal:block tal:replace='en_string'/>:</text:p>
+                        <text:p text:style-name='Table_20_Heading'
+                                tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/>:</text:p>
+                      </tal:block>
+                    </table:table-cell>
+                    <table:table-cell table:style-name='Tableau2.A1'
+                                      office:value-type='string'>
+                      <text:p text:style-name='Table_20_Contents'
+                              tal:content='python:data_dict["source_section_title"]'>source_section</text:p>
+                      <text:p text:style-name='Table_20_Contents'
+                              tal:content='python:data_dict["source_section_address"]'>address</text:p>
+                      <text:p text:style-name='Table_20_Contents'
+                              tal:content='python:data_dict["source_section_telfax"]'>tel, fax</text:p>
+                      <text:p text:style-name='Table_20_Contents'
+                              tal:content='python:data_dict["source_section_email"]'>email</text:p>
+                    </table:table-cell>
+                    <table:table-cell table:style-name='Tableau2.A1'
+                                      office:value-type='string'
+                                      tal:define='orig_string string:Recipient; en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                      <text:p text:style-name='Table_20_Heading'><span tal:replace='en_string'/>:</text:p>
+                      <text:p text:style-name='Table_20_Heading' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/>:</text:p>
+                    </table:table-cell>
+                    <table:table-cell table:style-name='Tableau2.A1' office:value-type='string'>
+                      <text:p text:style-name='Table_20_Contents' tal:content='python:data_dict["destination_title"]'>destination</text:p>
+                      <text:p text:style-name='Table_20_Contents' tal:content='python:data_dict["destination_address"]'>address</text:p>
+                      <text:p text:style-name='Table_20_Contents' tal:content='python:data_dict["destination_telfax"]'>tel, fax</text:p>
+                      <text:p text:style-name='Table_20_Contents' tal:content='python:data_dict["destination_email"]'>email</text:p>
+                    </table:table-cell>
+                    <table:table-cell>
+                      <table:table table:is-sub-table='true'>
+                        <table:table-column table:style-name='Tableau2.E1.1'/>
+                        <table:table-column table:style-name='Tableau2.E1.2'/>
+                        <table:table-row table:style-name='Tableau2.E1.1'>
+                          <table:table-cell table:style-name='Tableau2.A1' office:value-type='string' tal:define='orig_string string:Reference; en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                            <text:p text:style-name='Table_20_Heading'><span tal:replace='en_string'/>:</text:p>
+                            <text:p text:style-name='Table_20_Heading' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/>:</text:p>
+                          </table:table-cell>
+                          <table:table-cell table:style-name='Tableau2.E1.2.1' office:value-type='string'>
+                            <text:p text:style-name='Big_20_Table_20_Content' tal:content='python:data_dict["reference"]'>reference</text:p>
+                          </table:table-cell>
+                        </table:table-row>
+                        <table:table-row table:style-name='Tableau2.E1.1'>
+                          <table:table-cell table:style-name='Tableau2.E1.1.2'
+                                            office:value-type='string'
+                                            tal:define='orig_string string:Document Date; en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                            <text:p text:style-name='Table_20_Heading'><span tal:replace='en_string'/>:</text:p>
+                            <text:p text:style-name='Table_20_Heading' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/>:</text:p>
+                          </table:table-cell>
+                          <table:table-cell table:style-name='Tableau2.E1.2.2' office:value-type='string'>
+                            <text:p text:style-name='Table_20_Contents'
+                                    tal:content="python: here.getPortalType().startswith('Purchase') and data_dict['start_date'] or data_dict['stop_date']">start_date</text:p>
+                          </table:table-cell>
+                        </table:table-row>
+                      </table:table>
+                    </table:table-cell>
+                  </table:table-row>
+                </table:table-header-rows>
+                <table:table-row table:style-name='Tableau2.1'>
+                  <table:table-cell table:style-name='Tableau2.E1.1.2' office:value-type='string' tal:define='orig_string string:Seller; en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                    <text:p text:style-name='Table_20_Heading'><span tal:replace='en_string'/>:</text:p>
+                    <text:p text:style-name='Table_20_Heading' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/>:</text:p>
+                  </table:table-cell>
+                  <table:table-cell table:style-name='Tableau2.E1.1.2' office:value-type='string'>
+                    <text:p text:style-name='Table_20_Contents' tal:content='python:data_dict["source_decision_title"]'>name</text:p>
+                    <text:p text:style-name='Table_20_Contents' tal:content='python:data_dict["source_decision_telfax"]'>tel, fax</text:p>
+                    <text:p text:style-name='Table_20_Contents' tal:content='python:data_dict["source_decision_email"]'>email</text:p>
+                  </table:table-cell>
+                  <table:table-cell table:style-name='Tableau2.E1.1.2' office:value-type='string' tal:define='orig_string string:Buyer; en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                    <text:p text:style-name='Table_20_Heading'><span tal:replace='en_string'/>:</text:p>
+                    <text:p text:style-name='Table_20_Heading' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/>:</text:p>
+                  </table:table-cell>
+                  <table:table-cell table:style-name='Tableau2.E1.1.2' office:value-type='string'>
+                    <text:p text:style-name='Table_20_Contents' tal:content='python:data_dict["destination_decision_title"]'>name</text:p>
+                    <text:p text:style-name='Table_20_Contents' tal:content='python:data_dict["destination_decision_telfax"]'>tel, fax</text:p>
+                    <text:p text:style-name='Table_20_Contents' tal:content='python:data_dict["destination_decision_email"]'>email</text:p>
+                  </table:table-cell>
+                  <table:table-cell>
+                    <table:table table:is-sub-table='true'>
+                      <table:table-column table:style-name='Tableau2.E1.1'/>
+                      <table:table-column table:style-name='Tableau2.E1.2'/>
+                      <table:table-row table:style-name='Tableau2.E1.1'>
+                        <table:table-cell table:style-name='Tableau2.E1.1.2'
+                                          office:value-type='string'
+                                          tal:define='orig_string string:Delivery Mode;
+                                          en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8");
+                                          my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                          <text:p text:style-name='Table_20_Heading'><span tal:replace='en_string'/>:</text:p>
+                          <text:p text:style-name='Table_20_Heading' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/>:</text:p>
+                        </table:table-cell>
+                        <table:table-cell table:style-name='Tableau2.E1.2.2' office:value-type='string'>
+                          <text:p text:style-name='Table_20_Contents' tal:content='python:data_dict["delivery_mode"]'>del mode</text:p>
+                        </table:table-cell>
+                      </table:table-row>
+                      <table:table-row table:style-name='Tableau2.E1.1'>
+                        <table:table-cell table:style-name='Tableau2.E1.1.2'
+                                          office:value-type='string'
+                                          tal:define='orig_string string:Incoterm;
+                                          en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8");
+                                          my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                          <text:p text:style-name='Table_20_Heading'><span tal:replace='en_string'/>:</text:p>
+                          <text:p text:style-name='Table_20_Heading' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/>:</text:p>
+                        </table:table-cell>
+                        <table:table-cell table:style-name='Tableau2.E1.2.2' office:value-type='string'>
+                          <text:p text:style-name='Table_20_Contents' tal:content='python:data_dict["incoterm"]'>incoterm</text:p>
+                        </table:table-cell>
+                      </table:table-row>
+                    </table:table>
+                  </table:table-cell>
+                </table:table-row>
+              </table:table>
+              <text:p text:style-name='P1'/>
+            </table:table-cell>
+            <table:covered-table-cell/>
+            <table:covered-table-cell/>
+            <table:covered-table-cell/>
+            <table:covered-table-cell/>
+            <table:covered-table-cell/>
+            <table:covered-table-cell/>
+            <table:covered-table-cell/>
+            <table:covered-table-cell/>
+          </table:table-row>
+          <table:table-row>
+            <table:table-cell table:style-name='Tableau1.A2'
+                              office:value-type='string'
+                              tal:define='orig_string string:Line;
+                              en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8");
+                              my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <text:p text:style-name='Item_20_Table_20_Title_20_Left'><span tal:replace='en_string'/></text:p>
+              <text:p text:style-name='Item_20_Table_20_Title_20_Left' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/></text:p>
+            </table:table-cell>
+            <table:table-cell table:style-name='Tableau1.A2'
+                              office:value-type='string'
+                              tal:define='orig_string string:Your Item no.;
+                              en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8");
+                              my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <text:p text:style-name='Item_20_Table_20_Title'><span tal:replace='en_string'/></text:p>
+              <text:p text:style-name='Item_20_Table_20_Title' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/></text:p>
+            </table:table-cell>
+            <table:table-cell table:style-name='Tableau1.A2'
+                              office:value-type='string'
+                              tal:define='orig_string string:Our Item no.;
+                              en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8");
+                              my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <text:p text:style-name='Item_20_Table_20_Title'><span tal:replace='en_string'/></text:p>
+              <text:p text:style-name='Item_20_Table_20_Title' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/></text:p>
+            </table:table-cell>
+            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Description; en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <text:p text:style-name='Item_20_Table_20_Title_20_Left'><span tal:replace='en_string'/></text:p>
+              <text:p text:style-name='Item_20_Table_20_Title_20_Left' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/></text:p>
+            </table:table-cell>
+            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Quantity; en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <text:p text:style-name='Item_20_Table_20_Title_20_Right'><span tal:replace='en_string'/></text:p>
+              <text:p text:style-name='Item_20_Table_20_Title_20_Right' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/></text:p>
+            </table:table-cell>
+            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Unit; en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <text:p text:style-name='Item_20_Table_20_Title'><span tal:replace='en_string'/></text:p>
+              <text:p text:style-name='Item_20_Table_20_Title' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/></text:p>
+            </table:table-cell>
+            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Delivery Date; en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <text:p text:style-name='Item_20_Table_20_Title'><span tal:replace='en_string'/></text:p>
+              <text:p text:style-name='Item_20_Table_20_Title' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/></text:p>
+            </table:table-cell>
+            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Unit Price; en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <text:p text:style-name='Item_20_Table_20_Title_20_Right'><span tal:replace='en_string'/></text:p>
+              <text:p text:style-name='Item_20_Table_20_Title_20_Right' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/></text:p>
+            </table:table-cell>
+            <table:table-cell table:style-name='Tableau1.A2' office:value-type='string' tal:define='orig_string string:Total Price; en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+              <text:p text:style-name='Item_20_Table_20_Title_20_Right'><span tal:replace='en_string'/></text:p>
+              <text:p text:style-name='Item_20_Table_20_Title_20_Right' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/></text:p>
+            </table:table-cell>
+          </table:table-row>
+        </table:table-header-rows>
+        <table:table-row table:style-name='Tableau1.3' tal:repeat='line_dict python:data_dict["line_list"]'>
+          <div tal:omit-tag='' tal:define='style_name python:line_dict["style_name"];
+               left_style_name python:line_dict["left_style_name"];
+               right_style_name python:line_dict["right_style_name"]'>
+            <table:table-cell table:style-name='Tableau1.A3' office:value-type='string'>
+              <text:p text:style-name='Table_20_Contents' tal:content='python:line_dict["index"]' tal:attributes='text:style-name left_style_name'>1</text:p>
+            </table:table-cell>
+            <table:table-cell table:style-name='Tableau1.A3' office:value-type='string'>
+              <text:p text:style-name='Table_20_Contents'
+                      tal:content='python:line_dict["source_reference"]'
+                      tal:attributes='text:style-name style_name'>source_ref</text:p>
+            </table:table-cell>
+            <table:table-cell table:style-name='Tableau1.A3' office:value-type='string'>
+              <text:p text:style-name='Table_20_Contents'
+                      tal:content='python:line_dict["reference"]'
+                      tal:attributes='text:style-name style_name'>ref</text:p>
+            </table:table-cell>
+            <table:table-cell table:style-name='Tableau1.A3' office:value-type='string'>
+              <text:p text:style-name='Table_20_Contents' tal:attributes="text:style-name left_style_name"><tal:block tal:repeat="line line_dict/description"><tal:block
+                    tal:replace="line"/><text:line-break tal:condition="not:repeat/line/end"/></tal:block></text:p>
+            </table:table-cell>
+            <table:table-cell table:style-name='Tableau1.A3' office:value-type='float'>
+              <text:p text:style-name='Table_20_Contents'
+                      tal:content='python:line_dict["total_quantity"]'
+                      tal:attributes='text:style-name right_style_name'>qty</text:p>
+            </table:table-cell>
+            <table:table-cell table:style-name='Tableau1.A3' office:value-type='string'>
+              <text:p text:style-name='Table_20_Contents'
+                      tal:content='python:line_dict["quantity_unit"]'
+                      tal:attributes='text:style-name style_name'>qty_u</text:p>
+            </table:table-cell>
+            <table:table-cell table:style-name='Tableau1.A3' office:value-type='string'>
+              <text:p text:style-name='Table_20_Contents'
+                      tal:content='python:line_dict["stop_date"]'
+                      tal:attributes='text:style-name style_name'>stop_date</text:p>
+            </table:table-cell>
+            <table:table-cell table:style-name='Tableau1.A3' office:value-type='float'>
+              <text:p text:style-name='Table_20_Contents'
+                      tal:content='python:line_dict["base_price"]'
+                      tal:attributes='text:style-name right_style_name'>base_price</text:p>
+            </table:table-cell>
+            <table:table-cell table:style-name='Tableau1.A3' office:value-type='float'>
+              <text:p text:style-name='Table_20_Contents'
+                      tal:content='python:line_dict["total_price"]'
+                      tal:attributes='text:style-name right_style_name'>total_price</text:p>
+            </table:table-cell>
+          </div>
+        </table:table-row>
+        <table:table-row table:style-name='Tableau1.5'>
+          <table:table-cell table:style-name='Tableau1.A5'
+                            table:number-columns-spanned='9' office:value-type='string'>
+            <table:table table:style-name='Tableau3' table:name='Tableau3'>
+              <table:table-column table:style-name='Tableau3.A'/>
+              <table:table-column table:style-name='Tableau3.B'/>
+              <table:table-column table:style-name='Tableau3.C'/>
+              <table:table-column table:style-name='Tableau3.D'/>
+              <table:table-column table:style-name='Tableau3.E'/>
+              <table:table-row table:style-name='Tableau3.1'>
+                <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+              </table:table-row>
+              <table:table-row table:style-name='Tableau3.2'>
+                <table:table-cell table:style-name='Tableau3.A2' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A2' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.D2' office:value-type='string' tal:define='orig_string string:Total Excluding VAT; en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                  <text:p text:style-name='Table_20_Heading'><span tal:replace='en_string'/>:</text:p>
+                  <text:p text:style-name='Table_20_Heading' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/>:</text:p>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.E2' office:value-type='float'>
+                  <text:p text:style-name='Table_20_Contents_20_Right' tal:content='python:data_dict["total_price_novat"]'>800.000,00</text:p>
+                </table:table-cell>
+              </table:table-row>
+              <table:table-row table:style-name='Tableau3.3'>
+                <table:table-cell table:style-name='Tableau3.A2' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A2' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <tal:block tal:define="global total_vat_list python: []">
+                  <table:table-cell table:style-name='Tableau3.D3'
+                                    office:value-type='string'>
+                    <tal:block tal:repeat="vat python: data_dict['vat_list']">
+                      <tal:block tal:define='orig_string python:vat.getResourceTitle(); en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                        <text:p text:style-name='Table_20_Heading'><span tal:replace='en_string'/>:</text:p>
+                        <text:p text:style-name='Table_20_Heading'
+                                tal:condition='python:my_string != en_string'><span tal:replace='my_string'/>:</text:p>
+                      </tal:block>
+                    </tal:block>
+                    <text:p text:style-name='Table_20_Heading'
+                            tal:define='orig_string string:TAX; en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'><span tal:replace="python: 'Total %s' % (my_string)"/>:</text:p>
+                  </table:table-cell>
+                  <table:table-cell table:style-name='Tableau3.E3'
+                                    office:value-type='float'
+                                    tal:attributes="office:value python: sum(total_vat_list)">
+                    <tal:block tal:repeat="vat python: data_dict['vat_list']">
+                      <text:p tal:define="vat_price python: vat.getPrice() * vat.getQuantity(); any python: total_vat_list.append(vat_price)"
+                              text:style-name='Table_20_Contents_20_Right'
+                              tal:content="vat_price">2000</text:p>
+                    </tal:block>
+                    <text:p text:style-name='Table_20_Contents_20_Right'
+                            tal:content="python: sum(total_vat_list)">2000</text:p>
+                  </table:table-cell>
+                </tal:block>
+              </table:table-row>
+              <table:table-row table:style-name='Tableau3.2'>
+                <table:table-cell table:style-name='Tableau3.A2' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A2' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.D3' office:value-type='string' tal:define='orig_string string:Total Including VAT; en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                  <text:p text:style-name='Table_20_Heading'><span tal:replace='en_string'/>:</text:p>
+                  <text:p text:style-name='Table_20_Heading' tal:condition='python:my_string!=en_string'><span tal:replace='my_string'/>:</text:p>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.E3' office:value-type='float' tal:attributes="office:value python:data_dict['total_price_novat'] + sum(total_vat_list)">
+                  <text:p text:style-name='Table_20_Contents_20_Right'
+                          tal:content='python:data_dict["total_price_novat"] + sum(total_vat_list)'>12345</text:p>
+                </table:table-cell>
+              </table:table-row>
+              <table:table-row table:style-name='Tableau3.1'>
+                <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+              </table:table-row>
+              <table:table-row table:style-name='Tableau3.6'>
+                <table:table-cell table:style-name='Tableau3.A6' office:value-type='string' tal:define='orig_string string:Notes; en_string python:unicode(here.Base_translateString(orig_string, lang="en"),"utf-8"); my_string python:unicode(here.Base_translateString(orig_string),"utf-8")'>
+                  <text:p text:style-name='P2'><span tal:replace='en_string'/><span tal:omit-tag='' tal:condition='python:my_string!=en_string'> / <span tal:replace='my_string'/></span>:</text:p>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.B6' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.B6' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.B6' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.E6' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+              </table:table-row>
+              <table:table-row table:style-name='Tableau3.7'>
+                <table:table-cell table:style-name='Tableau3.A7' table:number-columns-spanned='5' office:value-type='string'>
+                  <text:p text:style-name='P3'><tal:block tal:repeat="line data_dict/description"><tal:block
+                          tal:replace="line"/><text:line-break tal:condition="not:repeat/line/end"/></tal:block>
+                </text:p>
+                </table:table-cell>
+                <table:covered-table-cell/>
+                <table:covered-table-cell/>
+                <table:covered-table-cell/>
+                <table:covered-table-cell/>
+              </table:table-row>
+            </table:table>
+            <text:p text:style-name='Table_20_Contents'/>
+          </table:table-cell>
+          <table:covered-table-cell/>
+          <table:covered-table-cell/>
+          <table:covered-table-cell/>
+          <table:covered-table-cell/>
+          <table:covered-table-cell/>
+          <table:covered-table-cell/>
+          <table:covered-table-cell/>
+          <table:covered-table-cell/>
+        </table:table-row>
+      </table:table>
+      <text:p text:style-name='P4'/>
+    </office:text>
+  </office:body>
+</office:document-content>

@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>transaction = state_change[\'object\']\n
-\n
-# Check getBaobabSource and getBaobabDestination\n
-transaction.Base_checkBaobabSourceAndDestination()\n
-\n
-context.validateConsistency(state_change)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

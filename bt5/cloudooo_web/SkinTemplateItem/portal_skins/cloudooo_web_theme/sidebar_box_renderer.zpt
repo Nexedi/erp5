@@ -1,0 +1,29 @@
+<tal:block replace="nothing">
+  <!--
+  This renderer is used to generate sidebar boxes
+  and front page boxes in the layout. 
+  sidebar boxes include an icon which is not
+  present on front page boxes.
+
+  TODO:
+  - 
+  -->
+</tal:block>
+
+<tal:block metal:define-macro="widget">
+  <!--box here//-->
+  <tal:block tal:condition="field_list">
+    <div class="box" tal:attributes="class python:gid.lstrip(aggregate_name);">
+      <div class="text">
+        <h3 tal:condition="gtitle"><tal:block 
+                tal:content="gtitle"
+                i18n:translate="" i18n:domain="ui">Custom List</tal:block></h3>
+        <fieldset class="widget">
+          <tal:block tal:repeat="field field_list">
+            <tal:block metal:use-macro="here/field_render/macros/field_render"/>
+          </tal:block>
+        </fieldset>
+      </div>                                                                              
+    </div>
+  </tal:block>
+</tal:block>

@@ -49,37 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-request=context.REQUEST\n
-portal = context.getPortalObject()\n
-N_ = portal.Base_translateString\n
-\n
-if id_list == None:\n
-  message = N_("Please+select+one+or+more+items+to+delete+first.")\n
-  qs = \'?portal_status_message=%s\' % message\n
-  return request.RESPONSE.redirect( context.absolute_url() + \'/\' + form_id + qs )\n
-\n
-if not same_type(id_list, []):\n
-  id_list=[id_list,]\n
-\n
-if len(id_list) >1:\n
-  message = N_("Please+select+only+one+item+to+delete.")\n
-  qs = \'?portal_status_message=%s\' % message\n
-  return request.RESPONSE.redirect( context.absolute_url() + \'/\' + form_id + qs )\n
-\n
-object = getattr(context, id_list[0], None)\n
-\n
-portal.portal_workflow.doActionFor(object, \'delete_action\')\n
-message = N_(\'Attachment ${file_name} has been deleted\', mapping = { \'file_name\': \'"%s"\' % file_name})\n
-qs = \'?portal_status_message=%s\' % message\n
-return request.RESPONSE.redirect( context.absolute_url() + \'/\' + form_id + qs )\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>id_list=None, form_id=\'view\', file_name=\'\'</string> </value>
         </item>

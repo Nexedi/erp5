@@ -1,0 +1,1645 @@
+    
+      <section class="master">
+        <h1>Using the ERP5 Configurator</h1>
+        <h2>Small and Medium Business</h2>
+        <footer>
+          by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.
+        </footer>
+        <details open="open">
+          <p>In this tutorial you are going to learn how to configure your ERP5 instance for your company using the ERP5 Configurator. By using Configurator, you can have an ERP5 ready to use in few minutes, just by filling a few forms and waiting for the automated setup to do the hard job for you.</p>
+        </details>
+        <test>
+          <table style="display: none;" class="test">
+            <tbody></tbody>
+          </table>
+        </test>
+      </section><section class="chapter">
+        <h1>Standard Configuration</h1>
+        <details open="open">
+          <p>This configurator tutorial aims to configure one ERP5 instance for Small and Medium Business, and it should cover the most basic configuration that a SMB needs, like, Trade, Accounting, Document Management and others.</p><p>The Standard Configuration contains a pre-defined set of categories, modules, security which focus the most common ERP configuration scope for small and medium company world-wide. This configuration is appropriated to experiment and train yourself to ERP5 or use in production where this ERP configuration fits to the company needs.</p>
+        </details>
+        <test>
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">
+            <thead></thead>
+            <tbody>
+              <tr>
+                <td>setTimeout</td>
+                <td>60000</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>deleteCookie</td>
+                <td>LOCALIZER_LANGUAGE</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>createCookie</td>
+                <td>LOCALIZER_LANGUAGE=en</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>openAndWait</td>
+                <td>${base_url}/view</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>store</td>
+                <td>${base_url}/portal_configurator</td>
+                <td>configurator_base_url</td>
+              </tr>
+              <tr>
+                <td>openAndWait</td>
+                <td>${base_url}/Zuite_setUpConfigurationTest</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Init Ok</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </test>
+      </section><section class="screenshot">
+        <h1>Configure your Site</h1>
+        <img src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Consultant.Configurator.Configure.Your.Site?format=png" type="image/svg+xml" title="&quot;Configure your Site&quot; at Favorite Menu" alt="&quot;Configure your Site&quot; at Favorite Menu">
+        <details open="open">
+          <p>Use the "My favourites" Menu to select "Configure your Site" and start to configure your ERP5 Site. You will be redirected to the Configurator Tool.</p>
+        </details>
+        <test>
+          <table class="test" style="display: none;">
+            <tbody></tbody>
+          </table>
+        </test>
+      </section><section class="screenshot">
+        <h1>Configurator Welcome</h1>
+        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Consultant.Configurator.Configurator.Welcome?format=png" title="Configurator Initial Page" alt="Configurator Initial Page">
+        <details open="open">
+          <p>
+            This is the Initial Page of the configurator, at this stage you can select whatever Configuration that you prefer. For this tutorial we are going to select <b>SMALL AND MEDIUM BUSINESS</b>.
+          </p>
+        </details>
+        <test>
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">
+            <tbody>
+              <tr>
+                <td>setTimeout</td>
+                <td>1200000</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>openAndWait</td>
+                <td>${base_url}/Zuite_waitForActivities</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr class="" style="opacity: 1;">
+                <td>verifyTextPresent</td>
+                <td>Done.</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>setTimeout</td>
+                <td>120000</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>pause</td>
+                <td>4000</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>openAndWait</td>
+                <td>${configurator_base_url}/view</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>ERP5 Configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Welcome to Configurator</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>This tool will help you configure your fresh ERP5</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Language</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>ERP5 Configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//button[@value='business_configuration_module/STANDARD_CONFIGURATOR_TEST']</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </test>
+      </section><section class="screenshot">
+        <h1>Your Organisation</h1>
+        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Configurator.Organisation?format=png" title="Organisation Configuration Form" alt="Organisation Configuration Form">
+        <details open="open">
+          <p>You will then have to fill all the information about your Company. It is important for you to enter the correct information as it wont be possible after the configuration to change them by yourself. Once it is done, just click on "Configure Organisation".</p><p>Note: You are configuring the ERP5 instance for your company, so please use the information of your company, such as Name, Email, Address, Country, and Users' information.</p>
+        </details>
+        <test>
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">
+            <tbody>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>ERP5 Configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Installation steps</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Number of user accounts</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>User accounts configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Accounting</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Application preferences</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Download</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Your organisation</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>What is the name of your company?</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Email</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Telephone</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Street Address</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Postal Code</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>City</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Country</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyElementPresent</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="next:method"]</td>
+                <td>Configure Organisation</td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//input[@name="field_your_title"]</td>
+                <td>Nexedi SA</td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//input[@name="field_your_default_email_text"]</td>
+                <td>webproject-report@erp5.org</td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//input[@name="field_your_default_telephone_text"]</td>
+                <td>+123 234 567 891</td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//textarea[@name="field_your_default_address_street_address"]</td>
+                <td>270 bd Clémenceau, 59700 Marcq-en-Baroeul</td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//input[@name="field_your_default_address_zip_code"]</td>
+                <td>59700</td>
+              </tr>
+              <tr>
+                <td>select</td>
+                <td>//select[@name="field_your_default_address_region"]</td>
+                <td>Europe/Western Europe/France</td>
+              </tr>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Input is required but no input given.</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="field_your_title"]</td>
+                <td>Nexedi SA</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="field_your_default_email_text"]</td>
+                <td>webproject-report@erp5.org</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="field_your_default_telephone_text"]</td>
+                <td>+123 234 567 891</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//textarea[@name="field_your_default_address_street_address"]</td>
+                <td>270 bd Clémenceau, 59700 Marcq-en-Baroeul</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="field_your_default_address_zip_code"]</td>
+                <td>59700</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//select[@name="field_your_default_address_region"]</td>
+                <td>europe/western_europe/france</td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//input[@name="field_your_default_address_city"]</td>
+                <td>Lille</td>
+              </tr>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </test>
+      </section><section class="screenshot">
+        <h1>Number of user accounts</h1>
+        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Configurator.Number.User?format=png" title="User Number Configuration Form" alt="User Number Configuration Form">
+        <details open="open">
+          <p>You will then have to choose how many user accounts you want to create during the configuration. You will be able to create as many users as you want even after the configuration. So you don't have to configure all the persons of your organisation that will use ERP5 now. Click on "Configure user accounts number".</p>
+        </details>
+        <test>
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">
+            <tbody>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>ERP5 Configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Installation steps</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Number of user accounts</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>User accounts configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Accounting</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Application preferences</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Download</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Number of user accounts</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Enter the number of user accounts you want to create. In your company, each person using ERP5 should have his own user account.</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Select the number of user accounts you want to configure</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyElementPresent</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="next:method"]</td>
+                <td>Configure user accounts number</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="previous:method"]</td>
+                <td>Previous</td>
+              </tr>
+              <tr>
+                <td>verifyElementPresent</td>
+                <td>//input[@name="previous:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//input[@name="previous:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>ERP5 Configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Installation steps</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Number of user accounts</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>User accounts configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Accounting</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Application preferences</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Download</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Your organisation</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>What is the name of your company?</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Email</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Telephone</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Street Address</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Postal Code</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>City</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Country</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyElementPresent</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="next:method"]</td>
+                <td>Configure Organisation</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="field_your_title"]</td>
+                <td>Nexedi SA</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="field_your_default_email_text"]</td>
+                <td>webproject-report@erp5.org</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="field_your_default_telephone_text"]</td>
+                <td>+123 234 567 891</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//textarea[@name="field_your_default_address_street_address"]</td>
+                <td>270 bd Clémenceau, 59700 Marcq-en-Baroeul</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="field_your_default_address_zip_code"]</td>
+                <td>59700</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//select[@name="field_your_default_address_region"]</td>
+                <td>europe/western_europe/france</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="field_your_default_address_city"]</td>
+                <td>Lille</td>
+              </tr>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>ERP5 Configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Installation steps</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Number of user accounts</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>User accounts configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Accounting</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Application preferences</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Download</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Number of user accounts</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Enter the number of user accounts you want to create. In your company, each person using ERP5 should have his own user account.</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Select the number of user accounts you want to configure</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyElementPresent</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="next:method"]</td>
+                <td>Configure user accounts number</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="previous:method"]</td>
+                <td>Previous</td>
+              </tr>
+              <tr>
+                <td>verifyElementPresent</td>
+                <td>//input[@name="previous:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>select</td>
+                <td>//select[@name="field_your_company_employees_number"]</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </test>
+      </section><section class="screenshot">
+        <h1>User accounts configuration</h1>
+        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Configurator.User?format=png" title="User Configuration Form" alt="User Configuration Form">
+        <details open="open">
+          <p>
+            You will then have to fill in all the information for as many users as you selected before. <strong>ATTENTION: Do NOT use the username "zope".</strong>
+             Please notice that in an online environment the useres will receive their login and password by email so be careful to enter the right email address. When it is done you can click on "Configure user accounts".
+          </p>
+        </details>
+        <test>
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">
+            <tbody>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>ERP5 Configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Installation steps</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Number of user accounts</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>User accounts configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Accounting</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Application preferences</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Download</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>User accounts configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Fill in detailled information for each ERP5 user.</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>User accounts configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Fill in detailled information for each ERP5 user.</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>First Name</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Last Name</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>User Login</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>User Password</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Password Confirmation</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Function</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyElementPresent</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="next:method"]</td>
+                <td>Configure user accounts</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="previous:method"]</td>
+                <td>Previous</td>
+              </tr>
+              <tr>
+                <td>verifyElementPresent</td>
+                <td>//input[@name="previous:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//input[@name="field_your_first_name"]</td>
+                <td>Ivan</td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//input[@name="field_your_last_name"]</td>
+                <td>Petrov</td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//input[@name="field_your_reference"]</td>
+                <td>PERSON_RESERVED_REFERENCE</td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//input[@name="field_your_password"]</td>
+                <td>secret</td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//input[@name="field_your_password_confirm"]</td>
+                <td>secret</td>
+              </tr>
+              <tr class="" style="opacity: 1;">
+                <td>select</td>
+                <td>//select[@name="field_your_function"]</td>
+                <td>Company/Company Manager</td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//input[@name="field_your_default_email_text"]</td>
+                <td>webproject-report@erp5.org</td>
+              </tr>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>User login is either already used or contains invalid characters</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Please try another one</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//input[@name="field_your_reference"]</td>
+                <td>PERSON_USER_REFERENCE</td>
+              </tr>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </test>
+      </section><section class="screenshot">
+        <h1>Accounting</h1>
+        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Configurator.Accounting?format=png" title="Accounting Configuration Form" alt="Accounting Configuration Form">
+        <details open="open">
+          <p>You will then have to choose the accounting plan you want to use (If the accounting plan that you want to use is not available, we can teach you how to make your accounting plan available in ERP5). Then you have to enter the accounting period beginning date, the ending date and the name of the accounting period. When it is done you can click on "Configure accounting".</p>
+        </details>
+        <test>
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">
+            <tbody>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>ERP5 Configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Installation steps</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Number of user accounts</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>User accounts configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Accounting</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Application preferences</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Download</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Accounting</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Configure your accounting.</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Which accouting plan do you use?</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Accounting Period</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Accounting Periods are used to define the range of dates in which you will be allowed to input accounting transactions.</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>To start using the system, you have to configure the first accounting period.</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>What is the begin date of your current accounting period?</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>What will be the end date of your current accounting period?</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>What is the name of this period?</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyElementPresent</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="next:method"]</td>
+                <td>Configure accounting</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="previous:method"]</td>
+                <td>Previous</td>
+              </tr>
+              <tr>
+                <td>verifyElementPresent</td>
+                <td>//input[@name="previous:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="subfield_field_your_period_start_date_year"]</td>
+                <td>2012</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="subfield_field_your_period_start_date_month"]</td>
+                <td>01</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="subfield_field_your_period_start_date_day"]</td>
+                <td>01</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="subfield_field_your_period_stop_date_year"]</td>
+                <td>2012</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="subfield_field_your_period_stop_date_month"]</td>
+                <td>12</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="subfield_field_your_period_stop_date_day"]</td>
+                <td>31</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="field_your_period_title"]</td>
+                <td>2012</td>
+              </tr>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </test>
+      </section><section class="screenshot">
+        <h1>Application Preferences</h1>
+        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Configurator.Preference?format=png" title="Preferences Configuration Form" alt="Preferences Configuration Form">
+        <details open="open">
+          <p>You will then have to choose the "from" email address of your account. This email address will be used for automatically generated emails. You have to select the default accounting currency and the languages that you want to be available in your instance. English will always be available, other languages have to be installed during the configuration process. When it is done you can click on "Configure ERP5 Preferences".</p>
+        </details>
+        <test>
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">
+            <tbody>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>ERP5 Configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Installation steps</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Number of user accounts</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>User accounts configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Accounting</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Application preferences</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Download</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Application preferences</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Define some global preferences for your ERP5 application.</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>What email address should be used as From email address for automatically generated emails?</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>What is the currency used in your company?</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Which date format do you use?</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Which translations do you want to use?</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyElementPresent</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="next:method"]</td>
+                <td>Configure ERP5 Preferences</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="previous:method"]</td>
+                <td>Previous</td>
+              </tr>
+              <tr>
+                <td>verifyElementPresent</td>
+                <td>//input[@name="previous:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>select</td>
+                <td>//select[@name="field_your_price_currency"]</td>
+                <td>Euro</td>
+              </tr>
+              <tr>
+                <td>select</td>
+                <td>//select[@name="field_your_preferred_date_order"]</td>
+                <td>Day / Month / Year</td>
+              </tr>
+              <tr>
+                <td>addSelection</td>
+                <td>//select[@name="field_your_lang"]</td>
+                <td>label=French</td>
+              </tr>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </test>
+      </section><section class="screenshot">
+        <h1>Summary</h1>
+        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Consultant.Configurator.Summary?format=png" title="Configuration Summary" alt="Configuration Summary">
+        <details open="open">
+          <p>This step is to say that we have all the information needed for the installation. It is still possible to go back and correct wrong information, but once you will have clicked on 'Install' it won't be possible anymore. When you are sure of the information you filled, you can click on "Install".</p>
+        </details>
+        <test>
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">
+            <tbody>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>ERP5 Configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Installation steps</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Number of user accounts</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>User accounts configuration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Accounting</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Application preferences</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Download</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Download</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Installation procedure may begin</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>You are going to install your selected configuration.</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Please proceed using Install button below.</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>In the next page you will receive automatically updated installation status report.</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyElementPresent</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="next:method"]</td>
+                <td>Install</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="previous:method"]</td>
+                <td>Previous</td>
+              </tr>
+              <tr>
+                <td>verifyElementPresent</td>
+                <td>//input[@name="previous:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//input[@name="next:method"]</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </test>
+      </section><section class="screenshot">
+        <h1>Installation</h1>
+        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Configurator.Installation?format=png" title="Configuration Progression Bar" alt="Configuration Progression Bar">
+        <details open="open">
+          <p>You can follow the installation progress thanks to the "installation progress bar". Even if you quit the page, you won't be able to stop the installation process. Once it is done you will see a link at the end of the progress bar that will invite you to login to your ERP5 Instance. If you are running ERP5 in a virtual machine on a slow computer it could happen that you get a message "Error code 500". Don't worry, this only means that it takes a long time to configure ERP. In this case, just wait some more minutes and then return to your ERP5 instance (in the virtual machine you can do this by clicking the home button). Then you have to click "My Favourites" -&gt; "Log out" to log out from the emergency user. Then you can log in again using your user you just created.</p>
+        </details>
+        <test>
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">
+            <tbody>
+              <tr>
+                <td>waitForCondition</td>
+                <td>selenium.isTextPresent("ERP5 configuration process is running.")</td>
+                <td>10000</td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Please be patient and do not move from current page until you get</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>confirmation that the installation is over.</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>It will last approximately 5 to 10 minutes.</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>setTimeout</td>
+                <td>1200000</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>openAndWait</td>
+                <td>${base_url}/Zuite_waitForActivities</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Done.</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>setTimeout</td>
+                <td>30000</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>openAndWait</td>
+                <td>${base_url}/Zuite_assertEndConfiguration</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>True</td>
+                <td>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td>openAndWait</td>
+                <td>${base_url}/view</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>${base_user}</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>openAndWait</td>
+                <td>${base_url}/logout</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>openAndWait</td>
+                <td>${base_url}/login_form</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//input[@name="__ac_name"]</td>
+                <td>PERSON_USER_REFERENCE</td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//input[@name="__ac_password"]</td>
+                <td>secret</td>
+              </tr>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//input[@name="logged_in:method"]</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>openAndWait</td>
+                <td>${base_url}/view</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>PERSON_USER_REFERENCE</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>openAndWait</td>
+                <td>${base_url}/Zuite_waitForActivities</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>verifyTextPresent</td>
+                <td>Done.</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>setTimeout</td>
+                <td>30000</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>openAndWait</td>
+                <td>${base_url}/login_form</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//input[@name="__ac_name"]</td>
+                <td>${base_user}</td>
+              </tr>
+              <tr>
+                <td>type</td>
+                <td>//input[@name="__ac_password"]</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//input[@name="logged_in:method"]</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </test>
+      </section><section class="screenshot">
+        <h1>Start using your new ERP5 system</h1>
+        <img alt="Start using your new ERP5 system " title="Start using your new ERP5 system " type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Consultant.Configurator.Start.Using.Your.New.ERP5.System?format=png">
+        <details open="open">
+          <p>As soon the link is provided, click "Start using your new ERP5 system" to use your configured ERP5.</p>
+        </details>
+      </section><section class="screenshot">
+        <h1>Login</h1>
+        <img src="http://www.erp5.com/user-ERP5.Login.Form?format=png" type="image/svg+xml" title="Login Form" alt="Login Form">
+        <details open="open">
+          <p>Now you can login with the user Login and Password created during the configuration and enjoy your ERP5.</p>
+        </details>
+        <test>
+          <table class="test" style="display: none;">
+            <tbody></tbody>
+          </table>
+        </test>
+      </section>
+    

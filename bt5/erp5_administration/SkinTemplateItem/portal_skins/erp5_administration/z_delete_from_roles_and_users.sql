@@ -1,0 +1,1 @@
+delete from roles_and_users where <dtml-sqltest uid type=int op=eq multiple>

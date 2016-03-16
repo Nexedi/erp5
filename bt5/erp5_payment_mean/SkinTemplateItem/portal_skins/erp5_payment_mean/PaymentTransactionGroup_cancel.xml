@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if REQUEST is not None:\n
-  return\n
-\n
-for payment_transaction_line in context.getAggregateRelatedValueList():\n
-  payment_transaction_line.setDefaultActivateParameterDict({"tag": tag})\n
-  payment_transaction_line.setAggregate(None)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>tag="", REQUEST=None</string> </value>
         </item>

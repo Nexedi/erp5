@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This script is invoked each time a new message is validated\n
-The previous version is archived automatically.\n
-"""\n
-document = state_change[\'object\']\n
-reference = document.getReference()\n
-if not reference:\n
-  # If this object has no reference, we can not do anything\n
-  return\n
-portal = document.getPortalObject()\n
-portal_catalog = portal.portal_catalog\n
-search_kw = dict(reference=reference,\n
-                 validation_state="validated",\n
-                 uid=\'NOT %s\' %document.getUid())\n
-for old_document in portal_catalog(**search_kw):\n
-  old_document = old_document.getObject()\n
-  old_document.archive()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

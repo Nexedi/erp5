@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>ob = state_change[\'object\']\n
-if ob.getPortalType() == \'Inotify\':\n
-  ob = ob.getParentValue()\n
-if ob.getRelativeUrl() == \'portal_inotify\':\n
-  ob.resetCache()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

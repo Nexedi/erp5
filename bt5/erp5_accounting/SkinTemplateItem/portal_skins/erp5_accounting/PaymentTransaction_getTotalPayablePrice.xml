@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if brain is not None:\n
-  transaction = brain.getObject()\n
-else:\n
-  transaction = context\n
-    \n
-def getTotalPrice(transaction_path):\n
-  is_source = transaction.AccountingTransaction_isSourceView()\n
-  total_price = 0\n
-  for mvt in transaction.getMovementList(\n
-         portal_type=context.getPortalAccountingMovementTypeList()):\n
-    if is_source:\n
-      node = mvt.getSourceValue()\n
-      if node is not None and node.isMemberOf(\'account_type/asset/cash\'):\n
-        total_price -= mvt.getSourceInventoriatedTotalAssetPrice() or 0\n
-    else:\n
-      node = mvt.getDestinationValue()\n
-      if node is not None and  node.isMemberOf(\'account_type/asset/cash\'):\n
-        total_price -= mvt.getDestinationInventoriatedTotalAssetPrice() or 0\n
-  return total_price\n
-\n
-return getTotalPrice(transaction.getPath())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain=None, selection=None, **kw</string> </value>
         </item>

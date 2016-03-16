@@ -22,30 +22,6 @@
               <dictionary/>
             </value>
         </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-#!/usr/bin/env node\n
-\n
-var lint = require("../test/lint/lint"),\n
-    path = require("path");\n
-\n
-if (process.argv.length > 2) {\n
-  lint.checkDir(process.argv[2]);\n
-} else {\n
-  process.chdir(path.resolve(__dirname, ".."));\n
-  lint.checkDir("lib");\n
-  lint.checkDir("mode");\n
-  lint.checkDir("addon");\n
-  lint.checkDir("keymap");\n
-}\n
-\n
-process.exit(lint.success() ? 0 : 1);\n
-
-
-]]></string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

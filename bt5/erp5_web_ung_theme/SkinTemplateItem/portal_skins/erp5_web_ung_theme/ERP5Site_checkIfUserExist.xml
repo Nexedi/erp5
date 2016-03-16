@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>import json\n
-\n
-kw.update(context.REQUEST.form)\n
-\n
-if not kw:\n
-  return json.dumps(dict(response=False))\n
-\n
-portal = context.getPortalObject()\n
-person = portal.portal_catalog.getResultValue(portal_type="Person",\n
-                                              validation_state="validated",\n
-                                              ignore_unknown_columns=True,\n
-                                              **kw)\n
-\n
-return json.dumps(dict(response=(person is not None)))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

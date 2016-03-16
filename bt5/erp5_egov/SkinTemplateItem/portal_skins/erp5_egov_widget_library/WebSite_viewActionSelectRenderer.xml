@@ -33,19 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-  <div class="adminSection" tal:define="actions request/actions">\n
-    <tal:block metal:use-macro="here/context_box_render/macros/action"/>\n
-    <div class="clear">\n
-    </div>\n
-  </div>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

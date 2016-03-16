@@ -1,0 +1,104 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Previous and Next buttons for Selection</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Previous and Next button for Selection</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=4</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=2</td>
+  <td></td>
+</tr>
+<!-- Prev / Next -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id='context_bar']//a[@title='Previous']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_my_id</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id='context_bar']//a[@title='Next']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_my_id</td>
+  <td>2</td>
+</tr>
+<!-- First / Last -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id='context_bar']//a[@title='First']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_my_id</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id='context_bar']//a[@title='Last']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_my_id</td>
+  <td>3</td>
+</tr>
+<!-- Back to list mode -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id='context_bar']//a[@title='List Mode']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td>regexp:${base_url}/foo_module/FooModule_viewFooList(\?|$)</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

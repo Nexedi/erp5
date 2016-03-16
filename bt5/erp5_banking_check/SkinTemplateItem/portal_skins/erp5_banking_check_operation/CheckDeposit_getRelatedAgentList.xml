@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>agent_list = []\n
-for o in context.objectValues(portal_type=\'Check Operation Line\'):\n
-  bank_account = o.getSourcePaymentValue()\n
-  if bank_account in (\'\', None):\n
-    continue\n
-  agent_list.extend(bank_account.searchFolder())\n
-\n
-return agent_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

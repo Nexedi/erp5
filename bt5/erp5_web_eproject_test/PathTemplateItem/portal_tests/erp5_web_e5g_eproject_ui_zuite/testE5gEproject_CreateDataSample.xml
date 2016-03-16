@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal =  context.getPortalObject()\n
-\n
-"""Delete objects we are about to create """\n
-for i in range(start, start + num):\n
-  if getattr(portal.project_module, \'project_\' + str(i), None) is not None:\n
-    portal.project_module.deleteContent(\'project_\' + str(i))\n
-  if getattr(portal.task_module, \'task_\' + str(i), None) is not None:\n
-    portal.task_module.deleteContent(\'task_\' + str(i))\n
-\n
-"""Create objects with given parameters"""\n
-for i in range(start, start + num):\n
-  portal.project_module.newContent(id = \'project_\' + str(i), title = \'Super Project %d\' % i, reference = \'Super Project %d\' % i, portal_type=\'Project\')\n
-  portal.task_module.newContent(id = \'task_\' + str(i), title = \'Super Task %d\' % i, portal_type=\'Task\')\n
-\n
-return \'Created Successfully.\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>start = 0, num = 1</string> </value>
         </item>

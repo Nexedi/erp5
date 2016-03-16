@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>module = context\n
-\n
-forbidden_property = [\'uid\', \'portal_type\']\n
-property_list = []\n
-\n
-for portal_type in module.allowedContentTypes():\n
-  for property in portal_type.getInstancePropertyAndBaseCategorySet():\n
-    if property not in forbidden_property:\n
-      property_list.append((portal_type.id, property))\n
-\n
-property_list.sort()\n
-return [(\'-- Ignore this Property --\', \'\')] + map(lambda x: (x[1], \'%s.%s\' % (x[0], x[1])), property_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

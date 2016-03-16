@@ -1,0 +1,268 @@
+<html>
+<head><title>Test for Accounting Transaction Template</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test Accounting Transaction Template
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_initializeAccountingTransactionTemplateTest">
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+<!-- Setup {{{ -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<!-- }}} -->
+
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>label=Add Accounting Transaction</td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>label=Add Accounting Transaction Lines</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_line_count</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Accounting Transaction Lines added.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_title</td>
+  <td>Accounting Transaction Template</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_start_date_year</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_start_date_month</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_start_date_day</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_my_resource</td>
+  <td>label=YEN</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]/select</td>
+  <td>label=1 - Equity</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[3]/select</td>
+  <td>label=2 - Fixed Assets</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[3]/select</td>
+  <td>label=40 - Payable</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[3]/select</td>
+  <td>label=41 - Receivable</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>document.forms[0].elements['Base_edit:method'][1]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>label=Make a Template</td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<!-- Remove Accounting Transactions -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/AccountingZuite_initializeAccountingTransactionTemplateTest</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Accounting Transactions Created.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>label=Add Accounting Transaction Template</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Template created.</td>
+  <td></td>
+</tr>
+
+<!-- Check the content of the document -->
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_title</td>
+  <td>Accounting Transaction Template</td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>field_my_resource</td>
+  <td>YEN</td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]/select</td>
+  <td>label=1 - Equity</td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[3]/select</td>
+  <td>label=2 - Fixed Assets</td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[3]/select</td>
+  <td>label=40 - Payable</td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[3]/select</td>
+  <td>label=41 - Receivable</td>
+</tr>
+
+<!-- Wait for activities -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<!-- delete template -->
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_favorite</td>
+  <td>label=Preferences</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Preference for erp5_accounting ui tests</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Templates</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@class="listbox_title"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-check-all"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_deleteObjectList:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Deleted.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>0 records</td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

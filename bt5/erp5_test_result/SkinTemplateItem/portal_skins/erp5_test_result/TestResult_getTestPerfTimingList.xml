@@ -49,39 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-test_list = []\n
-\n
-test_dict = {\'objective time to view object form\': \'view_object\',\n
-             \'time to view object form with many lines\': \'view_100_lines\',\n
-             \'time to view proxyfield form\': \'view_proxyfield\',\n
-             \'add =\': \'add_%u\',\n
-             \'tic =\': \'tic_%u\',\n
-             \'view =\': \'view_%u\',\n
-             }\n
-\n
-for result_line in context.objectValues(portal_type=\'Test Result Line\'):\n
-  test = {}\n
-  object_count = None\n
-  for line in result_line.getProperty(\'stdout\').splitlines():\n
-    for k, v in test_dict.items():\n
-      if k in line:\n
-        test[\'%\' in v and v % object_count or v] = \\\n
-          float(line.split(\'<\')[1].strip())\n
-        break\n
-    else:\n
-      if line.startswith(\'nb objects =\'):\n
-        object_count = int(line.split()[-1])\n
-  test_list.append(test)\n
-\n
-return test_list\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>TestResult_getTestPerfTimingList</string> </value>
         </item>

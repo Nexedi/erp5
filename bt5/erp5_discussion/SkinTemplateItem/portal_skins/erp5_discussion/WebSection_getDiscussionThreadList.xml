@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script gets list of Discussion Thread for a Forum using catalog. \n
-  Due to asynchronous nature of catalog it can use\n
-  passed from REQUEST not index yet threads.\n
-"""\n
-thread_relative_url = context.REQUEST.get(\'thread_relative_url\')\n
-discussion_thread_list = [x.getObject() for x  in context.getDocumentValueList(**kw)]\n
-if thread_relative_url is not None:\n
-  thread = context.restrictedTraverse(thread_relative_url)\n
-  if thread is not None and thread not in discussion_thread_list:\n
-    discussion_thread_list = [thread] + discussion_thread_list\n
-return discussion_thread_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>explanation_value = context.getExplanationValue()\n
-if explanation_value is not None:\n
-  if explanation_value.getPortalType().startswith(\'Purchase\'):\n
-    return 1\n
-return 0\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

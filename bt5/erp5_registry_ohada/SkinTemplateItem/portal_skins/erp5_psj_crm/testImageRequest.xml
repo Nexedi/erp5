@@ -49,35 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ZSQLCatalog.SQLCatalog import ComplexQuery\n
-from Products.ZSQLCatalog.SQLCatalog import Query\n
-\n
-# Get the list of parent messages\n
-attachment_pdf_list=[]\n
-current_object = context.getObject()\n
-event_list = current_object.getFollowUpRelatedValueList()\n
-attachment_list =[x.getAggregateValueList() for x in event_list]\n
-for y in attachment_list:\n
- attachment_pdf_list.extend(filter(lambda x:(x.getPortalType()==\'PDF\'),y))\n
-event_uid_list = map(lambda x: x.getUid(), event_list)\n
-attachment_pdf_uid_list =[x.getUid() for x in attachment_pdf_list]\n
-\n
-if not event_uid_list:\n
- return []\n
-\n
-# Build query\n
-query = ComplexQuery(Query(parent_uid=event_uid_list),\n
-                     Query(uid=event_uid_list),\n
-                     Query(parent_uid=attachment_pdf_uid_list),\n
-                     Query(uid=attachment_pdf_uid_list),\n
-                     operator="OR")\n
-\n
-kw[\'portal_type\'] = (\'PDF\',\'Image\') + context.getPortalDocumentTypeList()+context.getPortalEventTypeList()\n
-return context.portal_catalog(query=query, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

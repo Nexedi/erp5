@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-\n
-user_id = context.portal_membership.getAuthenticatedMember().getUserName()\n
-\n
-def getUserSiteUid(user_id):\n
-  return context.Baobab_getUserAssignedRootSite(user_id=user_id, object=1).getSiteUid()\n
-\n
-\n
-getUserSiteUid = CachingMethod(getUserSiteUid, id=\'Baobab_getUserUserSiteUid\', cache_factory=\'erp5_ui_medium\')\n
-return getUserSiteUid(user_id=user_id)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

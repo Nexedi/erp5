@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
-\n
-user_site_list = context.Baobab_getUserAssignedSiteList()\n
-if len(user_site_list) == 0:\n
-  raise ValueError, "You cannot create a CounterDate if you don\'t have an assignment."\n
-\n
-site = context.Baobab_getVaultSite(user_site_list[0])\n
-context.setSiteValue(site)\n
-context.setStartDate(DateTime(DateTime().Date()))\n
-\n
-\n
-context.assignRoleToSecurityGroup()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

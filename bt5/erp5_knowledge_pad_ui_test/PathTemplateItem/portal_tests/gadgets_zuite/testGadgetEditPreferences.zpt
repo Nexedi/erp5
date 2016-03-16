@@ -1,0 +1,192 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Express Access Tab</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
+</thead><tbody>
+
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/init">init</span>
+
+<!-- Set longer timeout. -->
+<tr>
+  <td>setTimeout</td>
+  <td>180000</td>
+  <td></td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">
+Wait for activities</span>
+<tr>
+  <td>openAndWait</td>		 
+  <td>${base_url}/view</td>
+  <td></td>
+</tr>
+<!-- Add to pad few gadgets -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/google_calendar</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeText</td>
+  <td>transition_message</td>
+  <td>calendar_box_url</td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${calendar_box_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeText</td>
+  <td>transition_message</td>
+  <td>calendar_box_id</td>
+</tr>
+
+<!-- Clock -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/clock</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeText</td>
+  <td>transition_message</td>
+  <td>clock_box_url</td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${clock_box_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeText</td>
+  <td>transition_message</td>
+  <td>clock_box_id</td>
+</tr>
+
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">Wait for activities</span>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@id='${clock_box_id}']/h3/span/a[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>gadget_preference_${clock_box_id}_field_my_preferred_header_title</td>
+  <td>Clock XXXXX</td>
+</tr>
+<tr>
+  <td>keyPressAndWait</td>
+  <td>gadget_preference_${clock_box_id}_field_my_preferred_header_title</td>
+  <td>\13</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Preference updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Clock XXXXX</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@id='${calendar_box_id}']/h3/span/a[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>gadget_preference_${calendar_box_id}_field_my_preferred_header_title</td>
+  <td>Calendar YYYYY</td>
+</tr>
+<tr>
+  <td>keyPressAndWait</td>
+  <td>gadget_preference_${calendar_box_id}_field_my_preferred_header_title</td>
+  <td>\13</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Preference updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Calendar YYYYY</td>
+  <td></td>
+</tr>
+
+<!-- Edit gadget form submit by pressing enter -->
+<tr>
+  <td>click</td>
+  <td>//div[@id='${calendar_box_id}']/h3/span/a[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>gadget_preference_${calendar_box_id}_field_my_preferred_header_title</td>
+  <td>Calendar AAAAA</td>
+</tr>
+<tr>
+  <td>keyPressAndWait</td>
+  <td>gadget_preference_${calendar_box_id}_field_my_preferred_header_title</td>
+  <td>\13</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Preference updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Calendar AAAAA</td>
+  <td></td>
+</tr>
+
+
+<!-- Test deleting a gadget -->
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">
+Wait for activities</span>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@id='${calendar_box_id}']/h3/span/a[1]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertConfirmation</td>
+  <td>Are you sure you want to remove this gadget from your personalized page?</td>
+  <td></td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">
+Wait for activities</span>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextNotPresent</td>
+  <td>Calendar AAAAA</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>

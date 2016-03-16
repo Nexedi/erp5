@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># make default CMF personalize_form redirect to the preference tool\n
-\n
-preference_tool = context.getPortalObject().portal_preferences\n
-\n
-preference = preference_tool.getActivePreference()\n
-\n
-if preference is not None and preference.getPriority() == 3: # XXX: 3 is Priority.USER\n
-  return preference.Base_redirect(\'view\')\n
-\n
-return preference_tool.Base_redirect(\'view\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

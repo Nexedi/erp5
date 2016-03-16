@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Due to limitation of edos test runner in buildbot we manually \n
-  call this method that will set SVN revision number used for this \'Test Result\' object. \n
-"""\n
-if revision and not context.getIntIndex():\n
-  context.setIntIndex(revision)\n
-\n
-context.edit(buildslave_name = buildslave_name)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>revision, buildslave_name = \'\'</string> </value>
         </item>

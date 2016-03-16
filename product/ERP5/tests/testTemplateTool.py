@@ -362,7 +362,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     available_bt, = template_tool.getRepositoryBusinessTemplateList(
       template_list=('test_core',))
     revision = available_bt.getRevision()
-    self.assertEqual('PN8VPt52MbdHtxfjKvL+MBsNbzM=', revision)
+    self.assertEqual('ZjtyN3qfJKXd8TjB7JPX/mG0FkE=', revision)
     installed_bt = template_tool.download("%s/%s" % (available_bt.repository,
                                                      available_bt.filename))
     self.assertEqual(revision, installed_bt.getRevision())
@@ -385,14 +385,14 @@ class TestTemplateTool(ERP5TypeTestCase):
     # ... at building by default ...
     bt.build()
     revision = bt.getRevision()
-    self.assertEqual('tPNr/gGXaa0fYCsFUWe8nqzSNLc=', revision)
+    self.assertEqual('9rVhiz7Agr5G7L1jegm9yLuUD9U=', revision)
     self.portal.portal_skins.erp5_test.manage_renameObject('test_file',
                                                            'test_file2')
     bt.build(update_revision=False)
     self.assertEqual(revision, bt.getRevision())
     # ... and at export.
     bt.export(str(random.random()))
-    self.assertEqual('Nup/xsO1xpsmdJ5GTdknuVJyOr8=', bt.getRevision())
+    self.assertEqual('dhgvzCfmibJEiy5M+5axf9ZM3gA=', bt.getRevision())
     self.abort()
 
   def test_getInstalledBusinessTemplateList(self):

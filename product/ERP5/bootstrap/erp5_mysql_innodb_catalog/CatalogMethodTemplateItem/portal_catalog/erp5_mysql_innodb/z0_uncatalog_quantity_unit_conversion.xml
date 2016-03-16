@@ -19,15 +19,6 @@
             <value> <string>z0_uncatalog_quantity_unit_conversion</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-DELETE FROM quantity_unit_conversion\n
-WHERE <dtml-sqltest uid op=eq type=int>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

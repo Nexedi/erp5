@@ -49,12 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># We do not want any automatic computation on phone number coming from plugin\n
-context.edit(telephone_number=text)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>text</string> </value>
         </item>

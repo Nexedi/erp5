@@ -1,0 +1,84 @@
+<tal:block
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  tal:define="field_id here/getId;
+              selection_name here/getSelectionName;
+              real_context here/getContext;
+              global is_gadget_mode request/is_gadget_mode | nothing;
+              line_list here/query;
+              listbox_max_lines  python: int(here.getMaxLineNumber());
+              total_line         python: int(here.total_size);
+              need_pagination python: total_line > listbox_max_lines;
+              page_navigation_template python: request.get('page_navigation_template', here.getPageNavigationTemplate());
+              is_slider_mode python:  'Slider' in page_navigation_template;
+              is_default_listbox_field python: field_id=='listbox';
+              base_url_string real_context/absolute_url;
+              date_renderer nocall:real_context/WebSection_viewBlogFrontPage/listbox_effective_date/render_html;">
+<div class="blog_rss"><a href="./WebSection_viewContentListAsRSS"><img src="web_images/rss-image.png" alt="This blog as RSS" /></a></div>
+
+<tal:block tal:repeat="line line_list">
+
+  <!--Here is a post-->
+  <div class="blog_post" tal:define="render_result line/render">
+    <tal:block tal:define="title python: render_result[0][1]; 
+                           author python: render_result[1][1]; 
+                           date python: render_result[2][1]; 
+                           categories python: render_result[3][1]; 
+                           url python: '%s/%s' % (base_url_string, render_result[4][1]);
+                           comments_url python: '%s#comments' % url;
+                           facebook_url python: 'http://www.facebook.com/share.php?u=%s&t=%s' % (url, title);
+                           twitter_url python: 'http://twitter.com/home?status=Currently reading %s' % url;
+                           summary python: render_result[5][1];
+                           comment_count python: render_result[6][1];
+                           date_rendered python: date_renderer(date)">
+
+<div class="post_head">
+  <h1><a tal:attributes="href url" tal:content="title">This is the title of the blog post</a></h1>
+
+  <small class="post_time">
+    <strong tal:content="structure date_rendered">date</strong>
+  </small>
+
+  <small class="post_author"><tal:block i18n:translate="" i18n:domain="ui">Author</tal:block>: <span tal:replace="author">Author</span></small><tal:block tal:condition="categories"> | <small class="post_category"><tal:block i18n:translate="" i18n:domain="ui">Category</tal:block>: 
+    <tal:block tal:repeat="category categories"><a tal:attributes="href python: '%s?subject=%s' % (base_url_string, category)" tal:content="category">cat.</a><tal:block tal:condition="not: repeat/category/end"> ; </tal:block></tal:block></small></tal:block>
+
+</div><!--End post_head -->
+
+  <div class="post_body" tal:content="structure summary">Here is a blog post content</div>
+
+  <!-- <div class="post_read_more"><a tal:attributes="href url" i18n:translate="" i18n:domain="ui">Read more</a></div> -->
+  <div class="post_bottom">
+    <a tal:attributes="href comments_url"><tal:block tal:replace="comment_count">0</tal:block> <tal:block i18n:translate="" i18n:domain="ui">comment</tal:block></a> | 
+    <tal:block i18n:translate="" i18n:domain="ui">Share</tal:block>: <a title="Facebook" tal:attributes="href facebook_url"><img width="20px" alt="Facebook logo" src="web_images/facebook-button.png" /></a>
+         <a title="Twitter" tal:attributes="href twitter_url"><img width="20px" alt="Twitter Logo" src="web_images/twitter-button.png" /></a>
+
+  </div><!--End post_bottom-->
+
+    </tal:block>
+
+
+  </div><!--End blog_post-->
+
+    <tal:block tal:condition="not: repeat/line/end"><br /><hr class="post_separator" /></tal:block>
+
+</tal:block>
+
+<tal:block tal:condition="need_pagination">
+  <input type="hidden" 
+         name="list_selection_name" 
+         value="default" 
+         tal:attributes="value selection_name" />
+  <input type="hidden" 
+         name="listbox_uid:list" />
+  <input type="hidden" name="selection_name_selection_key" value="md5"
+         tal:define="selection_key here/getSelectionKey"
+         tal:condition="selection_key"
+         tal:attributes="name string:${selection_name}_selection_key;
+                         value selection_key" />
+  <div class="listbox-footer-box">
+    <tal:block metal:use-macro="container/ListBox_asHTMLLibrary/macros/listbox_navigation" />
+  </div>
+</tal:block>
+
+</tal:block>

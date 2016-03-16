@@ -1,0 +1,2 @@
+preference_tool = context.getPortalObject().portal_preferences
+context.setSourceSection(preference_tool.getPreferredAccountingTransactionSourceSection())

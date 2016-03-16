@@ -19,10 +19,6 @@
             <value> <string>Base_zClearWorklistTable</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string>DELETE FROM worklist_cache</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

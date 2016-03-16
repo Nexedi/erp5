@@ -1,0 +1,306 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block tal:replace="nothing">
+<!--
+This Page template is aimed to generate the HTML code necessary to display correctly the
+PlaningBox. The process is based on the strucutre passed in parameter (i.e options/struct)
+Beware this only generates the HTML code, no CSS generation is done in this script
+-->
+  </tal:block>
+  <tal:block tal:define=" basic options/basic;
+             planning options/planning;
+             address python: basic.context.absolute_url()">
+    <!-- hidden fields holding some usefull data-->
+    <input type="hidden" name="list_selection_name" value="PlanningView" tal:attributes="value python:basic.field.get_value('selection_name')" />
+    <!-- setPage needs 'listbox_uid:list'-->
+    <input type="hidden" name="listbox_uid:list" />
+    <!-- block_moved_list -->
+    <input type="hidden" name="previous_block_moved" value="None"
+           tal:attributes="value python:basic.REQUEST.get('previous_block_moved','')" />
+    <input type="hidden" name="block_moved" />
+
+    <!-- Planning's header -->
+    <div class="planning_box">
+     <div class="planning_box_header">
+            <b i18n:translate="" i18n:domain="ui"> 
+              <tal:block tal:replace="structure python:basic.field.get_value('title')" /> 
+            </b>
+            <tal:block tal:repeat="nb python:range(3)"> &nbsp; <!-- Adding spaces --> </tal:block>
+            
+            <b tal:replace="nothing"><!-- report path selection --></b>
+            <select name="report_root_url" onchange="submitAction(this.form,'/setReportRoot')"
+                    tal:attributes="onchange string:submitAction(this.form,'${address}/setReportRoot')">
+              <tal:block tal:condition="python:basic.selection is None"
+                         tal:define="global selection_report_path python:basic.report_root_list[0][0]" />
+              <tal:block tal:condition="python:basic.selection is not None"
+                         tal:define="global selection_report_path python:basic.selection.report_path" />
+              <tal:block tal:repeat="report_root_element python:basic.report_root_list">
+                <tal:block tal:condition="python:report_root_element[0]==selection_report_path">
+                  <b tal:replace="nothing">actual value is selected</b>
+                  <option i18n:translate="" i18n:domain="ui" selected="selected" value="None"
+                          tal:attributes="value python:report_root_element[0]"
+                          tal:content="structure python:report_root_element[1]">_</option>
+                </tal:block>
+                <tal:block tal:condition="python:report_root_element[0]!=selection_report_path">
+                  <b tal:replace="nothing">actual value is not selected</b>
+                  <option i18n:translate="" i18n:domain="ui" value="None"
+                          tal:attributes="value python:report_root_element[0]"
+                          tal:content="structure python:report_root_element[1]">_</option>
+                </tal:block>
+              </tal:block>
+            </select>
+
+            <tal:block tal:repeat="nb python:range(8)"> &nbsp; </tal:block>
+
+            <tal:block tal:condition="python:planning.report_axis == planning.Y">
+              <tal:block i18n:translate="" i18n:domain="ui"> Y Axis </tal:block>
+            </tal:block>
+            <tal:block tal:condition="python:planning.report_axis != planning.Y">
+              <tal:block i18n:translate="" i18n:domain="ui"> X Axis </tal:block>
+            </tal:block>
+
+            <tal:block tal:repeat="nb python:range(1)"> &nbsp; </tal:block>
+
+            <b tal:replace="nothing">
+              <!-- page selection need to be implemented here for that will use structure.basic-->
+            </b>
+
+            <tal:block tal:condition="python:basic.report_axis_info['bound_start']!=0">
+              <b tal:replace="nothing"> previous page exists </b>
+              <input type="image" src="/images/1leftarrowv.png" title="Previous Page" border="0"
+                     name="previousPage:method"
+                     tal:attributes="src string:${address}/images/1leftarrowv.png" />
+            </tal:block>
+            <select name="list_start" title="Change Page" size="1"
+                    onchange=""
+                    tal:condition="python:basic.report_axis_info['bound_page_total'] &gt; 1"
+                    tal:attributes="onchange string:submitAction(this.form,'${address}/setPage')">
+              <tal:block tal:repeat="current_page_number python:range(basic.report_axis_info['bound_page_total']+1)[1:]">
+                <tal:block tal:condition="python:current_page_number==basic.report_axis_info['bound_page_current']">
+                  <b tal:replace="nothing"> actual page is selected </b>
+                  <option selected="selected" value="None"
+                          tal:attributes="value python:(current_page_number - 1)*basic.report_axis_info['bound_axis_groups']"
+                          tal:content="structure python:str(current_page_number) + ' of ' +  str(basic.report_axis_info['bound_page_total'])">page</option>
+                </tal:block>
+                <tal:block tal:condition="python:current_page_number!=basic.report_axis_info['bound_page_current']">
+                  <b tal:replace="nothing"> actual page is not selected </b>
+                  <option value="None"
+                          tal:attributes="value python:(current_page_number - 1)*basic.report_axis_info['bound_axis_groups']"
+                          tal:content="structure python:str(current_page_number) + ' of ' + str(basic.report_axis_info['bound_page_total'])">page</option>
+                </tal:block>
+              </tal:block>
+            </select>
+
+            <tal:block tal:condition="python:basic.report_axis_info['bound_stop']!=basic.report_axis_info['bound_end']">
+              <b tal:replace="nothing"> next page exists </b>
+              <input type="image" src="/images/1rightarrowv.png" title="Next Page" border="0"
+                     name="nextPage:method"
+                     tal:attributes="src string:${address}/images/1rightarrowv.png" />
+            </tal:block>
+
+            <tal:block tal:repeat="nb python:range(8)"> &nbsp; </tal:block>
+
+            <tal:block tal:condition="python:planning.report_axis == planning.Y">
+              <tal:block i18n:translate="" i18n:domain="ui"> X Axis </tal:block>
+            </tal:block>
+            <tal:block tal:condition="python:planning.report_axis != planning.Y">
+              <tal:block i18n:translate="" i18n:domain="ui"> Y Axis </tal:block>
+            </tal:block>
+
+            <tal:block tal:repeat="nb python:range(1)"> &nbsp; </tal:block>
+
+           <select name="lane_path" onchange="submitAction(this.form,'/setLanePath')"
+                    tal:attributes="onchange string:submitAction(this.form,'${address}/setLanePath')">
+              <tal:block tal:condition="python:basic.selection is None"
+                         tal:define="global selection_report_path python:basic.lane_root_list[0][0]" />
+              <tal:block tal:condition="python:basic.selection is not None"
+                         tal:define="global selection_lane_path python:basic.selection.getParams().get('lane_path')" />
+              <tal:block tal:repeat="lane_root_element python:basic.lane_root_list">
+                <tal:block tal:condition="python:lane_root_element[0]==selection_lane_path">
+                  <b tal:replace="nothing">actual value is selected</b>
+                  <option i18n:translate="" i18n:domain="ui" selected="selected" value="None"
+                          tal:attributes="value python:lane_root_element[0]"
+                          tal:content="structure python:lane_root_element[1]">_</option>
+                </tal:block>
+                <tal:block tal:condition="python:lane_root_element[0]!=selection_lane_path">
+                  <b tal:replace="nothing">actual value is not selected</b>
+                  <option i18n:translate="" i18n:domain="ui" value="None"
+                          tal:attributes="value python:lane_root_element[0]"
+                          tal:content="structure python:lane_root_element[1]">_</option>
+                </tal:block>
+              </tal:block>
+            </select>
+            <tal:block tal:define="form_id python:'%s' % (basic.form.id);
+                       selection_name python:basic.field.get_value('selection_name');
+                       zoom_level python:basic.selection.getParams().get('lane_path');
+                       today python:'%s/%s/%s' % (str(DateTime().year()), str(DateTime().month()),str(DateTime().day()))">
+              <a tal:attributes="href python: '%s/setLanePath?form_id=%s&amp;list_selection_name=%s&amp;bound_start=%s'
+                 % (context.absolute_url(), form_id,selection_name,today)">
+                <img src="/images/jump.png" alt="Jump" name="JumpToCurrentDay"
+                  tal:attributes="src string:${address}/images/jump.png; 
+                                  title python: here.Base_translateString('Jump to Current Day')"/>
+              </a>
+              </tal:block>
+       </div>
+      <!-- div class="planning_box" -->
+      <!-- planning structure (axis and group representation)-->
+      <div tal:repeat="axis python:(planning.report_axis,planning.lane_axis)"
+           tal:attributes="id python:axis.name">
+        <!-- groups of the current axis-->
+        <tal:block tal:repeat="axis_group python:axis.axis_group">
+          <div tal:attributes="id python:axis_group.name;
+               title python:axis_group.tooltip">
+            <!-- title of the current group-->
+            <a tal:attributes="href python:axis_group.info_title.link;
+               id python:axis_group.name + '_info'">
+              <tal:block tal:content="python:axis_group.info_title.title" />
+            </a>
+          </div>
+          <!-- depth of the current group -->
+          <div tal:repeat="depth python:range(axis_group.depth)"
+               tal:attributes="id python: axis_group.name + '_depth_' + str(depth)">
+          </div>
+        </tal:block>
+        <tal:condition tal:condition="python:axis==planning.X">
+          <tal:block tal:define="global previous_src string:${address}/images/1leftarrowv.png;
+                     global next_src string:${address}/images/1rightarrowv.png">
+          </tal:block>
+        </tal:condition>
+        <tal:condition tal:condition="python:axis==planning.Y">
+          <tal:block tal:define="global previous_src string:${address}/images/1toparrow.png;
+                     global next_src string:${address}/images/1bottomarrow.png">
+          </tal:block>
+        </tal:condition>
+        <!-- widgets of the current axis -->
+        <tal:block tal:condition="python:axis==planning.report_axis">
+          <!-- current axis is report axis-->
+          <tal:block tal:condition="python:basic.report_axis_info['bound_start']!=0">
+            <!-- previous page exists -->
+            <input type="image" src="/images/1leftarrowv.png" title="Previous Page" border="0"
+                   name="previousPage:method"
+                   tal:attributes="src previous_src;
+                   id python:axis.name + '_previous'" />
+          </tal:block>
+          <tal:block tal:condition="python:basic.report_axis_info['bound_stop']!=basic.report_axis_info['bound_end']">
+            <!-- next page exists -->
+            <input type="image" src="/images/1rightarrowv.png" title="Next Page" border="0"
+                   name="nextPage:method"
+                   tal:attributes="src next_src;
+                   id python:axis.name + '_next'" />
+          </tal:block>
+          <!-- inserting depth widget -->
+          <div tal:condition= "python:axis==planning.X"
+               tal:define="url python:'%s/%s' % (basic.context.absolute_url(),basic.form.id);
+               selection_name python:basic.field.get_value('selection_name')"
+               tal:attributes="id python:axis.name + '_depth'">
+            <a tal:repeat="unfold_level python:range(0,4)"
+               tal:attributes="href python:'%s?selection_index=&amp;selection_name=%s&amp;ignore_layout:int=0&amp;report_depth:int=%s' % (url,selection_name,unfold_level)"
+               tal:content="structure python:str(unfold_level) + '&lt;br&gt;'">
+              0
+            </a>
+          </div>
+          <div tal:condition= "python:axis==planning.Y"
+               tal:define="url python:'%s/%s' % (basic.context.absolute_url(),basic.form.id);
+               selection_name python:basic.field.get_value('selection_name')"
+               tal:attributes="id python:axis.name + '_depth'">
+            <a tal:repeat="unfold_level python:range(0,4)"
+               tal:attributes="href python:'%s?selection_index=&amp;selection_name=%s&amp;ignore_layout:int=0&amp;report_depth:int=%s' % (url,selection_name,unfold_level)"
+               tal:content="structure python:str(unfold_level) + '&amp;''nbsp;'">
+              0
+            </a>
+          </div>
+        </tal:block>
+        <tal:block tal:condition="python:axis==planning.lane_axis">
+          <!-- Lane page-->
+          <!-- previous page exists -->
+          <input type="image" src="/images/1leftarrowv.png" title="Previous Lane Page" border="0"
+                 name="previousLanePage:method"
+                 tal:attributes="src previous_src;
+                 id python:axis.name + '_previous'" />
+          <!-- next page exists -->
+          <input type="image" src="/images/1rightarrowv.png" title="Next Lane Page" border="0"
+                 name="nextLanePage:method"
+                 tal:attributes="src next_src;
+                 id python:axis.name + '_next'" />
+        </tal:block>
+      </div>
+      <!-- planning content-->
+      <div class="planning_content">
+        <!-- display report axis lines -->
+        <tal:block tal:repeat="axis_group python:planning.report_axis.axis_group">
+          <div tal:attributes="id python:axis_group.name + '_line'"></div>
+          <b tal:replace="nothing">
+            <!-- display report axis sub_lines if necessary --></b>
+          <tal:block tal:condition="python:axis_group.axis_element_number &gt; 1">
+            <div tal:repeat="axis_element_number python:range(axis_group.axis_element_number)[1:]"
+                 tal:attributes="id python:axis_group.name + '_line_' + str(axis_element_number)">
+            </div>
+          </tal:block>
+        </tal:block>
+        <!-- display lane axis lines -->
+        <div tal:repeat="axis_group python:planning.lane_axis.axis_group"
+             tal:attributes="id python:axis_group.name + '_line'"></div>
+        <!-- display blocks -->
+        <tal:block tal:repeat="block python:planning.content">
+          <div ondblclick="showGrips()"
+               tal:condition="python:block.property_dict['stat']== 0"
+               tal:attributes="id python:block.name;
+               title python:block.title;
+               style python:'text-align:center'">
+            <tal:block tal:condition="python:block.zone == 1">
+              <tal:block tal:repeat="area python:block.info.keys()">
+                <tal:block tal:define="info_area python:area.split('_')[1]">
+                  <!-- tal:attributes="id python:info_area"> <! python:block.name + '_' + area"-->
+                  <tal:block tal:condition="python:block.info[area].info != ''">
+                    <tal:block tal:condition="python:info_area!='center'">
+                      <a tal:condition="python:block.info[area].info != '__'"
+                         tal:content="python:block.info[area].info"
+                         tal:attributes="href python:block.info[area].link;
+                         class python:'planning_box_' + info_area">
+                      </a>
+                      <a tal:condition="python:block.info[area].info == '__'"
+                         tal:attributes="href python:block.info[area].link;
+                         class python:'planning_box_' + info_area">
+                        <img tal:attributes="src python:basic.context.getUrl() + '/images/question.png'"
+                             height="15" width="15" />
+                      </a>
+                    </tal:block>
+                    <tal:block tal:condition="python:info_area=='center'">
+                      <div tal:attributes="class python:'planning_box_' + info_area">
+                        <a tal:condition="python:block.info[area].info != '__'"
+                           tal:content="python:block.info[area].info"
+                           tal:attributes="href python:block.info[area].link">
+                        </a>
+                        <a tal:condition="python:block.info[area].info == '__'"
+                           tal:attributes="href python:block.info[area].link"
+                           tal:content="python:'.'">
+                          <!-- not used any more
+                               &lt;img tal:attributes="src python:basic.here.getUrl() + '/images/question.png'"
+                               height="15" width="15" /&gt;
+                               -->
+                        </a>
+                      </div>
+                    </tal:block>
+                  </tal:block>
+                </tal:block>
+              </tal:block>
+            </tal:block>
+          </div>
+          <div tal:condition="python:block.property_dict['stat']== 1"
+               tal:attributes="id python:block.name;
+               title python:block.title">
+          </div>
+        </tal:block>
+      </div>
+      <!-- generic div used for redimensionning-->
+      <div id="top" style="position:absolute; width:5px;height:5px; background:#a45d10"></div>
+      <div id="right" style="position:absolute; width:5px;height:5px; background:#a45d10"></div>
+      <div id="bottom" style="position:absolute; width:5px;height:5px; background:#a45d10"></div>
+      <div id="left" style="position:absolute; width:5px;height:5px; background:#a45d10"></div>
+      <!-- declaring DTML properties -->
+      <tal:block tal:replace="structure python:context.planning_dhtml(planning=planning)" />
+      <!--/div-->
+    </div>
+  </tal:block>
+</tal:block>

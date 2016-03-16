@@ -49,36 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Errors import ProgrammingError\n
-\n
-zTrimInventoryCacheFromDateOnCatalog = getattr(context, \'SimulationTool_zTrimInventoryCacheFromDateOnCatalog\', None)\n
-if zTrimInventoryCacheFromDateOnCatalog is None:\n
-  return\n
-\n
-min_date = None\n
-for loop_item in xrange(len(uid)):\n
-    if not isInventoryMovement[loop_item] and isMovement[loop_item] and getResourceUid[loop_item]:\n
-        if getDestinationUid[loop_item] and getStopDate[loop_item]:\n
-            if min_date:\n
-                min_date = min(min_date, getStopDate[loop_item])\n
-            else:\n
-                min_date = getStopDate[loop_item]\n
-        if getSourceUid[loop_item] and getStartDate[loop_item]:\n
-            if min_date:\n
-                min_date = min(min_date, getStartDate[loop_item])\n
-            else:\n
-                min_date = getStartDate[loop_item]\n
-\n
-try:\n
-    zTrimInventoryCacheFromDateOnCatalog(uid_list=uid, min_date=min_date)\n
-except ProgrammingError:\n
-    # Create table if it does not exits\n
-    # Then no need to flush an empty table\n
-    context.SimulationTool_zCreateInventoryCache()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>uid, isMovement, isInventoryMovement, getResourceUid, getDestinationUid, getStopDate, getSourceUid, getStartDate</string> </value>
         </item>

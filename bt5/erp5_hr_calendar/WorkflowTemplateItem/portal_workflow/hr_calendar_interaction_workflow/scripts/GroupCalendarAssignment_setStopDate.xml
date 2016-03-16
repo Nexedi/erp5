@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
-group_calendar_assignment = state_change["object"]\n
-stop_date = group_calendar_assignment.getStopDate()\n
-if stop_date:\n
-  stop_date = DateTime(stop_date.Date() + " 23:59:59")\n
-  group_calendar_assignment.setStopDate(stop_date)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

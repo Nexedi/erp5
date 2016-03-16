@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Return latest discussion threads on a web site public forum.\n
-"""\n
-\n
-reference = context.WebSection_getDiscussionApplicablity()\n
-\n
-if reference is not None:\n
-  document = context.restrictedTraverse(reference)\n
-  return document.getPredecessorRelatedValueList()\n
-\n
-return []\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

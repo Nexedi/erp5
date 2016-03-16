@@ -1,0 +1,21 @@
+<tal:block replace="nothing"
+           xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"/>
+
+body{
+  font-size:0.7em;
+}
+
+/* ERP5 Discussion Thread support */
+blockquote {
+  background-color:#E9E9E9;
+  border:1px solid #8CACBB;
+  margin:5px;
+  padding:10px 15px;
+
+}
+
+/* add here all css you want to use inside the fck_editor.
+In a first step we decide to use no style, in this way, the user 
+writing documentation don't care about the style only the content. */

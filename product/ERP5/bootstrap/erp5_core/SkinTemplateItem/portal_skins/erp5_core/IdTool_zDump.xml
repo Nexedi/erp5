@@ -19,10 +19,6 @@
             <value> <string>IdTool_zDump</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string>select id_group, last_id from portal_ids</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

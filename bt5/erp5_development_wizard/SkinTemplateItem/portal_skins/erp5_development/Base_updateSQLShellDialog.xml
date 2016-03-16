@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Update Form\n
-"""\n
-\n
-return context.Base_redirect(\'Base_viewSQLShellDialog\',\n
-              keep_items = dict(sql_expression=sql_expression))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>sql_expression, **kw</string> </value>
         </item>

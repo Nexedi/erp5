@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-field_your_search_text = request.get("field_your_search_text")\n
-portal_type_list = ["Web Page", "Web Illustration", "Web Table"]\n
-\n
-keep_items = dict(SearchableText=field_your_search_text,\n
-                  portal_type=portal_type_list)\n
-\n
-return context.Base_redirect("", keep_items=keep_items)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

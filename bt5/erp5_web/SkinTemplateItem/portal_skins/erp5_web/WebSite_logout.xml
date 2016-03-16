@@ -169,20 +169,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Default logout handler, overwritten to give website specific portal status message.\n
-"""\n
-website = context.getWebSiteValue()\n
-REQUEST = context.REQUEST\n
-if REQUEST.has_key(\'portal_skin\'):\n
-   context.portal_skins.clearSkinCookie()\n
-REQUEST.RESPONSE.expireCookie(\'__ac\', path=\'/\')\n
-msg = context.Base_translateString(\'You have been logged out. Thank you for using this website.\')\n
-return website.Base_redirect(form_id, keep_items = {\'portal_status_message\' : msg},  **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>dialog_id=None, form_id=\'\', **kw</string> </value>
         </item>

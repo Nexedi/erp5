@@ -1,0 +1,4 @@
+<tal:block tal:define="sitemap_root python:request.get('current_web_site', here);
+                       depth python:here.getLayoutProperty('layout_sitemap_depth', 5)">
+<tal:block metal:use-macro="here/sitemap_renderer/macros/master" />
+</tal:block>

@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This script returns the list of items based on the preferred\n
-resources for events. It is intended to be used\n
-by ListField instances.\n
-"""\n
-\n
-from Products.ERP5Type.Cache import CachingMethod\n
-\n
-def getResourceItemList():\n
-  result = []\n
-  url_list = context.portal_preferences.getPreferredEventResourceList()\n
-  for url in url_list:\n
-    resource_value = context.getPortalObject().restrictedTraverse(url)\n
-    result.append((resource_value.getTranslatedTitle(), resource_value.getRelativeUrl()))\n
-  return result\n
-\n
-getResourceItemList = CachingMethod(getResourceItemList, \n
-      id=(script.id, context.Localizer.get_selected_language()), \n
-      cache_factory=\'erp5_ui_long\')\n
-                                 \n
-return getResourceItemList()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

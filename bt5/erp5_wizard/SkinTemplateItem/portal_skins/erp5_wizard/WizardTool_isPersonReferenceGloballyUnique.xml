@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>reference = str(editor)\n
-return int(context.portal_wizard.callRemoteProxyMethod(\n
-                             \'Base_isPersonReferenceUnique\', \\\n
-                              use_cache = 0, \\\n
-                              ignore_exceptions = 0, \\\n
-                              **{\'reference\':reference,\n
-                                 \'ignore_users_from_same_instance\':ignore_users_from_same_instance,\n
-                                 \'erp5_uid\': context.ERP5Site_getExpressInstanceUid()}))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>editor, request, ignore_users_from_same_instance=0</string> </value>
         </item>

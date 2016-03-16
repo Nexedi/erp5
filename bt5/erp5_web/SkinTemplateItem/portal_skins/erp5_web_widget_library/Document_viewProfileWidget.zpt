@@ -1,0 +1,94 @@
+<table id="document_profile">
+  <tr>
+    <td class="left" i18n:translate="" i18n:domain="ui">
+      Title:
+    </td>
+    <td class="right">
+      <span tal:replace="here/getTitle"/>
+    </td>
+  </tr>
+  <tr>
+    <td class="left" i18n:translate="" i18n:domain="ui">
+      Reference:
+    </td>
+    <td class="right">
+      <span tal:replace="here/getReference"/>
+    </td>
+  </tr>
+  <tr>
+    <td class="left" i18n:translate="" i18n:domain="ui">
+      Authors:
+    </td>
+    <td></td>
+  </tr>
+  <tr>
+    <td class="right" colspan="2">
+      <ul class="authors">
+        <li tal:repeat="owner here/Base_getOwnerInfoList">
+          <a tal:attributes="href owner/url" tal:content="owner/title"/>
+          (<a tal:attributes="href python: 'mailto:'+str(owner.get('email',''))" tal:content="owner/email"/>)
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td class="left" i18n:translate="" i18n:domain="ui">
+      Status:
+    </td>
+    <td class="right">
+      <span tal:attributes="class here/getValidationState" tal:content="here/getTranslatedValidationState"/>
+    </td>
+  </tr>
+  <tr>
+    <td class="left" i18n:translate="" i18n:domain="ui">
+      Version:
+    </td>
+    <td class="right">
+      <span tal:replace="here/getVersion"/>
+    </td>
+  </tr>
+  <tr>
+    <td class="left" i18n:translate="" i18n:domain="ui">
+      Language:
+    </td>
+    <td class="right">
+      <span tal:replace="here/getLanguage"/>
+    </td>
+  </tr>
+  <tal:block tal:define="other_lang_list python:[here.getLatestVersionValue(language=lng) for lng in here.getLanguageList() if lng!=here.getLanguage()]">
+    <tr tal:condition="other_lang_list">
+      <td i18n:translate="" i18n:domain="ui">
+        Also in:
+      </td>
+      <td>
+        <span tal:repeat="doc other_lang_list">
+          <a tal:attributes="href python:doc.absolute_url()+'/view'" tal:content="doc/getLanguage"/>
+        </span>
+      </td>
+    </tr>
+  </tal:block>
+  <tr>
+    <td i18n:translate="" i18n:domain="ui">
+      Word count:
+    </td>
+    <td>
+      <span tal:replace="python: int(round(len(here.getSearchableText().split()),-2))"/>
+    </td>
+  </tr>
+  <tr>
+    <td i18n:translate="" i18n:domain="ui">
+      Size:
+    </td>
+    <td>
+      <span tal:replace="python: '%d kB' % (here.getSize()/1000)"/>
+    </td>
+  </tr>
+  <tr>
+    <td i18n:translate="" i18n:domain="ui">
+      File format:
+    </td>
+    <td>
+      <span tal:replace="python: here.getSourceReference() is not None and here.getSourceReference().rfind('.')>-1 and here.getSourceReference()[here.getSourceReference().rfind('.')+1:] or ''"/>
+    </td>
+  </tr>
+</table>

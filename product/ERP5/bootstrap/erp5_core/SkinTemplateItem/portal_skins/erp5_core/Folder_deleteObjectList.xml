@@ -49,45 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-request=context.REQUEST\n
-portal = context.getPortalObject()\n
-Base_translateString = portal.Base_translateString\n
-\n
-selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)\n
-uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
-\n
-if uids == []:\n
-  message = Base_translateString("Please select one or more items to delete first.")\n
-  qs = \'?portal_status_message=%s\' % message\n
-  return request.RESPONSE.redirect( context.absolute_url() + \'/\' + form_id + qs )\n
-\n
-field_id=\'listbox\'\n
-field_selection_name=\'folder_delete_selection\'\n
-# XXX If we come from the view mode -> list mode proxy, make sure we don\'t make\n
-# another proxy to this proxy.\n
-if form_id == \'Base_viewListModeRenderer\':\n
-  form_id = context.Base_viewListModeRenderer.listbox.get_value(\'form_id\')\n
-  field_id = context.Base_viewListModeRenderer.listbox.get_value(\'field_id\')\n
-  field_selection_name = context.Base_viewListModeRenderer.listbox.get_value(\'selection_name\')\n
-\n
-kw = {\'uid\': uids, \'form_id\': form_id, \'field_id\': field_id}\n
-request.set(\'object_uid\', context.getUid())\n
-request.set(\'uids\', uids)\n
-request.set(\'proxy_form_id\', form_id)\n
-request.set(\'proxy_field_id\', field_id)\n
-request.set(\'proxy_field_selection_name\', field_selection_name)\n
-request.set(\'ignore_hide_rows\', 1)\n
-\n
-context.portal_selections.setSelectionParamsFor(\'folder_delete_selection\', kw)\n
-return context.Folder_viewDeleteDialog(uids=uids, REQUEST=request)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection_index=None,form_id=\'\',uids=[], listbox_uid=[],selection_name=\'\'</string> </value>
         </item>

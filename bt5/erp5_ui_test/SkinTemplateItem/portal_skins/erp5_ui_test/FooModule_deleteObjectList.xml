@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Delete a range of sub objects"""\n
-from DateTime import DateTime\n
-\n
-for i in range(start, start + num):\n
-  context.deleteContent(str(i))\n
-\n
-return \'Deleted Successfully.\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>start=0, num=1</string> </value>
         </item>

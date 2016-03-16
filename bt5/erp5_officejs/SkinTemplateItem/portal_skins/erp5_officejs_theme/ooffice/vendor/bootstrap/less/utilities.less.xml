@@ -19,66 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>//\n
-// Utility classes\n
-// --------------------------------------------------\n
-\n
-\n
-// Floats\n
-// -------------------------\n
-\n
-.clearfix {\n
-  .clearfix();\n
-}\n
-.center-block {\n
-  .center-block();\n
-}\n
-.pull-right {\n
-  float: right !important;\n
-}\n
-.pull-left {\n
-  float: left !important;\n
-}\n
-\n
-\n
-// Toggling content\n
-// -------------------------\n
-\n
-// Note: Deprecated .hide in favor of .hidden or .sr-only (as appropriate) in v3.0.1\n
-.hide {\n
-  display: none !important;\n
-}\n
-.show {\n
-  display: block !important;\n
-}\n
-.invisible {\n
-  visibility: hidden;\n
-}\n
-.text-hide {\n
-  .text-hide();\n
-}\n
-\n
-\n
-// Hide from screenreaders and browsers\n
-//\n
-// Credit: HTML5 Boilerplate\n
-\n
-.hidden {\n
-  display: none !important;\n
-  visibility: hidden !important;\n
-}\n
-\n
-\n
-// For Affix plugin\n
-// -------------------------\n
-\n
-.affix {\n
-  position: fixed;\n
-}\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

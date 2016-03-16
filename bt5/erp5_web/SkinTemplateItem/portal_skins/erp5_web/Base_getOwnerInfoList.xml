@@ -49,33 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Returns a list of dictionaries with information about the owners of\n
-  the document in the form:\n
-\n
-  {\n
-    \'url\': person_url,\n
-    \'title\': person_title,\n
-    \'email\': person_email,\n
-  }\n
-"""\n
-\n
-info_list = []\n
-\n
-person_list = context.Base_getOwnerValueList()\n
-\n
-for person_object in person_list:\n
-  person_title = person_object.getTitle() or person_object.getReference(\'\')\n
-  person_url = \'%s/view\' % person_object.absolute_url()\n
-  person_email = person_object.getDefaultEmailText(\'\')\n
-\n
-  info_list.append(dict(title=person_title, email=person_email, url=person_url))\n
-\n
-return info_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

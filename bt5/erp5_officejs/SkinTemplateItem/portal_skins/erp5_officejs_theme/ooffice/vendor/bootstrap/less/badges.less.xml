@@ -19,65 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-//\n
-// Badges\n
-// --------------------------------------------------\n
-\n
-\n
-// Base classes\n
-.badge {\n
-  display: inline-block;\n
-  min-width: 10px;\n
-  padding: 3px 7px;\n
-  font-size: @font-size-small;\n
-  font-weight: @badge-font-weight;\n
-  color: @badge-color;\n
-  line-height: @badge-line-height;\n
-  vertical-align: baseline;\n
-  white-space: nowrap;\n
-  text-align: center;\n
-  background-color: @badge-bg;\n
-  border-radius: @badge-border-radius;\n
-\n
-  // Empty badges collapse automatically (not available in IE8)\n
-  &:empty {\n
-    display: none;\n
-  }\n
-\n
-  // Quick fix for badges in buttons\n
-  .btn & {\n
-    position: relative;\n
-    top: -1px;\n
-  }\n
-}\n
-\n
-// Hover state, but only for links\n
-a.badge {\n
-  &:hover,\n
-  &:focus {\n
-    color: @badge-link-hover-color;\n
-    text-decoration: none;\n
-    cursor: pointer;\n
-  }\n
-}\n
-\n
-// Account for counters in navs\n
-a.list-group-item.active > .badge,\n
-.nav-pills > .active > a > .badge {\n
-  color: @badge-active-color;\n
-  background-color: @badge-active-bg;\n
-}\n
-.nav-pills > li > a > .badge {\n
-  margin-left: 3px;\n
-}\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

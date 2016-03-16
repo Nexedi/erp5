@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-REQUEST=context.REQUEST\n
-selection_name = REQUEST[\'selection_name\']\n
-object_list = context.portal_selections.getSelectionValueList(selection_name, context=context, REQUEST=REQUEST)\n
-delivery_list = []\n
-for o in object_list:\n
-  delivery_list.append(o)\n
-\n
-if len(delivery_list) < 2:\n
-  ret_url = context.absolute_url() + \'/\' + form_id\n
-  qs = \'?portal_status_message=Please+select+more+than+one+items.\'\n
-else:\n
-  ret_url = context.absolute_url() + \'/\' + form_id\n
-  qs = \'?portal_status_message=Merged.\'\n
-  context.portal_simulation.mergeDeliveryList(delivery_list)\n
-\n
-return REQUEST.RESPONSE.redirect( ret_url + qs )\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id=\'\'</string> </value>
         </item>

@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if context.isResourceType():\n
-  uid_list = context.getUid()\n
-else:\n
-  uid_list = context.ResourceModule_getSelection().getUidList()\n
-\n
-return context.portal_simulation.getInventoryList(transformed_resource=transformed_resource_list,resource_uid=uid_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>transformed_resource_list, **kw</string> </value>
         </item>

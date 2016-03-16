@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>result = []\n
-\n
-for r in context.contentValues(portal_type= "Requirement", sort_on = ((\'int_index\',\'ascending\', \'int\'),)):\n
-  if not r.getRequirementRelatedValueList():\n
-    if not r.contentValues(portal_type= "Requirement", sort_on = ((\'int_index\',\'ascending\', \'int\'),)):\n
-      result.append({\'requirement_reference\': r.Requirement_getDefaultReference(),\n
-                     \'requirement_title\': r.getTitle(),\n
-                     \'project_reference\': \'Not covered\',\n
-                     \'project_title\': \'\',\n
-                     \'stop_date\': None})\n
-  else:\n
-    for p in r.getRequirementRelatedValueList():\n
-      result.append({\'requirement_reference\': r.Requirement_getDefaultReference(),\n
-                     \'requirement_title\': r.getTitle(),\n
-                     \'project_reference\': p.Project_getDefaultReference(),\n
-                     \'project_title\': p.getTitle(),\n
-                     \'stop_date\': p.getStopDate()})\n
-  result.extend(r.RequirementDocument_getProjectCoverageList())\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

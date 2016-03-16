@@ -1,0 +1,68 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block metal:define-macro="master">
+    <tal:block tal:define="local_parameter_list local_parameter_list | python: {};
+               proxy_form_id_list  python: here.Base_getRelatedObjectParameter('proxy_listbox_ids');
+               dummy python: local_parameter_list.update({ 'field_id': request['field_id'], 'cancel_url': request['cancel_url'],
+                                                                                                  'saved_form_data': dict(request['saved_form_data'])});">
+     <tal:block metal:use-macro="here/dialog_main/macros/master">
+      <tal:block metal:fill-slot="main">
+        <tal:block tal:define="dummy python: request.set('here', here);
+                   proxy_listbox_id python: context.Base_getRelationFieldProxyListBoxId();
+                   field_render here/field_render/macros/field_render;">
+
+          <tal:block tal:condition="preferred_html_style_developper_mode">
+            <tal:block metal:use-macro="developper_shortcut_render/macros/form" />
+          </tal:block>
+          <div class="dialog_box">
+            <div tal:condition="python: len(proxy_form_id_list) > 0"
+              class="dialog_selector">
+              <label for="dialog_selector"
+                     i18n:translate="" i18n:domain="ui">Select Template</label>
+              <select name="select_dialog" id="dialog_selector"
+                      onchange="submitAction(this.form,'Base_doRelationDialog')">
+                <tal:block tal:repeat="proxy_listbox_id_item proxy_form_id_list">
+                  <option tal:attributes="value python: proxy_listbox_id_item[0];
+                                        selected python: proxy_listbox_id_item[0] == proxy_listbox_id"
+                          tal:content="python: proxy_listbox_id_item[1]"
+                          i18n:translate="" i18n:domain="ui"></option>
+                </tal:block>
+              </select>
+              <button type="submit" name="Base_doRelationDialog:method">
+                <span class="image"></span>
+                <span class="description"
+                      i18n:translate="" i18n:domain="ui">Go</span>
+              </button>
+            </div>
+            <div tal:condition="python: len(proxy_form_id_list) == 0">
+              <input type="hidden" name="proxy_listbox_id" value='Base_viewRelatedObjectListBase/listbox'/>
+            </div>
+            <tal:block metal:use-macro="here/form_dialog/macros/content" />
+          </div>
+        </tal:block>
+      </tal:block>
+
+      <tal:block metal:fill-slot="bottom">
+        <tal:block tal:define="dummy python: request.set('here', here);
+                   bottom_group python: form.get_fields_in_group('bottom')">
+          <div tal:condition="python: len(bottom_group) > 0"
+            class="bottom">
+            <tal:block tal:repeat="field bottom_group">
+              <tal:block tal:condition="preferred_html_style_developper_mode">
+                <tal:block metal:use-macro="developper_shortcut_render/macros/field_developper" />
+              </tal:block>
+              <tal:block tal:define="field_description field/Field_getDescription"
+                         tal:condition="preferred_html_style_translator_mode">
+                <tal:block metal:use-macro="developper_shortcut_render/macros/field_translator" />
+              </tal:block>
+              <tal:block tal:define="value python:request.get(field.id, None)"
+                         tal:replace="structure python:field.render(value, request)" />
+            </tal:block>
+          </div>
+        </tal:block>
+      </tal:block>
+    </tal:block>
+    </tal:block>
+  </tal:block>
+</tal:block>

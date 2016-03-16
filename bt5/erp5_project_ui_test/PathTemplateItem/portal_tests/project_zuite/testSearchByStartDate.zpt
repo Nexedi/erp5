@@ -1,0 +1,59 @@
+<html>
+<head><title>Test quick search on the project module.</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test quick search on the project module.
+</td></tr>
+</thead>
+<tbody tal:define="init_method string:Zuite_createDataForProjectZuite;">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForProjectZuite/macros/init" />
+<!-- }}} -->
+
+<tr>
+  <td>verifyEditable</td>
+  <td>//tr[@class="listbox-search-line"]/th[6]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-search-line"]/th[6]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class="listbox-search-line"]/th[6]//input</td>
+  <td>&gt;=2010/03/01</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//tr[@class="listbox-search-line"]/th[6]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-search-line"]/th[6]//input</td>
+  <td>&gt;=2010/03/01</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[6]</td>
+  <td>2010/03/01</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html> 

@@ -49,41 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>alarm_tool = context.getPortalObject().portal_alarms\n
-periodicity_list = [\n
-  \'periodicity_day_frequency\',\n
-  \'periodicity_hour\',\n
-  \'periodicity_hour_frequency\',\n
-  \'periodicity_minute\',\n
-  \'periodicity_minute_frequency\',\n
-  \'periodicity_month\',\n
-  \'periodicity_month_day\',\n
-  \'periodicity_month_frequency\',\n
-  \'periodicity_start_date\',\n
-  \'periodicity_stop_date\',\n
-  \'periodicity_week\',\n
-  \'periodicity_week_day\',\n
-  \'periodicity_week_frequency\',\n
-]\n
-result_list = [\'Alarm;Enabled;ReportMethodId;ActiveSenseMethodId;SenseMethodId;SolveMethodId;\' + \';\'.join(periodicity_list)]\n
-for alarm in alarm_tool.contentValues():\n
-  in_list = [\n
-    alarm.getRelativeUrl(),\n
-    str(alarm.getEnabled()),\n
-    str(alarm.getReportMethodId()),\n
-    str(alarm.getActiveSenseMethodId()),\n
-    str(alarm.getSenseMethodId()),\n
-    str(alarm.getSolveMethodId())\n
-  ]\n
-  for periodicity_id in periodicity_list:\n
-    in_list.append(str(getattr(alarm, periodicity_id, None)))\n
-  result_list.append(\';\'.join(in_list))\n
-result_list.sort()\n
-return \'\\n\'.join(result_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

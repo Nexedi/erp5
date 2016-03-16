@@ -1,0 +1,2 @@
+<h1 tal:content="here/getTitle" />
+<p tal:content="here/getDescription" />

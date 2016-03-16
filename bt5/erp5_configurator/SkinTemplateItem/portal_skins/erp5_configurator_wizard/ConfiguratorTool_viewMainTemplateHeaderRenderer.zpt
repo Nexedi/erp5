@@ -1,0 +1,10 @@
+<div style="padding: 0.1em; 
+            margin: 0.5em; 
+            border:1px solid #3D5474;
+            background-color: #BAD0F0;">
+  <h1 i18n:translate=""
+      i18n:domain="ui"
+      style="padding: 0.4em;
+             padding-left: 0.3em; 
+             margin: 0em;" > ERP5 Configuration </h1>
+</div>

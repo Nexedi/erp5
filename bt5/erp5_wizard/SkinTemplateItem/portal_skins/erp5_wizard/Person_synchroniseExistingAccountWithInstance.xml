@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-\n
-if person is None:\n
-  person = context\n
-\n
-kw = context.Person_getDataDict(person=person)\n
-\n
-# explicitly check if username is unique\n
-if portal.WizardTool_isPersonReferencePresent(kw[\'reference\']):\n
-  # create assignment for user in Authentification Server\n
-  portal.portal_wizard.callRemoteProxyMethod(\n
-                         \'WitchTool_createNewAssignmentForExistingPerson\',\n
-                         use_cache = 0,\n
-                         ignore_exceptions = 0,\n
-                         **kw)\n
-else:\n
-  raise ValueError, "User does not exist yet"\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>person=None, **kw</string> </value>
         </item>

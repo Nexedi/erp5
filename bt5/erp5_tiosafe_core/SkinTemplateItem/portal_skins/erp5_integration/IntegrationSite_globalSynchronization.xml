@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Browses the Integration Sites and calls the synchronize method\'s on each\n
-for site in context.portal_integrations.objectValues():\n
-  site.IntegrationSite_synchronize()\n
-\n
-translateString = context.Base_translateString\n
-\n
-portal_status_message = translateString("Synchronization started.")\n
-context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id=\'view\', **kw</string> </value>
         </item>

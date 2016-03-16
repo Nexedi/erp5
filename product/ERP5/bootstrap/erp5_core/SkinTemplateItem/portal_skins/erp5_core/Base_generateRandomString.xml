@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Generic random string generator.\n
-  \n
-"""\n
-from random import choice\n
-from string import letters, digits\n
-\n
-character_set = \'\'\n
-if include_letters:\n
-  character_set = \'%s%s\' %(character_set, letters)\n
-if include_digits:\n
-  character_set = \'%s%s\' %(character_set, digits)\n
-return \'\'.join([choice(character_set) for i in range(int(string_length))])\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>string_length=10, include_letters=1, include_digits=1</string> </value>
         </item>

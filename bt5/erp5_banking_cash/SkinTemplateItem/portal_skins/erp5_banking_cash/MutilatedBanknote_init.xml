@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>user_site = context.Baobab_getUserAssignedRootSite()\n
-user_counter = context.Baobab_getUserAssignedSiteList()[0]\n
-if user_site in (\'\', None) or user_counter in (\'\', None):\n
-  raise ValueError, "Unable to determine site"\n
-if \'guichet\' not in user_counter:\n
-  raise ValueError, "You are not assigned to a counter"\n
-context.edit(source=user_counter, source_trade=user_site)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

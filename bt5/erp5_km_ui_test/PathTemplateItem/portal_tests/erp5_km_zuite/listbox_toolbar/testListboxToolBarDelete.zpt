@@ -1,0 +1,64 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/getId"/>
+</head>
+<body tal:define="file_name string:tiolive-ERP5.Freedom.TioLive.MultiplePages.PDF-001-en.pdf;
+                  full_filename_location python: here.Zuite_getFilenameLocation(file_name)">
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site/document_module/view?reset:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>listbox_title</td>
+  <td>%new document%</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>listbox_translated_validation_state_title</td>
+  <td>!=Deleted</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>hidden_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td/input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_deleteObjectList:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Deleted.</td>
+  <td></td>
+</tr>
+
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />
+
+</tbody></table>
+</body>
+</html>

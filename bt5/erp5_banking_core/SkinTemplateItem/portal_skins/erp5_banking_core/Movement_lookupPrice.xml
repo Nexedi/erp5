@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-\n
-def Movement_lookupPrice():\n
-  resource = context.getResourceValue()\n
-  if resource is not None:\n
-    return resource.getPrice(context=context)\n
-  else:\n
-    return None\n
-\n
-return CachingMethod(Movement_lookupPrice, (\'erp5_banking_core/Movement_lookupPrice\', context.getResource()), \n
-                     cache_factory="erp5_ui_long")()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

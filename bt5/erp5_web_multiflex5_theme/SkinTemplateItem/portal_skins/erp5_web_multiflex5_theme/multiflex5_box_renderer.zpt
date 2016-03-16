@@ -1,0 +1,15 @@
+<tal:block metal:define-macro="widget">
+        <a id="anchor-sidemenu-4" tal:attributes="id gid"></a>
+        <div class="corner-subcontent-top" tal:condition="python:len(field_list)"></div>
+        <div tal:attributes="class python: gid.lstrip(aggregate_name);"
+             tal:condition="python:len(field_list)">
+          <h1 class="group_title" i18n:translate="" i18n:domain="ui" tal:content="python: gtitle">4-01a. Side menu 1</h1>                  
+          <fieldset class="widget">
+            <legend i18n:translate="" i18n:domain="ui" tal:content="python: gtitle" class="group_title"/>
+            <tal:block tal:repeat="field field_list">
+              <tal:block metal:use-macro="here/field_render/macros/field_render"/>
+            </tal:block>
+          </fieldset>
+        </div>
+        <div class="corner-subcontent-bottom" tal:condition="python:len(field_list)"></div>
+</tal:block>

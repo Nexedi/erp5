@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-form = context.REQUEST.form\n
-event_module = portal.event_module\n
-\n
-firstname = context.REQUEST.get(\'field_your_first_name\')\n
-\n
-new_event = portal.event_module.newContent(portal_type=portal_type)\n
-new_event.setTitle(firstname)\n
-\n
-return new_event.Base_redirect("view")\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>portal_type</string> </value>
         </item>

@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>line = state_change[\'object\']\n
-\n
-base_id = \'cell\'\n
-line.updateCellRange(base_id=base_id)\n
-\n
-# also update membership criterion category list on line\n
-if line.getMembershipCriterionBaseCategoryList():\n
-  line.setMembershipCriterionCategoryList([])\n
-  budget_line_category_list = line.getCategoryList()\n
-  for variation in budget_line_category_list:\n
-    if not variation:\n
-      continue\n
-    base, category = variation.split(\'/\', 1)\n
-    if base in line.getMembershipCriterionBaseCategoryList():\n
-      line.setMembershipCriterionCategoryList(\n
-            [variation,] + line.getMembershipCriterionCategoryList())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

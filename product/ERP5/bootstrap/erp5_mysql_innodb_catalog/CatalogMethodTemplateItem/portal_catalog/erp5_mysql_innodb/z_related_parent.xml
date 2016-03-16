@@ -20,15 +20,6 @@ query_table</string> </value>
             <value> <string>z_related_parent</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-var table_0>.uid = <dtml-var query_table>.parent_uid\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Is it a gadget UI mode?\n
-"""\n
-request = context.REQUEST\n
-list_mode = request.get(\'list_mode\', False)\n
-dialog_mode = request.get(\'dialog_mode\', False)\n
-\n
-# in relations "mode" dialog_id is exposed in REQUEST\n
-dialog_id = request.get(\'dialog_id\', None)\n
-\n
-if dialog_id is not None or \\\n
-  list_mode == True or \\\n
-  dialog_mode == True:\n
-  return False\n
-\n
-return True\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

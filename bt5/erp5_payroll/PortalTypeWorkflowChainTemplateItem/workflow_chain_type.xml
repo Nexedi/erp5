@@ -1,34 +1,34 @@
 <workflow_chain>
  <chain>
-  <type>Employment Contract</type>
+  <type>portal_type_workflow_chain/Employment Contract</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Pay Sheet Cell</type>
+  <type>portal_type_workflow_chain/Pay Sheet Cell</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Pay Sheet Line</type>
+  <type>portal_type_workflow_chain/Pay Sheet Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>Pay Sheet Model</type>
+  <type>portal_type_workflow_chain/Pay Sheet Model</type>
   <workflow>edit_workflow, paysheet_model_interaction_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Pay Sheet Model Cell</type>
+  <type>portal_type_workflow_chain/Pay Sheet Model Cell</type>
   <workflow>trade_model_cell_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Pay Sheet Model Line</type>
+  <type>portal_type_workflow_chain/Pay Sheet Model Line</type>
   <workflow>edit_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>Pay Sheet Transaction</type>
+  <type>portal_type_workflow_chain/Pay Sheet Transaction</type>
   <workflow>accounting_workflow, delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Pay Sheet Transaction Line</type>
+  <type>portal_type_workflow_chain/Pay Sheet Transaction Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

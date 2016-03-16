@@ -185,26 +185,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-\'\'\'\n
-If all product have no Weight, it don\'t need to be sheep. \n
-\'\'\'\n
-return False\n
-shopping_cart_items = context.SaleOrder_getShoppingCartItemList()\n
-\n
-weight = 0\n
-for order_line in shopping_cart_items:\n
-  resource = order_line.getResourceValue()\n
-  weight  += resource.getBaseWeight(0)\n
-\n
-return weight > 0\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

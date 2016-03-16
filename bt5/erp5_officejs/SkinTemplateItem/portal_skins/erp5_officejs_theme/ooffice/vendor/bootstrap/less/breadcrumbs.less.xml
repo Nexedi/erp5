@@ -19,37 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-//\n
-// Breadcrumbs\n
-// --------------------------------------------------\n
-\n
-\n
-.breadcrumb {\n
-  padding: 8px 15px;\n
-  margin-bottom: @line-height-computed;\n
-  list-style: none;\n
-  background-color: @breadcrumb-bg;\n
-  border-radius: @border-radius-base;\n
-  > li {\n
-    display: inline-block;\n
-    + li:before {\n
-      content: "@{breadcrumb-separator}\\00a0"; // Unicode space added since inline-block means non-collapsing white-space\n
-      padding: 0 5px;\n
-      color: @breadcrumb-color;\n
-    }\n
-  }\n
-  > .active {\n
-    color: @breadcrumb-active-color;\n
-  }\n
-}\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

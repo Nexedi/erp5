@@ -23,45 +23,6 @@
             <value> <string>application/javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
-// Distributed under an MIT license: http://codemirror.net/LICENSE\n
-\n
-// Depends on jsonlint.js from https://github.com/zaach/jsonlint\n
-\n
-// declare global: jsonlint\n
-\n
-(function(mod) {\n
-  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
-    mod(require("../../lib/codemirror"));\n
-  else if (typeof define == "function" && define.amd) // AMD\n
-    define(["../../lib/codemirror"], mod);\n
-  else // Plain browser env\n
-    mod(CodeMirror);\n
-})(function(CodeMirror) {\n
-"use strict";\n
-\n
-CodeMirror.registerHelper("lint", "json", function(text) {\n
-  var found = [];\n
-  jsonlint.parseError = function(str, hash) {\n
-    var loc = hash.loc;\n
-    found.push({from: CodeMirror.Pos(loc.first_line - 1, loc.first_column),\n
-                to: CodeMirror.Pos(loc.last_line - 1, loc.last_column),\n
-                message: str});\n
-  };\n
-  try { jsonlint.parse(text); }\n
-  catch(e) {}\n
-  return found;\n
-});\n
-\n
-});\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

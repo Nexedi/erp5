@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tal:block 
+  xmlns:tal="http://xml.zope.org/namespaces/tal" 
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  metal:use-macro="here/rss_view/macros/master" >
+</tal:block>

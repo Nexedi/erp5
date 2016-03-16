@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script is hack to get the html of FCKEditor. \n
-  The goals is open the html form to send e-mail without reload the page.\n
-  XXX - This script will be remove as soon as possible to use a good way\n
-"""\n
-extra_content = extra_context = {"inputvalue": "", "inputname": "Compose Mail"}\n
-\n
-return context.fckeditor_wysiwyg_support.pt_render(extra_context=extra_context)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

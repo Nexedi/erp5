@@ -25,10 +25,6 @@
             <value> <string>z0_drop_email_thread</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string>DROP TABLE IF EXISTS email_thread;</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

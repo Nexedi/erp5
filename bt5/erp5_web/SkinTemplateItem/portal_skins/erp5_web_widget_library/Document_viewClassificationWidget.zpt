@@ -1,0 +1,8 @@
+<div class="related_docs" tal:condition="here/getClassification">
+  <div class="title" i18n:translate="" i18n:domain="ui">Security Classification</div>
+  <ul>
+    <li>
+      <span tal:replace="here/getClassificationTitle"/>
+    </li>
+  </ul>
+</div>

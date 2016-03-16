@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if  select_favorite is None:\n
-   select_favorite = context.REQUEST.form["Base_doFavorite"]\n
-if select_favorite == \'\':\n
-  return\n
-# XXX more encode should be implemented in ERP5Site_redirect.\n
-select_favorite = select_favorite.replace(\' \', \'+\')\n
-return context.ERP5Site_redirect(select_favorite, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>select_favorite=None, **kw</string> </value>
         </item>

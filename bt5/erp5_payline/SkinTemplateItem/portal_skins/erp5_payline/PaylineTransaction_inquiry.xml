@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-Call whatever can make context progress.\n
-What is called depends on context\'s resource and simulation state.\n
-Trigger for this call may be an HTTP Exchange (a notification received from Payline) or an alarm (missed notification and timeout reached).\n
-"""\n
-simulation_state = context.getSimulationState()\n
-if simulation_state not in (\'confirmed\', \'started\'):\n
-  raise ValueError(\'No action expected in %r state\' % (simulation_state, ))\n
-getattr(context, script.id + context.getSimulationState().title().replace(\'_\', \'\') + context.getResourceValue().getCodification())()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

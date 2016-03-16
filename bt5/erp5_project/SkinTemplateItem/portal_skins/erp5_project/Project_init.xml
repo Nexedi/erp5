@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Initialize an unique codification on project, because projects are often used as security group.\n
-"""\n
-codification = context.getPortalObject().portal_ids.generateNewId(id_group=\'project.codification\', id_generator=\'uid\', default=1)\n
-context.setCodification(\'PROJ-%s\' % codification)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

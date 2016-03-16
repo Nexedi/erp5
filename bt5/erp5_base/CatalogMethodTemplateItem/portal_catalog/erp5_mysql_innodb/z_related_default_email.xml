@@ -22,19 +22,6 @@ RELATED_QUERY_SEPARATOR=" AND "</string> </value>
             <value> <string>z_related_default_email</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-var table_0>.uid = <dtml-var table_1>.uid\n
-<dtml-var RELATED_QUERY_SEPARATOR>\n
- <dtml-var table_0>.parent_uid = <dtml-var query_table>.uid\n
-AND <dtml-var table_0>.portal_type = \'Email\'\n
-AND <dtml-var table_0>.id = \'default_email\'\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

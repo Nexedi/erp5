@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>for result_line, stdout in zip(result_line_list, stdout_list):\n
-  context.newContent(portal_type=\'Benchmark Result Line\',\n
-                     title=\'%s repeat with %s concurrent users\' % (repeat, concurrent_user),\n
-                     concurrent_user=concurrent_user,\n
-                     username=username,\n
-                     repeat=repeat,\n
-                     benchmark_suite_list=benchmark_suite_list,\n
-                     result_header_list=result_header_list,\n
-                     result_list=result_line,\n
-                     error_counter=len([result for result in result_line if result == 0]),\n
-                     stdout=stdout)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>username, repeat, concurrent_user, benchmark_suite_list, result_header_list, result_line_list, stdout_list</string> </value>
         </item>

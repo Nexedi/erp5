@@ -49,44 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Form.Report import ReportSection\n
-result=[]\n
-request = context.REQUEST\n
-params = {}\n
-\n
-selection_columns = [(\'validation_state\', \'State\')]\n
-#Add dynamicaly ticket type columns to the form\n
-#The name of column must be without spaces\n
-for ticket_type in context.getPortalTicketTypeList():\n
-  selection_columns.append((ticket_type.replace(\' \',\'\'),ticket_type))\n
-selection_columns.append((\'unassigned\', \'Unassigned\'))\n
-selection_columns.append((\'total\', \'Total\'))\n
-\n
-#Future states\n
-params=dict(direction=context.Event_getFutureStateList())\n
-result.append(ReportSection(\n
-              path=context.getPhysicalPath(),\n
-              selection_columns=selection_columns,\n
-              listbox_display_mode=\'FlatListMode\',\n
-              title=context.Base_translateString(\'Future Events\'),\n
-              selection_params=params,\n
-              form_id=\'EventModule_viewEventActivityList\'))\n
-\n
-#Past states\n
-params=dict(direction=context.Event_getPastStateList())\n
-result.append(ReportSection(\n
-              path=context.getPhysicalPath(),\n
-              selection_columns=selection_columns,\n
-              listbox_display_mode=\'FlatListMode\',\n
-              title=context.Base_translateString(\'Past Events\'),\n
-              selection_params=params,\n
-              form_id=\'EventModule_viewEventActivityList\'))\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>""" \n
-  Return the sort title of the default currency used in Shopping Cart.\n
-"""\n
-return context.getWebSiteValue().WebSite_getShoppingCartDefaultCurrency().getShortTitle()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

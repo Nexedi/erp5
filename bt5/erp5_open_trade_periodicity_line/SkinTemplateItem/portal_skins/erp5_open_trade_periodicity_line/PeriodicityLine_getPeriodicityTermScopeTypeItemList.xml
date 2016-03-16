@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import translateString\n
-\n
-return (\n
-  (\'\', \'\'),\n
-  (translateString(\'Until the next period\'), \'until_the_next_period\'),\n
-  (translateString(\'Until the end of month\'), \'until_the_end_of_month\'),\n
-  )\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

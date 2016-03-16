@@ -33,21 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<div class="mail-navigation">\n
-  <span class="mail-action">Mail</span>\n
-</div>\n
-<div class="separator"></div>\n
-  <button title="Compose Mail" name="" type="submit" id="compose-mail" i18n:translate="" i18n:domain="ui">Compose Mail</button>\n
-<div class="gadget-column">\n
-  <div class="file-quick-search"></div>\n
-</div>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

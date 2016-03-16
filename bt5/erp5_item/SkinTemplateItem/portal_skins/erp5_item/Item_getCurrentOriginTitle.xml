@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>current_site = context.Item_getCurrentOriginValue(**kw)\n
-if current_site is not None:\n
-  return current_site.getSourceTitle()\n
-return None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

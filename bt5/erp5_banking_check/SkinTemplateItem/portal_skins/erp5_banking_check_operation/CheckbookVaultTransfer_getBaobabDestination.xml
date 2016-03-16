@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>destination = context.getDestination()\n
-if destination is not None:\n
-  if destination.endswith(\'surface\'):\n
-    destination = \'%s/%s\' % (destination,\'caisse_courante/encaisse_des_billets_et_monnaies\')\n
-  if destination.endswith(\'caveau\'):\n
-    destination = \'%s/%s\' % (destination,\'auxiliaire/encaisse_des_billets_et_monnaies\')\n
-return destination\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

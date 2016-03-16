@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Wrapper to store the subject list in context, because isn\'t possible \n
-  pass list in POST correctly.\n
-"""\n
-context.setSubjectList(value.split(","))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>value=""</string> </value>
         </item>

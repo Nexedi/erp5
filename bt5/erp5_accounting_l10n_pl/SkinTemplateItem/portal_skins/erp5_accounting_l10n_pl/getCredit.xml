@@ -49,11 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return context.FiscalReportCell_doGetInventory(accounts,omit_input=1,omit_output=0)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>accounts</string> </value>
         </item>

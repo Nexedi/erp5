@@ -49,34 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.PythonScripts.standard import html_quote\n
-\n
-result = \'\'\n
-error_message = None\n
-try:\n
-  result = context.asStrippedHTML()\n
-  if result:\n
-    return result\n
-  if not context.hasBaseData():\n
-    error_message = context.Base_translateString("This document is not converted yet.")\n
-except Exception, e:\n
-  from Products.ERP5Type.Log import log\n
-  log("asStrippedHTML", str(e))\n
-  error_message = "%s %s" % (context.Base_translateString("Preview Error:"),\n
-                              str(e))\n
-\n
-if error_message is not None:\n
-  return \'<div class="error">%s</div>\' % html_quote(error_message)\n
-\n
-return result\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

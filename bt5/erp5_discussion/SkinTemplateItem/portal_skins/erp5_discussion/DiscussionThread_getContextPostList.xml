@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
- This script returns the list of Discussion Post objects from the Discussion Thread object\n
- that is associated to this context.\n
- If there is no Discussion Thread, an empty list is returned.\n
-"""\n
-\n
-if context.getPortalType() != "Discussion Thread":\n
-  discussion = context.DiscussionThread_getContextThread()\n
-else:\n
-  discussion = context\n
-\n
-if discussion == None:\n
-  return []\n
-\n
-if kw.has_key("portal_type") == False:\n
-  kw[\'portal_type\'] = "Discussion Post"\n
-\n
-return discussion.searchFolder(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

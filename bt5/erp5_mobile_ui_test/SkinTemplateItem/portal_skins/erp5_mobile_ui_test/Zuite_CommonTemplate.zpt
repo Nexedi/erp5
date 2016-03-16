@@ -1,0 +1,23 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <tal:block metal:define-macro="init">
+    <tr>
+      <td>store</td>
+      <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
+      <td>base_url</td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/TestTool_setSkinNameCookie?skin_name=Mobile</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="goToFrontPage">
+   <tr>
+    <td>open</td>
+    <td>${base_url}/view</td>
+    <td></td>
+   </tr>
+  </tal:block>
+</tal:block>

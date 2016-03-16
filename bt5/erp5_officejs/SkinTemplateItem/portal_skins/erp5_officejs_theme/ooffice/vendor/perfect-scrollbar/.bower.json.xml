@@ -19,23 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>{\n
-  "name": "perfect-scrollbar",\n
-  "homepage": "https://github.com/noraesae/perfect-scrollbar",\n
-  "version": "0.4.8",\n
-  "_release": "0.4.8",\n
-  "_resolution": {\n
-    "type": "version",\n
-    "tag": "0.4.8",\n
-    "commit": "af55a6eb3bc9419aadfc482cad2df788b27efae9"\n
-  },\n
-  "_source": "git://github.com/noraesae/perfect-scrollbar.git",\n
-  "_target": "*",\n
-  "_originalSource": "perfect-scrollbar"\n
-}</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

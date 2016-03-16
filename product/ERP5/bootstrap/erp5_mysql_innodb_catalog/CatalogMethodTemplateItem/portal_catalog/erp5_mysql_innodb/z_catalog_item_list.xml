@@ -61,55 +61,6 @@ getMovedItemUidList</string> </value>
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-DELETE FROM\n
-  item\n
-WHERE\n
-<dtml-in uid>\n
-  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
-</dtml-in>\n
-;\n
-\n
-<dtml-var "\'\\0\'">\n
-\n
-<dtml-let movement_list="[]" uid_dict="{}">\n
-  <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isMovement[loop_item] and isAccountable[loop_item] and getMovedItemUidList[loop_item]">\n
-      <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
-      <dtml-call expr="movement_list.append(loop_item)">\n
-    </dtml-if>\n
-  </dtml-in>\n
-  <dtml-if expr="_.len(movement_list) > 0">\n
-REPLACE INTO\n
-  item\n
-VALUES\n
-    <dtml-in prefix="loop" expr="movement_list">\n
-      <dtml-in expr="getMovedItemUidList[loop_item]">\n
-\n
-(  \n
-  <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
-  <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
-  <dtml-sqlvar expr="uid_dict[uid[loop_item]]" type="int">,\n
-  <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="getDestinationUid[loop_item]" type="int" optional>,\n
-  <dtml-sqlvar expr="getDestinationSectionUid[loop_item]" type="int" optional>,\n
-  <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,\n
-  <dtml-sqlvar sequence-item type="int" optional>,\n
-  <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getSimulationState[loop_item]" type="string" optional>\n
-)\n
-        <dtml-if sequence-end><dtml-else>,</dtml-if>\n
-      </dtml-in>\n
-      <dtml-if sequence-end><dtml-else>,</dtml-if>\n
-    </dtml-in>\n
-  </dtml-if>\n
-</dtml-let>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

@@ -19,14 +19,6 @@
             <value> <string>z_delete_from_roles_and_users</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-delete from roles_and_users where <dtml-sqltest uid type=int op=eq multiple>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

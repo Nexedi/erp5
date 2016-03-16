@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Every site should have one forum as theme uses it to get latest discussion posts.\n
-  Forum relative url is taken from web site configuration itself.\n
-  \n
-  This is all arbitrary...\n
-"""\n
-\n
-website = context.getWebSiteValue()\n
-default_forum_url = website.getProperty(\'default_forum_relative_url\', \'discussions\')\n
-return website.restrictedTraverse(default_forum_url, None)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># request = container.REQUEST\n
-# if request.form.get(\'view\', None) == \'jio_view\':\n
-portal_type = context.getPortalType()\n
-filename = context.getFilename()\n
-if portal_type == \'Spreadsheet\' and not filename.endswith(\'.xlsy\'):\n
-  # return context.convert(format=\'xlsy\')\n
-  metadata, data = context.convert(format=\'xlsy\')\n
-  context.setData(data)\n
-  context.setContentType(metadata)\n
-  context.setFilename(\'.\'.join(filename.split(\'.\')[:-1]) + \'.xlsy\')\n
-else:\n
-  data = context.getData()\n
-# return context.Document_viewAsJio()\n
-return data\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

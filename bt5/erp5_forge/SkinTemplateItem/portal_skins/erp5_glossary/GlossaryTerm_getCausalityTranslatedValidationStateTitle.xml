@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>causality_term = context.getCausalityValue(portal_type=\'Glossary Term\')\n
-if causality_term is not None:\n
-  return causality_term.getTranslatedValidationStateTitle()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if not context.getFollowUp():\n
-  return False\n
-followup_value = context.getFollowUpValue(checked_permission=\'Access contents information\')\n
-if followup_value is None:\n
-  return False\n
-if getattr(followup_value, \'getAssessmentFormId\', None) is None:\n
-  return False\n
-return followup_value.getAssessmentFormId()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,54 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  Returns a group category based on career\n
-  and or assignments in such way that the returned\n
-  value describes the most accurately the default group\n
-  which a person has been assigned to.\n
-\n
-  Default implementation considers the list of\n
-  valid assigned groups, if any, and returns the most recent\n
-  one. Else, it returns the career group.\n
-\n
-  Implementation is based on Person_getAssignedGroupList.\n
-  (to be implemented).\n
-"""\n
-\n
-if REQUEST is not None:\n
-  # This script has proxy roles, so we don\'t allow users to call it directly\n
-  from AccessControl import getSecurityManager\n
-  from zExceptions import Unauthorized\n
-  if not \'Manager\' in getSecurityManager().getUser().getRoles():\n
-    raise Unauthorized(script)\n
-\n
-from DateTime import DateTime\n
-now = DateTime()\n
-\n
-existing_group_set = {}\n
-for assignment in context.contentValues(portal_type=\'Assignment\'):\n
-  if assignment.getGroup() \\\n
-      and assignment.getValidationState() == \'open\' \\\n
-      and ( assignment.getStartDate() is None or\n
-            assignment.getStartDate() <= now <= assignment.getStopDate()):\n
-   existing_group_set[assignment.getGroup()] = 1\n
-\n
-# If we have multiple groups defined on assignments, this scripts does not\n
-# try to guess, and fallback to the default career\'s group\n
-if len(existing_group_set.keys()) == 1:\n
-  return existing_group_set.keys()[0]\n
-\n
-# no group found on open assignments, returns the default group\n
-# (on a person document this is acquired on the default career\'s subordination)\n
-return context.getGroup()\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>REQUEST=None</string> </value>
         </item>

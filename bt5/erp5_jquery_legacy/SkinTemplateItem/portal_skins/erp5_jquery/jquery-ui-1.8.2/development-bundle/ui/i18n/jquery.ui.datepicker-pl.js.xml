@@ -23,37 +23,6 @@
             <value> <string>application/x-javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/* Polish initialisation for the jQuery UI date picker plugin. */\n
-/* Written by Jacek Wysocki (jacek.wysocki@gmail.com). */\n
-jQuery(function($){\n
-\t$.datepicker.regional[\'pl\'] = {\n
-\t\tcloseText: \'Zamknij\',\n
-\t\tprevText: \'&#x3c;Poprzedni\',\n
-\t\tnextText: \'Następny&#x3e;\',\n
-\t\tcurrentText: \'Dziś\',\n
-\t\tmonthNames: [\'Styczeń\',\'Luty\',\'Marzec\',\'Kwiecień\',\'Maj\',\'Czerwiec\',\n
-\t\t\'Lipiec\',\'Sierpień\',\'Wrzesień\',\'Październik\',\'Listopad\',\'Grudzień\'],\n
-\t\tmonthNamesShort: [\'Sty\',\'Lu\',\'Mar\',\'Kw\',\'Maj\',\'Cze\',\n
-\t\t\'Lip\',\'Sie\',\'Wrz\',\'Pa\',\'Lis\',\'Gru\'],\n
-\t\tdayNames: [\'Niedziela\',\'Poniedziałek\',\'Wtorek\',\'Środa\',\'Czwartek\',\'Piątek\',\'Sobota\'],\n
-\t\tdayNamesShort: [\'Nie\',\'Pn\',\'Wt\',\'Śr\',\'Czw\',\'Pt\',\'So\'],\n
-\t\tdayNamesMin: [\'N\',\'Pn\',\'Wt\',\'Śr\',\'Cz\',\'Pt\',\'So\'],\n
-\t\tweekHeader: \'Tydz\',\n
-\t\tdateFormat: \'dd.mm.yy\',\n
-\t\tfirstDay: 1,\n
-\t\tisRTL: false,\n
-\t\tshowMonthAfterYear: false,\n
-\t\tyearSuffix: \'\'};\n
-\t$.datepicker.setDefaults($.datepicker.regional[\'pl\']);\n
-});\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

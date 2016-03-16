@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Return the tenderer of the procedure \n
-  ie: return the organisation on wich belong the user\n
-  if it doesn\'t exist return the user\n
-"""\n
-portal = context.getPortalObject()\n
-user_name = context.getViewPermissionOwner()\n
-user_obj = context.ERP5Site_getPersonObjectFromUserName(user_name)\n
-tenderer = \'\'\n
-if user_obj is not None:\n
-  organisation_value = user_obj.getCareerSubordinationValue()\n
-  if organisation_value is not None:   \n
-    tenderer = organisation_value.getTitle()\n
-  else:\n
-    tenderer = user_obj.getTitle()\n
-return tenderer\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

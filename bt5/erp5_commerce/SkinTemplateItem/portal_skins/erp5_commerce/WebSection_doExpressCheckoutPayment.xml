@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>order_parameter_dict = context.WebSite_getPaypalOrderParameterDict()\n
-if order_parameter_dict is None:\n
-  return None\n
-order_parameter_dict[\'TOKEN\'] = token\n
-order_parameter_dict[\'PAYERID\'] = payer_id\n
-order_parameter_dict[\'METHOD\'] = \'DoExpressCheckoutPayment\'\n
-\n
-response_parameter_dict = context.WebSection_submitPaypalNVPRequest(parameter_dict=order_parameter_dict,\n
-                                                                  nvp_url=context.WebSite_getPaypalUrl(api=\'nvp\'))\n
-return response_parameter_dict\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>token, payer_id</string> </value>
         </item>

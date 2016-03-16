@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-print \'<html><head><meta http-equiv="refresh" content="%s"></head><body>\' % refresh_interval\n
-\n
-for table in \'message\', \'message_queue\':\n
-  q = """SELECT count(*) AS %(table)s, method_id, processing, processing_node AS node, min(priority) AS min_pri, max(priority) AS max_pri\n
-           FROM %(table)s GROUP BY method_id, processing, processing_node ORDER BY node""" % dict(table=table)\n
-\n
-  print "<table border=\\"\\" style=\\"font-size:XX-small;\\"><tbody> <tr><th>%s</th> <th>method_id</th> <th>processing</th> <th>node</th> <th>min_pri</th> <th>max_pri</th> </tr>" % table\n
-  for row in context.cmf_activity_sql_connection.manage_test(q):\n
-    print \'<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td</tr>\' % (row[table], row[\'method_id\'], row[\'processing\'], row[\'node\'], row[\'min_pri\'], row[\'max_pri\'])\n
-  print \'</tbody> </table> <br/>\'\n
-\n
-return printed\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>refresh_interval=5</string> </value>
         </item>

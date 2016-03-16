@@ -49,47 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
-from string import zfill\n
-\n
-portal_object = context.getPortalObject()\n
-num = 0\n
-result_listbox = []\n
-\n
-# context.log(str(kw))\n
-if active_process_path is None:\n
-  if kw.has_key(\'active_process\') and kw[\'active_process\'] not in (\'\', None):\n
-    active_process_path = kw[\'active_process\']\n
-#else:\n
-#  if context.REQUEST.get(\'active_process\', None) not in (\'None\', None):\n
-#    active_process_path = context.REQUEST.get(\'active_process\')\n
-  else:\n
-    return []\n
-\n
-active_process_value = context.getPortalObject().restrictedTraverse(active_process_path)\n
-result_list = [[x.method_id, x.result] for x in active_process_value.getResultList()]\n
-\n
-result_list.sort()\n
-\n
-for [method_id, result] in result_list:\n
-  safe_id = context.Base_getSafeIdFromString(\'result %s\' % num)\n
-  num += 1\n
-  int_len = 3\n
-  o = newTempBase(portal_object, safe_id)\n
-  o.setUid( \'new_%s\' % zfill(num, int_len)) # XXX There is a security issue here\n
-  o.edit(uid=\'new_%s\' % zfill(num, int_len)) # XXX There is a security issue here\n
-  o.edit( method_id   = method_id\n
-         , result     = result[\'message\']\n
-         , object_url = result[\'object_url\']\n
-         , object     = result[\'object\']\n
-        )\n
-  result_listbox.append(o)\n
-\n
-return result_listbox\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>active_process_path=None, **kw</string> </value>
         </item>

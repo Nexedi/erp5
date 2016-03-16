@@ -25,15 +25,6 @@
             <value> <string>z_create_email</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string>CREATE TABLE `email` (\n
-  `uid` BIGINT UNSIGNED NOT NULL,\n
-  `url_string` varchar(255),\n
-  PRIMARY KEY `uid` (`uid`),\n
-  KEY `url_string` (`url_string`)\n
-) ENGINE=InnoDB;</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

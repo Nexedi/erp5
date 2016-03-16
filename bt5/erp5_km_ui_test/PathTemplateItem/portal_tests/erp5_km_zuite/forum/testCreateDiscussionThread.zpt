@@ -1,0 +1,136 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/getId"/>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
+</thead><tbody>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Forum</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Forum</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Discussion Threads</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Post Message</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_title</td>
+  <td>Thread 1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>New discussion thread created</td>
+  <td></td>
+</tr>
+
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Forum</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Thread 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//img[@alt='Link To Post']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeAttribute</td>
+  <td>//a[@title="Thread 1"]@href</td>
+  <td>thread_url</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>1 records</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>DiscussionThread_redirectCreateNewDiscussionPost:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_your_title</td>
+  <td>exact:Re: Thread 1</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_text_content</td>
+  <td>Response</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Thread 1</td>
+  <td></td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
+<tr>
+  <td>open</td>
+  <td>${thread_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Re: Thread 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>2 records</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />
+
+</tbody></table>
+</body>
+</html>

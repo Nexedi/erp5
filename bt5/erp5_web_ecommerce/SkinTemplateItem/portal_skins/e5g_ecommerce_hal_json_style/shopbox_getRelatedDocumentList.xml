@@ -55,42 +55,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>import json\n
-if REQUEST is None:\n
-  REQUEST = context.REQUEST\n
-\n
-# raise ValueError(\'foo\')\n
-document = context.getObject()\n
-\n
-subobject_list = document.Base_getRelatedDocumentList()\n
-subobject_result_list = []\n
-\n
-      \n
-for subobject in subobject_list:\n
-  subobject_dict = {}\n
-  subobject_type = subobject.getPortalType()\n
-  subobject_title = subobject.getTitle()\n
-\n
-  if subobject_type == \'Sale Supply Line\':\n
-    pass\n
-  elif subobject_type == \'Product Individual Variation\':\n
-    subobject_dict[\'title\'] = subobject.getTitle()\n
-  elif subobject_title == \'default_image\':\n
-    subobject_dict[\'default_image_url\'] = subobject.getPath()\n
-  elif subobject_type == \'Embedded File\':\n
-    subobject_dict[\'image_url\'] = subobject.getPath()\n
-  elif subobject_type == \'Purchase Supply Line\':\n
-    subobject_dict[\'price\'] = subobject.getBasePrice()\n
-  subobject_result_list.append(subobject_dict)\n
-        \n
-return json.dumps({\n
-  # \'variation_list\': [x[0] for x in document.getVariationCategoryItemList()]\n
-  \'related_document_list\': subobject_result_list\n
-}, indent=2)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>REQUEST=None</string> </value>
         </item>

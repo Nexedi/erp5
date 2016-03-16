@@ -95,12 +95,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>.ui-listview .ui-btn-icon-right .ui-li-count {\n
-  top: 23%;\n
-}</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Gadget Manifest Example Lists CSS</string> </value>
         </item>

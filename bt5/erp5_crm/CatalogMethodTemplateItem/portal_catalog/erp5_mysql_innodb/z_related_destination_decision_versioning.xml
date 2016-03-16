@@ -53,17 +53,6 @@ table_1\r\n
             <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
-AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.destination_decision.getUid()">\n
-AND <dtml-var table_0>.uid = catalog.uid\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

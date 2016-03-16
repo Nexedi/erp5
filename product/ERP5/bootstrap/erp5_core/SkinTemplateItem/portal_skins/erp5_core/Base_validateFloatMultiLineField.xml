@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Validate that all items in a multi line field are floats.\n
-"""\n
-for item in editor:\n
-  try:\n
-    float(item)\n
-  except (ValueError, TypeError):\n
-    return 0\n
-return 1\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>editor, request</string> </value>
         </item>

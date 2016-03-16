@@ -19,35 +19,6 @@
             <value> <string>application/x-genesis-rom</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>CKEditor SCAYT Plugin\r\n
-=====================\r\n
-\r\n
-This plugin brings Spell Check As You Type (SCAYT) into up to CKEditor 4+.\r\n
-\r\n
-SCAYT is a "installation-less", using the web-services of [WebSpellChecker.net](http://www.webspellchecker.net/). It\'s an out of the box solution.\r\n
-\r\n
-Installation\r\n
-------------\r\n
-\r\n
-1. Clone/copy this repository contents in a new "plugins/scayt" folder in your CKEditor installation.\r\n
-2. Enable the "scayt" plugin in the CKEditor configuration file (config.js):\r\n
-\r\n
-        config.extraPlugins = \'scayt\';\r\n
-\r\n
-That\'s all. SCAYT will appear on the editor toolbar and will be ready to use.\r\n
-\r\n
-License\r\n
--------\r\n
-\r\n
-Licensed under the terms of any of the following licenses at your choice: [GPL](http://www.gnu.org/licenses/gpl.html), [LGPL](http://www.gnu.org/licenses/lgpl.html) and [MPL](http://www.mozilla.org/MPL/MPL-1.1.html).\r\n
-\r\n
-See LICENSE.md for more information.\r\n
-\r\n
-Developed in cooperation with [WebSpellChecker.net](http://www.webspellchecker.net/).\r\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Check that all transactions grouped together have a 0 balance.\n
-\n
-In other words, check that all transactions grouped together really match.\n
-"""\n
-\n
-active_process = context.newActiveProcess().getRelativeUrl()\n
-\n
-assert not fixit, NotImplemented\n
-\n
-context.getPortalObject().portal_catalog.searchAndActivate(\n
-   method_id=\'AccountingTransactionLine_checkGroupingReferenceIsValid\',\n
-   method_kw=dict(fixit=fixit, active_process=active_process),\n
-   activate_kw=dict(tag=tag, priority=5),\n
-   portal_type=context.getPortalAccountingMovementTypeList(),\n
-   grouping_reference=\'%\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>tag, fixit=0, **kw</string> </value>
         </item>

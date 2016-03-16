@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Generate a Zuite (if necessary), create/update the test and redirect to the selenium test created/updated\n
-  url, web_page or web_page_reference must be set for it to work (or the context should be the Web Page in question)\n
-"""\n
-test_list = []\n
-count = 0\n
-portal = context.getPortalObject()\n
-for url in url_list:\n
- count += 1\n
- if "http" not in url:\n
-   # local content\n
-   data = portal.restrictedTraverse(url).TestPage_viewSeleniumTest()\n
- else:\n
-   data = context.Zuite_urlRead(url, safe_return=1)\n
- test_list.append((data, \'%s %s\' % (count, url)),)\n
-\n
-return context.Zuite_createAndLaunchSeleniumTest(test_list=test_list,\n
-                                                 zuite_id=zuite_id)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>url_list, zuite_id=\'tutorial_zuite\'</string> </value>
         </item>

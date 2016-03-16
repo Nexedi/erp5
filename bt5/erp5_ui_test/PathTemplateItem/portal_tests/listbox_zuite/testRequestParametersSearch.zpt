@@ -1,0 +1,160 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Search using Parameters from REQUEST</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Search using Parameters from REQUEST</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td tal:content="string:${here/portal_url}/foo_module/FooModule_createObjects">Create objects </td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string:${here/portal_url}/foo_module/Zuite_waitForActivities"/>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<!-- Search by id -->
+<tr>
+  <td>open</td>
+        <td tal:content="string:${here/portal_url}/foo_module/view?id=0&amp;reset=1"/>
+  <td></td>
+</tr>
+<!--
+ XXX parameters passed through the REQUEST are currently not displayed.
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@id="listbox_search_line"]/td[2]//input</td>
+  <td>0</td>
+</tr>
+-->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]</td>
+  <td>Title 0</td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]/div[2]//span[@id='data_short']</td>
+  <td>Title 0</td>
+</tr>
+</tal:block>
+<!-- Search by title -->
+<tr>
+  <td>open</td>
+  <td tal:content="string:${here/portal_url}/foo_module/view?title=Title%201&amp;reset=1"/>
+  <td></td>
+</tr>
+<!-- 
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@id="listbox_search_line"]/td[3]//input</td>
+  <td>Title 1</td>
+</tr>
+-->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]</td>
+  <td>Title 1</td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]/div[2]//span[@id='data_short']</td>
+  <td>Title 1</td>
+</tr>
+</tal:block>
+
+<!-- Search by title (a list) -->
+<tr>
+  <td>open</td>
+  <td tal:content="string:${here/portal_url}/foo_module/view?title:list=Title%200&amp;title:list=Title%201&amp;reset=1"/>
+  <td></td>
+</tr>
+<!-- 
+XXX what should we display in the field in that case ?
+    so it's probably better not to display anything ...
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@id="listbox_search_line"]/td[3]//input</td>
+  <td>Title 1</td>
+</tr>
+-->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]</td>
+  <td>Title 0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[3]</td>
+  <td>Title 1</td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]/div[2]//span[@id='data_short']</td>
+  <td>Title 0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_1"]/div[2]//span[@id='data_short']</td>
+  <td>Title 1</td>
+</tr>
+</tal:block>
+
+
+<!-- Search with an ignored parameter -->
+<tr>
+  <td>open</td>
+  <td tal:content="string:${here/portal_url}/foo_module/view?ignored_param=ignored&amp;reset=1"/>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>10 records</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

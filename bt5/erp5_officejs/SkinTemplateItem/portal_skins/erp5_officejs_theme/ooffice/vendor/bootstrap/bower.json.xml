@@ -19,44 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-{\n
-  "name": "bootstrap",\n
-  "version": "3.0.3",\n
-  "main": [\n
-    "./dist/js/bootstrap.js", \n
-    "./dist/css/bootstrap.css", \n
-    "./dist/fonts/glyphicons-halflings-regular.eot",\n
-    "./dist/fonts/glyphicons-halflings-regular.svg",\n
-    "./dist/fonts/glyphicons-halflings-regular.ttf",\n
-    "./dist/fonts/glyphicons-halflings-regular.woff"\n
-  ],\n
-  "ignore": [\n
-    "**/.*",\n
-    "_*",\n
-    "docs-assets",\n
-    "examples",\n
-    "/fonts",\n
-    "js/tests",\n
-    "CNAME",\n
-    "CONTRIBUTING.md",\n
-    "Gruntfile.js",\n
-    "browserstack.json",\n
-    "composer.json",\n
-    "package.json",\n
-    "*.html"\n
-  ],\n
-  "dependencies": {\n
-    "jquery": ">= 1.9.0"\n
-  }\n
-}\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

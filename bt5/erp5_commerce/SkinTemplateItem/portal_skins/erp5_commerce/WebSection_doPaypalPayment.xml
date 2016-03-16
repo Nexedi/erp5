@@ -49,43 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-isAnon = context.portal_membership.isAnonymousUser()\n
-translateString = context.Base_translateString\n
-\n
-## check if user is authenticated\n
-if isAnon:\n
-  msg = translateString("You need to create an account to continue. If you already have one, please login.")\n
-  context.Base_redirect(\'WebSite_viewRegistrationDialog\', \\\n
-                        keep_items={\'portal_status_message\': msg,\n
-                                    \'editable_mode\': 1})\n
-  return\n
-\n
-## check if the id of the token correspond to the good products\n
-parameter_dict = context.WebSection_getExpressCheckoutDetails(token)\n
-if parameter_dict[\'ACK\'] != \'Success\':\n
-  msg = translateString("This paypal session is not initialised with the actual card.")\n
-  context.Base_redirect(\'\', \\\n
-                        keep_items={\'portal_status_message\': msg,})\n
-\n
-payer_id = parameter_dict[\'PAYERID\']\n
-response_dict = context.WebSection_doExpressCheckoutPayment(token, payer_id)\n
-\n
-if response_dict[\'ACK\'] != \'Success\':\n
-  msg = translateString("Your payment failed because of ")\n
-  context.Base_redirect(\'WebSite_viewRegistrationDialog\', \\\n
-                        keep_items={\'portal_status_message\': \'%s : %s\' % (msg, str(response_dict)),\n
-                                    \'editable_mode\': 1})\n
-  return\n
-\n
-#Payment is ok. Set shopping cart is payed\n
-context.SaleOrder_setShoppingCartBuyer()\n
-  \n
-return context.SaleOrder_finalizeShopping()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>token</string> </value>
         </item>

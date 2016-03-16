@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>delivery = state_change[\'object\']\n
-\n
-portal = delivery.getPortalObject()\n
-try:\n
-  portal.portal_solvers\n
-  portal.portal_solver_processes\n
-except AttributeError:\n
-  delivery.diverge()\n
-else:\n
-  solver_tag = \'%s_solve\' % delivery.getPath()\n
-  delivery.activate(tag=solver_tag).Delivery_solveDivergenceAutomatically()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

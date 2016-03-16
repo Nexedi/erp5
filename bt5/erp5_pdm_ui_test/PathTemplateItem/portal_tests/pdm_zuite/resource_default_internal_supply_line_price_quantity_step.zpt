@@ -1,0 +1,138 @@
+<html>
+<head><title>Test quantity steps for price on internal supply line</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test quantity steps for price on internal supply line
+</td></tr>
+</thead>
+<tbody tal:define="init_method string:PdmZuite_createDelivery?state=draft">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/init" />
+<!-- }}} -->
+
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Internal</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_internal_supply_line_quantity_step_list</td>
+  <td>10<br />20</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>field_my_internal_supply_line_quantity_step_list</td>
+  <td>10.0
+20.0</td>
+<tr>
+  <td>assertText</td>
+  <td>//input[@name="field_matrixbox_base_price_cell_0_0_0"]/../../../td[1]</td>
+  <td>Quantity &lt; 10.0</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//input[@name="field_matrixbox_base_price_cell_1_0_0"]/../../../td[1]</td>
+  <td>10.0 &lt;= Quantity &lt; 20.0</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//input[@name="field_matrixbox_base_price_cell_2_0_0"]/../../../td[1]</td>
+  <td>20.0 &lt;= Quantity</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_matrixbox_base_price_cell_0_0_0"]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_matrixbox_base_price_cell_1_0_0"]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_matrixbox_base_price_cell_2_0_0"]</td>
+  <td>3</td>
+</tr>
+<!-- save and check -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertFloatValue</td>
+  <td>//input[@name="field_matrixbox_base_price_cell_0_0_0"]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>assertFloatValue</td>
+  <td>//input[@name="field_matrixbox_base_price_cell_1_0_0"]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>assertFloatValue</td>
+  <td>//input[@name="field_matrixbox_base_price_cell_2_0_0"]</td>
+  <td>3</td>
+</tr>
+
+<!-- XXX: the field rounds to int the displayed value. This is strange
+-->
+
+<!-- The field has a validator to prevent from entering values that are non numerics
+-->
+<tr>
+  <td>type</td>
+  <td>field_my_internal_supply_line_quantity_step_list</td>
+  <td>foo<br />bar</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>field_my_internal_supply_line_quantity_step_list</td>
+  <td>foo
+bar</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>field_my_internal_supply_line_quantity_step_list</td>
+  <td>foo
+bar</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//textarea[@name="field_my_internal_supply_line_quantity_step_list"]/parent::div/following-sibling::span</td>
+  <td>You did not enter a floating point number.</td>
+</tr>
+
+
+
+<tr>
+  <td>type</td>
+  <td>field_my_internal_supply_line_quantity_step_list</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html> 
+<!-- vim: syntax=html foldmethod=marker -->

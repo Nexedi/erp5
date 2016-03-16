@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>total = 0\n
-for line in context.objectValues(portal_type = context.getPortalAccountingMovementTypeList()) :\n
-  total += line.getSourceDebit()\n
-  \n
-return total\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

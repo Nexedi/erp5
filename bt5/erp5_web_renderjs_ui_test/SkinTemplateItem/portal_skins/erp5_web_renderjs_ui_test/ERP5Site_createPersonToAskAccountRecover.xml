@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>alpha = \'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\'\n
-new_password = \'\'.join([random.choice(alpha) for i in range(10)])\n
-\n
-person_module = context.getPortalObject().person_module\n
-user_id = "user_a_test"\n
-person = getattr(person_module, user_id, None)\n
-if person:\n
-  if person.getReference() != user_id:\n
-    person.setReference(user_id)\n
-else:\n
-  person = person_module.newContent(portal_type="Person",\n
-                                    reference=user_id,\n
-                                    id=user_id,\n
-                                    password=new_password,\n
-                                    default_email_text="userA@example.invalid")\n
-  assignment = person.newContent(portal_type=\'Assignment\')\n
-  assignment.open()\n
-\n
-# Make sure always a new password\n
-person.setPassword(new_password)\n
-return "OK"\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

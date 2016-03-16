@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>catalog_kw = {\'select_dict\': {\'quantity\':\'stock.quantity\'}, \'stock.quantity\': \'!=0\' }\n
-return context.ERP5Site_checkCatalogTable(\n
-  active_process=context.newActiveProcess().getPath(),\n
-  activity_count=activity_count,\n
-  bundle_object_count=bundle_object_count,\n
-  catalog_kw=catalog_kw,\n
-  property_override_method_id=\'ERP5Site_getStockTableFilterDict\',\n
-  **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>activity_count=1, bundle_object_count=100, **kw</string> </value>
         </item>

@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-portal_type = \'Data Protection Request\'\n
-module = portal.getDefaultModule(portal_type)\n
-current_user = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
-\n
-reference_index = portal.portal_ids.generateNewId(id_group=(\'data_protection_request\'), default=1)\n
-reference = \'DPR-%s\' % (reference_index,)\n
-data_protection = module.newContent(portal_type=portal_type,\n
-                                    contributor_value=current_user,\n
-                                    agent_value=context,\n
-                                    description=description,\n
-                                    reference=reference)\n
-data_protection.submit()\n
-msg = portal.Base_translateString(\'New data protection request added.\')\n
-return context.Base_redirect(form_id, keep_items={\'portal_status_message\': msg}, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>description, form_id=\'view\', **kw</string> </value>
         </item>

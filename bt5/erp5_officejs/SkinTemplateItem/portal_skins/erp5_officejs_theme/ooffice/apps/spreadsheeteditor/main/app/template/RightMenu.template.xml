@@ -19,36 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<div id="view-right-menu" class="tool-menu right">\n
-    <div class="right-panel">\n
-        <div id="id-shape-settings" class="settings-panel">\n
-        </div>\n
-        <div id="id-image-settings" class="settings-panel">\n
-        </div>\n
-        <!-- /** proprietary begin **/ -->\n
-        <div id="id-chart-settings" class="settings-panel">\n
-        </div>\n
-        <!-- /** proprietary end **/ -->\n
-        <div id="id-paragraph-settings" class="settings-panel">\n
-        </div>\n
-    </div>\n
-    <div class="tool-menu-btns">\n
-        <div class="ct-btn-category arrow-left" />\n
-        <button id="id-right-menu-shape" class="btn btn-category arrow-left" content-target="id-shape-settings"><span class="btn-icon btn-menu-shape">&nbsp;</span></button>\n
-        <button id="id-right-menu-image" class="btn btn-category arrow-left" content-target="id-image-settings"><span class="btn-icon btn-menu-image">&nbsp;</span></button>\n
-        <!-- /** proprietary begin **/ -->\n
-        <button id="id-right-menu-chart" class="btn btn-category arrow-left" content-target="id-chart-settings"><span class="btn-icon btn-menu-chart">&nbsp;</span></button>\n
-        <!-- /** proprietary end **/ -->\n
-        <button id="id-right-menu-text" class="btn btn-category arrow-left" content-target="id-paragraph-settings"><span class="btn-icon btn-menu-text">&nbsp;</span></button>\n
-    </div>\n
-</div>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

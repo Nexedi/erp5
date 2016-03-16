@@ -1,0 +1,1 @@
+select distinct <dtml-var security_uid_field> from catalog

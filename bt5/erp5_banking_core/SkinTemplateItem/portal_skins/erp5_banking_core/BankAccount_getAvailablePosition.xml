@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return context.BankAccount_getPosition(\n
-  get_inventory_id=\'getAvailableInventory\',\n
-  src__=src__,\n
-)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>src__=0</string> </value>
         </item>

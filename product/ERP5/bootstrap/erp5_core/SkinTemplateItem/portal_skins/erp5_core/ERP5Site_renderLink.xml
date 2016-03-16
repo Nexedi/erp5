@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-if len(http_parameters) == 0:\n
-  return link\n
-if \'?\' in link:\n
-  sep=\'&\'\n
-else:\n
-  sep=\'?\'\n
-return \'%s%s%s\' % (link, sep, http_parameters)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>link, http_parameters</string> </value>
         </item>

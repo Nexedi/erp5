@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>user_name = context.portal_membership.getAuthenticatedMember()\n
-\n
-context.portal_acknowledgements.acknowledge(path=acknowledgement_url, \n
-       user_name=user_name)\n
-\n
-return container.REQUEST.RESPONSE.redirect(context.absolute_url())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>acknowledgement_url=None</string> </value>
         </item>

@@ -19,19 +19,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABEAAAAPCAIAAACN07NGAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
-bWFnZVJlYWR5ccllPAAAAcpJREFUeNqcks9LAlEQx79jK0KRiRCY/bhkh9C8lBQGIUgUYXrt7/MW
-QSgIGqhEEUhYqXTMiwlSEUmQUYtNM6tmRJcalsfu2/nOfOb7HrXx5zB0CQYRj3M4DLcbRGAe/pdP
-ed7f0WjQyQkyGTSbquGtLfh8dHPDiQSmpmAY+PhQpWSPjODtDdUq1eu8uanKZtOmxfx+LC/j6YmS
-SZTL8oLXV7y8oNPBwwPlcpROY2wMa2uYnpZ0S+NwIBDgaFTKU6GAy0uFkXh+pmIR5+fweDgWg9dL
-hjGYp9vVdXGRJya05NmZ7NDcHFerqvf5eGcH4+OaI8z9Pr2hBX1mhvf2SJRHRygU6PSUV1a0g8v1
-3RhjaJG1S2KdGCjzXF1hfZ0CAZmEeyC/aMSlbpfv7uj4GI+PqiyX2W7X6aXQN5nRz5YwTdze0uEh
-iyXxOHm9PDkpeGi3eXdX8QZhzWO5getrOjhgpxORCJaWRIBQiDc2cH9P+/totax026CP0F9cUD6v
-DCKYn4cgCYxQhcOCR6USpVI8OsqmSX1NpaKmLSyop1L+R2xv8+ysVpSDajT6fSibFeN5dRWl0tD6
-L2OExzS1mxxdraZ7/7jXnwIMAH77vof+JfgrAAAAAElFTkSuQmCC</string> </value>
-        </item>
-        <item>
             <key> <string>height</string> </key>
             <value> <int>15</int> </value>
         </item>

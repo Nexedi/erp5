@@ -89,7 +89,7 @@
                         <string>my_source_payment</string>
                         <string>my_destination_reference</string>
                         <string>my_source_reference</string>
-                        <string>my_view_mode_journal</string>
+                        <string>my_view_mode_ledger</string>
                         <string>my_view_mode_task_line_aggregate_title</string>
                         <string>my_view_mode_listbox_aggregate</string>
                         <string>my_view_mode_aggregate_title</string>

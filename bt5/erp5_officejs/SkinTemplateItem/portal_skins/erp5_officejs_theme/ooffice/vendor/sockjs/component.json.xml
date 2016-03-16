@@ -19,19 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>{\n
-  "name": "sockjs",\n
-  "version": "0.3.4",\n
-  "main": "sockjs.js",\n
-  "ignore": [\n
-    "**/.*",\n
-    "node_modules",\n
-    "components"\n
-  ]\n
-}</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

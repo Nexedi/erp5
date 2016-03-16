@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>for ti in sorted(context.getPortalObject().portal_types.contentValues(), key=lambda x:x.getId()):\n
-  for ai in sorted(ti.contentValues(portal_type=\'Action Information\'), key=lambda x:x.getReference()):\n
-    print ti.getId()\n
-    print " ", "\\n  ".join([x for x in (\n
-      "Reference: %s" % ai.getReference(),\n
-      "Title: %s" % ai.getTitle(),\n
-      "Action: %s" % ai.getActionText(),\n
-      "Icon: %s" % ai.getIconText(),\n
-      "Permission: %s" % ai.getActionPermission(),\n
-      "Action Type: %s" % ai.getActionType(),\n
-      "Visible: %s" % ai.getVisible(),\n
-      "Index: %s" % ai.getFloatIndex())])\n
-    print\n
-\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

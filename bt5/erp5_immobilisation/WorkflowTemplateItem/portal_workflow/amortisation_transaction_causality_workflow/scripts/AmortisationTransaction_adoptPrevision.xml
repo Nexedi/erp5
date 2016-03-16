@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>transaction = state_change[\'object\']\n
-\n
-# Set relative simulation movements profit_quantity to 0\n
-movement_list = transaction.getMovementList()\n
-all_simulation_movement_path_list = []\n
-for movement in movement_list:\n
-  simulation_movement_list = movement.getDeliveryRelatedValueList(portal_type=\'Simulation Movement\')\n
-  for simulation_movement in simulation_movement_list:\n
-    simulation_movement.edit(profit_quantity=0)\n
-  all_simulation_movement_path_list.extend([x.getPath() for x in simulation_movement_list])\n
-\n
-# Update from simulation, then adapt causality value\n
-builder = transaction.portal_deliveries.amortisation_transaction_builder\n
-builder.updateFromSimulation(transaction.getRelativeUrl())\n
-tag = \'%s_afterBuild\' % transaction.getRelativeUrl()\n
-transaction.activate(tag=tag,\n
-    after_path_and_method_id=(\n
-    all_simulation_movement_path_list,\n
-    (\'immediateReindexObject\', \'recursiveImmediateReindexObject\'))).AmortisationTransaction_afterBuild()\n
-\n
-# Automatic workflow\n
-transaction.activate(after_tag=tag).updateCausalityState()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

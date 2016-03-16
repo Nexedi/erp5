@@ -22,16 +22,6 @@
               <dictionary/>
             </value>
         </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<?php \n
-header("HTTP/1.0 404 Not Found");\n
-?>
-
-]]></string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Form.Report import ReportSection\n
-result=[]\n
-result.append(ReportSection(\n
-              path=context.getPhysicalPath(),\n
-              title=context.Base_translateString(\'Campaigns\'),\n
-              form_id=\'CampaignModule_viewCampaignStatusList\'))\n
-\n
-result.append(ReportSection(\n
-              path=context.getPhysicalPath(),\n
-              title=context.Base_translateString(\'Events\'),\n
-              form_id=\'CampaignModule_viewCampaignDetailedEventsList\'))\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

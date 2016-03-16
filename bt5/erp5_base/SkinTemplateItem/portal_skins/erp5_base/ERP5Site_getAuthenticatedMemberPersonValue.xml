@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Find and returns Person object for current logged in user.\n
-Returns None if no corresponding person, for example when not using ERP5Security.ERP5UserManager.\n
-"""\n
-portal = context.getPortalObject()\n
-if user_name is None:\n
-  user_name = portal.portal_membership.getAuthenticatedMember()\n
-\n
-from Products.ERP5Security.ERP5UserManager import getUserByLogin\n
-found_user_list = getUserByLogin(portal, str(user_name))\n
-if len(found_user_list) == 1:\n
-  return found_user_list[0]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>user_name = None</string> </value>
         </item>

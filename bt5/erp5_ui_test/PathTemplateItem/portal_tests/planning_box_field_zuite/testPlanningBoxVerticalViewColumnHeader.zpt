@@ -1,0 +1,307 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test PlanningBox Vertical Column Header</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test PlanningBox Vertical Column Header<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+</thead><tbody tal:define="year python: DateTime().year();
+                           now python: DateTime()">
+<!-- Planning Box is not displayed in mobile skin
+     So this test is skipped -->
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_editObjectLineDates</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Modified Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewPlanningBox/planning_box/PlanningBox_setPropertyList?calendar_view='checked'</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//img[@alt='Planning']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Site Error</td>
+  <td></td>
+</tr>
+<!-- Make sure that we are working with currently date -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//img[@name='JumpToCurrentDay']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_1"]</td>
+  <td tal:content="python: '%s %02d/%02d 00:00' % (now.Day(), now.month(), now.day())"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_2"]</td>
+  <td tal:content="python: '%s %02d/%02d 03:00' % (now.Day(), now.month(), now.day())"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_3"]</td>
+  <td tal:content="python: '%s %02d/%02d 06:00' % (now.Day(), now.month(), now.day())"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_4"]</td>
+  <td tal:content="python: '%s %02d/%02d 09:00' % (now.Day(), now.month(), now.day())"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_5"]</td>
+  <td tal:content="python: '%s %02d/%02d 12:00' % (now.Day(), now.month(), now.day())"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_6"]</td>
+  <td tal:content="python: '%s %02d/%02d 15:00' % (now.Day(), now.month(), now.day())"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_7"]</td>
+  <td tal:content="python: '%s %02d/%02d 18:00' % (now.Day(), now.month(), now.day())"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_8"]</td>
+  <td tal:content="python: '%s %02d/%02d 21:00' % (now.Day(), now.month(), now.day())"> </td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>lane_path</td>
+  <td>label=Year</td>
+</tr>
+<tr>
+  <td>verifyTextNotPresent</td>
+  <td>Site Error</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_1"]</td>
+  <td tal:content="string:January $year"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_2"]</td>
+  <td tal:content="string:February $year"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_3"]</td>
+  <td tal:content="string:March $year"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_4"]</td>
+  <td tal:content="string:April $year"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_5"]</td>
+  <td tal:content="string:May $year"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_6"]</td>
+  <td tal:content="string:June $year"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_7"]</td>
+  <td tal:content="string:July $year"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_8"]</td>
+  <td tal:content="string:August $year"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_9"]</td>
+  <td tal:content="string:September $year"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_10"]</td>
+  <td tal:content="string:October $year"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_11"]</td>
+  <td tal:content="string:November $year"> </td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_12"]</td>
+  <td tal:content="string:December $year"> </td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>lane_path</td>
+  <td>label=Month</td>
+</tr>
+<tr>
+  <td>verifyTextNotPresent</td>
+  <td>Site Error</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_1"]</td>
+  <td tal:content="string:$year/01/01"/>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_2"]</td>
+  <td tal:content="string:$year/01/04"/>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_3"]</td>
+  <td tal:content="string:$year/01/07"/>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_4"]</td>
+  <td tal:content="string:$year/01/10"/>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_5"]</td>
+  <td tal:content="string:$year/01/13"/>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_6"]</td>
+  <td tal:content="string:$year/01/16"/>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_7"]</td>
+  <td tal:content="string:$year/01/19"/>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_8"]</td>
+  <td tal:content="string:$year/01/22"/>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_9"]</td>
+  <td tal:content="string:$year/01/25"/>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_10"]</td>
+  <td tal:content="string:$year/01/28"/>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_lane_11"]</td>
+  <td tal:content="string:$year/01/31"/>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>lane_path</td>
+  <td>label=Day</td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Site Error</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewPlanningBox/planning_box/PlanningBox_setPropertyList</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Successfully.</td>
+  <td></td>
+</tr>
+</tal:block>
+
+</tbody></table>
+</body>
+</html>

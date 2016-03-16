@@ -49,35 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from DateTime import DateTime\n
-try:\n
-  token_dict = context.Base_getBearerToken(token)\n
-except KeyError:\n
-  # not found\n
-  return None\n
-\n
-key = context.getPortalObject().portal_preferences.getPreferredBearerTokenKey()\n
-\n
-if context.Base_getHMAC(key, str(token_dict)) != token:\n
-  # bizzare, not valid\n
-  return None\n
-\n
-if DateTime().timeTime() > token_dict[\'expiration_timestamp\']:\n
-  # expired\n
-  return None\n
-\n
-if token_dict[\'user-agent\'] == context.REQUEST.getHeader(\'User-Agent\') and token_dict[\'remote-addr\'] == context.REQUEST.get(\'REMOTE_ADDR\'):\n
-  # correct\n
-  return token_dict[\'reference\']\n
-return None\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>token</string> </value>
         </item>

@@ -19,20 +19,6 @@
             <value> <string>application/x-ruby</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string># Get the directory that this configuration file exists in\n
-dir = File.dirname(__FILE__)\n
-\n
-# Load the sencha-touch framework automatically.\n
-load File.join(dir, \'..\', \'themes\')\n
-\n
-# Compass configurations\n
-sass_path    = dir\n
-css_path     = File.join(dir, "..", "css")\n
-environment  = :production\n
-output_style = :compressed</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

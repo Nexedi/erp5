@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Resource lister from a ticket\n
-"""\n
-portal = context.getPortalObject()\n
-portal_type = portal.getPortalEventTypeList()[0]\n
-\n
-event = portal.getDefaultModule(portal_type).newContent(portal_type=portal_type,\n
-                                                         temp_object=True)\n
-\n
-return event.Event_getResourceItemList()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

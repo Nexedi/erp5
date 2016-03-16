@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  Redirect to external map provider.\n
-  In some case we can render an ERP% form and never leave ERP5 site thus this is\n
-  a simple basic implementation\n
-"""\n
-context.REQUEST.RESPONSE.redirect( \\\n
-  \'http://www.openstreetmap.org/?lat=%s&lon=%s&zoom=17&layers=M\' \\\n
-    %(context.getLatitude(), context.getLongitude()))\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

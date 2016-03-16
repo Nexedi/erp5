@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>resource_value = context.Item_getResourceValue()\n
-movement_value = context.getAggregateRelatedValue()\n
-\n
-result_item_list = [(\'\', \'\')]\n
-if resource_value is not None:\n
-  result_item_list.extend([(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in resource_value.getQuantityUnitValueList()])\n
-elif movement_value is not None:\n
-  result_item_list.extend([(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in movement_value.getQuantityUnitValueList()])\n
-\n
-return result_item_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

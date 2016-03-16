@@ -49,12 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>context.sale_order_module.newContent(portal_type=\'Sale Order\', id=\'erp5_trade_ui_test_sale_order_1\')\n
-return "Sale Order Created."\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Example code:\n
-\n
-# Import a standard function, and get the HTML request and response objects.\n
-from Products.PythonScripts.standard import html_quote\n
-request = container.REQUEST\n
-RESPONSE =  request.RESPONSE\n
-\n
-# Return a string identifying this script.\n
-print "This is the", script.meta_type, \'"%s"\' % script.getId(),\n
-if script.title:\n
-    print "(%s)" % html_quote(script.title),\n
-print "in", container.absolute_url()\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Movement_statBalance</string> </value>
         </item>

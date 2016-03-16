@@ -33,52 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-  <metal:block define-macro="master">\n
-    <tal:block tal:define="title here/Title;\n
-                           enctype string:multipart/form-data;\n
-                           portal context/portal_url/getPortalObject;\n
-                           global css_list python:[\'%s/tabber_style.css\' % (portal.absolute_url(),)];\n
-                           global js_list python:[\'%s/erp5_tabber.js\' % (portal.absolute_url(),)]">\n
-      <tal:block metal:use-macro="here/main_template/macros/master">\n
-        <tal:block metal:fill-slot="main">\n
-          <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
-            <tal:block tal:define="dummy python:request.RESPONSE.redirect(\'%s/login_form\' % portal.absolute_url())" />\n
-          </tal:block>\n
-          <tal:block tal:condition="python:not here.portal_membership.isAnonymousUser()">\n
-            <div class="index_html" style="margin:20px 40px 0 40px; padding:0; text-align:left;">\n
-             <div class="document">\n
-              <div class="actions">\n
-                <metal:block define-slot="tabs" />\n
-              </div>\n
-              <div class="content editable">\n
-              <div id="container" style="margin: 1em">\n
-                <metal:block define-slot="content" />\n
-              </div>\n
-                <p class="clear" />\n
-              </div>\n
-              <tal:block tal:condition="python: here.getPortalObject().restrictedTraverse(\'portal_gadgets\', None) is not None">\n
-                  <tal:block tal:condition="exists:here/ERP5Site_viewHomeAreaRenderer"\n
-                            tal:replace="structure python: here.ERP5Site_viewHomeAreaRenderer(create_default_pad=True, \n
-                                                                                              make_security_check=True)" />\n
-            </tal:block>\n
-            </div>\n
-            </div>\n
-          </tal:block>\n
-        </tal:block>\n
-      </tal:block>\n
-    </tal:block>\n
-  </metal:block>\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

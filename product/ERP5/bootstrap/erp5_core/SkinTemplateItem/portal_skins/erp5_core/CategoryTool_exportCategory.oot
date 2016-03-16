@@ -1,0 +1,41 @@
+<office:document-content
+  xmlns:office='urn:oasis:names:tc:opendocument:xmlns:office:1.0'
+  xmlns:table='urn:oasis:names:tc:opendocument:xmlns:table:1.0'
+  xmlns:tal='http://xml.zope.org/namespaces/tal'
+  xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
+
+  office:version="1.0"
+
+  tal:attributes='dummy python: request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'>
+  <office:body>
+    <office:spreadsheet>
+      <tal:block tal:repeat="table context/CategoryTool_constructCategoryTableToExport">
+        <table:table table:print="false" tal:attributes="table:name table/name"> 
+          <table:table-column tal:repeat="path_cell table/header_row"/>
+
+          <table:table-header-rows>
+            <table:table-row tal:define="row table/header_row">
+              <table:table-cell tal:repeat="path_cell row/path_cell_list">
+                <text:p tal:content="path_cell"/>
+              </table:table-cell>
+              <table:table-cell tal:repeat="category_property row/category_property_list">
+                <text:p tal:content="category_property"/>
+              </table:table-cell>
+            </table:table-row>
+          </table:table-header-rows>
+          <table:table-row tal:repeat="row table/row_list">
+            <table:table-cell tal:repeat="path_cell row/path_cell_list">
+              <text:p tal:content="path_cell"/>
+            </table:table-cell>
+            <table:table-cell tal:repeat="category_property row/category_property_list">
+              <text:p tal:content="category_property"/>
+            </table:table-cell>
+          </table:table-row>
+        </table:table>
+      </tal:block>
+    </office:spreadsheet>
+  </office:body>
+</office:document-content>
+<!--
+vim: filetype=xml
+-->

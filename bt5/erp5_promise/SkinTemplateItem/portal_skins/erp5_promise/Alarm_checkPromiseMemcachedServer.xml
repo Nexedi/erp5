@@ -49,40 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFActivity.ActiveResult import ActiveResult\n
-\n
-portal = context.getPortalObject()\n
-promise_url = portal.getPromiseParameter(\'external_service\', \'memcached_url\')\n
-\n
-if promise_url is None:\n
-  return\n
-\n
-plugin = portal.portal_memcached.default_memcached_plugin\n
-\n
-url = "memcached://%s/" % plugin.getUrlString()\n
-\n
-active_result = ActiveResult()\n
-\n
-if promise_url != url:\n
-  severity = 1\n
-  summary = "Memcached not configured as expected"\n
-  detail = "Expect %s\\nGot %s" % (promise_url, url)\n
-else:\n
-  severity = 0\n
-  summary = "Nothing to do."\n
-  detail = ""\n
-\n
-active_result.edit(\n
-  summary=summary, \n
-  severity=severity,\n
-  detail=detail)\n
-\n
-\n
-context.newActiveProcess().postResult(active_result)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>tag, fixit=False, **kw</string> </value>
         </item>

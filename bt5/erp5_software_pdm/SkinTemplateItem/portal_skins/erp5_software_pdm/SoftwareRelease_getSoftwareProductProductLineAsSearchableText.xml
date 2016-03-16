@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>r = \'\'\n
-\n
-software_product = context.getFollowUpValue(portal_type=\'Software Product\')\n
-if software_product:\n
-    r = software_product.getProductLineTitle() + \' \' + software_product.getDescription() + software_product.getTitle()\n
-return r\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

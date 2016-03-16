@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>""" \n
-  Return the current step for checkout procedure that will be displayed on Shopping Cart page.\n
-"""\n
-web_site = context.getWebSiteValue()\n
-shopping_cart = web_site.SaleOrder_getShoppingCart()\n
-empty_cart = shopping_cart.SaleOrder_isShoppingCartEmpty()\n
-is_consistent = shopping_cart.SaleOrder_isConsistent()\n
-is_anonymous = context.portal_membership.isAnonymousUser()\n
-\n
-if empty_cart:\n
-  return context.Base_translateString(\'Add a product to your Shopping Cart.\')\n
-\n
-if not is_consistent:\n
-  return context.Base_translateString(\'Select a Shipping Service.\')\n
-\n
-if is_consistent and is_anonymous:\n
-  return context.Base_translateString(\'Please, you must login to proceed.\')\n
-\n
-if is_consistent and not is_anonymous:\n
-  return context.Base_translateString(\'Select your billing address.\')\n
-\n
-return\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

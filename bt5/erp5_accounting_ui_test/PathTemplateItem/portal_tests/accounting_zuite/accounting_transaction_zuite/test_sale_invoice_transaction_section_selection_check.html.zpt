@@ -1,0 +1,128 @@
+<html>
+<head><title>Test Section Selection for Sale Invoice Transaction</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test Section Selection for Sale Invoice Transaction.
+</td></tr>
+<!-- XXX we do not need init method here ! -->
+</thead><tbody tal:define="init_method string:">
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+<!-- Setup {{{ -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/AccountingZuite_setDocumentSectionPreference</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>('group/demo_group', 'group/demo_group')</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<!-- }}} -->
+
+<!-- Add an accounting transaction and select an orgaisation as section {{{ -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>label=Add Sale Invoice Transaction</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Object created.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_my_source_section</td>
+  <td>label=My Organisation</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_title</td>
+  <td>My Sale Invoice Transaction</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>document.forms[0].elements['Base_edit:method'][1]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<!-- Modify Preference -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/AccountingZuite_unsetDocumentSectionPreference</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>(None, None)</td>
+  <td></td>
+</tr>
+<!-- Activity -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<!-- Open the transaction view and check section value. -->
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>label=Accounting</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=My Sale Invoice Transaction</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_my_source_section</td>
+  <td>organisation_module/my_organisation</td>
+</tr>
+
+<!-- Reset Preference -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/AccountingZuite_setDocumentSectionPreference</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>('group/demo_group', 'group/demo_group')</td>
+  <td></td>
+</tr>
+
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

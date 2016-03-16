@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This scripts calls the crawlContent API and returns a nice message\n
-to the user. If no URL is defined, warns the user.\n
-"""\n
-translateString = context.Base_translateString\n
-if not context.asURL():\n
-  portal_status_message = translateString("Please specify a URL before trying to start to crawl content.")\n
-else:\n
-  portal_status_message = translateString("Started crawling external source.")\n
-  context.crawlContent()\n
-return context.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_status_message), **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

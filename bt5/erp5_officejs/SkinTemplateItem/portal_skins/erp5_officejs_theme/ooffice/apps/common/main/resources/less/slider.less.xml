@@ -19,59 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-.slider {\r\n
-    position: relative;\r\n
-    height: 18px;\r\n
-\r\n
-    .thumb {\r\n
-        position: absolute;\r\n
-        left: 0;\r\n
-        top: 0;\r\n
-        width: 13px;\r\n
-        height: 15px;\r\n
-        margin-left: -7px;\r\n
-        cursor: default;\r\n
-        .background-ximage(\'@{common-image-path}/@{common-controls}\', \'@{common-image-path}/@{common-controls2x}\', 100px);\r\n
-        background-position: @slide-thumb-offset-x @slide-thumb-offset-y;\r\n
-\r\n
-        &.active {\r\n
-            background-position: @slide-thumb-offset-x @slide-thumb-offset-y - 30px;\r\n
-        }\r\n
-    }\r\n
-\r\n
-    .track {\r\n
-        height: 18px;\r\n
-        .track-left {\r\n
-            width: 7px;\r\n
-            background: transparent no-repeat @slide-track-offset-x @slide-track-offset-y;\r\n
-        }\r\n
-        .track-right {\r\n
-            width: 7px;\r\n
-            background: transparent no-repeat @slide-track-offset-x - 7px @slide-track-offset-y;\r\n
-        }\r\n
-        .track-center {\r\n
-            background: transparent repeat-x @slide-track-offset-x @slide-track-offset-y - 18px;\r\n
-        }\r\n
-\r\n
-        div {\r\n
-            height: 18px;\r\n
-            display: inline-block;\r\n
-            .background-ximage(\'@{common-image-path}/@{common-controls}\', \'@{common-image-path}/@{common-controls2x}\', 100px)  !important;\r\n
-        }\r\n
-\r\n
-    }\r\n
-\r\n
-    &.disabled {\r\n
-        opacity: 0.35;\r\n
-    }\r\n
-}
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Note: this script is executed with the proxy role Manager, because this script needs\n
-#       to use checkbook_module.\n
-\n
-transaction = state_change[\'object\']\n
-check = transaction.getAggregateValue()\n
-check.deliver()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

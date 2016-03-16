@@ -1,0 +1,15 @@
+<tal:comment replace="nothing">
+  This widget displays the top bar of Web Site
+</tal:comment>
+
+
+<tal:block tal:define="current_web_site_url python:request.get('current_web_site_url', '');
+                       current_web_site python:request.get('current_web_site', here);
+                       isAnon python: context.portal_membership.isAnonymousUser()">
+
+<a tal:attributes="href python: isAnon and current_web_site_url or current_web_site_url + '/WebSite_logout'">
+ <div id="logo">
+  </div>
+</a>
+
+</tal:block>

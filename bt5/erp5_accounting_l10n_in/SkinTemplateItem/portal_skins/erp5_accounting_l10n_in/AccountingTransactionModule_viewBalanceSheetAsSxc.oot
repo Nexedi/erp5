@@ -1,0 +1,284 @@
+<office:document-content xmlns:draw='http://openoffice.org/2000/drawing' xmlns:office='http://openoffice.org/2000/office' xmlns:text='http://openoffice.org/2000/text' xmlns:ooo='http://openoffice.org/2004/office' xmlns:number='http://openoffice.org/2000/datastyle' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:meta='http://openoffice.org/2000/meta' xmlns:table='http://openoffice.org/2000/table' xmlns:dr3d='http://openoffice.org/2000/dr3d' xmlns:fo='http://www.w3.org/1999/XSL/Format' xmlns:style='http://openoffice.org/2000/style' xmlns:xforms='http://www.w3.org/2002/xforms' xmlns:form='http://openoffice.org/2000/form' xmlns:script='http://openoffice.org/2000/script' xmlns:ooow='http://openoffice.org/2004/writer' xmlns:svg='http://www.w3.org/2000/svg' xmlns:chart='http://openoffice.org/2000/chart' xmlns:dom='http://www.w3.org/2001/xml-events' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:oooc='http://openoffice.org/2004/calc' xmlns:math='http://www.w3.org/1998/Math/MathML' office:class='spreadsheet'  xmlns:tal='http://xml.zope.org/namespaces/tal'
+          xmlns:i18n='http://xml.zope.org/namespaces/i18n'
+          xmlns:metal='http://xml.zope.org/namespaces/metal'
+          tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'
+         office:version='1.0'>
+  <office:script/>
+  <office:font-decls>
+    <style:font-decl style:font-pitch='variable' fo:font-family="'DejaVu Sans'" style:name='DejaVu Sans'/>
+    <style:font-decl style:font-pitch='variable' fo:font-family='Arial' style:font-family-generic='swiss' style:name='Arial'/>
+  </office:font-decls>
+  <office:automatic-styles>
+    <style:style style:family='table-column' style:name='col1'>
+      <style:properties style:column-width='4.0cm' fo:break-before='auto'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='col2'>
+      <style:properties style:column-width='7.0cm' fo:break-before='auto'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='col3'>
+      <style:properties style:column-width='3.0cm' fo:break-before='auto'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='co1'>
+      <style:properties style:column-width='7.251cm' fo:break-before='auto'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='co2'>
+      <style:properties style:column-width='1.877cm' fo:break-before='auto'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='co3'>
+      <style:properties style:column-width='4.27cm' fo:break-before='auto'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='co4'>
+      <style:properties style:column-width='2.267cm' fo:break-before='auto'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='ro1'>
+      <style:properties style:use-optimal-row-height='true' style:row-height='0.695cm' fo:break-before='auto'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='ro2'>
+      <style:properties style:use-optimal-row-height='true' style:row-height='0.459cm' fo:break-before='auto'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='ro3'>
+      <style:properties style:use-optimal-row-height='true' style:row-height='0.441cm' fo:break-before='auto'/>
+    </style:style>
+    <style:style style:master-page-name='Default' style:family='table' style:name='ta1'>
+      <style:properties style:writing-mode='lr-tb' table:display='true'/>
+    </style:style>
+    <number:number-style number:language='en' number:country='IN' style:name='N155004'>
+      <number:number number:decimal-places='2' number:min-integer-digits='1' number:grouping='true'/>
+    </number:number-style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce1'>
+      <style:properties fo:border-right='none' fo:font-weight='bold' fo:border-bottom='0.039cm double #000000' style:text-align-source='fix' style:border-line-width-bottom='0.002cm 0.035cm 0.002cm' fo:margin-left='0cm' fo:font-size='16pt' fo:text-align='center' fo:border-top='none' fo:border-left='none'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce2'>
+      <style:properties fo:font-weight='bold' fo:border-bottom='0.035cm solid #000000' style:text-align-source='fix' fo:border-right='none' fo:border-left='none' fo:text-align='center' fo:border-top='none' fo:margin-left='0cm'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce3'>
+      <style:properties fo:border-top='0.088cm solid #000000' fo:border-right='0.035cm solid #000000' fo:border-bottom='none' fo:border-left='0.088cm solid #000000'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce4'>
+      <style:properties fo:border-top='none' fo:border-right='0.035cm solid #000000' fo:border-bottom='0.035cm solid #000000' fo:border-left='0.088cm solid #000000'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce5'>
+      <style:properties fo:border-top='none' fo:border-right='0.035cm solid #000000' fo:border-bottom='none' fo:border-left='0.088cm solid #000000'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce6'>
+      <style:properties fo:border-top='none' fo:border-right='0.035cm solid #000000' fo:border-bottom='none' fo:font-weight='bold' fo:border-left='0.088cm solid #000000'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce7'>
+      <style:properties fo:font-weight='bold' fo:border-bottom='none' style:text-align-source='fix' fo:border-right='0.035cm solid #000000' fo:border-left='0.088cm solid #000000' fo:text-align='end' fo:border-top='none' fo:margin-left='0cm'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce8'>
+      <style:properties fo:border-top='none' fo:border-right='0.035cm solid #000000' fo:border-bottom='0.088cm solid #000000' fo:border-left='0.088cm solid #000000'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce9'>
+      <style:properties fo:font-weight='bold' fo:border-bottom='none' style:text-align-source='fix' fo:border-right='0.035cm solid #000000' fo:border-left='0.035cm solid #000000' fo:text-align='center' fo:border-top='0.088cm solid #000000' fo:margin-left='0cm'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce10'>
+      <style:properties fo:font-weight='bold' fo:border-bottom='0.035cm solid #000000' style:text-align-source='fix' fo:border-right='0.035cm solid #000000' fo:border-left='0.035cm solid #000000' fo:text-align='center' fo:border-top='none' fo:margin-left='0cm'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce11'>
+      <style:properties fo:border-top='none' fo:border-right='0.035cm solid #000000' fo:border-bottom='none' fo:border-left='0.035cm solid #000000'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce12'>
+      <style:properties fo:border-bottom='none' style:text-align-source='fix' fo:border-right='0.035cm solid #000000' fo:border-left='0.035cm solid #000000' fo:text-align='center' fo:border-top='none' fo:margin-left='0cm'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce13'>
+      <style:properties fo:border-top='none' fo:border-right='0.035cm solid #000000' fo:border-bottom='0.088cm solid #000000' fo:border-left='0.035cm solid #000000'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:data-style-name='N155004' style:family='table-cell' style:name='ce14'>
+      <style:properties fo:border-bottom='none' style:text-align-source='fix' fo:border-right='0.035cm solid #000000' fo:border-left='0.035cm solid #000000' fo:text-align='end' fo:border-top='none' fo:margin-left='0cm'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:data-style-name='N155004' style:family='table-cell' style:name='ceXX'>
+      <style:properties fo:border-bottom='none' style:text-align-source='fix' fo:border-right='0.088cm solid #000000' fo:border-left='0.035cm solid #000000' fo:text-align='end' fo:border-top='none' fo:margin-left='0cm'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:data-style-name='N155004' style:family='table-cell' style:name='ce15'>
+      <style:properties fo:border-right='0.035cm solid #000000' fo:font-weight='bold' fo:border-bottom='0.039cm double #000000' style:text-align-source='fix' style:border-line-width-bottom='0.002cm 0.035cm 0.002cm' fo:margin-left='0cm' fo:text-align='end' fo:border-top='0.018cm solid #000000' fo:border-left='0.035cm solid #000000'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce16'>
+      <style:properties fo:font-weight='bold' fo:border-bottom='none' style:text-align-source='fix' fo:border-right='0.088cm solid #000000' fo:border-left='0.035cm solid #000000' fo:text-align='center' fo:border-top='0.088cm solid #000000' fo:margin-left='0cm'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce17'>
+      <style:properties fo:font-weight='bold' fo:border-bottom='0.035cm solid #000000' style:text-align-source='fix' fo:border-right='0.088cm solid #000000' fo:border-left='0.035cm solid #000000' fo:text-align='center' fo:border-top='none' fo:margin-left='0cm'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce18'>
+      <style:properties fo:border-top='none' fo:border-right='0.088cm solid #000000' fo:border-bottom='none' fo:border-left='0.035cm solid #000000'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:data-style-name='N155004' style:family='table-cell' style:name='ce19'>
+      <style:properties fo:border-right='0.088cm solid #000000' fo:font-weight='bold' fo:border-bottom='0.039cm double #000000' style:text-align-source='fix' style:border-line-width-bottom='0.002cm 0.035cm 0.002cm' fo:margin-left='0cm' fo:text-align='end' fo:border-top='0.018cm solid #000000' fo:border-left='0.035cm solid #000000'/>
+    </style:style>
+    <style:style style:parent-style-name='Default' style:family='table-cell' style:name='ce20'>
+      <style:properties fo:border-top='none' fo:border-right='0.088cm solid #000000' fo:border-bottom='0.088cm solid #000000' fo:border-left='0.035cm solid #000000'/>
+    </style:style>
+  </office:automatic-styles>
+  <office:body>
+    <table:table table:style-name='ta1' table:name='BS'>
+      <office:forms form:automatic-focus='false' form:apply-design-mode='false'/>
+      <table:table-column table:style-name='co1' table:default-cell-style-name='ce5'/>
+      <table:table-column table:style-name='co2' table:default-cell-style-name='ce11'/>
+      <table:table-column table:style-name='co3' table:default-cell-style-name='ce11'/>
+      <table:table-column table:style-name='co3' table:default-cell-style-name='ce18'/>
+      <table:table-row table:style-name='ro1'>
+        <table:table-cell table:number-rows-spanned='1' table:style-name='ce1' table:number-columns-spanned='4' table:value-type='string'>
+          <text:p tal:content="python:here.restrictedTraverse(request.organisation).getCorporateName()">COMPANY NAME</text:p>
+        </table:table-cell>
+        <table:covered-table-cell table:style-name='Default' table:number-columns-repeated='3'/>
+      </table:table-row>
+      <table:table-row table:style-name='ro2'>
+        <table:table-cell table:number-rows-spanned='1' table:style-name='ce2' table:number-columns-spanned='4' table:value-type='string'>
+			<text:p>Balance sheet as at <tal:x replace="request/at_date" /></text:p>
+        </table:table-cell>
+        <table:covered-table-cell table:style-name='Default' table:number-columns-repeated='3'/>
+      </table:table-row>
+      <table:table-row table:style-name='ro3'>
+        <table:table-cell table:style-name='Default' table:number-columns-repeated='4'/>
+      </table:table-row>
+      <table:table-row table:style-name='ro2'>
+        <table:table-cell table:style-name='ce3'/>
+        <table:table-cell table:value-type='string' table:style-name='ce9'>
+          <text:p>Schedule</text:p>
+        </table:table-cell>
+        <table:table-cell table:value-type='string' table:style-name='ce9'>
+          <text:p>As at <tal:x replace="request/at_date" /></text:p>
+        </table:table-cell>
+        <table:table-cell table:value-type='string' table:style-name='ce16'>
+          <text:p>As at <tal:x replace="request/at_date2" /></text:p>
+        </table:table-cell>
+      </table:table-row>
+      <table:table-row table:style-name='ro2'>
+        <table:table-cell table:style-name='ce4'/>
+        <table:table-cell table:value-type='string' table:style-name='ce10'>
+          <text:p>No</text:p>
+        </table:table-cell>
+        <table:table-cell table:value-type='string' table:style-name='ce10'>
+          <text:p>Rs. <text:s text:c='9'/>P.</text:p>
+        </table:table-cell>
+        <table:table-cell table:value-type='string' table:style-name='ce17'>
+          <text:p>Rs. <text:s text:c='9'/>P.</text:p>
+        </table:table-cell>
+      </table:table-row>
+      <table:table-row table:style-name='ro3' table:number-rows-repeated='2'>
+        <table:table-cell table:number-columns-repeated='4'/>
+      </table:table-row>
+	  <tal:foo define="global result context/AccountingTransactionModule_getDataForBalanceSheet" />
+	  <tal:foo define="global schedules python: result[1].items()" />
+	  <tal:foo define="global items_list python: result[0]" />
+	  <tal:x repeat="item items_list">
+		  <table:table-row tal:condition="python: item['t'] == 'total'" table:style-name='ro3'>
+			  <table:table-cell table:value-type='string' table:style-name='ce7'>
+				  <text:p tal:content="python: item['text']">Total</text:p>
+			  </table:table-cell>
+			  <table:table-cell/>
+			  <table:table-cell tal:attributes="table:formula python:item['formula']" table:style-name='ce15' table:value-type='float'>
+			  </table:table-cell>
+			  <table:table-cell tal:attributes="table:formula python:item['formula2']" table:style-name='ce19' table:value-type='float'>
+			  </table:table-cell>
+		  </table:table-row>
+
+		  <table:table-row tal:condition="python: item['t'] == 'minitotal'" table:style-name='ro2'>
+			  <table:table-cell table:value-type='string'>
+				  <text:p></text:p>
+			  </table:table-cell>
+			  <table:table-cell/>
+			  <table:table-cell tal:attributes="table:formula python:item['formula']" table:style-name='ce14' table:value-type='float'>
+			  </table:table-cell>
+			  <table:table-cell tal:attributes="table:formula python:item['formula2']" table:style-name='ceXX' table:value-type='float'>
+			  </table:table-cell>
+		  </table:table-row>
+
+		  <tal:nottotal tal:condition="python: item['t'] not in ('total','minitotal')" >
+
+			  <table:table-row tal:condition="python: item['level'] == 0" table:style-name='ro3'>
+				  <table:table-cell table:value-type='string' table:style-name='ce6'>
+					  <text:p tal:content="python: item['text']">I SOURCES OF FUNDS</text:p>
+				  </table:table-cell>
+				  <table:table-cell table:number-columns-repeated='3'/>
+			  </table:table-row>
+
+			  <table:table-row tal:condition="python: item['t'] == 'end'"  table:style-name='ro2'>
+				  <table:table-cell table:value-type='string'>
+					  <text:p tal:content="python: item['text']">(1) Shareholders'Funds:</text:p>
+				  </table:table-cell>
+				  <table:table-cell table:value-type='string' table:style-name='ce12'>
+					  <text:p tal:content="python: item['schedule'] ">A</text:p>
+				  </table:table-cell>
+				  <table:table-cell tal:attributes="table:value python:item['value']" table:style-name='ce14' table:value-type='float'>
+				  </table:table-cell>
+				  <table:table-cell tal:attributes="table:value python:item['value2']" table:style-name='ceXX' table:value-type='float'>
+				  </table:table-cell>
+			  </table:table-row>
+
+			  <table:table-row tal:condition="python: item['level'] == 1 and item['t'] != 'end' " table:style-name='ro2'>
+				  <table:table-cell table:value-type='string'>
+					  <text:p tal:content="python: item['text']">[a] Share Capital</text:p>
+				  </table:table-cell>
+				  <table:table-cell/>
+				  <table:table-cell/>
+				  <table:table-cell/>
+			  </table:table-row>
+
+		  </tal:nottotal>
+
+	  </tal:x>
+
+      <table:table-row table:style-name='ro3'>
+        <table:table-cell table:style-name='ce8'/>
+        <table:table-cell table:style-name='ce13' table:number-columns-repeated='2'/>
+        <table:table-cell table:style-name='ce20'/>
+      </table:table-row>
+    </table:table>
+    <table:table table:style-name='ta1' table:name='Schedules'>
+      <table:table-column table:style-name='col1' table:default-cell-style-name='ce7'/>
+      <table:table-column table:style-name='col2' table:default-cell-style-name='Default'/>
+      <table:table-column table:style-name='col3' table:default-cell-style-name='ceXX'/>
+
+      <table:table-row table:style-name='ro2'>
+        <table:table-cell table:number-rows-spanned='1' table:style-name='ce2' table:number-columns-spanned='3' table:value-type='string'>
+			<text:p>Schedules as at <tal:x replace="request/at_date" /></text:p>
+        </table:table-cell>
+        <table:covered-table-cell table:style-name='Default' table:number-columns-repeated='3'/>
+      </table:table-row>
+
+      <table:table-row table:style-name='ro3'>
+        <table:table-cell table:style-name='Default' table:number-columns-repeated='3'/>
+      </table:table-row>
+
+      <table:table-row table:style-name='ro3'>
+        <table:table-cell table:style-name='ce3'/>
+        <table:table-cell table:style-name='ce9'/>
+        <table:table-cell table:style-name='ce16'/>
+      </table:table-row>
+
+	  <tal:x content="python: schedules.sort()" />
+	  <tal:x repeat="item python: schedules">
+		  <table:table-row table:style-name='ro3'>
+			<table:table-cell>
+				<text:p tal:content="python: 'Schedule '+item[0]">
+				</text:p>
+			</table:table-cell>
+			<table:table-cell/>
+			<table:table-cell/>
+		  </table:table-row>
+		  <tal:x repeat="subitem python: item[1]">
+		  <table:table-row table:style-name='ro3'>
+		  <table:table-cell />
+			<table:table-cell>
+				<tal:t tal:condition="python: subitem['title'] != ''" >
+					<text:p tal:content="python: '%(description)s (%(title)s)'%subitem" />
+				</tal:t>
+				<tal:t tal:condition="python: subitem['title'] == ''" >
+					<text:p tal:content="python: '%(description)s'%subitem" />
+				</tal:t>
+			</table:table-cell>
+			<table:table-cell tal:attributes="table:value python:subitem['quantity']" table:value-type='float' />
+		  </table:table-row>
+		  </tal:x>
+	  </tal:x>
+
+      <table:table-row table:style-name='ro3'>
+        <table:table-cell table:style-name='ce8'/>
+        <table:table-cell table:style-name='ce13' />
+        <table:table-cell table:style-name='ce20'/>
+      </table:table-row>
+
+    </table:table>
+  </office:body>
+</office:document-content>

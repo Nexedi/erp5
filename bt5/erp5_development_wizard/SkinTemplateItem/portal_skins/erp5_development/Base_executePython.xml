@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>selection_id = \'python_shell_selection\'\n
-portal = context.getPortalObject()\n
-portal_selections = portal.portal_selections\n
-\n
-if python_expression is None:\n
-  python_expression = context.REQUEST.get(\'python_expression\')\n
-if python_expression is None:\n
-  # take from hard coded selection as when browsing listboxes\n
-  # sql_expression is simply not available\n
-  selection_object = portal_selections.getSelectionParamsFor(selection_id)\n
-  if selection_object:\n
-    python_expression = selection_object.get(\'python_expression\')\n
-\n
-# update selection\n
-portal_selections.setSelectionParamsFor(selection_id, \\\n
-         dict(python_expression=python_expression))\n
-\n
-# pass all to code runner\n
-return context.Base_runPythonCode(python_expression)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>python_expression=None,**kw</string> </value>
         </item>

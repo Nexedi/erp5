@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-\n
-search_kw = dict(\n
-  parent_portal_type=\'Payment Transaction\',\n
-  section_uid=context.getSourceSectionUid(),\n
-  default_aggregate_uid=context.getUid(),\n
-)\n
-\n
-if context.getSourcePayment():\n
-  precision = context.getQuantityPrecisionFromResource(\n
-    context.getSourcePaymentValue().getPriceCurrency())\n
-  portal.REQUEST.set(\'precision\', precision)\n
-\n
-return portal.portal_simulation.getMovementHistoryList(**search_kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

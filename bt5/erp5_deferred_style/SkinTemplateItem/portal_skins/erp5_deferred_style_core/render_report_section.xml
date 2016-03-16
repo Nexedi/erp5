@@ -33,21 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
-           xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
-           tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'>\n
-  <!-- The user of this must put a report section named "report_section" in TALES context -->\n
-  <tal:block tal:define="report_item report_section"> <!-- compatibilty alias -->\n
-    <tal:block metal:use-macro="here/report_view/macros/render_report_section"/>\n
-  </tal:block>\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/xml</string> </value>
         </item>

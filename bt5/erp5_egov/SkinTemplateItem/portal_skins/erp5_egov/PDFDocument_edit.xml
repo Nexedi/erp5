@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>form_id = \'view\'\n
-return context.asContext(edit=context.edit,\n
-  **{form_id: context.getTypeInfo().getERP5Form()}).Base_edit(form_id=form_id, *args, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id, *args, **kw</string> </value>
         </item>

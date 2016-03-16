@@ -23,33 +23,6 @@
             <value> <string>application/x-javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-﻿/* Japanese initialisation for the jQuery UI date picker plugin. */\n
-/* Written by Kentaro SATO (kentaro@ranvis.com). */\n
-jQuery(function($){\n
-\t$.datepicker.regional[\'ja\'] = {\n
-\t\tcloseText: \'閉じる\',\n
-\t\tprevText: \'&#x3c;前\',\n
-\t\tnextText: \'次&#x3e;\',\n
-\t\tcurrentText: \'今日\',\n
-\t\tmonthNames: [\'1月\',\'2月\',\'3月\',\'4月\',\'5月\',\'6月\',\n
-\t\t\'7月\',\'8月\',\'9月\',\'10月\',\'11月\',\'12月\'],\n
-\t\tmonthNamesShort: [\'1月\',\'2月\',\'3月\',\'4月\',\'5月\',\'6月\',\n
-\t\t\'7月\',\'8月\',\'9月\',\'10月\',\'11月\',\'12月\'],\n
-\t\tdayNames: [\'日曜日\',\'月曜日\',\'火曜日\',\'水曜日\',\'木曜日\',\'金曜日\',\'土曜日\'],\n
-\t\tdayNamesShort: [\'日\',\'月\',\'火\',\'水\',\'木\',\'金\',\'土\'],\n
-\t\tdayNamesMin: [\'日\',\'月\',\'火\',\'水\',\'木\',\'金\',\'土\'],\n
-\t\tdateFormat: \'yy/mm/dd\', firstDay: 0,\n
-\t\tisRTL: false,\n
-\t\tshowMonthAfterYear: true};\n
-\t$.datepicker.setDefaults($.datepicker.regional[\'ja\']);\n
-});
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

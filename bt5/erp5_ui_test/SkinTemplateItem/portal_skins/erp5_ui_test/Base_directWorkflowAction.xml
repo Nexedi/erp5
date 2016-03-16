@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-context.portal_workflow.doActionFor(context , workflow_action, comment=\'\', **kw)\n
-message = \'direct workflow action done.\'\n
-request.RESPONSE.redirect("%s/?portal_status_message=%s" % (context.absolute_url(), message) )\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>workflow_action, **kw</string> </value>
         </item>

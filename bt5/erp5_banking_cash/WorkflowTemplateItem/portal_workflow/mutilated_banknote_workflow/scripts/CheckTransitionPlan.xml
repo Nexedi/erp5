@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-ob = state_change[\'object\']\n
-\n
-# check presence of banknote\n
-if len(ob.objectValues(portal_type="Exchanged Mutilated Banknote Line")) != 0:\n
-  msg = Message(domain = "ui", message="Transition forbidden with exchanged banknote line defined.")\n
-  raise ValidationFailed, (msg,)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

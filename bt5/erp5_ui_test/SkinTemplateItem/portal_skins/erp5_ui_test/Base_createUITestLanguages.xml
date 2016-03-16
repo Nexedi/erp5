@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-Localizer = portal.Localizer\n
-\n
-for language in (\'wo\', \'xh\'):\n
-  Localizer.manage_addLanguage(language)\n
-  for catalog in Localizer.objectValues():\n
-    catalog.manage_addLanguage(language)\n
-\n
-portal.portal_caches.clearAllCache()\n
-return \'New Languages Added.\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

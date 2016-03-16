@@ -114,46 +114,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!doctype html>\n
-<html>\n
-  <head>\n
-    <meta charset="utf-8">\n
-    <meta name="viewport" content="width=device-width, initial-scale=1">\n
-\n
-    <title>Share jIO</title>\n
-\n
-    <script src="rsvp.js"></script>\n
-    <script src="renderjs.js"></script>\n
-    <script src="gadget_officejs_page_share_webrtc_jio.js"></script>\n
-  </head>\n
-\n
-  <body>\n
-    <div class="ui-grid-b ui-responsive">\n
-      <div class="ui-block-a"></div>\n
-      <div class="ui-block-b">\n
-        <p data-i18n="This is a renderJS gadget which shares a jIO storage via WebRTC.">This is a renderJS gadget which shares a jIO storage via WebRTC.</p>\n
-        <h2 data-i18n="Peer list">Peer list</h2>\n
-        <p><span data-i18n="Connected peers:">Connected peers:</span> <span class="peer_count">0</span></p>\n
-        <pre class="info"></pre>\n
-      </div>\n
-      <div class="ui-block-c"></div>\n
-    </div>\n
-\n
-    <div class="gadget_websocket">\n
-      <div data-gadget-url="gadget_websocket.html" data-gadget-scope="gadget_websocket.html">\n
-      </div>\n
-    </div>\n
-    <div class="gadget_webrtc_datachannel"></div>\n
-  </body>\n
-</html>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>text_content_substitution_mapping_method_id</string> </key>
             <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
         </item>

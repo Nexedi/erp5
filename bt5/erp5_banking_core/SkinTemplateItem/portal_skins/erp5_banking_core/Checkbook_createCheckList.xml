@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-\n
-context.setTitle(\'%s - %s\' % (start_number, stop_number))\n
-for i in xrange(int(start_number), int(stop_number) + 1):\n
-  newline = context.newContent(portal_type=\'Check\', title=str(i))\n
-  newline.setDestination(context.getDestinationSection())\n
-  newline.setStartDate(context.getStartDate())\n
-\n
-request.RESPONSE.redirect(context.absolute_url())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>start_number, stop_number</string> </value>
         </item>

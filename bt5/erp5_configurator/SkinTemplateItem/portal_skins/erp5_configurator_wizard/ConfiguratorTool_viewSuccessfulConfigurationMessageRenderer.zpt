@@ -1,0 +1,19 @@
+<div>
+
+  <h3 i18n:translate=""
+      i18n:domain="ui">Configuration is over. Enjoy your new ERP5 system!</h3>
+
+  <p i18n:translate=""
+     i18n:domain="ui">
+    Please click link below. 
+    You will be redirected to a form in which you can login using 
+    one of yours newly created ERP5 user accounts.
+  </p>
+
+  <a tal:attributes="href python: '%s/login_form' %here.getPortalObject().absolute_url()">
+    <tal:replace i18n:translate=""
+                 i18n:domain="ui">Start using your new ERP5 system</tal:replace>
+  </a>
+
+</div>
+

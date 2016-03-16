@@ -19,43 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-//\n
-// Component animations\n
-// --------------------------------------------------\n
-\n
-// Heads up!\n
-//\n
-// We don\'t use the `.opacity()` mixin here since it causes a bug with text\n
-// fields in IE7-8. Source: https://github.com/twitter/bootstrap/pull/3552.\n
-\n
-.fade {\n
-  opacity: 0;\n
-  .transition(opacity .15s linear);\n
-  &.in {\n
-    opacity: 1;\n
-  }\n
-}\n
-\n
-.collapse {\n
-  display: none;\n
-  &.in {\n
-    display: block;\n
-  }\n
-}\n
-.collapsing {\n
-  position: relative;\n
-  height: 0;\n
-  overflow: hidden;\n
-  .transition(height .35s ease);\n
-}\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,48 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  Generate an image name and check if it already exist\n
-"""\n
-\n
-path = context.getPath()\n
-image_id = title.lower() + "_" + slide_type.lower()\n
-\n
-# We replace all the whitespaces by dots\n
-image_id = \'\'.join(c for c in (\'_\'.join(image_id.split(\' \'))) if c.isalnum() or c == \'_\')\n
-\n
-found = True\n
-while found:\n
-  image_path = path + \'/\' + image_id\n
-  try:\n
-    image = context.restrictedTraverse(image_path)\n
-  except:\n
-    image = None\n
-    found = False\n
-    break\n
-  # If there\'s already an image with the same url\n
-  if found:\n
-    # Check if the end is a number and increment in that case\n
-    try:\n
-      end_number = int(image_id.split(\'_\')[-1])\n
-    except:\n
-      end_number = -1\n
-    if end_number > 0:\n
-      image_id = image_id.split(\'_\')[0:-1]\n
-      image_id.append(str(end_number+1))\n
-      image_id = \'_\'.join(image_id)\n
-    else:\n
-      image_id += \'_1\'\n
-\n
-return image_id\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>title, slide_type</string> </value>
         </item>

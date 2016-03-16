@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-serial = getattr(brain, \'serial\', \'0.0.0.0\')\n
-next_serial = getattr(brain, \'next_serial\', \'0.0.0.0\')\n
-\n
-if serial != \'0.0.0.0\':\n
-  return \'Base_viewHistoricalComparison?serial=%s&amp;next_serial=%s&amp;time=%s\'\\\n
-      % ( serial, next_serial, brain.time )\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain, **kw</string> </value>
         </item>

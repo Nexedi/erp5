@@ -49,12 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFCore.utils import getToolByName\n
-return getToolByName(context, \'portal_simulation\').solveMovement(context, delivery_solver, target_solver)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>delivery_solver=None, target_solver=None</string> </value>
         </item>

@@ -1,0 +1,82 @@
+<tal:block tal:define="uid options/uid;
+                       path options/path;
+                       title options/title;
+                       portal_type options/portal_type;
+                       url options/url;
+                       found options/found;
+                       version options/version;
+                       language options/language;
+                       owner_url options/owner_url;
+                       owner_title options/owner_title;
+                       reference options/reference;
+                       reference_url options/reference_url;
+                       document_web_section_list options/document_web_section_list;
+                       modification_date python: context.Base_FormatDate(options['modification_date']);
+                       inline_popup options/inline_popup">
+
+  <div class="search-text-summary"
+       tal:attributes="id uid;
+                       onmouseover string:showPopik('${uid}', '${path}')">   
+
+    <div style="display: none;"
+         tal:condition="inline_popup"
+         tal:attributes="id string:hidden_popup_listbox_${uid}"
+         tal:content="structure inline_popup"/>
+
+    <div class="search-header">  
+
+      <a tal:attributes="href url">
+        <span class="search_result_title"
+              tal:content="title"/>
+      </a>
+        <span class="search_result_portal_type"
+              tal:content="portal_type"/>
+
+      <img src="km_img/find.png" 
+           tal:attributes="onClick string:togglePreview('${uid}', '${path}')"
+           title="Turn On / Off preview"/>
+
+    </div>
+
+    <span class="search-details found"
+          tal:content="structure found"/>
+
+    <div class="search-details coordinates">
+      
+      <a class="reference-link"
+         tal:content="reference"
+         tal:attributes="href reference_url"
+         title="Reference"/>
+
+      - <span class="version" 
+              tal:content="version"
+              title="Version"/>
+      - <span class="language" 
+              tal:content="language"
+              title="Language"/>
+
+      <tal:block tal:condition="document_web_section_list">
+        - 
+        <a class="section-link"
+           tal:repeat="section document_web_section_list"
+           tal:attributes="href section/absolute_url"
+           tal:content="section/getCompactTranslatedTitle"
+           title="Publication section"/>
+      </tal:block>
+
+      <tal:block tal:condition="python: owner_title is not None and owner_url is not None">
+        -<a class="owner-link" 
+            tal:attributes="href owner_url"
+            tal:content="owner_title"
+            title="Owner"/>
+      </tal:block> 
+
+      -<a class="history-link" 
+         tal:attributes="href string:${url}/Base_viewHistory"
+         tal:content="modification_date"
+         title="Modification date"/>
+               
+    </div>
+  </div>
+
+</tal:block>

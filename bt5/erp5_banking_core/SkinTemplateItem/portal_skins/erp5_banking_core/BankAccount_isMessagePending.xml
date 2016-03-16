@@ -49,11 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return context.portal_activities.countMessageWithTag(context.BankAccount_getMessageTag(bank_account))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>bank_account</string> </value>
         </item>

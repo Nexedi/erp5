@@ -65,31 +65,6 @@ variation_text</string> </value>
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-SELECT\n
-\tSUM(movement.quantity) AS quantity\n
-FROM\n
-\tcatalog AS container_cell, movement\n
-WHERE\n
-\tmovement.explanation_uid = <dtml-sqlvar explanation_uid type="int">\n
-  AND container_cell.has_cell_content = 0\n
-  AND container_cell.uid = movement.uid\n
-  AND\t(container_cell.portal_type = "Container Cell" \n
-      OR container_cell.portal_type = "Container Line")\n
-\n
-<dtml-if resource_uid>\n
-  AND movement.resource_uid = <dtml-sqlvar resource_uid type="int">\n
-</dtml-if>\n
-<dtml-if variation_text>\n
-  AND movement.variation_text = <dtml-sqlvar variation_text type="string">\n
-</dtml-if>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

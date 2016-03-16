@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-trust_dict=dict((x, request[x]) for x in (\n
-  \'valid_until\', \'hostname\', \'realm\', \'finger_print\', \'valid_from\', \'issuer_dname\', \'failures\'))\n
-\n
-context.getVcsTool().acceptSSLServer(trust_dict, True)\n
-\n
-return context.restrictedTraverse(caller)(**caller_kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>caller, caller_kw={}, added=(), removed=(), modified=(), changelog=None, **kw</string> </value>
         </item>

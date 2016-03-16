@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>import json\n
-portal = context.getPortalObject()\n
-context.REQUEST.response.setHeader(\'Access-Control-Allow-Origin\', \'*\')\n
-print portal.portal_catalog(portal_type="Image Title", src__=1)\n
-#return printed\n
-data = {}\n
-data["image_list"] = []\n
-image_list = data["image_list"]\n
-for tile_image in portal.portal_catalog(portal_type="Image Tile"):\n
-  title = tile_image.getTitle() \n
-  id =  tile_image.getId()\n
-  image_list.append({"title":title, "id": id})\n
-  \n
-return json.dumps(data)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

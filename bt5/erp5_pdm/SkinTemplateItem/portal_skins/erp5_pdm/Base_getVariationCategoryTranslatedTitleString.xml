@@ -49,11 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return \',\'.join([q[0] for q in context.getVariationCategoryItemList(display_id=\'translated_title\', display_base_category=True)])\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args,**kwargs</string> </value>
         </item>

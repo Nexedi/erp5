@@ -49,34 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# License: GPL\n
-# Author: Lukasz Nowak <lukasz.nowak@ventis.com.pl>\n
-# Copyright 2007 Ventis s. c.\n
-\n
-simulations_found = context.Base_getSimulationTree(start_path=start_path)\n
-\n
-if len(simulations_found) == 0:\n
-  print \'No simulations related\'\n
-else:\n
-  for simulation_root in simulations_found.iterkeys():\n
-    print simulation_root\n
-    for simulation in simulations_found[simulation_root]:\n
-      print \'\\t\',simulation.getPath(),simulation.getPortalType(),\n
-      if simulation.getPortalType() == \'Simulation Movement\':\n
-        print simulation.getCausalityState(),\n
-      else:\n
-        print \'nostate\',\n
-      print simulation.getCategoriesList()\n
-\n
-return printed\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>start_path=None</string> </value>
         </item>

@@ -49,44 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-selection_name = \'data_protection_request_erase_data_selection\'\n
-property_id_list = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
-# clean up selection\n
-portal.portal_selections.setSelectionCheckedUidsFor(selection_name, ())\n
-document_to_cleanup = context.getAgentValue()\n
-clean_up_done = False\n
-\n
-# First: Purge workflow history comments\n
-if flush_worklfow_history_comment:\n
-  document_to_cleanup.Base_purgeWorkflowHistoryCommentList()\n
-  edit_message = portal.Base_translateString(\'Workflow comments deleted by data protection manager\')\n
-  portal.portal_workflow.doActionFor(document_to_cleanup, \'edit_action\', comment=edit_message)\n
-  clean_up_done = True\n
-\n
-# Second: erase properties\n
-if property_id_list:\n
-  edit_kw = {}\n
-  [edit_kw.update({property_id: None}) for property_id in property_id_list]\n
-\n
-  edit_message = portal.Base_translateString(\'Properties deleted by data protection manager: ${items}\',\n
-                                             mapping={\'items\': \', \'.join(property_id_list)})\n
-  portal.portal_workflow.doActionFor(document_to_cleanup, \'edit_action\', comment=edit_message)\n
-  document_to_cleanup.edit(**edit_kw)\n
-  clean_up_done = True\n
-\n
-if clean_up_done:\n
-  msg = portal.Base_translateString(\'Data erased.\')\n
-  # Then remove \'View History\' permission to everyone except manager\n
-  document_to_cleanup.manage_permission(\'View History\', [\'Manager\'], 0)\n
-else:\n
-  msg = portal.Base_translateString(\'No change occurs.\')\n
-\n
-return context.Base_redirect(form_id, keep_items={\'portal_status_message\': msg}, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id, flush_worklfow_history_comment, **kw</string> </value>
         </item>

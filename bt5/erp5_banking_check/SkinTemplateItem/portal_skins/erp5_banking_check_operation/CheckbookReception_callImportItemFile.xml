@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>REQUEST = context.REQUEST\n
-message = context.CheckbookReception_importItemFile(import_file=import_file, REQUEST=REQUEST, **kw)\n
-redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
-                                , \'portal_status_message=%s\' % message\n
-                                )\n
-request = context.REQUEST\n
-request[ \'RESPONSE\' ].redirect( redirect_url )\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>import_file=None, **kw</string> </value>
         </item>

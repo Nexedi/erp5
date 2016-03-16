@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Get list of latest Posts which belong to a forum (i.e. websection + predicate)\n
-"""\n
-# first get list of all container Threads (details should be set on predicate)\n
-parent_uid_list = [x.getUid() for x in context.getDocumentValueList()]\n
-\n
-# get sorted list of all "contained" in them Posts\n
-kw[\'sort_on\'] = ((\'modification_date\', \'DESC\'),)\n
-kw[\'portal_type\'] = \'Discussion Post\'\n
-kw[\'parent_uid\'] = parent_uid_list\n
-\n
-if len(parent_uid_list)==0:\n
-  # no parent discussion threads therefore no posts\n
-  return []\n
-\n
-result = [x.getObject() for x in  context.portal_catalog(**kw)]\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

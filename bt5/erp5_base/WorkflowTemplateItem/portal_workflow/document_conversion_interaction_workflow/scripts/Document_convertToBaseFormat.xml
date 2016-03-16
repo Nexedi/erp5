@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>document = state_change[\'object\']\n
-\n
-# calculate new conversion to base_format\n
-document.processFile()\n
-\n
-if document.getMetaType() == \'ERP5 OOo Document\':\n
-  # XXX How to filter documents which are implementing base_convertable \n
-  # and not text_document\n
-  # Clear base_data\n
-  document.setBaseData(None)\n
-  tag = \'document_%s_convert\' % document.getPath()\n
-  document.activate(tag=tag).Document_tryToConvertToBaseFormat()\n
-else:\n
-  # do not run it in activity but not with try except statement\n
-  # Transaction must fail, otherwise data will be lost\n
-  document.convertToBaseFormat()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

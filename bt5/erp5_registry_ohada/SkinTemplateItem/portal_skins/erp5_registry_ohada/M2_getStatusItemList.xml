@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-result = []\n
-result.append((\'Nouveau\', \'_new_action\'))\n
-result.append((\'Partant\', \'_go_action\'))\n
-result.append((\'Maintenu\', \'_action_maintain\'))\n
-result.append((\'Modifié\', \'_action_modify\'))\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

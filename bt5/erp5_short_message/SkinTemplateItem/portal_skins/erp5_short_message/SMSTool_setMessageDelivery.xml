@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""Search the event and set it delivered\n
-#XXX-Fx : See with JPS for a new event implementation\n
-#XXX-Fx : DestinationReference property must be replace by a category (multiple reference)\n
-#XXX-FX : Other possibility : use acknowledgment\n
-"""\n
-event = context.portal_catalog.getResultValue(portal_type=portal_type, destination_reference="%"+destination_reference+"%")\n
-if event is not None:\n
-  #All sms must be delivered to set event as delivered\n
-  if event.getQuantity() > 1:\n
-    if event.isDelivered():\n
-      event.setStopDate(delivery_date)\n
-      event.deliver()\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>delivery_date, portal_type, destination_reference</string> </value>
         </item>

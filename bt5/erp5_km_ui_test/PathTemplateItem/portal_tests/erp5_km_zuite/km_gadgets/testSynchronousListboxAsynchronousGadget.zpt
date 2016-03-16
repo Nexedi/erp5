@@ -1,0 +1,89 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/getId"/>
+</head>
+<body >
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site/1/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_document_history&amp;mode=web_section&amp;default_pad_group=default_section_pad</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site/1/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_my_documents&amp;mode=web_section&amp;default_pad_group=default_section_pad</td>
+  <td></td>
+</tr>
+
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
+
+<!-- "Save and Edit" -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site/km_test_web_site/1/view?editable_mode:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_description</td>
+  <td>test</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>input-save-edit</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_description</td>
+  <td>test</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+
+<!-- "Save and View" -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site/km_test_web_site/1/view?editable_mode:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_description</td>
+  <td>view test</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>input-save-view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site/km_test_web_site/1/view?editable_mode:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_description</td>
+  <td>view test</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

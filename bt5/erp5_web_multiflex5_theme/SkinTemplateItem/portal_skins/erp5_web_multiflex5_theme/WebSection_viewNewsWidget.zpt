@@ -1,0 +1,22 @@
+<tal:block replace="nothing">
+  <!--
+  This widget displays the list of News.
+
+  TODO:
+    - maximum number of items should be configurable.
+    - excerpt support is required?
+  -->
+</tal:block>
+
+<tal:block tal:define="current_web_section python:request.get('current_web_section', here);
+                       web_site python:current_web_section.getWebSiteValue();
+                       news_area_section_id python:current_web_section.getLayoutProperty('layout_news_area_section_id', '');
+                       news_area_section python:web_site.restrictedTraverse(news_area_section_id)">
+<ul>
+<tal:block tal:repeat="item python:news_area_section.getDocumentValueList(limit=10, sort_on=[('modification_date','descending')])">
+  <li><a href="#"
+       tal:attributes="href python:news_area_section.getPermanentURL(item)"
+       tal:content="item/getTitle" /> <tal:block tal:replace="item/getDescription" /> (<tal:block tal:replace="python:item.getModificationDate().Date()"/>)</li>
+</tal:block>
+</ul>
+</tal:block>

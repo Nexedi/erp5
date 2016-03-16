@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>\'\'\'This script return the list of all users that is possible to assign the application\'\'\'\n
-\n
-group = context.getTypeInfo().getOrganisationDirectionService()\n
-\n
-cat = context.restrictedTraverse(\'portal_categories/group/%s\' % group)\n
-\n
-if cat is not None:\n
-  cat_uid = cat.getUid()\n
-  agent_list = context.portal_catalog(portal_type=\'Assignment\',\n
-                                      group_uid=cat_uid)\n
-\n
-  return [(agent.getParentValue().getReference(), agent.getParentValue().getReference()) for agent in agent_list if agent.getParentValue().getReference()]\n
-else:\n
-  return []\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

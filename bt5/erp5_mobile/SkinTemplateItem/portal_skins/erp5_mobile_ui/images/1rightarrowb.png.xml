@@ -23,17 +23,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAOCAYAAAAmL5yKAAABZElEQVQoz2NgQAH1TKKiXla8vPYJ
-QA4rA+nAmFVaOrhHQyPhPyureBM5hrAqKUXU19au/RcYWPKXgYGfZENYRUQ86mbMOPjr0qV3/319
-8/8xMHDUA8UZiTaAj8+hrqlp/c+rV9//X7fu6n9Pz7xfTEw8NcS6BGiARV1l5bKfK1de+t/Zuef/
-rFkn/vv55f9mZRUmyjusPDx6dTk5s35OmXLsf0bG4v+VlRv+z5x58r+zc9Y/VlbBVqAadrwGcHGp
-1UVH9/2srt7yPy1t0f+qqo3/QWwzs4z/TEy8a4BquAgYIFfn49P4s6Rk3f+Ghq3/y8s3/NfXTwRq
-Ft0IlJcm6AU2NpE6d/fKn62te8A26+kl/mdkFATZLEFUILKx8dR5eJT/LCzc+N/IKPU/A4PgOqC4
-CNHRyMEhUGdtnfPX0DADmBolNgPFJElKSMzMnN2Sktb/gWGxkVTNIMAMxLHAhDeHWM0AN8F7pQD6
-pwEAAAAASUVORK5CYII=</string> </value>
-        </item>
-        <item>
             <key> <string>height</string> </key>
             <value> <int>14</int> </value>
         </item>

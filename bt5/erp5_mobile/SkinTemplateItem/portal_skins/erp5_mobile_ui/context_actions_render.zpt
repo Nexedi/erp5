@@ -1,0 +1,219 @@
+<tal:block tal:replace="nothing"
+	xmlns:tal="http://xml.zope.org/namespaces/tal"
+	xmlns:metal="http://xml.zope.org/namespaces/metal"
+	xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+<!--
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+Vincent Pelletier <vincent@nexedi.com>
+Christophe Dumez <christophe@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+XXX: Folder_filter accesses selection directly
+-->
+</tal:block>
+<tal:block metal:define-macro="master">
+      <span class="first"
+        tal:define="search_actions actions/object_search | nothing;
+        exchange_actions actions/object_exchange | nothing;
+        report_actions actions/object_report | nothing;
+        button_actions actions/object_button | nothing;
+        fast_input_actions actions/object_fast_input | nothing;
+        sort_actions actions/object_sort | nothing;
+        ui_actions actions/object_ui | nothing;
+        print_actions actions/object_print | nothing;
+        list_mode list_mode | nothing">
+        <span class="tool_buttons" align="center">
+                <tal:block tal:condition="list_mode | nothing">
+                    <button class="cut" type="submit" name="Folder_cut:method" title="Cut"
+                            i18n:attributes="title" i18n:domain="ui">
+                      <span class="image"></span>
+                      <span class="description" i18n:translate="" i18n:domain="ui">Cut</span>
+                    </button>
+                    <button class="copy" type="submit" name="Folder_copy:method" title="Copy"
+                            i18n:attributes="title" i18n:domain="ui">
+                      <span class="image"></span>
+                      <span class="description" i18n:translate="" i18n:domain="ui">Copy</span>
+                    </button>
+                    <button class="paste" type="submit" name="Folder_paste:method" title="Paste"
+                            i18n:attributes="title" i18n:domain="ui">
+                      <span class="image"></span>
+                      <span class="description" i18n:translate="" i18n:domain="ui">Paste</span>
+                    </button>
+                    <span class="separator"><!--separator--></span>
+                  </tal:block>
+
+                  <button class="new" type="submit" title="New"
+                          tal:attributes="name python: list_mode and 'Folder_create:method' or 'Base_createNewDocument:method'"
+                          i18n:attributes="title" i18n:domain="ui">
+                    <span class="image"></span>
+                    <span class="description" i18n:translate="" i18n:domain="ui">New</span>
+                  </button>
+                  <button class="clone" type="submit" title="Clone"
+                          tal:condition="python: not list_mode"
+                          tal:attributes="name python: 'Base_createCloneDocument:method'"
+                          i18n:attributes="title" i18n:domain="ui">
+                    <span class="image"></span>
+                    <span class="description" i18n:translate="" i18n:domain="ui">Clone</span>
+                  </button>
+                  <button tal:condition="list_mode" class="delete" type="submit" name="Folder_deleteObjectList:method" title="Delete"
+                          i18n:attributes="title" i18n:domain="ui">
+                    <span class="image"></span>
+                    <span class="description" i18n:translate="" i18n:domain="ui">Delete</span>
+                  </button>
+
+                  <tal:block tal:condition="list_mode">
+                    <span class="separator"><!--separator--></span>
+                    <a tal:condition="search_actions" class="find" title="Find"
+                       tal:attributes="href python: portal.ERP5Site_renderCustomLink(search_actions[0]['url'], http_parameter_list, dialog_category='object_search')"
+                       i18n:attributes="title" i18n:domain="ui">
+                      <span class="image"></span>
+                      <span class="description" i18n:translate="" i18n:domain="ui">Find</span>
+                    </a> <!---->
+                    <button class="show_all" type="submit" name="Folder_show:method" title="Show All"
+                            i18n:attributes="title" i18n:domain="ui">
+                      <span class="image"></span>
+                      <span class="description" i18n:translate="" i18n:domain="ui">Show All</span>
+                    </button>
+                    <button type="submit" name="Folder_filter:method" title="Filter"
+                            tal:attributes="class python: here.portal_selections.getSelectionInvertModeFor(request['selection_name']) and 'filter_on' or 'filter';"
+                            i18n:attributes="title" i18n:domain="ui">
+                      <span class="image"></span>
+                      <span class="description" i18n:translate="" i18n:domain="ui">Filter</span>
+                    </button>
+                    <a tal:condition="sort_actions" class="sort" title="Sort"
+                       tal:attributes="href python: portal.ERP5Site_renderCustomLink(sort_actions[0]['url'], http_parameter_list, dialog_category='object_sort')"
+                       i18n:attributes="title" i18n:domain="ui">
+                      <span class="image"></span>
+                      <span class="description" i18n:translate="" i18n:domain="ui">Sort</span>
+                    </a>
+                    <tal:block tal:condition="list_mode">
+                      <tal:block tal:condition="ui_actions">
+                      <span class="separator"><!--separator--></span>
+                      <a class="configure" title="Configure"
+                          tal:attributes="href python: portal.ERP5Site_renderCustomLink(ui_actions[0]['url'], http_parameter_list, dialog_category='object_ui')"
+                          i18n:attributes="title" i18n:domain="ui">
+                          <span class="image"></span>
+                          <span class="description" i18n:translate="" i18n:domain="ui">Configure</span>
+                      </a>
+                      </tal:block>
+                    </tal:block>
+                  </tal:block>
+                </span><br />
+
+              <div class="div_prev" id="div_prev">
+              <div id="jump">
+                <span id="jump" metal:define-macro="jump">
+                  <select name="select_jump"
+                          tal:attributes="onchange string:submitAction(this.form,'Base_doJump')">
+                    <option selected="selected" value=""
+                            i18n:translate="" i18n:domain="ui">Jump...</option>
+                    <tal:block tal:repeat="jump actions/object_jump | nothing">
+                      <option tal:attributes="value jump/url"
+                              tal:content="jump/name" i18n:translate="" i18n:domain="ui" />
+                    </tal:block>
+                    <tal:block tal:condition="preferred_html_style_developper_mode">
+                      <tal:block tal:condition="python: here.getPortalTypeName() in portal.portal_types.objectIds() and portal.portal_types.getTypeInfo(here).Base_getSourceVisibility()">
+                        <option value="1" disabled="disabled" i18n:translate="" i18n:domain="ui">-- Developper Mode --</option>
+                        <option tal:attributes="value python: '%s/manage_workspace' % (here.portal_types.getTypeInfo(here).absolute_url(),)"
+                                i18n:translate="" i18n:domain="ui">Edit Portal Type '<tal:block tal:content="python: here.getPortalTypeName()"
+                                                                                i18n:name="portal_type" i18n:translate="" i18n:domain="ui" />'</option>
+                      </tal:block>
+                      <tal:block tal:condition="portal/portal_workflow/Base_getSourceVisibility">
+                        <option value="1" disabled="disabled" i18n:translate="" i18n:domain="ui">-- Workflows --</option>
+                        <tal:block tal:repeat="workflow python: portal.portal_workflow.getWorkflowsFor(here)">
+                          <option tal:attributes="value python: '%s/manage_properties' % (workflow.absolute_url(), )" tal:content="workflow/title" />
+                        </tal:block>
+                      </tal:block>
+                    </tal:block>
+                  </select>
+                  <button type="submit" name="Base_doJump:method" title="Jump"
+                          i18n:attributes="title" i18n:domain="ui">
+                    <span class="image"></span>
+                    <span class="description"
+                          i18n:translate="" i18n:domain="ui">Jump</span>
+                  </button>
+                </span>
+              </div>
+            <!-- Actions list starts here -->
+             <div id="actions">
+              <span id="action" metal:define-macro="action">
+               <select name="select_action"
+                        tal:attributes="onchange string:submitAction(this.form,'${url}/Base_doAction')"                     tal:define="document_template_list here/getDocumentTemplateList | nothing">
+                  <option selected="selected" value=""
+                          i18n:translate="" i18n:domain="ui">Action...
+                  </option>
+                  <tal:block tal:repeat="content here/allowedContentTypes | nothing">
+                    <tal:block tal:condition="python: not content.getId() in here.portal_types.getTypeInfo(here).getHiddenContentTypeList()">
+                      <option tal:attributes="value python: 'add ' + content.getId()"
+                    i18n:translate="" i18n:domain="ui">Add
+                        <tal:block tal:content="content/Title"
+                                  i18n:name="portal_type" i18n:translate="" i18n:domain="ui">
+                        </tal:block>
+                      </option>
+                    </tal:block>
+                  </tal:block>
+                  <tal:block tal:condition="document_template_list">
+                    <option disabled="disabled">-- 
+                      <tal:block i18n:translate="" i18n:domain="ui">Templates</tal:block> --
+                    </option>
+                    <tal:block tal:repeat="document_template document_template_list">
+                      <option tal:attributes="value python:'template ' + document_template.getRelativeUrl()"
+                      i18n:translate="" i18n:domain="ui">Add
+                        <tal:block tal:content="document_template/getTitle"
+                                i18n:name="document_template"></tal:block>
+                      </option>
+                    </tal:block>
+                  </tal:block>
+                  <option disabled="disabled">-- 
+                    <tal:block i18n:translate="" i18n:domain="ui">Workflows</tal:block> --
+                  </option>
+                  <tal:block tal:repeat="action actions/workflow">
+                    <option tal:content="action/name"
+                            tal:attributes="value python: 'workflow ' + action['url']"
+                            i18n:translate="" i18n:domain="ui"></option>
+                  </tal:block>
+                  <option disabled="disabled">-- 
+                    <tal:block i18n:translate="" i18n:domain="ui">Object</tal:block> --
+                  </option>
+                  <tal:block tal:repeat="action actions/object_action | nothing">
+                    <option tal:content="action/name"
+                            tal:attributes="value python: 'object ' + action['url']"
+                            i18n:translate="" i18n:domain="ui"></option>
+                  </tal:block>
+                  <tal:block tal:replace='nothing'>
+                  <!-- XXX folder actions is inherited from CMF, but not used in ERP5 (for now) -->
+                    <option disabled="disabled">--
+                      <tal:block i18n:translate="" i18n:domain="ui">folder</tal:block> --
+                    </option>
+                    <tal:block tal:repeat="action actions/folder">
+                      <option tal:content="action/name"
+                              tal:attributes="value python: 'folder ' + action['url']"
+                              i18n:translate="" i18n:domain="ui"></option>
+                    </tal:block>
+                  </tal:block>
+                </select>
+
+                <button class="button" type="submit" name="Base_doAction:method" title="Action"
+                        i18n:attributes="title" i18n:domain="ui">
+                  <span class="image"></span>
+                  <span class="description"
+                      i18n:translate="" i18n:domain="ui">Action</span>
+                </button>
+              </span>
+              </div>
+        </div>
+</span>
+</tal:block>

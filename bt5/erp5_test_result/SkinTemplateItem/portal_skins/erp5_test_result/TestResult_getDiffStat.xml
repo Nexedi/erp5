@@ -49,34 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>value_list = context.getPortalObject().portal_selections \\\n
-               .getSelectionCheckedValueList(context.REQUEST.selection_name)\n
-if not value_list:\n
-  raise ValueError(\'No Test Result selected\')\n
-\n
-if len(value_list) != 2:\n
-  raise ValueError(\'Two Test Results should be selected\')\n
-\n
-a, b = value_list\n
-\n
-if a.getSimulationState() != "stopped" or b.getSimulationState() != "stopped":\n
-  # it\'s useless to compare two results that are not yet completed\n
-  return []\n
-\n
-compared_prop_list = (\'all_tests\', \'errors\', \'failures\', \'skips\')\n
-\n
-\n
-d = {}\n
-for prop in compared_prop_list:\n
-  d[prop] = b.getProperty(prop) - a.getProperty(prop)\n
-\n
-from Products.PythonScripts.standard import Object\n
-\n
-return [Object(uid="new_", **d) ]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

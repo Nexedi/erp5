@@ -102,53 +102,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta charset="utf-8" />\n
-    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>ERP5 Search Field</title>\n
-\n
-    <!-- renderjs -->\n
-    <script src="rsvp.js"></script>\n
-    <script src="renderjs.js"></script>\n
-    <script src="handlebars.js"></script>\n
-\n
-    <!-- custom script -->\n
-    <script src="gadget_erp5_searchfield.js"></script>\n
-\n
-   <script id="panel-template" type="text/x-handlebars-template">\n
-      <div class="field_container">\n
-        <div class="ui-field-contain">\n
-          <div class="bottom">\n
-              <div class="ui-input-text ui-body-{{theme}} ui-input-has-icon ui-corner-all ui-shadow-inset ui-input-has-clear">\n
-                <input type="text" data-enhanced="true" value="{{widget_value}}" name="search" {{widget_status_attribute}} >\n
-                <div class="ui-btn ui-input-clear ui-input-btn ui-corner-all ui-icon-search ui-btn-icon-notext" data-i18n="[node]header-submit">\n
--                 Submit<input data-enhanced="true" type="submit" data-i18n="[value]header-submit" value="Submit" {{widget_status_attribute}} />\n
-                </div>\n
-              </div>\n
-              <div class="ui-shadow-inset ui-btn ui-btn-inline ui-corner-all ui-btn-{{theme}} ui-btn-icon-notext ui-icon-filter ui-override-theme " >\n
-                <div class="ui-input-btn">\n
-                  <input class="filter_button" data-role="button" data-enhanced="true" type="submit" data-i18n="[value]" value=" ">\n
-                </div>\n
-            </div>\n
-         </div>\n
-        </div>\n
-      </div>\n
-    </script>\n
-\n
-  </head>\n
-  <body>\n
-    <div class="save_form document_form"></div>\n
-  </body>\n
-</html>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Gadget ERP5 Search Field</string> </value>
         </item>

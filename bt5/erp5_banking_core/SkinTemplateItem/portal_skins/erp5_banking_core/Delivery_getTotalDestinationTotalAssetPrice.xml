@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>total = 0\n
-for line in context.objectValues(portal_type=portal_type):\n
-  if line.getDestinationTotalAssetPrice() is not None:\n
-     total += line.getDestinationTotalAssetPrice()\n
-return total\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>portal_type=None</string> </value>
         </item>

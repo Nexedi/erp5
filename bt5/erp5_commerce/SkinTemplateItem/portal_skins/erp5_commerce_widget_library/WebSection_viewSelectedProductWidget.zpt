@@ -1,0 +1,44 @@
+<tal:block replace="nothing">
+  <!--
+  This widget displays the list of Products contained in the current context.
+  
+  TODO:
+    - make sure translation is possible
+    - make sure URLs are correct
+    - use generic method (erp5_web) to retrieve the list of subsections
+    - make it hierarchic
+  -->
+</tal:block>
+<div tal:define="web_site here/getWebSiteValue;
+                 shopping_cart here/SaleOrder_getShoppingCart;
+                 site_url web_site/absolute_url;
+                 currency_symbol web_site/WebSite_getShoppingCartDefaultCurrencySymbol;
+                 current_web_section python: request.get('current_web_section', here);
+                 product_list python: web_site.WebSite_getProductList(limit=5);"
+     i18n:translate="" i18n:domain="ui" i18n:attributes="title"
+     title="Sections accessible from here." class="selected-product">
+  <tal:block tal:repeat="product python: product_list">
+    <div tal:define="product_href python: '%s/product_module/%s/%s' % (site_url, product.getId(), 'Resource_viewAsShop');
+                     price python: here.WebSection_unrestrictedGetPrice(product)">
+     <a href="#" tal:attributes="href product_href">
+       <img tal:condition="python: product.getDefaultImageValue() not in (None, '') and product.getDefaultImageValue().getData() not in (None, '')"
+            tal:attributes="src python: product.getDefaultImageAbsoluteUrl() + '?display=thumbnail&format=png&resolution=75'" width="75"/>
+       <tal:block tal:condition="python: product.getDefaultImageValue() in (None, '') or product.getDefaultImageValue().getData() in (None, '')">
+         <div style="width:75px; height:75px;vertical-align:middle; text-align:middle;">
+         <br />
+         <span>No image available.</span>
+         </div>
+       </tal:block>
+     </a>
+     <a href="#" tal:content="python: product.getTranslatedTitle()"
+                 tal:attributes="href product_href">A product</a>
+     <br />
+     <tal:block tal:condition="python: price is not None">
+       <span  tal:content="python: '%s %s' % (price, currency_symbol)"></span>
+     </tal:block>
+     <tal:block tal:condition="python: price is None">
+       <span>The price is not setted yet.</span>
+     </tal:block>
+   </div>
+  </tal:block>
+</div>

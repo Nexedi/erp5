@@ -1,0 +1,285 @@
+<html>
+<head><title>Test for Accounting module main lisbox</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test Accounting module listbox multi pages
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0&month_count:int=12">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<!-- }}} -->
+
+<!-- 4*12 records in the list {{{ -->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>48 records</td>
+</tr>
+<!-- }}} -->
+
+<!-- we will check all dates {{{ -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td>2005/01/01</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[5]</td>
+  <td>2005/01/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[5]</td>
+  <td>2005/01/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[5]</td>
+  <td>2005/01/04</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-4 DataA']/td[5]</td>
+  <td>2005/02/01</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-5 DataB']/td[5]</td>
+  <td>2005/02/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-6 DataA']/td[5]</td>
+  <td>2005/02/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-7 DataB']/td[5]</td>
+  <td>2005/02/04</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-8 DataA']/td[5]</td>
+  <td>2005/03/01</td>
+</tr>
+<tr> 
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-9 DataB']/td[5]</td>
+  <td>2005/03/02</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td>2005/03/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[5]</td>
+  <td>2005/03/04</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[5]</td>
+  <td>2005/04/01</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[5]</td>
+  <td>2005/04/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-4 DataA']/td[5]</td>
+  <td>2005/04/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-5 DataB']/td[5]</td>
+  <td>2005/04/04</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-6 DataA']/td[5]</td>
+  <td>2005/05/01</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-7 DataB']/td[5]</td>
+  <td>2005/05/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-8 DataA']/td[5]</td>
+  <td>2005/05/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-9 DataB']/td[5]</td>
+  <td>2005/05/04</td>
+</tr>
+
+<!-- }}} -->
+
+<!-- apply a filter and check lines {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[ @value='listbox.operation_date:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>48 records</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-search-line']/th[2]/input</td>
+  <td>%Client%</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>24 records</td>
+</tr>
+
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td>2005/01/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[5]</td>
+  <td>2005/01/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[5]</td>
+  <td>2005/02/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[5]</td>
+  <td>2005/02/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-4 DataA']/td[5]</td>
+  <td>2005/03/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-5 DataB']/td[5]</td>
+  <td>2005/03/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-6 DataA']/td[5]</td>
+  <td>2005/04/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-7 DataB']/td[5]</td>
+  <td>2005/04/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-8 DataA']/td[5]</td>
+  <td>2005/05/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-9 DataB']/td[5]</td>
+  <td>2005/05/03</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td>2005/06/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[5]</td>
+  <td>2005/06/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[5]</td>
+  <td>2005/07/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[5]</td>
+  <td>2005/07/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-4 DataA']/td[5]</td>
+  <td>2005/08/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-5 DataB']/td[5]</td>
+  <td>2005/08/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-6 DataA']/td[5]</td>
+  <td>2005/09/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-7 DataB']/td[5]</td>
+  <td>2005/09/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-8 DataA']/td[5]</td>
+  <td>2005/10/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-9 DataB']/td[5]</td>
+  <td>2005/10/03</td>
+</tr>
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title>E5G ECrm Custom Panel</title>
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="gadget_global.js" type="text/javascript"></script>
+    <script src="handlebars.js" type="text/javascript"></script>
+    <script src="jquery.js" type="text/javascript"></script>
+    <script src="jquerymobile.js" type="text/javascript"></script>
+
+    <script id="panel-full-template" type="text/x-handlebars-template">
+      <div data-role="header">
+        <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">
+          <div class="ui-controlgroup-controls">
+            <form action="#" method="post">
+              <input type="submit" data-i18n="[value]Close" data-icon="delete" data-iconpos="notext" value="Close" />
+            </form>
+          </div>
+        </div>
+        <h1>Quicklinks</h1>
+      </div>
+      <div class="ui-content">
+  
+        <ul data-role="listview">
+          <li class="ui-li-divider" data-role="list-divider" role="heading">
+              <h1>Navigation</h1>
+          </li>
+           <li class="ui-li-has-icon">
+              <a href="{{url_commandments}}" class="ui-btn ui-body-inherit ui-btn-icon-right ui-icon-carat-r">
+                <span class="ui-li-icon ui-li-icon-custom ui-icon ui-icon-folder">&nbsp;</span>
+                <h1>Commandments</h1>
+                <p>Guidelines for developing web apps</p>
+              </a>
+            </li>
+            <li class="ui-li-has-icon">
+              <a href="{{url_components}}" class="ui-btn ui-btn-icon-right ui-body-inherit ui-icon-carat-r">
+                <span class="ui-li-icon ui-li-icon-custom ui-icon ui-icon-puzzle-piece">&nbsp;</span>
+                <h1>Components</h1>
+                <p>Layout recommendations</p>
+              </a>
+            </li>
+            <li class="ui-li-has-icon">
+                <a href="{{url_contents}}" class="ui-btn ui-btn-icon-right ui-body-inherit ui-icon-carat-r">
+                  <span class="ui-li-icon ui-li-icon-custom ui-icon ui-icon-book">&nbsp;</span>
+                  <h1>Content</h1>
+                  <p>Typography information</p>
+                </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </script>
+
+    <!-- custom script -->
+    <script src="gadget_manifest_panel.js" type="text/javascript"></script>
+
+  </head>
+  <body>
+
+  <div class="jqm-navmenu-panel"></div>
+    
+  </body>
+</html>

@@ -1,0 +1,22 @@
+<tal:block replace="nothing">
+  <!--
+  This widget displays the search form.
+  -->
+</tal:block>
+
+<tal:block tal:define="current_web_section python:request.get('current_web_section', here);
+                       search_area_section_id python:current_web_section.getLayoutProperty('layout_search_area_section_id', '')">
+<div class="searchform">
+  <fieldset tal:define="search_default_text python:current_web_section.Base_translateString('Search')">
+    <input name="field_your_search_text" class="field"
+           value="Search" tal:attributes="value string:${search_default_text};
+                                          onfocus string:if (this.value=='${search_default_text}') this.value='';
+                                          onkeyup string:submitFormOnEnter(event, this.form, '${search_area_section_id}/ERP5Site_viewQuickSearchResultList');"
+           onfocus="this.value='';"
+           onkeyup="submitFormOnEnter(event, this.form, 'search_area/ERP5Site_viewQuickSearchResultList');"/>
+    <input type="submit" class="button" value="Search" name="search_area/ERP5Site_viewQuickSearchResultList:method"
+           tal:attributes="name string:${search_area_section_id}/ERP5Site_viewQuickSearchResultList:method"
+           i18n:attributes="value" i18n:domain="ui" />
+  </fieldset>
+</div>
+</tal:block>

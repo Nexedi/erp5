@@ -23,29 +23,6 @@
             <value> <string>application/x-javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-displayMessage = function () {\n
-  wizard_message = document.getElementById(\'wizard_message\');\n
-  wizard_message.style.visibility = \'visible\';\n
-  if (!/MSIE/.test(navigator.userAgent)) {\n
-    if (scrapeText(wizard_message) == \'true\') {\n
-      wizard_message.innerHTML = \'<a href="next">Please click here to access ERP5 Express Configuration service.</a>\';\n
-    } else {\n
-      wizard_message.innerHTML = \'You can not access ERP5 Express Configuration service.\';\n
-    }\n
-  } else {\n
-    wizard_message.innerHTML = \'<a href="http://www.mozilla.com/firefox/">Please click here to download Firefox, because your browser may not work properly. It is free.</a>\';\n
-  }\n
-}\n
-addLoadEvent(displayMessage);\n
-\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

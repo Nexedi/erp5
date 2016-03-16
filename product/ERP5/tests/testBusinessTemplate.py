@@ -39,6 +39,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList, Sequence
 from urllib import pathname2url
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
+from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.Workflow import addWorkflowByType
 import shutil
@@ -6337,6 +6338,52 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     # check both File instances no longer behave like being overriden
     self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
 
+  def test_168_CheckPortalTypeAndPathInSameBusinessTemplate(self, change_broken_object=False):
+    """
+    Make sure we can define a portal type and instance of that portal type
+    in same bt. It already happened that this failed with error :
+    BrokenModified: Can't change broken objects
+
+    It might sound similar to test_167, but we had cases not working even
+    though test_167 was running fine (due to additional steps that were
+    doing more reset of components)
+    """
+    # Make sure we have no portal type Foo generated from a previous test
+    try:
+      import erp5
+      del erp5.portal_type.Foo
+    except AttributeError:
+      pass
+    template_tool = self.portal.portal_templates
+    bt_path = os.path.join(os.path.dirname(__file__), 'test_data',
+                     'BusinessTemplate_test_168_CheckPortalTypeAndPathInSameBusinessTemplate')
+    bt = template_tool.download(bt_path)
+    foo_in_bt = bt._path_item._objects["foo"]
+    if change_broken_object:
+      foo_in_bt.__Broken_state__["title"] = "FooBar"
+      foo_in_bt._p_changed = 1
+    # Force evaluation of a method to force unghosting of the class
+    getattr(foo_in_bt, "getTitle", None)
+    self.assertTrue(isinstance(foo_in_bt, ERP5BaseBroken))
+    self.commit()
+    bt.install(force=1)
+    self.commit()
+    foo_in_portal = self.portal.foo
+    self.assertFalse(isinstance(foo_in_portal, ERP5BaseBroken))
+    self.assertEqual("Foo", foo_in_portal.getPortalType())
+    if change_broken_object:
+      self.assertEqual("FooBar", getattr(foo_in_portal, "title"))
+    self.uninstallBusinessTemplate('test_168_CheckPortalTypeAndPathInSameBusinessTemplate')
+
+  def test_169_CheckPortalTypeAndPathInSameBusinessTemplateAndBrokenObjectModification(self):
+    """
+    Make sure we have possibility to change broken
+    objects, such possibility is needed when document are exported
+    as separated file (one for metadata, one for the content, often
+    use for anything containing text or code)
+    """
+    self.test_168_CheckPortalTypeAndPathInSameBusinessTemplate(change_broken_object=True)
+
   def test_type_provider(self):
     self.portal.newContent(id='dummy_type_provider', portal_type="Types Tool")
     type_provider = self.portal.dummy_type_provider
@@ -7498,10 +7545,6 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
       self.assertNotEqual(wf_history_dict.get('time'), None)
       self.assertNotEqual(wf_history_dict.get('actor'), None)
       self.assertNotEqual(wf_history_dict.get('comment'), None)
-
-  def stepRemoveZodbDocument(self, sequence=None, **kw):
-    self.getPortalObject().portal_components.deleteContent(
-      sequence['document_id'])
 
   def stepCheckZodbDocumentExistsAndValidated(self, sequence=None, **kw):
     component = getattr(self.getPortalObject().portal_components,

@@ -1,0 +1,351 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Pager</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Pager<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>3 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-item-number"]</td>
+  <td>- 0 items selected</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//a[not(@title)]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//a[not(@title)]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//a[not(@title)]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@class="listbox-data-line-3 DataB"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?start:int=3&amp;num:int=7</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>10 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-item-number"]</td>
+  <td>- 0 items selected</td>
+</tr>
+
+<tal:block tal:define="prefix string:listbox; 
+                       set_page python:1;
+                       lines_per_pages python:3">
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />
+</tal:block>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//a[not(@title)]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//a[not(@title)]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//a[not(@title)]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@class="listbox-data-line-3 DataB"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+
+<tal:block tal:define="prefix string:listbox; 
+                       set_page python:2;
+                       lines_per_pages python:3">
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />
+</tal:block>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//a[not(@title)]</td>
+  <td>3</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//a[not(@title)]</td>
+  <td>4</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//a[not(@title)]</td>
+  <td>5</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@class="listbox-data-line-3 DataB"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+
+<tal:block tal:define="prefix string:listbox; 
+                       set_page python:1;
+                       lines_per_pages python:3">
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />
+</tal:block>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//a[not(@title)]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//a[not(@title)]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//a[not(@title)]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@class="listbox-data-line-3 DataB"]</td>
+  <td></td>
+</tr>
+
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>type</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>4</td>
+</tr>
+<tr>
+  <td>keyPressAndWait</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>\13</td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>select</td>
+  <td>id=listbox_page_selection</td>
+  <td>4 of 4</td>
+</tr>
+</tal:block>
+
+<tal:block tal:define="prefix string:listbox; 
+                       set_page python:4;
+                       lines_per_pages python:3">
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />
+</tal:block>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//a[not(@title)]</td>
+  <td>9</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/manage_delObjects?ids=9</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>9 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-item-number"]</td>
+  <td>- 0 items selected</td>
+</tr>
+
+<tal:block tal:define="prefix string:listbox; 
+                       set_page python:3;
+                       lines_per_pages python:3">
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />
+</tal:block>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//a[not(@title)]</td>
+  <td>6</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//a[not(@title)]</td>
+  <td>7</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//a[not(@title)]</td>
+  <td>8</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@class="listbox-data-line-3 DataB"]</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>

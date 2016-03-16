@@ -49,39 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>kw = {\'reset\':1,\n
-      \'search_text\':field_your_search_text,\n
-      \'your_search_text\':field_your_search_text,\n
-      \'all_languages\':all_languages,\n
-      \'ignore_hide_rows\': 1,\n
-      \'list_style\':list_style}\n
-\n
-if field_your_search_portal_type:\n
-  if field_your_search_portal_type == \'all\':\n
-    kw.update({\'portal_type\':list(context.getPortalDocumentTypeList())})\n
-  else:\n
-    kw.update({\'portal_type\':field_your_search_portal_type})\n
-\n
-web_section = context.getWebSectionValue()\n
-if web_section is not None and \\\n
-    not bool(context.REQUEST.get(\'ignore_layout\', False)):\n
-  search_context = web_section\n
-  if list_style is None:\n
-    kw.update({\'list_style\':\'search\'})\n
-else:\n
-  search_context = context.getPortalObject()\n
-\n
-if field_your_search_text in (\'\', None):\n
-  # no search criteria specified, refuse to conduct any search and \n
-  # show a message to user\n
-  kw[\'portal_status_message\'] = \'Please specify search criteria.\'\n
-  return search_context.Base_redirect(\'view\', keep_items=kw)\n
-  \n
-return search_context.Base_redirect(field_your_search_form_id, keep_items=kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>field_your_search_text=\'\', field_your_search_portal_type=\'\', all_languages=None, list_style=None, field_your_search_form_id=\'ERP5Site_viewSearchResult\'</string> </value>
         </item>

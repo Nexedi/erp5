@@ -98,22 +98,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>// .CodeMirror, .codemirror_gadget {\n
-  // FIXME: hardcoded value\n
-//   height: 50em;\n
-// }\n
-\n
-.CodeMirror {\n
-  // border: 1px solid #eee;\n
-  height: 60em;\n
-}\n
-// .CodeMirror-scroll {\n
-//  overflow-y: hidden;\n
-//   overflow-x: auto;\n
-// }</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Codemirror Gadget CSS</string> </value>
         </item>

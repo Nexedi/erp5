@@ -1,0 +1,27 @@
+<span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/global_definitions"/>
+
+<tal:block 
+  tal:define="current_web_section python: context.REQUEST.get('current_web_section', here);
+              current_web_section python:
+                  test(current_web_section.getPortalType()=='Web Site', here, current_web_section);
+              current_web_section_url python: current_web_section.absolute_url();
+              cancel_url string:${current_web_section_url}/view">
+
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/>
+
+      <div class="portal-column"
+           tal:condition="python:active_knowledge_pad is not None"
+           tal:attributes="class python: test(isAnon or isAnonymousKnowledgePadUsed, 
+                                              'portal-column-undraggable', 
+                                              'portal-column');
+                           id python: 'portal-column-%s' %pad_column">
+
+        <tal:block define="layout python:active_knowledge_pad.KnowledgePad_getBoxColumnLayout(real_context=here)"
+                   condition="python: len(layout)>=pad_column+1"
+                   replace="structure python:
+                  active_knowledge_pad.KnowledgePad_viewColumnWidget(section_layout=layout[pad_column],  
+                                                                     real_context=here,
+                                                                     cancel_url=cancel_url)"/>
+    </div>
+
+</tal:block>

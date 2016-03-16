@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>sender =  context.ERP5Site_getAuthenticatedMemberPersonValue()\n
-\n
-if sender is None:\n
-  sender = context.getDestinationValue()\n
-\n
-if sender is None:\n
-  sender = context.getSourceTradeValue()\n
-\n
-return sender\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

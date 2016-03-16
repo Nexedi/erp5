@@ -21,18 +21,6 @@ table_2</string> </value>
             <value> <string>z_related_explanation_destination_section</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-var table_0>.uid = catalog.uid\n
- AND <dtml-var table_0>.explanation_uid = <dtml-var table_1>.uid\n
- AND <dtml-var table_1>.base_category_uid = <dtml-var "portal_categories.destination_section.getUid()">\n
- AND <dtml-var table_1>.category_uid = <dtml-var table_2>.uid\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

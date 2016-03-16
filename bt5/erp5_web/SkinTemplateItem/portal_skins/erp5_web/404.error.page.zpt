@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title>404 Not Found</title>
+</head>
+  <img style="width:150px" alt="ERP5 Logo" src="images/erp5_logo.png"/> 
+<body>
+  <h1>Not Found</h1>
+  The requested URL <code><tal:block tal:content="request/URL">/fdsqflkjdsqflkjdslkjf</tal:block></code> was not found on this server. 
+  <hr />
+</body>
+</html>

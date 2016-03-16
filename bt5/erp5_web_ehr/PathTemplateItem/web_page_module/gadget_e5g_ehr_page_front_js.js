@@ -1,0 +1,115 @@
+/*global window, rJS, RSVP */
+/*jslint nomen: true, indent: 2, maxerr: 3 */
+(function (window, rJS, RSVP) {
+  "use strict";
+
+  /////////////////////////////////////////////////////////////////
+  // api
+  /////////////////////////////////////////////////////////////////
+
+  // temporary options:
+  //  gadget_href         [string]  url of gadget to load into a cell
+  //  gadget_portal_link  [string]  portal type url (to avoid fetching)
+  //  gadget_query        [object]  query parameters for data to display
+  //  gadegt_title        [string]  title for listbox
+  //  gadget_portal       [string]  portal type to link to
+
+  var HARDCODED_GRID_LIST = [
+    [{
+      "gadget_href": "gadget_e5g_ecrm_field_listbox_widget.html",
+      "gadget_portal_link": "#jio_key=position_opportunity_module&view=view",
+      "gadget_title": "Open Positions",
+      "gadget_portal": "Position Opportunity",
+      "gadget_query": {
+        "query": 'portal_type: "Position Opportunity"',
+        "select_list": ["title"],
+        "limit": [0, 5]
+      }
+    }, {
+      "gadget_href": "gadget_e5g_ecrm_field_listbox_widget.html",
+      "gadget_portal_link": "#jio_key=position_announcement_module&view=view",
+      "gadget_title": "Position Announcements",
+      "gadget_portal": "Position Announcement",
+      "gadget_query": {
+        "query": 'portal_type: "Position Announcement"',
+        "select_list": ["title"],
+        "limit": [0, 5]
+      }
+    }, {
+      "gadget_href": "gadget_e5g_ecrm_field_listbox_widget.html",
+      "gadget_portal_link": "#jio_key=position_module&view=view",
+      "gadget_title": "Positions",
+      "gadget_portal": "Position",
+      "gadget_query": {
+        "query": 'portal_type: "Position"',
+        "select_list": ["title"],
+        "limit": [0, 5]
+      }
+    }]
+  ];
+
+  /////////////////////////////////////////////////////////////////
+  // some methods
+  /////////////////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////////////////
+  // RJS
+  /////////////////////////////////////////////////////////////////
+
+  rJS(window)
+
+    /////////////////////////////////////////////////////////////////
+    // ready
+    /////////////////////////////////////////////////////////////////
+    .ready(function (my_gadget) {
+      my_gadget.property_dict = {};
+    })
+
+    .ready(function (my_gadget) {
+      return my_gadget.getElement()
+        .push(function (my_element) {
+          my_gadget.property_dict.element = my_element;
+        });
+    })
+
+    /////////////////////////////////////////////////////////////////
+    // published methods
+    /////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////
+    // acquired methods
+    /////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////
+    // published methods
+    /////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////
+    // declared methods
+    /////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////
+    // declared service
+    /////////////////////////////////////////////////////////////////
+    .declareMethod("render", function () {
+      var gadget = this;
+      return new RSVP.Queue()
+        .push(function () {
+          return gadget.declareGadget("gadget_erp5_grid.html", {
+            "scope": "grid"
+          });
+        })
+        .push(function () {
+          return gadget.getDeclaredGadget("grid");
+        })
+        .push(function (my_grid_gadget) {
+          return my_grid_gadget.render({"layout": HARDCODED_GRID_LIST});
+        })
+        .push(function (my_content_gadget) {
+          gadget.property_dict.element.appendChild(
+            my_content_gadget.property_dict.element
+          );
+        });
+    });
+
+}(window, rJS, RSVP));

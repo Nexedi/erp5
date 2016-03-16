@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>template_list = [x.getTitle() for x in context.portal_templates.getInstalledBusinessTemplateList()]\n
-template_list.sort()\n
-return template_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

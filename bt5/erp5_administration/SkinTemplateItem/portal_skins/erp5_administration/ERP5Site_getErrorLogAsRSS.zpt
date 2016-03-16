@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+<channel xmlns:tal="http://xml.zope.org/namespaces/tal"
+      tal:define="error_log python:context.getPortalObject().error_log;
+                  dummy python:request.RESPONSE.setHeader('Content-Type', 'text/html;; charset=utf-8')">
+    <title tal:content="string:Errors from ${error_log/absolute_url}"></title>
+    <description>Zope Error Log</description>
+    <link tal:content="error_log/absolute_url"></link>
+    <item tal:repeat="error error_log/getLogEntries">
+        <tal:block tal:define="error_time python:modules['DateTime'].DateTime(error['time'])">
+          <title tal:content="string:${error/userid} ${error/type} ${error/value} ${error_time}"></title>
+          <link tal:content="string:${error_log/absolute_url}/showEntry?id=${error/id}"/>
+          <description>
+            &lt;table&gt;
+              &lt;tr&gt;&lt;th&gt;Login&lt;/th&gt;&lt;td&gt;<tal:block tal:replace="error/userid"/>&lt;/td&gt;&lt;/tr&gt;
+              &lt;tr&gt;&lt;th&gt;Date&lt;/th&gt;&lt;td&gt;<tal:block tal:replace="error_time"/>&lt;/td&gt;&lt;/tr&gt;
+              &lt;tr&gt;&lt;th&gt;URL&lt;/th&gt;&lt;td&gt;<tal:block tal:replace="error/url"/>&lt;/td&gt;&lt;/tr&gt;
+              &lt;tr&gt;&lt;th&gt;Error Type&lt;/th&gt;&lt;td&gt;<tal:block tal:replace="error/type"/>&lt;/td&gt;&lt;/tr&gt;
+              &lt;tr&gt;&lt;th&gt;Error Value&lt;/th&gt;&lt;td&gt;<tal:block tal:replace="error/value"/>&lt;/td&gt;&lt;/tr&gt;
+              &lt;tr&gt;&lt;th&gt;Traceback&lt;/th&gt;&lt;td&gt;<tal:block tal:replace="error/tb_html"/>&lt;/td&gt;&lt;/tr&gt;
+              &lt;tr&gt;&lt;th&gt;Request&lt;/th&gt;&lt;td&gt;<tal:block tal:replace="error/req_html"/>&lt;/td&gt;&lt;/tr&gt;
+            &lt;/table&gt;
+          </description>
+          <guid tal:content="string:${error_log/absolute_url}/showEntry?id=${error/id}"></guid>
+        </tal:block>
+    </item>
+</channel>
+</rss>

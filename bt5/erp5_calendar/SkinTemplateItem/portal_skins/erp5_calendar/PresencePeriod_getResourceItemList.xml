@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-\n
-preferred_presence_calendar_period_type = portal.portal_preferences\\\n
-        .getPreferredPresenceCalendarPeriodType()\n
-\n
-method_id = portal.portal_preferences.getPreference(\n
-     \'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\')\n
-\n
-category = portal.portal_categories.calendar_period_type\n
-\n
-if preferred_presence_calendar_period_type:\n
-  category = category.restrictedTraverse(preferred_presence_calendar_period_type, category)\n
-\n
-return getattr(category, method_id)(local_sort_id=(\'int_index\', \'translated_title\'),\n
-                                    checked_permission=\'View\',\n
-                                    is_self_excluded=0,\n
-                                    base=1)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

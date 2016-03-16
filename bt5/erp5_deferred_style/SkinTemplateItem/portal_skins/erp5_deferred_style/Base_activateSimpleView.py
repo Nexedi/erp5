@@ -1,0 +1,73 @@
+from Products.ERP5Type.Message import translateString
+portal = context.getPortalObject()
+request = portal.REQUEST
+format = request.get('format', '')
+skin_name = request.get('deferred_portal_skin', portal.portal_skins.getDefaultSkin())
+
+tag = 'active-report-wrapped-%s' % random.randint(0, 1000)
+priority = 3
+
+person_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+if person_value is None:
+  portal.changeSkin(None)
+  return context.Base_redirect('view', keep_items=dict(
+              portal_status_message=translateString(
+                        "No person found for your user")))
+
+if person_value.getDefaultEmailText('') in ('', None):
+  portal.changeSkin(None)
+  return context.Base_redirect('view', keep_items=dict(
+              portal_status_message=translateString(
+                        "You haven't defined your email address")))
+  
+user_name = person_value.getReference()
+
+# save request parameters
+# XXX we exclude some reserved names in a very ad hoc way
+request_form = {}
+for k, v in request.form.items():
+  if k not in ('TraversalRequestNameStack', 'AUTHENTICATED_USER', 'URL',
+      'SERVER_URL', 'AUTHENTICATION_PATH', 'USER_PREF_LANGUAGES', 'PARENTS',
+      'PUBLISHED', 'AcceptLanguage', 'AcceptCharset', 'RESPONSE',
+      'ACTUAL_URL'):
+    # XXX proxy fields stores a cache in request.other that cannot be pickled
+    if str(k).startswith('field__proxyfield'):
+      continue
+    # Remove FileUpload parameters
+    elif getattr(v, 'headers', ''):
+      continue
+    request_form[k] = v
+
+localizer_language = portal.Localizer.get_selected_language()
+
+activity_context = context
+if activity_context == portal:
+  # portal is not an active object
+  activity_context = portal.portal_simulation
+
+
+params = {}
+form = getattr(context, deferred_style_dialog_method)
+if hasattr(form, 'ZScriptHTML_tryParams'):
+  # Some actions are wrapped by a script.
+  # In that case we look at script signature to pass them the sames
+  for param in form.ZScriptHTML_tryParams():
+    params[param] = request.get(param)
+else:
+  params['format'] = format
+
+activity_context.activate(
+    activity='SQLQueue', tag=tag, priority=priority).Base_renderSimpleView(
+           localizer_language=localizer_language,
+           skin_name=skin_name,
+           request_form=request_form,
+           deferred_style_dialog_method=deferred_style_dialog_method,
+           user_name=user_name,
+           params=params,
+          )
+
+context.activate(activity='SQLQueue', after_tag=tag).getTitle()
+
+portal.changeSkin(None)
+return context.Base_redirect('view', keep_items=dict(
+              portal_status_message=translateString("Report Started")))

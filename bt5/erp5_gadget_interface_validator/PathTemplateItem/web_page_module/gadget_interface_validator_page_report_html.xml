@@ -102,65 +102,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
-    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>Gadget Interface Validator Reportpage</title>\n
-\n
-    <link rel="http://www.renderjs.org/rel/interface" href="gadget_interface_validator_reportpage_interface.html">\n
-\n
-    <!-- renderjs -->\n
-    <script src="rsvp.js" type="text/javascript"></script>\n
-    <script src="renderjs.js" type="text/javascript"></script>\n
-    <script src="handlebars.js" type="text/javascript"></script>\n
-\n
-    <!-- custom script -->\n
-    <script src="gadget_global.js" type="text/javascript"></script>\n
-    <script src="gadget_interface_validator_page_report.js" type="text/javascript"></script>\n
-\n
-    <script id="report-widget-table" type="text/x-handlebars-template">\n
-      <table class="ui-responsive ui-body-c ui-table-inset custom-force-list">\n
-        <thead class="ui-bar-inherit">\n
-          <tr>\n
-            {{#each column_list}}\n
-              <th>{{this}}</th>\n
-            {{/each}}\n
-          </tr>\n
-        </thead>\n
-        {{> report-widget-table-partial}}\n
-        <tfoot class="ui-bar-inherit"></tfoot>\n
-      </table>\n
-    </script>\n
-\n
-    <script id="report-widget-table-partial" type="text/x-handlebars-template">\n
-      <tbody>\n
-      {{#each row_list}}\n
-        <tr id = {{default_id}}>\n
-        {{#each cell_list}}\n
-          <td class={{default_class}}>{{value}}</td>\n
-        {{/each}}\n
-        </tr>\n
-      {{/each}}\n
-      </tbody>\n
-    </script>\n
-\n
-  </head>\n
-  <body>\n
-    <div data-gadget-url="gadget_interface.html"\n
-          data-gadget-scope="interface_gadget"\n
-          data-gadget-sandbox="public"></div>\n
-    <div class="validation_report"></div>\n
-  </body>\n
-</html>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Gadget Interface Validator Reportpage</string> </value>
         </item>

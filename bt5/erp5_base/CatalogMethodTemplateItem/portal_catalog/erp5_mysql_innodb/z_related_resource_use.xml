@@ -22,19 +22,6 @@ table_3</string> </value>
             <value> <string>z_related_resource_use</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-var table_0>.uid = catalog.uid\n
-AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.resource.getUid()">\n
-AND <dtml-var table_0>.category_uid=<dtml-var table_2>.uid\n
-AND <dtml-var table_1>.uid = <dtml-var table_2>.uid\n
-AND <dtml-var table_1>.base_category_uid = <dtml-var "portal_categories.use.getUid()">\n
-AND <dtml-var table_1>.category_uid = <dtml-var table_3>.uid
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

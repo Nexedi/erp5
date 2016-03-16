@@ -1,0 +1,19 @@
+       
+<h2><a name="comments" tal:content="python: len(here.query())">32</a> comments</h2>
+
+<tal:block tal:define="real_context here/getContext; 
+                       base_url_string real_context/absolute_url;"
+           tal:repeat="line here/query">
+
+  <!--Here is a comment-->
+  <div class="blog_comment" tal:define="render_result line/render">
+    <tal:block tal:define="title python: render_result[0][1];
+                           content python: render_result[1][1]">
+      <h3 tal:content="title">Title</h3>
+      <div tal:content="structure content">Content</div>
+    </tal:block>
+  </div><!--End blog_comment-->
+
+    <tal:block tal:condition="not: repeat/line/end"><br /><hr class="comment_separator" /></tal:block>
+
+</tal:block>

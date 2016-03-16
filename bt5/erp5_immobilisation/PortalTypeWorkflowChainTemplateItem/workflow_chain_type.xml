@@ -1,70 +1,70 @@
 <workflow_chain>
  <chain>
-  <type>Amortisation Rule</type>
+  <type>portal_type_workflow_chain/Amortisation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Amortisation Transaction</type>
+  <type>portal_type_workflow_chain/Amortisation Transaction</type>
   <workflow>accounting_workflow, amortisation_transaction_causality_workflow, delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Amortisation Transaction Line</type>
+  <type>portal_type_workflow_chain/Amortisation Transaction Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Delivery Cell</type>
+  <type>portal_type_workflow_chain/Delivery Cell</type>
   <workflow>immobilisation_movement_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Immobilisation</type>
+  <type>portal_type_workflow_chain/Immobilisation</type>
   <workflow>edit_workflow, immobilisation_delivery_workflow, immobilisation_movement_interaction_workflow, immobilisation_workflow</workflow>
  </chain>
  <chain>
-  <type>Immobilisation Line</type>
+  <type>portal_type_workflow_chain/Immobilisation Line</type>
   <workflow>edit_workflow, immobilisation_movement_interaction_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Internal Packing List</type>
+  <type>portal_type_workflow_chain/Internal Packing List</type>
   <workflow>immobilisation_movement_interaction_workflow, immobilisation_workflow</workflow>
  </chain>
  <chain>
-  <type>Internal Packing List Line</type>
+  <type>portal_type_workflow_chain/Internal Packing List Line</type>
   <workflow>immobilisation_movement_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Inventory</type>
+  <type>portal_type_workflow_chain/Inventory</type>
   <workflow>immobilisation_movement_interaction_workflow, immobilisation_workflow</workflow>
  </chain>
  <chain>
-  <type>Inventory Cell</type>
+  <type>portal_type_workflow_chain/Inventory Cell</type>
   <workflow>immobilisation_movement_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Inventory Line</type>
+  <type>portal_type_workflow_chain/Inventory Line</type>
   <workflow>immobilisation_movement_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Purchase Packing List</type>
+  <type>portal_type_workflow_chain/Purchase Packing List</type>
   <workflow>immobilisation_movement_interaction_workflow, immobilisation_workflow</workflow>
  </chain>
  <chain>
-  <type>Purchase Packing List Cell</type>
+  <type>portal_type_workflow_chain/Purchase Packing List Cell</type>
   <workflow>immobilisation_movement_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Purchase Packing List Line</type>
+  <type>portal_type_workflow_chain/Purchase Packing List Line</type>
   <workflow>immobilisation_movement_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Sale Packing List</type>
+  <type>portal_type_workflow_chain/Sale Packing List</type>
   <workflow>immobilisation_movement_interaction_workflow, immobilisation_workflow</workflow>
  </chain>
  <chain>
-  <type>Sale Packing List Cell</type>
+  <type>portal_type_workflow_chain/Sale Packing List Cell</type>
   <workflow>immobilisation_movement_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Sale Packing List Line</type>
+  <type>portal_type_workflow_chain/Sale Packing List Line</type>
   <workflow>immobilisation_movement_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

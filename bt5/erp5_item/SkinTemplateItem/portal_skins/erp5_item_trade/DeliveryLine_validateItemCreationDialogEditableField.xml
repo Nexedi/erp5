@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if not editor and (\n
-     request.get(\'field_listbox_title_%s\' % request.cell.uid) or\n
-     request.get(\'field_listbox_reference_%s\' % request.cell.uid)):\n
-  return False\n
-return True\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>editor, request</string> </value>
         </item>

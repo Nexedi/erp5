@@ -19,27 +19,6 @@
             <value> <string>image/svg+xml</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<svg xmlns="http://www.w3.org/2000/svg">\r\n
-\t<g id="tool_star">\r\n
-     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-1 -1 26 26">\r\n
-     \t<defs>\r\n
-\t\t<linearGradient y2="1" x2="1" y1="0.10156" x1="0.36328" id="svg_i22">\r\n
-\t\t\t<stop stop-opacity="1" stop-color="#ffffff" offset="0"/>\r\n
-\t\t\t<stop stop-opacity="1" stop-color="#666666" offset="1"/>\r\n
-\t\t</linearGradient>\r\n
-\t\t</defs>\r\n
-\t\t<polygon points="12.4062,1.55891 15.0578,9.39339 23.3283,9.49422 16.6965,14.4371 19.1564,22.3338 12.4062,17.5543 5.65596,22.3338 8.11588,14.4371 1.48406,9.49422 9.75455,9.39339" stroke="#000000" fill="url(#svg_i22)"/>\t </svg>\r\n
-\t</g>\r\n
-\t\r\n
-\t<g id="svg_eof"/>\r\n
-</svg>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

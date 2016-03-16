@@ -1,6 +1,6 @@
 <workflow_chain>
  <chain>
-  <type>Log</type>
+  <type>portal_type_workflow_chain/Log</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

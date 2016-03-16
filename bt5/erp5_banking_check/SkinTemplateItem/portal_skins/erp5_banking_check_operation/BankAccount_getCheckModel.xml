@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>PORTAL_TYPE_TO_CHECK_MODEL_REFERENCE = {\n
-  \'Person\': \'CCOP\',\n
-  \'Organisation\': \'CCCO\',\n
-}\n
-\n
-entity_portal_type = context.getParentValue().getPortalType()\n
-reference = PORTAL_TYPE_TO_CHECK_MODEL_REFERENCE[entity_portal_type]\n
-check_resource = context.getPortalObject().Base_getCheckModelByReference(\n
-  reference=reference,\n
-  unique_per_account=unique_per_account,\n
-)\n
-return check_resource\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>unique_per_account=False</string> </value>
         </item>

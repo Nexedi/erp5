@@ -49,12 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>context.log("Naming Convention Violation", "FiscalReportCell_debtorBankAccountsBalance should be renamed FiscalReportCell_getDebtorBankAccountBalance")\n
-return context.FiscalReportCell_getBankAccountBalance(accounts, debtor_only=True, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>accounts, **kw</string> </value>
         </item>

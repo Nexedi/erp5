@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>reference = bank_account.getReference()\n
-if not same_type(reference, \'\'):\n
-  raise TypeError, \'Reference is not a string: %s.getReference() == %s\' % (repr(bank_account), repr(reference))\n
-return \'bank_account_%s\' % (reference, )\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>bank_account</string> </value>
         </item>

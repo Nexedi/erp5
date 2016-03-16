@@ -19,63 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>//\n
-// Code (inline and block)\n
-// --------------------------------------------------\n
-\n
-\n
-// Inline and block code styles\n
-code,\n
-kbd,\n
-pre,\n
-samp {\n
-  font-family: @font-family-monospace;\n
-}\n
-\n
-// Inline code\n
-code {\n
-  padding: 2px 4px;\n
-  font-size: 90%;\n
-  color: @code-color;\n
-  background-color: @code-bg;\n
-  white-space: nowrap;\n
-  border-radius: @border-radius-base;\n
-}\n
-\n
-// Blocks of code\n
-pre {\n
-  display: block;\n
-  padding: ((@line-height-computed - 1) / 2);\n
-  margin: 0 0 (@line-height-computed / 2);\n
-  font-size: (@font-size-base - 1); // 14px to 13px\n
-  line-height: @line-height-base;\n
-  word-break: break-all;\n
-  word-wrap: break-word;\n
-  color: @pre-color;\n
-  background-color: @pre-bg;\n
-  border: 1px solid @pre-border-color;\n
-  border-radius: @border-radius-base;\n
-\n
-  // Account for some code outputs that place code tags in pre tags\n
-  code {\n
-    padding: 0;\n
-    font-size: inherit;\n
-    color: inherit;\n
-    white-space: pre-wrap;\n
-    background-color: transparent;\n
-    border-radius: 0;\n
-  }\n
-}\n
-\n
-// Enable scrollable blocks of code\n
-.pre-scrollable {\n
-  max-height: @pre-scrollable-max-height;\n
-  overflow-y: scroll;\n
-}\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

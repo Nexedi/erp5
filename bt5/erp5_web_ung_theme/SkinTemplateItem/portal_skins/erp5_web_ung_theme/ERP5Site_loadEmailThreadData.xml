@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from json import dumps\n
-\n
-portal = context.getPortalObject()\n
-form = context.REQUEST.form\n
-\n
-data_dict = {}\n
-\n
-email_thread_uid = form.get("email_thread_uid")\n
-\n
-email = portal.portal_catalog.getResultValue(portal_type="Email Thread",\n
-                                             uid=email_thread_uid)\n
-\n
-data_dict["subject"] = email.getTitle()\n
-data_dict["to"] = email.getRecipient()\n
-data_dict["cc"] = email.getCcRecipient()\n
-data_dict["bcc"] = email.getBccRecipient()\n
-data_dict["text_content"] = email.getTextContent()\n
-data_dict["state"] = email.getValidationState()\n
-data_dict["id"] = email.getId()\n
-\n
-return dumps(data_dict)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

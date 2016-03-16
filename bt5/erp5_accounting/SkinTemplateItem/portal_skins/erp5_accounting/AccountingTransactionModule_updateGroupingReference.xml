@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># we must keep parameters in sync with\n
-# AccountingTransactionModule_setGroupingReference we cannot use **kw, because\n
-# of ZPublisher introspection that pass automatically only named parameters\n
-\n
-return context.AccountingTransactionModule_setGroupingReference(\n
-                        uids=uids,\n
-                        listbox=listbox,\n
-                        listbox_uid=listbox_uid,\n
-                        list_selection_name=list_selection_name,\n
-                        node=node,\n
-                        mirror_section=mirror_section,\n
-                        update=1)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>uids=[], listbox=None, listbox_uid=[], list_selection_name=\'\', node=\'\', mirror_section=\'\', cancel_url=\'\', **kw</string> </value>
         </item>

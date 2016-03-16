@@ -1,0 +1,112 @@
+<tal:block
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  tal:define="field_id here/getId;
+              form_id python: here.getForm().id;
+              selection_name here/getSelectionName;
+              selection here/getSelection;
+              portal_url_string here/getPortalUrlString;
+              real_context here/getContext;
+              context_url real_context/absolute_url;
+              md5_string here/getMD5Checksum;
+              line_list here/query;
+              is_domain_tree_mode here/isDomainTreeMode;
+              is_report_tree_mode here/isReportTreeMode;
+              is_domain_tree_supported here/isDomainTreeSupported;
+              is_report_tree_supported here/isReportTreeSupported;
+              show_select_column here/showSelectColumn;
+              show_anchor_column here/showAnchorColumn;
+              show_search_line here/showSearchLine;
+              is_web_mode request/is_web_mode | nothing;
+              list_style python:request.get('list_style', is_web_mode and 'table' or None);
+              is_gadget_mode request/is_gadget_mode | nothing;
+              ">
+  <!-- ListBox starts here.  -->
+  <input type="hidden" name="list_selection_name" value="default" tal:attributes="value selection_name" />
+  <input type="hidden" name="list_selection_name" value="default"
+                       tal:attributes="value selection_name;
+                                       name string:${field_id}_list_selection_name" />
+  <input tal:condition="md5_string" type="hidden" name="md5_object_uid_list" value="checksum" tal:attributes="value md5_string" />
+  
+  <tal:block tal:condition="is_gadget_mode">
+    <tal:block tal:define="global box_relative_url python: request.get('box_relative_url', '');
+               global box python: real_context.restrictedTraverse(box_relative_url); 
+               global box_id python: 'visual_%s' %box_relative_url.split('/')[-1];
+               global dom_id python: request.get('dom_id',None) or box_id;">
+      <input tal:condition="python:form_id" 
+            type="hidden" name="gadget_form_id"
+            tal:attributes="value form_id" />
+    </tal:block>
+  </tal:block>
+
+  <tal:replace tal:content="nothing">
+    Because TAL cannot accept unbalanced tags, the support for a domain tree is realized by a macro.
+    The macro ListBoxContainer is a no-op, if not in domain tree mode. Otherwise, the macro constructs
+    a domain tree and extracts the body in an extra table.
+  </tal:replace>
+
+  <tal:block tal:define="expand python: 0">
+    <tal:block metal:define-macro="ListBoxContainer">
+      <tal:block tal:condition="expand">
+        <table tal:condition="is_domain_tree_mode"
+          style="width: 100%;" cellpadding="0" cellspacing="0"
+          summary="This table contains the domain tree with the switch button"
+          tal:define="selected_domain_path here/getSelectedDomainPath">
+          <tr>
+            <td valign="top">
+              <select name="domain_root_url"
+                tal:attributes="onchange string:submitAction(this.form, '${context_url}/setDomainRoot')">
+                <tal:block tal:repeat="c here/getDomainRootList">
+                  <option value="base_domain"
+                    tal:define="path python: c[0]; title python: c[1]"
+                    tal:attributes="selected python: path == selected_domain_path; value path"
+                    tal:content="title"
+                    i18n:translate="" i18n:domain="ui">Base Domain</option>
+                </tal:block>
+              </select>
+              <table id="listbox_domain_tree_table" cellpadding="0"
+                summary="This table contains the domain tree"
+                class="listbox_domain_tree_table"
+                tal:attributes="id string:${field_id}_domain_tree_table"
+                tal:define="report_tree_list python: here.makeReportTreeList(report_path = selected_domain_path, unfolded_list = selection.getDomainList(), is_report_opened = False);
+                            total_depth python: max([report_tree.depth for report_tree in report_tree_list] + [-1])">
+                <tr tal:repeat="report_tree report_tree_list">
+                  <tal:block tal:repeat="i python: range(report_tree.depth)">
+                    <td width="12" nowrap="nowrap">&nbsp;</td>
+                  </tal:block>
+		              <td colspan="1" style="text-align: left; vertical-align: top; white-space: nowrap;"
+                    tal:attributes="colspan python: total_depth - report_tree.depth + 1">
+                    <a href="method" class="tree_open"
+                      tal:condition="report_tree/is_open"
+                      tal:attributes="href string:foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">
+                      <b tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</b></a>
+                    <a href="method" class="tree_closed"
+                      tal:condition="not: report_tree/is_open"
+                      tal:attributes="href string:unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">
+                      <tal:block tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</tal:block></a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td style="vertical-align: top">
+              <tal:block metal:define-slot="ListBoxBody" />
+            </td>
+          </tr>
+        </table>
+        <tal:block tal:condition="not: is_domain_tree_mode">
+          <tal:block metal:define-slot="ListBoxBody" />
+        </tal:block>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+  <tal:block tal:condition="python: list_style == 'search'">
+    <span metal:use-macro="real_context/ListBox_asSearchStyleHTML/macros/main"/>
+  </tal:block>
+  <tal:block tal:condition="python: list_style == 'table'">
+    <span metal:use-macro="real_context/ListBox_asMf54TableStyleHTML/macros/main"/>
+  </tal:block>
+  <tal:block tal:condition="python: list_style not in ('search', 'table')">
+    <span metal:use-macro="real_context/ListBox_asStandardHTML/macros/main"/>
+  </tal:block>
+</tal:block>

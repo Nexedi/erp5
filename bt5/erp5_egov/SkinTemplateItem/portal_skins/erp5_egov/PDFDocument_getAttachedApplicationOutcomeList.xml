@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>\'\'\'\n
-  return the list of the file attached to the declaration where title is in request_income_title_list\n
-\'\'\'\n
-\n
-request_outcome_title_list = []\n
-sub_object_list = [x.getObject() for x in context.searchFolder(validation_state=[\'draft\',\'embedded\'])]\n
-return [x for x in sub_object_list if x.getTitle() in request_outcome_title_list]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args,**kw</string> </value>
         </item>

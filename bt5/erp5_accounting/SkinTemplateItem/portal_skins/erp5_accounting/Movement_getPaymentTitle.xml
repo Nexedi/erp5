@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if brain.payment_uid:\n
-  bank_account = context.getPortalObject().portal_catalog.getObject(brain.payment_uid)\n
-  if bank_account is not None:\n
-    # XXX use preference ?\n
-    if bank_account.getReference():\n
-      return \'%s - %s\' % (bank_account.getReference(), bank_account.getTitle())\n
-    return bank_account.getTitle()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain, selection=None, **kwd</string> </value>
         </item>

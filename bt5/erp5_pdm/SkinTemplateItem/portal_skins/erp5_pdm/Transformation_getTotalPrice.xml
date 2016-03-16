@@ -49,35 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if selection_name is not None:\n
-\n
-  reference_variation_category_list = context.portal_selections.getSelectionParamsFor(selection_name)[\'reference_variation_category_list\']\n
-  from Products.ERP5Type.Document import newTempAmount\n
-  tmp_context = newTempAmount(context, "temp_context",\n
-                              quantity=1.0,\n
-                              variation_category_list=reference_variation_category_list,\n
-                              resource=context.getRelativeUrl()) \n
-  price_currency = context.REQUEST.get(\'price_currency\', None)\n
-   \n
-  aal = context.getAggregatedAmountList(tmp_context)\n
-  for line in aal:\n
-    resource = line.getResourceValue()\n
-    sender_value = None\n
-    if resource is not None:\n
-      sender = line.getResourceValue().getPurchaseSupplyLineSource()\n
-    line.setCategoryMembership(\'source\', sender)\n
-    line.setCategoryMembership(\'price_currency\', price_currency)\n
-  \n
-  result = aal.getTotalPrice()\n
-  return result\n
-\n
-\n
-else:\n
-  return None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection=None, selection_name=None</string> </value>
         </item>

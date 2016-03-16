@@ -23,53 +23,6 @@
             <value> <string>application/javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/*jslint indent: 2 */\n
-/*global window, rJS, RSVP, curConfig, svgCanvas */\n
-(function (window, rJS, RSVP) {\n
-  "use strict";\n
-\n
-  curConfig.jGraduatePath = "lib/jgraduate/images/";  // XXX images are not loaded at the good place\n
-\n
-  rJS(window)\n
-    .ready(function (g) {\n
-      g.props = {};\n
-      [].forEach.call(window.document.head.querySelectorAll("base"), function (el) {\n
-        // XXX GadgetField adds <base> tag to fit to the parent page location, it\'s BAD to remove them.\n
-        //     In the case of method-draw, all component are loaded dynamicaly through ajax requests in\n
-        //     method-draw "folder". By setting a <base> tag, we change the url resolution behavior, and\n
-        //     we break all dynamic links. So, deleting <base> is required.\n
-        window.document.head.removeChild(el);\n
-      });\n
-      var deferred = RSVP.defer();\n
-      svgCanvas.ready(function () {\n
-        deferred.resolve();\n
-      });\n
-      return deferred.promise;\n
-    })\n
-    .declareMethod(\'render\', function (options) {\n
-      this.props.key = options.key;\n
-      svgCanvas.setSvgString(options.value);\n
-    })\n
-    .declareService(function () {\n
-      if (/(?:^\\?|&)auto_focus=(true|1)(?:&|$)/.test(window.location.search)) {\n
-        window.focus();  // should be done by the parent gadget?\n
-      }\n
-    })\n
-    .declareMethod(\'getContent\', function () {\n
-      var form_data = {};\n
-      form_data[this.props.key] = svgCanvas.getSvgString();\n
-      return form_data;\n
-    });\n
-\n
-}(window, rJS, RSVP));\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

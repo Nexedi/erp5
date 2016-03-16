@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>group = kw.get(\'group\')\n
-function = kw.get(\'function\')\n
-activity = kw.get(\'activity\')\n
-title = kw.get(\'title\')\n
-description = kw.get(\'description\')\n
-start_date = kw.get(\'start_date\')\n
-stop_date = kw.get(\'stop_date\')\n
-\n
-if None not in [start_date, stop_date, group, function]:\n
-  assignment = context.newContent(portal_type=\'Assignment\', **kw)\n
-  assignment.open()\n
-  return assignment\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

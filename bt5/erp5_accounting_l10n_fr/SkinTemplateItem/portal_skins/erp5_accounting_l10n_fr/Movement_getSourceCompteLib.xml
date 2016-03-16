@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>account = context.getSourceValue(portal_type=\'Account\')\n
-\n
-if account.isMemberOf(\'account_type/asset/cash/bank\'):\n
-  return "%s - %s" % (account.getTranslatedTitle(), context.getSourcePaymentTitle())\n
-\n
-return account.getTranslatedTitle()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

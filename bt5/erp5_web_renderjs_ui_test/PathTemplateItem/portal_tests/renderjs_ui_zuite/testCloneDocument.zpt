@@ -1,0 +1,309 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Add']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>link=Add</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Proceed']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>//select[@name='field_your_portal_type']</td>
+  <td>label=Foo</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Proceed']</td>
+  <td></td>
+</tr>
+
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Add"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="Add"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>link=Add</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Proceed']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>//select[@name='field_your_portal_type']</td>
+  <td>label=Foo Line</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Proceed']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Back']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@title="listbox_start_date"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@title="listbox_start_date"]</td>
+  <td>2022-12-21</td>
+</tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//input[@title="Short Title"]</td>
+  <td>test_clone</td>
+</tr>
+
+
+<tr>
+  <td>check</td>
+  <td>//input[@title="Frozen"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>//select[@name='field_my_local_title']</td>
+  <td>label=First title</td>
+</tr>
+
+
+
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>a1</td>
+</tr>
+
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>input</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@data-relative-url='portal_categories/foo_category/a/a1']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//li[@data-relative-url='portal_categories/foo_category/a/a1']</td>
+  <td></td>
+</tr>
+
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="Tabs"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="View"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="View"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope="field_my_short_title"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope="field_my_short_title"]</td>
+  <td>test_clone</td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>a1</td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Frozen']</td>
+  <td>on</td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//select[@name='field_my_local_title']</td>
+  <td>First title</td>
+</tr>
+
+<tr>
+  <td>storeText</td>
+  <td>//div[@data-gadget-scope='field_my_id']</td>
+  <td>original_id</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Actions']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Clone Document']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Clone Document']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Proceed']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Proceed']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@title="Short Title"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@data-i18n="Save"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title="Short Title"]</td>
+  <td>test_clone</td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>a1</td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Frozen']</td>
+  <td>on</td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//select[@name='field_my_local_title']</td>
+  <td>First title</td>
+</tr>
+
+<tr>
+  <td>verifyNotValue</td>
+  <td>//input[@name='field_my_id']</td>
+  <td>original_id</td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>

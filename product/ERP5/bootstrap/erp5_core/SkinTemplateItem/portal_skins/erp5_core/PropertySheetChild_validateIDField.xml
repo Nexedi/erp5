@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Log import log\n
-portal = container.getPortalObject()\n
-if not(id_value.endswith(portal.restrictedTraverse(REQUEST.object_path)\\\n
-                         .getIdAsReferenceSuffix())):\n
-  return 0\n
-return 1\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>id_value, REQUEST</string> </value>
         </item>

@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This scripts sets up automatically default parameters\n
-  for a newly created Web Site\n
-"""\n
-# Set Web Site layout to default one\n
-context.setContainerLayout(\'erp5_web_layout\')\n
-context.setContentLayout(\'erp5_web_content_layout\')\n
-context.setLayoutConfigurationFormId(\'WebSection_viewDefaultThemeConfiguration\')\n
-language_list = context.Localizer.get_supported_languages()\n
-context.setAvailableLanguageSet(language_list)\n
-context.setStaticLanguageSelection(1)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

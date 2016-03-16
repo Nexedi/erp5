@@ -62,6 +62,7 @@ from Products.ERP5Type.Utils import readLocalTest, \
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken, InitGhostBase
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -101,6 +102,12 @@ try:
 except TypeError:
   pass
 cache_database = threading.local()
+from mimetypes import guess_extension
+from mimetypes import MimeTypes
+from Products.MimetypesRegistry.common import MimeTypeException
+import base64
+import binascii
+import imghdr
 
 # those attributes from CatalogMethodTemplateItem are kept for
 # backward compatibility
@@ -656,6 +663,21 @@ class BaseTemplateItem(Implicit, Persistent):
     else:
       return context
 
+  def _resetDynamicModules(self):
+    # before any import, flush all ZODB caches to force a DB reload
+    # otherwise we could have objects trying to get commited while
+    # holding reference to a class that is no longer the same one as
+    # the class in its import location and pickle doesn't tolerate it.
+    # First we do a savepoint to dump dirty objects to temporary
+    # storage, so that all references to them can be freed.
+    transaction.savepoint(optimistic=True)
+    # Then we need to flush from all caches, not only the one from this
+    # connection
+    portal = self.getPortalObject()
+    portal._p_jar.db().cacheMinimize()
+    synchronizeDynamicModules(portal, force=True)
+    gc.collect()
+
 class ObjectTemplateItem(BaseTemplateItem):
   """
     This class is used for generic objects and as a subclass.
@@ -670,19 +692,290 @@ class ObjectTemplateItem(BaseTemplateItem):
         if id != '':
           self._archive["%s/%s" % (tool_id, id)] = None
 
-  def export(self, context, bta, **kw):
+  def getClassNameAndExportedExtensionDict(self):
+    class_name_and_exported_extension_dict = {
+      "Web Page": {"extension": None, "exported_property_type": "text_content"},
+      "Web Style": {"extension": None, "exported_property_type": "text_content"},
+      "Web Script": {"extension": None, "exported_property_type": "text_content"},
+      "Test Page": {"extension": None, "exported_property_type": "text_content"},
+      "ZopePageTemplate": {"extension": ".zpt", "exported_property_type": "_text"},
+      "OOoTemplate": {"extension": ".oot", "exported_property_type": "_text"},
+      "Extension Component": {"extension": ".py", "exported_property_type": "text_content"},
+      "Test Component": {"extension": ".py", "exported_property_type": "text_content"},
+      "Document Component": {"extension": ".py", "exported_property_type": "text_content"},
+      "PythonScript": {"extension": ".py", "exported_property_type": "_body"},
+      "Python Script": {"extension": ".py", "exported_property_type": "_body"},
+      "Image": {"extension": None, "exported_property_type": "data"},
+      "File": {"extension": None, "exported_property_type": "data"},
+      "DTMLMethod": {"extension": None, "exported_property_type": "raw"},
+      "SQL": {"extension": '.sql', "exported_property_type": "src"},
+      "Spreadsheet": {"extension": None, "exported_property_type": "data"},
+      "PDF": {"extension": '.pdf', "exported_property_type": "data"}
+      }
+    return class_name_and_exported_extension_dict
+
+  def getPropertyAndExtensionExportedSeparatelyDict(self, document, key):
+    """Returns a dictionary with one element in the type of
+      {exported_property_type: extension}
+
+    exported_property_type is the key of the document where the actual data
+    exists. E.g. for a Extension Component this is 'text_content', while for a
+    PythonScript it is'_body'.
+
+    The extension can be default for some Portal Types, e.g. for PythonScript it
+    is always '.py', but for others like File guessExtensionOfDocument is used
+    to identify it.
+    """
+    class_name = document.__class__.__name__
+    class_name_and_exported_extension_dict = self.getClassNameAndExportedExtensionDict()
+    if class_name in class_name_and_exported_extension_dict.keys():
+      extension = class_name_and_exported_extension_dict[class_name]["extension"]
+      exported_property_type = class_name_and_exported_extension_dict[class_name]["exported_property_type"]
+      if extension:
+        return {exported_property_type: extension}
+      else:
+        extension = self.guessExtensionOfDocument(document, key, exported_property_type)
+        if extension:
+          # if the obtained extension was .xml, change it to ._xml so that it
+          # would not conflict with th .xml metadata document
+          if extension == '.xml':
+            extension = '._xml'
+          return {exported_property_type: extension}
+    return {}
+
+  def getMimetypesRegistryLookupResultOfContenType(self, content_type):
+    """Returns a lookup in mimetypes_registry based on the content_type"""
+    mimetypes_registry = self.getPortalObject().mimetypes_registry
+    try:
+      return mimetypes_registry.lookup(content_type)
+    except MimeTypeException:
+      return
+
+  def guessExtensionOfDocument(self, document, key, exported_property_type=None):
+    """Guesses and returns the extension of an ERP5 document.
+
+    The process followed is:
+    1. Try to guess extension by content type
+    2. Try to guess extension by the id of the document
+    3. Try to guess extension by the title of the document
+    4. Try to guess extension by the reference of the document
+    5. In the case of an image, try to guess extension by Base64 representation
+
+    In case everything fails then:
+    - '.bin' is returned for binary files
+    - '.txt' is returned for text
+    """
+    # Try to guess the extension based on the content_type of the document
+    # XXX Zope items like DTMLMethod would not
+    # implement getContentType method
+    extension = None
+    binary = 'not_identified'
+    content_type = None
+    if hasattr(document, 'getContentType'):
+      content_type = document.getContentType()
+    elif isinstance(document, ERP5BaseBroken):
+      content_type = getattr(document, "content_type", None)
+    if content_type:
+      lookup_result = self.getMimetypesRegistryLookupResultOfContenType(content_type)
+      if lookup_result:
+        # return first registered Extension (if any)
+        if lookup_result[0].extensions:
+          extension = lookup_result[0].extensions[0]
+        # If there is no extension return the first registered Glob (if any)
+        elif lookup_result[0].globs:
+          extension = str(lookup_result[0].globs[0]).replace('*', '')
+        if hasattr(lookup_result[0], 'binary'):
+          binary = lookup_result[0].binary
+      if extension:
+        if not extension.startswith('.'):
+          extension = '.'+extension
+        return extension
+    # Try to guess the extension based on the id of the document
+    mime = MimeTypes()    
+    mime_type = mime.guess_type(key)
+    if mime_type[0]:
+      extension = guess_extension(mime_type[0])
+      return extension
+    # Try to guess the extension based on the reference of the document
+    mime = MimeTypes()
+    reference = None
+    if hasattr(document, 'getReference'):
+      reference = document.getReference()
+    elif isinstance(document, ERP5BaseBroken):
+      reference = getattr(document, "reference", None)
+    if reference:
+      mime_type = mime.guess_type(reference)
+      if mime_type[0]:
+        extension = guess_extension(mime_type[0])
+        return extension
+    # Try to guess the extension based on the title of the document
+    title = getattr(document, "title", None)
+    if title:
+      mime_type = mime.guess_type(title)
+      if mime_type[0]:
+        extension = guess_extension(mime_type[0])
+        return extension
+    # Try to get type of image from its base64 encoding
+    if exported_property_type == 'data':
+      # XXX maybe decoding the whole file just for the extension is an overkill
+      data = str(document.__dict__.get('data'))
+      try:
+        decoded_data = base64.decodestring(data)
+        for test in imghdr.tests:
+          extension = test(decoded_data, None)
+          if extension:
+            return '.'+extension
+      except binascii.Error:
+        LOG('BusinessTemplate ', 0, 'data is not base 64')
+    # in case we could not read binary flag from mimetypes_registry then return
+    # '.bin' for all the Portal Types where exported_property_type is data
+    # (File, Image, Spreadsheet). Otherwise, return .bin if binary was returned
+    # as 1.
+    if (binary == 'not_identified' and exported_property_type == 'data') or \
+       binary == 1:
+      return '.bin'
+    # in all other cases return .txt
+    return '.txt'
+      
+  def export(self, context, bta, catalog_method_template_item = 0, **kw):
     """
       Export the business template : fill the BusinessTemplateArchive with
       objects exported as XML, hierarchicaly organised.
     """
     if len(self._objects.keys()) == 0:
       return
-    path = self.__class__.__name__
+    path = self.__class__.__name__ + '/'
     for key, obj in self._objects.iteritems():
-      # export object in xml
-      f = StringIO()
-      XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
-      bta.addObject(f, key, path=path)
+      class_name = obj.__class__.__name__
+      property_and_extension_exported_separately_dict = self.getPropertyAndExtensionExportedSeparatelyDict(obj, key)
+      # Back compatibility with filesystem Documents
+      if isinstance(obj, str):
+        if not key.startswith(path):
+          key = path + key
+        bta.addObject(obj, name=key, ext='.py')
+      else:
+        if property_and_extension_exported_separately_dict:
+          for record_id, record in property_and_extension_exported_separately_dict.iteritems():
+            extension = record
+            exported_property_type = record_id
+            if hasattr(obj, exported_property_type):
+              exported_property = getattr(obj, exported_property_type)
+              if isinstance(exported_property, unicode):
+                exported_property = str(exported_property.encode('utf-8'))
+              elif not isinstance(exported_property, str):
+                exported_property = str(exported_property)
+
+              reset_output_encoding = False
+              if hasattr(obj, 'output_encoding'):
+                reset_output_encoding = True
+                output_encoding = obj.output_encoding
+              obj = obj._getCopy(context)
+
+              f = StringIO(exported_property)
+              bta.addObject(f, key, path=path, ext=extension)
+
+              # since we get the obj from context we should
+              # again remove useless properties
+              obj = self.removeProperties(obj, 1, keep_workflow_history = True)
+
+              # in case the related Portal Type does not exist, the object may be broken.
+              # So we cannot delattr, but we can delet the het of its its broken state
+              if isinstance(obj, ERP5BaseBroken):
+                del obj.__Broken_state__[exported_property_type]
+                if reset_output_encoding:
+                  self._objects[obj_key].__Broken_state__['output_encoding'] = output_encoding
+                obj._p_changed = 1
+              else:
+                delattr(obj, exported_property_type)
+                if reset_output_encoding:
+                  obj.output_encoding = output_encoding
+              transaction.savepoint(optimistic=True)
+
+        f = StringIO()
+        XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
+        bta.addObject(f, key, path=path)
+        
+      if catalog_method_template_item:
+        # add all datas specific to catalog inside one file
+        xml_data = self.generateXml(key)
+        bta.addObject(xml_data, key + '.catalog_keys', path=path)
+        
+  def _importFile(self, file_name, file_obj, catalog_method_template_item = 0):
+    transactional_variable = getTransactionalVariable()
+    obj_key, file_ext = os.path.splitext(file_name)
+    # id() for installing several bt5 in the same transaction
+    transactional_variable_obj_key = "%s-%s" % (id(self), obj_key)
+    if file_ext != '.xml':
+      # if the document has not been migrated yet (its class is file and
+      # it is not in portal_components) use legacy importer
+      if issubclass(self.__class__, FilesystemDocumentTemplateItem) and file_obj.name.rsplit(os.path.sep, 2)[-2] != 'portal_components':
+        FilesystemDocumentTemplateItem._importFile(self, file_name, file_obj)
+      else:
+        # For ZODB Components: if .xml have been processed before, set the
+        # source code property, otherwise store it in a transactional variable
+        # so that it can be set once the .xml has been processed
+        file_obj_content = file_obj.read()
+        try:
+          obj = self._objects[obj_key]
+        except KeyError:
+          transactional_variable[transactional_variable_obj_key] = file_obj_content
+        else:
+          obj_class_name = obj.__class__.__name__
+          exported_property_type = self.getClassNameAndExportedExtensionDict()[obj_class_name]['exported_property_type']
+          # if we have instance of InitGhostBase, 'unghost' it so we can
+          # identify if it is broken
+          if isinstance(self._objects[obj_key], InitGhostBase):
+            self._objects[obj_key].__class__.loadClass()
+          # in case the Portal Type does not exist, the object may be broken.
+          # So we cannot setattr, but we can change the attribute in its broken state
+          if isinstance(self._objects[obj_key], ERP5BaseBroken):
+            self._objects[obj_key].__Broken_state__[exported_property_type] = file_obj_content
+            self._objects[obj_key]._p_changed = 1
+          else:
+            setattr(self._objects[obj_key], exported_property_type, file_obj_content)
+            self._objects[obj_key] = self.removeProperties(self._objects[obj_key], 1, keep_workflow_history = True)
+    else:
+      connection = self.getConnection(self.aq_parent)
+      __traceback_info__ = 'Importing %s' % file_name
+      if hasattr(cache_database, 'db') and isinstance(file_obj, file):
+        obj = connection.importFile(self._compileXML(file_obj))
+      else:
+        # FIXME: Why not use the importXML function directly? Are there any BT5s
+        # with actual .zexp files on the wild?
+        obj = connection.importFile(file_obj, customImporters=customImporters)
+      self._objects[obj_key] = obj
+
+      if transactional_variable.get(transactional_variable_obj_key, None) != None:
+        obj_class_name = obj.__class__.__name__
+        exported_property_type = self.getClassNameAndExportedExtensionDict()[obj_class_name]['exported_property_type']
+        # if we have instance of InitGhostBase, 'unghost' it so we can
+        # identify if it is broken
+        if isinstance(self._objects[obj_key], InitGhostBase):
+          self._objects[obj_key].__class__.loadClass()
+        # in case the related Portal Type does not exist, the object may be broken.
+        # So we cannot setattr, but we can change the attribute in its broken state
+        if isinstance(self._objects[obj_key], ERP5BaseBroken):
+          self._objects[obj_key].__Broken_state__[exported_property_type] = transactional_variable[transactional_variable_obj_key]
+          self._objects[obj_key]._p_changed = 1
+        else:
+          setattr(self._objects[obj_key], exported_property_type, transactional_variable[transactional_variable_obj_key])
+          self._objects[obj_key] = self.removeProperties(self._objects[obj_key], 1, keep_workflow_history = True)
+
+      # When importing a Business Template, there is no way to determine if it
+      # has been already migrated or not in __init__() when it does not
+      # already exist, therefore BaseTemplateItem.__init__() is called which
+      # does not set _archive with portal_components/ like
+      # ObjectTemplateItem.__init__()
+      # XXX - the above comment is a bit unclear, 
+      # still not sure if this is handled correctly
+      if file_obj.name.rsplit(os.path.sep, 2)[-2] == 'portal_components':
+        self._archive[obj_key] = None
+        try:
+          del self._archive[obj_key[len('portal_components/'):]]
+        except KeyError:
+          pass
+      if catalog_method_template_item:
+        self.removeProperties(obj, 0)
 
   def build_sub_objects(self, context, id_list, url, **kw):
     # XXX duplicates code from build
@@ -803,21 +1096,6 @@ class ObjectTemplateItem(BaseTemplateItem):
       if connection is not None:
         return connection
       obj = obj.aq_parent
-
-  def _importFile(self, file_name, file_obj):
-    # import xml file
-    if not file_name.endswith('.xml'):
-      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
-      return
-    connection = self.getConnection(self.aq_parent)
-    __traceback_info__ = 'Importing %s' % file_name
-    if hasattr(cache_database, 'db') and isinstance(file_obj, file):
-      obj = connection.importFile(self._compileXML(file_obj))
-    else:
-      # FIXME: Why not use the importXML function directly? Are there any BT5s
-      # with actual .zexp files on the wild?
-      obj = connection.importFile(file_obj, customImporters=customImporters)
-    self._objects[file_name[:-4]] = obj
 
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
@@ -1001,6 +1279,10 @@ class ObjectTemplateItem(BaseTemplateItem):
       root_document_path = '/%s/%s' % (portal.getId(), root_path)
       recursiveUnindex(catalog, item_path, root_document_path)
 
+  def fixBrokenObject(self, obj):
+    if isinstance(obj, ERP5BaseBroken):
+      self._resetDynamicModules()
+
   def install(self, context, trashbin, **kw):
     self.beforeInstall()
     update_dict = kw.get('object_to_update')
@@ -1109,6 +1391,7 @@ class ObjectTemplateItem(BaseTemplateItem):
 
         # install object
         obj = self._objects[path]
+        self.fixBrokenObject(obj)
         # XXX Following code make Python Scripts compile twice, because
         #     _getCopy returns a copy without the result of the compilation.
         #     A solution could be to add a specific _getCopy method to
@@ -2165,7 +2448,6 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
               self._workflow_chain_archive[portal_type]
     context.portal_workflow.manage_changeWorkflows(default_chain,
                                                    props=chain_dict)
-
   # XXX : this method is kept temporarily, but can be removed once all bt5 are
   # re-exported with separated workflow-chain information
   def _importFile(self, file_name, file):
@@ -2694,23 +2976,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     return modified_object_dict
 
   def export(self, context, bta, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate, export', 0, 'no SQL catalog was available')
-      return
-
-    if len(self._objects.keys()) == 0:
-      return
-    path = self.__class__.__name__
-    for key in self._objects.keys():
-      obj = self._objects[key]
-      # export object in xml
-      f=StringIO()
-      XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
-      bta.addObject(f, key, path=path)
-      # add all datas specific to catalog inside one file
-      xml_data = self.generateXml(key)
-      bta.addObject(xml_data, key + '.catalog_keys', path=path)
+    ObjectTemplateItem.export(self, context, bta, catalog_method_template_item=1)
 
   def install(self, context, trashbin, **kw):
     ObjectTemplateItem.install(self, context, trashbin, **kw)
@@ -2867,14 +3133,9 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         else:
           # new style key
           self._method_properties.setdefault(id, PersistentMapping())[key] = 1
-    elif file_name.endswith('.xml'):
-      # just import xml object
-      connection = self.getConnection(self.aq_parent)
-      obj = connection.importFile(file, customImporters=customImporters)
-      self.removeProperties(obj, 0)
-      self._objects[file_name[:-4]] = obj
     else:
-      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      ObjectTemplateItem._importFile(self, file_name, file, catalog_method_template_item=1)
+
 
 class ActionTemplateItem(ObjectTemplateItem):
 
@@ -3524,21 +3785,6 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
               {self._getKey(path) : ['Removed', self.__class__.__name__[:-12]]})
     return modified_object_list
 
-  def _resetDynamicModules(self):
-    # before any import, flush all ZODB caches to force a DB reload
-    # otherwise we could have objects trying to get commited while
-    # holding reference to a class that is no longer the same one as
-    # the class in its import location and pickle doesn't tolerate it.
-    # First we do a savepoint to dump dirty objects to temporary
-    # storage, so that all references to them can be freed.
-    transaction.savepoint(optimistic=True)
-    # Then we need to flush from all caches, not only the one from this
-    # connection
-    portal = self.getPortalObject()
-    portal._p_jar.db().cacheMinimize()
-    synchronizeDynamicModules(portal, force=True)
-    gc.collect()
-
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
@@ -3963,74 +4209,14 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
       wf_history.pop('comment', None)
 
       obj.workflow_history[wf_id] = WorkflowHistoryList([wf_history])
-
+  
+  # XXX temporary should be eliminated from here
   def _importFile(self, file_name, file_obj):
-    """
-    This will be called once for non-migrated Document and twice for ZODB
-    Components (for .xml (metadata) and .py (source code)). This code MUST
-    consider both bt5 folder (everything is on the FS) and tarball (where in
-    case of ZODB Components, .xml may have been processed before .py and vice
-    versa.
-    """
-    tv = getTransactionalVariable()
-    obj_key, file_ext = os.path.splitext(file_name)
-    # id() for installing several bt5 in the same transaction
-    tv_obj_key = "%s-%s" % (id(self), obj_key)
-    if file_ext == '.py':
-      # If this Document has not been migrated yet (eg not matching
-      # "portal_components/XXX.py"), use legacy importer
-      if file_obj.name.rsplit(os.path.sep, 2)[-2] != 'portal_components':
-        FilesystemDocumentTemplateItem._importFile(self, file_name, file_obj)
-      # For ZODB Components: if .xml have been processed before, set the
-      # source code property, otherwise store it in a transactional variable
-      # so that it can be set once the .xml has been processed
-      else:
-        text_content = file_obj.read()
-        try:
-          obj = self._objects[obj_key]
-        except KeyError:
-          tv[tv_obj_key] = text_content
-        else:
-          obj.text_content = text_content
-    elif file_ext == '.xml':
-      ObjectTemplateItem._importFile(self, file_name, file_obj)
-      self._objects[obj_key].text_content = tv.get(tv_obj_key, None)
-
-      # When importing a Business Template, there is no way to determine if it
-      # has been already migrated or not in __init__() when it does not
-      # already exist, therefore BaseTemplateItem.__init__() is called which
-      # does not set _archive with portal_components/ like
-      # ObjectTemplateItem.__init__()
-      self._archive[obj_key] = None
-      del self._archive[obj_key[len('portal_components/'):]]
-    else:
-      LOG('Business Template', 0, 'Skipping file "%s"' % file_name)
-
+    ObjectTemplateItem._importFile(self, file_name, file_obj)
+  
+  # XXX temporary should be eliminated from here
   def export(self, context, bta, **kw):
-    """
-    Export a Document as two files for ZODB Components, one for metadata
-    (.xml) and the other for the Python source code (.py)
-    """
-    path = self.__class__.__name__ + '/'
-    for key, obj in self._objects.iteritems():
-      # Back compatibility with filesystem Documents
-      if isinstance(obj, str):
-        if not key.startswith(path):
-          key = path + key
-        bta.addObject(obj, name=key, ext='.py')
-      else:
-        obj = obj._getCopy(context)
-
-        f = StringIO(obj.text_content)
-        bta.addObject(f, key, path=path, ext='.py')
-
-        del obj.text_content
-        transaction.savepoint(optimistic=True)
-
-        # export object in xml
-        f = StringIO()
-        XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
-        bta.addObject(f, key, path=path)
+    ObjectTemplateItem.export(self, context, bta, **kw)  
 
   def getTemplateIdList(self):
     """
@@ -4228,7 +4414,7 @@ class CatalogKeyTemplateItemBase(BaseTemplateItem):
       elif not self.is_bt_for_diff:
         raise NotFound, '%s %r not found in catalog' %(self.key_title, key)
     if len(key_list) > 0:
-      self._objects['%s/%s' % (self.__class__.__name__, self.key_list_title)] = key_list
+      self._objects[self.key_list_title] = key_list
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.xml'):
@@ -4295,9 +4481,10 @@ class CatalogKeyTemplateItemBase(BaseTemplateItem):
   def export(self, context, bta, **kw):
     if len(self._objects.keys()) == 0:
       return
-    for path in self._objects.keys():
-      xml_data = self.generateXml(path=path)
-      bta.addObject(xml_data, name=path)
+    for name in self._objects.keys():
+      path = self.__class__.__name__
+      xml_data = self.generateXml(path=name)
+      bta.addObject(xml_data, name=name, path=path)
 
 class CatalogUniqueKeyTemplateItemBase(CatalogKeyTemplateItemBase):
   # like CatalogKeyTemplateItemBase, but for keys which use
@@ -4545,7 +4732,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
     name = posixpath.split(file_name)[1]
     if name == 'translation.po':
       text = file.read()
-      self._objects[file_name[:-3]] = text
+      self._objects[file_name[:-len(name)]] = text
     elif name == 'language.xml':
       xml = parse(file)
       name = xml.find('name').text

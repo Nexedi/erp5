@@ -19,23 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>{\n
-  "name": "requirejs-text",\n
-  "homepage": "https://github.com/requirejs/text",\n
-  "version": "2.0.10",\n
-  "_release": "2.0.10",\n
-  "_resolution": {\n
-    "type": "version",\n
-    "tag": "2.0.10",\n
-    "commit": "1592cbf9c7ffd703b36a3af4002e86457b8ab5dd"\n
-  },\n
-  "_source": "git://github.com/requirejs/text.git",\n
-  "_target": "~2.0.5",\n
-  "_originalSource": "requirejs-text"\n
-}</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

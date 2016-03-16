@@ -49,54 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# Raise ValidationFailed if the accounting date is not opened for the given date and the given site\n
-\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-from DateTime import DateTime\n
-\n
-if date is None:\n
-  # get current date\n
-  date = DateTime()\n
-\n
-# Make sure we have a date with no hours\n
-try:\n
-  date = date.Date()\n
-except AttributeError:\n
-  # Assume that non-date parameter contains the bare date.\n
-  pass\n
-\n
-if site is None:\n
-  # get site from user assignment\n
-  site_list = context.Baobab_getUserAssignedSiteList()\n
-  if len(site_list) == 0:\n
-    context.log(\'Baobab_checkAccountingDateOpen\', \'No site found for the user\')\n
-    return 0\n
-  else:\n
-    site = site_list[0]\n
-\n
-# get only the office, not need of vault\n
-#context.log(\'Baobab_checkAccountingDateOpen\', \'get site for vault %s\' %(site))\n
-site = context.Baobab_getVaultSite(site)\n
-accounting_date_list = context.portal_catalog(portal_type=\'Accounting Date\', site_id=site.getId(), simulation_state="opened", sort_on=[("start_date", "DESC")], limit=1)\n
-if len(accounting_date_list) == 0:\n
-  opened_accounting_date = DateTime(DateTime().Date())\n
-else:\n
-  opened_accounting_date = accounting_date_list[0].getStartDate()\n
-\n
-if DateTime(date) < opened_accounting_date:\n
-  msg = Message(domain = "ui", message="Transaction date incompatible with opened accounting date ${accounting_date}.", mapping={\'accounting_date\': opened_accounting_date})\n
-  raise ValidationFailed, (msg,)\n
-\n
-return "ok"\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>site=None, date=None</string> </value>
         </item>

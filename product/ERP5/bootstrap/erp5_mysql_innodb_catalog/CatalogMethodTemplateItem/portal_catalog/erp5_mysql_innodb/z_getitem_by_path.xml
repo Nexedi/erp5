@@ -51,24 +51,6 @@ uid_only</string> </value>
             <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-SELECT <dtml-if uid_only>uid<dtml-else>uid,path</dtml-if> from catalog \n
-WHERE \n
-  1 = 1\n
-<dtml-if path>\n
-  AND <dtml-sqltest path op=eq type="string">\n
-</dtml-if>\n
-<dtml-if path_list>\n
-  AND path IN (<dtml-in path_list><dtml-sqlvar sequence-item type="string">\n
-               <dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)\n
-</dtml-if>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

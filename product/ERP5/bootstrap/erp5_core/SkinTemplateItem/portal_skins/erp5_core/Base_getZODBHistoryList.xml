@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
-portal = context.getPortalObject()\n
-result = []\n
-\n
-def beautifyChange(change_dict):\n
-  return ["%s:%s" % (k,change_dict[k]) for k in sorted(change_dict.keys())]\n
-\n
-try:\n
-  history_size = portal.portal_preferences.getPreferredHtmlStyleZodbHistorySize()\n
-except AttributeError:\n
-  history_size = 50\n
-\n
-for dict_ in context.Base_getZODBChangeHistoryList(context, size=history_size):\n
-  tmp = newTempBase(portal, \'\')\n
-  dict_[\'changes\'] = beautifyChange(dict_.get(\'changes\', {}))\n
-  tmp.edit(**dict_)\n
-  result.append(tmp)\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

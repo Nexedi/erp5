@@ -1,0 +1,103 @@
+<html>
+<head><title>Test for Account transaction lisbox</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test Account Transaction List then jump to accounting module.
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounts</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- {{{ Select Receivable account and check transaction list -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Receivable</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Transactions</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+
+<!-- {{{ stat line -->
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[8]</td>
+  <td>5500.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
+  <td>0.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[10]</td>
+  <td>5500.0</td>
+</tr>
+<!-- }}} -->
+
+<!-- Jump to Accounting Module {{{ -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_jump</td>
+  <td>label=Accounting</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.title:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+<!-- check amounts for lines -->
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[9]</td>
+  <td>2200.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[10]</td>
+  <td>2200.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[9]</td>
+  <td>3300.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[10]</td>
+  <td>3300.0</td>
+</tr>
+
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

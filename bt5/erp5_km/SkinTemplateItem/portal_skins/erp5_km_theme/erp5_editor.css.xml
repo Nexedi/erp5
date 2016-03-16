@@ -37,35 +37,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block replace="nothing"\n
-           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-           xmlns:i18n="http://xml.zope.org/namespaces/i18n"/>\n
-\n
-body{\n
-  font-size:0.7em;\n
-}\n
-\n
-/* ERP5 Discussion Thread support */\n
-blockquote {\n
-  background-color:#E9E9E9;\n
-  border:1px solid #8CACBB;\n
-  margin:5px;\n
-  padding:10px 15px;\n
-\n
-}\n
-\n
-/* add here all css you want to use inside the fck_editor.\n
-In a first step we decide to use no style, in this way, the user \n
-writing documentation don\'t care about the style only the content. */\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

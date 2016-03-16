@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Return true if Immobilisation Tab is needed\n
-method = context.getAmortisationMethod()\n
-if method in (None, "", "no_change", "unimmobilise"):\n
-  return 0\n
-return 1\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

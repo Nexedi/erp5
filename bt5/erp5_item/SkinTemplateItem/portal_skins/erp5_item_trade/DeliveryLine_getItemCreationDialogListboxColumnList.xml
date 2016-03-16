@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-resolveCategory = context.getPortalObject().portal_categories.resolveCategory\n
-column_item_list = [(\'title\', \'Title\'),\n
-                    (\'reference\', \'Reference\'),\n
-                    (\'quantity\', \'Quantity\'),]\n
-\n
-cell_range = context.getCellRange(base_id=\'movement\')\n
-if len(cell_range) > 0:\n
-  column_item_list.append((\'line_variation_category_list\',\n
-                           resolveCategory(cell_range[0][0].split(\'/\')[0]).getTitle()))\n
-if len(cell_range) > 1:\n
-  column_item_list.append((\'column_variation_category_list\',\n
-                           resolveCategory(cell_range[1][0].split(\'/\')[0]).getTitle()))\n
-if len(cell_range) > 2:\n
-  column_item_list.append((\'tab_variation_category_list\',\n
-                           resolveCategory(cell_range[2][0].split(\'/\')[0]).getTitle()))\n
-\n
-return column_item_list\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

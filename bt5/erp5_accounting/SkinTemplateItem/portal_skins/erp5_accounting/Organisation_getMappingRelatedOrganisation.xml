@@ -49,50 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Returns the main organisation for that group.\n
-"""\n
-\n
-if len(context.contentValues(filter=\n
-    dict(portal_type=\'Accounting Period\'))) or context.getMapping():\n
-  return context\n
-\n
-def getOrganisationForSectionCategory(section):\n
-  mapping = section.getMappingRelatedValue(portal_type=\'Organisation\',\n
-                           checked_permission=\'Access contents information\')\n
-  if mapping is not None:\n
-    return mapping\n
-  \n
-  organisation_list = section.getGroupRelatedValueList(portal_type=\'Organisation\',\n
-                              strict_membership=1,\n
-                              checked_permission=\'Access contents information\')\n
-\n
-  for organisation in organisation_list:\n
-    if organisation.getProperty(\'validation_state\', \'unset\') not in (\'deleted\', \'invalidated\'):\n
-      return organisation\n
-\n
-\n
-group = context.getGroupValue()\n
-if group is None:\n
-  return context\n
-\n
-group_chain = []\n
-while group.getPortalType() != \'Base Category\':\n
-  group_chain.append(group)\n
-  group = group.getParentValue()\n
-\n
-for group in group_chain:\n
-  organisation = getOrganisationForSectionCategory(group)\n
-  if organisation is not None and (\n
-      len(organisation.contentValues(\n
-              filter=dict(portal_type=\'Accounting Period\'))) or \n
-      organisation.getMapping()):\n
-    return organisation\n
-\n
-return context\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

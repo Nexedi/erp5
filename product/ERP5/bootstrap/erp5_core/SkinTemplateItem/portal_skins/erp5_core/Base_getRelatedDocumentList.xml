@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery\n
-kw.pop(\'relative_url\', None)\n
-kw.pop(\'follow_up_uid\', None)\n
-portal_catalog=context.getPortalObject().portal_catalog\n
-follow_up_related_document_list = portal_catalog(\n
-           portal_type=portal_type,\n
-           follow_up_uid=context.getUid(), **kw)\n
-\n
-kw[\'query\'] = Query(relative_url=\'%s/%%\' % context.getRelativeUrl().replace(\'_\', r\'\\_\'))\n
-if follow_up_related_document_list:\n
-  kw[\'query\'] = ComplexQuery(\n
-    kw[\'query\'],\n
-    Query(uid=[x.getUid() for x in follow_up_related_document_list]),\n
-    operator=\'or\')\n
-\n
-return portal_catalog(portal_type=portal_type, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>portal_type= [], **kw</string> </value>
         </item>

@@ -1,0 +1,5 @@
+reference_currency = context.Baobab_getPortalReferenceCurrencyID()
+context.setPriceCurrency('currency_module/%s' %(reference_currency,))
+context.setCurrencyExchangeType('transfer')
+site = context.Baobab_getUserAssignedRootSite()
+context.setSource(site)

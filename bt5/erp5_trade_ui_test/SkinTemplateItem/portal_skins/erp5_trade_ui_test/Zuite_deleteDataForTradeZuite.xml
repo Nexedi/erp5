@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>try:\n
-  context.sale_order_module.manage_delObjects(ids=[\'erp5_trade_ui_test_sale_order_1\'])\n
-except:\n
-  pass\n
-return "Deleted Successfully."\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

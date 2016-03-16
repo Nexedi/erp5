@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from DateTime import DateTime\n
-\n
-now = DateTime()\n
-deadline = brain.getStopDate()\n
-css_class = None\n
-\n
-low_level_alert = \\\n
-brain.restrictedTraverse(brain.REQUEST.get(\'box_relative_url\', \'\')).\\\n
-KnowledgeBox_getDefaultPreferencesDict().get(\'low_level_alert\', None)\n
-\n
-if now > deadline:\n
-  css_class = "DataRed"\n
-elif now - deadline > -(int(low_level_alert) or 3):\n
-  css_class = "DataPink"\n
-\n
-return css_class\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain=None, **kw</string> </value>
         </item>

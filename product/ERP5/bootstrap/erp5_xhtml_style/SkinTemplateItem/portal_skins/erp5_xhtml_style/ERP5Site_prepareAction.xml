@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Script to call in action scripts before executig the actual action.\n
-from Products.ERP5Type.Log import log\n
-log("ERP5Site_prepare is deprecated, "\n
-    "use Base_updateListboxSelection instead")\n
-\n
-# Update checked uids\n
-if None not in (selection_name, uids, listbox_uid):\n
-  context.getPortalObject().portal_selections.updateSelectionCheckedUidList(selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=context.REQUEST)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection_name=None, uids=None, listbox_uid=None, **kw</string> </value>
         </item>

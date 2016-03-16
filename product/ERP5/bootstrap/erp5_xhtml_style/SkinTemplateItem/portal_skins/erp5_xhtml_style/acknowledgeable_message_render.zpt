@@ -1,0 +1,17 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block metal:define-macro="master">
+    <tal:block tal:repeat="item here/AcknowledgementTool_getUserUnreadAcknowledgementList | nothing">
+      <div class="dialog_box">
+        <div class="list_dialog">
+          <tal:div content="structure item/text_content" />
+          <tal:block tal:repeat="aggregate_info item/aggregate_url_list | nothing">
+            <a tal:attributes="href python: aggregate_info[1]" tal:content="python: aggregate_info[0]">Some Document Title</a>
+          </tal:block>
+        </div>
+        <a tal:attributes="href item/acknowledge_url"><button i18n:translate="" i18n:domain="ui">DISMISS</button></a>
+      </div>
+    </tal:block>
+  </tal:block>
+</tal:block>

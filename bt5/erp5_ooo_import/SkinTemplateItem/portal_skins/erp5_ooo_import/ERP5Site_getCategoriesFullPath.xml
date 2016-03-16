@@ -49,40 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Guess the path of categories, taking as input a mapping {base_category:\n
-category}, where category can be the relative_url, the title or the reference\n
-of the category\n
-"""\n
-\n
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery\n
-portal = context.getPortalObject()\n
-result_dict = {}\n
-\n
-for base_category_name, category in category_dict.items():\n
-  category_object = \\\n
-    context.getPortalObject().portal_categories[base_category_name]\n
-  \n
-  category_value = category_object.restrictedTraverse(category, None)\n
-  if category_value is None:\n
-    query = ComplexQuery(\n
-                ComplexQuery(Query(title=category,\n
-                               key=\'ExactMatch\'),\n
-                         Query(reference=category,\n
-                               key=\'ExactMatch\'),\n
-                         operator=\'OR\'),\n
-                ComplexQuery(Query(relative_url=\'%s/%%\' % base_category_name)))\n
-    category_value = portal.portal_catalog.getResultValue(query=query)\n
-\n
-  if category_value is not None:\n
-    # remove base category from relative_url\n
-    result_dict[base_category_name] = \\\n
-      category_value.getRelativeUrl().split(\'/\', 1)[1]\n
-\n
-return result_dict\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>category_dict</string> </value>
         </item>

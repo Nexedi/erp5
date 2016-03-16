@@ -1,0 +1,42 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block metal:define-macro="master">
+    <tal:block tal:define="form_id form/id;
+               local_parameter_list python: {'form_id': form_id};
+               form_action python: form and form.action not in ('', None) and form.action or nothing;
+               title here/getTranslatedTitle | here/Title">
+      <tal:block metal:use-macro="here/main_template/macros/master">
+        <tal:block metal:fill-slot="context_bar">
+          <tal:block metal:use-macro="here/context_box_render/macros/master" />
+        </tal:block>
+        <tal:block metal:fill-slot="main">
+          <div class="document" tal:define="actions python: []">
+            <div class="actions"
+                 tal:condition="python: (not is_web_mode or editable_mode)">
+              <button tal:condition="python: not is_web_mode and form_action"
+                      type="submit" class="save" title="Save"
+                      tal:attributes="name string:${form_action}:method;
+                      onclick string:javascript:clickSaveButton('${form_action}');"
+                      i18n:attributes="title" i18n:domain="ui">
+                <span class="image"></span>
+                <span class="description" i18n:translate="" i18n:domain="ui">Save</span>
+              </button>
+              <ul>
+                <li tal:repeat="action actions"
+                    tal:attributes="class python: action == current_action and 'selected' or 'not_selected'">
+                  <a tal:attributes="href python: '%s%s%s' % (action['url'], '?' in action['url'] and '&amp;' or '?', http_parameters)"
+                     tal:content="action/name"
+                     i18n:translate="" i18n:domain="ui" />
+                </li>
+              </ul>
+            </div>
+
+
+            <tal:block metal:define-slot="main" />
+          </div>
+        </tal:block>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+</tal:block>

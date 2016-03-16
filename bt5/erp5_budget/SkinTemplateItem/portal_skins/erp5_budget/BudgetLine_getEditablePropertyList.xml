@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>item_list = []\n
-\n
-# FIXME: it\'s not so good to use a category here ...\n
-\n
-if context.isMemberOf(\'budget_line_type/quantity\'):\n
-  item_list.append((\'quantity\', \'quantity\'))\n
-if context.isMemberOf(\'budget_line_type/destination_debit\'):\n
-  item_list.append((\'destination_debit\', \'destination_debit\'))\n
-if context.isMemberOf(\'budget_line_type/destination_credit\'):\n
-  item_list.append((\'destination_credit\', \'destination_credit\'))\n
-\n
-if not item_list:\n
-  # by default we use quantity\n
-  item_list = [(\'quantity\', \'quantity\')]\n
-\n
-item_list.append(\n
- (\'membership_criterion_category_list\',\n
-  \'membership_criterion_category_list\'))\n
-return item_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

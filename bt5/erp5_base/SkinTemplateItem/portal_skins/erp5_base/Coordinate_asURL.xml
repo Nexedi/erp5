@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if hasattr(context, \'asURL\') : \n
-  return context.asURL()\n
-return None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain, selection=None, selection_name=None, **kwd</string> </value>
         </item>

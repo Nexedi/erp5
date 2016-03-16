@@ -1,0 +1,1 @@
+select catalog.uid from catalog where portal_type = "Bank Account" or portal_type = "Account"

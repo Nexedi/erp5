@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -36,29 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<tal:block replace="nothing">\n
-  <!--\n
-  This widget displays download widget of a document.\n
- \n
-  -->\n
-</tal:block>\n
-\n
-<div class="download-document-format-list-container"\n
-     tal:define="document_url context/absolute_url" i18n:domain="ui">\n
-  <div class="download-document-format-list-menu" id="donwload_choice">\n
-    <ul>\n
-      <li class="separator"><a tal:attributes="href document_url" i18n:translate="">Original File</a></li>\n
-      <li class="separator" tal:condition="python: len(context.getTargetFormatItemList())>0"><a tal:attributes="href string:${document_url}/Document_viewDownloadDialog?cancel_url=${document_url}/view" i18n:translate="">Other Format</a></li>\n
-    </ul>\n
-  </div>\n
-</div>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>
@@ -69,6 +43,10 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>Base_viewDownloadWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

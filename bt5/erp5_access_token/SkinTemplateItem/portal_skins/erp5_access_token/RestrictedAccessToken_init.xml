@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>alpha = \'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\'\n
-random_id = \'\'\n
-for i in range(0,128):\n
-  random_id += random.choice(alpha)\n
-\n
-# Define Reference from ID provided by portal_ids\n
-portal = context.getPortalObject()\n
-type_definition = context.getTypeInfo()\n
-\n
-short_portal_type = type_definition.getShortTitle()\n
-if not short_portal_type:\n
-  short_portal_type = \'\'.join(s for s in type_definition.getId() if s.isupper())\n
-\n
-id_group = (\'reference\', short_portal_type)\n
-default = 1\n
-new_id = portal.portal_ids.generateNewId(id_group=id_group, default=default)\n
-reference = \'%s-%s%s\' % (short_portal_type, new_id, random_id)\n
-\n
-context.setReference(reference)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Create a zuite or return an existing one after remove his contents.\n
-"""\n
-assert context.getPortalType() == "Test Tool", "bad context"\n
-if REQUEST:\n
-  raise RuntimeError("You can not call this script from the URL")\n
-\n
-if zuite_id is None:\n
-  raise ValueError("Zuite_id cannot be None!")\n
-\n
-if zuite_id not in context.objectIds():\n
-  factory = context.portal_tests.manage_addProduct[\'Zelenium\']\n
-  factory.manage_addZuite(id=zuite_id)\n
-\n
-zuite = getattr(context.portal_tests, zuite_id)\n
-if zuite.getMetaType() != "ERP5 Test Tool":\n
-  raise ValueError("Zuite is not a ERP5 Test Tool")\n
-\n
-zuite.manage_delObjects(zuite.objectIds())\n
-\n
-return zuite\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>zuite_id, REQUEST=None</string> </value>
         </item>

@@ -33,65 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<!doctype html>\n
-\n
-<title>CodeMirror: Selection Marking Demo</title>\n
-<meta charset="utf-8"/>\n
-<link rel=stylesheet href="../doc/docs.css">\n
-\n
-<link rel="stylesheet" href="../lib/codemirror.css">\n
-<script src="../lib/codemirror.js"></script>\n
-<script src="../addon/search/searchcursor.js"></script>\n
-<script src="../addon/selection/mark-selection.js"></script>\n
-<style type="text/css">\n
-      .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
-      .CodeMirror-selected  { background-color: blue !important; }\n
-      .CodeMirror-selectedtext { color: white; }\n
-      .styled-background { background-color: #ff7; }\n
-    </style>\n
-<div id=nav>\n
-  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
-\n
-  <ul>\n
-    <li><a href="../index.html">Home</a>\n
-    <li><a href="../doc/manual.html">Manual</a>\n
-    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
-  </ul>\n
-  <ul>\n
-    <li><a class=active href="#">Selection Marking</a>\n
-  </ul>\n
-</div>\n
-\n
-<article>\n
-<h2>Selection Marking Demo</h2>\n
-<form><textarea id="code" name="code">\n
-Select something from here. You\'ll see that the selection\'s foreground\n
-color changes to white! Since, by default, CodeMirror only puts an\n
-independent "marker" layer behind the text, you\'ll need something like\n
-this to change its colour.\n
-\n
-Also notice that turning this addon on (with the default style) allows\n
-you to safely give text a background color without screwing up the\n
-visibility of the selection.</textarea></form>\n
-\n
-    <script>\n
-var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
-  lineNumbers: true,\n
-  styleSelectedText: true\n
-});\n
-editor.markText({line: 6, ch: 26}, {line: 6, ch: 42}, {className: "styled-background"});\n
-</script>\n
-\n
-    <p>Simple addon to easily mark (and style) selected text. <a href="../doc/manual.html#addon_mark-selection">Docs</a>.</p>\n
-\n
-  </article>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

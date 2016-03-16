@@ -1,0 +1,275 @@
+/* =========================================================================*/
+/* ======================== Custom Overwrites ============================= */
+/* =========================================================================*/
+/* force padding-top on div.ui-page */
+html body div.ui-page {
+  padding-top: 0 !important;
+}
+/* initializing page */
+html body .custom-init .ui-header {
+  position: absolute;
+  z-index: 100;
+  width: 100%;
+  background-color: transparent;
+}
+html body .custom-init .ui-content {
+  padding-top: 1em;
+}
+html body .custom-init .ui-header-fixed {
+  left: 0;
+	right: 0;
+	width: 100%;
+	position: fixed;
+	z-index: 1000;
+}
+html body .custom-view .ui-header-fixed {
+  position: absolute;
+}
+html body .custom-init .ui-header .ui-subheader {
+  display: none;
+}
+/* background dimensions */
+.custom-background {
+  height: 400px;
+  height: 30vh;
+  padding: 15% 0;
+}
+html body section.custom-landing-page {
+  height: 600px;
+  height: 75vh;
+  border: 0;
+  position: relative;
+  border-radius: 0;
+  max-width: none;
+  margin: -16px -16px 0;
+  -webkit-box-shadow: 0 1px 3px #aaa;
+  -moz-box-shadow: 0 1px 3px #aaa;
+  box-shadow: 0 1px 3px #aaa;
+}
+html body section.custom-landing-page > div {
+  border-radius: 0;
+  width: auto;
+}
+html body .ui-content-header-section .ui-content-title.custom-title {
+  padding-top: 0;
+}
+.custom-title:after {
+  bottom: 30%;
+  content: "";
+  left: 0;
+  margin: 0 auto 1px;
+  position: absolute;
+  right: 0;
+  width: 30%;
+  border-bottom: 1px solid rgb(115, 115, 115); /* IE8 */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.55);
+}
+.custom-title:before {
+  bottom: 30%;
+  content: "";
+  left: 0;
+  margin: 0 auto;
+  position: absolute;
+  right: 0;
+  width: 30%;
+  border-bottom: 1px solid rgb(232, 232, 232); /* IE8 */
+  border-bottom: 1px solid rgba(232, 232, 232, 0.5);
+}
+
+/* miserable text placement */
+html.ui-mobile body .custom-tagline {
+  padding-top: 20%;
+  padding-top: 20vh;  
+}
+@media (max-width: 62em) {
+  html.ui-mobile body .custom-tagline {
+    padding-top: 25%;
+    padding-top: 25vh;  
+  }
+}
+@media (max-width: 48em) {
+  html.ui-mobile body .custom-tagline {
+    padding-top: 30%;
+    padding-top: 30vh;  
+  }
+}
+
+/* custom card-deck width */
+@media (min-width: 62em) {
+  html.ui-mobile body .ui-card-deck.custom-deck > .ui-li-static,
+  html.ui-mobile body .ui-card-deck.custom-deck > li > .ui-btn {
+    width: 33.1%;
+    margin: .625em 1%;
+    max-width: 33.1%;
+  }
+}
+@media (min-width: 48em) {
+  html.ui-mobile body .ui-card-deck.custom-deck > .ui-li-static,
+  html.ui-mobile body .ui-card-deck.custom-deck > li > .ui-btn {
+    width: 30.9333%;
+    margin: .5625em 1.2%;
+    max-width: 30.9333%;
+  }
+}
+
+/* footer section */
+.custom-footer {
+  margin: 0;
+  padding: 0;
+}
+.custom-footer .ui-controlgroup {
+  margin: 0;
+  padding: 0;
+  text-align: right;
+  padding-right: 1em;
+}
+.custom-footer .ui-controlgroup .ui-btn {
+  border: 0 none;
+}
+.custom-footer .custom-fineprint {
+  margin: 0;
+  padding-left: 1em;
+  font-size: .8em;
+}
+
+/* center elements on small screen */
+@media (max-width: 48em) {
+  .custom-footer .custom-fineprint {
+    padding-top: .25em;
+  }
+  .custom-footer .ui-controlgroup,
+  .custom-footer .custom-fineprint {
+    text-align: center;
+  }
+}
+/* readonly */
+.custom-readonly {
+  opacity: 1;
+}
+/* invalid */
+.custom-invalid {
+  color: red !important;
+}
+/* align button left/right */
+.custom-right {
+  text-align: right;
+  padding-right: 2%;
+}
+@media (max-width: 48em) {
+  .custom-right {
+    text-align: center;
+  }
+}
+.jsbin-embed {
+  text-align: center;
+}
+/* hide button background, borders, hardcode dimensions */
+div.custom-iframe-loader {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border: 0 none;
+  background: 0 none;
+  background-image: none !important;
+  background-color: transparent;
+  min-width: 60%;
+  min-height: 50px;
+}
+.italic {
+  font-style: italic;
+}
+.align-center {
+  text-align: center;
+}
+.xl {
+  font-size: 2em;
+}
+.l {
+  font-size: 1em;
+}
+.m {
+  font-size: .8em;
+}
+.s {
+  font-size: .6em;
+}
+.middle {
+  vertical-align: middle;
+}
+.fade {
+  opacity: .25;
+}
+.turq {
+  color: turquoise;
+}
+.orange {
+  color: orange;
+}
+.custom-icongrid {
+  max-width: 80%;
+  margin: 0 auto;
+}
+@media (min-width: 48em) {
+  .custom-icongrid {
+    max-width: 50%;
+    margin: 0 auto;
+  }
+}
+.custom-hr {
+  max-width: 50%;
+  color: #e6e6e6;
+  opacity: .25;
+}
+
+.ui-grid-container > ul > li > iframe {
+  width: 99%  !important;
+}
+
+/* ==================== More overrides from porting ========================= */
+/* fix panel listview margin */
+html .ui-panel .ui-content > .ui-listview {
+  margin: -1em;
+}
+
+/* fix width of content sections */
+.ui-content-header-section,
+.ui-content-section {
+  max-width: 85%;
+
+}
+.ui-content-header-plain {
+  max-width: 85%;
+}
+
+/* fix padding of content header and section */
+.ui-content-header-section ~ .ui-content-section {
+  padding-top: .5em;
+}
+
+/* fix borders */
+.ui-content-header-section {
+  -webkit-border-top-left-radius: .3125em;
+  -webkit-border-top-right-radius: .3125em;
+  border-top-left-radius: .3125em;
+  border-top-right-radius: .3125em;
+}
+
+.ui-content-header-plain ~ .ui-content-section {
+  -webkit-border-top-left-radius: .3125em;
+  -webkit-border-top-right-radius: .3125em;
+  border-top-left-radius: .3125em;
+  border-top-right-radius: .3125em;
+}
+
+.ui-content-header-section ~ .ui-content-section:first-child {
+  -webkit-border-top-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* iframe */
+iframe {
+  width: auto;
+  border: 0 none;
+}

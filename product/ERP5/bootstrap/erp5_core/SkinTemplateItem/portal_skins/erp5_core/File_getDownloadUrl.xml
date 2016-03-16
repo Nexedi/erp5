@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if brain is None:\n
-  brain = context\n
-return \'%s/Base_download\' % brain.absolute_url()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain=None, selection=None, selection_name=None, **kw</string> </value>
         </item>

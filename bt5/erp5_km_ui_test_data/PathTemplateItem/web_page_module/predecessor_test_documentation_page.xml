@@ -110,27 +110,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
-    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-\n
-    <title>Be Foo</title>\n
-  </head>\n
-\n
-  <body>\n
-  <p>Some documentation. which should have associated discussions</p>\n
-  </body>\n
-</html>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Predecessor Test Documentation</string> </value>
         </item>

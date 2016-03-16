@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from ZTUtils import make_query\n
-from Products.PythonScripts.standard import html_quote\n
-\n
-index = context.portal_selections.getSelectionIndexFor(selection_name)\n
-object = brain.getObject()\n
-\n
-# this is for domain_tree mode\n
-if object.getPortalType() == "Category" : \n
- return "#"\n
-\n
-method = \'Account_viewAccountingTransactionList\'\n
-kw = { \'selection_index\': str(index),\n
-       \'selection_name\' : selection_name, \n
-       \'reset\' : \'1\', \n
-     }\n
-\n
-return html_quote(\'%s/%s?%s\' % (object.absolute_url(), method, make_query(kw)))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain=None, selection=None, selection_name=None, **kwd</string> </value>
         </item>

@@ -49,43 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Get Person assignment details.\n
-"""\n
-#For Cloudooo : Proxify it to allow anonymous user to discover metadata of uploaded file\n
-\n
-from Products.ERP5Type.Cache import CachingMethod\n
-\n
-portal = context.getPortalObject()\n
-result = {\'group_list\': [],\n
-          \'site_list\': [],\n
-          \'function_list\': [],\n
-          \'destination_trade_relative_url\': None}\n
-person = portal.ERP5Site_getAuthenticatedMemberPersonValue(user_name=user_name)\n
-\n
-if person is None:\n
-  return result\n
-\n
-def getAssignmentDict(username):\n
-  person = portal.restrictedTraverse(person_relative_url)\n
-  assignment_list = person.Person_getAvailableAssignmentValueList()\n
-  for assignment in assignment_list:\n
-    assignment = assignment.getObject()\n
-    result[\'group_list\'].extend(assignment.getGroupList())\n
-    result[\'function_list\'].extend(assignment.getFunctionList())\n
-    result[\'site_list\'].extend(assignment.getSiteList())\n
-    result[\'destination_trade_relative_url\'] = assignment.getDestinationTradeRelativeUrl()\n
-  return result\n
-\n
-person_relative_url = person.getRelativeUrl()\n
-getAssignmentDict = CachingMethod(getAssignmentDict,\n
-                               ("ERP5Site_getPersonAssignmentDict",),\n
-                                cache_factory=\'erp5_ui_short\')\n
-return getAssignmentDict(person_relative_url)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>user_name=None</string> </value>
         </item>

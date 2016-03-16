@@ -19,16 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>.masked-field {\r\n
-    text-align: right;\r\n
-    border: 1px solid @gray;\r\n
-    border-radius: 2px;\r\n
-    padding: 0 3px;\r\n
-    .user-select(text);\r\n
-}</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

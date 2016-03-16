@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-if len(old_line_list) == 0 and len(new_line_list) == 6:\n
-  if \'\\n\'.join(new_line_list) == """\\\n
-<key> <string>__translation_dict</string> </key>\n
-<value>\n
-<dictionary/>\n
-</value>\n
-</item>\n
-<item>""":\n
-    return True\n
-\n
-return False\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>old_line_list, new_line_list</string> </value>
         </item>

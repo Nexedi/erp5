@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request = container.REQUEST\n
-if request.get(\'landscape\'):\n
-  return context.Base_getODTLandscapeStyleSheet\n
-return context.Base_getODTPortraitStyleSheet\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

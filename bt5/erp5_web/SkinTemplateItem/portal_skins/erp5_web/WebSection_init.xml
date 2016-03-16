@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># List no document until at least one Criterion is created.\n
-# BBB: property does not exist on old property sheets\n
-getattr(context, \'setEmptyCriterionValid\', lambda _: None)(False)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

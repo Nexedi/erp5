@@ -1,0 +1,56 @@
+<html>
+<head><title>Test MultiRelationStringField on a sale order line inside the other sale order line.</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test MultiRelationStringField on a sale order line inside the other sale order line.
+</td></tr>
+</thead>
+<tbody tal:define="init_method string:Zuite_createSaleOrderForTradeZuite;">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeZuite/macros/init" />
+<!-- }}} -->
+
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Add Sale Order Line</td>
+</tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td tal:content="string:glob:${here/portal_url}/sale_order_module/erp5_trade_ui_test_sale_order_1/1*" />
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Add Sale Order Line</td>
+</tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td tal:content="string:glob:${here/portal_url}/sale_order_module/erp5_trade_ui_test_sale_order_1/1/1*" />
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>portal_selections/viewSearchRelatedDocumentDialog1:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Site Error</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Please select one (or more) object.</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html> 
+<!-- vim: syntax=html foldmethod=marker -->

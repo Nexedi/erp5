@@ -1,0 +1,56 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <tal:block metal:define-macro="init" tal:define="base_url python: '/' + here.getPortalObject().getId()">
+
+    <!-- Click on + link -->
+    <tr>
+      <td>clickAndWait</td>
+      <td tal:content='string://button[@value="site/${link_title}.0"]'>link=node</td>
+      <td></td>
+    </tr>
+
+    <!-- Check inventory -->
+    <tr>
+      <td>verifyText</td>
+      <td>//span[@class="listbox-current-page-total-number"]</td>
+      <td tal:content="python: '%s records' % movement_count">number of record(s)</td>
+    </tr>
+    <tal:block tal:condition="python: movement_count != 0">
+
+      <!-- Check that inventory and movement list are consistent -->
+      <tal:block tal:repeat="inventory_tuple python: [(current_inventory, 3),
+                                                      (available_inventory, 4),
+                                                      (future_inventory, 5),
+]">
+        <tr>
+          <td>verifyText</td>
+          <td tal:content="python: '//tr[@class=\'listbox-data-line-0 DataA\']/td[%s]' % inventory_tuple[1]">inventory value</td>
+          <td tal:content="python: inventory_tuple[0]">current inventory</td>
+        </tr>
+        <tr>
+          <td>verifyText</td>
+          <td tal:content="python: '//tr[@class=\'listbox_stat_line  listbox-stat-line\']/td[%s]' % inventory_tuple[1]">inventory value</td>
+          <td tal:content="python: inventory_tuple[0]">current inventory</td>
+        </tr>
+
+        <!-- Check movement history list -->
+        <tr>
+          <td>clickAndWait</td>
+          <td tal:content="python: '//tr[@class=\'listbox-data-line-0 DataA\']/td[%s]/a[1]' % inventory_tuple[1]">link</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>verifyText</td>
+          <td>//span[@class="listbox-current-page-total-number"]</td>
+          <td tal:content="python: '%s records' % int(abs(inventory_tuple[0]))">number of movement(s)</td>
+        </tr>
+        <!-- Go back to inventory view -->
+        <tr>
+          <td>clickAndWait</td>
+          <td>//a[@class="listbox_title"]</td>
+          <td></td>
+        </tr>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+</tal:block>

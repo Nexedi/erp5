@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>currency = context.getResourceTitle()\n
-\n
-var_ressource_title = context.getParentValue().getResourceTitle().lower()\n
-var_ressource_title = var_ressource_title.replace(" ", "_")\n
-\n
-encaisse_devise = "/encaisse_des_devises/%s/sortante" %(var_ressource_title)\n
-#encaisse_devise = "/encaisse_des_devises/%s/sortante" %(context.getParentValue().getResourceTitle().lower())\n
-\n
-\n
-counter_site = context.getSource()\n
-destination = counter_site + encaisse_devise\n
-return destination\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

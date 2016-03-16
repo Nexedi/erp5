@@ -49,40 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-if not language:\n
-  language = context.getLanguage()\n
-  if not language:\n
-    language = portal.portal_preferences.getPreferredCustomerRelationLanguage()\n
-    \n
-notification_message = portal.portal_notifications.getDocumentValue(\n
-                                language=language,\n
-                                reference=reference)\n
-\n
-if substitution_method_parameter_dict is None:\n
-  substitution_method_parameter_dict = {}\n
-# Notification method will receive the current event under "event_value" key.\n
-# This way notification method can return properties from recipient or follow up of the event.\n
-substitution_method_parameter_dict.setdefault(\'event_value\', context)\n
-\n
-\n
-if notification_message is not None:\n
-  context.setContentType(notification_message.getContentType())\n
-  target_format = "txt"\n
-  if context.getContentType() == \'text/html\':\n
-    target_format = "html"\n
-  mime, text_content = notification_message.convert(target_format,\n
-      substitution_method_parameter_dict=substitution_method_parameter_dict)\n
-  context.setTextContent(text_content)\n
-  context.setAggregateList(notification_message.getProperty(\'aggregate_list\', []))\n
-  \n
-  if not context.hasTitle():\n
-    context.setTitle(notification_message.asSubjectText(\n
-      substitution_method_parameter_dict=substitution_method_parameter_dict))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>reference, language=None, substitution_method_parameter_dict=None</string> </value>
         </item>

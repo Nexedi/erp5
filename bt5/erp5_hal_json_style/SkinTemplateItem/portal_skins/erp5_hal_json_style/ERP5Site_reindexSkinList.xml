@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-skin_tool = portal.portal_skins\n
-for skin_folder in portal.portal_skins.objectValues():\n
-  for skin_document in skin_folder.objectValues():\n
-    if skin_document.meta_type == "ERP5 Form":\n
-      # skin_document.setUid(None)\n
-      skin_document.reindexObject()\n
-\n
-print "skins ok"\n
-\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>sql_catalog_id=None, additional_priority=0, final_activity_tag=None</string> </value>
         </item>

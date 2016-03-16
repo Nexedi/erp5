@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This script returns the list of forms that will be used as assessment forms on events\n
-"""\n
-\n
-from Products.ERP5Type.Cache import CachingMethod\n
-\n
-def getFormItemList():\n
-  result = [(\'\', \'\')]\n
-  form_id_list = context.portal_preferences.getPreferredEventAssessmentFormIdList()\n
-  for form_id in form_id_list:\n
-    form = getattr(context.getPortalObject(), form_id, None)\n
-    if form is not None:\n
-      result.append((context.Localizer.erp5_ui.gettext(form.title) or form_id, form_id))\n
-  return result\n
-\n
-getFormItemList = CachingMethod(getFormItemList, \n
-      id=(\'Ticket_getFormItemList\', context.Localizer.get_selected_language()),\n
-      cache_factory=\'erp5_ui_long\')\n
-                                 \n
-return getFormItemList()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

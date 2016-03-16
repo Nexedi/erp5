@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Get other versions of this document.\n
-"""\n
-request = context.REQUEST\n
-portal = context.getPortalObject()\n
-\n
-# we can use current_web_document in case it\'s "embedded" into a Web Section\n
-document = request.get(\'current_web_document\', context)\n
-\n
-kw[\'reference\'] = document.getReference()\n
-if kw[\'reference\'] is None:\n
-  # we can not find other "verions" of this document as it doesn\'t have a reference\n
-  return []\n
-kw[\'uid\'] = \'!=%s\' %document.getUid()\n
-if \'portal_type\' not in kw:\n
-  kw[\'portal_type\'] = context.getPortalDocumentTypeList()\n
-return portal.portal_catalog(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>language = context.Localizer.get_selected_language()\n
-\n
-SUPPORT_ENABLED = \'support_enabled\'\n
-SUPPORT_DISABLED = \'support_disabled\'\n
-ADVERTISEMENT_ENABLED = \'advertisement_enabled\'\n
-\n
-if express_mode==SUPPORT_ENABLED:\n
-  # For Express users.\n
-  proxy_path = \'web_site_module/express_frame/WebSite_viewExpressCustomerSupportMenu\'\n
-elif express_mode==SUPPORT_DISABLED:\n
-  return \'\'\n
-else:\n
-  # Advertisement\n
-  # XXXX FIX THIS URL!!!\n
-  proxy_path = \'web_site_module/express_frame/WebSite_viewDummyAdvertisement\'\n
-\n
-\n
-# XXX we need to think about https\n
-traverse_subpath = proxy_path.split(\'/\')\n
-context.REQUEST.set(\'traverse_subpath\', traverse_subpath)\n
-return context.portal_wizard.proxy()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>express_mode</string> </value>
         </item>

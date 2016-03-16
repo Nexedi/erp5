@@ -33,25 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block tal:replace="nothing"\n
-           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-  <tal:block metal:define-macro="breadcrumb">\n
-    <tal:block tal:repeat="item here/breadcrumbs">\n
-      <a tal:attributes="href item/url" tal:content="item/title" />\n
-      /\n
-    </tal:block>\n
-  </tal:block>\n
-</tal:block>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

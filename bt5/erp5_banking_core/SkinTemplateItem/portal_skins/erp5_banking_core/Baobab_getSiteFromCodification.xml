@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>site_list = [x[1] for x in context.Delivery_getVaultItemList(vault_type=(\'site\',),strict_membership=1,\n
-                                              leaf_node=0,user_site=0) if x[1]!=\'\']\n
-for site in site_list:\n
-  site_value = context.portal_categories.restrictedTraverse(site)\n
-  if site_value.getCodification()==codification:\n
-    return site_value\n
-return None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>codification</string> </value>
         </item>

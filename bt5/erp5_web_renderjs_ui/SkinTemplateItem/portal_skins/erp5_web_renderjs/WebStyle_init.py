@@ -1,0 +1,1 @@
+context.setContentType('text/css')

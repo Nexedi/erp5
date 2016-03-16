@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Set connected user as shopping cart customer"""\n
-shopping_cart = context.SaleOrder_getShoppingCart()\n
-member = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
-shopping_cart.edit(destination_section_value=member)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

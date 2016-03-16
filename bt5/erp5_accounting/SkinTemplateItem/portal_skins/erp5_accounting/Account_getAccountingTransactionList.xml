@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Returns Accounting Transactions where this account is node.\n
-"""\n
-kw[\'node_uid\'] = context.getUid()\n
-return context.Node_getAccountingTransactionList(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

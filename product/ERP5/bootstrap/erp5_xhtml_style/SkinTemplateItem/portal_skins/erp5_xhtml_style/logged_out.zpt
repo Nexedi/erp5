@@ -1,0 +1,3 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal">
+  <tal:block tal:define="dummy python:request.RESPONSE.redirect('%s?portal_status_message=%s' % (here.absolute_url(), here.Base_translateString('You have been logged out.')))" />
+</tal:block>

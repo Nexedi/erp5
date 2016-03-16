@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if value.strip() or REQUEST.get(\'field_your_support_request_template\'):\n
-  return True\n
-from Products.Formulator.Errors import ValidationError\n
-raise ValidationError(\'external_validator_failed\', context, error_text=\'Required when no template is used\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>value, REQUEST</string> </value>
         </item>

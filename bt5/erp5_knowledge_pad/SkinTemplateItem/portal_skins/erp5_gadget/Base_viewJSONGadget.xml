@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-s="""<script type="text/javascript">\n
-var d = loadJSONDoc(\'%s/KnowledgeBox_getDefaultPreferencesDictAsJSON\');\n
-var gotMetadata = function (meta) {\n
-    alert(\'Preferred max rows = \' + meta.preferred_max_rows);\n
-};\n
-var metadataFetchFailed = function (err) {\n
-  alert("Fail fetching preferences");\n
-};\n
-d.addCallbacks(gotMetadata, metadataFetchFailed);\n
-</script>\n
-""" %box.absolute_url()\n
-\n
-return s\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>box</string> </value>
         </item>

@@ -25,13 +25,6 @@
             <value> <string>z_portal_ids_commit</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string># Warning : This method is obsolete, the new method is IdTool_zCommit\n
-#           it\'s kept for backward compatiblity\n
-\n
-commit</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

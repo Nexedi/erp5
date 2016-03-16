@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Form.Report import ReportSection\n
-\n
-result = []\n
-\n
-params = {}\n
-\n
-portal = context.portal_url.getPortalObject()\n
-\n
-for project_line in [x.getObject() for x in context.searchFolder(sort_id=\'int_index\')]:\n
-\n
-  result.append(\n
-                 ReportSection(path=project_line.getPhysicalPath(),    \n
-                               form_id=\'ProjectLine_viewReport\',\n
-                               selection_name=\'project_line_selection\',\n
-                               selection_params=params,\n
-                               #listbox_display_mode=\'ReportTreeMode\',\n
-                               \n
-                               )             \n
-               )\n
-\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args,**kw</string> </value>
         </item>

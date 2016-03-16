@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""This script is a placeholder for projects to implement extra constraint to prevent grouping of accounting transaction lines.\n
-Note that the sequence of letters will still remain unique for section, mirror_section and node, regardless of extra grouping parameters.\n
-\n
-For instance, we can refuse to group together lines for different order by returning the reference of the order in that script.\n
-\n
-The returned value must be hashable.\n
-"""\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>source=True</string> </value>
         </item>

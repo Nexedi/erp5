@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if len(old_line_list) == 1 and len(new_line_list) == 1 and \\\n
-   new_line_list[0] == old_line_list[0].replace("BTrees._OOBTree","BTrees.OOBTree"):\n
-    return True\n
-\n
-return False\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>old_line_list, new_line_list</string> </value>
         </item>

@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>delivery = context\n
-solver_process_tool = delivery.getPortalObject().portal_solver_processes\n
-# XXX We sometimes want to store solver process document persistently.\n
-solver_process = solver_process_tool.newSolverProcess(delivery, temp_object=True)\n
-if solver_process is not None:\n
-  solver_process.buildTargetSolverList()\n
-  solver_tag = \'%s_solve\' % delivery.getPath()\n
-  solver_process.solve(activate_kw={\'tag\':solver_tag})\n
-  delivery.activate(after_tag=solver_tag).updateCausalityState(solve_automatically=False)\n
-else:\n
-  delivery.updateCausalityState(solve_automatically=False)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

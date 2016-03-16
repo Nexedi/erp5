@@ -1,78 +1,78 @@
 <workflow_chain>
  <chain>
-  <type>Apparel Assortment</type>
+  <type>portal_type_workflow_chain/Apparel Assortment</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Assortment Colour Variation</type>
+  <type>portal_type_workflow_chain/Apparel Assortment Colour Variation</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Bath</type>
+  <type>portal_type_workflow_chain/Apparel Bath</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Cloth</type>
+  <type>portal_type_workflow_chain/Apparel Cloth</type>
   <workflow>apparel_cloth_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Colour Range</type>
+  <type>portal_type_workflow_chain/Apparel Colour Range</type>
   <workflow>apparel_shape_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Colour Range Variation</type>
+  <type>portal_type_workflow_chain/Apparel Colour Range Variation</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Colour Range Variation Line</type>
+  <type>portal_type_workflow_chain/Apparel Colour Range Variation Line</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Component</type>
+  <type>portal_type_workflow_chain/Apparel Component</type>
   <workflow>apparel_component_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Consumption</type>
+  <type>portal_type_workflow_chain/Apparel Consumption</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Fabric</type>
+  <type>portal_type_workflow_chain/Apparel Fabric</type>
   <workflow>apparel_component_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Fabric Colour Variation</type>
+  <type>portal_type_workflow_chain/Apparel Fabric Colour Variation</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Fabric Item</type>
+  <type>portal_type_workflow_chain/Apparel Fabric Item</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Measurement</type>
+  <type>portal_type_workflow_chain/Apparel Measurement</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Model</type>
+  <type>portal_type_workflow_chain/Apparel Model</type>
   <workflow>apparel_model_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Model Colour Variation</type>
+  <type>portal_type_workflow_chain/Apparel Model Colour Variation</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Model Morphology Variation</type>
+  <type>portal_type_workflow_chain/Apparel Model Morphology Variation</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Shape</type>
+  <type>portal_type_workflow_chain/Apparel Shape</type>
   <workflow>apparel_shape_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Size</type>
+  <type>portal_type_workflow_chain/Apparel Size</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Apparel Technical Drawing</type>
+  <type>portal_type_workflow_chain/Apparel Technical Drawing</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

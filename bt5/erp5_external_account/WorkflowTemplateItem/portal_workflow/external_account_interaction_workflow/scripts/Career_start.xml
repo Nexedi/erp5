@@ -49,40 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Create respective accounts for a company employee.\n
-"""\n
-portal = context.getPortalObject()\n
-\n
-career = state_change[\'object\']\n
-person = career.getParentValue()\n
-\n
-default_email_text = person.Person_getDefaultExternalEmailText()\n
-username, domain = default_email_text.split(\'@\', 2)\n
-if domain in portal.portal_preferences.getPreferredManagedExternalDomainNameList():\n
-  # find (or create an external Email Account instance)\n
-  kw = {\'email.url_string\':default_email_text,\n
-        \'default_source_uid\': person.getUid(),\n
-        \'validation_state\': \'validated\',\n
-        \'portal_type\': "Email Account"}\n
-  email_account = portal.portal_catalog.getResultValue(**kw)\n
-  if email_account is None:\n
-    # might be invalidate temporary\n
-    kw[\'validation_state\'] = \'invalidated\'\n
-    email_account = portal.portal_catalog.getResultValue(**kw)\n
-    if email_account is not None:\n
-      email_account.validate()\n
-    else:\n
-      # no external account at all so create it\n
-      email_account = portal.external_account_module.newContent(\n
-                                                       portal_type = "Email Account",\n
-                                                       url_string = default_email_text,\n
-                                                       source_value = person)\n
-      email_account.validate()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

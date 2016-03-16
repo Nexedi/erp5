@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>#TODO : USE CACHE\n
-#the goal of this script is to get all the related product of this section\n
-current_web_section = context.REQUEST.get(\'current_web_section\', context)\n
-product_list = []\n
-\n
-if not kw.has_key(\'portal_type\'):\n
-  kw[\'portal_type\'] = \'Product\'\n
-\t\t \n
-if not kw.has_key(\'limit\'):\t\t \n
-  kw[\'limit\'] = limit\t\t \n
-\t\t \n
-if not kw.has_key(\'all_versions\'):\t\t \n
-  kw[\'all_versions\'] = 1\t\t \n
-\t\t \n
-if not kw.has_key(\'all_languages\'):\t\t \n
-  kw[\'all_languages\'] = 1\t\t \n
-\t\t \n
-for key in [\'limit\',\'all_versions\',\'all_languages\']:\t\t \n
-  kw[key] = int(kw[key])\t\t \n
-\t\t \n
-product_list = current_web_section.getDocumentValueList(**kw)\n
-return product_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>limit=1000, **kw</string> </value>
         </item>

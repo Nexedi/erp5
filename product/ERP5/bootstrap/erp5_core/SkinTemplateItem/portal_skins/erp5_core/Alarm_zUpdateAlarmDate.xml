@@ -20,17 +20,6 @@ alarm_date</string> </value>
             <value> <string>Alarm_zUpdateAlarmDate</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-REPLACE INTO\n
-  alarm (uid, alarm_date)\n
-VALUES\n
-  (<dtml-sqlvar uid type="int">, <dtml-sqlvar alarm_date type="datetime" optional>)
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

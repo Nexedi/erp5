@@ -39,55 +39,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<office:document-content\n
-  xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\'\n
-  xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\'\n
-  xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
-  xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"\n
-\n
-  office:version="1.0"\n
-\n
-  tal:attributes=\'dummy python: request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'>\n
-  <office:body>\n
-    <office:spreadsheet>\n
-      <tal:block tal:repeat="table context/CategoryTool_constructCategoryTableToExport">\n
-        <table:table table:print="false" tal:attributes="table:name table/name"> \n
-          <table:table-column tal:repeat="path_cell table/header_row"/>\n
-\n
-          <table:table-header-rows>\n
-            <table:table-row tal:define="row table/header_row">\n
-              <table:table-cell tal:repeat="path_cell row/path_cell_list">\n
-                <text:p tal:content="path_cell"/>\n
-              </table:table-cell>\n
-              <table:table-cell tal:repeat="category_property row/category_property_list">\n
-                <text:p tal:content="category_property"/>\n
-              </table:table-cell>\n
-            </table:table-row>\n
-          </table:table-header-rows>\n
-          <table:table-row tal:repeat="row table/row_list">\n
-            <table:table-cell tal:repeat="path_cell row/path_cell_list">\n
-              <text:p tal:content="path_cell"/>\n
-            </table:table-cell>\n
-            <table:table-cell tal:repeat="category_property row/category_property_list">\n
-              <text:p tal:content="category_property"/>\n
-            </table:table-cell>\n
-          </table:table-row>\n
-        </table:table>\n
-      </tal:block>\n
-    </office:spreadsheet>\n
-  </office:body>\n
-</office:document-content>\n
-<!--\n
-vim: filetype=xml\n
--->\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>application/vnd.oasis.opendocument.spreadsheet</string> </value>
         </item>

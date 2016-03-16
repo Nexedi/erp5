@@ -62,22 +62,6 @@
             <value> <string>Resource_zGetTransformedResourceList</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-select distinct\n
-  catalog.uid, catalog.relative_url, catalog.title\n
-from\n
-  transformation \n
-join \n
-  catalog on transformation.transformed_uid=catalog.uid\n
-\n
-where\n
-  <dtml-sqltest resource_uid column="transformation.uid" type=int multiple>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

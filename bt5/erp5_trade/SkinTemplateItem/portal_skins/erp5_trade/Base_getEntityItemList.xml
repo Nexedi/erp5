@@ -49,36 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>try:\n
-  return container.REQUEST.other[script.id]\n
-except KeyError:\n
-  pass\n
-\n
-if not role_list:\n
-  return []\n
-\n
-portal = context.getPortalObject()\n
-\n
-if not portal_type:\n
-  portal_type = portal.getPortalNodeTypeList()\n
-\n
-role_uid = [portal.portal_categories.resolveCategory(role).getUid()\n
-              for role in role_list]\n
-\n
-result = container.REQUEST.other[script.id] = [(\'\', \'\')] + [\n
-      (x.getTitle(), x.getRelativeUrl()) for x in \n
-            context.portal_catalog.searchResults(\n
-               portal_type=portal_type,\n
-               default_role_uid=role_uid,\n
-               validation_state=validation_state,\n
-               sort_on=((\'portal_type\', \'asc\'),\n
-                        (\'title\', \'asc\'))) ]\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>role_list, validation_state=\'validated\', portal_type=None</string> </value>
         </item>

@@ -1,0 +1,345 @@
+<tal:block metal:define-macro="init_test_environment">
+  <tr>
+    <td>store</td>
+    <td tal:content="python:
+        here.REQUEST.get('URL')[0:here.REQUEST.get('URL').find('/portal_tests/')]">erp5</td>
+    <td>base_url</td>
+  </tr>
+  <!-- Always initialize browser to English language -->
+  <tr>
+    <td>deleteCookie</td>
+    <td>LOCALIZER_LANGUAGE</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>createCookie</td>
+    <td>LOCALIZER_LANGUAGE=en</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/view</td>
+    <td></td>
+  </tr>
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span>
+</tal:block>
+
+<tal:block metal:define-macro="login_as_manager">
+  <!-- Login as manager -->
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/logout</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/login_form</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>//input[@name="__ac_name"]</td>
+    <td tal:content="python:
+          here.Zuite_getHowToInfo()['manager_username']"></td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>//input[@name="__ac_password"]</td>
+    <td tal:content="python:
+        here.Zuite_getHowToInfo()['manager_password']"></td>
+  </tr>
+  <tr>
+    <td>clickAndWait</td>
+    <td>//input[@name="logged_in:method"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/view</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyTextPresent</td>
+    <td tal:content="python:
+          here.Zuite_getHowToInfo()['manager_username']"></td>
+    <td></td>
+  </tr>
+</tal:block>
+
+<tal:block metal:define-macro="wait_for_activities">
+  <!-- Wait for activities to finish -->
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Zuite_waitForActivities</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyTextPresent</td>
+    <td>Done.</td>
+    <td></td>
+  </tr> 
+</tal:block>
+
+<tal:block metal:define-macro="invoke_simulation_alarms">
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\  <!-- Wait for activities to finish -->
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Zuite_invokeSimulationAlarmList</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyTextPresent</td>
+    <td>Done.</td>
+    <td></td>
+  </tr> 
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>
+</tal:block>
+
+<tal:block metal:define-macro="login_as_functional_test_user">
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Zuite_createFunctionalTestUser</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyTextPresent</td>
+    <td>Done.</td>
+    <td></td>
+  </tr>
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Base_clearCache</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertTextPresent</td>
+    <td>Cleared.</td>
+    <td></td>
+  </tr>
+  <!-- login with functional test user -->
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/logout</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/login_form</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>//input[@name="__ac_name"]</td>
+    <td tal:content="python:
+          here.Zuite_getHowToInfo()['functional_test_username']"></td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>//input[@name="__ac_password"]</td>
+    <td tal:content="python:
+        here.Zuite_getHowToInfo()['functional_test_user_password']"></td>
+  </tr>
+  <tr>
+    <td>clickAndWait</td>
+    <td>//input[@name="logged_in:method"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/view</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyTextPresent</td>
+    <td tal:content="python:
+          here.Zuite_getHowToInfo()['functional_test_username']"></td>
+    <td></td>
+  </tr>
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Base_clearCache</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertTextPresent</td>
+    <td>Cleared.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Zuite_updateUserPreference</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyTextPresent</td>
+    <td>Init Ok.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/view</td>
+    <td></td>
+  </tr>
+</tal:block>
+
+<tal:block metal:define-macro="login_as_functional_another_test_user">
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Zuite_createAnotherFunctionalTestUser</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyTextPresent</td>
+    <td>Done.</td>
+    <td></td>
+  </tr>
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Base_clearCache</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertTextPresent</td>
+    <td>Cleared.</td>
+    <td></td>
+  </tr>
+  <!-- login with functional test user -->
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/logout</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/login_form</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>//input[@name="__ac_name"]</td>
+    <td tal:content="python:
+          here.Zuite_getHowToInfo()['functional_another_test_username']"></td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>//input[@name="__ac_password"]</td>
+    <td tal:content="python:
+        here.Zuite_getHowToInfo()['functional_test_user_password']"></td>
+  </tr>
+  <tr>
+    <td>clickAndWait</td>
+    <td>//input[@name="logged_in:method"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/view</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyTextPresent</td>
+    <td tal:content="python:
+          here.Zuite_getHowToInfo()['functional_another_test_username']"></td>
+    <td></td>
+  </tr>
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Base_clearCache</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertTextPresent</td>
+    <td>Cleared.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Zuite_updateUserPreference</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyTextPresent</td>
+    <td>Init Ok.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/view</td>
+    <td></td>
+  </tr>
+</tal:block>
+
+<tal:block metal:define-macro="login_as_user">
+  <!-- login with newly created user from Express configuration -->
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/view</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/logout</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/login_form</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>//input[@name="__ac_name"]</td>
+    <td tal:content="python:
+          here.Zuite_getHowToInfo()['person_howto_reference']"></td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>//input[@name="__ac_password"]</td>
+    <td tal:content="python:
+          here.Zuite_getHowToInfo()['person_howto_password']"></td>
+  </tr>
+  <tr>
+    <td>clickAndWait</td>
+    <td>//input[@name="logged_in:method"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/view</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyTextPresent</td>
+    <td tal:content="python:
+          here.Zuite_getHowToInfo()['person_howto_reference']"></td>
+    <td></td>
+  </tr>
+</tal:block>
+
+<tal:block metal:define-macro="select_cash_account">
+  <span tal:condition="python:'5 - Bank' in here.Zuite_getCashAccountRelatedFormattedTitleList()">
+  <tr>
+    <td>select</td>
+    <td>//select[@name="field_your_node"]</td>
+    <td>5 - Bank</td>
+  </tr>
+  </span>
+  <span tal:condition="python:'51 - Bank' in here.Zuite_getCashAccountRelatedFormattedTitleList()">
+  <tr>
+    <td>select</td>
+    <td>//select[@name="field_your_node"]</td>
+    <td>51 - Bank</td>
+  </tr>
+  </span>
+  <span tal:condition="python:'512 - Banques' in here.Zuite_getCashAccountRelatedFormattedTitleList()">
+   <tr>
+    <td>select</td>
+    <td>//select[@name="field_your_node"]</td>
+    <td>512 - Banques</td>
+   </tr>
+  </span>
+</tal:block>

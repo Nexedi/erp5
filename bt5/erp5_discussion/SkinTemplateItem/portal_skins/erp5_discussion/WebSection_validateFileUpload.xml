@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  Use to check if current user is allowed to perform a file upload.\n
-"""\n
-if context.portal_membership.isAnonymousUser() and len(editor.read()) > 1048576 :\n
-  return 0\n
-return 1\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>editor, request</string> </value>
         </item>

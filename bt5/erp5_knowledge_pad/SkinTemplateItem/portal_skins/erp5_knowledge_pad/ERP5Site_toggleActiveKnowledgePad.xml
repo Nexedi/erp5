@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>toggable_pad = None\n
-all_knowledge_pads = context.ERP5Site_getKnowledgePadListForUser(mode=mode)\n
-if isinstance(knowledge_pad_url, basestring):\n
-  toggable_pad = context.restrictedTraverse(knowledge_pad_url)\n
-else:\n
-  # we pass object\n
-  toggable_pad = knowledge_pad_url\n
-\n
-if toggable_pad is not None:\n
-  if toggable_pad.getValidationState() == \'invisible\':\n
-    toggable_pad.visible()\n
-  for pad in all_knowledge_pads:\n
-    if pad.getObject()!=toggable_pad and pad.getValidationState()==\'visible\':\n
-      pad.invisible()\n
-if redirect:\n
-  context.Base_redirect(form_id="view")\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>knowledge_pad_url=None, mode=None, redirect=True</string> </value>
         </item>

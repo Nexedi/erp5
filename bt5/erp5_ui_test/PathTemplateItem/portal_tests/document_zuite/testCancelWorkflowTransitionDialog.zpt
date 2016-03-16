@@ -1,0 +1,83 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Click Cancel on Workflow Transition Dialog</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Click Cancel on Workflow Transition Dialog</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Dummy Workflow Action</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>name=Base_cancel:method</td>
+  <td>Cancel Action</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>name=Base_cancel:method</td>
+  <td/>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td></td>
+  <td/>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Site Error</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0/Foo_view*" />
+  <td></td>
+</tr>
+<!-- We check that the transition has not been passed by looking at the
+workflow history. -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=History</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number x1_listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

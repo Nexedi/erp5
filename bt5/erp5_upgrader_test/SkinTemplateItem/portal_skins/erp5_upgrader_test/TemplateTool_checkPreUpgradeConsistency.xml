@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>template_tool = context\n
-\n
-return template_tool.upgradeSite((\'erp5_full_text_mroonga_catalog\',),\n
-  dry_run=(not fixit))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>fixit=False, **kw</string> </value>
         </item>

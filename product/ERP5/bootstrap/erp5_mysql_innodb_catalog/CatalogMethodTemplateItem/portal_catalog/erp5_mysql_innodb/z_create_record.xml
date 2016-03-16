@@ -51,24 +51,6 @@
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string># Host:\n
-# Database: test\n
-# Table: \'record\'\n
-#\n
-CREATE TABLE `record` (\n
-  `uid` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,\n
-  `path` varchar(255) NOT NULL default \'\',\n
-  `catalog` BOOL NOT NULL default 0,\n
-  `played` BOOL NOT NULL default 0,\n
-  `date` DATETIME NOT NULL,\n
-  PRIMARY KEY  (`uid`),\n
-  KEY `played` (`played`),\n
-  KEY `date` (`date`)\n
-) ENGINE=InnoDB;\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

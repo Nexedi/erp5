@@ -1,0 +1,15 @@
+html.ui-mobile head + body div.ui-field-contain > a.ui-btn,
+html.ui-mobile head + body .ui-field-contain > :first-child:nth-last-child(2) ~ .ui-btn{
+  margin: 0;
+  height: 2.3em;
+}
+html.ui-mobile head + body .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-select {
+  width: 29%;
+}
+html.ui-mobile head + body .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-select:last-child {
+  -webkit-border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+

@@ -49,37 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-\'\'\'Lookup source account & destination account from applicable paths and copy\n
-them on this movement.\n
-\'\'\'\n
-movement = state_change[\'object\']\n
-searchPredicateList = movement.getPortalObject().portal_domains.searchPredicateList\n
-\n
-resource = movement.getResourceValue()\n
-if resource is not None:\n
-  if not movement.getDestinationAccount():\n
-    for predicate in searchPredicateList(\n
-                      context=movement, portal_type=\'Purchase Supply Line\'):\n
-      if predicate.getDestinationAccount():\n
-        movement.setDestinationAccount(predicate.getDestinationAccount())\n
-        break\n
-  if not movement.getSourceAccount():\n
-    for predicate in searchPredicateList(\n
-                      context=movement, portal_type=\'Sale Supply Line\'):\n
-      if predicate.getSourceAccount():\n
-        movement.setSourceAccount(predicate.getSourceAccount())\n
-        break\n
-else:\n
-  movement.setSourceAccount(None)\n
-  movement.setDestinationAccount(None)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

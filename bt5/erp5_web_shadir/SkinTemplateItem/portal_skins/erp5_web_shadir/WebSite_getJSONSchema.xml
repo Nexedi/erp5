@@ -49,49 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return {\n
-   \'type\': \'array\',\n
-   \'items\': [\n
-      {\'type\': \'object\',\n
-       \'properties\':{\n
-          \'file\':{\n
-             \'type\': \'string\',\n
-             \'required\': True,\n
-          },\n
-          \'urlmd5\': {\n
-             \'type\': \'string\',\n
-             \'required\': True,\n
-          },\n
-          \'sha512\': {\n
-             \'type\': \'string\',\n
-             \'required\': True,\n
-          },\n
-          \'creation_date\': {\n
-             \'type\': \'string\',\n
-             \'required\': False,\n
-          },\n
-          \'expiration_date\': {\n
-             \'type\': \'string\',\n
-             \'required\': False,\n
-          },\n
-          \'distribution\': {\n
-             \'type\': \'string\',\n
-             \'required\': False,\n
-          },\n
-          \'architecture\': {\n
-             \'type\': \'string\',\n
-             \'required\': False,\n
-          },\n
-       }\n
-     },\n
-     {\'type\': \'string\',\n
-      \'blank\': True},\n
-   ]\n
-}\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

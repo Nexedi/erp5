@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
-\n
-if vault is not None:\n
-  if not vault.endswith(\'encaisse_des_billets_et_monnaies\'):\n
-    vault = "%s/%s" % (vault,\'encaisse_des_billets_et_monnaies\')\n
-\n
-listbox_data = context.Delivery_getCheckbookList(batch_mode=1,node=vault,at_date=at_date)\n
-\n
-result_list = []\n
-i=0\n
-for line in listbox_data:\n
-  result_list.append(newTempBase(context, "new_%3i" % i, **line))\n
-  i+=1\n
-return result_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>vault=None,at_date=None,**kw</string> </value>
         </item>

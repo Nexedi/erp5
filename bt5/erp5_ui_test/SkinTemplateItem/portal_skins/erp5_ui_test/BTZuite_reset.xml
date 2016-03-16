@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Uninstall business template"""\n
-# Uninstall test business templates before the test\n
-bt_list = context.portal_templates.getInstalledBusinessTemplatesList()\n
-for bt in bt_list:\n
-  if bt.getTitle().startswith(\'test_\'):\n
-    bt.uninstall()\n
-\n
-# modify repository list information\n
-if end:\n
-  # set default repository list when test is finished\n
-  repository_list = [\'http://www.erp5.org/dists/snapshot/bt5\']\n
-else:\n
-  # just used test repository to not display to many bt and thus have listbox\n
-  # with many pages\n
-  repository_list = [\'http://www.erp5.org/dists/snapshot/test_bt5\']\n
-\n
-context.portal_templates.updateRepositoryBusinessTemplateList(repository_list)\n
-\n
-return \'Reset Successfully.\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>end=0</string> </value>
         </item>

@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>reference = \'\'\n
-if context.getBankCountryCode():\n
-  reference = \' \'.join((context.getBankCountryCode(),\n
-                   context.getBankCode() or \'\',\n
-                   context.getBranch() or \'\',\n
-                   context.getBankAccountNumber() or \'\',\n
-                   context.getBankAccountKey() or \'\'))\n
-else:\n
-  reference = \' \'.join((context.getBankCode() or \'\',\n
-                   context.getBranch() or \'\',\n
-                   context.getBankAccountNumber() or \'\',\n
-                   context.getBankAccountKey() or \'\'))\n
-\n
-if not reference.strip():\n
-  return default or context.getTitleOrId()\n
-\n
-return reference\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>default=None, **kw</string> </value>
         </item>

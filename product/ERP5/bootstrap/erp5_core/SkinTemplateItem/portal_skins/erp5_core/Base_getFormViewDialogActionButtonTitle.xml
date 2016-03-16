@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-\n
-button_title = request.get(\'button_title\', None)\n
-if button_title is not None:\n
-  return button_title\n
-\n
-wf_actions =  context.portal_actions.portal_actions.listFilteredActionsFor(context)[\'workflow\']\n
-workflow_action = request.get(\'workflow_action\', None) or request.get(\'field_my_workflow_action\', None)\n
-if workflow_action:\n
-  for action in wf_actions: \n
-    if action[\'id\'] == workflow_action:\n
-      return action[\'name\']\n
-\n
-if workflow_action:\n
-  # It means that workflow_action is not available now. Redirect to default view with a nice message.\n
-  from Products.ERP5Type.Message import translateString\n
-  message = translateString("Workflow state may have been updated by other user. Please try again.")\n
-  context.Base_redirect(\'view\', keep_items={\'portal_status_message\': message})\n
-\n
-return form.title\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form</string> </value>
         </item>

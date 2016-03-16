@@ -1,0 +1,110 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Float Value with Float Fields</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Float Value with Float Fields</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/getQuantity</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>10.0</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_quantity</td>
+  <td>10.0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//fieldset[@class="right editable"]//div[@class="field"][2]//div</td>
+  <td>10.0</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_quantity</td>
+  <td>1000000000000.00</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="information_area"]</td>
+  <td>Input data has errors. Please look at the error messages below.</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="error"]</td>
+  <td>The number you input has too large precision.</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_quantity</td>
+  <td>1000000000000.0</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_quantity</td>
+  <td>1000000000000.0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//fieldset[@class="right editable"]//div[@class="field"][2]//div</td>
+  <td>1 000 000 000 000.0</td>
+</tr>
+</tbody></table>
+</body>
+</html>

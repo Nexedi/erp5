@@ -1,0 +1,38 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+
+  <tal:block metal:define-macro="createKMWebSite">
+    <!-- create the web_site -->
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_site_module/WebSiteModule_createKMSite?site_id=km_test_web_site&amp;title=KM Test Web Site</td>
+      <td></td>
+      <td>Create a new site</td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Created Successfully.</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <!-- Wait for activities to finish -->
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr> 
+  </tal:block>
+</tal:block>
+
+
+<tal:block metal:define-macro="deleteKMWebSite">
+    <!-- delete the web_site XXX: not used anymore as no need to delete site -->
+</tal:block>
+
+

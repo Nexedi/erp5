@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from ZTUtils import make_query\n
-form_results = context.BusinessTemplate_viewCreateWorkingCopy.validate_all(REQUEST)\n
-working_copy = form_results[\'your_repository\']\n
-context.getVcsTool(path=working_copy).createBusinessTemplateWorkingCopy()\n
-\n
-query_string = make_query(portal_status_message=\'Business Template Working Copy created\')\n
-REQUEST.response.redirect(\'%s/BusinessTemplate_viewVcsStatus?%s\' % \n
-                          (context.absolute_url_path(), query_string))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>REQUEST</string> </value>
         </item>

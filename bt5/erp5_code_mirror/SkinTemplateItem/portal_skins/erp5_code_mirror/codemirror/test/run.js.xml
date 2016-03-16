@@ -31,48 +31,6 @@
             <value> <string>application/javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>#!/usr/bin/env node\n
-\n
-var lint = require("./lint/lint");\n
-\n
-lint.checkDir("mode");\n
-lint.checkDir("lib");\n
-lint.checkDir("addon");\n
-lint.checkDir("keymap");\n
-\n
-var ok = lint.success();\n
-\n
-var files = new (require(\'node-static\').Server)();\n
-\n
-var server = require(\'http\').createServer(function (req, res) {\n
-  req.addListener(\'end\', function () {\n
-    files.serve(req, res, function (err/*, result */) {\n
-      if (err) {\n
-        console.error(err);\n
-        process.exit(1);\n
-      }\n
-    });\n
-  }).resume();\n
-}).addListener(\'error\', function (err) {\n
-  throw err;\n
-}).listen(3000, function () {\n
-  var childProcess = require(\'child_process\');\n
-  var phantomjs = require("phantomjs");\n
-  var childArgs = [\n
-    require("path").join(__dirname, \'phantom_driver.js\')\n
-  ];\n
-  childProcess.execFile(phantomjs.path, childArgs, function (err, stdout, stderr) {\n
-    server.close();\n
-    console.log(stdout);\n
-    if (err) console.error(err);\n
-    if (stderr) console.error(stderr);\n
-    process.exit(err || stderr || !ok ? 1 : 0);\n
-  });\n
-});\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

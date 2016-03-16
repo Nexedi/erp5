@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Total credit (in local currency) of all accounting transactions having this\n
-bank account as payment\n
-"""\n
-kw[\'payment_uid\'] = context.getUid()\n
-kw[\'omit_asset_increase\'] = 1\n
-kw[\'asset_price\'] = False\n
-kw[\'node_category\'] = \'account_type/asset/cash/bank\'\n
-kw.update(kw[\'selection\'].getParams())\n
-\n
-# here, or 0 is to prevent displaying "- 0"\n
-return - context.Node_statAccountingBalance(**kw) or 0\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

@@ -1,0 +1,296 @@
+<tal:block define="dummy python: request.RESPONSE.setHeader('Content-Type', 'text/css;; charset=utf-8')"/>
+<tal:block define="
+  site_url python:here.getWebSiteValue().absolute_url();
+  has_right_column python:bool(here.getLayoutProperty('layout_right_column', False));
+  body_color python:here.getLayoutProperty('layout_body_color', 'rgb(240,240,240)');
+  primary_color python:here.getLayoutProperty('layout_primary_color', 'rgb(200,200,200)');
+  secondary_color python:here.getLayoutProperty('layout_secondary_color', 'rgb(225,225,225)');
+  header_color python:here.getLayoutProperty('layout_header_color', 'rgb(218,218,218)');
+  footer_color python:here.getLayoutProperty('layout_footer_color', 'rgb(225,225,225)');
+  menu_color python:here.getLayoutProperty('layout_menu_color', 'rgb(235,235,235)');
+  container_width python:here.getLayoutProperty('layout_container_width', 978);
+  border_width python:here.getLayoutProperty('layout_border_width', 10);
+  main_width python:container_width - 2 * border_width;
+  header_top_height python:here.getLayoutProperty('layout_header_top_height', 100);
+  nav_button_left python: 547 + container_width - 978;
+  navglobal_width python: 600 + container_width - 978;
+
+  right_column_width python:here.getLayoutProperty('layout_right_column_width', 270);
+  right_column_padding python:here.getLayoutProperty('layout_right_column_padding', 12);
+  main_content_width python:main_width - (right_column_padding + right_column_width) * ((has_right_column or 0) and 1);
+  sitename_width python:here.getLayoutProperty('layout_sitename_width', 300);
+  header_background_image python:here.getLayoutProperty('layout_header_background_image', 
+                                                        'mf54_image/bg_header.jpg');
+  header_background_image python:'%s/%s?format=png' % (site_url, header_background_image);
+  site_logo python:here.getLayoutProperty('layout_site_logo', 
+                                          'mf54_image/bg_logo.gif');
+  site_logo python:'%s/%s?format=png' % (site_url, site_logo);
+  page_top_background_image python:here.getLayoutProperty('layout_page_top_background_image', 
+                                                        'mf54_image/bg_corner_page_top.gif');
+  page_top_background_image python:'%s/%s?format=png' % (site_url, page_top_background_image);
+  page_bottom_background_image python:here.getLayoutProperty('layout_page_bottom_background_image', 
+                                                        'mf54_image/bg_corner_page_bottom.gif');
+  page_bottom_background_image python:'%s/%s?format=png' % (site_url, page_bottom_background_image);
+  content_bottom_background_image python:here.getLayoutProperty('layout_content_bottom_background_image', 
+            'mf54_image/bg_corner_content_%s1col_bottom.gif' % ((not has_right_column and 'nosidebar_') or ''));
+  content_bottom_background_image python:'%s/%s?format=png' % (site_url, content_bottom_background_image);
+  content_top_background_image python:here.getLayoutProperty('layout_content_top_background_image', 
+            'mf54_image/bg_corner_content_%s1col_top.gif' % ((not has_right_column and 'nosidebar_') or ''));
+  content_top_background_image python:'%s/%s?format=png' % (site_url, content_top_background_image);
+  subcontent_top_background_image python:here.getLayoutProperty('layout_subcontent_top_background_image',
+                                                        'mf54_image/bg_corner_subcontent_top.gif');
+  subcontent_top_background_image python:'%s/%s?format=png' % (site_url, subcontent_top_background_image);
+  subcontent_bottom_background_image python:here.getLayoutProperty('layout_subcontent_bottom_background_image',
+                                                        'mf54_image/bg_corner_subcontent_bottom.gif');
+  subcontent_bottom_background_image python:'%s/%s?format=png' % (site_url, subcontent_bottom_background_image);
+">
+                    
+/****************************************************************/
+/*   Design:   Multiflex-5.4                                    */
+/*   Type:     Design with sidebar                              */
+/*   File:     Grid Toolbox                                     */
+/*   Option:   Design with sidebar                              */
+/*--------------------------------------------------------------*/
+/*   Design:   www.1234.info                                    */
+/*   Date:     March 13, 2008                                   */
+/*--------------------------------------------------------------*/
+/*   License:  Fully open source without restrictions.          */
+/*             Please keep footer credits with the words        */
+/*             "Design by 1234.info". Thank you!                */
+/****************************************************************/
+
+/******************/
+/* GLOBAL LAYOUT  */
+/******************/
+
+ body {font-size:62.5%; background-color:<tal:block tal:replace="body_color"/>; font-family:arial,sans-serif;} /*Font-size: 1.0em = 10px when browser default size is 16px*/
+.container {width:<tal:block tal:replace="container_width"/>px; padding-top:10px; padding-bottom:20px; margin:0 auto; font-size:1.0em;}
+.header {width:<tal:block tal:replace="main_width"/>px; min-height:130px /*Non-IE6*/; height:auto !important /*Non-IE6*/; height:130px /*IE6*/; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background:<tal:block tal:replace="secondary_color"/> url(<tal:block tal:replace="header_background_image"/>) repeat-x /*Total header background image entered here. Height: 125px*/; font-size:1.0em;}
+.header-top {clear:both; width:<tal:block tal:replace="main_width"/>px; height:<tal:block tal:replace="header_top_height"/>px; /*background:<tal:block tal:replace="header_color"/> url(<tal:block tal:replace="site_url"/>/mf54_image/bg_header_top.jpg) repeat-x Top header background image entered here. Height: 100px;*/ font-size:1.0em;}
+.header-bottom {clear:both; width:<tal:block tal:replace="main_width"/>px; min-height:30px /*Non-IE6*/; height:auto !important /*Non-IE6*/; height:30px /*IE6*/; /*background:<tal:block tal:replace="secondary_color"/> url(<tal:block tal:replace="site_url"/>/mf54_image/bg_header_bottom.jpg) repeat-x Bottom header background image entered here: Height: 25 px;*/ font-size:1.0em;}
+.navbar {white-space:nowrap /*IE hack*/; float:left; width:<tal:block tal:replace="main_width"/>px; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="secondary_color"/>; font-family:tahoma,arial,sans-serif; font-size:130% !important /*Non-IE6*/; font-size:120% /*IE6*/;} /*Color navigation bar normal mode*/
+.main {clear:both; width:<tal:block tal:replace="main_width"/>px; padding:10px 0 20px 0; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.0em;}
+.main_content {display:inline; /*Fix IE floating margin bug*/; float:left; width:<tal:block tal:replace="main_content_width"/>px; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.0em; overflow:visible !important /*Non-IE6*/; overflow:hidden /*IE6*/;}
+.subcontent {display:inline /*Fix IE floating margin bug*/; float:right; width:<tal:block tal:replace="right_column_width"/>px; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.0em; overflow:visible !important /*Non-IE6*/; overflow:hidden /*IE6*/;}
+.footer {clear:both; width:<tal:block tal:replace="main_width"/>px; padding:1.0em 0 1.0em 0; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="footer_color"/>; font-size:1.1em !important /*Non-IE6*/; font-size:1.0em /*IE6*/; overflow:visible !important /*Non-IE6*/; overflow:hidden /*IE6*/;}
+
+/****************/
+/*  HEADER-TOP  */
+/****************/
+
+/* SITENAME AND SLOGAN */
+.sitelogo {width:70px; height:70px; position:absolute; z-index:1; margin:15px 0 0 15px; background:url(<tal:content tal:replace="site_logo"/>);}
+.sitename {width:<tal:content tal:replace="sitename_width"/>px; height:70px; position:absolute; z-index:1; margin:27px 0 0 95px; overflow:hidden;}
+.sitename h1 {font-family:"trebuchet ms",arial,sans serif; font-weight:normal; font-size:290% !important /*Non-IE6*/; font-size:260% /*IE6*/;}
+.sitename h2 {font-family:verdana,arial,sans serif; margin-top:-5px; padding-bottom:2px; color:rgb(125,125,125); height:20px; font-weight:normal; font-size:130% !important /*Non-IE6*/; font-size:120% /*IE6*/;}
+.sitename a{text-decoration:none; color:rgb(125,125,125);}
+.sitename a:hover {text-decoration:none;}
+
+/* BUTTON NAVIGATION */
+.navbutton {width:400px; position:absolute; z-index:2; margin-top:43px; margin-left:<tal:block tal:content="nav_button_left" />px !important /*Non-IE6*/; margin-left:<tal:block tal:content="python: nav_button_left + 3" />px /*IE6*/;}
+.navbutton ul {float:right;}
+.navbutton li {display:inline; list-style:none;}
+.navbutton li a {padding-left:3px;}
+.navbutton a:hover {text-decoration:none;}
+.navbutton a img {height:15px;}
+
+/* GLOBAL NAVIGATION */
+.navglobal {width:<tal:block tal:content="navglobal_width" />px; position:absolute; z-index:3; margin-top:65px; margin-left:349px !important /*Non-IE6*/; margin-left:351px /*IE6*/;}
+.navglobal ul {float:right; font-weight:normal;}        
+.navglobal li {display:inline; list-style:none;}
+.navglobal li a {display:block; float:left; padding:2px 5px 2px 5px; color:rgb(125,125,125); text-decoration:none; font-size:130% !important /*Non-IE6*/; font-size:120% /*IE6*/;}
+.navglobal a:hover {text-decoration:none; color:rgb(255,255,255);}
+
+/*******************/
+/*  HEADER BOTTOM  */
+/*******************/
+
+/* BREADCRUMB */
+.header-bottom ul {float:left; list-style:none; padding:8px 0 3px 10px !important /*Non-IE6*/; padding:8px 0 3px 10px /*IE6*/;}
+.header-bottom ul li {display:inline; padding:0 0 0 10px; background:transparent url(<tal:block tal:replace="site_url"/>/mf54_image/bg_bullet_arrow.gif) no-repeat 0 50%; font-size:110% !important /*Non-IE6*/; font-size:100% /*IE6*/;}
+.header-bottom ul li.nobullet {display:inline; padding:0; background:none; color:rgb(75,75,75);}
+.header-bottom ul a {color:rgb(125,125,125); font-weight:bold; text-decoration:none;}
+.header-bottom ul a:hover {color:rgb(255,255,255);}
+
+/* SEARCH FORM */
+.header-bottom .searchform {float:right;}
+.header-bottom .searchform form fieldset {float:right; border:none; padding-top:5px; padding-right:10px;}
+.header-bottom .searchform input.field {width:15.0em; height:1.2em; padding:1px !important /*Non-IE6*/; padding:2px /*IE6*/; border:solid 1px <tal:block tal:replace="primary_color"/>; background-color:rgb(255,255,255); font-size:110% !important /*Non-IE6*/; font-size:100% /*IE6*/;}
+.header-bottom .searchform input.button {height:1.6em; background-color:rgb(240,240,240); border:solid 1px rgb(150,150,150); text-align:center; color:rgb(100,100,100); font-size:110% !important /*Non-IE6*/; font-size:100% /*IE6*/;}
+.header-bottom .searchform input.button:hover {cursor:pointer; border:solid 1px rgb(80,80,80); background-color:rgb(220,220,220); color:rgb(80,80,80);}
+
+/********************/
+/*  NAVIGATION BAR  */
+/********************/
+
+/* MAIN MENU */
+.navbar ul {list-style-type:none;}
+.navbar ul li {float:left; z-index:auto !important /*Non-IE6*/; z-index:1000 /*IE6*/; background-color:<tal:block tal:replace="secondary_color"/>;}
+.navbar ul li a {float:none !important /*Non-IE6*/; float:left /*IE-6*/; display:block; height:3.1em; line-height:3.1em; padding:0 16px 0 16px; text-decoration:none; font-weight:bold; color:rgb(100,100,100); border-right:solid 0px <tal:block tal:replace="menu_color"/>;}
+.navbar ul li ul {display:none; border:none;}
+.navbar ul li ul li a {float:none !important /*Non-IE6*/; float:left /*IE-6*/; display:block; height:3.1em; line-height:3.1em; padding:0 16px 0 16px; text-decoration:none; font-weight:bold; color:rgb(100,100,100); border-right:solid 0px <tal:block tal:replace="menu_color"/>;}
+.navbar ul li ul li ul {display:none; border:none;}
+.navbar ul li:hover ul li ul {display:none; border:none;}
+.navbar ul li ul li ul li a {float:none !important /*Non-IE6*/; float:left /*IE-6*/; display:block; height:3.1em; line-height:3.1em; padding:0 16px 0 16px; text-decoration:none; font-weight:bold; color:rgb(100,100,100); border-right:solid 0px <tal:block tal:replace="menu_color"/>;}
+
+
+/* SUBMENU (Non-IE6 hovering) */
+.navbar ul li:hover {position:relative;} /*Sylvain IE hack*/
+.navbar ul li:hover a {background-color:<tal:block tal:replace="menu_color"/>; text-decoration:none;} /*Color main cells hovering mode*/
+.navbar ul li:hover ul {display:block; width:10.0em; position:absolute; z-index:1000; top:3.0em; margin-top:0.1em; left:0; padding:0px 16px 0px 16px; border-top:solid 1px rgb(215,215,215);}
+.navbar ul li:hover ul li a {white-space:normal; display:block; width:10.0em; height:auto; line-height:1.3em; margin-left:-17px; padding:4px 16px 4px 16px; border-right:solid 1px rgb(215,215,215); border-left:solid 1px rgb(215,215,215); border-bottom: solid 1px rgb(215,215,215); background-color:<tal:block tal:replace="menu_color"/>; font-weight:normal; color:rgb(100,100,100);} /*Color subcells normal mode*/
+.navbar ul li:hover ul li a:hover {background-color:<tal:block tal:replace="secondary_color"/>; text-decoration:none;} /*Color subcells hovering mode*/
+.navbar ul li:hover ul li:hover ul {display:block; width:10.0em; position:absolute; z-index:1000; top:-0.2em; left:11.4em; padding:0px 16px 0px 16px; border-top:solid 1px rgb(215,215,215);}
+.navbar ul li:hover ul li:hover ul li a {white-space:normal; display:block; width:10.0em; height:auto; line-height:1.3em; margin-left:-17px; padding:4px 16px 4px 16px; border-right:solid 1px rgb(215,215,215); border-left:solid 1px rgb(215,215,215); border-bottom: solid 1px rgb(215,215,215); background-color:<tal:block tal:replace="menu_color"/>; font-weight:normal; color:rgb(100,100,100);}
+.navbar ul li:hover ul li:hover ul li a:hover {background-color:<tal:block tal:replace="secondary_color"/>; text-decoration:none;} /*Color subcells hovering mode*/
+
+/* SUBMENU (IE6 hovering) */
+.navbar table {position:absolute; z-index:1000; top:0px; left:-1px; border-collapse:collapse;}
+.navbar ul li a:hover {position:relative /*Sylvain IE hack*/; z-index:1000 /*Sylvain IE hack*/; background-color:<tal:block tal:replace="menu_color"/>; text-decoration:none;} /*Color main cells hovering mode*/
+.navbar ul li a:hover ul {display:block; width:10.0em; position:absolute; z-index:1000; top:3.1em; t\op:3.0em; left:0px; marg\in-top:0.1em; border-top:solid 1px rgb(215,215,215); }
+.navbar ul li a:hover ul li a {white-space:normal; display:block; w\idth:10.0em; height:1px; line-height:1.3em; padding:4px 16px 4px 16px; border-right:solid 1px rgb(215,215,215); border-left:solid 1px rgb(215,215,215); border-bottom: solid 1px rgb(215,215,215); background-color:<tal:block tal:replace="menu_color"/>; font-weight:normal; color:rgb(100,100,100);} /*Color subcells normal mode*/
+.navbar ul li a:hover ul li a:hover {background-color:<tal:block tal:replace="secondary_color"/>; text-decoration:none;} /*Color subcells hovering mode*/
+.navbar ul li a:hover ul li a:hover ul {display:block; width:10.0em; position:absolute; z-index:1000; top:3.1em; t\op:3.0em; left:0px; marg\in-top:0.1em; border-top:solid 1px rgb(215,215,215); }
+.navbar ul li a:hover ul li a:hover ul li a {white-space:normal; display:block; w\idth:10.0em; height:1px; line-height:1.3em; padding:4px 16px 4px 16px; border-right:solid 1px rgb(215,215,215); border-left:solid 1px rgb(215,215,215); border-bottom: solid 1px rgb(215,215,215); background-color:<tal:block tal:replace="menu_color"/>; font-weight:normal; color:rgb(100,100,100);} /*Color subcells normal mode*/
+.navbar ul li a:hover ul li a:hover ul li a:hover {background-color:<tal:block tal:replace="secondary_color"/>; text-decoration:none;} /*Color subcells hovering mode*/
+
+
+/************/
+/*  CONTENT */
+/************/
+
+/* CONTAINER (NO BOXES) */
+.content-1col-nobox {width:<tal:block tal:replace="main_content_width"/>px; background-color:rgb(255,255,255);}
+.content-2col-nobox-leftcolumn {display:inline; float:left; width:<tal:block tal:replace="python:main_content_width/2-1"/>px; border-right:solid 1px rgb(215,215,215) /*Use this statement if left column is longer than the right column. Activate by removing "xx_" from property name*/; background-color:rgb(255,255,255);}
+.content-2col-nobox-rightcolumn {display:inline; float:right; width:<tal:block tal:replace="python:main_content_width/2-1"/>px; border-left:solid 1px rgb(215,215,215)/*Use this statement if right columnn is longer than the left column. De-activate by adding "xx_" to propery name*/; background-color:rgb(255,255,255);}
+
+/* CONTAINER (BOXES) */
+.content-1col-box {width:<tal:block tal:replace="main_content_width"/>px; background-color:transparent;}
+.content-2col-box-leftcolumn {display:inline; float:left; width:333px; background-color:transparent;}
+.content-2col-box-rightcolumn {display:inline; float:right; width:333px;  background-color:transparent;}
+.content-2col-box {width:333px; background-color:rgb(255,255,255);}
+
+/***************/
+/* SUBCONTENT  */
+/***************/
+
+.subcontent-box {width:<tal:block tal:replace="right_column_width"/>px; float:right; background-color:rgb(255,255,255);}
+
+/************/
+/*  FOOTER  */
+/************/
+.footer p {clear:both; line-height:1.3em; text-align:center; color:rgb(125,125,125); font-weight:bold; font-size:110%;}
+.footer p.credits {clear:both; font-weight:normal;}
+.footer a, .footer a:visited {text-decoration:underline; color:rgb(125,125,125);}
+.footer a:hover {text-decoration:none; color:rgb(0,0,0);}
+
+/*********************/
+/*  ROUNDED CORNERS  */
+/*********************/
+
+/* PAGE */
+.corner-page-top {width:<tal:block tal:replace="container_width"/>px; height:10px; background:transparent url(<tal:block tal:replace="page_top_background_image"/>) no-repeat; overflow:hidden;}
+.corner-page-bottom {width:<tal:block tal:replace="container_width"/>px; height:10px; padding-bottom:20px; background:transparent url(<tal:block tal:replace="page_bottom_background_image"/>) no-repeat; overflow:hidden;}
+
+/* CONTENT */
+.corner-content-1col-top {clear:both; width:<tal:block tal:replace="main_content_width"/>px; height:7px; background:white url(<tal:block tal:replace="content_top_background_image"/>) no-repeat; overflow:hidden;}
+.corner-content-1col-bottom {clear:both; width:<tal:block tal:replace="main_content_width"/>px; height:7px; margin-bottom:10px; background:transparent url(<tal:block tal:replace="content_bottom_background_image"/>) no-repeat; overflow:hidden;}
+.corner-content-2col-top {width:333px; height:7px; background:transparent url(<tal:block tal:replace="site_url"/>/mf54_image/bg_corner_content_2col_top.gif) no-repeat; overflow:hidden;}
+.corner-content-2col-bottom {width:333px; height:7px; margin-bottom:10px; background:transparent url(<tal:block tal:replace="site_url"/>/mf54_image/bg_corner_content_2col_bottom.gif) no-repeat; overflow:hidden;}
+
+/* SUBCONTENT */
+.corner-subcontent-top {clear:both; width:<tal:block tal:replace="right_column_width"/>px; height:7px; background:transparent url(<tal:block tal:replace="subcontent_top_background_image"/>) no-repeat; overflow:hidden;}
+.corner-subcontent-bottom {clear:both; width:<tal:block tal:replace="right_column_width"/>px; height:7px; margin-bottom:10px; background:transparent url(<tal:block tal:replace="subcontent_bottom_background_image"/>) no-repeat; overflow:hidden;}
+
+/******************/
+/*  CLEAR FLOATS  */
+/******************/
+.container:after, .header:after, .header-top:after, .header-bottom:after, .navbar:after, .main:after, .content:after, .main_content div:after, .subcontent:after, .subcontent div:after, .footer:after {content:"."; display:block; height:0; clear:both; visibility:hidden;}
+.content-1col-nobox:after, .content-2col-nobox-leftcolumn:after, .content-2col-nobox-rightcolumn:after, .content-1col-box:after, .content-2col-box-leftcolumn:after, .content-2col-box-rightcolumn:after, .content-2col-box:after, .subcontent-box:after {content:"."; display:block; height:0; clear:both; visibility:hidden;}
+.corner-content-1col-top:after, .corner-content-1col-bottom:after, .corner-content-2col-top:after, .corner-content-2col-bottom:after, .corner-subcontent-top:after, .corner-subcontent-bottom:after {content:"."; display:block; height:0; clear:both; visibility:hidden;}
+ p:after {content:"."; display:block; height:0; /*clear:both Do not use here to avoid paragraphs clearing next to images;*/  visibility:hidden;}
+ 
+/**************/
+/*  PRINTING  */
+/**************/
+/* To avoid that some layouts may break during printing */
+/* we remove one vertical border-line for the columns  */                 
+@media print {.content-2col-nobox-rightcolumn {display:inline; float:right; width:<tal:block tal:replace="python:main_content_width/2-1"/>px; border-left:none; background-color:rgb(255,255,255);}}
+
+ /********************************************/
+/*  USED ONLY FOR DEMO PAGE FOR GRID SETUP  */
+/*  Do not use for operational purposes     */
+/********************************************/
+.main p.demo {margin:0; padding:10px 20px 50px 20px;}
+
+/******************************************/
+/*  YOUR OWN USER STYLES                  */
+/*  If you want to add your own styles,   */
+/*  then add them here below in order to  */
+/*  avoid a mixup with default styles.    */
+/******************************************/
+
+
+/******************************************/
+/*  REQUIRED PATCHES FOR ERP5                     */
+/******************************************/
+input#hidden_button {
+  display: none;
+}
+
+.header-bottom .searchform fieldset {float:right; border:none; padding-top:5px; padding-right:10px;}
+
+div.main_content div.content fieldset.bottom label {
+  display: none;
+}
+
+div.main_content div.content fieldset.header {
+  /* The Title (Header) is displayed outside the form */
+  display: none;
+}
+
+fieldset.widget legend {
+  display: none;        /* Do not display legends on widgets */
+}
+
+fieldset.widget div.field label {
+  display: none;        /* Do not display labels on the right side */
+}
+
+fieldset.widget div.field div.input label {
+  display: block;
+}
+
+/* HEADING - Special icon */
+div.subcontent-box.sidemenu1 h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;}
+div.subcontent-box.sidemenu2 h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;}
+div.subcontent-box.sidemenu3 h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;}
+div.subcontent-box.loginbox h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_login.gif) no-repeat; background-position:229px 5px;}
+div.subcontent-box.searchbox h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_search.gif) no-repeat; background-position:225px 5px;}
+div.subcontent-box.videobox h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_video.gif) no-repeat; background-position:231px 5px;}
+div.subcontent-box.audiobox h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_audio.gif) no-repeat; background-position:225px 5px;}
+div.subcontent-box.webtemplatebox h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_webtemplate.gif) no-repeat; background-position:226px 5px;}
+div.subcontent-box.documentbox h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_document.gif) no-repeat; background-position:229px 5px;}
+div.subcontent-box.blogbox h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_blog.gif) no-repeat; background-position:233px 5px;}
+div.subcontent-box.forumbox h1.group_title {background: url(<tal:block tal:replace="site_url"/>/mf54_image/icon_celltitle_forum.gif) no-repeat; background-position:229px 5px;}
+
+/* HEADING -- Without icon */
+div.subcontent-box.headbox1noicon h1.group_title {background:none;}
+div.subcontent-box.headbox1noicon h1.noicon {background:none;}
+div.subcontent-box.headbox1noicon h2.noicon {background:none;}
+
+/* FLAG BUTTON NAVIGATION -- new css for flag to separate flag from rss with keeping the same style */
+.navbuttonflag {width:400px; position:absolute; z-index:2; margin-top:43px; margin-left:526px !important /*Non-IE6*/; margin-left:520px /*IE6*/;}
+.navbuttonflag ul {float:right;}
+.navbuttonflag li {display:inline; list-style:none;}
+.navbuttonflag li a {padding-left:3px;}
+.navbuttonflag a:hover {text-decoration:none;}
+.navbuttonflag a img {height:15px;}
+
+/******************************************/
+/*  ERP5 Extensions                       */
+/******************************************/
+.navbar ul li.login {float:right}
+
+
+</tal:block>

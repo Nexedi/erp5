@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>\'\'\'\n
-  In case of the user is a document, return the url of the this document\n
-\'\'\'\n
-\n
-document_type_list = context.EGov_getAllowedFormTypeList()\n
-portal = context.getPortalObject()\n
-\n
-user_name = context.portal_membership.getAuthenticatedMember().getUserName()\n
-\n
-form_list = portal.portal_catalog(\\\n
-                                portal_type=document_type_list, \n
-                                reference=user_name)\n
-\n
-if len(form_list) == 0:\n
-  return None\n
-return form_list[0].getAbsoluteUrl()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

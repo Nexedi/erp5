@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <tal:block tal:define="site_root    python: here.getWebSiteValue() or here.getPortalObject();
+                       portal_url   python: site_root.absolute_url();">
+      <link rel="stylesheet" type="text/css" tal:attributes="href string:${portal_url}/boom.css">
+      <script type="text/javascript" tal:attributes="src string:${portal_url}/jquery/core/jquery.js"></script>
+      <script type="text/javascript" tal:attributes="src string:${portal_url}/jquery/ui/js/jquery-ui.js"></script>
+      <script type="text/javascript" tal:attributes="src string:${portal_url}/html5_book.js"></script>
+    </tal:block>
+    <script type="text/javascript">
+       $(document).ready(function(){
+         $('input[name=clean_button]', window.top.document).click(function(){
+           console.log(window.top.document)
+           cleanForPrince();
+           return false;
+         });
+         convertBook('index_html?format=html', $('body'));
+       });
+     </script>
+    <title>View as Book</title>
+  </head>
+  <body></body>
+</html>

@@ -33,26 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block metal:define-macro="init_test_environment">\n
-  <tr>\n
-    <td>store</td>\n
-    <td tal:content="python:\n
-        here.REQUEST.get(\'URL\')[0:here.REQUEST.get(\'URL\').find(\'/portal_tests/\')]">erp5</td>\n
-    <td>base_url</td>\n
-  </tr>\n
-  <tr>\n
-    <td>open</td>\n
-    <td>${base_url}/login_form</td>\n
-    <td></td>\n
-  </tr>\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

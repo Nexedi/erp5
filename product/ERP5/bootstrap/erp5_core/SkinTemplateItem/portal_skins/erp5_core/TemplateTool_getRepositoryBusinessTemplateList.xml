@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># return the list of business_template, optionnally filtered by title, for installation dialog.\n
-template_list = context.getRepositoryBusinessTemplateList(**kw)\n
-\n
-# XXX this is not usual catalog syntax ...\n
-title = title.replace(\'%\', \'\')\n
-\n
-if title:\n
-  return [bt for bt in template_list if title in bt.getTitle()]\n
-\n
-return template_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>title="", **kw</string> </value>
         </item>

@@ -49,12 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># This script is called to defer fulltext indexing in a lower priority.\n
-context.activate(activity=\'SQLQueue\', priority=4, group_method_id=None).SQLCatalog_deferFullTextIndexActivity(path_list=list(getPath))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>getPath</string> </value>
         </item>

@@ -1,0 +1,222 @@
+<tal:block tal:replace="nothing"
+           xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  
+
+  <!-- First & Previous button navigation --> 
+  <tal:block metal:define-macro="first_previous_page_navigation">
+
+    <tal:block tal:condition="python: here.current_page > 0">
+      <button type="image" src="2leftarrowv.png"
+              title="First Page" name="firstPage:method"
+              class="listbox_first_page"
+              tal:attributes="name string:${field_id}_firstPage:method;
+                              src string:${portal_url_string}/images/2leftarrowv.png;
+                              class python: test(is_default_listbox_field, 'listbox_first_page', 'listbox_first_page %s_first_page' %field_id)"
+              i18n:domain="ui" i18n:attributes="title">
+        <span class="image"/>
+      </button>
+      <button type="image" src="1leftarrowv.png"
+              title="Previous Page" name="previousPage:method"
+              class="listbox_previous_page"
+              tal:attributes="name string:${field_id}_previousPage:method;
+                              src string:${portal_url_string}/images/1leftarrowv.png;
+                              class python: test(is_default_listbox_field, 'listbox_previous_page', 'listbox_previous_page %s_previous_page' %field_id)"
+              i18n:domain="ui" i18n:attributes="title">
+        <span class="image"/>
+      </button>
+
+    </tal:block>
+
+  </tal:block>
+
+  <!-- Next & Last button navigation --> 
+  <tal:block metal:define-macro="next_last_page_navigation">
+
+    <tal:block tal:condition="python: here.current_page < here.total_pages - 1">
+      <button type="image" src="1rightarrowv.png"
+              title="Next Page" name="nextPage:method" class="listbox_next_page"
+              tal:attributes="name string:${field_id}_nextPage:method;
+                              src string:${portal_url_string}/images/1rightarrowv.png;
+                              class python: test(is_default_listbox_field, 'listbox_next_page', 'listbox_next_page %s_next_page' %field_id)"
+              i18n:domain="ui" i18n:attributes="title">
+        <span class="image"/>
+      </button>
+      <button type="image" src="2rightarrowv.png"
+              title="Last Page" name="lastPage:method" class="listbox_last_page"
+              tal:attributes="name string:${field_id}_lastPage:method;
+                              src string:${portal_url_string}/images/2rightarrowv.png;
+                              class python: test(is_default_listbox_field, 'listbox_last_page', 'listbox_last_page %s_last_page' %field_id)"
+              i18n:domain="ui" i18n:attributes="title" >
+        <span class="image"/>
+      </button>
+
+    </tal:block>
+
+  </tal:block>
+
+  <!-- First & Previous button navigation (asynchronous mode) --> 
+  <tal:block metal:define-macro="first_previous_page_navigation_asynchronous">
+
+    <tal:block tal:condition="python: here.current_page > 0">
+        <button tal:define ="params python: {field_id+'_firstPage:method':'', 'list_style':list_style}"
+                 title="First Page" 
+                 name="firstPage"
+                 type = "button" 
+                 class = "listbox_first_page"
+                 tal:attributes="value string:|&lt;;
+                                 onclick python:
+                                 real_context.KnowledgePad_generateAjaxCall(context_url+'/'+form_id,box,dom_id,params);
+                                 class python: test(is_default_listbox_field, 'listbox_first_page', 'listbox_first_page %s_first_page' %field_id)"
+                 i18n:domain="ui" i18n:attributes="title">
+            <span class="image"/>
+          </button>
+          <button tal:define ="params python: {field_id+'_previousPage:method':'','page_start':here.current_page+1,'list_style':list_style}"
+                  title="Previous Page"
+                  name="previousPage"
+                  type="button"
+                  class="listbox_previous_page"
+                  tal:attributes="value string:&lt;&lt;;
+                                  onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+'/'+form_id,box,dom_id,params);
+                                  class python: test(is_default_listbox_field, 'listbox_previous_page', 'listbox_previous_page %s_previous_page' %field_id)"
+                  i18n:domain="ui" i18n:attributes="title">
+            <span class="image"/>
+          </button>
+        </tal:block>
+   
+  </tal:block>
+
+  <!-- Next & Last button navigation (asynchronous mode) --> 
+  <tal:block metal:define-macro="next_last_page_navigation_asynchronous">
+
+    <tal:block tal:condition="python: current_page < total_page">
+      <button tal:define ="params python: {field_id+'_nextPage:method':'','page_start':here.current_page+1,'list_style':list_style}"
+              title="Next Page"
+              name="nextPage"
+              type="button"
+              class="listbox_next_page"
+              tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+'/'+form_id,box,dom_id,params);
+                              class python: test(is_default_listbox_field, 'listbox_next_page', 'listbox_next_page %s_next_page' %field_id)"
+              i18n:domain="ui" i18n:attributes="title">
+            <span class="image"/>
+       </button>
+       <button tal:define ="params python: {field_id+'_lastPage:method':'','total_size':int(here.total_size), 'list_style':list_style}"
+               title="Last Page"
+               name="lastPage"
+               type="button"
+               class="listbox_last_page"
+               tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+'/'+form_id,box,dom_id,params);
+                               class python: test(is_default_listbox_field, 'listbox_last_page', 'listbox_last_page %s_last_page' %field_id)"
+               i18n:domain="ui" i18n:attributes="title">
+            <span class="image"/>
+       </button>
+    </tal:block>
+
+  </tal:block>
+
+  <!-- Type in listbox navigation --> 
+  <tal:block metal:define-macro="type_in_page_navigation">
+    <input class="listbox_set_page" 
+           name="page_start" onblur="this.value=this.defaultValue"
+           tal:attributes="name string:${field_id}_page_start;
+                           class python: test(is_default_listbox_field, 'listbox_set_page', 'listbox_set_page %s_set_page' %field_id);
+                           value python:here.current_page + 1;
+                           size python:len(str(here.total_pages));
+                           onkeypress string:submitFormOnEnter(event, this.form, '${field_id}_setPage')" />
+    / <tal:block content="here/total_pages" />
+  </tal:block>
+
+  <!-- Type in listbox page number navigation (asyncronous) --> 
+  <tal:block metal:define-macro="type_in_page_navigation_asynchronous">
+
+    <input class="listbox_set_page" 
+           name="page_start" onblur="this.value=this.defaultValue"
+           tal:define="params python: {field_id+'_setPage:method':'',field_id+'_page_start':'this.value','list_style':list_style}"
+           tal:attributes='name string:${field_id}_page_start;
+                           class python: test(is_default_listbox_field, "listbox_set_page", "listbox_set_page %s_set_page" %field_id);
+                           value python:here.current_page + 1;
+                           size python:len(str(here.total_pages));
+                           onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,dom_id,params).replace("\"this.value\"","this.value")+ "return false;;}"'/>
+    / <tal:block content="here/total_pages" />
+  </tal:block>
+
+  <!-- Show list of direct listbox page selection -->
+  <tal:block metal:define-macro="text_link_page_navigation">
+    <tal:block tal:repeat="page_index page_index_list ">
+      <a tal:attributes="href python: '%s_setPage?%s_page_start=%s&list_selection_name=%s&listbox_uid:list=[]' %(field_id, field_id, page_index, selection_name);
+                         class python: test(page_index==current_page, 'selected', '');
+                         title string:Page ${page_index}"
+         tal:content="page_index"/>
+    </tal:block>
+  </tal:block>
+
+  <!-- Show list of direct listbox page selection (asynchronous) -->
+  <tal:block metal:define-macro="text_link_page_navigation_asynchronous">
+    <tal:block tal:repeat="page_index page_index_list ">
+      <a tal:define="params python: {field_id+'_setPage:method':'',field_id+'_page_start':page_index,'list_style':list_style, 'list_selection_name':selection_name, 'listbox_uid':[]}"
+         tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+'/'+form_id,box,dom_id,params);
+                         class python: test(page_index==current_page, 'selected', '');
+                         title string:Page ${page_index}"
+         tal:content="page_index"/>
+    </tal:block>
+  </tal:block>
+
+
+  <!-- Text navigation (i.e. 1 2 3 4 .. n links)-->
+  <tal:block metal:define-macro="text_navigation"
+                   tal:define="offset python: 7;
+                               all_page_index_list python: range(1, here.total_pages + 1);
+                               page_index_list python: all_page_index_list[max(current_page-offset, 1)-1: min(current_page+offset, len(all_page_index_list))];
+                               is_default_listbox_field python: field_id=='listbox';">
+
+    <!-- Non gadget mode -->
+    <tal:block tal:condition="not: is_gadget_mode">
+      <tal:block metal:use-macro="real_context/page_navigation_render/macros/first_previous_page_navigation" />
+      <tal:block metal:use-macro="real_context/page_navigation_render/macros/text_link_page_navigation" />
+      <tal:block metal:use-macro="real_context/page_navigation_render/macros/next_last_page_navigation" />
+    </tal:block>
+
+    <!-- Gadget mode -->
+    <tal:block tal:condition="is_gadget_mode"
+               tal:define="max_lines      python: here.getMaxLineNumber();
+                           total_page     python: here.total_pages;
+                           page_id        python: here.current_page;
+                           current_page   python: page_id + 1;
+                           previous_page  python: current_page - 1;
+                           next_page      python: current_page + 1;">
+      <tal:block metal:use-macro="real_context/page_navigation_render/macros/first_previous_page_navigation_asynchronous" />
+      <tal:block metal:use-macro="real_context/page_navigation_render/macros/text_link_page_navigation_asynchronous" />
+      <tal:block metal:use-macro="real_context/page_navigation_render/macros/next_last_page_navigation_asynchronous" />
+    </tal:block>
+
+  </tal:block>
+
+  <!-- Slider navigation with input  (i.e. first, previous, next, last links)-->
+  <tal:block metal:define-macro="page_navigation"
+             tal:define="is_default_listbox_field python: field_id=='listbox';">
+    <tal:block tal:condition="python: here.total_pages > 1">
+
+      <!-- Non gadget mode -->
+      <tal:block tal:condition="not: is_gadget_mode">
+        <tal:block metal:use-macro="real_context/page_navigation_render/macros/first_previous_page_navigation" />
+        <tal:block metal:use-macro="real_context/page_navigation_render/macros/type_in_page_navigation" />
+        <tal:block metal:use-macro="real_context/page_navigation_render/macros/next_last_page_navigation" />
+      </tal:block>
+
+      <!-- Gadget mode -->
+      <tal:block tal:condition="is_gadget_mode"
+                 tal:define="max_lines      python: here.getMaxLineNumber();
+                             total_page     python: here.total_pages;
+                             page_id        python: here.current_page;
+                             current_page   python: page_id + 1;
+                             previous_page  python: current_page - 1;
+                             next_page      python: current_page + 1;">
+        <tal:block metal:use-macro="real_context/page_navigation_render/macros/first_previous_page_navigation_asynchronous" />
+        <tal:block metal:use-macro="real_context/page_navigation_render/macros/type_in_page_navigation_asynchronous" />
+        <tal:block metal:use-macro="real_context/page_navigation_render/macros/next_last_page_navigation_asynchronous" />
+      </tal:block>
+    </tal:block>
+  </tal:block>
+
+</tal:block>

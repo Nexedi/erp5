@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>try:\n
-  return container.REQUEST[script.id]\n
-except KeyError:\n
-  pass\n
-\n
-dependant_dimensions_dict = context.BudgetLine_getSummaryDimensionKeyDict()\n
-\n
-summary_key_dict = {}\n
-\n
-from Products.ERP5Type.Utils import cartesianProduct\n
-# also add all cell coordinates in the dictionnary\n
-for cell_key in cartesianProduct(context.getCellRange()):\n
-  for key in cell_key:\n
-    if key in dependant_dimensions_dict:\n
-      summary_key_dict[tuple(cell_key)] = 1\n
-      break\n
-\n
-container.REQUEST.set(script.id, summary_key_dict)\n
-return summary_key_dict\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

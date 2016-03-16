@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Fetches the listbox from session variables\n
-"""\n
-\n
-session = context.ERP5RunMyDocs_acquireSession()\n
-if session.has_key(\'listbox\'):\n
-  listbox = session[\'listbox\']\n
-else:\n
-  listbox = []\n
-\n
-return listbox\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>sort_on = [], **kw</string> </value>
         </item>

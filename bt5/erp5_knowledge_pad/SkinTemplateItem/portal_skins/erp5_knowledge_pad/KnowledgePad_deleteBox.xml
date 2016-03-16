@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>""" \n
-  Delete Box from Pad.\n
-  This script is called by drag and drop javascript framework\n
-  when user click on \'Close\' button.\n
-"""\n
-splitted_box_url = box_relative_url.split(\'_\')\n
-box_relative_url = \'knowledge_pad_module/%s/%s\'  %(splitted_box_url[-2], splitted_box_url[-1])\n
-box = context.restrictedTraverse(box_relative_url)\n
-box.delete()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>box_relative_url</string> </value>
         </item>

@@ -1,0 +1,175 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/getId"/>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
+</thead><tbody>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr> 
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Search</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_searchabletext_any</td>
+  <td>Pouet</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>hidden_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']//span[@class='search_result_title']</td>
+  <td>test_km_web_site_page</td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>link=km.web.site.test.page</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Search Results</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Summary</td>
+  <td></td>
+</tr>
+<!-- More complex cases with all search criterions filled in -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Search</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_searchabletext_any</td>
+  <td>erp5</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_searchabletext_all</td>
+  <td>with_this_word</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_searchabletext_phrase</td>
+  <td>with_this_exact_phrase</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_searchabletext_without</td>
+  <td>without_this_word</td>
+</tr>
+<tr>
+  <td>addSelection</td>
+  <td>field_my_search_portal_type</td>
+  <td>label=Drawing</td>
+</tr>
+<tr>
+  <td>addSelection</td>
+  <td>field_my_search_portal_type</td>
+  <td>label=File</td>
+</tr>
+<tr>
+  <td>addSelection</td>
+  <td>field_my_search_portal_type</td>
+  <td>label=Image</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_reference</td>
+  <td>with_this_reference</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_version</td>
+  <td>with_this_version</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_your_language</td>
+  <td>label=en</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>field_your_mine</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>field_your_newest</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_my_created_within</td>
+  <td>label=One week</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_contributor_title</td>
+  <td>contributor</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Search Results</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Summary</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />
+
+</tbody></table>
+</body>
+</html>
+

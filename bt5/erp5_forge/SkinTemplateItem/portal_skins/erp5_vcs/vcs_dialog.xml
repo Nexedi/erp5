@@ -33,26 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-  <tal:block define="local_parameter_list python: dict((x, request[x])\n
-                       for x in (\'added\', \'modified\', \'removed\', \'changelog\', \'push\')\n
-                       if x in request);\n
-                     dummy python: local_parameter_list.update((x, options.pop(x))\n
-                       for x in (\'caller\', \'caller_kw\')\n
-                       if x in options)"\n
-             tal:on-error="structure python: here.BusinessTemplate_handleException(error.value, context.id)">\n
-    <tal:block metal:use-macro="here/form_dialog/macros/master" />\n
-  </tal:block>\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

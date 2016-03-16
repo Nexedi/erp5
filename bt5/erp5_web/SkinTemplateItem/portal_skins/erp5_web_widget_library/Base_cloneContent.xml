@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Create new Content by cloning an existing document\n
-  or by creating a new document.\n
-\n
-  This script is called by the admin toolbox.\n
-\n
-  Cloning or creation is prevented if document already exists\n
-  with same reference, version, language. Pretty messages\n
-  are provided to the user.\n
-"""\n
-context.Base_createCloneDocument(web_mode=1, \n
-                                                                    clone=clone, \n
-                                                                    form_id=form_id, \n
-                                                                    editable_mode=editable_mode)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>clone=1, form_id=\'view\', editable_mode=0</string> </value>
         </item>

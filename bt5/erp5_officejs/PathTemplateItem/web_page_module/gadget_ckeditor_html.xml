@@ -104,34 +104,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html manifest="gadget_ckeditor.appcache">\n
-  <head>\n
-    <meta charset="utf-8">\n
-    <meta name="viewport" content="width=device-width, initial-scale=1">\n
-    <title>CKEditor Gadget</title>\n
-\n
-    <script src="rsvp.js" type="text/javascript"></script>\n
-    <script src="renderjs.js" type="text/javascript"></script>\n
-\n
-    <!-- This gadget provides ckeditor with all Plugins activated by default -->\n
-    <!-- Make sure to check the timestamp of your CKEditor version in order to update the manifest -->\n
-    <script src="ckeditor/ckeditor.js"></script>\n
-    <script src="gadget_ckeditor.js" type="text/javascript"></script>\n
-\n
-  </head>\n
-  <body>\n
-    <div class="ckeditor_gadget"><textarea></textarea></div>\n
-  </body>\n
-</html>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>CKEditor Gadget</string> </value>
         </item>

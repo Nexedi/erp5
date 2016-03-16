@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>\'\'\'\n
-  this script return a list of catorgory Items\n
-  It\'s used in the Pay Sheet Model to return all category slices \n
-  corresponding to childs of the selection of the base category in the view\n
-\'\'\'\n
-\n
-category_list = []\n
-\n
-for category in context.getVariationSettingsCategoryList():\n
-  category_name = category.replace(\'salary_range/\',\'\',1)\n
-  if context.portal_categories.getCategoryValue(category) is None:\n
-    raise ValueError, \'no category %s\' % category\n
-  else:\n
-    if matrixbox:\n
-      category_list.extend(context.portal_categories.getCategoryValue(category).getCategoryChildLogicalPathItemList(checked_permission=\'View\', is_right_display=1, base=1)[1:])\n
-    else:\n
-      cat_list = [cat[0] for cat in\n
-          context.portal_categories.salary_range[category_name].getCategoryChildItemList(checked_permission=\'View\', base=1)[1:]]\n
-      category_list.append(cat_list)\n
-\n
-return category_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>matrixbox=0, base_id=\'movement\',**kw</string> </value>
         </item>

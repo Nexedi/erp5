@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-solver_process = context.getSolverValueList()[-1]\n
-solver_decision_uid = int(solver_decision_uid)\n
-solver_decision = None\n
-for solver_decision in solver_process.objectValues(portal_type="Solver Decision"):\n
-  if solver_decision.getUid() == solver_decision_uid:\n
-    break\n
-assert solver_decision is not None, \\\n
-  "unable to find solver decision with uid : %r on %r" % (\n
-    solver_decision_uid, solver)\n
-solver_value = None\n
-if solver:\n
-  solver_value = portal.restrictedTraverse(solver)\n
-  solver_decision.setSolverValue(solver_value)\n
-else:\n
-  solver_decision.setSolverList([])\n
-\n
-#return solver_decision.Delivery_viewSolveDivergenceDialog.listbox_solver_configuration.widget.render(\n
-return solver_decision.SolverDecision_renderSolverConfiguration(context)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>solver=None, solver_decision_uid=None</string> </value>
         </item>

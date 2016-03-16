@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This script is used to determine if the user\n
-has the permission "Modify portal content",\n
-in the context\n
-"""\n
-from AccessControl import getSecurityManager\n
-u=getSecurityManager().getUser()\n
-if u.has_permission("Modify portal content",context):\n
-  return True\n
-else:\n
-  return False\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

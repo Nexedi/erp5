@@ -49,11 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return - context.AccountModule_getBalance(brain=brain, selection=selection, omit_asset_increase=1, **kw) or 0.00\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain=None, selection=None, **kw</string> </value>
         </item>

@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>person = context.ERP5Site_getAuthenticatedMemberPersonValue\n
-\n
-discussion_post = context.newContent(\n
-    title=title,\n
-    text_content=text_content,\n
-    source_value=person,\n
-    portal_type=\'Discussion Post\'\n
-)\n
-if batch_mode:\n
-  return discussion_post\n
-\n
-translateString = context.Base_translateString\n
-\n
-portal_status_message = translateString(\'New reply created.\')\n
-context.Base_redirect(\'view\',\n
-    keep_items = dict(portal_status_message=portal_status_message))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>title, text_content, form_id, batch_mode=False, **kw</string> </value>
         </item>

@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
-\n
-context.setGlobalConfigurationAttr(\n
-   categories_spreadsheet_configuration_save_relative_url=configuration_save.getRelativeUrl())\n
-\n
-configuration_save.addConfigurationItem("Categories Spreadsheet Configurator Item",\n
-                                 configuration_spreadsheet_data = getattr(context, "standard_category.ods").data)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>configuration_save_url=None, **kw</string> </value>
         </item>

@@ -49,35 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>selection_id = \'sql_shell_selection\'\n
-portal = context.getPortalObject()\n
-portal_selections = portal.portal_selections\n
-\n
-if sql_expression is None:\n
-  sql_expression = context.REQUEST.get(\'sql_expression\')\n
-if sql_expression is None:\n
-  # take from hard coded selection as when browsing listboxes\n
-  # sql_expression is simply not available\n
-  selection_object = portal_selections.getSelectionParamsFor(selection_id)\n
-  if selection_object:\n
-    sql_expression = selection_object.get(\'sql_expression\')\n
-\n
-# If not expression return empty list\n
-if not sql_expression: return ()\n
-\n
-# using semicolumn can kill zope\n
-sql_expression = sql_expression.replace(\';\', \' \')\n
-\n
-# update selection\n
-portal_selections.setSelectionParamsFor(selection_id, \\\n
-         dict(sql_expression=sql_expression))\n
-\n
-# pass all to code runner\n
-return context.Base_zExecuteSQL(sql_expression=sql_expression)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>sql_expression=None,**kw</string> </value>
         </item>

@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-howto_dict = context.Zuite_getHowToInfo()\n
-\n
-# check if there is already the euro curency on the instance\n
-\n
-sale_packing_list = context.portal_catalog.getResultValue(\n
-                                   portal_type=\'Sale Packing List\',\n
-                                   title=\'ZUITE-TEST-SALEORDER-PRODUCT-001\',)\n
-sale_packing_list.start()\n
-sale_packing_list.deliver()\n
-# Clear cache\n
-portal.portal_caches.clearAllCache()\n
-\n
-return "Init Ok"\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>clean=True</string> </value>
         </item>

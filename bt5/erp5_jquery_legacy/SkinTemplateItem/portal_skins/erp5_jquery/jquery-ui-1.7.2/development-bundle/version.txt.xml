@@ -22,10 +22,6 @@
               <dictionary/>
             </value>
         </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string>1.7.2</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal =  context.getPortalObject()\n
-\n
-"""Delete objects we are about to create """\n
-for i in range(start, start + num):\n
-  if getattr(portal.bug_module, \'bug_\' + str(i), None) is not None:\n
-    portal.bug_module.deleteContent(\'bug_\' + str(i))\n
-\n
-"""Create objects with given parameters"""\n
-for i in range(start, start + num):\n
-  portal.bug_module.newContent(id = \'bug_\' + str(i), title = \'Super Bug %d\' % i, portal_type=\'Bug\')\n
-\n
-return \'Created Successfully.\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>start = 0, num = 1</string> </value>
         </item>

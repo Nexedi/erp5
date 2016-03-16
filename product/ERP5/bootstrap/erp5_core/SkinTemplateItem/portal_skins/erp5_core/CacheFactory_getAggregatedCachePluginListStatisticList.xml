@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Collect all possible (sub contained) Ram Cache Plugins.\n
-   This collection will be used in respective report form."""\n
-from Products.ERP5Form.Report import ReportSection\n
-\n
-result = []\n
-for ram_cache_plugin in context.getPortalObject().portal_catalog(\n
-                                             portal_type = \'Ram Cache\',\n
-                                             path =\'%\' + context.getRelativeUrl() +\'%\'):\n
-  result.append(ReportSection(path = ram_cache_plugin.getRelativeUrl(), \n
-                              form_id = \'RamCache_viewStatisticList\',\n
-                              title = \'%s/%s\' %(ram_cache_plugin.getParentValue().getTitle(),\n
-                                                ram_cache_plugin.getTitle()),))\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

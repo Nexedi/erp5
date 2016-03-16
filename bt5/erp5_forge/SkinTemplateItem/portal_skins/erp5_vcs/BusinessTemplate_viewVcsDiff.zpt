@@ -1,0 +1,87 @@
+<tal:block tal:replace="nothing"
+           xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+<!--
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+                   Christophe Dumez <christophe@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+</tal:block>
+<tal:block tal:define="portal_path here/portal_url;
+                       css_list python: ['%s/ERP5VCS_movableMenu.css' % portal_path,
+                                         '%s/erp5.css' % portal_path,];
+                       js_list python: ['%s/erp5.js' % portal_path,
+                                        '%s/ERP5VCS_menuico.js' % portal_path,
+                                        '%s/ERP5VCS_movableMenu.js' % portal_path,
+                                        '%s/ERP5VCS_doCreateJavaScriptDiff.js' % portal_path]">
+  <tal:block metal:use-macro="here/view_main/macros/master">
+    <tal:block metal:fill-slot="main">
+<tal:py replace="structure 
+python: here.BusinessTemplate_doVcsDiff(request['added'], request['modified'], request['removed'])">diff here</tal:py>
+
+<script type="text/javascript">
+  // Menu Customization
+  var MenuToolBar=new CreateToolBarMenu("#dae6e6", "#ffffff", "#b1bbbb", "#6699ff", "font-family:verdana;font-size:11px;color:black;font-weight:bold", 16, 16)
+  MenuToolBar.Add("ERP5VCS_imgs/revertoff.png", "ERP5VCS_imgs/reverton.png", "Back", "#", "goBack()");
+  MenuToolBar.Add("ERP5VCS_imgs/captionoff.png", "ERP5VCS_imgs/captionon.png", "Show Legend", "#", "winList['captionWindow'].open();");
+  MenuToolBar.Add("ERP5VCS_imgs/execoff.png", "ERP5VCS_imgs/execon.png", "Commit Changes", "#", "doCommit(document.getElementById('main_form'));");
+  // Menu Display
+  MenuToolBar.Display();
+</script>
+
+<div id="captionWindow" class="window" style="right:20px;left:auto;top:180px;width:120px;background-color:#dae6e6;border-color:#ebf8f8 #c0caca #c0caca #c0caca;">
+  <div class="titleBar" style="background-color:#dae6e6;color:black;">
+    <span class="titleBarText">Legend -- SVN</span>
+    <img class="titleBarButtons" alt="" src="ERP5VCS_imgs/altbuttons.gif" longdesc="ERP5VCS_imgs/altbuttonslow.gif" usemap="#sampleMap3" />
+    <map id="sampleMap3" name="sampleMap3">
+      <area shape="rect" coords="0,0,15,13"  href="" alt="" title="Minimize" onclick="this.parentWindow.minimize();return false;" />
+      <area shape="rect" coords="16,0,31,13" href="" alt="" title="Restore"  onclick="this.parentWindow.restore();return false;" />
+      <area shape="rect" coords="34,0,49,13" href="" alt="" title="Close"    onclick="this.parentWindow.close();return false;" />
+    </map>
+  </div>
+  <div class="clientArea" style="background-color:#fffdfd;color:#806040;border-color:#c0caca #c0caca #c0caca #c0caca;text-align:center;">
+  <span style="font-weight: bold; color: black;">Legend</span><hr/>
+  <table cellpadding="0" cellspacing="0" style="margin-left:auto; margin-right:auto;width:80%; border: 1px solid gray;">
+        <tbody>
+          <tr>
+            <td style="text-align: center; background-color: rgb(253, 117, 74);">Removed</td>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <td colspan="2" style="text-align: center; background-color: rgb(253, 228, 6);">Changed</td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td style="text-align: center; background-color: rgb(83, 253, 74);">Added</td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+</div>
+
+<script type="text/javascript">
+  winInit();
+  if (winList['captionWindow']){
+    winList['captionWindow'].open();
+    winList['captionWindow'].close();
+  }
+</script>
+
+
+</tal:block>
+</tal:block>
+</tal:block>

@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># We will make sure that the check will not be usable\n
-transaction = state_change[\'object\']\n
-from Products.ERP5Type.Message import Message\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-\n
-portal_workflow = transaction.portal_workflow\n
-\n
-aggregate_list = []\n
-line_list = transaction.getMovementList()\n
-for line in line_list:\n
-  aggregate_list.extend(line.getAggregateValueList())\n
-ref_min = transaction.getReferenceRangeMin()\n
-ref_max = transaction.getReferenceRangeMin()\n
-if ref_min is not None or ref_max is not None:\n
-  if len(aggregate_list)==0:\n
-    msg = Message(domain=\'ui\', message=\'Sorry, no check was found, but there is a reference.\')\n
-    raise ValidationFailed, (msg,)\n
-  for aggregate in aggregate_list:\n
-    if aggregate.getPortalType()==\'Check\':\n
-      aggregate.setStopDate(transaction.getStartDate())\n
-      portal_workflow.doActionFor(aggregate,\'stop_action\',wf=\'check_workflow\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

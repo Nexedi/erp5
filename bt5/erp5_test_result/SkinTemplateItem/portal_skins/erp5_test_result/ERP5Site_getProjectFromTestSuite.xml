@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal_catalog = context.getPortalObject().portal_catalog\n
-\n
-source_project_list = portal_catalog(portal_type=\'Project\', \n
-                                     title=dict(query=test_suite,\n
-                                                key=\'ExactMatch\'))\n
-if source_project_list:\n
-  return source_project_list[0].getObject()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>test_suite</string> </value>
         </item>

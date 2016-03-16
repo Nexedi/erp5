@@ -37,57 +37,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block replace="nothing">\n
-  <!--\n
-  This widget displays the list of Products contained in the current context.\n
-  \n
-  TODO:\n
-    - make sure translation is possible\n
-    - make sure URLs are correct\n
-    - use generic method (erp5_web) to retrieve the list of subsections\n
-    - make it hierarchic\n
-  -->\n
-</tal:block>\n
-<div tal:define="web_site here/getWebSiteValue;\n
-                 shopping_cart here/SaleOrder_getShoppingCart;\n
-                 site_url web_site/absolute_url;\n
-                 currency_symbol web_site/WebSite_getShoppingCartDefaultCurrencySymbol;\n
-                 current_web_section python: request.get(\'current_web_section\', here);\n
-                 product_list python: web_site.WebSite_getProductList(limit=5);"\n
-     i18n:translate="" i18n:domain="ui" i18n:attributes="title"\n
-     title="Sections accessible from here." class="selected-product">\n
-  <tal:block tal:repeat="product python: product_list">\n
-    <div tal:define="product_href python: \'%s/product_module/%s/%s\' % (site_url, product.getId(), \'Resource_viewAsShop\');\n
-                     price python: here.WebSection_unrestrictedGetPrice(product)">\n
-     <a href="#" tal:attributes="href product_href">\n
-       <img tal:condition="python: product.getDefaultImageValue() not in (None, \'\') and product.getDefaultImageValue().getData() not in (None, \'\')"\n
-            tal:attributes="src python: product.getDefaultImageAbsoluteUrl() + \'?display=thumbnail&format=png&resolution=75\'" width="75"/>\n
-       <tal:block tal:condition="python: product.getDefaultImageValue() in (None, \'\') or product.getDefaultImageValue().getData() in (None, \'\')">\n
-         <div style="width:75px; height:75px;vertical-align:middle; text-align:middle;">\n
-         <br />\n
-         <span>No image available.</span>\n
-         </div>\n
-       </tal:block>\n
-     </a>\n
-     <a href="#" tal:content="python: product.getTranslatedTitle()"\n
-                 tal:attributes="href product_href">A product</a>\n
-     <br />\n
-     <tal:block tal:condition="python: price is not None">\n
-       <span  tal:content="python: \'%s %s\' % (price, currency_symbol)"></span>\n
-     </tal:block>\n
-     <tal:block tal:condition="python: price is None">\n
-       <span>The price is not setted yet.</span>\n
-     </tal:block>\n
-   </div>\n
-  </tal:block>\n
-</div>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

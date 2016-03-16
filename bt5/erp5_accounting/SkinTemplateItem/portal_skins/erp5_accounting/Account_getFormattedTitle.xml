@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if account is None:\n
-  account = context\n
-\n
-gap_id = account.Account_getGapId(gap_root=gap_root)\n
-title  = account.getTranslatedTitle()\n
-\n
-if gap_id:\n
-  title = "%s - %s" % (gap_id, title)\n
-\n
-return title\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>account=None, gap_root=None</string> </value>
         </item>

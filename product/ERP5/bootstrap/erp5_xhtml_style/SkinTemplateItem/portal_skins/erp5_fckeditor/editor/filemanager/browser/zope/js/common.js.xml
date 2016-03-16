@@ -23,43 +23,6 @@
             <value> <string>application/javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>﻿/*\n
- * FCKeditor - The text editor for internet\n
- * Copyright (C) 2003-2004 Frederico Caldeira Knabben\n
- * \n
- * Licensed under the terms of the GNU Lesser General Public License:\n
- * \t\thttp://www.opensource.org/licenses/lgpl-license.php\n
- * \n
- * For further information visit:\n
- * \t\thttp://www.fckeditor.net/\n
- * \n
- * File Name: common.js\n
- * \tCommon objects and functions shared by all pages that compose the\n
- * \tFile Browser dialog window.\n
- * \n
- * Version:  2.0 FC \n
- * \n
- * File Authors:\n
- * \t\tFrederico Caldeira Knabben (fredck@fckeditor.net)\n
- */\n
-\n
-function AddSelectOption( selectElement, optionText, optionValue )\n
-{\n
-\tvar oOption = document.createElement("OPTION") ;\n
-\n
-\toOption.text\t= optionText ;\n
-\toOption.value\t= optionValue ;\t\n
-\n
-\tselectElement.options.add(oOption) ;\n
-\n
-\treturn oOption ;\n
-}\n
-\n
-var oConnector\t= window.parent.oConnector ;\n
-var oIcons\t\t= window.parent.oIcons ;</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

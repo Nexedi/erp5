@@ -1,0 +1,203 @@
+<html>
+  <head><title>Accounting Transaction Module Search Dialog: seach by date</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Accounting Transaction Module Search Dialog: seach by date
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+
+<!-- setup {{{ -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<!-- }}} -->
+
+<!-- search by from date {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Find']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_your_from_date_year</td>
+  <td>2005</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_your_from_date_month</td>
+  <td>01</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_your_from_date_day</td>
+  <td>04</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<!-- list filtered with 1 item-->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+<!-- check amounts for lines -->
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[9]/a
+</td>
+  <td>7700.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[10]/a
+</td>
+  <td>7700.0</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Find']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyFloatValue</td>
+  <td>subfield_field_your_from_date_year</td>
+  <td>2005</td>
+</tr>
+<tr>
+  <td>verifyFloatValue</td>
+  <td>subfield_field_your_from_date_month</td>
+  <td>01</td>
+</tr>
+<tr>
+  <td>verifyFloatValue</td>
+  <td>subfield_field_your_from_date_day</td>
+  <td>04</td>
+</tr>
+<!-- }}} -->
+
+<!-- search by from date and at_date {{{ -->
+<tr>
+  <td>type</td>
+  <td>subfield_field_your_from_date_year</td>
+  <td>2005</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_your_from_date_month</td>
+  <td>01</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_your_from_date_day</td>
+  <td>02</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_your_to_date_year</td>
+  <td>2005</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_your_to_date_month</td>
+  <td>01</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_your_to_date_day</td>
+  <td>03</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<!-- list filtered with 2 item-->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+
+<!-- check amounts for lines -->
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[9]/a
+</td>
+  <td>2200.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[10]/a
+</td>
+  <td>2200.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-1 DataB']/td[9]/a
+</td>
+  <td>3300.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-1 DataB']/td[10]/a
+</td>
+  <td>3300.0</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Find']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyFloatValue</td>
+  <td>subfield_field_your_from_date_year</td>
+  <td>2005</td>
+</tr>
+<tr>
+  <td>verifyFloatValue</td>
+  <td>subfield_field_your_from_date_month</td>
+  <td>01</td>
+</tr>
+<tr>
+  <td>verifyFloatValue</td>
+  <td>subfield_field_your_from_date_day</td>
+  <td>02</td>
+</tr>
+<tr>
+  <td>verifyFloatValue</td>
+  <td>subfield_field_your_to_date_year</td>
+  <td>2005</td>
+</tr>
+<tr>
+  <td>verifyFloatValue</td>
+  <td>subfield_field_your_to_date_month</td>
+  <td>01</td>
+</tr>
+<tr>
+  <td>verifyFloatValue</td>
+  <td>subfield_field_your_to_date_day</td>
+  <td>03</td>
+</tr>
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

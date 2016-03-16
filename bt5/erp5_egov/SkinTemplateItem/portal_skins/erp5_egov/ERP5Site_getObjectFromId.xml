@@ -49,12 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>module = context.getDefaultModule(portal_type=portal_type)\n
-return getattr(module, id, None)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>portal_type, id</string> </value>
         </item>

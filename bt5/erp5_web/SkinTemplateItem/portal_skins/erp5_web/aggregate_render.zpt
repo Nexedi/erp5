@@ -1,0 +1,80 @@
+<!-- ============================================================== -->
+<!--
+Description:
+  This macro renders an aggregate of groups (like the ones returned
+  by Form_getGroupList() method).
+
+Note:
+  The 'aggregate' variable must be defined just before the macro call.
+
+Example of macro use (similar to 'erp5_web_default_template' use):
+  <tal:block
+   tal:define="TOP             python: 'top';
+               SIDEBAR         python: 'sidebar';
+               aggregate_list  python: dict(layout_form.WebSite_getGroupList([TOP, SIDEBAR]))">
+
+    <tal:block tal:define="aggregate python: (TOP, aggregate_list[TOP])">
+      <tal:block metal:use-macro="here/erp5_web_macros/macros/render_aggregate"/>
+    </tal:block>
+
+    <div>
+      <tal:block tal:define="aggregate python: (SIDEBAR, aggregate_list[SIDEBAR])">
+        <tal:block metal:use-macro="here/erp5_web_macros/macros/render_aggregate"/>
+      </tal:block>
+    </div>
+
+  </tal:block>
+-->
+
+<tal:block metal:define-macro="populate_request">
+  <tal:block tal:define="dialog_mode dialog_mode | nothing;
+                         list_mode list_mode | nothing;
+                         dummy python: request.set('dialog_mode', dialog_mode);
+                         dummy python: request.set('list_mode', list_mode);
+                         dummy python: request.set('http_parameters', http_parameters);
+                         dummy python: request.set('actions', actions);
+                         dummy python: request.set('current_web_section',
+                                                   request.get('current_web_section', section));
+                         dummy python: request.set('current_web_section_url', section_url);
+                         dummy python: request.set('current_web_document',
+                                                   request.get('current_web_document', here));
+                         dummy python: request.set('is_web_section_default_document',
+                                                   request.get('is_web_section_default_document', 0));
+                         dummy python: request.set('current_web_site', website);
+                         dummy python: request.set('current_web_site_url', portal_path);"/>
+</tal:block>
+
+<tal:block metal:define-macro="aggregate_render">
+  <!-- Each aggregate of groups is a div wrapper -->
+  <div tal:define="aggregate_name   python: aggregate[0];
+                   group_list       python: aggregate[1];
+                   widget_renderer  widget_renderer|nothing"
+        tal:condition="python: len(group_list)"
+        tal:attributes="class wrapper_class | string:wrapper;
+                        id    wrapper_id | python: 'wrapper_%s' % aggregate_name;">
+
+    <tal:block tal:repeat="group group_list">
+      <tal:block tal:define="gid     group/gid;
+                             gtitle  group/gtitle;
+                             goid    group/goid;
+                             field_list python: layout_form.get_fields_in_group(goid);">
+        <tal:block tal:condition="not:widget_renderer">
+          <div tal:attributes="class python: gid.lstrip(aggregate_name);" tal:condition="python:len(field_list)">                 
+            <fieldset class="widget">
+              <legend i18n:translate="" i18n:domain="ui"
+                      tal:content="python: gtitle" class="group_title"/>
+              <tal:block tal:repeat="field field_list">
+                <tal:block metal:use-macro="here/field_render/macros/field_render"/>
+              </tal:block>
+            </fieldset>
+          </div>
+        </tal:block>
+        <tal:block tal:condition="widget_renderer">
+          <div metal:use-macro="widget_renderer"/>
+        </tal:block>
+      </tal:block>
+    </tal:block>
+  </div>
+</tal:block>
+
+<!-- ============================================================== -->

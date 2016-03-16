@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Get the list of attachments\n
-portal_type_list = (\'PDF\', \'Image\',)\n
-\n
-aggregate_list = context.getAggregateValueList(\n
-   portal_type=portal_type_list)\n
-\n
-sub_document_list = [x.getObject() for x in context.searchFolder(\n
-   portal_type=portal_type_list)]\n
-\n
-return aggregate_list + sub_document_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>lines_num=8, **kw</string> </value>
         </item>

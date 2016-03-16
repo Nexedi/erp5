@@ -33,30 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block tal:define="url context/absolute_url" >\n
-\n
-  <a tal:attributes="href string:${url}/Person_email">\n
-    <img src="gadget_button_email.png" \n
-        alt="Email Person" />\n
-  </a>\n
-\n
-  <a tal:attributes="href string:${url}/Person_call">\n
-    <img src="gadget_button_call.png" \n
-        alt="Call Person" />\n
-  </a>\n
-\n
-  <a tal:attributes="href string:${url}/Person_chat">\n
-    <img src="gadget_button_chat.png" alt="Chat" />\n
-  </a>\n
-\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

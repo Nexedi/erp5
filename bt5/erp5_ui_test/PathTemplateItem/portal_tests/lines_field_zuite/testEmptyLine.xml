@@ -33,48 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
-<head>\n
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test first empty line on lines field</title>\n
-</head>\n
-<body>\n
-<table cellpadding="1" cellspacing="1" border="1">\n
-<thead>\n
-<tr><td rowspan="1" colspan="3">Test first empty line on lines field</td></tr>\n
-</thead><tbody>\n
-<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />\n
-<tr>\n
-  <td>open</td>\n
-  <td>${base_url}/foo_module/1/view</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>type</td>\n
-  <td>field_my_lines_list</td>\n
-  <td>javascript{"\\na\\nb\\n"}</td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>//button[@title=\'Save\']</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertEval</td>\n
-  <td>this.browserbot.findElement(\'field_my_lines_list\').value</td>\n
-  <td>javascript{"\\na\\nb\\n"}</td>\n
-</tr>\n
-</body>\n
-</html>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

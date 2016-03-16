@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>pl = state_change[\'object\']\n
-#pl.log(pl.getRelativeUrl())\n
-for movement in pl.getAggregatedItemsNextImmobilisationMovementValueList():\n
-  if movement.getImmobilisationState() != \'calculating\':\n
-    movement.calculateImmobilisationValidity()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change,**kw</string> </value>
         </item>

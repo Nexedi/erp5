@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Do actual conversion of Notification Message documents.\n
-"""\n
-# we don\'t care to convert Notification Message\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>format, quality, display_list</string> </value>
         </item>

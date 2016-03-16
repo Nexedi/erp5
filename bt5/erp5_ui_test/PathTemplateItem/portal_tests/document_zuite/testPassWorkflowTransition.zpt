@@ -1,0 +1,61 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Pass Workflow Transition</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Pass Workflow Transition</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Dummy Workflow Action</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>id=dialog_submit_button</td>
+  <td>Dummy Workflow Action</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>id=dialog_submit_button</td>
+  <td/>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Status changed.</td>
+  <td/>
+</tr>
+
+</tbody></table>
+</body>
+</html>

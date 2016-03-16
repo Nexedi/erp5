@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="UTF-8"> 
+        <script type="text/javascript" src="jquery-1.7.2.js"></script>
+        <script type="text/javascript">
+                $(document).ready(function(){
+                        $.get('http://localhost:12001/erp5/portal_skins/erp5_tile/ERP5Site_getTileImageMetadataList', function(data) {
+                                $('#result').html(data);
+                                alert('Load was performed.');
+                        });
+                                                           
+
+                });
+        </script>
+</head>
+<body> 
+
+        <button>Get JSON data</button>
+        <div id="result"></div>
+
+</body>
+</html>

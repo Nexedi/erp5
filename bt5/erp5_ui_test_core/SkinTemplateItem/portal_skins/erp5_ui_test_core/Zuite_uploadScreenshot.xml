@@ -49,37 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Upload a screenshot taken by the test to ERP5\n
-"""\n
-from Products.ERP5Type.Log import log\n
-\n
-data_uri = context.REQUEST.form.get(\'data_uri\', \'default\')\n
-\n
-image_module = getattr(context, "image_module", None)\n
-if image_module is None:\n
-  return "erp5_dms is not Installed"\n
-\n
-image = image_module.getPortalObject().WebSection_getDocumentValue(\n
-                                                   name=image_reference)\n
-\n
-if image is None or image.getPortalType() != "Image":\n
-  # Image is an embedded file or not an image\n
-  return "Image: " + str(image_reference) + " not found"\n
-\n
-image.setContentType(\'image/png\')\n
-data_text = data_uri.read()\n
-data = data_text.decode(\'base64\')\n
-\n
-image.edit(data=data,\n
-           filename=str(image_reference) + \'.png\', \n
-           content_type = \'image/png\')\n
-\n
-context.Zuite_updateImage(image)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>data_uri, image_reference</string> </value>
         </item>

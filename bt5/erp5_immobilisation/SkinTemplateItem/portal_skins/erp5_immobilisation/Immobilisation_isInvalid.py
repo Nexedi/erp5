@@ -1,0 +1,1 @@
+return context.getImmobilisationState() == 'invalid'

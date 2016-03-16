@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>project_uid_list = [x.uid for x in context.portal_catalog(\n
-     relative_url=\'%s/%%\' % context.getRelativeUrl())] + [context.getUid()]\n
-\n
-return context.portal_catalog(\n
-                                                         selection_report=selection_report,\n
-                                                         portal_type=portal_type,\n
-            related_source_project_or_destination_project = project_uid_list )\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection=None, selection_report=None, portal_type=[], **kw</string> </value>
         </item>

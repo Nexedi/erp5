@@ -1,0 +1,30 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <tal:block metal:define-macro="init">
+    <tr>
+      <td>store</td>
+      <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
+      <td>base_url</td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_site_module/WebSiteModule_resetWebZuite</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Reset Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_site_module/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+  </tal:block>
+</tal:block>

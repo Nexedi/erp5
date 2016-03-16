@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Get the Message List from DummyMailHost.\n
-\n
-  This is used by functional tests to get all\n
-  emails sent by the instance. This will prevent \n
-  the instance spam mailing lists during the \n
-  Functional Tests.\n
-"""\n
-if getattr(context.MailHost, "getMessageList", None) is None:\n
-  return "ERROR: MailHost is not a DummyMailHost"\n
-\n
-message_list = context.MailHost.getMessageList()\n
-for mail in message_list:\n
-  for part in mail:\n
-    print part\n
-  print "="*79\n
-  print ""  \n
-\n
-print "Total messages: %s" %len(message_list)\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

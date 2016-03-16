@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if kw.get(\'created_by_builder\', 0): \n
-  return\n
-\n
-preference_tool = context.getPortalObject().portal_preferences\n
-context.setSourceSection(preference_tool.getPreferredAccountingTransactionSourceSection())\n
-context.setResource(preference_tool.getPreferredAccountingTransactionCurrency())\n
-\n
-context.newContent(portal_type=\'Internal Invoice Transaction Line\', )\n
-context.newContent(portal_type=\'Internal Invoice Transaction Line\', )\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

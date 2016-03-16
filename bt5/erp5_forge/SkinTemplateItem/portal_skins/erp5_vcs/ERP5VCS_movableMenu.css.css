@@ -1,0 +1,55 @@
+.lastLine {
+  padding-left: 6em;
+}
+
+.window {
+  background-color: #dae6e6;
+  border-color: #f0f0f0 #606060 #404040 #d0d0d0;
+  border-style: solid;
+  border-width: 2px;
+  margin: 0px;
+  padding: 2px;
+  position: absolute;
+  text-align: left;
+  visibility: hidden;
+}
+
+.titleBar {
+  background-color: #008080;
+  cursor: default;
+  color: #ffffff;
+  font-family: "MS Sans Serif", "Arial", "Helvetica", sans-serif;
+  font-size: 8pt;
+  font-weight: bold;
+  margin: 0px;
+  padding: 2px 2px 2px .5em;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.titleBarText {
+  float: left;
+  overflow: hidden;
+  text-align: left;
+}
+
+.titleBarButtons {
+  border-style: none;
+  border-width: 0px;
+  vertical-align: middle;
+  width: 50px;
+  height: 14px;
+}
+
+.clientArea {
+  background-color: #ffffff;
+  border-color: #404040 #e0e0e0 #f0f0f0 #505050;
+  border-style: solid;
+  border-width: 2px;
+  color: #000000;
+  font-family: "Arial", "Helvetica", sans-serif;
+  font-size: 10pt;
+  margin: 2px 0px 0px 0px;
+  overflow: auto;
+  padding: .5em;
+}

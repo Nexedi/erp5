@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-promise_url = portal.getPromiseParameter(\'external_service\', \'memcached_url\')\n
-\n
-protocol, promise_url = promise_url.split(\'://\', 1)\n
-\n
-domain_port = promise_url.split(\'/\', 1)[0]\n
-port = domain_port.split(\':\')[-1]\n
-domain = domain_port[:-(len(port)+1)]\n
-\n
-portal.portal_memcached.default_memcached_plugin.edit(url_string="%s:%s" % (domain, port))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

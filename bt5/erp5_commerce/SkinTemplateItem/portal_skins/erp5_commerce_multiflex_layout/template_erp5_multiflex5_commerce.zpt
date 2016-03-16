@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+<!--  Version: Multiflex-5.4 / Overview                     -->
+<!--  Type:    Design with sidebar                          -->
+<!--  Date:    March 13, 2008                               -->
+<!--  Design:  www.1234.info                                -->
+<!--  License: Fully open source without restrictions.      -->
+<!--           Please keep footer credits with the words    -->
+<!--           "Design by 1234.info". Thank you!            -->
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="cache-control" content="no-cache" />
+  <meta http-equiv="expires" content="3600" />
+  <meta name="revisit-after" content="2 days" />
+  <meta name="robots" content="index,follow" />
+  <meta name="publisher" content="Your publisher infos here" />
+  <meta name="copyright" content="Your copyright infos here" />
+  <meta name="author" content="Designed by www.1234.info / Modified: Your Name" />
+  <meta name="distribution" content="global" />
+  <meta name="description" content="Your container description here" />
+  <meta name="keywords" content="Your keywords, keywords, keywords, here" />
+  <link rel="stylesheet" type="text/css" media="screen,projection,print" href="mf54_reset.css" />
+  <link rel="stylesheet" type="text/css" media="screen,projection,print" href="mf54_grid.css" />
+  <link rel="stylesheet" type="text/css" media="screen,projection,print" href="mf54_content.css" />
+  <link rel="icon" type="image/x-icon" href="./mf54_image/favicon.ico" />
+  <title>Multiflex-5.4 | Content Toolbox |</title>
+</head>
+
+<!-- Global IE fix to avoid layout crash when single word size wider than column width -->
+<!-- Following line MUST remain as a comment to have the proper effect -->
+<!--[if IE]><style type="text/css"> body {word-wrap: break-word;}</style><![endif]-->
+
+<body>
+  <!-- ERP5 WEB INTEGRATION -->
+  <tal:block metal:define-macro="master">
+    <tal:block tal:define="website here/getWebSiteValue;
+                           enctype string:multipart/form-data;
+                           portal_path python:website.absolute_url();
+                           section here/getWebSectionValue;
+                           section_url section/absolute_url;
+                           editable request/editable_mode | python: 0;
+                           list_mode list_mode | nothing;
+                           dialog_mode dialog_mode | nothing;
+                           has_no_layout python: layout_form is None;
+                           dummy python: request.set('dialog_mode', dialog_mode);
+                           dummy python: request.set('list_mode', list_mode);
+                           aggregate python: has_no_layout or layout_form.Form_getGroupList(
+                                             ['header', 'navbar', 'headline', 'subcontent', 'product_list', 'footer']);
+                           aggregate python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};
+                           header_area python:aggregate.get('header', []);
+                           navbar_area python:aggregate.get('navbar', []);
+                           headline_area python:aggregate.get('headline', []);
+                           subcontent_area python:aggregate.get('subcontent', []);
+                           product_list_area python:aggregate.get('product_list', []);
+                           footer_area python:aggregate.get('footer', []);
+                           global css_list_template python:[
+                                  '%s/mf54_reset.css' % portal_path,
+                                  '%s/mf54_grid.css' % section_url,
+                                  '%s/mf54_content.css' % portal_path,
+] + (section.getLayoutProperty('layout_additional_css', None) and [section.getLayoutProperty('layout_additional_css')] or []);
+                                   global js_list python:['%s/erp5_tabber.js' % portal_path,]">
+      <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">
+        <tal:block metal:fill-slot="layout">
+          <tal:block metal:use-macro="here/aggregate_render/macros/populate_request"/>
+
+  <!-- CONTAINER FOR ENTIRE PAGE -->
+  <div class="container">
+
+    <!-- HEADER -->
+    <div class="corner-page-top"></div>
+    <div class="header">
+        <!-- Layout form rendering -->
+        <tal:block tal:condition="python: layout_form is not None">
+          <tal:block tal:repeat="aggregate python: [('header', header_area)]">
+              <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+          </tal:block>
+        </tal:block>
+    </div>
+    <div class="corner-page-bottom"></div>
+    
+    <!-- NAVIGATION BAR -->
+    <div class="corner-page-top"></div>
+    <div class="navbar">
+      <!-- Layout form rendering -->
+      <tal:block tal:condition="python: layout_form is not None">
+        <tal:block tal:repeat="aggregate python: [('navbar', navbar_area)]">
+           <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+        </tal:block>
+      </tal:block>
+    </div>    
+  
+    <!-- MAIN SECTION -->
+    <div class="main">
+      <div class="headline">
+      <!-- Layout form rendering -->
+      <tal:block tal:condition="python: layout_form is not None">
+        <tal:block tal:repeat="aggregate python: [('headline', headline_area)]">
+           <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+        </tal:block>
+      </tal:block>
+      </div>
+
+      <!-- SUBCONTENT -->
+      <div class="subcontent" tal:condition="python: section.getLayoutProperty('layout_right_column', False)">
+        <!-- Layout form rendering -->
+        <tal:block tal:condition="python: layout_form is not None"
+                   tal:define="widget_renderer here/multiflex5_box_renderer/macros/widget">
+          <tal:block tal:repeat="aggregate python: [('subcontent', subcontent_area)]">
+              <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+          </tal:block>
+        </tal:block>
+      </div> 
+
+      <!-- CONTENT -->
+      <div class="main_content">
+        <tal:block  tal:condition="python: request.get('portal_status_message') is not None">
+        <div class="main_content">
+          <div class="corner-content-1col-top"></div>
+          <div class="content-1col-nobox portal_status_message">
+            <h3>
+              <span tal:content="python: request.get('portal_status_message')"></span>
+            </h3>
+          </div>
+          <div class="corner-content-1col-bottom"></div>
+        </div>
+        </tal:block>        
+        <tal:block  tal:condition="python: request.get('current_web_section', here).getLayoutProperty('ecommerce_selected_product', False)">
+        <div class="main_content">
+          <div class="corner-content-1col-top"></div>
+          <div class="content-1col-nobox">
+            <tal:block tal:content="structure here/WebSection_viewSelectedProductWidget"/>
+          </div>
+          <div class="corner-content-1col-bottom"></div>
+        </div>
+        </tal:block>
+      <tal:block tal:condition="python: (section is website) or section.getLayoutProperty('ecommerce_default_content', False)">
+        <div class="main_content">
+        <div class="corner-content-1col-top"></div>
+        <div class="content-1col-nobox">
+          <tal:block metal:define-slot="main"/>
+        </div>
+        <div class="corner-content-1col-bottom"></div>
+      </tal:block>
+      <tal:block tal:condition="python: (section is not website) and section.getLayoutProperty('ecommerce_product_list', True)">
+        <div class="main_content">
+          <tal:block tal:condition="python: layout_form is not None"
+                     tal:define="widget_renderer here/multiflex5_large_box_renderer/macros/large_widget">
+            <tal:block tal:repeat="aggregate python: [('product_list', product_list_area)]">
+              <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+            </tal:block>
+          </tal:block>
+        </div>
+      </tal:block>
+      </div>
+    </div>
+      
+    <!-- FOOTER -->
+    <div class="footer">
+        <!-- Layout form rendering -->
+        <tal:block tal:condition="python: layout_form is not None">
+          <tal:block tal:repeat="aggregate python: [('footer', footer_area)]">
+              <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+          </tal:block>
+        </tal:block>
+    </div>
+    <div class="corner-page-bottom"></div>
+  </div> 
+  
+    <!-- ERP5 WEB INTEGRATION -->
+        </tal:block>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+</body>
+</html>

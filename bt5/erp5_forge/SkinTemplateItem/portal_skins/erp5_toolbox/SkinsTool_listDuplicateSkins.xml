@@ -169,45 +169,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""List all skins that are present in more than one skin folder, ordered by\n
-priority.\n
-"""\n
-\n
-# make sure context is the skins tool\n
-stool = context.portal_skins\n
-\n
-print \'<html><body>\'\n
-skins_by_name = {}\n
-\n
-for skin_key, skin_path_list in stool.getSkinPaths():\n
-  if skin_key == stool.getDefaultSkin():\n
-    skin_path_list = skin_path_list.split(\',\')\n
-    for skin_path in skin_path_list:\n
-      # skip CMF paths\n
-      if skin_path in (\'control\', \'zpt_control\',\n
-                       \'generic\', \'zpt_generic\',\n
-                       \'content\', \'zpt_content\'):\n
-        continue\n
-      skin_folder = stool.portal_skins[skin_path]\n
-      for skin in skin_folder.objectValues():\n
-        skins_by_name.setdefault(skin.getId(), []).append(skin_path)\n
-\n
-for skin_name, location_list in skins_by_name.items():\n
-  if len(location_list) > 1:\n
-    print skin_name, \'<br/>\'\n
-    for location in location_list:\n
-      print "&nbsp;" * 3, \'<a href="%s/%s/%s/manage_main">%s</a><br/>\' % (stool.absolute_url(), location, skin_name, location)\n
-\n
-print \'</body></html>\'\n
-return printed\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

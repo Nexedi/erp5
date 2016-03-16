@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>translateString = context.Base_translateString\n
-\n
-if document_url is not None or not document_url:\n
-  context.setTextContent(context.ERP5RunMyDocs_importWebPage(document_url))\n
-  context.fromURL(document_url)\n
-  portal_status_message = "Web Page successfully imported"\n
-else:\n
-  portal_status_message = "Url was not Provided."\n
-\n
-context.Base_redirect(\'view\', keep_items = dict(portal_status_message=translateString(portal_status_message)))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>document_url=\'\'</string> </value>
         </item>

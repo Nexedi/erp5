@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return context.portal_catalog(\n
-  explanation_portal_type="Production Order",\n
-  parent_specialise_portal_type=("Delivery Simulation Rule",\n
-                                 "Transformation Sourcing Simulation Rule"),\n
-  delivery_uid=None,\n
-  left_join_list=("delivery_uid",),\n
-  select_list=("delivery_uid",),\n
-  group_by=("uid",),\n
-  **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

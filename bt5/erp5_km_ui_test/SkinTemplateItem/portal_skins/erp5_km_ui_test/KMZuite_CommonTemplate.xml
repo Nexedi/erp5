@@ -33,52 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:metal="http://xml.zope.org/namespaces/metal">\n
-\n
-\n
-  <tal:block metal:define-macro="createKMWebSite">\n
-    <!-- create the web_site -->\n
-    <tr>\n
-      <td>open</td>\n
-      <td>${base_url}/web_site_module/WebSiteModule_createKMSite?site_id=km_test_web_site&amp;title=KM Test Web Site</td>\n
-      <td></td>\n
-      <td>Create a new site</td>\n
-    </tr>\n
-    <tr>\n
-      <td>assertTextPresent</td>\n
-      <td>Created Successfully.</td>\n
-      <td></td>\n
-      <td></td>\n
-    </tr>\n
-    <!-- Wait for activities to finish -->\n
-    <tr>\n
-      <td>openAndWait</td>\n
-      <td>${base_url}/Zuite_waitForActivities</td>\n
-      <td></td>\n
-    </tr>\n
-    <tr>\n
-      <td>verifyTextPresent</td>\n
-      <td>Done.</td>\n
-      <td></td>\n
-    </tr> \n
-  </tal:block>\n
-</tal:block>\n
-\n
-\n
-<tal:block metal:define-macro="deleteKMWebSite">\n
-    <!-- delete the web_site XXX: not used anymore as no need to delete site -->\n
-</tal:block>\n
-\n
-\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

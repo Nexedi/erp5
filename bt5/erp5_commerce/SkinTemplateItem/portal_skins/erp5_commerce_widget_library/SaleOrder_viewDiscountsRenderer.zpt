@@ -1,0 +1,13 @@
+<tal:block tal:define="discount_info here/Person_getApplicableDiscountInformation;">
+
+  <h2>
+    <span tal:replace="python: here.Base_translateString('Discounts')"/>
+  </h2>
+
+  <p tal:condition="python: discount_info is not None"> 
+    <!-- Render discount information -->
+  </p>
+
+  <p tal:condition="python: discount_info is None">No discounts.</p>
+
+</tal:block>

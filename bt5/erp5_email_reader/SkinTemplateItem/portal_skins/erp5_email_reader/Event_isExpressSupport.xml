@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>email = \'express-support@tiolive.com\'\n
-\n
-destination_list = context.getDestinationValueList() or []\n
-source_list = context.getSourceValueList() or []\n
-\n
-document_list = destination_list + source_list\n
-\n
-for document in document_list:\n
-  if document.getDefaultEmailText()==email:\n
-    return True\n
-\n
-return False\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

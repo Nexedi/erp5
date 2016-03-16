@@ -1,0 +1,97 @@
+<html>
+<head><title>Test for Accounting module main listbox</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test Accounting module listbox supports deleting
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0&transaction_state=draft">
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+<!-- Setup {{{ -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/AccountingZuite_markChanged</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<!-- }}} -->
+
+<!-- 4 records in the list {{{ -->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+<!-- }}} -->
+
+<!-- Delete {{{ -->
+<tr>
+  <td>click</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[1]/input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_deleteObjectList:method</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- Check content of delete confirmation dialog -->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+<!-- check amounts for lines -->
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[8]/a
+</td>
+  <td>20000.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>
+//tr[@class='listbox-data-line-0 DataA']/td[9]/a
+</td>
+  <td>20000.0</td>
+</tr>
+
+
+<!-- Confirm deletion and check redirection -->
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Deleted.</td>
+  <td></td>
+</tr>
+
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

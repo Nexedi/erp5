@@ -49,12 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if None not in (procedure_object, user_name, role_name_list):\n
-  procedure_object.manage_addLocalRoles(user_name, role_name_list)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>procedure_object=None, user_name=None, role_name_list=None</string> </value>
         </item>

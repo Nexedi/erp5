@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>delivery = state_change[\'object\'].getExplanationValue()\n
-try:\n
-  delivery.aq_explicit.getCausalityState\n
-except AttributeError:\n
-  return\n
-delivery.activate(tag=\'build:\'+delivery.getPath()).Delivery_calculate()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

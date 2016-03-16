@@ -1,0 +1,39 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Workflow Actions</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Workflow Actions</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<!-- "fake" workflow actions can be created as a workflow action, this is the
+way used to display workflow actions on a folder, passing transitions for all
+objects in the selection.
+-->
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_addAction?id=test_action&name=Workflow Action to Portal&category=workflow&action=string:%24{portal_url}/view">Create a dummy action that redirects to the portal</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/foo_module/1/view">/erp5/foo_module/1/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Workflow Action to Portal</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Welcome to ERP5</td>
+  <td></td>
+</tr>
+<!-- TODO: test "real workflow actions" -->
+</body>
+</html>

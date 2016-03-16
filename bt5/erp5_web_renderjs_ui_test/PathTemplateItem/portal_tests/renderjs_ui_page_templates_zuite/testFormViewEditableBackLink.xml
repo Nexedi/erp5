@@ -33,69 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
-<head>\n
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Form View Editable Back Link</title>\n
-</head>\n
-<body>\n
-<table cellpadding="1" cellspacing="1" border="1">\n
-<thead>\n
-<tr><td rowspan="1" colspan="3">Test Default Module View</td></tr>\n
-</thead><tbody>\n
-<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />\n
-\n
-<tr>\n
-  <td>open</td>\n
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?editable=true</td>\n
-  <td></td>\n
-</tr>\n
-\n
-<!-- Wait for gadget to be loaded -->\n
-<tr>\n
-  <td>waitForElementPresent</td>\n
-  <td>//div[@data-gadget-url=\'${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html\']</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>waitForTextPresent</td>\n
-  <td>Title 1</td>\n
-  <td></td>\n
-</tr>\n
-\n
-<!-- Header has a link to the previous history entry -->\n
-<tr>\n
-  <td>assertElementPresent</td>\n
-  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Back\' and contains(@href, \'#!history_previous\')]</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>click</td>\n
-  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Back\' and contains(@href, \'#!history_previous\')]</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>waitForElementPresent</td>\n
-  <td>//div[@data-gadget-url=\'${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html\']</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>waitForTextPresent</td>\n
-  <td>Foos</td>\n
-  <td></td>\n
-</tr>\n
-\n
-</tbody></table>\n
-</body>\n
-</html>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

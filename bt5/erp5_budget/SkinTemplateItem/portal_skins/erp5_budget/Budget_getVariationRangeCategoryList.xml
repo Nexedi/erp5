@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>budget_model = context.getSpecialiseValue(portal_type=\'Budget Model\')\n
-if budget_model is not None:\n
-  return budget_model.getBudgetVariationRangeCategoryList(context)\n
-\n
-return []\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

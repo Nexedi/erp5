@@ -49,40 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""This scripts prints a table of all checked uids as html.\n
-The title of the html is in the form "len(checked_uids) == %d"\n
-The body contains some /table/tr with td[0] for uid and td[1] for id\n
-"""\n
-\n
-if selection_name is None:\n
-  return "selection_name parameter not passed"\n
-\n
-portal = context.getPortalObject()\n
-checked_uids = portal.portal_selections\\\n
-                    .getSelectionCheckedUidsFor(selection_name)\n
-getObj = portal.portal_catalog.getObject\n
-checked_uids_objs = [getObj(uid) for uid in checked_uids]\n
-checked_uids_objs.sort(key=lambda x:x.getId())\n
-\n
-# we produce html for easier Selenium parsing\n
-table = "\\n".join(["<tr><td>%s</td><td>%s</td></tr>" % (\n
-                    x.getUid(), x.getId()) for x in checked_uids_objs])\n
-return """<html>\n
-<head><title>len(checked_uids) == %d</title></head>\n
-<body>\n
-<table>\n
-  %s\n
-</table>\n
-</body>\n
-</html>""" % (len(checked_uids), table)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>selection_name=None, **kw</string> </value>
         </item>

@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  File a failed authentication attempt.\n
-"""\n
-from DateTime import DateTime\n
-portal = context.getPortalObject()\n
-portal_preferences = portal.portal_preferences\n
-\n
-if not portal_preferences.isAuthenticationPolicyEnabled():\n
-  # no policy, no sense to file failure\n
-  return 0\n
-\n
-activate_kw = {\'tag\': \'authentication_event_%s\' %context.getReference()}\n
-authentication_event = portal.system_event_module.newContent(\n
-                                                    portal_type = "Authentication Event",\n
-                                                    activate_kw = activate_kw)\n
-authentication_event.setDestinationValue(context)\n
-authentication_event.confirm()\n
-return authentication_event\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

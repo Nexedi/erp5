@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>error_counter = 0\n
-for benchmark_result_line in context.contentValues(portal_type=\'Benchmark Result Line\'):\n
-  error_counter += benchmark_result_line.getProperty(\'error_counter\')\n
-\n
-context.edit(error_counter=error_counter,\n
-             error_message_list=error_message_list,\n
-             string_index=\'FAIL\')\n
-\n
-context.stop()\n
-context.setProperty(\'string_index\', result)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>result, error_message_list=[]</string> </value>
         </item>

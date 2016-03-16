@@ -49,35 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  A sample usage of how ical categories can be used\n
-  (here to group tasks related to the same project\n
-  or events related to the same sale opportunity)\n
-"""\n
-project = None\n
-\n
-if brainObject is not None:\n
-  real_context = brainObject\n
-else:\n
-  real_context = context\n
-\n
-portal_type = real_context.getPortalType()\n
-if portal_type == \'Task\':\n
-  project = real_context.getSourceProjectValue()\n
-elif portal_type in context.getPortalEventTypeList():\n
-  project = real_context.getFollowUpValue()\n
-\n
-if project is not None:\n
-  # we have to tweak here because not all object have references\n
-  if hasattr(project, \'getReference\'):\n
-    return project.getReference() or project.getTitle()\n
-  else:\n
-    return project.getTitle()\n
-return \'\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brainObject=None</string> </value>
         </item>

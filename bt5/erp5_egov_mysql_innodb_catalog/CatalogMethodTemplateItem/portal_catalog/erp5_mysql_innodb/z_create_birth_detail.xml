@@ -57,18 +57,6 @@
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string>CREATE TABLE `birth_detail` (\n
-  `uid` BIGINT UNSIGNED NOT NULL,\n
-  `birthplace_city` VARCHAR(255) DEFAULT \'\',\n
-  `birth_date` datetime DEFAULT NULL,\n
-  PRIMARY KEY (`uid`),\n
-  KEY `birthplace` (`birthplace_city`),\n
-  KEY `birth_date` (`birth_date`)\n
-) ENGINE=InnoDB\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

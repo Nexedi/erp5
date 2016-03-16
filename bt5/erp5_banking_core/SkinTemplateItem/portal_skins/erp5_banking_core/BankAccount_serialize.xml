@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Serialize operations for this bank account\n
-# Lookup pending tagged indexations\n
-tag = context.BankAccount_getMessageTag(context)\n
-if context.getPortalObject().portal_activities.countMessageWithTag(tag):\n
-  raise ValueError("There are operations pending for this account that prevent form calculating its position. Please try again later.")\n
-# Create a tagged indexation\n
-context.activate(tag=tag).getId()\n
-# Serialize at ZODB level\n
-context.serialize()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

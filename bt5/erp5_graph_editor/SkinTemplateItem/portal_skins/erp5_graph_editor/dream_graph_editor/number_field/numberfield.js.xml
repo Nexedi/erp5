@@ -23,31 +23,6 @@
             <value> <string>application/javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>/*global window, rJS */\n
-(function(window, rJS) {\n
-    "use strict";\n
-    rJS(window).ready(function(gadget) {\n
-        return gadget.getElement().push(function(element) {\n
-            gadget.element = element;\n
-        });\n
-    }).declareMethod("render", function(options) {\n
-        var input = this.element.querySelector("input");\n
-        input.setAttribute("value", options.value);\n
-        input.setAttribute("name", options.key);\n
-        input.setAttribute("title", options.property_definition.description);\n
-    }).declareMethod("getContent", function() {\n
-        var input = this.element.querySelector("input"), result = {};\n
-        if (input.value !== "") {\n
-            result[input.getAttribute("name")] = parseFloat(input.value);\n
-        } else {\n
-            result[input.getAttribute("name")] = null;\n
-        }\n
-        return result;\n
-    });\n
-})(window, rJS);</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

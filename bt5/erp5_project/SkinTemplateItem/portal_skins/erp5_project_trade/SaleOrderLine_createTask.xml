@@ -49,36 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>#print kw\n
-#return printed\n
-\n
-task = context.task_module.newContent(\n
-                                      portal_type=\'Task\',\n
-                                      title=title,\n
-                                      reference=reference,\n
-                                      source=source,\n
-                                      source_section=source_section,\n
-                                      destination_decision=destination_decision,\n
-                                      destination_section=destination_section,\n
-                                      source_project=source_project,\n
-                                      destination=destination,\n
-                                      start_date=start_date,\n
-                                      stop_date=stop_date,\n
-                                      task_line_resource=task_line_resource,\n
-                                      task_line_quantity=task_line_quantity,\n
-                                      task_line_price=task_line_price,\n
-                                      task_line_quantity_unit=task_line_quantity_unit,\n
-                                      price_currency=price_currency,\n
-                                      description=description,\n
-                                     )\n
-translateString = context.Base_translateString\n
-portal_status_message = translateString("Object created.")\n
-return task.Base_redirect(\'view\', \n
-          keep_items = dict(portal_status_message=portal_status_message),)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>title=None, reference=None, source=None, source_section=None, destination_decision=None, destination_section=None, source_project=None, destination=None, start_date=None, stop_date=None, task_line_resource=None, task_line_quantity=None, task_line_price=None, task_line_quantity_unit=None, price_currency=None, description=None, **kw</string> </value>
         </item>

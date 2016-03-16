@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
-\n
-organisation_configurator_item = configuration_save.addConfigurationItem(\n
-    "Organisation Configurator Item",\n
-    **kw)\n
-\n
-context.setGlobalConfigurationAttr(company_email=kw.get(\'default_email_text\'))\n
-\n
-# store globally company\'s configurator item which we can use later to reconfigure\n
-context.setGlobalConfigurationAttr(\n
-     organisation_configurator_item=\n
-          organisation_configurator_item.getRelativeUrl())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>configuration_save_url=None, **kw</string> </value>
         </item>

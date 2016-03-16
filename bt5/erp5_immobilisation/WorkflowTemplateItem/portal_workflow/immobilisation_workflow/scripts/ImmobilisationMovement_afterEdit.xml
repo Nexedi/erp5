@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>pl = state_change[\'object\']\n
-\n
-# It is done before and after because stop_date may have change\n
-for movement in pl.getAggregatedItemsNextImmobilisationMovementValueList():\n
-  if movement.getImmobilisationState() != \'calculating\':\n
-    movement.calculateImmobilisationValidity()\n
-\n
-pl.activate(after_method_id=(\'recursiveReindexObject\', \'immediateReindexObject\',)).updateImmobilisationState()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change,**kw</string> </value>
         </item>

@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>MARKER = (\'\', None,)\n
-portal = context.getPortalObject()\n
-portal_categories = portal.portal_categories\n
-\n
-kw.update({\'validation_state\' :[\'validated\']})\n
-\n
-box_relative_url = context.REQUEST.get(\'box_relative_url\')\n
-box = context.restrictedTraverse(box_relative_url)\n
-preferences = box.KnowledgeBox_getDefaultPreferencesDict()\n
-\n
-for key in (\'role\', \'function\', \'site\'):\n
-  value = preferences.get(\'preferred_%s\' %key)\n
-  context.log(\'%s=%s\' %(key, value))\n
-  if value not in MARKER:\n
-    kw[\'%s_uid\' %key] = portal_categories.restrictedTraverse(\'%s/%s\' %(key, value)).getUid()\n
-\n
-return portal.portal_catalog(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

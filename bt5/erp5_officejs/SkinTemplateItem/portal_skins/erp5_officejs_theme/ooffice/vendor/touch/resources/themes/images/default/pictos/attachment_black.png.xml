@@ -19,32 +19,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAE0ElEQVRoBe2a3YtWRRzH3bVd0zR7
-MUtSw9BWy0iL2CwML2Qh6BWKIoOEiP4AoZcL8SboKrqRRW8khK6CbhQpKgrNQlB7AYOoVaQFk0rS
-ajMzt8/ncGY5+/C4Nzszp+fw/ODzzJw555mZ7/zmzMw5c3rGx8dntLMejPSrYRHcClfC/9nOU7nj
-cArOoau9MNNb4Q9L4Hk4CBfAP3cC1tU6W/clrbqKNqgmclE/DME++AM6QWS7Olp3Nailf5LGcMCJ
-2fAajEK7TDoxTS1qmj2h0wg2EzbBCHSisKnqrCa1zSy0loLXkfBlA8WGhlDbOrX2MhjblTeDI3FT
-TW2b1dpLZDWsB6egppra1LhawYNwIzTd1Dio4JVwbdPVlhpXXkFE0a6qUtkYGTtS/gS/wlJw9bYM
-cpoaexWc0r4m87dhNyPkmVAQg8ca4i/Ck7AwpOcKhykoDN8xww/JVy/2OB20g3MPwg8Qs9yp8hq2
-O6ewb8l0C5xE6DgeHYCtsBNegGJG4NR+rrHBxyCbxfbwX9T8VSjWsISucnyC+RdsfRf4R2CZXsdc
-B3wEwTOXiHttuD6kxwiTePgslX0fLuLJmwn19E0QelMf8bvhdbCr20D74B/4E96DN2B3eUwQz1IM
-WnbPEYRcQvCjxC83Gm/g/CKu0/tfwDnQ+7vABrsDHoKrIJqFVo+WIRk5/Ae7gciscNAmvKZM+4VQ
-D1sfH1E1u3o1ryJxuj8pBFfrFO7DalqIe096v2o+rUUXV+Tc8pNacEtx9R+muIdbVem532FPeeIW
-wkHI4tGyzIkgh2B70SkGJ6enGQxUjxC8Y9Tj3JarS1fLmYPIWsTauNWK5G7sWsrrCq6l2TMW2vVw
-xsaupaiuh2tp9oyFdj2csbFrKarr4VqaPWOhXQ9nbOxaiup6uJZmz1ho18MZG/tyRflyL5nV5WHL
-bVe2r2ivS6aWjFO/0/qOMtyJ6ONd1izea/1N3DQ30E7DCdCWg69+fD/9FSSzdq083cJsxPllJj8S
-uptwPTxmGqIVdC/hEHhO2whzwd2Hk+A7rwXgtkxUSyF4HjW8H48q/Ch8A4p5mbS7CBUdhPoW8wmS
-ngJFfsy5M4T+9wGIus1CfoXF3j10N2EvzKXyFnAn6DUPRmEbPAPPwQ74DTx3APSqTrgd/NTI9Jio
-tdifjZmpeXnfvgR9pej1xEcglOMuobuGHrsd8ymsKK/1I9Y34SKE62OFyQRbQbvyGugthbix9goc
-hhPgwPUZ+IJ+XnmNXflh8HuQWCKr+SQVbEGfwH2KqULaYlhQTSsFP076cahWMmY8uWAr6/27FYod
-/1aRpdDlnN8O4X6OKbKa17BdKLUtpYBtsIkR+RDh5xCEOUgNwSq4DZJbDsGKcP93oORpwuq+cD/H
-2UzBrnjGwJVODpvqi4CU5avxtHPeMXCyb7qp8ZiCnfCdIpwPm2pqU+MB7y0XAHbttRDWwEQbZaOo
-cRY46KLAAcTPET4AV0hNMzWpbU+hNcyLJDiK7oXzUJ27OjmuFjUNTOgMEUNsBbwFP0MnC7XualBL
-sUYPOict+UrR3sfPwn7wY7FOE26drbsa5gehISw+7eXEJGNF5LOpwgfBZ1U9fw8keT4l3+maT19H
-4Ht4F1zRnUVk0W2JT9h/Gehyk5kr98oAAAAASUVORK5CYII=</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<comptabilite xmlns:tal="http://xml.zope.org/namespaces/tal">
+  <exercice>
+    <DateCloture tal:content="python: options['at_date'].strftime('%Y-%m-%d')">20141231</DateCloture>
+    <tal:block tal:repeat="result options/result_list"><tal:block tal:replace="structure python: result.detail.decode('zlib')"/></tal:block>
+  </exercice>
+</comptabilite>

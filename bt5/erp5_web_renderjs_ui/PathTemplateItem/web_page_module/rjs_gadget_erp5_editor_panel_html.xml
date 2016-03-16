@@ -102,32 +102,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta charset="utf-8" />\n
-    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>ERP5 Editor Panel</title>\n
-\n
-    <!-- renderjs -->\n
-    <script src="rsvp.js"></script>\n
-    <script src="renderjs.js"></script>\n
-    <script src="handlebars.js"></script>\n
-\n
-    <!-- custom script -->\n
-    <script src="gadget_erp5_editor_panel.js"></script>\n
-  </head>\n
-  <body>\n
-    <div class="jqm-navmenu-panel"></div>\n
-  </body>\n
-</html>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Gadget ERP5 Editor Panel</string> </value>
         </item>

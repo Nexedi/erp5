@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>movement = state_change[\'object\']\n
-\n
-resource = movement.getResourceValue()\n
-if resource is not None:\n
-  # if the movement already have a use which is valid for this resource, don\'t change it\n
-  movement_use = movement.getUse()\n
-  if movement_use and movement_use in resource.getUseList():\n
-    return\n
-  # otherwise initialise to the default use\n
-  movement.setUse(resource.getDefaultUse())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

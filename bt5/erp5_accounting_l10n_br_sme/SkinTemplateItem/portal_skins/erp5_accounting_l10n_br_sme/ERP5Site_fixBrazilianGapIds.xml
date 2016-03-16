@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>category_list = context.portal_catalog(path="%portal_categories/gap2/br%")\n
-\n
-for cat in category_list:\n
-  id = cat.getId()\n
-  newid = id.replace(\'_\', \'.\')\n
-  try:\n
-    cat.getObject().setId(newid)\n
-  except:\n
-    pass\n
-  print newid\n
-\n
-print \'Categories Renamed\'\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

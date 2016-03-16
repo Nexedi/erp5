@@ -33,50 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block metal:define-macro="discussions">\n
-  <div class="bottomPosts Discussions"\n
-       tal:define="web_site here/getWebSiteValue;\n
-                   absolute_url here/getAbsoluteUrl;\n
-                   relative_url here/getRelativeUrl;\n
-                   discussion_thread_section here/WebSite_getDefaultForumWebSectionValue;\n
-                   discussion_thread_list here/WebSection_getLatestDiscussionThreadList">\n
-    <h2>\n
-      <a title="Show more" tal:attributes="href string:${discussion_thread_section/absolute_url}">Discussions</a>\n
-      <a class="txtButn" title="Show more"\n
-         tal:attributes="href string:${discussion_thread_section/absolute_url}/WebSection_viewCreateNewDiscussionThreadDialog?cancel_url=${absolute_url}&amp;predecessor_url=${relative_url}">New</a>\n
-    </h2>\n
-    \n
-    <div class="row" tal:repeat="discussion_thread discussion_thread_list">\n
-      <tal:block tal:define="discussion_post discussion_thread/DiscussionThread_getLastPost;\n
-                             author_dict discussion_post/DiscussionPost_getAuthorDict;\n
-                             is_author_link_available python:author_dict[\'author_url\'] is not None;\n
-                             base_url python: \'%s/%s/%s\' %(web_site.absolute_url(), discussion_thread_section.getId(), discussion_thread.getReference())">\n
-     \n
-        <div class="date">\n
-          <span tal:replace="python: discussion_post.getModificationDate().strftime(\'%d-%m\')"/>\n
-          <span tal:content="python: discussion_post.getModificationDate().strftime(\'%Y\')"/>\n
-        </div>\n
-        <div class="text">\n
-          <h3>\n
-            <a title="Show post"\n
-              tal:attributes="href python: \'%s/view?list_start=%s&amp;reset=1#%s\' %(base_url, discussion_post.getId(), discussion_post.getUid())"\n
-              tal:content="discussion_post/getTitle"/> \n
-            <em>by <spam tal:replace="author_dict/author_title"/></em>\n
-          </h3>\n
-          <span tal:replace="structure python: discussion_post.getTextContent()"/>\n
-        </div>\n
-      </tal:block>\n
-    </div>\n
-    <div class="clear"></div>\n
-  </div>\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

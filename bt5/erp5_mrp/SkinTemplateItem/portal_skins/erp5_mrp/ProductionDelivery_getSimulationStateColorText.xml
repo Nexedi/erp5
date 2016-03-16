@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>simulation_method = getattr(delivery, \'getSimulationState\', None)\n
-if simulation_method is None:\n
-  return \'#D1E8FF\'\n
-\n
-simulation_state = simulation_method()\n
-\n
-color_dict = {\n
-  \'draft\': \'#a7d7ae\',\n
-  \'planned\': \'#ffff00\',\n
-  \'ordered\': \'#ff8e56\',\n
-  \'confirmed\': \'#ff0000\',\n
-  \'started\': \'#ff00ff\',\n
-  \'stopped\': \'#00b8ff\',\n
-  \'delivered\': \'#3deb3d\',\n
-}\n
-return color_dict.get(simulation_state, \'#D1E8FF\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>delivery=None</string> </value>
         </item>

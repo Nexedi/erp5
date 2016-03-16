@@ -1,0 +1,286 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Duration Field</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Duration Field</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewDurationField</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_quantity_hour</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_quantity_minute</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_quantity_second</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_hour</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_minute</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_second</td>
+  <td>0</td>
+</tr>
+
+<!-- Test second value -->
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_quantity_second</td>
+  <td>59</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_hour</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_minute</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_second</td>
+  <td>59</td>
+</tr>
+
+<!-- Test minute value -->
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_quantity_minute</td>
+  <td>58</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_hour</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_minute</td>
+  <td>58</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_second</td>
+  <td>59</td>
+</tr>
+
+<!-- Test hour value -->
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_quantity_hour</td>
+  <td>23</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_hour</td>
+  <td>23</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_minute</td>
+  <td>58</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_second</td>
+  <td>59</td>
+</tr>
+
+<!-- Test second increase minutes -->
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_quantity_second</td>
+  <td>63</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_hour</td>
+  <td>23</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_minute</td>
+  <td>59</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_second</td>
+  <td>3</td>
+</tr>
+
+<!-- Test minutes increase hour -->
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_quantity_minute</td>
+  <td>63</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_hour</td>
+  <td>24</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_minute</td>
+  <td>3</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_second</td>
+  <td>3</td>
+</tr>
+
+<!-- Test seconds increase hour -->
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_quantity_hour</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_quantity_minute</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_quantity_second</td>
+  <td>3600</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_hour</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_minute</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>subfield_field_my_quantity_second</td>
+  <td>0</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

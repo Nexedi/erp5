@@ -1,0 +1,129 @@
+<tal:block tal:replace="nothing"
+           xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+<!--
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+                   Christophe Dumez <christophe@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+</tal:block>
+<tal:block tal:define="do_extract request/do_extract | python: 1;
+                       portal_path here/portal_url;
+                       css_list python: ['%s/ERP5VCS_dhtmlXTree.css' % portal_path,
+                                         '%s/ERP5VCS_movableMenu.css' % portal_path,
+                                         '%s/erp5.css' % portal_path];
+                       js_list python: ['%s/erp5.js' % portal_path,
+                                        '%s/ERP5VCS_dhtmlXCommon.js' % portal_path,
+                                        '%s/ERP5VCS_dhtmlXTree.js' % portal_path,
+                                        '%s/ERP5VCS_menuico.js' % portal_path,
+                                        '%s/ERP5VCS_movableMenu.js' % portal_path,
+                                        '%s/ERP5VCS_doCreateJavaScriptStatus.js' % portal_path]">
+  <tal:block metal:use-macro="here/view_main/macros/master">
+    <tal:block metal:fill-slot="main">
+      <script type="text/javascript" tal:content="string:var do_extract = ${do_extract};"/>
+      <noscript>
+        <h3 class="error">Please activate javascript in your web browser or this module won't work.</h3>
+      </noscript>
+      <!-- Form Hidden : Selected files -->
+      <input type="hidden" name="removed" value="" />
+      <input type="hidden" name="added" value="" />
+      <input type="hidden" name="modified" value="" />
+      <input type="hidden" name="files" value="" />
+      <!-- End Hidden -->
+      
+      <div id="menudiv" style="opacity: 0.85; position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
+        <table cellspacing="1" cellpadding="0" style="width:82px;background-color:#ffffff; border-style: solid; border-width: 1px;">
+        <tr><td>
+          <table style="width: 80px;" cellspacing="0" cellpadding="0">
+            <tr>
+              <td id="item2" style="text-align: center;" onMouseOver="this.style.backgroundColor='#dae6e6'" onMouseOut="this.style.backgroundColor='#ffffff'" onclick="viewDiff(1,document.getElementById('main_form'))">Diff</td>
+            </tr>
+            <tr>
+              <td id="item3" style="text-align: center;" onMouseOver="this.style.backgroundColor='#dae6e6'" onMouseOut="this.style.backgroundColor='#ffffff'" onclick="log()">  History</td>
+            </tr>
+            <tr>
+              <td id="item4" style="text-align: center;" onMouseOver="this.style.backgroundColor='#dae6e6'" onMouseOut="this.style.backgroundColor='#ffffff'" onclick="commit(1,document.getElementById('main_form'))">Commit</td>
+            </tr>
+            <tr>
+              <td id="item5" style="text-align: center;" onMouseOver="this.style.backgroundColor='#dae6e6'" onMouseOut="this.style.backgroundColor='#ffffff'" onclick="revert(1,document.getElementById('main_form'))">Revert</td>
+            </tr>
+          </table>
+        </td></tr>
+      </table>
+      </div>
+      
+      <br/>
+      <div style="color: black; font-weight: bold;"
+           tal:define="vcs_tool context/getVcsTool; repos_url vcs_tool/getRemoteUrl; comment vcs_tool/getRemoteComment">
+        Repository: <a tal:attributes="href repos_url" tal:content="repos_url"></a>
+        <tal:block condition="comment" replace="string: (${comment})"/>
+      </div><br/>
+      <button type="button" onclick="treeTaller()">Taller</button>
+      <button type="button" onclick="treeShorter()">Shorter</button>
+      <div id="splashScreen" style="position:absolute;z-index:5;top:40%;left:35%; width: 300px; background-color: #cccccc; opacity: 0.6; border-style: solid; vertical-align: middle; text-align: center; color: #000066; font-weight: bold; border-width: 1px;">
+            <br/><br/><br/>
+            Checking for changes.<br/><br/>
+            <img src="ERP5VCS_imgs/wait.gif" alt="Please wait..."/><br/><br/><br/><br/>
+      </div>
+      <div 
+        id="treebox1" 
+        style="width:98%; height: 300px;background-color:#f5f5f5;border :1px solid Silver;overflow:auto;">
+      </div>
+      <div id="captionWindow" class="window" style="right:20px;left:auto;top:140px;width:120px;background-color:#dae6e6;border-color:#ebf8f8 #c0caca #c0caca #c0caca;">
+        <div class="titleBar" style="background-color:#dae6e6;color:black;">
+          <span class="titleBarText">Legend -- SVN</span>
+          <img class="titleBarButtons" alt="" src="ERP5VCS_imgs/altbuttons.gif" longdesc="ERP5VCS_imgs/altbuttonslow.gif" usemap="#sampleMap3" />
+          <map id="sampleMap3" name="sampleMap3">
+            <area shape="rect" coords="0,0,15,13"  href="" alt="" title="Minimize" onclick="this.parentWindow.minimize();return false;" />
+            <area shape="rect" coords="16,0,31,13" href="" alt="" title="Restore"  onclick="this.parentWindow.restore();return false;" />
+            <area shape="rect" coords="34,0,49,13" href="" alt="" title="Close"    onclick="this.parentWindow.close();return false;" />
+          </map>
+        </div>
+        <div class="clientArea" style="background-color:#fffdfd;color:#806040;border-color:#c0caca #c0caca #c0caca #c0caca;text-align:center;">
+          <div style="font-weight: bold; color: black; text-align: center;">Legend</div><hr/>
+            <div style="color: green">Added files</div>
+            <div style="color: orange">Modified files</div>
+            <div style="color: red">Removed files</div>
+            <!-- <div style="color: purple" title="You must update local working copy">Outdated files</div> -->
+            <div style="color: grey" title="Please resolve conflicts manually">Conflicted files</div>
+            <div style="color: black">Unmodified files</div>
+        </div>
+      </div>
+      
+      <script type="text/javascript">
+        winInit();
+        if (winList['captionWindow']){
+          winList['captionWindow'].open();
+          winList['captionWindow'].close();
+        }
+      </script>
+      <input name="showUnmodified" value="showUnmodified" type="checkbox" onclick="showNormalFiles()"/> <span style="color: black;">Show unmodified files</span>
+      <script type="text/javascript">
+        // Menu Customization
+        var MenuToolBar=new CreateToolBarMenu("#dae6e6", "#ffffff", "#b1bbbb", "#6699ff", "font-family:verdana;font-size:11px;color:black;font-weight:bold", 16, 16)
+        MenuToolBar.Add("ERP5VCS_imgs/captionoff.png", "ERP5VCS_imgs/captionon.png", "Show Legend", "#", "winList['captionWindow'].open();");
+        MenuToolBar.Add("ERP5VCS_imgs/expandoff.png", "ERP5VCS_imgs/expandon.png", "Expand / Collapse", "#", "expandCollapse();");
+        MenuToolBar.Add("ERP5VCS_imgs/diffoff.png", "ERP5VCS_imgs/diffon.png", "View Diff", "#", "viewDiff(0,document.getElementById('main_form'));");
+        MenuToolBar.Add("ERP5VCS_imgs/execoff.png", "ERP5VCS_imgs/execon.png", "Commit Changes", "#", "commit(0,document.getElementById('main_form'));");
+        MenuToolBar.Add("ERP5VCS_imgs/revertoff.png", "ERP5VCS_imgs/reverton.png", "Revert Changes", "#", "revert(0,document.getElementById('main_form'));");
+        // Menu Display
+        MenuToolBar.Display();
+        doOnLoad();
+      </script>
+    </tal:block>
+  </tal:block>
+</tal:block>

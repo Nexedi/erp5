@@ -1,0 +1,109 @@
+<html>
+<head><title>Test quick sort on the project module.</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test quick sort on the project module.
+</td></tr>
+</thead>
+<tbody tal:define="init_method string:Zuite_createDataForProjectZuite;">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForProjectZuite/macros/init" />
+<!-- }}} -->
+
+<tr>
+  <td>assertElementPresent</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.delivery.start_date:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.delivery.stop_date:desc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.delivery.start_date:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.delivery.start_date:none']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.delivery.start_date:desc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[6]/button/img[@title="Ascending Display"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[6]/button/img[@title="Descending Display"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[6]</td>
+  <td>2010/01/01</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[6]</td>
+  <td>2010/02/01</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[6]</td>
+  <td>2010/03/01</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.delivery.start_date:desc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.delivery.start_date:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.delivery.start_date:none']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[6]/button/img[@title="Ascending Display"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[6]/button/img[@title="Descending Display"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[6]</td>
+  <td>2010/03/01</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[6]</td>
+  <td>2010/02/01</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[6]</td>
+  <td>2010/01/01</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>translate = context.Base_translateString\n
-return [\n
-  (translate(\'Submitted\'), \'submitted\'),\n
-  (translate(\'Opened\'), \'validated\'),\n
-  (translate(\'Suspended\'), \'suspended\'),\n
-  (translate(\'Closed\'), \'invalidated\'),\n
-]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

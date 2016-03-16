@@ -95,27 +95,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>table th, table td {\n
-  line-height: 1.5em;\n
-  text-align: left;\n
-  padding: .4em .25em;\n
-  vertical-align: middle;\n
-}\n
-\n
-@media (max-width: 62em) {\n
-  html table tbody tr td:first-child, tbody tr th:first-child {\n
-    line-height: 1em;\n
-    padding-bottom: 0;\n
-  }\n
-}\n
-\n
-html body table.ui-responsive thead th {\n
-  color: white;\n
-}\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Gadget Manifest Example Tables Extended CSS</string> </value>
         </item>

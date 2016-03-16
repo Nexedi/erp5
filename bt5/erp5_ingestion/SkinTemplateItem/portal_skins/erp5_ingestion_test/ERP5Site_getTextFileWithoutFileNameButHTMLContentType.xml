@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-Just returns the data with text/html as content-type\n
-"""\n
-document = context.text_file\n
-context.REQUEST.RESPONSE.setHeader(\'content-type\', \'text/html\')\n
-return document.data\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>seed=None</string> </value>
         </item>

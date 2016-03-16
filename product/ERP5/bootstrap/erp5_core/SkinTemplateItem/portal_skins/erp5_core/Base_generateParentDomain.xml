@@ -49,48 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempDomain\n
-domain_list=[]\n
-request = context.REQUEST\n
-filter = {}\n
-\n
-try:\n
-  # first, try to get form_id from the request\n
-  listbox = getattr(getattr(request[\'here\'], request[\'form_id\']), \'listbox\', None)\n
-except KeyError:\n
-  # then, try current_form_id\n
-  listbox = getattr(getattr(request[\'here\'], request[\'current_form_id\']), \'listbox\', None)\n
-\n
-if listbox is not None:\n
-  portal_type_list = [x[0] for x in listbox.get_value(\'portal_types\')]\n
-  filter[\'portal_type\'] = portal_type_list\n
-\n
-if depth == 0:\n
-  parent_obj = request[\'here\']\n
-  parent_url = parent_obj.getRelativeUrl()\n
-  \n
-else:\n
-  parent_url = parent.getProperty(\'parent_url\')\n
-  parent_obj = context.restrictedTraverse(parent_url)\n
-\n
-for obj in parent_obj.contentValues(filter=filter):\n
-  domain = parent.generateTempDomain(id=\'%s_%s\' % (depth, obj.getId()))\n
-  domain.edit(title=obj.getTitle(),\n
-              parent_url=obj.getRelativeUrl(),\n
-              domain_generator_method_id=script.id,\n
-              list_method=\'searchFolder\',\n
-              context_url=parent_url,\n
-              uid=obj.getUid())\n
-  domain.setCriterion(property=\'uid\', identity=obj.getUid())\n
-  domain.setCriterionPropertyList([\'uid\'])\n
-\n
-  domain_list.append(domain)\n
-\n
-return domain_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>depth, parent, **kw</string> </value>
         </item>

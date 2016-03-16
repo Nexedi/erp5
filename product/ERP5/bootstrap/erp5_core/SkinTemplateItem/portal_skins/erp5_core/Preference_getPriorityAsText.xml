@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>priority_dict = {\n
-  1:\'Site\',\n
-  2:\'Group\',\n
-}\n
-return priority_dict.get(context.getPriority(), \'User\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

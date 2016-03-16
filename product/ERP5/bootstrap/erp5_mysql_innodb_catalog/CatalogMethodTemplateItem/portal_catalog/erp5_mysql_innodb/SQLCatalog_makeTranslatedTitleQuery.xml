@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query, SimpleQuery, AndQuery\n
-portal = context.getPortalObject()\n
-\n
-# This scriptable key supports content_translation if the table is present\n
-catalog = portal.portal_catalog.getSQLCatalog()\n
-if \'content_translation\' in catalog.getProperty(\'sql_search_tables\'):\n
-  if [x for x in catalog.getProperty(\'sql_catalog_search_keys\', []) if \'Mroonga\' in x]:\n
-    return AndQuery(SimpleQuery(**{\'content_translation.translated_text\': value, \'comparison_operator\': \'mroonga_boolean\'}),\n
-                    Query(**{\'content_translation.property_name\': \'title\'}))\n
-  else:\n
-    return AndQuery(SimpleQuery(**{\'content_translation.translated_text\': value, \'comparison_operator\': \'match_boolean\'}),\n
-                    Query(**{\'content_translation.property_name\': \'title\'}))\n
-\n
-# Otherwise it simply use title\n
-return Query(title=value)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>value</string> </value>
         </item>

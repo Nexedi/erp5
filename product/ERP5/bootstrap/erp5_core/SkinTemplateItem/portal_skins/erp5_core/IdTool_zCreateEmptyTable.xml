@@ -57,14 +57,6 @@
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string>CREATE TABLE `portal_ids` (\n
-  `id_group` VARBINARY(255),\n
-  `last_id` BIGINT UNSIGNED,\n
-  PRIMARY KEY  (`id_group`)\n
-) ENGINE=InnoDB;</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

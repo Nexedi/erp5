@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  A core method that will return default image conversion arguments as a dict.\n
-"""\n
-portal = context.getPortalObject()\n
-portal_preferences = portal.portal_preferences\n
-image_argument_dict = {\'format\': portal_preferences.getPreferredImageFormat(),\n
-                       \'quality\': portal_preferences.getPreferredImageQuality()}\n
-\n
-pre_converted_only = portal_preferences.getPreferredPreConvertedOnly()\n
-if pre_converted_only:\n
-  # only add if it\'s True as conversion machine assume that if it is missing\n
-  # then conversion should happen "on the fly"\n
-  image_argument_dict[\'pre_converted_only\'] = pre_converted_only\n
-\n
-if context.getPortalType() in (\'PDF\',):\n
-  # PDF support frames\n
-  image_argument_dict[\'frame\'] = 0\n
-return image_argument_dict\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

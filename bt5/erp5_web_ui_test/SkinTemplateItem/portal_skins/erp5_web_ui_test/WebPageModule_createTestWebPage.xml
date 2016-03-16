@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>web_page = context.newContent(portal_type=\'Web Page\', id=id, reference=reference)\n
-if publish:\n
-  web_page.publish()\n
-return "Created Successfully."\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>id=id, reference=None, publish=False</string> </value>
         </item>

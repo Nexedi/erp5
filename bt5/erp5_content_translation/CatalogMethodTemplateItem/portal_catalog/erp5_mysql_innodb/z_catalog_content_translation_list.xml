@@ -19,28 +19,6 @@
             <value> <string>z_catalog_content_translation_list</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-let content_translation_dict_list="CatalogTool_getContentTranslationDictList(Base_getContentTranslationTargetObject)">\n
-<dtml-if "content_translation_dict_list">\n
-REPLACE INTO content_translation\n
-VALUES\n
-<dtml-in "content_translation_dict_list">\n
-(<dtml-sqlvar "_[\'sequence-item\'][\'uid\']" type=int>,\n
- <dtml-sqlvar "_[\'sequence-item\'][\'property_name\']" type=string>,\n
- <dtml-sqlvar "_[\'sequence-item\'][\'content_language\']" type=string>,\n
- <dtml-sqlvar "_[\'sequence-item\'][\'translated_text\']" type=string>\n
-)\n
-<dtml-unless sequence-end>,</dtml-unless>\n
-</dtml-in>\n
-</dtml-if>\n
-</dtml-let>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

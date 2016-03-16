@@ -33,30 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<h4 i18n:translate=""\n
-    i18n:domain="ui"> The Demo Configuration is going to be installed.</h4>\n
-\n
-\n
-<p i18n:translate=""\n
-    i18n:domain="ui">\n
-   After the configuration process finish, you can login normal user:\n
-     <li> Login : demo </li>\n
-     <li> Password : demo </li>\n
-</p>\n
-\n
-\n
-<p i18n:translate=""\n
-    i18n:domain="ui">\n
-  Please proceed using Install button below. \n
-  In the next page you will receive automatically updated installation status report.\n
-</p>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

@@ -1,0 +1,135 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>testMyDocumentsGadget (expected failure)</title>
+</head>
+<body tal:define="file_name string:tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods;
+                  full_filename_location python: here.Zuite_getFilenameLocation(file_name)">
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">testMyDocumentsGadget (expected failure)</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />
+
+<tr>
+  <td>setTimeout</td>
+  <td>60000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=New Document</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_file</td>
+  <td tal:content="full_filename_location"></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>successfully</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeAttribute</td>
+  <td>//ul[@class="breadcrumb"]//li[3]/a@href</td>
+  <td>file_url</td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${file_url}?editable_mode:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Spreadsheet</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_title</td>
+  <td>TioLive Spreadsheet</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_reference</td>
+  <td>tiolive-ERP5.Freedom.TioLive.Spreadsheet</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_version</td>
+  <td>001</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_language</td>
+  <td>en</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td tal:content="file_name"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Spreadsheet</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Converted</td>
+  <td></td>
+</tr>
+<!--  add "My Documents" gadget -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_my_documents&amp;mode=web_front</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.isTextPresent("TioLive")</td>
+  <td>30000</td> 
+</tr>
+<!--  XXX: add "Profile" gadget -->
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />
+<tr>
+  <td>setTimeout</td>
+  <td>30000</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

@@ -19,19 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<div id="header-container">\n
-    <div id="header-logo"></div>\n
-    <div id="header-caption"><div><%= headerCaption %></div></div>\n
-    <div id="header-documentcaption"><%= documentCaption %></div>\n
-    <div id="header-back" style="display: <%= canBack ? \'table-cell\' : \'none\' %>;"><div><%= textBack %></div></div>\n
-</div>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

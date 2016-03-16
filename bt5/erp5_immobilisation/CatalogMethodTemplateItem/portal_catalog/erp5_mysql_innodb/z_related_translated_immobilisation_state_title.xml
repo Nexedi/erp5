@@ -51,16 +51,6 @@
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-var table_0>.original_message = catalog.immobilisation_state\n
- AND <dtml-var table_0>.message_context = "immobilisation_state_title"\n
- AND <dtml-var table_0>.language = <dtml-sqlvar "Localizer.get_selected_language()" type="string">
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

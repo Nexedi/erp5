@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Jump to a person of the current P form\n
-\n
-request=context.REQUEST\n
-s_form = context.getObject()\n
-\n
-if s_form is not None:\n
-  portal = context.getPortalObject()\n
-  rccm = s_form.getCorporateRegistrationCode()\n
-  org_result = portal.organisation_module.searchFolder(corporate_registration_code=rccm)\n
-  organisation_uid_list = [org.getObject().getUid() for org in org_result]\n
-  if len(organisation_uid_list) != 0 : \n
-    kw = {\'uid\': organisation_uid_list}\n
-    context.portal_selections.setSelectionParamsFor(\'Base_jumpToRelatedObjectList\', kw)\n
-    request.set(\'object_uid\', context.getUid())\n
-    request.set(\'uids\', organisation_uid_list)\n
-    return context.Base_jumpToRelatedObjectList(uids=organisation_uid_list, REQUEST=request)\n
-\n
-\n
-redirect_url = \'%s/view?%s\' % (context.getPath(),\n
-            \'portal_status_message=No+Organisation+Related+Current+Form\')\n
-\n
-return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

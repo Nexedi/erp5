@@ -49,40 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Raise ValidationFailed if the counter date not opened for the given date and the given site\n
-\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-\n
-if date is None:\n
-  # get current date\n
-  from DateTime import DateTime\n
-  date = DateTime()\n
-\n
-# Make sure we have a date with no hours\n
-date = date.Date()\n
-\n
-if site is None:\n
-  # get site from user assignment\n
-  site_list = context.Baobab_getUserAssignedSiteList()\n
-  if len(site_list) == 0:\n
-    context.log(\'Baobab_checkCounterDateOpen\', \'No site found for the user\')\n
-    return 0\n
-  else:\n
-    site = site_list[0]\n
-\n
-# get only the office, not need of vault\n
-#context.log(\'Baobab_checkCounterDateOpen\', \'get site for vault %s\' %(site))\n
-site = context.Baobab_getVaultSite(site)\n
-\n
-if context.portal_catalog.countResults(portal_type=\'Counter Date\', start_date=date, site_id=site.getId(), simulation_state="open")[0][0] == 0:\n
-  msg = Message(domain = "ui", message="Transaction not in the good counter date")\n
-  raise ValidationFailed, (msg,)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>site=None, date=None</string> </value>
         </item>

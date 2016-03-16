@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-dialog = getattr(context, dialog_id)\n
-if dialog.has_field(\'your_item_extra_property_list\') and editor and len(request.get("field_listbox_reference_%s" % request.cell.uid))<=6:\n
-  reference = "%s%s" % (request.get("field_your_prefix_reference"), request.get(\'field_listbox_reference_%s\' % request.cell.uid).zfill(6))  \n
-  test_result = request.cell.Base_validateEan13Code(reference,request)\n
-\n
-  if test_result ==True:\n
-    request.form["field_listbox_reference_%s" % request.cell.uid] = reference\n
-    request.set("field_listbox_reference_%s" % request.cell.uid,reference)\n
-    result = [x.getObject() for x in context.portal_catalog(portal_type = request.get("field_your_type"),\n
-              reference= reference)]\n
-    if (result !=[] or test_result ==False ):\n
-      return False\n
-  elif test_result == False:\n
-    return False \n
-return True\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>editor, request,dialog_id=\'DeliveryLine_viewItemCreationDialog\'</string> </value>
         </item>

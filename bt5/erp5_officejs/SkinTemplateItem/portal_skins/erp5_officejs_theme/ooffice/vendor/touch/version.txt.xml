@@ -19,10 +19,6 @@
             <value> <string>text/plain</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>2.1.0</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

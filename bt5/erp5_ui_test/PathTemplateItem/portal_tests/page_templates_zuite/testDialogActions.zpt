@@ -1,0 +1,90 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Dialog Buttons</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test dialog button for actions and update redirect to the good action</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_types/Foo/PortalType_addAction?id=test_action&amp;name=Dummy Exchange&amp;category=object_exchange&amp;action=string:${object_url}/Foo_viewDummyDialog</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/1/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title="Import / Export"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@name='update_method']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@name='dialog_method']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_string_field</td>
+  <td>A value from the user</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_update_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>"Update" action is done with "A value from the user".</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>"Nothing" action is done.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+   <td>//button[@title="Import / Export"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_cancel_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td tal:content="string:glob:${here/portal_url}/foo_module/1/Foo_view" />
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_types/Foo/PortalType_deleteAction?id=test_action</td>
+  <td></td>
+</tr>
+</body>
+</html>

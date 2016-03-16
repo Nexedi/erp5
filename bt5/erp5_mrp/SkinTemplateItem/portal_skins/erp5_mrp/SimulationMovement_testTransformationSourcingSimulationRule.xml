@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>rule = context.getParentValue().getSpecialiseValue()\n
-return rule.getPortalType() == "Transformation Simulation Rule" \\\n
-   and rule.testTransformationSourcing(context)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>rule</string> </value>
         </item>

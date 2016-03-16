@@ -23,14 +23,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
-bWFnZVJlYWR5ccllPAAAAJlJREFUeNqc000KgCAQBtBh6AAdpSO1q07VJSSkTWBboy7iBVylUSHm
-mCqIP/A9FEfoh243vYaCtkk5ohkb05dcxIbN0OK9zkKesJ2js5+EuGEf+EX8cAggkVCYAj4IFbat
-ilz3QlYhDiocO8GL8Jm3WmsoBUApBWxiQCGY8u4xBFMrj0Iwp3xDCOZ+IB/Bkl/oIkWAi5wCDAAq
-JWX7c/V5eAAAAABJRU5ErkJggg==</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

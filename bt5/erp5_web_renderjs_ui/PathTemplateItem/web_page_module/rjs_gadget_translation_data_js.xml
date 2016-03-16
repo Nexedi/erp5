@@ -100,20 +100,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>/*globals window*/\n
-/*jslint indent: 2, nomen: true, maxlen: 80*/\n
-(function (window) {\n
-  "use strict";\n
-\n
-  window.translation_data = {\n
-    en: {\n
-    }\n
-  };\n
-\n
-}(window));</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Gadget Translation Data JS</string> </value>
         </item>

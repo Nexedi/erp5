@@ -23,18 +23,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABkAAAAPCAYAAAARZmTlAAAABGdBTUEAAK/INwWK6QAAABl0RVh0
-U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAGQSURBVHjaYlx0d9FDBgYG/i+/vzD8B0IY
-+P8fyGZkYPCV8WWQ45ZjwAX+vn3E8OPCZiiPEUX/3/dPGH5c3PYRIIBYrn64Kvzv/z/uVz9eoVgC
-FGNgZGRksBOzY2DgxmkHw7/vHxl+3T0JMhaImZAs+cvw5+k1hi2XX7AABBDLgy8P/rz9+Zbh0ddH
-YIPRffJB5QMDPvDv2weGn7ePQT2C8AkD0Kyrr34yXHr56w9AALGADP4LtBWEkS0B+wQIkX2HFYAc
-8+8vxCeMTEj6gUEJJP4B5QECiIkR2XYaAYAAYmKgAwAIILpYAhBAdLEEIIDoYglAANHFEoAAoosl
-AAFEU0sYocUMQACxwDLhv3//gJkUKeMBmf8ZgeXPH2Dx8OcPToP+/AXKw/Qx/kfJo3+BBIgGCCCW
-mx9vsnx4+IHh95PfkKIEqVgBZdQjn44wvBN4h9OS38+uMXy9+x2a4xlRcvzjj38Ynnz6wwIQQIxi
-pWIPvx79yv/301+shmjyazIIsAngLbv+PLuOL9Q+AgQYANPsxhT+pebeAAAAAElFTkSuQmCC</string> </value>
-        </item>
-        <item>
             <key> <string>height</string> </key>
             <value> <int>15</int> </value>
         </item>

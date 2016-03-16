@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Return the default publication section relative url to be added in the \n
-  document uploaded when attaching document using Base_viewNewFileDialog\n
-"""\n
-return \'\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

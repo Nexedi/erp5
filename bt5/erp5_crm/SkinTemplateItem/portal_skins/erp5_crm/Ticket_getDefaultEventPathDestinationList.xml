@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-domain = context.getDefaultEventPathDestinationValue()\n
-if domain is None:\n
-  return []\n
-\n
-return portal.portal_catalog(selection_domain={domain.getParentId(): (\'portal_domains\', domain.getRelativeUrl())})\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

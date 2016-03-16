@@ -19,16 +19,6 @@
             <value> <string>SimulationTool_zCreateInventoryCache</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string>Create table `inventory_cache` (\n
-      `query` BINARY(16) NOT NULL,\n
-      `date` datetime NOT NULL,\n
-      `result` LONGBLOB NOT NULL,\n
-   PRIMARY KEY (`query`, `date`),\n
-   KEY (`date`)\n
-) Engine=InnoDB</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

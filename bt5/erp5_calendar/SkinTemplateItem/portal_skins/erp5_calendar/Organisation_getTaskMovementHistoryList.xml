@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>movement_list = []\n
-organisation = context\n
-\n
-for person in organisation.getSubordinationRelatedValueList(portal_type=\'Person\',\n
-                                                            checked_permission="View"):\n
-  movement_list.extend(person.Person_getTaskMovementHistoryList(**kw))\n
-\n
-return movement_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

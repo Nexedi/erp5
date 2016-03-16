@@ -33,23 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<h3 i18n:translate=""\n
-      i18n:domain="ui"> \n
-    ERP5 configuration process is running.</h3>\n
-  \n
-<p i18n:translate=""\n
-      i18n:domain="ui"> \n
-  Please be patient and do not move from current page until you get \n
-  confirmation that the installation is over. \n
-  It will last approximately 5 to 10 minutes.\n
-</p>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

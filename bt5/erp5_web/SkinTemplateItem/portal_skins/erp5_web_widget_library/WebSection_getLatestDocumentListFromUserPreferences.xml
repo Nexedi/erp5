@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>web_section = None\n
-box_relative_url = context.REQUEST.get(\'box_relative_url\', None)\n
-if box_relative_url is not None:\n
-  box = context.restrictedTraverse(box_relative_url)\n
-  preferences = box.KnowledgeBox_getDefaultPreferencesDict()\n
-  # check if in preferences we explicitly define the section we want \n
-  if preferences.get(\'preferred_section_relative_url\', None) is not None:\n
-    web_section_relative_url = preferences[\'preferred_section_relative_url\']\n
-    web_section = context.restrictedTraverse(web_section_relative_url, None)\n
-  elif context.REQUEST.get(\'current_web_section\', None) is not None:\n
-    web_section =  context.REQUEST[\'current_web_section\']\n
-  # if current context is a Web Section or Web Site ..\n
-  if web_section is None and not getattr(context, \'isDocument\', 1):\n
-    web_section = context\n
-\n
-# fall back to site\n
-if web_section is None:\n
-  web_section = context.getWebSiteValue()\n
-return web_section.getDocumentValueList(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

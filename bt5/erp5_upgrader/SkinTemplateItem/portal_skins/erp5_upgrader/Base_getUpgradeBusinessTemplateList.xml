@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script should returns always two list of Business Template.\n
-   - The first list is to resolve dependencies and upgrade.\n
-   - The second list is what you want to keep. This is useful if we want to keep \n
-   a old business template without updating it and without removing it\n
-"""\n
-\n
-return (\'erp5_base\',), ["erp5_upgrader"]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>fixit=False</string> </value>
         </item>

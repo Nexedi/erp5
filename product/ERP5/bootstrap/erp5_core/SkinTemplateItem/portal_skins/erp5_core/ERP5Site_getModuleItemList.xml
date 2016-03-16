@@ -49,33 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-\n
-portal = context.getPortalObject()\n
-user = portal.portal_membership.getAuthenticatedMember().getUserName()\n
-\n
-def getModuleItemList(user=None):\n
-  gettext = portal.Localizer.erp5_ui.gettext\n
-\n
-  item_list = []\n
-  for module_id in portal.objectIds(spec=(\'ERP5 Folder\',)):\n
-    module = portal.restrictedTraverse(module_id, None)\n
-    if module is not None:\n
-      if portal.portal_membership.checkPermission(\'View\', module):\n
-        item_list.append((gettext(module.getTitleOrId()), module.absolute_url_path()))\n
-\n
-  item_list.sort(key=lambda x: x[0])\n
-  return item_list\n
-\n
-getModuleItemList = CachingMethod(getModuleItemList,  \n
-  id=(\'ERP5Site_getModuleItemList\', portal.Localizer.get_selected_language(), portal.portal_url()),\n
-      cache_factory=\'erp5_ui_short\')\n
-\n
-return getModuleItemList(user=user)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -1,0 +1,301 @@
+<tal:block metal:define-macro="main"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+
+  <!-- ListBox (table mode) starts here -->
+
+  <input tal:replace="nothing" type="hidden" name="form_id" tal:attributes="value form_id" tal:condition="form_id"/>
+
+  <!--<input type="hidden" name="selection_name" tal:attributes="value selection_name" tal:condition="selection_name"/>
+  <input type="hidden" name="selection_index" tal:attributes="value selection_index" tal:condition="selection_index"/>-->
+  
+  <!--<input type="hidden" name="listbox_uid:list" value="" tal:attributes="name string:${field_id}_uid:list"/>
+  <input type="hidden" name="total_size" value="" tal:attributes="value here/total_size"/> -->
+  <input id="listbox_select" tal:attributes="id string:${field_id}_select"
+         title="Filter" alt="Filter" name="Base_doSelect:method"
+         type="submit" style="display: none"/>
+
+  <tal:block tal:define="expand python: 1;
+             table_form_id request/current_form_id | form_id;
+             your_search_text python:here.getParamDict().get('your_search_text', None)">
+    <tal:block metal:use-macro="template/macros/ListBoxContainer">
+      <tal:block metal:fill-slot="ListBoxBody">
+
+          <input tal:condition="python:is_gadget_mode" type="hidden" name="dom_id" tal:attributes="value dom_id" />
+
+          <table class="listbox table">
+          
+            <caption>
+                <span class="left">
+
+                 <a tal:condition="not:is_gadget_mode" tal:attributes="href string:${context_url}/${table_form_id}?list_style=search">
+                     <img id="style_toggle_icon"
+                          tal:attributes="src string:${context_url}/images/table_style_icon.png"
+                          height="16"
+                          title="Search mode"
+                          alt="Search mode"
+                          i18n:domain="ui" i18n:attributes="title"/>
+                  </a>
+
+                  <input tal:condition="python:not is_gadget_mode and (is_domain_tree_supported or is_report_tree_supported)"
+                         type="image" src="text_block.png" id="listbox_flat_list_mode"
+                         title="Flat List" name="setFlatListMode:method"
+                         value="1" alt="Flat List"
+                         tal:attributes="src string:${portal_url_string}/images/text_block.png;
+                                         id string:${field_id}_flat_list_mode"
+                         i18n:domain="ui" i18n:attributes="title" />
+                  <input tal:condition="python: not is_gadget_mode and is_report_tree_supported"
+                         type="image" src="view_tree.png" id="listbox_report_tree_mode"
+                         title="Report Tree" name="setReportTreeMode:method"
+                         value="1" alt="Report Tree"
+                         tal:attributes="src string:${portal_url_string}/images/view_tree.png;
+                                         id string:${field_id}_report_tree_mode"
+                         i18n:domain="ui" i18n:attributes="title" />
+                  <input tal:condition="python: not is_gadget_mode and is_domain_tree_supported"
+                         type="image" src="view_choose.png" id="listbox_domain_tree_mode"
+                         title="Domain Tree" name="setDomainTreeMode:method"
+                         value="1" alt="Domain Tree"
+                         tal:attributes="src string:${portal_url_string}/images/view_choose.png;
+                                         id string:${field_id}_domain_tree_mode"
+                         i18n:domain="ui" i18n:attributes="title" />
+                  
+                  <input  tal:condition="python:not is_gadget_mode and (is_domain_tree_supported or is_report_tree_supported)"
+                         type="image" id="listbox_reset_selection"
+                         title="Show All" name="Folder_show:method"
+                         id="listbox_reset_selection"
+                         value="1" alt="Flat List"
+                         tal:attributes="src string:${portal_url_string}/images/showall.png;"
+                         i18n:domain="ui" i18n:attributes="title" />
+
+                  <!-- supporting search mode for gadget mode -->
+
+                  <button tal:condition="is_gadget_mode"
+                          tal:define = "params python: {'list_style':'search'}"
+                          type="button"
+                          title="Search mode"
+                          tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+'/'+form_id,box,dom_id,params);"
+                          i18n:domain="ui" i18n:attributes="title">
+                    <img id="style_toggle_icon"
+                         alt="Search mode"
+                         tal:attributes="src string:${context_url}/images/table_style_icon.png"
+                         height="16"/></button>
+                  <a tal:attributes="id string:${field_id}_title; href here/getListActionUrl"
+                     tal:condition="python: here.field.get_value('list_action')">
+                    <em i18n:translate="" 
+                        i18n:domain="ui" tal:content="here/getTitle" />
+                  </a>
+                  <tal:block tal:condition="python: not here.field.get_value('list_action')">
+                    <em i18n:translate="" 
+                        i18n:domain="ui" tal:content="here/getTitle" />
+                  </tal:block>
+                  <!-- supporting domain tree mode for gadget mode (disabled)-->
+                  <!--
+                  <br tal:condition="is_gadget_mode"/>
+                  <button tal:condition="python: is_gadget_mode and (is_domain_tree_supported or is_report_tree_supported)"
+                          tal:define = "params python: {'setFlatListMode:method':1}"
+                          id="listbox_flat_list_mode"
+                          type="button"
+                          title="Flat List"
+                          alt="Flat List"
+                          tal:attributes="id string:${field_id}_flat_list_mode;
+                                          onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+'/'+form_id,box,dom_id,params);"
+                          i18n:domain="ui" i18n:attributes="title">
+                    <img tal:attributes="src string:${portal_url_string}/images/text_block.png;"/></button>
+
+                  <button tal:condition="python: is_gadget_mode and is_report_tree_supported"
+                          tal:define = "params python: {'setReportTreeMode:method':1}"
+                          style="cursor:pointer;" id="listbox_report_tree_mode"
+                          type="button"
+                          title="Report Tree"
+                          alt="Report Tree"
+                          tal:attributes="id string:${field_id}_report_tree_mode;
+                                          onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+'/'+form_id,box,dom_id,params);"
+                          i18n:domain="ui" i18n:attributes="title">
+                    <img src="view_tree.png"
+                         tal:attributes="src string:${portal_url_string}/images/view_tree.png;"/></button>
+
+                  <button tal:condition="python: is_gadget_mode and is_domain_tree_supported"
+                          tal:define = "params python: {'setDomainTreeMode:method':'1'}"
+                          style="cursor:pointer;" id="listbox_domain_tree_mode"
+                          type="button"
+                          title="Domain Tree"
+                          alt="Domain Tree"
+                          tal:attributes="id string:${field_id}_domain_tree_mode;
+                                          onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+'/'+form_id,box,dom_id,params);"
+                          i18n:domain="ui" i18n:attributes="title">
+                    <img tal:attributes="src string:${portal_url_string}/images/view_choose.png;"/></button>
+                  -->
+                </span>
+
+                <span class="right"
+                  tal:define="listbox_max_lines  python: int(here.getMaxLineNumber());
+                              total_line         python: int(here.total_size);
+                              current_page       python: int(here.current_page) + 1;
+                              current_page_max   python: listbox_max_lines * current_page;
+                              current_page_start python: (listbox_max_lines * (current_page - 1)) + 1;
+                              current_page_stop  python: (total_line < current_page_max) and total_line or current_page_max;">
+                                <tal:block condition="python: total_line > 0"
+                                  tal:replace="structure python: real_context.Base_translateString('Results <em>${start} - ${stop}</em> of <em>${total}</em>.', mapping=dict(start=current_page_start, stop=current_page_stop, total=total_line))"/>
+              <span tal:condition="python: total_line == 0" class="warning" i18n:translate="" i18n:domain="ui">No result !</span>
+                </span>
+            </caption>
+
+              <tr class ="thead listbox_search_line">
+                <td tal:condition="python:not is_gadget_mode and show_select_column"
+                    class="Data" style="width: 50px; text-align: center; vertical-align: middle; white-space: nowrap;">
+                  <input id="listbox_check_all" type="image"
+                         name="checkAll:method" value="1"
+                         alt="Check All" title="Check All"
+                         tal:attributes="id string:${field_id}_check_all;
+                                         name string:${field_id}_checkAll:method;
+                                         src string:${portal_url_string}/images/checkall.png"
+                         i18n:domain="ui" i18n:attributes="title" />&nbsp;<input id="listbox_uncheck_all"
+                                    type="image" name="uncheckAll:method" value="1"
+                                    style="border: 0" alt="Uncheck All" title="Uncheck All"
+                                    tal:attributes="id string:${field_id}_uncheck_all;
+                                                    src string:${portal_url_string}/images/decheckall.png;
+                                                    name string:${field_id}_uncheckAll:method;"
+                                    i18n:domain="ui" i18n:attributes="title" />
+              </td>
+
+                <tal:block tal:repeat="value here/getLabelValueList">
+                  <tal:block tal:define="sql        python: value[0];
+                                         title      python: value[1];
+                                         sort_order python: value[2]">
+                    <th tal:condition="sql">
+
+                      <button tal:condition="not:is_gadget_mode" type="submit"  class="sort_button"
+                        name="setSelectionQuickSortOrder:method"
+                        tal:attributes="title string:${title}; 
+                                        value string:${field_id}.${sql}"
+                        i18n:domain="ui" i18n:attributes="title">
+                          <span tal:content="title" i18n:domain="ui" i18n:translate="">ID</span>
+                      </button>
+                      
+                      <!-- Sort for gadget mode -->
+                      <button tal:condition="is_gadget_mode" 
+                             tal:define ="params python: {'setSelectionQuickSortOrder:method':field_id+'.'+sql};"
+                             type="button"  
+                             class="sort_button"
+                             tal:attributes="title string:${title}; 
+                                             onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+'/'+form_id,box,dom_id,params);"
+                                             i18n:domain="ui" i18n:attributes="title">
+                        <span tal:content="title" i18n:domain="ui" i18n:translate="">ID</span>
+                      </button>
+
+                      <img tal:condition="python: sort_order == 'ascending'"
+                        alt="Ascending Display" title="Ascending Display"
+                        tal:attributes="src string:${portal_url_string}/images/1bottomarrow.png"
+                        style="float:left"
+                        i18n:domain="ui" i18n:attributes="title"/>
+                      <img tal:condition="python: sort_order == 'descending'"
+                        alt="Descending Display" title="Descending Display"
+                        tal:attributes="src string:${portal_url_string}/images/1toparrow.png"
+                        style="float:left"
+                        i18n:domain="ui" i18n:attributes="title"/>
+                    </th>
+                    <th tal:condition="not: sql" tal:content="title" i18n:domain="ui" i18n:translate=""/>
+                  </tal:block>
+                </tal:block>
+              </tr>
+              <tr class="thead listbox_search_line" tal:condition="show_search_line">
+                <td tal:condition="python: show_select_column and show_search_line and not is_gadget_mode"
+                    class="Data" style="width: 50px; text-align: center; vertical-align: middle">
+                  <input id="listbox_select" type="image"
+                         title="Action" alt="Action" name="Base_doSelect:method"
+                         tal:attributes="id string:${field_id}_select;
+                         src string:${portal_url_string}/images/exec16.png"
+                         i18n:domain="ui" i18n:attributes="title" />
+
+              </td>
+                <td tal:repeat="value here/getSearchValueList">
+                  <tal:block tal:define="alias        python: value[0];
+                                         param        python: value[1];
+                                         search_field python: value[2]"
+                             tal:condition="alias">
+                    <tal:block
+                      tal:condition="python: search_field is not None"
+                      tal:replace="structure python: search_field.render(value=param, key=alias)"/>
+                    
+                    <input tal:condition="python: not is_gadget_mode and search_field is None" 
+                           name="id" size="5" value=""
+                           type="text" tal:attributes="name alias; value param"/>
+
+                    <!-- Search for gadget mode -->
+                    <input tal:condition="python: is_gadget_mode and search_field is None" 
+                           tal:define ="params python: {alias:'this.value'};"
+                           size="8"
+                           type="textarea" 
+                           tal:attributes='value python: selection.getParams().get(alias,"");
+                           onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,dom_id,params).replace("\"this.value\"","this.value")+ "return false;;}"'/>
+
+                  </tal:block>
+                </td>
+              </tr>
+
+            <tal:replace tal:content="nothing">
+              TODO: Move pagination pre-calcultion higher in that code.
+            </tal:replace>
+              <tr class="tbody" tal:condition="line_list"
+                tal:repeat="line line_list" tal:define="checked_uid_set here/getCheckedUidSet">
+                <td tal:condition="python: show_select_column and not is_gadget_mode"
+                    class="DataA" style="width: 50px; text-align: center; vertical-align: middle"
+                    >
+                  <input tal:condition="python: not line.isSummary() and line.getObject() is not None"
+                         type="checkbox" value="checked" id="listbox_cb_1" name="uids:list"
+                         tal:attributes="checked python: line.getUid() in checked_uid_set;
+                         value line/getUid;
+                         id string:${field_id}_cb_${line/getUid}" />
+                  <tal:block tal:condition="python: line.isSummary() or line.getObject() is None"></tal:block>
+                </td>
+                
+                <tal:block tal:repeat="value line/render">
+                  <td tal:define="html               python: value[0];
+                                  original_value     python: value[1];
+                                  error              python: value[2];
+                                  editable_field     python: value[3];
+                                  editable_field_css python: editable_field != None and editable_field.get_value('css_class')">
+                    <input tal:condition="not: repeat/value/index"
+                           type="hidden" value="1" name="listbox_uid:list"
+                           tal:attributes="value python: line.getUid() or '';
+                                      name string:${field_id}_uid:list" />
+                    <tal:block tal:replace="structure html">value</tal:block>
+                  </td>
+                </tal:block>
+              </tr>
+              <tr tal:condition="python: int(here.total_size) > int(here.getMaxLineNumber())"
+                class="tfoot">
+                <td class="pageNavigation" style="white-space: nowrap; vertical-align: middle; text-align: right;"
+                    tal:attributes="colspan python: len(here.getSelectedColumnList()) + bool(show_select_column)">
+                  <tal:block metal:use-macro="real_context/page_navigation_render/macros/page_navigation" />
+                </td>
+              </tr>
+
+              <tr tal:condition="hide_rows_on_no_search_criterion"
+                  class="listbox_missing_search_criterion">
+                <td tal:attributes="colspan python: len(here.getSearchValueList()) + 1">
+                  <span i18n:translate="" 
+                        i18n:domain="ui">
+                    To display actual content, please fill in one or more search criterion.
+                  </span>
+                </td>
+              </tr>
+
+          </table>
+
+          <!-- Advanced Search footer -->
+          <div class="centeredInner extendedSearchBar"
+               tal:condition="python:not is_gadget_mode and show_search_line and your_search_text is not None">
+            <input name="bottom_your_search_text" size="40" value=""
+                   type="text" tal:attributes="value your_search_text"
+                   onkeypress="submitFormOnEnter(event, this.form, 'ERP5Site_processAdvancedSearchBottom');"/>
+            <input class="button" value="Search" name="ERP5Site_processAdvancedSearchBottom:method" type="submit" />
+          </div>
+        
+      </tal:block>
+    </tal:block>
+  </tal:block>
+  <!-- ListBox ends here -->
+
+</tal:block>

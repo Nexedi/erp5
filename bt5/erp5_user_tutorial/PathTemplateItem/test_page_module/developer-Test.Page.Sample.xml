@@ -115,41 +115,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<section class="master"> \n
-    <h1>My first tutorial</h1> <details open="true" /> <test> \n
-      <table class="test" style="display: none;"> \n
-        <tbody /> \n
-      </table> </test> </section>\n
-    <section class="illustration"> \n
-    <h1>Here is the name of your slide</h1> \n
-   <img type="image/svg+xml" title="Here is the name of your slide" alt="Here is the name of your slide" src="user-Howto.Add.Organisations.Check.Creation.2.Organisations.Screenshot?format=" /> \n
-    <p>Here is the content of your slide.</p><details open="true"> \n
-      <p>Your text should look like this. This corresponds to notes in a Libre Office presentation.</p> </details> <test> \n
-      <table cellspacing="1" cellpadding="1" border="1" class="test" style="display: none;"> \n
-        <tbody> \n
-          <tr style="opacity: 1; z-index: 0;"> \n
-            <td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_CommonTemplate/macros/init&quot; style=&quot;display:none;&quot;&gt;init&lt;/span&gt;</td> \n
-          </tr> \n
-          <tr> \n
-            <td>open</td> \n
-            <td>${base_url}/view</td> \n
-            <td> <br /> </td> \n
-          </tr> \n
-          <tr> \n
-            <td>open</td> \n
-            <td>${base_url}/person_module</td> \n
-            <td> <br /> </td> \n
-          </tr> \n
-        </tbody> \n
-      </table> </test>\n
-</section>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Test Page Sample Document</string> </value>
         </item>

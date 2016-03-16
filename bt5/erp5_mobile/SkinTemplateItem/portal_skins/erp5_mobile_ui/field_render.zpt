@@ -1,0 +1,51 @@
+<tal:block tal:replace="nothing"
+           xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+<!--
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+                   Vincent Pelletier <vincent@nexedi.com>
+                   Christophe Dumez <christophe@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+--></tal:block>
+
+<tal:block metal:define-macro="field_render">
+  <tal:block tal:condition="python: field.meta_type != 'HiddenStringField'"
+             tal:define="field_id     field/id;
+                         value        python: request.get(field_id, None);
+                         render_prefix render_prefix | nothing;
+                         field_errors python: request.get('field_errors', {});
+                         field_has_error  python: field_errors.has_key(field_id);
+                         global form_id form_id | python: form.id;
+                         field_description field/Field_getDescription;">
+    <div tal:define="html_render  python: field.render_htmlgrid(value, request, render_prefix=render_prefix)"
+         tal:attributes="title field_description;
+                         class python: ' '.join([x for x in ['field', field.is_required() and 'required' or None, field_has_error and 'error' or None, field.get_value('css_class') or None] if x is not None])"
+         i18n:attributes="title" i18n:domain="ui">
+      <tal:block tal:repeat="html_tuple html_render">
+        <label>
+          <tal:block tal:content="structure python: html_tuple[0]"
+                    i18n:translate="" i18n:domain="ui"/>
+        </label>
+        <div class="input" tal:content="structure python: html_tuple[1]"/>
+        <span tal:condition="python: field_has_error"
+              class="error"
+              tal:content="python: field_errors[field_id].error_text"
+              i18n:translate="" i18n:domain="ui"/>
+      </tal:block>
+    </div>
+  </tal:block>
+</tal:block>

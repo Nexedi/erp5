@@ -51,19 +51,6 @@
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<dtml-let portal="getPortalObject()">\n
-<dtml-let catalog="portal.portal_catalog.getSQLCatalog(getId())">\n
-DELETE FROM <dtml-var expr="getattr(catalog, \'sphinx_index\', getattr(portal, \'sphinx_index\', \'erp5\'))"> WHERE id=<dtml-sqlvar expr="uid" type=int>\n
-</dtml-let>\n
-</dtml-let>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

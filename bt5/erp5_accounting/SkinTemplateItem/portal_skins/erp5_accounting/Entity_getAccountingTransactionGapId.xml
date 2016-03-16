@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if None not in (brain, selection):\n
-  try:\n
-    account_uid = brain.account_uid\n
-  except AttributeError:\n
-    account_uid = None\n
-  if account_uid != None:\n
-    account = context.portal_catalog.getObject(account_uid)\n
-    if account != None:\n
-      return account.Account_getGapId()\n
-return None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain=None, selection=None</string> </value>
         </item>

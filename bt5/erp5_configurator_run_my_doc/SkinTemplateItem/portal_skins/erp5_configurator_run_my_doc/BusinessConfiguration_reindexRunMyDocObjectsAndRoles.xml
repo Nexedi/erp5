@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>""" This script reindex all the objects created before updating local roles """\n
-module_list = [\'document_module\',\n
-               \'image_module\',\n
-               \'knowledge_pad_module\',\n
-               \'organisation_module\',\n
-               \'person_module\',\n
-               \'review_module\',\n
-               \'test_page_module\',\n
-               \'web_page_module\',\n
-               \'web_site_module\']\n
-\n
-context.portal_types.recursiveImmediateReindexObject()\n
-portal = context.getPortalObject()\n
-for module_id in module_list:\n
-  module = getattr(portal, module_id)\n
-  module.recursiveImmediateReindexObject()\n
-  stack = [module]\n
-  for obj in stack:\n
-    for child in obj.objectValues():\n
-      stack.append(child)\n
-    obj.updateLocalRolesOnSecurityGroups()\n
-    obj.reindexObjectSecurity()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

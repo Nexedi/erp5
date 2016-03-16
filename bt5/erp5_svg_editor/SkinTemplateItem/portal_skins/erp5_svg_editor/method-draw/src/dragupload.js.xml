@@ -23,20 +23,6 @@
             <value> <string>application/javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>window.onload = function () {\n
-  document.querySelector(\'body\').addEventListener(\'drop\', function(e) {\n
-    e.preventDefault();\n
-    var reader = new FileReader();\n
-    reader.onload = function(evt) {\n
-      //document.querySelector(\'img\').src = evt.target.result;\n
-    };\n
-\n
-    reader.readAsDataURL(e.dataTransfer.files[0]);\n
-  }, false);\n
-}</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

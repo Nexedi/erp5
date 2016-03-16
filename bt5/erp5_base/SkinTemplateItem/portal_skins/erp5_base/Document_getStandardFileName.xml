@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Just an alias for real script\n
-"""\n
-from Products.ERP5Type.Log import log\n
-log(\'DeprecationWarning: Please use Document_getStandardFilename\')\n
-return context.Document_getStandardFilename(format=format)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>format=None</string> </value>
         </item>

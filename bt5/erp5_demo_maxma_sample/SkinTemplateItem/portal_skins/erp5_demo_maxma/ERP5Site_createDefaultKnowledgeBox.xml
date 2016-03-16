@@ -49,41 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>knowledge_pad.setTitle("Home")\n
-knowledge_box = knowledge_pad.newContent(\n
-  portal_type=\'Knowledge Box\',\n
-  specialise=\'specialise/portal_gadgets/erp5_gadget_best_seller_products\',\n
-  mode=\'total_price\',\n
-  section_category=\'group/my_group\',\n
-  activate_kw = activate_kw)\n
-knowledge_box.visible()\n
-knowledge_box.setProperty(\'method\',\'getCurrentInventoryList\')\n
-\n
-knowledge_box = knowledge_pad.newContent(\n
-  portal_type=\'Knowledge Box\',\n
-  specialise=\'specialise/portal_gadgets/erp5_gadget_contact_person\',\n
-  activate_kw = activate_kw)\n
-knowledge_box.visible()\n
-\n
-# Documentation Gadget\n
-knowledge_box = knowledge_pad.newContent(\n
-  portal_type=\'Knowledge Box\',\n
-  specialise=\'specialise/portal_gadgets/erp5_gadget_events\',\n
-  activate_kw=activate_kw)\n
-knowledge_box.visible()\n
-\n
-# Documentation Gadget\n
-knowledge_box = knowledge_pad.newContent(\n
-  portal_type=\'Knowledge Box\',\n
-  specialise=\'specialise/portal_gadgets/erp5_gadget_new_sale_opportunity\',\n
-  activate_kw=activate_kw)\n
-knowledge_box.visible()\n
-\n
-knowledge_pad.edit(user_layout="1##3|2##4")\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>knowledge_pad, **activate_kw</string> </value>
         </item>

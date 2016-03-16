@@ -22,18 +22,6 @@
               <dictionary/>
             </value>
         </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string>*.txt   text\n
-*.js    text\n
-*.html  text\n
-*.md    text\n
-*.json  text\n
-*.yml   text\n
-*.css   text\n
-*.svg   text\n
-</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

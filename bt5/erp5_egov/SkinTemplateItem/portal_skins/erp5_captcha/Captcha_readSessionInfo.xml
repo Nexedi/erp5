@@ -193,28 +193,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-session_id = request.get(\'erp5_captcha_session_id\', None)\n
-if session_id is None:\n
-  return \'no session\'\n
-print session_id\n
-# get session\n
-session = context.portal_sessions[session_id]\n
-\n
-if session.has_key(\'captcha_text\') and  session.has_key(\'captcha_image_path\'):\n
-  captcha_text = session[\'captcha_text\']\n
-  captcha_file_path = session[\'captcha_image_path\']\n
-  print captcha_text\n
-  print captcha_file_path\n
-\n
-print session\n
-\n
-print \'OK\'\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

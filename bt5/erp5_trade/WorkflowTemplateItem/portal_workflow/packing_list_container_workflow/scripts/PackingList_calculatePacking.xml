@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>packing_list = state_change[\'object\']\n
-isTransitionPossible = packing_list.getPortalObject().portal_workflow.isTransitionPossible\n
-if packing_list.isPacked():\n
-  if isTransitionPossible(packing_list, \'pack\'):\n
-    packing_list.pack()\n
-else:\n
-  if isTransitionPossible(packing_list, \'miss\'):\n
-    packing_list.miss()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

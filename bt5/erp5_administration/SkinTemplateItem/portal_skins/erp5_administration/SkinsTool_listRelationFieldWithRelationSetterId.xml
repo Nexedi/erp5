@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Utility script listing all relation fields that are using relation_setter_id feature.\n
-This helps migrating them after r33837\n
-"""\n
-multi_relation_field_meta_type_list = [\'RelationStringField\',\n
-                                       \'MultiRelationStringField\']\n
-for field_path, field in context.ZopeFind(\n
-            context.portal_skins, obj_metatypes=multi_relation_field_meta_type_list +\n
-                                                [\'ProxyField\'], search_sub=1):\n
-  if field.meta_type == \'ProxyField\':\n
-    template_field = field.getRecursiveTemplateField()\n
-    if template_field is None or template_field.meta_type not in multi_relation_field_meta_type_list:\n
-      continue\n
-\n
-  relation_setter_id = field.get_value(\'relation_setter_id\')\n
-  if relation_setter_id:\n
-    print field_path, relation_setter_id\n
-\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

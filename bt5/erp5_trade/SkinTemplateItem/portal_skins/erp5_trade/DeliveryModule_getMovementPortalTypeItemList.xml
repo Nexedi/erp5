@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import translateString\n
-types_tool = context.getPortalObject().portal_types\n
-movement_type_list = context.getPortalMovementTypeList()\n
-type_set = {}\n
-\n
-for type_name in types_tool.getTypeInfo(context).getTypeAllowedContentTypeList():\n
-  for line_type_name in types_tool.getTypeInfo(type_name).getTypeAllowedContentTypeList():\n
-    if line_type_name in movement_type_list:\n
-      type_set[line_type_name] = 1\n
-    for cell_type_name in types_tool.getTypeInfo(line_type_name).getTypeAllowedContentTypeList():\n
-      if cell_type_name in movement_type_list:\n
-        type_set[cell_type_name] = 1\n
-\n
-return [(translateString(t), t) for t in type_set.keys()]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

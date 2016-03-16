@@ -1,0 +1,1 @@
+DELETE FROM movement WHERE <dtml-sqltest uid op=eq type=int>

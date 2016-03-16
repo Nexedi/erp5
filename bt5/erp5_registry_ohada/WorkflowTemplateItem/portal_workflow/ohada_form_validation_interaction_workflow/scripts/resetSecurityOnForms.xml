@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script resets security on all forms after validation by registry officer\n
-"""\n
-\n
-portal = context.getPortalObject()\n
-request_eform = state_change[\'object\']\n
-N_ = portal.Base_translateString\n
-\n
-new_reference = request_eform.getRegistrationNumber()\n
-\n
-sql_kw = {}\n
-sql_kw[\'portal_type\'] = \'Assignment\'\n
-sql_kw[\'validation_state\'] = \'open\'\n
-sql_kw[\'default_destination_uid\'] = request_eform.getUid()\n
-sql_kw[\'default_function_uid\'] = request_eform.portal_categories.function.entreprise.getUid()\n
-for assignment in request_eform.portal_catalog(**sql_kw):\n
-  assignment.setCorporateRegistrationCode(new_reference)\n
-\n
-# We need to update security now\n
-request_eform.updateLocalRolesOnSecurityGroups()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

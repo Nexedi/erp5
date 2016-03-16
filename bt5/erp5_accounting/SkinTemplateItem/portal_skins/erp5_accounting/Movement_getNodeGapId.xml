@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>gap_id_cache = context.REQUEST.other.get(\'Movement_getNodeGapIdCache\', {})\n
-key = brain.node_relative_url\n
-gap_id = gap_id_cache.get(key)\n
-if gap_id is None:\n
-  gap_id = context.getPortalObject().restrictedTraverse(\n
-                    key).Account_getGapId()\n
-  gap_id_cache[key] = gap_id\n
-  context.REQUEST.other[\'Movement_getNodeGapIdCache\'] = gap_id_cache\n
-return gap_id\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain=None, selection=None, **kw</string> </value>
         </item>

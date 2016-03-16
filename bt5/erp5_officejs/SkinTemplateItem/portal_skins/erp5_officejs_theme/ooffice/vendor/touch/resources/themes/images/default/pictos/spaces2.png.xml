@@ -19,35 +19,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">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</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

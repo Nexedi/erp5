@@ -1,0 +1,454 @@
+<office:document-content xmlns:draw='urn:oasis:names:tc:opendocument:xmlns:drawing:1.0' xmlns:office='urn:oasis:names:tc:opendocument:xmlns:office:1.0' xmlns:text='urn:oasis:names:tc:opendocument:xmlns:text:1.0' xmlns:ooo='http://openoffice.org/2004/office' xmlns:number='urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:meta='urn:oasis:names:tc:opendocument:xmlns:meta:1.0' xmlns:table='urn:oasis:names:tc:opendocument:xmlns:table:1.0' xmlns:dr3d='urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0' xmlns:fo='urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0' xmlns:style='urn:oasis:names:tc:opendocument:xmlns:style:1.0' xmlns:xforms='http://www.w3.org/2002/xforms' xmlns:form='urn:oasis:names:tc:opendocument:xmlns:form:1.0' xmlns:script='urn:oasis:names:tc:opendocument:xmlns:script:1.0' xmlns:ooow='http://openoffice.org/2004/writer' xmlns:svg='urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0' xmlns:chart='urn:oasis:names:tc:opendocument:xmlns:chart:1.0' xmlns:dom='http://www.w3.org/2001/xml-events' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:oooc='http://openoffice.org/2004/calc' xmlns:math='http://www.w3.org/1998/Math/MathML'  xmlns:tal='http://xml.zope.org/namespaces/tal'
+          xmlns:i18n='http://xml.zope.org/namespaces/i18n'
+          xmlns:metal='http://xml.zope.org/namespaces/metal'
+          tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'
+          tal:define="pl python:here.ProfitAndLoss_calculateCells();"
+         office:version='1.0'>
+  <office:scripts/>
+  <office:font-face-decls>
+    <style:font-face style:name='Bitstream Vera Sans1' svg:font-family="'Bitstream Vera Sans'" style:font-pitch='variable'/>
+    <style:font-face style:name='Lucidasans' svg:font-family='Lucidasans' style:font-pitch='variable'/>
+    <style:font-face style:name='Bitstream Vera Sans' svg:font-family="'Bitstream Vera Sans'" style:font-family-generic='swiss' style:font-pitch='variable'/>
+    <style:font-face style:name='Luxi Sans' svg:font-family="'Luxi Sans'" style:font-family-generic='swiss' style:font-pitch='variable'/>
+  </office:font-face-decls>
+  <office:automatic-styles>
+    <style:style style:family='table-column' style:name='co1'>
+      <style:table-column-properties fo:break-before='auto' style:column-width='7cm'/>
+    </style:style>
+    <style:style style:family='table-column' style:name='co2'>
+      <style:table-column-properties fo:break-before='auto' style:column-width='3cm'/>
+    </style:style>
+    <style:style style:family='table-row' style:name='ro1'>
+      <style:table-row-properties style:row-height='0.427cm' fo:break-before='auto' style:use-optimal-row-height='true'/>
+    </style:style>
+    <style:style style:family='table' style:name='ta1' style:master-page-name='Default'>
+      <style:table-properties style:writing-mode='lr-tb' table:display='true'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='ce1' style:parent-style-name='Default'>
+      <style:table-cell-properties fo:border-left='none' fo:border-right='none' fo:border-top='none' style:text-align-source='fix' fo:border-bottom='0.002cm solid #000000' style:repeat-content='false'/>
+      <style:paragraph-properties fo:text-align='center' fo:margin-left='0cm'/>
+      <style:text-properties fo:font-weight='bold'/>
+    </style:style>
+    <style:style style:family='table-cell' style:name='ce2' style:parent-style-name='Default'>
+      <style:table-cell-properties fo:border-left='none' fo:border-right='none' fo:border-top='none' style:text-align-source='fix' fo:border-bottom='0.002cm solid #000000' style:repeat-content='false'/>
+      <style:paragraph-properties fo:text-align='left' fo:margin-left='0cm'/>
+      <style:text-properties fo:font-weight='bold'/>
+    </style:style>
+  </office:automatic-styles>
+  <office:body>
+    <office:spreadsheet>
+      <table:table table:style-name='ta1' table:print='false' table:name='Sheet1'>
+        <table:table-column table:style-name='co1' table:default-cell-style-name='Default'/>
+        <table:table-column table:style-name='co2' table:default-cell-style-name='Default'/>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell table:style-name='ce1' office:value-type='string'>
+            <text:p>Opis</text:p>
+          </table:table-cell>
+          <table:table-cell table:style-name='ce1' office:value-type='string'>
+            <text:p>Stan</text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p></text:p>
+          </table:table-cell>
+          <table:table-cell office:value-type='string'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell table:style-name='ce2' office:value-type='string'>
+            <text:p>A. Przychody ze sprzedaży netto i związane z nimi</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/A" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>I. Przychody netto ze sprzedaży produktów</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/AI" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>II. Zmiana stanu produktów (+ zwiększenie, - zmniejszenie)</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/AII" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>III. Koszty wytworzenia produktów na własne potrzeby jednostki</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/AIII" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>IV. Przychody netto ze sprzedaży towarów i materiałów</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/AIV" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell table:style-name='ce2' office:value-type='string'>
+            <text:p>B. Koszty działalności operacyjnej</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/B" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>I. Amortyzacja</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/BI" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>II. Zużycie materiałów i energii</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/BII" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>III. Usługi obce</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/BIII" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>IV. Podatki i opłaty</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/BIV" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>V. Wynagrodzenia</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/BV" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>VI. Ubezpieczenia społeczne i inne świadczenia</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/BVI" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>VII. Pozostałe koszty rodzajowe</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/BVII" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>VIII. Wartość sprzedanych towarów i materiałów</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/BVIII" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell table:style-name='ce2' office:value-type='string'>
+            <text:p>C. Zysk (strata) ze sprzedaży (A-B)</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/C" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell table:style-name='ce2' office:value-type='string'>
+            <text:p>D. Pozostałe przychody operacyjne</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/D" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>I. Zysk ze zbycia niefinansowych aktywów trwałych</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/DI" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>II. Dotacje</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/DII" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>III. Inne przychody operacyjne</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/DIII" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell table:style-name='ce2' office:value-type='string'>
+            <text:p>E. Pozostałe koszty operacyjne</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/E" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>I. Strata ze zbycia niefinansowych aktywów trwałych</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/EI" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>II. Aktualizacja wartości aktywów niefinansowych</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/EII" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>III. Inne koszty operacyjne</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/EIII" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell table:style-name='ce2' office:value-type='string'>
+            <text:p>F. Zysk (strata) na działalności operacyjnej (C+D-E)</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/F" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell table:style-name='ce2' office:value-type='string'>
+            <text:p>G. Przychody finansowe</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/G" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>I. Dywidendy i udziały w zyskach</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/GI" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>II. Odsetki</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/GII" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>III. Zysk ze zbycia inwestycji</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/GIII" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>IV. Aktualizacja wartości inwestycji</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/GIV" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>V. Inne</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/GV" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell table:style-name='ce2' office:value-type='string'>
+            <text:p>H. Koszty finansowe</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/H" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>I. Odsetki</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/HI" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>II. Strata ze zbycia inwestycji</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/HII" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>III. Aktualizacja wartości inwestycji</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/HIII" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>IV. Inne</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/HIV" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell table:style-name='ce2' office:value-type='string'>
+            <text:p>I. Zysk (strata) z działalności gospodarczej (F+G-H)</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/I" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell table:style-name='ce2' office:value-type='string'>
+            <text:p>J. Wynik zdarzeń nadzwyczajnych (J.I. - J.II.)</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/J" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>I. Zyski nadzwyczajne</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/JI" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell office:value-type='string'>
+            <text:p>II. Straty nadzwyczajne</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/JII" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell table:style-name='ce2' office:value-type='string'>
+            <text:p>K. Zysk (strata) brutto (I+/-J)</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/K" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell table:style-name='ce2' office:value-type='string'>
+            <text:p>L. Podatek dochodowy</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/L" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell table:style-name='ce2' office:value-type='string'>
+            <text:p>M. Pozostałe obowiązkowe zmniejszenia zysku (zwiększenia straty)</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/M" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+        <table:table-row table:style-name='ro1'>
+          <table:table-cell table:style-name='ce2' office:value-type='string'>
+            <text:p>N. Zysk (strata) netto (K-L-M)</text:p>
+          </table:table-cell>
+          <table:table-cell tal:attributes="office:value pl/N" office:value-type='float'>
+            <text:p></text:p>
+          </table:table-cell>
+        </table:table-row>
+
+      </table:table>
+    </office:spreadsheet>
+  </office:body>
+</office:document-content>

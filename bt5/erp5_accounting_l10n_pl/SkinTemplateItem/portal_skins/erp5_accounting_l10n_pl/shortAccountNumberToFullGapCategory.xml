@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>gap_root = kw.get(\'gap_root\', context.getPortalObject().portal_preferences.getPreferredAccountingTransactionGap())\n
-\n
-parts=[]\n
-for i in range(len(accountNumber)+1):\n
-  parts.append(accountNumber[:i])\n
-  context.log(parts)\n
-return gap_root+\'/\'.join(parts)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>accountNumber, **kw</string> </value>
         </item>

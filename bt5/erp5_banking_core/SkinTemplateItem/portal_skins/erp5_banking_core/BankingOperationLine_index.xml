@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Reindex the given line with a tag so it can be found in the message table.\n
-activate_kw = {}\n
-if source:\n
-  activate_kw[\'tag\'] = context.BankAccount_getMessageTag(line.getSourcePaymentValue())\n
-  line.reindexObject(activate_kw=activate_kw)\n
-else:\n
-  activate_kw[\'tag\'] = context.BankAccount_getMessageTag(line.getDestinationPaymentValue())\n
-  line.reindexObject(activate_kw=activate_kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>line, source=0</string> </value>
         </item>

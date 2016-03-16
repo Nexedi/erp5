@@ -1,0 +1,115 @@
+<html>
+<head><title>Test for Organisation transaction lisbox</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test Transactions related to an Organisation, with stop date
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionListSalesAndPayments">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounts</td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_jump</td>
+  <td>Accounting Preference</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_preferred_accounting_transaction_at_date_year</td>
+  <td>2005</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_preferred_accounting_transaction_at_date_month</td>
+  <td>01</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_preferred_accounting_transaction_at_date_day</td>
+  <td>11</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Organisations</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- {{{ Select Client 1 Organisation and check transaction list -->
+<tr>
+  <td>type</td>
+  <!-- title -->
+  <td>//tr[@class='listbox-search-line']/th[2]/input</td>
+  <td>Client 1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Client 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Transactions</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>12 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[preceding-sibling::label[contains(text(),'At Date')]]</td>
+  <td>2005/01/11</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
+  <td>72600.00</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[10]</td>
+  <td>1100.00</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[12]</td>
+  <td>71500.0</td>
+</tr>
+<!-- the last line of running total column shows the same value that the total
+balance. -->
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-11 DataB']/td[13]</td>
+  <td>71500.0</td>
+</tr>
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

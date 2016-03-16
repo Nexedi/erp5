@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-preferred_language_list = portal.portal_preferences.getPreference(\'preferred_user_interface_language_list\', None)\n
-\n
-def getConfiguratorLanguageList():\n
-  language_list = []\n
-  for language in portal.Localizer.get_languages_map():\n
-    title = portal.Localizer.erp5_ui.gettext(language[\'title\'], lang=language[\'id\'])\n
-    if not preferred_language_list or language[\'id\'] in preferred_language_list:\n
-      language_list.append((title, language[\'id\']))\n
-  return language_list\n
-\n
-from Products.ERP5Type.Cache import CachingMethod\n
-return CachingMethod(getConfiguratorLanguageList,\n
-    ("getConfiguratorLanguageList", ),cache_factory=\'erp5_ui_long\')()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

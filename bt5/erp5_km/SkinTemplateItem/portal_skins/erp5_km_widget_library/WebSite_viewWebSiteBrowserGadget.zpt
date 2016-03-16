@@ -1,0 +1,14 @@
+<!-- XXX: read depth from gadget preferences -->
+<div class="gadget-website-browser"
+     tal:define="depth python: 10;
+                 include_subsection python: 1;
+                 collapse_depth python: 1;
+                 section_list python: here.WebSection_getSiteMapTree(depth=depth, include_subsection=include_subsection)">
+
+  <tal:block tal:content="structure python: here.WebSection_viewSubsectionRenderer(section_list = section_list, 
+                                                                                   collapse_depth=collapse_depth)"/>
+  <tal:block tal:condition="python: len(section_list)==0">
+    <p i18n:domain="erp5_ui" i18n:translate=""> No subsections found. </p>
+  </tal:block>
+ 
+</div>

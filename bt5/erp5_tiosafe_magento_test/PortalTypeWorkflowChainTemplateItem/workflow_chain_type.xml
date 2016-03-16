@@ -1,18 +1,18 @@
 <workflow_chain>
  <chain>
-  <type>Magento Test Person</type>
+  <type>portal_type_workflow_chain/Magento Test Person</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Magento Test Product</type>
+  <type>portal_type_workflow_chain/Magento Test Product</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Magento Test Sale Order</type>
+  <type>portal_type_workflow_chain/Magento Test Sale Order</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Magento Test Sale Order Item</type>
+  <type>portal_type_workflow_chain/Magento Test Sale Order Item</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

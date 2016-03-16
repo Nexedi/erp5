@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>def edit(url, edit_order, cleaned_v):\n
-  context.setTranslationDomain(url.split("/")[-1], cleaned_v[\'domain_name\'])\n
-return context.Base_edit(form_id, listbox_edit=edit, *args, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id, *args, **kw</string> </value>
         </item>

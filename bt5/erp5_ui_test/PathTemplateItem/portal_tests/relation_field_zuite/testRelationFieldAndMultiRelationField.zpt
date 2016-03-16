@@ -1,0 +1,72 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Relation Field and Multi Relation Field in the same Form</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Relation Field and Multi Relation Field in
+the same Form</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_foo_category_title</td>
+  <td>a1</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_bar_category_title_list</td>
+  <td>Title 1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<!-- no amiguity, relations are edited directly. -->
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_foo_category_title</td>
+  <td>a1</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_bar_category_title_list</td>
+  <td>Title 1</td>
+</tr>
+</tbody></table>
+</body>
+</html>

@@ -33,45 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<html>\n
-<head><title>Test stock browser for draft state</title></head>\n
-<body>\n
-<table cellpadding="1" cellspacing="1" border="1">\n
-<thead>\n
-<tr><td rowspan="1" colspan="4">\n
-Test stock browser for draft state\n
-</td></tr>\n
-</thead>\n
-<tbody tal:define="init_method string:PdmZuite_createDelivery?state=draft">\n
-\n
-<!-- Setup {{{ -->\n
-<tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/init" />\n
-<!-- }}} -->\n
-\n
-<!-- Check source -->\n
-<tal:block tal:define="link_title python: \'erp5_pdm_ui_test_source_site\';\n
-                       movement_count python: 0;">\n
-  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/init" />\n
-</tal:block>\n
-\n
-<!-- Check destination -->\n
-<tal:block tal:define="link_title python: \'erp5_pdm_ui_test_destination_site\';\n
-                       movement_count python: 0;">\n
-  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/init" />\n
-</tal:block>\n
-\n
-\n
-</tbody></table>\n
-</body>\n
-</html> \n
-<!-- vim: syntax=html foldmethod=marker -->
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

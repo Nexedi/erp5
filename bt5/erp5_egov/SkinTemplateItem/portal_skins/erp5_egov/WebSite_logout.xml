@@ -49,25 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Default logout handler, overwritten to give website specific portal status message.\n
-"""\n
-portal = context.getPortalObject()\n
-N_ = portal.Base_translateString\n
-website = context.getWebSiteValue()\n
-form_id=\'EGov_viewLoginForm\'\n
-\n
-REQUEST = context.REQUEST\n
-if REQUEST.has_key(\'portal_skin\'):\n
-   context.portal_skins.clearSkinCookie()\n
-REQUEST.RESPONSE.expireCookie(\'__ac\', path=\'/\')\n
-msg = N_(\'You have been logged out. Thank you for using this website.\')\n
-return website.Base_redirect(form_id, keep_items = {\'portal_status_message\' : msg},\n
-                             editable_mode=editable_mode, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>dialog_id=None, editable_mode=0, **kw</string> </value>
         </item>

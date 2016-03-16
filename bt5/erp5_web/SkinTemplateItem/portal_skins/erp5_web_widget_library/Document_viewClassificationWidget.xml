@@ -33,21 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<div class="related_docs" tal:condition="here/getClassification">\n
-  <div class="title" i18n:translate="" i18n:domain="ui">Security Classification</div>\n
-  <ul>\n
-    <li>\n
-      <span tal:replace="here/getClassificationTitle"/>\n
-    </li>\n
-  </ul>\n
-</div>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>movement = context\n
-\n
-parent = movement.getParentValue()\n
-if parent.getPortalType() == \'Applied Rule\':\n
-  parent_rule = parent.getSpecialiseValue()\n
-  if parent_rule.getPortalType() not in [\'Order Root Simulation Rule\', \'Production Order Root Simulation Rule\']:\n
-    return False\n
-\n
-return True\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>rule</string> </value>
         </item>

@@ -23,54 +23,6 @@
             <value> <string>text/css</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>.document .content{\n
-  min-height:100px;\n
-}\n
-.required-field label{\n
-  font-weight: bold;\n
-}\n
-\n
-\n
-.validation-failed {\n
-  border: 1px solid red;\n
-}\n
-\n
-.center_left {\n
-  float:left;\n
-  width: 50%;\n
-}\n
-\n
-.center_right {\n
-    float: left;\n
-    margin-left: 0.5%;\n
-    width: 47.5%;\n
-}\n
-\n
-fieldset.left {\n
-    margin-right:0px;\n
-}\n
-\n
-fieldset.right {\n
-  width:47.5%;\n
-  margin-left:0.5%;\n
-}\n
-.center_left,\n
-.center_right{\n
-  border: 1px solid #97B0D1;\n
-  padding-left: 5px;\n
-  padding-right: 5px;\n
-  padding-top: 5px;\n
-  margin-bottom: 5px;\n
-}\n
-\n
-//portal_status_gadget CSS\n
-#portal_status_message p {\n
-  display:none;\n
-  color:red;\n
-}</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

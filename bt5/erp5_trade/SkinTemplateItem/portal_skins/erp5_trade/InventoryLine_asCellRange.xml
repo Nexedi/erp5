@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-resource = context.getResourceValue()\n
-cell_range = []\n
-if resource is not None:\n
-  base_category_list = resource.getVariationBaseCategoryList()\n
-\n
-  for base_category in base_category_list:\n
-    if matrixbox == 1:\n
-      # XXX matrixbox is right_display (not as listfield) => invert display and value in item\n
-      cell_range.append( map(lambda x: (x[1],x[0]), context.getVariationCategoryItemList(base_category_list = (base_category,) ) ) )\n
-    else:\n
-      cell_range.append( context.getVariationCategoryList(base_category_list = (base_category,) ) )\n
-\n
-  cell_range = filter(lambda x: x != [], cell_range )\n
-\n
-return cell_range\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>matrixbox=0, **kw</string> </value>
         </item>

@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>""" \n
-  Decide if current user is a Web Site User or Web Site Administrator.\n
-  This check is typically useful for showing/hiding different\n
-  parts of Web Site like Admin Toolbox or determining the appropriate\n
-  \'view\' action on object.\n
-"""\n
-\n
-portal_membership = context.portal_membership\n
-if portal_membership.isAnonymousUser() or portal_membership.getAuthenticatedMember().has_role((\'Member\',)):\n
-  ## Anonymous/Member is likely to be an website visitor\n
-  return True\n
-else:\n
-  return False\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

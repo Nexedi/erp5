@@ -19,30 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>{\n
-  "name": "jquery",\n
-  "version": "2.0.3",\n
-  "description": "jQuery component",\n
-  "keywords": [\n
-    "jquery",\n
-    "component"\n
-  ],\n
-  "main": "jquery.js",\n
-  "license": "MIT",\n
-  "homepage": "https://github.com/components/jquery",\n
-  "_release": "2.0.3",\n
-  "_resolution": {\n
-    "type": "version",\n
-    "tag": "2.0.3",\n
-    "commit": "452a56b52b8f4a032256cdb8b6838f25f0bdb3d2"\n
-  },\n
-  "_source": "git://github.com/components/jquery.git",\n
-  "_target": "~2.0.0",\n
-  "_originalSource": "jquery"\n
-}</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

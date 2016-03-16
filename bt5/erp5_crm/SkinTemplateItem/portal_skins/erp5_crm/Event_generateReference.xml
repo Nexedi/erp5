@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Owner Proxy Role allows anonymous users to create events\n
-through web sites. cf. Event_init\n
-"""\n
-portal = context.getPortalObject()\n
-type_definition = context.getTypeInfo()\n
-\n
-short_portal_type = type_definition.getShortTitle()\n
-if not short_portal_type:\n
-  short_portal_type = \'\'.join(s for s in type_definition.getId() if s.isupper())\n
-\n
-new_id = portal.portal_ids.generateNewId(id_group=repr((\'reference\', short_portal_type)), default=1)\n
-reference = \'%s-%s\' % (short_portal_type, new_id)\n
-\n
-context.setReference(reference)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

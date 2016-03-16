@@ -1,0 +1,74 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <tal:block metal:define-macro="init">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+    <tr>
+      <td>setTimeout</td>
+      <td>600000</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/PdmZuite_deleteData</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Deleted Successfully.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/PdmZuite_reset</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Reset Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td tal:content="string:$${base_url}/internal_packing_list_module/$init_method" />
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Delivery Created.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/product_module/erp5_pdm_ui_test_product/Resource_viewInventory</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//input[@class="listbox-tree-domain-tree-mode"]</td>
+      <td></td>
+    </tr>
+  </tal:block>
+</tal:block>

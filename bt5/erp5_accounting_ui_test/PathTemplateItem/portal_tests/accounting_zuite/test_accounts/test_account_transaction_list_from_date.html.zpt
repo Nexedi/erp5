@@ -1,0 +1,160 @@
+<html>
+<head><title>Test for Account transaction lisbox</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test Transactions related to an account, with from date parameter
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionListSalesAndPayments">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounts</td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_jump</td>
+  <td>Accounting Preference</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_preferred_accounting_transaction_from_date_year</td>
+  <td>2005</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_preferred_accounting_transaction_from_date_month</td>
+  <td>01</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_preferred_accounting_transaction_from_date_day</td>
+  <td>12</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounts</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- {{{ Select Receivable account and check transaction list -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Receivable</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Transactions</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>89 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[preceding-sibling::label[contains(text(),'From Date')]]</td>
+  <td>2005/01/12</td>
+</tr>
+<!-- }}} -->
+
+<!-- {{{ Summary Line -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[1]</td>
+  <td>Previous Balance</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]</td>
+  <td>2005/01/12</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[6]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[7]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[8]</td>
+  <td>217800.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[9]</td>
+  <td>3300</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[10]</td>
+  <td>214500.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[11]</td>
+  <td>214500.0</td>
+</tr>
+<!-- }}} -->
+
+<!-- FIXME: Listbox lines are not tested, because we don't know which will from
+client 1 invoice or client 2 invoice will have the first uid. -->
+
+<!-- {{{ stat line -->
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[8]</td>
+  <td>1339800.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
+  <td>1339800.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[10]</td>
+  <td>0.0</td>
+</tr>
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

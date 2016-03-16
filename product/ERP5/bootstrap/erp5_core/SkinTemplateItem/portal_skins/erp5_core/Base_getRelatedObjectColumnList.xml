@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>listbox = getattr(context, context.REQUEST.form_id, None).get_field( context.REQUEST.field_id )\n
-dialog_id = listbox.get_value(\'relation_form_id\') or \'Base_viewRelatedObjectList\'\n
-result = listbox.get_value(\'columns\')\n
-\n
-if result in [ [], (), None, \'\']:\n
-  result = getattr(context, dialog_id, None).get_field( \'listbox\' ).get_value(\'columns\')\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

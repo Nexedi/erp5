@@ -1,0 +1,1 @@
+<tal:block metal:use-macro="here/list_dialog/macros/master"/>

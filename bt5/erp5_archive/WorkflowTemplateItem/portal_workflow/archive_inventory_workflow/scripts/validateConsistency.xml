@@ -49,38 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.ERP5Type.Message import Message\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-\n
-inventory = state_change[\'object\']\n
-\n
-# Make sure the start_date is defined\n
-start_date = inventory.getStartDate()\n
-if start_date is None:\n
-  text = "Sorry, you must define the inventory date"\n
-  message = Message(domain=\'ui\', message=text)\n
-  raise ValidationFailed, message\n
-\n
-# Make sure the node is defined\n
-node = inventory.getDestination()\n
-if node is None:\n
-  text = "Sorry, you must define the inventory warehouse"\n
-  message = Message(domain=\'ui\', message=text)\n
-  raise ValidationFailed, message\n
-\n
-\n
-# use of the constraint\n
-error_list = inventory.checkConsistency()\n
-if len(error_list) > 0:\n
-  raise ValidationFailed, (error_list[0].getTranslatedMessage(),)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

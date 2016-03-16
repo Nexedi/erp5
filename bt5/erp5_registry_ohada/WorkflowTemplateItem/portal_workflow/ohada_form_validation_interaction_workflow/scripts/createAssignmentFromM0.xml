@@ -49,46 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This script collects *all* filled properties in the M0\n
-request_eform and creates a new Organisation record.\n
-"""\n
-\n
-# Initalize some useful variables\n
-person_module = context.getPortalObject().person_module\n
-request_eform = sci[\'object\']\n
-duration = request_eform.getDuration()\n
-duration_length =int(duration.split(\' \').pop(0))\n
-beginning_date = request_eform.getBeginningDate()\n
-y = beginning_date.year()\n
-m = beginning_date.month()\n
-d = beginning_date.day()\n
-stop_year = y+duration_length\n
-first_associate= person_module.newContent(portal_type =\'Person\')\n
-first_associate_assignment = first_associate.newContent(portal_type =\'Assignment\',\n
-  function = \'entreprise/associe\',\n
-  start_date =organisation.getStartDate(),\n
-  stop_date ="%04d/%02d/%02d" % (stop_year, m, d),\n
-  destination_value = organisation,\n
-)\n
-#Second Associate\n
-second_associate= person_module.newContent(portal_type =\'Person\')\n
-second_associate.edit(\n
-  last_name =request_eform.getSecondAssociateLastname(),\n
-  first_name = request_eform.getSecondAssociateFirstname(),\n
-  start_date = request_eform.getSecondAssociateBirthday(),\n
-  career_subordination_value = organisation,\n
-)\n
-second_associate_assignment = second_associate.newContent(portal_type =\'Assignment\',\n
-  function = \'entreprise/associe\',\n
-  start_date =organisation.getStartDate(),\n
-  stop_date=organisation.getStopDate(),\n
-  destination_value = organisation,\n
-)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>sci</string> </value>
         </item>

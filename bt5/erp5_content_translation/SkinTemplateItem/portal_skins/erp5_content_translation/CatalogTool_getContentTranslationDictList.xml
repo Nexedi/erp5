@@ -49,63 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Utils import convertToUpperCase\n
-portal = context.getPortalObject()\n
-portal_type_property_mapping = portal.ERP5Site_getPortalTypeContentTranslationMapping()\n
-\n
-result = []\n
-\n
-def upperCase(text):\n
-  return convertToUpperCase(text.replace(\'-\', \'_\'))\n
-\n
-content_language_list = context.Localizer.get_languages()\n
-\n
-for document in document_list:\n
-  portal_type = document.getPortalType()\n
-  if portal_type not in portal_type_property_mapping:\n
-    continue\n
-  \n
-  uid = document.getUid()\n
-  for property_name in portal_type_property_mapping[portal_type]:\n
-    temporary_result = []\n
-\n
-    original_text = None\n
-    original_method = getattr(document, \'get%s\' % upperCase(property_name), None)\n
-    if original_method is not None:\n
-      original_text = original_method()\n
-\n
-    for content_language in content_language_list:\n
-      method_name = \'get%s\' % (upperCase(\'%s_translated_%s\' %\n
-                                         (content_language, property_name)),)\n
-      translated_text = None\n
-      method = getattr(document, method_name, None)\n
-      if method is not None and document.getProperty(\'%s_translation_domain\' % property_name) == \'content\':\n
-        translated_text = method()\n
-      else:\n
-        translation_method = getattr(document, \'get%s\' % upperCase(\'translated_%s\' % property_name), None)\n
-        if original_text is not None and translation_method is not None:\n
-          temporary_translated_text = translation_method(language=content_language)\n
-          if original_text != temporary_translated_text:\n
-             translated_text = temporary_translated_text\n
-      if translated_text:\n
-        temporary_result.append({\'uid\': uid,\n
-                                 \'property_name\': property_name,\n
-                                 \'content_language\': content_language,\n
-                                 \'translated_text\': translated_text,\n
-                                 })\n
-    # also add original content\n
-    if original_text is not None:\n
-      temporary_result.append({\'uid\': uid,\n
-                               \'property_name\': property_name,\n
-                               \'content_language\': \'\',\n
-                               \'translated_text\': original_text,\n
-                               })\n
-    result.extend(temporary_result)\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>document_list=None</string> </value>
         </item>

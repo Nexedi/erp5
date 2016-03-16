@@ -1,0 +1,8 @@
+<tal:block xmlns:tal='http://xml.zope.org/namespaces/tal'
+           xmlns:metal='http://xml.zope.org/namespaces/metal'
+           tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'>
+  <!-- The user of this must put a report section named "report_section" in TALES context -->
+  <tal:block tal:define="report_item report_section"> <!-- compatibilty alias -->
+    <tal:block metal:use-macro="here/report_view/macros/render_report_section"/>
+  </tal:block>
+</tal:block>

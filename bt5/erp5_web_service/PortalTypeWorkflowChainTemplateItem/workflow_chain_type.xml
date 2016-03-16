@@ -1,6 +1,6 @@
 <workflow_chain>
  <chain>
-  <type>FTP Connector</type>
+  <type>portal_type_workflow_chain/FTP Connector</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
 </workflow_chain>

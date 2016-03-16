@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Really send the mail message.\n
-\n
-This script has proxy role, for \'Use Mailhost services\' permission required\n
-by event.send\n
-"""\n
-\n
-event = state_change[\'object\']\n
-portal = state_change.getPortal()\n
-\n
-if event.getPortalType() in (\'Mail Message\', ):\n
-  send_mail = portal.portal_workflow.getInfoFor(event, \'send_mail\',\n
-                                                wf_id=\'event_workflow\')\n
-  if send_mail:\n
-    if event.getSource():\n
-      event.send()\n
-    else:\n
-      event.send(mfrom=portal.portal_preferences.getPreferredEventSenderEmail())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

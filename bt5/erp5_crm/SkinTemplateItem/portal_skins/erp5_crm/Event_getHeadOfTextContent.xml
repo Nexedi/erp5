@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>text = context.asText()\n
-LENGTH = 25\n
-\n
-#TODO: Think about the display length of multibyte characters.\n
-try:\n
-  return unicode(text, \'utf-8\')[:LENGTH].encode(\'utf-8\')\n
-except UnicodeDecodeError:\n
-  return text[:LENGTH]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

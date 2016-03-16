@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Script to custom the date using, for example, abbreviated months\n
-  i.e\n
-    Feb 7\n
-  XXX - check if it is possible with DateField\n
-"""\n
-date = context.getStartDate()\n
-if not date:\n
-  return None\n
-if date.isCurrentDay():\n
-  return date.AMPMMinutes()\n
-else:\n
-  return "%s %s" % (date.aMonth(), date.day())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

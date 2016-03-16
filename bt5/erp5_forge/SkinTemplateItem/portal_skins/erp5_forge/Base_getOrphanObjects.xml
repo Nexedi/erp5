@@ -49,59 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.ERP5Type.Document import newTempBase\n
-\n
-## Stuff that is ignored\n
-#- everything that is not in a portal_*\n
-#- portal_trash, portal_categories, portal_templates, portal_preferences\n
-#- objects whose meta-type is \'External Method\' or \'Filesystem*\'\n
-#- \'portal_skins/external_method\' & \'portal_skins/custom\'\n
-#- \'portal_workflow/business_template_building_workflow\' & \'portal_workflow/business_template_installation_workflow\'\n
-#- \'portal_catalog/erp5_mysql\' & \'portal_catalog/cps3_mysql\' & \'portal_types/Business Template\'\n
-##\n
-\n
-portals_scanned = [\'portal_actions\', \'portal_memberdata\', \'portal_skins\', \'portal_types\', \'portal_undo\', \'portal_url\', \'portal_workflow\', \'portal_discussion\', \'portal_membership\', \'portal_registration\', \'portal_properties\', \'portal_metadata\', \'portal_syndication\', \'portal_uidannotation\', \'portal_uidgenerator\', \'portal_uidhandler\', \'portal_report\', \'portal_rules\', \'portal_ids\', \'portal_simulation\', \'portal_alarms\', \'portal_domains\', \'portal_deliveries\', \'portal_orders\', \'portal_catalog\', \'portal_selections\', \'portal_synchronizations\', \'portal_activities\']\n
-orphans_list = []\n
-if object is None:\n
-  object = context\n
-objects = object.objectValues()\n
-for o in objects:\n
-  object_path = \'/\'.join(o.getPhysicalPath()[2:])\n
-  if \'portal_skins/external_method\' in object_path or \\\n
-     \'portal_skins/custom\' in object_path or \\\n
-     \'portal_workflow/business_template_building_workflow\' in object_path or \\\n
-     \'portal_workflow/business_template_installation_workflow\' in object_path or \\\n
-     \'portal_catalog/erp5_mysql\' in object_path or \\\n
-     \'portal_catalog/cps3_mysql\' in object_path or\\\n
-     \'portal_types/Business Template\' in object_path:\n
-    continue\n
-  if (object is not context) or (object_path.split(\'/\')[0] in portals_scanned):\n
-    if not o.meta_type.startswith(\'Filesystem\') and o.meta_type != \'External Method\':\n
-      context.log("lol", object_path)\n
-      if not context.getPortalObject().Base_getOriginalBusinessTemplateId(file=object_path):\n
-        if object_path not in portals_scanned:\n
-          # orphan object\n
-          orphans_list.append(object_path)\n
-      # Recursively check children\n
-      orphans_list.extend([x.uid for x in context.Base_getOrphanObjects(object=o)])\n
-\n
-object_list = []\n
-for orphan in orphans_list:\n
-  my_dict = {}\n
-  my_dict[\'uid\'] = orphan\n
-  temp_object = newTempBase(folder=context.getPortalObject(), id=\'1234\')\n
-  temp_object.edit(**my_dict)\n
-  object_list.append(temp_object)\n
-\n
-return object_list\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>object=None, **kw</string> </value>
         </item>

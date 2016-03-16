@@ -1,0 +1,508 @@
+<html>
+<head><title>Test for Account module main lisbox</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test display of Account Module, with from_date parameter (which has no impact)
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounts</td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_jump</td>
+  <td>Accounting Preference</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_preferred_accounting_transaction_from_date_year</td>
+  <td>2005</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_preferred_accounting_transaction_from_date_month</td>
+  <td>01</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>subfield_field_my_preferred_accounting_transaction_from_date_day</td>
+  <td>3</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounts</td>
+</tr>
+<!-- }}} -->
+
+<!-- 10 accounts -> 10 records in the list {{{ -->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>10 records</td>
+</tr>
+<!-- }}} -->
+
+<!-- Listbox lines {{{ -->
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-0 DataA']/td[2]/a</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-0 DataA']/td[3]/a</td>
+    <td>Equity</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-0 DataA']/td[4]/a</td>
+    <td>Validated</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-0 DataA']/td[5]/a</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-0 DataA']/td[6]/a</td>
+    <td>0.0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-0 DataA']/td[7]/a</td>
+    <td>20000.0</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-0 DataA']/td[8]/a</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-0 DataA']/td[9]/a</td>
+    <td>20000.0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-1 DataB']/td[2]/a</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-1 DataB']/td[3]/a</td>
+    <td>Fixed Assets</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-1 DataB']/td[4]/a</td>
+    <td>Validated</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-1 DataB']/td[5]/a</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-1 DataB']/td[6]/a</td>
+    <td>15000.0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-1 DataB']/td[7]/a</td>
+    <td>0.0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-1 DataB']/td[8]/a</td>
+    <td>15000.0</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-1 DataB']/td[9]/a</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-2 DataA']/td[2]/a</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-2 DataA']/td[3]/a</td>
+    <td>Stocks</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-2 DataA']/td[4]/a</td>
+    <td>Validated</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-2 DataA']/td[5]/a</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-2 DataA']/td[6]/a</td>
+    <td>5000.0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-2 DataA']/td[7]/a</td>
+    <td>0.0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-2 DataA']/td[8]/a</td>
+    <td>5000.0</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-2 DataA']/td[9]/a</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-3 DataB']/td[2]/a</td>
+    <td>40</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-3 DataB']/td[3]/a</td>
+    <td>Payable</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-3 DataB']/td[4]/a</td>
+    <td>Validated</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-3 DataB']/td[5]/a</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-3 DataB']/td[6]/a</td>
+    <td>0.0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-3 DataB']/td[7]/a</td>
+    <td>7700.0</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-3 DataB']/td[8]/a</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-3 DataB']/td[9]/a</td>
+    <td>7700.0</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-4 DataA']/td[2]/a</td>
+    <td>41</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-4 DataA']/td[3]/a</td>
+    <td>Receivable</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-4 DataA']/td[4]/a</td>
+    <td>Validated</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-4 DataA']/td[5]/a</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-4 DataA']/td[6]/a</td>
+    <td>5500.0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-4 DataA']/td[7]/a</td>
+    <td>0.0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-4 DataA']/td[8]/a</td>
+    <td>5500.0</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-4 DataA']/td[9]/a</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-6 DataA']/td[2]/a</td>
+    <td>4457</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-6 DataA']/td[3]/a</td>
+    <td>Collected VAT 10%</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-6 DataA']/td[4]/a</td>
+    <td>Validated</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-6 DataA']/td[5]/a</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-6 DataA']/td[6]/a</td>
+    <td>0.0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-6 DataA']/td[7]/a</td>
+    <td>500.0</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-6 DataA']/td[8]/a</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-6 DataA']/td[9]/a</td>
+    <td>500.0</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-5 DataB']/td[2]/a</td>
+    <td>4456</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-5 DataB']/td[3]/a</td>
+    <td>Refundable VAT 10%</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-5 DataB']/td[4]/a</td>
+    <td>Validated</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-5 DataB']/td[5]/a</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-5 DataB']/td[6]/a</td>
+    <td>700.0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-5 DataB']/td[7]/a</td>
+    <td>0.0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-5 DataB']/td[8]/a</td>
+    <td>700.0</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-5 DataB']/td[9]/a</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-7 DataB']/td[2]/a</td>
+    <td>5</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-7 DataB']/td[3]/a</td>
+    <td>Bank</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-7 DataB']/td[4]/a</td>
+    <td>Validated</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-7 DataB']/td[5]/a</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-7 DataB']/td[6]/a</td>
+    <td>0.0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-7 DataB']/td[7]/a</td>
+    <td>0.0</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-7 DataB']/td[8]/a</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-7 DataB']/td[9]/a</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-8 DataA']/td[2]/a</td>
+    <td>6</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-8 DataA']/td[3]/a</td>
+    <td>Goods Purchase</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-8 DataA']/td[4]/a</td>
+    <td>Validated</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-8 DataA']/td[5]/a</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-8 DataA']/td[6]/a</td>
+    <td>7000.0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-8 DataA']/td[7]/a</td>
+    <td>0.0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-8 DataA']/td[8]/a</td>
+    <td>7000.0</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-8 DataA']/td[9]/a</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-9 DataB']/td[2]/a</td>
+    <td>7</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-9 DataB']/td[3]/a</td>
+    <td>Goods Sales</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-9 DataB']/td[4]/a</td>
+    <td>Validated</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-9 DataB']/td[5]/a</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-9 DataB']/td[6]/a</td>
+    <td>0.0</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-9 DataB']/td[7]/a</td>
+    <td>5000.0</td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox-data-line-9 DataB']/td[8]/a</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox-data-line-9 DataB']/td[9]/a</td>
+    <td>5000.0</td>
+  </tr>
+<!-- }}} -->
+
+<!-- Check Stat columns {{{ -->
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[2]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[3]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[4]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[5]</td>
+    <td>12</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[6]</td>
+    <td>33200.00</td>
+  </tr>
+  <tr>
+    <td>verifyFloat</td>
+    <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[7]</td>
+    <td>33200.00</td>
+  </tr>
+  <!-- XXX Currently no stat for Debit Balance and Credit Balance -->
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[8]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyText</td>
+    <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
+    <td></td>
+  </tr>
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

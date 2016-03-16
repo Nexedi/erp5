@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -36,34 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<tal:block  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-  <tal:block metal:use-macro="here/main_template/macros/master">\n
-    <tal:block metal:fill-slot="main">\n
-\n
-\n
-      <h1>Page Not Found</h1> \n
-      <br /><br />\n
-      The requested URL\n
-      <i><code>\n
-        <tal:block tal:content="request/URL">/fdsqflkjdsqflkjdslkjf</tal:block>\n
-      </code></i>\n
-      was not found on this server. \n
-      <br /><br />\n
-      <hr />\n
-\n
-    </tal:block>\n
-  </tal:block>\n
-</tal:block>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>
@@ -74,6 +43,10 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>404.error.page</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

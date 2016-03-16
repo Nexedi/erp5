@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Get default relation string field parameters\n
-  based on its id\n
-"""\n
-pieces = context.getId().split(\'_\')\n
-prefix = pieces.pop(0)\n
-if prefix != \'my\' and prefix != \'listbox\':\n
-  return {} # this should not happen\n
-\n
-if pieces[-1] == \'list\':\n
-  pieces.pop()\n
-\n
-# can it be translated title, or something else?\n
-if pieces[-1] in (\'title\', \'reference\'):\n
-  idx = -1\n
-else:\n
-  idx = -2\n
-  pieces += \'relative\', \'url\'\n
-\n
-return {\'base_category\': \'_\'.join(pieces[:idx]),\n
-        \'catalog_index\': \'_\'.join(pieces[idx:])}\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

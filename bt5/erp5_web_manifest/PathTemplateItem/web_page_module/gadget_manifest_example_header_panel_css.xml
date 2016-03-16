@@ -95,19 +95,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>.ui-header .ui-controlgroup, .ui-panel .ui-header .ui-controlgroup {\n
-  min-width: inherit;\n
-  max-width: none;\n
-}\n
-.ui-header .ui-controlgroup-horizontal .ui-controlgroup-controls a.ui-btn {\n
-  width: auto;\n
-}\n
-.ui-panel .ui-panel-inner {\n
-  padding: 0;\n
-}</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Gadget Manifest Example Header Panel CSS</string> </value>
         </item>

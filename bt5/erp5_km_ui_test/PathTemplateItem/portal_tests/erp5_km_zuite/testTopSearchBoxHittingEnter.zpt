@@ -1,0 +1,79 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/getId"/>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
+</thead><tbody>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/Zuite_waitForActivities</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_search_text</td>
+  <td>Pouet</td>
+</tr>
+<tr>
+  <td>keyPressAndWait</td>
+  <td>field_your_search_text</td>
+  <td>\13</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']//span[@class='search_result_title']</td>
+  <td>test_km_web_site_page</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']//a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//ul[@class='breadcrumb']/li[1]/a</td>
+  <td>Home</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//ul[@class='breadcrumb']/li[2]/a</td>
+  <td>Web Pages</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//ul[@class='breadcrumb']/li[3]/a</td>
+  <td>test page for KM</td>
+</tr>
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />
+
+</tbody></table>
+</body>
+</html>

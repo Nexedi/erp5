@@ -1,0 +1,117 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Worklists</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Worklists</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=10</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Validate Action</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Base_clearCache</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Cleared.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/goToFrontPage" />
+</tal:block>
+
+<tr>
+  <td>selectAndWait</td>
+  <td>select_favorite</td>
+  <td>Draft To Validate (9)</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>9 records</td> 
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//a[not(@title)][1]</td>
+  <td>1</td>
+</tr>
+
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/goToFrontPage" />
+</tal:block>
+
+<tr>
+  <td>selectAndWait</td>
+  <td>select_favorite</td>
+  <td>Validated Foos (1)</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td> 
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//a[not(@title)][1]</td>
+  <td>0</td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>

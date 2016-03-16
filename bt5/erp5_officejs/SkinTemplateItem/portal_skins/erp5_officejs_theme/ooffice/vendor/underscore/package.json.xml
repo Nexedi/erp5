@@ -19,37 +19,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-{\n
-  "name"          : "underscore",\n
-  "description"   : "JavaScript\'s functional programming helper library.",\n
-  "homepage"      : "http://underscorejs.org",\n
-  "keywords"      : ["util", "functional", "server", "client", "browser"],\n
-  "author"        : "Jeremy Ashkenas <jeremy@documentcloud.org>",\n
-  "repository"    : {"type": "git", "url": "git://github.com/jashkenas/underscore.git"},\n
-  "main"          : "underscore.js",\n
-  "version"       : "1.5.2",\n
-  "devDependencies": {\n
-    "phantomjs": "1.9.0-1"\n
-  },\n
-  "scripts": {\n
-    "test": "phantomjs test/vendor/runner.js test/index.html?noglobals=true"\n
-  },\n
-  "licenses": [\n
-    {\n
-      "type": "MIT",\n
-      "url": "https://raw.github.com/jashkenas/underscore/master/LICENSE"\n
-    }\n
-  ],\n
-  "files"         : ["underscore.js", "underscore-min.js", "LICENSE"]\n
-}\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if len(old_line_list) == 1 and len(new_line_list) == 1:\n
-  if new_line_list[0] == old_line_list[0].replace("string encoding","unicode encoding") and \\\n
-         old_line_list[0] == \'\074value\076 \074string encoding="cdata"\076\074![CDATA[\':\n
-    return True\n
-\n
-  if new_line_list[0] == old_line_list[0].replace("string","unicode") and \\\n
-     old_line_list[0] == "]]\076\074/string\076 \074/value\076":\n
-    return True\n
-\n
-elif not old_line_list and \'\\n\'.join(new_line_list) == """\\\n
-\074key\076 \074string\076output_encoding\074/string\076 \074/key\076\n
-\074value\076 \074string\076utf-8\074/string\076 \074/value\076\n
-\074/item\076\n
-\074item\076""":\n
-  return True\n
-\n
-return False\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>old_line_list, new_line_list</string> </value>
         </item>

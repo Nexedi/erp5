@@ -19,34 +19,6 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAFMklEQVRoBe2ZW6hVRRjHz/aWWh41
-u5iXPIqXyAI79ZBJGkdBCBFfxLKHRKEXe7GH4BBBZS9hGUYPJT6EKUEQJYZyHkREHyoIM/FCkoLV
-QyFe0sqyPP3+mzWL2Wuv28zam3NcZw38mW99811nZs18a+9af39/x1Bqw4ZSssq1SrjsK16tcLXC
-JZuBakuXbEGb0qlWuGlKcjBqtVonWAcOgCug38JN6CNgM3gwh7n2iqi0LAKiWwQOA9WoWbiIzHow
-pojPIrpFk11I8GdyJGpPxH/I94JakcB9db0TJuAu4JqsSfwPdFf6Bl1Er8ih9TxBzwY+bSxKm3in
-h/soF9HxSphAx+N0dRHH6D4MFhe04azulTBeHgGTnL01KmjSnmxktf/JN+E7CW1UwfDke0xBG87q
-vgnr8GlFa5Wd3LH4JpzbwWATvCUT1ukOaj6TecslTJ4jSFSne9eQSJgkR4JngEpa5+a7wl7byTm6
-eIVxsNeAnvjhdK5vwj9h9q9007lGfU7px7CsO3we21sVm1PzTfhXvNxw8tQsfA3W8WZ2JmdFIDGT
-fk6mdETAK2GK9/PY+SViy/VRHxAnXZRYUcWrLzS1ycC5lvdKuO6uo+Mz+psB7dMdY+K+d1Sch/y0
-QEfnSDeToEMsdyuS8Ed4+Tm3p0ZBfRNva2TlenoaqU5L8gnoe63nTNI7YVbnEtY/z/QQL/At7EPx
-Q6ncZYzaNbwSNiueqmgGvRMODHxAf9kYc+h3MmFOpzxbdxb274/4UPL6csvfcFzkV4/b8PQW0PWS
-F8eQvVt+aaPB7UB20qDqagPQ5Eb97IV3F0jTN2Od9d+VEPZuwcx/ioFHcxi5jswqku2TLLr6EeA1
-oHv1X5DUNDYXzAbRoudPeF+Dv2PGYNWbdDS5fd6ra+8MDOkwiZv96GrsRG6U0YXWAfQc+AFEZVv9
-vBUf870SRtHM2Hzol8CXQIVIVpDnkFkORpik1dOmg81Aq5Vlw2Vc1+ZpoF9WRtZ92Y6zaJR0yHWB
-jeAroG2kK8YlCCX1Hphm++NZk7gEHAYu9pJkdYu8DyY3+LEf0mgUHwK94DxIcuLC19X0LBhm++VZ
-23w7uAhc7NmyR9Fdbds1dOaWRlGJ7gAqJW2jraJ3YXeBCcj08HTHfuHo8wrym0D9FjC27D4xYZT0
-A9vLQO9Aq5JLsqND6wU7MNG0qWA/SNKz+VeR643aiD43JYzSPUB33ndA76httJ203u2PwTgTJLSu
-klMgj1+dJVuMblIfJoywqpa14AzQ6ZbHSatl9O6F7zT0IqA7OK+fb5CdmJSs+Dp1VQCoUnkd7AZx
-lzvstjdN8h6CUm+arrB6jIaR0T/AuK7K1DaB0UMg7yy2S06vT7e9OjyfiIlLch+CfTFjiu0V0HDP
-R2w618LtSliHY/i/MXQ3uABsf9reqgHuACpW9gB7XPRBMMVO0qYZ6/gHRJUG4vld4gj/M4Z+NRKb
-7v+VwH7HdWeruNCXl4n5BvRCO0mbZiwUNAoD1S81gRGTDtCDVmy6ttKSeJHx3yz5N6HrpaSxaXr4
-gyLhH4kjLAGhHwdng9hUaj5lAk7qkVkB9KOgFkynfXi92TrwB0XC2pajTWDQbwRxqcKbZPhZPbIz
-QF+g2xMnz9igSFjvpvk2Hw79CXgHdMYFncZD5z6wHWyNk9MXyttgoJr8/w52EFz9Z9+gJtBKnYB3
-3ScwbKhC6wH7saEtHjYzqyGj7IRLFVOKuagSLsUypiRRrXDK5JRiqFrhUixjShLVCqdMTimG/geI
-0UIFHuszIAAAAABJRU5ErkJggg==</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

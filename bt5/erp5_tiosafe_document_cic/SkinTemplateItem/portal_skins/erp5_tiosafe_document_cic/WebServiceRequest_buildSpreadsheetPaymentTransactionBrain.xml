@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># country property is used in gid computation of organisation\n
-# transform it to category as soon as possible\n
-\n
-\n
-brain_list = [brain(context=context,\n
-                    object_type=context.getDestinationObjectType(),\n
-                    **parameter_dict),]\n
-\n
-return brain_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>parameter_dict, brain</string> </value>
         </item>

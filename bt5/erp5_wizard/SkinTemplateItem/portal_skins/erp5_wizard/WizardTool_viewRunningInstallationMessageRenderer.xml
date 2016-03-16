@@ -33,38 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block tal:define="percentage options/percentage;\n
-                       coefficient python: 4;">\n
-\n
-  <div style="width:400px; \n
-              height:25px; \n
-              background-color:lightgray;\n
-              border:1px solid black;">\n
-    <div tal:attributes="style python: \'text-align:right;;\n
-                                        height: 25px;; \n
-                                        background-color:#f09400;; \n
-                                        width: %spx;;\' %(coefficient*percentage)">\n
-      <div style="height:20px; \n
-                  padding-top: 5px; \n
-                  padding-right: 3px; \n
-                  font-weight:bold;"\n
-           tal:condition="python: int(percentage) != 0">\n
-        <span tal:content="percentage"/>%\n
-      </div>\n
-    </div>\n
-  </div>\n
-\n
-  <tal:block \n
-     tal:replace="structure python: here.portal_wizard.callRemoteProxyMethod(\'WizardTool_viewPatienceMessageRenderer\')"/>\n
-\n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

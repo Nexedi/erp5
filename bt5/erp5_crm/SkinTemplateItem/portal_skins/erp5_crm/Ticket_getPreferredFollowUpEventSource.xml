@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Returns the default sender for response events.\n
-\n
-This script is here so that we can easily customized depending on the context event, ticket or user preferences.\n
-"""\n
-\n
-if context.hasSource():\n
-  return context.getSource()\n
-logged_in_user = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
-if logged_in_user is not None:\n
-  return logged_in_user.getRelativeUrl()\n
-return \'\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

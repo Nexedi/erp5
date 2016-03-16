@@ -63,7 +63,6 @@ from base64 import decodestring
 import subprocess
 import time
 
-
 WIN = os.name == 'nt'
 
 CATALOG_UPDATABLE = object()
@@ -460,6 +459,79 @@ class TemplateTool (BaseTool):
       Return the diff filtered by python scripts into html format
       """
       return self.getFilteredDiff(diff).toHTML()
+
+    def _cleanUpTemplateFolder(self, folder_path):
+      file_object_list = [x for x in os.listdir(folder_path)]
+      for file_object in file_object_list:
+        file_object_path = os.path.join(folder_path, file_object)
+        if os.path.isfile(file_object_path):
+          os.unlink(file_object_path)
+        else:
+          shutil.rmtree(file_object_path)
+
+    security.declareProtected( 'Import/Export objects', 'importAndReExportBusinessTemplateFromPath' )
+    def importAndReExportBusinessTemplateFromPath(self, template_path):
+      """
+        Imports the template that is in the template_path and exports it to the
+        same path.
+
+        We want to clean this directory, i.e. remove all files before
+        the export. Because this is called as activity though, it could cause
+        the following problem:
+        - Activity imports the template
+        - Activity removes all files from template_path
+        - Activity fails in export.
+        Then the folder contents will be changed, so when retrying the
+        activity may succeed without the user understanding that files were
+        erased. For this reason export is done in 3 steps:
+        - First to a temporary directory
+        - If there was no error delete contents of template_path
+        - Copy the contents of the temporary directory to the template_path
+      """
+      import_template = self.download(url=template_path)
+      export_dir = mkdtemp()
+      try:
+        import_template.export(path=export_dir, local=True)
+        self._cleanUpTemplateFolder(template_path)
+        file_name_list = [x for x in os.listdir(export_dir)]
+        for file_name in file_name_list:
+          temp_file_path = os.path.join(export_dir, file_name)
+          destination_file_path = os.path.join(template_path, file_name)
+          shutil.move(temp_file_path, destination_file_path)
+      except:
+        raise
+      finally:
+        shutil.rmtree(export_dir)
+
+    security.declareProtected( 'Import/Export objects', 'importAndReExportBusinessTemplateListFromPath' )
+    def importAndReExportBusinessTemplateListFromPath(self, repository_list, REQUEST=None, **kw):
+      """
+        Migrate business templates to new format where files like .py or .html
+        are exported seprately than the xml.
+      """
+      repository_list = filter(bool, repository_list)
+
+      if REQUEST is None:
+        REQUEST = getattr(self, 'REQUEST', None)
+        
+      if len(repository_list) == 0 and REQUEST:
+        ret_url = self.absolute_url()
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
+                                  % (ret_url, 'No repository was defined'))
+                                    
+      for repository in repository_list:
+        repository = repository.rstrip('\n')
+        repository = repository.rstrip('\r')
+        for business_template_id in os.listdir(repository):
+          template_path = os.path.join(repository, business_template_id)
+          if os.path.isfile(template_path):
+            LOG(business_template_id,0,'is file, so it is skipped')
+          else:
+            if not os.path.exists((os.path.join(template_path, 'bt'))):
+              LOG(business_template_id,0,'has no bt sub-folder, so it is skipped')
+            else:
+              self.activate(activity='SQLQueue').\
+                importAndReExportBusinessTemplateFromPath(template_path)
 
     security.declareProtected(Permissions.ManagePortal, 'getFilteredDiff')
     def getFilteredDiff(self, diff):

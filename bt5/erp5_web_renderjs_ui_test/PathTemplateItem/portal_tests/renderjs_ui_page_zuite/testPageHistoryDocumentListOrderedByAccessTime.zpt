@@ -1,0 +1,216 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Page History Only Shows Module Sub Documents</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Page Front</td></tr>
+</thead><tbody>
+
+    <!-- reuse listbox suite reset to clear modules. -->
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+    <tr>
+      <td>open</td>
+      <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Reset Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <!-- create a Foo -->
+      <td>${base_url}/foo_module/Foo_createObjects?start:int=1&amp;num:int=2</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Created Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+
+<!-- Access both documents -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Title 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='field_listbox']//a[text()='Title 1' and contains(@href, '#!index')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Title 2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='field_listbox']//a[text()='Title 2' and contains(@href, '#!index')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td></td>
+</tr>
+
+<!-- Go to the history tab -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Menu' and @type='submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Menu' and @type='submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//div[contains(@class, 'ui-panel-open')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='History']</td>
+  <td></td>
+</tr>
+
+<!-- Wait for gadget to be loaded -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_history.html']</td>
+  <td></td>
+</tr>
+
+<!-- Generate links to module -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='m']//li[@class='ui-first-child']//a[text()='Title 2 (Foo)' and contains(@href, '#!display') and contains(@href, 'n.jio_key=foo_module%2F2')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Title 1 (Foo)' and contains(@href, '#!display') and contains(@href, 'n.jio_key=foo_module%2F1')]</td>
+  <td></td>
+</tr>
+
+<!-- Click on second one to change the order -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Title 1 (Foo)' and contains(@href, '#!display') and contains(@href, 'n.jio_key=foo_module%2F1')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td></td>
+</tr>
+
+<!-- Go to the history tab -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Menu' and @type='submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Menu' and @type='submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//div[contains(@class, 'ui-panel-open')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='History']</td>
+  <td></td>
+</tr>
+
+<!-- Wait for gadget to be loaded -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_history.html']</td>
+  <td></td>
+</tr>
+
+<!-- Generate links to module -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='m']//li[@class='ui-first-child']//a[text()='Title 1 (Foo)' and contains(@href, '#!display') and contains(@href, 'n.jio_key=foo_module%2F1')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Title 2 (Foo)' and contains(@href, '#!display') and contains(@href, 'n.jio_key=foo_module%2F2')]</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>

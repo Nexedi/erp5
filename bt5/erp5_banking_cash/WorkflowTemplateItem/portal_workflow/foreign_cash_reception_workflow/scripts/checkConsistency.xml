@@ -49,36 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import Message\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-\n
-object = state_change[\'object\']\n
-\n
-transaction = state_change[\'object\']\n
-\n
-# use of the constraint\n
-vliste = object.checkConsistency()\n
-object.log(\'vliste\', vliste)\n
-if len(vliste) != 0:\n
-  raise ValidationFailed, (vliste[0].getMessage(),)\n
-\n
-dest = object.getDestination()\n
-# check again that we are in the good accounting date\n
-transaction.Baobab_checkCounterDateOpen(site=dest, date=transaction.getStartDate())\n
-if not \'encaisse_des_devises\' in object.getDestination():\n
-  msg = Message(domain="ui", message="Wrong Destination Selected.")\n
-  raise validationFailed, (msg,)\n
-\n
-object_price = object.getSourceTotalAssetPrice()\n
-line_price = object.getTotalPrice(portal_type=[\'Cash Delivery Line\',\'Cash Delivery Cell\'],fast=0)\n
-\n
-if object_price != line_price:\n
-  msg = Message(domain="ui", message="Amount differs between document and lines.")\n
-  raise ValidationFailed, (msg,)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

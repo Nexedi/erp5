@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-variation_text = context.getVariationText()\n
-if variation_text is not None:\n
-  destination = context.getBaobabDestination() \n
-  if destination is not None:\n
-    if destination.find(\'encaisse_des_billets_retires_de_la_circulation\')>=0:\n
-      variation_text = variation_text.replace(\'cash_status/cancelled\',\n
-                                          \'cash_status/retired\')\n
-return variation_text\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

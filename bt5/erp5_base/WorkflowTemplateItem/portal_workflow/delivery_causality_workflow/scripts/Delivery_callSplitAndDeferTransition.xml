@@ -49,30 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>delivery = state_change[\'object\']\n
-\n
-stop_date = state_change.kwargs[\'stop_date\']\n
-start_date = state_change.kwargs[\'start_date\']\n
-\n
-tag = delivery.getPath() + \'_split\'\n
-split_and_defer = 0\n
-listbox = state_change[\'kwargs\'].get(\'listbox\')\n
-split_movement_list = []\n
-if listbox is not None:\n
-  for line in listbox:\n
-    url = line[\'listbox_key\']\n
-    choice = line[\'choice\']\n
-    if choice == \'SplitAndDefer\':\n
-      split_movement_list.append(delivery.restrictedTraverse(url))\n
-\n
-delivery.splitAndDefer(split_movement_list=split_movement_list,\n
-                       start_date=start_date,\n
-                       stop_date=stop_date,\n
-                       comment=\'\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

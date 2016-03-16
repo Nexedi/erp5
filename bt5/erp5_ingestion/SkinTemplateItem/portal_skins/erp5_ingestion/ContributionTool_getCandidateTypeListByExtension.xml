@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Find by give filename extension which portal_type is the right one.\n
-  Use content_type_registry for that. \n
-"""\n
-from Products.CMFCore.utils import getToolByName\n
-\n
-registry = getToolByName(context, \'content_type_registry\', None)\n
-if registry is None:\n
-  return (None, )\n
-else:\n
-  pt = registry.findTypeName(\'a.%s\' %ext, None, None)\n
-  return (pt,)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>ext</string> </value>
         </item>

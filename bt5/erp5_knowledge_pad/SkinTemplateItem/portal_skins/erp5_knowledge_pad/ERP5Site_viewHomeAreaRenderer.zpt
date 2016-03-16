@@ -1,0 +1,25 @@
+<span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/global_definitions"/>
+
+<div id="gadget_area_wrapper">
+
+    <tal:block tal:condition="python:not (isAnon or isAnonymousKnowledgePadUsed)"> 
+      <div id="pad-navigation-wrapper">
+        <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/navigation"/>
+      </div>
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/loading_message"/>
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/knowledge_pad_security_check"/> 
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/>
+    </tal:block>
+
+    <!-- Render active Knowledge pad -->
+    <div id="pad-body-wrapper"
+         tal:condition="python:active_knowledge_pad is not None">
+      <tal:block tal:replace="structure python: active_knowledge_pad.KnowledgePad_viewDashboardWidget(
+                                                                       columns=columns,
+                                                                       real_context=here,
+                                                                       cancel_url=cancel_url)"/>
+    </div>
+    <!-- Hidden dialogs -->
+    <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/hidden_dialogs"/>
+
+</div>

@@ -33,37 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<div id="knowledge_pad_module" class="box_inner_content">\n
-  <table width="65%" height="100" style="margin-bottom:10px;">\n
-    <tbody>\n
-      <tr>\n
-        <td colspan="2" style="vertical-align:middle;text-align:center;width:100%;">\n
-          <h2 style="margin-top:0px; margin-bottom:0px;">Test Creation Wizard</h2>\n
-        </td>\n
-      </tr>\n
-      <tr>\n
-        <td colspan="2" style="vertical-align:middle;text-align:center;width:100%;">\n
-          <label>Create a new Test Page, using this wizard.</label>\n
-        </td>\n
-      </tr>\n
-      <tr>\n
-        <td style="vertical-align:middle;text-align:right;">\n
-          <a href="./test_page_module/TestPageModule_viewCreationWizard"><span style="background-repeat: no-repeat; display: block; height: 22px; width: 22px;background-image:url(\'launch_icon.png\');"></span></a>\n
-        </td>\n
-        <td style="vertical-align:middle;text-align:left;">\n
-          <a href="./test_page_module/TestPageModule_viewCreationWizard">I would like to create a new Test Page.</a>\n
-        </td>\n
-      </tr>\n
-    </tbody>\n
-  </table>\n
-</div>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

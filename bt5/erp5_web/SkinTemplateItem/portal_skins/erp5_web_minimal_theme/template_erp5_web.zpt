@@ -1,0 +1,116 @@
+<tal:block
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block tal:replace="nothing">
+  <!--
+  Copyright (c) 2006-2015 Nexedi SARL and Contributors. All Rights Reserved.
+                     Vincent Pelletier <vincent@nexedi.com>
+                     Christophe Dumez <christophe@nexedi.com>
+
+  This program is Free Software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+  -->
+  </tal:block>
+  <tal:block metal:define-macro="master">
+    <tal:block tal:define="
+      website python:here.getWebSiteValue();
+      portal_path python:website.absolute_url();
+      list_mode list_mode | nothing;
+      editable request/editable_mode | python: 0;
+      global css_list_template python:[
+        portal_path + '/erp5_web.css',
+        portal_path + '/erp5_web_%scontent.css' % (editable and 'editable_' or ''),
+        portal_path + '/erp5_web_admin_toolbox.css',
+        portal_path + '/template_erp5_web.css',
+      ];
+      global js_list python:[];
+      portal_status_message python: request.get('portal_status_message');
+      global_definitions_macros here/global_definitions/macros;
+      subject_list subject_list | python:here.getProperty('subject_list', []) or [];
+  ">
+    <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
+      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+      <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+        <head>
+          <tal:block metal:use-macro="global_definitions_macros/header_boilerplate" />
+          <tal:block metal:use-macro="global_definitions_macros/render_css_js" />
+          <meta name="robots" content="index, follow" />
+        </head>
+        <body tal:attributes="class body_css_class|nothing">
+          <form
+            id="main_form"
+            class="main_form"
+            onsubmit="changed=false; return true"
+            enctype="multipart/form-data"
+            tal:attributes="
+              action url;
+              method python:str(path('form/method | string:post')).lower();
+            "
+          >
+            <fieldset id="hidden_fieldset" class="hidden_fieldset">
+              <input
+                tal:condition="form_action | nothing"
+                id="hidden_button"
+                class="hidden_button"
+                type="submit"
+                value="dummy"
+                tal:attributes="name string:${form_action}:method"
+              />
+              <tal:block metal:use-macro="global_definitions_macros/http_definitions" />
+            </fieldset>
+            <tal:block tal:define="dummy python: request.set('editable_mode', True)">
+              <div id="main_content" tal:attributes="class python:(list_mode and 'list_mode') or 'view_mode'">
+                <div tal:condition="python: portal_status_message" tal:content="portal_status_message" id="transition_message"/>
+                <tal:block metal:define-slot="main"/>
+              </div>
+              <tal:block tal:condition="python: layout_form is not None">
+                <tal:block tal:replace="nothing">
+                <!--<tal:block tal:define="template python: here.developper_shortcut_render">
+                  <tal:block metal:use-macro="template/macros/form"/>
+                </tal:block>-->
+                <!-- Here we force the editable_mode variable to True to let the layout and widgets
+                     based on forms be rendered as editable or non-editable according the "editable"
+                     property on fields.
+
+                     However this has bad side effect: the editable_mode variable in request is
+                     forced to True and is no longer representative of the web site mode.
+
+                     We also set some REQUEST variables which will be needed by Widgets.
+                 -->
+                </tal:block>
+                <tal:block
+                  tal:repeat="aggregate python: layout_form.Form_getGroupList(['header', 'left', 'right', 'footer'])"
+                  tal:define="
+                    dummy python: request.set('editable_mode', True);
+                    dialog_mode dialog_mode | nothing;
+                    dummy python: request.set('dialog_mode', dialog_mode);
+                    dummy python: request.set('list_mode', list_mode);
+                    dummy python: request.set('http_parameters', http_parameters);
+                    dummy python: request.set('actions', actions);
+                    dummy python: request.set('current_web_section', request.get('current_web_section', here.getWebSectionValue()));
+                    dummy python: request.set('current_web_document', request.get('current_web_document', here));
+                    dummy python: request.set('is_web_section_default_document', request.get('is_web_section_default_document', 0));
+                  "
+                >
+                  <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                </tal:block>
+              </tal:block>
+            </tal:block>
+          </form>
+        </body>
+      </html>
+    </tal:block>
+  </tal:block>
+</tal:block>

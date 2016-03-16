@@ -19,39 +19,6 @@
             <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-label {\r\n
-    &.link {\r\n
-        border-bottom: 1px dotted #aaa;\r\n
-        cursor: pointer;\r\n
-\r\n
-        &.disabled {\r\n
-            cursor: default;\r\n
-        }\r\n
-    }\r\n
-\r\n
-    &.disabled {\r\n
-        opacity: 0.5;\r\n
-    }\r\n
-}\r\n
-\r\n
-.menu-shapes .dataview {\r\n
-    > div:not(.grouped-data):not(.ps-scrollbar-x-rail):not(.ps-scrollbar-y-rail) {\r\n
-        .box-shadow(none);\r\n
-    }\r\n
-}\r\n
-\r\n
-.combobox.fonts {\r\n
-    > .dropdown-menu {\r\n
-        max-height: 388px;\r\n
-    }\r\n
-}
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

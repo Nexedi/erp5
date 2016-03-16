@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># We will take the emission letter and find what is the right site\n
-# for it and the return the result\n
-\n
-site_item_list = context.Delivery_getVaultItemList(vault_type=(\'site\',),user_site=0,\n
-                                                  with_base=0,strict_membership=1,\n
-                                                  leaf_node=0)\n
-site_path_list = [x[1] for x in site_item_list if x[1]!=\'\' and \'principale\' in x[1]]\n
-site_base_category = context.portal_categories.site\n
-for site_path in site_path_list:\n
-  site = site_base_category.restrictedTraverse(site_path)\n
-  if site.getCodification()[:1].lower()==emission_letter:\n
-    return site\n
-return None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>emission_letter=None</string> </value>
         </item>

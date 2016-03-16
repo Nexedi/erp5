@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>source = context.getBaobabSource()\n
-destination = context.getBaobabDestination()\n
-\n
-if source.split("/")[-1] == destination.split("/")[-1]:\n
-  if ("reserve" in source) and ("caisse_courante" in destination):\n
-    variation = context.getVariationText()\n
-    result = variation.replace(\'new_emitted\', \'valid\')\n
-    return result\n
-return context.getVariationText()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kwd</string> </value>
         </item>

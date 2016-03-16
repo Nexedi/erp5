@@ -105,7 +105,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_journal</string>
+                        <string>my_ledger</string>
                         <string>my_simulation_state_list</string>
                       </list>
                     </value>

@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script is a proxy wrapper to get worklist information.\n
-  XXX: To be extended to return more than role.\n
-"""\n
-\n
-portal_workflow = context.getPortalObject().portal_workflow\n
-workflow = getattr(portal_workflow, workflow_id)\n
-worklist = getattr(workflow.worklists, worklist_id)\n
-roles = worklist.getGuard().getRolesText().split(\';\')\n
-return roles\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>workflow_id, worklist_id</string> </value>
         </item>

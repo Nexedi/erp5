@@ -22,13 +22,6 @@
               <dictionary/>
             </value>
         </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string>language: node_js\n
-node_js:\n
-  - 0.8\n
-</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

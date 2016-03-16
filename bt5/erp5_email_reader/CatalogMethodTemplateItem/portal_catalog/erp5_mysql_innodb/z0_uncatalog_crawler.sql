@@ -1,0 +1,1 @@
+DELETE FROM crawler WHERE <dtml-sqltest uid op=eq type=int>

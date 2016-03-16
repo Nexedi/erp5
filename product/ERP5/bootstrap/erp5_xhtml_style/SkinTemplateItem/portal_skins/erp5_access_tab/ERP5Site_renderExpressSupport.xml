@@ -33,22 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
-           tal:define="configured_status_dict here/ERP5Site_getConfiguredStatusDict;\n
-                       express_mode configured_status_dict/express_mode;\n
-                       dummy python: request.RESPONSE.setHeader(\'Content-Type\', \n
-                                                                \'text/html;; charset=utf-8\');">\n
-  <tal:block replace="structure python:here.ERP5Site_getExpressSupportHTML(express_mode)"></tal:block>\n
-</tal:block>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

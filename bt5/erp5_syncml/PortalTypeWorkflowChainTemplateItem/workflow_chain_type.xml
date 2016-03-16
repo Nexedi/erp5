@@ -1,18 +1,18 @@
 <workflow_chain>
  <chain>
-  <type>SyncML Publication</type>
+  <type>portal_type_workflow_chain/SyncML Publication</type>
   <workflow>edit_workflow, syncml_subcription_validation_workflow, syncml_subscription_authentication_workflow, syncml_synchronization_workflow</workflow>
  </chain>
  <chain>
-  <type>SyncML Signature</type>
+  <type>portal_type_workflow_chain/SyncML Signature</type>
   <workflow>edit_workflow, syncml_signature_validation_workflow</workflow>
  </chain>
  <chain>
-  <type>SyncML Subscription</type>
+  <type>portal_type_workflow_chain/SyncML Subscription</type>
   <workflow>edit_workflow, syncml_subcription_validation_workflow, syncml_subscription_authentication_workflow, syncml_synchronization_workflow</workflow>
  </chain>
  <chain>
-  <type>Synchronization Tool</type>
+  <type>portal_type_workflow_chain/Synchronization Tool</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

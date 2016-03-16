@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Jump to a bank account of the current organisation\n
-Base_translateString = context.Base_translateString\n
-request=context.REQUEST\n
-portal = context.getPortalObject()\n
-organisation = portal.restrictedTraverse(\n
-          portal.portal_preferences.getPreferredAccountingTransactionSourceSection())\n
-\n
-if organisation is not None :\n
-  selection_uid_list = [ bank_account.getUid() for bank_account \\\n
-     in organisation.searchFolder(portal_type=portal.getPortalPaymentNodeTypeList()) ]\n
-  if len(selection_uid_list) != 0 : \n
-    kw = {\'uid\': selection_uid_list}\n
-    portal.portal_selections.setSelectionParamsFor(\'Base_jumpToRelatedObjectList\', kw)\n
-    request.set(\'object_uid\', context.getUid())\n
-    request.set(\'uids\', selection_uid_list)\n
-    return context.Base_jumpToRelatedObjectList(\n
-          uids=selection_uid_list, REQUEST=request)\n
-\n
-return context.Base_redirect(form_id, keep_items=dict(portal_status_message=Base_translateString(\'No bank account for current organisation.\')))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id=\'view\'</string> </value>
         </item>

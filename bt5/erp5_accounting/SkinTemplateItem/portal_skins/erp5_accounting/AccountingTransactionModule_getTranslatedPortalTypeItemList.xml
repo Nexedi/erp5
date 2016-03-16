@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal_type_list = context.getPortalAccountingTransactionTypeList()\n
-Base_translateString = context.Base_translateString\n
-\n
-item_list = []\n
-for portal_type in portal_type_list : \n
-  item_list.append((Base_translateString(portal_type), portal_type))\n
-\n
-return item_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

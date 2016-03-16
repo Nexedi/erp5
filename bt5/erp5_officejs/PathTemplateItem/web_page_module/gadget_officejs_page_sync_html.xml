@@ -104,58 +104,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!doctype html>\n
-<html>\n
-  <head>\n
-    <meta charset="utf-8">\n
-    <meta name="viewport" content="width=device-width, initial-scale=1">\n
-\n
-    <title>OfficeJS Sync Page</title>\n
-\n
-    <script src="rsvp.js"></script>\n
-    <script src="renderjs.js"></script>\n
-    <script src="handlebars.js"></script>\n
-    <script src="gadget_global.js" ></script>\n
-\n
-    <script id="page-template" type="text/x-handlebars-template">\n
-      <article class="ui-content ui-body-c">\n
-        <section class="ui-content-header-plain">\n
-          <h3 class="ui-content-title ui-body-c">\n
-            <span class="ui-icon ui-icon-custom ui-icon-refresh">&nbsp;</span>\n
-            Synchronize your data\n
-          </h3>\n
-        </section>\n
-        <section class="ui-body-c ui-content-section">\n
-          <div class="ui-controlgroup ui-controlgroup-horizontal">\n
-            <div class="ui-grid-b ui-responsive">\n
-              <div class="ui-block-a"></div>\n
-              <div class="ui-block-b">\n
-                <form class="synchro-form view-web-page-form">\n
-                  <button type="submit" data-i18n="Launch Synchronization" data-theme="b">Launch Synchronization</button>\n
-                </form>\n
-              </div>\n
-              <div class="ui-block-c"></div>\n
-            </div>\n
-          </div>\n
-        </section>\n
-      </article>\n
-    </script>\n
-\n
-    <script src="gadget_officejs_page_sync.js"></script>\n
-\n
-  </head>\n
-\n
-  <body>\n
-  </body>\n
-</html>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>OfficeJS Sync Page</string> </value>
         </item>

@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-""" round according to (french) fiscality rules """\n
-amount=float(amount or 0)\n
-fractionalPart, integerPart = math.modf(amount)\n
-if math.fabs(fractionalPart) > 0.49999 :\n
-  if integerPart > 0 : \n
-    integerPart += 1\n
-  elif integerPart < 0:\n
-    integerPart -= 1\n
-return int(integerPart)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>amount</string> </value>
         </item>

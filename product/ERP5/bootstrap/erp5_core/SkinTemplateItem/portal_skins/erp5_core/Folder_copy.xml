@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-Base_translateString = portal.Base_translateString\n
-\n
-selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)\n
-uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
-# make sure nothing is checked after\n
-context.portal_selections.setSelectionCheckedUidsFor(selection_name, [])\n
-\n
-request=context.REQUEST\n
-\n
-if uids != []:\n
-  context.manage_copyObjects(uids=uids, REQUEST=request, RESPONSE=request.RESPONSE)\n
-  message = Base_translateString("Items copied.")\n
-else:\n
-  message = Base_translateString("Please select one or more items to copy first.")\n
-\n
-return context.Base_redirect(form_id,\n
-             keep_items=dict(portal_status_message=message))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id, uids=[], listbox_uid=[], selection_name=\'\'</string> </value>
         </item>

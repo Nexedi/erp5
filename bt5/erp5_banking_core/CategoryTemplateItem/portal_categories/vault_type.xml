@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="BaseCategory" module="Products.ERP5Type.Document.BaseCategory"/>
+        <global name="BaseCategory" module="Products.ERP5.Document.BaseCategory"/>
         <tuple/>
       </tuple>
     </pickle>

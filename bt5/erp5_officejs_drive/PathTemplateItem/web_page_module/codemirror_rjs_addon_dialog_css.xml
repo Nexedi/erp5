@@ -98,41 +98,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>.CodeMirror-dialog {\n
-  position: absolute;\n
-  left: 0; right: 0;\n
-  background: inherit;\n
-  z-index: 15;\n
-  padding: .1em .8em;\n
-  overflow: hidden;\n
-  color: inherit;\n
-}\n
-\n
-.CodeMirror-dialog-top {\n
-  border-bottom: 1px solid #eee;\n
-  top: 0;\n
-}\n
-\n
-.CodeMirror-dialog-bottom {\n
-  border-top: 1px solid #eee;\n
-  bottom: 0;\n
-}\n
-\n
-.CodeMirror-dialog input {\n
-  border: none;\n
-  outline: none;\n
-  background: transparent;\n
-  width: 20em;\n
-  color: inherit;\n
-  font-family: monospace;\n
-}\n
-\n
-.CodeMirror-dialog button {\n
-  font-size: 70%;\n
-}</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Codemirror Addon Dialog CSS</string> </value>
         </item>

@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># This script will try to guess what is the current currency\n
-# for the particular vault\n
-\n
-vault_list = vault.split(\'/\')\n
-currency_id = None\n
-# Well, this is not a nice way of doing, we should have\n
-# a mapping or something instead\n
-if \'encaisse_des_devises\' in vault_list:\n
-  vault_currency_title = vault_list[vault_list.index(\'encaisse_des_devises\')+1]\n
-  context.log(\'Baobab_getVaultCurrency, vault = \', vault_currency_title)\n
-  for currency in context.currency_module.objectValues():\n
-    context.log(\'Baobab_getVaultCurrency, cur = \', currency.getTitle())\n
-    currency_title = currency.getTitle().replace(\' \',\'_\').lower()\n
-    if currency_title == vault_currency_title:\n
-      return currency.getRelativeUrl()\n
-else:\n
-  return context.currency_module[context.Baobab_getPortalReferenceCurrencyID()].getRelativeUrl()\n
-\n
-raise ValueError, \'No currency found for vault %s\'  %vault\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>vault=None,**kw</string> </value>
         </item>

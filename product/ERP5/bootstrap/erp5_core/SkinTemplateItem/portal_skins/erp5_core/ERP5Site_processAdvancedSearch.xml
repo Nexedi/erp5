@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return context.ERP5Site_viewQuickSearchResultList(\n
-    field_your_search_text = top_your_search_text,\n
-    field_your_search_portal_type = top_your_search_portal_type,\n
-    all_languages=all_languages)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>top_your_search_text=\'\', top_your_search_portal_type=None, all_languages=False</string> </value>
         </item>

@@ -1,0 +1,5 @@
+org=context.restrictedTraverse(context.REQUEST.organisation)
+adr=org.getAddress()
+woj=adr.getRegionValue()
+kraj=woj.getParent()
+return woj.getTitle(),kraj.getTitle()

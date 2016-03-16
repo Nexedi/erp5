@@ -49,41 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>""" Format the date according to current user preferences."""\n
-\n
-if not date:\n
-  return \'\'\n
-\n
-try:\n
-  order = context.getPortalObject().portal_preferences.getPreferredDateOrder()\n
-except AttributeError:\n
-  order = \'ymd\'\n
-\n
-y = date.year()\n
-m = date.month()\n
-d = date.day()\n
-\n
-if order == \'dmy\':\n
-  result = "%02d/%02d/%04d" % (d, m, y)\n
-elif order == \'mdy\':\n
-  result = "%02d/%02d/%04d" % (m, d, y)\n
-else: # ymd is default\n
-  result = "%04d/%02d/%02d" % (y, m, d)\n
-\n
-if hour_minute or seconds:\n
-  if seconds:\n
-    hour_minute_text = "%02dh%02dmn%02ds" % (date.hour(), date.minute(), date.second())\n
-  else:\n
-    hour_minute_text = "%02dh%02dmn" % (date.hour(), date.minute())\n
-  result = context.Base_translateString("${date} at ${hour_minute_text}", \n
-              mapping = {\'date\' : result, \'hour_minute_text\' : hour_minute_text  })\n
-  \n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>date, hour_minute=0, seconds=0</string> </value>
         </item>

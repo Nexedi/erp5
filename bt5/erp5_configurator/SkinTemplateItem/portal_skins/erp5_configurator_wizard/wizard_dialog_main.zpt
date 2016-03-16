@@ -1,0 +1,26 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block metal:define-macro="master">
+    <tal:block tal:define="form_action python: form.update_action or 'Base_callDialogMethod';
+               dialog_id form/id | template/id;
+               form_id request/form_id | string:view;
+               dialog_method form/action | dialog_id;
+               update_action form/update_action;
+               global dialog_category request/dialog_category | nothing;
+
+               local_parameter_list local_parameter_list | python: {};
+               dummy python: local_parameter_list.update({'dialog_id': dialog_id, 'dialog_method': dialog_method, 'update_method': update_action, 'dialog_category': dialog_category, 'cancel_url': request.get('cancel_url'), 'form_id': form_id});
+               title python: here.Base_translateString(here.Base_getFormViewDialogActionButtonTitle(form))">
+      <tal:block metal:use-macro="here/wizard_main_template/macros/master">
+        <tal:block metal:fill-slot="main">
+          <div class="list_dialog">
+            <tal:block metal:define-slot="main" />
+            <tal:block metal:define-slot="bottom" />
+          </div>
+
+        </tal:block>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+</tal:block>

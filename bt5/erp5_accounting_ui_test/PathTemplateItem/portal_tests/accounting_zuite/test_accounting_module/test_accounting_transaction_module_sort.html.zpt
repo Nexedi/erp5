@@ -1,0 +1,446 @@
+<html>
+<head><title>Test sort for Accounting module main listbox</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test sort for Accounting module main listbox
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+<!-- Setup {{{ -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<tr>
+<!-- }}} -->
+
+<!-- check content of known lines {{{ -->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td>2005/01/01</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[5]</td>
+  <td>2005/01/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[5]</td>
+  <td>2005/01/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[5]</td>
+  <td>2005/01/04</td>
+</tr>
+<!-- }}} -->
+
+<!-- sort by title {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.operation_date:none']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.title:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td>2005/01/01</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[5]</td>
+  <td>2005/01/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[5]</td>
+  <td>2005/01/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[5]</td>
+  <td>2005/01/04</td>
+</tr>
+<!-- }}} -->
+
+<!-- search and sort by title desc (regression) {{{ -->
+<tr>
+  <td>type</td>
+  <td>listbox_title</td>
+  <td>%</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.title:desc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td>2005/01/04</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[5]</td>
+  <td>2005/01/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[5]</td>
+  <td>2005/01/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[5]</td>
+  <td>2005/01/01</td>
+</tr>
+<!-- }}} -->
+
+<!-- sort by type {{{ -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.title:none']</td>
+  <td></td>
+</tr>
+<tr>
+  <!-- reset title sorting -->
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.title:none']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and
+    @value='listbox.translated_portal_type:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td>2005/01/01</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[5]</td>
+  <td>2005/01/04</td>
+</tr>
+<!-- }}} -->
+
+<!-- sort by type desc {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and
+    @value='listbox.translated_portal_type:desc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[5]</td>
+  <td>2005/01/04</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[5]</td>
+  <td>2005/01/01</td>
+</tr>
+<!-- }}} -->
+
+<!-- sort by date {{{ -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.translated_portal_type:none']</td>
+  <td></td>
+</tr>
+<tr>
+  <!-- reset type sorting -->
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.translated_portal_type:none']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and
+    @value='listbox.operation_date:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td>2005/01/01</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[5]</td>
+  <td>2005/01/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[5]</td>
+  <td>2005/01/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[5]</td>
+  <td>2005/01/04</td>
+</tr>
+<!-- }}} -->
+
+<!-- sort by date desc {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and
+    @value='listbox.operation_date:desc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td>2005/01/04</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[5]</td>
+  <td>2005/01/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[5]</td>
+  <td>2005/01/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[5]</td>
+  <td>2005/01/01</td>
+</tr>
+<!-- }}} -->
+
+<!-- sort by reference {{{ -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.operation_date:none']</td>
+  <td></td>
+</tr>
+<tr>
+  <!-- reset date sorting -->
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.operation_date:none']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>listbox_reference</td>
+  <td>%</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and
+    @value='listbox.reference:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td>2005/01/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[5]</td>
+  <td>2005/01/03</td>
+</tr>
+<!-- }}} -->
+
+<!-- sort by reference desc {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and
+    @value='listbox.reference:desc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td>2005/01/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[5]</td>
+  <td>2005/01/02</td>
+</tr>
+<!-- }}} -->
+
+<!-- clear reference search {{{ -->
+<tr>
+  <td>type</td>
+  <td>listbox_reference</td>
+  <td></td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- sort by specific reference {{{ -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.reference:none']</td>
+  <td></td>
+</tr>
+<tr>
+  <!-- reset reference sorting -->
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and
+    @value='listbox.reference:none']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and
+    @value='listbox.specific_reference:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td>2005/01/01</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[5]</td>
+  <td>2005/01/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[5]</td>
+  <td>2005/01/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[5]</td>
+  <td>2005/01/04</td>
+</tr>
+<!-- }}} -->
+
+<!-- sort by specific reference desc {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and
+    @value='listbox.specific_reference:desc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[5]</td>
+  <td>2005/01/04</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[5]</td>
+  <td>2005/01/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[5]</td>
+  <td>2005/01/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[5]</td>
+  <td>2005/01/01</td>
+</tr>
+<!-- }}} -->
+
+<!-- sort by simulation state {{{ -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.specific_reference:none']</td>
+  <td></td>
+</tr>
+<tr>
+  <!-- reset specific_reference sorting -->
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and
+    @value='listbox.specific_reference:none']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and
+    @value='listbox.translated_simulation_state_title:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

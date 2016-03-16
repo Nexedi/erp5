@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>context.updateVariationCategoryList()\n
-portal = context.getPortalObject()\n
-Base_translateString = portal.Base_translateString\n
-\n
-message = Base_translateString(\'%s Updated.\' % context.getPortalType())\n
-return context.Base_redirect(form_id=form_id,\n
-                      selection_name=selection_name,\n
-                      selection_index=selection_index,\n
-                      keep_items={\'portal_status_message\': message})\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id=\'view\', selection_index=0, selection_name=\'\'</string> </value>
         </item>

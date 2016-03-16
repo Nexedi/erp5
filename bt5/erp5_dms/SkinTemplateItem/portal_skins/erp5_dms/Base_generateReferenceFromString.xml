@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  Generate reference from a string by escaping all non ascii characters.\n
-  XXX: add support for non-ascii characters using unidecode python library\n
-"""\n
-transliterate_list = [\'?\', \':\', \';\', \'/\', \'&\', \'=\', \'^\', \'@\', \'>\', \'<\', \']\', \'[\', \'^\', \'\\\\\']\n
-\n
-def removeNonAscii(s): \n
-  return "".join(i for i in s if ord(i)>44 and ord(i)<123)\n
-\n
-# reference can be used for permanent URL so be friendly to spaces (SEO)\n
-s = s.strip()\n
-s =s.replace(\' \', \'-\')\n
-\n
-s = removeNonAscii(s)\n
-for item in transliterate_list:\n
-  s = s.replace(item, \'-\')\n
-\n
-return s.strip(\'-\')\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>s</string> </value>
         </item>

@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>#Clean some properties\n
-context.setSourceReference(None)\n
-context.setDestinationReference(None)\n
-context.setSolver(None)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

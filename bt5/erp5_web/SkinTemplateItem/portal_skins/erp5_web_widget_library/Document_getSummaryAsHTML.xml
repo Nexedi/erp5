@@ -33,61 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block \n
-  tal:define="document_url here/absolute_url;\n
-              thumbnail_url here/Base_getThumbnailAbsoluteUrl;\n
-              icon here/getIconURL;\n
-              title here/getTitle;\n
-              modification_date python: here.Base_FormatDate(here.getModificationDate(),hour_minute=1);\n
-              image_conversion_dict here/Base_getImageArgumentDict;\n
-              dummy python: image_conversion_dict.update(**{\'display\':\'thumbnail\'});\n
-              image_conversion_arguments python: \'&\'.join([\'%s=%s\' % (k, v) for k, v in image_conversion_dict.items()]);\n
-              description python: here.getDescription();\n
-              box_relative_url python: request.get(\'box_relative_url\', \'\');\n
-              dom_id python: modules[\'base64\'].urlsafe_b64encode(\'%s-%s\' %(box_relative_url, here.getUid())).rstrip(\'=\')">\n
-  <div class="document-gadget-quick-preview">\n
-  <div class="teaser"\n
-       tal:attributes="onclick string:$(\'#${dom_id}\').toggle();">\n
-    <img alt="Icon" class="icon"\n
-         tal:attributes="src icon" />\n
-\n
-    <span class="document-title"\n
-          tal:content="title"/>\n
-\n
-    <span class="modification-date"\n
-          tal:content="modification_date"/>\n
-\n
-  </div>\n
-\n
-  <!-- Hidden thumbnail & description -->\n
-  <div class="body" style="display:none;"\n
-       tal:attributes="id dom_id">\n
-    <a target="_blank" \n
-       tal:attributes="href string:${document_url}/view">\n
-      <img alt="Thumbnail" class="document-thumbnail"\n
-         tal:condition="python: thumbnail_url is not None"\n
-         tal:attributes="src string:${thumbnail_url}/index_html?${image_conversion_arguments}"/>\n
-      <br/>\n
-      <span class="description"\n
-            tal:content="description"/>\n
-    </a>\n
-    <br/>\n
-    <a target="_blank" \n
-       class="document-link"\n
-       title="Original Document"\n
-       i18n:translate="" i18n:domain="ui" i18n:attributes="title"\n
-       tal:attributes="href string:${document_url}/view">Show original item</a>\n
-  </div>\n
-  </div>\n
-  \n
-</tal:block>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

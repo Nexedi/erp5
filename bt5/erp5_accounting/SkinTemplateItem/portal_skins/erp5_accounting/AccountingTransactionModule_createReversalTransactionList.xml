@@ -49,69 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.ERP5Type.Message import translateString\n
-try:\n
-  from zExceptions import Redirect\n
-except:\n
-  Redirect = \'Redirect\'\n
-portal = context.getPortalObject()\n
-stool = portal.portal_selections\n
-getObject = portal.portal_catalog.getObject\n
-countMessage = portal.portal_activities.countMessage\n
-\n
-stool.updateSelectionCheckedUidList(selection_name, listbox_uid, uids)\n
-selection_uid_list = context.portal_selections.getSelectionCheckedUidsFor(\n
-                                                       selection_name)\n
-if selection_uid_list:\n
-  object_list = [getObject(uid) for uid in selection_uid_list]\n
-else:\n
-  object_list = stool.callSelectionFor(selection_name)\n
-\n
-# XXX prevent to call this on the whole module:\n
-if len(object_list) >= 1000:\n
-  return context.Base_redirect(form_id,\n
-    keep_items=dict(portal_status_message=\n
-        translateString(\n
-         \'Refusing to process more than 1000 objects, check your selection.\')))\n
-\n
-tag = \'reversal_creation_%s\' % random.randint(0, 1000)\n
-activated = 0\n
-for obj in object_list:\n
-  obj = obj.getObject()\n
-  if countMessage(path=obj.getPath(),\n
-                  method_id=\'AccountingTransaction_createReversalTransaction\'):\n
-    raise Redirect, "%s/view?portal_status_message=%s" % (\n
-              context.absolute_url(), translateString(\n
-      \'Reversal creation already in progress, abandon.\'))\n
-  obj.activate(tag=tag).AccountingTransaction_createReversalTransaction(\n
-                                cancellation_amount=cancellation_amount,\n
-                                date=date,\n
-                                plan=plan)\n
-  activated += 1\n
-\n
-if not activated:\n
-  return context.Base_redirect(form_id,\n
-     keep_items=dict(portal_status_message=\n
-          translateString(\'No valid transaction in your selection.\')))\n
-\n
-# activate something on the folder\n
-context.activate(after_tag=tag).getTitle()\n
-\n
-return context.Base_redirect(form_id,\n
-     keep_items=dict(portal_status_message=\n
-        translateString(\n
-          \'Reversal creation for ${activated_transaction_count} on\'\n
-          \' ${total_selection_count} transactions in progress.\',\n
-          mapping=dict(activated_transaction_count=activated,\n
-                       total_selection_count=len(object_list)))))\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>cancellation_amount=False, date=None, plan=False, uids=[], listbox_uid=[], selection_name=\'\', form_id=\'view\', **kw</string> </value>
         </item>

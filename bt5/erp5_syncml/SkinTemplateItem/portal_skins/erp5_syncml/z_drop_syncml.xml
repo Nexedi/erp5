@@ -25,10 +25,6 @@
             <value> <string>z_drop_syncml</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string>DROP TABLE IF EXISTS syncml</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

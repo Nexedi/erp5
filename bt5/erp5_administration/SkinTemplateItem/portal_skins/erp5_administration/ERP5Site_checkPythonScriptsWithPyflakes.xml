@@ -49,55 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Runs pyflakes on all python scripts.\n
-\n
-TODO / BUGS:\n
-* there is an offset in the line numbers in the reports\n
-* script containing only a comment cannot be parsed\n
-* integrate this directly in python script ZMI\n
-* wouldn\'t it be better to use this on a business template to check scripts\n
-from the business template ?\n
-"""\n
-\n
-pyflakes = context.ERP5Site_runPyflakes\n
-\n
-def indent(text):\n
-  return \'\'.join(("  " + line) for line in text.splitlines(True))\n
-\n
-def make_body(script):\n
-  """rewrite a python script as if it was a python function with all\n
-  bound names in the signature.\n
-  """\n
-  bound_names = script.getBindingAssignments().getAssignedNamesInOrder()\n
-  # printed is from  RestrictedPython.RestrictionMutator the rest comes from\n
-  # RestrictedPython.Utilities.utility_builtins\n
-  extra_builtins= [\'printed\', \'same_type\', \'string\', \'sequence\', \'random\',\n
-    \'DateTime\', \'whrandom\', \'reorder\', \'sets\', \'test\', \'math\']\n
-  \n
-  params = script.params()\n
-  \n
-  signature_parts = bound_names + extra_builtins\n
-  if params:\n
-    signature_parts += [params]\n
-  signature = ", ".join(signature_parts)\n
-  \n
-  function_name = script.getId().replace(".", "__dot__").replace(" ", "__space__")\n
-  \n
-  body = "def %s(%s):\\n%s" % (function_name, signature, indent(script.body()) or "  pass")\n
-  return body\n
-\n
-\n
-for script_container in (context.portal_skins, context.portal_workflow):\n
-  for script_path, script in context.ZopeFind(script_container, obj_metatypes=[\'Script (Python)\'], search_sub=1):\n
-    err = pyflakes(make_body(script), \'%s/%s\' % (script_container.getId(), script_path))\n
-    if err:\n
-      print err,\n
-\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

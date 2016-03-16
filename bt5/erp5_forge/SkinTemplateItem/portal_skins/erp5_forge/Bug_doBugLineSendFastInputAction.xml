@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import translateString\n
-bug_line = context.newContent(portal_type=\'Bug Line\',\n
-  title = title, text_content=text_content)\n
-bug_line.start()\n
-\n
-if batch_mode:\n
-  return bug_line\n
-else:\n
-  return context.Base_redirect(form_id, keep_items=dict(\n
-        portal_status_message=translateString(\'Bug Line sent.\')))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>title=\'\', text_content=\'\', form_id=\'view\', batch_mode=0, *args, **kwargs</string> </value>
         </item>

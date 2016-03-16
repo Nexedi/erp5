@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Delete an action on a type informations from types tool.\n
-"""\n
-assert context.meta_type in (\'ERP5 Type Information\', \'ERP5 Base Type\'), context.meta_type\n
-\n
-if context.meta_type == \'ERP5 Type Information\':\n
-  existing_actions_indexs = []\n
-  for idx, ai in enumerate(context.listActions()):\n
-    if ai.getId() == id:\n
-      existing_actions_indexs.append(idx)\n
-\n
-  if existing_actions_indexs:\n
-    context.deleteActions(existing_actions_indexs)\n
-else:\n
-  existing_actions_ids = []\n
-  for action in context.objectValues(spec=\'ERP5 Action Information\'):\n
-    if action.getReference() == id:\n
-      existing_actions_ids.append(action.getId())\n
-  if existing_actions_ids:\n
-    context.manage_delObjects(existing_actions_ids)\n
-\n
-return \'Set Successfully.\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>id=None</string> </value>
         </item>

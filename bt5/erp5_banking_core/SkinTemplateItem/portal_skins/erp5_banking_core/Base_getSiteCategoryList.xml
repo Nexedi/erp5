@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-site_vault_type_uid = portal.portal_categories.vault_type.site.getUid()\n
-result = []\n
-append = result.append\n
-for site in portal.portal_catalog(\n
-  portal_type=\'Category\',\n
-  strict_vault_type_uid=site_vault_type_uid):\n
-  if \'/portal_categories/site/\' not in site.path:\n
-    continue\n
-  append(site.getObject())\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

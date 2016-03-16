@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
- Must call all the script in appropriated order to setup UNG.\n
-"""\n
-from Products.ERP5Type.Log import log\n
-log(\'Launching activities to setup the demo UNG configuration!\')\n
-\n
-kw = {}\n
-installed_business_template_list = context.portal_templates.getInstalledBusinessTemplateTitleList()\n
-\n
-if \'erp5_web_ung_theme\' not in installed_business_template_list:\n
-  kw = context.Alarm_installUngBusinessTemplateList()\n
-\n
-context.activate(**kw).Alarm_configureUng()\n
-\n
-log(\'Finished to launch the activities to setup the demo UNG configuration!\')\n
-context.setEnabled(False)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

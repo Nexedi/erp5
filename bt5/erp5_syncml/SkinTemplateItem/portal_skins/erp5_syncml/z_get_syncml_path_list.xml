@@ -51,24 +51,6 @@ path</string> </value>
             <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-SELECT path, gid, data \n
-FROM syncml\n
-WHERE\n
-  path like <dtml-sqlvar path type="string">\n
-<dtml-if min_gid>\n
-  AND gid >= <dtml-sqlvar min_gid type="string">\n
-</dtml-if>\n
-<dtml-if max_gid>\n
-  AND gid <= <dtml-sqlvar max_gid type="string">\n
-</dtml-if>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

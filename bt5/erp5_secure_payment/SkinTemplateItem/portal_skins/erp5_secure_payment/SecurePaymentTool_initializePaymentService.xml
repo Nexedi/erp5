@@ -49,11 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>return context.portal_secure_payments.initialize(service=service_reference, REQUEST=context.REQUEST, **kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>service_reference=\'default\', **kw</string> </value>
         </item>

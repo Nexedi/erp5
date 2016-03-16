@@ -49,29 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>email_reader = context.getParentValue()\n
-title = context.getReplySubject()\n
-text_content = context.getReplyBody()\n
-\n
-id_group = "%s-sent" % email_reader.getRelativeUrl()\n
-new_id = context.portal_ids.generateNewId(id_group=id_group)\n
-new_id = "OUTBOX-%s" % new_id\n
-\n
-# Prepare new message\n
-new_message = email_reader.newContent(portal_type="Email Thread", id=new_id, title=title, text_content=text_content, text_format="text/plain")\n
-new_message.setRecipient(context.getReplyTo())\n
-# set In-Reply-To field\n
-new_message.setDestinationReference(context.getSourceReference())\n
-\n
-# Reply to old one\n
-context.reply()\n
-\n
-# And display\n
-return new_message.Base_redirect()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -19,10 +19,6 @@
             <value> <string>application/x-ruby</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>stylesheet \'sencha-touch.scss\'</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

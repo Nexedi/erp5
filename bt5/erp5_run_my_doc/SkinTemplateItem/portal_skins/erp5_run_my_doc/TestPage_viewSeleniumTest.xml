@@ -33,33 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
-  <head>\n
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-    <title tal:content="context/title">The title</title>\n
-  </head>\n
-  <body>\n
-    <table name="SELENIUM-TEST" cellpadding="1" cellspacing="1" border="1">\n
-      <thead>\n
-        <tr class="title">\n
-          <td colspan="3" tal:content="context/title">title</td>\n
-        </tr>\n
-      </thead>\n
-      <tbody>\n
-        <tal:block tal:replace="structure python:context.TestPage_getSeleniumTestInit()" />\n
-        <tal:block tal:replace="structure python:context.TestPage_extractTest(context.asStrippedHTML())" />\n
-      </tbody>\n
-    </table>\n
-  </body>\n
-</html>
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

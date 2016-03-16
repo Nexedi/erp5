@@ -49,33 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if clean:\n
-  context.Zuite_tearDownFullTextSearchTest()\n
-\n
-portal = context.getPortalObject()\n
-howto_dict = context.Zuite_getHowToInfo()\n
-\n
-\n
-person = portal.person_module.newContent(portal_type=\'Person\',\n
-                                         title=howto_dict[\'full_text_person_title\'],\n
-                                         reference=howto_dict[\'full_text_person_reference\'],\n
-                                         default_email_text=howto_dict[\'full_text_person_email\'])\n
-# create Organisation\n
-organisation = portal.organisation_module.newContent(portal_type=\'Organisation\',\n
-                                                     title=howto_dict[\'full_text_organisation_title\'],\n
-                                                     default_email_text=howto_dict[\'full_text_organisation_email\'])\n
-# set organisation\n
-person.setCareerSubordinationValue(organisation)\n
-\n
-# Create Currency\n
-portal.currency_module.newContent(portal_type=\'Currency\',\n
-                                  title=howto_dict[\'dig_currency_title\'])\n
-\n
-return "Init Ok"\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>clean=True</string> </value>
         </item>

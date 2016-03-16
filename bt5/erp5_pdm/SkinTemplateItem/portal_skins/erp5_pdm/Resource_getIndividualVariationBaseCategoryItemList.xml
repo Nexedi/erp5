@@ -49,38 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This script returns the list of base categories on the preferred\n
-variations for services. It is intended to be used\n
-by ListField instances.\n
-"""\n
-\n
-portal_type = context.getPortalType()\n
-if portal_type in context.getPortalVariationTypeList():\n
-  portal_type = context.getParentValue().getPortalType()\n
-\n
-from Products.ERP5Type.Cache import CachingMethod\n
-\n
-def getIndividualVariationBaseCategoryList(portal_type):\n
-  result = []\n
-  #xxx default preference value [] for fix a bug\n
-  method_name = \'getPreferred%sIndividualVariationBaseCategoryList\' % portal_type.replace(\' \', \'\')\n
-  method = getattr(context.portal_preferences, method_name)\n
-  url_list = method([])\n
-  for url in url_list:\n
-    base_category = context.portal_categories[url]\n
-    result.append((base_category.getTranslatedTitle(), base_category.getRelativeUrl()))\n
-  return result\n
-\n
-getIndividualVariationBaseCategoryList = CachingMethod(getIndividualVariationBaseCategoryList,\n
-    id=(script.id, context.Localizer.get_selected_language()),\n
-    cache_factory=\'erp5_ui_long\')\n
-\n
-return getIndividualVariationBaseCategoryList(portal_type)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

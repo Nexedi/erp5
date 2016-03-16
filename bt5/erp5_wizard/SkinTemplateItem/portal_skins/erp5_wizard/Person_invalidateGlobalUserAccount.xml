@@ -49,35 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
- Invalidate global user account. \n
-\n
- Only invalidate if the local user has no Valid Assigments and \n
- reference.\n
-"""\n
-if person is None:\n
-  person = context\n
-\n
-reference = person.getReference()\n
-assignment_len = len(person.Person_getAvailableAssignmentValueList())\n
-if reference is not None and  assignment_len == 0:\n
-  # invalidate user in Authentification Server only if \n
-  # its a loggable user in current instance\n
-  kw = context.Person_getDataDict(person=person)\n
-  context.portal_wizard.callRemoteProxyMethod(\n
-                     \'WitchTool_invalidateGlobalUserAccountFromExpressInstance\', \\\n
-                     use_cache = 0, \\\n
-                     ignore_exceptions = 0, \\\n
-                     **kw)\n
-else:\n
-  from Products.ERP5Type.Log import log\n
-  log("Unable to invalidate remote global account for "\\\n
-      "%s (reference=%s , len(assignment_list)=%s)" % (person.getRelativeUrl(), \n
-                                                       reference, assignment_len))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>person=None, **kw</string> </value>
         </item>

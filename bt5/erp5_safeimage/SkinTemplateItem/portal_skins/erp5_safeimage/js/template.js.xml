@@ -23,24 +23,6 @@
             <value> <string>application/javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-(function(){\n
-  document.write("<script id=\'image\' type=\'text/html\'>");\n
-  document.write("{{! Service page template }}");\n
-  document.write("<article>");\n
-  document.write("{{ image_id }}");\n
-  document.write("<div id=\'map\' class=\'smallmap\'></div>");\n
-  document.write("</article>");\n
-  document.write("</script>");\n
-})();\n
-\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

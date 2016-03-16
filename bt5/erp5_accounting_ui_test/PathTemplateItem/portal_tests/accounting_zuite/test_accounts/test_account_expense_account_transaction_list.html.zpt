@@ -1,0 +1,159 @@
+<html>
+<head><title>Test for Account transaction lisbox</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test Transactions related to an account
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounts</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- {{{ Select Goods Sales account and check transaction list -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Goods Sales</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Transactions</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+
+<!-- dumped listbox {{{2 -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]</td>
+  <td>Client 1 Sale Invoice</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]</td>
+  <td>2005/01/02</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[4]</td>
+  <td>Sale Invoice Transaction</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[6]</td>
+  <td>Client 1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[7]</td>
+  <td>Posted to General Ledger</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[8]</td>
+  <td>0.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[9]</td>
+  <td>2000.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[10]</td>
+  <td>-2000.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[11]</td>
+  <td>-2000.0</td>
+</tr>
+
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[2]</td>
+  <td>Client 2 Sale Invoice</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[3]</td>
+  <td>2005/01/03</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[4]</td>
+  <td>Sale Invoice Transaction</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[6]</td>
+  <td>Client 2</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[7]</td>
+  <td>Posted to General Ledger</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[8]</td>
+  <td>0.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[9]</td>
+  <td>3000.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[10]</td>
+  <td>-3000.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[11]</td>
+  <td>-5000.0</td>
+</tr>
+<!-- }}} -->
+
+<!-- {{{ stat line -->
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[8]</td>
+  <td>0.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
+  <td>5000.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[10]</td>
+  <td>-5000.0</td>
+</tr>
+<!-- 2}}} -->
+
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

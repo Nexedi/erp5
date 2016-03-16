@@ -2,19 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="LDIFMethod" module="Products.ZLDAPMethods.LM"/>
-        <tuple/>
-      </tuple>
+      <global name="LDIFMethod" module="Products.ZLDAPMethods.LM"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>_arg</string> </key>
             <value>
@@ -84,14 +75,14 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>uid</string>
-<string>Person_isLdapIndexable</string>
-<string>getFirstName</string>
-<string>getLastName</string>
-<string>getDefaultEmailText</string>
-<string>getPassword</string>
-<string>getReference</string>
-<string>getDestinationReference</string>
+                            <string>uid</string>
+                            <string>Person_isLdapIndexable</string>
+                            <string>getFirstName</string>
+                            <string>getLastName</string>
+                            <string>getDefaultEmailText</string>
+                            <string>getPassword</string>
+                            <string>getReference</string>
+                            <string>getDestinationReference</string>
                           </list>
                         </value>
                     </item>

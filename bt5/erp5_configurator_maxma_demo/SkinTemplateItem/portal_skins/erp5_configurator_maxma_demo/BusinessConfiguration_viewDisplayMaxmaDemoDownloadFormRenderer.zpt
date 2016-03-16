@@ -1,0 +1,17 @@
+<h4 i18n:translate=""
+    i18n:domain="ui"> The Demo Configuration is going to be installed.</h4>
+
+
+<p i18n:translate=""
+    i18n:domain="ui">
+   After the configuration process finish, you can login normal user:
+     <li> Login : demo </li>
+     <li> Password : demo </li>
+</p>
+
+
+<p i18n:translate=""
+    i18n:domain="ui">
+  Please proceed using Install button below. 
+  In the next page you will receive automatically updated installation status report.
+</p>

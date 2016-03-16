@@ -1,0 +1,126 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test EG5 ehr UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test EG5 ehr UI</td></tr>
+</thead>
+<tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_tests/erp5_web_e5g_ehr_ui_zuite/testE5gEhr_PreferenceReset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<!-- skin list -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_skins/erp5_hal_json_style/ERP5Site_reindexSkinList/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>skins ok</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+  <td></td>
+</tr>
+
+<!-- create sample data -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_tests/erp5_web_e5g_ehr_ui_zuite/testE5gEhr_CreateDataSample</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+  <td></td>
+</tr>
+
+
+<!-- Initialize -->
+<!-- DISABLE FOR NOW -->
+<!--
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/e5g_ehr/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>E-HR</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@data-i18n="E-HR"]</td>
+  <td>E-HR</td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Super Opportunity</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Super Announcement</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Super Position</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//a[@href="#jio_key=position_opportunity_module%2Fopportunity_0&amp;view=view"]</td>
+  <td>Super Opportunity 0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//a[@href="#jio_key=position_announcement_module%2Fannouncement_0&amp;view=view"]</td>
+  <td>Super Announcement Title 0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//a[@href="#jio_key=position_module%2Fposition_0&amp;view=view"]</td>
+  <td>Super Position 0</td>
+</tr>
+-->
+
+</tbody>
+</table>
+</body>
+</html>

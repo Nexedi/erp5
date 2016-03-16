@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Get default external email text.\n
-  Usually this is the default email text but it can be any.\n
-"""\n
-return context.getDefaultEmailText()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Person_getDefaultExternalEmailText</string> </value>
         </item>

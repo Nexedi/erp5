@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -36,26 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<tal:block tal:replace="nothing"\n
-           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-  <tal:block metal:define-macro="breadcrumb">\n
-    <a tal:attributes="href here/ERP5Site_getTioLiveSiteRootUrl">TioLive</a> /\n
-    <tal:block tal:repeat="item here/breadcrumbs">\n
-      <a tal:attributes="href item/url" tal:content="item/title" />\n
-      /\n
-    </tal:block>\n
-  </tal:block>\n
-</tal:block>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>
@@ -66,6 +43,10 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>breadcrumb_render</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

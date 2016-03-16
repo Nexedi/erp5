@@ -49,11 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>raise NotImplementedError(\'This script shall be overlodad, as user creation is project specific\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>tag, first_name, last_name, reference, email</string> </value>
         </item>

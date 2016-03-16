@@ -49,44 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script returns the list of category (or tags) which are available in the current web section.\n
-  It returns a python list of Category object. A Category object is really simple, as it has just \n
-  one property with a getter and a setter : title.\n
-\n
-  TODO: XXX-JPS\n
-  - this is way too slow - it will collapse the system\n
-  - have a look at mailreader code - there is something doing the same\n
-  - consider using virtual domains possibly - again look in email reader code\n
-""" \n
-\n
-\n
-## First step : retrieve the raw list\n
-current_section = context.getWebSectionValue()\n
-subject_list = []\n
-\n
-for item in current_section.WebSection_getDocumentValueList(): # XXX-JPS - this will fail for performance reasons\n
-  subject_list.extend([x for x in item.getSubjectList() if not x in subject_list])\n
-\n
-## Now, build the object list so that a Listbox can be used to display the results of this script.\n
-result = []\n
-\n
-class Category:\n
-  def setTitle(self, title):\n
-    self.title = title\n
-  def getTitle(self):\n
-    return self.title\n
-\n
-for item in subject_list:\n
-  obj = Category()\n
-  obj.setTitle(item)\n
-  result.append(obj)\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

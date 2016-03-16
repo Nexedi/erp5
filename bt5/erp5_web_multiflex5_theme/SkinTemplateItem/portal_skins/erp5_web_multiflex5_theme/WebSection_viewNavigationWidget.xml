@@ -37,45 +37,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block replace="nothing">\n
-  <!--\n
-  This widget displays the list of Sections contained in the current context.\n
-  It uses the properties defined on sections to decide whether sections\n
-  -->\n
-</tal:block>\n
-\n
-<tal:block tal:define="current_web_site python:request.get(\'current_web_site\', here);\n
-                       exclude_default_document python: context.getLayoutProperty(\'layout_navigation_default_visible\') == 0;\n
-                       include_site_default_page python: context.getLayoutProperty(\'layout_navigation_home_visible\') == 1;\n
-                       menu_item_list python:current_web_site.WebSection_getSiteMapTree(depth=3, exclude_default_document=exclude_default_document, include_site_default_page = include_site_default_page);\n
-                       web_site_url python:current_web_site.absolute_url()">\n
-  <ul>\n
-    <li tal:repeat="menu_item menu_item_list">\n
-      <tal:block tal:condition="not:nocall:menu_item/subsection"><a tal:attributes="href menu_item/url" tal:content="menu_item/translated_title">Menu</a></tal:block>\n
-      <tal:block tal:condition="nocall:menu_item/subsection">\n
-      <a tal:attributes="href menu_item/url"><tal:block tal:replace="menu_item/translated_title">Drop-down Menu</tal:block><!--[if IE 7]><!--></a><!--<![endif]-->\n
-      <!--[if lte IE 6]><table><tr><td><![endif]-->\n
-      <ul metal:define-macro="generateTree">\n
-        <li tal:repeat="item menu_item/subsection">\n
-          <a href="#" tal:attributes="href item/url" tal:content="item/translated_title">Menu subitem 1</a>\n
-          <tal:recurse define="menu_item item" tal:condition="nocall:item/subsection">\n
-            <metal:call use-macro="here/WebSection_viewNavigationWidget/macros/generateTree" />\n
-          </tal:recurse>\n
-        </li>\n
-      </ul>\n
-      <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
-      </tal:block>\n
-    </li>\n
-  </ul>\n
-</tal:block>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

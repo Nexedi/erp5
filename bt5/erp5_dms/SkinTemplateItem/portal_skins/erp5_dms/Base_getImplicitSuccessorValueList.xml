@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Called by document.getImplicitSuccessorValueList\n
-  Gets a list of dicts containing reference and/or version and/or language\n
-  and maybe some more things.\n
-  Returns a list of objects.\n
-\n
-  dummy simple implementation - if no version, then return the newest in the chosen language\n
-  or in any language if not specified\n
-"""\n
-my_reference = context.getReference()\n
-temporary_dict = {}\n
-for dic in reference_list:\n
-  reference = dic.get(\'reference\')\n
-  if reference is not None and reference!=my_reference:\n
-    temporary_dict[reference] = None\n
-\n
-if not temporary_dict:\n
-  return ()\n
-\n
-# For the present, we only use reference.\n
-# Result document will be the latest version with appropriate language by user setting.)\n
-return context.Base_zGetImplicitSuccessorValueList(reference_list=temporary_dict.keys())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>reference_list</string> </value>
         </item>

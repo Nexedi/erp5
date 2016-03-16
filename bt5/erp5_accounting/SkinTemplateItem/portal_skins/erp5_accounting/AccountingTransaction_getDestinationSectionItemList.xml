@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># deprecated, just use this in TALES:\n
-return context.Base_getPreferredSectionItemList(portal_type=\'Organisation\',\n
-          validation_state=\'validated\', base_category=\'destination_section\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

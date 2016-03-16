@@ -1,0 +1,9 @@
+<tal:block tal:define="language_list here/Localizer/get_languages_map;
+                       available_language_list here/getAvailableLanguageList;
+                       absolute_url here/absolute_url">
+<tal:block tal:repeat="language language_list" tal:condition="python:len(available_language_list) > 1">
+<b tal:condition="language/selected"><span style="text-decoration: underline" tal:content="language/id"/></b>
+<a tal:attributes="href python:'%s/Base_doLanguage?select_language=%s' % (absolute_url, language['id'])"
+   tal:content="language/id" tal:condition="python: language['id'] in available_language_list and not language.get('selected')"/>
+</tal:block>
+</tal:block>

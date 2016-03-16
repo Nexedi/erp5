@@ -33,40 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block tal:define="shipping here/SaleOrder_getSelectedShippingResource;\n
-                       web_site here/getWebSiteValue;">\n
-  <h2>\n
-    <span tal:replace="python: here.Base_translateString(\'Shipping\')"/>\n
-  </h2>\n
-\n
-  <tal:block tal:condition="python: shipping is None">\n
-    <h3> <span tal:replace="python: here.Base_translateString(\'You have not selected shipping\')"/></h3>\n
-    <p> \n
-      <strong>\n
-        <span tal:replace="python: here.Base_translateString(\'Your current cart selection requires shipping. Please select shipping from\')"/>\n
-        <a tal:attributes="href python: \'%s/cart\' % web_site.absolute_url()">here</a>.\n
-      </strong>\n
-    </p>\n
-  </tal:block>\n
-\n
-  <tal:block tal:condition="python: shipping is not None">\n
-    <p>\n
-      <span tal:replace="shipping_obj/getTitle"/> : \n
-      <b>\n
-        <span tal:replace="shipping/getPrice"/>\n
-        <span tal:replace="python: web_site.WebSite_getShoppingCartDefaultCurrency().getTitle()"/>\n
-      </b>\n
-    </p>\n
-  </tal:block>\n
-</tal:block>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>

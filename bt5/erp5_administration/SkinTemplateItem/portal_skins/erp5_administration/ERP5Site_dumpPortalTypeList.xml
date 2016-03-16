@@ -49,28 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>for ti in sorted(context.getPortalObject().portal_types.contentValues(), key=lambda x:x.getId()):\n
-  print ti.getId()\n
-  print " ", "\\n  ".join([x for x in (\n
-    "Short Title: %s" % ti.getShortTitle(),\n
-    "Class: %s" % ti.getTypeClass(),\n
-    "Init Script: %s" % ti.getTypeInitScriptId(),\n
-    "Add Permission: %s" % ti.getTypeAddPermission(),\n
-    "Acquire Local Roles: %s" % ti.getTypeAcquireLocalRole(),\n
-    "Property Sheets: %r" % sorted(ti.getTypePropertySheetList()),\n
-    "Base Categories: %r" % sorted(ti.getTypeBaseCategoryList()),\n
-    "Allowed Content Types: %r" % sorted(ti.getTypeAllowedContentTypeList()),\n
-    "Hidden Content Types: %r" % sorted(ti.getTypeHiddenContentTypeList()),\n
-    "Searchable Property: %r" % sorted(ti.getSearchableTextPropertyIdList()),\n
-    "Searchable Method: %r" % sorted(ti.getSearchableTextMethodIdList()),\n
-    )])\n
-  print\n
-\n
-return printed\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

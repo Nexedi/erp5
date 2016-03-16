@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
- Key categories for Supply Paths for Pricing Optimisation\n
-\n
- The way of the optimisation is reducing target supply paths,\n
- else all supply paths are the domain of the SELECT.\n
-"""\n
-category = context.portal_categories\n
-\n
-return [(x.id, x.id) for x in (category.resource, category.source, \n
-                               category.source_section, category.destination,\n
-                               category.destination_section, category.source_account,\n
-                               category.price_currency)]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

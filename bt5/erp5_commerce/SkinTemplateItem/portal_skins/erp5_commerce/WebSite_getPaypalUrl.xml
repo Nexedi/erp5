@@ -49,23 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if alternative_url is not None:\n
-  return alternative_url\n
-\n
-test_environement = context.getLayoutProperty(\'ecommerce_test_environment_enabled\', None)\n
-\n
-if test_environement is not None and test_environement == 1:\n
-  if api == \'nvp\':\n
-    return \'https://api-3t.sandbox.paypal.com/nvp\'\n
-  return \'https://www.sandbox.paypal.com/cgi-bin/webscr\'\n
-\n
-if api == \'nvp\':\n
-  return \'https://api-3t.paypal.com/nvp\'\n
-return \'https://www.paypal.com/cgi-bin/webscr\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>api=None, alternative_url=None</string> </value>
         </item>

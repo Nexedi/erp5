@@ -49,35 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>import commands\n
-kw[\'portal_type\'] = (\'PDF\')\n
-result_list = [x.getObject() for x in context.portal_catalog(**kw)]\n
-\n
-result=[]\n
-for x in result_list:\n
-  if x.getParentValue() == context:\n
-    result.append(x)\n
-result_list = result\n
-\n
-\n
-\n
-\n
-# get the merged pdf\n
-merged_pdf = context.mergePDF(result_list)\n
-\n
-\n
-request = context.REQUEST\n
-response = request.RESPONSE\n
-\n
-filename = \'%s.%s\' % ((\'all_attached_files\', \'pdf\'))\n
-response.setHeader(\'Content-disposition\', \'attachment; filename="%s"\' % filename)\n
-response.setHeader(\'Content-type\', \'appplication/pdf\')\n
-\n
-return merged_pdf\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

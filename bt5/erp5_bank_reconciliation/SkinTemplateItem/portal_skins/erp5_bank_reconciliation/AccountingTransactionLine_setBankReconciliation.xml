@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Set the aggregate relation to a payment request on this line.\n
-\n
-This script has a proxy role to be able to modify delivered lines\n
-"""\n
-portal = context.getPortalObject()\n
-\n
-assert context.getPortalType() in portal.getPortalAccountingMovementTypeList()\n
-\n
-context.setAggregateValue(payment_request_value, portal_type=\'Bank Reconciliation\')\n
-# for traceability\n
-portal.portal_workflow.doActionFor(\n
-  context.getParentValue(),\n
-  "edit_action",\n
-  comment=message)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>payment_request_value, message</string> </value>
         </item>

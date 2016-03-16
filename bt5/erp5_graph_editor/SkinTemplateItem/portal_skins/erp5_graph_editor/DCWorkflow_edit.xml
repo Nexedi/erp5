@@ -49,45 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import translateString\n
-from Products.Formulator.Errors import FormValidationError\n
-request = container.REQUEST\n
-\n
-form = getattr(context, form_id)\n
-edit_order = form.edit_order\n
-try:\n
-  # Validate\n
-  form.validate_all_to_request(request, key_prefix=\'my_\')\n
-except FormValidationError, validation_errors:\n
-  # Pack errors into the request\n
-  result = {}\n
-  result[\'field_errors\'] = {}\n
-  field_errors = form.ErrorFields(validation_errors)\n
-  for key, value in field_errors.items():\n
-    result[\'field_errors\'][key] = value.error_text\n
-  return form()\n
-\n
-(kw, encapsulated_editor_list), action = context.Base_edit(form_id, silent_mode=1)\n
-assert not encapsulated_editor_list\n
-\n
-context.setProperties(\n
-  title=kw[\'title\'],\n
-  description=kw[\'description\'],\n
-  manager_bypass=context.manager_bypass)\n
-marker = []\n
-if context.getProperty("jsplumb_graph", marker) is marker:\n
-  context.manage_setProperty("jsplumb_graph", kw["jsplumb_graph"])\n
-else:\n
-  context.manage_changeProperties({\'jsplumb_graph\': kw["jsplumb_graph"]})\n
-\n
-# XXX handle workflow edition here.\n
-\n
-return context.Base_redirect(form_id, \n
-                             keep_items={\'portal_status_message\': translateString("Data updated.")})\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id, *args, **kw</string> </value>
         </item>

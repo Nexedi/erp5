@@ -1,0 +1,79 @@
+<tal:block tal:replace="nothing"
+           xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+<!--
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+                   Vincent Pelletier <vincent@nexedi.com>
+                   Christophe Dumez <christophe@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+</tal:block>
+<tal:block tal:define="form_action string:logged_in;
+                       js_list python: ['%s/login_form.js' % (here.portal_url.getPortalObject().absolute_url(), )]">
+<tal:block metal:use-macro="here/main_template/macros/master">
+  <tal:block metal:fill-slot="main">
+    <div class="content login">
+      <div class="title_index" align="middle" tal:condition="python: request.get('came_from', None) is None">
+        <span class="erp" i18n:translate="" i18n:domain="ui">Log in</span>
+      </div>
+      <tal:block tal:condition="python: request.get('came_from', None) is not None">
+        <h1 i18n:translate="" i18n:domain="ui" class="erp" >You don't have enough permissions to access this page</h1>
+        <p i18n:translate="" i18n:domain="ui" class="erp" >You can log in with another user name or
+          <a href="javascript:history.back();" class="erp" 
+              i18n:translate="" i18n:domain="ui">go back</a>.
+        </p>
+      </tal:block>
+
+      <input tal:condition="exists: request/came_from"
+              type="hidden" name="came_from"
+              tal:attributes="value request/came_from" />
+
+      <fieldset class="left fielset_login">
+        <div class="field">
+          <label for="name" class="required" i18n:translate="" i18n:domain="ui">Name</label>
+          <div class="input"><input type="text" name="__ac_name" id="name" /></div>
+        </div>
+        <div class="field">
+          <label for="password" i18n:translate="" i18n:domain="ui">Password</label>
+          <div class="input"><input type="password" name="__ac_password" id="password"/></div>
+        </div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <div class="input">
+            <input type="submit" value="Login" class="button"
+                   tal:attributes="name python: '%s:method' % (form_action, )"
+                   i18n:attributes="value" i18n:domain="ui"/>
+          </div>
+        </div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <div class="input">
+            <a tal:attributes="href string:${here/portal_url}/mail_password_form"
+            i18n:translate="" i18n:domain="ui">I forgot my password!</a>
+          </div>
+        </div>
+      </fieldset>
+
+      <script type="text/javascript">setFocus()</script>
+    <div class="text_div">
+      <p i18n:translate="" i18n:domain="ui" class="info">> Having trouble logging in? Make sure to enable cookies in your web browser.</p>
+      <p i18n:translate="" i18n:domain="ui" class="info">> Don't forget to logout or exit your browser when you're done.</p>
+    </div>
+    </div>
+  </tal:block>
+</tal:block>
+</tal:block>

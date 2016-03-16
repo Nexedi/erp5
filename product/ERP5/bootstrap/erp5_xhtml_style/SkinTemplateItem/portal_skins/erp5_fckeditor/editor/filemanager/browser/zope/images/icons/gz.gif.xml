@@ -23,14 +23,6 @@
             <value> <string>image/gif</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">R0lGODlhEAAQAMQAAP/ntQDe3v+tAP+9Sv+tIf//92vG/2uM////jP/WjP/31gCU3v/GawAxUozW
-/wBjlN6UAP////8AAAAAAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEA
-ABQALAAAAAAQABAAQAVtICWOU2k2o1QoADMIUDxRkzNLUc4mDCHMtdmIZCqhRBIEr1E0PRwo3ArA
-I8hoNoqkyX0eh6LJY7IQi5ESCe2xWAQChsMxTa+nsTedgveCALM4Oy4xfnhaglaEf0JDYm1vcV9g
-jQuTYGNjZWMUIQA7</string> </value>
-        </item>
-        <item>
             <key> <string>height</string> </key>
             <value> <int>16</int> </value>
         </item>

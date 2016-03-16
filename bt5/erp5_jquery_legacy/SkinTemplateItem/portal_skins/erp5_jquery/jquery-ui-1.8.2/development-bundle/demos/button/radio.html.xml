@@ -33,60 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html lang="en">\n
-<head>\n
-\t<meta charset="UTF-8" />\n
-\t<title>jQuery UI Button - Radio Buttons demo</title>\n
-\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
-\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
-\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
-\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
-\t<script type="text/javascript" src="../../ui/jquery.ui.button.js"></script>\n
-\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
-\t<script type="text/javascript">\n
-\t$(function() {\n
-\t\t$("#radio").buttonset();\n
-\t});\n
-\t</script>\n
-\t<style>\n
-\t\t\n
-\t</style>\n
-</head>\n
-<body>\n
-\n
-<div class="demo">\n
-\n
-\t<form>\n
-\t\t<div id="radio">\n
-\t\t\t<input type="radio" id="radio1" name="radio" /><label for="radio1">Choice 1</label>\n
-\t\t\t<input type="radio" id="radio2" name="radio" checked="checked" /><label for="radio2">Choice 2</label>\n
-\t\t\t<input type="radio" id="radio3" name="radio" /><label for="radio3">Choice 3</label>\n
-\t\t</div>\n
-\t</form>\n
-\n
-</div><!-- End demo -->\n
-\n
-\n
-\n
-<div class="demo-description">\n
-\n
-<p>A set of three radio buttons transformed into a button set.</p>\n
-\n
-</div><!-- End demo-description -->\n
-\n
-\n
-\n
-</body>\n
-</html>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>radio.html</string> </value>
         </item>

@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>movement = context\n
-\n
-parent = movement.getParentValue()\n
-if parent.getPortalType() != \'Applied Rule\':\n
-  return False\n
-\n
-parent_rule = parent.getSpecialiseValue()\n
-if parent_rule.getPortalType() != \'Invoice Transaction Simulation Rule\':\n
-  return False\n
-\n
-receivable_account_type_list = (\'asset/receivable\',)\n
-payable_account_type_list = (\'liability/payable\',)\n
-\n
-for account in (movement.getSourceValue(portal_type=\'Account\'),\n
-                movement.getDestinationValue(portal_type=\'Account\')):\n
-  if account is not None:\n
-    account_type = account.getAccountType()\n
-    if account_type in receivable_account_type_list or \\\n
-        account_type in payable_account_type_list:\n
-      return True\n
-\n
-return False\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>rule</string> </value>
         </item>

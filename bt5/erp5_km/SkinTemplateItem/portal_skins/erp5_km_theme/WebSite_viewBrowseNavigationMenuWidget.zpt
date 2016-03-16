@@ -1,0 +1,62 @@
+<tal:block tal:define="current_web_site python:request.get('current_web_site', here);
+                       portal_path python:request.get('current_web_site_url', current_web_site.absolute_url());
+                       current_web_section_url python:request.get('current_web_section_url', portal_path);
+                       search_area_url python: '%s%s' % (portal_path, current_web_site.getLayoutProperty('layout_search_area_web_section_id', default=''));
+                       menu_item_list python:current_web_site.WebSection_getSiteMapTree(depth=32, property_mapping=('compact_translated_title',));
+                       is_anonymous here/portal_membership/isAnonymousUser;
+                       static_navigation_menu python:is_anonymous and current_web_site.getLayoutProperty('layout_anonymous_navigation_menu') or  current_web_site.getLayoutProperty('layout_member_navigation_menu');">
+
+  <li class="collapse-menu"
+      tal:condition="not:static_navigation_menu">
+    <div class="collapse-menu-root">
+      <a href="#" tal:attributes="href current_web_section_url">
+        <tal:block i18n:translate="" i18n:domain="ui">Browse</tal:block>
+      </a>
+    </div>
+    <ul tal:condition="menu_item_list">
+      <li tal:repeat="menu_item menu_item_list">
+        <tal:block tal:condition="not:nocall:menu_item/subsection"><a tal:attributes="href menu_item/url" tal:content="menu_item/compact_translated_title | menu_item/translated_title">Menu</a></tal:block>
+        <tal:block tal:condition="nocall:menu_item/subsection">
+        <a tal:attributes="href menu_item/url"><tal:block tal:replace="menu_item/compact_translated_title | menu_item/translated_title">Drop-down Menu</tal:block><!--[if IE 7]><!--></a><!--<![endif]-->
+        <ul metal:define-macro="generateTree">
+          <li tal:repeat="item menu_item/subsection">
+            <a href="#" tal:attributes="href item/url" tal:content="item/compact_translated_title | item/translated_title">Menu subitem 1</a>
+            <tal:recurse define="menu_item item" tal:condition="nocall:item/subsection">
+              <metal:call use-macro="here/WebSite_viewBrowseNavigationMenuWidget/macros/generateTree" />
+            </tal:recurse>
+          </li>
+        </ul>
+        </tal:block>
+      </li>
+    </ul>
+  </li>
+
+  <tal:block tal:condition="static_navigation_menu">
+    <tal:block tal:repeat="menu_item menu_item_list">
+
+    <li tal:define="sub_item_list menu_item/subsection"
+        tal:attributes="class python:'menu_item_%s collapse-menu' % repeat['menu_item'].index + ' ' + (sub_item_list and 'collapse-able' or '')">
+      <a tal:attributes="href menu_item/url" >
+        <tal:block tal:replace="menu_item/compact_translated_title | menu_item/translated_title">Menu</tal:block>
+      </a>
+ 
+        <ul tal:condition="sub_item_list">
+          <li tal:repeat="menu_item sub_item_list">
+            <tal:block tal:condition="not:nocall:menu_item/subsection"><a tal:attributes="href menu_item/url" tal:content="menu_item/compact_translated_title | menu_item/translated_title">Menu</a></tal:block>
+            <tal:block tal:condition="nocall:menu_item/subsection">
+            <a tal:attributes="href menu_item/url"><tal:block tal:replace="menu_item/compact_translated_title | menu_item/translated_title">Drop-down Menu</tal:block><!--[if IE 7]><!--></a><!--<![endif]-->
+            <ul>
+              <li tal:repeat="item menu_item/subsection">
+                <a href="#" tal:attributes="href item/url" tal:content="item/compact_translated_title | item/translated_title">Menu subitem 1</a>
+                <tal:recurse define="menu_item item" tal:condition="nocall:item/subsection">
+                  <metal:call use-macro="here/WebSite_viewNavigationMenuWidget/macros/generateTree" />
+                </tal:recurse>
+              </li>
+            </ul>
+            </tal:block>
+          </li>
+        </ul>
+    </li>
+    </tal:block>
+  </tal:block>
+</tal:block>

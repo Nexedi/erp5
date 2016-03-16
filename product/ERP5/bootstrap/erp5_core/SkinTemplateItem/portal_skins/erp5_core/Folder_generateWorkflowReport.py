@@ -1,0 +1,66 @@
+portal = context.getPortalObject()
+translateString = portal.Base_translateString
+getWorkflowsFor = portal.portal_workflow.getWorkflowsFor
+state_variable_set = set()
+add = state_variable_set.add
+type_state_variable_workflow_dict = {}
+type_workflow_state_count_dict_dict = {}
+workflow_translated_title_dict = {}
+workflow_translated_state_title_dict = {}
+portal_type_translated_title_dict = {}
+for portal_type in context.allowedContentTypes():
+  portal_type_id = portal_type.getId()
+  portal_type_translated_title_dict[portal_type_id] = translateString(portal_type.getTitle())
+  for workflow in getWorkflowsFor(portal_type_id):
+    state_container = getattr(workflow, 'states', None)
+    if state_container is not None and len(state_container) > 1:
+      state_var = workflow.state_var
+      workflow_id = workflow.getId()
+      workflow_translated_title_dict[workflow_id] = translateString(workflow.title)
+      type_state_variable_workflow_dict[(portal_type_id, state_var)] = workflow_id
+      state_count_dict = type_workflow_state_count_dict_dict.setdefault((portal_type_id, workflow_id), {})
+      translated_state_title_dict = workflow_translated_state_title_dict.setdefault(workflow_id, {})
+      for state in state_container.objectValues():
+        state_id = state.getId()
+        # TODO: support workflow-specific translations
+        translated_state_title_dict[state_id] = translateString(state.title)
+        state_count_dict[state_id] = 0
+      add(state_var)
+column_list = ['portal_type'] + list(state_variable_set)
+COUNT = 'count(*)'
+if use_selection:
+  selection_kw = portal.portal_selections.getSelectionParamsFor(selection_name).copy()
+  selection_kw.pop('limit', None)
+  query = portal.portal_catalog.getSQLCatalog().buildQuery(selection_kw)
+else:
+  query = None
+for line in context.searchFolder(group_by=column_list, select_list=[COUNT] + column_list, query=query):
+  portal_type = line.portal_type
+  count = getattr(line, COUNT)
+  for state_variable in state_variable_set:
+    workflow = type_state_variable_workflow_dict.get((line.portal_type, state_variable))
+    state = getattr(line, state_variable)
+    if workflow is None:
+      assert not state, (portal_type, state_variable, state)
+      continue
+    state_count_dict = type_workflow_state_count_dict_dict[(portal_type, workflow)]
+    state_count_dict[state] = count + state_count_dict[state]
+listbox = []
+append = listbox.append
+for (portal_type, workflow), state_count_dict in sorted(type_workflow_state_count_dict_dict.iteritems(), key=lambda x: x[0]):
+  if sum(state_count_dict.values()):
+    append({
+      'translated_portal_type': '%s - %s' % (portal_type_translated_title_dict[portal_type], workflow_translated_title_dict[workflow]),
+      'state' : '',
+      'count' : '',
+    })
+    translated_state_title_dict = workflow_translated_state_title_dict[workflow]
+    for state, count in sorted(state_count_dict.iteritems(), key=lambda x: x[0]):
+      if count:
+        append({
+          'translated_portal_type': '',
+          'state': translated_state_title_dict[state],
+          'count': count,
+        })
+portal.Base_updateDialogForm(listbox=listbox, empty_line_number=0)
+return context.Folder_viewWorkflowReport()

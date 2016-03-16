@@ -49,51 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFActivity.ActiveResult import ActiveResult\n
-from Products.ERP5.Tool.TemplateTool import BusinessTemplateUnknownError\n
-from Products.ERP5.Tool.TemplateTool import CATALOG_UPDATABLE\n
-\n
-portal = context.getPortalObject()\n
-template_tool = portal.portal_templates\n
-bt5 = portal.getPromiseParameter(\'portal_templates\', \'expected_bt5\')\n
-\n
-if bt5 is None:\n
-  return\n
-\n
-active_result = ActiveResult()\n
-\n
-bt5_list = bt5.split()\n
-bt5_list.extend(template_tool.getInstalledBusinessTemplateTitleList())\n
-\n
-try:\n
-  message_list = template_tool.upgradeSite(bt5_list, dry_run=True,\n
-                                 update_catalog=CATALOG_UPDATABLE)\n
-  severity = len(message_list)\n
-except BusinessTemplateUnknownError, error:\n
-  severity = -1\n
-  detail = str(error)\n
-\n
-if severity == -1:\n
-  severity = 5\n
-  summary = "Unable to resolve bt5 dependencies"\n
-elif severity == 0:\n
-  summary = "Nothing to do."\n
-  detail = ""\n
-else:\n
-  summary = "Upgrade needed."\n
-  detail = "Information: %s" % ",".join(message_list)\n
-\n
-\n
-active_result.edit(\n
-  summary=summary, \n
-  severity=severity,\n
-  detail=detail)\n
-\n
-context.newActiveProcess().postResult(active_result)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>tag, fixit=False, **kw</string> </value>
         </item>

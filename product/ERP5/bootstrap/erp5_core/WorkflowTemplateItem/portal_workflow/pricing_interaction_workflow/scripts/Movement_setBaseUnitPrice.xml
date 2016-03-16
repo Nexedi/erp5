@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>movement = state_change[\'object\']\n
-if not movement.hasBaseUnitPrice():\n
-  base_unit_price = state_change[\'kwargs\'][\'workflow_method_result\']\n
-  if base_unit_price is not None:\n
-    movement.setBaseUnitPrice(base_unit_price)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

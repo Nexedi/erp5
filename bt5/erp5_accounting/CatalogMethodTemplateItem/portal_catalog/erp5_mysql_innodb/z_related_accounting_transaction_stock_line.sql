@@ -1,0 +1,1 @@
+accounting_transaction.uid = <dtml-var table_0>.explanation_uid

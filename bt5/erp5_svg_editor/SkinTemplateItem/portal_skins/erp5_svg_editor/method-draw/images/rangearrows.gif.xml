@@ -23,11 +23,6 @@
             <value> <string>image/gif</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">R0lGODlhFAAHAJEDAAAAAHRyav///7u7uyH5BAEAAAMALAAAAAAUAAcAAAIdjDOpm2cCEVsBimfl
-rJlnAIZeNGpM6Zlbd0zbUQAAOw==</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

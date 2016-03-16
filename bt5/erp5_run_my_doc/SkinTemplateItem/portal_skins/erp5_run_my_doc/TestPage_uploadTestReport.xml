@@ -49,12 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>context.setTestReport(context.REQUEST.form.get(\'test_report\', \'default\').read())\n
-return "Report successfully uploaded\\n" + context.getTestReport()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

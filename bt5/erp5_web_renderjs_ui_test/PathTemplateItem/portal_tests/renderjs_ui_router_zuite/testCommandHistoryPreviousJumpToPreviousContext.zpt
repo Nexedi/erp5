@@ -1,0 +1,190 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Form View Previous Link</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Default Module View</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td></td>
+</tr>
+
+<!-- Wait for gadget to be loaded -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Title 1</td>
+  <td></td>
+</tr>
+
+<!-- Enter a search query to create a selection parameter -->
+<tr>
+  <td>type</td>
+  <td>search</td>
+  <td>title</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@value='header-submit' and @type='submit']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextNotPresent</td>
+  <td>Title 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Title 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='field_listbox']//a[text()='Title 1' and contains(@href, '#!index')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Edit</td>
+  <td></td>
+</tr>
+
+<!-- create a second history context by creating a subdocument -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Edit' and contains(@href, '#!change') and contains(@href, 'n.editable=true')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Add' and contains(@href, '#!change') and contains(@href, 'view%3Dcreate_a_document')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Add' and contains(@href, '#!change') and contains(@href, 'view%3Dcreate_a_document')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Proceed' and @type='submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Proceed' and @type='submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Tabs' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Tabs' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_tab.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='View' and contains(@href, '#!change') and contains(@href, 'n.view=view') and contains(@href, 'u.page=') and contains(@href, 'u.editable=')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view.html']</td>
+  <td></td>
+</tr>
+
+<!-- We are on the foo line in non editable mode -->
+<tr>
+  <td>assertTextPresent</td>
+  <td>Start Date</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+
+<!-- It should redirect to the foo in editable mode -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Title 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+
+<!-- It should redirect to the foo module with the search parameters -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Foos</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@value='title' and @type='text' and @name='search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Title 1</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

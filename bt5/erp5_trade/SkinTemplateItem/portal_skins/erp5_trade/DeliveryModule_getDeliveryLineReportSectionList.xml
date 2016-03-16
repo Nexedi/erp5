@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Form.Report import ReportSection\n
-request = container.REQUEST\n
-return ReportSection(form_id=\'DeliveryModule_viewDeliveryLineList\',\n
-                     path=context.getPhysicalPath(),\n
-                     selection_params=dict(portal_type=request[\'portal_type\'],\n
-                                           module_selection_name=request[\'selection_name\'])),\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

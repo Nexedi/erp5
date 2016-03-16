@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-\n
-funding_base_category = portal.portal_preferences.getPreferredAccountingTransactionLineFundingBaseCategory()\n
-\n
-if funding_base_category:\n
-  return portal.portal_categories.restrictedTraverse(funding_base_category).getBaseCategoryValue().getTitle()\n
-\n
-return \'Funding\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

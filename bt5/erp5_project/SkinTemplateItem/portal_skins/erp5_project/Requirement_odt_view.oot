@@ -1,0 +1,35 @@
+
+<office:document-content xmlns:draw='http://openoffice.org/2000/drawing' xmlns:office='http://openoffice.org/2000/office' xmlns:text='http://openoffice.org/2000/text' xmlns:number='http://openoffice.org/2000/datastyle' xmlns:chart='http://openoffice.org/2000/chart' xmlns:table='http://openoffice.org/2000/table' xmlns:dr3d='http://openoffice.org/2000/dr3d' xmlns:fo='http://www.w3.org/1999/XSL/Format' xmlns:style='http://openoffice.org/2000/style' xmlns:form='http://openoffice.org/2000/form' xmlns:script='http://openoffice.org/2000/script' xmlns:svg='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:math='http://www.w3.org/1998/Math/MathML' office:class='text'  xmlns:tal='http://xml.zope.org/namespaces/tal'
+          xmlns:i18n='http://xml.zope.org/namespaces/i18n'
+          xmlns:metal='http://xml.zope.org/namespaces/metal'
+          tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'
+         office:version='1.0'>
+  <office:script/>
+  <office:font-decls>
+    <style:font-decl fo:font-family="Tahoma, Lucidasans, 'Lucida Sans', 'Arial Unicode MS'" style:name='Tahoma1'/>
+    <style:font-decl style:font-pitch='variable' fo:font-family="'Andale Sans UI'" style:name='Andale Sans UI'/>
+    <style:font-decl style:font-pitch='variable' fo:font-family="'Bitstream Vera Sans'" style:font-style-name='Gras' style:name='Bitstream Vera Sans'/>
+    <style:font-decl style:font-pitch='variable' fo:font-family='Mincho' style:name='Mincho'/>
+    <style:font-decl style:font-pitch='variable' fo:font-family="Tahoma, Lucidasans, 'Lucida Sans', 'Arial Unicode MS'" style:name='Tahoma'/>
+    <style:font-decl style:font-pitch='variable' fo:font-family="'Nimbus Roman No9 L'" style:font-family-generic='roman' style:name='Nimbus Roman No9 L'/>
+  </office:font-decls>
+  <office:automatic-styles>
+    <style:style style:parent-style-name='Heading 1' style:family='paragraph' style:name='P1'>
+      <style:properties style:auto-text-indent='true' fo:margin-right='0cm' fo:text-indent='0.026cm' fo:margin-left='0.026cm'/>
+    </style:style>
+  </office:automatic-styles>
+  <office:body>
+    <text:sequence-decls>
+      <text:sequence-decl text:display-outline-level='0' text:name='Illustration'/>
+      <text:sequence-decl text:display-outline-level='0' text:name='Table'/>
+      <text:sequence-decl text:display-outline-level='0' text:name='Text'/>
+      <text:sequence-decl text:display-outline-level='0' text:name='Drawing'/>
+    </text:sequence-decls>
+    <text:p text:style-name='Heading'>Requirements list:</text:p>
+    <text:p text:style-name='Text body'/>
+	<tal:x repeat="requirement python:here.Requirement_flatten_list()">
+		<text:h text:style-name='P1' text:level='1'><tal:x replace="python: requirement[0].title" /> (ref <tal:x replace="python: requirement[1]" />)</text:h>
+		<text:p text:style-name='First line indent' tal:content="python: requirement[0].description">This is a very long endless description</text:p>
+	</tal:x>
+  </office:body>
+</office:document-content>

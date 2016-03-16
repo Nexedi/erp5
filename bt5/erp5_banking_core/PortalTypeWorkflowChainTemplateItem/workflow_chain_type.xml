@@ -1,58 +1,58 @@
 <workflow_chain>
  <chain>
-  <type>Accounting Cancellation</type>
+  <type>portal_type_workflow_chain/Accounting Cancellation</type>
   <workflow>accounting_cancellation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Accounting Date</type>
+  <type>portal_type_workflow_chain/Accounting Date</type>
   <workflow>accounting_date_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Bank Account</type>
+  <type>portal_type_workflow_chain/Bank Account</type>
   <workflow>-validation_workflow, bank_account_workflow</workflow>
  </chain>
  <chain>
-  <type>Career</type>
+  <type>portal_type_workflow_chain/Career</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Check</type>
+  <type>portal_type_workflow_chain/Check</type>
   <workflow>check_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Check Model Type Variation</type>
+  <type>portal_type_workflow_chain/Check Model Type Variation</type>
   <workflow>edit_workflow, model_variation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Checkbook</type>
+  <type>portal_type_workflow_chain/Checkbook</type>
   <workflow>checkbook_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Checkbook Model</type>
+  <type>portal_type_workflow_chain/Checkbook Model</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Checkbook Model Check Amount Variation</type>
+  <type>portal_type_workflow_chain/Checkbook Model Check Amount Variation</type>
   <workflow>edit_workflow, model_variation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Counter</type>
+  <type>portal_type_workflow_chain/Counter</type>
   <workflow>counter_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Counter Date</type>
+  <type>portal_type_workflow_chain/Counter Date</type>
   <workflow>counter_date_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Currency</type>
+  <type>portal_type_workflow_chain/Currency</type>
   <workflow>-validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Currency Exchange Line</type>
+  <type>portal_type_workflow_chain/Currency Exchange Line</type>
   <workflow>-validation_workflow, currency_exchange_line_interaction_workflow, currency_exchange_line_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Person</type>
+  <type>portal_type_workflow_chain/Person</type>
   <workflow>-user_account_workflow</workflow>
  </chain>
 </workflow_chain>

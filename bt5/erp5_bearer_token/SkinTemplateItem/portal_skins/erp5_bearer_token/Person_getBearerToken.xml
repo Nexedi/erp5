@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if context.getPortalType() != \'Person\':\n
-  raise TypeError(\'Person object is required\')\n
-from DateTime import DateTime\n
-from Products.ERP5Type.DateUtils import addToDate\n
-\n
-key = context.Base_getBearerTokenKey()\n
-if not key:\n
-  raise ValueError(\'Bearer Key Token is not defined\')\n
-\n
-token = {\n
-  \'expiration_timestamp\': addToDate(DateTime(), to_add={\'hour\': 1}).timeTime(),\n
-  \'reference\': context.getReference(),\n
-  \'user-agent\': context.REQUEST.getHeader(\'User-Agent\'),\n
-  \'remote-addr\': context.REQUEST.get(\'REMOTE_ADDR\')\n
-}\n
-\n
-hmac = context.Base_getHMAC(key, str(token))\n
-\n
-context.Base_setBearerToken(hmac, token)\n
-\n
-return hmac, token[\'expiration_timestamp\']\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script just returns what the user entered in\n
-  the fast input form.\n
-"""\n
-portal = context.getPortalObject()\n
-context.Base_updateDialogForm(listbox=listbox)\n
-return context.P0_viewAssignmentFastInputDialog(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox=None, **kw</string> </value>
         </item>

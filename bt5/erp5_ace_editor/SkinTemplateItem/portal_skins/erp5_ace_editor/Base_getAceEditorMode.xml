@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># For backward compatibility, make sure to use python as default mode\n
-mode = "python"\n
-portal_type = context.getPortalType()\n
-if portal_type == "Web Page":\n
-  mode = "html"\n
-elif portal_type == "Web Script":\n
-  mode = "javascript"\n
-elif portal_type == "Web Style":\n
-  mode = "css"\n
-return mode\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

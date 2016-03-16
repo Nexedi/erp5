@@ -1,0 +1,237 @@
+<tal:block metal:define-macro="global_definitions">
+  <tal:block define="
+    global mode options/mode | request/gadget_mode | string:erp5_front;
+    global default_pad_group options/default_pad_group | request/gadget_default_pad_group | string:;
+    global default_pad_group python: default_pad_group and context.WebSection_getDefaultPadGroup(default_pad_group);
+    global isAnonymousKnowledgePadUsed options/use_anonymous_knowledge_pad | python: request.get('use_anonymous_knowledge_pad', False);
+    dummy python: request.set('is_anonymous_knowledge_pad_used', isAnonymousKnowledgePadUsed);
+    struct python: here.ERP5Site_getActiveKnowledgePadForUser(mode=mode,
+      default_pad_group=default_pad_group or None,
+      create_default_pad=options.get('create_default_pad', False));
+    global active_knowledge_pad python: struct[0];
+    global knowledge_pads python: struct[1];
+    global columns python: options.get('columns', 3);
+    global isAnon python: here.portal_membership.isAnonymousUser();
+    global isUserAllowedToCreateKnowledgePads context/Base_isUserAllowedToUseKnowledgePad;
+    global isKnowledgePadTemplateUsed python: request.get('is_knowledge_pad_template_used', 0);
+    global make_security_check python: options.get('make_security_check', False);
+    global pad_column python: options.get('pad_column', 0);
+    global cancel_url here/absolute_url;
+    " />
+</tal:block>
+
+<tal:block metal:define-macro="disable_server_integration">
+
+  <tal:block tal:condition="isKnowledgePadTemplateUsed">
+    <script type="text/javascript" 
+            tal:content="structure string: //<![CDATA[
+                                           var is_knowledge_template_used = 1;
+                                           var mode = '${mode}';
+                                           var default_pad_group = '${default_pad_group}';
+                                           var cancel_url = '${cancel_url}';//]]">
+    </script>
+  </tal:block>
+
+</tal:block>
+
+<tal:block metal:define-macro="knowledge_pad_security_check">
+
+  <div tal:condition="python: not (isUserAllowedToCreateKnowledgePads or isAnon or isAnonymousKnowledgePadUsed)">
+    <div class="wait_block">
+      <p i18n:translate="" i18n:domain="ui"> 
+        You are not allowed to use knowledge pad system due to security restrictions.
+      </p>
+    </div>
+  </div>
+
+</tal:block> 
+
+<a metal:define-macro="add_new_gadget"
+   tal:condition="python:active_knowledge_pad is not None and not isKnowledgePadTemplateUsed"
+   tal:attributes="href string:Base_viewGadgetListDialog?reset=1&amp;cancel_url=${cancel_url}&amp;mode=${mode}&amp;active_pad_relative_url=${active_knowledge_pad/getRelativeUrl}"
+   title="Add gadgets"
+   i18n:domain="ui"
+   i18n:attributes="title"
+   id="add-gadgets">
+  <span i18n:translate="">Add gadgets</span>
+</a>
+
+<tal:block metal:define-macro="stick">
+  <tal:block
+    tal:condition="not: isKnowledgePadTemplateUsed"
+    tal:define="is_customized_pad python:
+          context in active_knowledge_pad.getPublicationSectionValueList() and
+          active_knowledge_pad.getGroup()==default_pad_group">
+
+    <a tal:condition="not: is_customized_pad"
+       tal:attributes="href python:
+       'WebSection_stickKnowledgePad?knowledge_pad_url=%s&cancel_url=%s'
+       %(active_knowledge_pad.getRelativeUrl(), cancel_url)"
+       i18n:translate="" 
+       i18n:domain="ui"
+       id="stick-gadgets"><span>Stick it</span></a>
+
+    <a tal:condition="is_customized_pad"
+       tal:attributes="href python:
+       'WebSection_unStickKnowledgePad?knowledge_pad_url=%s&cancel_url=%s'
+       %(active_knowledge_pad.getRelativeUrl(), cancel_url)"
+       i18n:translate="" 
+       i18n:domain="ui"
+       id="unstick-gadgets"><span>Unstick it</span></a>
+  </tal:block>
+</tal:block>
+
+
+
+<tal:block metal:define-macro="hidden_dialogs">
+
+  <div id="add_new_tab_dialog"
+      class="toggable_dialog">
+    <h3 i18n:translate="" i18n:domain="ui"> Add new tab </h3>
+      <span i18n:translate="" i18n:domain="ui">Tab name</span>: 
+      <input type="text" 
+             value="" 
+             name="pad_title" 
+             id="new_pad_title"
+             tal:attributes="onkeypress string: return addPadOnServerOnEnter(event, '${mode}', 'view')"/>
+      <br/>
+      <br/>
+      <button type="button"
+              onclick="$('#add_new_tab_dialog').toggle();"
+              i18n:translate="" 
+              i18n:domain="ui">Cancel</button>
+      <button type="button"
+              tal:attributes="onclick string:addPadOnServer('${mode}', 'view')" 
+              i18n:translate="" 
+              i18n:domain="ui"
+              id="add_new_tab_dialog_add_button">Add</button>
+  </div>
+
+  <div id="rename_tab_dialog" 
+       tal:condition="python:active_knowledge_pad is not None"
+       class="toggable_dialog"
+       tal:define="active_knowledge_pad_relative_url python:active_knowledge_pad and active_knowledge_pad.getRelativeUrl() or ''">
+    <h3 i18n:translate="" i18n:domain="ui"> Rename tab </h3>
+      <span i18n:translate="" i18n:domain="ui">Tab name</span>:
+      <input type="text"
+             id="new_knowledge_pad_title"
+             name="knowledge_pad_title"
+             onkeypress="return renameKnowledgePadToServerOnEnter(event);"
+             tal:attributes="value active_knowledge_pad/getTitle;"/>
+      <br/>
+      <br/>
+      <button type="button"
+              i18n:translate="" 
+              i18n:domain="ui"
+              onclick="$('#rename_tab_dialog').toggle();">Cancel</button>
+      <button type="button"
+              i18n:translate="" 
+              i18n:domain="ui"
+              id="rename_tab_dialog_rename_button"
+              onclick="renameKnowledgePadToServer();">
+        Rename 
+      </button>
+  </div>
+</tal:block>
+
+
+<tal:block metal:define-macro="navigation"
+           tal:define="is_tabs_visible 
+                            python: int(here.REQUEST.get('is_tabs_visible', 1));">
+
+  <div class="tab"
+       id="tabs_switcher">
+     <span i18n:translate="" i18n:domain="ui" id="tab_switcher_hidden"
+           tal:attributes="style python: test(is_tabs_visible, 'display:none', None)">Show tabs</span>
+     <span i18n:translate="" i18n:domain="ui" id="tab_switcher_visible"
+          tal:attributes="style python: test(is_tabs_visible, None, 'display:none')">Hide tabs</span>
+  </div>
+
+  <div id="tabs"
+       tal:attributes="style python: 
+                              'display: %s' %test(is_tabs_visible, 'block', 'none')">
+    <ul>
+      <tal:block tal:repeat="knowledge_pad knowledge_pads">
+
+        <tal:block  tal:define="knowledge_pad_relative_url knowledge_pad/getRelativeUrl;
+                                active_knowledge_pad_relative_url active_knowledge_pad/getRelativeUrl;
+                                is_active python: knowledge_pad_relative_url==active_knowledge_pad_relative_url;
+                                dom_id python: '%s' %knowledge_pad_relative_url.replace('/', '_');
+                                pad_title_dom_id python: '%s_title' %dom_id;"> 
+
+          <li tal:attributes="id dom_id;
+                              class python: test(is_active, 'tab tab_selected', 'tab')">
+
+            <!--                      
+            <a tal:attributes="href string:
+                                 ERP5Site_toggleActiveKnowledgePad?knowledge_pad_url=${knowledge_pad_relative_url}&amp;mode=${mode}">
+              <span tal:attributes="id pad_title_dom_id;"
+                    tal:content="knowledge_pad/getTitle"/>
+             </a>-->
+
+             <span tal:attributes="id pad_title_dom_id;
+                                   onclick string:loadPadFromServer('${knowledge_pad_relative_url}', '${dom_id}', '${mode}')" 
+                   tal:content="knowledge_pad/getTitle"/>
+
+               <div class="pad-actions"
+                    tal:attributes="style python: test(is_active, 'display:block', 'display:none')">
+                 <span title="Settings"
+                       i18n:attributes="title"
+                       i18n:domain="ui"
+                       class="clickable_image rename_tab_dialog_image"
+                       tal:attributes="onclick string:showRenamePadPopup('${knowledge_pad_relative_url}', 
+                                                                         '${pad_title_dom_id}');"></span>
+                 <span title="Remove"
+                       i18n:attributes="title"
+                       i18n:domain="ui"
+                       class="clickable_image remove_tab_dialog_image"
+                       tal:attributes="onclick string: removeKnowledgePadFromServer(
+                                                         '${knowledge_pad_relative_url}', '${mode}')"/>
+               </div>
+
+             </li>
+
+            </tal:block>
+          </tal:block>
+          <li class="tab"
+              tal:condition="not: isKnowledgePadTemplateUsed"
+              onclick="showAddNewPadPopup();"
+              i18n:translate="title" i18n:domain="ui"
+              title="Add new tab"
+              id="add_new_tab_dialog_link">Add tab</li>
+           <li class="tab"
+                    tal:condition="python: isKnowledgePadTemplateUsed and isUserAllowedToCreateKnowledgePads"
+                    onclick="showCreateDefaultKnowledgePadWarningMessage();"
+                    i18n:translate="title" i18n:domain="ui"
+                    title="Create your own tab"
+                    id="create_own_pad_dialog_link"></li>
+       </ul>
+  </div>
+
+  <div id="add_new_gadget_link">
+    <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget"> Add Gadgets</span>
+  </div>
+
+</tal:block>
+
+<tal:block metal:define-macro="add_new_gadget_message">
+  <div tal:condition="is_tab_empty">
+    <h3 i18n:translate="" 
+        i18n:domain="ui"> 
+      Your tab is empty.
+    </h3>
+    <h4 i18n:translate="" 
+        i18n:domain="ui"> 
+        Please  use link (<b>Add gadgets</b>) to prepare it yourself.
+    </h4>
+  </div>
+</tal:block>
+
+
+<tal:block metal:define-macro="loading_message">
+  <div id="loading-wrapper" style="display:none;">
+    <img src="ajax-loader.gif" title="Loading" alt="Loading"/>
+    <p i18n:translate="" i18n:domain="ui"> Please wait while your changes are being applied. </p>
+  </div>
+
+</tal:block>

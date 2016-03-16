@@ -49,18 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>destination = None\n
-# if import, then set destination to None\n
-if not context.isImported():\n
-  destination = context.getDestination()\n
-  if destination is not None:\n
-    destination += \'/caveau/auxiliaire/encaisse_des_billets_et_monnaies\'\n
-\n
-return destination\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

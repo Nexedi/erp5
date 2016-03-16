@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-child_count = 0\n
-\n
-for child in context.Person_getFamilyRelatedPersonList() :\n
-  if max_age == -1 or child.Person_getAge(year=1) <= max_age :\n
-    child_count += 1\n
-\n
-return child_count\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>max_age = -1</string> </value>
         </item>

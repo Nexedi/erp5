@@ -1,0 +1,333 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Generic Search Dialog</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Generic Search Dialog<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td tal:content="string:${here/portal_url}/bar_module/FooModule_createObjects?start:int=1&num:int=1"/>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string:${here/portal_url}/bar_module/FooModule_createObjects?start:int=2&num:int=1&portal_type=Bar"/>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string:${here/portal_url}/Zuite_waitForActivities"/>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>open</td>
+  <td tal:content="string:${here/portal_url}/bar_module/view"/>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Find']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_your_title']</td>
+  <td>Title</td>
+</tr>
+<!-- Title 
+<tr>
+  <td>assertSelected</td>
+  <td>field_your_title_search_key</td>
+  <td>Default (ExactMatch)</td>
+</tr> -->
+<tr>
+  <td>select</td>
+  <td>field_your_title_search_key</td>
+  <td>Keyword</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>listbox_title</td>
+  <td>Title</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+
+
+<!-- selection is saved -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Find']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//input[@name='field_your_title']</td>
+  <td>Title</td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>field_your_title_search_key</td>
+  <td>Keyword</td>
+</tr>
+
+<!-- search more
+XXX doing more advanced stuffs requires 'addSelection' and 'removeSelection'
+commands from selenium 0.8
+-->
+<tr>
+  <td>select</td>
+  <td>field_your_simulation_state</td>
+  <td>label=Draft</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_your_portal_type</td>
+  <td>label=Foo</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>listbox_title</td>
+  <td>Title</td>
+</tr>
+<!-- only 'Foo' portal type have a simulation state, so we only have 1 document
+-->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+
+<!-- select again, with exact search mode -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Find']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_your_title_search_key</td>
+  <td>label=Exact Match</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>0 records</td>
+</tr>
+
+<!-- test selection and exclusion of category -->
+<tr>
+	<td>clickAndWait</td>
+	<td>name=Folder_show:method</td>
+	<td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Find']</td>
+  <td></td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>name=field_your_foo_category_relative_url</td>
+	<td>label=a</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=dialog_submit_button</td>
+	<td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>0 records</td>
+</tr>
+
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Find']</td>
+  <td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>name=field_your_foo_category_relative_url_is_excluded_</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=dialog_submit_button</td>
+	<td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Find']</td>
+  <td></td>
+</tr>
+<tr>
+	<td>removeSelection</td>
+	<td>name=field_your_foo_category_relative_url</td>
+	<td>label=a</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>name=field_your_foo_category_relative_url</td>
+	<td>label=b</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=dialog_submit_button</td>
+	<td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Find']</td>
+  <td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>name=field_your_foo_category_relative_url_is_excluded_</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=dialog_submit_button</td>
+	<td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Find']</td>
+  <td></td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>name=field_your_foo_category_relative_url</td>
+	<td>label=a</td>
+</tr>
+<tr>
+	<td>removeSelection</td>
+	<td>name=field_your_foo_category_relative_url</td>
+	<td>label=b</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>name=field_your_foo_category_relative_url</td>
+	<td>label=b</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>name=field_your_foo_category_relative_url_is_excluded_</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=dialog_submit_button</td>
+	<td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=Folder_show:method</td>
+	<td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Find']</td>
+  <td></td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>name=field_your_foo_category_relative_url</td>
+	<td>label=a</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=field_your_title</td>
+	<td>Title 1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>name=field_your_foo_category_relative_url_is_excluded_</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=dialog_submit_button</td>
+	<td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+
+</body>
+</html>

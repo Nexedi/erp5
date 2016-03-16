@@ -1,0 +1,205 @@
+<html>
+<head><title>Test for Accounting Transaction</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test Simple view of an Accounting Transaction
+</td></tr>
+<!-- XXX we do not need init method here ! -->
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+<!-- Setup {{{ -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/AccountingZuite_markChanged</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounting</td>
+</tr>
+<!-- }}} -->
+
+<!-- Add an accounting transaction with 9 lines -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Add Accounting Transaction</td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Add Accounting Transaction Lines</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_line_count</td>
+  <td>7</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Accounting Transaction Lines added.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>9 records</td>
+</tr>
+
+<!-- store the index of each line -->
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[4]/input</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[4]/input</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[4]/input</td>
+  <td>3</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[4]/input</td>
+  <td>4</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-data-line-4 DataA']/td[4]/input</td>
+  <td>5</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-data-line-5 DataB']/td[4]/input</td>
+  <td>6</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-data-line-6 DataA']/td[4]/input</td>
+  <td>7</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-data-line-7 DataB']/td[4]/input</td>
+  <td>8</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class='listbox-data-line-8 DataA']/td[4]/input</td>
+  <td>9</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='Base_edit:method']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+
+<!-- now we will add one more line, and it will not be inserted between the
+other lines
+-->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Add Accounting Transaction Lines</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Accounting Transaction Lines added.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>10 records</td>
+</tr>
+
+<tr>
+  <td>assertFloatValue</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[4]/input</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>assertFloatValue</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[4]/input</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>assertFloatValue</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[4]/input</td>
+  <td>3</td>
+</tr>
+<tr>
+  <td>assertFloatValue</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[4]/input</td>
+  <td>4</td>
+</tr>
+<tr>
+  <td>assertFloatValue</td>
+  <td>//tr[@class='listbox-data-line-4 DataA']/td[4]/input</td>
+  <td>5</td>
+</tr>
+<tr>
+  <td>assertFloatValue</td>
+  <td>//tr[@class='listbox-data-line-5 DataB']/td[4]/input</td>
+  <td>6</td>
+</tr>
+<tr>
+  <td>assertFloatValue</td>
+  <td>//tr[@class='listbox-data-line-6 DataA']/td[4]/input</td>
+  <td>7</td>
+</tr>
+<tr>
+  <td>assertFloatValue</td>
+  <td>//tr[@class='listbox-data-line-7 DataB']/td[4]/input</td>
+  <td>8</td>
+</tr>
+<tr>
+  <td>assertFloatValue</td>
+  <td>//tr[@class='listbox-data-line-8 DataA']/td[4]/input</td>
+  <td>9</td>
+</tr>
+<!-- our new lines, at the end -->
+<tr>
+  <td>assertFloatValue</td>
+  <td>//tr[@class='listbox-data-line-9 DataB']/td[4]/input</td>
+  <td>0</td>
+</tr>
+
+<!-- }}} -->
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->

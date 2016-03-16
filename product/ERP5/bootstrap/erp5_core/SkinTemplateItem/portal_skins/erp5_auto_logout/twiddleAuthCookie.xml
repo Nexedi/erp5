@@ -169,17 +169,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-portal = context.getPortalObject()\n
-if DateTime().millis() >= portal.portal_sessions[portal.Base_getAutoLogoutSessionKey()].get(\'ac_renew\', 0):\n
-  portal.setAuthCookie(resp, cookie_name, cookie_value)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>resp, cookie_name, cookie_value</string> </value>
         </item>

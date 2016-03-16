@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-Check for some table consistency according to the create table list.\n
-If `fixit` is True, then it will create/drop table or alter existing tables\n
-"""\n
-portal = context.getPortalObject()\n
-show_source = not(fixit)\n
-return portal.portal_catalog.upgradeSchema(src__=show_source)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>fixit=False</string> </value>
         </item>

@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-for path in path_list:\n
-  document = portal.restrictedTraverse(path)\n
-  # Useful to reproduce Ingestion process from beginning\n
-  # All properties of object are considered as user input\n
-  input_parameter_dict = {\'portal_type\': document.getPortalType()}\n
-  for property_id in document.propertyIds():\n
-    if property_id not in (\'portal_type\', \'uid\', \'id\',) \\\n
-      and document.hasProperty(property_id):\n
-      input_parameter_dict[property_id] = document.getProperty(property_id)\n
-  filename = document.getFilename()\n
-\n
-  # Now starts metadata discovery process\n
-  document.activate().discoverMetadata(filename=filename, input_parameter_dict=input_parameter_dict)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>path_list</string> </value>
         </item>

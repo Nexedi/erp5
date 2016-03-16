@@ -23,26 +23,6 @@
             <value> <string>image/svg+xml</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<svg width="500" height="200" version="1.1" xmlns = \'http://www.w3.org/2000/svg\' xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 200">  \n
-  <defs>\n
-  <font-face font-family="Arvo">\n
-   <font-face-src>\n
-    <font-face-uri xlink:href="Arvo-Regular-webfont.svg">\n
-     <font-face-format string="svg"/>\n
-    </font-face-uri>\n
-   </font-face-src>\n
-  </font-face>\n
-  </defs>\n
-  <rect x="0" y="0" height="100" width="500" fill="#eee" />\n
-  <text x="20" y="50" font-family="Arvo" font-weight="normal" font-size="32">Text using CSS @font-face</text>\n
-</svg>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

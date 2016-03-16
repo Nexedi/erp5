@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if context.hasUrlString():\n
-  portal = context.getPortalObject()\n
-  portal_url_registry = portal.portal_url_registry\n
-  portal_url_registry.registerURL(context.asNormalisedURL(), context.getReference(), context=context)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

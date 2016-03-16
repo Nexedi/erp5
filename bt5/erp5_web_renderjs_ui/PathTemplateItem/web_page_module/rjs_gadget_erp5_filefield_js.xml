@@ -98,66 +98,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, RSVP, jIO*/\n
-/*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, rJS, RSVP, jIO) {\n
-  "use strict";\n
-\n
-  rJS(window)\n
-    .ready(function (gadget) {\n
-      return gadget.getElement()\n
-        .push(function (element) {\n
-          gadget.element = element;\n
-        });\n
-    })\n
-\n
-    .declareAcquiredMethod("notifyValid", "notifyValid")\n
-    .declareAcquiredMethod("notifyInvalid", "notifyInvalid")\n
-    .declareAcquiredMethod("notifyChange", "notifyChange")\n
-\n
-    .declareMethod(\'render\', function (options) {\n
-      var input = this.element.querySelector(\'input\'),\n
-        field_json = options.field_json || {};\n
-\n
-      input.setAttribute(\'name\', field_json.key);\n
-      input.setAttribute(\'title\', field_json.title);\n
-      if (field_json.required === 1) {\n
-        input.setAttribute(\'required\', \'required\');\n
-      }\n
-      if (field_json.editable !== 1) {\n
-        input.setAttribute(\'readonly\', \'readonly\');\n
-        input.setAttribute(\'data-wrapper-class\', \'ui-state-readonly\');\n
-        // input.setAttribute(\'disabled\', \'disabled\');\n
-\n
-      }\n
-    })\n
-\n
-    .declareMethod(\'getContent\', function () {\n
-      var gadget = this,\n
-        input = gadget.element.querySelector(\'input\'),\n
-        file = input.files[0];\n
-      if (file === undefined) {\n
-        return {};\n
-      }\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return jIO.util.readBlobAsDataURL(file);\n
-        })\n
-        .push(function (evt) {\n
-          var result = {};\n
-          result[input.getAttribute(\'name\')] = {\n
-            url: evt.target.result,\n
-            file_name: file.name\n
-          };\n
-          return result;\n
-        });\n
-    });\n
-\n
-}(window, rJS, RSVP, jIO));\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Gadget ERP5 Filefield JS</string> </value>
         </item>

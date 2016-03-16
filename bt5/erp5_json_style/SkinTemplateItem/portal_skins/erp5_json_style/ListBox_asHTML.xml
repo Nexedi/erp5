@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from collections import OrderedDict\n
-from json import dumps\n
-label_list = context.getLabelValueList()\n
-num = len(label_list)\n
-result_list = []\n
-for line in context.query():\n
-  value_list = line.getValueList()\n
-  result_list.append(OrderedDict([(label_list[i][1], value_list[i][0]) for i in range(num)]))\n
-return dumps(OrderedDict([(\'title\',context.getTitle()), (\'data\',result_list)]))\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

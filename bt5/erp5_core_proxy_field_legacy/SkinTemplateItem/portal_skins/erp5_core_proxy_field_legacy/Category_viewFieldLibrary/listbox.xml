@@ -10,13 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
-                <string>sort</string>
-                <string>selection_name</string>
+                <string>editable_columns</string>
                 <string>search</string>
                 <string>select</string>
-                <string>editable_columns</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -126,6 +126,10 @@
                         <tuple>
                           <string>int_index</string>
                           <string>Sort Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>

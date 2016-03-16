@@ -95,29 +95,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-html.ui-mobile head + body div.ui-field-contain > a.ui-btn,\n
-html.ui-mobile head + body .ui-field-contain > :first-child:nth-last-child(2) ~ .ui-btn{\n
-  margin: 0;\n
-  height: 2.3em;\n
-}\n
-html.ui-mobile head + body .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-select {\n
-  width: 29%;\n
-}\n
-html.ui-mobile head + body .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-select:last-child {\n
-  -webkit-border-top-right-radius: 0;\n
-  -webkit-border-bottom-right-radius: 0;\n
-  border-top-right-radius: 0;\n
-  border-bottom-right-radius: 0;\n
-}\n
-\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Gadget Manifest Example Forms CSS</string> </value>
         </item>

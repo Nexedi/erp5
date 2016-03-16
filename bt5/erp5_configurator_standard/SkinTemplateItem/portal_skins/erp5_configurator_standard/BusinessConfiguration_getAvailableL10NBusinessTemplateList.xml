@@ -49,39 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""This script returns the list of available translation business templates.\n
-\n
-"""\n
-\n
-Base_translateString = context.Base_translateString\n
-\n
-return [\n
-  dict(id=\'fr\',\n
-       name=Base_translateString(\'French\'),\n
-       bt5=\'erp5_l10n_fr\',),\n
-  dict(id=\'de\',\n
-       name=Base_translateString(\'German\'),\n
-       bt5=\'erp5_l10n_de\',),\n
-  dict(id=\'pl\',\n
-       name=Base_translateString(\'Polish\'),\n
-       bt5=\'erp5_l10n_pl_PL\',),\n
-  dict(id=\'pt-BR\',\n
-       name=Base_translateString(\'Portuguese / Brazil\'),\n
-       bt5=\'erp5_l10n_pt-BR\',),\n
-  dict(id=\'ko\',\n
-       name=Base_translateString(\'Korean\'),\n
-       bt5=\'erp5_l10n_ko\',),\n
-  dict(id=\'ru\',\n
-       name=Base_translateString(\'Russian\'),\n
-       bt5=\'erp5_l10n_ru\',),\n
-  dict(id=\'zh\',\n
-       name=Base_translateString(\'Chinese\'),\n
-       bt5=\'erp5_l10n_zh\',),\n
-]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

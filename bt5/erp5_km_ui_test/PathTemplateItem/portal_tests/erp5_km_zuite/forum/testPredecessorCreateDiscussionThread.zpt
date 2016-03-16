@@ -1,0 +1,515 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/getId"/>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_tests/erp5_km_zuite/forum/testPredecessorCreateDiscussionThreadReset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/predecessor_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Sections</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//legend[@class="group_title"]</td>
+  <td>Sections</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Discussion</td>
+  <td></td>
+</tr>
+<!-- create a new discussion thread, without explicit predecessor -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Discussion Threads</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Post Message</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Body</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_title</td>
+  <td>Thread 1</td>
+</tr>
+<!--
+<tr>
+  <td>type</td>
+  <td>//textarea[@class="ace_text-input"]</td>
+  <td>Post 1</td>
+</tr>
+-->
+<!-- verify predecessor hidden input is not set DONT WORK 
+<tr>
+  <td>assertValue</td>
+  <td>field_your_predecessor</td>
+  <td></td>
+</tr>
+-->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id='dialog_submit_button']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>New discussion thread created</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>New discussion thread created</td>
+  <td></td>
+</tr>
+<!-- make sure we are still on the form_list view -->
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Discussion Threads</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+
+<!-- add discussion thread to section with default page -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/predecessor_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Sections</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Section with default</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Test Section Default Content</td>
+  <td></td>
+</tr>
+<!-- make sure related discussions are shown -->
+<tr>
+  <td>verifyTextPresent</td>
+  <td>New</td>
+  <td></td>
+</tr>
+<!-- add thread 2 to this page, it should be visible here and in discussions, nowhere else -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=New</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Body</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_title</td>
+  <td>Thread 2</td>
+</tr>
+<!--
+<tr>
+  <td>type</td>
+  <td>//textarea[@class="ace_text-input"]</td>
+  <td>Post 2</td>
+</tr>
+-->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id='dialog_submit_button']</td>
+  <td></td>
+</tr>
+<!-- test we go back to where we came from -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Test Section Default Content</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Test Section Default Content</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<!-- add discsussion thread to web page  -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/predecessor_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Sections</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Section with content page</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Description</td>
+  <td></td>
+</tr>
+<!-- make sure document is shown -->
+<tr>
+  <td>verifyTextPresent</td>
+  <td>predecessor_test_documentation_page</td>
+  <td></td>
+</tr>
+<!-- go to this page and create a new discussion thread -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Predecessor Test Documentation</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Some documentation</td>
+  <td></td>
+</tr>
+<!-- check discussions are shown -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>New</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>New</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=New</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Body</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_title</td>
+  <td>Thread 3</td>
+</tr>
+<!--
+<tr>
+  <td>type</td>
+  <td>//textarea[@class="ace_text-input"]</td>
+  <td>Post 3</td>
+</tr>
+-->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id='dialog_submit_button']</td>
+  <td></td>
+</tr>
+<!-- test we go back to where we came from -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Some documentation</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Some documentation</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+  <td></td>
+</tr>
+
+<!-- threads created and redirects verified. now check the correct threads show -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/predecessor_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Sections</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//legend[@class="group_title"]</td>
+  <td>Sections</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Discussion</td>
+  <td></td>
+</tr>
+<!-- discussions should include all 3 discussions -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Discussion Threads</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Thread 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Thread 2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Thread 3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/predecessor_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Sections</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//legend[@class="group_title"]</td>
+  <td>Sections</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Section No Default</td>
+  <td></td>
+</tr>
+<!-- no default page, no discussions -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>should not display discussions</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>should not display discussions</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextNotPresent</td>
+  <td>New</td>
+  <td></td>
+</tr>
+
+<!-- section with default should only display thread 2 -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/predecessor_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Sections</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//legend[@class="group_title"]</td>
+  <td>Sections</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Section with default</td>
+  <td></td>
+</tr>
+<!-- check thread 2 and not 1 and 3 -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Thread 2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Thread 2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextNotPresent</td>
+  <td>Thread 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextNotPresent</td>
+  <td>Thread 3</td>
+  <td></td>
+</tr>
+
+<!-- section with default should only display thread 2 -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/predecessor_test_web_site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Sections</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//legend[@class="group_title"]</td>
+  <td>Sections</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Section with content page</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Description</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>predecessor_test_documentation_page</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Predecessor Test Documentation</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Some documentation</td>
+  <td></td>
+</tr>
+<!-- check thread 3 and not 1 and 2 are shown -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Thread 3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Thread 3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextNotPresent</td>
+  <td>Thread 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextNotPresent</td>
+  <td>Thread 2</td>
+  <td></td>
+</tr>
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_tests/erp5_km_zuite/forum/testPredecessorCreateDiscussionThreadReset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />
+
+</tbody></table>
+</body>
+</html>

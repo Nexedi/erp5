@@ -1,0 +1,82 @@
+<tal:comment replace="nothing">Display button to manage element in listbox.
+The condition on list style is for compatibility.
+You can implement this in web site layout.
+
+XXX TODO: make print, sort, find  work
+</tal:comment>
+
+<tal:block tal:define="list_style request/list_style | nothing"
+           tal:condition="python: list_style != 'search'">
+
+          <!-- Copy / Paste buttons -->
+          <div class="bottom_actions">
+            <span class="listbox_actions_title" i18n:translate="">Actions</span>
+            <div class="buttons_group">
+            <button type="submit" class="cut_button" title="Cut"
+                    name="Folder_cut:method"
+                    i18n:attributes="title" >
+              <span>
+                <span class="image">&nbsp;</span>
+                <span class="description" i18n:translate="" >Cut</span>
+              </span>
+            </button>
+            <button type="submit" class="copy_button" title="Copy"
+                    name="Folder_copy:method"
+                    i18n:attributes="title" >
+             <span>
+                <span class="image">&nbsp;</span>
+                <span class="description" i18n:translate="" >Copy</span>
+              </span>
+            </button>
+            <button type="submit" class="paste_button" title="Paste"
+                    name="Folder_paste:method"
+                    i18n:attributes="title" >
+             <span>
+                <span class="image">&nbsp;</span>
+                <span class="description" i18n:translate="" >Paste</span>
+              </span>
+            </button>
+            <button type="submit" class="delete_button" title="Delete"
+                    name="Folder_deleteObjectList:method"
+                    i18n:attributes="title" >
+             <span>
+                <span class="image">&nbsp;</span>
+                <span class="description" i18n:translate="" >Delete</span>
+              </span>
+            </button>
+            <button type="submit" class="new_button" title="New"
+                    name="Folder_create:method"
+                    i18n:attributes="title" >
+             <span>
+                <span class="image">&nbsp;</span>
+                <span class="description" i18n:translate="" >New</span>
+              </span>
+            </button>
+            <button type="submit" class="reset_button" title="Reset"
+                    name="Folder_show:method"
+                    i18n:attributes="title" >
+             <span>
+                <span class="image">&nbsp;</span>
+                <span class="description" i18n:translate="" >Reset</span>
+              </span>
+            </button>
+            <button type="submit" class="filter_button" title="Filter"
+                    name="Folder_filter:method"
+                    i18n:attributes="title" >
+             <span>
+                <span class="image">&nbsp;</span>
+                <span class="description" i18n:translate="" >Filter</span>
+              </span>
+            </button>
+            <button type="submit" class="config_button" title="Configure"
+                    name="Base_viewUIDialog:method"
+                    i18n:attributes="title" >
+             <span>
+                <span class="image">&nbsp;</span>
+                <span class="description" i18n:translate="" >Configure</span>
+              </span>
+            </button>
+
+            </div>
+          </div>
+</tal:block>

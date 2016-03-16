@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-if reference is None:\n
-  msg = Message(domain=\'ui\', message="Check not defined.")\n
-  raise ValidationFailed, (msg,)\n
-model_list = [x\n
-  for x in context.checkbook_model_module.objectValues()\n
-  if x.getReference() == reference\n
-  and x.isUniquePerAccount() == unique_per_account\n
-]\n
-model_list_len = len(model_list)\n
-if model_list_len == 0:\n
-  msg = Message(domain=\'ui\', message="Check not defined.")\n
-  raise ValidationFailed, (msg,)\n
-if model_list_len > 1:\n
-  msg = Message(domain=\'ui\', message="Two many check models with this reference.")\n
-  raise ValidationFailed, (msg,)\n
-return model_list[0]\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>reference=None, unique_per_account=True</string> </value>
         </item>

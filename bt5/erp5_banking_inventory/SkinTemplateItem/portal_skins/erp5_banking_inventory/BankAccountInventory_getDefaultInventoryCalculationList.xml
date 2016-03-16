@@ -49,22 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>default_inventory_calculation_list = ({ "inventory_params" : {"payment_uid" : context.getDestinationPaymentUid(),\n
-                                                                      "group_by_resource" : 1,\n
-                                                                      },\n
-                                        "list_method" : "getMovementList",\n
-                                        "first_level" : ({\'key\' : \'resource_relative_url\',\n
-                                                          \'getter\' : \'getResource\',\n
-                                                          \'setter\' : ("appendToCategoryList", "resource")},\n
-                                                         ),\n
-                                        },\n
-                                      )\n
-\n
-return default_inventory_calculation_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

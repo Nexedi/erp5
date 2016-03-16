@@ -1,0 +1,107 @@
+<tal:block
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n">'
+  <tal:block tal:replace="nothing">
+  <!--
+  Copyright (c) 2006-2015 Nexedi SARL and Contributors. All Rights Reserved.
+                     Vincent Pelletier <vincent@nexedi.com>
+                     Christophe Dumez <christophe@nexedi.com>
+
+  This program is Free Software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+  -->
+  </tal:block>
+  
+  <!doctype html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta name="description" content="" />
+      <meta name="keywords" content="" />
+      <meta name="robots" content="index, follow" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title></title>
+    </head>
+    <body>
+      <tal:block metal:define-macro="master">
+        <tal:block tal:define="website here/getWebSiteValue;
+                               portal_path python:website.absolute_url();
+                               section here/getWebSectionValue;
+                               section_url section/absolute_url;
+                               current_url request/URL;
+                               current_main_section here/WebSite_getMainSection;
+                               editable request/editable_mode | python: 0;
+                               portal_status_message request/portal_status_message | python: None;
+                               list_mode list_mode | nothing;
+                               dialog_mode dialog_mode | nothing;
+                               ignore_layout          request/ignore_layout | nothing;
+                               layout_form_id         request/layout_form_id | here/getApplicableLayout | nothing;
+                               layout_form    python: layout_form_id and getattr(here, layout_form_id, None) or None;
+                               has_no_layout python: layout_form is None;
+                               dummy python: request.set('dialog_mode', dialog_mode);
+                               dummy python: request.set('list_mode', list_mode);
+                               aggregate python: has_no_layout or layout_form.Form_getGroupList(['header', 'left', 'right', 'footer', 'discussions']);
+                               aggregate python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};
+                               discussions_area python:aggregate.get('discussions',  []);
+                               global is_web_mode python: 1;
+                               global js_list python: [];
+                               global css_list_template python:[]">
+      
+          <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">
+            <tal:block metal:fill-slot="layout">
+              
+              <tal:block metal:use-macro="here/aggregate_render/macros/populate_request"/>
+      
+              <div class="main-container">
+                <div class="main clearfix">
+      
+                  <span class="portal_status_message" tal:content="portal_status_message" 
+                        tal:condition="portal_status_message"/>
+        
+                  <div class="content wrappin">
+      
+                  <!-- Form is rendered here -->
+                  <tal:block metal:define-slot="main" />
+                    <tal:block tal:condition="python: layout_form is not None">
+      
+                      <tal:block tal:repeat="aggregate python: layout_form.Form_getGroupList(['header', 'left', 'right', 'footer', 'discussions'])"
+                                 tal:define="dummy python: request.set('editable_mode', True);
+                                             dialog_mode dialog_mode | nothing;
+                                             dummy python: request.set('dialog_mode', dialog_mode);
+                                             dummy python: request.set('list_mode', list_mode);
+                                             dummy python: request.set('http_parameters', http_parameters);
+                                             dummy python: request.set('actions', actions);
+                                             dummy python: request.set('current_web_section',
+                                                                       request.get('current_web_section', here.getWebSectionValue()));
+                                             dummy python: request.set('current_web_document',
+                                                                       request.get('current_web_document', here));
+                                             dummy python: request.set('is_web_section_default_document',
+                                                                       request.get('is_web_section_default_document', 0));">
+                        <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                      </tal:block>
+                    </tal:block>
+                      
+                    <div class="clear"></div>
+                  </div>
+                </div> <!-- #main -->
+              </div> <!-- #main-container -->
+            </tal:block>
+          </tal:block>
+        </tal:block>
+      </tal:block>
+    </body>
+  </html>
+</tal:block>

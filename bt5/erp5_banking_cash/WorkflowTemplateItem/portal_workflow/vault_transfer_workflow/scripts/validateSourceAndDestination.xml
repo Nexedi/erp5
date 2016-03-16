@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># Call the script wich checks if source and destination\n
-# are well defined\n
-transaction = state_change[\'object\']\n
-transaction.Base_checkBaobabSourceAndDestination()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

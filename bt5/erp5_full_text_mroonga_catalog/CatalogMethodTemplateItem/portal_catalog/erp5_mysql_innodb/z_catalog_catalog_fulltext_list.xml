@@ -53,24 +53,6 @@ getDescription</string> </value>
             <value> <int>1000</int> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-REPLACE INTO\n
-  catalog_full_text (`uid`, `title`, `description`)\n
-VALUES\n
-<dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-(\n
-  <dtml-sqlvar expr="uid[loop_item]" type="int">,  \n
-  <dtml-sqlvar expr="getTitle[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getDescription[loop_item]" type="string" optional>\n
-)<dtml-unless sequence-end>,</dtml-unless>\n
-</dtml-in>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

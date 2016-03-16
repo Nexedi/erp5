@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if not context.portal_actions.listFilteredActionsFor(context).has_key(\'object_print\'):\n
-  return None\n
-\n
-new_print_action_list = context.Base_fixDialogActions(\n
-     context.Base_filterDuplicateActions(\n
-     context.portal_actions.listFilteredActionsFor(context)), \'object_print\')\n
-if new_print_action_list:\n
-  #return new_print_action_list[0][\'original_url\']\n
-   return new_print_action_list[0][\'url\']\n
-\n
-return None\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

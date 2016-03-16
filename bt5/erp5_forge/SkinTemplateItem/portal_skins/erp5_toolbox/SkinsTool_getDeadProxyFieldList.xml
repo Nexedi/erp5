@@ -169,26 +169,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""List all dead proxy fields\n
-"""\n
-portal_skin = context.REQUEST.get(\'portal_skin\', \'View\')\n
-\n
-print "<html>"\n
-for field_path, field in context.ZopeFind(\n
-            context.portal_skins, obj_metatypes=[\'ProxyField\'], search_sub=1):\n
-  if field.getTemplateField() is None:\n
-    print \'<a href="%s/%s/manage_main?portal_skin=%s">%s</a><br />\' % (context.absolute_url(), field_path, portal_skin, field_path)\n
-\n
-print "</html>"\n
-return printed\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

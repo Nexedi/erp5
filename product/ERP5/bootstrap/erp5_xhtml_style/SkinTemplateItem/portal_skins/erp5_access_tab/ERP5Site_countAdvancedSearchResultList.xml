@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if search_section_path is not None:\n
-  section_value = context.getPortalObject().restrictedTraverse(search_section_path)\n
-  return section_value.countResults(**kw)\n
-\n
-return context.portal_catalog.countResults(**kw)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>search_section_path=None, **kw</string> </value>
         </item>

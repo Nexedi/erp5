@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Figure out if it is an journal, event or a todo.\n
-  Sample implementation: Task is a todo, event is an event, \n
-  anything else is an journal.\n
-"""\n
-portal_type = None\n
-if brainObject is not None:\n
-  portal_type = brainObject.getPortalType()\n
-else:\n
-  portal_type = context.getPortalType()\n
-\n
-if portal_type == \'Task\':\n
-  return \'todo\'\n
-elif portal_type in context.getPortalEventTypeList():\n
-  return \'event\'\n
-return \'journal\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brainObject=None</string> </value>
         </item>

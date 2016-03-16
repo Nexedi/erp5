@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Form.Report import ReportSection\n
-from DateTime import DateTime\n
-\n
-params, stat_columns, selection_columns = context.OrderModule_getOrderReportParameterDict()\n
-\n
-context.REQUEST.set(\'stat_columns\', stat_columns)\n
-result=[]\n
-result.append(ReportSection(\n
-              path=context.getPhysicalPath(),\n
-              selection_columns=selection_columns,\n
-              listbox_display_mode=\'FlatListMode\',\n
-              selection_params=params,\n
-              form_id=\'OrderModule_viewOrderStatList\'))\n
-\n
-\n
-return result\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

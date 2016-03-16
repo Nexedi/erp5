@@ -49,32 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  Check that number of untranslated messages for a Localizer MessageCatalog instance\n
-  doesn\'t exceed a fixed alarm_warn_ratio.\n
-"""\n
-alarm_warn_ratio = 0.25\n
-\n
-localizer = context.Localizer\n
-for message_catalog in localizer.objectValues(\'MessageCatalog\'):\n
-  all = len(message_catalog.MessageCatalog_getMessageDict().keys())\n
-  not_translated = len(message_catalog.MessageCatalog_getNotTranslatedMessageDict().keys())\n
-  enable_warning = not_translated > all*alarm_warn_ratio\n
-  if enable_warning:\n
-    # we have more than allowed number of untranslated messages,\n
-    # fire alarm\n
-    context.log("Too many untranslated Localizer messages for %s %s/%s" %(message_catalog, all, not_translated))\n
-    return True\n
-\n
-return False\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>activity_count=1, bundle_object_count=100, **kw</string> </value>
         </item>

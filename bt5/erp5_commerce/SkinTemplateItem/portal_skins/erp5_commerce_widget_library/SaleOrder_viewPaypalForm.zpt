@@ -1,0 +1,89 @@
+<tal:block tal:define="shopping_cart           here/SaleOrder_getShoppingCart;
+                       shopping_cart_item_list shopping_cart/SaleOrder_getShoppingCartItemList;
+                       web_site                here/getWebSiteValue;
+                       currency_code           web_site/WebSite_getShoppingCartDefaultCurrencyCode;
+                       customer                here/SaleOrder_getShoppingCartCustomer;
+                       applicable_tax          python: customer.Person_getApplicableTaxList().get('VAT');
+                       shopping_cart_price     python: float(shopping_cart.SaleOrder_getShoppingCartTotalPrice());
+                       taxes_amount            python: float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_taxes=True, include_shipping=True)) -
+                                                       float(shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=True));
+                       shipping                here/SaleOrder_getSelectedShippingResource;
+                       shipping_price          python: shipping.getPrice();
+                       paypal_method           python: '_express-checkout';
+                       test_env                python: True;
+                       test_base_url           python: 'http://www.dentra.net:9080/erp5';
+                       base_url                python: here.getWebSiteValue().absolute_url();
+                       action                  python: test_env and 'https://www.sandbox.paypal.com/cgi-bin/webscr'
+                                                                or  'https://www.paypal.com/cgi-bin/webscr';
+                       TPE python: options.get('TPE', 'my_merchant_key_location');
+                       langue python: options.get('language', 'en');">
+
+<!--  # can be _cart, _xclick, _express-checkout -->
+  <tal:block tal:condition="python: paypal_method == '_express-checkout'">
+    <tal:block tal:define="token python: here.WebSection_getNewPaypalToken()">
+      <a tal:condition="python: token is not None and token != ''"
+         tal:attributes="href python: '%s?cmd=_express-checkout&token=%s&AMT=70.0&CURRENCYCODE=%s' % (action, token, currency_code)">
+        <img src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" alt="PayPal - The safer, easier way to pay online!" style="border:none;">
+      </a>
+      <span tal:condition="python: token is None or token == ''" tal:content="python: here.Base_translateString('Paypal is not available actually.')"></span>
+    </tal:block>
+  </tal:block>
+
+  <tal:block tal:condition="python: paypal_method != '_express-checkout'">
+  <form target="paypal"
+        tal:attributes="action action"
+        method="post">
+    <input type="hidden" name="lc" value="FR">
+    <input type="hidden" name="business" value="vincen_1247039207_biz@nexedi.com">
+
+    <input type="hidden" name="rm" value="POST">
+    <input type="hidden" name="notify_url" tal:attributes="value python: '%s/SaleOrder_finalizeShopping' % (test_base_url)">
+    <input type="hidden" name="return" tal:attributes="value python: '%s/SaleOrder_viewThankYouMessage' % (base_url)">
+    <input type="hidden" name="cancel_return" tal:attributes="value python: '%s?portal_status_message=Payment canceled.' % (base_url)">
+    
+    <tal:block tal:condition="python: paypal_method == '_cart'" tal:repeat="item shopping_cart_item_list">
+      <input type="hidden" name="cmd" value="_cart">
+      <input type="hidden" name="tax_cart"  tal:attributes="value applicable_tax">
+      <tal:block tal:define="resource python: here.restrictedTraverse(item.getResource());
+                             quantity python: int(item.getQuantity());
+                             price    python: resource.getPrice();">
+        <input type="hidden" tal:attributes="name  python: 'item_name_%s' % (repeat['item'].index + 1);
+                                             value resource/getTitle;">
+        <input type="hidden" tal:attributes="name  python: 'item_number_%s' % (repeat['item'].index + 1);
+                                             value resource/getUid;">
+        <input type="hidden" tal:attributes="name  python: 'amount_%s' % (repeat['item'].index + 1);
+                                             value price;">
+        <input type="hidden" tal:attributes="name  python: 'quantity_%s' % (repeat['item'].index + 1);
+                                             value quantity;">
+       </tal:block>
+    </tal:block>
+    
+    <tal:block tal:condition="python: paypal_method == '_xclick'" tal:repeat="item shopping_cart_item_list">
+    <input type="hidden" name="cmd" value="_xclick">
+    <input type="hidden" name="amount" tal:attributes="value shopping_cart_price">
+    <input type="hidden" name="item_name" value="Commande de test">
+    <input type="hidden" name="tax" tal:attributes="value taxes_amount">
+    </tal:block>
+
+    <input type="hidden" name="address_override" value="0">
+    <input type="hidden" name="address1" tal:attributes="value customer/getDefaultAddressStreetAddress">
+    <input type="hidden" name="city" tal:attributes="value customer/getDefaultAddressCity">
+    <input type="hidden" name="country" tal:attributes="value python: here.restrictedTraverse('portal_categories/region/%s' % customer.getDefaultAddressRegion()).getReference()">
+    <input type="hidden" name="first_name" tal:attributes="value customer/getFirstName">
+    <input type="hidden" name="last_name" tal:attributes="value customer/getLastName">
+    <input type="hidden" name="zip" tal:attributes="value customer/getDefaultAddressZipCode">
+    <input type="hidden" name="night_phone_b" tal:attributes="value customer/getDefaultTelephoneText">
+
+    <input type="hidden" name="shipping" tal:attributes="value shipping_price">
+    <input type="hidden" name="currency_code" tal:attributes="value currency_code">
+    <input type="hidden" name="button_subtype" value="products">
+    <input type="hidden" name="display" value="1">
+    <input type="hidden" name="upload" value="1">
+    <input type="hidden" name="no_note" value="1">
+    <input type="hidden" name="no_shipping" value="1"> 
+    <input type="hidden" name="bn" value="PP-ShopCartBF:btn_cart_LG.gif:NonHosted">
+    <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+    <img alt="" border="0" src="https://www.paypal.com/fr_FR/i/scr/pixel.gif" width="1" height="1">
+  </form>
+  </tal:block>
+</tal:block>

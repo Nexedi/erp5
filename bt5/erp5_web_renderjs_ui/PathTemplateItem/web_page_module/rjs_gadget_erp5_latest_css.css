@@ -1,0 +1,1211 @@
+/* ------------------------------ Global Font  ---------------------------- */
+/* NOTE: family/size should only be set here! */
+input, select, textarea, button, p, h1, h2, h3, h4, h5, h6, table,
+.ui-header h1.ui-title,
+html.ui-mobile legend, .ui-btn, .ui-li-static, html.ui-mobile body form label {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 90%;
+}
+html body .ui-controlgroup.ui-btn-right,
+html body .ui-header .ui-btn,
+html body .ui-navbar li .ui-btn {
+  font-size: 90%;
+}
+/* fix font-size on notext buttons, so icons don't zoom, JQMs-px font-size */
+html body .ui-header .ui-controlgroup .ui-btn,
+html body .ui-footer .ui-controlgroup .ui-btn {
+  font-size: 100%;
+}
+
+
+/* ========================== Overrides Themes ============================ */
+/* JQM custom themes */
+/* a */
+/*--------------------------------------------------------------------------*/
+
+/* Bar: Toolbars, dividers, slider track */
+.ui-bar-a,
+.ui-page-theme-a .ui-bar-inherit,
+html .ui-bar-a .ui-bar-inherit,
+html .ui-body-a .ui-bar-inherit,
+html body .ui-group-theme-a .ui-bar-inherit {
+  background: 0 none;
+  background-color: #fff;
+  color: rgb(115, 115, 115); /* IE8 */
+  color: rgba(0, 0, 0, 0.55);
+  text-shadow: none;
+  border-color: #aaa;
+  font-weight: normal;
+}
+.ui-bar-a {
+  border-width: 1px;
+  border-style: solid;
+}
+/* tables & controlbar & tabs & labels */
+html .ui-overlay-a fieldset label,
+html .ui-overlay-a fieldset legend,
+html .ui-page-theme-a .ui-collapsible h1 a.ui-btn,
+html .ui-page-theme-a .ui-collapsible-set .ui-collapsible h1 a.ui-btn,
+html .ui-page-theme-a .document-table thead a.ui-btn,
+html .ui-page-theme-a .document-table thead label,
+html .ui-page-theme-a .document-table thead tr th {
+  color: rgb(115, 115, 115); /* IE8 */
+  color: rgba(0, 0, 0, 0.55);
+  text-shadow: #FFFFFF 0px 1px 0px;
+}
+html body .ui-page-theme-a table.document-table,
+html .document-table thead tr th {
+  background-color: #fff;
+  border-color: #aaa;
+}
+html .ui-page-theme-a .ui-popup .ui-header,
+html .ui-page-theme-a .ui-popup .ui-footer,
+html .ui-page-theme-a .ui-collapsible h1 a.ui-btn,
+html .ui-page-theme-a .ui-collapsible-set .ui-collapsible h1 a.ui-btn {
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #fff ), to( #f1f1f1 ));
+  background-image: -webkit-linear-gradient( #fff , #f1f1f1 );
+  background-image:    -moz-linear-gradient( #fff , #f1f1f1 );
+  background-image:     -ms-linear-gradient( #fff , #f1f1f1 );
+  background-image:      -o-linear-gradient( #fff , #f1f1f1 );
+  background-image:         linear-gradient( #fff , #f1f1f1 );
+  border-color: #aaa;
+}
+
+/* Page: background */
+.ui-page-theme-a,
+.ui-page-theme-a .ui-panel-wrapper {
+  color: #333;
+  text-shadow: none;
+  background: #f9f9f9;
+  background-image:  -webkit-gradient(linear, left top, left bottom, from( #f9f9f9), to( #eee ));
+  background-image:  -webkit-linear-gradient( #f9f9f9, #eee );
+  background-image:    -moz-linear-gradient( #f9f9f9, #eee );
+  background-image:     -ms-linear-gradient( #f9f9f9, #eee );
+  background-image:      -o-linear-gradient( #f9f9f9, #eee );
+  background-image:         linear-gradient( #f9f9f9, #eee );
+}
+/* Body: Read-only lists, text inputs, collapsible content */
+.ui-body-a,
+.ui-page-theme-a .ui-body-inherit,
+.ui-page-theme-a .ui-content-element,
+html .ui-bar-a .ui-body-inherit,
+html .ui-body-a .ui-body-inherit,
+html body .ui-group-theme-a .ui-body-inherit,
+.ui-overlay-a {
+  background-image: none;
+  background: #fff;
+  border-color:  #aaa;
+  color: #111;
+  text-shadow: none;
+}
+.ui-body-a {
+  border-width: 1px;
+  border-style: solid;
+}
+
+/* Links */
+.ui-page-theme-a a,
+html .ui-bar-a a,
+html .ui-body-a a
+/* visited */
+.ui-page-theme-a a:visited,
+html body.ui-overlay-a .ui-btn:visited,
+html body.ui-overlay-a a:visited,
+html .ui-bar-a a:visited,
+html .ui-body-a a:visited,
+html body .ui-group-theme-a a:visited,
+/* hover */
+html body.ui-overlay-a a:hover,
+html body.ui-overlay-a .ui-btn:hover,
+.ui-page-theme-a a:hover,
+html .ui-bar-a a:hover,
+html .ui-body-a a:hover,
+html body .ui-group-theme-a a:hover,
+html body.ui-overlay-a .ui-btn:hover,
+.ui-page-theme-a .ui-btn:hover,
+html .ui-bar-a .ui-btn:hover,
+html .ui-body-a .ui-btn:hover,
+html body .ui-group-theme-a .ui-btn:hover,
+/* texts */
+html body .ui-group-theme-a p, /* overwritten by ui-btn */
+html body .ui-group-theme-a h1,
+html body .ui-group-theme-a h2,
+html body .ui-group-theme-a h3,
+html body .ui-group-theme-a h4,
+html body .ui-group-theme-a h5,
+html body .ui-group-theme-a h6,
+html .ui-page-theme-a .ui-content-element {
+  color: rgb(115, 115, 115); /* IE8 */
+  color: rgba(0, 0, 0, 0.55);
+  border-color: #aaa;
+  text-shadow: none;
+}
+
+.ui-page-theme-a .ui-btn:active,
+html .ui-bar-a .ui-btn:active,
+html .ui-body-a .ui-btn:active,
+html body .ui-group-theme-a .ui-btn:active {
+  color: #fff;
+}
+
+/* Button up */
+.ui-page-theme-a .ui-btn,
+html .ui-bar-a .ui-btn,
+html .ui-body-a .ui-btn,
+html body .ui-btn.ui-btn-a,
+html body .ui-group-theme-a .ui-btn,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-a,
+.ui-page-theme-a .ui-bar-plain,
+/* Button visited */
+.ui-page-theme-a .ui-btn:visited,
+html .ui-bar-a .ui-btn:visited,
+html .ui-body-a .ui-btn:visited,
+html body .ui-btn.ui-btn-a:visited,
+html body .ui-group-theme-a .ui-btn:visited,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-a:visited,
+/* table */
+html .ui-page-theme-a .document-table tr td a:visited {
+  background: #fff;
+  color: rgb(115, 115, 115); /* IE8 */
+  color: rgba(0, 0, 0, 0.55);
+  text-shadow: none;
+  border-color: #aaa;
+}
+html .ui-page-theme-a .ui-input-clear:active,
+html .ui-page-theme-a .ui-input-clear.ui-btn-active,
+html .ui-page-theme-a .ui-input-action:active,
+html .ui-page-theme-a .ui-input-action.ui-btn-active {
+  background: #fff !important;
+}
+
+/* ------------------------- Header Buttons ------------------------------- */
+.ui-page-theme-a .ui-header .ui-btn,
+html .ui-bar-a .ui-header .ui-btn,
+html .ui-bar-a.ui-header .ui-btn,
+html .ui-body-a  .ui-header .ui-btn,
+html body  .ui-header .ui-btn.ui-btn-a,
+html body  .ui-header .ui-group-theme-a .ui-btn,
+ .ui-header [class*="ui-group-theme-"] .ui-btn.ui-btn-a,
+/* Button visited */
+.ui-page-theme-a  .ui-header  .ui-btn:visited,
+html .ui-bar-a  .ui-header .ui-btn:visited,
+html .ui-body-a  .ui-header .ui-btn:visited,
+html body .ui-header .ui-btn.ui-btn-a:visited,
+html body .ui-header .ui-group-theme-a .ui-btn:visited,
+.ui-header [class*="ui-group-theme-"] .ui-btn.ui-btn-a:visited,
+.ui-page-theme-a  .ui-header  a:visited,
+html .ui-bar-a  .ui-header a:visited,
+html .ui-body-a  .ui-header a:visited,
+html body .ui-header a.ui-btn-a:visited,
+html body .ui-header .ui-group-theme-a a:visited,
+.ui-header [class*="ui-group-theme-"] a.ui-btn-a:visited {
+  background: none repeat scroll 0 center transparent;
+  border: 0 none;
+  -webkit-border-radius: 0 0 0 0  /* iOS3 */ !important;
+  border-radius: 0 0 0 0  /* iOS3 */ !important;
+  -webkit-box-shadow: none /* iOS3 */ !important;
+  box-shadow: none /* iOS3 */ !important;
+  color: rgb(115, 115, 115); /* IE8 */
+  color: rgba(0, 0, 0, 0.55);
+  text-shadow: none;
+  font-weight: normal;
+  line-height: 3em; /* IE cannot take 300% */
+}
+/* Button special handling: panel listitems */
+.ui-page-theme-a .ui-panel-inner li .ui-btn,
+html .ui-bar-a .ui-panel-inner li .ui-btn,
+html .ui-body-a .ui-panel-inner li .ui-btn,
+html .ui-body-a .ui-panel-inner li.ui-li-static,
+html body .ui-panel-inner li .ui-btn.ui-btn-a,
+html body .ui-panel-inner li .ui-group-theme-a .ui-btn,
+[class*="ui-group-theme-"] .ui-panel-inner li .ui-btn.ui-btn-a,
+/* Button visited */
+.ui-page-theme-a .ui-panel-inner li .ui-btn:visited,
+html .ui-bar-a .ui-panel-inner li .ui-btn:visited,
+html .ui-body-a .ui-panel-inner li .ui-btn:visited,
+html body .ui-panel-inner li .ui-btn.ui-btn-a:visited,
+html body .ui-panel-inner li .ui-group-theme-a .ui-btn:visited,
+[class*="ui-group-theme-"] .ui-panel-inner li .ui-btn.ui-btn-a:visited,
+/* table */
+html .ui-page-theme-a .document-table,
+html .ui-page-theme-a .document-table {
+  background: none repeat scroll 0 0 transparent;
+  border-color: rgb(232, 232, 232);
+  border-color: rgba(255,255,255,.3);
+}
+/* dropshadow */
+html body .ui-group-theme-a li {
+  border-top: 1px solid #111;
+}
+html body .ui-group-theme-a li.ui-last-child {
+  border-top: 1px solid #111;
+  border-bottom: 1px solid #111;
+}
+html body .ui-group-theme-b li.ui-last-child a.ui-btn {
+  border-bottom: none
+}
+/* Button background hover */
+.ui-page-theme-a .ui-btn:hover,
+html .ui-bar-a .ui-btn:hover,
+html .ui-body-a .ui-btn:hover,
+html body .ui-btn.ui-btn-a:hover,
+html body .ui-group-theme-a .ui-btn:hover,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-a:hover,
+/* table rows */
+html .ui-page-theme-a .document-table tr th:hover ~ td,
+/* controlbars */
+html .ui-page-theme-a .ui-controlbar .ui-btn:hover,
+/* tabs */
+html .ui-page-theme-a .ui-collapsible-set .ui-collapsible h1 a.ui-btn:hover,
+html .ui-page-theme-a .ui-collapsible h1 a.ui-btn:hover{
+  background-color: #e8e8e8;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#e8e8e8));
+  background:        -webkit-linear-gradient(bottom, #fff, #e8e8e8);
+  background:           -moz-linear-gradient(bottom, #fff, #e8e8e8);
+  background:             -o-linear-gradient(bottom, #fff, #e8e8e8);
+  background:            -ms-linear-gradient(bottom, #fff, #e8e8e8);
+  background:                linear-gradient(bottom, #fff, #e8e8e8);
+}
+
+/* b */
+/*--------------------------------------------------------------------------*/
+/* Bar: Toolbars, dividers, slider track */
+.ui-bar-b,
+.ui-page-theme-b .ui-bar-inherit,
+html .ui-bar-b .ui-bar-inherit,
+html .ui-body-b .ui-bar-inherit,
+html body .ui-group-theme-b .ui-bar-inherit {
+  background: 0 none;
+  background: #222;
+  color: #fff;
+  text-shadow: 0 1px 0 #111111;
+  font-weight: normal;
+}
+.ui-bar-b {
+  border-width: 1px;
+  border-style: solid;
+}
+/* tables & controlbar & tabs & labels */
+html .ui-overlay-b fieldset label,
+html .ui-overlay-b fieldset legend,
+html .ui-page-theme-b .ui-controlbar .ui-btn,
+html .ui-page-theme-b .ui-controlbar ~ .ui-controlgroup .ui-btn,
+html .ui-page-theme-b .ui-collapsible h1 a.ui-btn,
+html .ui-page-theme-b .ui-collapsible-set .ui-collapsible h1 a.ui-btn,
+html .ui-page-theme-b .document-table thead a.ui-btn,
+html .ui-page-theme-b .document-table thead label {
+  color: #444;
+  text-shadow: 0 1px 0 #111111;
+}
+/* tables & controlbars */
+.ui-page-theme-b .document-table {
+  background-color: #222;
+  border-color: rgb(232, 232, 232); /* IE8 */
+  border-color: rgba(255,255,255,.3);
+}
+html .ui-page-theme-b .ui-popup .ui-header,
+html .ui-page-theme-b .ui-popup .ui-footer,
+html .ui-page-theme-b .ui-collapsible h1 a.ui-btn
+html .ui-page-theme-b .ui-collapsible-set .ui-collapsible h1 a.ui-btn {
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #444 ), to( #222 ));
+  background-image: -webkit-linear-gradient( #444 , #222 );
+  background-image:    -moz-linear-gradient( #444 , #222 );
+  background-image:     -ms-linear-gradient( #444 , #222 );
+  background-image:      -o-linear-gradient( #444 , #222 );
+  background-image:         linear-gradient( #444 , #222 );
+  border-color: #444;
+}
+
+/* Page background */
+.ui-page-theme-b,
+.ui-page-theme-b .ui-panel-wrapper {
+  color: #fff;
+  text-shadow: 0 1px 0 #111111;
+  background: #222;
+  border-color:  #444;
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #444 ), to( #222 ));
+  background-image: -webkit-linear-gradient( #444 , #222 );
+  background-image:    -moz-linear-gradient( #444 , #222 );
+  background-image:     -ms-linear-gradient( #444 , #222 );
+  background-image:      -o-linear-gradient( #444 , #222 );
+  background-image:         linear-gradient( #444 , #222 );
+}
+/* Body: Read-only lists, text inputs, collapsible content */
+.ui-body-b,
+.ui-page-theme-b .ui-body-inherit,
+.ui-page-theme-b .ui-content-element,
+html .ui-bar-b .ui-body-inherit,
+html .ui-body-b .ui-body-inherit,
+html body .ui-group-theme-b .ui-body-inherit,
+.ui-overlay-b {
+  color: #fff;
+  text-shadow: 0 1px 0 #111111;
+  background: #222;
+  border-color:  #444;
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #444 ), to( #222 ));
+  background-image: -webkit-linear-gradient( #444 , #222 );
+  background-image:    -moz-linear-gradient( #444 , #222 );
+  background-image:     -ms-linear-gradient( #444 , #222 );
+  background-image:      -o-linear-gradient( #444 , #222 );
+  background-image:         linear-gradient( #444 , #222 );
+}
+.ui-body-b {
+  border-width: 1px;
+  border-style: solid;
+}
+/* Input filterable */
+html .ui-body-b .ui-body-inherit.ui-input-search {
+  background-image: none;
+}
+
+/* Links */
+.ui-page-theme-b a,
+html .ui-bar-b a,
+html .ui-body-b a,
+html body .ui-group-theme-b a,
+/* visited */
+.ui-page-theme-b a:visited,
+html body.ui-overlay-b a:visited,
+html body.ui-overlay-b .ui-btn:visited,
+html .ui-bar-b a:visited,
+html .ui-body-b a:visited,
+html body .ui-group-theme-b a:visited,
+/* hover */
+html body.ui-overlay-b .ui-btn:hover,
+html body.ui-overlay-b a:hover,
+.ui-page-theme-b a:hover,
+html .ui-bar-b a:hover,
+html .ui-body-b a:hover,
+html body .ui-group-theme-a a:hover,
+.ui-overlay-b .ui-btn:hover,
+.ui-page-theme-b .ui-btn:hover,
+html .ui-page-theme-b .ui-btn:hover,
+html .ui-page-theme-b .ui-btn:hover,
+html body .ui-group-theme-b .ui-btn:hover,
+/* active */
+.ui-page-theme-b .ui-btn:active,
+html .ui-bar-b .ui-btn:active,
+html .ui-body-b .ui-btn:active,
+html body .ui-group-theme-b .ui-btn:active,
+/* Texts */
+html body .ui-group-theme-b p,
+html body .ui-group-theme-b h1,
+html body .ui-group-theme-b h2,
+html body .ui-group-theme-b h3,
+html body .ui-group-theme-b h4,
+html body .ui-group-theme-b h5,
+html body .ui-group-theme-b h6,
+html .ui-page-theme-b .ui-content-element {
+  color: #fff;
+  border-color: auto;
+  text-shadow: none;
+}
+/* Button up */
+.ui-page-theme-b .ui-btn,
+html .ui-bar-b .ui-btn,
+html .ui-body-b .ui-btn,
+html body .ui-btn.ui-btn-b,
+html body .ui-group-theme-b .ui-btn,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-b,
+.ui-page-theme-b .ui-bar-plain,
+/* Button visited */
+.ui-page-theme-b .ui-btn:visited,
+html .ui-bar-b .ui-btn:visited,
+html .ui-body-b .ui-btn:visited,
+html body .ui-btn.ui-btn-b:visited,
+html body .ui-group-theme-b .ui-btn:visited,
+[class*="ui-group-theme-"] a.ui-btn-b:visited,
+.ui-page-theme-b a:visited,
+html .ui-bar-b a:visited,
+html .ui-body-b a:visited,
+html body a.ui-btn-b:visited,
+html body .ui-group-theme-b a:visited,
+[class*="ui-group-theme-"] a.ui-btn-b:visited,
+html .ui-page-theme-b table tr td a:visited,
+/* table */
+html .ui-page-theme-b .document-table,
+html .ui-page-theme-b .document-table {
+  background: #222;
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #444 ), to( #222 ));
+  background-image: -webkit-linear-gradient( #444 , #222 );
+  background-image:    -moz-linear-gradient( #444 , #222 );
+  background-image:     -ms-linear-gradient( #444 , #222 );
+  background-image:      -o-linear-gradient( #444 , #222 );
+  background-image:         linear-gradient( #444 , #222 );
+  border-color: #444;
+  color: #fff;
+  text-shadow: 0px 1px 0px #111;
+}
+html .ui-page-theme-b .ui-input-clear:active,
+html .ui-page-theme-b .ui-input-clear.ui-btn-active,
+html .ui-page-theme-b .ui-input-action:active,
+html .ui-page-theme-b .ui-input-action.ui-btn-active {
+  background: #222 !important;
+}
+/* Header Buttons */
+.ui-page-theme-b .ui-header .ui-btn,
+html .ui-bar-b.ui-header .ui-btn,
+html .ui-bar-b  .ui-header .ui-btn,
+html .ui-body-b  .ui-header .ui-btn,
+html body  .ui-header .ui-btn.ui-btn-b,
+html body  .ui-header .ui-group-theme-b .ui-btn,
+ .ui-header [class*="ui-group-theme-"] .ui-btn.ui-btn-b,
+/* Button visited */
+.ui-page-theme-b  .ui-header  .ui-btn:visited,
+html .ui-bar-b  .ui-header .ui-btn:visited,
+html .ui-body-b  .ui-header .ui-btn:visited,
+html body .ui-header .ui-btn.ui-btn-b:visited,
+html body .ui-header .ui-group-theme-b .ui-btn:visited,
+.ui-header [class*="ui-group-theme-"] .ui-btn.ui-btn-b:visited,
+/* ADD also not on :hover */
+.ui-page-theme-b .ui-header  .ui-btn:hover,
+html .ui-bar-b .ui-header  .ui-btn:hover,
+html .ui-body-b .ui-header  .ui-btn:hover,
+html body .ui-header .ui-btn.ui-btn-b:hover,
+html body .ui-header .ui-group-theme-b .ui-btn:hover,
+.ui-header  [class*="ui-group-theme-"] .ui-btn.ui-btn-b:hover {
+  background: none repeat scroll 0 center transparent;
+  -webkit-border-radius: 0 0 0 0  /* iOS3 */ !important;
+  border-radius: 0 0 0 0  /* iOS3 */ !important;
+  -webkit-box-shadow: none /* iOS3 */ !important;
+  box-shadow: none /* iOS3 */ !important;
+  color: #fff;
+  text-shadow: none;
+  font-weight: normal;
+  line-height: 3.25em; /* IE cannot take 325% */
+}
+/* Button special handling: listitem , collapsibles */
+.ui-page-theme-b .ui-panel-inner li .ui-btn,
+html .ui-bar-b .ui-panel-inner li .ui-btn,
+html .ui-body-b .ui-panel-inner li .ui-btn,
+html .ui-body-b .ui-panel-inner li.ui-li-static,
+html body .ui-panel-inner .ui-collapsible .ui-collapsible-heading a.ui-btn.ui-collapsible-heading-toggle,
+html body .ui-panel-inner .ui-group-theme-b .ui-collapsible .ui-collapsible-heading a.ui-btn.ui-collapsible-heading-toggle,
+html body .ui-panel-inner li .ui-btn.ui-btn-b,
+html body .ui-panel-inner li .ui-group-theme-b .ui-btn,
+[class*="ui-group-theme-"] .ui-panel-inner li .ui-btn.ui-btn-b,
+/* Button visited */
+.ui-page-theme-b .ui-panel-inner li .ui-btn:visited,
+html .ui-bar-b .ui-panel-inner li .ui-btn:visited,
+html .ui-body-b .ui-panel-inner li .ui-btn:visited,
+html body .ui-panel-inner .ui-collapsible .ui-collapsible-heading a.ui-btn.ui-collapsible-heading-toggle:visited,
+html body .ui-panel-inner .ui-group-theme-b .ui-collapsible .ui-collapsible-heading a.ui-btn.ui-collapsible-heading-toggle:visited
+html body .ui-panel-inner li .ui-btn.ui-btn-b:visited,
+html body .ui-panel-inner li .ui-group-theme-b .ui-btn:visited,
+[class*="ui-group-theme-"] .ui-panel-inner li .ui-btn.ui-btn-b:visited {
+  background: none repeat scroll 0 0 transparent;
+  border-color: rgb(232, 232, 232); /* IE8 */
+  border-color: rgba(255,255,255,.3);
+}
+/* dropshadow */
+html body .ui-group-theme-b li {
+  border-top: 1px solid #111;
+}
+html body .ui-group-theme-b li.ui-last-child {
+  border-bottom: 1px solid #111;
+}
+html body .ui-group-theme-b li.ui-last-child a.ui-btn {
+  border-bottom: none
+}
+
+/* Button hover */
+.ui-page-theme-b .ui-btn:hover,
+html .ui-bar-b .ui-btn:hover,
+html .ui-body-b .ui-btn:hover,
+html body .ui-btn.ui-btn-b:hover,
+html body .ui-group-theme-b .ui-btn:hover,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-b:hover,
+/* table rows */
+html .ui-page-theme-b .document-table tr th:hover ~ td,
+/* controlbars */
+html .ui-page-theme-b .ui-controlbar .ui-btn:hover,
+/* tabs */
+html .ui-page-theme-b .ui-collapsible h1 a.ui-btn:hover
+html .ui-page-theme-b .ui-collapsible-set .ui-collapsible h1 a.ui-btn:hover {
+  background: #222;
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #444 ), to( #222 ));
+  background-image: -webkit-linear-gradient( #444 , #222 );
+  background-image:    -moz-linear-gradient( #444 , #222 );
+  background-image:     -ms-linear-gradient( #444 , #222 );
+  background-image:      -o-linear-gradient( #444 , #222 );
+  background-image:         linear-gradient( #444 , #222 );
+  border-color: rgb(232, 232, 232); /* IE8 */
+  border-color: rgba(255,255,255,.3);
+  /* border-color: #444 */
+  color: #fff;
+  text-shadow: 0px 1px 0px #111;
+}
+
+
+
+
+
+/* swatch "active" - need this for every swatch!!! */
+/*--------------------------------------------------------------------------*/
+
+/* Button down */
+html .ui-page-theme-a .ui-bar-active, /* if we do more like this, we need to have a proper theme */
+.ui-page-theme-a .ui-btn:active,
+html .ui-bar-a .ui-btn:active,
+html .ui-body-a .ui-btn:active,
+html body .ui-btn.ui-btn-a:active,
+html body .ui-group-theme-a .ui-btn:active,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-a:active,
+/* Active button */
+.ui-page-theme-a .ui-btn.ui-btn-active,
+html .ui-bar-a .ui-btn.ui-btn-active,
+html .ui-body-a .ui-btn.ui-btn-active,
+html body .ui-btn.ui-btn-a.ui-btn-active,
+html body .ui-group-theme-a .ui-btn.ui-btn-active,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-a.ui-btn-active,
+/* radio button */
+.ui-page-theme-a .ui-btn.ui-radio-on,
+html .ui-bar-a .ui-btn.ui-radio-on,
+html .ui-body-a .ui-btn.ui-radio-on,
+html body .ui-group-theme-a .ui-btn.ui-radio-on,
+.ui-btn.ui-radio-on.ui-btn-a,
+/* Active flipswitch background */
+.ui-page-theme-a .ui-flipswitch-active,
+html .ui-bar-a .ui-flipswitch-active,
+html .ui-body-a .ui-flipswitch-active,
+html body .ui-group-theme-a .ui-flipswitch-active,
+html body .ui-flipswitch.ui-bar-a.ui-flipswitch-active,
+/* Active slider track */
+.ui-page-theme-a .ui-slider-track .ui-btn-active,
+html .ui-bar-a .ui-slider-track .ui-btn-active,
+html .ui-body-a .ui-slider-track .ui-btn-active,
+html body .ui-group-theme-a .ui-slider-track .ui-btn-active,
+html body div.ui-slider-track.ui-body-a .ui-btn-active,
+/* Controlbar */
+html .ui-page-theme-a .ui-controlbar .ui-btn:active,
+html .ui-page-theme-a .ui-controlbar .ui-btn.ui-btn-active,
+/* Tab Buttons */
+html .ui-page-theme-a .ui-collapsible h1 a.ui-btn:active,
+html .ui-page-theme-a .ui-collapsible h1 a.ui-btn.ui-btn-active,
+html .ui-page-theme-a .ui-collapsible-set .ui-collapsible h1 a.ui-btn:active,
+html .ui-page-theme-a .ui-collapsible-set .ui-collapsible h1 a.ui-btn.ui-btn-active,
+/* black */
+html .ui-page-theme-b .ui-bar-active,
+.ui-page-theme-b .ui-btn:active,
+html .ui-bar-b .ui-btn:active,
+html .ui-body-b .ui-btn:active,
+html body .ui-btn.ui-btn-b:active,
+html body .ui-group-theme-b .ui-btn:active,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-b:active,
+/* Active button */
+.ui-page-theme-b .ui-btn.ui-btn-active,
+html .ui-bar-b .ui-btn.ui-btn-active,
+html .ui-body-b .ui-btn.ui-btn-active,
+html body .ui-btn.ui-btn-b.ui-btn-active,
+html body .ui-group-theme-b .ui-btn.ui-btn-active,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-b.ui-btn-active,
+/* radio on */
+.ui-page-theme-b .ui-btn.ui-radio-on,
+html .ui-bar-b .ui-btn.ui-radio-on,
+html .ui-body-b .ui-btn.ui-radio-on,
+html body .ui-group-theme-b .ui-btn.ui-radio-on,
+.ui-btn.ui-radio-on.ui-btn-b ,
+/* Active flipswitch background */
+.ui-page-theme-b .ui-flipswitch-active,
+html .ui-bar-b .ui-flipswitch-active,
+html .ui-body-b .ui-flipswitch-active,
+html body .ui-group-theme-b .ui-flipswitch-active,
+html body .ui-flipswitch.ui-bar-b.ui-flipswitch-active,
+/* Active slider track */
+.ui-page-theme-b .ui-slider-track .ui-btn-active,
+html .ui-bar-b .ui-slider-track .ui-btn-active,
+html .ui-body-b .ui-slider-track .ui-btn-active,
+html body .ui-group-theme-b .ui-slider-track .ui-btn-active,
+html body div.ui-slider-track.ui-body-b .ui-btn-active,
+/* Table rows on hover */
+html .document-table tbody tr.linkable:hover td:not(.ui-no-result),
+html .document-table tbody tr.linkable:hover th:not(.ui-no-result),
+/* Controlbar */
+html .ui-page-theme-b .ui-controlbar .ui-btn:active,
+html .ui-page-theme-b .ui-controlbar .ui-btn.ui-btn-active,
+/* Tab Buttons */
+html .ui-page-theme-b .ui-collapsible h1 a.ui-btn:active,
+html .ui-page-theme-b .ui-collapsible h1 a.ui-btn.ui-btn-active
+html .ui-page-theme-b .ui-collapsible-set .ui-collapsible h1 a.ui-btn:active,
+html .ui-page-theme-b .ui-collapsible-set .ui-collapsible h1 a.ui-btn.ui-btn-active,
+/* LOADER */
+html .ui-loader.ui-body-loader-active {
+  background-color: #94f2f1;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#0fbabd), to(#94f2f1));
+  background:        -webkit-linear-gradient(bottom, #0fbabd, #94f2f1);
+  background:           -moz-linear-gradient(bottom, #0fbabd, #94f2f1);
+  background:             -o-linear-gradient(bottom, #0fbabd, #94f2f1);
+  background:            -ms-linear-gradient(bottom, #0fbabd, #94f2f1);
+  background:                linear-gradient(bottom, #0fbabd, #94f2f1);
+  color: #fff !important;
+  text-shadow: none;
+  cursor: pointer;
+}
+/* Table rows ,no pointer... */
+html .document-table tbody tr:hover td {
+  cursor: default;
+}
+
+/* Active radio button */
+/* white */
+.ui-page-theme-a .ui-btn.ui-radio-on:after,
+html .ui-bar-a .ui-btn.ui-radio-on:after,
+html .ui-body-a .ui-btn.ui-radio-on:after,
+html body .ui-group-theme-a .ui-btn.ui-radio-on:after,
+.ui-btn.ui-radio-on.ui-btn-a:after,
+/* black */
+.ui-page-theme-b .ui-btn.ui-radio-on:after,
+html .ui-bar-b .ui-btn.ui-radio-on:after,
+html .ui-body-b .ui-btn.ui-radio-on:after,
+html body .ui-group-theme-b .ui-btn.ui-radio-on:after,
+.ui-btn.ui-radio-on.ui-btn-b:after {
+  border-color:     #fff;
+}
+
+/* Focus */
+/* white */
+.ui-overlay-a .ui-btn:focus,
+.ui-page-theme-a .ui-btn:focus,
+html .ui-bar-a .ui-btn:focus,
+html .ui-body-a .ui-btn:focus,
+html body .ui-group-theme-a .ui-btn:focus,
+html head + body .ui-btn.ui-btn-a:focus,
+/* Focus buttons and text inputs with div wrap */
+.ui-overlay-a .ui-focus,
+.ui-page-theme-a .ui-focus,
+html .ui-bar-a .ui-focus,
+html .ui-body-a .ui-focus,
+html body .ui-group-theme-a .ui-focus,
+html head + body .ui-btn-a.ui-focus,
+html head + body .ui-body-a.ui-focus,
+/* black */
+.ui-overlay-b .ui-btn:focus,
+.ui-page-theme-b .ui-btn:focus,
+html .ui-bar-b .ui-btn:focus,
+html .ui-body-b .ui-btn:focus,
+html body .ui-group-theme-b .ui-btn:focus,
+html head + body .ui-btn.ui-btn-b:focus,
+/* Focus buttons and text inputs with div wrap */
+.ui-overlay-b .ui-focus,
+.ui-page-theme-b .ui-focus,
+html .ui-bar-b .ui-focus,
+html .ui-body-b .ui-focus,
+html body .ui-group-theme-b .ui-focus,
+html head + body .ui-btn-b.ui-focus,
+html head + body .ui-body-b.ui-focus{
+  -webkit-box-shadow: 0 0 6px #0fbabd;
+  box-shadow: 0 0 6px #0fbabd;
+}
+
+
+/* =========================== Override Widgets =========================== */
+
+/* ------------------------ Toolbar (header/footer) ----------------------- */
+.ui-header, .ui-footer {
+  border-width: 1px 0;
+}
+/* position */
+.ui-header .ui-btn-left,
+.ui-header .ui-btn-right {
+  top: 0;
+  position: absolute;
+  bottom: 0;
+}
+.ui-header .ui-btn-left {
+  left: 0;
+}
+.ui-header .ui-btn-right {
+  right: 0;
+}
+/* fix controlgroups in header font-size */
+.ui-header .ui-controlgroup.ui-btn-left,
+.ui-header .ui-controlgroup.ui-btn-right {
+  font-size: auto;
+}
+/* double borders */
+html .ui-header .ui-btn-left.ui-btn,
+html .ui-header .ui-btn-left .ui-btn {
+  border-right: 1px solid rgb(232, 232, 232); /* IE8 */
+  border-right: 1px solid rgba(232, 232, 232, 0.5);
+}
+html .ui-header .ui-btn-right.ui-btn,
+html .ui-header .ui-btn-right .ui-btn {
+  border-left: 1px solid rgb(115, 115, 115); /* IE8 */
+  border-left: 1px solid rgba(0, 0, 0, 0.55);
+}
+/* blank JQM icons for font-awesome, remove icon borders/background */
+.ui-header .ui-btn:before {
+  content: "";
+  height: 100%;
+  position: absolute;
+  width: 0;
+  bottom: 0;
+  top: 0;
+}
+.ui-header .ui-btn-left .ui-btn:before,
+.ui-header .ui-btn-left.ui-btn:before {
+  right: 0px;
+  border-right: 1px solid rgb(115, 115, 115); /* IE8 */
+  border-right: 1px solid rgba(0, 0, 0, 0.55);
+}
+.ui-header .ui-btn-right .ui-btn:before,
+.ui-header .ui-btn-right.ui-btn:before {
+  left: 0px;
+  border-left: 1px solid rgb(232, 232, 232); /* IE8 */
+  border-left: 1px solid rgba(232, 232, 232, 0.5);
+}
+
+/* hide button text on small screens, if button has class "responsive" */
+@media (max-width: 40em) {
+  .responsive.ui-btn,
+  .ui-select span.responsive {
+    text-indent: -9999px;
+    white-space: nowrap !important;
+  }
+  .responsive.ui-btn:after {
+    text-indent: 0px;
+    left: .6em;
+  }
+  /* center select(!) icons on responsive layouts */
+  .ui-mini.ui-btn-icon-left:after,
+  .ui-mini .ui-btn-icon-left:after,
+  .ui-header .ui-btn-icon-left:after,
+  .ui-footer .ui-btn-icon-left:after {
+    left: .6em;
+  }
+}
+/* stretch */
+html body .ui-header a.ui-btn,
+html body .ui-header .ui-controlgroup div.ui-select .ui-btn {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  height: 100%;
+  margin: 0;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+/* =============================== SELECT ================================= */
+/* align with height of inputs */
+html body div.ui-select div {
+    height: 22px;
+    line-height: 1.7em;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+html body div.ui-select div span {
+   color: #000;
+}
+/* =============================== BUTTON ================================= */
+/* unbold */
+html .ui-btn, label.ui-btn {
+    font-weight: normal;
+}
+/* fix svg icon positioning */
+.ui-btn-icon-notext:after,
+.ui-btn-icon-left:after,
+.ui-btn-icon-top:after,
+.ui.btn-icon-bottom:after,
+.ui-btn-icon-right:after,
+.ui-listview > li > .ui-btn[class*="ui-icon-"]:after {
+    margin-top: -11px;
+    top: 50%;
+}
+
+/* fix text-indent when trying to use custom icons on iconpos-notext buttons */
+.ui-btn-icon-notext {
+  text-indent: -9999px;
+}
+.ui-btn-icon-notext:after {
+  text-indent: 0;
+}
+
+/* ---------------------------- TABLE  ------------------------------------ */
+/* NOTE: since the table widget is not used, JQM CSS is added hard coded */
+/* default table styles */
+.document-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  padding: 0;
+  width: 100%;
+}
+.document-table th,
+.document-table td {
+  line-height: 1.5em;
+  text-align: left;
+  padding: .4em .5em;
+  vertical-align:top;
+}
+.document-table th .ui-btn,
+.document-table td .ui-btn {
+  line-height: normal;
+}
+.document-table th {
+  font-weight: bold;
+}
+.document-table caption {
+  text-align: left;
+  margin-bottom: 1.4em;
+  opacity: .5;
+}
+
+/* radius */
+.ui-table-inset {
+  -webkit-border-radius: .3125em;
+  border-radius: .3125em;
+}
+.ui-table-inset thead,
+.ui-table-inset thead tr:first-child {
+  -webkit-border-top-left-radius: inherit;
+  border-top-left-radius: inherit;
+  -webkit-border-top-right-radius: inherit;
+  border-top-right-radius: inherit;
+}
+.ui-table-inset thead tr:first-child td:first-child,
+.ui-table-inset thead tr:first-child th:first-child{
+  -webkit-border-top-left-radius: inherit;
+  border-top-left-radius: inherit;
+}
+.ui-table-inset thead tr:first-child td:last-child,
+.ui-table-inset thead tr:first-child th:last-child{
+  -webkit-border-top-right-radius: inherit;
+  border-top-right-radius: inherit;
+}
+.ui-table-inset tbody tr:last-child td:first-child,
+.ui-table-inset tbody tr:last-child th:first-child {
+  -webkit-border-bottom-left-radius: inherit;
+  border-bottom-left-radius: inherit;
+}
+.ui-table-inset tbody tr:last-child td:last-child,
+.ui-table-inset tbody tr:last-child th:last-child {
+  -webkit-border-bottom-right-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+/* format header cells (partially overwriting theme css) */
+html .document-table thead th,
+html .document-table thead td {
+  padding: 0;
+  text-shadow: none;
+  font-weight: normal;
+  vertical-align: middle;
+  text-align: center;
+  padding: 0 .25em;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+/* set same padding everywhere */
+html .document-table tbdoy th,
+html .document-table tbody td {
+  padding: 0 1em;
+  vertical-align: middle;
+}
+@media (max-width: 20em) {
+  html .document-table tbdoy th,
+  html .document-table tbody td {
+    padding: 0;
+    height: 2.125em; /* mh... */
+  }
+}
+/* uncss table body links */
+html .document-table tbody td a,
+html .document-table tbody th a {
+  text-decoration: none;
+  font-weight: normal;
+}
+html .document-table tbody td:hover a,
+html .document-table tbody th:hover a {
+  text-decoration: none;
+}
+
+/* override JQM default format */
+html .document-table {
+  border: 1px solid;
+}
+/* alignment */
+html .document-table thead th .ui-btn,
+html .document-table thead td .ui-btn {
+  text-align: left;
+}
+/* table strokes/stripe */
+html .document-table thead th,
+html .document-table thead th,
+html .document-table tbody tr:last-child {
+  border-bottom: 1px solid #d6d6d6; /* non-RGBA fallback */
+  border-bottom: 1px solid rgba(0,0,0,.1);
+}
+html .document-table tbody th,
+html .document-table tbody td {
+  border-bottom: 1px solid #e6e6e6; /* non-RGBA fallback  */
+  border-bottom: 1px solid rgba(0,0,0,.05);
+}
+html .document-table tbody tr:last-child th,
+html .document-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+html .document-table tbody tr:nth-child(odd) td,
+html .document-table tbody tr:nth-child(odd) th {
+  background-color: #eeeeee; /* non-RGBA fallback  */
+  background-color: rgba(0,0,0,.04);
+}
+
+/* ------------------------ TABS/GRID ------------------------------------ */
+/* copy JQM grid CSS without width (set below) */
+ul.grid-items, ul.grid-items li {
+    list-style: none outside none;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+}
+ul.grid-items {
+    overflow: hidden;
+}
+ul.grid-items li {
+  float: left;
+}
+.grid-container ul li:first-child {
+  clear: left;
+}
+/*
+ * Width:
+ * default all in one line (as for tabs)
+ * > add .line-[x] to .grid-container = force [x] items/line
+ * > add .ui-responsive to .grid-container = force ONE item/line on smartphone
+ */
+
+/* thx: Lea Verou - http://bit.ly/1rAhqzm */
+.grid-container li a {
+  border-top: 0px;
+}
+.grid-container li.ui-block-a,
+.grid-container li.ui-block-b {
+  clear: none;
+}
+.grid-container ul li:first-child:nth-last-child(1),
+div.grid-container ul.grid-items.line-1 li,
+div.grid-container ul.grid-items.line-1 li ~ li {
+  width: 100%;
+}
+.grid-container ul li:first-child:nth-last-child(2),
+.grid-container ul li:first-child:nth-last-child(2) ~ li,
+div.grid-container ul.grid-items.line-2 li,
+div.grid-container ul.grid-items.line-2 li ~ li {
+  width: 50%;
+}
+.grid-container ul li:first-child:nth-last-child(3),
+.grid-container ul li:first-child:nth-last-child(3) ~ li,
+div.grid-container ul.grid-items.line-3 li,
+div.grid-container ul.grid-items.line-3 li ~ li {
+  width: 33.3333%;
+}
+.grid-container ul li:first-child:nth-last-child(4),
+.grid-container ul li:first-child:nth-last-child(4) ~ li,
+div.grid-container ul.grid-items.line-4 li,
+div.grid-container ul.grid-items.line-4 li ~ li {
+  width: 25%;
+}
+.grid-container ul li:first-child:nth-last-child(5),
+.grid-container ul li:first-child:nth-last-child(5) ~ li,
+div.grid-container ul.grid-items.line-5 li,
+div.grid-container ul.grid-items.line-5 li ~ li {
+  width: 20%;
+}
+.grid-container ul li:first-child:nth-last-child(6),
+.grid-container ul li:first-child:nth-last-child(6) ~ li,
+div.grid-container ul.grid-items.line-6 li,
+div.grid-container ul.grid-items.line-6 li ~ li {
+  width: 16.667%;
+}
+.grid-container ul li:first-child:nth-last-child(7),
+.grid-container ul li:first-child:nth-last-child(7) ~ li,
+div.grid-container ul.grid-items.line-7 li,
+div.grid-container ul.grid-items.line-7 li ~ li {
+  width: 14,285714286%;
+}
+.grid-container ul li:first-child:nth-last-child(8),
+.grid-container ul li:first-child:nth-last-child(8) ~ li,
+div.grid-container ul.grid-items.line-8 li,
+div.grid-container ul.grid-items.line-8 li ~ li {
+  width: 12.5%;
+}
+.grid-container ul li:first-child:nth-last-child(9),
+.grid-container ul li:first-child:nth-last-child(9) ~ li,
+div.grid-container ul.grid-items.line-9 li,
+div.grid-container ul.grid-items.line-9 li ~ li {
+  width: 11.112%;
+}
+.grid-container ul li:first-child:nth-last-child(10),
+.grid-container ul li:first-child:nth-last-child(10) ~ li,
+div.grid-container ul.grid-items.line-10 li,
+div.grid-container ul.grid-items.line-10 li ~ li {
+  width: 10%;
+}
+
+@media (max-width: 40em) {
+  div.grid-container.ui-responsive ul.grid-items li,
+  div.grid-container.ui-responsive ul.grid-items li ~ li {
+    width: 100%;
+  }
+}
+/* ----------------------------- FORM LAYOUT ------------------------------ */
+/* Romain */
+iframe {
+  width: 95%;
+  height: 500px;
+}
+
+/* XXX still terrilble */
+/* mimic ui-content */
+section.document_list,
+section.document_table,
+form.save_form {
+  border-width: 0;
+  overflow: visible;
+  overflow-x: hidden;
+  padding: 1em;
+}
+form.save_form section.document_table {
+  padding: 0;
+}
+section.document_table thead tr th {
+  height: 2.25em;
+}
+/* inset + listview|table|form */
+.document-listview,
+.document-table {
+  margin: -1em;
+}
+.document-listview.ui-listview-inset,
+.document-table.ui-table-inset {
+  margin: 1em 0;
+}
+
+/* action menu */
+.action_list {
+  display: inline-block;
+}
+/* override default page wrapping */
+.ui-mobile .ui-page-active {
+  overflow: hidden;
+}
+
+/* readonly */
+.custom-readonly {
+  opacity: 1;
+}
+/* padding and overall width */
+html .left, html .right, html .center, html .bottom {
+  vertical-align: top;
+  padding: 0 2%;
+}
+html .center, html .bottom {
+  display: block;
+  width: 96%;
+}
+html .left, html .right {
+  display: inline-block;
+  width: 45%;
+}
+html .left textarea, html .right textarea {
+  width: 100%;
+  display: inline-block;
+  vertical-align: midle;
+}
+/* override border-radius for all inputs to match buttons */
+html form .ui-input-text.ui-corner-all {
+  -webkit-border-radius: .325em;
+  border-radius: .325em;
+}
+
+/* set line height on forms*/
+html.ui-mobile body form label {
+  line-height: 1em;
+}
+
+/* fix relation of label/legend to input to display side-by-side */
+.field_container fieldset label:not(.ui-btn),
+.field_container fieldset div.ui-controlgroup-label {
+    max-width: 30%;
+    min-width: 30%;
+}
+.field_container .left label:not(.ui-btn) ~ *,
+.field_container .left div.ui-controlgroup-label ~ *,
+.field_container .right label:not(.ui-btn) ~ * ,
+.field_container .right div.ui-controlgroup-label ~ * {
+  width: 70%;
+}
+.field_container .center label:not(.ui-btn) ~ *,
+.field_container .center div.ui-controlgroup-label ~ * {
+  width: 68%;
+}
+
+@media (max-width: 40em) {
+  html .center, html .bottom, html .left, html .right {
+    width: auto;
+    display: block;
+  }
+
+  html .left textarea,
+  html .right textarea,
+  html.ui-mobile body .field_container fieldset.left div label,
+  html.ui-mobile body .field_container fieldset.left div label ~ *,
+  html.ui-mobile body .field_container fieldset.right div label,
+  html.ui-mobile body .field_container fieldset.right div label ~ *,
+  html.ui-mobile body .field_container fieldset.center div label,
+  html.ui-mobile body .field_container fieldset.center div label ~ * {
+    width: auto;
+  }
+  html.ui-mobile body .field_container fieldset.left div label,
+  html.ui-mobile body .field_container fieldset.right div label,
+  html.ui-mobile body .field_container fieldset.center div label {
+    min-width: none;
+    max-width: none;
+    margin-bottom: -.5em;
+  }
+  html .left textarea,
+  html .right textarea {
+    min-width: 100%;
+  }
+}
+/* --------------------------- FORM INPUTS -------------------------------- */
+
+/* set field and input side by side */
+.field_container fieldset label:not(.ui-btn),
+.field_container fieldset div.ui-controlgroup-label,
+.field_container fieldset label:not(.ui-btn) ~ *,
+.field_container fieldset div.ui-controlgroup-label ~ * {
+    display: inline-block;
+    vertical-align: middle;
+}
+@media (max-width: 40em) {
+  .field_container fieldset label:not(.ui-btn),
+  .field_container fieldset div.ui-controlgroup-label,
+  .field_container fieldset label:not(.ui-btn) ~ *,
+  .field_container fieldset div.ui-controlgroup-label ~ * {
+      display: block;
+      vertical-align: top;
+  }
+}
+/* --------------------------- CARD -------------------------------- */
+html .ui-card {
+  border: 1px solid;
+  max-width: 35%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10%;
+}
+@media (max-width: 40em) {
+  html .ui-card {
+    max-width: none;
+    margin-top: 30%;
+  }
+}
+/* -------------------- BREADCRUMB ----------------------------- */
+html.ui-mobile body nav.ui-title {
+    padding: 0;
+}
+.breadcrumb_container {
+    float: left;
+}

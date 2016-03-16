@@ -49,15 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>state_change[\'object\'].localBuild()\n
-alarm = getattr(state_change.getPortal().portal_alarms, "invoice_builder_alarm",\n
-  None)\n
-if alarm is not None:\n
-  alarm.activeSense()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

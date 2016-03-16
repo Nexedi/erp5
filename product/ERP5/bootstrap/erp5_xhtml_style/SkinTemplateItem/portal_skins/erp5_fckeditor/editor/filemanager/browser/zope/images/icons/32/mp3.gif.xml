@@ -23,17 +23,6 @@
             <value> <string>image/gif</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="base64">R0lGODlhIAAgAMQeADExYzExnGMxnGNjY86cAM7O/6XO9//OMcbexqWlpc6cY87v/5xjY0pKSlJS
-Us7OY5ycY///92OcnM7OAP/OY5xjAP//nGNjnP/OAP+cAISEhMbGxgAAAP///////wAAACH5BAEA
-AB4ALAAAAAAgACAAAAX/oCeOZGme6KitbOuyaal1dG3fncbFKu7Xqx3JQiwaj5kZTrPRDTEYCuQB
-rVqTvllT6LFgMgQHYFAhZM7nr3azAdK2Im+mIxEAABdELaNmt9s5NXByHQkXFwIBABp6fElsTGw5
-HJSVHIQGh4d2eAwTj0yRHZKCl18dBZqaiQANDJErf6RvpnOpqpuKi01NsIC0hLeqAboDvqG/wKeZ
-ucUEBMjIOBu1HZmJuhcFGQePfsk21IQJrA0XCzTc3j9Mo7URF3fnNo6iNsh/tQoDAwpo/2pG/YqW
-z4uVg1ci/VpI65/Dh48E0lASyN2JFy1k/RFE6+Ibgd++VaxIzSPIkBtHQ3G0aIKiRpETBSop2VLQ
-S0C8euHkQoLiyYXtYNKUEU7im1gfS5m0eWNWU549fkgNB1WEQpRYsVb1YKmr16+VeIhNEQIAOw==</string> </value>
-        </item>
-        <item>
             <key> <string>height</string> </key>
             <value> <int>32</int> </value>
         </item>

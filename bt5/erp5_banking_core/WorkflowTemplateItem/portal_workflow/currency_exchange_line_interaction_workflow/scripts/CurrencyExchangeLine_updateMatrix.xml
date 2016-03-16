@@ -49,43 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>context = state_change[\'object\']\n
-\n
-base_id = \'path\'\n
-kwd = {\'base_id\': base_id}\n
-\n
-\n
-context.updateCellRange(script_id=\'CurrencyExchangeLine_asCellRange\', base_id=base_id)\n
-cell_range_key_list = context.getCellRangeKeyList(base_id = base_id)\n
-resource_list = [\'resource/%s\' % context.getParentValue().getRelativeUrl()]\n
-price_currency_list = [context.getPriceCurrency(base=True)]\n
-membership_list = resource_list + price_currency_list\n
-context.setMembershipCriterionBaseCategoryList([x.split(\'/\')[0] for x in membership_list])\n
-context.setMembershipCriterionCategoryList(membership_list)\n
-context.setResourceValue(context.getParentValue())\n
-context.setMappedValuePropertyList((\'base_price\',\'discount\'))\n
-if cell_range_key_list != [[None, None]] :\n
-  i = 0\n
-  for k in cell_range_key_list:\n
-    category_list = filter(lambda k_item: k_item is not None, k)\n
-    c = context.newCell(*k, **kwd)\n
-    c.edit(mapped_value_property_list = (\'base_price\',\'discount\'),\n
-           force_update = 1,\n
-           membership_criterion_base_category_list = [x.split(\'/\')[0] for x in category_list],\n
-           membership_criterion_category_list = category_list,\n
-           category_list = category_list,\n
-    )\n
-    c.setCriterion(\'stop_date\', min=context.getStartDate(), max=context.getStopDate())\n
-    if c.getBasePrice() is None and context.getBasePrice() is not None:\n
-      c.setBasePrice(context.getBasePrice())\n
-    # set an int index for display\n
-    currency_exchange_type_value_list = c.getValueList(\'currency_exchange_type\')\n
-    if currency_exchange_type_value_list:\n
-      c.setIntIndex(currency_exchange_type_value_list[0].getIntIndex())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
         </item>

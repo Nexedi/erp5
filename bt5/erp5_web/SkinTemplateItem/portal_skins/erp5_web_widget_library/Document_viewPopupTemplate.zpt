@@ -1,0 +1,104 @@
+<tal:block tal:define="owner_list python: options.get('owner_list', None);
+                       modification_date python: options.get('modification_date', None);
+                       release_date python: options.get('release_date', None);
+                       publication_date python: options.get('publication_date', None);
+                       status python: options.get('status', None);
+                       group python: options.get('group', None);
+                       project python: options.get('project', None);
+                       reference python: options.get('reference', None);
+                       language python: options.get('language', None);
+                       version python: options.get('version', None);
+                       thumbnail_url python: options.get('thumbnail_url', None);
+                       url python: options.get('url', None);
+                       sections python: options.get('sections', None);
+                       image_conversion_dict here/Base_getImageArgumentDict;
+                       dummy python: image_conversion_dict.update(**{'display':'thumbnail'});
+                       image_conversion_arguments python: '&'.join(['%s=%s' % (k, v) for k, v in image_conversion_dict.items()]);">
+
+  <span id="listbox-preview-connector"></span>
+
+  <div class="popup_row" tal:condition="thumbnail_url">
+    <a tal:attributes="href url">
+      <img alt="Thumbnail" 
+         i18n:translate="alt" i18n:domain="ui"
+         tal:attributes="src string:${thumbnail_url}/index_html?${image_conversion_arguments}"/>
+    </a>
+  </div>
+
+  <div class="popup_row" tal:condition="reference">    
+    <span class="popup_label" 
+          i18n:translate="" i18n:domain="ui">Reference:</span>
+    <span class="reference"
+          tal:content="reference|nothing"/>
+  </div>
+
+  <div class="popup_row" tal:condition="version">    
+    <span class="popup_label" 
+          i18n:translate="" i18n:domain="ui">Version:</span>
+    <span class="version"
+          tal:content="version|nothing"/>
+  </div>
+
+  <div class="popup_row" tal:condition="language">    
+    <span class="popup_label" 
+          i18n:translate="" i18n:domain="ui">Language:</span>
+    <span class="language"
+          tal:content="language|nothing"/>
+  </div>  
+    
+  <div class="popup_row" tal:condition="project">
+    <span class="popup_label " 
+          i18n:translate="" i18n:domain="ui">Project:</span>
+    <span class="project"
+          tal:content="project|nothing"/>
+  </div>
+  
+  <div class="popup_row" tal:condition="owner_list">
+    <span class="popup_label" 
+          i18n:translate="" i18n:domain="ui">Owner:</span>
+    <span tal:repeat="owner owner_list"
+          class="owner">
+      <a tal:attributes="href owner/url"
+         tal:content="owner/title"/>
+    </span>
+  </div> 
+  
+  <div class="popup_row" tal:condition="modification_date">
+    <span class="popup_label" 
+          i18n:translate="" i18n:domain="ui">Last modified:</span>
+    <span class="modification_date"  
+          tal:content="modification_date|nothing"/>
+  </div>
+  
+  <div class="popup_row" tal:condition="release_date">
+    <span class="popup_label" 
+          i18n:translate="" i18n:domain="ui">Released:</span>
+    <span class="release_date" 
+          tal:content="release_date|nothing"/>
+  </div>
+  
+  <div class="popup_row" tal:condition="publication_date">  
+    <span class="popup_label" 
+          i18n:translate="" i18n:domain="ui">Published:</span>
+    <span class="publication_date"
+          tal:content="publication_date|nothing"/>
+  </div>
+
+  <div class="popup_row" tal:condition="sections">  
+    <span class="popup_label" 
+          i18n:translate="" i18n:domain="ui">Section:</span>
+    <span tal:repeat="section sections"
+          class="section">
+      <a tal:attributes="href section/url"
+         tal:content="section/title"/>
+    </span>
+  </div>
+  
+  <div class="popup_row" tal:condition="status">    
+    <span class="popup_label" 
+          i18n:translate="" i18n:domain="ui">State:</span>
+    <span tal:attributes="class python:'%s-state' %status.lower()"
+          tal:content="status|nothing"/>
+  </div>
+   
+</tal:block>

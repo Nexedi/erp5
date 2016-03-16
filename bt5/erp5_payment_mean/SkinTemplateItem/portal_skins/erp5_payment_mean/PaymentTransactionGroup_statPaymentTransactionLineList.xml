@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.PythonScripts.standard import Object\n
-portal = context.getPortalObject()\n
-\n
-search_kw = dict(\n
-  parent_portal_type=\'Payment Transaction\',\n
-  section_uid=context.getSourceSectionUid(),\n
-  default_aggregate_uid=context.getUid(),\n
-)\n
-\n
-return Object(total_quantity=portal.portal_simulation.getInventory(**search_kw)),\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

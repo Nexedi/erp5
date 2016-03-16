@@ -49,20 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>\'\'\'This script check that all required files have been uploaded\'\'\'\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-document = state_change[\'object\']\n
-portal = document.getPortalObject()\n
-N_ = portal.Base_translateString\n
-\n
-if document.PDFDocument_getRequirementCount() != 0:\n
-  message = \'%s following document (s) are missing to submit the request \' % document.PDFDocument_getRequirementCount()\n
-  message = N_(message)\n
-  raise ValidationFailed, message\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

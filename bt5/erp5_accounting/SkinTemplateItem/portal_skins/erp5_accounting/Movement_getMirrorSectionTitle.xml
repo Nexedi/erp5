@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""Retrieve the title of the mirror section\n
-"""\n
-if brain.mirror_section_uid:\n
-  movement = brain.getObject()\n
-  if brain.mirror_section_uid == movement.getDestinationSectionUid():\n
-    return movement.getDestinationSectionTitle()\n
-  return movement.getSourceSectionTitle()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>brain, selection=None, **kwd</string> </value>
         </item>

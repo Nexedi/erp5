@@ -19,54 +19,6 @@
             <value> <string>application/javascript</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>﻿/*\r\n
- * (c) Copyright Ascensio System SIA 2010-2015\r\n
- *\r\n
- * This program is a free software product. You can redistribute it and/or \r\n
- * modify it under the terms of the GNU Affero General Public License (AGPL) \r\n
- * version 3 as published by the Free Software Foundation. In accordance with \r\n
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect \r\n
- * that Ascensio System SIA expressly excludes the warranty of non-infringement\r\n
- * of any third-party rights.\r\n
- *\r\n
- * This program is distributed WITHOUT ANY WARRANTY; without even the implied \r\n
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For \r\n
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html\r\n
- *\r\n
- * You can contact Ascensio System SIA at Lubanas st. 125a-25, Riga, Latvia,\r\n
- * EU, LV-1021.\r\n
- *\r\n
- * The  interactive user interfaces in modified source and object code versions\r\n
- * of the Program must display Appropriate Legal Notices, as required under \r\n
- * Section 5 of the GNU AGPL version 3.\r\n
- *\r\n
- * Pursuant to Section 7(b) of the License you must retain the original Product\r\n
- * logo when distributing the program. Pursuant to Section 7(e) we decline to\r\n
- * grant you any rights under trademark law for use of our trademarks.\r\n
- *\r\n
- * All the Product\'s GUI elements, including illustrations and icon sets, as\r\n
- * well as technical writing content are licensed under the terms of the\r\n
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License\r\n
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode\r\n
- *\r\n
- */\r\n
- Ext.define("Common.store.SettingsList", {\r\n
-    extend: "Ext.data.Store",\r\n
-    config: {\r\n
-        model: "Common.model.SettingItem",\r\n
-        grouper: {\r\n
-            groupFn: function (record) {\r\n
-                return record.get("group");\r\n
-            },\r\n
-            sorterFn: function () {\r\n
-                return 0;\r\n
-            }\r\n
-        }\r\n
-    }\r\n
-});</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

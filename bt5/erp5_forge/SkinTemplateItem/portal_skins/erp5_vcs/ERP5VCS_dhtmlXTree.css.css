@@ -1,0 +1,12 @@
+.defaultTreeTable{
+			margin : 0;
+			padding : 0;
+			border : 0;
+}
+.containerTableStyle { overflow : auto; font-size : 12px;}
+/* folders & files names */
+.standartTreeRow{ font-family : Verdana, Geneva, Arial, Helvetica, sans-serif; 	font-size : 12px; -moz-user-select: none; text-align: left;}
+.selectedTreeRow{ background-color : blue; color:white; font-family : Verdana, Geneva, Arial, Helvetica, sans-serif; 		font-size : 12px;  -moz-user-select: none;  }
+.standartTreeImage{ overflow:hidden; border:0; padding:0; margin:0; }
+.hiddenRow { width:1px;   overflow:hidden;  }
+.dragSpanDiv{	font-size : 12px; }

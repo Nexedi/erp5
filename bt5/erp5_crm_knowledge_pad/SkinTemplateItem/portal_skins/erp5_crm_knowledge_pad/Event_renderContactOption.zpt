@@ -1,0 +1,1 @@
+<img src="icon.png" tal:attributes="src python:'gadget_%s.png' % here.getPortalType().replace(' ', '_').lower()" />

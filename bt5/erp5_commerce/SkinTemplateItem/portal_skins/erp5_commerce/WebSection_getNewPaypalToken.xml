@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>response_parameter_dict = context.WebSection_submitPaypalNVPRequest(parameter_dict=context.WebSite_getPaypalOrderParameterDict(),\n
-                                                                  nvp_url=context.WebSite_getPaypalUrl(api=\'nvp\', alternative_url=alternative_url))\n
-\n
-if response_parameter_dict is None:\n
-  return None\n
-\n
-if response_parameter_dict[\'ACK\'] == \'Success\':\n
-  return response_parameter_dict[\'TOKEN\']\n
-return \'\'\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>alternative_url=None</string> </value>
         </item>

@@ -49,17 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This method send only for Bug Messages was overwritten by \n
-BugMessage_send script. This script only build and setData to \n
-the Bug Messages. THIS NOT SEND MAIL IT SELF! \n
-"""\n
-bug_event = state_change[\'object\']\n
-bug_event.send()\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

@@ -33,31 +33,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<resource xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-  xmlns:metal="http://xml.zope.org/namespaces/metal" tal:attributes="type here/getPortalType"><tal:block\n
-    tal:condition="here/getTitle">\n
-  <title tal:content="here/getTitle" /></tal:block><tal:block\n
-    tal:condition="here/getReference">\n
-  <reference tal:content="here/getReference" /></tal:block><tal:block\n
-    tal:condition="here/getEan13Code">\n
-  <ean13 tal:content="here/getEan13Code" /></tal:block><tal:block\n
-    tal:condition="here/getDescription">\n
-  <description tal:content="here/getDescription" /></tal:block>\n
-  <category tal:repeat="category here/Resource_getCategoryList" tal:content="category" />\n
-  <mapping tal:repeat="mapping here/Resource_getMappingList">\n
-    <category tal:repeat="category mapping/category" tal:content="category" /><tal:block\n
-      tal:condition="mapping/reference">\n
-    <reference tal:content="mapping/reference" /></tal:block>\n
-  </mapping>\n
-</resource>\n
-
-
-]]></unicode> </value>
-        </item>
-        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/xml</string> </value>
         </item>

@@ -49,48 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>delivery = state_change[\'object\']\n
-\n
-split_movement_list = state_change[\'kwargs\'][\'split_movement_list\']\n
-start_date = state_change[\'kwargs\'][\'start_date\']\n
-stop_date = state_change[\'kwargs\'][\'stop_date\']\n
-\n
-if not len(split_movement_list):\n
-  delivery.updateCausalityState()\n
-  return\n
-\n
-tag = delivery.getPath() + \'_split\'\n
-\n
-for movement in split_movement_list:\n
-  delivery.getPortalObject().portal_simulation.solveMovement(\n
-    movement, None, \'SplitAndDefer\', start_date=start_date,\n
-    stop_date=stop_date, activate_kw={\'tag\':tag})\n
-\n
-delivery.activate(after_tag=tag).updateCausalityState()\n
-\n
-# Create delivery\n
-explanation_uid_list = []\n
-object = delivery\n
-while object is not None:\n
-  explanation_uid_list.append(object.getUid())\n
-  object = object.getCausalityValue()\n
-    \n
-previous_tag = None\n
-for delivery_builder in delivery.getBuilderList():\n
-  this_builder_tag = \'%s_split_%s\' % (delivery.getPath(),\n
-                                      delivery_builder.getId())\n
-  after_tag = [tag]\n
-  if previous_tag:\n
-    after_tag.append(previous_tag)\n
-  delivery_builder.activate(activity=\'SQLQueue\',\n
-                            tag=this_builder_tag,\n
-                            after_tag=after_tag).build(\n
-                                  explanation_uid=explanation_uid_list)\n
-  previous_tag = this_builder_tag\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

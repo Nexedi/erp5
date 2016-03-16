@@ -23,26 +23,6 @@
             <value> <string>application/json</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string>{\n
-  "name": "codemirror",\n
-  "version":"4.11.0",\n
-  "main": ["lib/codemirror.js", "lib/codemirror.css"],\n
-  "ignore": [\n
-    "**/.*",\n
-    "node_modules",\n
-    "components",\n
-    "bin",\n
-    "demo",\n
-    "doc",\n
-    "test",\n
-    "index.html",\n
-    "package.json"\n
-  ]\n
-}\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

@@ -19,21 +19,6 @@
             <value> <string>application/x-ruby</string> </value>
         </item>
         <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-require "compass"\n
-\n
-# for background_noise\n
-require "chunky_png"\n
-require "base64"\n
-require File.join(File.dirname(__FILE__), \'compass-recipes\', \'sass_extensions\')\n
-\n
-Compass::Frameworks.register("recipes", :path => "#{File.dirname(__FILE__)}/..")
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>

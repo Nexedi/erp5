@@ -49,24 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>if not portal_type:\n
-  portal_type = context.getPortalObject().getPortalAccountingMovementTypeList()\n
-\n
-sort_dict = { \'income\': 0,\n
-              \'expense\': -2,\n
-              \'receivable\': -2,\n
-              \'payable\': 0,\n
-              \'collected_vat\': -1,\n
-              \'refundable_vat\': -1 }\n
-\n
-def getAccountingTransactionLineSortKey(line):\n
-  return sort_dict.get(line.getId(), line.getIntIndex() or line.getIntId())\n
-\n
-return sorted(context.contentValues(portal_type=portal_type, checked_permission="View"), key=getAccountingTransactionLineSortKey)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>portal_type=[], **kw</string> </value>
         </item>

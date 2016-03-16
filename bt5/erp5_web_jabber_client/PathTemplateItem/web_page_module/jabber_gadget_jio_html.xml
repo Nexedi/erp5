@@ -100,36 +100,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
-    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>Jio Gadget</title>\n
-\n
-    <!-- renderjs -->\n
-    <script src="rsvp.js" type="text/javascript"></script>\n
-    <script src="renderjs.js" type="text/javascript"></script>\n
-\n
-    <script src="jiodev.js" type="text/javascript"></script>\n
-\n
-    <!-- custom script -->\n
-    <script src="gadget_jabberclient_jio.js" type="text/javascript"></script>\n
-\n
-  </head>\n
-  <body>\n
-  <div class="ui-hidden-accessible connection-gadget-container"></div>\n
-  <div data-gadget-url=\'gadget_jio.html\' data-gadget-scope=\'persistent_jio\'></div>\n
-\n
-  </body>\n
-</html>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>JabberClient Gadget jIO</string> </value>
         </item>

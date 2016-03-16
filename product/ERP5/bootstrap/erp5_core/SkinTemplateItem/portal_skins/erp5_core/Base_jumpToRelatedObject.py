@@ -1,0 +1,116 @@
+from ZTUtils import make_query
+portal = context.getPortalObject()
+Base_translateString = portal.Base_translateString
+checkPerm = portal.portal_membership.checkPermission
+
+if jump_from_relative_url is None:
+  relation = context
+else:
+  relation = portal.restrictedTraverse(jump_from_relative_url)
+
+# FIXME: performance problem getting *all* related documents URL is not scalable.
+getter_base_name = ''.join([x.capitalize() for x in base_category.split('_')])
+if related:
+  search_method = getattr(relation, 'get%sRelatedList' % getter_base_name)
+else:
+  search_method = getattr(relation, 'get%sList' % getter_base_name)
+
+related_list = search_method(portal_type = portal_type)
+
+if same_type(portal_type, ''):
+  portal_type = [portal_type]
+
+relation_found = 0
+if len(related_list) == 0:
+  url = context.absolute_url()
+  message = Base_translateString(
+    'No %s Related' % portal_type[0],
+    default = unicode(Base_translateString('No ${portal_type} related.',
+                                           mapping = { 'portal_type': Base_translateString(portal_type[0])}), 'utf8'))
+
+elif len(related_list) == 1:
+  relation_found = 1
+  related_object = portal.restrictedTraverse(related_list[0], None)
+  if related_object is None:
+    # this might be a category
+    related_object = portal.portal_categories.resolveCategory(
+                           "%s/%s" % (base_category, related_list[0]))
+
+  if related_object is not None and checkPerm("View", related_object) :
+    if target_form_id is not None:
+      form_id = target_form_id
+    else:
+      form_id = 'view'
+    url = related_object.absolute_url()
+    message = Base_translateString(
+      # first, try to get a full translated message with portal types
+      "%s related to %s." % (related_object.getPortalType(), context.getPortalType()),
+       # if not found, fallback to generic translation
+      default = unicode(Base_translateString('${this_portal_type} related to ${that_portal_type} : ${that_title}.',
+        mapping={"this_portal_type" : related_object.getTranslatedPortalType(),
+                 "that_portal_type" : context.getTranslatedPortalType(),
+                 "that_title" : context.getTitleOrId() }), 'utf8'))
+  else :
+    url = context.absolute_url()
+    message = Base_translateString("You are not authorised to view the related document.")
+    relation_found = 0
+
+else:
+  # jump to the module if we can guess it
+  if len(portal_type) == 1:
+    module_id = portal.getDefaultModuleId(portal_type[0], None)
+    if module_id is not None:
+      module = portal.getDefaultModule(portal_type[0])
+      if related:
+        return module.Base_redirect(
+                 'view', keep_items={'default_%s_uid' % base_category: relation.getUid(),
+                                     'ignore_hide_rows': 1,
+                                     'reset': 1})
+      # We can not pass parameters through url, otherwise we might have too long urls (if many uids).
+      # Therefore check if we are in usual case of module form having a listbox, and update
+      # selection for it
+      get_uid_method = getattr(relation, 'get%sUidList' % getter_base_name)
+      portal_type_object = portal.portal_types[module.getPortalType()]
+      module_form = portal_type_object.getDefaultViewFor(module)
+      if "listbox" in [x for x in module_form.objectIds()]:
+        listbox = module_form.listbox
+        selection_name = listbox.get_value("selection_name")
+        portal.portal_selections.setSelectionToAll(selection_name)
+        uid_list = get_uid_method(portal_type=portal_type, checked_permission="View")
+        portal.portal_selections.setSelectionParamsFor(selection_name, {"uid": uid_list})
+        return module.Base_redirect('view', keep_items=dict(ignore_hide_rows=1))
+
+  # compute the list of objects we are actually authorised to view
+  related_object_list = []
+  for path in search_method(portal_type=portal_type) :
+    obj = portal.restrictedTraverse(path, None)
+    if obj is None:
+      # this might be a category
+      obj = portal.portal_categories.resolveCategory(
+                           "%s/%s" % (base_category, path))
+
+    if obj is not None and checkPerm("View", obj):
+      related_object_list.append(obj)
+  if len(related_object_list) == 0 :
+    url = context.absolute_url()
+    message = Base_translateString("You are not authorised to view any related document.")
+    relation_found = 0
+  else :
+    request=portal.REQUEST
+    selection_uid_list = [x.getUid() for x in related_object_list]
+    kw = {'uid': selection_uid_list}
+    portal.portal_selections.setSelectionParamsFor(
+                          'Base_jumpToRelatedObjectList', kw)
+    request.set('object_uid', context.getUid())
+    request.set('uids', selection_uid_list)
+    return getattr(context, relation_form_id)(
+                      uids=selection_uid_list, REQUEST=request)
+
+query_params = dict(portal_status_message=message)
+if selection_name and not relation_found:
+  query_params['selection_name'] = selection_name
+  query_params['selection_index'] = selection_index
+
+
+redirect_url = '%s/%s?%s' % (url, form_id, make_query(query_params))
+return context.REQUEST[ 'RESPONSE' ].redirect(redirect_url)

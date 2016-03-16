@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>date = context.getStartDate()\n
-\n
-if not date:\n
-  return ""\n
-else:\n
-  return context.Base_translateString(date.Day())\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

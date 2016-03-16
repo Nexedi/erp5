@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>""" Retrieve the category list of the resource. """\n
-\n
-result_list = []\n
-cat_tool = context.getPortalObject().portal_categories\n
-\n
-# add to the list the shared variations\n
-for variation in context.getVariationCategoryItemList(omit_individual_variation=0, base=1, display_id=\'title\'):\n
-  cat = cat_tool.restrictedTraverse(variation[1])\n
-  if cat.getPortalType() == "Category":\n
-    result_list.append(variation[1])\n
-  else:\n
-    result_list.append(cat.getVariationBaseCategory()+"/"+cat.getTitle())\n
-\n
-# sort the result list to always build the same xml\n
-result_list.sort()\n
-\n
-return result_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
