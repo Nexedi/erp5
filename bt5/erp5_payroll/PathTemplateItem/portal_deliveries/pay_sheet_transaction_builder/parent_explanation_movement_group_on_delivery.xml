@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Root Applied Rule Causality Movement Group" module="erp5.portal_type"/>
+      <global name="Parent Explanation Movement Group" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22,19 +22,19 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>root_applied_rule_causality_movement_group_on_delivery</string> </value>
+            <value> <string>parent_explanation_movement_group_on_delivery</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value> <int>3</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Root Applied Rule Causality Movement Group</string> </value>
+            <value> <string>Parent Explanation Movement Group</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>root_applied_rule_causality_movement_group_on_delivery</string> </value>
+            <value> <string>parent_explanation_movement_group_on_delivery</string> </value>
         </item>
       </dictionary>
     </pickle>
