@@ -50,6 +50,18 @@
 
   }
 
+  function disconnectOnbeforeunload(connection) {
+    return function (event) {
+      /* XXX it can be interfere with changed warning
+      if (changed && $('button.save')) {
+        return unsaved_warn_message;
+      }*/
+      connection.sync = true;
+      connection.disconnect();
+      connection.flush();
+    };
+  }
+
   function deferOnMessageStanza(message) {
     var gadget = this;
     enqueueDefer(gadget, function () {
@@ -148,27 +160,29 @@
       // Try to auto connection
       if (gadget.props.server !== undefined) {
         gadget.props.connection = new Strophe.Connection(gadget.props.server);
+        var connection = gadget.props.connection;
 
-//         gadget.props.connection.rawInput = function (data) {
-//           console.log("RECEIVING SOMETHING");
-//           console.log(data);
-//         };
-//         gadget.props.connection.rawOutput = function (data) {
-//           console.log("SENDING SOMETHING");
-//           console.log(data);
-//         };
+        // connection.rawInput = function (data) {
+        //   console.log("RECEIVING SOMETHING");
+        //   console.log(data);
+        // };
+        // connection.rawOutput = function (data) {
+        //   console.log("SENDING SOMETHING");
+        //   console.log(data);
+        // };
 
-        gadget.props.connection.connect(
+        connection.connect(
           gadget.props.jid,
           gadget.props.passwd,
           handleConnectionCallback
         );
-        gadget.props.connection.addHandler(
+        window.onbeforeunload = disconnectOnbeforeunload(connection);
+        connection.addHandler(
           deferOnPresenceStanza.bind(gadget),
           null,
           "presence"
         );
-        gadget.props.connection.addHandler(
+        connection.addHandler(
           deferOnMessageStanza.bind(gadget),
           null,
           "message",
