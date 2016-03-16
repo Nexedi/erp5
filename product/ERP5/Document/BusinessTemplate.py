@@ -2520,6 +2520,16 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
   def export(self, context, bta, **kw):
     if not self._objects:
       return
+    # 'portal_type_workflow_chain/' is added in _importFile
+    # and if the template is not built,
+    # it should be removed here from the key
+    new_objects = PersistentMapping()
+    for key, value in self._objects.iteritems():
+      new_key = deepcopy(key)
+      if 'portal_type_workflow_chain/' in key:
+        new_key = new_key.replace('portal_type_workflow_chain/', '')
+      new_objects[new_key] = value
+    self._objects = new_objects
     # export workflow chain
     xml_data = self.generateXml()
     bta.addObject(xml_data, name='workflow_chain_type',
