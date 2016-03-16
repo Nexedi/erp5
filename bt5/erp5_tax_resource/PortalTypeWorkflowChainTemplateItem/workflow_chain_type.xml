@@ -1,6 +1,6 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Tax</type>
+  <type>Tax</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
 </workflow_chain>

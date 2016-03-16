@@ -1,106 +1,106 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Address</type>
+  <type>Address</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Agent</type>
+  <type>Agent</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Assignment</type>
+  <type>Assignment</type>
   <workflow>assignment_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Bank Account</type>
+  <type>Bank Account</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Career</type>
+  <type>Career</type>
   <workflow>career_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Chat Address</type>
+  <type>Chat Address</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Credit Card</type>
+  <type>Credit Card</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Currency</type>
+  <type>Currency</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Currency Exchange Line</type>
+  <type>Currency Exchange Line</type>
   <workflow>currency_exchange_line_interaction_workflow, edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Email</type>
+  <type>Email</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Embedded File</type>
+  <type>Embedded File</type>
   <workflow>document_conversion_interaction_workflow, edit_workflow, embedded_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Embedded Folder</type>
+  <type>Embedded Folder</type>
   <workflow>edit_workflow, embedded_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Fax</type>
+  <type>Fax</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/File</type>
+  <type>File</type>
   <workflow>document_conversion_interaction_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Geographical Area</type>
+  <type>Geographical Area</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Geographical Location</type>
+  <type>Geographical Location</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Image</type>
+  <type>Image</type>
   <workflow>document_conversion_interaction_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Link</type>
+  <type>Link</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Notification Message</type>
+  <type>Notification Message</type>
   <workflow>document_conversion_interaction_workflow, document_security_interaction_workflow, edit_workflow, notification_message_workflow, processing_status_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Organisation</type>
+  <type>Organisation</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Person</type>
+  <type>Person</type>
   <workflow>edit_workflow, person_interaction_workflow, user_account_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Query</type>
+  <type>Query</type>
   <workflow>edit_workflow, query_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Role Definition</type>
+  <type>Role Definition</type>
   <workflow>edit_workflow, local_permission_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Rounding Model</type>
+  <type>Rounding Model</type>
   <workflow>validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Simulation Movement</type>
+  <type>Simulation Movement</type>
   <workflow>simulation_movement_causality_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Telephone</type>
+  <type>Telephone</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

@@ -1,38 +1,38 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Test Case</type>
+  <type>Test Case</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Test Case Actor</type>
+  <type>Test Case Actor</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Test Case Step</type>
+  <type>Test Case Step</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Test Report</type>
+  <type>Test Report</type>
   <workflow>edit_workflow, test_report_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Test Report Step</type>
+  <type>Test Report Step</type>
   <workflow>edit_workflow, test_report_step_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Use Case</type>
+  <type>Use Case</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Use Case Actor</type>
+  <type>Use Case Actor</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Use Case Scenario</type>
+  <type>Use Case Scenario</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Use Case Scenario Step</type>
+  <type>Use Case Scenario Step</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

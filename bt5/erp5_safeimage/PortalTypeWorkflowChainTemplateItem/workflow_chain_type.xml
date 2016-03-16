@@ -1,14 +1,14 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Image Tile</type>
+  <type>Image Tile</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Image Tile Group</type>
+  <type>Image Tile Group</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Image Tile Transformed</type>
+  <type>Image Tile Transformed</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
 </workflow_chain>

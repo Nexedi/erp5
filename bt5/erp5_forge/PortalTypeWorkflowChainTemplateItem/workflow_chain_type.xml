@@ -1,14 +1,14 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Bug</type>
+  <type>Bug</type>
   <workflow>bug_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Bug Line</type>
+  <type>Bug Line</type>
   <workflow>bug_event_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Glossary Term</type>
+  <type>Glossary Term</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
 </workflow_chain>

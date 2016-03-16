@@ -1,42 +1,42 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Benchmark Result</type>
+  <type>Benchmark Result</type>
   <workflow>edit_workflow, test_result_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Benchmark Result Line</type>
+  <type>Benchmark Result Line</type>
   <workflow>edit_workflow, test_result_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Scalability Test Suite</type>
+  <type>Scalability Test Suite</type>
   <workflow>edit_workflow, test_suite_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/SlapOS Agent Distributor</type>
+  <type>SlapOS Agent Distributor</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/SlapOS Agent Test Suite</type>
+  <type>SlapOS Agent Test Suite</type>
   <workflow>edit_workflow, test_suite_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Test Node</type>
+  <type>Test Node</type>
   <workflow>edit_workflow, test_node_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Test Result</type>
+  <type>Test Result</type>
   <workflow>edit_workflow, test_result_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Test Result Line</type>
+  <type>Test Result Line</type>
   <workflow>edit_workflow, test_result_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Test Result Node</type>
+  <type>Test Result Node</type>
   <workflow>edit_workflow, test_result_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Test Suite</type>
+  <type>Test Suite</type>
   <workflow>edit_workflow, test_suite_workflow</workflow>
  </chain>
 </workflow_chain>

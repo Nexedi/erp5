@@ -1,6 +1,6 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Payline Transaction</type>
+  <type>Payline Transaction</type>
   <workflow>edit_workflow, payline_transaction_workflow</workflow>
  </chain>
 </workflow_chain>

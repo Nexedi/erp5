@@ -1,30 +1,30 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Accept Solver</type>
+  <type>Accept Solver</type>
   <workflow>solver_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Adopt Solver</type>
+  <type>Adopt Solver</type>
   <workflow>solver_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Production Reduction Solver</type>
+  <type>Production Reduction Solver</type>
   <workflow>solver_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Quantity Cancel Solver</type>
+  <type>Quantity Cancel Solver</type>
   <workflow>solver_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Quantity Split Solver</type>
+  <type>Quantity Split Solver</type>
   <workflow>solver_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Trade Model Solver</type>
+  <type>Trade Model Solver</type>
   <workflow>solver_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Unify Solver</type>
+  <type>Unify Solver</type>
   <workflow>solver_workflow</workflow>
  </chain>
 </workflow_chain>
