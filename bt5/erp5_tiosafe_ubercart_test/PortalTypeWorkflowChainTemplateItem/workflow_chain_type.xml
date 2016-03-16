@@ -1,22 +1,22 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Ubercart Test Delivery Person</type>
+  <type>Ubercart Test Delivery Person</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Ubercart Test Person</type>
+  <type>Ubercart Test Person</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Ubercart Test Product</type>
+  <type>Ubercart Test Product</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Ubercart Test Sale Order</type>
+  <type>Ubercart Test Sale Order</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Ubercart Test Sale Order Item</type>
+  <type>Ubercart Test Sale Order Item</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

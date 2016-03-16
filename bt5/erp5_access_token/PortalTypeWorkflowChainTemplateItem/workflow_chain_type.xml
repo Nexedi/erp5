@@ -1,10 +1,10 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/One Time Restricted Access Token</type>
+  <type>One Time Restricted Access Token</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Restricted Access Token</type>
+  <type>Restricted Access Token</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
 </workflow_chain>

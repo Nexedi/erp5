@@ -1,6 +1,6 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Data Set</type>
+  <type>Data Set</type>
   <workflow>document_publication_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

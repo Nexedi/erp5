@@ -1,174 +1,174 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Business Link</type>
+  <type>Business Link</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Business Process</type>
+  <type>Business Process</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Container</type>
+  <type>Container</type>
   <workflow>edit_workflow, pricing_interaction_workflow, reindex_object_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Container Cell</type>
+  <type>Container Cell</type>
   <workflow>container_interaction_workflow, edit_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Container Line</type>
+  <type>Container Line</type>
   <workflow>container_interaction_workflow, edit_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Delivery Cell</type>
+  <type>Delivery Cell</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Delivery Root Simulation Rule</type>
+  <type>Delivery Root Simulation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Delivery Simulation Rule</type>
+  <type>Delivery Simulation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Internal Order</type>
+  <type>Internal Order</type>
   <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, order_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Internal Order Cell</type>
+  <type>Internal Order Cell</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Internal Order Line</type>
+  <type>Internal Order Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, movement_resource_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Internal Packing List</type>
+  <type>Internal Packing List</type>
   <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, packing_list_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Internal Packing List Cell</type>
+  <type>Internal Packing List Cell</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Internal Packing List Line</type>
+  <type>Internal Packing List Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, movement_resource_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Internal Trade Condition</type>
+  <type>Internal Trade Condition</type>
   <workflow>edit_workflow, reindex_object_interaction_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Inventory</type>
+  <type>Inventory</type>
   <workflow>edit_workflow, inventory_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Inventory Cell</type>
+  <type>Inventory Cell</type>
   <workflow>pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Inventory Line</type>
+  <type>Inventory Line</type>
   <workflow>edit_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Order Root Simulation Rule</type>
+  <type>Order Root Simulation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Payment Condition</type>
+  <type>Payment Condition</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Purchase Order</type>
+  <type>Purchase Order</type>
   <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, order_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Purchase Order Cell</type>
+  <type>Purchase Order Cell</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Purchase Order Line</type>
+  <type>Purchase Order Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, movement_resource_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Purchase Packing List</type>
+  <type>Purchase Packing List</type>
   <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, packing_list_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Purchase Packing List Cell</type>
+  <type>Purchase Packing List Cell</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Purchase Packing List Line</type>
+  <type>Purchase Packing List Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, movement_resource_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Purchase Trade Condition</type>
+  <type>Purchase Trade Condition</type>
   <workflow>edit_workflow, reindex_object_interaction_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Returned Purchase Packing List</type>
+  <type>Returned Purchase Packing List</type>
   <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, packing_list_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Returned Purchase Packing List Cell</type>
+  <type>Returned Purchase Packing List Cell</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Returned Purchase Packing List Line</type>
+  <type>Returned Purchase Packing List Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, movement_resource_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Returned Sale Packing List</type>
+  <type>Returned Sale Packing List</type>
   <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, packing_list_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Returned Sale Packing List Cell</type>
+  <type>Returned Sale Packing List Cell</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Returned Sale Packing List Line</type>
+  <type>Returned Sale Packing List Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, movement_resource_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Sale Order</type>
+  <type>Sale Order</type>
   <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, order_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Sale Order Cell</type>
+  <type>Sale Order Cell</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Sale Order Line</type>
+  <type>Sale Order Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, movement_resource_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Sale Packing List</type>
+  <type>Sale Packing List</type>
   <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, packing_list_container_workflow, packing_list_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Sale Packing List Cell</type>
+  <type>Sale Packing List Cell</type>
   <workflow>container_interaction_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Sale Packing List Line</type>
+  <type>Sale Packing List Line</type>
   <workflow>container_interaction_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, movement_resource_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Sale Trade Condition</type>
+  <type>Sale Trade Condition</type>
   <workflow>edit_workflow, reindex_object_interaction_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Trade Model Line</type>
+  <type>Trade Model Line</type>
   <workflow>edit_workflow, trade_model_line_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Trade Model Line Cell Consistency Constraint</type>
+  <type>Trade Model Line Cell Consistency Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Trade Model Path</type>
+  <type>Trade Model Path</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

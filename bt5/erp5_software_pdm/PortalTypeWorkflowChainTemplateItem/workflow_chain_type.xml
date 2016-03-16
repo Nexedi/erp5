@@ -1,18 +1,18 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Software Licence</type>
+  <type>Software Licence</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Software Product</type>
+  <type>Software Product</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Software Publication</type>
+  <type>Software Publication</type>
   <workflow>edit_workflow, pricing_interaction_workflow, ticket_interaction_workflow, ticket_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Software Release</type>
+  <type>Software Release</type>
   <workflow>document_publication_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

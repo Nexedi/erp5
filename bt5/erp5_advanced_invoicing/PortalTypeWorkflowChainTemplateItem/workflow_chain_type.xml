@@ -1,10 +1,10 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Purchase Invoice</type>
+  <type>Purchase Invoice</type>
   <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, invoice_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Sale Invoice</type>
+  <type>Sale Invoice</type>
   <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, invoice_workflow</workflow>
  </chain>
 </workflow_chain>

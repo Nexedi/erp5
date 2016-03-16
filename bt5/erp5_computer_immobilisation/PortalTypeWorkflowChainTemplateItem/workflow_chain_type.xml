@@ -1,26 +1,26 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Computer</type>
+  <type>Computer</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Computer Model</type>
+  <type>Computer Model</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Computer Network</type>
+  <type>Computer Network</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Computer Partition</type>
+  <type>Computer Partition</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Internet Protocol Address</type>
+  <type>Internet Protocol Address</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Tcp Port Number</type>
+  <type>Tcp Port Number</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

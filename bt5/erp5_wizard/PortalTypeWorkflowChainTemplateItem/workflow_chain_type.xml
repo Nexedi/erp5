@@ -1,10 +1,10 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Assignment</type>
+  <type>Assignment</type>
   <workflow>express_person_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Person</type>
+  <type>Person</type>
   <workflow>express_person_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

@@ -1,46 +1,46 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Budget</type>
+  <type>Budget</type>
   <workflow>budget_interaction_workflow, budget_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Budget Cell</type>
+  <type>Budget Cell</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Budget Line</type>
+  <type>Budget Line</type>
   <workflow>budget_line_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Budget Model</type>
+  <type>Budget Model</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Budget Transaction</type>
+  <type>Budget Transaction</type>
   <workflow>budget_transaction_workflow, edit_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Budget Transfer</type>
+  <type>Budget Transfer</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Budget Transfer Line</type>
+  <type>Budget Transfer Line</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Category Budget Variation</type>
+  <type>Category Budget Variation</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Node Budget Variation</type>
+  <type>Node Budget Variation</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Transaction Quantity Value Feasability Constraint</type>
+  <type>Transaction Quantity Value Feasability Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Transaction Quantity Value Validity Constraint</type>
+  <type>Transaction Quantity Value Validity Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

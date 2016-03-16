@@ -1,38 +1,38 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Category Membership Divergence Tester</type>
+  <type>Category Membership Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/DateTime Divergence Tester</type>
+  <type>DateTime Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Float Divergence Tester</type>
+  <type>Float Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Net Converted Quantity Divergence Tester</type>
+  <type>Net Converted Quantity Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Solver Process</type>
+  <type>Solver Process</type>
   <workflow>solver_process_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Solver Type</type>
+  <type>Solver Type</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Specialise Divergence Tester</type>
+  <type>Specialise Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/String Divergence Tester</type>
+  <type>String Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Variation Divergence Tester</type>
+  <type>Variation Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

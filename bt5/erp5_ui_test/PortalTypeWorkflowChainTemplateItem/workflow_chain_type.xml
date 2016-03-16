@@ -1,14 +1,14 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Bar</type>
+  <type>Bar</type>
   <workflow>edit_workflow, foo_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Foo</type>
+  <type>Foo</type>
   <workflow>edit_workflow, foo_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Foo Line</type>
+  <type>Foo Line</type>
   <workflow>pricing_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

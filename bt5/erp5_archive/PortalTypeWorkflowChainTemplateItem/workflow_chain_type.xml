@@ -1,10 +1,10 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Archive</type>
+  <type>Archive</type>
   <workflow>archive_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Archive Inventory</type>
+  <type>Archive Inventory</type>
   <workflow>archive_inventory_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>
