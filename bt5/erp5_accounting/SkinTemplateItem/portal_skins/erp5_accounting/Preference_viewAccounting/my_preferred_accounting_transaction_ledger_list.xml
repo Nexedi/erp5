@@ -11,13 +11,12 @@
             <value>
               <list>
                 <string>default</string>
-                <string>required</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_preferred_accounting_transaction_simulation_state_list</string> </value>
+            <value> <string>my_preferred_accounting_transaction_ledger_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -66,10 +65,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -88,15 +83,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_simulation_state</string> </value>
+                    <value> <string>your_ledger</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>AccountModule_viewDialogFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

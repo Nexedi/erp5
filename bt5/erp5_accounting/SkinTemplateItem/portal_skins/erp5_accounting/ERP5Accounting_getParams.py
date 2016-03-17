@@ -98,6 +98,12 @@ simulation_state = selection_params.get('simulation_state',
 if simulation_state:
   params['simulation_state'] = simulation_state
 
+ledger = selection_params.get('ledger_uid', None)
+if ledger is None:
+  portal_categories = context.getPortalObject().portal_categories
+  params['ledger_uid'] = [portal_categories.resolveCategory(category).getUid()
+      for category in preference.getPreferredAccountingTransactionLedgerList([])]
+
 portal_type = selection_params.get('movement_portal_type', None)
 if portal_type:
   params['portal_type'] = portal_type
