@@ -960,9 +960,14 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
       tmp_sort_on = ()
       if sort_on is not None:
-        for grain in sort_on:
-          if grain != "":
-            tmp_sort_on += (tuple([x for x in grain.split(",")]),)
+
+        if isinstance(sort_on, list):
+          for grain in sort_on:
+            tmp_sort_on += (tuple([x for x in json.loads(grain)]),)
+        else:
+          #only one single criteria
+          tmp_sort_on = (tuple([x for x in json.loads(sort_on)]),)
+
 
       if query:
         sql_list = callable_list_method(full_text=query, limit=limit, sort_on=tmp_sort_on, local_roles=local_roles, **catalog_kw)

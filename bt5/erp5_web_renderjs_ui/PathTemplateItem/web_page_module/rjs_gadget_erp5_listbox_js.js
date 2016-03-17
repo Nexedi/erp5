@@ -283,7 +283,7 @@
           for (i = 0; i < gadget.props.field_json.column_list.length; i += 1) {
             class_value = "";
             for (j = 0; j < gadget.props.sort_list.length; j += 1) {
-              tmp = gadget.props.sort_list[j].split(",");
+              tmp = gadget.props.sort_list[j];
               if (tmp[0] === gadget.props.field_json.column_list[i][0]) {
                 if (tmp[1] === "ascending") {
                   class_value = "ui-icon-arrow-up";

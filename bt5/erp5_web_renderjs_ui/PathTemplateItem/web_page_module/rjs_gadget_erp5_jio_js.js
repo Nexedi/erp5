@@ -116,6 +116,7 @@
         parsed_query,
         sub_query,
         result_list,
+        tmp_list = [],
         local_roles;
       if (option_dict.query) {
         parsed_query = jIO.QueryFactory.create(option_dict.query);
@@ -159,7 +160,12 @@
         option_dict.query = query;
         option_dict.local_roles = local_roles;
       }
-
+      if (option_dict.sort_on) {
+        for (i = 0; i < option_dict.sort_on.length; i += 1) {
+          tmp_list.push(JSON.stringify(option_dict.sort_on[i]));
+        }
+        option_dict.sort_on = tmp_list;
+      }
       return wrapJioCall(
         this,
         'getAttachment',
