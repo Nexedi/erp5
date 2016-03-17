@@ -184,9 +184,6 @@
             if ((error.target !== undefined) && (error.target.status === 400)) {
               return form_gadget.notifySubmitted()
                 .push(function () {
-                  return form_gadget.notifyChange();
-                })
-                .push(function () {
                   return form_gadget.displayFormulatorValidationError(JSON.parse(error.target.responseText));
                 });
             }
