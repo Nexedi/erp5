@@ -1,4 +1,3 @@
-
 /*! URI.js v1.12.0 http://medialize.github.com/URI.js/ */
 /* build contains: IPv6.js, punycode.js, SecondLevelDomains.js, URI.js, URI.fragmentQuery.js */
 (function(e,k){"object"===typeof exports?module.exports=k():"function"===typeof define&&define.amd?define(k):e.IPv6=k(e)})(this,function(e){var k=e&&e.IPv6;return{best:function(e){e=e.toLowerCase().split(":");var k=e.length,d=8;""===e[0]&&""===e[1]&&""===e[2]?(e.shift(),e.shift()):""===e[0]&&""===e[1]?e.shift():""===e[k-1]&&""===e[k-2]&&e.pop();k=e.length;-1!==e[k-1].indexOf(".")&&(d=7);var g;for(g=0;g<k&&""!==e[g];g++);if(g<d)for(e.splice(g,1,"0000");e.length<d;)e.splice(g,0,"0000");for(g=0;g<d;g++){for(var k=
@@ -9183,7 +9182,8 @@ return new Parser;
           parsed_query,
           sub_query,
           result_list,
-          local_roles;
+          local_roles,
+          tmp_list = [];
         if (options.query) {
           parsed_query = jIO.QueryFactory.create(options.query);
 
@@ -9223,6 +9223,13 @@ return new Parser;
             }
 
           }
+        }
+
+        if (options.sort_on) {
+          for (i = 0; i < options.sort_on.length; i += 1) {
+            tmp_list.push(JSON.stringify(options.sort_on[i]));
+          }
+          options.sort_on = tmp_list;
         }
 
         return jIO.util.ajax({
