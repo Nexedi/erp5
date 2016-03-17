@@ -368,6 +368,11 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
 
     return self
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isDeletable')
+  def isDeletable(self, check_relation):
+    return False
+
   security.declarePrivate('manage_beforeDelete')
   def manage_beforeDelete(self, item, container):
     # skin is setup during __before_publishing_traverse__, which
