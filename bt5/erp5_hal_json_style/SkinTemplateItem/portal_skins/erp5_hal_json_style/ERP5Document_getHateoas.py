@@ -83,16 +83,19 @@ def getFormRelativeUrl(form):
 
 def getFieldDefault(traversed_document, field, key, value=None):
   # REQUEST.get(field.id, field.get_value("default"))
-  return traversed_document.Field_getDefaultValue(field, key, value, REQUEST)
+  result = traversed_document.Field_getDefaultValue(field, key, value, REQUEST)
+  if getattr(result, 'translate', None) is not None:
+    result = "%s" % result
+  return result
 
-def renderField(traversed_document, field, form_relative_url, value=None, meta_type=None, key=None):
+def renderField(traversed_document, field, form_relative_url, value=None, meta_type=None, key=None, key_prefix=None, selection_params=None):
   if meta_type is None:
     meta_type = field.meta_type
   if key is None:
-    key = field.generate_field_key()
+    key = field.generate_field_key(key_prefix=key_prefix)
 
   if meta_type == "ProxyField":
-    result = renderField(traversed_document, field, form_relative_url, value, meta_type=field.getRecursiveTemplateField().meta_type, key=key)
+    result = renderField(traversed_document, field, form_relative_url, value, meta_type=field.getRecursiveTemplateField().meta_type, key=key, key_prefix=key_prefix, selection_params=selection_params)
   elif meta_type == "ListField":
     result = {
       "type": meta_type,
@@ -323,6 +326,8 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
     portal_types = field.get_value('portal_types')
     default_params = dict(field.get_value('default_params'))
     default_params['ignore_unknown_columns'] = True
+    if selection_params is not None:
+      default_params.update(selection_params)
     # How to implement pagination?
     # default_params.update(REQUEST.form)
     lines = field.get_value('lines')
@@ -412,7 +417,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
   return result
 
 
-def renderForm(traversed_document, form, response_dict):
+def renderForm(traversed_document, form, response_dict, key_prefix=None, selection_params=None):
   REQUEST.set('here', traversed_document)
   field_errors = REQUEST.get('field_errors', {})
 
@@ -465,7 +470,7 @@ def renderForm(traversed_document, form, response_dict):
 #         field_list.append((field.id, renderRawField(field)))
         if field.get_value("enabled"):
           try:
-            response_dict[field.id] = renderField(traversed_document, field, form_relative_url)
+            response_dict[field.id] = renderField(traversed_document, field, form_relative_url, key_prefix=key_prefix, selection_params=selection_params)
             if field_errors.has_key(field.id):
               response_dict[field.id]["error_text"] = field_errors[field.id].error_text
           except AttributeError:
@@ -499,6 +504,27 @@ def renderForm(traversed_document, form, response_dict):
 #   "form": raw_response_dict
 # }
 
+  if (form.pt == 'report_view'):
+    report_item_list = []
+    report_result_list = []
+    for field in form.get_fields():
+      if field.getRecursiveTemplateField().meta_type == 'ReportBox':
+        report_item_list.extend(field.render())
+    j = 0
+    for report_item in report_item_list:
+      report_context = report_item.getObject(portal)
+      report_prefix = 'x%s' % j
+      j += 1
+      report_title = report_item.getTitle()
+      # report_class = "report_title_level_%s" % report_item.getLevel()
+      report_form = report_item.getFormId()
+      report_result = {'_links': {}}
+      renderForm(traversed_document, getattr(report_context, report_item.getFormId()),
+                 report_result, key_prefix=report_prefix,
+                 selection_params=report_item.selection_params)
+      report_result_list.append(report_result)
+
+    response_dict['report_section_list'] = report_result_list
 
 # XXX form action update, etc
 def renderRawField(field):
@@ -1024,6 +1050,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           if same_type(property_value, DateTime()):
             # Serialize DateTime
             property_value = property_value.rfc822()
+          elif getattr(property_value, 'translate', None) is not None:
+            property_value = "%s" % property_value
           document_result[select] = property_value
       result_list.append(document_result)
     result_dict['_embedded'] = {"contents": result_list}
