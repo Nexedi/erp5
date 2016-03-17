@@ -1,5 +1,5 @@
 from Products.ERP5Type.Document import newTempBase
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Log import log
 portal = context.getPortalObject()

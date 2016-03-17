@@ -9,15 +9,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>default</string>
-                <string>required</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_preferred_accounting_transaction_simulation_state_list</string> </value>
+            <value> <string>my_ledger</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -54,19 +51,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -81,22 +70,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_simulation_state</string> </value>
+                    <value> <string>my_ledger</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>AccountModule_viewDialogFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>AccountingTransaction_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
