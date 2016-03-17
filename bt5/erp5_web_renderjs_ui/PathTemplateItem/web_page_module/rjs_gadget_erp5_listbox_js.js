@@ -168,6 +168,7 @@
     return gadget.translateHtml(listbox_template(
       {
         "hide_class": gadget.props.hide_class,
+        "hide_sort": gadget.props.hide_sort,
         "title": gadget.props.field_json.title
       }
     ));
@@ -249,6 +250,7 @@
           return false;
         });
       }
+      gadget.props.hide_sort = field_json.sort_column_list.length ? "" : "ui-disabled";
 
       if (field_json.search_column_list.length) {
         field_json.search_column_list = field_json.search_column_list.filter(function (n) {
