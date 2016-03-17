@@ -25,13 +25,11 @@
 
   function createSortItemTemplate(gadget, sort_value) {
     var sort_column_list = gadget.props.sort_column_list,
-      sort_value_list = [],
+      sort_value_list = sort_value || [],
       option_list = [],
       i;
 
-    if (sort_value) {
-      sort_value_list = sort_value.split(",");
-    }
+
     for (i = 0; i < sort_column_list.length; i += 1) {
       option_list.push({
         "text": sort_column_list[i][1],
@@ -143,21 +141,18 @@
             sort_query = [],
             select_list,
             sort_item,
-            sort_item_query,
             options = {},
             i;
 
           for (i = 0; i < sort_list.length; i += 1) {
             sort_item = sort_list[i];
             select_list = sort_item.querySelectorAll("select");
-            sort_item_query = select_list[0][select_list[0].selectedIndex].value
-              + "," + select_list[1][select_list[1].selectedIndex].value + ",";
-            sort_query[i] = sort_item_query;
+            sort_query[i] = [select_list[0][select_list[0].selectedIndex].value,
+              select_list[1][select_list[1].selectedIndex].value];
           }
           if (i === 0) {
             options[gadget.props.key] = undefined;
           } else {
-            sort_query[i] = "";
             options[gadget.props.key] = sort_query;
           }
           return gadget.redirect({

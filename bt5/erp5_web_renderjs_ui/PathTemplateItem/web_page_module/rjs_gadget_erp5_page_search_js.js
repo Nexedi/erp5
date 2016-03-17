@@ -42,7 +42,7 @@
       return this.getUrlParameter(argument_list)
         .push(function (result) {
           if ((result === undefined) && (argument_list[0] === 'field_listbox_sort_list:json')) {
-            return ["modification_date,descending,", ""];
+            return [['modification_date', 'descending']];
           }
           return result;
         });
