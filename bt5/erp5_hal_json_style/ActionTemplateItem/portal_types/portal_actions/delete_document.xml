@@ -78,7 +78,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: (portal.portal_workflow.isTransitionPossible(object, \'delete\') or ((getattr(object, \'getParentValue\', None) is not None) and (portal.Base_checkPermission(object.getParentValue().getRelativeUrl(), \'Delete objects\')) and len([workflow for workflow in object.Base_getWorkflowHistory().keys() if workflow != \'edit_workflow\']) == 0)) and (object.getRelationCountForDeletion() == 0)</string> </value>
+            <value> <string>python: object.isDeletable(check_relation=False)</string> </value>
         </item>
       </dictionary>
     </pickle>

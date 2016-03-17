@@ -6,23 +6,30 @@ intended to make code easy understanding
 """
 
 portal = context.getPortalObject()
+request=container.REQUEST
 
-history_dict = context.Base_getWorkflowHistory()
-history_dict.pop('edit_workflow', None)
+def errorHandler():
+  request.RESPONSE.setStatus(400)
+  form = getattr(context,form_id)
+  return context.ERP5Document_getHateoas(form=form, REQUEST=request, mode='form')
+  
 
-if history_dict == {} or context.getParentValue().portal_type == 'Preference': 
-  try:
-    context.getParentValue().manage_delObjects(
-      ids= [context.getId()])
-  except ConflictError:
-    raise
-  except Exception:
-    pass
+if context.isDeletable(check_relation=True):
+  if portal.portal_workflow.isTransitionPossible(context, 'delete'):
+    try:
+      portal.portal_workflow.doActionFor(context, 'delete_action')
+    except ConflictError:
+      return errorHandler()
+    except Exception:
+      pass
+  else:
+    try:
+      context.getParentValue().manage_delObjects(
+        ids= [context.getId()])
+    except ConflictError:
+      return errorHandler()
+    except Exception:
+      pass
 
 else:
-  try:
-    portal.portal_workflow.doActionFor(context, 'delete_action')
-  except ConflictError:
-    raise
-  except:
-    pass
+  return errorHandler()
