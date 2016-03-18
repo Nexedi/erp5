@@ -65,6 +65,7 @@ class NodeTestSuite(SlapOSInstance):
   def __init__(self, reference):
     super(NodeTestSuite, self).__init__()
     self.reference = reference
+    self.cluster_configuration = {}
 
   def edit(self, **kw):
     super(NodeTestSuite, self).edit(**kw)
