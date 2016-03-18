@@ -1,4 +1,4 @@
-/*global window, rJS, jIO, FormData, XMLHttpRequestProgressEvent, UriTemplate */
+/*global window, rJS, jIO, FormData, UriTemplate */
 /*jslint indent: 2, maxerr: 3 */
 (function (window, rJS, jIO) {
   "use strict";
@@ -8,8 +8,7 @@
     var storage = gadget.state_parameter_dict.jio_storage;
     return storage[method_name].apply(storage, argument_list)
       .push(undefined, function (error) {
-        if (error instanceof XMLHttpRequestProgressEvent &&
-            error.target.status === 401) {
+        if ((error.target !== undefined) && (error.target.status === 401)) {
           if (gadget.state_parameter_dict.jio_storage_name === "ERP5") {
             return gadget.redirect({ page: "login" });
           }
