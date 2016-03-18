@@ -95,8 +95,3 @@ class Preference( Folder ):
   def disable(self, **kw):
     """Workflow method"""
     self._clearCache()
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isDeletable')
-  def isDeletable(self, check_relation):
-    return not (check_relation and self.getRelationCountForDeletion())
