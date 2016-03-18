@@ -678,6 +678,34 @@ class BaseTemplateItem(Implicit, Persistent):
     synchronizeDynamicModules(portal, force=True)
     gc.collect()
 
+  def _addPrefixToObjects(self, prefix):
+    '''
+      This method is called on preinstall on both the business template
+      that is to be intalled and the already installed one.
+
+      This is used for types were the prefix is not used in the path that the
+      object will be exported, so we should not need to have it on _importFile
+      or other methods. These are:
+      - PortalTypeWorkflowChainTemplateItem
+      - PortalTypeRolesTemplateItem
+      - PortalTypeAllowedContentTypeTemplateItem
+      - PortalTypeHiddenContentTypeTemplateItem
+      - PortalTypePropertySheetTemplateItem
+      - PortalTypeBaseCategoryTemplateItem
+
+      The use of the prefix is twofold:
+      - To have unique keys in the dictionary of modified objects
+      - To preserve compatibility with previously installed business templates
+    '''
+    new_dict = PersistentMapping()
+    old_object = deepcopy(self._objects)
+    for key, value in old_object.iteritems():
+      if not prefix in key:
+        key = '%s/%s' % (prefix, key)
+      new_dict[key] = value
+    if new_dict:
+      self._objects = new_dict
+
 class ObjectTemplateItem(BaseTemplateItem):
   """
     This class is used for generic objects and as a subclass.
@@ -2520,16 +2548,6 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
   def export(self, context, bta, **kw):
     if not self._objects:
       return
-    # 'portal_type_workflow_chain/' is added in _importFile
-    # and if the template is not built,
-    # it should be removed here from the key
-    new_objects = PersistentMapping()
-    for key, value in self._objects.iteritems():
-      new_key = deepcopy(key)
-      if 'portal_type_workflow_chain/' in key:
-        new_key = new_key.replace('portal_type_workflow_chain/', '')
-      new_objects[new_key] = value
-    self._objects = new_objects
     # export workflow chain
     xml_data = self.generateXml()
     bta.addObject(xml_data, name='workflow_chain_type',
@@ -2660,14 +2678,8 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
 
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
-    new_dict = PersistentMapping()
-    # Fix key from installed bt if necessary
-    for key, value in installed_item._objects.iteritems():
-      if not 'portal_type_workflow_chain/' in key:
-        key = 'portal_type_workflow_chain/%s' % (key)
-      new_dict[key] = value
-    if new_dict:
-      installed_item._objects = new_dict
+    self._addPrefixToObjects('portal_type_workflow_chain')
+    installed_item._addPrefixToObjects('portal_type_workflow_chain')
     for path in self._objects:
       if path in installed_item._objects:
         # compare object to see it there is changes
@@ -2731,10 +2743,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
         raise ValueError, "Portal Type %r not found in site" %(portal_type,)
       prop_value = getattr(ob, self.class_property, ())
       if allowed_type in prop_value:
-        if self.class_property not in portal_type:
-          key = '%s/%s' % (self.class_property, portal_type)
-        else:
-          key = portal_type
+        key = portal_type
         self._objects.setdefault(key, []).append(allowed_type)
       elif not self.is_bt_for_diff:
         raise ValueError, "%s %s not found in portal type %s" % (
@@ -2766,13 +2775,8 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
     new_dict = PersistentMapping()
-    # fix key if necessary in installed bt for diff
-    for key, value in installed_item._objects.iteritems():
-      if self.class_property not in key:
-        key = '%s/%s' % (self.class_property, key)
-      new_dict[key] = value
-    if new_dict:
-      installed_item._objects = new_dict
+    self._addPrefixToObjects(self.class_property)
+    installed_item._addPrefixToObjects(self.class_property)
     for path in self._objects:
       if path in installed_item._objects:
         # compare object to see it there is changes
@@ -2798,12 +2802,8 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     xml = parse(file)
     portal_type_list = xml.findall('portal_type')
     for portal_type in portal_type_list:
-      id = portal_type.get('id')
+      key = portal_type.get('id')
       item_type_list = [item.text for item in portal_type.findall('item')]
-      if self.class_property not in id:
-        key = '%s/%s' % (self.class_property, id,)
-      else:
-        key = id
       self._objects[key] = item_type_list
 
   def install(self, context, trashbin, **kw):
@@ -3346,14 +3346,13 @@ class ActionTemplateItem(ObjectTemplateItem):
 class PortalTypeRolesTemplateItem(BaseTemplateItem):
 
   def __init__(self, id_list, **kw):
-    id_list = ['portal_type_roles/%s' % id for id in id_list if id != '']
     BaseTemplateItem.__init__(self, id_list, **kw)
 
   def build(self, context, **kw):
     p = context.getPortalObject()
     for relative_url in self._archive.keys():
       obj = p.unrestrictedTraverse("portal_types/%s" %
-          relative_url.split('/', 1)[1])
+        relative_url.split('/', 1)[-1])
       # normalize url
       relative_url = '%s/%s' % (obj.getPhysicalPath()[-2:])
       self._objects[relative_url] = type_role_list = []
@@ -3449,7 +3448,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
             value = value.encode('utf_8', 'backslashreplace')
           type_role_property_dict.setdefault(property_id, []).append(value)
       type_roles_list.append(type_role_property_dict)
-    self._objects['portal_type_roles/%s' % (file_name[:-4],)] = type_roles_list
+    self._objects[file_name[:-4]] = type_roles_list
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
@@ -3461,7 +3460,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
           action = update_dict[roles_path]
           if action == 'nothing':
             continue
-        path = 'portal_types/%s' % roles_path.split('/', 1)[1]
+        path = 'portal_types/%s' % roles_path.split('/', 1)[-1]
         obj = p.unrestrictedTraverse(path, None)
         if obj is not None:
           # reset roles before applying
@@ -3481,12 +3480,18 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     else:
       keys = self._objects.keys()
     for roles_path in keys:
-      path = 'portal_types/%s' % roles_path.split('/', 1)[1]
+      path = 'portal_types/%s' % roles_path.split('/', 1)[-1]
       try:
         obj = p.unrestrictedTraverse(path)
         obj.manage_delObjects([x.id for x in obj.getRoleInformationList()])
       except (NotFound, KeyError):
         pass
+
+  def preinstall(self, context, installed_item, **kw):
+    self._addPrefixToObjects('portal_type_roles')
+    installed_item._addPrefixToObjects('portal_type_roles')
+    return BaseTemplateItem.preinstall(self, context=context,
+            installed_item=installed_item, **kw)
 
 class SitePropertyTemplateItem(BaseTemplateItem):
 
