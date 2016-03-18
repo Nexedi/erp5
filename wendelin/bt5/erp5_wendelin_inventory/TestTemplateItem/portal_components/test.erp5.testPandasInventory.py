@@ -37,16 +37,18 @@ class PandasInventoryTest(ERP5TypeTestCase):
     """
     Tuple of Business Templates we need to install
     """
-    return ('erp5_wendelin',)
+    return ('erp5_wendelin_inventory',)
 
   def afterSetUp(self):
     """
     This is ran before anything, used to set the environment
     """
+    self.validateRules()
     self.supplier = self.createSupplier()
     self.client = self.createClient()
     self.sale_order = self.createSaleOrder(self.supplier, self.client)
     transaction.commit()
+    self.portal.portal_alarms.packing_list_builder_alarm.activeSense()
 
     self.tic()
     self.assertNoPendingMessage()
@@ -116,8 +118,8 @@ class PandasInventoryTest(ERP5TypeTestCase):
     
   def test_01_fillBigArrayTest(self):
     resource_uid = self.sale_order['1'].getResourceUid()
-    data = self.portal.portal_skins.erp5_wendelin_inventory.Base_zGetStockByResource(resource_uid=resource_uid)
-    self.portal.portal_skins.erp5_wendelin_inventory.Base_convertResultsToBigArray(
+    data = self.portal.Base_zGetStockByResource(resource_uid=resource_uid)
+    self.portal.Base_convertResultsToBigArray(
       data,
       reference='TestingFillBigArray'
     )
@@ -129,8 +131,8 @@ class PandasInventoryTest(ERP5TypeTestCase):
 
   def test_02_extendBigArrayTest(self):
     resource_uid = self.sale_order['1'].getResourceUid()
-    data = self.portal.portal_skins.erp5_wendelin_inventory.Base_zGetStockByResource(resource_uid=resource_uid)
-    self.portal.portal_skins.erp5_wendelin_inventory.Base_convertResultsToBigArray(
+    data = self.portal.Base_zGetStockByResource(resource_uid=resource_uid)
+    self.portal.Base_convertResultsToBigArray(
       data,
       reference='TestingExtendBigArray'
     )
@@ -140,7 +142,7 @@ class PandasInventoryTest(ERP5TypeTestCase):
     data_array = self.portal.portal_catalog(portal_type='Data Array', reference='TestingExtendBigArray')[0].getObject()
     current_size = len(data_array)
     
-    self.portal.portal_skins.erp5_wendelin_inventory.Base_extendBigArray(
+    self.portal.Base_extendBigArray(
         data_array.getArray(), 
         data_array.getArray()
     )
@@ -155,15 +157,15 @@ class PandasInventoryTest(ERP5TypeTestCase):
     
   def test_03_importCategoryInformationTest(self):
     resource_uid = self.sale_order['1'].getResourceUid()
-    data = self.portal.portal_skins.erp5_wendelin_inventory.Base_zGetStockByResource(resource_uid=resource_uid)
-    self.portal.portal_skins.erp5_wendelin_inventory.Base_convertResultsToBigArray(
+    data = self.portal.Base_zGetStockByResource(resource_uid=resource_uid)
+    self.portal.Base_convertResultsToBigArray(
       data,
       reference='TestingImportCategoryInformation'
     )
     transaction.commit()
     self.tic()
     
-    array = self.portal.portal_skins.erp5_wendelin_inventory.Base_fillPandasInventoryCategoryList(
+    array = self.portal.Base_fillPandasInventoryCategoryList(
         'TestingImportCategoryInformation',
         verbose=False, 
         duplicate_category=False
@@ -177,8 +179,8 @@ class PandasInventoryTest(ERP5TypeTestCase):
     
   def test_04_getMovementHistoryListTest(self):
     resource_uid = self.sale_order['1'].getResourceUid()
-    data = self.portal.portal_skins.erp5_wendelin_inventory.Base_zGetStockByResource(resource_uid=resource_uid)
-    self.portal.portal_skins.erp5_wendelin_inventory.Base_convertResultsToBigArray(
+    data = self.portal.Base_zGetStockByResource(resource_uid=resource_uid)
+    self.portal.Base_convertResultsToBigArray(
       data,
       reference='TestingGetMovementHistoryList'
     )
@@ -188,7 +190,7 @@ class PandasInventoryTest(ERP5TypeTestCase):
     result = self.portal.portal_catalog(portal_type='Data Array', reference='TestingGetMovementHistoryList')
     self.assertTrue(len(result) != 0)
     
-    df = self.portal.portal_skins.erp5_wendelin_inventory.Base_filterInventoryDataFrame(
+    df = self.portal.Base_filterInventoryDataFrame(
       is_accountable=True,
       resource_uid=resource_uid,
       data_array_reference='TestingGetMovementHistoryList'
