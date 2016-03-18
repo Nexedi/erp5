@@ -4763,7 +4763,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_17_SubobjectsAfterUpgradOfBusinessTemplate(self):
+  def test_17_SubobjectsAfterUpgradeOfBusinessTemplate(self):
     """Test Upgrade Of Business Template Keeps Subobjects"""
     sequence_list = SequenceList()
     # check if subobjects in module and catalog still remains after an update
