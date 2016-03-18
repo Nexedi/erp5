@@ -2688,15 +2688,15 @@ class Base( CopyContainer,
                             'isDeletable')
   def isDeletable(self, check_relation):
     """Test if object can be delete"""
-    portal = self.getPortalObject()
-    if not portal.portal_workflow.isTransitionPossible(self, 'delete'):
-      if not portal.portal_membership.checkPermission(
-          'Delete objects', self.getParentValue()):
-        return False
-      for wf_id in getattr(aq_base(self), "workflow_history", ()):
-        if wf_id != 'edit_workflow':
-          return False
-    return not (check_relation and self.getRelationCountForDeletion())
+    container = self.getParentValue()
+    portal = container.getPortalObject()
+    return (portal.portal_workflow.isTransitionPossible(self, 'delete')
+      if container.portal_type != 'Preference' and
+        any(wf_id != 'edit_workflow'
+            for wf_id in getattr(aq_base(self), "workflow_history", ()))
+      else portal.portal_membership.checkPermission(
+        'Delete objects', container)
+      ) and not (check_relation and self.getRelationCountForDeletion())
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isDeleted')
