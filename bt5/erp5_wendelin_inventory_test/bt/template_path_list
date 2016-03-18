@@ -1,0 +1,16 @@
+business_process_module/1
+business_process_module/1/**
+currency_module/EUR
+portal_alarms/packing_list_builder_alarm
+portal_categories/quantity_unit
+portal_categories/quantity_unit/unit
+portal_categories/quantity_unit/unit/piece
+portal_categories/trade_phase/**
+portal_categories/trade_state/**
+portal_deliveries/sale_packing_list_builder
+portal_deliveries/sale_packing_list_builder/**
+portal_rules/3
+portal_rules/3/**
+portal_rules/7
+portal_rules/7/**
+sale_trade_condition_module/1
