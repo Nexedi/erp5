@@ -750,7 +750,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             else:
               jump_related_suffix = 'related_'
 
-            jump_uid = portal.restrictedTraverse(argument_dict.pop('jump_from_relative_url', traversed_document.getRelativeUrl())).getUid()
+            jump_uid = portal.restrictedTraverse(argument_dict.pop('jump_from_relative_url', getRealRelativeUrl(traversed_document))).getUid()
             final_argument_dict['default_%s_%suid' % (argument_dict.pop('base_category'), jump_related_suffix)] = jump_uid
 
             erp5_action_list[-1]['href'] = url_template_dict["jio_search_template"] % {
