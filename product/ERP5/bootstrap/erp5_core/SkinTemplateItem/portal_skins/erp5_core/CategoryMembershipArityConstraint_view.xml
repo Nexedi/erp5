@@ -97,6 +97,7 @@
                       <list>
                         <string>my_id</string>
                         <string>my_reference</string>
+                        <string>my_portal_type</string>
                         <string>my_min_arity</string>
                         <string>my_max_arity</string>
                         <string>my_constraint_base_category_list</string>

@@ -97,6 +97,7 @@
                       <list>
                         <string>my_id</string>
                         <string>my_reference</string>
+                        <string>my_portal_type</string>
                         <string>my_expression</string>
                       </list>
                     </value>

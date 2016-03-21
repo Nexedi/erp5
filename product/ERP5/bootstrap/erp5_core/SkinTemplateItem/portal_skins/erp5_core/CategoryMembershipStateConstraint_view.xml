@@ -97,6 +97,7 @@
                       <list>
                         <string>my_id</string>
                         <string>my_reference</string>
+                        <string>my_portal_type</string>
                         <string>my_base_category</string>
                         <string>my_membership_portal_type_list</string>
                         <string>my_workflow_state_list</string>
