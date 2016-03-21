@@ -8,6 +8,9 @@ import sys
 import ast
 import types
 import inspect
+import traceback
+
+import transaction
 
 mime_type = 'text/plain'
 # IPython expects 2 status message - 'ok', 'error'
@@ -79,7 +82,13 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   if jupyter_code:
   
     # Create ast parse tree
-    ast_node = ast.parse(jupyter_code)
+    try:
+      ast_node = ast.parse(jupyter_code)
+    except Exception as e:
+      # It's not necessary to abort the current transaction here 'cause the 
+      # user's code wasn't executed at all yet.
+      return getErrorMessageForException(self, e, local_variable_dict)
+      
     # Get the node list from the parsed tree
     nodelist = ast_node.body
 
@@ -116,13 +125,46 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
       for node in to_run_exec:
         mod = ast.Module([node])
         code = compile(mod, '<string>', "exec")
-        exec(code, g, g)
+        try:
+          exec(code, g, g)
+        except Exception as e:
+          # Abort the current transaction 
+          transaction.abort()
+          # Clear the portal cache from previous transaction
+          self.getPortalObject().portal_caches.clearAllCache()
+          return getErrorMessageForException(self, e, local_variable_dict)
 
       # Execute the interactive nodes with 'single' mode
       for node in to_run_interactive:
         mod = ast.Interactive([node])
         code = compile(mod, '<string>', "single")
-        exec(code, g, g)
+        try:
+          exec(code, g, g)
+          # Instead of using the Python's sys.displayhook to automatically
+          # format last-returning object (because it's not thread-safe), 
+          # we walk through the user's code in reverse and find the last line
+          # that is not a comment. Then we add a new line calling the external 
+          # method Base_renderAsHtml to properly render the object.
+          #
+          # TODO: refactor this into pure a AST transformation. Warning:
+          # the AST module's documentation is very poor (close to non-existent).
+          #
+          last_code_line = ''
+          for line in reversed(jupyter_code.split('\n')):
+            if not '#' in line:
+              last_code_line = line
+              break
+          # Need to check if Base_renderAsHtml is the last expression and do 
+          # not call it again if it is true, otherwise we get double-rendering.
+          if not last_code_line == '' and not 'Base_renderAsHtml' in last_code_line:
+            new_last_line = 'context.Base_renderAsHtml(%s)' % last_code_line
+            exec(new_last_line, g, g)
+        except Exception as e:
+          # Abort the current transaction 
+          transaction.abort()
+          # Clear the portal cache from previous transaction
+          self.getPortalObject().portal_caches.clearAllCache()
+          return getErrorMessageForException(self, e, local_variable_dict)
 
       # Letting the code fail in case of error while executing the python script/code
       # XXX: Need to be refactored so to acclimitize transactions failure as well as
@@ -167,6 +209,24 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   }
 
   return result
+
+def getErrorMessageForException(self, exception, local_variable_dict):
+  '''
+    getErrorMessageForException receives an Expcetion object and a context for
+    code execution (local_variable_dict) and will return a dict as Jupyter
+    requires for error rendering.
+  '''
+  etype, value, tb = sys.exc_info()
+  traceback_text = traceback.format_exc().split('\n')[:-1]
+  return {
+    'status': 'error',
+    'result_string': None,
+    'local_variable_dict': local_variable_dict,
+    'mime_type': 'text/plain',
+    'evalue': str(value),
+    'ename': exception.__class__.__name__,
+    'traceback': traceback_text
+  }
 
 def AddNewLocalVariableDict(self):
   """

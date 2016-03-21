@@ -46,12 +46,15 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W: 55,  2: Using the global statement (global-statement)</string>
-                <string>W: 95,  8: Use of exec (exec-used)</string>
-                <string>W:119,  8: Use of exec (exec-used)</string>
-                <string>W:125,  8: Use of exec (exec-used)</string>
-                <string>W:220,  4: Using the global statement (global-statement)</string>
-                <string>W:320,  2: Using the global statement (global-statement)</string>
+                <string>W: 58,  2: Using the global statement (global-statement)</string>
+                <string>W:104,  8: Use of exec (exec-used)</string>
+                <string>W:129, 10: Use of exec (exec-used)</string>
+                <string>W:142, 10: Use of exec (exec-used)</string>
+                <string>W:161, 12: Use of exec (exec-used)</string>
+                <string>W:219,  2: Unused variable \'etype\' (unused-variable)</string>
+                <string>W:219, 16: Unused variable \'tb\' (unused-variable)</string>
+                <string>W:280,  4: Using the global statement (global-statement)</string>
+                <string>W:380,  2: Using the global statement (global-statement)</string>
               </tuple>
             </value>
         </item>

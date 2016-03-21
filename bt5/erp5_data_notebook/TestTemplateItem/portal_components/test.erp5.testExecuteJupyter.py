@@ -101,21 +101,18 @@ portal = context.getPortalObject()
 portal.%s()
 """%script_id
 
-    # Make call to Base_runJupyter to run the jupyter code which is making
-    # a call to the newly created ZODB python_script and assert if the call raises
-    # NameError as we are sending an invalid python_code to it
-    self.assertRaises(
-                      NameError,
-                      portal.Base_runJupyter,
-                      jupyter_code=jupyter_code,
-                      old_local_variable_dict=portal.Base_addLocalVariableDict()
-                      )
-    # Abort the current transaction of test so that we can proceed to new one
-    transaction.abort()
-    # Clear the portal cache from previous transaction
-    self.portal.portal_caches.clearAllCache()
-    # Remove the ZODB python script created above
-    removeZODBPythonScript(script_container, script_id)
+    result = portal.Base_runJupyter(
+      jupyter_code=jupyter_code, 
+      old_local_variable_dict=portal.Base_addLocalVariableDict()
+    )
+    
+    self.assertEquals(result['ename'], 'NameError')
+    self.assertEquals(result['result_string'], None)
+    
+    # There's no need to abort the current transaction. The error handling code
+    # should be responsible for this, so we check the script's title
+    script_title = script_container.JupyterCompile_errorResult.getTitle()
+    self.assertNotEqual(script_title, new_test_title)
 
     # Test that calling Base_runJupyter shouldn't change the context Title
     self.assertNotEqual(portal.getTitle(), new_test_title)
@@ -248,13 +245,14 @@ portal.%s()
     reference = 'Test.Notebook.ExecuteJupyterErrorHandling %s' % time.time()
     title = 'Test NB Title %s' % time.time()
 
-    self.assertRaises(
-                      NameError, 
-                      portal.Base_executeJupyter,
-                      title=title,
-                      reference=reference,
-                      python_expression=python_expression
-                      )
+    result = json.loads(portal.Base_executeJupyter(
+      title=title, 
+      reference=reference, 
+      python_expression=python_expression
+    ))
+    
+    self.assertEquals(result['ename'], 'NameError')
+    self.assertEquals(result['code_result'], None)
 
   def testBaseExecuteJupyterSaveActiveResult(self):
     """
