@@ -56,13 +56,14 @@
             gadget.getUrlFor({command: 'change', options: {page: "breadcrumb"}}),
             gadget.getUrlFor({command: 'history_previous'}),
             gadget.getUrlFor({command: 'selection_previous'}),
-            gadget.getUrlFor({command: 'selection_next'})
+            gadget.getUrlFor({command: 'selection_next'}),
+            gadget.getUrlFor({command: 'change', options: {page: "jump"}})
           ]);
         })
         .push(function (all_result) {
 
           return gadget.updateHeader({
-            jump_url: "",
+            jump_url: all_result[7],
             actions_url: all_result[2],
             previous_url: all_result[5],
             next_url: all_result[6],

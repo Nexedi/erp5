@@ -738,6 +738,28 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
                 "view": erp5_action_list[-1]['name']
               }
+
+        if erp5_action_key == 'object_jump':
+          if 'Base_jumpToRelatedObject' in view_action['url']:
+            # Fetch the URL arguments
+            argument_dict = dict([x.split('=') for x in view_action['url'].split('?', 1)[1].split("&")])
+            final_argument_dict = {'portal_type': argument_dict.pop('portal_type', None)}
+            jump_related = argument_dict.pop('related', 1)
+            if (jump_related):
+              jump_related_suffix = ''
+            else:
+              jump_related_suffix = 'related_'
+
+            jump_uid = portal.restrictedTraverse(argument_dict.pop('jump_from_relative_url', traversed_document.getRelativeUrl())).getUid()
+            final_argument_dict['default_%s_%suid' % (argument_dict.pop('base_category'), jump_related_suffix)] = jump_uid
+
+            erp5_action_list[-1]['href'] = url_template_dict["jio_search_template"] % {
+              "query": make_query({"query": sql_catalog.buildQuery(final_argument_dict).asSearchTextExpression(sql_catalog)})
+            }
+          else:
+            # XXX How to handle all custom jump actions?
+            erp5_action_list.pop(-1)
+
   
       if erp5_action_list:
         if len(erp5_action_list) == 1:
