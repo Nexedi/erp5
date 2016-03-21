@@ -2,17 +2,123 @@
 
 from cStringIO import StringIO
 from Products.ERP5Type.Globals import  PersistentMapping
-from OFS.Image import Image as OFSImage
+from erp5.portal_type import Image
+
 
 import sys
+import traceback
 import ast
 import types
-import inspect
+import base64
+import transaction
 
-mime_type = 'text/plain'
-# IPython expects 2 status message - 'ok', 'error'
-status = u'ok'
-ename, evalue, tb_list = None, None, None
+from matplotlib.figure import Figure
+from IPython.core.display import DisplayObject
+from IPython.lib.display import IFrame
+
+
+def Base_executeJupyter(self, python_expression=None, reference=None, title=None, request_reference=False, **kw):
+  context = self
+  portal = context.getPortalObject()
+  # Check permissions for current user and display message to non-authorized user 
+  if not portal.Base_checkPermission('portal_components', 'Manage Portal'):
+    return "You are not authorized to access the script"
+  
+  import json
+  
+  # Convert the request_reference argument string to their respeced boolean values
+  request_reference = {'True': True, 'False': False}.get(request_reference, False)
+  
+  # Return python dictionary with title and reference of all notebooks
+  # for request_reference=True
+  if request_reference:
+    data_notebook_list = portal.portal_catalog(portal_type='Data Notebook')
+    notebook_detail_list = [{'reference': obj.getReference(), 'title': obj.getTitle()} for obj in data_notebook_list]
+    return notebook_detail_list
+  
+  if not reference:
+    message = "Please set or use reference for the notebook you want to use"
+    return message
+  
+  # Take python_expression as '' for empty code from jupyter frontend
+  if not python_expression:
+    python_expression = ''
+  
+  # Get Data Notebook with the specific reference
+  data_notebook = portal.portal_catalog.getResultValue(portal_type='Data Notebook',
+                        reference=reference)
+  
+  # Create new Data Notebook if reference doesn't match with any from existing ones
+  if not data_notebook:
+    notebook_module = portal.getDefaultModule(portal_type='Data Notebook')
+    data_notebook = notebook_module.DataNotebookModule_addDataNotebook(
+      title=title,
+      reference=reference,
+      batch_mode=True
+    )
+  
+  # Add new Data Notebook Line to the Data Notebook
+  data_notebook_line = data_notebook.DataNotebook_addDataNotebookLine(
+    notebook_code=python_expression,
+    batch_mode=True
+  )
+  
+  # Get active_process associated with data_notebook object
+  process_id = data_notebook.getProcess()
+  active_process = portal.portal_activities[process_id]
+  # Add a result object to Active Process object
+  result_list = active_process.getResultList()
+  
+  # Get local variables saves in Active Result, local varibales are saved as
+  # persistent mapping object
+  old_local_variable_dict = result_list[0].summary
+  if not old_local_variable_dict:
+    old_local_variable_dict = context.Base_addLocalVariableDict()
+  
+  # Pass all to code Base_runJupyter external function which would execute the code
+  # and returns a dict of result
+  final_result = Base_compileJupyterCode(self, python_expression, old_local_variable_dict)
+  code_result = final_result['result_string']
+  new_local_variable_dict = final_result['local_variable_dict']
+  ename = final_result['ename']
+  evalue = final_result['evalue']
+  traceback = final_result['traceback']
+  status = final_result['status']
+  mime_type = final_result['mime_type']
+  
+  # Call to function to update persistent mapping object with new local variables
+  # and save the variables in the Active Result pertaining to the current Data Notebook
+  new_dict = context.Base_updateLocalVariableDict(new_local_variable_dict)
+  result_list[0].edit(summary=new_dict)
+  
+  result = {
+    u'code_result': code_result,
+    u'ename': ename,
+    u'evalue': evalue,
+    u'traceback': traceback,
+    u'status': status,
+    u'mime_type': mime_type
+  }
+  
+  # Catch exception while seriaizing the result to be passed to jupyter frontend
+  # and in case of error put code_result as None and status as 'error' which would
+  # be shown by Jupyter frontend
+  try:
+    serialized_result = json.dumps(result)
+  except UnicodeDecodeError:
+    result = {
+      u'code_result': None,
+      u'ename': u'UnicodeDecodeError',
+      u'evalue': None,
+      u'traceback': None,
+      u'status': u'error',
+      u'mime_type': mime_type
+    }
+    serialized_result = json.dumps(result)
+  
+  data_notebook_line.edit(notebook_code_result=code_result, mime_type=mime_type)
+  
+  return serialized_result
 
 def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   """
@@ -48,26 +154,21 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
       out2 = '12'
 
   """
-  # Updating global variable mime_type to its original value
-  # Required when call to Base_displayImage is made which is changing
-  # the value of gloabl mime_type
-  # Same for status, ename, evalue, tb_list
-  global mime_type, status, ename, evalue, tb_list
   mime_type = 'text/plain'
   status = u'ok'
   ename, evalue, tb_list = None, None, None
-
+  
   # Other way would be to use all the globals variables instead of just an empty
   # dictionary, but that might hamper the speed of exec or eval.
-  # Something like -- g = globals(); g['context'] = self;
-  g = {}
+  # Something like -- user_context = globals(); user_context['context'] = self;
+  user_context = {}
 
   # Saving the initial globals dict so as to compare it after code execution
   globals_dict = globals()
-  g['context'] = self
+  user_context['context'] = self
   result_string = ''
   # Update globals dict and use it while running exec command
-  g.update(old_local_variable_dict['variables'])
+  user_context.update(old_local_variable_dict['variables'])
 
   # XXX: The focus is on 'ok' status only, we're letting errors to be raised on
   # erp5 for now, so as not to hinder the transactions while catching them.
@@ -79,7 +180,13 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   if jupyter_code:
   
     # Create ast parse tree
-    ast_node = ast.parse(jupyter_code)
+    try:
+      ast_node = ast.parse(jupyter_code)
+    except Exception as e:
+      # It's not necessary to abort the current transaction here 'cause the 
+      # user's code wasn't executed at all yet.
+      return getErrorMessageForException(self, e, local_variable_dict)
+    
     # Get the node list from the parsed tree
     nodelist = ast_node.body
 
@@ -92,7 +199,7 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
       # So, here we would try to get the name 'posixpath' and import it as 'path'
       for k, v in old_local_variable_dict['imports'].iteritems():
         import_statement_code = 'import %s as %s'%(v, k)
-        exec(import_statement_code, g, g)
+        exec(import_statement_code, user_context, user_context)
       
       # If the last node is instance of ast.Expr, set its interactivity as 'last'
       # This would be the case if the last node is expression
@@ -111,34 +218,93 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
       old_stdout = sys.stdout
       result = StringIO()
       sys.stdout = result
+      
+      # Variables used at the display hook to get the proper form to display
+      # the last returning variable of any code cell.
+      #
+      display_data = {'result': '', 'mime_type': None}
+      
+      # This is where one part of the  display magic happens. We create an 
+      # instance of ProcessorList and add each of the built-in processors.
+      # The classes which each of them are responsiblefor rendering are defined
+      # in the classes themselves.
+      #
+      # The customized display hook will automatically use the processor
+      # of the matching class to decide how the object should be displayed.
+      #        
+      processor_list = ProcessorList()
+      processor_list.addProcessor(IPythonDisplayObjectProcessor)
+      processor_list.addProcessor(MatplotlibFigureProcessor)
+      processor_list.addProcessor(ERP5ImageProcessor)
+      processor_list.addProcessor(IPythonDisplayObjectProcessor)
+      
+      # Putting necessary variables in the `exec` calls context.
+      # 
+      # - result: is required to store the order of manual calls to the rendering
+      #   function;
+      #
+      # - display_data: is required to support mime type changes;
+      #
+      # - processor_list: is required for the proper rendering of the objects
+      #
+      user_context['_display_data'] = display_data
+      user_context['_processor_list'] = processor_list
 
       # Execute the nodes with 'exec' mode
       for node in to_run_exec:
         mod = ast.Module([node])
         code = compile(mod, '<string>', "exec")
-        exec(code, g, g)
-
+        try:
+          exec(code, user_context, user_context)
+        except Exception as e:
+          # Abort the current transaction 
+          transaction.abort()
+          # Clear the portal cache from previous transaction
+          self.getPortalObject().portal_caches.clearAllCache()
+          return getErrorMessageForException(self, e, local_variable_dict)
+      
       # Execute the interactive nodes with 'single' mode
       for node in to_run_interactive:
         mod = ast.Interactive([node])
         code = compile(mod, '<string>', "single")
-        exec(code, g, g)
-
-      # Letting the code fail in case of error while executing the python script/code
-      # XXX: Need to be refactored so to acclimitize transactions failure as well as
-      # normal python code failure and show it to user on jupyter frontend.
-      # Decided to let this fail silently in backend without letting the frontend
-      # user know the error so as to let tranasction or its error be handled by ZODB
-      # in uniform way instead of just using half transactions.
+        try:
+          exec(code, user_context, user_context)
+          # Instead of using the Python's sys.displayhook to automatically
+          # format last-returning object (because it's not thread-safe), 
+          # we walk through the user's code in reverse and find the last line
+          # that is not a comment. Then we add a new line calling the external 
+          # method Base_renderAsHtml to properly render the object.
+          #
+          # TODO: refactor this into pure a AST transformation. Warning:
+          # the AST module's documentation is very poor (close to non-existent).
+          #
+          last_code_line = ''
+          for line in reversed(jupyter_code.split('\n')):
+            if not '#' in line:
+              last_code_line = line
+              break
+          # Need to check if Base_renderAsHtml is the last expression and do 
+          # not call it again if it is true, otherwise we get double-rendering.
+          if not last_code_line == '' and not 'Base_renderAsHtml' in last_code_line:
+            new_last_line = 'context.Base_renderAsHtml(%s)' % last_code_line
+            exec(new_last_line, user_context, user_context)
+        except Exception as e:
+          # Abort the current transaction 
+          transaction.abort()
+          # Clear the portal cache from previous transaction
+          self.getPortalObject().portal_caches.clearAllCache()
+          return getErrorMessageForException(self, e, local_variable_dict)
 
       sys.stdout = old_stdout
-      result_string = result.getvalue()
+      mime_type = display_data['mime_type'] or mime_type
+      result_string = result.getvalue() + display_data['result']
 
     # Difference between the globals variable before and after exec/eval so that
     # we don't have to save unnecessary variables in database which might or might
     # not be picklabale
-    local_variable_dict_new = {key: val for key, val in g.items() if key not in globals_dict.keys()}
-    local_variable_dict['variables'].update(local_variable_dict_new)
+    for key, val in user_context.items():
+      if key not in globals_dict.keys():
+        local_variable_dict['variables'][key] = val
 
     # Differentiate 'module' objects from local_variable_dict and save them as
     # string in the dict as {'imports': {'numpy': 'np', 'matplotlib': 'mp']}
@@ -167,6 +333,51 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   }
 
   return result
+  
+def renderAsHtml(self, renderable_object):
+  '''
+    renderAsHtml will render its parameter as HTML by using the matching 
+    display processor for that class. Some processors can be found in this
+    file. 
+  '''
+  # Ugly frame hack to access the processor list defined in the body of the
+  # kernel's code, where `exec` is called.
+  #
+  # At this point the stack should be, from top to the bottom:
+  #
+  #   5. ExternalMethod Patch call
+  #   4. Base_compileJupyterCode frame (where we want to change variable)
+  #   3. exec call to run the user's code
+  #   2. ExternalMethod Patch call through `context.Base_renderAsHtml` in the notebook
+  #   1. renderAsHtml frame (where the function is)
+  # 
+  # So sys._getframe(3) is enough to get us up into the frame we want.
+  #
+  compile_jupyter_frame = sys._getframe(3)
+  compile_jupyter_locals = compile_jupyter_frame.f_locals
+  processor = compile_jupyter_locals['processor_list'].getProcessorFor(renderable_object)
+  result, mime_type = processor(renderable_object).process()
+  compile_jupyter_locals['result'].write(result)
+  compile_jupyter_locals['display_data']['mime_type'] = 'text/html'
+  return ''
+  
+def getErrorMessageForException(self, exception, local_variable_dict):
+  '''
+    getErrorMessageForException receives an Expcetion object and a context for
+    code execution (local_variable_dict) and will return a dict as Jupyter
+    requires for error rendering.
+  '''
+  etype, value, tb = sys.exc_info()
+  traceback_text = traceback.format_exc().split('\n')[:-1]
+  return {
+    'status': 'error',
+    'result_string': None,
+    'local_variable_dict': local_variable_dict,
+    'mime_type': 'text/plain',
+    'evalue': str(value),
+    'ename': exception.__class__.__name__,
+    'traceback': traceback_text
+  }
 
 def AddNewLocalVariableDict(self):
   """
@@ -190,137 +401,176 @@ def UpdateLocalVariableDict(self, existing_dict):
     new_dict['imports'][key] = val
   return new_dict
 
-def Base_displayImage(self, image_object=None):
+class ObjectProcessor(object):
+  '''
+    Basic object processor that stores the first parameters of the constructor
+    in the `subject` attribute and store the target classes for that processor.
+  '''
+  TARGET_CLASSES=None
+  
+  @classmethod
+  def getTargetClasses(cls):
+    return cls.TARGET_CLASSES
+    
+  def __init__(self, something):
+    self.subject = something
+
+class MatplotlibFigureProcessor(ObjectProcessor):
+  '''
+    MatplotlibFigureProcessor handles the rich display of 
+    matplotlib.figure.Figure objects. It displays them using an img tag with
+    the inline png image encoded as base64.
+  '''
+  TARGET_CLASSES=[Figure,]
+
+  def process(self):
+    image_io = StringIO()
+    self.subject.savefig(image_io, format='png')
+    image_io.seek(0)
+    return self._getImageHtml(image_io), 'text/html'
+  
+  def _getImageHtml(self, image_io):
+    return '<img src="data:image/png;base64,%s" /><br />' % base64.b64encode(image_io.getvalue())
+    
+class ERP5ImageProcessor(ObjectProcessor):
+  '''
+   ERP5ImageProcessor handles the rich display of ERP5's image_module object.
+   It gets the image data and content type and use them to create a proper img
+   tag.
+  '''
+  TARGET_CLASSES=[Image,]
+  
+  def process(self):
+    from base64 import b64encode
+    figure_data = b64encode(self.subject.getData())
+    mime_type = self.subject.getContentType()
+    return '<img src="data:%s;base64,%s" /><br />' % (mime_type, figure_data), 'text/html'
+
+class IPythonDisplayObjectProcessor(ObjectProcessor):
+  '''
+    IPythonDisplayObjectProcessor handles the display of all objects from the
+    IPython.display module, including: Audio, IFrame, YouTubeVideo, VimeoVideo, 
+    ScribdDocument, FileLink, and FileLinks. 
+    
+    All these objects have the `_repr_html_` method, which is used by the class
+    to render them.
+  '''
+  TARGET_CLASSES=[DisplayObject, IFrame]
+  
+  def process(self):
+    html_repr = self.subject._repr_html_()
+    return html_repr + '<br />', 'text/html' 
+
+class GenericProcessor(ObjectProcessor):
+  '''
+    Generic processor to render objects as string.
+  '''
+  
+  def process(self):
+    return str(self.subject), 'text/plain'
+    
+class ProcessorList(object):
+  '''
+    ProcessorList is responsible to store all the processors in a dict using
+    the classes they handle as the key. Subclasses of these classes will have
+    the same processor of the eigen class. This means that the order of adding
+    processors is important, as some classes' processors may be overwritten in
+    some situations.
+    
+    The `getProcessorFor` method uses `something.__class__' and not 
+    `type(something)` because using the later onobjects returned by portal 
+    catalog queries will return an AcquisitionWrapper type instead of the 
+    object's real class.
+  '''
+  
+  def __init__(self, default=GenericProcessor):
+    self.processors = {}
+    self.default_processor = GenericProcessor
+  
+  def addProcessor(self, processor):
+    classes = processor.getTargetClasses()
+    for klass in classes:
+      self.processors[klass] = processor
+      for subclass in klass.__subclasses__():
+        self.processors[subclass] = processor
+      
+  def getProcessorFor(self, something):
+    return self.processors.get(something.__class__, self.default_processor)
+
+def storeIFrame(self, html, key):
+  memcached_tool = self.getPortalObject().portal_memcached
+  memcached_dict = memcached_tool.getMemcachedDict(key_prefix='pivottablejs', plugin_path='portal_memcached/default_memcached_plugin')
+  memcached_dict[key] = html
+  return True
+
+def erp5PivotTableUI(self, df, erp5_url):
+  from IPython.display import IFrame
+  template = """
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>PivotTable.js</title>
+
+      <!-- external libs from cdnjs -->
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/pivot.min.css">
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/pivot.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/d3_renderers.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/c3_renderers.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/export_renderers.min.js"></script>
+
+      <style>
+        body {font-family: Verdana;}
+        .node {
+         border: solid 1px white;
+         font: 10px sans-serif;
+         line-height: 12px;
+         overflow: hidden;
+         position: absolute;
+         text-indent: 2px;
+        }
+        .c3-line, .c3-focused {stroke-width: 3px !important;}
+        .c3-bar {stroke: white !important; stroke-width: 1;}
+        .c3 text { font-size: 12px; color: grey;}
+        .tick line {stroke: white;}
+        .c3-axis path {stroke: grey;}
+        .c3-circle { opacity: 1 !important; }
+      </style>
+    </head>
+    <body>
+      <script type="text/javascript">
+        $(function(){
+          if(window.location != window.parent.location)
+            $("<a>", {target:"_blank", href:""})
+              .text("[pop out]").prependTo($("body"));
+
+          $("#output").pivotUI( 
+            $.csv.toArrays($("#output").text()), 
+            { 
+              renderers: $.extend(
+                $.pivotUtilities.renderers, 
+                $.pivotUtilities.c3_renderers, 
+                $.pivotUtilities.d3_renderers,
+                $.pivotUtilities.export_renderers
+                ),
+              hiddenAttributes: [""]
+            }
+          ).show();
+         });
+      </script>
+      <div id="output" style="display: none;">%s</div>
+    </body>
+  </html>
   """
-  External function to display Image objects to jupyter frontend.
-
-  XXX:  This function is intented to be called from Base_executeJupyter 
-        or Jupyter frontend.That's why printing string and returning None.
-        Also, it clears the plot for Matplotlib object after every call, so
-        in case of saving the plot, its essential to call Base_saveImage before
-        calling Base_displayImage.
-
-  Parameters
-  ----------
-  
-  image_object :Any image object from ERP5 
-                Any matplotlib object from which we can create a plot.
-                Can be <matplotlib.lines.Line2D>, <matplotlib.text.Text>, etc.
-  
-  Output
-  -----
-  
-  Prints base64 encoded string of the plot on which it has been called.
-
-  """
-  if image_object:
-
-    import base64
-    # Chanage global variable 'mime_type' to 'image/png'
-    global mime_type
-
-    # Image object in ERP5 is instance of OFS.Image object
-    if isinstance(image_object, OFSImage):
-      figdata = base64.b64encode(image_object.getData())
-      mime_type = image_object.getContentType()
-
-    # Ensure that the object we are taking as `image_object` is basically a
-    # Matplotlib.pyplot module object from which we are seekign the data of the
-    # plot .
-    elif inspect.ismodule(image_object) and image_object.__name__=="matplotlib.pyplot":
-
-      # Create a ByteFile on the server which would be used to save the plot
-      figfile = StringIO()
-      # Save plot as 'png' format in the ByteFile
-      image_object.savefig(figfile, format='png')
-      figfile.seek(0)
-      # Encode the value in figfile to base64 string so as to serve it jupyter frontend
-      figdata = base64.b64encode(figfile.getvalue())
-      mime_type = 'image/png'
-      # Clear the plot figures after every execution
-      image_object.close()
-
-    # XXX: We are not returning anything because we want this function to be called
-    # by Base_executeJupyter , inside exec(), and its better to get the printed string
-    # instead of returned string from this function as after exec, we are getting
-    # value from stdout and using return we would get that value as string inside
-    # an string which is unfavourable.
-    print figdata
-    return None
-
-def Base_saveImage(self, plot=None, reference=None, **kw):
-  """
-  Saves generated plots from matplotlib in ERP5 Image module
-
-  XXX:  Use only if bt5 'erp5_wendelin' installed
-        This function is intented to be called from Base_executeJupyter 
-        or Jupyter frontend.
-
-  Parameters
-  ----------
-  plot : Matplotlib plot object
-  
-  reference: Reference of Image object which would be generated
-             Id and reference should be always unique
-  
-  Output
-  ------
-  Returns None, but saves the plot object as ERP5 image in Image Module with
-  reference same as that of data_array_object.
-  
-  """
-
-  # As already specified in docstring, this function should be called from
-  # Base_executeJupyter or Jupyter Frontend which means that it would pass
-  # through exec and hence the printed result would be caught in a string and
-  # that's why we are using print and returning None.
-  if not reference:
-    print 'No reference specified for Image object'
-    return None
-  if not plot:
-    print 'No matplotlib plot object specified'
-    return None
-
-  filename = '%s.png'%reference
-  # Save plot data in buffer
-  buff = StringIO()
-  plot.savefig(buff, format='png')
-  buff.seek(0)
-  data = buff.getvalue()
-
-  import time
-  image_id = reference+str(time.time())
-  # Add new Image object in erp5 with id and reference
-  image_module = self.getDefaultModule(portal_type='Image')
-  image_module.newContent(
-    portal_type='Image',
-    id=image_id,
-    reference=reference,
-    data=data,
-    filename=filename)
-
-  return None
-
-def getError(self, previous=1):
-  """
-  Show error to the frontend and change status of code as 'error' from 'ok'
-  
-  Parameters
-  ----------
-  previous: Type - int. The number of the error you want to see.
-  Ex: 1 for last error
-      2 for 2nd last error and so on..
-
-  """
-  error_log_list = self.error_log._getLog()
-  if error_log_list:
-    if isinstance(previous, int):
-      # We need to get the object for last index of list
-      error = error_log_list[-previous]
-  global status, ename, evalue, tb_list
-  status = u'error'
-  ename = unicode(error['type'])
-  evalue = unicode(error['value'])
-  tb_list = [l+'\n' for l in error['tb_text'].split('\n')]
-
-  return None
+  html_string = template % df.to_csv()
+  from hashlib import sha512
+  key = sha512(html_string).hexdigest()
+  storeIFrame(self, html_string, key)
+  url = "%s/Base_displayPivotTableFrame?key=%s" % (erp5_url, key)
+  return IFrame(src=url, width='100%', height='500')
