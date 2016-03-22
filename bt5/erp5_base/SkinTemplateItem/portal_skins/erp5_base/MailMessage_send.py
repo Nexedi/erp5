@@ -35,7 +35,7 @@ if to_url is None:
   for recipient in context.getDestinationValueList():
     email = recipient.getDefaultEmailText()
     if email:
-      to_url_list.append(formataddr((recipient.getTitle(), recipient.getDefaultEmailText())))
+      to_url_list.append(formataddr((recipient.hasTitle() and recipient.getTitle(), recipient.getDefaultEmailText())))
     else:
       # MailMessage portal type is supposed to have a constraint to report this
       # to the user earlier
@@ -55,7 +55,7 @@ if download or not use_activity:
     if from_url is None:
       sender = context.getSourceValue()
       if sender is not None:
-        from_url = formataddr((sender.getTitle(), sender.getDefaultEmailText()))
+        from_url = formataddr((sender.hasTitle() and sender.getTitle(), sender.getDefaultEmailText()))
       else:
         from_url = portal.portal_preferences.getPreferredEventSenderEmail()
         if not from_url:
