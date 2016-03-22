@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.22 (2016-03-22)
+-------------------
+
+ * erp5.util
+
+   - Allow to define slapos parameters in test suites
+
 0.4.43 (2015-09-02)
 -------------------
 
