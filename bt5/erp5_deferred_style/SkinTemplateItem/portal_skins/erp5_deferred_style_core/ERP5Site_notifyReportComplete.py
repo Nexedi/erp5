@@ -1,6 +1,6 @@
 portal = context.getPortalObject()
 
-portal.portal_notifications.activate(queue='SQLQueue').sendMessage(
+portal.portal_notifications.activate(activity='SQLQueue').sendMessage(
   recipient=user_name,
   subject=subject,
   message=message,
