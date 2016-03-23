@@ -13,6 +13,15 @@
   $.mobile.hashListeningEnabled = false;
   $.mobile.pushStateEnabled = false;
 
+  /*
+  if (navigator.hasOwnProperty('serviceWorker')) {
+    // Check if a ServiceWorker already controls the site on load
+    if (!navigator.serviceWorker.controller) {
+      // Register the ServiceWorker
+      navigator.serviceWorker.register('gadget_erp5_serviceworker.js');
+    }
+  }
+  */
   var MAIN_SCOPE = "m";
 
   function renderMainGadget(gadget, url, options) {
