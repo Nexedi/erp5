@@ -242,6 +242,105 @@ class TestListBox(ERP5TypeTestCase):
       listbox.get_value('default', render_format='list', REQUEST=request)
     except UnicodeError, e:
       self.fail('Rendering failed: %s' % e)
+    self.assertIn(u"\xe9lisa", listbox.render(REQUEST=request))
+
+  def test_UTF8Parameters(self, quiet=0, run=run_all_test):
+    """UTF8 encoded string properties are also handled
+    """
+    portal = self.getPortal()
+    portal.ListBoxZuite_reset()
+
+    # We create a script to use as a list method
+    list_method_id = 'ListBox_ParametersListMethod'
+    createZODBPythonScript(
+        portal.portal_skins.custom,
+        list_method_id,
+        'selection=None, **kw',
+        """return [context.asContext(alternate_title = u'\xe9lisa'.encode('utf8'))]""")
+
+    # set the listbox to use this as list method
+    listbox = portal.FooModule_viewFooList.listbox
+    listbox.ListBox_setPropertyList(
+      field_list_method = list_method_id,
+      field_count_method = '',
+      field_columns = ['alternate_title | Alternate Title',],
+      field_url_columns = ['alternate_title | alternate_title',],)
+
+    request = get_request()
+    request['here'] = portal.foo_module
+    try:
+      listbox.get_value('default', render_format='list', REQUEST=request)
+    except UnicodeError, e:
+      self.fail('Rendering failed: %s' % e)
+    self.assertIn(u"\xe9lisa", listbox.render(REQUEST=request))
+
+  def test_UnicodeURLColumns(self, quiet=0, run=run_all_test):
+    """URL column script can return unicode
+    """
+    portal = self.getPortal()
+    portal.ListBoxZuite_reset()
+
+    # We create a script to use as a url column method
+    url_column_method_id = 'Base_get%sUrlColumnMethod' % self.id()
+    createZODBPythonScript(
+        portal.portal_skins.custom,
+        url_column_method_id,
+        'selection=None, **kw',
+        """return u'http://example.com/?\xe9lisa'""")
+
+    listbox = portal.FooModule_viewFooList.listbox
+    # here we cover two cases, id has an editable field, title has not
+    listbox.ListBox_setPropertyList(
+      field_url_columns = [
+        'title | %s' % url_column_method_id,
+        'id | %s' % url_column_method_id,
+        ],)
+
+    foo_module = portal.foo_module
+    o = foo_module.newContent(title=u'\xe9lisa')
+    o.immediateReindexObject()
+
+    request = get_request()
+    request['here'] = portal.foo_module
+    try:
+      rendered = listbox.get_value('default', render_format='list', REQUEST=request)
+    except UnicodeError, e:
+      self.fail('Rendering failed: %s' % e)
+    self.assertIn(u"http://example.com/?\xe9lisa", listbox.render(REQUEST=request))
+
+  def test_UTF8URLColumns(self, quiet=0, run=run_all_test):
+    """URL column script can return UTF8 encoded string
+    """
+    portal = self.getPortal()
+    portal.ListBoxZuite_reset()
+
+    # We create a script to use as a url column method
+    url_column_method_id = 'Base_get%sUrlColumnMethod' % self.id()
+    createZODBPythonScript(
+        portal.portal_skins.custom,
+        url_column_method_id,
+        'selection=None, **kw',
+        """return u'http://example.com/?\xe9lisa'.encode('utf8')""")
+
+    listbox = portal.FooModule_viewFooList.listbox
+    # here we cover two cases, id has an editable field, title has not
+    listbox.ListBox_setPropertyList(
+      field_url_columns = [
+        'title | %s' % url_column_method_id,
+        'id | %s' % url_column_method_id,
+        ],)
+
+    foo_module = portal.foo_module
+    o = foo_module.newContent(title=u'\xe9lisa')
+    o.immediateReindexObject()
+
+    request = get_request()
+    request['here'] = portal.foo_module
+    try:
+      rendered = listbox.get_value('default', render_format='list', REQUEST=request)
+    except UnicodeError, e:
+      self.fail('Rendering failed: %s' % e)
+    self.assertIn(u"http://example.com/?\xe9lisa", listbox.render(REQUEST=request))
 
   def test_05_EditSelectionWithFileUpload(self, quiet=quiet, run=run_all_test):
     """Listbox edits selection with request parameters. Special care must be
