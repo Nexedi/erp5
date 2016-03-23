@@ -127,7 +127,7 @@
                         </tuple>
                         <tuple>
                           <string>int_index</string>
-                          <string>Int Index</string>
+                          <string>Priority</string>
                         </tuple>
                         <tuple>
                           <string>test_node</string>
