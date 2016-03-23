@@ -678,7 +678,7 @@ class BaseTemplateItem(Implicit, Persistent):
     synchronizeDynamicModules(portal, force=True)
     gc.collect()
 
-  def _addPrefixToObjects(self, prefix):
+  def _addPrefixToObjectKeyList(self, prefix):
     '''
       This method is called on preinstall on both the business template
       that is to be intalled and the already installed one.
@@ -2678,8 +2678,8 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
 
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
-    self._addPrefixToObjects('portal_type_workflow_chain')
-    installed_item._addPrefixToObjects('portal_type_workflow_chain')
+    self._addPrefixToObjectKeyList('portal_type_workflow_chain')
+    installed_item._addPrefixToObjectKeyList('portal_type_workflow_chain')
     for path in self._objects:
       if path in installed_item._objects:
         # compare object to see it there is changes
@@ -2775,8 +2775,8 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
     new_dict = PersistentMapping()
-    self._addPrefixToObjects(self.class_property)
-    installed_item._addPrefixToObjects(self.class_property)
+    self._addPrefixToObjectKeyList(self.class_property)
+    installed_item._addPrefixToObjectKeyList(self.class_property)
     for path in self._objects:
       if path in installed_item._objects:
         # compare object to see it there is changes
@@ -3488,8 +3488,8 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         pass
 
   def preinstall(self, context, installed_item, **kw):
-    self._addPrefixToObjects('portal_type_roles')
-    installed_item._addPrefixToObjects('portal_type_roles')
+    self._addPrefixToObjectKeyList('portal_type_roles')
+    installed_item._addPrefixToObjectKeyList('portal_type_roles')
     return BaseTemplateItem.preinstall(self, context=context,
             installed_item=installed_item, **kw)
 
