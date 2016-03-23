@@ -156,7 +156,7 @@
             options[gadget.props.key] = sort_query;
           }
           return gadget.redirect({
-            command: 'change',
+            command: 'store_and_change',
             options: options
           });
         }
