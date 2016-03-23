@@ -2445,6 +2445,9 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           except AttributeError:
             pass
 
+      if isinstance(url, str):
+        url = unicode(url, encoding)
+
       if editable_field is not None:
         uid = self.getUid()
         key = '%s_%s' % (editable_field.getId(), uid)
@@ -2526,8 +2529,6 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         if url is not None:
           # JPS-XXX - I think we should not display a URL for objects
           # which do not have the View permission
-          if isinstance(url, str):
-            url = unicode(url, encoding)
           html = u'<a href="%s">%s</a>' % (url, html)
 
       html_list.append((html, original_value, error, editable_field, url))
