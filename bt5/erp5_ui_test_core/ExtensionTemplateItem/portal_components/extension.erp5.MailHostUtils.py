@@ -31,11 +31,14 @@ from Products.ERP5Type.tests.utils import DummyMailHostMixin
 
 def setupDummyMailHost(self):
   """Replace Original Mail Host by Dummy Mail Host in a non-persistent way
+  and reset the list of already sent messages.
 
   Copied & pasted from ERP5TypeTestCaseMixin._setUpDummyMailHost
   """
-  cls = self.getPortalObject().MailHost.__class__
+  mailhost = self.getPortalObject().MailHost
+  cls = mailhost.__class__
   if not issubclass(cls, DummyMailHostMixin):
     cls.__bases__ = (DummyMailHostMixin,) + cls.__bases__
     pmc_init_of(cls)
+  mailhost.reset()
   return True
