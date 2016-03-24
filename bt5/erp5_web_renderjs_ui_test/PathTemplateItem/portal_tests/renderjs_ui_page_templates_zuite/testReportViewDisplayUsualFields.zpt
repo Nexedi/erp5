@@ -1,0 +1,63 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Form Report Get Header From Editable Value</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Form Report Get Header From Editable Value</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?page=tab</td>
+  <td></td>
+</tr>
+
+<!-- Wait for gadget to be loaded -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_tab.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Title 1</td>
+  <td></td>
+</tr>
+
+<!-- Follow one link -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='History' and contains(@href, '#!change') and contains(@href, 'history') and contains(@href, 'u.page=') and contains(@href, 'n.editable=true')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_report_view.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>View ZODB History</td>
+  <td></td>
+</tr>
+
+<!-- There is a form_view gadget containing the main fields -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html' and @class='form_view']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html' and @class='form_view']//label[@for='field_your_zodb_history']</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

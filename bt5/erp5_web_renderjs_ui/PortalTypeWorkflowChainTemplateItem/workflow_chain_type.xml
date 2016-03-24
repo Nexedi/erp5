@@ -1,14 +1,14 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Web Manifest</type>
+  <type>Web Manifest</type>
   <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Web Script</type>
+  <type>Web Script</type>
   <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Web Style</type>
+  <type>Web Style</type>
   <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
  </chain>
 </workflow_chain>

@@ -1,46 +1,46 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Document Ingestion Message</type>
+  <type>Document Ingestion Message</type>
   <workflow>document_conversion_interaction_workflow, document_ingestion_interaction_workflow, document_ingestion_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Drawing</type>
+  <type>Drawing</type>
   <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/File</type>
+  <type>File</type>
   <workflow>document_publication_workflow, document_security_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Image</type>
+  <type>Image</type>
   <workflow>document_publication_workflow, document_security_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/PDF</type>
+  <type>PDF</type>
   <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Presentation</type>
+  <type>Presentation</type>
   <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/RSS Feed</type>
+  <type>RSS Feed</type>
   <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Spreadsheet</type>
+  <type>Spreadsheet</type>
   <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Text</type>
+  <type>Text</type>
   <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/URL Crawler</type>
+  <type>URL Crawler</type>
   <workflow>document_publication_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Web Page</type>
+  <type>Web Page</type>
   <workflow>-publication_workflow, document_publication_workflow</workflow>
  </chain>
 </workflow_chain>

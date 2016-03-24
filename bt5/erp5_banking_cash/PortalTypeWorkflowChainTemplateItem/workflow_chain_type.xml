@@ -1,114 +1,114 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Cash Balance Regulation</type>
+  <type>Cash Balance Regulation</type>
   <workflow>cash_balance_regulation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Cash Exchange</type>
+  <type>Cash Exchange</type>
   <workflow>cash_exchange_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Cash Movement</type>
+  <type>Cash Movement</type>
   <workflow>cash_movement_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Cash Movement New Not Emitted</type>
+  <type>Cash Movement New Not Emitted</type>
   <workflow>cash_movement_new_not_emitted_interaction_workflow, cash_movement_new_not_emitted_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Cash Sorting</type>
+  <type>Cash Sorting</type>
   <workflow>cash_sorting_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Cash Sorting Statistic</type>
+  <type>Cash Sorting Statistic</type>
   <workflow>cash_sorting_statistic_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Cash To Currency Purchase</type>
+  <type>Cash To Currency Purchase</type>
   <workflow>cash_to_currency_purchase_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Cash To Currency Sale</type>
+  <type>Cash To Currency Sale</type>
   <workflow>cash_to_currency_sale_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Classification Survey</type>
+  <type>Classification Survey</type>
   <workflow>classification_survey_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Container Cell</type>
+  <type>Container Cell</type>
   <workflow>container_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Container Line</type>
+  <type>Container Line</type>
   <workflow>container_interaction_workflow, edit_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Counter Rendering</type>
+  <type>Counter Rendering</type>
   <workflow>counter_rendering_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Destruction Survey</type>
+  <type>Destruction Survey</type>
   <workflow>destruction_survey_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Foreign Cash Reception</type>
+  <type>Foreign Cash Reception</type>
   <workflow>edit_workflow, foreign_cash_reception_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Historical Operation</type>
+  <type>Historical Operation</type>
   <workflow>edit_workflow, historical_operation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Internal Money Deposit</type>
+  <type>Internal Money Deposit</type>
   <workflow>edit_workflow, internal_money_deposit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Internal Money Payment</type>
+  <type>Internal Money Payment</type>
   <workflow>edit_workflow, internal_money_payment_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Monetary Destruction</type>
+  <type>Monetary Destruction</type>
   <workflow>edit_workflow, monetary_destruction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Monetary Issue</type>
+  <type>Monetary Issue</type>
   <workflow>edit_workflow, monetary_issue_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Monetary Recall</type>
+  <type>Monetary Recall</type>
   <workflow>edit_workflow, monetary_recall_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Monetary Reception</type>
+  <type>Monetary Reception</type>
   <workflow>edit_workflow, monetary_reception_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Monetary Survey</type>
+  <type>Monetary Survey</type>
   <workflow>edit_workflow, monetary_survey_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Money Deposit</type>
+  <type>Money Deposit</type>
   <workflow>edit_workflow, money_deposit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Money Deposit Rendering</type>
+  <type>Money Deposit Rendering</type>
   <workflow>edit_workflow, money_deposit_rendering_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Mutilated Banknote</type>
+  <type>Mutilated Banknote</type>
   <workflow>edit_workflow, mutilated_banknote_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Usual Cash Rendering</type>
+  <type>Usual Cash Rendering</type>
   <workflow>edit_workflow, usual_cash_rendering_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Usual Cash Transfer</type>
+  <type>Usual Cash Transfer</type>
   <workflow>edit_workflow, usual_cash_transfer_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Vault Transfer</type>
+  <type>Vault Transfer</type>
   <workflow>edit_workflow, vault_transfer_workflow</workflow>
  </chain>
 </workflow_chain>

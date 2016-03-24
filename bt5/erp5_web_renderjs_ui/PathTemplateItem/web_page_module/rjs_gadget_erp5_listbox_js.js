@@ -168,6 +168,7 @@
     return gadget.translateHtml(listbox_template(
       {
         "hide_class": gadget.props.hide_class,
+        "hide_sort": gadget.props.hide_sort,
         "title": gadget.props.field_json.title
       }
     ));
@@ -249,6 +250,7 @@
           return false;
         });
       }
+      gadget.props.hide_sort = field_json.sort_column_list.length ? "" : "ui-disabled";
 
       if (field_json.search_column_list.length) {
         field_json.search_column_list = field_json.search_column_list.filter(function (n) {
@@ -283,7 +285,7 @@
           for (i = 0; i < gadget.props.field_json.column_list.length; i += 1) {
             class_value = "";
             for (j = 0; j < gadget.props.sort_list.length; j += 1) {
-              tmp = gadget.props.sort_list[j].split(",");
+              tmp = gadget.props.sort_list[j];
               if (tmp[0] === gadget.props.field_json.column_list[i][0]) {
                 if (tmp[1] === "ascending") {
                   class_value = "ui-icon-arrow-up";

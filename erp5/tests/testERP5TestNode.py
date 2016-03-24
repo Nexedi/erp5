@@ -232,11 +232,13 @@ extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
 [rep1]
 repository = %(temp_dir)s/testnode/foo/rep1
 branch = master
+revision =
 develop = false
 
 [rep2]
 repository = %(temp_dir)s/testnode/foo/rep2
 branch = foo
+revision =
 develop = false
 """ % {'temp_dir': self._temp_dir}
     else:
@@ -250,11 +252,13 @@ extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
 repository = <obfuscated_url>/rep1/rep1.git
 revision = %(revision1)s
 ignore-ssl-certificate = true
+develop = false
 
 [rep2]
 repository = <obfuscated_url>/rep2/rep2.git
 revision = %(revision2)s
 ignore-ssl-certificate = true
+develop = false
 """ % {'temp_dir': self._temp_dir, 'revision1': revision1, 'revision2': revision2}
     self.assertEquals(expected_profile, profile.read())
     profile.close()
@@ -575,7 +579,7 @@ ignore-ssl-certificate = true
     def patch_getSlaposHateoasUrl(self, *args, **kw):
       return "http://Foo"
     def patch_generateConfiguration(self, *args, **kw):
-      return json.dumps({"configuration_list": [], "involved_nodes_computer_guid"\
+      return json.dumps({"configuration_list": [{}], "involved_nodes_computer_guid"\
 : [], "error_message": "No error.", "launcher_nodes_computer_guid": [], \
 "launchable": False, "randomized_path" : "azertyuiop"})
     def patch_isMasterTestnode(self, *args, **kw):
@@ -650,7 +654,6 @@ ignore-ssl-certificate = true
       original_getSlaposAccountCertificate = TaskDistributor.getSlaposAccountCertificate
       original_getSlaposUrl = TaskDistributor.getSlaposUrl
       original_getSlaposHateoasUrl = TaskDistributor.getSlaposHateoasUrl
-      original_generateConfiguration = TaskDistributor.generateConfiguration
       original_isMasterTestnode = TaskDistributor.isMasterTestnode
       original_updateInstanceXML = RunnerClass._updateInstanceXML
       original_isHostingSubscriptionReady = SlapOSMasterCommunicator.isHostingSubscriptionReady
@@ -660,12 +663,13 @@ ignore-ssl-certificate = true
       TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
       TaskDistributor.getSlaposUrl = patch_getSlaposUrl
       TaskDistributor.getSlaposHateoasUrl = patch_getSlaposHateoasUrl
-      TaskDistributor.generateConfiguration = patch_generateConfiguration
       TaskDistributor.isMasterTestnode = patch_isMasterTestnode
       RunnerClass._updateInstanceXML = doNothing
       SlapOSMasterCommunicator.isHostingSubscriptionReady = patch_isHostingSubscriptionReady
       SlapOSMasterCommunicator.isRegisteredHostingSubscription = patch_isRegisteredHostingSubscription
       SlapOSMasterCommunicator.__init__ = doNothing
+    original_generateConfiguration = TaskDistributor.generateConfiguration
+    TaskDistributor.generateConfiguration = patch_generateConfiguration
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
     original_getTestType = TaskDistributor.getTestType
@@ -693,12 +697,12 @@ ignore-ssl-certificate = true
       TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
       TaskDistributor.getSlaposUrl = original_getSlaposUrl
       TaskDistributor.getSlaposHateoasUrl = original_getSlaposHateoasUrl
-      TaskDistributor.generateConfiguration = original_generateConfiguration
       TaskDistributor.isMasterTestnode = original_isMasterTestnode
       RunnerClass._updateInstanceXML = original_updateInstanceXML
       SlapOSMasterCommunicator.isHostingSubscriptionReady = original_isHostingSubscriptionReady
       SlapOSMasterCommunicator.isRegisteredHostingSubscription = original_isRegisteredHostingSubscription
       SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
+    TaskDistributor.generateConfiguration = original_generateConfiguration
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
     TaskDistributionTool.subscribeNode = original_subscribeNode
@@ -759,7 +763,7 @@ ignore-ssl-certificate = true
     def patch_getSlaposHateoasUrl(self, *args, **kw):
       return "http://Foo"
     def patch_generateConfiguration(self, *args, **kw):
-      return json.dumps({"configuration_list": [], "involved_nodes_computer_guid"\
+      return json.dumps({"configuration_list": [{}], "involved_nodes_computer_guid"\
 : [], "error_message": "No error.", "launcher_nodes_computer_guid": [], \
 "launchable": False, "randomized_path" : "azertyuiop"})
     def patch_isMasterTestnode(self, *args, **kw):
@@ -820,7 +824,6 @@ ignore-ssl-certificate = true
       original_getSlaposAccountCertificate = TaskDistributor.getSlaposAccountCertificate
       original_getSlaposUrl = TaskDistributor.getSlaposUrl
       original_getSlaposHateoasUrl = TaskDistributor.getSlaposHateoasUrl
-      original_generateConfiguration = TaskDistributor.generateConfiguration
       original_isMasterTestnode = TaskDistributor.isMasterTestnode
       original_supply = SlapOSControler.supply
       original_request = SlapOSControler.request
@@ -832,7 +835,6 @@ ignore-ssl-certificate = true
       TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
       TaskDistributor.getSlaposUrl = patch_getSlaposUrl
       TaskDistributor.getSlaposHateoasUrl = patch_getSlaposHateoasUrl
-      TaskDistributor.generateConfiguration = patch_generateConfiguration
       TaskDistributor.isMasterTestnode = patch_isMasterTestnode
       SlapOSControler.supply = doNothing
       SlapOSControler.request = doNothing
@@ -840,9 +842,11 @@ ignore-ssl-certificate = true
       SlapOSMasterCommunicator.isHostingSubscriptionReady = patch_isHostingSubscriptionReady
       SlapOSMasterCommunicator.isRegisteredHostingSubscription = patch_isRegisteredHostingSubscription
       SlapOSMasterCommunicator.__init__ = doNothing
+    original_generateConfiguration = TaskDistributor.generateConfiguration
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
     original_getTestType = TaskDistributor.getTestType
+    TaskDistributor.generateConfiguration = patch_generateConfiguration
     TaskDistributor.startTestSuite = patch_startTestSuite
     TaskDistributor.subscribeNode = doNothing
     TaskDistributor.getTestType = patch_getTestType
@@ -871,7 +875,6 @@ ignore-ssl-certificate = true
       TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
       TaskDistributor.getSlaposUrl = original_getSlaposUrl
       TaskDistributor.getSlaposHateoasUrl = original_getSlaposHateoasUrl
-      TaskDistributor.generateConfiguration = original_generateConfiguration
       TaskDistributor.isMasterTestnode = original_isMasterTestnode
       SlapOSControler.supply =original_supply
       SlapOSControler.request = original_request
@@ -879,6 +882,7 @@ ignore-ssl-certificate = true
       SlapOSMasterCommunicator.isHostingSubscriptionReady = original_isHostingSubscriptionReady
       SlapOSMasterCommunicator.isRegisteredHostingSubscription = original_isRegisteredHostingSubscription
       SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
+    TaskDistributor.generateConfiguration = original_generateConfiguration
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
     TaskDistributionTool.subscribeNode = original_subscribeNode

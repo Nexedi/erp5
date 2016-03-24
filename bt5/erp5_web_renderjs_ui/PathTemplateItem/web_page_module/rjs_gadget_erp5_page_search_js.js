@@ -31,6 +31,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -42,17 +43,27 @@
       return this.getUrlParameter(argument_list)
         .push(function (result) {
           if ((result === undefined) && (argument_list[0] === 'field_listbox_sort_list:json')) {
-            return ["modification_date,descending,", ""];
+            return [['modification_date', 'descending']];
           }
           return result;
         });
     })
     .declareMethod("render", function () {
-      var gadget = this;
+      var gadget = this,
+        header_dict = {page_title: 'Search'};
 
-      return gadget.updateHeader({
-        page_title: 'Search'
-      })
+      return gadget.getUrlParameter('history')
+        .push(function (result) {
+          if (result !== undefined) {
+            return gadget.getUrlFor({command: 'history_previous'});
+          }
+        })
+        .push(function (result) {
+          if (result !== undefined) {
+            header_dict.selection_url = result;
+          }
+          return gadget.updateHeader(header_dict);
+        })
         .push(function () {
           return gadget.getDeclaredGadget('form_list');
         })

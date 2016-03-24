@@ -351,8 +351,9 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
       title=SimpleQuery(comparison_operator='=', title=suite_title),
       validation_state='validated')
     assert len(test_suite_list) == 1, "We found %i test suite for %s" % (
-                                      len(test_suite_list), name)
+                                      len(test_suite_list), suite_title)
     test_suite = test_suite_list[0].getObject()
+    return test_suite
 
   security.declarePublic("startUnitTest")
   def startUnitTest(self,test_result_path,exclude_list=()):
@@ -373,3 +374,20 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     test_result = portal.unrestrictedTraverse(test_path)
     test_suite_title = test_result.getTitle()
     return portal.portal_task_distribution_tool.stopUnitTest(self,test_path,status_dict)
+
+  security.declarePublic("generateConfiguration")
+  def generateConfiguration(self, test_suite_title, batch_mode=0):
+    """
+    return the list of configuration to create instances, in the case of ERP5 unit tests,
+    we will have only one configuration (unlike scalability tests). But for API consistency,
+    always return a list.
+    """
+    test_suite = self._getTestSuiteFromTitle(test_suite_title)
+    cluster_configuration = test_suite.getClusterConfiguration() or '{}'
+    try:
+      generated_configuration = [json.loads(cluster_configuration)]
+    except ValueError:
+      generated_configuration = [{}]
+    if batch_mode:
+      return generated_configuration
+    return json.dumps(generated_configuration)

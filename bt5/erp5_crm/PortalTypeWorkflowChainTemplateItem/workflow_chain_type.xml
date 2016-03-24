@@ -1,58 +1,58 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Acknowledgement</type>
+  <type>Acknowledgement</type>
   <workflow>acknowledgement_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Campaign</type>
+  <type>Campaign</type>
   <workflow>edit_workflow, pricing_interaction_workflow, ticket_interaction_workflow, ticket_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Fax Message</type>
+  <type>Fax Message</type>
   <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Letter</type>
+  <type>Letter</type>
   <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Mail Message</type>
+  <type>Mail Message</type>
   <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Meeting</type>
+  <type>Meeting</type>
   <workflow>edit_workflow, pricing_interaction_workflow, ticket_interaction_workflow, ticket_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Note</type>
+  <type>Note</type>
   <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Phone Call</type>
+  <type>Phone Call</type>
   <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Sale Opportunity</type>
+  <type>Sale Opportunity</type>
   <workflow>edit_workflow, pricing_interaction_workflow, sale_opportunity_workflow, ticket_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Short Message</type>
+  <type>Short Message</type>
   <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Site Message</type>
+  <type>Site Message</type>
   <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Support Request</type>
+  <type>Support Request</type>
   <workflow>edit_workflow, pricing_interaction_workflow, ticket_interaction_workflow, ticket_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Visit</type>
+  <type>Visit</type>
   <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Web Message</type>
+  <type>Web Message</type>
   <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

@@ -117,6 +117,8 @@ def resetRegisteredWorkflowMethod(portal_type=None):
   for method in workflow_method_registry:
     method.reset(portal_type=portal_type)
 
+  del workflow_method_registry[:]
+
 class WorkflowMethod(Method):
 
   def __init__(self, method, id=None, reindex=1):
@@ -2681,6 +2683,20 @@ class Base( CopyContainer,
       return isTempDocument()
     else:
       return False
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isDeletable')
+  def isDeletable(self, check_relation):
+    """Test if object can be delete"""
+    container = self.getParentValue()
+    portal = container.getPortalObject()
+    return (portal.portal_workflow.isTransitionPossible(self, 'delete')
+      if container.portal_type != 'Preference' and
+        any(wf_id != 'edit_workflow'
+            for wf_id in getattr(aq_base(self), "workflow_history", ()))
+      else portal.portal_membership.checkPermission(
+        'Delete objects', container)
+      ) and not (check_relation and self.getRelationCountForDeletion())
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isDeleted')

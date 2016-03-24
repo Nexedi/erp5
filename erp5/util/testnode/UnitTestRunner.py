@@ -89,7 +89,7 @@ class UnitTestRunner():
       log("Before status_dict = slapos_method(...)")
       status_dict = slapos_method(self.testnode.config,
                                   environment=self.testnode.config['environment'],
-                                 )
+                                  **kw)
       log(status_dict)
       log("After status_dict = slapos_method(...)")
       if status_dict['status_code'] != 0:
@@ -105,9 +105,18 @@ class UnitTestRunner():
     We will build slapos software needed by the testnode itself,
     like the building of selenium-runner by default
     """
+    # report-url, report-project and suite-url are required to seleniumrunner
+    # instance. This is a hack which must be removed.
+    cluster_configuration = {}
+    config = self.testnode.config
+    cluster_configuration['report-url'] = config.get("report-url", "")
+    cluster_configuration['report-project'] = config.get("report-project", "")
+    cluster_configuration['suite-url'] = config.get("suite-url", "")
     return self._prepareSlapOS(self.testnode.config['slapos_directory'],
               test_node_slapos, self.testnode.log, create_partition=0,
-              software_path_list=self.testnode.config.get("software_list"))
+              software_path_list=self.testnode.config.get("software_list"),
+              cluster_configuration=cluster_configuration
+              )
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
@@ -118,7 +127,8 @@ class UnitTestRunner():
       log = self.testnode.log
     return self._prepareSlapOS(node_test_suite.working_directory,
               node_test_suite, log,
-              software_path_list=[node_test_suite.custom_profile_path])
+              software_path_list=[node_test_suite.custom_profile_path],
+              cluster_configuration={'_': json.dumps(node_test_suite.cluster_configuration)})
 
   def runTestSuite(self, node_test_suite, portal_url, log=None):
     config = self.testnode.config

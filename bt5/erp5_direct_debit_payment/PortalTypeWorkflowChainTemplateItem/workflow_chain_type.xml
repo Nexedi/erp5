@@ -1,6 +1,6 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Direct Debit Mandate</type>
+  <type>Direct Debit Mandate</type>
   <workflow>direct_debit_mandate_validation_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

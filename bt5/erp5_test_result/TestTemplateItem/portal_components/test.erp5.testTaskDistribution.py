@@ -104,9 +104,10 @@ class TestTaskDistribution(ERP5TypeTestCase):
                     int_index = priority,
                     specialise_value = specialise_value,
                    )
+
+      test_suite.setClusterConfiguration(cluster_configuration)
       if portal_type == "Scalability Test Suite":
         test_suite.setGraphCoordinate(graph_coordinate)
-        test_suite.setClusterConfiguration(cluster_configuration)
 
 
       test_suite.newContent( portal_type= 'Test Suite Repository',
@@ -390,6 +391,19 @@ class TestTaskDistribution(ERP5TypeTestCase):
 
   def test_10_cancelTestResult(self):
     pass
+
+  def test_10b_generateConfiguration(self):
+    """
+    It shall be possible on a test suite to define configuration we would like
+    to use to create slapos instance.
+    """
+    test_suite, = self._createTestSuite(cluster_configuration=None)
+    self.tic()
+    self.assertEquals('{"configuration_list": [{}]}', self.distributor.generateConfiguration(test_suite.getTitle()))
+    test_suite.setClusterConfiguration("{'foo': 3}")
+    self.assertEquals('{"configuration_list": [{}]}', self.distributor.generateConfiguration(test_suite.getTitle()))
+    test_suite.setClusterConfiguration('{"foo": 3}')
+    self.assertEquals('{"configuration_list": [{"foo": 3}]}', self.distributor.generateConfiguration(test_suite.getTitle()))
 
   def _checkTestSuiteAggregateList(self, *args):
     self.tic()

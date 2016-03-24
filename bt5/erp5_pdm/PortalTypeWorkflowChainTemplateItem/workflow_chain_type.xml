@@ -1,82 +1,82 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Component</type>
+  <type>Component</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Internal Supply</type>
+  <type>Internal Supply</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Internal Supply Line</type>
+  <type>Internal Supply Line</type>
   <workflow>edit_workflow, reindex_object_interaction_workflow, supply_line_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Measure</type>
+  <type>Measure</type>
   <workflow>conversion_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Product</type>
+  <type>Product</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Purchase Supply</type>
+  <type>Purchase Supply</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Purchase Supply Line</type>
+  <type>Purchase Supply Line</type>
   <workflow>edit_workflow, reindex_object_interaction_workflow, supply_line_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Quantity Unit Conversion Definition</type>
+  <type>Quantity Unit Conversion Definition</type>
   <workflow>conversion_interaction_workflow, edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Quantity Unit Conversion Group</type>
+  <type>Quantity Unit Conversion Group</type>
   <workflow>conversion_interaction_workflow, edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Resource Measures Consistency Constraint</type>
+  <type>Resource Measures Consistency Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Sale Supply</type>
+  <type>Sale Supply</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Sale Supply Line</type>
+  <type>Sale Supply Line</type>
   <workflow>edit_workflow, reindex_object_interaction_workflow, supply_line_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Service</type>
+  <type>Service</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Supply Line</type>
+  <type>Supply Line</type>
   <workflow>edit_workflow, reindex_object_interaction_workflow, supply_line_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Transformation</type>
+  <type>Transformation</type>
   <workflow>conversion_interaction_workflow, edit_workflow, transformation_interaction_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Transformation Operation</type>
+  <type>Transformation Operation</type>
   <workflow>conversion_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Transformation Operation Cell</type>
+  <type>Transformation Operation Cell</type>
   <workflow>conversion_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Transformation Optional Resource</type>
+  <type>Transformation Optional Resource</type>
   <workflow>conversion_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Transformation Transformed Resource</type>
+  <type>Transformation Transformed Resource</type>
   <workflow>conversion_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Transformation Transformed Resource Cell</type>
+  <type>Transformation Transformed Resource Cell</type>
   <workflow>conversion_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

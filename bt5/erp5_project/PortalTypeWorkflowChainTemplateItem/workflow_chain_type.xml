@@ -1,34 +1,34 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Project</type>
+  <type>Project</type>
   <workflow>edit_workflow, project_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Project Line</type>
+  <type>Project Line</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Requirement</type>
+  <type>Requirement</type>
   <workflow>edit_workflow, requirement_analysis_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Requirement Document</type>
+  <type>Requirement Document</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Task</type>
+  <type>Task</type>
   <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, task_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Task Line</type>
+  <type>Task Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Task Report</type>
+  <type>Task Report</type>
   <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, task_report_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Task Report Line</type>
+  <type>Task Report Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

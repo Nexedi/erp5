@@ -1,14 +1,14 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Implicit Item Movement</type>
+  <type>Implicit Item Movement</type>
   <workflow>edit_workflow, implicit_item_movement_workflow, movement_resource_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Item</type>
+  <type>Item</type>
   <workflow>edit_workflow, item_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Service Report</type>
+  <type>Service Report</type>
   <workflow>edit_workflow, item_workflow</workflow>
  </chain>
 </workflow_chain>

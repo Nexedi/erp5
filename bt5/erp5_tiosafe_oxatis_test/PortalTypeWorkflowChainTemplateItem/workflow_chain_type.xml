@@ -1,18 +1,18 @@
 <workflow_chain>
  <chain>
-  <type>portal_type_workflow_chain/Oxatis Test Person</type>
+  <type>Oxatis Test Person</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Oxatis Test Product</type>
+  <type>Oxatis Test Product</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Oxatis Test Sale Order</type>
+  <type>Oxatis Test Sale Order</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>portal_type_workflow_chain/Oxatis Test Sale Order Item</type>
+  <type>Oxatis Test Sale Order Item</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>
