@@ -4,6 +4,7 @@
 # it requires socat command
 
 ZOPE_PIDS="$(slapos node | grep 'zope\|notebook' | awk '{print substr($0, 59, 5);}')"
+LOCAL_IPv4="$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')"
 
 port=20000
 
@@ -20,10 +21,10 @@ for pid in $ZOPE_PIDS;
     ipv6_ip=${ip_port:0:10}
     ipv6_port=${ip_port:11:15}
     socat TCP-LISTEN:$port,fork TCP:[$ipv6_ip]:$ipv6_port &
-    echo "Jupyter node at https://<YOUR_VM_IP>:${port}/"
+    echo "Jupyter node at https://${LOCAL_IPv4}:${port}/"
   else
     socat TCP-LISTEN:$port,fork TCP:$ip_port &
-    echo "Zope node at http://<YOUR_VM_IP>:${port}/"
+    echo "Zope node at http://${LOCAL_IPv4}:${port}/"
   fi
 
   # increase port base
