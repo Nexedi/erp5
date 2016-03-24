@@ -20,7 +20,7 @@ for pid in $ZOPE_PIDS;
     ipv6_ip=${ip_port:0:10}
     ipv6_port=${ip_port:11:15}
     socat TCP-LISTEN:$port,fork TCP:[$ipv6_ip]:$ipv6_port &
-    echo "Jupiter node at http://<YOUR_VM_IP>:${port}/"
+    echo "Jupyter node at https://<YOUR_VM_IP>:${port}/"
   else
     socat TCP-LISTEN:$port,fork TCP:$ip_port &
     echo "Zope node at http://<YOUR_VM_IP>:${port}/"
