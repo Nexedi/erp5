@@ -484,29 +484,24 @@ class Predicate(XMLObject):
     self._range_criterion = PersistentMapping()
 
     for c in category_list:
-      predicate_value = None
-      if isinstance(c, (str, unicode)):
-        bc = c.split('/')[0]
-        if bc in base_category_id_list:
-          # This is a category
-          membership_criterion_category_list.append(c)
-          membership_criterion_base_category_list.append(bc)
-          continue
-        else:
-          predicate_value = category_tool.resolveCategory(c)
+      bc = c.split('/')[0]
+      if bc in base_category_id_list:
+        # This is a category
+        membership_criterion_category_list.append(c)
+        membership_criterion_base_category_list.append(bc)
       else:
-        predicate_value = c
-      if predicate_value is not None:
-        criterion_property_list.extend(predicate_value.getCriterionPropertyList())
-        membership_criterion_category_list.extend(
-                    predicate_value.getMembershipCriterionCategoryList())
-        membership_criterion_base_category_list.extend(
-                    predicate_value.getMembershipCriterionBaseCategoryList())
-        multimembership_criterion_base_category_list.extend(
-                    predicate_value.getMultimembershipCriterionBaseCategoryList())
-        test_method_id_list += list(predicate_value.getTestMethodIdList() or [])
-        for p in predicate_value.getCriterionList():
-          self.setCriterion(p.property, identity=p.identity, min=p.min, max=p.max)
+        predicate_value = category_tool.resolveCategory(c)
+        if predicate_value is not None:
+          criterion_property_list.extend(predicate_value.getCriterionPropertyList())
+          membership_criterion_category_list.extend(
+                      predicate_value.getMembershipCriterionCategoryList())
+          membership_criterion_base_category_list.extend(
+                      predicate_value.getMembershipCriterionBaseCategoryList())
+          multimembership_criterion_base_category_list.extend(
+                      predicate_value.getMultimembershipCriterionBaseCategoryList())
+          test_method_id_list += list(predicate_value.getTestMethodIdList() or [])
+          for p in predicate_value.getCriterionList():
+            self.setCriterion(p.property, identity=p.identity, min=p.min, max=p.max)
     self.setCriterionPropertyList(criterion_property_list)
     self._setMembershipCriterionCategoryList(membership_criterion_category_list)
     self._setMembershipCriterionBaseCategoryList(membership_criterion_base_category_list)
