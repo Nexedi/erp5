@@ -498,11 +498,14 @@
   //////////////////////////////////////////////////////////////////
   // Command URL functions
   //////////////////////////////////////////////////////////////////
-  function routeMethodLess() {
+  function routeMethodLess(gadget) {
     // Nothing. Go to front page
-    return synchronousChangeState(
-      getDisplayUrlFor(undefined, {page: 'worklist'})
-    );
+    return gadget.getSetting("frontpage_gadget")
+      .push(function (result) {
+        return synchronousChangeState(
+          getDisplayUrlFor(undefined, {page: result})
+        );
+      });
   }
 
   function routeDisplay(gadget, command_options) {
@@ -544,7 +547,7 @@
     }
 
     if (command_options.args.page === undefined) {
-      return routeMethodLess();
+      return routeMethodLess(gadget);
     }
 
     command_options.args.jio_key = command_options.path || undefined;
@@ -788,7 +791,7 @@
       if (command_options.method) {
         throw new Error('Unsupported hash method: ' + command_options.method);
       }
-      return routeMethodLess();
+      return routeMethodLess(gadget);
     })
 
     .declareMethod('start', function () {
@@ -799,6 +802,7 @@
     .declareAcquiredMethod('jio_allDocs', 'jio_allDocs')
     .declareAcquiredMethod('jio_getAttachment', 'jio_getAttachment')
     .declareAcquiredMethod('setSetting', 'setSetting')
+    .declareAcquiredMethod('getSetting', 'getSetting')
 
     .declareService(function () {
       var gadget = this;

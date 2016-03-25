@@ -8,7 +8,7 @@ web_section = REQUEST.get("current_web_section")
 
 
 return default_web_page.WebPage_viewAsWeb(mapping_dict={
-  "frontpage_gadget": web_section.getLayoutProperty("configuration_frontpage_gadget_url", default=""),
+  "frontpage_gadget": web_section.getLayoutProperty("configuration_frontpage_gadget_url", default="worklist"),
   "application_title": web_section.getLayoutProperty("configuration_application_title", default="ERP5"),
   "action_view": web_section.getLayoutProperty("configuration_view_action_category", default="object_view"),
   "default_view_reference": web_section.getLayoutProperty("configuration_default_view_action_reference", default="view"),
