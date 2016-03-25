@@ -42,6 +42,11 @@
 </tr>
 <tr>
   <td>type</td>
+  <td>field_my_title</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
   <td>field_my_reference</td>
   <td>reference0</td>
 </tr>
