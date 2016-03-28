@@ -2,16 +2,6 @@
  <portal_type id="Data Array">
   <item>DataArray</item>
  </portal_type>
- <portal_type id="Data Array Line">
-  <item>DataArrayLine</item>
- </portal_type>
- <portal_type id="Data Array Line Existence Constraint">
-  <item>ConstraintType</item>
-  <item>DataArrayLine</item>
- </portal_type>
- <portal_type id="Data Event">
-  <item>DataEvent</item>
- </portal_type>
  <portal_type id="Data Operation">
   <item>Predicate</item>
  </portal_type>

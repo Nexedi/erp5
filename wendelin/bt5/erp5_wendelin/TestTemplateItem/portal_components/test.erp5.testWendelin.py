@@ -28,8 +28,6 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from wendelin.bigarray.array_zodb import ZBigArray
-from DateTime import DateTime
-from zExceptions import NotFound
 import msgpack
 import numpy as np
 import string
@@ -37,7 +35,7 @@ import random
 
 def getRandomString():
   return 'test_%s' %''.join([random.choice(string.ascii_letters + string.digits) \
-    for _ in xrange(32)])
+    for n in xrange(32)])
     
 def chunks(l, n):
   """Yield successive n-sized chunks from l."""
@@ -67,8 +65,6 @@ class Test(ERP5TypeTestCase):
       self.portal.portal_ingestion_policies.IngestionPolicyTool_addIngestionPolicy( \
         reference  = reference, \
         batch_mode = 1)
-    # to avoid random test failures due to test execution we make start date one day before
-    data_supply.setStartDate(DateTime() - 1)
     self.tic()
     
     return ingestion_policy, data_supply, data_stream, data_array
@@ -79,10 +75,9 @@ class Test(ERP5TypeTestCase):
     Test we can import certain libraries but still failure to do so should be a  		 
     a test step failure rather than global test failure. 		 
     """ 		 
-    import scipy as _	 
-    import sklearn as _
-    import pandas as _
-    import matplotlib as _
+    import scipy 		 
+    import sklearn
+    import pandas
 
   def test_01_IngestionFromFluentd(self):
     """
@@ -100,16 +95,16 @@ class Test(ERP5TypeTestCase):
     # make sure real_data tail is also a full line
     real_data += '\n'
 
-    ingestion_policy, _, data_stream, data_array = \
+    ingestion_policy, data_supply, data_stream, data_array = \
       self.stepSetupIngestion(reference)
-
+    
     # simulate fluentd by setting proper values in REQUEST
     request.method = 'POST'
     data_chunk = msgpack.packb([0, real_data], use_bin_type=True)
     request.set('reference', reference)
     request.set('data_chunk', data_chunk)
     ingestion_policy.ingest()
-
+    
     data_stream_data = data_stream.getData()
     self.assertEqual(real_data, data_stream_data)
     
@@ -126,11 +121,6 @@ class Test(ERP5TypeTestCase):
     self.assertEqual(np.average(zarray), np.average(np.arange(100001)))
     self.assertTrue(np.array_equal(zarray, np.arange(100001)))
     
-    # test ingesting with bad reference and raise of NotFound
-    request.set('reference', reference + 'not_existing')
-    self.assertRaises(NotFound, ingestion_policy.ingest)
-    
-    
   def test_01_1_IngestionTail(self):
     """
     Test real time convertion to a numpy array by appending data to a data stream.
@@ -145,7 +135,7 @@ class Test(ERP5TypeTestCase):
     # make sure real_data tail is also a full line
     real_data += '\n'
 
-    _, _, data_stream, data_array = self.stepSetupIngestion(reference)
+    ingestion_policy, data_supply, data_stream, data_array = self.stepSetupIngestion(reference)
     data_stream.appendData(real_data)
     self.tic()
     
@@ -154,7 +144,7 @@ class Test(ERP5TypeTestCase):
     # override DataStream_transformTail to actually do transformation on appenData
     start = data_stream.getSize()
     script_id = 'DataStream_transformTail'
-    script_content_list = ["start_offset, end_offset", """
+    script_content_list = ["*argument_list", """
 # created by testWendelin.test_01_1_IngestionTail
 start = %s
 end  = %s
@@ -199,7 +189,7 @@ context.activate().DataStream_readChunkListAndTransform( \
     offset = max_elements / jobs
     start = 0
     end = start + offset
-    for _ in range(jobs):
+    for i in range(jobs):
       # calculate directly expectations
       expected_result_list.append(np.average(expected_numpy_array[start:end]))
       data_array.activate(
@@ -229,7 +219,7 @@ context.activate().DataStream_readChunkListAndTransform( \
 
     portal.log( real_data)
     
-    _, _, data_stream, _ = self.stepSetupIngestion(reference)
+    ingestion_policy, data_supply, data_stream, data_array = self.stepSetupIngestion(reference)
     data_stream.appendData(real_data)
     self.tic()
     

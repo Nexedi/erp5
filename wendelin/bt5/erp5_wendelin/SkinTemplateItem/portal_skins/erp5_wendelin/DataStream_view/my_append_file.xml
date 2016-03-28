@@ -10,17 +10,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
-                <string>editable</string>
-                <string>list_method</string>
+                <string>css_class</string>
+                <string>description</string>
+                <string>hidden</string>
                 <string>title</string>
-                <string>url_columns</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>my_append_file</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -57,10 +56,14 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key> <string>css_class</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -71,8 +74,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -81,12 +86,6 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>url_columns</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
                 </item>
               </dictionary>
             </value>
@@ -96,33 +95,24 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>title</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>description</string> </key>
+                    <value> <string>Upload a file to be appended to the current.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_view_mode_file</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewDMSFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                    </value>
+                    <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -130,13 +120,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Preview</string> </value>
-                </item>
-                <item>
-                    <key> <string>url_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <value> <string>Append file (this will append to existing data)</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -152,7 +136,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.DataArray_getArrayColumnList()</string> </value>
+            <value> <string>python: \'hidden_label\' if context.getSize() == 0 else \'\'</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -165,20 +149,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(col[0], None) for col in here.DataArray_getArrayColumnList()]</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>DataArray_getArrayRowList</string> </value>
+            <value> <string>python: context.getSize() == 0</string> </value>
         </item>
       </dictionary>
     </pickle>
