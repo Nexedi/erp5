@@ -45,7 +45,19 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>W: 38,  8: Unused variable \'n\' (unused-variable)</string>
+                <string>W: 78,  4: Unused variable \'scipy\' (unused-variable)</string>
+                <string>W: 80,  4: Unused variable \'pandas\' (unused-variable)</string>
+                <string>W: 79,  4: Unused variable \'sklearn\' (unused-variable)</string>
+                <string>W: 98, 22: Unused variable \'data_supply\' (unused-variable)</string>
+                <string>W:138, 22: Unused variable \'data_supply\' (unused-variable)</string>
+                <string>W:192,  8: Unused variable \'i\' (unused-variable)</string>
+                <string>W:138,  4: Unused variable \'ingestion_policy\' (unused-variable)</string>
+                <string>W:222,  4: Unused variable \'ingestion_policy\' (unused-variable)</string>
+                <string>W:222, 22: Unused variable \'data_supply\' (unused-variable)</string>
+                <string>W:222, 48: Unused variable \'data_array\' (unused-variable)</string>
+              </tuple>
             </value>
         </item>
         <item>

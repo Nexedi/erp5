@@ -49,22 +49,12 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This script returns the list of items based on the preferred\n
-resources for events. It is intended to be used\n
-by ListField instances.\n
-"""\n
-return context.Ticket_getResourceItemList(portal_type=\'Data Event\')\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>form_id, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DataEvent_getResourceItemList</string> </value>
+            <value> <string>DataStream_saveDataStream</string> </value>
         </item>
       </dictionary>
     </pickle>

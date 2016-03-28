@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>description</string>
                 <string>title</string>
               </list>
             </value>
@@ -72,6 +73,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Upload a file that will REPLACE the current one, please be careful.</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_view_mode_file</string> </value>
                 </item>
@@ -85,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Upload file</string> </value>
+                    <value> <string>Upload file (this will ERASE existing data, please be careful)</string> </value>
                 </item>
               </dictionary>
             </value>
