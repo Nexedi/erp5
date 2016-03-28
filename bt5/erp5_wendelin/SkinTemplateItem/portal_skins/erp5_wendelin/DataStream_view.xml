@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>DataStream_saveDataStream</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

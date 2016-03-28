@@ -10,14 +10,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>css_class</string>
                 <string>description</string>
+                <string>hidden</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_file</string> </value>
+            <value> <string>my_append_file</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -54,6 +56,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -62,7 +74,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -73,8 +95,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Upload a file that will REPLACE the current one, please be careful.</string> </value>
+                    <value> <string>Upload a file to be appended to the current.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -85,15 +111,45 @@
                     <value> <string>Base_viewDMSFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Upload file (this will ERASE existing data, please be careful)</string> </value>
+                    <value> <string>Append file (this will append to existing data)</string> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: \'hidden_label\' if context.getSize() == 0 else \'\'</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: context.getSize() == 0</string> </value>
         </item>
       </dictionary>
     </pickle>
