@@ -101,11 +101,7 @@ class DataArray(BigFile):
     """
        Implement getSize interface for ndarray
     """
-    array = self.getArray()
-    if array is None:
-      return 0
-    else:
-      return self.getArray().nbytes
+    return self.getArray().nbytes
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getArrayShape')
   def getArrayShape(self):
@@ -142,8 +138,8 @@ class DataArray(BigFile):
     if range is not None:
       ranges = HTTPRangeSupport.parseRange(range)
 
-      array = self.getArray()
-      factor = array.nbytes / array.shape[0]
+      # get byte view of array because we interpret ranges in bytes
+      data = self.getArray()[:].view("uint8").ravel()
 
       if if_range is not None:
         # Only send ranges if the data isn't modified, otherwise send
@@ -205,8 +201,7 @@ class DataArray(BigFile):
               'bytes %d-%d/%d' % (start, end - 1, self.getSize()))
           RESPONSE.setStatus(206) # Partial content
 
-          # convert ranges from bytes to array indices
-          RESPONSE.write(array[start/factor:end/factor].tobytes())
+          RESPONSE.write(data[start:end].tobytes())
         else:
           boundary = choose_boundary()
 
@@ -240,8 +235,7 @@ class DataArray(BigFile):
                 'Content-Range: bytes %d-%d/%d\r\n\r\n' % (
                     start, end - 1, self.getSize()))
 
-            # convert ranges from bytes to array indices
-            RESPONSE.write(array[start/factor:end/factor].tobytes())
+            RESPONSE.write(data[start:end].tobytes())
 
           RESPONSE.write('\r\n--%s--\r\n' % boundary)
           return True

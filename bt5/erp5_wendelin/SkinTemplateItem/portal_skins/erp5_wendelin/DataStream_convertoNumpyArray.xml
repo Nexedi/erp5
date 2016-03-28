@@ -49,58 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  Get a chunks of data from a Data Stream, convert it to numpy array\n
-  and return proper start and end for next record.\n
-  \n
-  This script assumes stream has following format.\n
-  {dict1}{dict2}\n
-  {dict3}\n
-  \n
-  And it\'s possible that last chunk in its last line is incomplete dictionary \n
-  thus correction needed.\n
-  \n
-"""\n
-import json\n
-\n
-chunk_text = \'\'.join(chunk_list)\n
-#context.log(\'%s %s %s\' %(start, end, len(chunk_text)))\n
-\n
-# remove last line as it might be uncomplete and correct start and end offsets\n
-line_list = chunk_text.split(\'\\n\')\n
-last_line = line_list[-1]\n
-line_list.pop(-1)\n
-\n
-for line in line_list:\n
-  # must have proper format\n
-  assert line.endswith(\'}\')\n
-  assert line.startswith(\'{\')\n
-  \n
-  # fix \' -> "\n
-  line = line.replace("\'", \'"\')\n
-  \n
-  if line.count(\'{\') > 1:\n
-    # multiple concatenated dictionaries in one line, bad format ignore for now\n
-    pass \n
-  else:\n
-    d = json.loads(line)\n
-    # xxx: save this value as a Data Array identified by data_array_reference\n
-\n
-# start and enf offsets may not match existing record structure in stream\n
-# thus corrections in start and end offsets is needed thus we\n
-# return transformed values which is just last line length\n
-start -= len(last_line)\n
-end -= len(last_line)\n
-\n
-return start, end\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>chunk_list, start, end, data_array_reference=None</string> </value>
         </item>
