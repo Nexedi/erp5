@@ -1,8 +1,4 @@
-Data Array Line Existence Constraint | ConstraintType
-Data Array Line Existence Constraint | DataArrayLine
-Data Array Line | DataArrayLine
 Data Array | DataArray
-Data Event | DataEvent
 Data Operation | Predicate
 Data Product | DefaultImage
 Data Release | Predicate

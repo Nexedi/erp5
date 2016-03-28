@@ -20,10 +20,6 @@
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Data Event</type>
-  <workflow>edit_workflow</workflow>
- </chain>
- <chain>
   <type>Data Ingestion</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>

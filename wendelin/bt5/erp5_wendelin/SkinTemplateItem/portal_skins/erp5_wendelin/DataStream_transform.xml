@@ -49,54 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-""" \n
-  Read entire stream using activities either in a sequence or in a oarallel mode.\n
-  Pass stream\'s data to handler script  who can transform it.\n
-  Parameters:\n
-    * transform_script_id - the script which will transform data\n
-    * chunk_length - the length of a chunk\n
-    * data_array_reference - the reference of the output Data Array\n
-    * parallelize - try to transform in parallel or not, in this case\n
-      developer must carefully choose chunk_length to match record (s) size\n
-"""\n
-start = 0\n
-end  = chunk_length\n
-if not parallelize:\n
-  # sequential case\n
-  context.activate().DataStream_readChunkListAndTransform( \\\n
-    start, \\\n
-    end, \\\n
-    chunk_length, \\\n
-    transform_script_id, \\\n
-    data_array_reference,\\\n
-    recursive =1, \\\n
-    **kw)\n
-else:\n
-  # parallel case\n
-  total_size =  context.getSize()\n
-  while total_size > start:\n
-    start += chunk_length + 1\n
-    end += chunk_length +1\n
-    if end > total_size:\n
-      end = total_size\n
-      \n
-    # call transformation in an activity\n
-    context.activate(activity=\'SQLQueue\').DataStream_readChunkListAndTransform( \\\n
-      start, \\\n
-      end, \\\n
-      chunk_length, \\\n
-      transform_script_id, \\\n
-      data_array_reference,\\\n
-      recursive = 0, \\\n
-      **kw)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>chunk_length=1048576, transform_script_id=None, data_array_reference=None,parallelize=0, **kw</string> </value>
         </item>
