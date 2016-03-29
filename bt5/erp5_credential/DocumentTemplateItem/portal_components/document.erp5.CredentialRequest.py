@@ -75,6 +75,14 @@ class CredentialRequest(Ticket, EncryptedPasswordMixin):
           name_list.append(self.getFirstName())
         if self.getLastName() not in (None, ''):
           name_list.append(self.getLastName())
-        return ' '.join(name_list)
+        if name_list:
+          return ' '.join(name_list)
+        return self.getReference() or self.getId()
       else:
         return self.title
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'hasTitle')
+    def hasTitle(self):
+      return self.title or self.hasFirstName() or self.hasLastName()
+
