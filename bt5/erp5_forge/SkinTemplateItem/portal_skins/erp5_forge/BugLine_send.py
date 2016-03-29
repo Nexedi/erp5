@@ -9,7 +9,7 @@ if subject is None:
 if from_url is None:
   sender = context.getSourceValue()
   if sender is not None:
-    if sender.getTitle():
+    if sender.hasTitle():
       from_url = '"%s" <%s>' % (sender.getTitle(),
                             sender.getDefaultEmailText())
     else:
@@ -32,7 +32,7 @@ if to_url is None:
   for recipient in recipient_list:
     email = recipient.getDefaultEmailText()
     if email:
-      if recipient.getTitle():
+      if recipient.hasTitle():
         to_url_list.append('"%s" <%s>' % (recipient.getTitle(), email))
       else:
         to_url_list.append(email)
