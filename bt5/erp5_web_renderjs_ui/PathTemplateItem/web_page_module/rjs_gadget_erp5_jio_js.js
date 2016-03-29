@@ -202,6 +202,9 @@
           };
         });
     })
+    .declareMethod('get', function (id) {
+      return wrapJioCall(this, 'get', [id]);
+    })
     .declareMethod('getAttachment', function (id, name) {
       return wrapJioCall(this, 'getAttachment', [id, name, {format: "json"}]);
     })
