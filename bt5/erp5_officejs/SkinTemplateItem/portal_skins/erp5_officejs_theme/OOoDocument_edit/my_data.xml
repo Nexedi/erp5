@@ -262,7 +262,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.getPortalObject().restrictedTraverse(\'web_site_module/officejs_spreadsheet/rjsunsafe/gadget_ooffice.html\').absolute_url()</string> </value>
+            <value> <string>python: context.getPortalObject().restrictedTraverse(\'web_site_module/officejs_spreadsheet/rjsunsafe/ooffice/gadget_ooffice.html\').absolute_url()</string> </value>
         </item>
       </dictionary>
     </pickle>

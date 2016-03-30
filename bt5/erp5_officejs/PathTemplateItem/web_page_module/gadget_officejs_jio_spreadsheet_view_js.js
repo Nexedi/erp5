@@ -171,7 +171,7 @@
         })
         .push(function () {
           return gadget.declareGadget(
-            "rjsunsafe/gadget_ooffice.html",
+            "rjsunsafe/ooffice/gadget_ooffice.html",
             {
               scope: "my_text_content",
               sandbox: "iframe",
