@@ -19,7 +19,7 @@
     <script id="table-template" type="text/x-handlebars-template">
       <section class="ui-content-header-plain">
         <h3 class="ui-content-title ui-body-c" data-i18n="[last]{{definition_i18n}}">
-          <span class="ui-icon ui-icon-custom ui-icon-random">&nbsp;</span>
+          <span class="ui-icon ui-icon-custom ui-icon-{{definition_icon}}">&nbsp;</span>
           {{definition_title}}
         </h3>
       </section>
@@ -29,20 +29,6 @@
           <li><a data-i18n="{{i18n}}" class="ui-body-inherit" href="{{link}}">{{title}}</a></li>
         {{/each}}
       </ul>
-
-      {{#if action_tab_list}}
-        <section class="ui-content-header-plain">
-          <h3 class="ui-content-title ui-body-c" data-i18n="[last]{{section_i18n}}">
-            <span class="ui-icon ui-icon-custom ui-icon-random">&nbsp;</span>
-            {{section_title}}
-          </h3>
-        </section>
-        <ul data-role="listview" data-theme="c" data-inset="true" class="document-listview">
-        {{#each action_tab_list}}
-          <li><a data-i18n="{{i18n}}" class="ui-body-inherit" href="{{link}}">{{title}}</a></li>
-        {{/each}}
-        </ul>
-      {{/if}}
     </script>
 
   </head>
