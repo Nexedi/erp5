@@ -21,4 +21,10 @@ if request.form.has_key('dialog_id'):
 else:
   form_id = request.form['form_id']
 
-request.RESPONSE.redirect('%s/%s?%s' % (context.absolute_url(), form_id, make_query(kw)))
+url_params_string = make_query(kw)
+
+if len(url_params_string) > 2000:
+  # If we cannot redirect, then call the form directly.
+  return getattr(context, form_id)(**kw)
+
+request.RESPONSE.redirect('%s/%s?%s' % (context.absolute_url(), form_id, url_params_string))
