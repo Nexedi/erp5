@@ -45,7 +45,6 @@
       var gadget = this,
         erp5_document,
         result_list,
-        view_list,
         workflow_list,
         action_list,
         inner_html;
@@ -60,27 +59,11 @@
           erp5_document = result;
           workflow_list = erp5_document._links.action_workflow || [];
           action_list = erp5_document._links.action_object_action || [];
-          view_list = erp5_document._links.view;
-          if (view_list.constructor !== Array) {
-            view_list = [view_list];
-          }
           if (workflow_list.constructor !== Array) {
             workflow_list = [workflow_list];
           }
           if (action_list.constructor !== Array) {
             action_list = [action_list];
-          }
-          promise_list.push(gadget.getUrlFor({command: 'change', options: {
-            view: "view",
-            page: undefined,
-            editable: undefined
-          }}));
-          for (i = 0; i < view_list.length - 1; i += 1) {
-            promise_list.push(gadget.getUrlFor({command: 'change', options: {
-              view: view_list[i].href,
-              editable: true,
-              page: undefined
-            }}));
           }
           for (i = 0; i < workflow_list.length; i += 1) {
             promise_list.push(gadget.getUrlFor({command: 'change', options: {view: workflow_list[i].href, page: undefined, editable: undefined}}));
@@ -95,20 +78,11 @@
         })
         .push(function (all_result) {
           var i, j,
-            tab_list = [],
             workflow_action_list = [],
             action_tab_list = [];
 
           result_list = all_result;
-          j = 3;
-          for (i = 0; i < view_list.length - 1; i += 1) {
-            tab_list.push({
-              title: view_list[i].title,
-              link: all_result[j],
-              i18n: view_list[i].title
-            });
-            j += 1;
-          }
+          j = 2;
           for (i = 0; i < workflow_list.length; i += 1) {
             workflow_action_list.push({
               title: workflow_list[i].title,
@@ -126,19 +100,6 @@
             j += 1;
           }
           inner_html = table_template({
-            definition_title: "Views",
-            definition_i18n: "Views",
-            definition_icon: "eye",
-            documentlist: [{
-              title: view_list[0].title,
-              link: all_result[2]
-            }]
-          }) + table_template({
-            definition_title: "Editables",
-            definition_i18n: "Editables",
-            definition_icon: "edit",
-            documentlist: tab_list
-          }) + table_template({
             definition_title: "Workflow Transitions",
             documentlist: workflow_action_list,
             definition_i18n: "Workflow-Transitions",
