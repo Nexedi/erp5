@@ -80,14 +80,6 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
                       , PropertySheet.Task
                       )
 
-    def _setTitle(self, value):
-      """
-        Here we see that we must define a notion
-        of priority in the way fields are updated
-      """
-      if value != self.getTitle():
-        self.title = value
-
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTitle')
     def getTitle(self, **kw):
