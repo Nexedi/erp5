@@ -82,7 +82,7 @@ if not context.getStartDate():\n
   context.setStartDate(DateTime())\n
 \n
 context.portal_sms.activate(\n
-  queue="SQLQueue",\n
+  activity="SQLQueue",\n
   # We do not retry these activities not to send SMS multiple times\n
   max_retry=0,\n
   conflict_retry=False,\n
