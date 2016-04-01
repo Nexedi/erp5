@@ -1,7 +1,7 @@
 <html>
   <head>
-    <script type="text/javascript" src="http://localhost:2200/erp5/jquery/core/jquery.min.js"></script>
-    <script type="text/javascript" src="http://localhost:2200/erp5/jquery/ui/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" tal:attributes="src python: context.portal_url() + '/jquery/core/jquery.min.js'" src=""></script>
+    <script type="text/javascript" tal:attributes="src python: context.portal_url() + '/jquery/ui/js/jquery-ui.min.js'" src=""></script>
     <script type="text/javascript" src="http://evanplaice.github.io/jquery-csv/src/jquery.csv.js"></script>
     
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">
@@ -19,11 +19,13 @@
       $(document).ready(function () {
         $('#filter_button').on('click', function (){
           var data = $('form').serializeArray();
+          var url = $('form').data('portal-url');
+          
           $('#pivottablejs').html('Loading...');
-
+          
           $.ajax({
             type: "POST",
-            url: "http://localhost:2200/erp5/portal_skins/erp5_inventory_pandas/filterDataFrame?as_csv=True",
+            url: url + '/Base_filterInventoryDataFrame?as_csv=True',
             data: data,
             success: function (response) {
               var input = $.csv.toArrays(response);
@@ -51,7 +53,7 @@
     <h1>Integration between Pandas-based Inventory API and PivotTableJS</h1>
     <p><b>NOTE: for this protoype the code will use the Big Array object with title "Wendelin + Jupyter"</b></p>
     
-    <form>
+    <form tal:attributes="data-portal-url context/portal_url">
       <fieldset>
         <legend>Is accountable?</legend>
         <input type="radio" name="is_accountable" value="1" checked> Yes
