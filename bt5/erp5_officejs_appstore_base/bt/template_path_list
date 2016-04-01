@@ -1,0 +1,6 @@
+portal_categories/publication_section/**
+web_page_module/gadget_ojs_*
+web_site_module/officejs_app_template
+web_site_module/officejs_app_template/**
+web_site_module/officejs_appstore
+web_site_module/officejs_appstore/**
