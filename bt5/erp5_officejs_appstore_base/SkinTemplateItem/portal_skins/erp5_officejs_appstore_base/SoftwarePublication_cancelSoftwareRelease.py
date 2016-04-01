@@ -1,0 +1,3 @@
+software_release = context.SoftwarePublication_getRelatedSoftwareRelease()
+software_release.cancel()
+software_release.SoftwareRelease_cancelRelatedWebDocument()
