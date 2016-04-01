@@ -19,11 +19,13 @@
       $(document).ready(function () {
         $('#filter_button').on('click', function (){
           var data = $('form').serializeArray();
+          var url = $('form').data('portal-url');
+          
           $('#pivottablejs').html('Loading...');
-
+          
           $.ajax({
             type: "POST",
-            url: "http://localhost:2200/erp5/portal_skins/erp5_inventory_pandas/filterDataFrame?as_csv=True",
+            url: url + '/portal_skins/erp5_inventory_pandas/Base_filterInventoryDataFrame?as_csv=True',
             data: data,
             success: function (response) {
               var input = $.csv.toArrays(response);
@@ -51,7 +53,7 @@
     <h1>Integration between Pandas-based Inventory API and PivotTableJS</h1>
     <p><b>NOTE: for this protoype the code will use the Big Array object with title "Wendelin + Jupyter"</b></p>
     
-    <form>
+    <form tal:attributes="data-portal-url context/portal_url">
       <fieldset>
         <legend>Is accountable?</legend>
         <input type="radio" name="is_accountable" value="1" checked> Yes
