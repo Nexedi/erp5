@@ -13,6 +13,9 @@
       });
   }
 
+  // MESSAGE_FRESHNESS 30 minutes
+  var MESSAGE_FRESHNESS = 1800000;
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // ready
@@ -62,7 +65,11 @@
             index,
             displayed_text = '',
             is_incoming = true,
-            is_handled;
+            is_handled,
+            previous_message_date,
+            is_old,
+            message_date,
+            message_is_incoming;
 
           function appendText(txt, incoming) {
             var li, pre;
@@ -81,36 +88,53 @@
             }
           }
 
+          function appendDate(date) {
+            var li,
+              i_element;
+            li = document.createElement("li");
+            li.setAttribute("style", "text-align: center; padding-left: 5em; padding: 0;");
+            i_element = document.createElement("i");
+            i_element.setAttribute("style", "white-space: pre-wrap; padding: 0.5em 0 0.5em 0; display: block;");
+            i_element.textContent = date.toLocaleString();
+            li.appendChild(i_element);
+            ul.appendChild(li);
+          }
+
           for (i = 0; i < line_list.length - 1; i += 1) {
             line = line_list[i];
             is_handled = false;
-
+            is_old = false;
             if (line.indexOf('[') === 0) {
               index = line.indexOf('] ');
               if (index !== -1) {
+                // Check message freshness
+                message_date = new Date(line.substring(1, index));
+                if (previous_message_date === undefined) {
+                  previous_message_date = new Date(message_date - MESSAGE_FRESHNESS - 2);
+                }
+                if (message_date - previous_message_date > MESSAGE_FRESHNESS) {
+                  is_old = true;
+                }
                 // Check direction
                 tmp_line = line.substring(index + 2);
                 if (tmp_line.indexOf('> ') === 0) {
-                  line = tmp_line.substring(2);
-                  // Outgoing
-                  if (is_incoming) {
-                    appendText(displayed_text, is_incoming);
-                    is_incoming = false;
-                    displayed_text = line + '\n';
-                    is_handled = true;
-                  }
+                  message_is_incoming = false;
                 } else if (tmp_line.indexOf('< ') === 0) {
-                  line = tmp_line.substring(2);
-                  // Incoming
-                  if (!is_incoming) {
-                    appendText(displayed_text, is_incoming);
-                    is_incoming = true;
-                    displayed_text = line + '\n';
-                    is_handled = true;
-                  }
+                  message_is_incoming = true;
+                }
+                line = tmp_line.substring(2);
+                if (message_is_incoming !== is_incoming || is_old) {
+                  appendText(displayed_text, is_incoming);
+                  is_incoming = message_is_incoming;
+                  is_handled = true;
+                  displayed_text = line + '\n';
+                }
+                if (is_old) {
+                  appendDate(message_date);
                 }
               }
             }
+            previous_message_date = message_date;
 
             if (!is_handled) {
               displayed_text += line + '\n';
