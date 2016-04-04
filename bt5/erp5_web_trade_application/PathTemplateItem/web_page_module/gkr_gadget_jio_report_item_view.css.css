@@ -1,0 +1,182 @@
+.ui-content-section-nopad {
+  border: 0 none;
+  padding: 0;
+}
+
+
+.ui-report-table tbody tr td {
+  text-align: right;
+}
+
+
+html.ui-mobile .ui-report-table .indent td,
+html.ui-mobile .ui-report-table .indent th {
+  font-style: italic;
+  font-size: .8em;
+}
+.ui-report-table .indent th {
+  padding-left: 2em;
+}
+html.ui-mobile .ui-report-table .headline td, 
+html.ui-mobile .ui-report-table .headline th {
+    font-weight: 600;
+}
+
+html.ui-mobile .ui-report-table tr td:last-child {
+  width: 3em;
+  font-size: .8em;
+}
+
+@media (max-width: 40em) {
+  .ui-report-table tbody tr td {
+    text-align: inherit;
+  }
+}
+.graph-container {
+  position: relative;
+  height:500px;
+}
+.graph-element {
+  position: absolute;
+  width: 100%;
+  left: 10px;
+  right: 10px;
+  top: 40px;
+  bottom: 10px;
+  overflow: hidden;
+}
+.graph-element > div {
+  margin-top: -2px;
+}
+
+
+.graph-element-price {
+  position: absolute;
+  width: 100%;
+  left: 10px;
+  right: 10px;
+  top: 40px;
+  bottom: 10px;
+  overflow: hidden;
+}
+.graph-element-price > div {
+  margin-top: -2px;
+}
+
+
+
+.dygraph-legend > span {
+  display: block;
+}
+.dygraph-legend > span b span {
+  display: inline-block;
+}
+      
+      
+      
+.ui-report-table th, .ui-report-table td {
+  line-height: 1.5em;
+  text-align: left;
+  padding: .4em .25em;
+  vertical-align: middle;
+}
+
+@media (max-width: 62em) {
+  html .ui-report-table tbody tr td:first-child, .ui-report-table tbody tr th:first-child {
+    line-height: 1em;
+    padding-bottom: 0;
+  }
+}
+
+/* =========================================================================*/
+/* ======================== Custom Overwrites ============================= */
+/* =========================================================================*/
+/* force padding-top on div.ui-page */
+
+
+
+
+/* hide button background, borders, hardcode dimensions */
+div.custom-iframe-loader {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border: 0 none;
+  background: 0 none;
+  background-image: none !important;
+  background-color: transparent;
+  min-width: 60%;
+  min-height: 50px;
+}
+.italic {
+  font-style: italic;
+}
+.align-center {
+  text-align: center;
+}
+.xl {
+  font-size: 2em;
+}
+.l {
+  font-size: 1em;
+}
+.m {
+  font-size: .8em;
+}
+.s {
+  font-size: .6em;
+}
+.middle {
+  vertical-align: middle;
+}
+.fade {
+  opacity: .25;
+}
+.turq {
+  color: turquoise;
+}
+.orange {
+  color: orange;
+}
+.custom-icongrid {
+  max-width: 80%;
+  margin: 0 auto;
+}
+@media (min-width: 48em) {
+  .custom-icongrid {
+    max-width: 50%;
+    margin: 0 auto;
+  }
+}
+.custom-hr {
+  max-width: 50%;
+  color: #e6e6e6;
+  opacity: .25;
+}
+
+.ui-grid-container > ul > li > iframe {
+  width: 99%  !important;
+}
+
+/* ==================== More overrides from porting ========================= */
+/* fix panel listview margin */
+html .ui-panel .ui-content > .ui-listview {
+  margin: -1em;
+}
+
+/* fix width of content sections */
+.ui-content-header-section,
+.ui-content-section {
+  max-width: 85%;
+
+}
+.ui-content-header-plain {
+  max-width: 85%;
+}
+
+/* fix padding of content header and section */
+.ui-content-header-section ~ .ui-content-section {
+  padding-top: .5em;
+}
+
+

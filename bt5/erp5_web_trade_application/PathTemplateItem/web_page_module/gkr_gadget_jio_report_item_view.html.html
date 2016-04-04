@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html> 
+  <head>
+    <title>Report</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="dygraph.js" type="text/javascript"></script>
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="URI.js" type="text/javascript"></script>
+    <script src="jquery.js" type="text/javascript"></script>
+    <script src="jquerymobile.js" type="text/javascript"></script>
+    <script src="gadget_gkr_jio_report_item_view.js" type="text/javascript"></script>
+    <script src="excellentexport.js" type="text/javascript"></script>
+    
+    <link rel="stylesheet" href="gadget_gkr_jio_report_item_view.css">
+
+   
+   
+   <script class="daily_report_template" type="text/x-handlebars-template">
+    <div class="ui-mobile-viewport ui-overlay-a">
+       <article class="ui-content ui-body-c">
+         <section class="ui-content-header-plain ">
+           <h3 class="ui-icon ui-icon-calendar ui-content-title ui-body-c" data-i18n="Daily Statement" >
+           </h3>
+           <h3 class="ui-content-title ui-body-c">{{Date}}</h3>
+        <table class="ui-body-c ui-table-inset ui-report-table" id="daily_report">
+          <thead>
+            <tr>
+              <th></th>
+              <th data-i18n="Total Price"> Total Price</th>
+              <th data-i18n="Total Quantity(Kg)"> Total Quantity </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="headline">
+              <th data-i18n="Production"> Production</th>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr class="indent">
+              <th data-i18n="Latex"> Latex</th>
+              <td>/</td>
+              <td>{{production_latex_total_quantity}}</td>
+             
+            </tr>
+            <tr class="indent">
+              <th data-i18n="Rubber"> Rubber</th>
+              <td>/</td>
+              <td>{{production_rubber_total_quantity}}</td>
+             
+            </tr>
+
+            <tr class="headline">
+              <th data-i18n="Purchase Of Product"> Purchase Of Product</th>
+              <td></td>
+              <td></td>
+             
+            </tr>
+            <tr class="indent">
+              <th data-i18n="Latex"> Latex</th>
+              <td>{{purchase_product_latex_total_price}}</td>
+              <td>{{purchase_product_latex_total_quantity}}</td>
+            
+            </tr>
+            <tr class="indent">
+              <th data-i18n="Rubber"> Rubber</th>
+              <td>{{purchase_product_rubber_total_price}}</td>
+              <td>{{purchase_product_rubber_total_quantity}}</td>
+             
+            </tr>
+            
+
+            <tr class="headline">
+              <th data-i18n="Purchase Of Raw Material"> Purchase of Raw Material</th>
+              <td></td>
+              <td></td>
+              
+            </tr>
+
+            <tr class="indent">
+              <th data-i18n="Material"> Material</th>
+              <td>{{purchase_material_total_price}}</td>
+              <td>{{purchase_material_total_quantity}}</td>
+            
+            </tr>
+            
+            <tr class="headline">
+              <th data-i18n="Sale"></th>
+              <td></td>
+              <td></td>
+            
+            </tr>
+            
+            <tr class="indent">
+              <th data-i18n="Sale Of Latex"> Sale Of Latex</th>
+              <td>{{sale_latex_total_price}}</td>
+              <td>{{sale_latex_total_quantity}}</td>
+             
+            </tr>
+            
+            <tr class="indent">
+              <th data-i18n="Sale Of Rubber"> Sale Of Rubber</th>
+              <td>{{sale_rubber_total_price}}</td>
+              <td>{{sale_rubber_total_quantity}}</td>
+              
+            </tr>
+            
+            <tr class="indent">
+              <th data-i18n="Sale Of Material"> Sale Of Material</th>
+              <td>{{sale_material_total_price}}</td>
+              <td>{{sale_material_total_quantity}}</td>
+              
+            </tr>
+          </tbody>
+        </table>
+        <button type="submit" data-i18n="Export To Excel"></button>
+      </section>
+      </div>
+   </script>
+   
+  
+  <script class="monthly_report_template" type="text/x-handlebars-template">
+    
+   <section class="ui-body-c ui-content-section ui-content-section-nopad ui-grid-container ui-responsive">
+        <table class="ui-body-c ui-table-inset ui-report-table" id="monthly_report">
+         <thead>
+          <tr>
+            <th rowspan="2">Date</th>
+            <th rowspan="2">production of latex</th>
+            <th rowspan="2">production of rubber</th>
+            <th rowspan="2">purchase of latex</th>
+            <th rowspan="2">purchase of rubber</th>
+            <th rowspan="2">purchase of raw material</th>
+            <th rowspan="2">sale of latex</th>
+            <th rowspan="2">sale of rubber</th>
+            <th rowspan="2">sale of material</th>
+          </tr>
+         </thead>
+         <tbody>
+          {{#each value}}
+          <tr>
+            <th>{{date}}</th>
+            <td>{{production_of_latex}}</td>
+            <td>{{production_of_rubber}}</td>
+            <td>{{purchase_of_latex}}</td>
+            <td>{{purchase_of_rubber}}</td>
+            <td>{{purchase_of_raw_material}}</td>
+            <td>{{sale_of_latex}}</td>
+            <td>{{sale_of_rubber}}</td>
+            <td>{{sale_of_material}}</td>
+          </tr>   
+          {{/each}}
+         </tbody>
+         <button type="submit" data-i18n="Export To Excel"></button>
+      </table>
+      
+    </section>
+  </script>
+  
+  
+  
+     
+  
+  <script class="monthly_report_price_template" type="text/x-handlebars-template">
+    
+   <section class="ui-body-c ui-content-section ui-content-section-nopad ui-grid-container ui-responsive">
+        <table class="ui-body-c ui-table-inset ui-report-table" id="monthly_price_report">
+         <thead>
+          <tr>
+            <th rowspan="2">Date</th>
+            <th rowspan="2">purchase of latex</th>
+            <th rowspan="2">purchase of rubber</th>
+            <th rowspan="2">purchase of raw material</th>
+            <th rowspan="2">sale of latex</th>
+            <th rowspan="2">sale of rubber</th>
+            <th rowspan="2">sale of material</th>
+          </tr>
+         </thead>
+         <tbody>
+          {{#each value}}
+          <tr>
+            <th>{{date}}</th>
+            <td>{{purchase_of_latex}}</td>
+            <td>{{purchase_of_rubber}}</td>
+            <td>{{purchase_of_raw_material}}</td>
+            <td>{{sale_of_latex}}</td>
+            <td>{{sale_of_rubber}}</td>
+            <td>{{sale_of_material}}</td>
+          </tr>   
+          {{/each}}
+         </tbody>
+        <button type="submit" data-i18n="Export To Excel"></button>
+      </table>
+     
+     
+
+    </section>
+  </script>
+  </head>
+
+  <body>
+     <form class="top" target="_blank">
+     <div class="report_container">
+     </div>
+      
+    <section class="ui-content-header-plain">
+        <h3 class="ui-content-title ui-body-c">
+          Monthly Quantity Report
+          <span class="ui-icon ui-icon-custom ui-icon-table">&nbsp;</span>
+        </h3>
+      </section>
+     <section class="ui-body-c ui-content-section ui-grid-container ui-responsive">
+        <div class="graph-container">
+          <div class="graph-element">
+          </div>
+         </div>
+       <ul>
+          <li>
+            <p>
+              Total quantity
+            </p>
+          </li>
+        </ul>
+       </section>
+     <section class="monthly_table">
+     </section>
+  
+     <section class="ui-content-header-plain">
+        <h3 class="ui-content-title ui-body-c">
+          Monthly Price Report
+          <span class="ui-icon ui-icon-custom ui-icon-table">&nbsp;</span>
+        </h3>
+      </section>
+     <section class="ui-body-c ui-content-section ui-grid-container ui-responsive">
+        <div class="graph-container">
+          <div class="graph-element-price">
+          </div>
+         </div>
+       <ul>
+          <li>
+            <p>
+              Total Price
+            </p>
+          </li>
+        </ul>
+       </section>
+     <section class="monthly_table_price">
+     </section>
+    
+    </form>
+  
+  </body>
+</html>

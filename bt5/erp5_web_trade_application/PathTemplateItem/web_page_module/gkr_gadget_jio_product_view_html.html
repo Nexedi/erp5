@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Acquisition App Product View</title>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="gadget_global.js" ></script>
+    <script src="handlebars.js"></script>
+
+    <script class="view-product-template" type="text/x-handlebars-template">
+        <form>
+
+          <div class="left">
+
+            <div class="ui-field-contain">
+              <label data-i18n="Title">Title</label>
+              <input type="text" data-wrapper-class="ui-state-readonly" readonly value="{{title}}">
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Product or Material Line">Product or Material Line</label>
+              <input type="text" data-wrapper-class="ui-state-readonly" readonly value="{{product_line_title}}">
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Quantity Unit">Quantity Unit</label>
+              <input type="text" data-wrapper-class="ui-state-readonly" readonly value="{{quantity_unit_title}}">
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Reference">Reference</label>
+              <input type="text" data-wrapper-class="ui-state-readonly" readonly value="{{reference}}">
+            </div>
+
+            <a href="Base_redirectTo/{{product_path}}/Resource_viewInventory?reset=1" target="_blank" data-i18n="Stock">Stock</a>
+
+          </div>
+
+        </form>
+    </script>
+
+    <script src="gadget_gkr_jio_product_view.js"></script>
+
+  </head>
+
+  <body>
+  </body>
+</html>
