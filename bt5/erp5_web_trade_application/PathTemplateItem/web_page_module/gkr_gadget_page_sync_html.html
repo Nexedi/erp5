@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Acquisition App Sync Page</title>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="handlebars.js"></script>
+    <script src="gadget_global.js" ></script>
+
+    <script id="page-template" type="text/x-handlebars-template">
+      <div class="ui-grid-b ui-responsive">
+        <div class="ui-block-a"></div>
+        <div class="ui-block-b">
+          <form class="synchro-form">
+            <input data-inline="true" type="submit" value="Launch Synchronisation" data-i18n="[value]Launch Synchronisation" data-theme="b">
+          </form>
+        </div>
+        <div class="ui-block-c"></div>
+        
+        <a href="#page=sync_log" data-i18n="Sync Log">Sync Log</a>
+        
+      </div>
+    </script>
+
+    <script src="gadget_gkr_page_sync.js"></script>
+
+  </head>
+
+  <body>
+  </body>
+</html>

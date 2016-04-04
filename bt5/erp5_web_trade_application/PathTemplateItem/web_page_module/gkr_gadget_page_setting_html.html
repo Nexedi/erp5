@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Acquisition App Setting</title>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="gadget_global.js" ></script>
+    <script src="handlebars.js"></script>
+    <script src="gkr_js_cookie.js"></script>
+
+    <script class="view-setting-template" type="text/x-handlebars-template">
+      <div class="ui-grid-b ui-responsive">
+        <div class="ui-block-a"></div>
+        <div class="ui-block-b">
+
+          <form class="view-setting-form">
+
+            <div class="ui-field-contain">
+              <label data-i18n="Login">Login</label>
+              <input type="text" name="jid" placeholder="Ex: john" value="{{jid}}">
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Password">Password</label>
+              <input type="password" name="passwd" placeholder="Ex: A1bcF$99" value="">
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Language">Language</label>
+              <div>
+                <input type="radio" id="language_zh" name="language" value="zh">
+                <label for="language_zh" data-i18n="Chinese">Chinese</label>
+                <input type="radio" id="language_th" name="language" value="th">
+                <label for="language_th" data-i18n="Thai">Thai</label>
+                <input type="radio" id="language_ms" name="language" value="ms">
+                <label for="language_ms" data-i18n="Malay">Malay</label>
+                <input type="radio" id="language_en" name="language" value="en">
+                <label for="language_en" data-i18n="English">English</label>
+              </div>
+            </div>
+
+            <input data-inline="true" type="submit" name="save" value="Save" data-theme="b" data-i18n="[value]Save">
+
+          </form>
+
+          <form class="view-advanced-setting-form">
+            <input data-inline="true" type="button" name="reset_database" value="Reset Database" data-theme="b" data-i18n="[value]Reset Database">
+            <input data-inline="true" type="button" name="update_application" value="Update Application" data-theme="b" data-i18n="[value]Update Application">
+            <a data-role="button" data-theme="b" href="Base_goToFrontendSelector" target="frontend_selector" data-i18n="Go To Frontend Selector">Go To Frontend Selector</a>
+          </form>
+
+        </div>
+        <div class="ui-block-c"></div>
+      </div>
+    </script>
+
+    <script src="gadget_gkr_page_setting.js"></script>
+
+  </head>
+
+  <body>
+  </body>
+</html>

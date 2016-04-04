@@ -1,0 +1,428 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Acquisition App Inventory Move Record Module Add Inventory Move Record</title>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="gadget_global.js" ></script>
+    <script src="handlebars.js"></script>
+    <script src="gadget_gkr_jio_inventory_move_record_module_add_inventory_move_record.js"></script>
+
+    <script class="new-inventory-move-record-template" type="text/x-handlebars-template">
+      <div class="ui-grid-b ui-responsive">
+        <div class="ui-block-a"></div>
+        <div class="ui-block-b">
+
+          <form class="new-inventory-move-record-form">
+
+            <div class="ui-field-contain">
+              <label data-i18n="Inventory Organisation">Inventory Organisation</label>
+              <input type="text" name="previousowner" value="{{previousowner}}" readonly>
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Output Warehouse Or Bin">Output Warehouse Or Bin</label>
+              <input type="text" name="previouslocation" value="{{previouslocation}}" list="list_previouslocationtitle">
+            </div>
+            <datalist id="list_previouslocationtitle"></datalist>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Input Warehouse Or Bin">Input Warehouse Or Bin</label>
+              <input type="text" name="nextlocation" value="{{nextlocation}}" list="list_nextlocationtitle">
+            </div>
+            <datalist id="list_nextlocationtitle"></datalist>
+
+            <div class="ui-field-contain">
+              <label class="gkr_required" data-i18n="Product or Material Title">Product or Material Title</label>
+              <input class="gkr_required" type="text" name="product" required list="list_producttitle">
+            </div>
+            <datalist id="list_producttitle"></datalist>
+
+            <div class="ui-field-contain">
+              <label class="gkr_required" data-i18n="DRC(%)">DRC(%)</label>
+              <input class="gkr_required" type="number" name="drc" value="100" step="0.0001" required>
+            </div>
+
+            <div class="ui-field-contain">
+              <label class="gkr_required" data-i18n="Dry Quantity">Dry Quantity</label>
+              <input class="gkr_required" type="number" name="dry_quantity" step="0.00000001" required>
+            </div>
+
+            <div class="ui-field-contain">
+              <label class="gkr_required" data-i18n="Wet Quantity">Wet Quantity</label>
+              <input class="gkr_required" type="number" name="wet_quantity" step="0.00000001" required>
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Quantity Unit">Quantity Unit</label>
+              <select class="new-performed-task" name="quantity_unit" required>
+                <option value=""></option>
+              </select>
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Batch">Batch</label>
+              <input type="text" name="batch">
+            </div>
+
+            <fieldset name="line2">
+              <hr>
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Product or Material Title">Product or Material Title</label>
+                <input class="gkr_required" type="text" name="product2" list="list_producttitle">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="DRC(%)">DRC(%)</label>
+                <input class="gkr_required" type="number" name="drc2" value="100" step="0.0001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Dry Quantity">Dry Quantity</label>
+                <input class="gkr_required" type="number" name="dry_quantity2" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Wet Quantity">Wet Quantity</label>
+                <input class="gkr_required" type="number" name="wet_quantity2" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Quantity Unit">Quantity Unit</label>
+                <select class="new-performed-task" name="quantity_unit2">
+                  <option value=""></option>
+                </select>
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Batch">Batch</label>
+                <input type="text" name="batch2">
+              </div>
+            </fieldset>
+
+            <fieldset name="line3">
+              <hr>
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Product or Material Title">Product or Material Title</label>
+                <input class="gkr_required" type="text" name="product3" list="list_producttitle">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="DRC(%)">DRC(%)</label>
+                <input class="gkr_required" type="number" name="drc3" value="100" step="0.0001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Dry Quantity">Dry Quantity</label>
+                <input class="gkr_required" type="number" name="dry_quantity3" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Wet Quantity">Wet Quantity</label>
+                <input class="gkr_required" type="number" name="wet_quantity3" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Quantity Unit">Quantity Unit</label>
+                <select class="new-performed-task" name="quantity_unit3">
+                  <option value=""></option>
+                </select>
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Batch">Batch</label>
+                <input type="text" name="batch3">
+              </div>
+            </fieldset>
+
+            <fieldset name="line4">
+              <hr>
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Product or Material Title">Product or Material Title</label>
+                <input class="gkr_required" type="text" name="product4" list="list_producttitle">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="DRC(%)">DRC(%)</label>
+                <input class="gkr_required" type="number" name="drc4" value="100" step="0.0001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Dry Quantity">Dry Quantity</label>
+                <input class="gkr_required" type="number" name="dry_quantity4" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Wet Quantity">Wet Quantity</label>
+                <input class="gkr_required" type="number" name="wet_quantity4" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Quantity Unit">Quantity Unit</label>
+                <select class="new-performed-task" name="quantity_unit4">
+                  <option value=""></option>
+                </select>
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Batch">Batch</label>
+                <input type="text" name="batch4">
+              </div>
+            </fieldset>
+
+            <fieldset name="line5">
+              <hr>
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Product or Material Title">Product or Material Title</label>
+                <input class="gkr_required" type="text" name="product5" list="list_producttitle">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="DRC(%)">DRC(%)</label>
+                <input class="gkr_required" type="number" name="drc5" value="100" step="0.0001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Dry Quantity">Dry Quantity</label>
+                <input class="gkr_required" type="number" name="dry_quantity5" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Wet Quantity">Wet Quantity</label>
+                <input class="gkr_required" type="number" name="wet_quantity5" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Quantity Unit">Quantity Unit</label>
+                <select class="new-performed-task" name="quantity_unit5">
+                  <option value=""></option>
+                </select>
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Batch">Batch</label>
+                <input type="text" name="batch5">
+              </div>
+            </fieldset>
+
+            <fieldset name="line6">
+              <hr>
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Product or Material Title">Product or Material Title</label>
+                <input class="gkr_required" type="text" name="product6" list="list_producttitle">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="DRC(%)">DRC(%)</label>
+                <input class="gkr_required" type="number" name="drc6" value="100" step="0.0001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Dry Quantity">Dry Quantity</label>
+                <input class="gkr_required" type="number" name="dry_quantity6" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Wet Quantity">Wet Quantity</label>
+                <input class="gkr_required" type="number" name="wet_quantity6" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Quantity Unit">Quantity Unit</label>
+                <select class="new-performed-task" name="quantity_unit6">
+                  <option value=""></option>
+                </select>
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Batch">Batch</label>
+                <input type="text" name="batch6">
+              </div>
+            </fieldset>
+
+            <fieldset name="line7">
+              <hr>
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Product or Material Title">Product or Material Title</label>
+                <input class="gkr_required" type="text" name="product7" list="list_producttitle">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="DRC(%)">DRC(%)</label>
+                <input class="gkr_required" type="number" name="drc7" value="100" step="0.0001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Dry Quantity">Dry Quantity</label>
+                <input class="gkr_required" type="number" name="dry_quantity7" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Wet Quantity">Wet Quantity</label>
+                <input class="gkr_required" type="number" name="wet_quantity7" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Quantity Unit">Quantity Unit</label>
+                <select class="new-performed-task" name="quantity_unit7">
+                  <option value=""></option>
+                </select>
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Batch">Batch</label>
+                <input type="text" name="batch7">
+              </div>
+            </fieldset>
+
+            <fieldset name="line8">
+              <hr>
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Product or Material Title">Product or Material Title</label>
+                <input class="gkr_required" type="text" name="product8" list="list_producttitle">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="DRC(%)">DRC(%)</label>
+                <input class="gkr_required" type="number" name="drc8" value="100" step="0.0001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Dry Quantity">Dry Quantity</label>
+                <input class="gkr_required" type="number" name="dry_quantity8" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Wet Quantity">Wet Quantity</label>
+                <input class="gkr_required" type="number" name="wet_quantity8" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Quantity Unit">Quantity Unit</label>
+                <select class="new-performed-task" name="quantity_unit8">
+                  <option value=""></option>
+                </select>
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Batch">Batch</label>
+                <input type="text" name="batch8">
+              </div>
+            </fieldset>
+
+            <fieldset name="line9">
+              <hr>
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Product or Material Title">Product or Material Title</label>
+                <input class="gkr_required" type="text" name="product9" list="list_producttitle">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="DRC(%)">DRC(%)</label>
+                <input class="gkr_required" type="number" name="drc9" value="100" step="0.0001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Dry Quantity">Dry Quantity</label>
+                <input class="gkr_required" type="number" name="dry_quantity9" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Wet Quantity">Wet Quantity</label>
+                <input class="gkr_required" type="number" name="wet_quantity9" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Quantity Unit">Quantity Unit</label>
+                <select class="new-performed-task" name="quantity_unit9">
+                  <option value=""></option>
+                </select>
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Batch">Batch</label>
+                <input type="text" name="batch9">
+              </div>
+            </fieldset>
+
+            <fieldset name="line10">
+              <hr>
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Product or Material Title">Product or Material Title</label>
+                <input class="gkr_required" type="text" name="product10" list="list_producttitle">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="DRC(%)">DRC(%)</label>
+                <input class="gkr_required" type="number" name="drc10" value="100" step="0.0001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Dry Quantity">Dry Quantity</label>
+                <input class="gkr_required" type="number" name="dry_quantity10" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label class="gkr_required" data-i18n="Wet Quantity">Wet Quantity</label>
+                <input class="gkr_required" type="number" name="wet_quantity10" step="0.00000001">
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Quantity Unit">Quantity Unit</label>
+                <select class="new-performed-task" name="quantity_unit10">
+                  <option value=""></option>
+                </select>
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Batch">Batch</label>
+                <input type="text" name="batch10">
+              </div>
+            </fieldset>
+
+            <button type="button" name="add_line" data-i18n="Add Line">Add Line</button>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Input Date">Input Date</label>
+              <input type="date" name="date" value="{{date}}" required>
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Comment">Comment</label>
+              <textarea name="comment"></textarea>
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Sync Method">Sync Method</label>
+              <div>
+                <input type="radio" id="sync_flag_yes" name="sync_flag" value="1" checked>
+                <label for="sync_flag_yes" data-i18n="Ready To Sync">Ready To Sync</label>
+                <input type="radio" id="sync_flag_no" name="sync_flag" value="">
+                <label for="sync_flag_no" data-i18n="Do Not Sync">Do Not Sync</label>
+              </div>
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Input User Name">Input User Name</label>
+              <input type="text" name="inputusername" value="" readonly>
+            </div>
+
+            <input data-inline="true" type="submit" value="Add" data-theme="b" data-i18n="[value]Add">
+            <input type="hidden" name="hidden_in_html5_app_flag" value="0" required>
+
+          </form>
+        </div>
+        <div class="ui-block-c"></div>
+      </div>
+    </script>
+
+
+  </head>
+
+  <body>
+  </body>
+</html>
