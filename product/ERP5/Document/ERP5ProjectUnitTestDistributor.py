@@ -385,9 +385,9 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     test_suite = self._getTestSuiteFromTitle(test_suite_title)
     cluster_configuration = test_suite.getClusterConfiguration() or '{}'
     try:
-      generated_configuration = [json.loads(cluster_configuration)]
+      generated_configuration = {"configuration_list": [json.loads(cluster_configuration)]}
     except ValueError:
-      generated_configuration = [{}]
+      generated_configuration = {"configuration_list": [{}]}
     if batch_mode:
       return generated_configuration
     return json.dumps(generated_configuration)
