@@ -49,41 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-configuration_save = context.restrictedTraverse(configuration_save_url)\n
-company_email = kw[\'default_email_text\']\n
-group = kw[\'group\']\n
-\n
-organisation_configurator_item = configuration_save.addConfigurationItem(\n
-                                     "Organisation Configurator Item", **kw)\n
-\n
-# store globally preferred group\n
-context.setGlobalConfigurationAttr(group_id=group)\n
-\n
-# store globally company\'s email\n
-context.setGlobalConfigurationAttr(company_email=company_email)\n
-\n
-# store globally company\'s configurator item which we can use later to reconfigure\n
-context.setGlobalConfigurationAttr(organisation_configurator_item=organisation_configurator_item.getRelativeUrl())\n
-\n
-# price currency contains all currency info like iso code& precision \';\' separated\n
-currency_info_list = kw[\'price_currency_list\']\n
-for currency_info in currency_info_list:\n
-  currency_reference, currency_base_unit_quantity, currency_title  = \\\n
-      currency_info.split(\';\')\n
-  configuration_save.addConfigurationItem(\n
-      "Currency Configurator Item",\n
-      reference = currency_reference,\n
-      base_unit_quantity = currency_base_unit_quantity,\n
-      title = currency_title,)\n
-context.setGlobalConfigurationAttr(default_currency=currency_reference)\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>configuration_save_url=None, **kw</string> </value>
         </item>

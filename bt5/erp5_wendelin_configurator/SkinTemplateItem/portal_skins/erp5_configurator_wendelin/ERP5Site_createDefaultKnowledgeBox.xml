@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>configuration_save_url, configuration_spreadsheet, **kw</string> </value>
+            <value> <string>knowledge_pad, **activate_kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessConfiguration_configureWendelinCategories</string> </value>
+            <value> <string>ERP5Site_createDefaultKnowledgeBox</string> </value>
         </item>
       </dictionary>
     </pickle>
