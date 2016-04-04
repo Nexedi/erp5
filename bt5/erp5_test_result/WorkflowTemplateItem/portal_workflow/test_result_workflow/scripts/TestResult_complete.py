@@ -11,7 +11,11 @@ if test_result.getPortalType() == 'Test Result':
                  skips=0)
   for line in test_result.objectValues(portal_type='Test Result Line'):
     for prop in edit_kw:
-      edit_kw[prop] = edit_kw[prop] + line.getProperty(prop, 0)
+      try:
+        edit_kw[prop] = edit_kw[prop] + line.getProperty(prop, 0)
+      except TypeError as e:
+        context.log("", repr(e))
+        has_unknown_result = True
     has_unknown_result = has_unknown_result or line.getStringIndex() == 'UNKNOWN'
   if has_unknown_result or edit_kw['errors'] or edit_kw['failures']:
     status = 'FAIL'
