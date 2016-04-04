@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>l =  context.BusinessConfiguration_getCategoriesSpreadsheetConfiguratorItem().getCategoryTitleItemList(category_id)\n
-l.sort()\n
-return l\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>category_id</string> </value>
         </item>
