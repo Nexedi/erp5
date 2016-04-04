@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Acquisition App Purchase Record View</title>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="gadget_global.js" ></script>
+    <script src="handlebars.js"></script>
+
+    <script class="view-organisation-template" type="text/x-handlebars-template">
+        <form>
+
+          <div class="left">
+
+            <div class="ui-field-contain">
+              <label data-i18n="Title">Title</label>
+              <input type="text" data-wrapper-class="ui-state-readonly" readonly value="{{title}}">
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Default Telephone">Default Telephone</label>
+              <input type="text" data-wrapper-class="ui-state-readonly" readonly value="{{default_telephone_coordinate_text}}">
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Default Address City">Default Address City</label>
+              <input type="text" data-wrapper-class="ui-state-readonly" readonly value="{{default_address_city}}">
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Region">Region</label>
+              <input type="text" data-wrapper-class="ui-state-readonly" readonly value="{{default_address_region_title}}">
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Street Address">Street Address</label>
+              <textarea data-wrapper-class="ui-state-readonly" readonly value="{{default_address_street_address}}"></textarea>
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Postal Code">Postal Code</label>
+              <input type="text" data-wrapper-class="ui-state-readonly" readonly value="{{default_address_zip_code}}">
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Email">Email</label>
+              <input type="email" data-wrapper-class="ui-state-readonly" readonly value="{{default_email_coordinate_text}}">
+            </div>
+
+          </div>
+
+        </form>
+    </script>
+
+    <script src="gadget_erp5_page_organisation.js"></script>
+
+  </head>
+
+  <body>
+  </body>
+</html>
