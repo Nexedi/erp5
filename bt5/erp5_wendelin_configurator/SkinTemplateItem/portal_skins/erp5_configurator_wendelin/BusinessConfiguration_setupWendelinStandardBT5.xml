@@ -49,54 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
-\n
-bt5_installation_list = (\'erp5_full_text_mroonga_catalog\',\n
-                         \'erp5_base\',\n
-                         \'erp5_jquery_ui\',\n
-                         \'erp5_ingestion_mysql_innodb_catalog\',\n
-                         \'erp5_ingestion\',\n
-                         \'erp5_stock_cache\',\n
-                         \'erp5_knowledge_pad\', # it must be before erp5_web\n
-                         \'erp5_web\',\n
-                         \'erp5_dms\',\n
-                         \'erp5_pdm\',\n
-                         \'erp5_trade\',\n
-                         \'erp5_project\',\n
-                         \'erp5_simulation\',\n
-                         \'erp5_ods_style\',\n
-                         \'erp5_odt_style\',\n
-                         \'erp5_rss_style\',\n
-                         \'erp5_trade\',\n
-                         # jupiter notebook integration\n
-                         \'erp5_data_notebook\',\n
-                         # to develop faster\n
-                         \'erp5_ace_editor\',\n
-                         \'erp5_forge\',\n
-                         \'erp5_development_wizard\',\n
-                         \'erp5_dhtml_style\',\n
-                         # install later UI bt5s as broken now\n
-                         #\'erp5_wendelin_renderjs_ui\',\n
-                         \'erp5_hal_json_style\',\n
-                         \'erp5_web_renderjs_ui\',\n
-                         \'erp5_wendelin\',\n
-                         \'erp5_wendelin_examples\',\n
-                         \'erp5_wendelin_data\',\n
-                         \'erp5_wendelin_development\'\n
-                        )\n
-\n
-bt5_update_catalog = (\'erp5_ingestion_mysql_innodb_catalog\',)\n
-\n
-for name in bt5_installation_list:\n
-  configuration_save.addConfigurationItem("Standard BT5 Configurator Item",\n
-                                          title=name, bt5_id=name,\n
-                                          update_catalog=(name in bt5_update_catalog),\n
-                                          install_dependency=True,\n
-                                          )\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>configuration_save_url=None, **kw</string> </value>
         </item>
