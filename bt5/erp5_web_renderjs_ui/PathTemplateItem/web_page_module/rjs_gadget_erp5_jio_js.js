@@ -210,6 +210,12 @@
     })
     .declareMethod('putAttachment', function (id, name, json) {
       return wrapJioCall(this, 'putAttachment', [id, name, JSON.stringify(json)]);
+    })
+    .declareMethod('put', function (key, doc) {
+      return wrapJioCall(this, 'put', [key, doc]);
+    })
+    .declareMethod('post', function (doc) {
+      return wrapJioCall(this, 'post', [doc]);
     });
 
 }(window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, ComplexQuery, jIO));
