@@ -357,7 +357,7 @@
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
-            <value> <string>gadget_erp5_jio.html</string> </value>
+            <value> <string>gadget_trade_standalone_jio.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
@@ -400,6 +400,12 @@
             <value> <string>super_test</string> </value>
         </item>
         <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>layout_configuration_form_id</string> </key>
             <value> <string>WebSection_viewGKRApplicationPreference</string> </value>
         </item>
@@ -423,7 +429,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>GRG Acquisition App</string> </value>
+            <value> <string>super test</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
