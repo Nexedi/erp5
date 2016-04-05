@@ -50,6 +50,21 @@
   <td>Dummy Report</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Views</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Editables</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Jumps</td>
+  <td></td>
+</tr>
 
 </tbody></table>
 </body>

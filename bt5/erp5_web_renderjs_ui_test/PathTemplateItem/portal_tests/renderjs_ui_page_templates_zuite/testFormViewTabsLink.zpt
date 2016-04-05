@@ -32,22 +32,37 @@
 <!-- Header has a link to the action page -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Jump' and contains(@href, '#!change') and contains(@href, 'n.page=jump')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Tabs' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Jump' and contains(@href, '#!change') and contains(@href, 'n.page=jump')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Tabs' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_jump.html']</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_tab.html']</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
   <td>Title 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Views</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Editables</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Jumps</td>
   <td></td>
 </tr>
 
