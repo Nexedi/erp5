@@ -46,7 +46,7 @@ from Products.ERP5 import DeliverySolver
 from Products.ERP5 import TargetSolver
 from Products.PythonScripts.Utility import allow_class
 
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 
 from Shared.DC.ZRDB.Results import Results
 from Products.ERP5Type.Utils import mergeZRDBResults
@@ -237,54 +237,28 @@ class SimulationTool(BaseTool):
       return self._buildSimulationStateQuery(simulation_state_dict=simulation_state_dict)
 
     def _buildSimulationStateQuery(self, simulation_state_dict, table='stock'):
-      input_simulation_state = simulation_state_dict.get(
-                                 'input_simulation_state')
-      output_simulation_state = simulation_state_dict.get(
-                                 'output_simulation_state')
       simulation_state = simulation_state_dict.get('simulation_state')
       if simulation_state is not None:
-        simulation_query = Query(operator='IN',
-                                 **{'%s.simulation_state' % (table, ):
-                                    simulation_state})
-      elif input_simulation_state is not None:
-        input_quantity_query = ComplexQuery(
-                        ComplexQuery(
-                            Query(**{'%s.quantity' % table: '>=0'}),
-                            Query(**{'%s.is_cancellation' % table: 0}),
-                            operator='AND'),
-                        ComplexQuery(
-                            Query(**{'%s.quantity' % table: '<0'}),
-                            Query(**{'%s.is_cancellation' % table: 1}),
-                            operator='AND'),
-                        operator='OR')
-        input_simulation_query = Query(operator='IN',
-                                       **{'%s.simulation_state' % (table, ):
-                                          input_simulation_state})
-        simulation_query = ComplexQuery(input_quantity_query,
-                                        input_simulation_query,
-                                        operator='AND')
+        return SimpleQuery(**{table + '.simulation_state': simulation_state})
+      input_simulation_state = simulation_state_dict.get('input_simulation_state')
+      if input_simulation_state is not None:
+        simulation_query = ComplexQuery(
+          self._getIncreaseQuery(table, 'quantity', True),
+          SimpleQuery(**{table + '.simulation_state': input_simulation_state}),
+          operator='AND',
+        )
+        output_simulation_state = simulation_state_dict.get('output_simulation_state')
         if output_simulation_state is not None:
-          output_quantity_query = ComplexQuery(
-                        ComplexQuery(
-                            Query(**{'%s.quantity' % table: '<0'}),
-                            Query(**{'%s.is_cancellation' % table: 0}),
-                            operator='AND'),
-                        ComplexQuery(
-                            Query(**{'%s.quantity' % table: '>=0'}),
-                            Query(**{'%s.is_cancellation' % table: 1}),
-                            operator='AND'),
-                        operator='OR')
-          output_simulation_query = Query(operator='IN',
-                                          **{'%s.simulation_state' % (table, ):
-                                             output_simulation_state})
-          output_query = ComplexQuery(output_quantity_query,
-                                      output_simulation_query,
-                                      operator='AND')
-          simulation_query = ComplexQuery(simulation_query, output_query,
-                                          operator='OR')
-      else:
-        simulation_query = None
-      return simulation_query
+          simulation_query = ComplexQuery(
+            simulation_query,
+            ComplexQuery(
+              self._getIncreaseQuery(table, 'quantity', False),
+              SimpleQuery(**{table + '.simulation_state': output_simulation_state}),
+              operator='AND',
+            ),
+            operator='OR'
+          )
+        return simulation_query
 
     def _getSimulationStateDict(self, simulation_state=None, omit_transit=0,
                                 input_simulation_state=None,
@@ -370,112 +344,48 @@ class SimulationTool(BaseTool):
           simulation_dict['simulation_state'] = output_simulation_state
       return simulation_dict
 
-    def _getOmitQuery(self, query_table=None, omit_input=0, omit_output=0,
-                      omit_asset_increase=0, omit_asset_decrease=0, **kw):
-      omit_dict = self._getOmitDict(omit_input=omit_input,
-                                    omit_output=omit_output,
-                                    omit_asset_increase=omit_asset_increase,
-                                    omit_asset_decrease=omit_asset_decrease)
-      return self._buildOmitQuery(query_table=query_table, omit_dict=omit_dict)
-
-    def _buildOmitQuery(self, query_table, omit_dict):
+    def _getIncreaseQuery(self, table, column, increase, sql_catalog_id=None):
       """
-      Build a specific query in order to take:
-      - negatives quantity values if omit_input
-      - postives quantity values if omit_output
-      - negatives asset price values if omit_asset_increase
-      - positives asset price values if omit_asset_decrease
+      Returns a Query filtering rows depending on whether they represent an
+      increase or a decrease.
+      table (string)
+        Name of table to use as stock table.
+      column (string)
+        Name of interesting column. Supported values are:
+        - total_price for asset price increase/decrease
+        - quantity for quantity increase (aka input)/decrease (aka output)
+      increase (bool)
+        False: decreasing rows are kept
+        True: increasing rows are kept
+      sql_catalog_id (string or None)
+        Idenfitier of an SQLCatalog object relevant to table, or None for
+        default one.
       """
-      omit_query = None
-      omit_input = omit_dict.get('input', False)
-      omit_output = omit_dict.get('output', False)
-      omit_asset_increase = omit_dict.get('asset_increase', False)
-      omit_asset_decrease = omit_dict.get('asset_decrease', False)
-      if omit_input or omit_output\
-          or omit_asset_increase or omit_asset_decrease:
-        # Make sure to check some conditions
-        condition_expression = \
-          "%(query_table)s.node_uid <> %(query_table)s.mirror_node_uid \
-         OR %(query_table)s.section_uid <> %(query_table)s.mirror_section_uid \
-         OR %(query_table)s.mirror_node_uid IS NULL \
-         OR %(query_table)s.mirror_section_uid IS NULL \
-         OR %(query_table)s.payment_uid IS NOT NULL \
-           " % {'query_table': query_table}
-        if omit_input:
-          quantity_query = ComplexQuery(
-                        ComplexQuery(
-                            Query(**{'%s.quantity' % query_table: '<0'}),
-                            Query(**{'%s.is_cancellation' % query_table: 0}),
-                            operator='AND'),
-                        ComplexQuery(
-                            Query(**{'%s.quantity' % query_table: '>=0'}),
-                            Query(**{'%s.is_cancellation' % query_table: 1}),
-                            operator='AND'),
-                        operator='OR')
-          omit_query = ComplexQuery(quantity_query, condition_expression,
-                                    operator='AND')
-        if omit_output:
-          quantity_query = ComplexQuery(
-                        ComplexQuery(
-                            Query(**{'%s.quantity' % query_table: '>=0'}),
-                            Query(**{'%s.is_cancellation' % query_table: 0}),
-                            operator='AND'),
-                        ComplexQuery(
-                            Query(**{'%s.quantity' % query_table: '<0'}),
-                            Query(**{'%s.is_cancellation' % query_table: 1}),
-                            operator='AND'),
-                        operator='OR')
-          output_query = ComplexQuery(quantity_query, condition_expression,
-                                      operator='AND')
-          if omit_query is not None:
-            omit_query = ComplexQuery(omit_query, output_query, operator='AND')
-          else:
-            omit_query = output_query
-
-        if omit_asset_increase:
-          asset_price_query = ComplexQuery(
-                        ComplexQuery(
-                            Query(**{'%s.total_price' % query_table: '<0'}),
-                            Query(**{'%s.is_cancellation' % query_table: 0}),
-                            operator='AND'),
-                        ComplexQuery(
-                            Query(**{'%s.total_price' % query_table: '>=0'}),
-                            Query(**{'%s.is_cancellation' % query_table: 1}),
-                            operator='AND'),
-                        operator='OR')
-          asset_increase_query = ComplexQuery(asset_price_query, condition_expression,
-                                              operator='AND')
-          if omit_query is not None:
-            omit_query = ComplexQuery(omit_query, asset_increase_query, operator='AND')
-          else:
-            omit_query = asset_increase_query
-
-        if omit_asset_decrease:
-          asset_price_query = ComplexQuery(
-                        ComplexQuery(
-                            Query(**{'%s.total_price' % query_table: '>=0'}),
-                            Query(**{'%s.is_cancellation' % query_table: 0}),
-                            operator='AND'),
-                        ComplexQuery(
-                            Query(**{'%s.total_price' % query_table: '<0'}),
-                            Query(**{'%s.is_cancellation' % query_table: 1}),
-                            operator='AND'),
-                        operator='OR')
-          asset_decrease_query = ComplexQuery(asset_price_query, condition_expression,
-                                              operator='AND')
-          if omit_query is not None:
-            omit_query = ComplexQuery(omit_query, asset_decrease_query, operator='AND')
-          else:
-            omit_query = asset_decrease_query
-
-      return omit_query
-
-    def _getOmitDict(self, omit_input=False, omit_output=False,
-                     omit_asset_increase=False, omit_asset_decrease=False):
-      return { 'input': omit_input,
-               'output': omit_output,
-               'asset_increase': omit_asset_increase,
-               'asset_decrease': omit_asset_decrease, }
+      if column == 'total_price':
+        dedicated_column = 'is_asset_increase'
+      elif column == 'quantity':
+        dedicated_column = 'is_input'
+      else:
+        raise ValueError('Unknown column %r' % (column, ))
+      if self.getPortalObject().portal_catalog.hasColumn(
+            dedicated_column,
+            sql_catalog_id,
+          ):
+        return SimpleQuery(**{dedicated_column: increase})
+      # Dedicated columns are not present, compute on the fly.
+      return ComplexQuery(
+        ComplexQuery(
+          SimpleQuery(comparison_operator='<', **{table + '.' + column: 0}),
+          SimpleQuery(**{table + '.is_cancellation': increase}),
+          operator='AND',
+        ),
+        ComplexQuery(
+          SimpleQuery(comparison_operator='>=', **{table + '.' + column: 0}),
+          SimpleQuery(**{table + '.is_cancellation': not increase}),
+          operator='AND',
+        ),
+        operator='OR',
+      )
 
     def _generateSQLKeywordDict(self, table='stock', **kw):
         sql_kw, new_kw = self._generateKeywordDict(**kw)
@@ -534,32 +444,54 @@ class SimulationTool(BaseTool):
         for key, value in new_kw.pop('related_key_dict', {}).iteritems():
           new_kw['%s_%s' % (table, key)] = value
         # Simulation states matched with input and output omission
-        def joinQueriesIfNeeded(query_a, query_b, operator):
-          if None not in (query_a, query_b):
-            return ComplexQuery(query_a, query_b, operator=operator)
-          elif query_a is not None:
-            return query_a
-          return query_b
         def getSimulationQuery(simulation_dict, omit_dict):
           simulation_query = self._buildSimulationStateQuery(
-                               simulation_state_dict=simulation_dict,
-                               table=table)
-          omit_query = self._buildOmitQuery(query_table=table,
-                                            omit_dict=omit_dict)
-          return joinQueriesIfNeeded(query_a=simulation_query,
-                                     query_b=omit_query, operator='AND')
-        regular_query = getSimulationQuery(new_kw.pop('simulation_dict', {}),
-                                           new_kw.pop('omit_dict', {}))
+            simulation_state_dict=simulation_dict,
+            table=table,
+          )
+          query_list = [
+            self._getIncreaseQuery(table, column, value)
+            for key, column, value in (
+              ('input',          'quantity',    False),
+              ('output',         'quantity',    True),
+              ('asset_increase', 'total_price', False),
+              ('asset_decrease', 'total_price', True),
+            )
+            if omit_dict.get(key)
+          ]
+          if query_list:
+            if simulation_query is not None:
+              query_list.append(simulation_query)
+            return ComplexQuery(
+              "%(query_table)s.node_uid <> %(query_table)s.mirror_node_uid "
+              "OR %(query_table)s.section_uid <> %(query_table)s.mirror_section_uid "
+              "OR %(query_table)s.mirror_node_uid IS NULL "
+              "OR %(query_table)s.mirror_section_uid IS NULL "
+              "OR %(query_table)s.payment_uid IS NOT NULL" % {
+                'query_table': table,
+              },
+              operator='AND',
+              *query_list
+            )
+          return simulation_query
+        simulation_query = getSimulationQuery(
+          new_kw.pop('simulation_dict', {}),
+          new_kw.pop('omit_dict', {}),
+        )
         reserved_kw = new_kw.pop('reserved_kw', None)
         if reserved_kw is not None:
           reserved_query = getSimulationQuery(
             reserved_kw.pop('simulation_dict', {}),
-            reserved_kw.pop('omit_dict', {}))
-          simulation_query = joinQueriesIfNeeded(query_a=regular_query,
-                                                 query_b=reserved_query,
-                                                 operator='OR')
-        else:
-          simulation_query = regular_query
+            reserved_kw.pop('omit_dict', {}),
+          )
+          if simulation_query is None:
+            simulation_query = reserved_query
+          elif reserved_query is not None:
+            simulation_query = ComplexQuery(
+              simulation_query,
+              reserved_query,
+              operator='OR',
+            )
         if simulation_query is not None:
           new_kw['query'] = simulation_query
 
@@ -824,32 +756,32 @@ class SimulationTool(BaseTool):
       #if len(variation_category_uid_list) :
       #  new_kw['variationCategory'] = variation_category_uid_list
 
-      simulation_dict =  self._getSimulationStateDict(
-                                simulation_state=simulation_state,
-                                omit_transit=omit_transit,
-                                input_simulation_state=input_simulation_state,
-                                output_simulation_state=output_simulation_state,
-                                transit_simulation_state=transit_simulation_state,
-                                strict_simulation_state=strict_simulation_state)
-      new_kw['simulation_dict'] = simulation_dict
-      omit_dict = self._getOmitDict(omit_input=omit_input,
-                                    omit_output=omit_output,
-                                    omit_asset_increase=omit_asset_increase,
-                                    omit_asset_decrease=omit_asset_decrease)
-      new_kw['omit_dict'] = omit_dict
+      new_kw['simulation_dict'] = self._getSimulationStateDict(
+        simulation_state=simulation_state,
+        omit_transit=omit_transit,
+        input_simulation_state=input_simulation_state,
+        output_simulation_state=output_simulation_state,
+        transit_simulation_state=transit_simulation_state,
+        strict_simulation_state=strict_simulation_state,
+      )
+      new_kw['omit_dict'] = {
+        'input': omit_input,
+        'output': omit_output,
+        'asset_increase': omit_asset_increase,
+        'asset_decrease': omit_asset_decrease,
+      }
       if reserved_kw is not None:
         if not isinstance(reserved_kw, dict):
           # Not a dict when taken from URL, so, cast is needed
           # to make pop method available
           reserved_kw = dict(reserved_kw)
-        new_reserved_kw = {}
-        reserved_omit_input = reserved_kw.pop('omit_input',0)
-        reserved_omit_output = reserved_kw.pop('omit_output',0)
-        new_reserved_kw['omit_dict'] = self._getOmitDict(
-                                         omit_input=reserved_omit_input,
-                                         omit_output=reserved_omit_output)
-        new_reserved_kw['simulation_dict'] = self._getSimulationStateDict(**reserved_kw)
-        new_kw['reserved_kw'] = new_reserved_kw
+        new_kw['reserved_kw'] = {
+          'omit_dict': {
+            'input': reserved_kw.pop('omit_input', False),
+            'ouput': reserved_kw.pop('omit_output', False),
+          },
+          'simulation_dict': self._getSimulationStateDict(**reserved_kw),
+        }
       # It is necessary to use here another SQL query (or at least a subquery)
       # to get _DISTINCT_ uid from predicate_category table.
       # Otherwise, by using a where_expression, cells which fit conditions
