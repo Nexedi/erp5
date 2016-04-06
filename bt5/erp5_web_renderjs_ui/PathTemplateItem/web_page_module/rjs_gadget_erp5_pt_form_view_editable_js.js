@@ -39,12 +39,16 @@
     })
     .declareMethod('render', function (options) {
       var erp5_document = options.erp5_document,
-        form_gadget = this;
+        form_gadget = this,
+        action_dict = erp5_document._embedded._view._actions;
 
       form_gadget.props.id = options.jio_key;
       form_gadget.props.view = options.view;
-      form_gadget.props.action = erp5_document._embedded._view._actions.put;
       form_gadget.props.form_id = erp5_document._embedded._view.form_id;
+
+      if (action_dict !== undefined) {
+        form_gadget.props.action = erp5_document._embedded._view._actions.put;
+      }
 
       return form_gadget.getDeclaredGadget("erp5_form")
         .push(function (erp5_form) {
@@ -82,8 +86,7 @@
           ]);
         })
         .push(function (all_result) {
-
-          return form_gadget.updateHeader({
+          var header_dict = {
             tab_url: all_result[2],
             cut_url: "",
             actions_url: all_result[3],
@@ -92,9 +95,13 @@
             // view_url: all_result[1],
             selection_url: all_result[6],
             page_title: options.erp5_document.title,
-            breadcrumb_url: all_result[4],
-            save_action: true
-          });
+            breadcrumb_url: all_result[4]
+          };
+          if (form_gadget.props.action !== undefined) {
+            header_dict.save_action = true;
+          }
+
+          return form_gadget.updateHeader(header_dict);
         });
     })
 
@@ -107,6 +114,10 @@
 
       function formSubmit() {
         var erp5_form;
+        if (form_gadget.props.action === undefined) {
+          // If not action is defined on form, do nothing
+          return;
+        }
         return form_gadget.getDeclaredGadget("erp5_form")
           .push(function (gadget) {
             erp5_form = gadget;

@@ -422,22 +422,27 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
   field_errors = REQUEST.get('field_errors', {})
 
   #hardcoded
+  include_action = True
   if form.pt == 'form_dialog':
     action_to_call = "Base_callDialogMethod"
   else:
     action_to_call = form.action
+  if (action_to_call == 'Base_edit') and (not portal.portal_membership.checkPermission('Modify portal content', traversed_document)):
+    # prevent allowing editing if user doesn't have permission
+    include_action = False
 
-  # Form action
-  response_dict['_actions'] = {
-    'put': {
-      "href": url_template_dict["form_action"] % {
-        "traversed_document_url": site_root.absolute_url() + "/" + traversed_document.getRelativeUrl(),
-        "action_id": action_to_call
-      },
-      "action": form.action,
-      "method": form.method,
+  if (include_action):
+    # Form action
+    response_dict['_actions'] = {
+      'put': {
+        "href": url_template_dict["form_action"] % {
+          "traversed_document_url": site_root.absolute_url() + "/" + traversed_document.getRelativeUrl(),
+          "action_id": action_to_call
+        },
+        "action": form.action,
+        "method": form.method,
+      }
     }
-  }
   # Form traversed_document
   response_dict['_links']['traversed_document'] = {
     "href": default_document_uri_template % {

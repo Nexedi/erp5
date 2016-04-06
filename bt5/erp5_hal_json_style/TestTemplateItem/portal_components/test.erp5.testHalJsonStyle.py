@@ -597,6 +597,79 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
   @simulate('Base_getRequestHeader', '*args, **kwargs',
             'return "application/hal+json"')
   @changeSkin('Hal')
+  def test_getHateoasDocument_non_editable_default_view(self):
+    document = self._makeDocument()
+    # Drop editable permission
+    document.manage_permission('Modify portal content', [], 0)
+    document.Foo_view.listbox.ListBox_setPropertyList(
+      field_title = 'Foo Lines',
+      field_list_method = 'objectValues',
+      field_portal_types = 'Foo Line | Foo Line',
+      field_stat_method = 'portal_catalog',
+      field_stat_columns = 'quantity | Foo_statQuantity',
+      field_editable = 1,
+      field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date\ncatalog.uid|Uid',
+      field_editable_columns = 'id|ID\ntitle|Title\nquantity|quantity\nstart_date|Date',
+      field_search_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
+
+    parent = document.getParentValue()
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view")
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
+
+    self.assertEqual(result_dict['_links']['parent'],
+                    {"href": "urn:jio:get:%s" % parent.getRelativeUrl(), "name": parent.getTitle()})
+
+    self.assertEqual(result_dict['_links']['view'][0]['href'],
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % (
+                       self.portal.absolute_url(),
+                       urllib.quote_plus(document.getRelativeUrl())))
+    self.assertEqual(result_dict['_links']['view'][0]['title'], "View")
+    self.assertEqual(result_dict['_links']['view'][0]['name'], "view")
+
+    self.assertEqual(result_dict['title'].encode("UTF-8"), document.getTitle())
+    self.assertEqual(result_dict['_debug'], "traverse")
+
+    # Check embedded form rendering
+    self.assertEqual(result_dict['_embedded']['_view']['form_id']['default'], 'Foo_view')
+    self.assertEqual(result_dict['_embedded']['_view']['form_id']['editable'], 0)
+    self.assertEqual(result_dict['_embedded']['_view']['form_id']['hidden'], 1)
+    self.assertEqual(result_dict['_embedded']['_view']['form_id']['key'], 'form_id')
+    self.assertEqual(result_dict['_embedded']['_view']['form_id']['required'], 1)
+    self.assertEqual(result_dict['_embedded']['_view']['form_id']['type'], 'StringField')
+
+    self.assertEqual(result_dict['_embedded']['_view']['my_id']['default'], document.getId())
+    self.assertEqual(result_dict['_embedded']['_view']['my_id']['editable'], 1)
+    self.assertEqual(result_dict['_embedded']['_view']['my_id']['hidden'], 0)
+    self.assertEqual(result_dict['_embedded']['_view']['my_id']['key'], 'field_my_id')
+    self.assertEqual(result_dict['_embedded']['_view']['my_id']['required'], 1)
+    self.assertEqual(result_dict['_embedded']['_view']['my_id']['type'], 'StringField')
+    self.assertEqual(result_dict['_embedded']['_view']['my_id']['title'], 'ID')
+
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['href'], 'urn:jio:get:%s' % document.getRelativeUrl())
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['name'], document.getRelativeUrl())
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['title'], document.getTitle().decode("UTF-8"))
+
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['self']['href'], "%s/%s/Foo_view" % (
+                                                                                    self.portal.absolute_url(),
+                                                                                    document.getRelativeUrl()))
+
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['form_definition']['href'], 'urn:jio:get:portal_skins/erp5_ui_test/Foo_view')
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['form_definition']['name'], 'Foo_view')
+
+    self.assertFalse(result_dict['_embedded']['_view'].has_key('_actions'))
+
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
   def test_getHateoasDocument_report_view(self):
     document = self._makeDocument()
 
