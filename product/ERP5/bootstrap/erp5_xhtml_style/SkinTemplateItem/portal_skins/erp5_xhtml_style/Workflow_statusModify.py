@@ -46,8 +46,24 @@ if listbox is not None:
     listbox_line_list.append(value)
   doaction_param_list['listbox'] = tuple(listbox_line_list)
 
+execution_date = doaction_param_list.pop('execution_date', None)
+if execution_date is not None:
+  context.activate(
+    activity='SQLQueue',
+    at_date=execution_date,
+  ).Base_workflowStatusModify(
+    workflow_action=doaction_param_list.pop('next_workflow_action'),
+    comment=doaction_param_list.get('comment', ''),
+    batch=True,
+  )
+  doaction_param_list['comment'] = translateString(
+    'Scheduled for execution at $time',
+    mapping={
+      'time': str(execution_date),
+    },
+  )
 try:
-  context.portal_workflow.doActionFor(
+  portal.portal_workflow.doActionFor(
     context,
     doaction_param_list['workflow_action'],
     **doaction_param_list)
