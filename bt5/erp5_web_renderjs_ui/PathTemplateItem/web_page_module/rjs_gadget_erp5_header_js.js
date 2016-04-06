@@ -102,10 +102,14 @@
         // Directly modify the previous calculated header
         // in order not to remove the submit input
         // and still receive 'submit' event
-        var class_list = this.props.right_link.querySelector('button').classList;
-        if (class_list.contains('ui-icon-check')) {
-          class_list.remove('ui-icon-check');
-          class_list.add('ui-icon-warning');
+        var button = this.props.right_link.querySelector('button'),
+          class_list;
+        if (button !== null) {
+          class_list = button.classList;
+          if (class_list.contains('ui-icon-check')) {
+            class_list.remove('ui-icon-check');
+            class_list.add('ui-icon-warning');
+          }
         }
       }
     })
