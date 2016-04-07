@@ -76,10 +76,8 @@
           }
           return RSVP.all([
             erp5_form.render(form_options),
-            form_gadget.getUrlFor({command: 'change', options: {}}),
             form_gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
             form_gadget.getUrlFor({command: 'change', options: {page: "action", editable: true}}),
-            form_gadget.getUrlFor({command: 'change', options: {page: "breadcrumb", editable: true}}),
             new_content_action,
             form_gadget.getUrlFor({command: 'history_previous'}),
             delete_action
@@ -87,15 +85,13 @@
         })
         .push(function (all_result) {
           var header_dict = {
-            tab_url: all_result[2],
+            tab_url: all_result[1],
+            actions_url: all_result[2],
+            add_url: all_result[3],
+            selection_url: all_result[4],
+            delete_url: all_result[5],
             cut_url: "",
-            actions_url: all_result[3],
-            delete_url: all_result[7],
-            add_url: all_result[5],
-            // view_url: all_result[1],
-            selection_url: all_result[6],
-            page_title: options.erp5_document.title,
-            breadcrumb_url: all_result[4]
+            page_title: options.erp5_document.title
           };
           if (form_gadget.props.action !== undefined) {
             header_dict.save_action = true;

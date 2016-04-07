@@ -51,8 +51,7 @@
         .push(function (result) {
           var i,
             promise_list = [
-              gadget.getUrlFor({command: 'change', options: {page: undefined}}),
-              gadget.getUrlFor({command: 'change', options: {page: "breadcrumb"}})
+              gadget.getUrlFor({command: 'change', options: {page: undefined}})
             ];
           erp5_document = result;
           view_list = erp5_document._links.action_object_jump || [];
@@ -75,11 +74,11 @@
 
           result_list = all_result;
 
-          for (i = 2; i < all_result.length; i += 1) {
+          for (i = 1; i < all_result.length; i += 1) {
             tab_list.push({
-              title: view_list[i - 2].title,
+              title: view_list[i - 1].title,
               link: all_result[i],
-              i18n: view_list[i - 2].title
+              i18n: view_list[i - 1].title
             });
           }
           return gadget.translateHtml(table_template({
@@ -93,8 +92,7 @@
 
           return gadget.updateHeader({
             back_url: result_list[0],
-            page_title: erp5_document.title,
-            breadcrumb_url: result_list[1]
+            page_title: erp5_document.title
           });
         });
     });

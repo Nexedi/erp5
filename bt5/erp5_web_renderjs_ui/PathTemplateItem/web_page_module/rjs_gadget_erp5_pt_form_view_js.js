@@ -53,7 +53,6 @@
             form_gadget.render(form_options),
             gadget.getUrlFor({command: 'change', options: {editable: true}}),
             gadget.getUrlFor({command: 'change', options: {page: "action"}}),
-            gadget.getUrlFor({command: 'change', options: {page: "breadcrumb"}}),
             gadget.getUrlFor({command: 'history_previous'}),
             gadget.getUrlFor({command: 'selection_previous'}),
             gadget.getUrlFor({command: 'selection_next'}),
@@ -63,15 +62,14 @@
         .push(function (all_result) {
 
           return gadget.updateHeader({
-            tab_url: all_result[7],
-            actions_url: all_result[2],
-            previous_url: all_result[5],
-            next_url: all_result[6],
-            export_url: "",
             edit_url: all_result[1],
-            selection_url: all_result[4],
+            actions_url: all_result[2],
+            selection_url: all_result[3],
+            previous_url: all_result[4],
+            next_url: all_result[5],
+            tab_url: all_result[6],
+            export_url: "",
             page_title: options.erp5_document.title,
-            breadcrumb_url: all_result[3]
           });
         });
     });

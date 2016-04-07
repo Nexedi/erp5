@@ -127,12 +127,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!history_previous')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='1' and contains(@href, '#!history_previous')]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!history_previous')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='1' and contains(@href, '#!history_previous')]</td>
   <td></td>
 </tr>
 
@@ -149,12 +149,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!history_previous')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Title 1' and contains(@href, '#!history_previous')]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!history_previous')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Title 1' and contains(@href, '#!history_previous')]</td>
   <td></td>
 </tr>
 

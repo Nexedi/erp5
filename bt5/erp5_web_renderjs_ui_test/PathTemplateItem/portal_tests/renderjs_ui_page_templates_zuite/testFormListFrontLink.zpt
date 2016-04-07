@@ -2,7 +2,7 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test Form View BreadCrumb Link</title>
+<title>Test Form List BreadCrumb Link</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
@@ -13,14 +13,14 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
   <td></td>
 </tr>
 
 <!-- Wait for gadget to be loaded -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view.html']</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
   <td></td>
 </tr>
 <tr>
@@ -29,20 +29,20 @@
   <td></td>
 </tr>
 
-<!-- Header has a link to the breadcrumb page -->
+<!-- Header has a link to the front page -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Title 1' and contains(@href, '#!change') and contains(@href, 'n.page=breadcrumb')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Foos' and contains(@href, '#!display')]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Title 1' and contains(@href, '#!change') and contains(@href, 'n.page=breadcrumb')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Foos' and contains(@href, '#!display')]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
-  <td>Breadcrumb</td>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_worklist.html']</td>
   <td></td>
 </tr>
 

@@ -112,15 +112,13 @@
               section.innerHTML = my_translation_html;
               return RSVP.all([
                 erp5_form.render(form_options),
-                form_gadget.getUrlFor({command: 'change', options: {page: undefined, view: undefined}}),
-                form_gadget.getUrlFor({command: 'change', options: {page: "breadcrumb"}})
+                form_gadget.getUrlFor({command: 'change', options: {page: undefined, view: undefined}})
               ]);
             })
             .push(function (all_result) {
               return form_gadget.updateHeader({
                 cancel_url: all_result[1],
                 page_title: options.erp5_document.title,
-                breadcrumb_url: all_result[2],
                 submit_action: true
               });
             });

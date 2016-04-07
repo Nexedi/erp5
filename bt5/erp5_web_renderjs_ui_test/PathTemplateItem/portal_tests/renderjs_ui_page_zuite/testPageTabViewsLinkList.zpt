@@ -7,20 +7,20 @@
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test Page BreadCrumb Back Link</td></tr>
+<tr><td rowspan="1" colspan="3">Test Page Tab Link List</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?page=breadcrumb</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?page=tab</td>
   <td></td>
 </tr>
 
 <!-- Wait for gadget to be loaded -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_breadcrumb.html']</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_tab.html']</td>
   <td></td>
 </tr>
 <tr>
@@ -29,17 +29,23 @@
   <td></td>
 </tr>
 
-<!-- Generate back link -->
+<!-- Generate links to parents -->
 <tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!change') and contains(@href, 'u.page=')]</td>
+  <td>assertTextPresent</td>
+  <td>Views</td>
   <td></td>
 </tr>
 
-<!-- Follow module link -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='View' and contains(@href, '#!change') and contains(@href, 'n.view=view') and contains(@href, 'u.page=') and contains(@href, 'u.editable=')]</td>
+  <td></td>
+</tr>
+
+<!-- Follow one link -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!change') and contains(@href, 'u.page=')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='View' and contains(@href, '#!change') and contains(@href, 'n.view=view') and contains(@href, 'u.page=') and contains(@href, 'u.editable=')]</td>
   <td></td>
 </tr>
 <tr>

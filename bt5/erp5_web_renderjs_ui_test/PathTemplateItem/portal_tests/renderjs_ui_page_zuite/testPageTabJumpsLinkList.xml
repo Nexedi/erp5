@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testFormViewEditableBreadCrumbLink</string> </value>
+            <value> <string>testPageTabJumpsLinkList</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

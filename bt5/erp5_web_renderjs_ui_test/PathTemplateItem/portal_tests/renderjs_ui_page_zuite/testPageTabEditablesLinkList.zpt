@@ -32,20 +32,10 @@
 <!-- Generate links to parents -->
 <tr>
   <td>assertTextPresent</td>
-  <td>Views</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
   <td>Editables</td>
   <td></td>
 </tr>
 
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='View' and contains(@href, '#!change') and contains(@href, 'n.view=view') and contains(@href, 'u.page=') and contains(@href, 'u.editable=')]</td>
-  <td></td>
-</tr>
 <tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope='m']//a[text()='View' and contains(@href, '#!change') and contains(@href, 'n.view=') and contains(@href, 'u.page=') and contains(@href, 'n.editable=true')]</td>

@@ -129,15 +129,16 @@
     })
     .declareMethod('render', function (options) {
       var gadget = this,
-        possible_left_link_list = [
-          // ['menu_url', 'Menu', 'bars'],
-          ['selection_url', 'Back', 'arrow-left'],
-          ['view_url', 'View', 'check'],
-          ['cancel_url', 'Cancel', 'times'],
-          ['back_url', 'Back', 'arrow-left']
-        ],
+        possible_left_link_list = [],
         possible_left_button_list = [
           ['panel_action', 'Menu', 'bars', 'panel']
+        ],
+        possible_main_link_list = [
+          // ['menu_url', 'Menu', 'bars'],
+          ['front_url', 'Front', 'arrow-up'],
+          ['selection_url', 'Previous', 'arrow-up'],
+          ['cancel_url', 'Cancel', 'times'],
+          ['back_url', 'Back', 'times']
         ],
         possible_right_link_list = [
           ['edit_url', 'Edit', 'pencil']
@@ -184,8 +185,14 @@
         // Updating globally the page title. Does not follow RenderJS philosophy, but, it is enough for now
         document.title = title_link.title;
       }
-      if (options.hasOwnProperty("breadcrumb_url")) {
-        title_link.url = options.breadcrumb_url;
+      // Handle main link
+      for (i = 0; i < possible_main_link_list.length; i += 1) {
+        if (options.hasOwnProperty(possible_main_link_list[i][0])) {
+          title_link.icon = possible_main_link_list[i][2];
+          title_link.url = options[possible_main_link_list[i][0]];
+        }
+      }
+      if (title_link.hasOwnProperty("url")) {
         promise_list.push(gadget.translateHtml(header_title_link_template(title_link)));
       } else {
         promise_list.push(gadget.translateHtml(header_title_template(title_link)));

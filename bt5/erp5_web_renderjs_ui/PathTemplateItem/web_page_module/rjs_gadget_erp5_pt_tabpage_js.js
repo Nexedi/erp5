@@ -45,9 +45,44 @@
       var view_list,
         tab_list = [],
         jump_action_list = [],
+        breadcrumb_action_list = [],
+        parent_queue,
         gadget = this,
         erp5_document,
         jump_list;
+
+      function handleParent(parent_link) {
+        parent_queue.push(function () {
+          var uri,
+            jio_key;
+          if (parent_link !== undefined) {
+            uri = new URI(parent_link.href);
+            jio_key = uri.segment(2);
+
+            if ((uri.protocol() !== 'urn') || (uri.segment(0) !== 'jio') || (uri.segment(1) !== "get")) {
+              // Parent is the ERP5 site
+              breadcrumb_action_list.unshift({
+                title: "ERP5",
+                link: "#"
+              });
+            } else {
+              // Parent is an ERP5 document
+              return gadget.getUrlFor({command: 'display_stored_state', options: {jio_key: jio_key}})
+                .push(function (parent_href) {
+                  breadcrumb_action_list.unshift({
+                    title: parent_link.name,
+                    link: parent_href
+                  });
+                  return gadget.jio_getAttachment(jio_key, "links");
+                })
+                .push(function (result) {
+                  handleParent(result._links.parent || "#");
+                });
+            }
+
+          }
+        });
+      }
 
       return gadget.jio_getAttachment(options.jio_key, "links")
         .push(function (result) {
@@ -84,6 +119,9 @@
               page: 'search'
             }}));
           }
+          parent_queue = new RSVP.Queue();
+          handleParent(erp5_document._links.parent || "#");
+          promise_list.push(parent_queue);
           return RSVP.all(promise_list);
         })
         .push(function (all_result) {
@@ -123,6 +161,11 @@
             documentlist: jump_action_list,
             definition_icon: "plane",
             definition_i18n: "Jumps"
+          }) + table_template({
+            definition_title: "Breadcrumb",
+            documentlist: breadcrumb_action_list,
+            definition_icon: "ellipsis-v",
+            definition_i18n: "Breadcrumb"
           }));
         })
         .push(function (my_translated_html) {
@@ -131,15 +174,13 @@
           return RSVP.all([
             gadget.getUrlFor({command: 'change', options: {
               page: undefined
-            }}),
-            gadget.getUrlFor({command: 'change', options: {page: "breadcrumb"}})
+            }})
           ]);
         })
         .push(function (url_list) {
           return gadget.updateHeader({
             back_url: url_list[0],
-            page_title: erp5_document.title,
-            breadcrumb_url: url_list[1]
+            page_title: erp5_document.title
           });
         });
     });

@@ -25,14 +25,14 @@
 </tr>
 <tr>
   <td>waitForTextPresent</td>
-  <td>Back</td>
+  <td>Search</td>
   <td></td>
 </tr>
 
 <!-- Generate back link -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Back' and contains(@href, '#!history_previous')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Search' and contains(@href, '#!history_previous')]</td>
   <td></td>
 </tr>
 

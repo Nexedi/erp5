@@ -85,7 +85,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Title 1' and contains(@href, '#!change') and contains(@href, 'n.page=breadcrumb')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Title 1' and contains(@href, '#!history_previous')]</td>
   <td></td>
 </tr>
 <tr>

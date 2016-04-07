@@ -68,9 +68,9 @@
           return RSVP.all([
             gadget.getDeclaredGadget("erp5_searchfield"),
             gadget.getDeclaredGadget("erp5_form"),
-            gadget.getUrlFor({command: 'change', options: {page: "breadcrumb"}}),
             new_content_action,
-            gadget.getUrlFor({command: 'change', options: {page: "action"}})
+            gadget.getUrlFor({command: 'change', options: {page: "action"}}),
+            gadget.getUrlFor({command: 'display', options: {}})
           ]);
         })
         .push(function (all_gadget) {
@@ -81,11 +81,11 @@
               panel_action: true,
               jump_url: "",
               cut_url: "",
-              actions_url: all_gadget[4],
+              add_url: all_gadget[2],
+              actions_url: all_gadget[3],
               export_url: "",
-              add_url: all_gadget[3],
               page_title: options.erp5_document.title,
-              breadcrumb_url: all_gadget[2]
+              front_url: all_gadget[4]
             })
 
           ]);
@@ -104,6 +104,7 @@
           .push(function (data) {
             var options = {
               begin_from: undefined,
+              // XXX Hardcoded
               field_listbox_begin_from: undefined
             };
             if (data.search) {

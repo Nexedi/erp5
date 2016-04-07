@@ -41,20 +41,25 @@
   <td></td>
 </tr>
 
-<!-- Header has a link to the breadcrumb page -->
+<!-- Header has a menu button -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Title 1' and contains(@href, '#!change') and contains(@href, 'n.page=breadcrumb')]</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Menu' and @type='submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//div[contains(@class, 'ui-panel-closed')]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Title 1' and contains(@href, '#!change') and contains(@href, 'n.page=breadcrumb')]</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Menu' and @type='submit']</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
-  <td>Breadcrumb</td>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//div[contains(@class, 'ui-panel-open')]</td>
   <td></td>
 </tr>
 
