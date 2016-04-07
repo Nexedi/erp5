@@ -142,13 +142,18 @@
           check_remote_creation: true,
           check_remote_deletion: true,
               local_sub_storage: {
+                
+               type: "rjs",
+           gadget: gadget.state_parameter_dict.jio_storage,
+            sub_storage: {
+
             type: "query",
             sub_storage: {
               type: "uuid",
               sub_storage: {
                 type: "indexeddb",
                 database: "trade"
-              }
+              }}
             }
           },
           /*local_sub_storage: {

@@ -57,7 +57,8 @@
           return gadget.repair();
         })
         .push(function () {
-          alert(translateString('Synchronisation Finished'));
+         // alert(translateString('Synchronisation Finished'));
+        alert('Synchronisation Finished');
           return;
         });
     });
