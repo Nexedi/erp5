@@ -84,6 +84,14 @@
             </value>
         </item>
         <item>
+            <key> <string>searchable_text_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>DiscussionThread_getChildDiscussionPostRawText</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>short_title</string> </key>
             <value> <string>Discussion Thread</string> </value>
         </item>
