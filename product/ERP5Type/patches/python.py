@@ -107,6 +107,14 @@ def patch_linecache():
     if isinstance(m, str) and 'linecache' in m:
       frame = frame.f_back
       m = frame.f_globals['__name__']
+    if m == 'IPython.utils.ulinecache':
+      frame = frame.f_back
+      m = frame.f_globals['__name__']
+      # IPython.utils.ulinecache.getline (used in `list` pdb command) call IPython.utils.ulinecache.getlines
+      # so we may have two frames in IPython.utils.ulinecache module
+      if m == 'IPython.utils.ulinecache':
+        frame = frame.f_back
+        m = frame.f_globals['__name__']
     if m == 'IPython.core.debugger':
       co_name = frame.f_code.co_name
       if co_name == 'format_stack_entry':
