@@ -1023,3 +1023,42 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     self.assertTrue(os.path.exists(os.path.join(self.export_dir, 'bt')))
     self.assertTrue(os.path.exists(test_component_path+'.xml'))
     self.assertTrue(os.path.exists(test_component_path+'.py'))
+
+  def test_twoFileImportExportForFileWithNoData(self):
+    """
+      Test Business Template Import And Export With File
+      that has no data attribute. Only .xml metadata is exported
+    """
+    file_title = "foo"
+
+    file_document_kw = {"title": file_title,
+                        "portal_type": "File"}
+
+    file_page = self.portal.document_module.newContent(**file_document_kw)
+    file_document_kw['id'] = file_id = file_page.getId()
+
+    self.template.edit(template_path_list=['document_module/'+file_id,])
+
+    file_document_path = os.path.join(self.cfg.instancehome, self.export_dir,
+                                     'PathTemplateItem', 'document_module',
+                                      file_id)
+
+    self.template.build()
+    self.tic()
+    self.template.export(path=self.export_dir, local=True)
+    self.tic()
+
+    self.assertTrue(os.path.exists(file_document_path+'.xml'))
+    # check that there is no other file exported
+    self.assertEqual(len(os.listdir(file_document_path.rsplit('/', 1)[0])), 1)
+
+    import_template = self._importBusinessTemplate()
+
+    self.portal.document_module.manage_delObjects([file_id])
+
+    import_template.install()
+
+    file_page = self.portal.document_module[file_id]
+
+    for property_id, property_value in file_document_kw.iteritems():
+      self.assertEqual(getattr(file_page, property_id), property_value)

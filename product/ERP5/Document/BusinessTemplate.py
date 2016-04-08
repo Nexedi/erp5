@@ -858,7 +858,13 @@ class ObjectTemplateItem(BaseTemplateItem):
           for record_id, record in property_and_extension_exported_separately_dict.iteritems():
             extension = record
             exported_property_type = record_id
-            if hasattr(obj, exported_property_type):
+            # We want to export separately only if the attibute exists in the
+            # instance. However, it may be defined as an attribute of the class
+            # and not of the instance, and hasattr would return True in this case.
+            # On the other hand, there might be the case that the object is
+            # ghost object. So the hasattr part is expected also to load it.
+            if hasattr(obj, exported_property_type) and \
+                exported_property_type in obj.__dict__:
               exported_property = getattr(obj, exported_property_type)
               if isinstance(exported_property, unicode):
                 exported_property = str(exported_property.encode('utf-8'))
