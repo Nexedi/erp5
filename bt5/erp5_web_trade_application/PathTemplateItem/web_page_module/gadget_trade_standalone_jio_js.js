@@ -103,7 +103,7 @@
           query: {
             query: 'portal_type:( ' +
               '"Product Module" ' +
-              'OR "Organisation Module" ' +
+              'OR "Organisation Module" '+
               'OR "Purchase Record Module" ' +
               'OR "Purchase Record" ' +
               'OR "Purchase Price Record Module" ' +
@@ -142,7 +142,7 @@
           check_remote_creation: true,
           check_remote_deletion: true,
           local_sub_storage: {
-             
+
             type: "query",
             sub_storage: {
               type: "uuid",
@@ -152,24 +152,6 @@
               }
             }
           },
-          /*local_sub_storage: {
-
-            type: "rjs",
-            gadget: shared_gadget,
-            sub_storage: {
-
-            type: "query",
-            sub_storage: {
-              type: "uuid",
-              sub_storage: {
-                type: "indexeddb",
-                database: "erp5js_gkr_"+Cookies.get('jid')
-              }
-            }
-
-            }
-          },*/
-         
 
           remote_sub_storage: {
             type: "erp5",
@@ -177,19 +159,7 @@
             default_view_reference: setting_list[1]
           }
         });
-          
-          
-          
-          
-          
-          
-          /*return gadget.state_parameter_dict.jio_storage.createJio({
-            type: "erp5",
-            url: setting_list[0],
-            default_view_reference: setting_list[1]
-          });
-          */
-          
+
         });
     })
 
@@ -293,7 +263,7 @@
     })
   
    .declareMethod('repair', function () {
-      var storage = this.state_parameter_dict.jio_storage,
+      var storage = this.state_parameter_dict.jio_storage.state_parameter_dict.jio_storage,
         argument_list = arguments;
 
       return storage.allDocs({

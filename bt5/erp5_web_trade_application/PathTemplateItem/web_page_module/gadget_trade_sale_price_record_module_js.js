@@ -97,7 +97,7 @@
                 type: "complex"
               })
               */
-              query: 'hidden_in_html5_app_flag:"0" AND portal_type:("Sale Price Record" OR "Sale Price Record Temp")',
+              query: 'portal_type:("Sale Price Record" OR "Sale Price Record Temp")',
               select_list: ['doc_id', 'product', 'priced_quantity', 'quantity_unit', 'base_price', 'price_currency',
                             'nextowner', 'comment', 'date', 'inputusername',
                             'local_state', 'sync_flag', 'local_validation', 'portal_type'],
