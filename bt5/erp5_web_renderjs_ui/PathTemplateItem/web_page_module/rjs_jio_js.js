@@ -8783,7 +8783,8 @@ return new Parser;
           form_data_json = {},
           field,
           key,
-          prefix_length;
+          prefix_length,
+          result;
 
         form_data_json.form_id = {
           "key": [form.form_id.key],
@@ -8811,11 +8812,15 @@ return new Parser;
           }
         }
 
-        return {
-          action_href: form._actions.put.href,
+        result = {
           data: converted_json,
           form_data: form_data_json
         };
+        if (form.hasOwnProperty('_actions') &&
+            form._actions.hasOwnProperty('put')) {
+          result.action_href = form._actions.put.href;
+        }
+        return result;
       });
   }
 
@@ -8972,6 +8977,12 @@ return new Parser;
               form_data[json[key].key] = data[key];
             }
           }
+        }
+        if (!result.hasOwnProperty('action_href')) {
+          throw new jIO.util.jIOError(
+            "ERP5: can not modify document: " + id,
+            403
+          );
         }
         return context.putAttachment(
           id,
