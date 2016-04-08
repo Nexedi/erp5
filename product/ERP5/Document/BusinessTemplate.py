@@ -857,39 +857,47 @@ class ObjectTemplateItem(BaseTemplateItem):
         if property_and_extension_exported_separately_dict:
           for record_id, record in property_and_extension_exported_separately_dict.iteritems():
             extension = record
-            exported_property_type = record_id
-            if hasattr(obj, exported_property_type):
-              exported_property = getattr(obj, exported_property_type)
+            # we copy the object from the context. Sometimes this changes
+            # output_encoding, so we keep it here to restore.
+            reset_output_encoding = False
+            if hasattr(obj, 'output_encoding'):
+              reset_output_encoding = True
+              output_encoding = obj.output_encoding
+            obj = obj._getCopy(context)
+            try:
+              exported_property = getattr(obj, record_id)
+              # Delete this attribute from the object.
+              # in case the related Portal Type does not exist, the object may be broken.
+              # So we cannot delattr, but we can delete the key of its its broken state
+              if isinstance(obj, ERP5BaseBroken):
+                del obj.__Broken_state__[record_id]
+                obj._p_changed = 1
+              else:
+                delattr(obj, record_id)
+            except (AttributeError, KeyError):
+              # property was not set on instance,
+              # do nothing, only .xml metadata will be exported
+              pass
+            else:
+              # export a separate file with the data
               if isinstance(exported_property, unicode):
                 exported_property = str(exported_property.encode('utf-8'))
               elif not isinstance(exported_property, str):
                 exported_property = str(exported_property)
-
-              reset_output_encoding = False
-              if hasattr(obj, 'output_encoding'):
-                reset_output_encoding = True
-                output_encoding = obj.output_encoding
-              obj = obj._getCopy(context)
-
               f = StringIO(exported_property)
               bta.addObject(f, key, path=path, ext=extension)
 
-              # since we get the obj from context we should
-              # again remove useless properties
-              obj = self.removeProperties(obj, 1, keep_workflow_history = True)
+            # since we get the obj from context we should
+            # again remove useless properties
+            obj = self.removeProperties(obj, 1, keep_workflow_history = True)
 
-              # in case the related Portal Type does not exist, the object may be broken.
-              # So we cannot delattr, but we can delet the het of its its broken state
+            if reset_output_encoding:
               if isinstance(obj, ERP5BaseBroken):
-                del obj.__Broken_state__[exported_property_type]
-                if reset_output_encoding:
-                  self._objects[obj_key].__Broken_state__['output_encoding'] = output_encoding
+                self._objects[obj_key].__Broken_state__['output_encoding'] = output_encoding
                 obj._p_changed = 1
               else:
-                delattr(obj, exported_property_type)
-                if reset_output_encoding:
-                  obj.output_encoding = output_encoding
-              transaction.savepoint(optimistic=True)
+                obj.output_encoding = output_encoding
+            transaction.savepoint(optimistic=True)
 
         f = StringIO()
         XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
