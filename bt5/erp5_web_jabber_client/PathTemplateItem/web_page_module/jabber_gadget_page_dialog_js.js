@@ -1,6 +1,6 @@
-/*global window, document, rJS, RSVP, loopEventListener*/
+/*global window, document, rJS, RSVP, Handlebars, loopEventListener*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, document, rJS, RSVP, loopEventListener) {
+(function (window, document, rJS, RSVP, Handlebars, loopEventListener) {
   "use strict";
 
   function scroll() {
@@ -13,10 +13,29 @@
       });
   }
 
-  // MESSAGE_FRESHNESS 30 minutes
-  var MESSAGE_FRESHNESS = 1800000;
+  function getDomFromString(str) {
+    var temp_div = document.createElement('div');
+    temp_div.innerHTML = str.trim();
+    return temp_div.firstChild;
+  }
 
-  rJS(window)
+  /////////////////////////////////////////////////////////////////
+  // Handlebars
+  /////////////////////////////////////////////////////////////////
+  // Precompile the templates while loading the first gadget instance
+  var gadget_klass = rJS(window),
+    input_source = gadget_klass.__template_element
+                         .getElementById("input-template")
+                         .innerHTML,
+    input_template = Handlebars.compile(input_source),
+    textarea_source = gadget_klass.__template_element
+                         .getElementById("textarea-template")
+                         .innerHTML,
+    textarea_template = Handlebars.compile(textarea_source),
+    // MESSAGE_FRESHNESS 30 minutes
+    MESSAGE_FRESHNESS = 1800000;
+
+  gadget_klass
     /////////////////////////////////////////////////////////////////
     // ready
     /////////////////////////////////////////////////////////////////
@@ -30,6 +49,10 @@
       return g.getElement()
         .push(function (element) {
           g.props.element = element;
+          g.props.template_container = element.querySelector('.ui-input-has-multiline');
+          g.props.keep_text_dict = {'oneline': '', 'textarea': ''};
+          g.props.template_container.insertBefore(getDomFromString(input_template()),
+                                                  g.props.template_container.firstChild);
         });
     })
 
@@ -48,9 +71,12 @@
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function (options) {
       var gadget = this,
-        ul = document.createElement("ul");
+        ul = document.createElement("ul"),
+        template_container = gadget.props.template_container;
       ul.setAttribute("data-role", "listview");
       gadget.props.jid = options.jid;
+      template_container.children[0].focus();
+      template_container.children[0].select();
       return gadget.updateHeader({
         page_title: options.jid
       })
@@ -108,21 +134,28 @@
               index = line.indexOf('] ');
               if (index !== -1) {
                 // Check message freshness
+                // If we receive one multiline message, then the lines after the first
+                // would not start with the date. So this would return Invalid Date
                 message_date = new Date(line.substring(1, index));
-                if (previous_message_date === undefined) {
-                  previous_message_date = new Date(message_date - MESSAGE_FRESHNESS - 2);
+                // Check direction and cut the date from the start of the line. 
+                // This should be done only if it is a unique line or the first
+                // line of a multi-line message. Other lines will retain direction
+                // of the first
+                if (isNaN(message_date) === false) {
+                  if (previous_message_date === undefined) {
+                    previous_message_date = new Date(message_date - MESSAGE_FRESHNESS - 2);
+                  }
+                  if (message_date - previous_message_date > MESSAGE_FRESHNESS) {
+                    is_old = true;
+                  }
+                  tmp_line = line.substring(index + 2);
+                  if (tmp_line.indexOf('> ') === 0) {
+                    message_is_incoming = false;
+                  } else if (tmp_line.indexOf('< ') === 0) {
+                    message_is_incoming = true;
+                  }
+                  line = tmp_line.substring(2);
                 }
-                if (message_date - previous_message_date > MESSAGE_FRESHNESS) {
-                  is_old = true;
-                }
-                // Check direction
-                tmp_line = line.substring(index + 2);
-                if (tmp_line.indexOf('> ') === 0) {
-                  message_is_incoming = false;
-                } else if (tmp_line.indexOf('< ') === 0) {
-                  message_is_incoming = true;
-                }
-                line = tmp_line.substring(2);
                 if (message_is_incoming !== is_incoming || is_old) {
                   appendText(displayed_text, is_incoming);
                   is_incoming = message_is_incoming;
@@ -149,13 +182,21 @@
     })
 
     .declareService(function () {
-      var form_gadget = this;
-
+      var form_gadget = this,
+        template_container = form_gadget.props.template_container,
+        keep_text_dict = form_gadget.props.keep_text_dict;
       function formSubmit(submit_event) {
         return form_gadget.notifySubmitting()
           .push(function () {
             var text = submit_event.target[0].value;
             submit_event.target[0].value = "";
+            keep_text_dict.oneline = "";
+            keep_text_dict.textarea = "";
+            template_container.removeChild(template_container.firstChild);
+            template_container.insertBefore(getDomFromString(input_template()),
+                                            template_container.firstChild);
+            template_container.children[0].focus();
+            template_container.children[0].select();
             return form_gadget.jio_putAttachment(
               form_gadget.props.jid,
               'MESSAGE',
@@ -186,7 +227,40 @@
     })
 
     .declareService(function () {
+      var gadget = this,
+        template_container = gadget.props.template_container,
+        keep_text_dict = gadget.props.keep_text_dict;
+      function changeMode() {
+        if (template_container.children[0].className === 'input-content') {
+          keep_text_dict.oneline = template_container.children[0].value;
+          template_container.removeChild(template_container.firstChild);
+          template_container.insertBefore(getDomFromString(textarea_template()),
+                                                          template_container.firstChild);
+          template_container.children[0].value = keep_text_dict.textarea;
+        } else {
+          keep_text_dict.textarea = template_container.children[0].value;
+          template_container.removeChild(template_container.firstChild);
+          template_container.insertBefore(getDomFromString(input_template()),
+                                                          template_container.firstChild);
+          template_container.children[0].value = keep_text_dict.oneline;
+        }
+        var typing_field = template_container.children[0];
+        typing_field.focus();
+        typing_field.select();
+        typing_field.selectionStart = typing_field.selectionEnd = typing_field.value.length;
+      }
+
+      // Listen to button click
+      return loopEventListener(
+        gadget.props.element.querySelector('.custom-mode-change'),
+        'click',
+        false,
+        changeMode
+      );
+    })
+
+    .declareService(function () {
       scroll();
     });
 
-}(window, document, rJS, RSVP, loopEventListener));
+}(window, document, rJS, RSVP, Handlebars, loopEventListener));
