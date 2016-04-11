@@ -112,6 +112,16 @@
               <tr style="opacity: 1; z-index: 0;">
                 <td colspan="3">&lt;tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=(['title', 'ZUITE-TEST-SALEORDER-PRODUCT-001'],), enter_object=True)"/&gt;</td>
               </tr>
+                <td>type</td>
+                <td>//input[@name="field_my_reference"]</td> <!-- remove this test if //div[@id="breadcrumb"]/a[3] is ZUITE-TEST-SALEORDER-PRODUCT-001 -->
+                <td>SPL-ZUITE-TEST-SALEORDER-PRODUCT-001</td>
+              </tr>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//button[@name="Base_edit:method"]</td>
+                <td></td>
+              </tr>
+              <tr>
               <tr>
                 <td>verifyText</td>
                 <td>//div[@id="breadcrumb"]/a[2]</td>
@@ -120,7 +130,7 @@
               <tr style="opacity: 1; z-index: 0;">
                 <td>verifyText</td>
                 <td>//div[@id="breadcrumb"]/a[3]</td>
-                <td>ZUITE-TEST-SALEORDER-PRODUCT-001</td>
+                <td>SPL-ZUITE-TEST-SALEORDER-PRODUCT-001</td> <!-- could also be ZUITE-TEST-SALEORDER-PRODUCT-001 -->
               </tr>
             </tbody>
           </table>
