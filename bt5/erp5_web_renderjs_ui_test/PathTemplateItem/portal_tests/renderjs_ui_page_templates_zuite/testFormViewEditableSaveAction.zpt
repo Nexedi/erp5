@@ -62,7 +62,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='QWERTY' and contains(@href, '#!history_previous')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Foo: QWERTY' and contains(@href, '#!history_previous')]</td>
   <td></td>
 </tr>
 <tr>

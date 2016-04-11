@@ -139,7 +139,7 @@
 
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>//a[@data-i18n = "Title 2"]</td>
+  <td>//a[@data-i18n = "Foo: Title 2"]</td>
   <td></td>
 </tr>
 
@@ -147,7 +147,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Title 3']</td>
+  <td>//a[@data-i18n='Foo: Title 3']</td>
   <td></td>
 </tr>
 
@@ -167,14 +167,14 @@
 
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>//a[@data-i18n = "Title 3"]</td>
+  <td>//a[@data-i18n = "Foo: Title 3"]</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Title 4']</td>
+  <td>//a[@data-i18n='Foo: Title 4']</td>
   <td></td>
 </tr>
 
@@ -195,13 +195,13 @@
 
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>//a[@data-i18n = "Title 4"]</td>
+  <td>//a[@data-i18n = "Foo: Title 4"]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Title 3']</td>
+  <td>//a[@data-i18n='Foo: Title 3']</td>
   <td></td>
 </tr>
 

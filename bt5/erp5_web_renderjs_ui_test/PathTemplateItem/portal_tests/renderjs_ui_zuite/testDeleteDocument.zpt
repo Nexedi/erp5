@@ -117,13 +117,13 @@
 
 <tr>
  	<td>waitForElementPresent</td>
- 	<td>//a[text()='1']</td>
+ 	<td>//a[text()='Foo Line: 1']</td>
  	<td></td>
 </tr>
 
 <tr>
   <td>click</td>
- 	<td>//a[text()='1']</td>
+ 	<td>//a[text()='Foo Line: 1']</td>
  	<td></td>
 </tr>
 
@@ -174,7 +174,7 @@
 
 <tr>
  	<td>waitForElementPresent</td>
- 	<td>//a[text()='2']</td>
+ 	<td>//a[text()='Foo Line: 2']</td>
  	<td></td>
 </tr>
 
@@ -196,13 +196,13 @@
 
 <tr>
  	<td>waitForElementPresent</td>
- 	<td>//a[text()='2']</td>
+ 	<td>//a[text()='Foo Line: 2']</td>
  	<td></td>
 </tr>
 
 <tr>
   <td>click</td>
- 	<td>//a[text()='2']</td>
+ 	<td>//a[text()='Foo Line: 2']</td>
  	<td></td>
 </tr>
 

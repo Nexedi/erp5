@@ -175,7 +175,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Foos']</td>
+  <td>//a[@data-i18n='Foo Module']</td>
   <td></td>
 </tr>
 

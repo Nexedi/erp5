@@ -24,6 +24,12 @@
         var erp5_document = {
           '_embedded': {
             '_view': report_section
+          },
+          '_links': {
+            'type': {
+              // form_view display portal_type in header
+              name: ''
+            }
           }
         };
         return form_gadget.render({erp5_document: erp5_document,

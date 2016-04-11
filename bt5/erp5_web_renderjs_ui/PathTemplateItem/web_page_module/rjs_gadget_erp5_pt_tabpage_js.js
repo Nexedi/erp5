@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars, URI */
+/*global window, rJS, RSVP, Handlebars, URI, calculatePageTitle */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, URI) {
+(function (window, rJS, RSVP, Handlebars, URI, calculatePageTitle) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -174,15 +174,16 @@
           return RSVP.all([
             gadget.getUrlFor({command: 'change', options: {
               page: undefined
-            }})
+            }}),
+            calculatePageTitle(gadget, erp5_document)
           ]);
         })
         .push(function (url_list) {
           return gadget.updateHeader({
             back_url: url_list[0],
-            page_title: erp5_document.title
+            page_title: url_list[1]
           });
         });
     });
 
-}(window, rJS, RSVP, Handlebars, URI));
+}(window, rJS, RSVP, Handlebars, URI, calculatePageTitle));

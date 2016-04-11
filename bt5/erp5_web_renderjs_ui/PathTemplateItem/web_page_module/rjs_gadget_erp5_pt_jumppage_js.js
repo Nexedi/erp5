@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars, URI */
+/*global window, rJS, RSVP, Handlebars, URI, calculatePageTitle */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, URI) {
+(function (window, rJS, RSVP, Handlebars, URI, calculatePageTitle) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -81,20 +81,23 @@
               i18n: view_list[i - 1].title
             });
           }
-          return gadget.translateHtml(table_template({
-            definition_title: "Jumps",
-            documentlist: tab_list,
-            definition_i18n: "Jumps"
-          }));
+          return RSVP.all([
+            gadget.translateHtml(table_template({
+              definition_title: "Jumps",
+              documentlist: tab_list,
+              definition_i18n: "Jumps"
+            })),
+            calculatePageTitle(gadget, erp5_document)
+          ]);
         })
-        .push(function (my_translated_html) {
-          gadget.props.element.innerHTML = my_translated_html;
+        .push(function (last_result_list) {
+          gadget.props.element.innerHTML = last_result_list[0];
 
           return gadget.updateHeader({
             back_url: result_list[0],
-            page_title: erp5_document.title
+            page_title: last_result_list[1]
           });
         });
     });
 
-}(window, rJS, RSVP, Handlebars, URI));
+}(window, rJS, RSVP, Handlebars, URI, calculatePageTitle));

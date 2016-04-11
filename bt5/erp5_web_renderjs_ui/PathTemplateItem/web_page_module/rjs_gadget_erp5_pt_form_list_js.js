@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, loopEventListener */
+/*global window, rJS, RSVP, loopEventListener, calculatePageTitle */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, loopEventListener) {
+(function (window, rJS, RSVP, loopEventListener, calculatePageTitle) {
   "use strict";
 
   rJS(window)
@@ -29,7 +29,7 @@
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .allowPublicAcquisition("getListboxInfo", function () {
       return this.getDeclaredGadget("erp5_form")
-        .push(function(form_gadget) {
+        .push(function (form_gadget) {
           return form_gadget.getListboxInfo();
         });
     })
@@ -70,7 +70,8 @@
             gadget.getDeclaredGadget("erp5_form"),
             new_content_action,
             gadget.getUrlFor({command: 'change', options: {page: "action"}}),
-            gadget.getUrlFor({command: 'display', options: {}})
+            gadget.getUrlFor({command: 'display', options: {}}),
+            calculatePageTitle(gadget, options.erp5_document)
           ]);
         })
         .push(function (all_gadget) {
@@ -84,7 +85,7 @@
               add_url: all_gadget[2],
               actions_url: all_gadget[3],
               export_url: "",
-              page_title: options.erp5_document.title,
+              page_title: all_gadget[5],
               front_url: all_gadget[4]
             })
 
@@ -124,4 +125,4 @@
       );
     });
 
-}(window, rJS, RSVP, loopEventListener));
+}(window, rJS, RSVP, loopEventListener, calculatePageTitle));

@@ -105,7 +105,7 @@
 
 <tr>
   <td>click</td>
-  <td>//a[text()='1']</td>
+  <td>//a[text()='Foo Line: 1']</td>
   <td></td>
 </tr>
 

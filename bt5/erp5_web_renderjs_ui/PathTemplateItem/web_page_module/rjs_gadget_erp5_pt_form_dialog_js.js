@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, RSVP, URI, loopEventListener, document */
-(function (window, rJS, RSVP, URI, loopEventListener) {
+/*global window, rJS, RSVP, URI, loopEventListener, document, calculatePageTitle */
+(function (window, rJS, RSVP, URI, loopEventListener, calculatePageTitle) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -112,13 +112,14 @@
               section.innerHTML = my_translation_html;
               return RSVP.all([
                 erp5_form.render(form_options),
-                form_gadget.getUrlFor({command: 'change', options: {page: undefined, view: undefined}})
+                form_gadget.getUrlFor({command: 'change', options: {page: undefined, view: undefined}}),
+                calculatePageTitle(form_gadget, options.erp5_document)
               ]);
             })
             .push(function (all_result) {
               return form_gadget.updateHeader({
                 cancel_url: all_result[1],
-                page_title: options.erp5_document.title,
+                page_title: all_result[2],
                 submit_action: true
               });
             });
@@ -201,4 +202,4 @@
       );
     });
 
-}(window, rJS, RSVP, URI, loopEventListener));
+}(window, rJS, RSVP, URI, loopEventListener, calculatePageTitle));

@@ -220,7 +220,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -234,7 +234,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.51485.40506.26299</string> </value>
+                <value> <string>946.44927.40202.16725</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,8 +252,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419930446.08</float>
-                        <string>GMT</string>
+                        <float>1460379644.0</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, loopEventListener, document */
+/*global window, rJS, RSVP, loopEventListener, document, calculatePageTitle */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, loopEventListener) {
+(function (window, rJS, RSVP, loopEventListener, calculatePageTitle) {
   "use strict";
 
   rJS(window)
@@ -80,7 +80,8 @@
             form_gadget.getUrlFor({command: 'change', options: {page: "action", editable: true}}),
             new_content_action,
             form_gadget.getUrlFor({command: 'history_previous'}),
-            delete_action
+            delete_action,
+            calculatePageTitle(form_gadget, options.erp5_document)
           ]);
         })
         .push(function (all_result) {
@@ -91,7 +92,7 @@
             selection_url: all_result[4],
             delete_url: all_result[5],
             cut_url: "",
-            page_title: options.erp5_document.title
+            page_title: all_result[6]
           };
           if (form_gadget.props.action !== undefined) {
             header_dict.save_action = true;
@@ -165,4 +166,4 @@
       );
     });
 
-}(window, rJS, RSVP, loopEventListener));
+}(window, rJS, RSVP, loopEventListener, calculatePageTitle));

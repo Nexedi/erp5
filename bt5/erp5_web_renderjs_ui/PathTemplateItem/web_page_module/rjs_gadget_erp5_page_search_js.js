@@ -101,8 +101,12 @@
                 "editable": 1
               }
             }},
-              "_links": {}
-              },
+              "_links": {
+                "type": {
+                  // form_list display portal_type in header
+                  name: ""
+                }
+              }},
             form_definition: {
               group_list: [[
                 "bottom",

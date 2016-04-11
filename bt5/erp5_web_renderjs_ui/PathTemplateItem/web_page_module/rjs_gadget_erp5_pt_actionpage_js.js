@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars */
+/*global window, rJS, RSVP, Handlebars, calculatePageTitle */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars) {
+(function (window, rJS, RSVP, Handlebars, calculatePageTitle) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -93,23 +93,26 @@
           if (erp5_document._links.action_object_clone_action) {
             action = tab_list.pop();
           }
-          return gadget.translateHtml(table_template({
-            definition_title: "Workflow Transitions",
-            documentlist: tab_list,
-            definition_i18n: "Workflow-Transitions",
-            section_i18n: "Actions",
-            section_title: "Actions",
-            action: action
-          }));
+          return RSVP.all([
+            gadget.translateHtml(table_template({
+              definition_title: "Workflow Transitions",
+              documentlist: tab_list,
+              definition_i18n: "Workflow-Transitions",
+              section_i18n: "Actions",
+              section_title: "Actions",
+              action: action
+            })),
+            calculatePageTitle(gadget, erp5_document)
+          ]);
         })
-        .push(function (my_translated_html) {
-          gadget.props.element.innerHTML = my_translated_html;
+        .push(function (last_result_list) {
+          gadget.props.element.innerHTML = last_result_list[0];
 
           return gadget.updateHeader({
             back_url: result_list[0],
-            page_title: erp5_document.title
+            page_title: last_result_list[1]
           });
         });
     });
 
-}(window, rJS, RSVP, Handlebars));
+}(window, rJS, RSVP, Handlebars, calculatePageTitle));

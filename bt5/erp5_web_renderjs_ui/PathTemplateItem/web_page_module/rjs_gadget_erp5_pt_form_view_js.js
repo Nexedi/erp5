@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP */
+/*global window, rJS, RSVP, calculatePageTitle */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, calculatePageTitle) {
   "use strict";
 
   // Precompile the templates while loading the first gadget instance
@@ -56,7 +56,8 @@
             gadget.getUrlFor({command: 'history_previous'}),
             gadget.getUrlFor({command: 'selection_previous'}),
             gadget.getUrlFor({command: 'selection_next'}),
-            gadget.getUrlFor({command: 'change', options: {page: "tab"}})
+            gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
+            calculatePageTitle(gadget, options.erp5_document)
           ]);
         })
         .push(function (all_result) {
@@ -69,9 +70,9 @@
             next_url: all_result[5],
             tab_url: all_result[6],
             export_url: "",
-            page_title: options.erp5_document.title,
+            page_title: all_result[7]
           });
         });
     });
 
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, calculatePageTitle));
