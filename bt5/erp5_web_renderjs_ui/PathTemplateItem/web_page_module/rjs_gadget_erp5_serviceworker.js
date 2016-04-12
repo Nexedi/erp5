@@ -3,7 +3,7 @@
 (function (self, caches, fetch) {
   "use strict";
 
-  var CACHE_NAME = 'Tue, 12 Apr 2016 15:30:00 GMT',
+  var CACHE_NAME = 'Tue, 12 Apr 2016 16:30:00 GMT',
     // Files required to make this app work offline
     REQUIRED_FILES = [
       './',

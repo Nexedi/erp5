@@ -164,6 +164,7 @@
           })
           .push(function (evt) {
             var location = evt.target.getResponseHeader("X-Location"),
+              jio_key,
               list = [];
             list.push(form_gadget.notifySubmitted());
 
@@ -174,7 +175,13 @@
                 // No redirection, stay on the same document
                 list.push(form_gadget.redirect({command: 'change', options: {view: "view", page: undefined}}));
               } else {
-                list.push(form_gadget.redirect({command: 'push_history', options: {jio_key: new URI(location).segment(2), editable: form_gadget.props.editable}}));
+                jio_key = new URI(location).segment(2);
+                if (form_gadget.props.id === jio_key) {
+                  // Do not update navigation history if dialog redirect to the same document
+                  list.push(form_gadget.redirect({command: 'change', options: {jio_key: jio_key, editable: form_gadget.props.editable}}));
+                } else {
+                  list.push(form_gadget.redirect({command: 'push_history', options: {jio_key: jio_key, editable: form_gadget.props.editable}}));
+                }
               }
             }
             return RSVP.all(list);
