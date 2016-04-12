@@ -72,27 +72,18 @@
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
-            g.getUrlFor({command: 'display', options: {page: "front"}}),
-            g.getUrlFor({command: 'display', options: {page: "history"}}),
-            g.getUrlFor({command: 'display', options: {page: "preference"}}),
-            g.getUrlFor({command: 'display', options: {page: "logout"}}),
-            g.getUrlFor({command: 'display', options: {page: "search"}}),
-            g.getUrlFor({command: 'display', options: {page: "worklist"}}),
-            
-            g.getUrlFor({command: 'display', options: {page: "purchase_price_record_module"}}),
-            g.getUrlFor({command: 'display', options: {page: "purchase_record_module"}}),
-            g.getUrlFor({command: 'display', options: {page: "product_module"}}),
-            g.getUrlFor({command: 'display', options: {page: "organisation_module"}}),
-            g.getUrlFor({command: 'display', options: {page: "inventory_move_record_module"}}),
-            g.getUrlFor({command: 'display', options: {page: "production_record_module"}}),
-            
-            
-            g.getUrlFor({command: 'display', options: {page: "sale_price_record_module"}}),
-            g.getUrlFor({command: 'display', options: {page: "sale_record_module"}}),
-            g.getUrlFor({command: 'display', options: {page: "daily_statement_record_module"}}),
-            g.getUrlFor({command: 'display', options: {page: "report_item_module"}}),
-            g.getUrlFor({command: 'display', options: {page: "sync"}}),
-            g.getUrlFor({command: 'display', options: {page: "setting"}})
+            g.getUrlFor({jio_key: "purchase_price_record_module",page:"view"}),
+            g.getUrlFor({jio_key: "purchase_record_module",page:"view"}),
+            g.getUrlFor({jio_key: "product_module",page:"view"}),
+            g.getUrlFor({jio_key: "organisation_module",page:"view"}),
+            g.getUrlFor({jio_key: "inventory_move_record_module",page:"view"}),
+            g.getUrlFor({jio_key: "production_record_module",page:"view"}),
+            g.getUrlFor({jio_key: "sale_price_record_module",page:"view"}),
+            g.getUrlFor({jio_key: "sale_record_module",page:"view"}),
+            g.getUrlFor({jio_key: "daily_statement_record_module",page:"view"}),
+            g.getUrlFor({jio_key: "report_item_module",page:"view"}),
+            g.getUrlFor({page: "sync"}),
+            g.getUrlFor({page: "setting"})
             
           ]);
         })
@@ -101,30 +92,19 @@
        
           var tmp = panel_template_header();
           tmp += panel_template_body({
-            "module_href": all_result[0],
-            "history_href": all_result[1],
-            "preference_href": all_result[2],
-            // "language_list": language_list,
-            "logout_href": all_result[3],
-            "search_href": all_result[4],
-            "worklist_href": all_result[5],
-            "purchase_price_record_module_href": all_result[6],
-            "purchase_record_module_href": all_result[7],
-            "product_module_href": all_result[8],
-            "organisation_module_href": all_result[9],
-            "inventory_move_record_module_href": all_result[10],
-            "production_record_module_href": all_result[11],
-            "sale_price_record_module_href": all_result[12],
-            "sale_record_module_href": all_result[13],
-            "daily_statement_record_module_href": all_result[14],
-            "report_item_module_href": all_result[15],
-            "sync_href": all_result[16],
-            "setting_href": all_result[17]
-            
-            
-            
-  
-          });
+            "purchase_price_record_module_href": all_result[0],
+            "purchase_record_module_href": all_result[1],
+            "product_module_href": all_result[2],
+            "organisation_module_href": all_result[3],
+            "inventory_move_record_module_href": all_result[4],
+            "production_record_module_href": all_result[5],
+            "sale_price_record_module_href": all_result[6],
+            "sale_record_module_href": all_result[7],
+            "daily_statement_record_module_href": all_result[8],
+            "report_item_module_href": all_result[9],
+            "sync_href": all_result[10],
+            "setting_href": all_result[11]
+         });
           return tmp;
         })
         .push(function (my_translated_or_plain_html) {
