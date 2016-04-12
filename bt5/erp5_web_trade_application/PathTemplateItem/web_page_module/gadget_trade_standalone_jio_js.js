@@ -285,6 +285,14 @@
           return storage.repair.apply(storage, argument_list);
         });
 
+    })
+  
+  
+  
+  
+  .declareMethod('get', function () {
+      var storage = this.state_parameter_dict.jio_storage.state_parameter_dict.jio_storage;
+      return storage.get.apply(storage, arguments);
     });
 
 
