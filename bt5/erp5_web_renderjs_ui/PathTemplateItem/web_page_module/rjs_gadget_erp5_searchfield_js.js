@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, loopEventListener, Handlebars */
+/*global window, rJS, RSVP, Handlebars, loopEventListener */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, loopEventListener, Handlebars) {
+(function (window, rJS, RSVP, Handlebars, loopEventListener) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -34,8 +34,6 @@
     // acquired method
     //////////////////////////////////////////////
     .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
-    .declareAcquiredMethod("getListboxInfo", "getListboxInfo")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -82,27 +80,17 @@
     })
     .declareService(function () {
       var gadget = this,
-        url,
-        options = {},
-        sort_button = gadget.props.element.querySelector(".filter_button");
+        clear_button = gadget.props.element.querySelector(".clear_button"),
+        search_input = gadget.props.element.querySelector("input");
       return loopEventListener(
-        sort_button,
+        clear_button,
         "click",
         false,
         function () {
-          return new RSVP.Queue()
-            .push(function () {
-              return gadget.getListboxInfo();
-            })
-            .push(function (result) {
-              url = "gadget_erp5_search_editor.html";
-              options.extended_search  = gadget.props.extended_search;
-              options.begin_from = result.begin_from;
-              options.search_column_list = result.search_column_list;
-              return gadget.renderEditorPanel(url, options);
-            });
+          search_input.value = "";
+          search_input.focus();
         }
       );
     });
 
-}(window, rJS, RSVP, loopEventListener, Handlebars));
+}(window, rJS, RSVP, Handlebars, loopEventListener));

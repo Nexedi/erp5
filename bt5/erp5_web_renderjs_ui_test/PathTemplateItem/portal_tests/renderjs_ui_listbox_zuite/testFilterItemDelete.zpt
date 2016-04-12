@@ -53,13 +53,13 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@class='filter_button']</td>
+  <td>//button[text()='Filter']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>click</td>
-  <td>//input[@class='filter_button']</td>
+  <td>//button[text()='Filter']</td>
   <td></td>
 </tr>
 
@@ -86,7 +86,7 @@
 
 <tr>
   <td>click</td>
-  <td>//input[@class='filter_button']</td>
+  <td>//button[text()='Filter']</td>
   <td></td>
 </tr>
 
@@ -201,14 +201,14 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@class='filter_button']</td>
+  <td>//button[text()='Filter']</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>click</td>
-  <td>//input[@class='filter_button']</td>
+  <td>//button[text()='Filter']</td>
   <td></td>
 </tr>
 

@@ -90,13 +90,13 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+  <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>//a[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+  <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
   <td></td>
 </tr>
 

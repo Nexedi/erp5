@@ -48,9 +48,19 @@
           return result;
         });
     })
+    .declareMethod("triggerSubmit", function () {
+      var argument_list = arguments;
+      return this.getDeclaredGadget('form_list')
+        .push(function (gadget) {
+          return gadget.triggerSubmit.apply(gadget, argument_list);
+        });
+    })
     .declareMethod("render", function () {
       var gadget = this,
-        header_dict = {page_title: 'Search'};
+        header_dict = {
+          page_title: 'Search',
+          filter_action: true
+        };
 
       return gadget.getUrlParameter('history')
         .push(function (result) {

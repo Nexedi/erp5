@@ -27,12 +27,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
-    .allowPublicAcquisition("getListboxInfo", function () {
-      return this.getDeclaredGadget("erp5_form")
-        .push(function (form_gadget) {
-          return form_gadget.getListboxInfo();
-        });
-    })
+    .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -86,12 +81,38 @@
               actions_url: all_gadget[3],
               export_url: "",
               page_title: all_gadget[5],
-              front_url: all_gadget[4]
+              front_url: all_gadget[4],
+              filter_action: true
             })
 
           ]);
         });
 
+    })
+
+    .declareMethod('triggerSubmit', function () {
+      var gadget = this,
+        extended_search = '',
+        options = {};
+      return gadget.getDeclaredGadget("erp5_searchfield")
+        .push(function (search_gadget) {
+          return search_gadget.getContent();
+        })
+        .push(function (result) {
+          // Hardcoded field name
+          extended_search = result.search;
+          return gadget.getDeclaredGadget("erp5_form");
+        })
+        .push(function (form_gadget) {
+          return form_gadget.getListboxInfo();
+        })
+        .push(function (result) {
+          var url = "gadget_erp5_search_editor.html";
+          options.extended_search  = extended_search;
+          options.begin_from = result.begin_from;
+          options.search_column_list = result.search_column_list;
+          return gadget.renderEditorPanel(url, options);
+        });
     })
 
     .declareService(function () {
