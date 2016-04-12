@@ -89,7 +89,7 @@
             i;
           all_docs_result = result;
           for (i = 0, i_len = Math.min(result.data.total_rows, option_dict.line_count); i < i_len; i += 1) {
-            promise_list.push(gadget.getUrlFor({command: 'display', options: {page: result.data.rows[i].id}}));
+            promise_list.push(gadget.getUrlFor({jio_key: result.data.rows[i].id, page: 'view'}));
           }
 
           // Calculate next/previous links if needed
