@@ -228,6 +228,12 @@ rjsunsafe/ooffice/apps/common/main/lib/model/Font.js\n
 rjsunsafe/ooffice/apps/common/main/lib/model/HistoryVersion.js\n
 rjsunsafe/ooffice/apps/common/main/lib/model/User.js\n
 rjsunsafe/ooffice/apps/common/main/lib/mods/perfect-scrollbar.js\n
+rjsunsafe/ooffice/apps/common/main/lib/template/Chat.template\n
+rjsunsafe/ooffice/apps/common/main/lib/template/Comments.template\n
+rjsunsafe/ooffice/apps/common/main/lib/template/CommentsPanel.template\n
+rjsunsafe/ooffice/apps/common/main/lib/template/CommentsPopover.template\n
+rjsunsafe/ooffice/apps/common/main/lib/template/ExtendedColorDialog.template\n
+rjsunsafe/ooffice/apps/common/main/lib/template/Header.template\n
 rjsunsafe/ooffice/apps/common/main/lib/util/LanguageInfo.js\n
 rjsunsafe/ooffice/apps/common/main/lib/util/Shortcuts.js\n
 rjsunsafe/ooffice/apps/common/main/lib/util/Tip.js\n
@@ -265,6 +271,21 @@ rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/controller/Viewport.js\n
 rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/model/Formula.js\n
 rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/model/ShapeGroup.js\n
 rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/model/TableTemplate.js\n
+rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/template/CellEditor.template\n
+rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/template/ChartSettings.template\n
+rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/template/ChartSettingsDlg.template\n
+rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/template/FileMenu.template\n
+rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/template/ImageSettings.template\n
+rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/template/LeftMenu.template\n
+rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/template/ParagraphSettings.template\n
+rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/template/ParagraphSettingsAdvanced.template\n
+rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/template/PrintSettings.template\n
+rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/template/RightMenu.template\n
+rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/template/ShapeSettings.template\n
+rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/template/ShapeSettingsAdvanced.template\n
+rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/template/StatusBar.template\n
+rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/template/Toolbar.template\n
+rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/template/Viewport.template\n
 rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/view/AutoFilterDialog.js\n
 rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/view/CellEditor.js\n
 rjsunsafe/ooffice/apps/spreadsheeteditor/main/app/view/CellRangeDialog.js\n
@@ -525,8 +546,7 @@ rjsunsafe/ooffice_fonts/ktwsh55ufibg65drjf4gn5djccz8e7dg.js\n
 rjsunsafe/ooffice_fonts/ktwsh55ufijgk35iptozrmuwqtuy.js\n
 rjsunsafe/ooffice_fonts/ktwsh55ufirzeamcpft1h7dwca.js\n
 rjsunsafe/ooffice_fonts/p7agk5uum7xi6muwqtuy.js\n
-#1f857659e691baf43ab5f56b88824172\n
-\n
+#58255e301d6e7f2575e1533e50a088f9\n
 NETWORK:\n
 *\n
 
@@ -666,7 +686,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>950.10630.64275.23040</string> </value>
+                <value> <string>950.30121.40091.5956</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -684,7 +704,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1459290721.99</float>
+                        <float>1460465491.6</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
