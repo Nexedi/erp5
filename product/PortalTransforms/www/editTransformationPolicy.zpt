@@ -33,7 +33,7 @@
 	 </td>
          <td>
 	   <select name="required_transforms:list" multiple="multiple">
-	     <option tal:repeat="id here/objectIds"
+	     <option tal:repeat="id python: sorted(here.objectIds())"
 		     tal:attributes="value id;"
 		     tal:content="id"/>
 	   </select>
