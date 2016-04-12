@@ -574,7 +574,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             REQUEST['RESPONSE'].redirect(self.absolute_url() +
                 '/manage_editTransformationPolicyForm')
 
-    security.declarePrivate('listPolicies')
+    security.declareProtected(View, 'listPolicies')
     def listPolicies(self):
         """ return the list of defined policies
 
