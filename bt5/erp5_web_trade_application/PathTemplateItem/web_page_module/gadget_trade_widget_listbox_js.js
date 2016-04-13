@@ -76,9 +76,9 @@
         }
         option_dict.query.query = '(' + search_list.join(' OR ') + ') AND ' + option_dict.query.query;
       }
-      option_dict.begin_from = parseInt(option_dict.begin_from, 2) || 0;
+      option_dict.begin_from = parseInt(option_dict.begin_from, 10) || 0;
       // Display 10 lines by default
-      option_dict.line_count = option_dict.line_count || 2;
+      option_dict.line_count = option_dict.line_count || 10;
       option_dict.query.limit = [option_dict.begin_from, option_dict.line_count + 1];
 
       return gadget.jio_allDocs(option_dict.query)

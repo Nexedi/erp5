@@ -106,7 +106,9 @@
           sub_options = {
             doc: doc,
             jio_key: args.jio_key,
-            search: args.search
+            search: args.search,
+            begin_from: args.begin_from
+
           };
           if (base_portal_type.search(/_temp$/) >= 0) {
             //Remove "_temp"

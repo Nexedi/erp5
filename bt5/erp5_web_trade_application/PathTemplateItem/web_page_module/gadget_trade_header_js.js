@@ -138,14 +138,10 @@
         possible_right_link_list = [
           ['edit_url', 'Edit', 'pencil'],
           ['right_url', 'New', 'plus']
-
-          
         ],
         possible_right_button_list = [
           ['save_action', 'Save', 'check', 'submit'],
           ['submit_action', 'Proceed', 'check', 'submit'],
-          //['new_action', 'New', 'check', 'submit']
-
         ],
         possible_sub_header_list = [
           ['tab_url', 'Tabs', 'eye'],
