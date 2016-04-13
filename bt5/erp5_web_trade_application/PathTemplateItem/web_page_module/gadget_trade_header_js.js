@@ -136,12 +136,15 @@
           ['panel_action', 'Menu', 'bars', 'panel']
         ],
         possible_right_link_list = [
-          ['edit_url', 'Edit', 'pencil']
+          ['edit_url', 'Edit', 'pencil'],
+          ['right_url', 'New', 'plus']
+
+          
         ],
         possible_right_button_list = [
           ['save_action', 'Save', 'check', 'submit'],
           ['submit_action', 'Proceed', 'check', 'submit'],
-          ['new_url', 'New', 'plus']
+          //['new_action', 'New', 'check', 'submit']
 
         ],
         possible_sub_header_list = [
