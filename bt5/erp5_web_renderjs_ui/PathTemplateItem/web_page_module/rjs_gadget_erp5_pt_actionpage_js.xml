@@ -270,7 +270,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>ERP5TypeTestCase</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -292,8 +292,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411734193.12</float>
-                        <string>GMT</string>
+                        <float>1459921390.91</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
@@ -323,7 +323,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>ERP5TypeTestCase</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -337,7 +337,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.30039.19211.22562</string> </value>
+                <value> <string>950.21143.12012.58743</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -355,8 +355,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444985792.56</float>
-                        <string>GMT</string>
+                        <float>1460528334.55</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
@@ -382,7 +382,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>ERP5TypeTestCase</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -412,8 +412,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411734095.88</float>
-                        <string>GMT</string>
+                        <float>1459909098.06</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
