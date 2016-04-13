@@ -536,8 +536,7 @@
 \n
 \n
   CodeMirror.commands.autocomplete = function(cm) {\n
-    CodeMirror.showHint(cm, CodeMirror.hint.anyword, {\n
-    } );\n
+    CodeMirror.showHint(cm, CodeMirror.hint.anyword, {range: Infinity} );\n
   }\n
 \n
 \n
