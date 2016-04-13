@@ -109,6 +109,12 @@
             </value>
         </item>
         <item>
+            <key> <string>__translation_dict</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
             <key> <string>_identity_criterion</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -118,6 +124,14 @@
             <key> <string>_range_criterion</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>caching_policy/must-revalidate</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -315,7 +329,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.39940.7236.26060</string> </value>
+                <value> <string>949.6527.32664.14592</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -333,7 +347,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441966702.41</float>
+                        <float>1460562484.03</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
