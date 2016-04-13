@@ -39,7 +39,7 @@ context.portal_sms.activate(
   recipient=to_url,
   sender=from_url,
   sender_title=from_title,
-  message_type="text",
+  message_type="MULTITEXT",
   test=download,
   document_relative_url=context.getRelativeUrl(),
   **kw)

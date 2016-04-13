@@ -70,11 +70,15 @@ class MobytGateway(XMLObject):
                       , PropertySheet.SMSGateway
                       )
 
+    # see https://web.archive.org/web/20111125005954/http://www.mobyt.fr/doc/mobyt_module_http.pdf
+    # for documentation of this old API
     api_url = "http://multilevel.mobyt.fr/sms"
+
     security.declarePublic('getAllowedMessageType')
     def getAllowedMessageType(self):
       """List of all message type"""
-      return ['text','multitext', 'wappush', 'ucs2', 'multiucs2']
+      # `text` is here for compatibility, but the API always expected uppercase
+      return ['text', 'TEXT', 'MULTITEXT', 'WAPPUSH', 'UCS2', 'MULTIUCS2']
 
     security.declarePrivate("_fetchSendResponseAsDict")
     def _fetchSendResponseAsDict(self,page):
@@ -145,7 +149,7 @@ class MobytGateway(XMLObject):
          recipient -- phone url of destination_reference. Could be a list
          sender -- phone url of source
          sender_title -- Use it as source if the gateway has title mode enable
-         message_type -- Only 'text' is available today
+         message_type -- see getAllowedMessageType
          test -- Force the test mode
 
          Kw Parameters:
@@ -194,7 +198,7 @@ class MobytGateway(XMLObject):
       if message_type != "text":
         assert quality == 'n', "This type of message require top level messsage quality"
         assert message_type in self.getAllowedMessageType(), "Unknown message type"
-        params['operation'] = message_type.capitalize()
+        params['operation'] = message_type
 
       #Send message (or test)
       if test or self.isSimulationMode():
