@@ -509,6 +509,13 @@ testCM("markClearBetween", function(cm) {
   eq(cm.findMarksAt(Pos(1, 1)).length, 0);
 });
 
+testCM("findMarksMiddle", function(cm) {
+  var mark = cm.markText(Pos(1, 1), Pos(3, 1));
+  var found = cm.findMarks(Pos(2, 1), Pos(2, 2));
+  eq(found.length, 1);
+  eq(found[0], mark);
+}, {value: "line 0\nline 1\nline 2\nline 3"});
+
 testCM("deleteSpanCollapsedInclusiveLeft", function(cm) {
   var from = Pos(1, 0), to = Pos(1, 1);
   var m = cm.markText(from, to, {collapsed: true, inclusiveLeft: true});
@@ -611,6 +618,14 @@ testCM("getAllMarks", function(cm) {
   eq(cm.getAllMarks().length, 2);
 });
 
+testCM("setValueClears", function(cm) {
+  cm.addLineClass(0, "wrap", "foo");
+  var mark = cm.markText(Pos(0, 0), Pos(1, 1), {inclusiveLeft: true, inclusiveRight: true});
+  cm.setValue("foo");
+  is(!cm.lineInfo(0).wrapClass);
+  is(!mark.find());
+}, {value: "a\nb"});
+
 testCM("bug577", function(cm) {
   cm.setValue("a\nb");
   cm.clearHistory();
@@ -673,7 +688,7 @@ testCM("selectAllNoScroll", function(cm) {
 });
 
 testCM("selectionPos", function(cm) {
-  if (phantom) return;
+  if (phantom || cm.getOption("inputStyle") != "textarea") return;
   cm.setSize(100, 100);
   addDoc(cm, 200, 100);
   cm.setSelection(Pos(1, 100), Pos(98, 100));
@@ -803,6 +818,7 @@ testCM("collapsedRangeCoordsChar", function(cm) {
 }, {value: "123456\nabcdef\nghijkl\nmnopqr\n"});
 
 testCM("collapsedRangeBetweenLinesSelected", function(cm) {
+  if (cm.getOption("inputStyle") != "textarea") return;
   var widget = document.createElement("span");
   widget.textContent = "\u2194";
   cm.markText(Pos(0, 3), Pos(1, 0), {replacedWith: widget});
@@ -995,6 +1011,14 @@ testCM("wrappingInlineWidget", function(cm) {
   eq(curR.bottom, cur1.bottom);
 }, {value: "1 2 3 xxx 4", lineWrapping: true});
 
+testCM("showEmptyWidgetSpan", function(cm) {
+  var marker = cm.markText(Pos(0, 2), Pos(0, 2), {
+    clearWhenEmpty: false,
+    replacedWith: document.createTextNode("X")
+  });
+  eq(cm.display.view[0].text.textContent, "abXc");
+}, {value: "abc"});
+
 testCM("changedInlineWidget", function(cm) {
   cm.setSize("10em");
   var w = document.createElement("span");
@@ -1083,6 +1107,7 @@ testCM("measureEndOfLine", function(cm) {
 }, {mode: "text/html", value: "<!-- foo barrr -->", lineWrapping: true}, ie_lt8 || opera_lt10);
 
 testCM("scrollVerticallyAndHorizontally", function(cm) {
+  if (cm.getOption("inputStyle") != "textarea") return;
   cm.setSize(100, 100);
   addDoc(cm, 40, 40);
   cm.setCursor(39);
@@ -1311,10 +1336,11 @@ testCM("verticalMovementCommandsWrapping", function(cm) {
     lineWrapping: true});
 
 testCM("rtlMovement", function(cm) {
+  if (cm.getOption("inputStyle") != "textarea") return;
   forEach(["خحج", "خحabcخحج", "abخحخحجcd", "abخde", "abخح2342خ1حج", "خ1ح2خح3حxج",
            "خحcd", "1خحcd", "abcdeح1ج", "خمرحبها مها!", "foobarر", "خ ة ق",
-           "<img src=\"/בדיקה3.jpg\">"], function(line) {
-    var inv = line.charAt(0) == "خ";
+           "<img src=\"/בדיקה3.jpg\">", "يتم السحب في 05 فبراير 2014"], function(line) {
+    var inv = line.charCodeAt(0) > 128;
     cm.setValue(line + "\n"); cm.execCommand(inv ? "goLineEnd" : "goLineStart");
     var cursors = byClassName(cm.getWrapperElement(), "CodeMirror-cursors")[0];
     var cursor = cursors.firstChild;
@@ -1380,7 +1406,7 @@ testCM("lineChangeEvents", function(cm) {
 });
 
 testCM("scrollEntirelyToRight", function(cm) {
-  if (phantom) return;
+  if (phantom || cm.getOption("inputStyle") != "textarea") return;
   addDoc(cm, 500, 2);
   cm.setCursor(Pos(0, 500));
   var wrap = cm.getWrapperElement(), cur = byClassName(wrap, "CodeMirror-cursor")[0];
@@ -1564,7 +1590,7 @@ testCM("addLineClass", function(cm) {
   eq(byClassName(lines, "foo").length, 2);
   eq(byClassName(lines, "bar").length, 1);
   eq(byClassName(lines, "baz").length, 1);
-  eq(byClassName(lines, "gutter-class").length, 1);
+  eq(byClassName(lines, "gutter-class").length, 2); // Gutter classes are reflected in 2 nodes
   cm.removeLineClass(0, "text", "foo");
   cls(0, "bar", null, null, null);
   cm.removeLineClass(0, "text", "foo");
@@ -1637,6 +1663,8 @@ testCM("atomicMarker", function(cm) {
 
 testCM("selectionBias", function(cm) {
   cm.markText(Pos(0, 1), Pos(0, 3), {atomic: true});
+  cm.setCursor(Pos(0, 2));
+  eqPos(cm.getCursor(), Pos(0, 1));
   cm.setCursor(Pos(0, 2));
   eqPos(cm.getCursor(), Pos(0, 3));
   cm.setCursor(Pos(0, 2));
@@ -2071,6 +2099,13 @@ testCM("eventOrder", function(cm) {
   eq(seen.join(","), "change,change,activity,change");
 });
 
+testCM("splitSpaces_nonspecial", function(cm) {
+  eq(byClassName(cm.getWrapperElement(), "cm-invalidchar").length, 0);
+}, {
+  specialChars: /[\u00a0]/,
+  value: "spaces ->            <- between"
+});
+
 test("core_rmClass", function() {
   var node = document.createElement("div");
   node.className = "foo-bar baz-quux yadda";
@@ -2099,3 +2134,18 @@ test("core_addClass", function() {
   CodeMirror.addClass(node, "b");
   eq(node.className, "a b");
 });
+
+testCM("lineSeparator", function(cm) {
+  eq(cm.lineCount(), 3);
+  eq(cm.getLine(1), "bar\r");
+  eq(cm.getLine(2), "baz\rquux");
+  cm.setOption("lineSeparator", "\r");
+  eq(cm.lineCount(), 5);
+  eq(cm.getLine(4), "quux");
+  eq(cm.getValue(), "foo\rbar\r\rbaz\rquux");
+  eq(cm.getValue("\n"), "foo\nbar\n\nbaz\nquux");
+  cm.setOption("lineSeparator", null);
+  cm.setValue("foo\nbar\r\nbaz\rquux");
+  eq(cm.lineCount(), 4);
+}, {value: "foo\nbar\r\nbaz\rquux",
+    lineSeparator: "\n"});

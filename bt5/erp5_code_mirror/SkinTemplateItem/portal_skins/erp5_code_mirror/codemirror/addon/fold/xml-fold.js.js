@@ -174,7 +174,7 @@
     }
   };
 
-  // Used by addon/edit/closetag.js
+  // Used by addon/cm_edit/closetag.js
   CodeMirror.scanForClosingTag = function(cm, pos, name, end) {
     var iter = new Iter(cm, pos.line, pos.ch, end ? {from: 0, to: end} : null);
     return findMatchingClose(iter, name);
