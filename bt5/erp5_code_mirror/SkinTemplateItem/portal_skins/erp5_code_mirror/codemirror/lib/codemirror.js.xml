@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897131.66</string> </value>
+            <value> <string>ts60604368.54</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>320620</int> </value>
+            <value> <int>353548</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -68,7 +68,7 @@
   else if (typeof define == "function" && define.amd) // AMD\n
     return define([], mod);\n
   else // Plain browser env\n
-    this.CodeMirror = mod();\n
+    (this || window).CodeMirror = mod();\n
 })(function() {\n
   "use strict";\n
 \n
@@ -76,29 +76,29 @@
 \n
   // Kludges for bugs and behavior differences that can\'t be feature\n
   // detected are enabled based on userAgent etc sniffing.\n
+  var userAgent = navigator.userAgent;\n
+  var platform = navigator.platform;\n
 \n
-  var gecko = /gecko\\/\\d/i.test(navigator.userAgent);\n
-  // ie_uptoN means Internet Explorer version N or lower\n
-  var ie_upto10 = /MSIE \\d/.test(navigator.userAgent);\n
-  var ie_11up = /Trident\\/(?:[7-9]|\\d{2,})\\..*rv:(\\d+)/.exec(navigator.userAgent);\n
+  var gecko = /gecko\\/\\d/i.test(userAgent);\n
+  var ie_upto10 = /MSIE \\d/.test(userAgent);\n
+  var ie_11up = /Trident\\/(?:[7-9]|\\d{2,})\\..*rv:(\\d+)/.exec(userAgent);\n
   var ie = ie_upto10 || ie_11up;\n
   var ie_version = ie && (ie_upto10 ? document.documentMode || 6 : ie_11up[1]);\n
-  var webkit = /WebKit\\//.test(navigator.userAgent);\n
-  var qtwebkit = webkit && /Qt\\/\\d+\\.\\d+/.test(navigator.userAgent);\n
-  var chrome = /Chrome\\//.test(navigator.userAgent);\n
-  var presto = /Opera\\//.test(navigator.userAgent);\n
+  var webkit = /WebKit\\//.test(userAgent);\n
+  var qtwebkit = webkit && /Qt\\/\\d+\\.\\d+/.test(userAgent);\n
+  var chrome = /Chrome\\//.test(userAgent);\n
+  var presto = /Opera\\//.test(userAgent);\n
   var safari = /Apple Computer/.test(navigator.vendor);\n
-  var khtml = /KHTML\\//.test(navigator.userAgent);\n
-  var mac_geMountainLion = /Mac OS X 1\\d\\D([8-9]|\\d\\d)\\D/.test(navigator.userAgent);\n
-  var phantom = /PhantomJS/.test(navigator.userAgent);\n
+  var mac_geMountainLion = /Mac OS X 1\\d\\D([8-9]|\\d\\d)\\D/.test(userAgent);\n
+  var phantom = /PhantomJS/.test(userAgent);\n
 \n
-  var ios = /AppleWebKit/.test(navigator.userAgent) && /Mobile\\/\\w+/.test(navigator.userAgent);\n
+  var ios = /AppleWebKit/.test(userAgent) && /Mobile\\/\\w+/.test(userAgent);\n
   // This is woefully incomplete. Suggestions for alternative methods welcome.\n
-  var mobile = ios || /Android|webOS|BlackBerry|Opera Mini|Opera Mobi|IEMobile/i.test(navigator.userAgent);\n
-  var mac = ios || /Mac/.test(navigator.platform);\n
-  var windows = /win/i.test(navigator.platform);\n
+  var mobile = ios || /Android|webOS|BlackBerry|Opera Mini|Opera Mobi|IEMobile/i.test(userAgent);\n
+  var mac = ios || /Mac/.test(platform);\n
+  var windows = /win/i.test(platform);\n
 \n
-  var presto_version = presto && navigator.userAgent.match(/Version\\/(\\d*\\.\\d*)/);\n
+  var presto_version = presto && userAgent.match(/Version\\/(\\d*\\.\\d*)/);\n
   if (presto_version) presto_version = Number(presto_version[1]);\n
   if (presto_version && presto_version >= 15) { presto = false; webkit = true; }\n
   // Some browsers use the wrong event properties to signal cmd/ctrl on OS X\n
@@ -122,33 +122,40 @@
     setGuttersForLineNumbers(options);\n
 \n
     var doc = options.value;\n
-    if (typeof doc == "string") doc = new Doc(doc, options.mode);\n
+    if (typeof doc == "string") doc = new Doc(doc, options.mode, null, options.lineSeparator);\n
     this.doc = doc;\n
 \n
-    var display = this.display = new Display(place, doc);\n
+    var input = new CodeMirror.inputStyles[options.inputStyle](this);\n
+    var display = this.display = new Display(place, doc, input);\n
     display.wrapper.CodeMirror = this;\n
     updateGutters(this);\n
     themeChanged(this);\n
     if (options.lineWrapping)\n
       this.display.wrapper.className += " CodeMirror-wrap";\n
-    if (options.autofocus && !mobile) focusInput(this);\n
+    if (options.autofocus && !mobile) display.input.focus();\n
     initScrollbars(this);\n
 \n
     this.state = {\n
       keyMaps: [],  // stores maps added by addKeyMap\n
       overlays: [], // highlighting overlays, as added by addOverlay\n
       modeGen: 0,   // bumped when mode/overlay changes, used to invalidate highlighting info\n
-      overwrite: false, focused: false,\n
+      overwrite: false,\n
+      delayingBlurEvent: false,\n
+      focused: false,\n
       suppressEdits: false, // used to disable editing during key handlers when in readOnly mode\n
-      pasteIncoming: false, cutIncoming: false, // help recognize paste/cut edits in readInput\n
+      pasteIncoming: false, cutIncoming: false, // help recognize paste/cut edits in input.poll\n
+      selectingText: false,\n
       draggingText: false,\n
       highlight: new Delayed(), // stores highlight worker timeout\n
-      keySeq: null  // Unfinished key sequence\n
+      keySeq: null,  // Unfinished key sequence\n
+      specialChars: null\n
     };\n
+\n
+    var cm = this;\n
 \n
     // Override magic textarea content restore that IE sometimes does\n
     // on our hidden textarea on reload\n
-    if (ie && ie_version < 11) setTimeout(bind(resetInput, this, true), 20);\n
+    if (ie && ie_version < 11) setTimeout(function() { cm.display.input.reset(true); }, 20);\n
 \n
     registerEventHandlers(this);\n
     ensureGlobalHandlers();\n
@@ -157,7 +164,7 @@
     this.curOp.forceUpdate = true;\n
     attachDoc(this, doc);\n
 \n
-    if ((options.autofocus && !mobile) || activeElt() == display.input)\n
+    if ((options.autofocus && !mobile) || cm.hasFocus())\n
       setTimeout(bind(onFocus, this), 20);\n
     else\n
       onBlur(this);\n
@@ -165,8 +172,14 @@
     for (var opt in optionHandlers) if (optionHandlers.hasOwnProperty(opt))\n
       optionHandlers[opt](this, options[opt], Init);\n
     maybeUpdateLineNumberWidth(this);\n
+    if (options.finishInit) options.finishInit(this);\n
     for (var i = 0; i < initHooks.length; ++i) initHooks[i](this);\n
     endOperation(this);\n
+    // Suppress optimizelegibility in Webkit, since it breaks text\n
+    // measuring on line wrapping boundaries.\n
+    if (webkit && options.lineWrapping &&\n
+        getComputedStyle(display.lineDiv).textRendering == "optimizelegibility")\n
+      display.lineDiv.style.textRendering = "auto";\n
   }\n
 \n
   // DISPLAY CONSTRUCTOR\n
@@ -175,31 +188,17 @@
   // and content drawing. It holds references to DOM nodes and\n
   // display-related state.\n
 \n
-  function Display(place, doc) {\n
+  function Display(place, doc, input) {\n
     var d = this;\n
+    this.input = input;\n
 \n
-    // The semihidden textarea that is focused when the editor is\n
-    // focused, and receives input.\n
-    var input = d.input = elt("textarea", null, null, "position: absolute; padding: 0; width: 1px; height: 1em; outline: none");\n
-    // The textarea is kept positioned near the cursor to prevent the\n
-    // fact that it\'ll be scrolled into view on input from scrolling\n
-    // our fake cursor out of view. On webkit, when wrap=off, paste is\n
-    // very slow. So make the area wide instead.\n
-    if (webkit) input.style.width = "1000px";\n
-    else input.setAttribute("wrap", "off");\n
-    // If border: 0; -- iOS fails to open keyboard (issue #1287)\n
-    if (ios) input.style.border = "1px solid black";\n
-    input.setAttribute("autocorrect", "off"); input.setAttribute("autocapitalize", "off"); input.setAttribute("spellcheck", "false");\n
-\n
-    // Wraps and hides input textarea\n
-    d.inputDiv = elt("div", [input], null, "overflow: hidden; position: relative; width: 3px; height: 0px;");\n
     // Covers bottom-right square when both scrollbars are present.\n
     d.scrollbarFiller = elt("div", null, "CodeMirror-scrollbar-filler");\n
-    d.scrollbarFiller.setAttribute("not-content", "true");\n
+    d.scrollbarFiller.setAttribute("cm-not-content", "true");\n
     // Covers bottom of gutter when coverGutterNextToScrollbar is on\n
     // and h scrollbar is present.\n
     d.gutterFiller = elt("div", null, "CodeMirror-gutter-filler");\n
-    d.gutterFiller.setAttribute("not-content", "true");\n
+    d.gutterFiller.setAttribute("cm-not-content", "true");\n
     // Will contain the actual code, positioned to cover the viewport.\n
     d.lineDiv = elt("div", null, "CodeMirror-code");\n
     // Elements are added to these to represent selection and cursors.\n
@@ -228,15 +227,11 @@
     d.scroller = elt("div", [d.sizer, d.heightForcer, d.gutters], "CodeMirror-scroll");\n
     d.scroller.setAttribute("tabIndex", "-1");\n
     // The element in which the editor lives.\n
-    d.wrapper = elt("div", [d.inputDiv, d.scrollbarFiller, d.gutterFiller, d.scroller], "CodeMirror");\n
+    d.wrapper = elt("div", [d.scrollbarFiller, d.gutterFiller, d.scroller], "CodeMirror");\n
 \n
     // Work around IE7 z-index bug (not perfect, hence IE7 not really being supported)\n
     if (ie && ie_version < 8) { d.gutters.style.zIndex = -1; d.scroller.style.paddingRight = 0; }\n
-    // Needed to hide big blue blinking cursor on Mobile Safari\n
-    if (ios) input.style.width = "0px";\n
-    if (!webkit) d.scroller.draggable = true;\n
-    // Needed to handle Tab key in KHTML\n
-    if (khtml) { d.inputDiv.style.height = "1px"; d.inputDiv.style.position = "absolute"; }\n
+    if (!webkit && !(gecko && mobile)) d.scroller.draggable = true;\n
 \n
     if (place) {\n
       if (place.appendChild) place.appendChild(d.wrapper);\n
@@ -263,24 +258,12 @@
     // Used to only resize the line number gutter when necessary (when\n
     // the amount of lines crosses a boundary that makes its width change)\n
     d.lineNumWidth = d.lineNumInnerWidth = d.lineNumChars = null;\n
-    // See readInput and resetInput\n
-    d.prevInput = "";\n
     // Set to true when a non-horizontal-scrolling line widget is\n
     // added. As an optimization, line widget aligning is skipped when\n
     // this is false.\n
     d.alignWidgets = false;\n
-    // Flag that indicates whether we expect input to appear real soon\n
-    // now (after some event like \'keypress\' or \'input\') and are\n
-    // polling intensively.\n
-    d.pollingFast = false;\n
-    // Self-resetting timeout for the poller\n
-    d.poll = new Delayed();\n
 \n
     d.cachedCharWidth = d.cachedTextHeight = d.cachedPaddingH = null;\n
-\n
-    // Tracks when resetInput has punted to just putting a short\n
-    // string into the textarea instead of the full selection.\n
-    d.inaccurateSelection = false;\n
 \n
     // Tracks the maximum line length so that the horizontal scrollbar\n
     // can be kept static when scrolling.\n
@@ -297,6 +280,10 @@
     // Used to track whether anything happened since the context menu\n
     // was opened.\n
     d.selForContextMenu = null;\n
+\n
+    d.activeTouch = null;\n
+\n
+    input.init(d);\n
   }\n
 \n
   // STATE UPDATES\n
@@ -478,7 +465,7 @@
       if (horiz.clientWidth) scroll(horiz.scrollLeft, "horizontal");\n
     });\n
 \n
-    this.checkedOverlay = false;\n
+    this.checkedZeroWidth = false;\n
     // Need to set a minimum width to see the scrollbar on IE7 (but must not set it on IE8).\n
     if (ie && ie_version < 8) this.horiz.style.minHeight = this.vert.style.minWidth = "18px";\n
   }\n
@@ -513,29 +500,43 @@
         this.horiz.firstChild.style.width = "0";\n
       }\n
 \n
-      if (!this.checkedOverlay && measure.clientHeight > 0) {\n
-        if (sWidth == 0) this.overlayHack();\n
-        this.checkedOverlay = true;\n
+      if (!this.checkedZeroWidth && measure.clientHeight > 0) {\n
+        if (sWidth == 0) this.zeroWidthHack();\n
+        this.checkedZeroWidth = true;\n
       }\n
 \n
       return {right: needsV ? sWidth : 0, bottom: needsH ? sWidth : 0};\n
     },\n
     setScrollLeft: function(pos) {\n
       if (this.horiz.scrollLeft != pos) this.horiz.scrollLeft = pos;\n
+      if (this.disableHoriz) this.enableZeroWidthBar(this.horiz, this.disableHoriz);\n
     },\n
     setScrollTop: function(pos) {\n
       if (this.vert.scrollTop != pos) this.vert.scrollTop = pos;\n
+      if (this.disableVert) this.enableZeroWidthBar(this.vert, this.disableVert);\n
     },\n
-    overlayHack: function() {\n
+    zeroWidthHack: function() {\n
       var w = mac && !mac_geMountainLion ? "12px" : "18px";\n
-      this.horiz.style.minHeight = this.vert.style.minWidth = w;\n
-      var self = this;\n
-      var barMouseDown = function(e) {\n
-        if (e_target(e) != self.vert && e_target(e) != self.horiz)\n
-          operation(self.cm, onMouseDown)(e);\n
-      };\n
-      on(this.vert, "mousedown", barMouseDown);\n
-      on(this.horiz, "mousedown", barMouseDown);\n
+      this.horiz.style.height = this.vert.style.width = w;\n
+      this.horiz.style.pointerEvents = this.vert.style.pointerEvents = "none";\n
+      this.disableHoriz = new Delayed;\n
+      this.disableVert = new Delayed;\n
+    },\n
+    enableZeroWidthBar: function(bar, delay) {\n
+      bar.style.pointerEvents = "auto";\n
+      function maybeDisable() {\n
+        // To find out whether the scrollbar is still visible, we\n
+        // check whether the element under the pixel in the bottom\n
+        // left corner of the scrollbar box is the scrollbar box\n
+        // itself (when the bar is still visible) or its filler child\n
+        // (when the bar is hidden). If it is still visible, we keep\n
+        // it enabled, if it\'s hidden, we disable pointer events.\n
+        var box = bar.getBoundingClientRect();\n
+        var elt = document.elementFromPoint(box.left + 1, box.bottom - 1);\n
+        if (elt != bar) bar.style.pointerEvents = "none";\n
+        else delay.set(1000, maybeDisable);\n
+      }\n
+      delay.set(1000, maybeDisable);\n
     },\n
     clear: function() {\n
       var parent = this.horiz.parentNode;\n
@@ -564,10 +565,11 @@
 \n
     cm.display.scrollbars = new CodeMirror.scrollbarModel[cm.options.scrollbarStyle](function(node) {\n
       cm.display.wrapper.insertBefore(node, cm.display.scrollbarFiller);\n
+      // Prevent clicks in the scrollbars from killing focus\n
       on(node, "mousedown", function() {\n
-        if (cm.state.focused) setTimeout(bind(focusInput, cm), 0);\n
+        if (cm.state.focused) setTimeout(function() { cm.display.input.focus(); }, 0);\n
       });\n
-      node.setAttribute("not-content", "true");\n
+      node.setAttribute("cm-not-content", "true");\n
     }, function(pos, axis) {\n
       if (axis == "horizontal") setScrollLeft(cm, pos);\n
       else setScrollTop(cm, pos);\n
@@ -596,6 +598,7 @@
 \n
     d.sizer.style.paddingRight = (d.barWidth = sizes.right) + "px";\n
     d.sizer.style.paddingBottom = (d.barHeight = sizes.bottom) + "px";\n
+    d.heightForcer.style.borderBottom = sizes.bottom + "px solid transparent"\n
 \n
     if (sizes.right && sizes.bottom) {\n
       d.scrollbarFiller.style.display = "block";\n
@@ -664,7 +667,7 @@
                                                  "CodeMirror-linenumber CodeMirror-gutter-elt"));\n
       var innerW = test.firstChild.offsetWidth, padding = test.offsetWidth - innerW;\n
       display.lineGutter.style.width = "";\n
-      display.lineNumInnerWidth = Math.max(innerW, display.lineGutter.offsetWidth - padding);\n
+      display.lineNumInnerWidth = Math.max(innerW, display.lineGutter.offsetWidth - padding) + 1;\n
       display.lineNumWidth = display.lineNumInnerWidth + padding;\n
       display.lineNumChars = display.lineNumInnerWidth ? last.length : -1;\n
       display.lineGutter.style.width = display.lineNumWidth + "px";\n
@@ -699,7 +702,17 @@
     this.oldDisplayWidth = displayWidth(cm);\n
     this.force = force;\n
     this.dims = getDimensions(cm);\n
+    this.events = [];\n
   }\n
+\n
+  DisplayUpdate.prototype.signal = function(emitter, type) {\n
+    if (hasHandler(emitter, type))\n
+      this.events.push(arguments);\n
+  };\n
+  DisplayUpdate.prototype.finish = function() {\n
+    for (var i = 0; i < this.events.length; i++)\n
+      signal.apply(null, this.events[i]);\n
+  };\n
 \n
   function maybeClipScrollbars(cm) {\n
     var display = cm.display;\n
@@ -774,7 +787,7 @@
     // width and height.\n
     removeChildren(display.cursorDiv);\n
     removeChildren(display.selectionDiv);\n
-    display.gutters.style.height = 0;\n
+    display.gutters.style.height = display.sizer.style.minHeight = 0;\n
 \n
     if (different) {\n
       display.lastWrapHeight = update.wrapperHeight;\n
@@ -788,12 +801,10 @@
   }\n
 \n
   function postUpdateDisplay(cm, update) {\n
-    var force = update.force, viewport = update.viewport;\n
+    var viewport = update.viewport;\n
+\n
     for (var first = true;; first = false) {\n
-      if (first && cm.options.lineWrapping && update.oldDisplayWidth != displayWidth(cm)) {\n
-        force = true;\n
-      } else {\n
-        force = false;\n
+      if (!first || !cm.options.lineWrapping || update.oldDisplayWidth == displayWidth(cm)) {\n
         // Clip forced viewport to actual scrollable area.\n
         if (viewport && viewport.top != null)\n
           viewport = {top: Math.min(cm.doc.height + paddingVert(cm.display) - displayHeight(cm), viewport.top)};\n
@@ -807,13 +818,13 @@
       updateHeightsInViewport(cm);\n
       var barMeasure = measureForScrollbars(cm);\n
       updateSelection(cm);\n
-      setDocumentHeight(cm, barMeasure);\n
       updateScrollbars(cm, barMeasure);\n
+      setDocumentHeight(cm, barMeasure);\n
     }\n
 \n
-    signalLater(cm, "update", cm);\n
+    update.signal(cm, "update", cm);\n
     if (cm.display.viewFrom != cm.display.reportedViewFrom || cm.display.viewTo != cm.display.reportedViewTo) {\n
-      signalLater(cm, "viewportChange", cm, cm.display.viewFrom, cm.display.viewTo);\n
+      update.signal(cm, "viewportChange", cm, cm.display.viewFrom, cm.display.viewTo);\n
       cm.display.reportedViewFrom = cm.display.viewFrom; cm.display.reportedViewTo = cm.display.viewTo;\n
     }\n
   }\n
@@ -825,16 +836,16 @@
       postUpdateDisplay(cm, update);\n
       var barMeasure = measureForScrollbars(cm);\n
       updateSelection(cm);\n
-      setDocumentHeight(cm, barMeasure);\n
       updateScrollbars(cm, barMeasure);\n
+      setDocumentHeight(cm, barMeasure);\n
+      update.finish();\n
     }\n
   }\n
 \n
   function setDocumentHeight(cm, measure) {\n
     cm.display.sizer.style.minHeight = measure.docHeight + "px";\n
-    var total = measure.docHeight + cm.display.barHeight;\n
-    cm.display.heightForcer.style.top = total + "px";\n
-    cm.display.gutters.style.height = Math.max(total + scrollGap(cm), measure.clientHeight) + "px";\n
+    cm.display.heightForcer.style.top = measure.docHeight + "px";\n
+    cm.display.gutters.style.height = (measure.docHeight + cm.display.barHeight + scrollGap(cm)) + "px";\n
   }\n
 \n
   // Read the actual heights of the rendered lines, and update their\n
@@ -868,7 +879,7 @@
   // given line.\n
   function updateWidgetHeight(line) {\n
     if (line.widgets) for (var i = 0; i < line.widgets.length; ++i)\n
-      line.widgets[i].height = line.widgets[i].node.offsetHeight;\n
+      line.widgets[i].height = line.widgets[i].node.parentNode.offsetHeight;\n
   }\n
 \n
   // Do a bulk-read of the DOM positions and sizes needed to draw the\n
@@ -911,7 +922,7 @@
     for (var i = 0; i < view.length; i++) {\n
       var lineView = view[i];\n
       if (lineView.hidden) {\n
-      } else if (!lineView.node) { // Not drawn yet\n
+      } else if (!lineView.node || lineView.node.parentNode != container) { // Not drawn yet\n
         var node = buildLineElement(cm, lineView, lineN, dims);\n
         container.insertBefore(node, cur);\n
       } else { // Already drawn\n
@@ -942,7 +953,7 @@
       if (type == "text") updateLineText(cm, lineView);\n
       else if (type == "gutter") updateLineGutter(cm, lineView, lineN, dims);\n
       else if (type == "class") updateLineClasses(lineView);\n
-      else if (type == "widget") updateLineWidgets(lineView, dims);\n
+      else if (type == "widget") updateLineWidgets(cm, lineView, dims);\n
     }\n
     lineView.changes = null;\n
   }\n
@@ -1017,14 +1028,24 @@
       lineView.node.removeChild(lineView.gutter);\n
       lineView.gutter = null;\n
     }\n
+    if (lineView.gutterBackground) {\n
+      lineView.node.removeChild(lineView.gutterBackground);\n
+      lineView.gutterBackground = null;\n
+    }\n
+    if (lineView.line.gutterClass) {\n
+      var wrap = ensureLineWrapped(lineView);\n
+      lineView.gutterBackground = elt("div", null, "CodeMirror-gutter-background " + lineView.line.gutterClass,\n
+                                      "left: " + (cm.options.fixedGutter ? dims.fixedPos : -dims.gutterTotalWidth) +\n
+                                      "px; width: " + dims.gutterTotalWidth + "px");\n
+      wrap.insertBefore(lineView.gutterBackground, lineView.text);\n
+    }\n
     var markers = lineView.line.gutterMarkers;\n
     if (cm.options.lineNumbers || markers) {\n
       var wrap = ensureLineWrapped(lineView);\n
-      var gutterWrap = lineView.gutter =\n
-        wrap.insertBefore(elt("div", null, "CodeMirror-gutter-wrapper", "left: " +\n
-                              (cm.options.fixedGutter ? dims.fixedPos : -dims.gutterTotalWidth) +\n
-                              "px; width: " + dims.gutterTotalWidth + "px"),\n
-                          lineView.text);\n
+      var gutterWrap = lineView.gutter = elt("div", null, "CodeMirror-gutter-wrapper", "left: " +\n
+                                             (cm.options.fixedGutter ? dims.fixedPos : -dims.gutterTotalWidth) + "px");\n
+      cm.display.input.setUneditable(gutterWrap);\n
+      wrap.insertBefore(gutterWrap, lineView.text);\n
       if (lineView.line.gutterClass)\n
         gutterWrap.className += " " + lineView.line.gutterClass;\n
       if (cm.options.lineNumbers && (!markers || !markers["CodeMirror-linenumbers"]))\n
@@ -1042,14 +1063,14 @@
     }\n
   }\n
 \n
-  function updateLineWidgets(lineView, dims) {\n
+  function updateLineWidgets(cm, lineView, dims) {\n
     if (lineView.alignable) lineView.alignable = null;\n
     for (var node = lineView.node.firstChild, next; node; node = next) {\n
       var next = node.nextSibling;\n
       if (node.className == "CodeMirror-linewidget")\n
         lineView.node.removeChild(node);\n
     }\n
-    insertLineWidgets(lineView, dims);\n
+    insertLineWidgets(cm, lineView, dims);\n
   }\n
 \n
   // Build a line\'s DOM representation from scratch\n
@@ -1061,25 +1082,26 @@
 \n
     updateLineClasses(lineView);\n
     updateLineGutter(cm, lineView, lineN, dims);\n
-    insertLineWidgets(lineView, dims);\n
+    insertLineWidgets(cm, lineView, dims);\n
     return lineView.node;\n
   }\n
 \n
   // A lineView may contain multiple logical lines (when merged by\n
   // collapsed spans). The widgets for all of them need to be drawn.\n
-  function insertLineWidgets(lineView, dims) {\n
-    insertLineWidgetsFor(lineView.line, lineView, dims, true);\n
+  function insertLineWidgets(cm, lineView, dims) {\n
+    insertLineWidgetsFor(cm, lineView.line, lineView, dims, true);\n
     if (lineView.rest) for (var i = 0; i < lineView.rest.length; i++)\n
-      insertLineWidgetsFor(lineView.rest[i], lineView, dims, false);\n
+      insertLineWidgetsFor(cm, lineView.rest[i], lineView, dims, false);\n
   }\n
 \n
-  function insertLineWidgetsFor(line, lineView, dims, allowAbove) {\n
+  function insertLineWidgetsFor(cm, line, lineView, dims, allowAbove) {\n
     if (!line.widgets) return;\n
     var wrap = ensureLineWrapped(lineView);\n
     for (var i = 0, ws = line.widgets; i < ws.length; ++i) {\n
       var widget = ws[i], node = elt("div", [widget.node], "CodeMirror-linewidget");\n
       if (!widget.handleMouseEvents) node.setAttribute("cm-ignore-events", "true");\n
       positionLineWidget(widget, node, lineView, dims);\n
+      cm.display.input.setUneditable(node);\n
       if (allowAbove && widget.above)\n
         wrap.insertBefore(node, lineView.gutter || lineView.text);\n
       else\n
@@ -1121,6 +1143,922 @@
   function copyPos(x) {return Pos(x.line, x.ch);}\n
   function maxPos(a, b) { return cmp(a, b) < 0 ? b : a; }\n
   function minPos(a, b) { return cmp(a, b) < 0 ? a : b; }\n
+\n
+  // INPUT HANDLING\n
+\n
+  function ensureFocus(cm) {\n
+    if (!cm.state.focused) { cm.display.input.focus(); onFocus(cm); }\n
+  }\n
+\n
+  // This will be set to an array of strings when copying, so that,\n
+  // when pasting, we know what kind of selections the copied text\n
+  // was made out of.\n
+  var lastCopied = null;\n
+\n
+  function applyTextInput(cm, inserted, deleted, sel, origin) {\n
+    var doc = cm.doc;\n
+    cm.display.shift = false;\n
+    if (!sel) sel = doc.sel;\n
+\n
+    var paste = cm.state.pasteIncoming || origin == "paste";\n
+    var textLines = doc.splitLines(inserted), multiPaste = null;\n
+    // When pasing N lines into N selections, insert one line per selection\n
+    if (paste && sel.ranges.length > 1) {\n
+      if (lastCopied && lastCopied.join("\\n") == inserted) {\n
+        if (sel.ranges.length % lastCopied.length == 0) {\n
+          multiPaste = [];\n
+          for (var i = 0; i < lastCopied.length; i++)\n
+            multiPaste.push(doc.splitLines(lastCopied[i]));\n
+        }\n
+      } else if (textLines.length == sel.ranges.length) {\n
+        multiPaste = map(textLines, function(l) { return [l]; });\n
+      }\n
+    }\n
+\n
+    // Normal behavior is to insert the new text into every selection\n
+    for (var i = sel.ranges.length - 1; i >= 0; i--) {\n
+      var range = sel.ranges[i];\n
+      var from = range.from(), to = range.to();\n
+      if (range.empty()) {\n
+        if (deleted && deleted > 0) // Handle deletion\n
+          from = Pos(from.line, from.ch - deleted);\n
+        else if (cm.state.overwrite && !paste) // Handle overwrite\n
+          to = Pos(to.line, Math.min(getLine(doc, to.line).text.length, to.ch + lst(textLines).length));\n
+      }\n
+      var updateInput = cm.curOp.updateInput;\n
+      var changeEvent = {from: from, to: to, text: multiPaste ? multiPaste[i % multiPaste.length] : textLines,\n
+                         origin: origin || (paste ? "paste" : cm.state.cutIncoming ? "cut" : "+input")};\n
+      makeChange(cm.doc, changeEvent);\n
+      signalLater(cm, "inputRead", cm, changeEvent);\n
+    }\n
+    if (inserted && !paste)\n
+      triggerElectric(cm, inserted);\n
+\n
+    ensureCursorVisible(cm);\n
+    cm.curOp.updateInput = updateInput;\n
+    cm.curOp.typing = true;\n
+    cm.state.pasteIncoming = cm.state.cutIncoming = false;\n
+  }\n
+\n
+  function handlePaste(e, cm) {\n
+    var pasted = e.clipboardData && e.clipboardData.getData("text/plain");\n
+    if (pasted) {\n
+      e.preventDefault();\n
+      if (!cm.isReadOnly() && !cm.options.disableInput)\n
+        runInOp(cm, function() { applyTextInput(cm, pasted, 0, null, "paste"); });\n
+      return true;\n
+    }\n
+  }\n
+\n
+  function triggerElectric(cm, inserted) {\n
+    // When an \'electric\' character is inserted, immediately trigger a reindent\n
+    if (!cm.options.electricChars || !cm.options.smartIndent) return;\n
+    var sel = cm.doc.sel;\n
+\n
+    for (var i = sel.ranges.length - 1; i >= 0; i--) {\n
+      var range = sel.ranges[i];\n
+      if (range.head.ch > 100 || (i && sel.ranges[i - 1].head.line == range.head.line)) continue;\n
+      var mode = cm.getModeAt(range.head);\n
+      var indented = false;\n
+      if (mode.electricChars) {\n
+        for (var j = 0; j < mode.electricChars.length; j++)\n
+          if (inserted.indexOf(mode.electricChars.charAt(j)) > -1) {\n
+            indented = indentLine(cm, range.head.line, "smart");\n
+            break;\n
+          }\n
+      } else if (mode.electricInput) {\n
+        if (mode.electricInput.test(getLine(cm.doc, range.head.line).text.slice(0, range.head.ch)))\n
+          indented = indentLine(cm, range.head.line, "smart");\n
+      }\n
+      if (indented) signalLater(cm, "electricInput", cm, range.head.line);\n
+    }\n
+  }\n
+\n
+  function copyableRanges(cm) {\n
+    var text = [], ranges = [];\n
+    for (var i = 0; i < cm.doc.sel.ranges.length; i++) {\n
+      var line = cm.doc.sel.ranges[i].head.line;\n
+      var lineRange = {anchor: Pos(line, 0), head: Pos(line + 1, 0)};\n
+      ranges.push(lineRange);\n
+      text.push(cm.getRange(lineRange.anchor, lineRange.head));\n
+    }\n
+    return {text: text, ranges: ranges};\n
+  }\n
+\n
+  function disableBrowserMagic(field) {\n
+    field.setAttribute("autocorrect", "off");\n
+    field.setAttribute("autocapitalize", "off");\n
+    field.setAttribute("spellcheck", "false");\n
+  }\n
+\n
+  // TEXTAREA INPUT STYLE\n
+\n
+  function TextareaInput(cm) {\n
+    this.cm = cm;\n
+    // See input.poll and input.reset\n
+    this.prevInput = "";\n
+\n
+    // Flag that indicates whether we expect input to appear real soon\n
+    // now (after some event like \'keypress\' or \'input\') and are\n
+    // polling intensively.\n
+    this.pollingFast = false;\n
+    // Self-resetting timeout for the poller\n
+    this.polling = new Delayed();\n
+    // Tracks when input.reset has punted to just putting a short\n
+    // string into the textarea instead of the full selection.\n
+    this.inaccurateSelection = false;\n
+    // Used to work around IE issue with selection being forgotten when focus moves away from textarea\n
+    this.hasSelection = false;\n
+    this.composing = null;\n
+  };\n
+\n
+  function hiddenTextarea() {\n
+    var te = elt("textarea", null, null, "position: absolute; padding: 0; width: 1px; height: 1em; outline: none");\n
+    var div = elt("div", [te], null, "overflow: hidden; position: relative; width: 3px; height: 0px;");\n
+    // The textarea is kept positioned near the cursor to prevent the\n
+    // fact that it\'ll be scrolled into view on input from scrolling\n
+    // our fake cursor out of view. On webkit, when wrap=off, paste is\n
+    // very slow. So make the area wide instead.\n
+    if (webkit) te.style.width = "1000px";\n
+    else te.setAttribute("wrap", "off");\n
+    // If border: 0; -- iOS fails to open keyboard (issue #1287)\n
+    if (ios) te.style.border = "1px solid black";\n
+    disableBrowserMagic(te);\n
+    return div;\n
+  }\n
+\n
+  TextareaInput.prototype = copyObj({\n
+    init: function(display) {\n
+      var input = this, cm = this.cm;\n
+\n
+      // Wraps and hides input textarea\n
+      var div = this.wrapper = hiddenTextarea();\n
+      // The semihidden textarea that is focused when the editor is\n
+      // focused, and receives input.\n
+      var te = this.textarea = div.firstChild;\n
+      display.wrapper.insertBefore(div, display.wrapper.firstChild);\n
+\n
+      // Needed to hide big blue blinking cursor on Mobile Safari (doesn\'t seem to work in iOS 8 anymore)\n
+      if (ios) te.style.width = "0px";\n
+\n
+      on(te, "input", function() {\n
+        if (ie && ie_version >= 9 && input.hasSelection) input.hasSelection = null;\n
+        input.poll();\n
+      });\n
+\n
+      on(te, "paste", function(e) {\n
+        if (signalDOMEvent(cm, e) || handlePaste(e, cm)) return\n
+\n
+        cm.state.pasteIncoming = true;\n
+        input.fastPoll();\n
+      });\n
+\n
+      function prepareCopyCut(e) {\n
+        if (signalDOMEvent(cm, e)) return\n
+        if (cm.somethingSelected()) {\n
+          lastCopied = cm.getSelections();\n
+          if (input.inaccurateSelection) {\n
+            input.prevInput = "";\n
+            input.inaccurateSelection = false;\n
+            te.value = lastCopied.join("\\n");\n
+            selectInput(te);\n
+          }\n
+        } else if (!cm.options.lineWiseCopyCut) {\n
+          return;\n
+        } else {\n
+          var ranges = copyableRanges(cm);\n
+          lastCopied = ranges.text;\n
+          if (e.type == "cut") {\n
+            cm.setSelections(ranges.ranges, null, sel_dontScroll);\n
+          } else {\n
+            input.prevInput = "";\n
+            te.value = ranges.text.join("\\n");\n
+            selectInput(te);\n
+          }\n
+        }\n
+        if (e.type == "cut") cm.state.cutIncoming = true;\n
+      }\n
+      on(te, "cut", prepareCopyCut);\n
+      on(te, "copy", prepareCopyCut);\n
+\n
+      on(display.scroller, "paste", function(e) {\n
+        if (eventInWidget(display, e) || signalDOMEvent(cm, e)) return;\n
+        cm.state.pasteIncoming = true;\n
+        input.focus();\n
+      });\n
+\n
+      // Prevent normal selection in the editor (we handle our own)\n
+      on(display.lineSpace, "selectstart", function(e) {\n
+        if (!eventInWidget(display, e)) e_preventDefault(e);\n
+      });\n
+\n
+      on(te, "compositionstart", function() {\n
+        var start = cm.getCursor("from");\n
+        if (input.composing) input.composing.range.clear()\n
+        input.composing = {\n
+          start: start,\n
+          range: cm.markText(start, cm.getCursor("to"), {className: "CodeMirror-composing"})\n
+        };\n
+      });\n
+      on(te, "compositionend", function() {\n
+        if (input.composing) {\n
+          input.poll();\n
+          input.composing.range.clear();\n
+          input.composing = null;\n
+        }\n
+      });\n
+    },\n
+\n
+    prepareSelection: function() {\n
+      // Redraw the selection and/or cursor\n
+      var cm = this.cm, display = cm.display, doc = cm.doc;\n
+      var result = prepareSelection(cm);\n
+\n
+      // Move the hidden textarea near the cursor to prevent scrolling artifacts\n
+      if (cm.options.moveInputWithCursor) {\n
+        var headPos = cursorCoords(cm, doc.sel.primary().head, "div");\n
+        var wrapOff = display.wrapper.getBoundingClientRect(), lineOff = display.lineDiv.getBoundingClientRect();\n
+        result.teTop = Math.max(0, Math.min(display.wrapper.clientHeight - 10,\n
+                                            headPos.top + lineOff.top - wrapOff.top));\n
+        result.teLeft = Math.max(0, Math.min(display.wrapper.clientWidth - 10,\n
+                                             headPos.left + lineOff.left - wrapOff.left));\n
+      }\n
+\n
+      return result;\n
+    },\n
+\n
+    showSelection: function(drawn) {\n
+      var cm = this.cm, display = cm.display;\n
+      removeChildrenAndAdd(display.cursorDiv, drawn.cursors);\n
+      removeChildrenAndAdd(display.selectionDiv, drawn.selection);\n
+      if (drawn.teTop != null) {\n
+        this.wrapper.style.top = drawn.teTop + "px";\n
+        this.wrapper.style.left = drawn.teLeft + "px";\n
+      }\n
+    },\n
+\n
+    // Reset the input to correspond to the selection (or to be empty,\n
+    // when not typing and nothing is selected)\n
+    reset: function(typing) {\n
+      if (this.contextMenuPending) return;\n
+      var minimal, selected, cm = this.cm, doc = cm.doc;\n
+      if (cm.somethingSelected()) {\n
+        this.prevInput = "";\n
+        var range = doc.sel.primary();\n
+        minimal = hasCopyEvent &&\n
+          (range.to().line - range.from().line > 100 || (selected = cm.getSelection()).length > 1000);\n
+        var content = minimal ? "-" : selected || cm.getSelection();\n
+        this.textarea.value = content;\n
+        if (cm.state.focused) selectInput(this.textarea);\n
+        if (ie && ie_version >= 9) this.hasSelection = content;\n
+      } else if (!typing) {\n
+        this.prevInput = this.textarea.value = "";\n
+        if (ie && ie_version >= 9) this.hasSelection = null;\n
+      }\n
+      this.inaccurateSelection = minimal;\n
+    },\n
+\n
+    getField: function() { return this.textarea; },\n
+\n
+    supportsTouch: function() { return false; },\n
+\n
+    focus: function() {\n
+      if (this.cm.options.readOnly != "nocursor" && (!mobile || activeElt() != this.textarea)) {\n
+        try { this.textarea.focus(); }\n
+        catch (e) {} // IE8 will throw if the textarea is display: none or not in DOM\n
+      }\n
+    },\n
+\n
+    blur: function() { this.textarea.blur(); },\n
+\n
+    resetPosition: function() {\n
+      this.wrapper.style.top = this.wrapper.style.left = 0;\n
+    },\n
+\n
+    receivedFocus: function() { this.slowPoll(); },\n
+\n
+    // Poll for input changes, using the normal rate of polling. This\n
+    // runs as long as the editor is focused.\n
+    slowPoll: function() {\n
+      var input = this;\n
+      if (input.pollingFast) return;\n
+      input.polling.set(this.cm.options.pollInterval, function() {\n
+        input.poll();\n
+        if (input.cm.state.focused) input.slowPoll();\n
+      });\n
+    },\n
+\n
+    // When an event has just come in that is likely to add or change\n
+    // something in the input textarea, we poll faster, to ensure that\n
+    // the change appears on the screen quickly.\n
+    fastPoll: function() {\n
+      var missed = false, input = this;\n
+      input.pollingFast = true;\n
+      function p() {\n
+        var changed = input.poll();\n
+        if (!changed && !missed) {missed = true; input.polling.set(60, p);}\n
+        else {input.pollingFast = false; input.slowPoll();}\n
+      }\n
+      input.polling.set(20, p);\n
+    },\n
+\n
+    // Read input from the textarea, and update the document to match.\n
+    // When something is selected, it is present in the textarea, and\n
+    // selected (unless it is huge, in which case a placeholder is\n
+    // used). When nothing is selected, the cursor sits after previously\n
+    // seen text (can be empty), which is stored in prevInput (we must\n
+    // not reset the textarea when typing, because that breaks IME).\n
+    poll: function() {\n
+      var cm = this.cm, input = this.textarea, prevInput = this.prevInput;\n
+      // Since this is called a *lot*, try to bail out as cheaply as\n
+      // possible when it is clear that nothing happened. hasSelection\n
+      // will be the case when there is a lot of text in the textarea,\n
+      // in which case reading its value would be expensive.\n
+      if (this.contextMenuPending || !cm.state.focused ||\n
+          (hasSelection(input) && !prevInput && !this.composing) ||\n
+          cm.isReadOnly() || cm.options.disableInput || cm.state.keySeq)\n
+        return false;\n
+\n
+      var text = input.value;\n
+      // If nothing changed, bail.\n
+      if (text == prevInput && !cm.somethingSelected()) return false;\n
+      // Work around nonsensical selection resetting in IE9/10, and\n
+      // inexplicable appearance of private area unicode characters on\n
+      // some key combos in Mac (#2689).\n
+      if (ie && ie_version >= 9 && this.hasSelection === text ||\n
+          mac && /[\\uf700-\\uf7ff]/.test(text)) {\n
+        cm.display.input.reset();\n
+        return false;\n
+      }\n
+\n
+      if (cm.doc.sel == cm.display.selForContextMenu) {\n
+        var first = text.charCodeAt(0);\n
+        if (first == 0x200b && !prevInput) prevInput = "\\u200b";\n
+        if (first == 0x21da) { this.reset(); return this.cm.execCommand("undo"); }\n
+      }\n
+      // Find the part of the input that is actually new\n
+      var same = 0, l = Math.min(prevInput.length, text.length);\n
+      while (same < l && prevInput.charCodeAt(same) == text.charCodeAt(same)) ++same;\n
+\n
+      var self = this;\n
+      runInOp(cm, function() {\n
+        applyTextInput(cm, text.slice(same), prevInput.length - same,\n
+                       null, self.composing ? "*compose" : null);\n
+\n
+        // Don\'t leave long text in the textarea, since it makes further polling slow\n
+        if (text.length > 1000 || text.indexOf("\\n") > -1) input.value = self.prevInput = "";\n
+        else self.prevInput = text;\n
+\n
+        if (self.composing) {\n
+          self.composing.range.clear();\n
+          self.composing.range = cm.markText(self.composing.start, cm.getCursor("to"),\n
+                                             {className: "CodeMirror-composing"});\n
+        }\n
+      });\n
+      return true;\n
+    },\n
+\n
+    ensurePolled: function() {\n
+      if (this.pollingFast && this.poll()) this.pollingFast = false;\n
+    },\n
+\n
+    onKeyPress: function() {\n
+      if (ie && ie_version >= 9) this.hasSelection = null;\n
+      this.fastPoll();\n
+    },\n
+\n
+    onContextMenu: function(e) {\n
+      var input = this, cm = input.cm, display = cm.display, te = input.textarea;\n
+      var pos = posFromMouse(cm, e), scrollPos = display.scroller.scrollTop;\n
+      if (!pos || presto) return; // Opera is difficult.\n
+\n
+      // Reset the current text selection only if the click is done outside of the selection\n
+      // and \'resetSelectionOnContextMenu\' option is true.\n
+      var reset = cm.options.resetSelectionOnContextMenu;\n
+      if (reset && cm.doc.sel.contains(pos) == -1)\n
+        operation(cm, setSelection)(cm.doc, simpleSelection(pos), sel_dontScroll);\n
+\n
+      var oldCSS = te.style.cssText, oldWrapperCSS = input.wrapper.style.cssText;\n
+      input.wrapper.style.cssText = "position: absolute"\n
+      var wrapperBox = input.wrapper.getBoundingClientRect()\n
+      te.style.cssText = "position: absolute; width: 30px; height: 30px; top: " + (e.clientY - wrapperBox.top - 5) +\n
+        "px; left: " + (e.clientX - wrapperBox.left - 5) + "px; z-index: 1000; background: " +\n
+        (ie ? "rgba(255, 255, 255, .05)" : "transparent") +\n
+        "; outline: none; border-width: 0; outline: none; overflow: hidden; opacity: .05; filter: alpha(opacity=5);";\n
+      if (webkit) var oldScrollY = window.scrollY; // Work around Chrome issue (#2712)\n
+      display.input.focus();\n
+      if (webkit) window.scrollTo(null, oldScrollY);\n
+      display.input.reset();\n
+      // Adds "Select all" to context menu in FF\n
+      if (!cm.somethingSelected()) te.value = input.prevInput = " ";\n
+      input.contextMenuPending = true;\n
+      display.selForContextMenu = cm.doc.sel;\n
+      clearTimeout(display.detectingSelectAll);\n
+\n
+      // Select-all will be greyed out if there\'s nothing to select, so\n
+      // this adds a zero-width space so that we can later check whether\n
+      // it got selected.\n
+      function prepareSelectAllHack() {\n
+        if (te.selectionStart != null) {\n
+          var selected = cm.somethingSelected();\n
+          var extval = "\\u200b" + (selected ? te.value : "");\n
+          te.value = "\\u21da"; // Used to catch context-menu undo\n
+          te.value = extval;\n
+          input.prevInput = selected ? "" : "\\u200b";\n
+          te.selectionStart = 1; te.selectionEnd = extval.length;\n
+          // Re-set this, in case some other handler touched the\n
+          // selection in the meantime.\n
+          display.selForContextMenu = cm.doc.sel;\n
+        }\n
+      }\n
+      function rehide() {\n
+        input.contextMenuPending = false;\n
+        input.wrapper.style.cssText = oldWrapperCSS\n
+        te.style.cssText = oldCSS;\n
+        if (ie && ie_version < 9) display.scrollbars.setScrollTop(display.scroller.scrollTop = scrollPos);\n
+\n
+        // Try to detect the user choosing select-all\n
+        if (te.selectionStart != null) {\n
+          if (!ie || (ie && ie_version < 9)) prepareSelectAllHack();\n
+          var i = 0, poll = function() {\n
+            if (display.selForContextMenu == cm.doc.sel && te.selectionStart == 0 &&\n
+                te.selectionEnd > 0 && input.prevInput == "\\u200b")\n
+              operation(cm, commands.selectAll)(cm);\n
+            else if (i++ < 10) display.detectingSelectAll = setTimeout(poll, 500);\n
+            else display.input.reset();\n
+          };\n
+          display.detectingSelectAll = setTimeout(poll, 200);\n
+        }\n
+      }\n
+\n
+      if (ie && ie_version >= 9) prepareSelectAllHack();\n
+      if (captureRightClick) {\n
+        e_stop(e);\n
+        var mouseup = function() {\n
+          off(window, "mouseup", mouseup);\n
+          setTimeout(rehide, 20);\n
+        };\n
+        on(window, "mouseup", mouseup);\n
+      } else {\n
+        setTimeout(rehide, 50);\n
+      }\n
+    },\n
+\n
+    readOnlyChanged: function(val) {\n
+      if (!val) this.reset();\n
+    },\n
+\n
+    setUneditable: nothing,\n
+\n
+    needsContentAttribute: false\n
+  }, TextareaInput.prototype);\n
+\n
+  // CONTENTEDITABLE INPUT STYLE\n
+\n
+  function ContentEditableInput(cm) {\n
+    this.cm = cm;\n
+    this.lastAnchorNode = this.lastAnchorOffset = this.lastFocusNode = this.lastFocusOffset = null;\n
+    this.polling = new Delayed();\n
+    this.gracePeriod = false;\n
+  }\n
+\n
+  ContentEditableInput.prototype = copyObj({\n
+    init: function(display) {\n
+      var input = this, cm = input.cm;\n
+      var div = input.div = display.lineDiv;\n
+      disableBrowserMagic(div);\n
+\n
+      on(div, "paste", function(e) {\n
+        if (!signalDOMEvent(cm, e)) handlePaste(e, cm);\n
+      })\n
+\n
+      on(div, "compositionstart", function(e) {\n
+        var data = e.data;\n
+        input.composing = {sel: cm.doc.sel, data: data, startData: data};\n
+        if (!data) return;\n
+        var prim = cm.doc.sel.primary();\n
+        var line = cm.getLine(prim.head.line);\n
+        var found = line.indexOf(data, Math.max(0, prim.head.ch - data.length));\n
+        if (found > -1 && found <= prim.head.ch)\n
+          input.composing.sel = simpleSelection(Pos(prim.head.line, found),\n
+                                                Pos(prim.head.line, found + data.length));\n
+      });\n
+      on(div, "compositionupdate", function(e) {\n
+        input.composing.data = e.data;\n
+      });\n
+      on(div, "compositionend", function(e) {\n
+        var ours = input.composing;\n
+        if (!ours) return;\n
+        if (e.data != ours.startData && !/\\u200b/.test(e.data))\n
+          ours.data = e.data;\n
+        // Need a small delay to prevent other code (input event,\n
+        // selection polling) from doing damage when fired right after\n
+        // compositionend.\n
+        setTimeout(function() {\n
+          if (!ours.handled)\n
+            input.applyComposition(ours);\n
+          if (input.composing == ours)\n
+            input.composing = null;\n
+        }, 50);\n
+      });\n
+\n
+      on(div, "touchstart", function() {\n
+        input.forceCompositionEnd();\n
+      });\n
+\n
+      on(div, "input", function() {\n
+        if (input.composing) return;\n
+        if (cm.isReadOnly() || !input.pollContent())\n
+          runInOp(input.cm, function() {regChange(cm);});\n
+      });\n
+\n
+      function onCopyCut(e) {\n
+        if (signalDOMEvent(cm, e)) return\n
+        if (cm.somethingSelected()) {\n
+          lastCopied = cm.getSelections();\n
+          if (e.type == "cut") cm.replaceSelection("", null, "cut");\n
+        } else if (!cm.options.lineWiseCopyCut) {\n
+          return;\n
+        } else {\n
+          var ranges = copyableRanges(cm);\n
+          lastCopied = ranges.text;\n
+          if (e.type == "cut") {\n
+            cm.operation(function() {\n
+              cm.setSelections(ranges.ranges, 0, sel_dontScroll);\n
+              cm.replaceSelection("", null, "cut");\n
+            });\n
+          }\n
+        }\n
+        // iOS exposes the clipboard API, but seems to discard content inserted into it\n
+        if (e.clipboardData && !ios) {\n
+          e.preventDefault();\n
+          e.clipboardData.clearData();\n
+          e.clipboardData.setData("text/plain", lastCopied.join("\\n"));\n
+        } else {\n
+          // Old-fashioned briefly-focus-a-textarea hack\n
+          var kludge = hiddenTextarea(), te = kludge.firstChild;\n
+          cm.display.lineSpace.insertBefore(kludge, cm.display.lineSpace.firstChild);\n
+          te.value = lastCopied.join("\\n");\n
+          var hadFocus = document.activeElement;\n
+          selectInput(te);\n
+          setTimeout(function() {\n
+            cm.display.lineSpace.removeChild(kludge);\n
+            hadFocus.focus();\n
+          }, 50);\n
+        }\n
+      }\n
+      on(div, "copy", onCopyCut);\n
+      on(div, "cut", onCopyCut);\n
+    },\n
+\n
+    prepareSelection: function() {\n
+      var result = prepareSelection(this.cm, false);\n
+      result.focus = this.cm.state.focused;\n
+      return result;\n
+    },\n
+\n
+    showSelection: function(info) {\n
+      if (!info || !this.cm.display.view.length) return;\n
+      if (info.focus) this.showPrimarySelection();\n
+      this.showMultipleSelections(info);\n
+    },\n
+\n
+    showPrimarySelection: function() {\n
+      var sel = window.getSelection(), prim = this.cm.doc.sel.primary();\n
+      var curAnchor = domToPos(this.cm, sel.anchorNode, sel.anchorOffset);\n
+      var curFocus = domToPos(this.cm, sel.focusNode, sel.focusOffset);\n
+      if (curAnchor && !curAnchor.bad && curFocus && !curFocus.bad &&\n
+          cmp(minPos(curAnchor, curFocus), prim.from()) == 0 &&\n
+          cmp(maxPos(curAnchor, curFocus), prim.to()) == 0)\n
+        return;\n
+\n
+      var start = posToDOM(this.cm, prim.from());\n
+      var end = posToDOM(this.cm, prim.to());\n
+      if (!start && !end) return;\n
+\n
+      var view = this.cm.display.view;\n
+      var old = sel.rangeCount && sel.getRangeAt(0);\n
+      if (!start) {\n
+        start = {node: view[0].measure.map[2], offset: 0};\n
+      } else if (!end) { // FIXME dangerously hacky\n
+        var measure = view[view.length - 1].measure;\n
+        var map = measure.maps ? measure.maps[measure.maps.length - 1] : measure.map;\n
+        end = {node: map[map.length - 1], offset: map[map.length - 2] - map[map.length - 3]};\n
+      }\n
+\n
+      try { var rng = range(start.node, start.offset, end.offset, end.node); }\n
+      catch(e) {} // Our model of the DOM might be outdated, in which case the range we try to set can be impossible\n
+      if (rng) {\n
+        if (!gecko && this.cm.state.focused) {\n
+          sel.collapse(start.node, start.offset);\n
+          if (!rng.collapsed) sel.addRange(rng);\n
+        } else {\n
+          sel.removeAllRanges();\n
+          sel.addRange(rng);\n
+        }\n
+        if (old && sel.anchorNode == null) sel.addRange(old);\n
+        else if (gecko) this.startGracePeriod();\n
+      }\n
+      this.rememberSelection();\n
+    },\n
+\n
+    startGracePeriod: function() {\n
+      var input = this;\n
+      clearTimeout(this.gracePeriod);\n
+      this.gracePeriod = setTimeout(function() {\n
+        input.gracePeriod = false;\n
+        if (input.selectionChanged())\n
+          input.cm.operation(function() { input.cm.curOp.selectionChanged = true; });\n
+      }, 20);\n
+    },\n
+\n
+    showMultipleSelections: function(info) {\n
+      removeChildrenAndAdd(this.cm.display.cursorDiv, info.cursors);\n
+      removeChildrenAndAdd(this.cm.display.selectionDiv, info.selection);\n
+    },\n
+\n
+    rememberSelection: function() {\n
+      var sel = window.getSelection();\n
+      this.lastAnchorNode = sel.anchorNode; this.lastAnchorOffset = sel.anchorOffset;\n
+      this.lastFocusNode = sel.focusNode; this.lastFocusOffset = sel.focusOffset;\n
+    },\n
+\n
+    selectionInEditor: function() {\n
+      var sel = window.getSelection();\n
+      if (!sel.rangeCount) return false;\n
+      var node = sel.getRangeAt(0).commonAncestorContainer;\n
+      return contains(this.div, node);\n
+    },\n
+\n
+    focus: function() {\n
+      if (this.cm.options.readOnly != "nocursor") this.div.focus();\n
+    },\n
+    blur: function() { this.div.blur(); },\n
+    getField: function() { return this.div; },\n
+\n
+    supportsTouch: function() { return true; },\n
+\n
+    receivedFocus: function() {\n
+      var input = this;\n
+      if (this.selectionInEditor())\n
+        this.pollSelection();\n
+      else\n
+        runInOp(this.cm, function() { input.cm.curOp.selectionChanged = true; });\n
+\n
+      function poll() {\n
+        if (input.cm.state.focused) {\n
+          input.pollSelection();\n
+          input.polling.set(input.cm.options.pollInterval, poll);\n
+        }\n
+      }\n
+      this.polling.set(this.cm.options.pollInterval, poll);\n
+    },\n
+\n
+    selectionChanged: function() {\n
+      var sel = window.getSelection();\n
+      return sel.anchorNode != this.lastAnchorNode || sel.anchorOffset != this.lastAnchorOffset ||\n
+        sel.focusNode != this.lastFocusNode || sel.focusOffset != this.lastFocusOffset;\n
+    },\n
+\n
+    pollSelection: function() {\n
+      if (!this.composing && !this.gracePeriod && this.selectionChanged()) {\n
+        var sel = window.getSelection(), cm = this.cm;\n
+        this.rememberSelection();\n
+        var anchor = domToPos(cm, sel.anchorNode, sel.anchorOffset);\n
+        var head = domToPos(cm, sel.focusNode, sel.focusOffset);\n
+        if (anchor && head) runInOp(cm, function() {\n
+          setSelection(cm.doc, simpleSelection(anchor, head), sel_dontScroll);\n
+          if (anchor.bad || head.bad) cm.curOp.selectionChanged = true;\n
+        });\n
+      }\n
+    },\n
+\n
+    pollContent: function() {\n
+      var cm = this.cm, display = cm.display, sel = cm.doc.sel.primary();\n
+      var from = sel.from(), to = sel.to();\n
+      if (from.line < display.viewFrom || to.line > display.viewTo - 1) return false;\n
+\n
+      var fromIndex;\n
+      if (from.line == display.viewFrom || (fromIndex = findViewIndex(cm, from.line)) == 0) {\n
+        var fromLine = lineNo(display.view[0].line);\n
+        var fromNode = display.view[0].node;\n
+      } else {\n
+        var fromLine = lineNo(display.view[fromIndex].line);\n
+        var fromNode = display.view[fromIndex - 1].node.nextSibling;\n
+      }\n
+      var toIndex = findViewIndex(cm, to.line);\n
+      if (toIndex == display.view.length - 1) {\n
+        var toLine = display.viewTo - 1;\n
+        var toNode = display.lineDiv.lastChild;\n
+      } else {\n
+        var toLine = lineNo(display.view[toIndex + 1].line) - 1;\n
+        var toNode = display.view[toIndex + 1].node.previousSibling;\n
+      }\n
+\n
+      var newText = cm.doc.splitLines(domTextBetween(cm, fromNode, toNode, fromLine, toLine));\n
+      var oldText = getBetween(cm.doc, Pos(fromLine, 0), Pos(toLine, getLine(cm.doc, toLine).text.length));\n
+      while (newText.length > 1 && oldText.length > 1) {\n
+        if (lst(newText) == lst(oldText)) { newText.pop(); oldText.pop(); toLine--; }\n
+        else if (newText[0] == oldText[0]) { newText.shift(); oldText.shift(); fromLine++; }\n
+        else break;\n
+      }\n
+\n
+      var cutFront = 0, cutEnd = 0;\n
+      var newTop = newText[0], oldTop = oldText[0], maxCutFront = Math.min(newTop.length, oldTop.length);\n
+      while (cutFront < maxCutFront && newTop.charCodeAt(cutFront) == oldTop.charCodeAt(cutFront))\n
+        ++cutFront;\n
+      var newBot = lst(newText), oldBot = lst(oldText);\n
+      var maxCutEnd = Math.min(newBot.length - (newText.length == 1 ? cutFront : 0),\n
+                               oldBot.length - (oldText.length == 1 ? cutFront : 0));\n
+      while (cutEnd < maxCutEnd &&\n
+             newBot.charCodeAt(newBot.length - cutEnd - 1) == oldBot.charCodeAt(oldBot.length - cutEnd - 1))\n
+        ++cutEnd;\n
+\n
+      newText[newText.length - 1] = newBot.slice(0, newBot.length - cutEnd);\n
+      newText[0] = newText[0].slice(cutFront);\n
+\n
+      var chFrom = Pos(fromLine, cutFront);\n
+      var chTo = Pos(toLine, oldText.length ? lst(oldText).length - cutEnd : 0);\n
+      if (newText.length > 1 || newText[0] || cmp(chFrom, chTo)) {\n
+        replaceRange(cm.doc, newText, chFrom, chTo, "+input");\n
+        return true;\n
+      }\n
+    },\n
+\n
+    ensurePolled: function() {\n
+      this.forceCompositionEnd();\n
+    },\n
+    reset: function() {\n
+      this.forceCompositionEnd();\n
+    },\n
+    forceCompositionEnd: function() {\n
+      if (!this.composing || this.composing.handled) return;\n
+      this.applyComposition(this.composing);\n
+      this.composing.handled = true;\n
+      this.div.blur();\n
+      this.div.focus();\n
+    },\n
+    applyComposition: function(composing) {\n
+      if (this.cm.isReadOnly())\n
+        operation(this.cm, regChange)(this.cm)\n
+      else if (composing.data && composing.data != composing.startData)\n
+        operation(this.cm, applyTextInput)(this.cm, composing.data, 0, composing.sel);\n
+    },\n
+\n
+    setUneditable: function(node) {\n
+      node.contentEditable = "false"\n
+    },\n
+\n
+    onKeyPress: function(e) {\n
+      e.preventDefault();\n
+      if (!this.cm.isReadOnly())\n
+        operation(this.cm, applyTextInput)(this.cm, String.fromCharCode(e.charCode == null ? e.keyCode : e.charCode), 0);\n
+    },\n
+\n
+    readOnlyChanged: function(val) {\n
+      this.div.contentEditable = String(val != "nocursor")\n
+    },\n
+\n
+    onContextMenu: nothing,\n
+    resetPosition: nothing,\n
+\n
+    needsContentAttribute: true\n
+  }, ContentEditableInput.prototype);\n
+\n
+  function posToDOM(cm, pos) {\n
+    var view = findViewForLine(cm, pos.line);\n
+    if (!view || view.hidden) return null;\n
+    var line = getLine(cm.doc, pos.line);\n
+    var info = mapFromLineView(view, line, pos.line);\n
+\n
+    var order = getOrder(line), side = "left";\n
+    if (order) {\n
+      var partPos = getBidiPartAt(order, pos.ch);\n
+      side = partPos % 2 ? "right" : "left";\n
+    }\n
+    var result = nodeAndOffsetInLineMap(info.map, pos.ch, side);\n
+    result.offset = result.collapse == "right" ? result.end : result.start;\n
+    return result;\n
+  }\n
+\n
+  function badPos(pos, bad) { if (bad) pos.bad = true; return pos; }\n
+\n
+  function domToPos(cm, node, offset) {\n
+    var lineNode;\n
+    if (node == cm.display.lineDiv) {\n
+      lineNode = cm.display.lineDiv.childNodes[offset];\n
+      if (!lineNode) return badPos(cm.clipPos(Pos(cm.display.viewTo - 1)), true);\n
+      node = null; offset = 0;\n
+    } else {\n
+      for (lineNode = node;; lineNode = lineNode.parentNode) {\n
+        if (!lineNode || lineNode == cm.display.lineDiv) return null;\n
+        if (lineNode.parentNode && lineNode.parentNode == cm.display.lineDiv) break;\n
+      }\n
+    }\n
+    for (var i = 0; i < cm.display.view.length; i++) {\n
+      var lineView = cm.display.view[i];\n
+      if (lineView.node == lineNode)\n
+        return locateNodeInLineView(lineView, node, offset);\n
+    }\n
+  }\n
+\n
+  function locateNodeInLineView(lineView, node, offset) {\n
+    var wrapper = lineView.text.firstChild, bad = false;\n
+    if (!node || !contains(wrapper, node)) return badPos(Pos(lineNo(lineView.line), 0), true);\n
+    if (node == wrapper) {\n
+      bad = true;\n
+      node = wrapper.childNodes[offset];\n
+      offset = 0;\n
+      if (!node) {\n
+        var line = lineView.rest ? lst(lineView.rest) : lineView.line;\n
+        return badPos(Pos(lineNo(line), line.text.length), bad);\n
+      }\n
+    }\n
+\n
+    var textNode = node.nodeType == 3 ? node : null, topNode = node;\n
+    if (!textNode && node.childNodes.length == 1 && node.firstChild.nodeType == 3) {\n
+      textNode = node.firstChild;\n
+      if (offset) offset = textNode.nodeValue.length;\n
+    }\n
+    while (topNode.parentNode != wrapper) topNode = topNode.parentNode;\n
+    var measure = lineView.measure, maps = measure.maps;\n
+\n
+    function find(textNode, topNode, offset) {\n
+      for (var i = -1; i < (maps ? maps.length : 0); i++) {\n
+        var map = i < 0 ? measure.map : maps[i];\n
+        for (var j = 0; j < map.length; j += 3) {\n
+          var curNode = map[j + 2];\n
+          if (curNode == textNode || curNode == topNode) {\n
+            var line = lineNo(i < 0 ? lineView.line : lineView.rest[i]);\n
+            var ch = map[j] + offset;\n
+            if (offset < 0 || curNode != textNode) ch = map[j + (offset ? 1 : 0)];\n
+            return Pos(line, ch);\n
+          }\n
+        }\n
+      }\n
+    }\n
+    var found = find(textNode, topNode, offset);\n
+    if (found) return badPos(found, bad);\n
+\n
+    // FIXME this is all really shaky. might handle the few cases it needs to handle, but likely to cause problems\n
+    for (var after = topNode.nextSibling, dist = textNode ? textNode.nodeValue.length - offset : 0; after; after = after.nextSibling) {\n
+      found = find(after, after.firstChild, 0);\n
+      if (found)\n
+        return badPos(Pos(found.line, found.ch - dist), bad);\n
+      else\n
+        dist += after.textContent.length;\n
+    }\n
+    for (var before = topNode.previousSibling, dist = offset; before; before = before.previousSibling) {\n
+      found = find(before, before.firstChild, -1);\n
+      if (found)\n
+        return badPos(Pos(found.line, found.ch + dist), bad);\n
+      else\n
+        dist += after.textContent.length;\n
+    }\n
+  }\n
+\n
+  function domTextBetween(cm, from, to, fromLine, toLine) {\n
+    var text = "", closing = false, lineSep = cm.doc.lineSeparator();\n
+    function recognizeMarker(id) { return function(marker) { return marker.id == id; }; }\n
+    function walk(node) {\n
+      if (node.nodeType == 1) {\n
+        var cmText = node.getAttribute("cm-text");\n
+        if (cmText != null) {\n
+          if (cmText == "") cmText = node.textContent.replace(/\\u200b/g, "");\n
+          text += cmText;\n
+          return;\n
+        }\n
+        var markerID = node.getAttribute("cm-marker"), range;\n
+        if (markerID) {\n
+          var found = cm.findMarks(Pos(fromLine, 0), Pos(toLine + 1, 0), recognizeMarker(+markerID));\n
+          if (found.length && (range = found[0].find()))\n
+            text += getBetween(cm.doc, range.from, range.to).join(lineSep);\n
+          return;\n
+        }\n
+        if (node.getAttribute("contenteditable") == "false") return;\n
+        for (var i = 0; i < node.childNodes.length; i++)\n
+          walk(node.childNodes[i]);\n
+        if (/^(pre|div|p)$/i.test(node.nodeName))\n
+          closing = true;\n
+      } else if (node.nodeType == 3) {\n
+        var val = node.nodeValue;\n
+        if (!val) return;\n
+        if (closing) {\n
+          text += lineSep;\n
+          closing = false;\n
+        }\n
+        text += val;\n
+      }\n
+    }\n
+    for (;;) {\n
+      walk(from);\n
+      if (from == to) break;\n
+      from = from.nextSibling;\n
+    }\n
+    return text;\n
+  }\n
+\n
+  CodeMirror.inputStyles = {"textarea": TextareaInput, "contenteditable": ContentEditableInput};\n
 \n
   // SELECTION / CURSOR\n
 \n
@@ -1278,7 +2216,7 @@
 \n
   // Give beforeSelectionChange handlers a change to influence a\n
   // selection update.\n
-  function filterSelectionChange(doc, sel) {\n
+  function filterSelectionChange(doc, sel, options) {\n
     var obj = {\n
       ranges: sel.ranges,\n
       update: function(ranges) {\n
@@ -1286,7 +2224,8 @@
         for (var i = 0; i < ranges.length; i++)\n
           this.ranges[i] = new Range(clipPos(doc, ranges[i].anchor),\n
                                      clipPos(doc, ranges[i].head));\n
-      }\n
+      },\n
+      origin: options && options.origin\n
     };\n
     signal(doc, "beforeSelectionChange", doc, obj);\n
     if (doc.cm) signal(doc.cm, "beforeSelectionChange", doc.cm, obj);\n
@@ -1312,7 +2251,7 @@
 \n
   function setSelectionNoUndo(doc, sel, options) {\n
     if (hasHandler(doc, "beforeSelectionChange") || doc.cm && hasHandler(doc.cm, "beforeSelectionChange"))\n
-      sel = filterSelectionChange(doc, sel);\n
+      sel = filterSelectionChange(doc, sel, options);\n
 \n
     var bias = options && options.bias ||\n
       (cmp(sel.primary().head, doc.sel.primary().head) < 0 ? -1 : 1);\n
@@ -1346,8 +2285,9 @@
     var out;\n
     for (var i = 0; i < sel.ranges.length; i++) {\n
       var range = sel.ranges[i];\n
-      var newAnchor = skipAtomic(doc, range.anchor, bias, mayClear);\n
-      var newHead = skipAtomic(doc, range.head, bias, mayClear);\n
+      var old = sel.ranges.length == doc.sel.ranges.length && doc.sel.ranges[i];\n
+      var newAnchor = skipAtomic(doc, range.anchor, old && old.anchor, bias, mayClear);\n
+      var newHead = skipAtomic(doc, range.head, old && old.head, bias, mayClear);\n
       if (out || newAnchor != range.anchor || newHead != range.head) {\n
         if (!out) out = sel.ranges.slice(0, i);\n
         out[i] = new Range(newAnchor, newHead);\n
@@ -1356,103 +2296,114 @@
     return out ? normalizeSelection(out, sel.primIndex) : sel;\n
   }\n
 \n
-  // Ensure a given position is not inside an atomic range.\n
-  function skipAtomic(doc, pos, bias, mayClear) {\n
-    var flipped = false, curPos = pos;\n
-    var dir = bias || 1;\n
-    doc.cantEdit = false;\n
-    search: for (;;) {\n
-      var line = getLine(doc, curPos.line);\n
-      if (line.markedSpans) {\n
-        for (var i = 0; i < line.markedSpans.length; ++i) {\n
-          var sp = line.markedSpans[i], m = sp.marker;\n
-          if ((sp.from == null || (m.inclusiveLeft ? sp.from <= curPos.ch : sp.from < curPos.ch)) &&\n
-              (sp.to == null || (m.inclusiveRight ? sp.to >= curPos.ch : sp.to > curPos.ch))) {\n
-            if (mayClear) {\n
-              signal(m, "beforeCursorEnter");\n
-              if (m.explicitlyCleared) {\n
-                if (!line.markedSpans) break;\n
-                else {--i; continue;}\n
-              }\n
-            }\n
-            if (!m.atomic) continue;\n
-            var newPos = m.find(dir < 0 ? -1 : 1);\n
-            if (cmp(newPos, curPos) == 0) {\n
-              newPos.ch += dir;\n
-              if (newPos.ch < 0) {\n
-                if (newPos.line > doc.first) newPos = clipPos(doc, Pos(newPos.line - 1));\n
-                else newPos = null;\n
-              } else if (newPos.ch > line.text.length) {\n
-                if (newPos.line < doc.first + doc.size - 1) newPos = Pos(newPos.line + 1, 0);\n
-                else newPos = null;\n
-              }\n
-              if (!newPos) {\n
-                if (flipped) {\n
-                  // Driven in a corner -- no valid cursor position found at all\n
-                  // -- try again *with* clearing, if we didn\'t already\n
-                  if (!mayClear) return skipAtomic(doc, pos, bias, true);\n
-                  // Otherwise, turn off editing until further notice, and return the start of the doc\n
-                  doc.cantEdit = true;\n
-                  return Pos(doc.first, 0);\n
-                }\n
-                flipped = true; newPos = pos; dir = -dir;\n
-              }\n
-            }\n
-            curPos = newPos;\n
-            continue search;\n
+  function skipAtomicInner(doc, pos, oldPos, dir, mayClear) {\n
+    var line = getLine(doc, pos.line);\n
+    if (line.markedSpans) for (var i = 0; i < line.markedSpans.length; ++i) {\n
+      var sp = line.markedSpans[i], m = sp.marker;\n
+      if ((sp.from == null || (m.inclusiveLeft ? sp.from <= pos.ch : sp.from < pos.ch)) &&\n
+          (sp.to == null || (m.inclusiveRight ? sp.to >= pos.ch : sp.to > pos.ch))) {\n
+        if (mayClear) {\n
+          signal(m, "beforeCursorEnter");\n
+          if (m.explicitlyCleared) {\n
+            if (!line.markedSpans) break;\n
+            else {--i; continue;}\n
           }\n
         }\n
+        if (!m.atomic) continue;\n
+\n
+        if (oldPos) {\n
+          var near = m.find(dir < 0 ? 1 : -1), diff;\n
+          if (dir < 0 ? m.inclusiveRight : m.inclusiveLeft)\n
+            near = movePos(doc, near, -dir, near && near.line == pos.line ? line : null);\n
+          if (near && near.line == pos.line && (diff = cmp(near, oldPos)) && (dir < 0 ? diff < 0 : diff > 0))\n
+            return skipAtomicInner(doc, near, pos, dir, mayClear);\n
+        }\n
+\n
+        var far = m.find(dir < 0 ? -1 : 1);\n
+        if (dir < 0 ? m.inclusiveLeft : m.inclusiveRight)\n
+          far = movePos(doc, far, dir, far.line == pos.line ? line : null);\n
+        return far ? skipAtomicInner(doc, far, pos, dir, mayClear) : null;\n
       }\n
-      return curPos;\n
+    }\n
+    return pos;\n
+  }\n
+\n
+  // Ensure a given position is not inside an atomic range.\n
+  function skipAtomic(doc, pos, oldPos, bias, mayClear) {\n
+    var dir = bias || 1;\n
+    var found = skipAtomicInner(doc, pos, oldPos, dir, mayClear) ||\n
+        (!mayClear && skipAtomicInner(doc, pos, oldPos, dir, true)) ||\n
+        skipAtomicInner(doc, pos, oldPos, -dir, mayClear) ||\n
+        (!mayClear && skipAtomicInner(doc, pos, oldPos, -dir, true));\n
+    if (!found) {\n
+      doc.cantEdit = true;\n
+      return Pos(doc.first, 0);\n
+    }\n
+    return found;\n
+  }\n
+\n
+  function movePos(doc, pos, dir, line) {\n
+    if (dir < 0 && pos.ch == 0) {\n
+      if (pos.line > doc.first) return clipPos(doc, Pos(pos.line - 1));\n
+      else return null;\n
+    } else if (dir > 0 && pos.ch == (line || getLine(doc, pos.line)).text.length) {\n
+      if (pos.line < doc.first + doc.size - 1) return Pos(pos.line + 1, 0);\n
+      else return null;\n
+    } else {\n
+      return new Pos(pos.line, pos.ch + dir);\n
     }\n
   }\n
 \n
   // SELECTION DRAWING\n
 \n
-  // Redraw the selection and/or cursor\n
-  function drawSelection(cm) {\n
-    var display = cm.display, doc = cm.doc, result = {};\n
+  function updateSelection(cm) {\n
+    cm.display.input.showSelection(cm.display.input.prepareSelection());\n
+  }\n
+\n
+  function prepareSelection(cm, primary) {\n
+    var doc = cm.doc, result = {};\n
     var curFragment = result.cursors = document.createDocumentFragment();\n
-    var selFragment = result.selection = document.createDocumentFragment();\n
+    var 
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+selFragment = result.selection = document.createDocumentFragment();\n
 \n
     for (var i = 0; i < doc.sel.ranges.length; i++) {\n
+      if (primary === false && i == doc.sel.primIndex) continue;\n
       var range = doc.sel.ranges[i];\n
+      if (range.from().line >= cm.display.viewTo || range.to().line < cm.display.viewFrom) continue;\n
       var collapsed = range.empty();\n
       if (collapsed || cm.options.showCursorWhenSelecting)\n
-        drawSelectionCursor(cm, range, curFragment);\n
+        drawSelectionCursor(cm, range.head, curFragment);\n
       if (!collapsed)\n
         drawSelectionRange(cm, range, selFragment);\n
     }\n
-\n
-    // Move the hidden textarea near the cursor to prevent scrolling artifacts\n
-    if (cm.options.moveInputWithCursor) {\n
-      var headPos = cursorCoords(cm, doc.sel.primary().head, "div");\n
-      var wrapOff = display.wrapper.getBoundingClientRect(), lineOff = display.lineDiv.getBoundingClientRect();\n
-      result.teTop = Math.max(0, Math.min(display.wrapper.clientHeight - 10,\n
-                                          headPos.top + lineOff.top - wrapOff.top));\n
-      result.teLeft = Math.max(0, Math.min(display.wrapper.clientWidth - 10,\n
-                                           headPos.left + lineOff.left - wrapOff.left));\n
-    }\n
-\n
     return result;\n
   }\n
 \n
-  function showSelection(cm, drawn) {\n
-    removeChildrenAndAdd(cm.display.cursorDiv, drawn.cursors);\n
-    removeChildrenAndAdd(cm.display.selectionDiv, drawn.selection);\n
-    if (drawn.teTop != null) {\n
-      cm.display.inputDiv.style.top = drawn.teTop + "px";\n
-      cm.display.inputDiv.style.left = drawn.teLeft + "px";\n
-    }\n
-  }\n
-\n
-  function updateSelection(cm) {\n
-    showSelection(cm, drawSelection(cm));\n
-  }\n
-\n
   // Draws a cursor for the given range\n
-  function drawSelectionCursor(cm, range, output) {\n
-    var pos = cursorCoords(cm, range.head, "div", null, null, !cm.options.singleCursorHeightPerLine);\n
+  function drawSelectionCursor(cm, head, output) {\n
+    var pos = cursorCoords(cm, head, "div", null, null, !cm.options.singleCursorHeightPerLine);\n
 \n
     var cursor = output.appendChild(elt("div", "\\u00a0", "CodeMirror-cursor"));\n
     cursor.style.left = pos.left + "px";\n
@@ -1576,8 +2527,8 @@
 \n
     doc.iter(doc.frontier, Math.min(doc.first + doc.size, cm.display.viewTo + 500), function(line) {\n
       if (doc.frontier >= cm.display.viewFrom) { // Visible\n
-        var oldStyles = line.styles;\n
-        var highlighted = highlightLine(cm, line, state, true);\n
+        var oldStyles = line.styles, tooLong = line.text.length > cm.options.maxHighlightLength;\n
+        var highlighted = highlightLine(cm, line, tooLong ? copyState(doc.mode, state) : state, true);\n
         line.styles = highlighted.styles;\n
         var oldCls = line.styleClasses, newCls = highlighted.classes;\n
         if (newCls) line.styleClasses = newCls;\n
@@ -1586,9 +2537,10 @@
           oldCls != newCls && (!oldCls || !newCls || oldCls.bgClass != newCls.bgClass || oldCls.textClass != newCls.textClass);\n
         for (var i = 0; !ischange && i < oldStyles.length; ++i) ischange = oldStyles[i] != line.styles[i];\n
         if (ischange) changedLines.push(doc.frontier);\n
-        line.stateAfter = copyState(doc.mode, state);\n
+        line.stateAfter = tooLong ? state : copyState(doc.mode, state);\n
       } else {\n
-        processLine(cm, line.text, state);\n
+        if (line.text.length <= cm.options.maxHighlightLength)\n
+          processLine(cm, line.text, state);\n
         line.stateAfter = doc.frontier % 5 == 0 ? copyState(doc.mode, state) : null;\n
       }\n
       ++doc.frontier;\n
@@ -1733,10 +2685,12 @@
   function prepareMeasureForLine(cm, line) {\n
     var lineN = lineNo(line);\n
     var view = findViewForLine(cm, lineN);\n
-    if (view && !view.text)\n
+    if (view && !view.text) {\n
       view = null;\n
-    else if (view && view.changes)\n
+    } else if (view && view.changes) {\n
       updateLineForChanges(cm, view, lineN, getDimensions(cm));\n
+      cm.curOp.forceUpdate = true;\n
+    }\n
     if (!view)\n
       view = updateExternalMeasurement(cm, line);\n
 \n
@@ -1772,9 +2726,7 @@
 \n
   var nullRect = {left: 0, right: 0, top: 0, bottom: 0};\n
 \n
-  function measureCharInner(cm, prepared, ch, bias) {\n
-    var map = prepared.map;\n
-\n
+  function nodeAndOffsetInLineMap(map, ch, bias) {\n
     var node, start, end, collapse;\n
     // First, search the line map for the text node corresponding to,\n
     // or closest to, the target character.\n
@@ -1808,13 +2760,19 @@
         break;\n
       }\n
     }\n
+    return {node: node, start: start, end: end, collapse: collapse, coverStart: mStart, coverEnd: mEnd};\n
+  }\n
+\n
+  function measureCharInner(cm, prepared, ch, bias) {\n
+    var place = nodeAndOffsetInLineMap(prepared.map, ch, bias);\n
+    var node = place.node, start = place.start, end = place.end, collapse = place.collapse;\n
 \n
     var rect;\n
     if (node.nodeType == 3) { // If it is a text node, use a range to retrieve the coordinates.\n
       for (var i = 0; i < 4; i++) { // Retry a maximum of 4 times when nonsense rectangles are returned\n
-        while (start && isExtendingChar(prepared.line.text.charAt(mStart + start))) --start;\n
-        while (mStart + end < mEnd && isExtendingChar(prepared.line.text.charAt(mStart + end))) ++end;\n
-        if (ie && ie_version < 9 && start == 0 && end == mEnd - mStart) {\n
+        while (start && isExtendingChar(prepared.line.text.charAt(place.coverStart + start))) --start;\n
+        while (place.coverStart + end < place.coverEnd && isExtendingChar(prepared.line.text.charAt(place.coverStart + end))) ++end;\n
+        if (ie && ie_version < 9 && start == 0 && end == place.coverEnd - place.coverStart) {\n
           rect = node.parentNode.getBoundingClientRect();\n
         } else if (ie && cm.options.lineWrapping) {\n
           var rects = range(node, start, end).getClientRects();\n
@@ -1902,7 +2860,8 @@
 \n
   // Converts a {top, bottom, left, right} box from line-local\n
   // coordinates into another coordinate system. Context may be one of\n
-  // "line", "div" (display.lineDiv), "local"/null (editor), or "page".\n
+  // "line", "div" (display.lineDiv), "local"/null (editor), "window",\n
+  // or "page".\n
   function intoCoordSystem(cm, lineObj, rect, context) {\n
     if (lineObj.widgets) for (var i = 0; i < lineObj.widgets.length; ++i) if (lineObj.widgets[i].above) {\n
       var size = widgetHeight(lineObj.widgets[i]);\n
@@ -2125,6 +3084,7 @@
       updateMaxLine: false,    // Set when the widest line needs to be determined anew\n
       scrollLeft: null, scrollTop: null, // Intermediate scroll position, not pushed to DOM yet\n
       scrollToPos: null,       // Used to scroll to a specific position\n
+      focus: false,\n
       id: ++nextOpId           // Unique ID\n
     };\n
     if (operationGroup) {\n
@@ -2143,12 +3103,12 @@
     var callbacks = group.delayedCallbacks, i = 0;\n
     do {\n
       for (; i < callbacks.length; i++)\n
-        callbacks[i]();\n
+        callbacks[i].call(null);\n
       for (var j = 0; j < group.ops.length; j++) {\n
         var op = group.ops[j];\n
         if (op.cursorActivityHandlers)\n
           while (op.cursorActivityCalled < op.cursorActivityHandlers.length)\n
-            op.cursorActivityHandlers[op.cursorActivityCalled++](op.cm);\n
+            op.cursorActivityHandlers[op.cursorActivityCalled++].call(null, op.cm);\n
       }\n
     } while (i < callbacks.length);\n
   }\n
@@ -2218,7 +3178,7 @@
     }\n
 \n
     if (op.updatedDisplay || op.selectionChanged)\n
-      op.newSelectionNodes = drawSelection(cm);\n
+      op.preparedSelection = display.input.prepareSelection();\n
   }\n
 \n
   function endOperation_W2(op) {\n
@@ -2231,17 +3191,19 @@
       cm.display.maxLineChanged = false;\n
     }\n
 \n
-    if (op.newSelectionNodes)\n
-      showSelection(cm, op.newSelectionNodes);\n
-    if (op.updatedDisplay)\n
-      setDocumentHeight(cm, op.barMeasure);\n
+    if (op.preparedSelection)\n
+      cm.display.input.showSelection(op.preparedSelection);\n
     if (op.updatedDisplay || op.startHeight != cm.doc.height)\n
       updateScrollbars(cm, op.barMeasure);\n
+    if (op.updatedDisplay)\n
+      setDocumentHeight(cm, op.barMeasure);\n
 \n
     if (op.selectionChanged) restartBlink(cm);\n
 \n
     if (cm.state.focused && op.updateInput)\n
-      resetInput(cm, op.typing);\n
+      cm.display.input.reset(op.typing);\n
+    if (op.focus && op.focus == activeElt() && (!document.hasFocus || document.hasFocus()))\n
+      ensureFocus(op.cm);\n
   }\n
 \n
   function endOperation_finish(op) {\n
@@ -2260,7 +3222,7 @@
       display.scroller.scrollTop = doc.scrollTop;\n
     }\n
     if (op.scrollLeft != null && (display.scroller.scrollLeft != op.scrollLeft || op.forceScroll)) {\n
-      doc.scrollLeft = Math.max(0, Math.min(display.scroller.scrollWidth - displayWidth(cm), op.scrollLeft));\n
+      doc.scrollLeft = Math.max(0, Math.min(display.scroller.scrollWidth - display.scroller.clientWidth, op.scrollLeft));\n
       display.scrollbars.setScrollLeft(doc.scrollLeft);\n
       display.scroller.scrollLeft = doc.scrollLeft;\n
       alignHorizontally(cm);\n
@@ -2286,6 +3248,8 @@
     // Fire change events, and delayed event handlers\n
     if (op.changeObjs)\n
       signal(cm, "changes", cm, op.changeObjs);\n
+    if (op.update)\n
+      op.update.finish();\n
   }\n
 \n
   // Run the given function in an operation\n
@@ -2511,167 +3475,6 @@
     return dirty;\n
   }\n
 \n
-  // INPUT HANDLING\n
-\n
-  // Poll for input changes, using the normal rate of polling. This\n
-  // runs as long as the editor is focused.\n
-  function slowPoll(cm) {\n
-    if (cm.display.pollingFast) return;\n
-    cm.display.poll.set(cm.options.pollInterval, function() {\n
-      readInput(cm);\n
-      if (cm.state.focused) slowPoll(cm);\n
-    });\n
-  }\n
-\n
-  // When an event has just come in that is likely to add or change\n
-  // something in the input textarea, we poll faster, to ensure that\n
-  // the change appears on the screen quickly.\n
-  function fastPoll(cm) {\n
-    var missed = false;\n
-    cm.display.pollingFast = true;\n
-    function p() {\n
-      var changed = readInput(cm);\n
-      if (!changed && !missed) {missed = true; cm.display.poll.set(60, p);}\n
-      else {cm.display.pollingFast = false; slowPoll(cm);}\n
-    }\n
-    cm.display.poll.set(20, p);\n
-  }\n
-\n
-  // This will be set to an array of strings when copying, so that,\n
-  // when pasting, we know what kind of selections the copied text\n
-  // was made out of.\n
-  var lastCopied = null;\n
-\n
-  // Read input from the textarea, and update the document to match.\n
-  // When something is selected, it is present in the textarea, and\n
-  // selected (unless it is huge, in which case a placeholder is\n
-  // used). When nothing is selected, the cursor sits after previously\n
-  // seen text (can be empty), which is stored in prevInput (we must\n
-  // not reset the textarea when typing, because that breaks IME).\n
-  function readInput(cm) {\n
-    var input = cm.display.input, prevInput = cm.display.prevInput, doc = cm.doc;\n
-    // Since this is called a *lot*, try to bail out as cheaply as\n
-    // possible when it is clear that nothing happened. hasSelection\n
-    // will be the case when there is a lot of text in the textarea,\n
-    // in which case reading its value would be expensive.\n
-    if (!cm.state.focused || (hasSelection(input) && !prevInput) || isReadOnly(cm) || cm.options.disableInput || cm.state.keySeq)\n
-      return false;\n
-    // See paste handler for more on the fakedLastChar kludge\n
-    if (cm.state.pasteIncoming && cm.state.fakedLastChar) {\n
-      input.value = input.value.substring(0, input.value.length - 1);\n
-      cm.state.fakedLastChar = false;\n
-    }\n
-    var text = input.value;\n
-    // If nothing changed, bail.\n
-    if (text == prevInput && !cm.somethingSelected()) return false;\n
-    // Work around nonsensical selection resetting in IE9/10, and\n
-    // inexplicable appearance of private area unicode characters on\n
-    // some key combos in Mac (#2689).\n
-    if (ie && ie_version >= 9 && cm.display.inputHasSelection === text ||\n
-        mac && /[\\uf700-\\uf7ff]/.test(text)) {\n
-      resetInput(cm);\n
-      return false;\n
-    }\n
-\n
-    var withOp = !cm.curOp;\n
-    if (withOp) startOperation(cm);\n
-    cm.display.shift = false;\n
-\n
-    if (text.charCodeAt(0) == 0x200b && doc.sel == cm.display.selForContextMenu && !prevInput)\n
-      prevInput = "\\u200b";\n
-    // Find the part of the input that is actually new\n
-    var same = 0, l = Math.min(prevInput.length, text.length);\n
-    while (same < l && prevInput.charCodeAt(same) == text.charCodeAt(same)) ++same;\n
-    var inserted = text.slice(same), textLines = splitLines(inserted);\n
-\n
-    // When pasing N lines into N selections, insert one line per selection\n
-    var multiPaste = null;\n
-    if (cm.state.pasteIncoming && doc.sel.ranges.length > 1) {\n
-      if (lastCopied && lastCopied.join("\\n") == inserted)\n
-        multiPaste = doc.sel.ranges.length % lastCopied.length == 0 && map(lastCopied, splitLines);\n
-      else if (textLines.length == doc.sel.ranges.length)\n
-        multiPaste = map(textLines, function(l) { return [l]; });\n
-    }\n
-\n
-    // Normal behavior is to insert the new text into every selection\n
-    for (var i = doc.sel.ranges.length - 1; i >= 0; i--) {\n
-      var range = doc.sel.ranges[i];\n
-      var from = range.from(), to = range.to();\n
-      // Handle deletion\n
-      if (same < prevInput.length)\n
-        from = Pos(from.line, from.ch - (prevInput.length - same));\n
-      // Handle overwrite\n
-      else if (cm.state.overwrite && range.empty() && !cm.state.pasteIncoming)\n
-        to = Pos(to.line, Math.min(getLine(doc, to.line).text.length, to.ch + lst(textLines).length));\n
-      var updateInput = cm.curOp.updateInput;\n
-      var changeEvent = {from: from, to: to, text: multiPaste ? multiPaste[i % multiPaste.length] : textLines,\n
-                         origin: cm.state.pasteIncoming ? "paste" : cm.state.cutIncoming ? "cut" : "+input"};\n
-      makeChange(cm.doc, changeEvent);\n
-      signalLater(cm, "inputRead", cm, changeEvent);\n
-      // When an \'electric\' character is inserted, immediately trigger a reindent\n
-      if (inserted && !cm.state.pasteIncoming && cm.options.electricChars &&\n
-          cm.options.smartIndent && range.head.ch < 100 &&\n
-          (!i || doc.sel.ranges[i - 1].head.line != range.head.line)) {\n
-        var mode = cm.getModeAt(range.head);\n
-        var end = changeEnd(changeEvent);\n
-        if (mode.electricChars) {\n
-          for (var j = 0; j < mode.electricChars.length; j++)\n
-            if (inserted.indexOf(mode.electricChars.charAt(j)) > -1) {\n
-              indentLine(cm, end.line, "smart");\n
-              break;\n
-            }\n
-        } else if (mode.electricInput) {\n
-          if (mode.electricInput.test(getLine(doc, end.line).text.slice(0, end.ch)))\n
-            indentLine(cm, end.line, "smart");\n
-        }\n
-      }\n
-    }\n
-    ensureCursorVisible(cm);\n
-    cm.curOp.updateInput = updateInput;\n
-    cm.curOp.typing = true;\n
-\n
-    // Don\'t leave long text in the textarea, since it makes further polling slow\n
-    if (text.length > 1000 || text.indexOf("\\n") > -1) input.value = cm.display.prevInput = "";\n
-    else cm.display.prevInput = text;\n
-    if (withOp) endOperation(cm);\n
-    cm.state.pasteIncoming = cm.state.cutIncoming = false;\n
-    return true;\n
-  }\n
-\n
-  // Reset the input to correspond to the selection (or to be empty,\n
-  // when not typing and nothing is selected)\n
-  function resetInput(cm, typing) {\n
-    if (cm.display.contextMenuPending) return;\n
-    var minimal, selected, doc = cm.doc;\n
-    if (cm.somethingSelected()) {\n
-      cm.display.prevInput = "";\n
-      var range = doc.sel.primary();\n
-      minimal = hasCopyEvent &&\n
-        (range.to().line - range.from().line > 100 || (selected = cm.getSelection()).length > 1000);\n
-      var content = minimal ? "-" : selected || cm.getSelection();\n
-      cm.display.input.value = content;\n
-      if (cm.state.focused) selectInput(cm.display.input);\n
-      if (ie && ie_version >= 9) cm.display.inputHasSelection = content;\n
-    } else if (!typing) {\n
-      cm.display.prevInput = cm.display.input.value = "";\n
-      if (ie && ie_version >= 9) cm.display.inputHasSelection = null;\n
-    }\n
-    cm.display.inaccurateSelection = minimal;\n
-  }\n
-\n
-  function focusInput(cm) {\n
-    if (cm.options.readOnly != "nocursor" && (!mobile || activeElt() != cm.display.input))\n
-      cm.display.input.focus();\n
-  }\n
-\n
-  function ensureFocus(cm) {\n
-    if (!cm.state.focused) { focusInput(cm); onFocus(cm); }\n
-  }\n
-\n
-  function isReadOnly(cm) {\n
-    return cm.options.readOnly || cm.doc.cantEdit;\n
-  }\n
-\n
   // EVENT HANDLERS\n
 \n
   // Attach the necessary event handlers when initializing the editor\n
@@ -2690,14 +3493,63 @@
       }));\n
     else\n
       on(d.scroller, "dblclick", function(e) { signalDOMEvent(cm, e) || e_preventDefault(e); });\n
-    // Prevent normal selection in the editor (we handle our own)\n
-    on(d.lineSpace, "selectstart", function(e) {\n
-      if (!eventInWidget(d, e)) e_preventDefault(e);\n
-    });\n
     // Some browsers fire contextmenu *after* opening the menu, at\n
     // which point we can\'t mess with it anymore. Context menu is\n
     // handled in onMouseDown for these browsers.\n
     if (!captureRightClick) on(d.scroller, "contextmenu", function(e) {onContextMenu(cm, e);});\n
+\n
+    // Used to suppress mouse event handling when a touch happens\n
+    var touchFinished, prevTouch = {end: 0};\n
+    function finishTouch() {\n
+      if (d.activeTouch) {\n
+        touchFinished = setTimeout(function() {d.activeTouch = null;}, 1000);\n
+        prevTouch = d.activeTouch;\n
+        prevTouch.end = +new Date;\n
+      }\n
+    };\n
+    function isMouseLikeTouchEvent(e) {\n
+      if (e.touches.length != 1) return false;\n
+      var touch = e.touches[0];\n
+      return touch.radiusX <= 1 && touch.radiusY <= 1;\n
+    }\n
+    function farAway(touch, other) {\n
+      if (other.left == null) return true;\n
+      var dx = other.left - touch.left, dy = other.top - touch.top;\n
+      return dx * dx + dy * dy > 20 * 20;\n
+    }\n
+    on(d.scroller, "touchstart", function(e) {\n
+      if (!signalDOMEvent(cm, e) && !isMouseLikeTouchEvent(e)) {\n
+        clearTimeout(touchFinished);\n
+        var now = +new Date;\n
+        d.activeTouch = {start: now, moved: false,\n
+                         prev: now - prevTouch.end <= 300 ? prevTouch : null};\n
+        if (e.touches.length == 1) {\n
+          d.activeTouch.left = e.touches[0].pageX;\n
+          d.activeTouch.top = e.touches[0].pageY;\n
+        }\n
+      }\n
+    });\n
+    on(d.scroller, "touchmove", function() {\n
+      if (d.activeTouch) d.activeTouch.moved = true;\n
+    });\n
+    on(d.scroller, "touchend", function(e) {\n
+      var touch = d.activeTouch;\n
+      if (touch && !eventInWidget(d, e) && touch.left != null &&\n
+          !touch.moved && new Date - touch.start < 300) {\n
+        var pos = cm.coordsChar(d.activeTouch, "page"), range;\n
+        if (!touch.prev || farAway(touch, touch.prev)) // Single tap\n
+          range = new Range(pos, pos);\n
+        else if (!touch.prev.prev || farAway(touch, touch.prev.prev)) // Double tap\n
+          range = cm.findWordAt(pos);\n
+        else // Triple tap\n
+          range = new Range(Pos(pos.line, 0), clipPos(cm.doc, Pos(pos.line + 1, 0)));\n
+        cm.setSelection(range.anchor, range.head);\n
+        cm.focus();\n
+        e_preventDefault(e);\n
+      }\n
+      finishTouch();\n
+    });\n
+    on(d.scroller, "touchcancel", finishTouch);\n
 \n
     // Sync scrolling between fake scrollbars and real scrollable\n
     // area, ensure viewport is updated when scrolling.\n
@@ -2716,86 +3568,33 @@
     // Prevent wrapper from ever scrolling\n
     on(d.wrapper, "scroll", function() { d.wrapper.scrollTop = d.wrapper.scrollLeft = 0; });\n
 \n
-    on(d.input, "keyup", function(e) { onKeyUp.call(cm, e); });\n
-    on(d.input, "input", function() {\n
-      if (ie && ie_version >= 9 && cm.display.inputHasSelection) cm.display.inputHasSelection = null;\n
-      readInput(cm);\n
-    });\n
-    on(d.input, "keydown", operation(cm, onKeyDown));\n
-    on(d.input, "keypress", operation(cm, onKeyPress));\n
-    on(d.input, "focus", bind(onFocus, cm));\n
-    on(d.input, "blur", bind(onBlur, cm));\n
+    d.dragFunctions = {\n
+      enter: function(e) {if (!signalDOMEvent(cm, e)) e_stop(e);},\n
+      over: function(e) {if (!signalDOMEvent(cm, e)) { onDragOver(cm, e); e_stop(e); }},\n
+      start: function(e){onDragStart(cm, e);},\n
+      drop: operation(cm, onDrop),\n
+      leave: function(e) {if (!signalDOMEvent(cm, e)) { clearDragCursor(cm); }}\n
+    };\n
 \n
-    function drag_(e) {\n
-      if (!signalDOMEvent(cm, e)) e_stop(e);\n
-    }\n
-    if (cm.options.dragDrop) {\n
-      on(d.scroller, "dragstart", function(e){onDragStart(cm, e);});\n
-      on(d.scroller, "dragenter", drag_);\n
-      on(d.scroller, "dragover", drag_);\n
-      on(d.scroller, "drop", operation(cm, onDrop));\n
-    }\n
-    on(d.scroller, "paste", function(e) {\n
-      if (eventInWidget(d, e)) return;\n
-      cm.state.pasteIncoming = true;\n
-      focusInput(cm);\n
-      fastPoll(cm);\n
-    });\n
-    on(d.input, "paste", function() {\n
-      // Workaround for webkit bug https://bugs.webkit.org/show_bug.cgi?id=90206\n
-      // Add a char to the end of textarea before paste occur so that\n
-      // selection doesn\'t span to the end of textarea.\n
-      if (webkit && !cm.state.fakedLastChar && !(new Date - cm.state.lastMiddleDown < 200)) {\n
-        var start = d.input.selectionStart, end = d.input.selectionEnd;\n
-        d.input.value += "$";\n
-        // The selection end needs to be set before the start, otherwise there\n
-        // can be an intermediate non-empty selection between the two, which\n
-        // can override the middle-click paste buffer on linux and cause the\n
-        // wrong thing to get pasted.\n
-        d.input.selectionEnd = end;\n
-        d.input.selectionStart = start;\n
-        cm.state.fakedLastChar = true;\n
-      }\n
-      cm.state.pasteIncoming = true;\n
-      fastPoll(cm);\n
-    });\n
+    var inp = d.input.getField();\n
+    on(inp, "keyup", function(e) { onKeyUp.call(cm, e); });\n
+    on(inp, "keydown", operation(cm, onKeyDown));\n
+    on(inp, "keypress", operation(cm, onKeyPress));\n
+    on(inp, "focus", bind(onFocus, cm));\n
+    on(inp, "blur", bind(onBlur, cm));\n
+  }\n
 \n
-    function prepareCopyCut(e) {\n
-      if (cm.somethingSelected()) {\n
-        lastCopied = cm.getSelections();\n
-        if (d.inaccurateSelection) {\n
-          d.prevInput = "";\n
-          d.inaccurateSelection = false;\n
-          d.input.value = lastCopied.join("\\n");\n
-          selectInput(d.input);\n
-        }\n
-      } else {\n
-        var text = [], ranges = [];\n
-        for (var i = 0; i < cm.doc.sel.ranges.length; i++) {\n
-          var line = cm.doc.sel.ranges[i].head.line;\n
-          var lineRange = {anchor: Pos(line, 0), head: Pos(line + 1, 0)};\n
-          ranges.push(lineRange);\n
-          text.push(cm.getRange(lineRange.anchor, lineRange.head));\n
-        }\n
-        if (e.type == "cut") {\n
-          cm.setSelections(ranges, null, sel_dontScroll);\n
-        } else {\n
-          d.prevInput = "";\n
-          d.input.value = text.join("\\n");\n
-          selectInput(d.input);\n
-        }\n
-        lastCopied = text;\n
-      }\n
-      if (e.type == "cut") cm.state.cutIncoming = true;\n
+  function dragDropChanged(cm, value, old) {\n
+    var wasOn = old && old != CodeMirror.Init;\n
+    if (!value != !wasOn) {\n
+      var funcs = cm.display.dragFunctions;\n
+      var toggle = value ? on : off;\n
+      toggle(cm.display.scroller, "dragstart", funcs.start);\n
+      toggle(cm.display.scroller, "dragenter", funcs.enter);\n
+      toggle(cm.display.scroller, "dragover", funcs.over);\n
+      toggle(cm.display.scroller, "dragleave", funcs.leave);\n
+      toggle(cm.display.scroller, "drop", funcs.drop);\n
     }\n
-    on(d.input, "cut", prepareCopyCut);\n
-    on(d.input, "copy", prepareCopyCut);\n
-\n
-    // Needed to handle Tab key in KHTML\n
-    if (khtml) on(d.sizer, "mouseup", function() {\n
-      if (activeElt() == d.input) d.input.blur();\n
-      focusInput(cm);\n
-    });\n
   }\n
 \n
   // Called when the window resizes\n
@@ -2814,7 +3613,9 @@
   // Return true when the given mouse event happened in a widget\n
   function eventInWidget(display, e) {\n
     for (var n = e_target(e); n != display.wrapper; n = n.parentNode) {\n
-      if (!n || n.getAttribute("cm-ignore-events") == "true" || n.parentNode == display.sizer && n != display.mover) return true;\n
+      if (!n || (n.nodeType == 1 && n.getAttribute("cm-ignore-events") == "true") ||\n
+          (n.parentNode == display.sizer && n != display.mover))\n
+        return true;\n
     }\n
   }\n
 \n
@@ -2825,7 +3626,7 @@
   // coordinates beyond the right of the text.\n
   function posFromMouse(cm, e, liberal, forRect) {\n
     var display = cm.display;\n
-    if (!liberal && e_target(e).getAttribute("not-content") == "true") return null;\n
+    if (!liberal && e_target(e).getAttribute("cm-not-content") == "true") return null;\n
 \n
     var x, y, space = display.lineSpace.getBoundingClientRect();\n
     // Fails unpredictably on IE[67] when mouse is dragged around quickly.\n
@@ -2845,8 +3646,8 @@
   // middle-click-paste. Or it might be a click on something we should\n
   // not interfere with, such as a scrollbar or widget.\n
   function onMouseDown(e) {\n
-    if (signalDOMEvent(this, e)) return;\n
     var cm = this, display = cm.display;\n
+    if (signalDOMEvent(cm, e) || display.activeTouch && display.input.supportsTouch()) return;\n
     display.shift = e.shiftKey;\n
 \n
     if (eventInWidget(display, e)) {\n
@@ -2864,7 +3665,10 @@
 \n
     switch (e_button(e)) {\n
     case 1:\n
-      if (start)\n
+      // #3261: make sure, that we\'re not starting a second selection\n
+      if (cm.state.selectingText)\n
+        cm.state.selectingText(e);\n
+      else if (start)\n
         leftButtonDown(cm, e, start);\n
       else if (e_target(e) == display.scroller)\n
         e_preventDefault(e);\n
@@ -2872,18 +3676,20 @@
     case 2:\n
       if (webkit) cm.state.lastMiddleDown = +new Date;\n
       if (start) extendSelection(cm.doc, start);\n
-      setTimeout(bind(focusInput, cm), 20);\n
+      setTimeout(function() {display.input.focus();}, 20);\n
       e_preventDefault(e);\n
       break;\n
     case 3:\n
       if (captureRightClick) onContextMenu(cm, e);\n
+      else delayBlurEvent(cm);\n
       break;\n
     }\n
   }\n
 \n
   var lastClick, lastDoubleClick;\n
   function leftButtonDown(cm, e, start) {\n
-    setTimeout(bind(ensureFocus, cm), 0);\n
+    if (ie) setTimeout(bind(ensureFocus, cm), 0);\n
+    else cm.curOp.focus = activeElt();\n
 \n
     var now = +new Date, type;\n
     if (lastDoubleClick && lastDoubleClick.time > now - 400 && cmp(lastDoubleClick.pos, start) == 0) {\n
@@ -2897,9 +3703,10 @@
     }\n
 \n
     var sel = cm.doc.sel, modifier = mac ? e.metaKey : e.ctrlKey, contained;\n
-    if (cm.options.dragDrop && dragAndDrop && !isReadOnly(cm) &&\n
+    if (cm.options.dragDrop && dragAndDrop && !cm.isReadOnly() &&\n
         type == "single" && (contained = sel.contains(start)) > -1 &&\n
-        !sel.ranges[contained].empty())\n
+        (cmp((contained = sel.ranges[contained]).from(), start) < 0 || start.xRel > 0) &&\n
+        (cmp(contained.to(), start) > 0 || start.xRel < 0))\n
       leftButtonStartDrag(cm, e, start, modifier);\n
     else\n
       leftButtonSelect(cm, e, start, type, modifier);\n
@@ -2908,7 +3715,7 @@
   // Start a text drag. When it ends, see if any dragging actually\n
   // happen, and treat as a click if it didn\'t.\n
   function leftButtonStartDrag(cm, e, start, modifier) {\n
-    var display = cm.display;\n
+    var display = cm.display, startTime = +new Date;\n
     var dragEnd = operation(cm, function(e2) {\n
       if (webkit) display.scroller.draggable = false;\n
       cm.state.draggingText = false;\n
@@ -2916,12 +3723,13 @@
       off(display.scroller, "drop", dragEnd);\n
       if (Math.abs(e.clientX - e2.clientX) + Math.abs(e.clientY - e2.clientY) < 10) {\n
         e_preventDefault(e2);\n
-        if (!modifier)\n
+        if (!modifier && +new Date - 200 < startTime)\n
           extendSelection(cm.doc, start);\n
-        focusInput(cm);\n
-        // Work around unexplainable focus problem in IE9 (#2127)\n
-        if (ie && ie_version == 9)\n
-          setTimeout(function() {document.body.focus(); focusInput(cm);}, 20);\n
+        // Work around unexplainable focus problem in IE9 (#2127) and Chrome (#3081)\n
+        if (webkit || ie && ie_version == 9)\n
+          setTimeout(function() {document.body.focus(); display.input.focus();}, 20);\n
+        else\n
+          display.input.focus();\n
       }\n
     });\n
     // Let the drag handler handle this.\n
@@ -2947,6 +3755,7 @@
         ourRange = new Range(start, start);\n
     } else {\n
       ourRange = doc.sel.primary();\n
+      ourIndex = doc.sel.primIndex;\n
     }\n
 \n
     if (e.altKey) {\n
@@ -2978,8 +3787,9 @@
       ourIndex = ranges.length;\n
       setSelection(doc, normalizeSelection(ranges.concat([ourRange]), ourIndex),\n
                    {scroll: false, origin: "*mouse"});\n
-    } else if (ranges.length > 1 && ranges[ourIndex].empty() && type == "single") {\n
-      setSelection(doc, normalizeSelection(ranges.slice(0, ourIndex).concat(ranges.slice(ourIndex + 1)), 0));\n
+    } else if (ranges.length > 1 && ranges[ourIndex].empty() && type == "single" && !e.shiftKey) {\n
+      setSelection(doc, normalizeSelection(ranges.slice(0, ourIndex).concat(ranges.slice(ourIndex + 1)), 0),\n
+                   {scroll: false, origin: "*mouse"});\n
       startSel = doc.sel;\n
     } else {\n
       replaceOneSelection(doc, ourIndex, ourRange, sel_mouse);\n
@@ -3041,7 +3851,7 @@
       var cur = posFromMouse(cm, e, true, type == "rect");\n
       if (!cur) return;\n
       if (cmp(cur, lastPos) != 0) {\n
-        ensureFocus(cm);\n
+        cm.curOp.focus = activeElt();\n
         extendTo(cur);\n
         var visible = visibleLines(display, doc);\n
         if (cur.line >= visible.to || cur.line < visible.from)\n
@@ -3057,9 +3867,10 @@
     }\n
 \n
     function done(e) {\n
+      cm.state.selectingText = false;\n
       counter = Infinity;\n
       e_preventDefault(e);\n
-      focusInput(cm);\n
+      display.input.focus();\n
       off(document, "mousemove", move);\n
       off(document, "mouseup", up);\n
       doc.history.lastSelOrigin = null;\n
@@ -3070,13 +3881,14 @@
       else extend(e);\n
     });\n
     var up = operation(cm, done);\n
+    cm.state.selectingText = up;\n
     on(document, "mousemove", move);\n
     on(document, "mouseup", up);\n
   }\n
 \n
   // Determines whether an event happened in the gutter, and fires the\n
   // handlers for the corresponding event.\n
-  function gutterEvent(cm, e, type, prevent, signalfn) {\n
+  function gutterEvent(cm, e, type, prevent) {\n
     try { var mX = e.clientX, mY = e.clientY; }\n
     catch(e) { return false; }\n
     if (mX >= Math.floor(cm.display.gutters.getBoundingClientRect().right)) return false;\n
@@ -3093,14 +3905,14 @@
       if (g && g.getBoundingClientRect().right >= mX) {\n
         var line = lineAtHeight(cm.doc, mY);\n
         var gutter = cm.options.gutters[i];\n
-        signalfn(cm, type, cm, line, gutter, e);\n
+        signal(cm, type, cm, line, gutter, e);\n
         return e_defaultPrevented(e);\n
       }\n
     }\n
   }\n
 \n
   function clickInGutter(cm, e) {\n
-    return gutterEvent(cm, e, "gutterClick", true, signalLater);\n
+    return gutterEvent(cm, e, "gutterClick", true);\n
   }\n
 \n
   // Kludge to work around strange IE behavior where it\'ll sometimes\n
@@ -3109,23 +3921,32 @@
 \n
   function onDrop(e) {\n
     var cm = this;\n
+    clearDragCursor(cm);\n
     if (signalDOMEvent(cm, e) || eventInWidget(cm.display, e))\n
       return;\n
     e_preventDefault(e);\n
     if (ie) lastDrop = +new Date;\n
     var pos = posFromMouse(cm, e, true), files = e.dataTransfer.files;\n
-    if (!pos || isReadOnly(cm)) return;\n
+    if (!pos || cm.isReadOnly()) return;\n
     // Might be a file drop, in which case we simply extract the text\n
     // and insert it.\n
     if (files && files.length && window.FileReader && window.File) {\n
       var n = files.length, text = Array(n), read = 0;\n
       var loadFile = function(file, i) {\n
+        if (cm.options.allowDropFileTypes &&\n
+            indexOf(cm.options.allowDropFileTypes, file.type) == -1)\n
+          return;\n
+\n
         var reader = new FileReader;\n
         reader.onload = operation(cm, function() {\n
-          text[i] = reader.result;\n
+          var content = reader.result;\n
+          if (/[\\x00-\\x08\\x0e-\\x1f]{2}/.test(content)) content = "";\n
+          text[i] = content;\n
           if (++read == n) {\n
             pos = clipPos(cm.doc, pos);\n
-            var change = {from: pos, to: pos, text: splitLines(text.join("\\n")), origin: "paste"};\n
+            var change = {from: pos, to: pos,\n
+                          text: cm.doc.splitLines(text.join(cm.doc.lineSeparator())),\n
+                          origin: "paste"};\n
             makeChange(cm.doc, change);\n
             setSelectionReplaceHistory(cm.doc, simpleSelection(pos, changeEnd(change)));\n
           }\n
@@ -3138,19 +3959,19 @@
       if (cm.state.draggingText && cm.doc.sel.contains(pos) > -1) {\n
         cm.state.draggingText(e);\n
         // Ensure the editor is re-focused\n
-        setTimeout(bind(focusInput, cm), 20);\n
+        setTimeout(function() {cm.display.input.focus();}, 20);\n
         return;\n
       }\n
       try {\n
         var text = e.dataTransfer.getData("Text");\n
         if (text) {\n
-          if (cm.state.draggingText && !(mac ? e.metaKey : e.ctrlKey))\n
+          if (cm.state.draggingText && !(mac ? e.altKey : e.ctrlKey))\n
             var selected = cm.listSelections();\n
           setSelectionNoUndo(cm.doc, simpleSelection(pos, pos));\n
           if (selected) for (var i = 0; i < selected.length; ++i)\n
             replaceRange(cm.doc, "", selected[i].anchor, selected[i].head, "drag");\n
           cm.replaceSelection(text, "around", "paste");\n
-          focusInput(cm);\n
+          cm.display.input.focus();\n
         }\n
       }\n
       catch(e){}\n
@@ -3176,6 +3997,48 @@
       }\n
       e.dataTransfer.setDragImage(img, 0, 0);\n
       if (presto) img.parentNode.removeChild(img);\n
+    }\n
+  }\n
+\n
+  function onDragOver(cm, e) {\n
+    var pos = posFromMouse(cm, e);\n
+    if (!pos) return;\n
+    var frag = document.createDocumentFragment();\n
+    drawSelectionCursor(cm, pos, frag);\n
+    if (!cm.display.dragCursor) {\n
+      cm.display.dragCursor = elt("div", null, "CodeMirror-cursors CodeMirror-dragcursors");\n
+      cm.display.lineSpace.insertBefore(cm.display.dragCursor, cm.display.cursorDiv);\n
+    }\n
+    remov
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+eChildrenAndAdd(cm.display.dragCursor, frag);\n
+  }\n
+\n
+  function clearDragCursor(cm) {\n
+    if (cm.display.dragCursor) {\n
+      cm.display.lineSpace.removeChild(cm.display.dragCursor);\n
+      cm.display.dragCursor = null;\n
     }\n
   }\n
 \n
@@ -3243,8 +4106,9 @@
 \n
     var display = cm.display, scroll = display.scroller;\n
     // Quit if there\'s nothing to scroll here\n
-    if (!(dx && scroll.scrollWidth > scroll.clientWidth ||\n
-          dy && scroll.scrollHeight > scroll.clientHeight)) return;\n
+    var canScrollX = scroll.scrollWidth > scroll.clientWidth;\n
+    var canScrollY = scroll.scrollHeight > scroll.clientHeight;\n
+    if (!(dx && canScrollX || dy && canScrollY)) return;\n
 \n
     // Webkit browsers on OS X abort momentum scrolls when the target\n
     // of the scroll event is removed from the scrollable element.\n
@@ -3268,10 +4132,15 @@
     // scrolling entirely here. It\'ll be slightly off from native, but\n
     // better than glitching out.\n
     if (dx && !gecko && !presto && wheelPixelsPerUnit != null) {\n
-      if (dy)\n
+      if (dy && canScrollY)\n
         setScrollTop(cm, Math.max(0, Math.min(scroll.scrollTop + dy * wheelPixelsPerUnit, scroll.scrollHeight - scroll.clientHeight)));\n
       setScrollLeft(cm, Math.max(0, Math.min(scroll.scrollLeft + dx * wheelPixelsPerUnit, scroll.scrollWidth - scroll.clientWidth)));\n
-      e_preventDefault(e);\n
+      // Only prevent default scrolling if vertical scrolling is\n
+      // actually possible. Otherwise, it causes vertical scroll\n
+      // jitter on OSX trackpads when deltaX is small and deltaY\n
+      // is large (issue #3579)\n
+      if (!dy || (dy && canScrollY))\n
+        e_preventDefault(e);\n
       display.wheelStartX = null; // Abort measurement, if in progress\n
       return;\n
     }\n
@@ -3317,10 +4186,10 @@
     }\n
     // Ensure previous input has been read, so that the handler sees a\n
     // consistent view of the document\n
-    if (cm.display.pollingFast && readInput(cm)) cm.display.pollingFast = false;\n
+    cm.display.input.ensurePolled();\n
     var prevShift = cm.display.shift, done = false;\n
     try {\n
-      if (isReadOnly(cm)) cm.state.suppressEdits = true;\n
+      if (cm.isReadOnly()) cm.state.suppressEdits = true;\n
       if (dropShift) cm.display.shift = false;\n
       done = bound(cm) != Pass;\n
     } finally {\n
@@ -3347,7 +4216,7 @@
       stopSeq.set(50, function() {\n
         if (cm.state.keySeq == seq) {\n
           cm.state.keySeq = null;\n
-          resetInput(cm);\n
+          cm.display.input.reset();\n
         }\n
       });\n
       name = seq + " " + name;\n
@@ -3399,7 +4268,7 @@
   var lastStoppedKey = null;\n
   function onKeyDown(e) {\n
     var cm = this;\n
-    ensureFocus(cm);\n
+    cm.curOp.focus = activeElt();\n
     if (signalDOMEvent(cm, e)) return;\n
     // IE does strange things with escape.\n
     if (ie && ie_version < 11 && e.keyCode == 27) e.returnValue = false;\n
@@ -3440,36 +4309,49 @@
 \n
   function onKeyPress(e) {\n
     var cm = this;\n
-    if (signalDOMEvent(cm, e) || e.ctrlKey && !e.altKey || mac && e.metaKey) return;\n
+    if (eventInWidget(cm.display, e) || signalDOMEvent(cm, e) || e.ctrlKey && !e.altKey || mac && e.metaKey) return;\n
     var keyCode = e.keyCode, charCode = e.charCode;\n
     if (presto && keyCode == lastStoppedKey) {lastStoppedKey = null; e_preventDefault(e); return;}\n
-    if (((presto && (!e.which || e.which < 10)) || khtml) && handleKeyBinding(cm, e)) return;\n
+    if ((presto && (!e.which || e.which < 10)) && handleKeyBinding(cm, e)) return;\n
     var ch = String.fromCharCode(charCode == null ? keyCode : charCode);\n
     if (handleCharBinding(cm, e, ch)) return;\n
-    if (ie && ie_version >= 9) cm.display.inputHasSelection = null;\n
-    fastPoll(cm);\n
+    cm.display.input.onKeyPress(e);\n
   }\n
 \n
   // FOCUS/BLUR EVENTS\n
 \n
+  function delayBlurEvent(cm) {\n
+    cm.state.delayingBlurEvent = true;\n
+    setTimeout(function() {\n
+      if (cm.state.delayingBlurEvent) {\n
+        cm.state.delayingBlurEvent = false;\n
+        onBlur(cm);\n
+      }\n
+    }, 100);\n
+  }\n
+\n
   function onFocus(cm) {\n
+    if (cm.state.delayingBlurEvent) cm.state.delayingBlurEvent = false;\n
+\n
     if (cm.options.readOnly == "nocursor") return;\n
     if (!cm.state.focused) {\n
       signal(cm, "focus", cm);\n
       cm.state.focused = true;\n
       addClass(cm.display.wrapper, "CodeMirror-focused");\n
-      // The prevInput test prevents this from firing when a context\n
-      // menu is closed (since the resetInput would kill the\n
+      // This test prevents this from firing when a context\n
+      // menu is closed (since the input reset would kill the\n
       // select-all detection hack)\n
       if (!cm.curOp && cm.display.selForContextMenu != cm.doc.sel) {\n
-        resetInput(cm);\n
-        if (webkit) setTimeout(bind(resetInput, cm, true), 0); // Issue #1730\n
+        cm.display.input.reset();\n
+        if (webkit) setTimeout(function() { cm.display.input.reset(true); }, 20); // Issue #1730\n
       }\n
+      cm.display.input.receivedFocus();\n
     }\n
-    slowPoll(cm);\n
     restartBlink(cm);\n
   }\n
   function onBlur(cm) {\n
+    if (cm.state.delayingBlurEvent) return;\n
+\n
     if (cm.state.focused) {\n
       signal(cm, "blur", cm);\n
       cm.state.focused = false;\n
@@ -3485,85 +4367,14 @@
   // textarea (making it as unobtrusive as possible) to let the\n
   // right-click take effect on it.\n
   function onContextMenu(cm, e) {\n
+    if (eventInWidget(cm.display, e) || contextMenuInGutter(cm, e)) return;\n
     if (signalDOMEvent(cm, e, "contextmenu")) return;\n
-    var display = cm.display;\n
-    if (eventInWidget(display, e) || contextMenuInGutter(cm, e)) return;\n
-\n
-    var pos = posFromMouse(cm, e), scrollPos = display.scroller.scrollTop;\n
-    if (!pos || presto) return; // Opera is difficult.\n
-\n
-    // Reset the current text selection only if the click is done outside of the selection\n
-    // and \'resetSelectionOnContextMenu\' option is true.\n
-    var reset = cm.options.resetSelectionOnContextMenu;\n
-    if (reset && cm.doc.sel.contains(pos) == -1)\n
-      operation(cm, setSelection)(cm.doc, simpleSelection(pos), sel_dontScroll);\n
-\n
-    var oldCSS = display.input.style.cssText;\n
-    display.inputDiv.style.position = "absolute";\n
-    display.input.style.cssText = "position: fixed; width: 30px; height: 30px; top: " + (e.clientY - 5) +\n
-      "px; left: " + (e.clientX - 5) + "px; z-index: 1000; background: " +\n
-      (ie ? "rgba(255, 255, 255, .05)" : "transparent") +\n
-      "; outline: none; border-width: 0; outline: none; overflow: hidden; opacity: .05; filter: alpha(opacity=5);";\n
-    if (webkit) var oldScrollY = window.scrollY; // Work around Chrome issue (#2712)\n
-    focusInput(cm);\n
-    if (webkit) window.scrollTo(null, oldScrollY);\n
-    resetInput(cm);\n
-    // Adds "Select all" to context menu in FF\n
-    if (!cm.somethingSelected()) display.input.value = display.prevInput = " ";\n
-    display.contextMenuPending = true;\n
-    display.selForContextMenu = cm.doc.sel;\n
-    clearTimeout(display.detectingSelectAll);\n
-\n
-    // Select-all will be greyed out if there\'s nothing to select, so\n
-    // this adds a zero-width space so that we can later check whether\n
-    // it got selected.\n
-    function prepareSelectAllHack() {\n
-      if (display.input.selectionStart != null) {\n
-        var selected = cm.somethingSelected();\n
-        var extval = display.input.value = "\\u200b" + (selected ? display.input.value : "");\n
-        display.prevInput = selected ? "" : "\\u200b";\n
-        display.input.selectionStart = 1; display.input.selectionEnd = extval.length;\n
-        // Re-set this, in case some other handler touched the\n
-        // selection in the meantime.\n
-        display.selForContextMenu = cm.doc.sel;\n
-      }\n
-    }\n
-    function rehide() {\n
-      display.contextMenuPending = false;\n
-      display.inputDiv.style.position = "relative";\n
-      display.input.style.cssText = oldCSS;\n
-      if (ie && ie_version < 9) display.scrollbars.setScrollTop(display.scroller.scrollTop = scrollPos);\n
-      slowPoll(cm);\n
-\n
-      // Try to detect the user choosing select-all\n
-      if (display.input.selectionStart != null) {\n
-        if (!ie || (ie && ie_version < 9)) prepareSelectAllHack();\n
-        var i = 0, poll = function() {\n
-          if (display.selForContextMenu == cm.doc.sel && display.input.selectionStart == 0)\n
-            operation(cm, commands.selectAll)(cm);\n
-          else if (i++ < 10) display.detectingSelectAll = setTimeout(poll, 500);\n
-          else resetInput(cm);\n
-        };\n
-        display.detectingSelectAll = setTimeout(poll, 200);\n
-      }\n
-    }\n
-\n
-    if (ie && ie_version >= 9) prepareSelectAllHack();\n
-    if (captureRightClick) {\n
-      e_stop(e);\n
-      var mouseup = function() {\n
-        off(window, "mouseup", mouseup);\n
-        setTimeout(rehide, 20);\n
-      };\n
-      on(window, "mouseup", mouseup);\n
-    } else {\n
-      setTimeout(rehide, 50);\n
-    }\n
+    cm.display.input.onContextMenu(e);\n
   }\n
 \n
   function contextMenuInGutter(cm, e) {\n
     if (!hasHandler(cm, "gutterContextMenu")) return false;\n
-    return gutterEvent(cm, e, "gutterContextMenu", false, signal);\n
+    return gutterEvent(cm, e, "gutterContextMenu", false);\n
   }\n
 \n
   // UPDATING\n
@@ -3843,7 +4654,9 @@
 \n
     var lendiff = change.text.length - (to.line - from.line) - 1;\n
     // Remember that these lines changed, for updating the display\n
-    if (from.line == to.line && change.text.length == 1 && !isWholeLineUpdate(cm.doc, change))\n
+    if (change.full)\n
+      regChange(cm);\n
+    else if (from.line == to.line && change.text.length == 1 && !isWholeLineUpdate(cm.doc, change))\n
       regLineChange(cm, from.line, "text");\n
     else\n
       regChange(cm, from.line, to.line + 1, lendiff);\n
@@ -3865,7 +4678,7 @@
   function replaceRange(doc, code, from, to, origin) {\n
     if (!to) to = from;\n
     if (cmp(to, from) < 0) { var tmp = to; to = from; from = tmp; }\n
-    if (typeof code == "string") code = splitLines(code);\n
+    if (typeof code == "string") code = doc.splitLines(code);\n
     makeChange(doc, {from: from, to: to, text: code, origin: origin});\n
   }\n
 \n
@@ -4044,6 +4857,8 @@
 \n
     if (indentString != curSpaceString) {\n
       replaceRange(doc, indentString, Pos(n, 0), Pos(n, curSpaceString.length), "+input");\n
+      line.stateAfter = null;\n
+      return true;\n
     } else {\n
       // Ensure that, if the cursor was in the whitespace at the start\n
       // of the line, it is moved to the end of that space.\n
@@ -4056,7 +4871,6 @@
         }\n
       }\n
     }\n
-    line.stateAfter = null;\n
   }\n
 \n
   // Utility for applying a change to a line by handle or number,\n
@@ -4108,10 +4922,9 @@
   function findPosH(doc, pos, dir, unit, visually) {\n
     var line = pos.line, ch = pos.ch, origDir = dir;\n
     var lineObj = getLine(doc, line);\n
-    var possible = true;\n
     function findNextLine() {\n
       var l = line + dir;\n
-      if (l < doc.first || l >= doc.first + doc.size) return (possible = false);\n
+      if (l < doc.first || l >= doc.first + doc.size) return false\n
       line = l;\n
       return lineObj = getLine(doc, l);\n
     }\n
@@ -4121,14 +4934,16 @@
         if (!boundToLine && findNextLine()) {\n
           if (visually) ch = (dir < 0 ? lineRight : lineLeft)(lineObj);\n
           else ch = dir < 0 ? lineObj.text.length : 0;\n
-        } else return (possible = false);\n
+        } else return false\n
       } else ch = next;\n
       return true;\n
     }\n
 \n
-    if (unit == "char") moveOnce();\n
-    else if (unit == "column") moveOnce(true);\n
-    else if (unit == "word" || unit == "group") {\n
+    if (unit == "char") {\n
+      moveOnce()\n
+    } else if (unit == "column") {\n
+      moveOnce(true)\n
+    } else if (unit == "word" || unit == "group") {\n
       var sawType = null, group = unit == "group";\n
       var helper = doc.cm && doc.cm.getHelper(pos, "wordChars");\n
       for (var first = true;; first = false) {\n
@@ -4148,8 +4963,8 @@
         if (dir > 0 && !moveOnce(!first)) break;\n
       }\n
     }\n
-    var result = skipAtomic(doc, Pos(line, ch), origDir, true);\n
-    if (!possible) result.hitSide = true;\n
+    var result = skipAtomic(doc, Pos(line, ch), pos, origDir, true);\n
+    if (!cmp(pos, result)) result.hitSide = true;\n
     return result;\n
   }\n
 \n
@@ -4185,7 +5000,7 @@
 \n
   CodeMirror.prototype = {\n
     constructor: CodeMirror,\n
-    focus: function(){window.focus(); focusInput(this); fastPoll(this);},\n
+    focus: function(){window.focus(); this.display.input.focus();},\n
 \n
     setOption: function(option, value) {\n
       var options = this.options, old = options[option];\n
@@ -4296,7 +5111,7 @@
 \n
     getHelpers: function(pos, type) {\n
       var found = [];\n
-      if (!helpers.hasOwnProperty(type)) return helpers;\n
+      if (!helpers.hasOwnProperty(type)) return found;\n
       var help = helpers[type], mode = this.getModeAt(pos);\n
       if (typeof mode[type] == "string") {\n
         if (help[mode[type]]) found.push(help[mode[type]]);\n
@@ -4346,10 +5161,15 @@
       return lineAtHeight(this.doc, height + this.display.viewOffset);\n
     },\n
     heightAtLine: function(line, mode) {\n
-      var end = false, last = this.doc.first + this.doc.size - 1;\n
-      if (line < this.doc.first) line = this.doc.first;\n
-      else if (line > last) { line = last; end = true; }\n
-      var lineObj = getLine(this.doc, line);\n
+      var end = false, lineObj;\n
+      if (typeof line == "number") {\n
+        var last = this.doc.first + this.doc.size - 1;\n
+        if (line < this.doc.first) line = this.doc.first;\n
+        else if (line > last) { line = last; end = true; }\n
+        lineObj = getLine(this.doc, line);\n
+      } else {\n
+        lineObj = line;\n
+      }\n
       return intoCoordSystem(this, lineObj, {top: 0, left: 0}, mode || "page").top +\n
         (end ? this.doc.height - heightAtLine(lineObj) : 0);\n
     },\n
@@ -4378,12 +5198,6 @@
       });\n
     }),\n
 \n
-    addLineWidget: methodOp(function(handle, node, options) {\n
-      return addLineWidget(this, handle, node, options);\n
-    }),\n
-\n
-    removeLineWidget: function(widget) { widget.clear(); },\n
-\n
     lineInfo: function(line) {\n
       if (typeof line == "number") {\n
         if (!isLine(this.doc, line)) return null;\n
@@ -4407,6 +5221,7 @@
       var top = pos.bottom, left = pos.left;\n
       node.style.position = "absolute";\n
       node.setAttribute("cm-ignore-events", "true");\n
+      this.display.input.setUneditable(node);\n
       display.sizer.appendChild(node);\n
       if (vert == "over") {\n
         top = pos.top;\n
@@ -4441,8 +5256,10 @@
 \n
     execCommand: function(cmd) {\n
       if (commands.hasOwnProperty(cmd))\n
-        return commands[cmd](this);\n
+        return commands[cmd].call(null, this);\n
     },\n
+\n
+    triggerElectric: methodOp(function(text) { triggerElectric(this, text); }),\n
 \n
     findPosH: function(from, amount, unit, visually) {\n
       var dir = 1;\n
@@ -4533,7 +5350,8 @@
 \n
       signal(this, "overwriteToggle", this, this.state.overwrite);\n
     },\n
-    hasFocus: function() { return activeElt() == this.display.input; },\n
+    hasFocus: function() { return this.display.input.getField() == activeElt(); },\n
+    isReadOnly: function() { return !!(this.options.readOnly || this.doc.cantEdit); },\n
 \n
     scrollTo: methodOp(function(x, y) {\n
       if (x != null || y != null) resolveScrollToPos(this);\n
@@ -4609,14 +5427,14 @@
       old.cm = null;\n
       attachDoc(this, doc);\n
       clearCaches(this);\n
-      resetInput(this);\n
+      this.display.input.reset();\n
       this.scrollTo(doc.scrollLeft, doc.scrollTop);\n
       this.curOp.forceScroll = true;\n
       signalLater(this, "swapDoc", this, old);\n
       return old;\n
     }),\n
 \n
-    getInputField: function(){return this.display.input;},\n
+    getInputField: function(){return this.display.input.getField();},\n
     getWrapperElement: function(){return this.display.wrapper;},\n
     getScrollerElement: function(){return this.display.scroller;},\n
     getGutterElement: function(){return this.display.gutters;}\n
@@ -4657,12 +5475,31 @@
     clearCaches(cm);\n
     regChange(cm);\n
   }, true);\n
-  option("specialChars", /[\\t\\u0000-\\u0019\\u00ad\\u200b-\\u200f\\u2028\\u2029\\ufeff]/g, function(cm, val) {\n
-    cm.options.specialChars = new RegExp(val.source + (val.test("\\t") ? "" : "|\\t"), "g");\n
-    cm.refresh();\n
-  }, true);\n
+  option("lineSeparator", null, function(cm, val) {\n
+    cm.doc.lineSep = val;\n
+    if (!val) return;\n
+    var newBreaks = [], lineNo = cm.doc.first;\n
+    cm.doc.iter(function(line) {\n
+      for (var pos = 0;;) {\n
+        var found = line.text.indexOf(val, pos);\n
+        if (found == -1) break;\n
+        pos = found + val.length;\n
+        newBreaks.push(Pos(lineNo, found));\n
+      }\n
+      lineNo++;\n
+    });\n
+    for (var i = newBreaks.length - 1; i >= 0; i--)\n
+      replaceRange(cm.doc, val, newBreaks[i], Pos(newBreaks[i].line, newBreaks[i].ch + val.length))\n
+  });\n
+  option("specialChars", /[\\t\\u0000-\\u0019\\u00ad\\u200b-\\u200f\\u2028\\u2029\\ufeff]/g, function(cm, val, old) {\n
+    cm.state.specialChars = new RegExp(val.source + (val.test("\\t") ? "" : "|\\t"), "g");\n
+    if (old != CodeMirror.Init) cm.refresh();\n
+  });\n
   option("specialCharPlaceholder", defaultSpecialCharPlaceholder, function(cm) {cm.refresh();}, true);\n
   option("electricChars", true);\n
+  option("inputStyle", mobile ? "contenteditable" : "textarea", function() {\n
+    throw new Error("inputStyle can not (yet) be changed in a running editor"); // FIXME\n
+  }, true);\n
   option("rtlMoveVisually", !windows);\n
   option("wholeLineUpdateBefore", true);\n
 \n
@@ -4703,6 +5540,7 @@
   option("showCursorWhenSelecting", false, updateSelection, true);\n
 \n
   option("resetSelectionOnContextMenu", true);\n
+  option("lineWiseCopyCut", true);\n
 \n
   option("readOnly", false, function(cm, val) {\n
     if (val == "nocursor") {\n
@@ -4711,11 +5549,12 @@
       cm.display.disabled = true;\n
     } else {\n
       cm.display.disabled = false;\n
-      if (!val) resetInput(cm);\n
     }\n
+    cm.display.input.readOnlyChanged(val)\n
   });\n
-  option("disableInput", false, function(cm, val) {if (!val) resetInput(cm);}, true);\n
-  option("dragDrop", true);\n
+  option("disableInput", false, function(cm, val) {if (!val) cm.display.input.reset();}, true);\n
+  option("dragDrop", true, dragDropChanged);\n
+  option("allowDropFileTypes", null);\n
 \n
   option("cursorBlinkRate", 530);\n
   option("cursorScrollMargin", 0);\n
@@ -4731,11 +5570,11 @@
   option("viewportMargin", 10, function(cm){cm.refresh();}, true);\n
   option("maxHighlightLength", 10000, resetModeState, true);\n
   option("moveInputWithCursor", true, function(cm, val) {\n
-    if (!val) cm.display.inputDiv.style.top = cm.display.inputDiv.style.left = 0;\n
+    if (!val) cm.display.input.resetPosition();\n
   });\n
 \n
   option("tabindex", null, function(cm, val) {\n
-    cm.display.input.tabIndex = val || "";\n
+    cm.display.input.getField().tabIndex = val || "";\n
   });\n
   option("autofocus", null);\n
 \n
@@ -4886,7 +5725,30 @@
           else\n
             return {from: range.head, to: Pos(range.head.line, len)};\n
         } else {\n
-          return {from: range.from(), to: range.to()};\n
+          return
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+ {from: range.from(), to: range.to()};\n
         }\n
       });\n
     },\n
@@ -5003,7 +5865,8 @@
             } else if (cur.line > cm.doc.first) {\n
               var prev = getLine(cm.doc, cur.line - 1).text;\n
               if (prev)\n
-                cm.replaceRange(line.charAt(0) + "\\n" + prev.charAt(prev.length - 1),\n
+                cm.replaceRange(line.charAt(0) + cm.doc.lineSeparator() +\n
+                                prev.charAt(prev.length - 1),\n
                                 Pos(cur.line - 1, prev.length - 1), Pos(cur.line, 1), "+transpose");\n
             }\n
           }\n
@@ -5017,10 +5880,10 @@
         var len = cm.listSelections().length;\n
         for (var i = 0; i < len; i++) {\n
           var range = cm.listSelections()[i];\n
-          cm.replaceRange("\\n", range.anchor, range.head, "+input");\n
+          cm.replaceRange(cm.doc.lineSeparator(), range.anchor, range.head, "+input");\n
           cm.indentLine(range.from().line + 1, null, true);\n
-          ensureCursorVisible(cm);\n
         }\n
+        ensureCursorVisible(cm);\n
       });\n
     },\n
     toggleOverwrite: function(cm) {cm.toggleOverwrite();}\n
@@ -5107,7 +5970,7 @@
       for (var i = 0; i < keys.length; i++) {\n
         var val, name;\n
         if (i == keys.length - 1) {\n
-          name = keyname;\n
+          name = keys.join(" ");\n
           val = value;\n
         } else {\n
           name = keys.slice(0, i + 1).join(" ");\n
@@ -5166,10 +6029,10 @@
   // FROMTEXTAREA\n
 \n
   CodeMirror.fromTextArea = function(textarea, options) {\n
-    if (!options) options = {};\n
+    options = options ? copyObj(options) : {};\n
     options.value = textarea.value;\n
-    if (!options.tabindex && textarea.tabindex)\n
-      options.tabindex = textarea.tabindex;\n
+    if (!options.tabindex && textarea.tabIndex)\n
+      options.tabindex = textarea.tabIndex;\n
     if (!options.placeholder && textarea.placeholder)\n
       options.placeholder = textarea.placeholder;\n
     // Set autofocus to true if this textarea is focused, or if it has\n
@@ -5197,23 +6060,26 @@
       }\n
     }\n
 \n
+    options.finishInit = function(cm) {\n
+      cm.save = save;\n
+      cm.getTextArea = function() { return textarea; };\n
+      cm.toTextArea = function() {\n
+        cm.toTextArea = isNaN; // Prevent this from being ran twice\n
+        save();\n
+        textarea.parentNode.removeChild(cm.getWrapperElement());\n
+        textarea.style.display = "";\n
+        if (textarea.form) {\n
+          off(textarea.form, "submit", save);\n
+          if (typeof textarea.form.submit == "function")\n
+            textarea.form.submit = realSubmit;\n
+        }\n
+      };\n
+    };\n
+\n
     textarea.style.display = "none";\n
     var cm = CodeMirror(function(node) {\n
       textarea.parentNode.insertBefore(node, textarea.nextSibling);\n
     }, options);\n
-    cm.save = save;\n
-    cm.getTextArea = function() { return textarea; };\n
-    cm.toTextArea = function() {\n
-      cm.toTextArea = isNaN; // Prevent this from being ran twice\n
-      save();\n
-      textarea.parentNode.removeChild(cm.getWrapperElement());\n
-      textarea.style.display = "";\n
-      if (textarea.form) {\n
-        off(textarea.form, "submit", save);\n
-        if (typeof textarea.form.submit == "function")\n
-          textarea.form.submit = realSubmit;\n
-      }\n
-    };\n
     return cm;\n
   };\n
 \n
@@ -5306,10 +6172,13 @@
   // marker continues beyond the start/end of the line. Markers have\n
   // links back to the lines they currently touch.\n
 \n
+  var nextMarkerId = 0;\n
+\n
   var TextMarker = CodeMirror.TextMarker = function(doc, type) {\n
     this.lines = [];\n
     this.type = type;\n
     this.doc = doc;\n
+    this.id = ++nextMarkerId;\n
   };\n
   eventMixin(TextMarker);\n
 \n
@@ -5625,6 +6494,7 @@
   // spans partially within the change. Returns an array of span\n
   // arrays with one element for each line in (after) the change.\n
   function stretchSpansOverChange(doc, change) {\n
+    if (change.full) return null;\n
     var oldFirst = isLine(doc, change.from.line) && getLine(doc, change.from.line).markedSpans;\n
     var oldLast = isLine(doc, change.to.line) && getLine(doc, change.to.line).markedSpans;\n
     if (!oldFirst && !oldLast) return null;\n
@@ -5892,10 +6762,10 @@
 \n
   // Line widgets are block elements displayed above or below a line.\n
 \n
-  var LineWidget = CodeMirror.LineWidget = function(cm, node, options) {\n
+  var LineWidget = CodeMirror.LineWidget = function(doc, node, options) {\n
     if (options) for (var opt in options) if (options.hasOwnProperty(opt))\n
       this[opt] = options[opt];\n
-    this.cm = cm;\n
+    this.doc = doc;\n
     this.node = node;\n
   };\n
   eventMixin(LineWidget);\n
@@ -5906,50 +6776,55 @@
   }\n
 \n
   LineWidget.prototype.clear = function() {\n
-    var cm = this.cm, ws = this.line.widgets, line = this.line, no = lineNo(line);\n
+    var cm = this.doc.cm, ws = this.line.widgets, line = this.line, no = lineNo(line);\n
     if (no == null || !ws) return;\n
     for (var i = 0; i < ws.length; ++i) if (ws[i] == this) ws.splice(i--, 1);\n
     if (!ws.length) line.widgets = null;\n
     var height = widgetHeight(this);\n
-    runInOp(cm, function() {\n
+    updateLineHeight(line, Math.max(0, line.height - height));\n
+    if (cm) runInOp(cm, function() {\n
       adjustScrollWhenAboveVisible(cm, line, -height);\n
       regLineChange(cm, no, "widget");\n
-      updateLineHeight(line, Math.max(0, line.height - height));\n
     });\n
   };\n
   LineWidget.prototype.changed = function() {\n
-    var oldH = this.height, cm = this.cm, line = this.line;\n
+    var oldH = this.height, cm = this.doc.cm, line = this.line;\n
     this.height = null;\n
     var diff = widgetHeight(this) - oldH;\n
     if (!diff) return;\n
-    runInOp(cm, function() {\n
+    updateLineHeight(line, line.height + diff);\n
+    if (cm) runInOp(cm, function() {\n
       cm.curOp.forceUpdate = true;\n
       adjustScrollWhenAboveVisible(cm, line, diff);\n
-      updateLineHeight(line, line.height + diff);\n
     });\n
   };\n
 \n
   function widgetHeight(widget) {\n
     if (widget.height != null) return widget.height;\n
+    var cm = widget.doc.cm;\n
+    if (!cm) return 0;\n
     if (!contains(document.body, widget.node)) {\n
       var parentStyle = "position: relative;";\n
       if (widget.coverGutter)\n
-        parentStyle += "margin-left: -" + widget.cm.getGutterElement().offsetWidth + "px;";\n
-      removeChildrenAndAdd(widget.cm.display.measure, elt("div", [widget.node], null, parentStyle));\n
+        parentStyle += "margin-left: -" + cm.display.gutters.offsetWidth + "px;";\n
+      if (widget.noHScroll)\n
+        parentStyle += "width: " + cm.display.wrapper.clientWidth + "px;";\n
+      removeChildrenAndAdd(cm.display.measure, elt("div", [widget.node], null, parentStyle));\n
     }\n
-    return widget.height = widget.node.offsetHeight;\n
+    return widget.height = widget.node.parentNode.offsetHeight;\n
   }\n
 \n
-  function addLineWidget(cm, handle, node, options) {\n
-    var widget = new LineWidget(cm, node, options);\n
-    if (widget.noHScroll) cm.display.alignWidgets = true;\n
-    changeLine(cm.doc, handle, "widget", function(line) {\n
+  function addLineWidget(doc, handle, node, options) {\n
+    var widget = new LineWidget(doc, node, options);\n
+    var cm = doc.cm;\n
+    if (cm && widget.noHScroll) cm.display.alignWidgets = true;\n
+    changeLine(doc, handle, "widget", function(line) {\n
       var widgets = line.widgets || (line.widgets = []);\n
       if (widget.insertAt == null) widgets.push(widget);\n
       else widgets.splice(Math.min(widgets.length - 1, Math.max(0, widget.insertAt)), 0, widget);\n
       widget.line = line;\n
-      if (!lineIsHidden(cm.doc, line)) {\n
-        var aboveVisible = heightAtLine(line) < cm.doc.scrollTop;\n
+      if (cm && !lineIsHidden(doc, line)) {\n
+        var aboveVisible = heightAtLine(line) < doc.scrollTop;\n
         updateLineHeight(line, line.height + widgetHeight(widget));\n
         if (aboveVisible) addToScrollPos(cm, null, widget.height);\n
         cm.curOp.forceUpdate = true;\n
@@ -6125,7 +7000,9 @@
 \n
   function getLineStyles(cm, line, updateFrontier) {\n
     if (!line.styles || line.styles[0] != cm.state.modeGen) {\n
-      var result = highlightLine(cm, line, line.stateAfter = getStateBefore(cm, lineNo(line)));\n
+      var state = getStateBefore(cm, lineNo(line));\n
+      var result = highlightLine(cm, line, line.text.length > cm.options.maxHighlightLength ? copyState(cm.doc.mode, state) : state);\n
+      line.stateAfter = state;\n
       line.styles = result.styles;\n
       if (result.classes) line.styleClasses = result.classes;\n
       else if (line.styleClasses) line.styleClasses = null;\n
@@ -6142,7 +7019,7 @@
     var stream = new StringStream(text, cm.options.tabSize);\n
     stream.start = stream.pos = startAt || 0;\n
     if (text == "") callBlankLine(mode, state);\n
-    while (!stream.eol() && stream.pos <= cm.options.maxHighlightLength) {\n
+    while (!stream.eol()) {\n
       readToken(mode, stream, state);\n
       stream.start = stream.pos;\n
     }\n
@@ -6169,7 +7046,9 @@
     // is needed on Webkit to be able to get line-level bounding\n
     // rectangles for it (in measureChar).\n
     var content = elt("span", null, null, webkit ? "padding-right: .1px" : null);\n
-    var builder = {pre: elt("pre", [content]), content: content, col: 0, pos: 0, cm: cm};\n
+    var builder = {pre: elt("pre", [content], "CodeMirror-line"), content: content,\n
+                   col: 0, pos: 0, cm: cm,\n
+                   splitSpaces: (ie || webkit) && cm.getOption("lineWrapping")};\n
     lineView.measure = {};\n
 \n
     // Iterate over the logical lines that make up this visual line.\n
@@ -6179,8 +7058,6 @@
       builder.addToken = buildToken;\n
       // Optionally wire in some hacks into the token-rendering\n
       // algorithm, to deal with browser quirks.\n
-      if ((ie || webkit) && cm.getOption("lineWrapping"))\n
-        builder.addToken = buildTokenSplitSpaces(builder.addToken);\n
       if (hasBadBidiRects(cm.display.measure) && (order = getOrder(line)))\n
         builder.addToken = buildTokenBadBidi(builder.addToken, order);\n
       builder.map = [];\n
@@ -6221,6 +7098,7 @@
   function defaultSpecialCharPlaceholder(ch) {\n
     var token = elt("span", "\\u2022", "cm-invalidchar");\n
     token.title = "\\\\u" + ch.charCodeAt(0).toString(16);\n
+    token.setAttribute("aria-label", token.title);\n
     return token;\n
   }\n
 \n
@@ -6228,10 +7106,11 @@
   // the line map. Takes care to render special characters separately.\n
   function buildToken(builder, text, style, startStyle, endStyle, title, css) {\n
     if (!text) return;\n
-    var special = builder.cm.options.specialChars, mustWrap = false;\n
+    var displayText = builder.splitSpaces ? text.replace(/ {3,}/g, splitSpaces) : text;\n
+    var special = builder.cm.state.specialChars, mustWrap = false;\n
     if (!special.test(text)) {\n
       builder.col += text.length;\n
-      var content = document.createTextNode(text);\n
+      var content = document.createTextNode(displayText);\n
       builder.map.push(builder.pos, builder.pos + text.length, content);\n
       if (ie && ie_version < 9) mustWrap = true;\n
       builder.pos += text.length;\n
@@ -6242,7 +7121,7 @@
         var m = special.exec(text);\n
         var skipped = m ? m.index - pos : text.length - pos;\n
         if (skipped) {\n
-          var txt = document.createTextNode(text.slice(pos, pos + skipped));\n
+          var txt = document.createTextNode(displayText.slice(pos, pos + skipped));\n
           if (ie && ie_version < 9) content.appendChild(elt("span", [txt]));\n
           else content.appendChild(txt);\n
           builder.map.push(builder.pos, builder.pos + skipped, txt);\n
@@ -6254,9 +7133,16 @@
         if (m[0] == "\\t") {\n
           var tabSize = builder.cm.options.tabSize, tabWidth = tabSize - builder.col % tabSize;\n
           var txt = content.appendChild(elt("span", spaceStr(tabWidth), "cm-tab"));\n
+          txt.setAttribute("role", "presentation");\n
+          txt.setAttribute("cm-text", "\\t");\n
           builder.col += tabWidth;\n
+        } else if (m[0] == "\\r" || m[0] == "\\n") {\n
+          var txt = content.appendChild(elt("span", m[0] == "\\r" ? "\\u240d" : "\\u2424", "cm-invalidchar"));\n
+          txt.setAttribute("cm-text", m[0]);\n
+          builder.col += 1;\n
         } else {\n
           var txt = builder.cm.options.specialCharPlaceholder(m[0]);\n
+          txt.setAttribute("cm-text", m[0]);\n
           if (ie && ie_version < 9) content.appendChild(elt("span", [txt]));\n
           else content.appendChild(txt);\n
           builder.col += 1;\n
@@ -6276,22 +7162,17 @@
     builder.content.appendChild(content);\n
   }\n
 \n
-  function buildTokenSplitSpaces(inner) {\n
-    function split(old) {\n
-      var out = " ";\n
-      for (var i = 0; i < old.length - 2; ++i) out += i % 2 ? " " : "\\u00a0";\n
-      out += " ";\n
-      return out;\n
-    }\n
-    return function(builder, text, style, startStyle, endStyle, title) {\n
-      inner(builder, text.replace(/ {3,}/g, split), style, startStyle, endStyle, title);\n
-    };\n
+  function splitSpaces(old) {\n
+    var out = " ";\n
+    for (var i = 0; i < old.length - 2; ++i) out += i % 2 ? " " : "\\u00a0";\n
+    out += " ";\n
+    return out;\n
   }\n
 \n
   // Work around nonsense dimensions being reported for stretches of\n
   // right-to-left text.\n
   function buildTokenBadBidi(inner, order) {\n
-    return function(builder, text, style, startStyle, endStyle, title) {\n
+    return function(builder, text, style, startStyle, endStyle, title, css) {\n
       style = style ? style + " cm-force-border" : "cm-force-border";\n
       var start = builder.pos, end = start + text.length;\n
       for (;;) {\n
@@ -6300,8 +7181,8 @@
           var part = order[i];\n
           if (part.to > start && part.from <= start) break;\n
         }\n
-        if (part.to >= end) return inner(builder, text, style, startStyle, endStyle, title);\n
-        inner(builder, text.slice(0, part.to - start), style, startStyle, null, title);\n
+        if (part.to >= end) return inner(builder, text, style, startStyle, endStyle, title, css);\n
+        inner(builder, text.slice(0, part.to - start), style, startStyle, null, title, css);\n
         startStyle = null;\n
         text = text.slice(part.to - start);\n
         start = part.to;\n
@@ -6311,8 +7192,14 @@
 \n
   function buildCollapsedSpan(builder, size, marker, ignoreWidget) {\n
     var widget = !ignoreWidget && marker.widgetNode;\n
+    if (widget) builder.map.push(builder.pos, builder.pos + size, widget);\n
+    if (!ignoreWidget && builder.cm.display.input.needsContentAttribute) {\n
+      if (!widget)\n
+        widget = builder.content.appendChild(document.createElement("span"));\n
+      widget.setAttribute("cm-marker", marker.id);\n
+    }\n
     if (widget) {\n
-      builder.map.push(builder.pos, builder.pos + size, widget);\n
+      builder.cm.display.input.setUneditable(widget);\n
       builder.content.appendChild(widget);\n
     }\n
     builder.pos += size;\n
@@ -6334,30 +7221,38 @@
       if (nextChange == pos) { // Update current marker set\n
         spanStyle = spanEndStyle = spanStartStyle = title = css = "";\n
         collapsed = null; nextChange = Infinity;\n
-        var foundBookmarks = [];\n
+        var foundBookmarks = [], endStyles\n
         for (var j = 0; j < spans.length; ++j) {\n
           var sp = spans[j], m = sp.marker;\n
-          if (sp.from <= pos && (sp.to == null || sp.to > pos)) {\n
-            if (sp.to != null && nextChange > sp.to) { nextChange = sp.to; spanEndStyle = ""; }\n
+          if (m.type == "bookmark" && sp.from == pos && m.widgetNode) {\n
+            foundBookmarks.push(m);\n
+          } else if (sp.from <= pos && (sp.to == null || sp.to > pos || m.collapsed && sp.to == pos && sp.from == pos)) {\n
+            if (sp.to != null && sp.to != pos && nextChange > sp.to) {\n
+              nextChange = sp.to;\n
+              spanEndStyle = "";\n
+            }\n
             if (m.className) spanStyle += " " + m.className;\n
-            if (m.css) css = m.css;\n
+            if (m.css) css = (css ? css + ";" : "") + m.css;\n
             if (m.startStyle && sp.from == pos) spanStartStyle += " " + m.startStyle;\n
-            if (m.endStyle && sp.to == nextChange) spanEndStyle += " " + m.endStyle;\n
+            if (m.endStyle && sp.to == nextChange) (endStyles || (endStyles = [])).push(m.endStyle, sp.to)\n
             if (m.title && !title) title = m.title;\n
             if (m.collapsed && (!collapsed || compareCollapsedMarkers(collapsed.marker, m) < 0))\n
               collapsed = sp;\n
           } else if (sp.from > pos && nextChange > sp.from) {\n
             nextChange = sp.from;\n
           }\n
-          if (m.type == "bookmark" && sp.from == pos && m.widgetNode) foundBookmarks.push(m);\n
         }\n
+        if (endStyles) for (var j = 0; j < endStyles.length; j += 2)\n
+          if (endStyles[j + 1] == nextChange) spanEndStyle += " " + endStyles[j]\n
+\n
+        if (!collapsed || collapsed.from == pos) for (var j = 0; j < foundBookmarks.length; ++j)\n
+          buildCollapsedSpan(builder, 0, foundBookmarks[j]);\n
         if (collapsed && (collapsed.from || 0) == pos) {\n
           buildCollapsedSpan(builder, (collapsed.to == null ? len + 1 : collapsed.to) - pos,\n
                              collapsed.marker, collapsed.from == null);\n
           if (collapsed.to == null) return;\n
+          if (collapsed.to == pos) collapsed = false;\n
         }\n
-        if (!collapsed && foundBookmarks.length) for (var j = 0; j < foundBookmarks.length; ++j)\n
-          buildCollapsedSpan(builder, 0, foundBookmarks[j]);\n
       }\n
       if (pos >= len) break;\n
 \n
@@ -6397,17 +7292,24 @@
       updateLine(line, text, spans, estimateHeight);\n
       signalLater(line, "change", line, change);\n
     }\n
+    function linesFor(start, end) {\n
+      for (var i = start, result = []; i < end; ++i)\n
+        result.push(new Line(text[i], spansFor(i), estimateHeight));\n
+      return result;\n
+    }\n
 \n
     var from = change.from, to = change.to, text = change.text;\n
     var firstLine = getLine(doc, from.line), lastLine = getLine(doc, to.line);\n
     var lastText = lst(text), lastSpans = spansFor(text.length - 1), nlines = to.line - from.line;\n
 \n
     // Adjust the line structure\n
-    if (isWholeLineUpdate(doc, change)) {\n
+    if (change.full) {\n
+      doc.insert(0, linesFor(0, text.length));\n
+      doc.remove(text.length, doc.size - text.length);\n
+    } else if (isWholeLineUpdate(doc, change)) {\n
       // This is a whole-line replace. Treated specially to make\n
       // sure line objects move the way they are supposed to.\n
-      for (var i = 0, added = []; i < text.length - 1; ++i)\n
-        added.push(new Line(text[i], spansFor(i), estimateHeight));\n
+      var added = linesFor(0, text.length - 1);\n
       update(lastLine, lastLine.text, lastSpans);\n
       if (nlines) doc.remove(from.line, nlines);\n
       if (added.length) doc.insert(from.line, added);\n
@@ -6415,8 +7317,7 @@
       if (text.length == 1) {\n
         update(firstLine, firstLine.text.slice(0, from.ch) + lastText + firstLine.text.slice(to.ch), lastSpans);\n
       } else {\n
-        for (var added = [], i = 1; i < text.length - 1; ++i)\n
-          added.push(new Line(text[i], spansFor(i), estimateHeight));\n
+        var added = linesFor(1, text.length - 1);\n
         added.push(new Line(lastText + firstLine.text.slice(to.ch), lastSpans, estimateHeight));\n
         update(firstLine, firstLine.text.slice(0, from.ch) + text[0], spansFor(0));\n
         doc.insert(from.line + 1, added);\n
@@ -6427,9 +7328,31 @@
     } else {\n
       update(firstLine, firstLine.text.slice(0, from.ch) + text[0], spansFor(0));\n
       update(lastLine, lastText + lastLine.text.slice(to.ch), lastSpans);\n
-      for (var i = 1, added = []; i < text.length - 1; ++i)\n
-        added.push(new Line(text[i], spansFor(i), estimateHeight));\n
-      if (nlines > 1) doc.remove(from.line + 1, nlines - 1);\n
+      var added = linesFor(1, text.length - 1);\n
+      if (nlines > 1) doc.remo
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+ve(from.line + 1, nlines - 1);\n
       doc.insert(from.line + 1, added);\n
     }\n
 \n
@@ -6588,8 +7511,8 @@
   };\n
 \n
   var nextDocId = 0;\n
-  var Doc = CodeMirror.Doc = function(text, mode, firstLine) {\n
-    if (!(this instanceof Doc)) return new Doc(text, mode, firstLine);\n
+  var Doc = CodeMirror.Doc = function(text, mode, firstLine, lineSep) {\n
+    if (!(this instanceof Doc)) return new Doc(text, mode, firstLine, lineSep);\n
     if (firstLine == null) firstLine = 0;\n
 \n
     BranchChunk.call(this, [new LeafChunk([new Line("", null)])]);\n
@@ -6603,8 +7526,10 @@
     this.history = new History(null);\n
     this.id = ++nextDocId;\n
     this.modeOption = mode;\n
+    this.lineSep = lineSep;\n
+    this.extend = false;\n
 \n
-    if (typeof text == "string") text = splitLines(text);\n
+    if (typeof text == "string") text = this.splitLines(text);\n
     updateDoc(this, {from: start, to: start, text: text});\n
     setSelection(this, simpleSelection(start), sel_dontScroll);\n
   };\n
@@ -6634,12 +7559,12 @@
     getValue: function(lineSep) {\n
       var lines = getLines(this, this.first, this.first + this.size);\n
       if (lineSep === false) return lines;\n
-      return lines.join(lineSep || "\\n");\n
+      return lines.join(lineSep || this.lineSeparator());\n
     },\n
     setValue: docMethodOp(function(code) {\n
       var top = Pos(this.first, 0), last = this.first + this.size - 1;\n
       makeChange(this, {from: top, to: Pos(last, getLine(this, last).text.length),\n
-                        text: splitLines(code), origin: "setValue"}, true);\n
+                        text: this.splitLines(code), origin: "setValue", full: true}, true);\n
       setSelection(this, simpleSelection(top));\n
     }),\n
     replaceRange: function(code, from, to, origin) {\n
@@ -6650,7 +7575,7 @@
     getRange: function(from, to, lineSep) {\n
       var lines = getBetween(this, clipPos(this, from), clipPos(this, to));\n
       if (lineSep === false) return lines;\n
-      return lines.join(lineSep || "\\n");\n
+      return lines.join(lineSep || this.lineSeparator());\n
     },\n
 \n
     getLine: function(line) {var l = this.getLineHandle(line); return l && l.text;},\n
@@ -6690,10 +7615,11 @@
       extendSelection(this, clipPos(this, head), other && clipPos(this, other), options);\n
     }),\n
     extendSelections: docMethodOp(function(heads, options) {\n
-      extendSelections(this, clipPosArray(this, heads, options));\n
+      extendSelections(this, clipPosArray(this, heads), options);\n
     }),\n
     extendSelectionsBy: docMethodOp(function(f, options) {\n
-      extendSelections(this, map(this.sel.ranges, f), options);\n
+      var heads = map(this.sel.ranges, f);\n
+      extendSelections(this, clipPosArray(this, heads), options);\n
     }),\n
     setSelections: docMethodOp(function(ranges, primary, options) {\n
       if (!ranges.length) return;\n
@@ -6716,13 +7642,13 @@
         lines = lines ? lines.concat(sel) : sel;\n
       }\n
       if (lineSep === false) return lines;\n
-      else return lines.join(lineSep || "\\n");\n
+      else return lines.join(lineSep || this.lineSeparator());\n
     },\n
     getSelections: function(lineSep) {\n
       var parts = [], ranges = this.sel.ranges;\n
       for (var i = 0; i < ranges.length; i++) {\n
         var sel = getBetween(this, ranges[i].from(), ranges[i].to());\n
-        if (lineSep !== false) sel = sel.join(lineSep || "\\n");\n
+        if (lineSep !== false) sel = sel.join(lineSep || this.lineSeparator());\n
         parts[i] = sel;\n
       }\n
       return parts;\n
@@ -6737,7 +7663,7 @@
       var changes = [], sel = this.sel;\n
       for (var i = 0; i < sel.ranges.length; i++) {\n
         var range = sel.ranges[i];\n
-        changes[i] = {from: range.from(), to: range.to(), text: splitLines(code[i]), origin: origin};\n
+        changes[i] = {from: range.from(), to: range.to(), text: this.splitLines(code[i]), origin: origin};\n
       }\n
       var newSel = collapse && collapse != "end" && computeReplacedSel(this, changes, collapse);\n
       for (var i = changes.length - 1; i >= 0; i--)\n
@@ -6812,13 +7738,19 @@
       });\n
     }),\n
 \n
+    addLineWidget: docMethodOp(function(handle, node, options) {\n
+      return addLineWidget(this, handle, node, options);\n
+    }),\n
+    removeLineWidget: function(widget) { widget.clear(); },\n
+\n
     markText: function(from, to, options) {\n
-      return markText(this, clipPos(this, from), clipPos(this, to), options, "range");\n
+      return markText(this, clipPos(this, from), clipPos(this, to), options, options && options.type || "range");\n
     },\n
     setBookmark: function(pos, options) {\n
       var realOpts = {replacedWith: options && (options.nodeType == null ? options.widget : options),\n
                       insertLeft: options && options.insertLeft,\n
-                      clearWhenEmpty: false, shared: options && options.shared};\n
+                      clearWhenEmpty: false, shared: options && options.shared,\n
+                      handleMouseEvents: options && options.handleMouseEvents};\n
       pos = clipPos(this, pos);\n
       return markText(this, pos, pos, realOpts, "bookmark");\n
     },\n
@@ -6840,9 +7772,9 @@
         var spans = line.markedSpans;\n
         if (spans) for (var i = 0; i < spans.length; i++) {\n
           var span = spans[i];\n
-          if (!(lineNo == from.line && from.ch > span.to ||\n
-                span.from == null && lineNo != from.line||\n
-                lineNo == to.line && span.from > to.ch) &&\n
+          if (!(span.to != null && lineNo == from.line && from.ch > span.to ||\n
+                span.from == null && lineNo != from.line ||\n
+                span.from != null && lineNo == to.line && span.from > to.ch) &&\n
               (!filter || filter(span.marker)))\n
             found.push(span.marker.parent || span.marker);\n
         }\n
@@ -6881,7 +7813,8 @@
     },\n
 \n
     copy: function(copyHistory) {\n
-      var doc = new Doc(getLines(this, this.first, this.first + this.size), this.modeOption, this.first);\n
+      var doc = new Doc(getLines(this, this.first, this.first + this.size),\n
+                        this.modeOption, this.first, this.lineSep);\n
       doc.scrollTop = this.scrollTop; doc.scrollLeft = this.scrollLeft;\n
       doc.sel = this.sel;\n
       doc.extend = false;\n
@@ -6897,7 +7830,7 @@
       var from = this.first, to = this.first + this.size;\n
       if (options.from != null && options.from > from) from = options.from;\n
       if (options.to != null && options.to < to) to = options.to;\n
-      var copy = new Doc(getLines(this, from, to), options.mode || this.modeOption, from);\n
+      var copy = new Doc(getLines(this, from, to), options.mode || this.modeOption, from, this.lineSep);\n
       if (options.sharedHist) copy.history = this.history;\n
       (this.linked || (this.linked = [])).push({doc: copy, sharedHist: options.sharedHist});\n
       copy.linked = [{doc: this, isParent: true, sharedHist: options.sharedHist}];\n
@@ -6926,14 +7859,20 @@
     iterLinkedDocs: function(f) {linkedDocs(this, f);},\n
 \n
     getMode: function() {return this.mode;},\n
-    getEditor: function() {return this.cm;}\n
+    getEditor: function() {return this.cm;},\n
+\n
+    splitLines: function(str) {\n
+      if (this.lineSep) return str.split(this.lineSep);\n
+      return splitLinesAuto(str);\n
+    },\n
+    lineSeparator: function() { return this.lineSep || "\\n"; }\n
   });\n
 \n
   // Public alias.\n
   Doc.prototype.eachLine = Doc.prototype.iter;\n
 \n
   // Set up methods on CodeMirror\'s prototype to redirect to the editor\'s document.\n
-  var dontDelegate = "iter insert remove copy getEditor".split(" ");\n
+  var dontDelegate = "iter insert remove copy getEditor constructor".split(" ");\n
   for (var prop in Doc.prototype) if (Doc.prototype.hasOwnProperty(prop) && indexOf(dontDelegate, prop) < 0)\n
     CodeMirror.prototype[prop] = (function(method) {\n
       return function() {return method.apply(this.doc, arguments);};\n
@@ -7366,24 +8305,30 @@
     }\n
   };\n
 \n
+  var noHandlers = []\n
+  function getHandlers(emitter, type, copy) {\n
+    var arr = emitter._handlers && emitter._handlers[type]\n
+    if (copy) return arr && arr.length > 0 ? arr.slice() : noHandlers\n
+    else return arr || noHandlers\n
+  }\n
+\n
   var off = CodeMirror.off = function(emitter, type, f) {\n
     if (emitter.removeEventListener)\n
       emitter.removeEventListener(type, f, false);\n
     else if (emitter.detachEvent)\n
       emitter.detachEvent("on" + type, f);\n
     else {\n
-      var arr = emitter._handlers && emitter._handlers[type];\n
-      if (!arr) return;\n
-      for (var i = 0; i < arr.length; ++i)\n
-        if (arr[i] == f) { arr.splice(i, 1); break; }\n
+      var handlers = getHandlers(emitter, type, false)\n
+      for (var i = 0; i < handlers.length; ++i)\n
+        if (handlers[i] == f) { handlers.splice(i, 1); break; }\n
     }\n
   };\n
 \n
   var signal = CodeMirror.signal = function(emitter, type /*, values...*/) {\n
-    var arr = emitter._handlers && emitter._handlers[type];\n
-    if (!arr) return;\n
+    var handlers = getHandlers(emitter, type, true)\n
+    if (!handlers.length) return;\n
     var args = Array.prototype.slice.call(arguments, 2);\n
-    for (var i = 0; i < arr.length; ++i) arr[i].apply(null, args);\n
+    for (var i = 0; i < handlers.length; ++i) handlers[i].apply(null, args);\n
   };\n
 \n
   var orphanDelayedCallbacks = null;\n
@@ -7396,8 +8341,8 @@
   // them to be executed when the last operation ends, or, if no\n
   // operation is active, when a timeout fires.\n
   function signalLater(emitter, type /*, values...*/) {\n
-    var arr = emitter._handlers && emitter._handlers[type];\n
-    if (!arr) return;\n
+    var arr = getHandlers(emitter, type, false)\n
+    if (!arr.length) return;\n
     var args = Array.prototype.slice.call(arguments, 2), list;\n
     if (operationGroup) {\n
       list = operationGroup.delayedCallbacks;\n
@@ -7437,8 +8382,7 @@
   }\n
 \n
   function hasHandler(emitter, type) {\n
-    var arr = emitter._handlers && emitter._handlers[type];\n
-    return arr && arr.length > 0;\n
+    return getHandlers(emitter, type).length > 0\n
   }\n
 \n
   // Add on and off methods to a constructor\'s prototype, to make\n
@@ -7485,7 +8429,7 @@
 \n
   // The inverse of countColumn -- find the offset that corresponds to\n
   // a particular column.\n
-  function findColumn(string, goal, tabSize) {\n
+  var findColumn = CodeMirror.findColumn = function(string, goal, tabSize) {\n
     for (var pos = 0, col = 0;;) {\n
       var nextTab = string.indexOf("\\t", pos);\n
       if (nextTab == -1) nextTab = string.length;\n
@@ -7519,22 +8463,21 @@
       if (array[i] == elt) return i;\n
     return -1;\n
   }\n
-  if ([].indexOf) indexOf = function(array, elt) { return array.indexOf(elt); };\n
   function map(array, f) {\n
     var out = [];\n
     for (var i = 0; i < array.length; i++) out[i] = f(array[i], i);\n
     return out;\n
   }\n
-  if ([].map) map = function(array, f) { return array.map(f); };\n
+\n
+  function nothing() {}\n
 \n
   function createObj(base, props) {\n
     var inst;\n
     if (Object.create) {\n
       inst = Object.create(base);\n
     } else {\n
-      var ctor = function() {};\n
-      ctor.prototype = base;\n
-      inst = new ctor();\n
+      nothing.prototype = base;\n
+      inst = new nothing();\n
     }\n
     if (props) copyObj(props, inst);\n
     return inst;\n
@@ -7553,7 +8496,7 @@
     return function(){return f.apply(null, args);};\n
   }\n
 \n
-  var nonASCIISingleCaseWordChar = /[\\u00df\\u0590-\\u05f4\\u0600-\\u06ff\\u3040-\\u309f\\u30a0-\\u30ff\\u3400-\\u4db5\\u4e00-\\u9fcc\\uac00-\\ud7af]/;\n
+  var nonASCIISingleCaseWordChar = /[\\u00df\\u0587\\u0590-\\u05f4\\u0600-\\u06ff\\u3040-\\u309f\\u30a0-\\u30ff\\u3400-\\u4db5\\u4e00-\\u9fcc\\uac00-\\ud7af]/;\n
   var isWordCharBasic = CodeMirror.isWordChar = function(ch) {\n
     return /\\w/.test(ch) || ch > "\\x80" &&\n
       (ch.toUpperCase() != ch.toLowerCase() || nonASCIISingleCaseWordChar.test(ch));\n
@@ -7589,9 +8532,9 @@
   }\n
 \n
   var range;\n
-  if (document.createRange) range = function(node, start, end) {\n
+  if (document.createRange) range = function(node, start, end, endNode) {\n
     var r = document.createRange();\n
-    r.setEnd(node, end);\n
+    r.setEnd(endNode || node, end);\n
     r.setStart(node, start);\n
     return r;\n
   };\n
@@ -7615,14 +8558,23 @@
     return removeChildren(parent).appendChild(e);\n
   }\n
 \n
-  function contains(parent, child) {\n
+  var contains = CodeMirror.contains = function(parent, child) {\n
+    if (child.nodeType == 3) // Android browser always returns false when child is a textnode\n
+      child = child.parentNode;\n
     if (parent.contains)\n
       return parent.contains(child);\n
-    while (child = child.parentNode)\n
+    do {\n
+      if (child.nodeType == 11) child = child.host;\n
       if (child == parent) return true;\n
-  }\n
+    } while (child = child.parentNode);\n
+  };\n
 \n
-  function activeElt() { return document.activeElement; }\n
+  function activeElt() {\n
+    var activeElement = document.activeElement;\n
+    while (activeElement && activeElement.root && activeElement.root.activeElement)\n
+      activeElement = activeElement.root.activeElement;\n
+    return activeElement;\n
+  }\n
   // Older versions of IE throws unspecified error when touching\n
   // document.activeElement in some cases (during loading, in iframe)\n
   if (ie && ie_version < 11) activeElt = function() {\n
@@ -7705,8 +8657,10 @@
       if (measure.firstChild.offsetHeight != 0)\n
         zwspSupported = test.offsetWidth <= 1 && test.offsetHeight > 2 && !(ie && ie_version < 8);\n
     }\n
-    if (zwspSupported) return elt("span", "\\u200b");\n
-    else return elt("span", "\\u00a0", null, "display: inline-block; width: 1px; margin-right: -1px");\n
+    var node = zwspSupported ? elt("span", "\\u200b") :\n
+      elt("span", "\\u00a0", null, "display: inline-block; width: 1px; margin-right: -1px");\n
+    node.setAttribute("cm-text", "");\n
+    return node;\n
   }\n
 \n
   // Feature-detect IE\'s crummy client rect reporting for bidi text\n
@@ -7722,7 +8676,7 @@
 \n
   // See if "".split is the broken IE version, if so, provide an\n
   // alternative way to split lines.\n
-  var splitLines = CodeMirror.splitLines = "\\n\\nb".split(/\\n/).length != 3 ? function(string) {\n
+  var splitLinesAuto = CodeMirror.splitLines = "\\n\\nb".split(/\\n/).length != 3 ? function(string) {\n
     var pos = 0, result = [], l = string.length;\n
     while (pos <= l) {\n
       var nl = string.indexOf("\\n", pos);\n
@@ -7768,14 +8722,16 @@
 \n
   // KEY NAMES\n
 \n
-  var keyNames = {3: "Enter", 8: "Backspace", 9: "Tab", 13: "Enter", 16: "Shift", 17: "Ctrl", 18: "Alt",\n
-                  19: "Pause", 20: "CapsLock", 27: "Esc", 32: "Space", 33: "PageUp", 34: "PageDown", 35: "End",\n
-                  36: "Home", 37: "Left", 38: "Up", 39: "Right", 40: "Down", 44: "PrintScrn", 45: "Insert",\n
-                  46: "Delete", 59: ";", 61: "=", 91: "Mod", 92: "Mod", 93: "Mod", 107: "=", 109: "-", 127: "Delete",\n
-                  173: "-", 186: ";", 187: "=", 188: ",", 189: "-", 190: ".", 191: "/", 192: "`", 219: "[", 220: "\\\\",\n
-                  221: "]", 222: "\'", 63232: "Up", 63233: "Down", 63234: "Left", 63235: "Right", 63272: "Delete",\n
-                  63273: "Home", 63275: "End", 63276: "PageUp", 63277: "PageDown", 63302: "Insert"};\n
-  CodeMirror.keyNames = keyNames;\n
+  var keyNames = CodeMirror.keyNames = {\n
+    3: "Enter", 8: "Backspace", 9: "Tab", 13: "Enter", 16: "Shift", 17: "Ctrl", 18: "Alt",\n
+    19: "Pause", 20: "CapsLock", 27: "Esc", 32: "Space", 33: "PageUp", 34: "PageDown", 35: "End",\n
+    36: "Home", 37: "Left", 38: "Up", 39: "Right", 40: "Down", 44: "PrintScrn", 45: "Insert",\n
+    46: "Delete", 59: ";", 61: "=", 91: "Mod", 92: "Mod", 93: "Mod",\n
+    106: "*", 107: "=", 109: "-", 110: ".", 111: "/", 127: "Delete",\n
+    173: "-", 186: ";", 187: "=", 188: ",", 189: "-", 190: ".", 191: "/", 192: "`", 219: "[", 220: "\\\\",\n
+    221: "]", 222: "\'", 63232: "Up", 63233: "Down", 63234: "Left", 63235: "Right", 63272: "Delete",\n
+    63273: "Home", 63275: "End", 63276: "PageUp", 63277: "PageDown", 63302: "Insert"\n
+  };\n
   (function() {\n
     // Number keys\n
     for (var i = 0; i < 10; i++) keyNames[i + 48] = keyNames[i + 96] = String(i);\n
@@ -8069,6 +9025,8 @@
         lst(order).to -= m[0].length;\n
         order.push(new BidiSpan(0, len - m[0].length, len));\n
       }\n
+      if (order[0].level == 2)\n
+        order.unshift(new BidiSpan(1, order[0].to, order[0].to));\n
       if (order[0].level != lst(order).level)\n
         order.push(new BidiSpan(order[0].level, len, len));\n
 \n
@@ -8078,13 +9036,19 @@
 \n
   // THE END\n
 \n
-  CodeMirror.version = "4.11.0";\n
+  CodeMirror.version = "5.13.4";\n
 \n
   return CodeMirror;\n
 });\n
 
 
 ]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>

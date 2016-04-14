@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897147.84</string> </value>
+            <value> <string>ts60604388.72</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -96,15 +96,6 @@ CodeMirror.defineMode("xquery", function() {\n
     return kwObj;\n
   }();\n
 \n
-  // Used as scratch variables to communicate multiple values without\n
-  // consing up tons of objects.\n
-  var type, content;\n
-\n
-  function ret(tp, style, cont) {\n
-    type = tp; content = cont;\n
-    return style;\n
-  }\n
-\n
   function chain(stream, state, f) {\n
     state.tokenize = f;\n
     return f(stream, state);\n
@@ -123,7 +114,7 @@ CodeMirror.defineMode("xquery", function() {\n
 \n
       if(stream.match("![CDATA", false)) {\n
         state.tokenize = tokenCDATA;\n
-        return ret("tag", "tag");\n
+        return "tag";\n
       }\n
 \n
       if(stream.match("?", false)) {\n
@@ -140,28 +131,28 @@ CodeMirror.defineMode("xquery", function() {\n
     // start code block\n
     else if(ch == "{") {\n
       pushStateStack(state,{ type: "codeblock"});\n
-      return ret("", null);\n
+      return null;\n
     }\n
     // end code block\n
     else if(ch == "}") {\n
       popStateStack(state);\n
-      return ret("", null);\n
+      return null;\n
     }\n
     // if we\'re in an XML block\n
     else if(isInXmlBlock(state)) {\n
       if(ch == ">")\n
-        return ret("tag", "tag");\n
+        return "tag";\n
       else if(ch == "/" && stream.eat(">")) {\n
         popStateStack(state);\n
-        return ret("tag", "tag");\n
+        return "tag";\n
       }\n
       else\n
-        return ret("word", "variable");\n
+        return "variable";\n
     }\n
     // if a number\n
     else if (/\\d/.test(ch)) {\n
       stream.match(/^\\d*(?:\\.\\d*)?(?:E[+\\-]?\\d+)?/);\n
-      return ret("number", "atom");\n
+      return "atom";\n
     }\n
     // comment start\n
     else if (ch === "(" && stream.eat(":")) {\n
@@ -177,27 +168,27 @@ CodeMirror.defineMode("xquery", function() {\n
     }\n
     // assignment\n
     else if(ch ===":" && stream.eat("=")) {\n
-      return ret("operator", "keyword");\n
+      return "keyword";\n
     }\n
     // open paren\n
     else if(ch === "(") {\n
       pushStateStack(state, { type: "paren"});\n
-      return ret("", null);\n
+      return null;\n
     }\n
     // close paren\n
     else if(ch === ")") {\n
       popStateStack(state);\n
-      return ret("", null);\n
+      return null;\n
     }\n
     // open paren\n
     else if(ch === "[") {\n
       pushStateStack(state, { type: "bracket"});\n
-      return ret("", null);\n
+      return null;\n
     }\n
     // close paren\n
     else if(ch === "]") {\n
       popStateStack(state);\n
-      return ret("", null);\n
+      return null;\n
     }\n
     else {\n
       var known = keywords.propertyIsEnumerable(ch) && keywords[ch];\n
@@ -232,15 +223,14 @@ CodeMirror.defineMode("xquery", function() {\n
       // if the previous word was element, attribute, axis specifier, this word should be the name of that\n
       if(isInXmlConstructor(state)) {\n
         popStateStack(state);\n
-        return ret("word", "variable", word);\n
+        return "variable";\n
       }\n
       // as previously checked, if the word is element,attribute, axis specifier, call it an "xmlconstructor" and\n
       // push the stack so we know to look for it on the next word\n
       if(word == "element" || word == "attribute" || known.type == "axis_specifier") pushStateStack(state, {type: "xmlconstructor"});\n
 \n
       // if the word is known, return the details of that else just call this a generic \'word\'\n
-      return known ? ret(known.type, known.style, word) :\n
-                     ret("word", "variable", word);\n
+      return known ? known.style : "variable";\n
     }\n
   }\n
 \n
@@ -263,7 +253,7 @@ CodeMirror.defineMode("xquery", function() {\n
       maybeNested = (ch == "(");\n
     }\n
 \n
-    return ret("comment", "comment");\n
+    return "comment";\n
   }\n
 \n
   // tokenizer for string literals\n
@@ -275,7 +265,7 @@ CodeMirror.defineMode("xquery", function() {\n
       if(isInString(state) && stream.current() == quote) {\n
         popStateStack(state);\n
         if(f) state.tokenize = f;\n
-        return ret("string", "string");\n
+        return "string";\n
       }\n
 \n
       pushStateStack(state, { type: "string", name: quote, tokenize: tokenString(quote, f) });\n
@@ -283,7 +273,7 @@ CodeMirror.defineMode("xquery", function() {\n
       // if we\'re in a string and in an XML block, allow an embedded code block\n
       if(stream.match("{", false) && isInXmlAttributeBlock(state)) {\n
         state.tokenize = tokenBase;\n
-        return ret("string", "string");\n
+        return "string";\n
       }\n
 \n
 \n
@@ -297,13 +287,13 @@ CodeMirror.defineMode("xquery", function() {\n
           // if we\'re in a string and in an XML block, allow an embedded code block in an attribute\n
           if(stream.match("{", false) && isInXmlAttributeBlock(state)) {\n
             state.tokenize = tokenBase;\n
-            return ret("string", "string");\n
+            return "string";\n
           }\n
 \n
         }\n
       }\n
 \n
-      return ret("string", "string");\n
+      return "string";\n
     };\n
   }\n
 \n
@@ -321,7 +311,7 @@ CodeMirror.defineMode("xquery", function() {\n
     }\n
     stream.eatWhile(isVariableChar);\n
     state.tokenize = tokenBase;\n
-    return ret("variable", "variable");\n
+    return "variable";\n
   }\n
 \n
   // tokenizer for XML tags\n
@@ -331,19 +321,19 @@ CodeMirror.defineMode("xquery", function() {\n
       if(isclose && stream.eat(">")) {\n
         popStateStack(state);\n
         state.tokenize = tokenBase;\n
-        return ret("tag", "tag");\n
+        return "tag";\n
       }\n
       // self closing tag without attributes?\n
       if(!stream.eat("/"))\n
         pushStateStack(state, { type: "tag", name: name, tokenize: tokenBase});\n
       if(!stream.eat(">")) {\n
         state.tokenize = tokenAttribute;\n
-        return ret("tag", "tag");\n
+        return "tag";\n
       }\n
       else {\n
         state.tokenize = tokenBase;\n
       }\n
-      return ret("tag", "tag");\n
+      return "tag";\n
     };\n
   }\n
 \n
@@ -354,14 +344,14 @@ CodeMirror.defineMode("xquery", function() {\n
     if(ch == "/" && stream.eat(">")) {\n
       if(isInXmlAttributeBlock(state)) popStateStack(state);\n
       if(isInXmlBlock(state)) popStateStack(state);\n
-      return ret("tag", "tag");\n
+      return "tag";\n
     }\n
     if(ch == ">") {\n
       if(isInXmlAttributeBlock(state)) popStateStack(state);\n
-      return ret("tag", "tag");\n
+      return "tag";\n
     }\n
     if(ch == "=")\n
-      return ret("", null);\n
+      return null;\n
     // quoted string\n
     if (ch == \'"\' || ch == "\'")\n
       return chain(stream, state, tokenString(ch, tokenAttribute));\n
@@ -379,7 +369,7 @@ CodeMirror.defineMode("xquery", function() {\n
       state.tokenize = tokenBase;\n
     }\n
 \n
-    return ret("attribute", "attribute");\n
+    return "attribute";\n
   }\n
 \n
   // handle comments, including nested\n
@@ -388,7 +378,7 @@ CodeMirror.defineMode("xquery", function() {\n
     while (ch = stream.next()) {\n
       if (ch == "-" && stream.match("->", true)) {\n
         state.tokenize = tokenBase;\n
-        return ret("comment", "comment");\n
+        return "comment";\n
       }\n
     }\n
   }\n
@@ -400,7 +390,7 @@ CodeMirror.defineMode("xquery", function() {\n
     while (ch = stream.next()) {\n
       if (ch == "]" && stream.match("]", true)) {\n
         state.tokenize = tokenBase;\n
-        return ret("comment", "comment");\n
+        return "comment";\n
       }\n
     }\n
   }\n
@@ -411,7 +401,7 @@ CodeMirror.defineMode("xquery", function() {\n
     while (ch = stream.next()) {\n
       if (ch == "?" && stream.match(">", true)) {\n
         state.tokenize = tokenBase;\n
-        return ret("comment", "comment meta");\n
+        return "comment meta";\n
       }\n
     }\n
   }\n
@@ -483,7 +473,7 @@ CodeMirror.defineMIME("application/xquery", "xquery");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>15128</int> </value>
+            <value> <int>14470</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Haxe mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="haxe.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Haxe</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Haxe mode</h2>\n
+\n
+\n
+<div><p><textarea id="code-haxe" name="code">\n
+import one.two.Three;\n
+\n
+@attr("test")\n
+class Foo&lt;T&gt; extends Three\n
+{\n
+\tpublic function new()\n
+\t{\n
+\t\tnoFoo = 12;\n
+\t}\n
+\t\n
+\tpublic static inline function doFoo(obj:{k:Int, l:Float}):Int\n
+\t{\n
+\t\tfor(i in 0...10)\n
+\t\t{\n
+\t\t\tobj.k++;\n
+\t\t\ttrace(i);\n
+\t\t\tvar var1 = new Array();\n
+\t\t\tif(var1.length > 1)\n
+\t\t\t\tthrow "Error";\n
+\t\t}\n
+\t\t// The following line should not be colored, the variable is scoped out\n
+\t\tvar1;\n
+\t\t/* Multi line\n
+\t\t * Comment test\n
+\t\t */\n
+\t\treturn obj.k;\n
+\t}\n
+\tprivate function bar():Void\n
+\t{\n
+\t\t#if flash\n
+\t\tvar t1:String = "1.21";\n
+\t\t#end\n
+\t\ttry {\n
+\t\t\tdoFoo({k:3, l:1.2});\n
+\t\t}\n
+\t\tcatch (e : String) {\n
+\t\t\ttrace(e);\n
+\t\t}\n
+\t\tvar t2:Float = cast(3.2);\n
+\t\tvar t3:haxe.Timer = new haxe.Timer();\n
+\t\tvar t4 = {k:Std.int(t2), l:Std.parseFloat(t1)};\n
+\t\tvar t5 = ~/123+.*$/i;\n
+\t\tdoFoo(t4);\n
+\t\tuntyped t1 = 4;\n
+\t\tbob = new Foo&lt;Int&gt;\n
+\t}\n
+\tpublic var okFoo(default, never):Float;\n
+\tvar noFoo(getFoo, null):Int;\n
+\tfunction getFoo():Int {\n
+\t\treturn noFoo;\n
+\t}\n
+\t\n
+\tpublic var three:Int;\n
+}\n
+enum Color\n
+{\n
+\tred;\n
+\tgreen;\n
+\tblue;\n
+\tgrey( v : Int );\n
+\trgb (r:Int,g:Int,b:Int);\n
+}\n
+</textarea></p>\n
+\n
+<p>Hxml mode:</p>\n
+\n
+<p><textarea id="code-hxml">\n
+-cp test\n
+-js path/to/file.js\n
+#-remap nme:flash\n
+--next\n
+-D source-map-content\n
+-cmd \'test\'\n
+-lib lime\n
+</textarea></p>\n
+</div>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code-haxe"), {\n
+      \tmode: "haxe",\n
+        lineNumbers: true,\n
+        indentUnit: 4,\n
+        indentWithTabs: true\n
+      });\n
+      \n
+      editor = CodeMirror.fromTextArea(document.getElementById("code-hxml"), {\n
+      \tmode: "hxml",\n
+        lineNumbers: true,\n
+        indentUnit: 4,\n
+        indentWithTabs: true\n
+      });\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-haxe, text/x-hxml</code>.</p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

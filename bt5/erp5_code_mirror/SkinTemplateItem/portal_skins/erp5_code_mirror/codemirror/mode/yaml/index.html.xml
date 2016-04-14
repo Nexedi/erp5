@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: YAML mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="yaml.js"></script>\n
+<style>.CodeMirror { border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">YAML</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>YAML mode</h2>\n
+<form><textarea id="code" name="code">\n
+--- # Favorite movies\n
+- Casablanca\n
+- North by Northwest\n
+- The Man Who Wasn\'t There\n
+--- # Shopping list\n
+[milk, pumpkin pie, eggs, juice]\n
+--- # Indented Blocks, common in YAML data files, use indentation and new lines to separate the key: value pairs\n
+  name: John Smith\n
+  age: 33\n
+--- # Inline Blocks, common in YAML data streams, use commas to separate the key: value pairs between braces\n
+{name: John Smith, age: 33}\n
+---\n
+receipt:     Oz-Ware Purchase Invoice\n
+date:        2007-08-06\n
+customer:\n
+    given:   Dorothy\n
+    family:  Gale\n
+\n
+items:\n
+    - part_no:   A4786\n
+      descrip:   Water Bucket (Filled)\n
+      price:     1.47\n
+      quantity:  4\n
+\n
+    - part_no:   E1628\n
+      descrip:   High Heeled "Ruby" Slippers\n
+      size:       8\n
+      price:     100.27\n
+      quantity:  1\n
+\n
+bill-to:  &id001\n
+    street: |\n
+            123 Tornado Alley\n
+            Suite 16\n
+    city:   East Centerville\n
+    state:  KS\n
+\n
+ship-to:  *id001\n
+\n
+specialDelivery:  >\n
+    Follow the Yellow Brick\n
+    Road to the Emerald City.\n
+    Pay no attention to the\n
+    man behind the curtain.\n
+...\n
+</textarea></form>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {});\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-yaml</code>.</p>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

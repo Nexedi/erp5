@@ -36,7 +36,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<!doctype html>\n
+ï»¿<!doctype html>\n
 \n
 <title>CodeMirror: Tern Demo</title>\n
 <meta charset="utf-8"/>\n
@@ -51,16 +51,16 @@
 <script src="../addon/dialog/dialog.js"></script>\n
 <script src="../addon/hint/show-hint.js"></script>\n
 <script src="../addon/tern/tern.js"></script>\n
-<script src="http://marijnhaverbeke.nl/acorn/acorn.js"></script>\n
-<script src="http://marijnhaverbeke.nl/acorn/acorn_loose.js"></script>\n
-<script src="http://marijnhaverbeke.nl/acorn/util/walk.js"></script>\n
-<script src="http://ternjs.net/doc/demo/polyfill.js"></script>\n
-<script src="http://ternjs.net/lib/signal.js"></script>\n
-<script src="http://ternjs.net/lib/tern.js"></script>\n
-<script src="http://ternjs.net/lib/def.js"></script>\n
-<script src="http://ternjs.net/lib/comment.js"></script>\n
-<script src="http://ternjs.net/lib/infer.js"></script>\n
-<script src="http://ternjs.net/plugin/doc_comment.js"></script>\n
+<script src="//ternjs.net/node_modules/acorn/dist/acorn.js"></script>\n
+<script src="//ternjs.net/node_modules/acorn/dist/acorn_loose.js"></script>\n
+<script src="//ternjs.net/node_modules/acorn/dist/walk.js"></script>\n
+<script src="//ternjs.net/doc/demo/polyfill.js"></script>\n
+<script src="//ternjs.net/lib/signal.js"></script>\n
+<script src="//ternjs.net/lib/tern.js"></script>\n
+<script src="//ternjs.net/lib/def.js"></script>\n
+<script src="//ternjs.net/lib/comment.js"></script>\n
+<script src="//ternjs.net/lib/infer.js"></script>\n
+<script src="//ternjs.net/plugin/doc_comment.js"></script>\n
 <style>\n
       .CodeMirror {border: 1px solid #ddd;}\n
     </style>\n
@@ -114,7 +114,7 @@ baz.\n
 \n
 var randomStr = myMod.randomElt(myMod.strList);\n
 var randomInt = myMod.randomElt(myMod.intList);\n
-</textarea></p>\n
+</textarea></form>\n
 \n
 <p>Demonstrates integration of <a href="http://ternjs.net/">Tern</a>\n
 and CodeMirror. The following keys are bound:</p>\n
@@ -147,7 +147,7 @@ overview.</p>\n
   }\n
 \n
   var server;\n
-  getURL("http://ternjs.net/defs/ecma5.json", function(err, code) {\n
+  getURL("//ternjs.net/defs/ecma5.json", function(err, code) {\n
     if (err) throw new Error("Request for ecma5.json: " + err);\n
     server = new CodeMirror.TernServer({defs: [JSON.parse(code)]});\n
     editor.setOption("extraKeys", {\n

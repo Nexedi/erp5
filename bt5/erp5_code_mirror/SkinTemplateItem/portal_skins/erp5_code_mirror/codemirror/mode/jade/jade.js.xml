@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897132.18</string> </value>
+            <value> <string>ts60604380.86</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -102,7 +102,7 @@ CodeMirror.defineMode(\'jade\', function (config) {\n
     res.javaScriptArguments = this.javaScriptArguments;\n
     res.javaScriptArgumentsDepth = this.javaScriptArgumentsDepth;\n
     res.isInterpolating = this.isInterpolating;\n
-    res.interpolationNesting = this.intpolationNesting;\n
+    res.interpolationNesting = this.interpolationNesting;\n
 \n
     res.jsState = CodeMirror.copyState(jsMode, this.jsState);\n
 \n
@@ -195,7 +195,7 @@ CodeMirror.defineMode(\'jade\', function (config) {\n
         if (state.interpolationNesting < 0) {\n
           stream.next();\n
           state.isInterpolating = false;\n
-          return \'puncutation\';\n
+          return \'punctuation\';\n
         }\n
       } else if (stream.peek() === \'{\') {\n
         state.interpolationNesting++;\n
@@ -611,7 +611,7 @@ CodeMirror.defineMode(\'jade\', function (config) {\n
     copyState: copyState,\n
     token: nextToken\n
   };\n
-});\n
+}, \'javascript\', \'css\', \'htmlmixed\');\n
 \n
 CodeMirror.defineMIME(\'text/x-jade\', \'jade\');\n
 \n
@@ -626,7 +626,7 @@ CodeMirror.defineMIME(\'text/x-jade\', \'jade\');\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>15936</int> </value>
+            <value> <int>15972</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

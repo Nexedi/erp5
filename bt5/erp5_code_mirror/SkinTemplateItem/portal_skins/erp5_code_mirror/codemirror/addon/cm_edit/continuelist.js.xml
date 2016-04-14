@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897295.78</string> </value>
+            <value> <string>ts60604371.99</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -39,36 +39,36 @@
 })(function(CodeMirror) {\n
   "use strict";\n
 \n
-  var listRE = /^(\\s*)(>[> ]*|[*+-]\\s|(\\d+)\\.)(\\s*)/,\n
-      emptyListRE = /^(\\s*)(>[> ]*|[*+-]|(\\d+)\\.)(\\s*)$/,\n
+  var listRE = /^(\\s*)(>[> ]*|[*+-]\\s|(\\d+)([.)]))(\\s*)/,\n
+      emptyListRE = /^(\\s*)(>[> ]*|[*+-]|(\\d+)[.)])(\\s*)$/,\n
       unorderedListRE = /[*+-]\\s/;\n
 \n
   CodeMirror.commands.newlineAndIndentContinueMarkdownList = function(cm) {\n
     if (cm.getOption("disableInput")) return CodeMirror.Pass;\n
     var ranges = cm.listSelections(), replacements = [];\n
     for (var i = 0; i < ranges.length; i++) {\n
-      var pos = ranges[i].head, match;\n
+      var pos = ranges[i].head;\n
       var eolState = cm.getStateAfter(pos.line);\n
       var inList = eolState.list !== false;\n
-      var inQuote = eolState.quote !== false;\n
+      var inQuote = eolState.quote !== 0;\n
 \n
-      if (!ranges[i].empty() || (!inList && !inQuote) || !(match = cm.getLine(pos.line).match(listRE))) {\n
+      var line = cm.getLine(pos.line), match = listRE.exec(line);\n
+      if (!ranges[i].empty() || (!inList && !inQuote) || !match) {\n
         cm.execCommand("newlineAndIndent");\n
         return;\n
       }\n
-      if (cm.getLine(pos.line).match(emptyListRE)) {\n
+      if (emptyListRE.test(line)) {\n
         cm.replaceRange("", {\n
           line: pos.line, ch: 0\n
         }, {\n
           line: pos.line, ch: pos.ch + 1\n
         });\n
         replacements[i] = "\\n";\n
-\n
       } else {\n
-        var indent = match[1], after = match[4];\n
+        var indent = match[1], after = match[5];\n
         var bullet = unorderedListRE.test(match[2]) || match[2].indexOf(">") >= 0\n
           ? match[2]\n
-          : (parseInt(match[3], 10) + 1) + ".";\n
+          : (parseInt(match[3], 10) + 1) + match[4];\n
 \n
         replacements[i] = "\\n" + indent + bullet + after;\n
       }\n
@@ -87,7 +87,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1752</int> </value>
+            <value> <int>1761</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

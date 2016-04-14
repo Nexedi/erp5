@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Gas mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="gas.js"></script>\n
+<style>.CodeMirror {border: 2px inset #dee;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Gas</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Gas mode</h2>\n
+<form>\n
+<textarea id="code" name="code">\n
+.syntax unified\n
+.global main\n
+\n
+/* \n
+ *  A\n
+ *  multi-line\n
+ *  comment.\n
+ */\n
+\n
+@ A single line comment.\n
+\n
+main:\n
+        push    {sp, lr}\n
+        ldr     r0, =message\n
+        bl      puts\n
+        mov     r0, #0\n
+        pop     {sp, pc}\n
+\n
+message:\n
+        .asciz "Hello world!<br />"\n
+</textarea>\n
+        </form>\n
+\n
+        <script>\n
+            var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+                lineNumbers: true,\n
+                mode: {name: "gas", architecture: "ARMv6"},\n
+            });\n
+        </script>\n
+\n
+        <p>Handles AT&amp;T assembler syntax (more specifically this handles\n
+        the GNU Assembler (gas) syntax.)\n
+        It takes a single optional configuration parameter:\n
+        <code>architecture</code>, which can be one of <code>"ARM"</code>,\n
+        <code>"ARMv6"</code> or <code>"x86"</code>.\n
+        Including the parameter adds syntax for the registers and special\n
+        directives for the supplied architecture.\n
+\n
+        <p><strong>MIME types defined:</strong> <code>text/x-gas</code></p>\n
+    </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

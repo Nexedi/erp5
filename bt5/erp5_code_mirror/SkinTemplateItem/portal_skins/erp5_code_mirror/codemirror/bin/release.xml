@@ -7,14 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__propsets__</string> </key>
-            <value>
-              <tuple>
-                <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -70,7 +62,6 @@ function rewriteJSON(pack) {\n
   return pack.replace(/"version":"\\d+\\.\\d+\\.\\d+"/, "\\"version\\":\\"" + number + "\\"");\n
 }\n
 rewrite("package.json", rewriteJSON);\n
-rewrite("bower.json", rewriteJSON);\n
 rewrite("doc/manual.html", function(manual) {\n
   return manual.replace(/>version \\d+\\.\\d+\\.\\d+<\\/span>/, ">version " + number + "</span>");\n
 });\n
@@ -87,8 +78,8 @@ rewrite("doc/compress.html", function(cmp) {\n
 });\n
 \n
 rewrite("index.html", function(index) {\n
-  return index.replace(/<strong>version \\d+\\.\\d+<\\/strong>/,\n
-                       "<strong>version " + simple + "</strong>");\n
+  return index.replace(/\\.zip">\\d+\\.\\d+<\\/a>/,\n
+                       ".zip\\">" + simple + "</a>");\n
 });
 
 ]]></unicode> </value>
@@ -108,64 +99,6 @@ rewrite("index.html", function(index) {\n
         <item>
             <key> <string>output_encoding</string> </key>
             <value> <string>iso-8859-15</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="PropertySheet" module="OFS.PropertySheets"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_md</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>xmlns</string> </key>
-                    <value> <unicode>http://apache.org/dav/props/</unicode> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <unicode>executable</unicode> </value>
-                  </item>
-                  <item>
-                      <key> <string>meta</string> </key>
-                      <value>
-                        <dictionary>
-                          <item>
-                              <key> <string>__xml_attrs__</string> </key>
-                              <value>
-                                <dictionary/>
-                              </value>
-                          </item>
-                        </dictionary>
-                      </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>executable</string> </key>
-            <value> <string>T</string> </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

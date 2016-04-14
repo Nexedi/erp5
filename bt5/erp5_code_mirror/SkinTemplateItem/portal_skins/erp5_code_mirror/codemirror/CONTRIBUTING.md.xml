@@ -26,9 +26,9 @@
             <key> <string>raw</string> </key>
             <value> <string># How to contribute\n
 \n
-- [Getting help](#getting-help-)\n
-- [Submitting bug reports](#submitting-bug-reports-)\n
-- [Contributing code](#contributing-code-)\n
+- [Getting help](#getting-help)\n
+- [Submitting bug reports](#submitting-bug-reports)\n
+- [Contributing code](#contributing-code)\n
 \n
 ## Getting help\n
 \n
@@ -87,12 +87,24 @@ should be asked on the\n
 - Make sure all tests pass. Visit `test/index.html` in your browser to\n
   run them.\n
 - Submit a pull request\n
-([how to create a pull request](https://help.github.com/articles/fork-a-repo))\n
+([how to create a pull request](https://help.github.com/articles/fork-a-repo)).\n
+  Don\'t put more than one feature/fix in a single pull request.\n
+\n
+By contributing code to CodeMirror you\n
+\n
+ - agree to license the contributed code under CodeMirror\'s [MIT\n
+   license](http://codemirror.net/LICENSE).\n
+\n
+ - confirm that you have the right to contribute and license the code\n
+   in question. (Either you hold all rights on the code, or the rights\n
+   holder has explicitly granted the right to use it like this,\n
+   through a compatible open source license or through a direct\n
+   agreement with you.)\n
 \n
 ### Coding standards\n
 \n
 - 2 spaces per indentation level, no tabs.\n
-- Include semicolons after statements.\n
+\n
 - Note that the linter (`bin/lint`) which is run after each commit\n
   complains about unused variables and functions. Prefix their names\n
   with an underscore to muffle it.\n

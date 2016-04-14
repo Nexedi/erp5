@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897118.5</string> </value>
+            <value> <string>ts60604374.69</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -55,14 +55,16 @@
       CodeMirror.e_preventDefault(e);\n
       var axis = self.orientation == "horizontal" ? "pageX" : "pageY";\n
       var start = e[axis], startpos = self.pos;\n
+      function done() {\n
+        CodeMirror.off(document, "mousemove", move);\n
+        CodeMirror.off(document, "mouseup", done);\n
+      }\n
       function move(e) {\n
-        if (e.which != 1) {\n
-          CodeMirror.off(document, "mousemove", move);\n
-          return;\n
-        }\n
+        if (e.which != 1) return done();\n
         self.moveTo(startpos + (e[axis] - start) * (self.total / self.size));\n
       }\n
       CodeMirror.on(document, "mousemove", move);\n
+      CodeMirror.on(document, "mouseup", done);\n
     });\n
 \n
     CodeMirror.on(this.node, "click", function(e) {\n
@@ -85,26 +87,35 @@
     CodeMirror.on(this.node, "DOMMouseScroll", onWheel);\n
   }\n
 \n
-  Bar.prototype.moveTo = function(pos, update) {\n
+  Bar.prototype.setPos = function(pos) {\n
     if (pos < 0) pos = 0;\n
     if (pos > this.total - this.screen) pos = this.total - this.screen;\n
-    if (pos == this.pos) return;\n
+    if (pos == this.pos) return false;\n
     this.pos = pos;\n
     this.inner.style[this.orientation == "horizontal" ? "left" : "top"] =\n
       (pos * (this.size / this.total)) + "px";\n
-    if (update !== false) this.scroll(pos, this.orientation);\n
+    return true\n
   };\n
+\n
+  Bar.prototype.moveTo = function(pos) {\n
+    if (this.setPos(pos)) this.scroll(pos, this.orientation);\n
+  }\n
+\n
+  var minButtonSize = 10;\n
 \n
   Bar.prototype.update = function(scrollSize, clientSize, barSize) {\n
     this.screen = clientSize;\n
     this.total = scrollSize;\n
     this.size = barSize;\n
 \n
-    // FIXME clip to min size?\n
+    var buttonSize = this.screen * (this.size / this.total);\n
+    if (buttonSize < minButtonSize) {\n
+      this.size -= minButtonSize - buttonSize;\n
+      buttonSize = minButtonSize;\n
+    }\n
     this.inner.style[this.orientation == "horizontal" ? "width" : "height"] =\n
-      this.screen * (this.size / this.total) + "px";\n
-    this.inner.style[this.orientation == "horizontal" ? "left" : "top"] =\n
-      this.pos * (this.size / this.total) + "px";\n
+      buttonSize + "px";\n
+    this.setPos(this.pos);\n
   };\n
 \n
   function SimpleScrollbars(cls, place, scroll) {\n
@@ -131,7 +142,6 @@
     if (needsV) {\n
       this.vert.update(measure.scrollHeight, measure.clientHeight,\n
                        measure.viewHeight - (needsH ? width : 0));\n
-      this.vert.node.style.display = "block";\n
       this.vert.node.style.bottom = needsH ? width + "px" : "0";\n
     }\n
     if (needsH) {\n
@@ -145,11 +155,11 @@
   };\n
 \n
   SimpleScrollbars.prototype.setScrollTop = function(pos) {\n
-    this.vert.moveTo(pos, false);\n
+    this.vert.setPos(pos);\n
   };\n
 \n
   SimpleScrollbars.prototype.setScrollLeft = function(pos) {\n
-    this.horiz.moveTo(pos, false);\n
+    this.horiz.setPos(pos);\n
   };\n
 \n
   SimpleScrollbars.prototype.clear = function() {\n
@@ -175,7 +185,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5126</int> </value>
+            <value> <int>5297</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

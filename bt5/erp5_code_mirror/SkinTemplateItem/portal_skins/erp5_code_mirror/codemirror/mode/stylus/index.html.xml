@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Stylus mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<link rel="stylesheet" href="../../addon/hint/show-hint.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="stylus.js"></script>\n
+<script src="../../addon/hint/show-hint.js"></script>\n
+<script src="../../addon/hint/css-hint.js"></script>\n
+<style>.CodeMirror {background: #f8f8f8;} form{margin-bottom: .7em;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Stylus</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Stylus mode</h2>\n
+<form><textarea id="code" name="code">\n
+/* Stylus mode */\n
+\n
+#id,\n
+.class,\n
+article\n
+  font-family Arial, sans-serif\n
+\n
+#id,\n
+.class,\n
+article {\n
+  font-family: Arial, sans-serif;\n
+}\n
+\n
+// Variables\n
+font-size-base = 16px\n
+line-height-base = 1.5\n
+font-family-base = "Helvetica Neue", Helvetica, Arial, sans-serif\n
+text-color = lighten(#000, 20%)\n
+\n
+body\n
+  font font-size-base/line-height-base font-family-base\n
+  color text-color\n
+\n
+body {\n
+  font: 400 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;\n
+  color: #333;\n
+}\n
+\n
+// Variables\n
+link-color = darken(#428bca, 6.5%)\n
+link-hover-color = darken(link-color, 15%)\n
+link-decoration = none\n
+link-hover-decoration = false\n
+\n
+// Mixin\n
+tab-focus()\n
+  outline thin dotted\n
+  outline 5px auto -webkit-focus-ring-color\n
+  outline-offset -2px\n
+\n
+a\n
+  color link-color\n
+  if link-decoration\n
+    text-decoration link-decoration\n
+  &:hover\n
+  &:focus\n
+    color link-hover-color\n
+    if link-hover-decoration\n
+      text-decoration link-hover-decoration\n
+  &:focus\n
+    tab-focus()\n
+\n
+a {\n
+  color: #3782c4;\n
+  text-decoration: none;\n
+}\n
+a:hover,\n
+a:focus {\n
+  color: #2f6ea7;\n
+}\n
+a:focus {\n
+  outline: thin dotted;\n
+  outline: 5px auto -webkit-focus-ring-color;\n
+  outline-offset: -2px;\n
+}\n
+</textarea>\n
+</form>\n
+<script>\n
+  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+    extraKeys: {"Ctrl-Space": "autocomplete"},\n
+    tabSize: 2\n
+  });\n
+</script>\n
+\n
+<p><strong>MIME types defined:</strong> <code>text/x-styl</code>.</p>\n
+<p>Created by <a href="https://github.com/dmitrykiselyov">Dmitry Kiselyov</a></p>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

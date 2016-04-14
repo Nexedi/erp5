@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897148.6</string> </value>
+            <value> <string>ts60604385.87</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -98,7 +98,10 @@
           return "operator";\n
         case "\\\\":\n
           if (stream.match(/\\\\[a-z]+/)) return "string-2";\n
-          else return null;\n
+          else {\n
+            stream.next();\n
+            return "atom";\n
+          }\n
         case ".":\n
         case ",":\n
         case ";":\n
@@ -145,7 +148,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3084</int> </value>
+            <value> <int>3139</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

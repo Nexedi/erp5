@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897149.93</string> </value>
+            <value> <string>ts60604375.76</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -93,8 +93,7 @@ CodeMirror.defineMode("asterisk", function() {\n
 \n
   function basicToken(stream,state){\n
     var cur = \'\';\n
-    var ch  = \'\';\n
-    ch = stream.next();\n
+    var ch = stream.next();\n
     // comment\n
     if(ch == ";") {\n
       stream.skipToEnd();\n
@@ -164,7 +163,6 @@ CodeMirror.defineMode("asterisk", function() {\n
     token: function(stream, state) {\n
 \n
       var cur = \'\';\n
-      var ch  = \'\';\n
       if(stream.eatSpace()) return null;\n
       // extension started\n
       if(state.extenStart){\n
@@ -198,7 +196,7 @@ CodeMirror.defineMode("asterisk", function() {\n
       } else if(state.extenPriority) {\n
         state.extenPriority = false;\n
         state.extenApplication = true;\n
-        ch = stream.next(); // get comma\n
+        stream.next(); // get comma\n
         if(state.extenSame) return null;\n
         stream.eatWhile(/[^,]/);\n
         return "number";\n
@@ -234,7 +232,7 @@ CodeMirror.defineMIME("text/x-asterisk", "asterisk");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7476</int> </value>
+            <value> <int>7437</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

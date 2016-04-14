@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Dockerfile mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/mode/simple.js"></script>\n
+<script src="dockerfile.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Dockerfile</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Dockerfile mode</h2>\n
+<form><textarea id="code" name="code"># Install Ghost blogging platform and run development environment\n
+#\n
+# VERSION 1.0.0\n
+\n
+FROM ubuntu:12.10\n
+MAINTAINER Amer Grgic "amer@livebyt.es"\n
+WORKDIR /data/ghost\n
+\n
+# Install dependencies for nginx installation\n
+RUN apt-get update\n
+RUN apt-get install -y python g++ make software-properties-common --force-yes\n
+RUN add-apt-repository ppa:chris-lea/node.js\n
+RUN apt-get update\n
+# Install unzip\n
+RUN apt-get install -y unzip\n
+# Install curl\n
+RUN apt-get install -y curl\n
+# Install nodejs & npm\n
+RUN apt-get install -y rlwrap\n
+RUN apt-get install -y nodejs \n
+# Download Ghost v0.4.1\n
+RUN curl -L https://ghost.org/zip/ghost-latest.zip -o /tmp/ghost.zip\n
+# Unzip Ghost zip to /data/ghost\n
+RUN unzip -uo /tmp/ghost.zip -d /data/ghost\n
+# Add custom config js to /data/ghost\n
+ADD ./config.example.js /data/ghost/config.js\n
+# Install Ghost with NPM\n
+RUN cd /data/ghost/ && npm install --production\n
+# Expose port 2368\n
+EXPOSE 2368\n
+# Run Ghost\n
+CMD ["npm","start"]\n
+</textarea></form>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+        mode: "dockerfile"\n
+      });\n
+    </script>\n
+\n
+    <p>Dockerfile syntax highlighting for CodeMirror. Depends on\n
+    the <a href="../../demo/simplemode.html">simplemode</a> addon.</p>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-dockerfile</code></p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

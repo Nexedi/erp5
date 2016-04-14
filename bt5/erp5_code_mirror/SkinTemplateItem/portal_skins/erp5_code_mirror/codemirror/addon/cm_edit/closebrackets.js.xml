@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897295.56</string> </value>
+            <value> <string>ts60604371.88</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -37,26 +37,167 @@
   else // Plain browser env\n
     mod(CodeMirror);\n
 })(function(CodeMirror) {\n
-  var DEFAULT_BRACKETS = "()[]{}\'\'\\"\\"";\n
-  var DEFAULT_EXPLODE_ON_ENTER = "[]{}";\n
-  var SPACE_CHAR_REGEX = /\\s/;\n
+  var defaults = {\n
+    pairs: "()[]{}\'\'\\"\\"",\n
+    triples: "",\n
+    explode: "[]{}"\n
+  };\n
 \n
   var Pos = CodeMirror.Pos;\n
 \n
   CodeMirror.defineOption("autoCloseBrackets", false, function(cm, val, old) {\n
-    if (old != CodeMirror.Init && old)\n
-      cm.removeKeyMap("autoCloseBrackets");\n
-    if (!val) return;\n
-    var pairs = DEFAULT_BRACKETS, explode = DEFAULT_EXPLODE_ON_ENTER;\n
-    if (typeof val == "string") pairs = val;\n
-    else if (typeof val == "object") {\n
-      if (val.pairs != null) pairs = val.pairs;\n
-      if (val.explode != null) explode = val.explode;\n
+    if (old && old != CodeMirror.Init) {\n
+      cm.removeKeyMap(keyMap);\n
+      cm.state.closeBrackets = null;\n
     }\n
-    var map = buildKeymap(pairs);\n
-    if (explode) map.Enter = buildExplodeHandler(explode);\n
-    cm.addKeyMap(map);\n
+    if (val) {\n
+      cm.state.closeBrackets = val;\n
+      cm.addKeyMap(keyMap);\n
+    }\n
   });\n
+\n
+  function getOption(conf, name) {\n
+    if (name == "pairs" && typeof conf == "string") return conf;\n
+    if (typeof conf == "object" && conf[name] != null) return conf[name];\n
+    return defaults[name];\n
+  }\n
+\n
+  var bind = defaults.pairs + "`";\n
+  var keyMap = {Backspace: handleBackspace, Enter: handleEnter};\n
+  for (var i = 0; i < bind.length; i++)\n
+    keyMap["\'" + bind.charAt(i) + "\'"] = handler(bind.charAt(i));\n
+\n
+  function handler(ch) {\n
+    return function(cm) { return handleChar(cm, ch); };\n
+  }\n
+\n
+  function getConfig(cm) {\n
+    var deflt = cm.state.closeBrackets;\n
+    if (!deflt) return null;\n
+    var mode = cm.getModeAt(cm.getCursor());\n
+    return mode.closeBrackets || deflt;\n
+  }\n
+\n
+  function handleBackspace(cm) {\n
+    var conf = getConfig(cm);\n
+    if (!conf || cm.getOption("disableInput")) return CodeMirror.Pass;\n
+\n
+    var pairs = getOption(conf, "pairs");\n
+    var ranges = cm.listSelections();\n
+    for (var i = 0; i < ranges.length; i++) {\n
+      if (!ranges[i].empty()) return CodeMirror.Pass;\n
+      var around = charsAround(cm, ranges[i].head);\n
+      if (!around || pairs.indexOf(around) % 2 != 0) return CodeMirror.Pass;\n
+    }\n
+    for (var i = ranges.length - 1; i >= 0; i--) {\n
+      var cur = ranges[i].head;\n
+      cm.replaceRange("", Pos(cur.line, cur.ch - 1), Pos(cur.line, cur.ch + 1), "+delete");\n
+    }\n
+  }\n
+\n
+  function handleEnter(cm) {\n
+    var conf = getConfig(cm);\n
+    var explode = conf && getOption(conf, "explode");\n
+    if (!explode || cm.getOption("disableInput")) return CodeMirror.Pass;\n
+\n
+    var ranges = cm.listSelections();\n
+    for (var i = 0; i < ranges.length; i++) {\n
+      if (!ranges[i].empty()) return CodeMirror.Pass;\n
+      var around = charsAround(cm, ranges[i].head);\n
+      if (!around || explode.indexOf(around) % 2 != 0) return CodeMirror.Pass;\n
+    }\n
+    cm.operation(function() {\n
+      cm.replaceSelection("\\n\\n", null);\n
+      cm.execCommand("goCharLeft");\n
+      ranges = cm.listSelections();\n
+      for (var i = 0; i < ranges.length; i++) {\n
+        var line = ranges[i].head.line;\n
+        cm.indentLine(line, null, true);\n
+        cm.indentLine(line + 1, null, true);\n
+      }\n
+    });\n
+  }\n
+\n
+  function contractSelection(sel) {\n
+    var inverted = CodeMirror.cmpPos(sel.anchor, sel.head) > 0;\n
+    return {anchor: new Pos(sel.anchor.line, sel.anchor.ch + (inverted ? -1 : 1)),\n
+            head: new Pos(sel.head.line, sel.head.ch + (inverted ? 1 : -1))};\n
+  }\n
+\n
+  function handleChar(cm, ch) {\n
+    var conf = getConfig(cm);\n
+    if (!conf || cm.getOption("disableInput")) return CodeMirror.Pass;\n
+\n
+    var pairs = getOption(conf, "pairs");\n
+    var pos = pairs.indexOf(ch);\n
+    if (pos == -1) return CodeMirror.Pass;\n
+    var triples = getOption(conf, "triples");\n
+\n
+    var identical = pairs.charAt(pos + 1) == ch;\n
+    var ranges = cm.listSelections();\n
+    var opening = pos % 2 == 0;\n
+\n
+    var type, next;\n
+    for (var i = 0; i < ranges.length; i++) {\n
+      var range = ranges[i], cur = range.head, curType;\n
+      var next = cm.getRange(cur, Pos(cur.line, cur.ch + 1));\n
+      if (opening && !range.empty()) {\n
+        curType = "surround";\n
+      } else if ((identical || !opening) && next == ch) {\n
+        if (triples.indexOf(ch) >= 0 && cm.getRange(cur, Pos(cur.line, cur.ch + 3)) == ch + ch + ch)\n
+          curType = "skipThree";\n
+        else\n
+          curType = "skip";\n
+      } else if (identical && cur.ch > 1 && triples.indexOf(ch) >= 0 &&\n
+                 cm.getRange(Pos(cur.line, cur.ch - 2), cur) == ch + ch &&\n
+                 (cur.ch <= 2 || cm.getRange(Pos(cur.line, cur.ch - 3), Pos(cur.line, cur.ch - 2)) != ch)) {\n
+        curType = "addFour";\n
+      } else if (identical) {\n
+        if (!CodeMirror.isWordChar(next) && enteringString(cm, cur, ch)) curType = "both";\n
+        else return CodeMirror.Pass;\n
+      } else if (opening && (cm.getLine(cur.line).length == cur.ch ||\n
+                             isClosingBracket(next, pairs) ||\n
+                             /\\s/.test(next))) {\n
+        curType = "both";\n
+      } else {\n
+        return CodeMirror.Pass;\n
+      }\n
+      if (!type) type = curType;\n
+      else if (type != curType) return CodeMirror.Pass;\n
+    }\n
+\n
+    var left = pos % 2 ? pairs.charAt(pos - 1) : ch;\n
+    var right = pos % 2 ? ch : pairs.charAt(pos + 1);\n
+    cm.operation(function() {\n
+      if (type == "skip") {\n
+        cm.execCommand("goCharRight");\n
+      } else if (type == "skipThree") {\n
+        for (var i = 0; i < 3; i++)\n
+          cm.execCommand("goCharRight");\n
+      } else if (type == "surround") {\n
+        var sels = cm.getSelections();\n
+        for (var i = 0; i < sels.length; i++)\n
+          sels[i] = left + sels[i] + right;\n
+        cm.replaceSelections(sels, "around");\n
+        sels = cm.listSelections().slice();\n
+        for (var i = 0; i < sels.length; i++)\n
+          sels[i] = contractSelection(sels[i]);\n
+        cm.setSelections(sels);\n
+      } else if (type == "both") {\n
+        cm.replaceSelection(left + right, null);\n
+        cm.triggerElectric(left + right);\n
+        cm.execCommand("goCharLeft");\n
+      } else if (type == "addFour") {\n
+        cm.replaceSelection(left + left + left + left, "before");\n
+        cm.execCommand("goCharRight");\n
+      }\n
+    });\n
+  }\n
+\n
+  function isClosingBracket(ch, pairs) {\n
+    var pos = pairs.lastIndexOf(ch);\n
+    return pos > -1 && pos % 2 == 1;\n
+  }\n
 \n
   function charsAround(cm, pos) {\n
     var str = cm.getRange(Pos(pos.line, pos.ch - 1),\n
@@ -79,111 +220,6 @@
       stream.start = stream.pos;\n
     }\n
   }\n
-\n
-  function buildKeymap(pairs) {\n
-    var map = {\n
-      name : "autoCloseBrackets",\n
-      Backspace: function(cm) {\n
-        if (cm.getOption("disableInput")) return CodeMirror.Pass;\n
-        var ranges = cm.listSelections();\n
-        for (var i = 0; i < ranges.length; i++) {\n
-          if (!ranges[i].empty()) return CodeMirror.Pass;\n
-          var around = charsAround(cm, ranges[i].head);\n
-          if (!around || pairs.indexOf(around) % 2 != 0) return CodeMirror.Pass;\n
-        }\n
-        for (var i = ranges.length - 1; i >= 0; i--) {\n
-          var cur = ranges[i].head;\n
-          cm.replaceRange("", Pos(cur.line, cur.ch - 1), Pos(cur.line, cur.ch + 1));\n
-        }\n
-      }\n
-    };\n
-    var closingBrackets = "";\n
-    for (var i = 0; i < pairs.length; i += 2) (function(left, right) {\n
-      closingBrackets += right;\n
-      map["\'" + left + "\'"] = function(cm) {\n
-        if (cm.getOption("disableInput")) return CodeMirror.Pass;\n
-        var ranges = cm.listSelections(), type, next;\n
-        for (var i = 0; i < ranges.length; i++) {\n
-          var range = ranges[i], cur = range.head, curType;\n
-          var next = cm.getRange(cur, Pos(cur.line, cur.ch + 1));\n
-          if (!range.empty()) {\n
-            curType = "surround";\n
-          } else if (left == right && next == right) {\n
-            if (cm.getRange(cur, Pos(cur.line, cur.ch + 3)) == left + left + left)\n
-              curType = "skipThree";\n
-            else\n
-              curType = "skip";\n
-          } else if (left == right && cur.ch > 1 &&\n
-                     cm.getRange(Pos(cur.line, cur.ch - 2), cur) == left + left &&\n
-                     (cur.ch <= 2 || cm.getRange(Pos(cur.line, cur.ch - 3), Pos(cur.line, cur.ch - 2)) != left)) {\n
-            curType = "addFour";\n
-          } else if (left == \'"\' || left == "\'") {\n
-            if (!CodeMirror.isWordChar(next) && enteringString(cm, cur, left)) curType = "both";\n
-            else return CodeMirror.Pass;\n
-          } else if (cm.getLine(cur.line).length == cur.ch || closingBrackets.indexOf(next) >= 0 || SPACE_CHAR_REGEX.test(next)) {\n
-            curType = "both";\n
-          } else {\n
-            return CodeMirror.Pass;\n
-          }\n
-          if (!type) type = curType;\n
-          else if (type != curType) return CodeMirror.Pass;\n
-        }\n
-\n
-        cm.operation(function() {\n
-          if (type == "skip") {\n
-            cm.execCommand("goCharRight");\n
-          } else if (type == "skipThree") {\n
-            for (var i = 0; i < 3; i++)\n
-              cm.execCommand("goCharRight");\n
-          } else if (type == "surround") {\n
-            var sels = cm.getSelections();\n
-            for (var i = 0; i < sels.length; i++)\n
-              sels[i] = left + sels[i] + right;\n
-            cm.replaceSelections(sels, "around");\n
-          } else if (type == "both") {\n
-            cm.replaceSelection(left + right, null);\n
-            cm.execCommand("goCharLeft");\n
-          } else if (type == "addFour") {\n
-            cm.replaceSelection(left + left + left + left, "before");\n
-            cm.execCommand("goCharRight");\n
-          }\n
-        });\n
-      };\n
-      if (left != right) map["\'" + right + "\'"] = function(cm) {\n
-        var ranges = cm.listSelections();\n
-        for (var i = 0; i < ranges.length; i++) {\n
-          var range = ranges[i];\n
-          if (!range.empty() ||\n
-              cm.getRange(range.head, Pos(range.head.line, range.head.ch + 1)) != right)\n
-            return CodeMirror.Pass;\n
-        }\n
-        cm.execCommand("goCharRight");\n
-      };\n
-    })(pairs.charAt(i), pairs.charAt(i + 1));\n
-    return map;\n
-  }\n
-\n
-  function buildExplodeHandler(pairs) {\n
-    return function(cm) {\n
-      if (cm.getOption("disableInput")) return CodeMirror.Pass;\n
-      var ranges = cm.listSelections();\n
-      for (var i = 0; i < ranges.length; i++) {\n
-        if (!ranges[i].empty()) return CodeMirror.Pass;\n
-        var around = charsAround(cm, ranges[i].head);\n
-        if (!around || pairs.indexOf(around) % 2 != 0) return CodeMirror.Pass;\n
-      }\n
-      cm.operation(function() {\n
-        cm.replaceSelection("\\n\\n", null);\n
-        cm.execCommand("goCharLeft");\n
-        ranges = cm.listSelections();\n
-        for (var i = 0; i < ranges.length; i++) {\n
-          var line = ranges[i].head.line;\n
-          cm.indentLine(line, null, true);\n
-          cm.indentLine(line + 1, null, true);\n
-        }\n
-      });\n
-    };\n
-  }\n
 });\n
 
 
@@ -195,7 +231,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6302</int> </value>
+            <value> <int>6945</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

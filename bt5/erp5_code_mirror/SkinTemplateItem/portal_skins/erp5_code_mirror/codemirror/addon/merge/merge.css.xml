@@ -90,6 +90,7 @@
   position: absolute;\n
   cursor: pointer;\n
   color: #44c;\n
+  z-index: 3;\n
 }\n
 \n
 .CodeMirror-merge-copy-reverse {\n

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897139.39</string> </value>
+            <value> <string>ts60604377.31</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -34,7 +34,7 @@
   function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1)); }\n
 \n
   // Error, because "foobarhello" is neither a known type or property, but\n
-  // property was expected (after "and"), and it should be in parenthese.\n
+  // property was expected (after "and"), and it should be in parentheses.\n
   MT("atMediaUnknownType",\n
      "[def @media] [attribute screen] [keyword and] [error foobarhello] { }");\n
 \n
@@ -45,6 +45,12 @@
   // Make sure nesting works with media queries\n
   MT("atMediaMaxWidthNested",\n
      "[def @media] [attribute screen] [keyword and] ([property max-width]: [number 25px]) { [tag foo] { } }");\n
+\n
+  MT("atMediaFeatureValueKeyword",\n
+     "[def @media] ([property orientation]: [keyword landscape]) { }");\n
+\n
+  MT("atMediaUnknownFeatureValueKeyword",\n
+     "[def @media] ([property orientation]: [error upsidedown]) { }");\n
 \n
   MT("tagSelector",\n
      "[tag foo] { }");\n
@@ -77,11 +83,17 @@
   MT("tagColorHex3",\n
      "[tag foo] { [property background]: [atom #fff]; }");\n
 \n
+  MT("tagColorHex4",\n
+     "[tag foo] { [property background]: [atom #ffff]; }");\n
+\n
   MT("tagColorHex6",\n
      "[tag foo] { [property background]: [atom #ffffff]; }");\n
 \n
-  MT("tagColorHex4",\n
-     "[tag foo] { [property background]: [atom&error #ffff]; }");\n
+  MT("tagColorHex8",\n
+     "[tag foo] { [property background]: [atom #ffffffff]; }");\n
+\n
+  MT("tagColorHex5Invalid",\n
+     "[tag foo] { [property background]: [atom&error #fffff]; }");\n
 \n
   MT("tagColorHexInvalid",\n
      "[tag foo] { [property background]: [atom&error #ffg]; }");\n
@@ -103,13 +115,6 @@
 \n
   MT("tagTwoPropertiesURL",\n
      "[tag foo] { [property background]: [atom url]([string //example.com/foo.png]); [property padding]: [number 0]; }");\n
-\n
-  MT("commentSGML",\n
-     "[comment <!--comment-->]");\n
-\n
-  MT("commentSGML2",\n
-     "[comment <!--comment]",\n
-     "[comment -->] [tag div] {}");\n
 \n
   MT("indent_tagSelector",\n
      "[tag strong], [tag em] {",\n
@@ -149,17 +154,77 @@
      "}");\n
 \n
   MT("empty_url",\n
-     "[def @import] [tag url]() [tag screen];");\n
+     "[def @import] [atom url]() [attribute screen];");\n
 \n
   MT("parens",\n
      "[qualifier .foo] {",\n
      "  [property background-image]: [variable fade]([atom #000], [number 20%]);",\n
-     "  [property border-image]: [variable linear-gradient](",\n
+     "  [property border-image]: [atom linear-gradient](",\n
      "    [atom to] [atom bottom],",\n
      "    [variable fade]([atom #000], [number 20%]) [number 0%],",\n
      "    [variable fade]([atom #000], [number 20%]) [number 100%]",\n
      "  );",\n
      "}");\n
+\n
+  MT("css_variable",\n
+     ":[variable-3 root] {",\n
+     "  [variable-2 --main-color]: [atom #06c];",\n
+     "}",\n
+     "[tag h1][builtin #foo] {",\n
+     "  [property color]: [atom var]([variable-2 --main-color]);",\n
+     "}");\n
+\n
+  MT("supports",\n
+     "[def @supports] ([keyword not] (([property text-align-last]: [atom justify]) [keyword or] ([meta -moz-][property text-align-last]: [atom justify])) {",\n
+     "  [property text-align-last]: [atom justify];",\n
+     "}");\n
+\n
+   MT("document",\n
+      "[def @document] [tag url]([string http://blah]),",\n
+      "  [tag url-prefix]([string https://]),",\n
+      "  [tag domain]([string blah.com]),",\n
+      "  [tag regexp]([string \\".*blah.+\\"]) {",\n
+      "    [builtin #id] {",\n
+      "      [property background-color]: [keyword white];",\n
+      "    }",\n
+      "    [tag foo] {",\n
+      "      [property font-family]: [variable Verdana], [atom sans-serif];",\n
+      "    }",\n
+      "}");\n
+\n
+   MT("document_url",\n
+      "[def @document] [tag url]([string http://blah]) { [qualifier .class] { } }");\n
+\n
+   MT("document_urlPrefix",\n
+      "[def @document] [tag url-prefix]([string https://]) { [builtin #id] { } }");\n
+\n
+   MT("document_domain",\n
+      "[def @document] [tag domain]([string blah.com]) { [tag foo] { } }");\n
+\n
+   MT("document_regexp",\n
+      "[def @document] [tag regexp]([string \\".*blah.+\\"]) { [builtin #id] { } }");\n
+\n
+   MT("counter-style",\n
+      "[def @counter-style] [variable binary] {",\n
+      "  [property system]: [atom numeric];",\n
+      "  [property symbols]: [number 0] [number 1];",\n
+      "  [property suffix]: [string \\".\\"];",\n
+      "  [property range]: [atom infinite];",\n
+      "  [property speak-as]: [atom numeric];",\n
+      "}");\n
+\n
+   MT("counter-style-additive-symbols",\n
+      "[def @counter-style] [variable simple-roman] {",\n
+      "  [property system]: [atom additive];",\n
+      "  [property additive-symbols]: [number 10] [variable X], [number 5] [variable V], [number 1] [variable I];",\n
+      "  [property range]: [number 1] [number 49];",\n
+      "}");\n
+\n
+   MT("counter-style-use",\n
+      "[tag ol][qualifier .roman] { [property list-style]: [variable simple-roman]; }");\n
+\n
+   MT("counter-style-symbols",\n
+      "[tag ol] { [property list-style]: [atom symbols]([atom cyclic] [string \\"*\\"] [string \\"\\\\2020\\"] [string \\"\\\\2021\\"] [string \\"\\\\A7\\"]); }");\n
 })();\n
 
 
@@ -171,7 +236,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4227</int> </value>
+            <value> <int>6785</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

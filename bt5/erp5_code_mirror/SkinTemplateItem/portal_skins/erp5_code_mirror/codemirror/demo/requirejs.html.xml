@@ -76,13 +76,31 @@
 \n
     <div id="code"></div>\n
 \n
+    <button id="markdown">Dynamically load Markdown mode</button>\n
+\n
     <script type="text/javascript">\n
-      require(["../lib/codemirror", "../mode/htmlmixed/htmlmixed",\n
-               "../addon/hint/show-hint", "../addon/hint/html-hint"], function(CodeMirror) {\n
+      require.config({\n
+        packages: [{\n
+          name: "codemirror",\n
+          location: "../",\n
+          main: "lib/codemirror"\n
+        }]\n
+      });\n
+      require(["codemirror", "codemirror/mode/htmlmixed/htmlmixed",\n
+               "codemirror/addon/hint/show-hint", "codemirror/addon/hint/html-hint",\n
+               "codemirror/addon/mode/loadmode"], function(CodeMirror) {\n
         editor = CodeMirror(document.getElementById("code"), {\n
           mode: "text/html",\n
           extraKeys: {"Ctrl-Space": "autocomplete"},\n
           value: document.documentElement.innerHTML\n
+        });\n
+\n
+        CodeMirror.modeURL = "codemirror/mode/%N/%N";\n
+        document.getElementById("markdown").addEventListener("click", function() {\n
+          CodeMirror.requireMode("markdown", function() {\n
+            editor.replaceRange("This is **Markdown**.\\n\\n", {line: 0, ch: 0});\n
+            editor.setOption("mode", "markdown");\n
+          });\n
         });\n
       });\n
     </script>\n

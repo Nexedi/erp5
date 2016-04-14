@@ -31,11 +31,11 @@
             <value> <string>.CodeMirror-dialog {\n
   position: absolute;\n
   left: 0; right: 0;\n
-  background: white;\n
+  background: inherit;\n
   z-index: 15;\n
   padding: .1em .8em;\n
   overflow: hidden;\n
-  color: #333;\n
+  color: inherit;\n
 }\n
 \n
 .CodeMirror-dialog-top {\n

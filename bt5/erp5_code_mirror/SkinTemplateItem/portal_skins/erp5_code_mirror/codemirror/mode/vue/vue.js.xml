@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts60604388.46</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>vue.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function (mod) {\n
+  "use strict";\n
+  if (typeof exports === "object" && typeof module === "object") {// CommonJS\n
+    mod(require("../../lib/codemirror"),\n
+        require("../../addon/mode/overlay"),\n
+        require("../xml/xml"),\n
+        require("../javascript/javascript"),\n
+        require("../coffeescript/coffeescript"),\n
+        require("../css/css"),\n
+        require("../sass/sass"),\n
+        require("../stylus/stylus"),\n
+        require("../jade/jade"),\n
+        require("../handlebars/handlebars"));\n
+  } else if (typeof define === "function" && define.amd) { // AMD\n
+    define(["../../lib/codemirror",\n
+            "../../addon/mode/overlay",\n
+            "../xml/xml",\n
+            "../javascript/javascript",\n
+            "../coffeescript/coffeescript",\n
+            "../css/css",\n
+            "../sass/sass",\n
+            "../stylus/stylus",\n
+            "../jade/jade",\n
+            "../handlebars/handlebars"], mod);\n
+  } else { // Plain browser env\n
+    mod(CodeMirror);\n
+  }\n
+})(function (CodeMirror) {\n
+  var tagLanguages = {\n
+    script: [\n
+      ["lang", /coffee(script)?/, "coffeescript"],\n
+      ["type", /^(?:text|application)\\/(?:x-)?coffee(?:script)?$/, "coffeescript"]\n
+    ],\n
+    style: [\n
+      ["lang", /^stylus$/i, "stylus"],\n
+      ["lang", /^sass$/i, "sass"],\n
+      ["type", /^(text\\/)?(x-)?styl(us)?$/i, "stylus"],\n
+      ["type", /^text\\/sass/i, "sass"]\n
+    ],\n
+    template: [\n
+      ["lang", /^vue-template$/i, "vue"],\n
+      ["lang", /^jade$/i, "jade"],\n
+      ["lang", /^handlebars$/i, "handlebars"],\n
+      ["type", /^(text\\/)?(x-)?jade$/i, "jade"],\n
+      ["type", /^text\\/x-handlebars-template$/i, "handlebars"],\n
+      [null, null, "vue-template"]\n
+    ]\n
+  };\n
+\n
+  CodeMirror.defineMode("vue-template", function (config, parserConfig) {\n
+    var mustacheOverlay = {\n
+      token: function (stream) {\n
+        if (stream.match(/^\\{\\{.*?\\}\\}/)) return "meta mustache";\n
+        while (stream.next() && !stream.match("{{", false)) {}\n
+        return null;\n
+      }\n
+    };\n
+    return CodeMirror.overlayMode(CodeMirror.getMode(config, parserConfig.backdrop || "text/html"), mustacheOverlay);\n
+  });\n
+\n
+  CodeMirror.defineMode("vue", function (config) {\n
+    return CodeMirror.getMode(config, {name: "htmlmixed", tags: tagLanguages});\n
+  }, "htmlmixed", "xml", "javascript", "coffeescript", "css", "sass", "stylus", "jade", "handlebars");\n
+\n
+  CodeMirror.defineMIME("script/x-vue", "vue");\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2507</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

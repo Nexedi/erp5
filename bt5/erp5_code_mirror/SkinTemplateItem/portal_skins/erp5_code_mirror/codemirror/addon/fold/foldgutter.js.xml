@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897116.36</string> </value>
+            <value> <string>ts60604372.95</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -48,7 +48,7 @@
       cm.off("viewportChange", onViewportChange);\n
       cm.off("fold", onFold);\n
       cm.off("unfold", onFold);\n
-      cm.off("swapDoc", updateInViewport);\n
+      cm.off("swapDoc", onChange);\n
     }\n
     if (val) {\n
       cm.state.foldGutter = new State(parseOptions(val));\n
@@ -58,7 +58,7 @@
       cm.on("viewportChange", onViewportChange);\n
       cm.on("fold", onFold);\n
       cm.on("unfold", onFold);\n
-      cm.on("swapDoc", updateInViewport);\n
+      cm.on("swapDoc", onChange);\n
     }\n
   });\n
 \n
@@ -80,7 +80,7 @@
   function isFolded(cm, line) {\n
     var marks = cm.findMarksAt(Pos(line));\n
     for (var i = 0; i < marks.length; ++i)\n
-      if (marks[i].__isFold && marks[i].find().from.line == line) return true;\n
+      if (marks[i].__isFold && marks[i].find().from.line == line) return marks[i];\n
   }\n
 \n
   function marker(spec) {\n
@@ -95,14 +95,16 @@
 \n
   function updateFoldInfo(cm, from, to) {\n
     var opts = cm.state.foldGutter.options, cur = from;\n
+    var minSize = cm.foldOption(opts, "minFoldSize");\n
+    var func = cm.foldOption(opts, "rangeFinder");\n
     cm.eachLine(from, to, function(line) {\n
       var mark = null;\n
       if (isFolded(cm, cur)) {\n
         mark = marker(opts.indicatorFolded);\n
       } else {\n
-        var pos = Pos(cur, 0), func = opts.rangeFinder || CodeMirror.fold.auto;\n
+        var pos = Pos(cur, 0);\n
         var range = func && func(cm, pos);\n
-        if (range && range.from.line + 1 < range.to.line)\n
+        if (range && range.to.line - range.from.line >= minSize)\n
           mark = marker(opts.indicatorOpen);\n
       }\n
       cm.setGutterMarker(line, opts.gutter, mark);\n
@@ -120,20 +122,28 @@
   }\n
 \n
   function onGutterClick(cm, line, gutter) {\n
-    var opts = cm.state.foldGutter.options;\n
+    var state = cm.state.foldGutter;\n
+    if (!state) return;\n
+    var opts = state.options;\n
     if (gutter != opts.gutter) return;\n
-    cm.foldCode(Pos(line, 0), opts.rangeFinder);\n
+    var folded = isFolded(cm, line);\n
+    if (folded) folded.clear();\n
+    else cm.foldCode(Pos(line, 0), opts.rangeFinder);\n
   }\n
 \n
   function onChange(cm) {\n
-    var state = cm.state.foldGutter, opts = cm.state.foldGutter.options;\n
+    var state = cm.state.foldGutter;\n
+    if (!state) return;\n
+    var opts = state.options;\n
     state.from = state.to = 0;\n
     clearTimeout(state.changeUpdate);\n
     state.changeUpdate = setTimeout(function() { updateInViewport(cm); }, opts.foldOnChangeTimeSpan || 600);\n
   }\n
 \n
   function onViewportChange(cm) {\n
-    var state = cm.state.foldGutter, opts = cm.state.foldGutter.options;\n
+    var state = cm.state.foldGutter;\n
+    if (!state) return;\n
+    var opts = state.options;\n
     clearTimeout(state.changeUpdate);\n
     state.changeUpdate = setTimeout(function() {\n
       var vp = cm.getViewport();\n
@@ -155,7 +165,9 @@
   }\n
 \n
   function onFold(cm, from) {\n
-    var state = cm.state.foldGutter, line = from.line;\n
+    var state = cm.state.foldGutter;\n
+    if (!state) return;\n
+    var line = from.line;\n
     if (line >= state.from && line < state.to)\n
       updateFoldInfo(cm, line, line + 1);\n
   }\n
@@ -170,7 +182,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4372</int> </value>
+            <value> <int>4612</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

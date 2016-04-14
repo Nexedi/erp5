@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897152.25</string> </value>
+            <value> <string>ts60604368.76</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -105,7 +105,7 @@
 \n
   test("indented", "javascript", function(cm) {\n
     cm.lineComment(Pos(1, 0), Pos(2), {indent: true});\n
-  }, simpleProg, "function foo() {\\n  // return bar;\\n  // }");\n
+  }, simpleProg, "function foo() {\\n//   return bar;\\n// }");\n
 \n
   test("singleEmptyLine", "javascript", function(cm) {\n
     cm.setCursor(1);\n
@@ -132,7 +132,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4149</int> </value>
+            <value> <int>4147</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

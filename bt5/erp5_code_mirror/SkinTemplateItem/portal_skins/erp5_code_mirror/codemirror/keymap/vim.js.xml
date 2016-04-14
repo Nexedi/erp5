@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts31074350.75</string> </value>
+            <value> <string>ts60604368.41</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>191811</int> </value>
+            <value> <int>197907</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -58,42 +58,16 @@
 \n
 /**\n
  * Supported keybindings:\n
+ *   Too many to list. Refer to defaultKeyMap below.\n
  *\n
- *   Motion:\n
- *   h, j, k, l\n
- *   gj, gk\n
- *   e, E, w, W, b, B, ge, gE\n
- *   f<character>, F<character>, t<character>, T<character>\n
- *   $, ^, 0, -, +, _\n
- *   gg, G\n
- *   %\n
- *   \'<character>, `<character>\n
- *\n
- *   Operator:\n
- *   d, y, c\n
- *   dd, yy, cc\n
- *   g~, g~g~\n
- *   >, <, >>, <<\n
- *\n
- *   Operator-Motion:\n
- *   x, X, D, Y, C, ~\n
- *\n
- *   Action:\n
- *   a, i, s, A, I, S, o, O\n
- *   zz, z., z<CR>, zt, zb, z-\n
- *   J\n
- *   u, Ctrl-r\n
- *   m<character>\n
- *   r<character>\n
- *\n
- *   Modes:\n
- *   ESC - leave insert mode, visual mode, and clear input state.\n
- *   Ctrl-[, Ctrl-c - same as ESC.\n
+ * Supported Ex commands:\n
+ *   Refer to defaultExCommandMap below.\n
  *\n
  * Registers: unnamed, -, a-z, A-Z, 0-9\n
  *   (Does not respect the special case for number registers when delete\n
  *    operator is made with these commands: %, (, ),  , /, ?, n, N, {, } )\n
  *   TODO: Implement the remaining registers.\n
+ *\n
  * Marks: a-z, A-Z, and 0-9\n
  *   TODO: Implement the remaining special marks. They have more complex\n
  *       behavior.\n
@@ -112,6 +86,7 @@
  *  6. Motion, operator, and action implementations\n
  *  7. Helper functions for the key handler, motions, operators, and actions\n
  *  8. Set up Vim to work as a keymap for CodeMirror.\n
+ *  9. Ex command implementations.\n
  */\n
 \n
 (function(mod) {\n
@@ -144,9 +119,9 @@
     { keys: \'<C-[>\', type: \'keyToKey\', toKeys: \'<Esc>\', context: \'insert\' },\n
     { keys: \'<C-c>\', type: \'keyToKey\', toKeys: \'<Esc>\', context: \'insert\' },\n
     { keys: \'s\', type: \'keyToKey\', toKeys: \'cl\', context: \'normal\' },\n
-    { keys: \'s\', type: \'keyToKey\', toKeys: \'xi\', context: \'visual\'},\n
+    { keys: \'s\', type: \'keyToKey\', toKeys: \'c\', context: \'visual\'},\n
     { keys: \'S\', type: \'keyToKey\', toKeys: \'cc\', context: \'normal\' },\n
-    { keys: \'S\', type: \'keyToKey\', toKeys: \'dcc\', context: \'visual\' },\n
+    { keys: \'S\', type: \'keyToKey\', toKeys: \'VdO\', context: \'visual\' },\n
     { keys: \'<Home>\', type: \'keyToKey\', toKeys: \'0\' },\n
     { keys: \'<End>\', type: \'keyToKey\', toKeys: \'$\' },\n
     { keys: \'<PageUp>\', type: \'keyToKey\', toKeys: \'<C-b>\' },\n
@@ -244,6 +219,7 @@
     { keys: \'v\', type: \'action\', action: \'toggleVisualMode\' },\n
     { keys: \'V\', type: \'action\', action: \'toggleVisualMode\', actionArgs: { linewise: true }},\n
     { keys: \'<C-v>\', type: \'action\', action: \'toggleVisualMode\', actionArgs: { blockwise: true }},\n
+    { keys: \'<C-q>\', type: \'action\', action: \'toggleVisualMode\', actionArgs: { blockwise: true }},\n
     { keys: \'gv\', type: \'action\', action: \'reselectLastSelection\' },\n
     { keys: \'J\', type: \'action\', action: \'joinLines\', isEdit: true },\n
     { keys: \'p\', type: \'action\', action: \'paste\', isEdit: true, actionArgs: { after: true, isEdit: true }},\n
@@ -280,6 +256,34 @@
     { keys: \'g#\', type: \'search\', searchArgs: { forward: false, querySrc: \'wordUnderCursor\', toJumplist: true }},\n
     // Ex command\n
     { keys: \':\', type: \'ex\' }\n
+  ];\n
+\n
+  /**\n
+   * Ex commands\n
+   * Care must be taken when adding to the default Ex command map. For any\n
+   * pair of commands that have a shared prefix, at least one of their\n
+   * shortNames must not match the prefix of the other command.\n
+   */\n
+  var defaultExCommandMap = [\n
+    { name: \'colorscheme\', shortName: \'colo\' },\n
+    { name: \'map\' },\n
+    { name: \'imap\', shortName: \'im\' },\n
+    { name: \'nmap\', shortName: \'nm\' },\n
+    { name: \'vmap\', shortName: \'vm\' },\n
+    { name: \'unmap\' },\n
+    { name: \'write\', shortName: \'w\' },\n
+    { name: \'undo\', shortName: \'u\' },\n
+    { name: \'redo\', shortName: \'red\' },\n
+    { name: \'set\', shortName: \'se\' },\n
+    { name: \'set\', shortName: \'se\' },\n
+    { name: \'setlocal\', shortName: \'setl\' },\n
+    { name: \'setglobal\', shortName: \'setg\' },\n
+    { name: \'sort\', shortName: \'sor\' },\n
+    { name: \'substitute\', shortName: \'s\', possiblyAsync: true },\n
+    { name: \'nohlsearch\', shortName: \'noh\' },\n
+    { name: \'delmarks\', shortName: \'delm\' },\n
+    { name: \'registers\', shortName: \'reg\', excludeFromCommandHistory: true },\n
+    { name: \'global\', shortName: \'g\' }\n
   ];\n
 \n
   var Pos = CodeMirror.Pos;\n
@@ -344,12 +348,7 @@
         // Keypress character binding of format "\'a\'"\n
         return key.charAt(1);\n
       }\n
-      var pieces = key.split(\'-\');\n
-      if (/-$/.test(key)) {\n
-        // If the - key was typed, split will result in 2 extra empty strings\n
-        // in the array. Replace them with 1 \'-\'.\n
-        pieces.splice(-2, 2, \'-\');\n
-      }\n
+      var pieces = key.split(/-(?!$)/);\n
       var lastPiece = pieces[pieces.length - 1];\n
       if (pieces.length == 1 && pieces[0].length == 1) {\n
         // No-modifier bindings use literal character bindings above. Skip.\n
@@ -391,7 +390,11 @@
     }\n
 \n
     var numberRegex = /[\\d]/;\n
-    var wordRegexp = [(/\\w/), (/[^\\w\\s]/)], bigWordRegexp = [(/\\S/)];\n
+    var wordCharTest = [CodeMirror.isWordChar, function(ch) {\n
+      return ch && !CodeMirror.isWordChar(ch) && !/\\s/.test(ch);\n
+    }], bigWordCharTest = [function(ch) {\n
+      return /\\S/.test(ch);\n
+    }];\n
     function makeKeyRange(start, size) {\n
       var keys = [];\n
       for (var i = start; i < start + size; i++) {\n
@@ -433,18 +436,30 @@
     }\n
 \n
     var options = {};\n
-    function defineOption(name, defaultValue, type) {\n
-      if (defaultValue === undefined) { throw Error(\'defaultValue is required\'); }\n
+    function defineOption(name, defaultValue, type, aliases, callback) {\n
+      if (defaultValue === undefined && !callback) {\n
+        throw Error(\'defaultValue is required unless callback is provided\');\n
+      }\n
       if (!type) { type = \'string\'; }\n
       options[name] = {\n
         type: type,\n
-        defaultValue: defaultValue\n
+        defaultValue: defaultValue,\n
+        callback: callback\n
       };\n
-      setOption(name, defaultValue);\n
+      if (aliases) {\n
+        for (var i = 0; i < aliases.length; i++) {\n
+          options[aliases[i]] = options[name];\n
+        }\n
+      }\n
+      if (defaultValue) {\n
+        setOption(name, defaultValue);\n
+      }\n
     }\n
 \n
-    function setOption(name, value) {\n
+    function setOption(name, value, cm, cfg) {\n
       var option = options[name];\n
+      cfg = cfg || {};\n
+      var scope = cfg.scope;\n
       if (!option) {\n
         throw Error(\'Unknown option: \' + name);\n
       }\n
@@ -456,16 +471,59 @@
           value = true;\n
         }\n
       }\n
-      option.value = option.type == \'boolean\' ? !!value : value;\n
+      if (option.callback) {\n
+        if (scope !== \'local\') {\n
+          option.callback(value, undefined);\n
+        }\n
+        if (scope !== \'global\' && cm) {\n
+          option.callback(value, cm);\n
+        }\n
+      } else {\n
+        if (scope !== \'local\') {\n
+          option.value = option.type == \'boolean\' ? !!value : value;\n
+        }\n
+        if (scope !== \'global\' && cm) {\n
+          cm.state.vim.options[name] = {value: value};\n
+        }\n
+      }\n
     }\n
 \n
-    function getOption(name) {\n
+    function getOption(name, cm, cfg) {\n
       var option = options[name];\n
+      cfg = cfg || {};\n
+      var scope = cfg.scope;\n
       if (!option) {\n
         throw Error(\'Unknown option: \' + name);\n
       }\n
-      return option.value;\n
+      if (option.callback) {\n
+        var local = cm && option.callback(undefined, cm);\n
+        if (scope !== \'global\' && local !== undefined) {\n
+          return local;\n
+        }\n
+        if (scope !== \'local\') {\n
+          return option.callback();\n
+        }\n
+        return;\n
+      } else {\n
+        var local = (scope !== \'global\') && (cm && cm.state.vim.options[name]);\n
+        return (local || (scope !== \'local\') && option || {}).value;\n
+      }\n
     }\n
+\n
+    defineOption(\'filetype\', undefined, \'string\', [\'ft\'], function(name, cm) {\n
+      // Option is local. Do nothing for global.\n
+      if (cm === undefined) {\n
+        return;\n
+      }\n
+      // The \'filetype\' option proxies to the CodeMirror \'mode\' option.\n
+      if (name === undefined) {\n
+        var mode = cm.getOption(\'mode\');\n
+        return mode == \'null\' ? \'\' : mode;\n
+      } else {\n
+        var mode = name == \'\' ? \'null\' : name;\n
+        cm.setOption(\'mode\', mode);\n
+      }\n
+    });\n
 \n
     var createCircularJumpList = function() {\n
       var size = 100;\n
@@ -619,8 +677,9 @@
           visualBlock: false,\n
           lastSelection: null,\n
           lastPastedText: null,\n
-          sel: {\n
-          }\n
+          sel: {},\n
+          // Buffer-local/window-local values of vim options.\n
+          options: {}\n
         };\n
       }\n
       return cm.state.vim;\n
@@ -678,11 +737,18 @@
         // Add user defined key bindings.\n
         exCommandDispatcher.map(lhs, rhs, ctx);\n
       },\n
+      unmap: function(lhs, ctx) {\n
+        exCommandDispatcher.unmap(lhs, ctx);\n
+      },\n
+      // TODO: Expose setOption and getOption as instance methods. Need to decide how to namespace\n
+      // them, or somehow make them work with the existing CodeMirror setOption/getOption API.\n
       setOption: setOption,\n
       getOption: getOption,\n
       defineOption: defineOption,\n
       defineEx: function(name, prefix, func){\n
-        if (name.indexOf(prefix) !== 0) {\n
+        if (!prefix) {\n
+          prefix = name;\n
+        } else if (name.indexOf(prefix) !== 0) {\n
           throw new Error(\'(Vim.defineEx) "\'+prefix+\'" is not a prefix of "\'+name+\'", command not registered\');\n
         }\n
         exCommands[name]=func;\n
@@ -831,7 +897,18 @@
       },\n
       handleEx: function(cm, input) {\n
         exCommandDispatcher.processCommand(cm, input);\n
-      }\n
+      },\n
+\n
+      defineMotion: defineMotion,\n
+      defineAction: defineAction,\n
+      defineOperator: defineOperator,\n
+      mapCommand: mapCommand,\n
+      _mapCommand: _mapCommand,\n
+\n
+      defineRegister: defineRegister,\n
+\n
+      exitVisualMode: exitVisualMode,\n
+      exitInsertMode: exitInsertMode\n
     };\n
 \n
     // Represents the current input state.\n
@@ -918,6 +995,25 @@
         return this.keyBuffer.join(\'\');\n
       }\n
     };\n
+\n
+    /**\n
+     * Defines an external register.\n
+     *\n
+     * The name should be a single character that will be used to reference the register.\n
+     * The register should support setText, pushText, clear, and toString(). See Register\n
+     * for a reference implementation.\n
+     */\n
+    function defineRegister(name, register) {\n
+      var registers = vimGlobalState.registerController.registers[name];\n
+      if (!name || name.length != 1) {\n
+        throw Error(\'Register name must be 1 character\');\n
+      }\n
+      if (registers[name]) {\n
+        throw Error(\'Register already defined \' + name);\n
+      }\n
+      registers[name] = register;\n
+      validRegisters.push(name);\n
+    }\n
 \n
     /*\n
      * vim registers allow you to keep many independent copy and paste buffers.\n
@@ -1081,12 +1177,10 @@
             break;\n
           case \'search\':\n
             this.processSearch(cm, vim, command);\n
-            clearInputState(cm);\n
             break;\n
           case \'ex\':\n
           case \'keyToEx\':\n
             this.processEx(cm, vim, command);\n
-            clearInputState(cm);\n
             break;\n
           default:\n
             break;\n
@@ -1179,6 +1273,7 @@
             updateSearchQuery(cm, query, ignoreCase, smartCase);\n
           } catch (e) {\n
             showConfirm(cm, \'Invalid regex: \' + query);\n
+            clearInputState(cm);\n
             return;\n
           }\n
           commandDispatcher.processMotion(cm, vim, {\n
@@ -1221,15 +1316,21 @@
         }\n
         function onPromptKeyDown(e, query, close) {\n
           var keyName = CodeMirror.keyName(e);\n
-          if (keyName == \'Esc\' || keyName == \'Ctrl-C\' || keyName == \'Ctrl-[\') {\n
+          if (keyName == \'Esc\' || keyName == \'Ctrl-C\' || keyName == \'Ctrl-[\' ||\n
+              (keyName == \'Backspace\' && query == \'\')) {\n
             vimGlobalState.searchHistoryController.pushInput(query);\n
             vimGlobalState.searchHistoryController.reset();\n
             updateSearchQuery(cm, originalQuery);\n
             clearSearchHighlight(cm);\n
             cm.scrollTo(originalScrollPos.left, originalScrollPos.top);\n
             CodeMirror.e_stop(e);\n
+            clearInputState(cm);\n
             close();\n
             cm.focus();\n
+          } else if (keyName == \'Ctrl-U\') {\n
+            // Ctrl-U clears input.\n
+            CodeMirror.e_stop(e);\n
+            close(\'\');\n
           }\n
         }\n
         switch (command.searchArgs.querySrc) {\n
@@ -1290,10 +1391,12 @@
         }\n
         function onPromptKeyDown(e, input, close) {\n
           var keyName = CodeMirror.keyName(e), up;\n
-          if (keyName == \'Esc\' || keyName == \'Ctrl-C\' || keyName == \'Ctrl-[\') {\n
+          if (keyName == \'Esc\' || keyName == \'Ctrl-C\' || keyName == \'Ctrl-[\' ||\n
+              (keyName == \'Backspace\' && input == \'\')) {\n
             vimGlobalState.exCommandHistoryController.pushInput(input);\n
             vimGlobalState.exCommandHistoryController.reset();\n
             CodeMirror.e_stop(e);\n
+            clearInputState(cm);\n
             close();\n
             cm.focus();\n
           }\n
@@ -1301,6 +1404,10 @@
             up = keyName == \'Up\' ? true : false;\n
             input = vimGlobalState.exCommandHistoryController.nextMatch(input, up) || \'\';\n
             close(input);\n
+          } else if (keyName == \'Ctrl-U\') {\n
+            // Ctrl-U clears input.\n
+            CodeMirror.e_stop(e);\n
+            close(\'\');\n
           } else {\n
             if ( keyName != \'Left\' && keyName != \'Right\' && keyName != \'Ctrl\' && keyName != \'Alt\' && keyName != \'Shift\')\n
               vimGlobalState.exCommandHistoryController.reset();\n
@@ -1330,8 +1437,8 @@
         var registerName = inputState.registerName;\n
         var sel = vim.sel;\n
         // TODO: Make sure cm and vim selections are identical outside visual mode.\n
-        var origHead = copyCursor(vim.visualMode ? sel.head: cm.getCursor(\'head\'));\n
-        var origAnchor = copyCursor(vim.visualMode ? sel.anchor : cm.getCursor(\'anchor\'));\n
+        var origHead = copyCursor(vim.visualMode ? clipCursorToContent(cm, sel.head): cm.getCursor(\'head\'));\n
+        var origAnchor = copyCursor(vim.visualMode ? clipCursorToContent(cm, sel.anchor) : cm.getCursor(\'anchor\'));\n
         var oldHead = copyCursor(origHead);\n
         var oldAnchor = copyCursor(origAnchor);\n
         var newHead, newAnchor;\n
@@ -1486,7 +1593,30 @@
               expandSelectionToLine(cm, curStart, curEnd);\n
             } else if (motionArgs.forward) {\n
               // Clip to trailing newlines only if the motion goes forward.\n
-              clipToLine(cm, curStart, curEnd);\n
+            
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+  clipToLine(cm, curStart, curEnd);\n
             }\n
             mode = \'char\';\n
             var exclusive = !motionArgs.inclusive || linewise;\n
@@ -1504,7 +1634,7 @@
           var operatorMoveTo = operators[operator](\n
             cm, operatorArgs, cmSel.ranges, oldAnchor, newHead);\n
           if (vim.visualMode) {\n
-            exitVisualMode(cm);\n
+            exitVisualMode(cm, operatorMoveTo != null);\n
           }\n
           if (operatorMoveTo) {\n
             cm.setCursor(operatorMoveTo);\n
@@ -1644,11 +1774,12 @@
         var line = motionArgs.forward ? cur.line + repeat : cur.line - repeat;\n
         var first = cm.firstLine();\n
         var last = cm.lastLine();\n
-        // Vim cancels linewise motions that start on an edge and move beyond\n
-        // that edge. It does not cancel motions that do not start on an edge.\n
-        if ((line < first && cur.line == first) ||\n
-            (line > last && cur.line == last)) {\n
-          return;\n
+        // Vim go to line begin or line end when cursor at first/last line and\n
+        // move to previous/next line is triggered.\n
+        if (line < first && cur.line == first){\n
+          return this.moveToStartOfLine(cm, head, motionArgs, vim);\n
+        }else if (line > last && cur.line == last){\n
+            return this.moveToEol(cm, head, motionArgs, vim);\n
         }\n
         if (motionArgs.toFirstChar){\n
           endCh=findFirstNonWhiteSpaceCharacter(cm.getLine(line));\n
@@ -1872,6 +2003,10 @@
       }\n
     };\n
 \n
+    function defineMotion(name, fn) {\n
+      motions[name] = fn;\n
+    }\n
+\n
     function fillArray(val, times) {\n
       var arr = [];\n
       for (var i = 0; i < times; i++) {\n
@@ -1893,21 +2028,30 @@
           var anchor = ranges[0].anchor,\n
               head = ranges[0].head;\n
           text = cm.getRange(anchor, head);\n
-          if (!isWhiteSpaceString(text)) {\n
+          var lastState = vim.lastEditInputState || {};\n
+          if (lastState.motion == "moveByWords" && !isWhiteSpaceString(text)) {\n
             // Exclude trailing whitespace if the range is not all whitespace.\n
             var match = (/\\s+$/).exec(text);\n
-            if (match) {\n
+            if (match && lastState.motionArgs && lastState.motionArgs.forward) {\n
               head = offsetCursor(head, 0, - match[0].length);\n
               text = text.slice(0, - match[0].length);\n
             }\n
           }\n
-          var wasLastLine = head.line - 1 == cm.lastLine();\n
-          cm.replaceRange(\'\', anchor, head);\n
-          if (args.linewise && !wasLastLine) {\n
+          var prevLineEnd = new Pos(anchor.line - 1, Number.MAX_VALUE);\n
+          var wasLastLine = cm.firstLine() == cm.lastLine();\n
+          if (head.line > cm.lastLine() && args.linewise && !wasLastLine) {\n
+            cm.replaceRange(\'\', prevLineEnd, head);\n
+          } else {\n
+            cm.replaceRange(\'\', anchor, head);\n
+          }\n
+          if (args.linewise) {\n
             // Push the next line back down, if there is a next line.\n
-            CodeMirror.commands.newlineAndIndent(cm);\n
-            // null ch so setCursor moves to end of line.\n
-            anchor.ch = null;\n
+            if (!wasLastLine) {\n
+              cm.setCursor(prevLineEnd);\n
+              CodeMirror.commands.newlineAndIndent(cm);\n
+            }\n
+            // make sure cursor ends up at the end of the line.\n
+            anchor.ch = Number.MAX_VALUE;\n
           }\n
           finalHead = anchor;\n
         } else {\n
@@ -1954,7 +2098,7 @@
         vimGlobalState.registerController.pushText(\n
             args.registerName, \'delete\', text,\n
             args.linewise, vim.visualBlock);\n
-        return finalHead;\n
+        return clipCursorToContent(cm, finalHead);\n
       },\n
       indent: function(cm, args, ranges) {\n
         var vim = cm.state.vim;\n
@@ -2022,6 +2166,10 @@
       }\n
     };\n
 \n
+    function defineOperator(name, fn) {\n
+      operators[name] = fn;\n
+    }\n
+\n
     var actions = {\n
       jumpListWalk: function(cm, actionArgs, vim) {\n
         if (vim.visualMode) {\n
@@ -2082,9 +2230,7 @@
         switch (actionArgs.position) {\n
           case \'center\': y = y - (height / 2) + lineHeight;\n
             break;\n
-          case \'bottom\': y = y - height + lineHeight*1.4;\n
-            break;\n
-          case \'top\': y = y + lineHeight*0.4;\n
+          case \'bottom\': y = y - height + lineHeight;\n
             break;\n
         }\n
         cm.scrollTo(null, y);\n
@@ -2238,6 +2384,11 @@
         if (vim.visualMode) {\n
           curStart = cm.getCursor(\'anchor\');\n
           curEnd = cm.getCursor(\'head\');\n
+          if (cursorIsBefore(curEnd, curStart)) {\n
+            var tmp = curEnd;\n
+            curEnd = curStart;\n
+            curStart = tmp;\n
+          }\n
           curEnd.ch = lineLength(cm, curEnd.line) - 1;\n
         } else {\n
           // Repeat is the number of lines to join. Minimum 2 lines.\n
@@ -2256,10 +2407,10 @@
           cm.replaceRange(text, curStart, tmp);\n
         }\n
         var curFinalPos = Pos(curStart.line, finalCh);\n
-        cm.setCursor(curFinalPos);\n
         if (vim.visualMode) {\n
-          exitVisualMode(cm);\n
+          exitVisualMode(cm, false);\n
         }\n
+        cm.setCursor(curFinalPos);\n
       },\n
       newLineAndEnterInsertMode: function(cm, actionArgs, vim) {\n
         vim.insertMode = true;\n
@@ -2422,7 +2573,7 @@
           }\n
         }\n
         if (vim.visualMode) {\n
-          exitVisualMode(cm);\n
+          exitVisualMode(cm, false);\n
         }\n
         cm.setCursor(curPosFinal);\n
       },\n
@@ -2480,7 +2631,7 @@
             curStart = cursorIsBefore(selections[0].anchor, selections[0].head) ?\n
                          selections[0].anchor : selections[0].head;\n
             cm.setCursor(curStart);\n
-            exitVisualMode(cm);\n
+            exitVisualMode(cm, false);\n
           } else {\n
             cm.setCursor(offsetCursor(curEnd, 0, -1));\n
           }\n
@@ -2527,6 +2678,10 @@
       },\n
       exitInsertMode: exitInsertMode\n
     };\n
+\n
+    function defineAction(name, fn) {\n
+      actions[name] = fn;\n
+    }\n
 \n
     /*\n
      * Below are miscellaneous utility functions used by vim.js\n
@@ -2656,9 +2811,6 @@
     }\n
     function lineLength(cm, lineNum) {\n
       return cm.getLine(lineNum).length;\n
-    }\n
-    function reverse(s){\n
-      return s.split(\'\').reverse().join(\'\');\n
     }\n
     function trim(s) {\n
       if (s.trim) {\n
@@ -2973,59 +3125,38 @@
 \n
       // Seek to first word or non-whitespace character, depending on if\n
       // noSymbol is true.\n
-      var textAfterIdx = line.substring(idx);\n
-      var firstMatchedChar;\n
-      if (noSymbol) {\n
-        firstMatchedChar = textAfterIdx.search(/\\w/);\n
-      } else {\n
-        firstMatchedChar = textAfterIdx.search(/\\S/);\n
+      var test = noSymbol ? wordCharTest[0] : bigWordCharTest [0];\n
+      while (!test(line.charAt(idx))) {\n
+        idx++;\n
+        if (idx >= line.length) { return null; }\n
       }\n
-      if (firstMatchedChar == -1) {\n
-        return null;\n
-      }\n
-      idx += firstMatchedChar;\n
-      textAfterIdx = line.substring(idx);\n
-      var textBeforeIdx = line.substring(0, idx);\n
 \n
-      var matchRegex;\n
-      // Greedy matchers for the "word" we are trying to expand.\n
       if (bigWord) {\n
-        matchRegex = /^\\S+/;\n
+        test = bigWordCharTest[0];\n
       } else {\n
-        if ((/\\w/).test(line.charAt(idx))) {\n
-          matchRegex = /^\\w+/;\n
-        } else {\n
-          matchRegex = /^[^\\w\\s]+/;\n
+        test = wordCharTest[0];\n
+        if (!test(line.charAt(idx))) {\n
+          test = wordCharTest[1];\n
         }\n
       }\n
 \n
-      var wordAfterRegex = matchRegex.exec(textAfterIdx);\n
-      var wordStart = idx;\n
-      var wordEnd = idx + wordAfterRegex[0].length;\n
-      // TODO: Find a better way to do this. It will be slow on very long lines.\n
-      var revTextBeforeIdx = reverse(textBeforeIdx);\n
-      var wordBeforeRegex = matchRegex.exec(revTextBeforeIdx);\n
-      if (wordBeforeRegex) {\n
-        wordStart -= wordBeforeRegex[0].length;\n
-      }\n
+      var end = idx, start = idx;\n
+      while (test(line.charAt(end)) && end < line.length) { end++; }\n
+      while (test(line.charAt(start)) && start >= 0) { start--; }\n
+      start++;\n
 \n
       if (inclusive) {\n
-        // If present, trim all whitespace after word.\n
-        // Otherwise, trim all whitespace before word.\n
-        var textAfterWordEnd = line.substring(wordEnd);\n
-        var whitespacesAfterWord = textAfterWordEnd.match(/^\\s*/)[0].length;\n
-        if (whitespacesAfterWord > 0) {\n
-          wordEnd += whitespacesAfterWord;\n
-        } else {\n
-          var revTrim = revTextBeforeIdx.length - wordStart;\n
-          var textBeforeWordStart = revTextBeforeIdx.substring(revTrim);\n
-          var whitespacesBeforeWord = textBeforeWordStart.match(/^\\s*/)[0].length;\n
-          wordStart -= whitespacesBeforeWord;\n
+        // If present, include all whitespace after word.\n
+        // Otherwise, include all whitespace before word, except indentation.\n
+        var wordEnd = end;\n
+        while (/\\s/.test(line.charAt(end)) && end < line.length) { end++; }\n
+        if (wordEnd == end) {\n
+          var wordStart = start;\n
+          while (/\\s/.test(line.charAt(start - 1)) && start > 0) { start--; }\n
+          if (!start) { start = wordStart; }\n
         }\n
       }\n
-\n
-      return { start: Pos(cur.line, wordStart),\n
-               end: Pos(cur.line, wordEnd) };\n
+      return { start: Pos(cur.line, start), end: Pos(cur.line, end) };\n
     }\n
 \n
     function recordJumpPosition(cm, oldCur, newCur) {\n
@@ -3161,7 +3292,7 @@
       return cur;\n
     }\n
 \n
-    /*\n
+    /**\n
      * Returns the boundaries of the next word. If the cursor in the middle of\n
      * the word, then returns the boundaries of the current word, starting at\n
      * the cursor. If the cursor is at the start/end of a word, and we are going\n
@@ -3178,12 +3309,35 @@
      * @return {Object{from:number, to:number, line: number}} The boundaries of\n
      *     the word, or null if there are no more words.\n
      */\n
-    function findWord(cm, cur, forward, bigWord, emptyLineIsWord) {\n
+    function findWord(cm, cur, forward, bigWo
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+rd, emptyLineIsWord) {\n
       var lineNum = cur.line;\n
       var pos = cur.ch;\n
       var line = cm.getLine(lineNum);\n
       var dir = forward ? 1 : -1;\n
-      var regexps = bigWord ? bigWordRegexp : wordRegexp;\n
+      var charTests = bigWord ? bigWordCharTest: wordCharTest;\n
 \n
       if (emptyLineIsWord && line == \'\') {\n
         lineNum += dir;\n
@@ -3203,11 +3357,11 @@
         // Find bounds of next word.\n
         while (pos != stop) {\n
           var foundWord = false;\n
-          for (var i = 0; i < regexps.length && !foundWord; ++i) {\n
-            if (regexps[i].test(line.charAt(pos))) {\n
+          for (var i = 0; i < charTests.length && !foundWord; ++i) {\n
+            if (charTests[i](line.charAt(pos))) {\n
               wordStart = pos;\n
               // Advance to end of word.\n
-              while (pos != stop && regexps[i].test(line.charAt(pos))) {\n
+              while (pos != stop && charTests[i](line.charAt(pos))) {\n
                 pos += dir;\n
               }\n
               wordEnd = pos;\n
@@ -3524,6 +3678,12 @@
       },\n
       setReversed: function(reversed) {\n
         vimGlobalState.isReversed = reversed;\n
+      },\n
+      getScrollbarAnnotate: function() {\n
+        return this.annotate;\n
+      },\n
+      setScrollbarAnnotate: function(annotate) {\n
+        this.annotate = annotate;\n
       }\n
     };\n
     function getSearchState(cm) {\n
@@ -3533,7 +3693,8 @@
     function dialog(cm, template, shortText, onClose, options) {\n
       if (cm.openDialog) {\n
         cm.openDialog(template, onClose, { bottom: true, value: options.value,\n
-            onKeyDown: options.onKeyDown, onKeyUp: options.onKeyUp });\n
+            onKeyDown: options.onKeyDown, onKeyUp: options.onKeyUp,\n
+            selectValueOnOpen: false});\n
       }\n
       else {\n
         onClose(prompt(shortText, \'\'));\n
@@ -3607,13 +3768,17 @@
     // Translates the replace part of a search and replace from ex (vim) syntax into\n
     // javascript form.  Similar to translateRegex, but additionally fixes back references\n
     // (translates \'\\[0..9]\' to \'$[0..9]\') and follows different rules for escaping \'$\'.\n
+    var charUnescapes = {\'\\\\n\': \'\\n\', \'\\\\r\': \'\\r\', \'\\\\t\': \'\\t\'};\n
     function translateRegexReplace(str) {\n
       var escapeNextChar = false;\n
       var out = [];\n
       for (var i = -1; i < str.length; i++) {\n
         var c = str.charAt(i) || \'\';\n
         var n = str.charAt(i+1) || \'\';\n
-        if (escapeNextChar) {\n
+        if (charUnescapes[c + n]) {\n
+          out.push(charUnescapes[c+n]);\n
+          i++;\n
+        } else if (escapeNextChar) {\n
           // At any point in the loop, escapeNextChar is true if the previous\n
           // character was a \'\\\' and was not escaped.\n
           out.push(c);\n
@@ -3641,6 +3806,7 @@
     }\n
 \n
     // Unescape \\ and / in the replace part, for PCRE mode.\n
+    var unescapes = {\'\\\\/\': \'/\', \'\\\\\\\\\': \'\\\\\', \'\\\\n\': \'\\n\', \'\\\\r\': \'\\r\', \'\\\\t\': \'\\t\'};\n
     function unescapeRegexReplace(str) {\n
       var stream = new CodeMirror.StringStream(str);\n
       var output = [];\n
@@ -3649,13 +3815,15 @@
         while (stream.peek() && stream.peek() != \'\\\\\') {\n
           output.push(stream.next());\n
         }\n
-        if (stream.match(\'\\\\/\', true)) {\n
-          // \\/ => /\n
-          output.push(\'/\');\n
-        } else if (stream.match(\'\\\\\\\\\', true)) {\n
-          // \\\\ => \\\n
-          output.push(\'\\\\\');\n
-        } else {\n
+        var matched = false;\n
+        for (var matcher in unescapes) {\n
+          if (stream.match(matcher, true)) {\n
+            matched = true;\n
+            output.push(unescapes[matcher]);\n
+            break;\n
+          }\n
+        }\n
+        if (!matched) {\n
           // Don\'t change anything\n
           output.push(stream.next());\n
         }\n
@@ -3802,14 +3970,21 @@
       };\n
     }\n
     function highlightSearchMatches(cm, query) {\n
-      var overlay = getSearchState(cm).getOverlay();\n
+      var searchState = getSearchState(cm);\n
+      var overlay = searchState.getOverlay();\n
       if (!overlay || query != overlay.query) {\n
         if (overlay) {\n
           cm.removeOverlay(overlay);\n
         }\n
         overlay = searchOverlay(query);\n
         cm.addOverlay(overlay);\n
-        getSearchState(cm).setOverlay(overlay);\n
+        if (cm.showMatchesOnScrollbar) {\n
+          if (searchState.getScrollbarAnnotate()) {\n
+            searchState.getScrollbarAnnotate().clear();\n
+          }\n
+          searchState.setScrollbarAnnotate(cm.showMatchesOnScrollbar(query));\n
+        }\n
+        searchState.setOverlay(overlay);\n
       }\n
     }\n
     function findNext(cm, prev, query, repeat) {\n
@@ -3834,8 +4009,13 @@
       });\n
     }\n
     function clearSearchHighlight(cm) {\n
+      var state = getSearchState(cm);\n
       cm.removeOverlay(getSearchState(cm).getOverlay());\n
-      getSearchState(cm).setOverlay(null);\n
+      state.setOverlay(null);\n
+      if (state.getScrollbarAnnotate()) {\n
+        state.getScrollbarAnnotate().clear();\n
+        state.setScrollbarAnnotate(null);\n
+      }\n
     }\n
     /**\n
      * Check if pos is in the specified range, INCLUSIVE.\n
@@ -3873,32 +4053,18 @@
       return {top: from.line, bottom: to.line};\n
     }\n
 \n
-    // Ex command handling\n
-    // Care must be taken when adding to the default Ex command map. For any\n
-    // pair of commands that have a shared prefix, at least one of their\n
-    // shortNames must not match the prefix of the other command.\n
-    var defaultExCommandMap = [\n
-      { name: \'map\' },\n
-      { name: \'imap\', shortName: \'im\' },\n
-      { name: \'nmap\', shortName: \'nm\' },\n
-      { name: \'vmap\', shortName: \'vm\' },\n
-      { name: \'unmap\' },\n
-      { name: \'write\', shortName: \'w\' },\n
-      { name: \'undo\', shortName: \'u\' },\n
-      { name: \'redo\', shortName: \'red\' },\n
-      { name: \'set\', shortName: \'set\' },\n
-      { name: \'sort\', shortName: \'sor\' },\n
-      { name: \'substitute\', shortName: \'s\', possiblyAsync: true },\n
-      { name: \'nohlsearch\', shortName: \'noh\' },\n
-      { name: \'delmarks\', shortName: \'delm\' },\n
-      { name: \'registers\', shortName: \'reg\', excludeFromCommandHistory: true },\n
-      { name: \'global\', shortName: \'g\' }\n
-    ];\n
     var ExCommandDispatcher = function() {\n
       this.buildCommandMap_();\n
     };\n
     ExCommandDispatcher.prototype = {\n
       processCommand: function(cm, input, opt_params) {\n
+        var that = this;\n
+        cm.operation(function () {\n
+          cm.curOp.isVimOp = true;\n
+          that._processCommand(cm, input, opt_params);\n
+        });\n
+      },\n
+      _processCommand: function(cm, input, opt_params) {\n
         var vim = cm.state.vim;\n
         var commandHistoryRegister = vimGlobalState.registerController.getRegister(\':\');\n
         var previousCommand = commandHistoryRegister.toString();\n
@@ -4111,6 +4277,13 @@
     };\n
 \n
     var exCommands = {\n
+      colorscheme: function(cm, params) {\n
+        if (!params.args || params.args.length < 1) {\n
+          showConfirm(cm, cm.getOption(\'theme\'));\n
+          return;\n
+        }\n
+        cm.setOption(\'theme\', params.args[0]);\n
+      },\n
       map: function(cm, params, ctx) {\n
         var mapArgs = params.args;\n
         if (!mapArgs || mapArgs.length < 2) {\n
@@ -4144,6 +4317,9 @@
       },\n
       set: function(cm, params) {\n
         var setArgs = params.args;\n
+        // Options passed through to the setOption/getOption calls. May be passed in by the\n
+        // local/global versions of the set command\n
+        var setCfg = params.setCfg || {};\n
         if (!setArgs || setArgs.length < 1) {\n
           if (cm) {\n
             showConfirm(cm, \'Invalid mapping: \' + params.input);\n
@@ -4167,24 +4343,35 @@
           optionName = optionName.substring(2);\n
           value = false;\n
         }\n
+\n
         var optionIsBoolean = options[optionName] && options[optionName].type == \'boolean\';\n
         if (optionIsBoolean && value == undefined) {\n
           // Calling set with a boolean option sets it to true.\n
           value = true;\n
         }\n
-        if (!optionIsBoolean && !value || forceGet) {\n
-          var oldValue = getOption(optionName);\n
-          // If no value is provided, then we assume this is a get.\n
+        // If no value is provided, then we assume this is a get.\n
+        if (!optionIsBoolean && value === undefined || forceGet) {\n
+          var oldValue = getOption(optionName, cm, setCfg);\n
           if (oldValue === true || oldValue === false) {\n
             showConfirm(cm, \' \' + (oldValue ? \'\' : \'no\') + optionName);\n
           } else {\n
             showConfirm(cm, \'  \' + optionName + \'=\' + oldValue);\n
           }\n
         } else {\n
-          setOption(optionName, value);\n
+          setOption(optionName, value, cm, setCfg);\n
         }\n
       },\n
-      registers: function(cm,params) {\n
+      setlocal: function (cm, params) {\n
+        // setCfg is passed through to setOption\n
+        params.setCfg = {scope: \'local\'};\n
+        this.set(cm, params);\n
+      },\n
+      setglobal: function (cm, params) {\n
+        // setCfg is passed through to setOption\n
+        params.setCfg = {scope: \'global\'};\n
+        this.set(cm, params);\n
+      },\n
+      registers: function(cm, params) {\n
         var regArgs = params.args;\n
         var registers = vimGlobalState.registerController.registers;\n
         var regInfo = \'----------Registers----------<br><br>\';\n
@@ -4228,7 +4415,7 @@
               if (decimal + hex + octal > 1) { return \'Invalid arguments\'; }\n
               number = decimal && \'decimal\' || hex && \'hex\' || octal && \'octal\';\n
             }\n
-            if (args.eatSpace() && args.match(/\\/.*\\//)) { \'patterns not supported\'; }\n
+            if (args.match(/\\/.*\\//)) { return \'patterns not supported\'; }\n
           }\n
         }\n
         var err = parseArgs();\n
@@ -4411,6 +4598,9 @@
         var query = state.getQuery();\n
         var lineStart = (params.line !== undefined) ? params.line : cm.getCursor().line;\n
         var lineEnd = params.lineEnd || lineStart;\n
+        if (lineStart == cm.firstLine() && lineEnd == cm.lastLine()) {\n
+          lineEnd = Infinity;\n
+        }\n
         if (count) {\n
           lineStart = lineEnd;\n
           lineEnd = lineStart + count - 1;\n
@@ -4529,10 +4719,9 @@
         searchCursor.replace(newText);\n
       }\n
       function next() {\n
-        var found;\n
         // The below only loops to skip over multiple occurrences on the same\n
         // line when \'global\' is not true.\n
-        while(found = searchCursor.findNext() &&\n
+        while(searchCursor.findNext() &&\n
               isInRange(searchCursor.from(), lineStart, lineEnd)) {\n
           if (!global && lastPos && searchCursor.from().line == lastPos.line) {\n
             continue;\n
@@ -4664,6 +4853,19 @@
       }\n
     }\n
 \n
+    function _mapCommand(command) {\n
+      defaultKeymap.unshift(command);\n
+    }\n
+\n
+    function mapCommand(keys, type, name, args, extra) {\n
+      var command = {keys: keys, type: type};\n
+      command[type] = name;\n
+      command[type + "Args"] = args;\n
+      for (var key in extra)\n
+        command[key] = extra[key];\n
+      _mapCommand(command);\n
+    }\n
+\n
     // The timeout in milliseconds for the two-character ESC keymap should be\n
     // adjusted according to your typing speed to prevent false positives.\n
     defineOption(\'insertModeEscKeysTimeout\', 200, \'number\');\n
@@ -4694,6 +4896,14 @@
 \n
     function executeMacroRegister(cm, vim, macroModeState, registerName) {\n
       var register = vimGlobalState.registerController.getRegister(registerName);\n
+      if (registerName == \':\') {\n
+        // Read-only register containing last Ex command.\n
+        if (register.keyBuffer[0]) {\n
+          exCommandDispatcher.processCommand(cm, register.keyBuffer[0]);\n
+        }\n
+        macroModeState.isPlaying = false;\n
+        return;\n
+      }\n
       var keyBuffer = register.keyBuffer;\n
       var imc = 0;\n
       macroModeState.isPlaying = true;\n
@@ -4733,7 +4943,7 @@
       if (macroModeState.isPlaying) { return; }\n
       var registerName = macroModeState.latestRegister;\n
       var register = vimGlobalState.registerController.getRegister(registerName);\n
-      if (register) {\n
+      if (register && register.pushInsertModeChanges) {\n
         register.pushInsertModeChanges(macroModeState.lastInsertModeChanges);\n
       }\n
     }\n
@@ -4742,7 +4952,7 @@
       if (macroModeState.isPlaying) { return; }\n
       var registerName = macroModeState.latestRegister;\n
       var register = vimGlobalState.registerController.getRegister(registerName);\n
-      if (register) {\n
+      if (register && register.pushSearchQuery) {\n
         register.pushSearchQuery(query);\n
       }\n
     }\n
@@ -4793,7 +5003,7 @@
     }\n
     function updateFakeCursor(cm) {\n
       var vim = cm.state.vim;\n
-      var from = copyCursor(vim.sel.head);\n
+      var from = clipCursorToContent(cm, copyCursor(vim.sel.head));\n
       var to = offsetCursor(from, 0, 1);\n
       if (vim.fakeCursor) {\n
         vim.fakeCursor.clear();\n
@@ -4804,7 +5014,7 @@
       var anchor = cm.getCursor(\'anchor\');\n
       var head = cm.getCursor(\'head\');\n
       // Enter or exit visual mode to match mouse selection.\n
-      if (vim.visualMode && cursorEqual(head, anchor) && lineLength(cm, head.line) > head.ch) {\n
+      if (vim.visualMode && !cm.somethingSelected()) {\n
         exitVisualMode(cm, false);\n
       } else if (!vim.visualMode && !vim.insertMode && cm.somethingSelected()) {\n
         vim.visualMode = true;\n
@@ -4844,6 +5054,7 @@
       var macroModeState = vimGlobalState.macroModeState;\n
       var lastChange = macroModeState.lastInsertModeChanges;\n
       var keyName = CodeMirror.keyName(e);\n
+      if (!keyName) { return; }\n
       function onKeyFound() {\n
         lastChange.changes.push(new InsertModeKey(keyName));\n
         return true;\n
@@ -4957,6 +5168,12 @@
 
 
 ]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>

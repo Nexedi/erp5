@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: NSIS mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel=stylesheet href=../../lib/codemirror.css>\n
+<script src=../../lib/codemirror.js></script>\n
+<script src="../../addon/mode/simple.js"></script>\n
+<script src="../../addon/cm_edit/matchbrackets.js"></script>\n
+<script src=nsis.js></script>\n
+<style type=text/css>\n
+  .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
+</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">NSIS</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>NSIS mode</h2>\n
+\n
+\n
+<textarea id=code>\n
+; This is a comment\n
+!ifdef ERROR\n
+    !error "Something went wrong"\n
+!endif\n
+\n
+OutFile "demo.exe"\n
+RequestExecutionLevel user\n
+SetDetailsPrint listonly\n
+\n
+!include "LogicLib.nsh"\n
+!include "WinVer.nsh"\n
+\n
+Section -mandatory\n
+\n
+    Call logWinVer\n
+\n
+    ${If} 1 > 0\n
+      MessageBox MB_OK "Hello world"\n
+    ${EndIf}\n
+\n
+SectionEnd\n
+\n
+Function logWinVer\n
+\n
+    ${If} ${IsWin10}\n
+        DetailPrint "Windows 10!"\n
+    ${ElseIf} ${AtLeastWinVista}\n
+        DetailPrint "We\'re post-XP"\n
+    ${Else}\n
+        DetailPrint "Legacy system"\n
+    ${EndIf}\n
+\n
+FunctionEnd\n
+</textarea>\n
+\n
+<script>\n
+  var editor = CodeMirror.fromTextArea(document.getElementById(\'code\'), {\n
+    mode: \'nsis\',\n
+    indentWithTabs: true,\n
+    smartIndent: true,\n
+    lineNumbers: true,\n
+    matchBrackets: true\n
+  });\n
+</script>\n
+\n
+<p><strong>MIME types defined:</strong> <code>text/x-nsis</code>.</p>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

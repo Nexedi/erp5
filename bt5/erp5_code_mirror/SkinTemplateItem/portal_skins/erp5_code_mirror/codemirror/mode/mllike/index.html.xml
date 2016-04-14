@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: ML-like mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel=stylesheet href=../../lib/codemirror.css>\n
+<script src=../../lib/codemirror.js></script>\n
+<script src=../../addon/cm_edit/matchbrackets.js></script>\n
+<script src=mllike.js></script>\n
+<style type=text/css>\n
+  .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
+</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">ML-like</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>OCaml mode</h2>\n
+\n
+\n
+<textarea id="ocamlCode">\n
+(* Summing a list of integers *)\n
+let rec sum xs =\n
+  match xs with\n
+    | []       -&gt; 0\n
+    | x :: xs\' -&gt; x + sum xs\'\n
+\n
+(* Quicksort *)\n
+let rec qsort = function\n
+   | [] -&gt; []\n
+   | pivot :: rest -&gt;\n
+       let is_less x = x &lt; pivot in\n
+       let left, right = List.partition is_less rest in\n
+       qsort left @ [pivot] @ qsort right\n
+\n
+(* Fibonacci Sequence *)\n
+let rec fib_aux n a b =\n
+  match n with\n
+  | 0 -&gt; a\n
+  | _ -&gt; fib_aux (n - 1) (a + b) a\n
+let fib n = fib_aux n 0 1\n
+\n
+(* Birthday paradox *)\n
+let year_size = 365.\n
+\n
+let rec birthday_paradox prob people =\n
+    let prob\' = (year_size -. float people) /. year_size *. prob  in\n
+    if prob\' &lt; 0.5 then\n
+        Printf.printf "answer = %d\\n" (people+1)\n
+    else\n
+        birthday_paradox prob\' (people+1) ;;\n
+\n
+birthday_paradox 1.0 1\n
+\n
+(* Church numerals *)\n
+let zero f x = x\n
+let succ n f x = f (n f x)\n
+let one = succ zero\n
+let two = succ (succ zero)\n
+let add n1 n2 f x = n1 f (n2 f x)\n
+let to_string n = n (fun k -&gt; "S" ^ k) "0"\n
+let _ = to_string (add (succ two) two)\n
+\n
+(* Elementary functions *)\n
+let square x = x * x;;\n
+let rec fact x =\n
+  if x &lt;= 1 then 1 else x * fact (x - 1);;\n
+\n
+(* Automatic memory management *)\n
+let l = 1 :: 2 :: 3 :: [];;\n
+[1; 2; 3];;\n
+5 :: l;;\n
+\n
+(* Polymorphism: sorting lists *)\n
+let rec sort = function\n
+  | [] -&gt; []\n
+  | x :: l -&gt; insert x (sort l)\n
+\n
+and insert elem = function\n
+  | [] -&gt; [elem]\n
+  | x :: l -&gt;\n
+      if elem &lt; x then elem :: x :: l else x :: insert elem l;;\n
+\n
+(* Imperative features *)\n
+let add_polynom p1 p2 =\n
+  let n1 = Array.length p1\n
+  and n2 = Array.length p2 in\n
+  let result = Array.create (max n1 n2) 0 in\n
+  for i = 0 to n1 - 1 do result.(i) &lt;- p1.(i) done;\n
+  for i = 0 to n2 - 1 do result.(i) &lt;- result.(i) + p2.(i) done;\n
+  result;;\n
+add_polynom [| 1; 2 |] [| 1; 2; 3 |];;\n
+\n
+(* We may redefine fact using a reference cell and a for loop *)\n
+let fact n =\n
+  let result = ref 1 in\n
+  for i = 2 to n do\n
+    result := i * !result\n
+   done;\n
+   !result;;\n
+fact 5;;\n
+\n
+(* Triangle (graphics) *)\n
+let () =\n
+  ignore( Glut.init Sys.argv );\n
+  Glut.initDisplayMode ~double_buffer:true ();\n
+  ignore (Glut.createWindow ~title:"OpenGL Demo");\n
+  let angle t = 10. *. t *. t in\n
+  let render () =\n
+    GlClear.clear [ `color ];\n
+    GlMat.load_identity ();\n
+    GlMat.rotate ~angle: (angle (Sys.time ())) ~z:1. ();\n
+    GlDraw.begins `triangles;\n
+    List.iter GlDraw.vertex2 [-1., -1.; 0., 1.; 1., -1.];\n
+    GlDraw.ends ();\n
+    Glut.swapBuffers () in\n
+  GlMat.mode `modelview;\n
+  Glut.displayFunc ~cb:render;\n
+  Glut.idleFunc ~cb:(Some Glut.postRedisplay);\n
+  Glut.mainLoop ()\n
+\n
+(* A Hundred Lines of Caml - http://caml.inria.fr/about/taste.en.html *)\n
+(* OCaml page on Wikipedia - http://en.wikipedia.org/wiki/OCaml *)\n
+</textarea>\n
+\n
+<h2>F# mode</h2>\n
+<textarea id="fsharpCode">\n
+module CodeMirror.FSharp\n
+\n
+let rec fib = function\n
+    | 0 -> 0\n
+    | 1 -> 1\n
+    | n -> fib (n - 1) + fib (n - 2)\n
+\n
+type Point =\n
+    {\n
+        x : int\n
+        y : int\n
+    }\n
+\n
+type Color =\n
+    | Red\n
+    | Green\n
+    | Blue\n
+\n
+[0 .. 10]\n
+|> List.map ((+) 2)\n
+|> List.fold (fun x y -> x + y) 0\n
+|> printf "%i"\n
+</textarea>\n
+\n
+\n
+<script>\n
+  var ocamlEditor = CodeMirror.fromTextArea(document.getElementById(\'ocamlCode\'), {\n
+    mode: \'text/x-ocaml\',\n
+    lineNumbers: true,\n
+    matchBrackets: true\n
+  });\n
+\n
+  var fsharpEditor = CodeMirror.fromTextArea(document.getElementById(\'fsharpCode\'), {\n
+    mode: \'text/x-fsharp\',\n
+    lineNumbers: true,\n
+    matchBrackets: true\n
+  });\n
+</script>\n
+\n
+<p><strong>MIME types defined:</strong> <code>text/x-ocaml</code> (OCaml) and <code>text/x-fsharp</code> (F#).</p>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

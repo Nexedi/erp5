@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: JSX mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../javascript/javascript.js"></script>\n
+<script src="../xml/xml.js"></script>\n
+<script src="jsx.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">JSX</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>JSX mode</h2>\n
+\n
+<div><textarea id="code" name="code">// Code snippets from http://facebook.github.io/react/docs/jsx-in-depth.html\n
+\n
+// Rendering HTML tags\n
+var myDivElement = <div className="foo" />;\n
+ReactDOM.render(myDivElement, document.getElementById(\'example\'));\n
+\n
+// Rendering React components\n
+var MyComponent = React.createClass({/*...*/});\n
+var myElement = <MyComponent someProperty={true} />;\n
+ReactDOM.render(myElement, document.getElementById(\'example\'));\n
+\n
+// Namespaced components\n
+var Form = MyFormComponent;\n
+\n
+var App = (\n
+  <Form>\n
+    <Form.Row>\n
+      <Form.Label />\n
+      <Form.Input />\n
+    </Form.Row>\n
+  </Form>\n
+);\n
+\n
+// Attribute JavaScript expressions\n
+var person = <Person name={window.isLoggedIn ? window.name : \'\'} />;\n
+\n
+// Boolean attributes\n
+<input type="button" disabled />;\n
+<input type="button" disabled={true} />;\n
+\n
+// Child JavaScript expressions\n
+var content = <Container>{window.isLoggedIn ? <Nav /> : <Login />}</Container>;\n
+\n
+// Comments\n
+var content = (\n
+  <Nav>\n
+    {/* child comment, put {} around */}\n
+    <Person\n
+      /* multi\n
+         line\n
+         comment */\n
+      name={window.isLoggedIn ? window.name : \'\'} // end of line comment\n
+    />\n
+  </Nav>\n
+);\n
+</textarea></div>\n
+\n
+<script>\n
+var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+  lineNumbers: true,\n
+  mode: "jsx"\n
+})\n
+</script>\n
+\n
+<p>JSX Mode for <a href="http://facebook.github.io/react">React</a>\'s\n
+JavaScript syntax extension.</p>\n
+\n
+<p><strong>MIME types defined:</strong> <code>text/jsx</code>.</p>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

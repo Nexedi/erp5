@@ -46,10 +46,17 @@
 <link rel=stylesheet href="../addon/merge/merge.css">\n
 <script src="../lib/codemirror.js"></script>\n
 <script src="../mode/xml/xml.js"></script>\n
-<script src="//cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.js"></script>\n
+<script src="../mode/css/css.js"></script>\n
+<script src="../mode/javascript/javascript.js"></script>\n
+<script src="../mode/htmlmixed/htmlmixed.js"></script>\n
+<script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.js"></script>\n
 <script src="../addon/merge/merge.js"></script>\n
 <style>\n
     .CodeMirror { line-height: 1.2; }\n
+    @media screen and (min-width: 1300px) {\n
+      article { max-width: 1000px; }\n
+      #nav { border-right: 499px solid transparent; }\n
+    }\n
     span.clicky {\n
       cursor: pointer;\n
       background: #d70;\n
@@ -102,7 +109,7 @@ function initUI() {\n
   target.innerHTML = "";\n
   dv = CodeMirror.MergeView(target, {\n
     value: value,\n
-    origLeft: panes == 3 && !collapse && !connect ? orig1 : null,\n
+    origLeft: panes == 3 ? orig1 : null,\n
     orig: orig2,\n
     lineNumbers: true,\n
     mode: "text/html",\n
@@ -118,7 +125,7 @@ function toggleDifferences() {\n
 \n
 window.onload = function() {\n
   value = document.documentElement.innerHTML;\n
-  orig1 = value.replace(/\\.\\.\\//g, "codemirror/").replace("yellow", "orange");\n
+  orig1 = "<!doctype html>\\n\\n" + value.replace(/\\.\\.\\//g, "codemirror/").replace("yellow", "orange");\n
   orig2 = value.replace(/\\u003cscript/g, "\\u003cscript type=text/javascript ")\n
     .replace("white", "purple;\\n      font: comic sans;\\n      text-decoration: underline;\\n      height: 15em");\n
   initUI();\n

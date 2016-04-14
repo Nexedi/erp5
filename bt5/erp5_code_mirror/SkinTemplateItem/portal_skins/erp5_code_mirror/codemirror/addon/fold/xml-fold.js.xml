@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897116.59</string> </value>
+            <value> <string>ts60604373.08</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -202,7 +202,7 @@
     }\n
   };\n
 \n
-  // Used by addon/edit/closetag.js\n
+  // Used by addon/cm_edit/closetag.js\n
   CodeMirror.scanForClosingTag = function(cm, pos, name, end) {\n
     var iter = new Iter(cm, pos.line, pos.ch, end ? {from: 0, to: end} : null);\n
     return findMatchingClose(iter, name);\n
@@ -218,7 +218,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6570</int> </value>
+            <value> <int>6573</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

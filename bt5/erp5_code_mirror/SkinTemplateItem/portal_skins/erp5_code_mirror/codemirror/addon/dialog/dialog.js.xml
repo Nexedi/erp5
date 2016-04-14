@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897119.98</string> </value>
+            <value> <string>ts60604372.34</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -84,9 +84,13 @@
 \n
     var inp = dialog.getElementsByTagName("input")[0], button;\n
     if (inp) {\n
+      inp.focus();\n
+\n
       if (options.value) {\n
         inp.value = options.value;\n
-        inp.select();\n
+        if (options.selectValueOnOpen !== false) {\n
+          inp.select();\n
+        }\n
       }\n
 \n
       if (options.onInput)\n
@@ -105,8 +109,6 @@
       });\n
 \n
       if (options.closeOnBlur !== false) CodeMirror.on(inp, "blur", close);\n
-\n
-      inp.focus();\n
     } else if (button = dialog.getElementsByTagName("button")[0]) {\n
       CodeMirror.on(button, "click", function() {\n
         close();\n
@@ -191,7 +193,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4875</int> </value>
+            <value> <int>4938</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

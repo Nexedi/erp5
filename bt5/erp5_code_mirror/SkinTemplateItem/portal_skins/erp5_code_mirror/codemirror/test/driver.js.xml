@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897150.47</string> </value>
+            <value> <string>ts60604368.82</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -104,7 +104,7 @@ function runTests(callback) {\n
       }\n
     }\n
     if (!threw) {\n
-      if (expFail) callback("fail", test.name, message || "expected failure, but succeeded");\n
+      if (expFail) callback("fail", test.name, message || "expected failure, but passed");\n
       else callback("ok", test.name, message);\n
     }\n
     if (!quit) { // Run next test\n
@@ -174,7 +174,7 @@ function parseTestFilter(s) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3963</int> </value>
+            <value> <int>3960</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

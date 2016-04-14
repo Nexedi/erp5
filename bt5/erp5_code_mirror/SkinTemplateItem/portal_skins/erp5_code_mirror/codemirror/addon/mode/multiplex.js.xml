@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897116.0</string> </value>
+            <value> <string>ts60604374.15</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -42,12 +42,14 @@
 CodeMirror.multiplexingMode = function(outer /*, others */) {\n
   // Others should be {open, close, mode [, delimStyle] [, innerStyle]} objects\n
   var others = Array.prototype.slice.call(arguments, 1);\n
-  var n_others = others.length;\n
 \n
-  function indexOf(string, pattern, from) {\n
-    if (typeof pattern == "string") return string.indexOf(pattern, from);\n
+  function indexOf(string, pattern, from, returnEnd) {\n
+    if (typeof pattern == "string") {\n
+      var found = string.indexOf(pattern, from);\n
+      return returnEnd && found > -1 ? found + pattern.length : found;\n
+    }\n
     var m = pattern.exec(from ? string.slice(from) : string);\n
-    return m ? m.index + from : -1;\n
+    return m ? m.index + from + (returnEnd ? m[0].length : 0) : -1;\n
   }\n
 \n
   return {\n
@@ -70,14 +72,14 @@ CodeMirror.multiplexingMode = function(outer /*, others */) {\n
     token: function(stream, state) {\n
       if (!state.innerActive) {\n
         var cutOff = Infinity, oldContent = stream.string;\n
-        for (var i = 0; i < n_others; ++i) {\n
+        for (var i = 0; i < others.length; ++i) {\n
           var other = others[i];\n
           var found = indexOf(oldContent, other.open, stream.pos);\n
           if (found == stream.pos) {\n
-            stream.match(other.open);\n
+            if (!other.parseDelimiters) stream.match(other.open);\n
             state.innerActive = other;\n
             state.inner = CodeMirror.startState(other.mode, outer.indent ? outer.indent(state.outer, "") : 0);\n
-            return other.delimStyle;\n
+            return other.delimStyle && (other.delimStyle + " " + other.delimStyle + "-open");\n
           } else if (found != -1 && found < cutOff) {\n
             cutOff = found;\n
           }\n
@@ -92,18 +94,21 @@ CodeMirror.multiplexingMode = function(outer /*, others */) {\n
           state.innerActive = state.inner = null;\n
           return this.token(stream, state);\n
         }\n
-        var found = curInner.close ? indexOf(oldContent, curInner.close, stream.pos) : -1;\n
-        if (found == stream.pos) {\n
+        var found = curInner.close ? indexOf(oldContent, curInner.close, stream.pos, curInner.parseDelimiters) : -1;\n
+        if (found == stream.pos && !curInner.parseDelimiters) {\n
           stream.match(curInner.close);\n
           state.innerActive = state.inner = null;\n
-          return curInner.delimStyle;\n
+          return curInner.delimStyle && (curInner.delimStyle + " " + curInner.delimStyle + "-close");\n
         }\n
         if (found > -1) stream.string = oldContent.slice(0, found);\n
         var innerToken = curInner.mode.token(stream, state.inner);\n
         if (found > -1) stream.string = oldContent;\n
 \n
+        if (found == stream.pos && curInner.parseDelimiters)\n
+          state.innerActive = state.inner = null;\n
+\n
         if (curInner.innerStyle) {\n
-          if (innerToken) innerToken = innerToken + \' \' + curInner.innerStyle;\n
+          if (innerToken) innerToken = innerToken + " " + curInner.innerStyle;\n
           else innerToken = curInner.innerStyle;\n
         }\n
 \n
@@ -123,7 +128,7 @@ CodeMirror.multiplexingMode = function(outer /*, others */) {\n
         mode.blankLine(state.innerActive ? state.inner : state.outer);\n
       }\n
       if (!state.innerActive) {\n
-        for (var i = 0; i < n_others; ++i) {\n
+        for (var i = 0; i < others.length; ++i) {\n
           var other = others[i];\n
           if (other.open === "\\n") {\n
             state.innerActive = other;\n
@@ -154,7 +159,7 @@ CodeMirror.multiplexingMode = function(outer /*, others */) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4197</int> </value>
+            <value> <int>4624</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

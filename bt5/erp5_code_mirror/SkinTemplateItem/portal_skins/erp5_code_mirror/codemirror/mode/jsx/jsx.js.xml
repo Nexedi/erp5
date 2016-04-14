@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts60604381.36</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jsx.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"), require("../xml/xml"), require("../javascript/javascript"))\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror", "../xml/xml", "../javascript/javascript"], mod)\n
+  else // Plain browser env\n
+    mod(CodeMirror)\n
+})(function(CodeMirror) {\n
+  "use strict"\n
+\n
+  // Depth means the amount of open braces in JS context, in XML\n
+  // context 0 means not in tag, 1 means in tag, and 2 means in tag\n
+  // and js block comment.\n
+  function Context(state, mode, depth, prev) {\n
+    this.state = state; this.mode = mode; this.depth = depth; this.prev = prev\n
+  }\n
+\n
+  function copyContext(context) {\n
+    return new Context(CodeMirror.copyState(context.mode, context.state),\n
+                       context.mode,\n
+                       context.depth,\n
+                       context.prev && copyContext(context.prev))\n
+  }\n
+\n
+  CodeMirror.defineMode("jsx", function(config, modeConfig) {\n
+    var xmlMode = CodeMirror.getMode(config, {name: "xml", allowMissing: true, multilineTagIndentPastTag: false})\n
+    var jsMode = CodeMirror.getMode(config, modeConfig && modeConfig.base || "javascript")\n
+\n
+    function flatXMLIndent(state) {\n
+      var tagName = state.tagName\n
+      state.tagName = null\n
+      var result = xmlMode.indent(state, "")\n
+      state.tagName = tagName\n
+      return result\n
+    }\n
+\n
+    function token(stream, state) {\n
+      if (state.context.mode == xmlMode)\n
+        return xmlToken(stream, state, state.context)\n
+      else\n
+        return jsToken(stream, state, state.context)\n
+    }\n
+\n
+    function xmlToken(stream, state, cx) {\n
+      if (cx.depth == 2) { // Inside a JS /* */ comment\n
+        if (stream.match(/^.*?\\*\\//)) cx.depth = 1\n
+        else stream.skipToEnd()\n
+        return "comment"\n
+      }\n
+\n
+      if (stream.peek() == "{") {\n
+        xmlMode.skipAttribute(cx.state)\n
+\n
+        var indent = flatXMLIndent(cx.state), xmlContext = cx.state.context\n
+        // If JS starts on same line as tag\n
+        if (xmlContext && stream.match(/^[^>]*>\\s*$/, false)) {\n
+          while (xmlContext.prev && !xmlContext.startOfLine)\n
+            xmlContext = xmlContext.prev\n
+          // If tag starts the line, use XML indentation level\n
+          if (xmlContext.startOfLine) indent -= config.indentUnit\n
+          // Else use JS indentation level\n
+          else if (cx.prev.state.lexical) indent = cx.prev.state.lexical.indented\n
+        // Else if inside of tag\n
+        } else if (cx.depth == 1) {\n
+          indent += config.indentUnit\n
+        }\n
+\n
+        state.context = new Context(CodeMirror.startState(jsMode, indent),\n
+                                    jsMode, 0, state.context)\n
+        return null\n
+      }\n
+\n
+      if (cx.depth == 1) { // Inside of tag\n
+        if (stream.peek() == "<") { // Tag inside of tag\n
+          xmlMode.skipAttribute(cx.state)\n
+          state.context = new Context(CodeMirror.startState(xmlMode, flatXMLIndent(cx.state)),\n
+                                      xmlMode, 0, state.context)\n
+          return null\n
+        } else if (stream.match("//")) {\n
+          stream.skipToEnd()\n
+          return "comment"\n
+        } else if (stream.match("/*")) {\n
+          cx.depth = 2\n
+          return token(stream, state)\n
+        }\n
+      }\n
+\n
+      var style = xmlMode.token(stream, cx.state), cur = stream.current(), stop\n
+      if (/\\btag\\b/.test(style)) {\n
+        if (/>$/.test(cur)) {\n
+          if (cx.state.context) cx.depth = 0\n
+          else state.context = state.context.prev\n
+        } else if (/^</.test(cur)) {\n
+          cx.depth = 1\n
+        }\n
+      } else if (!style && (stop = cur.indexOf("{")) > -1) {\n
+        stream.backUp(cur.length - stop)\n
+      }\n
+      return style\n
+    }\n
+\n
+    function jsToken(stream, state, cx) {\n
+      if (stream.peek() == "<" && jsMode.expressionAllowed(stream, cx.state)) {\n
+        jsMode.skipExpression(cx.state)\n
+        state.context = new Context(CodeMirror.startState(xmlMode, jsMode.indent(cx.state, "")),\n
+                                    xmlMode, 0, state.context)\n
+        return null\n
+      }\n
+\n
+      var style = jsMode.token(stream, cx.state)\n
+      if (!style && cx.depth != null) {\n
+        var cur = stream.current()\n
+        if (cur == "{") {\n
+          cx.depth++\n
+        } else if (cur == "}") {\n
+          if (--cx.depth == 0) state.context = state.context.prev\n
+        }\n
+      }\n
+      return style\n
+    }\n
+\n
+    return {\n
+      startState: function() {\n
+        return {context: new Context(CodeMirror.startState(jsMode), jsMode)}\n
+      },\n
+\n
+      copyState: function(state) {\n
+        return {context: copyContext(state.context)}\n
+      },\n
+\n
+      token: token,\n
+\n
+      indent: function(state, textAfter, fullLine) {\n
+        return state.context.mode.indent(state.context.state, textAfter, fullLine)\n
+      },\n
+\n
+      innerMode: function(state) {\n
+        return state.context\n
+      }\n
+    }\n
+  }, "xml", "javascript")\n
+\n
+  CodeMirror.defineMIME("text/jsx", "jsx")\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5087</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

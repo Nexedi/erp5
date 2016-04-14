@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897134.83</string> </value>
+            <value> <string>ts60604386.78</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -99,16 +99,6 @@ CodeMirror.defineMode("tiddlywiki", function () {\n
     return f(stream, state);\n
   }\n
 \n
-  // Used as scratch variables to communicate multiple values without\n
-  // consing up tons of objects.\n
-  var type, content;\n
-\n
-  function ret(tp, style, cont) {\n
-    type = tp;\n
-    content = cont;\n
-    return style;\n
-  }\n
-\n
   function jsTokenBase(stream, state) {\n
     var sol = stream.sol(), ch;\n
 \n
@@ -123,16 +113,16 @@ CodeMirror.defineMode("tiddlywiki", function () {\n
         return chain(stream, state, twTokenCode);\n
       }\n
       if (stream.match(reBlockQuote)) {\n
-        return ret(\'quote\', \'quote\');\n
+        return \'quote\';\n
       }\n
       if (stream.match(reWikiCommentStart) || stream.match(reWikiCommentStop)) {\n
-        return ret(\'code\', \'comment\');\n
+        return \'comment\';\n
       }\n
       if (stream.match(reJsCodeStart) || stream.match(reJsCodeStop) || stream.match(reXmlCodeStart) || stream.match(reXmlCodeStop)) {\n
-        return ret(\'code\', \'comment\');\n
+        return \'comment\';\n
       }\n
       if (stream.match(reHR)) {\n
-        return ret(\'hr\', \'hr\');\n
+        return \'hr\';\n
       }\n
     } // sol\n
     ch = stream.next();\n
@@ -140,30 +130,30 @@ CodeMirror.defineMode("tiddlywiki", function () {\n
     if (sol && /[\\/\\*!#;:>|]/.test(ch)) {\n
       if (ch == "!") { // tw header\n
         stream.skipToEnd();\n
-        return ret("header", "header");\n
+        return "header";\n
       }\n
       if (ch == "*") { // tw list\n
         stream.eatWhile(\'*\');\n
-        return ret("list", "comment");\n
+        return "comment";\n
       }\n
       if (ch == "#") { // tw numbered list\n
         stream.eatWhile(\'#\');\n
-        return ret("list", "comment");\n
+        return "comment";\n
       }\n
       if (ch == ";") { // definition list, term\n
         stream.eatWhile(\';\');\n
-        return ret("list", "comment");\n
+        return "comment";\n
       }\n
       if (ch == ":") { // definition list, description\n
         stream.eatWhile(\':\');\n
-        return ret("list", "comment");\n
+        return "comment";\n
       }\n
       if (ch == ">") { // single line quote\n
         stream.eatWhile(">");\n
-        return ret("quote", "quote");\n
+        return "quote";\n
       }\n
       if (ch == \'|\') {\n
-        return ret(\'table\', \'header\');\n
+        return \'header\';\n
       }\n
     }\n
 \n
@@ -174,29 +164,29 @@ CodeMirror.defineMode("tiddlywiki", function () {\n
     // rudimentary html:// file:// link matching. TW knows much more ...\n
     if (/[hf]/i.test(ch)) {\n
       if (/[ti]/i.test(stream.peek()) && stream.match(/\\b(ttps?|tp|ile):\\/\\/[\\-A-Z0-9+&@#\\/%?=~_|$!:,.;]*[A-Z0-9+&@#\\/%=~_|$]/i)) {\n
-        return ret("link", "link");\n
+        return "link";\n
       }\n
     }\n
     // just a little string indicator, don\'t want to have the whole string covered\n
     if (ch == \'"\') {\n
-      return ret(\'string\', \'string\');\n
+      return \'string\';\n
     }\n
     if (ch == \'~\') {    // _no_ CamelCase indicator should be bold\n
-      return ret(\'text\', \'brace\');\n
+      return \'brace\';\n
     }\n
     if (/[\\[\\]]/.test(ch)) { // check for [[..]]\n
       if (stream.peek() == ch) {\n
         stream.next();\n
-        return ret(\'brace\', \'brace\');\n
+        return \'brace\';\n
       }\n
     }\n
     if (ch == "@") {    // check for space link. TODO fix @@...@@ highlighting\n
       stream.eatWhile(isSpaceName);\n
-      return ret("link", "link");\n
+      return "link";\n
     }\n
     if (/\\d/.test(ch)) {        // numbers\n
       stream.eatWhile(/\\d/);\n
-      return ret("number", "number");\n
+      return "number";\n
     }\n
     if (ch == "/") { // tw invisible comment\n
       if (stream.eat("%")) {\n
@@ -219,7 +209,7 @@ CodeMirror.defineMode("tiddlywiki", function () {\n
           return chain(stream, state, twTokenStrike);\n
         // mdash\n
         if (stream.peek() == \' \')\n
-          return ret(\'text\', \'brace\');\n
+          return \'brace\';\n
       }\n
     }\n
     if (ch == "\'") { // tw bold\n
@@ -233,7 +223,7 @@ CodeMirror.defineMode("tiddlywiki", function () {\n
       }\n
     }\n
     else {\n
-      return ret(ch);\n
+      return null;\n
     }\n
 \n
     // core macro handling\n
@@ -241,8 +231,7 @@ CodeMirror.defineMode("tiddlywiki", function () {\n
     var word = stream.current(),\n
     known = textwords.propertyIsEnumerable(word) && textwords[word];\n
 \n
-    return known ? ret(known.type, known.style, word) : ret("text", null, word);\n
-\n
+    return known ? known.style : null;\n
   } // jsTokenBase()\n
 \n
   // tw invisible comment\n
@@ -256,7 +245,7 @@ CodeMirror.defineMode("tiddlywiki", function () {\n
       }\n
       maybeEnd = (ch == "%");\n
     }\n
-    return ret("comment", "comment");\n
+    return "comment";\n
   }\n
 \n
   // tw strong / bold\n
@@ -270,29 +259,29 @@ CodeMirror.defineMode("tiddlywiki", function () {\n
       }\n
       maybeEnd = (ch == "\'");\n
     }\n
-    return ret("text", "strong");\n
+    return "strong";\n
   }\n
 \n
   // tw code\n
   function twTokenCode(stream, state) {\n
-    var ch, sb = state.block;\n
+    var sb = state.block;\n
 \n
     if (sb && stream.current()) {\n
-      return ret("code", "comment");\n
+      return "comment";\n
     }\n
 \n
     if (!sb && stream.match(reUntilCodeStop)) {\n
       state.tokenize = jsTokenBase;\n
-      return ret("code", "comment");\n
+      return "comment";\n
     }\n
 \n
     if (sb && stream.sol() && stream.match(reCodeBlockStop)) {\n
       state.tokenize = jsTokenBase;\n
-      return ret("code", "comment");\n
+      return "comment";\n
     }\n
 \n
-    ch = stream.next();\n
-    return (sb) ? ret("code", "comment") : ret("code", "comment");\n
+    stream.next();\n
+    return "comment";\n
   }\n
 \n
   // tw em / italic\n
@@ -306,7 +295,7 @@ CodeMirror.defineMode("tiddlywiki", function () {\n
       }\n
       maybeEnd = (ch == "/");\n
     }\n
-    return ret("text", "em");\n
+    return "em";\n
   }\n
 \n
   // tw underlined text\n
@@ -320,7 +309,7 @@ CodeMirror.defineMode("tiddlywiki", function () {\n
       }\n
       maybeEnd = (ch == "_");\n
     }\n
-    return ret("text", "underlined");\n
+    return "underlined";\n
   }\n
 \n
   // tw strike through text looks ugly\n
@@ -335,7 +324,7 @@ CodeMirror.defineMode("tiddlywiki", function () {\n
       }\n
       maybeEnd = (ch == "-");\n
     }\n
-    return ret("text", "strikethrough");\n
+    return "strikethrough";\n
   }\n
 \n
   // macro\n
@@ -343,19 +332,19 @@ CodeMirror.defineMode("tiddlywiki", function () {\n
     var ch, word, known;\n
 \n
     if (stream.current() == \'<<\') {\n
-      return ret(\'brace\', \'macro\');\n
+      return \'macro\';\n
     }\n
 \n
     ch = stream.next();\n
     if (!ch) {\n
       state.tokenize = jsTokenBase;\n
-      return ret(ch);\n
+      return null;\n
     }\n
     if (ch == ">") {\n
       if (stream.peek() == \'>\') {\n
         stream.next();\n
         state.tokenize = jsTokenBase;\n
-        return ret("brace", "macro");\n
+        return "macro";\n
       }\n
     }\n
 \n
@@ -364,10 +353,10 @@ CodeMirror.defineMode("tiddlywiki", function () {\n
     known = keywords.propertyIsEnumerable(word) && keywords[word];\n
 \n
     if (known) {\n
-      return ret(known.type, known.style, word);\n
+      return known.style, word;\n
     }\n
     else {\n
-      return ret("macro", null, word);\n
+      return null, word;\n
     }\n
   }\n
 \n
@@ -405,7 +394,7 @@ CodeMirror.defineMIME("text/x-tiddlywiki", "tiddlywiki");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>10195</int> </value>
+            <value> <int>9467</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

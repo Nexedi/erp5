@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897131.51</string> </value>
+            <value> <string>ts60604368.29</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -405,7 +405,7 @@
 \n
       getInput(cm, "Goto line", function(str) {\n
         var num;\n
-        if (str && !isNaN(num = Number(str)) && num == num|0 && num > 0)\n
+        if (str && !isNaN(num = Number(str)) && num == (num|0) && num > 0)\n
           cm.setCursor(num - 1);\n
       });\n
     },\n
@@ -423,6 +423,7 @@
     "Ctrl-X U": repeated("undo"),\n
     "Ctrl-X K": "close",\n
     "Ctrl-X Delete": function(cm) { kill(cm, cm.getCursor(), bySentence(cm, cm.getCursor(), 1), true); },\n
+    "Ctrl-X H": "selectAll",\n
 \n
     "Ctrl-Q Tab": repeated("insertTab"),\n
     "Ctrl-U": addPrefixMap\n
@@ -447,7 +448,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>13307</int> </value>
+            <value> <int>13338</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: VHDL mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/cm_edit/matchbrackets.js"></script>\n
+<script src="vhdl.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">VHDL</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>VHDL mode</h2>\n
+\n
+<div><textarea id="code" name="code">\n
+LIBRARY ieee;\n
+USE ieee.std_logic_1164.ALL;\n
+USE ieee.numeric_std.ALL;\n
+\n
+ENTITY tb IS\n
+END tb;\n
+\n
+ARCHITECTURE behavior OF tb IS\n
+   --Inputs\n
+   signal a : unsigned(2 downto 0) := (others => \'0\');\n
+   signal b : unsigned(2 downto 0) := (others => \'0\');\n
+    --Outputs\n
+   signal a_eq_b : std_logic;\n
+   signal a_le_b : std_logic;\n
+   signal a_gt_b : std_logic;\n
+\n
+    signal i,j : integer;\n
+\n
+BEGIN\n
+\n
+    -- Instantiate the Unit Under Test (UUT)\n
+   uut: entity work.comparator PORT MAP (\n
+          a => a,\n
+          b => b,\n
+          a_eq_b => a_eq_b,\n
+          a_le_b => a_le_b,\n
+          a_gt_b => a_gt_b\n
+        );\n
+\n
+   -- Stimulus process\n
+   stim_proc: process\n
+   begin\n
+        for i in 0 to 8 loop\n
+            for j in 0 to 8 loop\n
+                a <= to_unsigned(i,3); --integer to unsigned type conversion\n
+                b <= to_unsigned(j,3);\n
+                wait for 10 ns;\n
+            end loop;\n
+        end loop;\n
+   end process;\n
+\n
+END;\n
+</textarea></div>\n
+\n
+<script>\n
+  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+    lineNumbers: true,\n
+    matchBrackets: true,\n
+    mode: {\n
+      name: "vhdl",\n
+    }\n
+  });\n
+</script>\n
+\n
+<p>\n
+Syntax highlighting and indentation for the VHDL language.\n
+<h2>Configuration options:</h2>\n
+  <ul>\n
+    <li><strong>atoms</strong> - List of atom words. Default: "null"</li>\n
+    <li><strong>hooks</strong> - List of meta hooks. Default: ["`", "$"]</li>\n
+    <li><strong>multiLineStrings</strong> - Whether multi-line strings are accepted. Default: false</li>\n
+  </ul>\n
+</p>\n
+\n
+<p><strong>MIME types defined:</strong> <code>text/x-vhdl</code>.</p>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

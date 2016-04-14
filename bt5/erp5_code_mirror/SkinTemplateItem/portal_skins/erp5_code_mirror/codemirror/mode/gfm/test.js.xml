@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897137.65</string> </value>
+            <value> <string>ts60604379.39</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -78,6 +78,11 @@
      "",\n
      "[comment ```]",\n
      "bar");\n
+\n
+  MT("fencedCodeBlocksNoTildes",\n
+     "~~~",\n
+     "foo",\n
+     "~~~");\n
 \n
   MT("taskListAsterisk",\n
      "[variable-2 * []] foo]", // Invalid; must have space or x between []\n
@@ -161,6 +166,15 @@
   MT("vanillaLink",\n
      "foo [link http://www.example.com/] bar");\n
 \n
+  MT("vanillaLinkNoScheme",\n
+     "foo [link www.example.com] bar");\n
+\n
+  MT("vanillaLinkHttps",\n
+     "foo [link https://www.example.com/] bar");\n
+\n
+  MT("vanillaLinkDataSchema",\n
+     "foo [link data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==] bar");\n
+\n
   MT("vanillaLinkPunctuation",\n
      "foo [link http://www.example.com/]. bar");\n
 \n
@@ -169,6 +183,9 @@
 \n
   MT("vanillaLinkEmphasis",\n
      "foo [em *][em&link http://www.example.com/index.html][em *] bar");\n
+\n
+  MT("notALink",\n
+     "foo asfd:asdf bar");\n
 \n
   MT("notALink",\n
      "[comment ```css]",\n
@@ -180,8 +197,8 @@
 \n
   MT("notALink",\n
      "[comment `foo]",\n
-     "[link http://www.example.com/]",\n
-     "[comment `foo]",\n
+     "[comment&link http://www.example.com/]",\n
+     "[comment `] foo",\n
      "",\n
      "[link http://www.example.com/]");\n
 \n
@@ -249,7 +266,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6922</int> </value>
+            <value> <int>7385</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

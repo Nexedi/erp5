@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897133.37</string> </value>
+            <value> <string>ts60604386.5</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -70,42 +70,34 @@ CodeMirror.defineMode("tcl", function() {\n
       var beforeParams = state.beforeParams;\n
       state.beforeParams = false;\n
       var ch = stream.next();\n
-      if ((ch == \'"\' || ch == "\'") && state.inParams)\n
+      if ((ch == \'"\' || ch == "\'") && state.inParams) {\n
         return chain(stream, state, tokenString(ch));\n
-      else if (/[\\[\\]{}\\(\\),;\\.]/.test(ch)) {\n
+      } else if (/[\\[\\]{}\\(\\),;\\.]/.test(ch)) {\n
         if (ch == "(" && beforeParams) state.inParams = true;\n
         else if (ch == ")") state.inParams = false;\n
           return null;\n
-      }\n
-      else if (/\\d/.test(ch)) {\n
+      } else if (/\\d/.test(ch)) {\n
         stream.eatWhile(/[\\w\\.]/);\n
         return "number";\n
-      }\n
-      else if (ch == "#" && stream.eat("*")) {\n
-        return chain(stream, state, tokenComment);\n
-      }\n
-      else if (ch == "#" && stream.match(/ *\\[ *\\[/)) {\n
-        return chain(stream, state, tokenUnparsed);\n
-      }\n
-      else if (ch == "#" && stream.eat("#")) {\n
+      } else if (ch == "#") {\n
+        if (stream.eat("*"))\n
+          return chain(stream, state, tokenComment);\n
+        if (ch == "#" && stream.match(/ *\\[ *\\[/))\n
+          return chain(stream, state, tokenUnparsed);\n
         stream.skipToEnd();\n
         return "comment";\n
-      }\n
-      else if (ch == \'"\') {\n
+      } else if (ch == \'"\') {\n
         stream.skipTo(/"/);\n
         return "comment";\n
-      }\n
-      else if (ch == "$") {\n
+      } else if (ch == "$") {\n
         stream.eatWhile(/[$_a-z0-9A-Z\\.{:]/);\n
         stream.eatWhile(/}/);\n
         state.beforeParams = true;\n
         return "builtin";\n
-      }\n
-      else if (isOperatorChar.test(ch)) {\n
+      } else if (isOperatorChar.test(ch)) {\n
         stream.eatWhile(isOperatorChar);\n
         return "comment";\n
-      }\n
-      else {\n
+      } else {\n
         stream.eatWhile(/[\\w\\$_{}\\xa1-\\uffff]/);\n
         var word = stream.current().toLowerCase();\n
         if (keywords && keywords.propertyIsEnumerable(word))\n
@@ -183,7 +175,7 @@ CodeMirror.defineMIME("text/x-tcl", "tcl");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5006</int> </value>
+            <value> <int>4920</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

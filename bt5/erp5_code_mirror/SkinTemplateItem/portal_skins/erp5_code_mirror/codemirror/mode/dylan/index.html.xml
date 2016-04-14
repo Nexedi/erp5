@@ -1,0 +1,468 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Dylan mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/cm_edit/matchbrackets.js"></script>\n
+<script src="../../addon/comment/continuecomment.js"></script>\n
+<script src="../../addon/comment/comment.js"></script>\n
+<script src="dylan.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Dylan</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Dylan mode</h2>\n
+\n
+\n
+<div><textarea id="code" name="code">\n
+Module:       locators-internals\n
+Synopsis:     Abstract modeling of locations\n
+Author:       Andy Armstrong\n
+Copyright:    Original Code is Copyright (c) 1995-2004 Functional Objects, Inc.\n
+              All rights reserved.\n
+License:      See License.txt in this distribution for details.\n
+Warranty:     Distributed WITHOUT WARRANTY OF ANY KIND\n
+\n
+define open generic locator-server\n
+    (locator :: <locator>) => (server :: false-or(<server-locator>));\n
+define open generic locator-host\n
+    (locator :: <locator>) => (host :: false-or(<string>));\n
+define open generic locator-volume\n
+    (locator :: <locator>) => (volume :: false-or(<string>));\n
+define open generic locator-directory\n
+    (locator :: <locator>) => (directory :: false-or(<directory-locator>));\n
+define open generic locator-relative?\n
+    (locator :: <locator>) => (relative? :: <boolean>);\n
+define open generic locator-path\n
+    (locator :: <locator>) => (path :: <sequence>);\n
+define open generic locator-base\n
+    (locator :: <locator>) => (base :: false-or(<string>));\n
+define open generic locator-extension\n
+    (locator :: <locator>) => (extension :: false-or(<string>));\n
+\n
+/// Locator classes\n
+\n
+define open abstract class <directory-locator> (<physical-locator>)\n
+end class <directory-locator>;\n
+\n
+define open abstract class <file-locator> (<physical-locator>)\n
+end class <file-locator>;\n
+\n
+define method as\n
+    (class == <directory-locator>, string :: <string>)\n
+ => (locator :: <directory-locator>)\n
+  as(<native-directory-locator>, string)\n
+end method as;\n
+\n
+define method make\n
+    (class == <directory-locator>,\n
+     #key server :: false-or(<server-locator>) = #f,\n
+          path :: <sequence> = #[],\n
+          relative? :: <boolean> = #f,\n
+          name :: false-or(<string>) = #f)\n
+ => (locator :: <directory-locator>)\n
+  make(<native-directory-locator>,\n
+       server:    server,\n
+       path:      path,\n
+       relative?: relative?,\n
+       name:      name)\n
+end method make;\n
+\n
+define method as\n
+    (class == <file-locator>, string :: <string>)\n
+ => (locator :: <file-locator>)\n
+  as(<native-file-locator>, string)\n
+end method as;\n
+\n
+define method make\n
+    (class == <file-locator>,\n
+     #key directory :: false-or(<directory-locator>) = #f,\n
+          base :: false-or(<string>) = #f,\n
+          extension :: false-or(<string>) = #f,\n
+          name :: false-or(<string>) = #f)\n
+ => (locator :: <file-locator>)\n
+  make(<native-file-locator>,\n
+       directory: directory,\n
+       base:      base,\n
+       extension: extension,\n
+       name:      name)\n
+end method make;\n
+\n
+/// Locator coercion\n
+\n
+//---*** andrewa: This caching scheme doesn\'t work yet, so disable it.\n
+define constant $cache-locators?        = #f;\n
+define constant $cache-locator-strings? = #f;\n
+\n
+define constant $locator-to-string-cache = make(<object-table>, weak: #"key");\n
+define constant $string-to-locator-cache = make(<string-table>, weak: #"value");\n
+\n
+define open generic locator-as-string\n
+    (class :: subclass(<string>), locator :: <locator>)\n
+ => (string :: <string>);\n
+\n
+define open generic string-as-locator\n
+    (class :: subclass(<locator>), string :: <string>)\n
+ => (locator :: <locator>);\n
+\n
+define sealed sideways method as\n
+    (class :: subclass(<string>), locator :: <locator>)\n
+ => (string :: <string>)\n
+  let string = element($locator-to-string-cache, locator, default: #f);\n
+  if (string)\n
+    as(class, string)\n
+  else\n
+    let string = locator-as-string(class, locator);\n
+    if ($cache-locator-strings?)\n
+      element($locator-to-string-cache, locator) := string;\n
+    else\n
+      string\n
+    end\n
+  end\n
+end method as;\n
+\n
+define sealed sideways method as\n
+    (class :: subclass(<locator>), string :: <string>)\n
+ => (locator :: <locator>)\n
+  let locator = element($string-to-locator-cache, string, default: #f);\n
+  if (instance?(locator, class))\n
+    locator\n
+  else\n
+    let locator = string-as-locator(class, string);\n
+    if ($cache-locators?)\n
+      element($string-to-locator-cache, string) := locator;\n
+    else\n
+      locator\n
+    end\n
+  end\n
+end method as;\n
+\n
+/// Locator conditions\n
+\n
+define class <locator-error> (<format-string-condition>, <error>)\n
+end class <locator-error>;\n
+\n
+define function locator-error\n
+    (format-string :: <string>, #rest format-arguments)\n
+  error(make(<locator-error>, \n
+             format-string:    format-string,\n
+             format-arguments: format-arguments))\n
+end function locator-error;\n
+\n
+/// Useful locator protocols\n
+\n
+define open generic locator-test\n
+    (locator :: <directory-locator>) => (test :: <function>);\n
+\n
+define method locator-test\n
+    (locator :: <directory-locator>) => (test :: <function>)\n
+  \\=\n
+end method locator-test;\n
+\n
+define open generic locator-might-have-links?\n
+    (locator :: <directory-locator>) => (links? :: <boolean>);\n
+\n
+define method locator-might-have-links?\n
+    (locator :: <directory-locator>) => (links? :: singleton(#f))\n
+  #f\n
+end method locator-might-have-links?;\n
+\n
+define method locator-relative?\n
+    (locator :: <file-locator>) => (relative? :: <boolean>)\n
+  let directory = locator.locator-directory;\n
+  ~directory | directory.locator-relative?\n
+end method locator-relative?;\n
+\n
+define method current-directory-locator?\n
+    (locator :: <directory-locator>) => (current-directory? :: <boolean>)\n
+  locator.locator-relative?\n
+    & locator.locator-path = #[#"self"]\n
+end method current-directory-locator?;\n
+\n
+define method locator-directory\n
+    (locator :: <directory-locator>) => (parent :: false-or(<directory-locator>))\n
+  let path = locator.locator-path;\n
+  unless (empty?(path))\n
+    make(object-class(locator),\n
+         server:    locator.locator-server,\n
+         path:      copy-sequence(path, end: path.size - 1),\n
+         relative?: locator.locator-relative?)\n
+  end\n
+end method locator-directory;\n
+\n
+/// Simplify locator\n
+\n
+define open generic simplify-locator\n
+    (locator :: <physical-locator>)\n
+ => (simplified-locator :: <physical-locator>);\n
+\n
+define method simplify-locator\n
+    (locator :: <directory-locator>)\n
+ => (simplified-locator :: <directory-locator>)\n
+  let path = locator.locator-path;\n
+  let relative? = locator.locator-relative?;\n
+  let resolve-parent? = ~locator.locator-might-have-links?;\n
+  let simplified-path\n
+    = simplify-path(path, \n
+                    resolve-parent?: resolve-parent?,\n
+                    relative?: relative?);\n
+  if (path ~= simplified-path)\n
+    make(object-class(locator),\n
+         server:    locator.locator-server,\n
+         path:      simplified-path,\n
+         relative?: locator.locator-relative?)\n
+  else\n
+    locator\n
+  end\n
+end method simplify-locator;\n
+\n
+define method simplify-locator\n
+    (locator :: <file-locator>) => (simplified-locator :: <file-locator>)\n
+  let directory = locator.locator-directory;\n
+  let simplified-directory = directory & simplify-locator(directory);\n
+  if (directory ~= simplified-directory)\n
+    make(object-class(locator),\n
+         directory: simplified-directory,\n
+         base:      locator.locator-base,\n
+         extension: locator.locator-extension)\n
+  else\n
+    locator\n
+  end\n
+end method simplify-locator;\n
+\n
+/// Subdirectory locator\n
+\n
+define open generic subdirectory-locator\n
+    (locator :: <directory-locator>, #rest sub-path)\n
+ => (subdirectory :: <directory-locator>);\n
+\n
+define method subdirectory-locator\n
+    (locator :: <directory-locator>, #rest sub-path)\n
+ => (subdirectory :: <directory-locator>)\n
+  let old-path = locator.locator-path;\n
+  let new-path = concatenate-as(<simple-object-vector>, old-path, sub-path);\n
+  make(object-class(locator),\n
+       server:    locator.locator-server,\n
+       path:      new-path,\n
+       relative?: locator.locator-relative?)\n
+end method subdirectory-locator;\n
+\n
+/// Relative locator\n
+\n
+define open generic relative-locator\n
+    (locator :: <physical-locator>, from-locator :: <physical-locator>)\n
+ => (relative-locator :: <physical-locator>);\n
+\n
+define method relative-locator\n
+    (locator :: <directory-locator>, from-locator :: <directory-locator>)\n
+ => (relative-locator :: <directory-locator>)\n
+  let path = locator.locator-path;\n
+  let from-path = from-locator.locator-path;\n
+  case\n
+    ~locator.locator-relative? & from-locator.locator-relative? =>\n
+      locator-error\n
+        ("Cannot find relative path of absolute locator %= from relative locator %=",\n
+         locator, from-locator);\n
+    locator.locator-server ~= from-locator.locator-server =>\n
+      locator;\n
+    path = from-path =>\n
+      make(object-class(locator),\n
+           path: vector(#"self"),\n
+           relative?: #t);\n
+    otherwise =>\n
+      make(object-class(locator),\n
+           path: relative-path(path, from-path, test: locator.locator-test),\n
+           relative?: #t);\n
+  end\n
+end method relative-locator;\n
+\n
+define method relative-locator\n
+    (locator :: <file-locator>, from-directory :: <directory-locator>)\n
+ => (relative-locator :: <file-locator>)\n
+  let directory = locator.locator-directory;\n
+  let relative-directory = directory & relative-locator(directory, from-directory);\n
+  if (relative-directory ~= directory)\n
+    simplify-locator\n
+      (make(object-class(locator),\n
+            directory: relative-directory,\n
+            base:      locator.locator-base,\n
+            extension: locator.locator-extension))\n
+  else\n
+    locator\n
+  end\n
+end method relative-locator;\n
+\n
+define method relative-locator\n
+    (locator :: <physical-locator>, from-locator :: <file-locator>)\n
+ => (relative-locator :: <physical-locator>)\n
+  let from-directory = from-locator.locator-directory;\n
+  case\n
+    from-directory =>\n
+      relative-locator(locator, from-directory);\n
+    ~locator.locator-relative? =>\n
+      locator-error\n
+        ("Cannot find relative path of absolute locator %= from relative locator %=",\n
+         locator, from-locator);\n
+    otherwise =>\n
+      locator;\n
+  end\n
+end method relative-locator;\n
+\n
+/// Merge locators\n
+\n
+define open generic merge-locators\n
+    (locator :: <physical-locator>, from-locator :: <physical-locator>)\n
+ => (merged-locator :: <physical-locator>);\n
+\n
+/// Merge locators\n
+\n
+define method merge-locators\n
+    (locator :: <directory-locator>, from-locator :: <directory-locator>)\n
+ => (merged-locator :: <directory-locator>)\n
+  if (locator.locator-relative?)\n
+    let path = concatenate(from-locator.locator-path, locator.locator-path);\n
+    simplify-locator\n
+      (make(object-class(locator),\n
+            server:    from-locator.locator-server,\n
+            path:      path,\n
+            relative?: from-locator.locator-relative?))\n
+  else\n
+    locator\n
+  end\n
+end method merge-locators;\n
+\n
+define method merge-locators\n
+    (locator :: <file-locator>, from-locator :: <directory-locator>)\n
+ => (merged-locator :: <file-locator>)\n
+  let directory = locator.locator-directory;\n
+  let merged-directory \n
+    = if (directory)\n
+        merge-locators(directory, from-locator)\n
+      else\n
+        simplify-locator(from-locator)\n
+      end;\n
+  if (merged-directory ~= directory)\n
+    make(object-class(locator),\n
+         directory: merged-directory,\n
+         base:      locator.locator-base,\n
+         extension: locator.locator-extension)\n
+  else\n
+    locator\n
+  end\n
+end method merge-locators;\n
+\n
+define method merge-locators\n
+    (locator :: <physical-locator>, from-locator :: <file-locator>)\n
+ => (merged-locator :: <physical-locator>)\n
+  let from-directory = from-locator.locator-directory;\n
+  if (from-directory)\n
+    merge-locators(locator, from-directory)\n
+  else\n
+    locator\n
+  end\n
+end method merge-locators;\n
+\n
+/// Locator protocols\n
+\n
+define sideways method supports-open-locator?\n
+    (locator :: <file-locator>) => (openable? :: <boolean>)\n
+  ~locator.locator-relative?\n
+end method supports-open-locator?;\n
+\n
+define sideways method open-locator\n
+    (locator :: <file-locator>, #rest keywords, #key, #all-keys)\n
+ => (stream :: <stream>)\n
+  apply(open-file-stream, locator, keywords)\n
+end method open-locator;\n
+</textarea></div>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        mode: "text/x-dylan",\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        continueComments: "Enter",\n
+        extraKeys: {"Ctrl-Q": "toggleComment"},\n
+        tabMode: "indent",\n
+        indentUnit: 2\n
+      });\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-dylan</code>.</p>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

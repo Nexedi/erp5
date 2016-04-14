@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897117.47</string> </value>
+            <value> <string>ts60604372.67</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -66,7 +66,7 @@
     for (var i = 0; i < val.length; i++) {\n
       var elt = document.createElement("div");\n
       elt.className = "CodeMirror-ruler";\n
-      var col, cls = null, conf = val[i];\n
+      var col, conf = val[i];\n
       if (typeof conf == "number") {\n
         col = conf;\n
       } else {\n
@@ -75,7 +75,6 @@
         if (conf.color) elt.style.borderColor = conf.color;\n
         if (conf.lineStyle) elt.style.borderLeftStyle = conf.lineStyle;\n
         if (conf.width) elt.style.borderLeftWidth = conf.width;\n
-        cls = val[i].className;\n
       }\n
       elt.style.left = (left + col * cw) + "px";\n
       elt.style.top = "-50px";\n
@@ -100,7 +99,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2134</int> </value>
+            <value> <int>2090</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

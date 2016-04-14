@@ -52,6 +52,7 @@
 <script src="../addon/search/search.js"></script>\n
 <script src="../addon/scroll/annotatescrollbar.js"></script>\n
 <script src="../addon/search/matchesonscrollbar.js"></script>\n
+<script src="../addon/search/jump-to-line.js"></script>\n
 <style type="text/css">\n
       .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
       dt {font-family: monospace; color: #666;}\n
@@ -109,23 +110,28 @@
     <script>\n
 var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
   mode: "text/html",\n
-  lineNumbers: true\n
+  lineNumbers: true,\n
+  extraKeys: {"Alt-F": "findPersistent"}\n
 });\n
 </script>\n
 \n
     <p>Demonstration of primitive search/replace functionality. The\n
-    keybindings (which can be overridden by custom keymaps) are:</p>\n
+    keybindings (which can be configured with custom keymaps) are:</p>\n
     <dl>\n
       <dt>Ctrl-F / Cmd-F</dt><dd>Start searching</dd>\n
       <dt>Ctrl-G / Cmd-G</dt><dd>Find next</dd>\n
       <dt>Shift-Ctrl-G / Shift-Cmd-G</dt><dd>Find previous</dd>\n
       <dt>Shift-Ctrl-F / Cmd-Option-F</dt><dd>Replace</dd>\n
       <dt>Shift-Ctrl-R / Shift-Cmd-Option-F</dt><dd>Replace all</dd>\n
+      <dt>Alt-F</dt><dd>Persistent search (dialog doesn\'t autoclose,\n
+      enter to find next, Shift-Enter to find previous)</dd>\n
+      <dt>Alt-G</dt><dd>Jump to line</dd>\n
     </dl>\n
     <p>Searching is enabled by\n
     including <a href="../addon/search/search.js">addon/search/search.js</a>\n
     and <a href="../addon/search/searchcursor.js">addon/search/searchcursor.js</a>.\n
-    For good-looking input dialogs, you also want to include\n
+    Jump to line - including <a href="../addon/search/jumpToLine.js">addon/search/jumpToLine.js</a>.</p>\n
+    <p>For good-looking input dialogs, you also want to include\n
     <a href="../addon/dialog/dialog.js">addon/dialog/dialog.js</a>\n
     and <a href="../addon/dialog/dialog.css">addon/dialog/dialog.css</a>.</p>\n
   </article>

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897141.64</string> </value>
+            <value> <string>ts60604377.61</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -43,7 +43,7 @@
     "implements get native operator set typedef with enum throw rethrow " +\n
     "assert break case continue default in return new deferred async await " +\n
     "try catch finally do else for if switch while import library export " +\n
-    "part of show hide is").split(" ");\n
+    "part of show hide is as").split(" ");\n
   var blockKeywords = "try catch finally do else for if switch while".split(" ");\n
   var atoms = "true false null".split(" ");\n
   var builtins = "void bool num int double dynamic var String".split(" ");\n
@@ -54,20 +54,127 @@
     return obj;\n
   }\n
 \n
+  function pushInterpolationStack(state) {\n
+    (state.interpolationStack || (state.interpolationStack = [])).push(state.tokenize);\n
+  }\n
+\n
+  function popInterpolationStack(state) {\n
+    return (state.interpolationStack || (state.interpolationStack = [])).pop();\n
+  }\n
+\n
+  function sizeInterpolationStack(state) {\n
+    return state.interpolationStack ? state.interpolationStack.length : 0;\n
+  }\n
+\n
   CodeMirror.defineMIME("application/dart", {\n
     name: "clike",\n
     keywords: set(keywords),\n
-    multiLineStrings: true,\n
     blockKeywords: set(blockKeywords),\n
     builtin: set(builtins),\n
     atoms: set(atoms),\n
     hooks: {\n
       "@": function(stream) {\n
-        stream.eatWhile(/[\\w\\$_]/);\n
+        stream.eatWhile(/[\\w\\$_\\.]/);\n
         return "meta";\n
+      },\n
+\n
+      // custom string handling to deal with triple-quoted strings and string interpolation\n
+      "\'": function(stream, state) {\n
+        return tokenString("\'", stream, state, false);\n
+      },\n
+      "\\"": function(stream, state) {\n
+        return tokenString("\\"", stream, state, false);\n
+      },\n
+      "r": function(stream, state) {\n
+        var peek = stream.peek();\n
+        if (peek == "\'" || peek == "\\"") {\n
+          return tokenString(stream.next(), stream, state, true);\n
+        }\n
+        return false;\n
+      },\n
+\n
+      "}": function(_stream, state) {\n
+        // "}" is end of interpolation, if interpolation stack is non-empty\n
+        if (sizeInterpolationStack(state) > 0) {\n
+          state.tokenize = popInterpolationStack(state);\n
+          return null;\n
+        }\n
+        return false;\n
+      },\n
+\n
+      "/": function(stream, state) {\n
+        if (!stream.eat("*")) return false\n
+        state.tokenize = tokenNestedComment(1)\n
+        return state.tokenize(stream, state)\n
       }\n
     }\n
   });\n
+\n
+  function tokenString(quote, stream, state, raw) {\n
+    var tripleQuoted = false;\n
+    if (stream.eat(quote)) {\n
+      if (stream.eat(quote)) tripleQuoted = true;\n
+      else return "string"; //empty string\n
+    }\n
+    function tokenStringHelper(stream, state) {\n
+      var escaped = false;\n
+      while (!stream.eol()) {\n
+        if (!raw && !escaped && stream.peek() == "$") {\n
+          pushInterpolationStack(state);\n
+          state.tokenize = tokenInterpolation;\n
+          return "string";\n
+        }\n
+        var next = stream.next();\n
+        if (next == quote && !escaped && (!tripleQuoted || stream.match(quote + quote))) {\n
+          state.tokenize = null;\n
+          break;\n
+        }\n
+        escaped = !raw && !escaped && next == "\\\\";\n
+      }\n
+      return "string";\n
+    }\n
+    state.tokenize = tokenStringHelper;\n
+    return tokenStringHelper(stream, state);\n
+  }\n
+\n
+  function tokenInterpolation(stream, state) {\n
+    stream.eat("$");\n
+    if (stream.eat("{")) {\n
+      // let clike handle the content of ${...},\n
+      // we take over again when "}" appears (see hooks).\n
+      state.tokenize = null;\n
+    } else {\n
+      state.tokenize = tokenInterpolationIdentifier;\n
+    }\n
+    return null;\n
+  }\n
+\n
+  function tokenInterpolationIdentifier(stream, state) {\n
+    stream.eatWhile(/[\\w_]/);\n
+    state.tokenize = popInterpolationStack(state);\n
+    return "variable";\n
+  }\n
+\n
+  function tokenNestedComment(depth) {\n
+    return function (stream, state) {\n
+      var ch\n
+      while (ch = stream.next()) {\n
+        if (ch == "*" && stream.eat("/")) {\n
+          if (depth == 1) {\n
+            state.tokenize = null\n
+            break\n
+          } else {\n
+            state.tokenize = tokenNestedComment(depth - 1)\n
+            return state.tokenize(stream, state)\n
+          }\n
+        } else if (ch == "/" && stream.eat("*")) {\n
+          state.tokenize = tokenNestedComment(depth + 1)\n
+          return state.tokenize(stream, state)\n
+        }\n
+      }\n
+      return "comment"\n
+    }\n
+  }\n
 \n
   CodeMirror.registerHelper("hintWords", "application/dart", keywords.concat(atoms).concat(builtins));\n
 \n
@@ -86,7 +193,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1820</int> </value>
+            <value> <int>5114</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897142.34</string> </value>
+            <value> <string>ts60604386.9</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -80,35 +80,27 @@ CodeMirror.defineMode(\'tiki\', function(config) {\n
     case "{": //plugin\n
       stream.eat("/");\n
       stream.eatSpace();\n
-      var tagName = "";\n
-      var c;\n
-      while ((c = stream.eat(/[^\\s\\u00a0=\\"\\\'\\/?(}]/))) tagName += c;\n
+      stream.eatWhile(/[^\\s\\u00a0=\\"\\\'\\/?(}]/);\n
       state.tokenize = inPlugin;\n
       return "tag";\n
-      break;\n
     case "_": //bold\n
-      if (stream.eat("_")) {\n
+      if (stream.eat("_"))\n
         return chain(inBlock("strong", "__", inText));\n
-      }\n
       break;\n
     case "\'": //italics\n
-      if (stream.eat("\'")) {\n
-        // Italic text\n
+      if (stream.eat("\'"))\n
         return chain(inBlock("em", "\'\'", inText));\n
-      }\n
       break;\n
     case "(":// Wiki Link\n
-      if (stream.eat("(")) {\n
+      if (stream.eat("("))\n
         return chain(inBlock("variable-2", "))", inText));\n
-      }\n
       break;\n
     case "[":// Weblink\n
       return chain(inBlock("variable-3", "]", inText));\n
       break;\n
     case "|": //table\n
-      if (stream.eat("|")) {\n
+      if (stream.eat("|"))\n
         return chain(inBlock("comment", "||"));\n
-      }\n
       break;\n
     case "-":\n
       if (stream.eat("=")) {//titleBar\n
@@ -118,22 +110,19 @@ CodeMirror.defineMode(\'tiki\', function(config) {\n
       }\n
       break;\n
     case "=": //underline\n
-      if (stream.match("==")) {\n
+      if (stream.match("=="))\n
         return chain(inBlock("tw-underline", "===", inText));\n
-      }\n
       break;\n
     case ":":\n
-      if (stream.eat(":")) {\n
+      if (stream.eat(":"))\n
         return chain(inBlock("comment", "::"));\n
-      }\n
       break;\n
     case "^": //box\n
       return chain(inBlock("tw-box", "^"));\n
       break;\n
     case "~": //np\n
-      if (stream.match("np~")) {\n
+      if (stream.match("np~"))\n
         return chain(inBlock("meta", "~/np~"));\n
-      }\n
       break;\n
     }\n
 \n
@@ -359,7 +348,7 @@ CodeMirror.defineMIME("text/tiki", "tiki");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8655</int> </value>
+            <value> <int>8490</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

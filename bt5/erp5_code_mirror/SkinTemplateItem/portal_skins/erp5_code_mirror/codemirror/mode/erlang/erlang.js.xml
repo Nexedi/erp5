@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897148.75</string> </value>
+            <value> <string>ts60604378.71</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -248,16 +248,12 @@ CodeMirror.defineMode("erlang", function(cmCfg) {\n
         }else{\n
           return rval(state,stream,"function");\n
         }\n
-      }else if (is_member(w,operatorAtomWords)) {\n
-        return rval(state,stream,"operator");\n
       }else if (lookahead(stream) == ":") {\n
         if (w == "erlang") {\n
           return rval(state,stream,"builtin");\n
         } else {\n
           return rval(state,stream,"function");\n
         }\n
-      }else if (is_member(w,["true","false"])) {\n
-        return rval(state,stream,"boolean");\n
       }else if (is_member(w,["true","false"])) {\n
         return rval(state,stream,"boolean");\n
       }else{\n
@@ -658,7 +654,7 @@ CodeMirror.defineMode("erlang", function(cmCfg) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>19043</int> </value>
+            <value> <int>18853</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

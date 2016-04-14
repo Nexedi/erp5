@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897118.88</string> </value>
+            <value> <string>ts60604373.38</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -53,34 +53,54 @@
   };\n
 \n
   CodeMirror.defineExtension("showHint", function(options) {\n
-    // We want a single cursor position.\n
-    if (this.listSelections().length > 1 || this.somethingSelected()) return;\n
+    options = parseOptions(this, this.getCursor("start"), options);\n
+    var selections = this.listSelections()\n
+    if (selections.length > 1) return;\n
+    // By default, don\'t allow completion when something is selected.\n
+    // A hint function can have a `supportsSelection` property to\n
+    // indicate that it can handle selections.\n
+    if (this.somethingSelected()) {\n
+      if (!options.hint.supportsSelection) return;\n
+      // Don\'t try with cross-line selections\n
+      for (var i = 0; i < selections.length; i++)\n
+        if (selections[i].head.line != selections[i].anchor.line) return;\n
+    }\n
 \n
     if (this.state.completionActive) this.state.completionActive.close();\n
     var completion = this.state.completionActive = new Completion(this, options);\n
-    var getHints = completion.options.hint;\n
-    if (!getHints) return;\n
+    if (!completion.options.hint) return;\n
 \n
     CodeMirror.signal(this, "startCompletion", this);\n
-    if (getHints.async)\n
-      getHints(this, function(hints) { completion.showHints(hints); }, completion.options);\n
-    else\n
-      return completion.showHints(getHints(this, completion.options));\n
+    completion.update(true);\n
   });\n
 \n
   function Completion(cm, options) {\n
     this.cm = cm;\n
-    this.options = this.buildOptions(options);\n
-    this.widget = this.onClose = null;\n
+    this.options = options;\n
+    this.widget = null;\n
+    this.debounce = 0;\n
+    this.tick = 0;\n
+    this.startPos = this.cm.getCursor("start");\n
+    this.startLen = this.cm.getLine(this.startPos.line).length - this.cm.getSelection().length;\n
+\n
+    var self = this;\n
+    cm.on("cursorActivity", this.activityFunc = function() { self.cursorActivity(); });\n
   }\n
+\n
+  var requestAnimationFrame = window.requestAnimationFrame || function(fn) {\n
+    return setTimeout(fn, 1000/60);\n
+  };\n
+  var cancelAnimationFrame = window.cancelAnimationFrame || clearTimeout;\n
 \n
   Completion.prototype = {\n
     close: function() {\n
       if (!this.active()) return;\n
       this.cm.state.completionActive = null;\n
+      this.tick = null;\n
+      this.cm.off("cursorActivity", this.activityFunc);\n
 \n
+      if (this.widget && this.data) CodeMirror.signal(this.data, "close");\n
       if (this.widget) this.widget.close();\n
-      if (this.onClose) this.onClose();\n
       CodeMirror.signal(this.cm, "endCompletion", this.cm);\n
     },\n
 \n
@@ -97,87 +117,72 @@
       this.close();\n
     },\n
 \n
-    showHints: function(data) {\n
-      if (!data || !data.list.length || !this.active()) return this.close();\n
+    cursorActivity: function() {\n
+      if (this.debounce) {\n
+        cancelAnimationFrame(this.debounce);\n
+        this.debounce = 0;\n
+      }\n
 \n
-      if (this.options.completeSingle && data.list.length == 1)\n
-        this.pick(data, 0);\n
-      else\n
-        this.showWidget(data);\n
+      var pos = this.cm.getCursor(), line = this.cm.getLine(pos.line);\n
+      if (pos.line != this.startPos.line || line.length - pos.ch != this.startLen - this.startPos.ch ||\n
+          pos.ch < this.startPos.ch || this.cm.somethingSelected() ||\n
+          (pos.ch && this.options.closeCharacters.test(line.charAt(pos.ch - 1)))) {\n
+        this.close();\n
+      } else {\n
+        var self = this;\n
+        this.debounce = requestAnimationFrame(function() {self.update();});\n
+        if (this.widget) this.widget.disable();\n
+      }\n
     },\n
 \n
-    showWidget: function(data) {\n
-      this.widget = new Widget(this, data);\n
-      CodeMirror.signal(data, "shown");\n
-\n
-      var debounce = 0, completion = this, finished;\n
-      var closeOn = this.options.closeCharacters;\n
-      var startPos = this.cm.getCursor(), startLen = this.cm.getLine(startPos.line).length;\n
-\n
-      var requestAnimationFrame = window.requestAnimationFrame || function(fn) {\n
-        return setTimeout(fn, 1000/60);\n
-      };\n
-      var cancelAnimationFrame = window.cancelAnimationFrame || clearTimeout;\n
-\n
-      function done() {\n
-        if (finished) return;\n
-        finished = true;\n
-        completion.close();\n
-        completion.cm.off("cursorActivity", activity);\n
-        if (data) CodeMirror.signal(data, "close");\n
+    update: function(first) {\n
+      if (this.tick == null) return;\n
+      if (!this.options.hint.async) {\n
+        this.finishUpdate(this.options.hint(this.cm, this.options), first);\n
+      } else {\n
+        var myTick = ++this.tick, self = this;\n
+        this.options.hint(this.cm, function(data) {\n
+          if (self.tick == myTick) self.finishUpdate(data, first);\n
+        }, this.options);\n
       }\n
+    },\n
 \n
-      function update() {\n
-        if (finished) return;\n
-        CodeMirror.signal(data, "update");\n
-        var getHints = completion.options.hint;\n
-        if (getHints.async)\n
-          getHints(completion.cm, finishUpdate, completion.options);\n
-        else\n
-          finishUpdate(getHints(completion.cm, completion.options));\n
-      }\n
-      function finishUpdate(data_) {\n
-        data = data_;\n
-        if (finished) return;\n
-        if (!data || !data.list.length) return done();\n
-        if (completion.widget) completion.widget.close();\n
-        completion.widget = new Widget(completion, data);\n
-      }\n
+    finishUpdate: function(data, first) {\n
+      if (this.data) CodeMirror.signal(this.data, "update");\n
 \n
-      function clearDebounce() {\n
-        if (debounce) {\n
-          cancelAnimationFrame(debounce);\n
-          debounce = 0;\n
-        }\n
-      }\n
+      var picked = (this.widget && this.widget.picked) || (first && this.options.completeSingle);\n
+      if (this.widget) this.widget.close();\n
 \n
-      function activity() {\n
-        clearDebounce();\n
-        var pos = completion.cm.getCursor(), line = completion.cm.getLine(pos.line);\n
-        if (pos.line != startPos.line || line.length - pos.ch != startLen - startPos.ch ||\n
-            pos.ch < startPos.ch || completion.cm.somethingSelected() ||\n
-            (pos.ch && closeOn.test(line.charAt(pos.ch - 1)))) {\n
-          completion.close();\n
+      if (data && this.data && isNewCompletion(this.data, data)) return;\n
+      this.data = data;\n
+\n
+      if (data && data.list.length) {\n
+        if (picked && data.list.length == 1) {\n
+          this.pick(data, 0);\n
         } else {\n
-          debounce = requestAnimationFrame(update);\n
-          if (completion.widget) completion.widget.close();\n
+          this.widget = new Widget(this, data);\n
+          CodeMirror.signal(data, "shown");\n
         }\n
       }\n
-      this.cm.on("cursorActivity", activity);\n
-      this.onClose = done;\n
-    },\n
-\n
-    buildOptions: function(options) {\n
-      var editor = this.cm.options.hintOptions;\n
-      var out = {};\n
-      for (var prop in defaultOptions) out[prop] = defaultOptions[prop];\n
-      if (editor) for (var prop in editor)\n
-        if (editor[prop] !== undefined) out[prop] = editor[prop];\n
-      if (options) for (var prop in options)\n
-        if (options[prop] !== undefined) out[prop] = options[prop];\n
-      return out;\n
     }\n
   };\n
+\n
+  function isNewCompletion(old, nw) {\n
+    var moved = CodeMirror.cmpPos(nw.from, old.from)\n
+    return moved > 0 && old.to.ch - old.from.ch != nw.to.ch - nw.from.ch\n
+  }\n
+\n
+  function parseOptions(cm, pos, options) {\n
+    var editor = cm.options.hintOptions;\n
+    var out = {};\n
+    for (var prop in defaultOptions) out[prop] = defaultOptions[prop];\n
+    if (editor) for (var prop in editor)\n
+      if (editor[prop] !== undefined) out[prop] = editor[prop];\n
+    if (options) for (var prop in options)\n
+      if (options[prop] !== undefined) out[prop] = options[prop];\n
+    if (out.hint.resolve) out.hint = out.hint.resolve(cm, pos)\n
+    return out;\n
+  }\n
 \n
   function getText(completion) {\n
     if (typeof completion == "string") return completion;\n
@@ -229,6 +234,7 @@
   function Widget(completion, data) {\n
     this.completion = completion;\n
     this.data = data;\n
+    this.picked = false;\n
     var widget = this, cm = completion.cm;\n
 \n
     var hints = this.hints = document.createElement("ul");\n
@@ -343,6 +349,13 @@
       cm.off("scroll", this.onScroll);\n
     },\n
 \n
+    disable: function() {\n
+      this.completion.cm.removeKeyMap(this.keyMap);\n
+      var widget = this;\n
+      this.keyMap = {Enter: function() { widget.picked = true; }};\n
+      this.completion.cm.addKeyMap(this.keyMap);\n
+    },\n
+\n
     pick: function() {\n
       this.completion.pick(this.data, this.selectedHint);\n
     },\n
@@ -369,34 +382,79 @@
     }\n
   };\n
 \n
-  CodeMirror.registerHelper("hint", "auto", function(cm, options) {\n
-    var helpers = cm.getHelpers(cm.getCursor(), "hint"), words;\n
+  function applicableHelpers(cm, helpers) {\n
+    if (!cm.somethingSelected()) return helpers\n
+    var result = []\n
+    for (var i = 0; i < helpers.length; i++)\n
+      if (helpers[i].supportsSelection) result.push(helpers[i])\n
+    return result\n
+  }\n
+\n
+  function resolveAutoHints(cm, pos) {\n
+    var helpers = cm.getHelpers(pos, "hint"), words\n
     if (helpers.length) {\n
-      for (var i = 0; i < helpers.length; i++) {\n
-        var cur = helpers[i](cm, options);\n
-        if (cur && cur.list.length) return cur;\n
+      var async = false, resolved\n
+      for (var i = 0; i < helpers.length; i++) if (helpers[i].async) async = true\n
+      if (async) {\n
+        resolved = function(cm, callback, options) {\n
+          var app = applicableHelpers(cm, helpers)\n
+          function run(i, result) {\n
+            if (i == app.length) return callback(null)\n
+            var helper = app[i]\n
+            if (helper.async) {\n
+              helper(cm, function(result) {\n
+                if (result) callback(result)\n
+                else run(i + 1)\n
+              }, options)\n
+            } else {\n
+              var result = helper(cm, options)\n
+              if (result) callback(result)\n
+              else run(i + 1)\n
+            }\n
+          }\n
+          run(0)\n
+        }\n
+        resolved.async = true\n
+      } else {\n
+        resolved = function(cm, options) {\n
+          var app = applicableHelpers(cm, helpers)\n
+          for (var i = 0; i < app.length; i++) {\n
+            var cur = app[i](cm, options)\n
+            if (cur && cur.list.length) return cur\n
+          }\n
+        }\n
       }\n
+      resolved.supportsSelection = true\n
+      return resolved\n
     } else if (words = cm.getHelper(cm.getCursor(), "hintWords")) {\n
-      if (words) return CodeMirror.hint.fromList(cm, {words: words});\n
+      return function(cm) { return CodeMirror.hint.fromList(cm, {words: words}) }\n
     } else if (CodeMirror.hint.anyword) {\n
-      return CodeMirror.hint.anyword(cm, options);\n
+      return function(cm, options) { return CodeMirror.hint.anyword(cm, options) }\n
+    } else {\n
+      return function() {}\n
     }\n
+  }\n
+\n
+  CodeMirror.registerHelper("hint", "auto", {\n
+    resolve: resolveAutoHints\n
   });\n
 \n
   CodeMirror.registerHelper("hint", "fromList", function(cm, options) {\n
     var cur = cm.getCursor(), token = cm.getTokenAt(cur);\n
+    var to = CodeMirror.Pos(cur.line, token.end);\n
+    if (token.string && /\\w/.test(token.string[token.string.length - 1])) {\n
+      var term = token.string, from = CodeMirror.Pos(cur.line, token.start);\n
+    } else {\n
+      var term = "", from = to;\n
+    }\n
     var found = [];\n
     for (var i = 0; i < options.words.length; i++) {\n
       var word = options.words[i];\n
-      if (word.slice(0, token.string.length) == token.string)\n
+      if (word.slice(0, term.length) == term)\n
         found.push(word);\n
     }\n
 \n
-    if (found.length) return {\n
-      list: found,\n
-      from: CodeMirror.Pos(cur.line, token.start),\n
-            to: CodeMirror.Pos(cur.line, token.end)\n
-    };\n
+    if (found.length) return {list: found, from: from, to: to};\n
   });\n
 \n
   CodeMirror.commands.autocomplete = CodeMirror.showHint;\n
@@ -407,7 +465,7 @@
     alignWithWord: true,\n
     closeCharacters: /[\\s()\\[\\]{};:>,]/,\n
     closeOnUnfocus: true,\n
-    completeOnSingleClick: false,\n
+    completeOnSingleClick: true,\n
     container: null,\n
     customKeys: null,\n
     extraKeys: null\n
@@ -425,7 +483,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>14333</int> </value>
+            <value> <int>16422</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

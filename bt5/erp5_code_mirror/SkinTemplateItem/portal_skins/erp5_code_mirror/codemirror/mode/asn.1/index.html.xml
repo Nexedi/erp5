@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+ï»¿<!doctype html>\n
+\n
+<title>CodeMirror: ASN.1 mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="asn.1.js"></script>\n
+<style type="text/css">\n
+    .CodeMirror {\n
+        border-top: 1px solid black;\n
+        border-bottom: 1px solid black;\n
+    }\n
+</style>\n
+<div id=nav>\n
+    <a href="http://codemirror.net"><h1>CodeMirror</h1>\n
+        <img id=logo src="../../doc/logo.png">\n
+    </a>\n
+\n
+    <ul>\n
+        <li><a href="../../index.html">Home</a>\n
+        <li><a href="../../doc/manual.html">Manual</a>\n
+        <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+    </ul>\n
+    <ul>\n
+        <li><a href="../index.html">Language modes</a>\n
+        <li><a class=active href="http://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One">ASN.1</a>\n
+    </ul>\n
+</div>\n
+<article>\n
+    <h2>ASN.1 example</h2>\n
+    <div>\n
+        <textarea id="ttcn-asn-code">\n
+ --\n
+ -- Sample ASN.1 Code\n
+ --\n
+ MyModule DEFINITIONS ::=\n
+ BEGIN\n
+\n
+ MyTypes ::= SEQUENCE {\n
+     myObjectId   OBJECT IDENTIFIER,\n
+     mySeqOf      SEQUENCE OF MyInt,\n
+     myBitString  BIT STRING {\n
+                         muxToken(0),\n
+                         modemToken(1)\n
+                  }\n
+ }\n
+\n
+ MyInt ::= INTEGER (0..65535)\n
+\n
+ END\n
+        </textarea>\n
+    </div>\n
+\n
+    <script>\n
+        var ttcnEditor = CodeMirror.fromTextArea(document.getElementById("ttcn-asn-code"), {\n
+            lineNumbers: true,\n
+            matchBrackets: true,\n
+            mode: "text/x-ttcn-asn"\n
+        });\n
+        ttcnEditor.setSize(400, 400);\n
+        var mac = CodeMirror.keyMap.default == CodeMirror.keyMap.macDefault;\n
+        CodeMirror.keyMap.default[(mac ? "Cmd" : "Ctrl") + "-Space"] = "autocomplete";\n
+    </script>\n
+    <br/>\n
+    <p><strong>Language:</strong> Abstract Syntax Notation One\n
+        (<a href="http://www.itu.int/en/ITU-T/asn1/Pages/introduction.aspx">ASN.1</a>)\n
+    </p>\n
+    <p><strong>MIME types defined:</strong> <code>text/x-ttcn-asn</code></p>\n
+\n
+    <br/>\n
+    <p>The development of this mode has been sponsored by <a href="http://www.ericsson.com/">Ericsson\n
+    </a>.</p>\n
+    <p>Coded by Asmelash Tsegay Gebretsadkan </p>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

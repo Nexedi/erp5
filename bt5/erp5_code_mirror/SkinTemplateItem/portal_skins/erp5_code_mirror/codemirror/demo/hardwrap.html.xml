@@ -98,11 +98,14 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
     "Ctrl-Q": function(cm) { cm.wrapParagraph(cm.getCursor(), options); }\n
   }\n
 });\n
-var wait, options = {column: 60};\n
+var wait, options = {column: 60}, changing = false;\n
 editor.on("change", function(cm, change) {\n
+  if (changing) return;\n
   clearTimeout(wait);\n
   wait = setTimeout(function() {\n
-    console.log(cm.wrapParagraphsInRange(change.from, CodeMirror.changeEnd(change), options));\n
+    changing = true;\n
+    cm.wrapParagraphsInRange(change.from, CodeMirror.changeEnd(change), options);\n
+    changing = false;\n
   }, 200);\n
 });\n
 </script>\n

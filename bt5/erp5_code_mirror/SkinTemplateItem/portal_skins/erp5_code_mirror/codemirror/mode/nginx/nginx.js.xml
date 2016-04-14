@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897135.85</string> </value>
+            <value> <string>ts60604382.78</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -201,7 +201,7 @@ CodeMirror.defineMode("nginx", function(config) {\n
   };\n
 });\n
 \n
-CodeMirror.defineMIME("text/nginx", "text/x-nginx-conf");\n
+CodeMirror.defineMIME("text/x-nginx-conf", "nginx");\n
 \n
 });\n
 
@@ -214,7 +214,7 @@ CodeMirror.defineMIME("text/nginx", "text/x-nginx-conf");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>10169</int> </value>
+            <value> <int>10164</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -1,0 +1,422 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Markdown mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/cm_edit/continuelist.js"></script>\n
+<script src="../xml/xml.js"></script>\n
+<script src="markdown.js"></script>\n
+<style type="text/css">\n
+      .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
+      .cm-s-default .cm-trailing-space-a:before,\n
+      .cm-s-default .cm-trailing-space-b:before {position: absolute; content: "\\00B7"; color: #777;}\n
+      .cm-s-default .cm-trailing-space-new-line:before {position: absolute; content: "\\21B5"; color: #777;}\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Markdown</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Markdown mode</h2>\n
+<form><textarea id="code" name="code">\n
+Markdown: Basics\n
+================\n
+\n
+&lt;ul id="ProjectSubmenu"&gt;\n
+    &lt;li&gt;&lt;a href="/projects/markdown/" title="Markdown Project Page"&gt;Main&lt;/a&gt;&lt;/li&gt;\n
+    &lt;li&gt;&lt;a class="selected" title="Markdown Basics"&gt;Basics&lt;/a&gt;&lt;/li&gt;\n
+    &lt;li&gt;&lt;a href="/projects/markdown/syntax" title="Markdown Syntax Documentation"&gt;Syntax&lt;/a&gt;&lt;/li&gt;\n
+    &lt;li&gt;&lt;a href="/projects/markdown/license" title="Pricing and License Information"&gt;License&lt;/a&gt;&lt;/li&gt;\n
+    &lt;li&gt;&lt;a href="/projects/markdown/dingus" title="Online Markdown Web Form"&gt;Dingus&lt;/a&gt;&lt;/li&gt;\n
+&lt;/ul&gt;\n
+\n
+\n
+Getting the Gist of Markdown\'s Formatting Syntax\n
+------------------------------------------------\n
+\n
+This page offers a brief overview of what it\'s like to use Markdown.\n
+The [syntax page] [s] provides complete, detailed documentation for\n
+every feature, but Markdown should be very easy to pick up simply by\n
+looking at a few examples of it in action. The examples on this page\n
+are written in a before/after style, showing example syntax and the\n
+HTML output produced by Markdown.\n
+\n
+It\'s also helpful to simply try Markdown out; the [Dingus] [d] is a\n
+web application that allows you type your own Markdown-formatted text\n
+and translate it to XHTML.\n
+\n
+**Note:** This document is itself written using Markdown; you\n
+can [see the source for it by adding \'.text\' to the URL] [src].\n
+\n
+  [s]: /projects/markdown/syntax  "Markdown Syntax"\n
+  [d]: /projects/markdown/dingus  "Markdown Dingus"\n
+  [src]: /projects/markdown/basics.text\n
+\n
+\n
+## Paragraphs, Headers, Blockquotes ##\n
+\n
+A paragraph is simply one or more consecutive lines of text, separated\n
+by one or more blank lines. (A blank line is any line that looks like\n
+a blank line -- a line containing nothing but spaces or tabs is\n
+considered blank.) Normal paragraphs should not be indented with\n
+spaces or tabs.\n
+\n
+Markdown offers two styles of headers: *Setext* and *atx*.\n
+Setext-style headers for `&lt;h1&gt;` and `&lt;h2&gt;` are created by\n
+"underlining" with equal signs (`=`) and hyphens (`-`), respectively.\n
+To create an atx-style header, you put 1-6 hash marks (`#`) at the\n
+beginning of the line -- the number of hashes equals the resulting\n
+HTML header level.\n
+\n
+Blockquotes are indicated using email-style \'`&gt;`\' angle brackets.\n
+\n
+Markdown:\n
+\n
+    A First Level Header\n
+    ====================\n
+    \n
+    A Second Level Header\n
+    ---------------------\n
+\n
+    Now is the time for all good men to come to\n
+    the aid of their country. This is just a\n
+    regular paragraph.\n
+\n
+    The quick brown fox jumped over the lazy\n
+    dog\'s back.\n
+    \n
+    ### Header 3\n
+\n
+    &gt; This is a blockquote.\n
+    &gt; \n
+    &gt; This is the second paragraph in the blockquote.\n
+    &gt;\n
+    &gt; ## This is an H2 in a blockquote\n
+\n
+\n
+Output:\n
+\n
+    &lt;h1&gt;A First Level Header&lt;/h1&gt;\n
+    \n
+    &lt;h2&gt;A Second Level Header&lt;/h2&gt;\n
+    \n
+    &lt;p&gt;Now is the time for all good men to come to\n
+    the aid of their country. This is just a\n
+    regular paragraph.&lt;/p&gt;\n
+    \n
+    &lt;p&gt;The quick brown fox jumped over the lazy\n
+    dog\'s back.&lt;/p&gt;\n
+    \n
+    &lt;h3&gt;Header 3&lt;/h3&gt;\n
+    \n
+    &lt;blockquote&gt;\n
+        &lt;p&gt;This is a blockquote.&lt;/p&gt;\n
+        \n
+        &lt;p&gt;This is the second paragraph in the blockquote.&lt;/p&gt;\n
+        \n
+        &lt;h2&gt;This is an H2 in a blockquote&lt;/h2&gt;\n
+    &lt;/blockquote&gt;\n
+\n
+\n
+\n
+### Phrase Emphasis ###\n
+\n
+Markdown uses asterisks and underscores to indicate spans of emphasis.\n
+\n
+Markdown:\n
+\n
+    Some of these words *are emphasized*.\n
+    Some of these words _are emphasized also_.\n
+    \n
+    Use two asterisks for **strong emphasis**.\n
+    Or, if you prefer, __use two underscores instead__.\n
+\n
+Output:\n
+\n
+    &lt;p&gt;Some of these words &lt;em&gt;are emphasized&lt;/em&gt;.\n
+    Some of these words &lt;em&gt;are emphasized also&lt;/em&gt;.&lt;/p&gt;\n
+    \n
+    &lt;p&gt;Use two asterisks for &lt;strong&gt;strong emphasis&lt;/strong&gt;.\n
+    Or, if you prefer, &lt;strong&gt;use two underscores instead&lt;/strong&gt;.&lt;/p&gt;\n
+   \n
+\n
+\n
+## Lists ##\n
+\n
+Unordered (bulleted) lists use asterisks, pluses, and hyphens (`*`,\n
+`+`, and `-`) as list markers. These three markers are\n
+interchangable; this:\n
+\n
+    *   Candy.\n
+    *   Gum.\n
+    *   Booze.\n
+\n
+this:\n
+\n
+    +   Candy.\n
+    +   Gum.\n
+    +   Booze.\n
+\n
+and this:\n
+\n
+    -   Candy.\n
+    -   Gum.\n
+    -   Booze.\n
+\n
+all produce the same output:\n
+\n
+    &lt;ul&gt;\n
+    &lt;li&gt;Candy.&lt;/li&gt;\n
+    &lt;li&gt;Gum.&lt;/li&gt;\n
+    &lt;li&gt;Booze.&lt;/li&gt;\n
+    &lt;/ul&gt;\n
+\n
+Ordered (numbered) lists use regular numbers, followed by periods, as\n
+list markers:\n
+\n
+    1.  Red\n
+    2.  Green\n
+    3.  Blue\n
+\n
+Output:\n
+\n
+    &lt;ol&gt;\n
+    &lt;li&gt;Red&lt;/li&gt;\n
+    &lt;li&gt;Green&lt;/li&gt;\n
+    &lt;li&gt;Blue&lt;/li&gt;\n
+    &lt;/ol&gt;\n
+\n
+If you put blank lines between items, you\'ll get `&lt;p&gt;` tags for the\n
+list item text. You can create multi-paragraph list items by indenting\n
+the paragraphs by 4 spaces or 1 tab:\n
+\n
+    *   A list item.\n
+    \n
+        With multiple paragraphs.\n
+\n
+    *   Another item in the list.\n
+\n
+Output:\n
+\n
+    &lt;ul&gt;\n
+    &lt;li&gt;&lt;p&gt;A list item.&lt;/p&gt;\n
+    &lt;p&gt;With multiple paragraphs.&lt;/p&gt;&lt;/li&gt;\n
+    &lt;li&gt;&lt;p&gt;Another item in the list.&lt;/p&gt;&lt;/li&gt;\n
+    &lt;/ul&gt;\n
+    \n
+\n
+\n
+### Links ###\n
+\n
+Markdown supports two styles for creating links: *inline* and\n
+*reference*. With both styles, you use square brackets to delimit the\n
+text you want to turn into a link.\n
+\n
+Inline-style links use parentheses immediately after the link text.\n
+For example:\n
+\n
+    This is an [example link](http://example.com/).\n
+\n
+Output:\n
+\n
+    &lt;p&gt;This is an &lt;a href="http://example.com/"&gt;\n
+    example link&lt;/a&gt;.&lt;/p&gt;\n
+\n
+Optionally, you may include a title attribute in the parentheses:\n
+\n
+    This is an [example link](http://example.com/ "With a Title").\n
+\n
+Output:\n
+\n
+    &lt;p&gt;This is an &lt;a href="http://example.com/" title="With a Title"&gt;\n
+    example link&lt;/a&gt;.&lt;/p&gt;\n
+\n
+Reference-style links allow you to refer to your links by names, which\n
+you define elsewhere in your document:\n
+\n
+    I get 10 times more traffic from [Google][1] than from\n
+    [Yahoo][2] or [MSN][3].\n
+\n
+    [1]: http://google.com/        "Google"\n
+    [2]: http://search.yahoo.com/  "Yahoo Search"\n
+    [3]: http://search.msn.com/    "MSN Search"\n
+\n
+Output:\n
+\n
+    &lt;p&gt;I get 10 times more traffic from &lt;a href="http://google.com/"\n
+    title="Google"&gt;Google&lt;/a&gt; than from &lt;a href="http://search.yahoo.com/"\n
+    title="Yahoo Search"&gt;Yahoo&lt;/a&gt; or &lt;a href="http://search.msn.com/"\n
+    title="MSN Search"&gt;MSN&lt;/a&gt;.&lt;/p&gt;\n
+\n
+The title attribute is optional. Link names may contain letters,\n
+numbers and spaces, but are *not* case sensitive:\n
+\n
+    I start my morning with a cup of coffee and\n
+    [The New York Times][NY Times].\n
+\n
+    [ny times]: http://www.nytimes.com/\n
+\n
+Output:\n
+\n
+    &lt;p&gt;I start my morning with a cup of coffee and\n
+    &lt;a href="http://www.nytimes.com/"&gt;The New York Times&lt;/a&gt;.&lt;/p&gt;\n
+\n
+\n
+### Images ###\n
+\n
+Image syntax is very much like link syntax.\n
+\n
+Inline (titles are optional):\n
+\n
+    ![alt text](/path/to/img.jpg "Title")\n
+\n
+Reference-style:\n
+\n
+    ![alt text][id]\n
+\n
+    [id]: /path/to/img.jpg "Title"\n
+\n
+Both of the above examples produce the same output:\n
+\n
+    &lt;img src="/path/to/img.jpg" alt="alt text" title="Title" /&gt;\n
+\n
+\n
+\n
+### Code ###\n
+\n
+In a regular paragraph, you can create code span by wrapping text in\n
+backtick quotes. Any ampersands (`&amp;`) and angle brackets (`&lt;` or\n
+`&gt;`) will automatically be translated into HTML entities. This makes\n
+it easy to use Markdown to write about HTML example code:\n
+\n
+    I strongly recommend against using any `&lt;blink&gt;` tags.\n
+\n
+    I wish SmartyPants used named entities like `&amp;mdash;`\n
+    instead of decimal-encoded entites like `&amp;#8212;`.\n
+\n
+Output:\n
+\n
+    &lt;p&gt;I strongly recommend against using any\n
+    &lt;code&gt;&amp;lt;blink&amp;gt;&lt;/code&gt; tags.&lt;/p&gt;\n
+    \n
+    &lt;p&gt;I wish SmartyPants used named entities like\n
+    &lt;code&gt;&amp;amp;mdash;&lt;/code&gt; instead of decimal-encoded\n
+    entites like &lt;code&gt;&amp;amp;#8212;&lt;/code&gt;.&lt;/p&gt;\n
+\n
+\n
+To specify an entire block of pre-formatted code, indent every line of\n
+the block by 4 spaces or 1 tab. Just like with code spans, `&amp;`, `&lt;`,\n
+and `&gt;` characters will be escaped automatically.\n
+\n
+Markdown:\n
+\n
+    If you want your page to validate under XHTML 1.0 Strict,\n
+    you\'ve got to put paragraph tags in your blockquotes:\n
+\n
+        &lt;blockquote&gt;\n
+            &lt;p&gt;For example.&lt;/p&gt;\n
+        &lt;/blockquote&gt;\n
+\n
+Output:\n
+\n
+    &lt;p&gt;If you want your page to validate under XHTML 1.0 Strict,\n
+    you\'ve got to put paragraph tags in your blockquotes:&lt;/p&gt;\n
+    \n
+    &lt;pre&gt;&lt;code&gt;&amp;lt;blockquote&amp;gt;\n
+        &amp;lt;p&amp;gt;For example.&amp;lt;/p&amp;gt;\n
+    &amp;lt;/blockquote&amp;gt;\n
+    &lt;/code&gt;&lt;/pre&gt;\n
+</textarea></form>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        mode: \'markdown\',\n
+        lineNumbers: true,\n
+        theme: "default",\n
+        extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"}\n
+      });\n
+    </script>\n
+\n
+    <p>You might want to use the <a href="../gfm/index.html">Github-Flavored Markdown mode</a> instead, which adds support for fenced code blocks and a few other things.</p>\n
+\n
+    <p>Optionally depends on the XML mode for properly highlighted inline XML blocks.</p>\n
+    \n
+    <p><strong>MIME types defined:</strong> <code>text/x-markdown</code>.</p>\n
+\n
+    <p><strong>Parsing/Highlighting Tests:</strong> <a href="../../test/index.html#markdown_*">normal</a>,  <a href="../../test/index.html#verbose,markdown_*">verbose</a>.</p>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

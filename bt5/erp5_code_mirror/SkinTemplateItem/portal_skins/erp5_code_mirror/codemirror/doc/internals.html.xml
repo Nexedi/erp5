@@ -36,7 +36,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<!doctype html>\n
+ï»¿<!doctype html>\n
 \n
 <title>CodeMirror: Internals</title>\n
 <meta charset="utf-8"/>\n
@@ -538,6 +538,7 @@ composing is finished, but many don\'t fire anything when the character\n
 is updated <em>during</em> composition. So we poll, whenever the\n
 editor is focused, to provide immediate updates of the display.</p>\n
 \n
+</section>\n
 </article>
 
 ]]></unicode> </value>

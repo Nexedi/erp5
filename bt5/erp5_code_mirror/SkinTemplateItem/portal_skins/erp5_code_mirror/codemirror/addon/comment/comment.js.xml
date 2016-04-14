@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897117.58</string> </value>
+            <value> <string>ts60604372.17</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -49,22 +49,28 @@
   }\n
 \n
   CodeMirror.commands.toggleComment = function(cm) {\n
-    var minLine = Infinity, ranges = cm.listSelections(), mode = null;\n
+    cm.toggleComment();\n
+  };\n
+\n
+  CodeMirror.defineExtension("toggleComment", function(options) {\n
+    if (!options) options = noOptions;\n
+    var cm = this;\n
+    var minLine = Infinity, ranges = this.listSelections(), mode = null;\n
     for (var i = ranges.length - 1; i >= 0; i--) {\n
       var from = ranges[i].from(), to = ranges[i].to();\n
       if (from.line >= minLine) continue;\n
       if (to.line >= minLine) to = Pos(minLine, 0);\n
       minLine = from.line;\n
       if (mode == null) {\n
-        if (cm.uncomment(from, to)) mode = "un";\n
-        else { cm.lineComment(from, to); mode = "line"; }\n
+        if (cm.uncomment(from, to, options)) mode = "un";\n
+        else { cm.lineComment(from, to, options); mode = "line"; }\n
       } else if (mode == "un") {\n
-        cm.uncomment(from, to);\n
+        cm.uncomment(from, to, options);\n
       } else {\n
-        cm.lineComment(from, to);\n
+        cm.lineComment(from, to, options);\n
       }\n
     }\n
-  };\n
+  });\n
 \n
   CodeMirror.defineExtension("lineComment", function(from, to, options) {\n
     if (!options) options = noOptions;\n
@@ -85,7 +91,14 @@
 \n
     self.operation(function() {\n
       if (options.indent) {\n
-        var baseString = firstLine.slice(0, firstNonWS(firstLine));\n
+        var baseString = null;\n
+        for (var i = from.line; i < end; ++i) {\n
+          var line = self.getLine(i);\n
+          var whitespace = line.slice(0, firstNonWS(line));\n
+          if (baseString == null || baseString.length > whitespace.length) {\n
+            baseString = whitespace;\n
+          }\n
+        }\n
         for (var i = from.line; i < end; ++i) {\n
           var line = self.getLine(i), cut = baseString.length;\n
           if (!blankLines && !nonWS.test(line)) continue;\n
@@ -219,7 +232,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8008</int> </value>
+            <value> <int>8446</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897121.25</string> </value>
+            <value> <string>ts60604374.81</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -44,13 +44,14 @@
 // highlighted only if the selected text is a word. showToken, when enabled,\n
 // will cause the current token to be highlighted when nothing is selected.\n
 // delay is used to specify how much time to wait, in milliseconds, before\n
-// highlighting the matches.\n
+// highlighting the matches. If annotateScrollbar is enabled, the occurances\n
+// will be highlighted on the scrollbar via the matchesonscrollbar addon.\n
 \n
 (function(mod) {\n
   if (typeof exports == "object" && typeof module == "object") // CommonJS\n
-    mod(require("../../lib/codemirror"));\n
+    mod(require("../../lib/codemirror"), require("./matchesonscrollbar"));\n
   else if (typeof define == "function" && define.amd) // AMD\n
-    define(["../../lib/codemirror"], mod);\n
+    define(["../../lib/codemirror", "./matchesonscrollbar"], mod);\n
   else // Plain browser env\n
     mod(CodeMirror);\n
 })(function(CodeMirror) {\n
@@ -68,18 +69,19 @@
       this.showToken = options.showToken;\n
       this.delay = options.delay;\n
       this.wordsOnly = options.wordsOnly;\n
+      this.annotateScrollbar = options.annotateScrollbar;\n
     }\n
     if (this.style == null) this.style = DEFAULT_TOKEN_STYLE;\n
     if (this.minChars == null) this.minChars = DEFAULT_MIN_CHARS;\n
     if (this.delay == null) this.delay = DEFAULT_DELAY;\n
     if (this.wordsOnly == null) this.wordsOnly = DEFAULT_WORDS_ONLY;\n
     this.overlay = this.timeout = null;\n
+    this.matchesonscroll = null;\n
   }\n
 \n
   CodeMirror.defineOption("highlightSelectionMatches", false, function(cm, val, old) {\n
     if (old && old != CodeMirror.Init) {\n
-      var over = cm.state.matchHighlighter.overlay;\n
-      if (over) cm.removeOverlay(over);\n
+      removeOverlay(cm);\n
       clearTimeout(cm.state.matchHighlighter.timeout);\n
       cm.state.matchHighlighter = null;\n
       cm.off("cursorActivity", cursorActivity);\n
@@ -97,20 +99,39 @@
     state.timeout = setTimeout(function() {highlightMatches(cm);}, state.delay);\n
   }\n
 \n
+  function addOverlay(cm, query, hasBoundary, style) {\n
+    var state = cm.state.matchHighlighter;\n
+    cm.addOverlay(state.overlay = makeOverlay(query, hasBoundary, style));\n
+    if (state.annotateScrollbar) {\n
+      var searchFor = hasBoundary ? new RegExp("\\\\b" + query + "\\\\b") : query;\n
+      state.matchesonscroll = cm.showMatchesOnScrollbar(searchFor, true,\n
+        {className: "CodeMirror-selection-highlight-scrollbar"});\n
+    }\n
+  }\n
+\n
+  function removeOverlay(cm) {\n
+    var state = cm.state.matchHighlighter;\n
+    if (state.overlay) {\n
+      cm.removeOverlay(state.overlay);\n
+      state.overlay = null;\n
+      if (state.annotateScrollbar) {\n
+        state.matchesonscroll.clear();\n
+        state.matchesonscroll = null;\n
+      }\n
+    }\n
+  }\n
+\n
   function highlightMatches(cm) {\n
     cm.operation(function() {\n
       var state = cm.state.matchHighlighter;\n
-      if (state.overlay) {\n
-        cm.removeOverlay(state.overlay);\n
-        state.overlay = null;\n
-      }\n
+      removeOverlay(cm);\n
       if (!cm.somethingSelected() && state.showToken) {\n
         var re = state.showToken === true ? /[\\w$]/ : state.showToken;\n
         var cur = cm.getCursor(), line = cm.getLine(cur.line), start = cur.ch, end = start;\n
         while (start && re.test(line.charAt(start - 1))) --start;\n
         while (end < line.length && re.test(line.charAt(end))) ++end;\n
         if (start < end)\n
-          cm.addOverlay(state.overlay = makeOverlay(line.slice(start, end), re, state.style));\n
+          addOverlay(cm, line.slice(start, end), re, state.style);\n
         return;\n
       }\n
       var from = cm.getCursor("from"), to = cm.getCursor("to");\n
@@ -118,7 +139,7 @@
       if (state.wordsOnly && !isWord(cm, from, to)) return;\n
       var selection = cm.getRange(from, to).replace(/^\\s+|\\s+$/g, "");\n
       if (selection.length >= state.minChars)\n
-        cm.addOverlay(state.overlay = makeOverlay(selection, false, state.style));\n
+        addOverlay(cm, selection, false, state.style);\n
     });\n
   }\n
 \n
@@ -164,7 +185,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4943</int> </value>
+            <value> <int>5745</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

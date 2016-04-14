@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts60604382.53</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>xu_test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function() {\n
+  var mode = CodeMirror.getMode({indentUnit: 2}, "text/x-xu");\n
+  function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1), "xu"); }\n
+\n
+  MT("empty chart",\n
+     "[keyword msc][bracket {]",\n
+     "[base   ]",\n
+     "[bracket }]"\n
+   );\n
+\n
+  MT("comments",\n
+    "[comment // a single line comment]",\n
+    "[comment # another  single line comment /* and */ ignored here]",\n
+    "[comment /* A multi-line comment even though it contains]",\n
+    "[comment msc keywords and \\"quoted text\\"*/]");\n
+\n
+  MT("strings",\n
+    "[string \\"// a string\\"]",\n
+    "[string \\"a string running over]",\n
+    "[string two lines\\"]",\n
+    "[string \\"with \\\\\\"escaped quote\\"]"\n
+  );\n
+\n
+  MT("xù/ msgenny keywords classify as \'keyword\'",\n
+    "[keyword watermark]",\n
+    "[keyword alt]","[keyword loop]","[keyword opt]","[keyword ref]","[keyword else]","[keyword break]","[keyword par]","[keyword seq]","[keyword assert]"\n
+  );\n
+\n
+  MT("mscgen options classify as keyword",\n
+    "[keyword hscale]", "[keyword width]", "[keyword arcgradient]", "[keyword wordwraparcs]"\n
+  );\n
+\n
+  MT("mscgen arcs classify as keyword",\n
+    "[keyword note]","[keyword abox]","[keyword rbox]","[keyword box]",\n
+    "[keyword |||...---]", "[keyword ..--==::]",\n
+    "[keyword ->]", "[keyword <-]", "[keyword <->]",\n
+    "[keyword =>]", "[keyword <=]", "[keyword <=>]",\n
+    "[keyword =>>]", "[keyword <<=]", "[keyword <<=>>]",\n
+    "[keyword >>]", "[keyword <<]", "[keyword <<>>]",\n
+    "[keyword -x]", "[keyword x-]", "[keyword -X]", "[keyword X-]",\n
+    "[keyword :>]", "[keyword <:]", "[keyword <:>]"\n
+  );\n
+\n
+  MT("within an attribute list, attributes classify as attribute",\n
+    "[bracket [[][attribute label]",\n
+    "[attribute id]","[attribute url]","[attribute idurl]",\n
+    "[attribute linecolor]","[attribute linecolour]","[attribute textcolor]","[attribute textcolour]","[attribute textbgcolor]","[attribute textbgcolour]",\n
+    "[attribute arclinecolor]","[attribute arclinecolour]","[attribute arctextcolor]","[attribute arctextcolour]","[attribute arctextbgcolor]","[attribute arctextbgcolour]",\n
+    "[attribute arcskip][bracket ]]]"\n
+  );\n
+\n
+  MT("outside an attribute list, attributes classify as base",\n
+    "[base label]",\n
+    "[base id]","[base url]","[base idurl]",\n
+    "[base linecolor]","[base linecolour]","[base textcolor]","[base textcolour]","[base textbgcolor]","[base textbgcolour]",\n
+    "[base arclinecolor]","[base arclinecolour]","[base arctextcolor]","[base arctextcolour]","[base arctextbgcolor]","[base arctextbgcolour]",\n
+    "[base arcskip]"\n
+  );\n
+\n
+  MT("a typical program",\n
+    "[comment # typical mscgen program]",\n
+    "[keyword msc][base  ][bracket {]",\n
+    "[keyword wordwraparcs][operator =][string \\"true\\"][keyword hscale][operator =][string \\"0.8\\"][keyword arcgradient][operator =][base 30;]",\n
+    "[base   a][bracket [[][attribute label][operator =][string \\"Entity A\\"][bracket ]]][base ,]",\n
+    "[base   b][bracket [[][attribute label][operator =][string \\"Entity B\\"][bracket ]]][base ,]",\n
+    "[base   c][bracket [[][attribute label][operator =][string \\"Entity C\\"][bracket ]]][base ;]",\n
+    "[base   a ][keyword =>>][base  b][bracket [[][attribute label][operator =][string \\"Hello entity B\\"][bracket ]]][base ;]",\n
+    "[base   a ][keyword <<][base  b][bracket [[][attribute label][operator =][string \\"Here\'s an answer dude!\\"][bracket ]]][base ;]",\n
+    "[base   c ][keyword :>][base  *][bracket [[][attribute label][operator =][string \\"What about me?\\"][base , ][attribute textcolor][operator =][base red][bracket ]]][base ;]",\n
+    "[bracket }]"\n
+  );\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3688</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

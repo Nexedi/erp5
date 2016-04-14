@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts60604382.47</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>msgenny_test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function() {\n
+  var mode = CodeMirror.getMode({indentUnit: 2}, "text/x-msgenny");\n
+  function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1), "msgenny"); }\n
+\n
+  MT("comments",\n
+    "[comment // a single line comment]",\n
+    "[comment # another  single line comment /* and */ ignored here]",\n
+    "[comment /* A multi-line comment even though it contains]",\n
+    "[comment msc keywords and \\"quoted text\\"*/]");\n
+\n
+  MT("strings",\n
+    "[string \\"// a string\\"]",\n
+    "[string \\"a string running over]",\n
+    "[string two lines\\"]",\n
+    "[string \\"with \\\\\\"escaped quote\\"]"\n
+  );\n
+\n
+  MT("xù/ msgenny keywords classify as \'keyword\'",\n
+    "[keyword watermark]",\n
+    "[keyword alt]","[keyword loop]","[keyword opt]","[keyword ref]","[keyword else]","[keyword break]","[keyword par]","[keyword seq]","[keyword assert]"\n
+  );\n
+\n
+  MT("mscgen options classify as keyword",\n
+    "[keyword hscale]", "[keyword width]", "[keyword arcgradient]", "[keyword wordwraparcs]"\n
+  );\n
+\n
+  MT("mscgen arcs classify as keyword",\n
+    "[keyword note]","[keyword abox]","[keyword rbox]","[keyword box]",\n
+    "[keyword |||...---]", "[keyword ..--==::]",\n
+    "[keyword ->]", "[keyword <-]", "[keyword <->]",\n
+    "[keyword =>]", "[keyword <=]", "[keyword <=>]",\n
+    "[keyword =>>]", "[keyword <<=]", "[keyword <<=>>]",\n
+    "[keyword >>]", "[keyword <<]", "[keyword <<>>]",\n
+    "[keyword -x]", "[keyword x-]", "[keyword -X]", "[keyword X-]",\n
+    "[keyword :>]", "[keyword <:]", "[keyword <:>]"\n
+  );\n
+\n
+  MT("within an attribute list, mscgen/ xù attributes classify as base",\n
+    "[base [[label]",\n
+    "[base idurl id url]",\n
+    "[base linecolor linecolour textcolor textcolour textbgcolor textbgcolour]",\n
+    "[base arclinecolor arclinecolour arctextcolor arctextcolour arctextbgcolor arctextbgcolour]",\n
+    "[base arcskip]]]"\n
+  );\n
+\n
+  MT("outside an attribute list, mscgen/ xù attributes classify as base",\n
+    "[base label]",\n
+    "[base idurl id url]",\n
+    "[base linecolor linecolour textcolor textcolour textbgcolor textbgcolour]",\n
+    "[base arclinecolor arclinecolour arctextcolor arctextcolour arctextbgcolor arctextbgcolour]",\n
+    "[base arcskip]"\n
+  );\n
+\n
+  MT("a typical program",\n
+    "[comment # typical msgenny program]",\n
+    "[keyword wordwraparcs][operator =][string \\"true\\"][base , ][keyword hscale][operator =][string \\"0.8\\"][base , ][keyword arcgradient][operator =][base 30;]",\n
+    "[base   a : ][string \\"Entity A\\"][base ,]",\n
+    "[base   b : Entity B,]",\n
+    "[base   c : Entity C;]",\n
+    "[base   a ][keyword =>>][base  b: ][string \\"Hello entity B\\"][base ;]",\n
+    "[base   a ][keyword alt][base  c][bracket {]",\n
+    "[base     a ][keyword <<][base  b: ][string \\"Here\'s an answer dude!\\"][base ;]",\n
+    "[keyword ---][base : ][string \\"sorry, won\'t march - comm glitch\\"]",\n
+    "[base     a ][keyword x-][base  b: ][string \\"Here\'s an answer dude! (won\'t arrive...)\\"][base ;]",\n
+    "[bracket }]",\n
+    "[base   c ][keyword :>][base  *: What about me?;]"\n
+  );\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3097</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

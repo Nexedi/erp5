@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897141.45</string> </value>
+            <value> <string>ts60604377.81</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -42,46 +42,335 @@
   "use strict";\n
 \n
   CodeMirror.defineMode("django:inner", function() {\n
-    var keywords = ["block", "endblock", "for", "endfor", "in", "true", "false",\n
-                    "loop", "none", "self", "super", "if", "endif", "as", "not", "and",\n
-                    "else", "import", "with", "endwith", "without", "context", "ifequal", "endifequal",\n
-                    "ifnotequal", "endifnotequal", "extends", "include", "load", "length", "comment",\n
-                    "endcomment", "empty"];\n
-    keywords = new RegExp("^((" + keywords.join(")|(") + "))\\\\b");\n
+    var keywords = ["block", "endblock", "for", "endfor", "true", "false", "filter", "endfilter",\n
+                    "loop", "none", "self", "super", "if", "elif", "endif", "as", "else", "import",\n
+                    "with", "endwith", "without", "context", "ifequal", "endifequal", "ifnotequal",\n
+                    "endifnotequal", "extends", "include", "load", "comment", "endcomment",\n
+                    "empty", "url", "static", "trans", "blocktrans", "endblocktrans", "now",\n
+                    "regroup", "lorem", "ifchanged", "endifchanged", "firstof", "debug", "cycle",\n
+                    "csrf_token", "autoescape", "endautoescape", "spaceless", "endspaceless",\n
+                    "ssi", "templatetag", "verbatim", "endverbatim", "widthratio"],\n
+        filters = ["add", "addslashes", "capfirst", "center", "cut", "date",\n
+                   "default", "default_if_none", "dictsort",\n
+                   "dictsortreversed", "divisibleby", "escape", "escapejs",\n
+                   "filesizeformat", "first", "floatformat", "force_escape",\n
+                   "get_digit", "iriencode", "join", "last", "length",\n
+                   "length_is", "linebreaks", "linebreaksbr", "linenumbers",\n
+                   "ljust", "lower", "make_list", "phone2numeric", "pluralize",\n
+                   "pprint", "random", "removetags", "rjust", "safe",\n
+                   "safeseq", "slice", "slugify", "stringformat", "striptags",\n
+                   "time", "timesince", "timeuntil", "title", "truncatechars",\n
+                   "truncatechars_html", "truncatewords", "truncatewords_html",\n
+                   "unordered_list", "upper", "urlencode", "urlize",\n
+                   "urlizetrunc", "wordcount", "wordwrap", "yesno"],\n
+        operators = ["==", "!=", "<", ">", "<=", ">="],\n
+        wordOperators = ["in", "not", "or", "and"];\n
 \n
+    keywords = new RegExp("^\\\\b(" + keywords.join("|") + ")\\\\b");\n
+    filters = new RegExp("^\\\\b(" + filters.join("|") + ")\\\\b");\n
+    operators = new RegExp("^\\\\b(" + operators.join("|") + ")\\\\b");\n
+    wordOperators = new RegExp("^\\\\b(" + wordOperators.join("|") + ")\\\\b");\n
+\n
+    // We have to return "null" instead of null, in order to avoid string\n
+    // styling as the default, when using Django templates inside HTML\n
+    // element attributes\n
     function tokenBase (stream, state) {\n
-      stream.eatWhile(/[^\\{]/);\n
-      var ch = stream.next();\n
-      if (ch == "{") {\n
-        if (ch = stream.eat(/\\{|%|#/)) {\n
-          state.tokenize = inTag(ch);\n
-          return "tag";\n
-        }\n
+      // Attempt to identify a variable, template or comment tag respectively\n
+      if (stream.match("{{")) {\n
+        state.tokenize = inVariable;\n
+        return "tag";\n
+      } else if (stream.match("{%")) {\n
+        state.tokenize = inTag;\n
+        return "tag";\n
+      } else if (stream.match("{#")) {\n
+        state.tokenize = inComment;\n
+        return "comment";\n
       }\n
+\n
+      // Ignore completely any stream series that do not match the\n
+      // Django template opening tags.\n
+      while (stream.next() != null && !stream.match(/\\{[{%#]/, false)) {}\n
+      return null;\n
     }\n
-    function inTag (close) {\n
-      if (close == "{") {\n
-        close = "}";\n
-      }\n
+\n
+    // A string can be included in either single or double quotes (this is\n
+    // the delimeter). Mark everything as a string until the start delimeter\n
+    // occurs again.\n
+    function inString (delimeter, previousTokenizer) {\n
       return function (stream, state) {\n
-        var ch = stream.next();\n
-        if ((ch == close) && stream.eat("}")) {\n
-          state.tokenize = tokenBase;\n
-          return "tag";\n
+        if (!state.escapeNext && stream.eat(delimeter)) {\n
+          state.tokenize = previousTokenizer;\n
+        } else {\n
+          if (state.escapeNext) {\n
+            state.escapeNext = false;\n
+          }\n
+\n
+          var ch = stream.next();\n
+\n
+          // Take into account the backslash for escaping characters, such as\n
+          // the string delimeter.\n
+          if (ch == "\\\\") {\n
+            state.escapeNext = true;\n
+          }\n
         }\n
-        if (stream.match(keywords)) {\n
-          return "keyword";\n
-        }\n
-        return close == "#" ? "comment" : "string";\n
+\n
+        return "string";\n
       };\n
     }\n
+\n
+    // Apply Django template variable syntax highlighting\n
+    function inVariable (stream, state) {\n
+      // Attempt to match a dot that precedes a property\n
+      if (state.waitDot) {\n
+        state.waitDot = false;\n
+\n
+        if (stream.peek() != ".") {\n
+          return "null";\n
+        }\n
+\n
+        // Dot folowed by a non-word character should be considered an error.\n
+        if (stream.match(/\\.\\W+/)) {\n
+          return "error";\n
+        } else if (stream.eat(".")) {\n
+          state.waitProperty = true;\n
+          return "null";\n
+        } else {\n
+          throw Error ("Unexpected error while waiting for property.");\n
+        }\n
+      }\n
+\n
+      // Attempt to match a pipe that precedes a filter\n
+      if (state.waitPipe) {\n
+        state.waitPipe = false;\n
+\n
+        if (stream.peek() != "|") {\n
+          return "null";\n
+        }\n
+\n
+        // Pipe folowed by a non-word character should be considered an error.\n
+        if (stream.match(/\\.\\W+/)) {\n
+          return "error";\n
+        } else if (stream.eat("|")) {\n
+          state.waitFilter = true;\n
+          return "null";\n
+        } else {\n
+          throw Error ("Unexpected error while waiting for filter.");\n
+        }\n
+      }\n
+\n
+      // Highlight properties\n
+      if (state.waitProperty) {\n
+        state.waitProperty = false;\n
+        if (stream.match(/\\b(\\w+)\\b/)) {\n
+          state.waitDot = true;  // A property can be followed by another property\n
+          state.waitPipe = true;  // A property can be followed by a filter\n
+          return "property";\n
+        }\n
+      }\n
+\n
+      // Highlight filters\n
+      if (state.waitFilter) {\n
+          state.waitFilter = false;\n
+        if (stream.match(filters)) {\n
+          return "variable-2";\n
+        }\n
+      }\n
+\n
+      // Ignore all white spaces\n
+      if (stream.eatSpace()) {\n
+        state.waitProperty = false;\n
+        return "null";\n
+      }\n
+\n
+      // Identify numbers\n
+      if (stream.match(/\\b\\d+(\\.\\d+)?\\b/)) {\n
+        return "number";\n
+      }\n
+\n
+      // Identify strings\n
+      if (stream.match("\'")) {\n
+        state.tokenize = inString("\'", state.tokenize);\n
+        return "string";\n
+      } else if (stream.match(\'"\')) {\n
+        state.tokenize = inString(\'"\', state.tokenize);\n
+        return "string";\n
+      }\n
+\n
+      // Attempt to find the variable\n
+      if (stream.match(/\\b(\\w+)\\b/) && !state.foundVariable) {\n
+        state.waitDot = true;\n
+        state.waitPipe = true;  // A property can be followed by a filter\n
+        return "variable";\n
+      }\n
+\n
+      // If found closing tag reset\n
+      if (stream.match("}}")) {\n
+        state.waitProperty = null;\n
+        state.waitFilter = null;\n
+        state.waitDot = null;\n
+        state.waitPipe = null;\n
+        state.tokenize = tokenBase;\n
+        return "tag";\n
+      }\n
+\n
+      // If nothing was found, advance to the next character\n
+      stream.next();\n
+      return "null";\n
+    }\n
+\n
+    function inTag (stream, state) {\n
+      // Attempt to match a dot that precedes a property\n
+      if (state.waitDot) {\n
+        state.waitDot = false;\n
+\n
+        if (stream.peek() != ".") {\n
+          return "null";\n
+        }\n
+\n
+        // Dot folowed by a non-word character should be considered an error.\n
+        if (stream.match(/\\.\\W+/)) {\n
+          return "error";\n
+        } else if (stream.eat(".")) {\n
+          state.waitProperty = true;\n
+          return "null";\n
+        } else {\n
+          throw Error ("Unexpected error while waiting for property.");\n
+        }\n
+      }\n
+\n
+      // Attempt to match a pipe that precedes a filter\n
+      if (state.waitPipe) {\n
+        state.waitPipe = false;\n
+\n
+        if (stream.peek() != "|") {\n
+          return "null";\n
+        }\n
+\n
+        // Pipe folowed by a non-word character should be considered an error.\n
+        if (stream.match(/\\.\\W+/)) {\n
+          return "error";\n
+        } else if (stream.eat("|")) {\n
+          state.waitFilter = true;\n
+          return "null";\n
+        } else {\n
+          throw Error ("Unexpected error while waiting for filter.");\n
+        }\n
+      }\n
+\n
+      // Highlight properties\n
+      if (state.waitProperty) {\n
+        state.waitProperty = false;\n
+        if (stream.match(/\\b(\\w+)\\b/)) {\n
+          state.waitDot = true;  // A property can be followed by another property\n
+          state.waitPipe = true;  // A property can be followed by a filter\n
+          return "property";\n
+        }\n
+      }\n
+\n
+      // Highlight filters\n
+      if (state.waitFilter) {\n
+          state.waitFilter = false;\n
+        if (stream.match(filters)) {\n
+          return "variable-2";\n
+        }\n
+      }\n
+\n
+      // Ignore all white spaces\n
+      if (stream.eatSpace()) {\n
+        state.waitProperty = false;\n
+        return "null";\n
+      }\n
+\n
+      // Identify numbers\n
+      if (stream.match(/\\b\\d+(\\.\\d+)?\\b/)) {\n
+        return "number";\n
+      }\n
+\n
+      // Identify strings\n
+      if (stream.match("\'")) {\n
+        state.tokenize = inString("\'", state.tokenize);\n
+        return "string";\n
+      } else if (stream.match(\'"\')) {\n
+        state.tokenize = inString(\'"\', state.tokenize);\n
+        return "string";\n
+      }\n
+\n
+      // Attempt to match an operator\n
+      if (stream.match(operators)) {\n
+        return "operator";\n
+      }\n
+\n
+      // Attempt to match a word operator\n
+      if (stream.match(wordOperators)) {\n
+        return "keyword";\n
+      }\n
+\n
+      // Attempt to match a keyword\n
+      var keywordMatch = stream.match(keywords);\n
+      if (keywordMatch) {\n
+        if (keywordMatch[0] == "comment") {\n
+          state.blockCommentTag = true;\n
+        }\n
+        return "keyword";\n
+      }\n
+\n
+      // Attempt to match a variable\n
+      if (stream.match(/\\b(\\w+)\\b/)) {\n
+        state.waitDot = true;\n
+        state.waitPipe = true;  // A property can be followed by a filter\n
+        return "variable";\n
+      }\n
+\n
+      // If found closing tag reset\n
+      if (stream.match("%}")) {\n
+        state.waitProperty = null;\n
+        state.waitFilter = null;\n
+        state.waitDot = null;\n
+        state.waitPipe = null;\n
+        // If the tag that closes is a block comment tag, we want to mark the\n
+        // following code as comment, until the tag closes.\n
+        if (state.blockCommentTag) {\n
+          state.blockCommentTag = false;  // Release the "lock"\n
+          state.tokenize = inBlockComment;\n
+        } else {\n
+          state.tokenize = tokenBase;\n
+        }\n
+        return "tag";\n
+      }\n
+\n
+      // If nothing was found, advance to the next character\n
+      stream.next();\n
+      return "null";\n
+    }\n
+\n
+    // Mark everything as comment inside the tag and the tag itself.\n
+    function inComment (stream, state) {\n
+      if (stream.match(/^.*?#\\}/)) state.tokenize = tokenBase\n
+      else stream.skipToEnd()\n
+      return "comment";\n
+    }\n
+\n
+    // Mark everything as a comment until the `blockcomment` tag closes.\n
+    function inBlockComment (stream, state) {\n
+      if (stream.match(/\\{%\\s*endcomment\\s*%\\}/, false)) {\n
+        state.tokenize = inTag;\n
+        stream.match("{%");\n
+        return "tag";\n
+      } else {\n
+        stream.next();\n
+        return "comment";\n
+      }\n
+    }\n
+\n
     return {\n
       startState: function () {\n
         return {tokenize: tokenBase};\n
       },\n
       token: function (stream, state) {\n
         return state.tokenize(stream, state);\n
-      }\n
+      },\n
+      blockCommentStart: "{% comment %}",\n
+      blockCommentEnd: "{% endcomment %}"\n
     };\n
   });\n
 \n
@@ -103,7 +392,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2316</int> </value>
+            <value> <int>11787</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

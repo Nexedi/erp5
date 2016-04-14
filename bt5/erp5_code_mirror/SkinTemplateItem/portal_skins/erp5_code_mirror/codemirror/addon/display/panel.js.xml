@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897117.22</string> </value>
+            <value> <string>ts60604372.55</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -38,13 +38,31 @@
     mod(CodeMirror);\n
 })(function(CodeMirror) {\n
   CodeMirror.defineExtension("addPanel", function(node, options) {\n
+    options = options || {};\n
+\n
     if (!this.state.panels) initPanels(this);\n
 \n
     var info = this.state.panels;\n
-    if (options && options.position == "bottom")\n
-      info.wrapper.appendChild(node);\n
-    else\n
-      info.wrapper.insertBefore(node, info.wrapper.firstChild);\n
+    var wrapper = info.wrapper;\n
+    var cmWrapper = this.getWrapperElement();\n
+\n
+    if (options.after instanceof Panel && !options.after.cleared) {\n
+      wrapper.insertBefore(node, options.before.node.nextSibling);\n
+    } else if (options.before instanceof Panel && !options.before.cleared) {\n
+      wrapper.insertBefore(node, options.before.node);\n
+    } else if (options.replace instanceof Panel && !options.replace.cleared) {\n
+      wrapper.insertBefore(node, options.replace.node);\n
+      options.replace.clear();\n
+    } else if (options.position == "bottom") {\n
+      wrapper.appendChild(node);\n
+    } else if (options.position == "before-bottom") {\n
+      wrapper.insertBefore(node, cmWrapper.nextSibling);\n
+    } else if (options.position == "after-top") {\n
+      wrapper.insertBefore(node, cmWrapper);\n
+    } else {\n
+      wrapper.insertBefore(node, wrapper.firstChild);\n
+    }\n
+\n
     var height = (options && options.height) || node.offsetHeight;\n
     this._setSize(null, info.heightLeft -= height);\n
     info.panels++;\n
@@ -130,7 +148,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3102</int> </value>
+            <value> <int>3844</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

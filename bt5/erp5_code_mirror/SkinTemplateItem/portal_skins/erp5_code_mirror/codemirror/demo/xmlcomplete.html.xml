@@ -36,7 +36,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<!doctype html>\n
+ï»¿<!doctype html>\n
 \n
 <title>CodeMirror: XML Autocomplete Demo</title>\n
 <meta charset="utf-8"/>\n
@@ -69,7 +69,7 @@
 <form><textarea id="code" name="code"><!-- write some xml below -->\n
 </textarea></form>\n
 \n
-    <p>Press <strong>ctrl-space</strong>, or type a \'<\' character to\n
+    <p>Press <strong>ctrl-space</strong>, or type a \'&lt;\' character to\n
     activate autocompletion. This demo defines a simple schema that\n
     guides completion. The schema can be customizedâsee\n
     the <a href="../doc/manual.html#addon_xml-hint">manual</a>.</p>\n

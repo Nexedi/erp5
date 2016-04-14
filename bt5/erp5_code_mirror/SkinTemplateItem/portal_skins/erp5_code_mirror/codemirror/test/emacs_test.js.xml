@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897150.73</string> </value>
+            <value> <string>ts60604368.88</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -47,7 +47,7 @@
     var code;\n
     for (var c in CodeMirror.keyNames)\n
       if (CodeMirror.keyNames[c] == key) { code = c; break; }\n
-    if (c == null) throw new Error("Unknown key: " + key);\n
+    if (code == null) throw new Error("Unknown key: " + key);\n
 \n
     return eventCache[keyName] = {\n
       type: "keydown", keyCode: code, ctrlKey: ctrl, shiftKey: shift, altKey: alt,\n
@@ -166,6 +166,12 @@
     cm.triggerOnKeyDown(fakeEvent("Ctrl-S"));\n
     is(saved, "hi");\n
   }, {value: "hi", keyMap: "emacs"});\n
+\n
+  testCM("gotoInvalidLineFloat", function(cm) {\n
+    cm.openDialog = function(_, cb) { cb("2.2"); };\n
+    cm.triggerOnKeyDown(fakeEvent("Alt-G"));\n
+    cm.triggerOnKeyDown(fakeEvent("G"));\n
+  }, {value: "1\\n2\\n3\\n4", keyMap: "emacs"});\n
 })();\n
 
 
@@ -177,7 +183,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5647</int> </value>
+            <value> <int>5883</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

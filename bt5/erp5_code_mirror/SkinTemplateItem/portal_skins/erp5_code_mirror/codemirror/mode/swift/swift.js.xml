@@ -1,0 +1,250 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts60604386.38</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>swift.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+// Swift mode created by Michael Kaminsky https://github.com/mkaminsky11\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object")\n
+    mod(require("../../lib/codemirror"))\n
+  else if (typeof define == "function" && define.amd)\n
+    define(["../../lib/codemirror"], mod)\n
+  else\n
+    mod(CodeMirror)\n
+})(function(CodeMirror) {\n
+  "use strict"\n
+\n
+  function wordSet(words) {\n
+    var set = {}\n
+    for (var i = 0; i < words.length; i++) set[words[i]] = true\n
+    return set\n
+  }\n
+\n
+  var keywords = wordSet(["var","let","class","deinit","enum","extension","func","import","init","protocol",\n
+                          "static","struct","subscript","typealias","as","dynamicType","is","new","super",\n
+                          "self","Self","Type","__COLUMN__","__FILE__","__FUNCTION__","__LINE__","break","case",\n
+                          "continue","default","do","else","fallthrough","if","in","for","return","switch",\n
+                          "where","while","associativity","didSet","get","infix","inout","left","mutating",\n
+                          "none","nonmutating","operator","override","postfix","precedence","prefix","right",\n
+                          "set","unowned","weak","willSet"])\n
+  var definingKeywords = wordSet(["var","let","class","enum","extension","func","import","protocol","struct",\n
+                                  "typealias","dynamicType","for"])\n
+  var atoms = wordSet(["Infinity","NaN","undefined","null","true","false","on","off","yes","no","nil","null",\n
+                       "this","super"])\n
+  var types = wordSet(["String","bool","int","string","double","Double","Int","Float","float","public",\n
+                       "private","extension"])\n
+  var operators = "+-/*%=|&<>#"\n
+  var punc = ";,.(){}[]"\n
+  var number = /^-?(?:(?:[\\d_]+\\.[_\\d]*|\\.[_\\d]+|0o[0-7_\\.]+|0b[01_\\.]+)(?:e-?[\\d_]+)?|0x[\\d_a-f\\.]+(?:p-?[\\d_]+)?)/i\n
+  var identifier = /^[_A-Za-z$][_A-Za-z$0-9]*/\n
+  var property = /^[@\\.][_A-Za-z$][_A-Za-z$0-9]*/\n
+  var regexp = /^\\/(?!\\s)(?:\\/\\/)?(?:\\\\.|[^\\/])+\\//\n
+\n
+  function tokenBase(stream, state, prev) {\n
+    if (stream.sol()) state.indented = stream.indentation()\n
+    if (stream.eatSpace()) return null\n
+\n
+    var ch = stream.peek()\n
+    if (ch == "/") {\n
+      if (stream.match("//")) {\n
+        stream.skipToEnd()\n
+        return "comment"\n
+      }\n
+      if (stream.match("/*")) {\n
+        state.tokenize.push(tokenComment)\n
+        return tokenComment(stream, state)\n
+      }\n
+      if (stream.match(regexp)) return "string-2"\n
+    }\n
+    if (operators.indexOf(ch) > -1) {\n
+      stream.next()\n
+      return "operator"\n
+    }\n
+    if (punc.indexOf(ch) > -1) {\n
+      stream.next()\n
+      stream.match("..")\n
+      return "punctuation"\n
+    }\n
+    if (ch == \'"\' || ch == "\'") {\n
+      stream.next()\n
+      var tokenize = tokenString(ch)\n
+      state.tokenize.push(tokenize)\n
+      return tokenize(stream, state)\n
+    }\n
+\n
+    if (stream.match(number)) return "number"\n
+    if (stream.match(property)) return "property"\n
+\n
+    if (stream.match(identifier)) {\n
+      var ident = stream.current()\n
+      if (keywords.hasOwnProperty(ident)) {\n
+        if (definingKeywords.hasOwnProperty(ident))\n
+          state.prev = "define"\n
+        return "keyword"\n
+      }\n
+      if (types.hasOwnProperty(ident)) return "variable-2"\n
+      if (atoms.hasOwnProperty(ident)) return "atom"\n
+      if (prev == "define") return "def"\n
+      return "variable"\n
+    }\n
+\n
+    stream.next()\n
+    return null\n
+  }\n
+\n
+  function tokenUntilClosingParen() {\n
+    var depth = 0\n
+    return function(stream, state, prev) {\n
+      var inner = tokenBase(stream, state, prev)\n
+      if (inner == "punctuation") {\n
+        if (stream.current() == "(") ++depth\n
+        else if (stream.current() == ")") {\n
+          if (depth == 0) {\n
+            stream.backUp(1)\n
+            state.tokenize.pop()\n
+            return state.tokenize[state.tokenize.length - 1](stream, state)\n
+          }\n
+          else --depth\n
+        }\n
+      }\n
+      return inner\n
+    }\n
+  }\n
+\n
+  function tokenString(quote) {\n
+    return function(stream, state) {\n
+      var ch, escaped = false\n
+      while (ch = stream.next()) {\n
+        if (escaped) {\n
+          if (ch == "(") {\n
+            state.tokenize.push(tokenUntilClosingParen())\n
+            return "string"\n
+          }\n
+          escaped = false\n
+        } else if (ch == quote) {\n
+          break\n
+        } else {\n
+          escaped = ch == "\\\\"\n
+        }\n
+      }\n
+      state.tokenize.pop()\n
+      return "string"\n
+    }\n
+  }\n
+\n
+  function tokenComment(stream, state) {\n
+    stream.match(/^(?:[^*]|\\*(?!\\/))*/)\n
+    if (stream.match("*/")) state.tokenize.pop()\n
+    return "comment"\n
+  }\n
+\n
+  function Context(prev, align, indented) {\n
+    this.prev = prev\n
+    this.align = align\n
+    this.indented = indented\n
+  }\n
+\n
+  function pushContext(state, stream) {\n
+    var align = stream.match(/^\\s*($|\\/[\\/\\*])/, false) ? null : stream.column() + 1\n
+    state.context = new Context(state.context, align, state.indented)\n
+  }\n
+\n
+  function popContext(state) {\n
+    if (state.context) {\n
+      state.indented = state.context.indented\n
+      state.context = state.context.prev\n
+    }\n
+  }\n
+\n
+  CodeMirror.defineMode("swift", function(config) {\n
+    return {\n
+      startState: function() {\n
+        return {\n
+          prev: null,\n
+          context: null,\n
+          indented: 0,\n
+          tokenize: []\n
+        }\n
+      },\n
+\n
+      token: function(stream, state) {\n
+        var prev = state.prev\n
+        state.prev = null\n
+        var tokenize = state.tokenize[state.tokenize.length - 1] || tokenBase\n
+        var style = tokenize(stream, state, prev)\n
+        if (!style || style == "comment") state.prev = prev\n
+        else if (!state.prev) state.prev = style\n
+\n
+        if (style == "punctuation") {\n
+          var bracket = /[\\(\\[\\{]|([\\]\\)\\}])/.exec(stream.current())\n
+          if (bracket) (bracket[1] ? popContext : pushContext)(state, stream)\n
+        }\n
+\n
+        return style\n
+      },\n
+\n
+      indent: function(state, textAfter) {\n
+        var cx = state.context\n
+        if (!cx) return 0\n
+        var closing = /^[\\]\\}\\)]/.test(textAfter)\n
+        if (cx.align != null) return cx.align - (closing ? 1 : 0)\n
+        return cx.indented + (closing ? 0 : config.indentUnit)\n
+      },\n
+\n
+      electricInput: /^\\s*[\\)\\}\\]]$/,\n
+\n
+      lineComment: "//",\n
+      blockCommentStart: "/*",\n
+      blockCommentEnd: "*/"\n
+    }\n
+  })\n
+\n
+  CodeMirror.defineMIME("text/x-swift","swift")\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6424</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

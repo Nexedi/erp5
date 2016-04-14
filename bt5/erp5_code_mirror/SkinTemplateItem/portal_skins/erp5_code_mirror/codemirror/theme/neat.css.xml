@@ -35,11 +35,11 @@
 .cm-s-neat span.cm-special { line-height: 1em; font-weight: bold; color: #0aa; }\n
 .cm-s-neat span.cm-variable { color: black; }\n
 .cm-s-neat span.cm-number, .cm-s-neat span.cm-atom { color: #3a3; }\n
-.cm-s-neat span.cm-meta {color: #555;}\n
+.cm-s-neat span.cm-meta { color: #555; }\n
 .cm-s-neat span.cm-link { color: #3a3; }\n
 \n
-.cm-s-neat .CodeMirror-activeline-background {background: #e8f2ff !important;}\n
-.cm-s-neat .CodeMirror-matchingbracket {outline:1px solid grey; color:black !important;}\n
+.cm-s-neat .CodeMirror-activeline-background { background: #e8f2ff; }\n
+.cm-s-neat .CodeMirror-matchingbracket { outline:1px solid grey; color:black !important; }\n
 </string> </value>
         </item>
       </dictionary>

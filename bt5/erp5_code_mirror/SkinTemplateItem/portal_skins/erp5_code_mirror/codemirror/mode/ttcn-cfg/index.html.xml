@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: TTCN-CFG mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="ttcn-cfg.js"></script>\n
+<style type="text/css">\n
+    .CodeMirror {\n
+        border-top: 1px solid black;\n
+        border-bottom: 1px solid black;\n
+    }\n
+</style>\n
+<div id=nav>\n
+    <a href="http://codemirror.net"><h1>CodeMirror</h1>\n
+        <img id=logo src="../../doc/logo.png">\n
+    </a>\n
+\n
+    <ul>\n
+        <li><a href="../../index.html">Home</a>\n
+        <li><a href="../../doc/manual.html">Manual</a>\n
+        <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+    </ul>\n
+    <ul>\n
+        <li><a href="../index.html">Language modes</a>\n
+        <li><a class=active href="http://en.wikipedia.org/wiki/TTCN">TTCN-CFG</a>\n
+    </ul>\n
+</div>\n
+<article>\n
+    <h2>TTCN-CFG example</h2>\n
+    <div>\n
+        <textarea id="ttcn-cfg-code">\n
+[MODULE_PARAMETERS]\n
+# This section shall contain the values of all parameters that are defined in your TTCN-3 modules.\n
+\n
+[LOGGING]\n
+# In this section you can specify the name of the log file and the classes of events\n
+# you want to log into the file or display on console (standard error).\n
+\n
+LogFile := "logs/%e.%h-%r.%s"\n
+FileMask := LOG_ALL | DEBUG | MATCHING\n
+ConsoleMask := ERROR | WARNING | TESTCASE | STATISTICS | PORTEVENT\n
+\n
+LogSourceInfo := Yes\n
+AppendFile := No\n
+TimeStampFormat := DateTime\n
+LogEventTypes := Yes\n
+SourceInfoFormat := Single\n
+LogEntityName := Yes\n
+\n
+[TESTPORT_PARAMETERS]\n
+# In this section you can specify parameters that are passed to Test Ports.\n
+\n
+[DEFINE]\n
+# In this section you can create macro definitions,\n
+# that can be used in other configuration file sections except [INCLUDE].\n
+\n
+[INCLUDE]\n
+# To use configuration settings given in other configuration files,\n
+# the configuration files just need to be listed in this section, with their full or relative pathnames.\n
+\n
+[EXTERNAL_COMMANDS]\n
+# This section can define external commands (shell scripts) to be executed by the ETS\n
+# whenever a control part or test case is started or terminated.\n
+\n
+BeginTestCase := ""\n
+EndTestCase := ""\n
+BeginControlPart := ""\n
+EndControlPart := ""\n
+\n
+[EXECUTE]\n
+# In this section you can specify what parts of your test suite you want to execute.\n
+\n
+[GROUPS]\n
+# In this section you can specify groups of hosts. These groups can be used inside the\n
+# [COMPONENTS] section to restrict the creation of certain PTCs to a given set of hosts.\n
+\n
+[COMPONENTS]\n
+# This section consists of rules restricting the location of created PTCs.\n
+\n
+[MAIN_CONTROLLER]\n
+# The options herein control the behavior of MC.\n
+\n
+TCPPort := 0\n
+KillTimer := 10.0\n
+NumHCs := 0\n
+LocalAddress :=\n
+        </textarea>\n
+    </div>\n
+\n
+    <script> \n
+      var ttcnEditor = CodeMirror.fromTextArea(document.getElementById("ttcn-cfg-code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        mode: "text/x-ttcn-cfg"\n
+      });\n
+      ttcnEditor.setSize(600, 860);\n
+      var mac = CodeMirror.keyMap.default == CodeMirror.keyMap.macDefault;\n
+      CodeMirror.keyMap.default[(mac ? "Cmd" : "Ctrl") + "-Space"] = "autocomplete";\n
+    </script>\n
+    <br/>\n
+    <p><strong>Language:</strong> Testing and Test Control Notation -\n
+        Configuration files\n
+        (<a href="http://en.wikipedia.org/wiki/TTCN">TTCN-CFG</a>)\n
+    </p>\n
+    <p><strong>MIME types defined:</strong> <code>text/x-ttcn-cfg</code>.</p>\n
+\n
+    <br/>\n
+    <p>The development of this mode has been sponsored by <a href="http://www.ericsson.com/">Ericsson\n
+    </a>.</p>\n
+    <p>Coded by Asmelash Tsegay Gebretsadkan </p>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897134.06</string> </value>
+            <value> <string>ts60604378.37</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -62,7 +62,6 @@ CodeMirror.defineMode("ecl", function(config) {\n
   var blockKeywords = words("catch class do else finally for if switch try while");\n
   var atoms = words("true false null");\n
   var hooks = {"#": metaHook};\n
-  var multiLineStrings;\n
   var isOperatorChar = /[+\\-*&%=<>!?|\\/]/;\n
 \n
   var curPunc;\n
@@ -140,7 +139,7 @@ CodeMirror.defineMode("ecl", function(config) {\n
         if (next == quote && !escaped) {end = true; break;}\n
         escaped = !escaped && next == "\\\\";\n
       }\n
-      if (end || !(escaped || multiLineStrings))\n
+      if (end || !escaped)\n
         state.tokenize = tokenBase;\n
       return "string";\n
     };\n
@@ -243,7 +242,7 @@ CodeMirror.defineMIME("text/x-ecl", "ecl");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8889</int> </value>
+            <value> <int>8843</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

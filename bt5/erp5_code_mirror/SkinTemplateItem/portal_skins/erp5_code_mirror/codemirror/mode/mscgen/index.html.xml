@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: MscGen mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="mscgen.js"></script>\n
+<style>.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">MscGen</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>MscGen mode</h2>\n
+\n
+<div><textarea id="mscgen-code">\n
+# Sample mscgen program\n
+# See http://www.mcternan.me.uk/mscgen or\n
+# https://sverweij.github.io/mscgen_js for more samples\n
+msc {\n
+  # options\n
+  hscale="1.2";\n
+\n
+  # entities/ lifelines\n
+  a [label="Entity A"],\n
+  b [label="Entity B", linecolor="red", arclinecolor="red", textbgcolor="pink"],\n
+  c [label="Entity C"];\n
+\n
+  # arcs/ messages\n
+  a => c [label="doSomething(args)"];\n
+  b => c [label="doSomething(args)"];\n
+  c >> * [label="everyone asked me", arcskip="1"];\n
+  c =>> c [label="doing something"];\n
+  c -x * [label="report back", arcskip="1"];\n
+  |||;\n
+  --- [label="shows\'s over, however ..."];\n
+  b => a [label="did you see c doing something?"];\n
+  a -> b [label="nope"];\n
+  b :> a [label="shall we ask again?"];\n
+  a => b [label="naah"];\n
+  ...;\n
+}\n
+</textarea></div>\n
+\n
+<h2>XÃ¹ mode</h2>\n
+\n
+<div><textarea id="xu-code">\n
+# XÃ¹ - expansions to MscGen to support inline expressions\n
+#      https://github.com/sverweij/mscgen_js/blob/master/wikum/xu.md\n
+# More samples: https://sverweij.github.io/mscgen_js\n
+msc {\n
+  hscale="0.8",\n
+  width="700";\n
+\n
+  a,\n
+  b [label="change store"],\n
+  c,\n
+  d [label="necro queue"],\n
+  e [label="natalis queue"],\n
+  f;\n
+\n
+  a =>> b [label="get change list()"];\n
+  a alt f [label="changes found"] { /* alt is a xu specific keyword*/\n
+    b >> a [label="list of changes"];\n
+    a =>> c [label="cull old stuff (list of changes)"];\n
+    b loop e [label="for each change"] { // loop is xu specific as well...\n
+      /*\n
+       * Interesting stuff happens.\n
+       */\n
+      c =>> b [label="get change()"];\n
+      b >> c [label="change"];\n
+      c alt e [label="change too old"] {\n
+        c =>> d [label="queue(change)"];\n
+        --- [label="change newer than latest run"];\n
+        c =>> e [label="queue(change)"];\n
+        --- [label="all other cases"];\n
+        ||| [label="leave well alone"];\n
+      };\n
+    };\n
+\n
+    c >> a [label="done\n
+    processing"];\n
+\n
+    /* shucks! nothing found ...*/\n
+    --- [label="nothing found"];\n
+    b >> a [label="nothing"];\n
+    a note a [label="silent exit"];\n
+  };\n
+}\n
+</textarea></div>\n
+\n
+<h2>MsGenny mode</h2>\n
+<div><textarea id="msgenny-code">\n
+# MsGenny - simplified version of MscGen / XÃ¹\n
+#           https://github.com/sverweij/mscgen_js/blob/master/wikum/msgenny.md\n
+# More samples: https://sverweij.github.io/mscgen_js\n
+a -> b   : a -> b  (signal);\n
+a => b   : a => b  (method);\n
+b >> a   : b >> a  (return value);\n
+a =>> b  : a =>> b (callback);\n
+a -x b   : a -x b  (lost);\n
+a :> b   : a :> b  (emphasis);\n
+a .. b   : a .. b  (dotted);\n
+a -- b   : "a -- b straight line";\n
+a note a : a note a\\n(note),\n
+b box b  : b box b\\n(action);\n
+a rbox a : a rbox a\\n(reference),\n
+b abox b : b abox b\\n(state/ condition);\n
+|||      : ||| (empty row);\n
+...      : ... (omitted row);\n
+---      : --- (comment);\n
+</textarea></div>\n
+\n
+    <p>\n
+      Simple mode for highlighting MscGen and two derived sequence\n
+      chart languages.\n
+    </p>\n
+\n
+    <script>\n
+      var mscgenEditor = CodeMirror.fromTextArea(document.getElementById("mscgen-code"), {\n
+        lineNumbers: true,\n
+        mode: "text/x-mscgen",\n
+      });\n
+      var xuEditor = CodeMirror.fromTextArea(document.getElementById("xu-code"), {\n
+        lineNumbers: true,\n
+        mode: "text/x-xu",\n
+      });\n
+      var msgennyEditor = CodeMirror.fromTextArea(document.getElementById("msgenny-code"), {\n
+        lineNumbers: true,\n
+        mode: "text/x-msgenny",\n
+      });\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong>\n
+      <code>text/x-mscgen</code>\n
+      <code>text/x-xu</code>\n
+      <code>text/x-msgenny</code>\n
+    </p>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

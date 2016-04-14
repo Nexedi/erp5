@@ -1,0 +1,252 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Textile mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="textile.js"></script>\n
+<style>.CodeMirror {background: #f8f8f8;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/marijnh/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class="active" href="#">Textile</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+    <h2>Textile mode</h2>\n
+    <form><textarea id="code" name="code">\n
+h1. Textile Mode\n
+\n
+A paragraph without formatting.\n
+\n
+p. A simple Paragraph.\n
+\n
+\n
+h2. Phrase Modifiers\n
+\n
+Here are some simple phrase modifiers: *strong*, _emphasis_, **bold**, and __italic__.\n
+\n
+A ??citation??, -deleted text-, +inserted text+, some ^superscript^, and some ~subscript~.\n
+\n
+A %span element% and @code element@\n
+\n
+A "link":http://example.com, a "link with (alt text)":urlAlias\n
+\n
+[urlAlias]http://example.com/\n
+\n
+An image: !http://example.com/image.png! and an image with a link: !http://example.com/image.png!:http://example.com\n
+\n
+A sentence with a footnote.[123]\n
+\n
+fn123. The footnote is defined here.\n
+\n
+Registered(r), Trademark(tm), and Copyright(c)\n
+\n
+\n
+h2. Headers\n
+\n
+h1. Top level\n
+h2. Second level\n
+h3. Third level\n
+h4. Fourth level\n
+h5. Fifth level\n
+h6. Lowest level\n
+\n
+\n
+h2.  Lists\n
+\n
+* An unordered list\n
+** foo bar\n
+*** foo bar\n
+**** foo bar\n
+** foo bar\n
+\n
+# An ordered list\n
+## foo bar\n
+### foo bar\n
+#### foo bar\n
+## foo bar\n
+\n
+- definition list := description\n
+- another item    := foo bar\n
+- spanning ines   :=\n
+                     foo bar\n
+\n
+                     foo bar =:\n
+\n
+\n
+h2. Attributes\n
+\n
+Layouts and phrase modifiers can be modified with various kinds of attributes: alignment, CSS ID, CSS class names, language, padding, and CSS styles.\n
+\n
+h3. Alignment\n
+\n
+div<. left align\n
+div>. right align\n
+\n
+h3. CSS ID and class name\n
+\n
+You are a %(my-id#my-classname) rad% person.\n
+\n
+h3. Language\n
+\n
+p[en_CA]. Strange weather, eh?\n
+\n
+h3. Horizontal Padding\n
+\n
+p(())). 2em left padding, 3em right padding\n
+\n
+h3. CSS styling\n
+\n
+p{background: red}. Fire!\n
+\n
+\n
+h2. Table\n
+\n
+|_.              Header 1               |_.      Header 2        |\n
+|{background:#ddd}. Cell with background|         Normal         |\n
+|\\2.         Cell spanning 2 columns                             |\n
+|/2.         Cell spanning 2 rows       |(cell-class). one       |\n
+|                                                two             |\n
+|>.                  Right aligned cell |<. Left aligned cell    |\n
+\n
+\n
+h3. A table with attributes:\n
+\n
+table(#prices).\n
+|Adults|$5|\n
+|Children|$2|\n
+\n
+\n
+h2. Code blocks\n
+\n
+bc.\n
+function factorial(n) {\n
+    if (n === 0) {\n
+        return 1;\n
+    }\n
+    return n * factorial(n - 1);\n
+}\n
+\n
+pre..\n
+                ,,,,,,\n
+            o#\'9MMHb\':\'-,o,\n
+         .oH":HH$\' "\' \' -*R&o,\n
+        dMMM*""\'`\'      .oM"HM?.\n
+       ,MMM\'          "HLbd< ?&H\\\n
+      .:MH ."\\          ` MM  MM&b\n
+     . "*H    -        &MMMMMMMMMH:\n
+     .    dboo        MMMMMMMMMMMM.\n
+     .   dMMMMMMb      *MMMMMMMMMP.\n
+     .    MMMMMMMP        *MMMMMP .\n
+          `#MMMMM           MM6P ,\n
+       \'    `MMMP"           HM*`,\n
+        \'    :MM             .- ,\n
+         \'.   `#?..  .       ..\'\n
+            -.   .         .-\n
+              \'\'-.oo,oo.-\'\'\n
+\n
+\\. _(9>\n
+ \\==_)\n
+  -\'=\n
+\n
+h2. Temporarily disabling textile markup\n
+\n
+notextile. Don\'t __touch this!__\n
+\n
+Surround text with double-equals to disable textile inline. Example: Use ==*asterisks*== for *strong* text.\n
+\n
+\n
+h2. HTML\n
+\n
+Some block layouts are simply textile versions of HTML tags with the same name, like @div@, @pre@, and @p@. HTML tags can also exist on their own line:\n
+\n
+<section>\n
+  <h1>Title</h1>\n
+  <p>Hello!</p>\n
+</section>\n
+\n
+</textarea></form>\n
+    <script>\n
+        var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+            lineNumbers: true,\n
+            mode: "text/x-textile"\n
+        });\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-textile</code>.</p>\n
+\n
+    <p><strong>Parsing/Highlighting Tests:</strong> <a href="../../test/index.html#textile_*">normal</a>,  <a href="../../test/index.html#verbose,textile_*">verbose</a>.</p>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

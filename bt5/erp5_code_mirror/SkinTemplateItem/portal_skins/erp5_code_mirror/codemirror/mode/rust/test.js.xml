@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts60604384.58</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function() {\n
+  var mode = CodeMirror.getMode({indentUnit: 4}, "rust");\n
+  function MT(name) {test.mode(name, mode, Array.prototype.slice.call(arguments, 1));}\n
+\n
+  MT(\'integer_test\',\n
+     \'[number 123i32]\',\n
+     \'[number 123u32]\',\n
+     \'[number 123_u32]\',\n
+     \'[number 0xff_u8]\',\n
+     \'[number 0o70_i16]\',\n
+     \'[number 0b1111_1111_1001_0000_i32]\',\n
+     \'[number 0usize]\');\n
+\n
+  MT(\'float_test\',\n
+     \'[number 123.0f64]\',\n
+     \'[number 0.1f64]\',\n
+     \'[number 0.1f32]\',\n
+     \'[number 12E+99_f64]\');\n
+\n
+  MT(\'string-literals-test\',\n
+     \'[string "foo"]\',\n
+     \'[string r"foo"]\',\n
+     \'[string "\\\\"foo\\\\""]\',\n
+     \'[string r#""foo""#]\',\n
+     \'[string "foo #\\\\"# bar"]\',\n
+\n
+     \'[string b"foo"]\',\n
+     \'[string br"foo"]\',\n
+     \'[string b"\\\\"foo\\\\""]\',\n
+     \'[string br#""foo""#]\',\n
+     \'[string br##"foo #" bar"##]\',\n
+\n
+     "[string-2 \'h\']",\n
+     "[string-2 b\'h\']");\n
+\n
+})();\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>992</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

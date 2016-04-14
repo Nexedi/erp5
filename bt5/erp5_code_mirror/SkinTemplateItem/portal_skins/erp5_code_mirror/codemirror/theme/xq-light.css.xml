@@ -52,27 +52,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n
 THE SOFTWARE.\n
 */\n
-.cm-s-xq-light span.cm-keyword {line-height: 1em; font-weight: bold; color: #5A5CAD; }\n
-.cm-s-xq-light span.cm-atom {color: #6C8CD5;}\n
-.cm-s-xq-light span.cm-number {color: #164;}\n
-.cm-s-xq-light span.cm-def {text-decoration:underline;}\n
-.cm-s-xq-light span.cm-variable {color: black; }\n
-.cm-s-xq-light span.cm-variable-2 {color:black;}\n
-.cm-s-xq-light span.cm-variable-3 {color: black; }\n
+.cm-s-xq-light span.cm-keyword { line-height: 1em; font-weight: bold; color: #5A5CAD; }\n
+.cm-s-xq-light span.cm-atom { color: #6C8CD5; }\n
+.cm-s-xq-light span.cm-number { color: #164; }\n
+.cm-s-xq-light span.cm-def { text-decoration:underline; }\n
+.cm-s-xq-light span.cm-variable { color: black; }\n
+.cm-s-xq-light span.cm-variable-2 { color:black; }\n
+.cm-s-xq-light span.cm-variable-3 { color: black; }\n
 .cm-s-xq-light span.cm-property {}\n
 .cm-s-xq-light span.cm-operator {}\n
-.cm-s-xq-light span.cm-comment {color: #0080FF; font-style: italic;}\n
-.cm-s-xq-light span.cm-string {color: red;}\n
-.cm-s-xq-light span.cm-meta {color: yellow;}\n
-.cm-s-xq-light span.cm-qualifier {color: grey}\n
-.cm-s-xq-light span.cm-builtin {color: #7EA656;}\n
-.cm-s-xq-light span.cm-bracket {color: #cc7;}\n
-.cm-s-xq-light span.cm-tag {color: #3F7F7F;}\n
-.cm-s-xq-light span.cm-attribute {color: #7F007F;}\n
-.cm-s-xq-light span.cm-error {color: #f00;}\n
+.cm-s-xq-light span.cm-comment { color: #0080FF; font-style: italic; }\n
+.cm-s-xq-light span.cm-string { color: red; }\n
+.cm-s-xq-light span.cm-meta { color: yellow; }\n
+.cm-s-xq-light span.cm-qualifier { color: grey; }\n
+.cm-s-xq-light span.cm-builtin { color: #7EA656; }\n
+.cm-s-xq-light span.cm-bracket { color: #cc7; }\n
+.cm-s-xq-light span.cm-tag { color: #3F7F7F; }\n
+.cm-s-xq-light span.cm-attribute { color: #7F007F; }\n
+.cm-s-xq-light span.cm-error { color: #f00; }\n
 \n
-.cm-s-xq-light .CodeMirror-activeline-background {background: #e8f2ff !important;}\n
-.cm-s-xq-light .CodeMirror-matchingbracket {outline:1px solid grey;color:black !important;background:yellow;}
+.cm-s-xq-light .CodeMirror-activeline-background { background: #e8f2ff; }\n
+.cm-s-xq-light .CodeMirror-matchingbracket { outline:1px solid grey;color:black !important;background:yellow; }\n
+
 
 ]]></string> </value>
         </item>

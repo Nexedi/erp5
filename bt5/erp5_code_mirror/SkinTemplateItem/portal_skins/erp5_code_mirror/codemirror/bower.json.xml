@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897123.11</string> </value>
+            <value> <string>ts60604364.27</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -26,7 +26,6 @@
             <key> <string>data</string> </key>
             <value> <string>{\n
   "name": "codemirror",\n
-  "version":"4.11.0",\n
   "main": ["lib/codemirror.js", "lib/codemirror.css"],\n
   "ignore": [\n
     "**/.*",\n
@@ -37,7 +36,9 @@
     "doc",\n
     "test",\n
     "index.html",\n
-    "package.json"\n
+    "package.json",\n
+    "mode/*/*test.js",\n
+    "mode/*/*.html"\n
   ]\n
 }\n
 </string> </value>
@@ -48,7 +49,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>257</int> </value>
+            <value> <int>279</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

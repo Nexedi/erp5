@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Haskell mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<link rel="stylesheet" href="../../theme/elegant.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/cm_edit/matchbrackets.js"></script>\n
+<script src="haskell.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Haskell</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Haskell mode</h2>\n
+<form><textarea id="code" name="code">\n
+module UniquePerms (\n
+    uniquePerms\n
+    )\n
+where\n
+\n
+-- | Find all unique permutations of a list where there might be duplicates.\n
+uniquePerms :: (Eq a) => [a] -> [[a]]\n
+uniquePerms = permBag . makeBag\n
+\n
+-- | An unordered collection where duplicate values are allowed,\n
+-- but represented with a single value and a count.\n
+type Bag a = [(a, Int)]\n
+\n
+makeBag :: (Eq a) => [a] -> Bag a\n
+makeBag [] = []\n
+makeBag (a:as) = mix a $ makeBag as\n
+  where\n
+    mix a []                        = [(a,1)]\n
+    mix a (bn@(b,n):bs) | a == b    = (b,n+1):bs\n
+                        | otherwise = bn : mix a bs\n
+\n
+permBag :: Bag a -> [[a]]\n
+permBag [] = [[]]\n
+permBag bs = concatMap (\\(f,cs) -> map (f:) $ permBag cs) . oneOfEach $ bs\n
+  where\n
+    oneOfEach [] = []\n
+    oneOfEach (an@(a,n):bs) =\n
+        let bs\' = if n == 1 then bs else (a,n-1):bs\n
+        in (a,bs\') : mapSnd (an:) (oneOfEach bs)\n
+    \n
+    apSnd f (a,b) = (a, f b)\n
+    mapSnd = map . apSnd\n
+</textarea></form>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        theme: "elegant"\n
+      });\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-haskell</code>.</p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

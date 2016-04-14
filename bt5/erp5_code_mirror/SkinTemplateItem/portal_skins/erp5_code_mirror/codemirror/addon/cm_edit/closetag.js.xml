@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897295.63</string> </value>
+            <value> <string>ts60604371.94</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -122,33 +122,36 @@
     }\n
   }\n
 \n
-  function autoCloseSlash(cm) {\n
-    if (cm.getOption("disableInput")) return CodeMirror.Pass;\n
+  function autoCloseCurrent(cm, typingSlash) {\n
     var ranges = cm.listSelections(), replacements = [];\n
+    var head = typingSlash ? "/" : "</";\n
     for (var i = 0; i < ranges.length; i++) {\n
       if (!ranges[i].empty()) return CodeMirror.Pass;\n
       var pos = ranges[i].head, tok = cm.getTokenAt(pos);\n
       var inner = CodeMirror.innerMode(cm.getMode(), tok.state), state = inner.state;\n
-      if (tok.type == "string" || tok.string.charAt(0) != "<" ||\n
-          tok.start != pos.ch - 1)\n
+      if (typingSlash && (tok.type == "string" || tok.string.charAt(0) != "<" ||\n
+                          tok.start != pos.ch - 1))\n
         return CodeMirror.Pass;\n
       // Kludge to get around the fact that we are not in XML mode\n
       // when completing in JS/CSS snippet in htmlmixed mode. Does not\n
       // work for other XML embedded languages (there is no general\n
       // way to go from a mixed mode to its current XML state).\n
+      var replacement;\n
       if (inner.mode.name != "xml") {\n
         if (cm.getMode().name == "htmlmixed" && inner.mode.name == "javascript")\n
-          replacements[i] = "/script>";\n
+          replacement = head + "script";\n
         else if (cm.getMode().name == "htmlmixed" && inner.mode.name == "css")\n
-          replacements[i] = "/style>";\n
+          replacement = head + "style";\n
         else\n
           return CodeMirror.Pass;\n
       } else {\n
         if (!state.context || !state.context.tagName ||\n
             closingTagExists(cm, state.context.tagName, pos, state))\n
           return CodeMirror.Pass;\n
-        replacements[i] = "/" + state.context.tagName + ">";\n
+        replacement = head + state.context.tagName;\n
       }\n
+      if (cm.getLine(pos.line).charAt(tok.end) != ">") replacement += ">";\n
+      replacements[i] = replacement;\n
     }\n
     cm.replaceSelections(replacements);\n
     ranges = cm.listSelections();\n
@@ -156,6 +159,13 @@
       if (i == ranges.length - 1 || ranges[i].head.line < ranges[i + 1].head.line)\n
         cm.indentLine(ranges[i].head.line);\n
   }\n
+\n
+  function autoCloseSlash(cm) {\n
+    if (cm.getOption("disableInput")) return CodeMirror.Pass;\n
+    return autoCloseCurrent(cm, true);\n
+  }\n
+\n
+  CodeMirror.commands.closeTag = function(cm) { return autoCloseCurrent(cm); };\n
 \n
   function indexOf(collection, elt) {\n
     if (collection.indexOf) return collection.indexOf(elt);\n
@@ -195,7 +205,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7331</int> </value>
+            <value> <int>7705</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

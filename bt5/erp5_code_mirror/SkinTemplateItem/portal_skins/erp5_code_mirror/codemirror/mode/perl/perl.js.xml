@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897132.8</string> </value>
+            <value> <string>ts60604383.29</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -808,16 +808,21 @@ CodeMirror.defineMode("perl",function(){\n
                                 return "meta";}\n
                 return null;}\n
 \n
-        return{\n
-                startState:function(){\n
-                        return{\n
-                                tokenize:tokenPerl,\n
-                                chain:null,\n
-                                style:null,\n
-                                tail:null};},\n
-                token:function(stream,state){\n
-                        return (state.tokenize||tokenPerl)(stream,state);}\n
-                };});\n
+        return {\n
+            startState: function() {\n
+                return {\n
+                    tokenize: tokenPerl,\n
+                    chain: null,\n
+                    style: null,\n
+                    tail: null\n
+                };\n
+            },\n
+            token: function(stream, state) {\n
+                return (state.tokenize || tokenPerl)(stream, state);\n
+            },\n
+            lineComment: \'#\'\n
+        };\n
+});\n
 \n
 CodeMirror.registerHelper("wordChars", "perl", /[\\w$]/);\n
 \n
@@ -868,7 +873,7 @@ function eatSuffix(stream, c){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>56126</int> </value>
+            <value> <int>56134</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

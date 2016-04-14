@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897142.68</string> </value>
+            <value> <string>ts60604384.1</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -62,10 +62,10 @@ CodeMirror.defineMIME("text/x-rpm-changes", "rpm-changes");\n
 // Quick and dirty spec file highlighting\n
 \n
 CodeMirror.defineMode("rpm-spec", function() {\n
-  var arch = /^(i386|i586|i686|x86_64|ppc64|ppc|ia64|s390x|s390|sparc64|sparcv9|sparc|noarch|alphaev6|alpha|hppa|mipsel)/;\n
+  var arch = /^(i386|i586|i686|x86_64|ppc64le|ppc64|ppc|ia64|s390x|s390|sparc64|sparcv9|sparc|noarch|alphaev6|alpha|hppa|mipsel)/;\n
 \n
-  var preamble = /^(Name|Version|Release|License|Summary|Url|Group|Source|BuildArch|BuildRequires|BuildRoot|AutoReqProv|Provides|Requires(\\(\\w+\\))?|Obsoletes|Conflicts|Recommends|Source\\d*|Patch\\d*|ExclusiveArch|NoSource|Supplements):/;\n
-  var section = /^%(debug_package|package|description|prep|build|install|files|clean|changelog|preinstall|preun|postinstall|postun|pre|post|triggerin|triggerun|pretrans|posttrans|verifyscript|check|triggerpostun|triggerprein|trigger)/;\n
+  var preamble = /^[a-zA-Z0-9()]+:/;\n
+  var section = /^%(debug_package|package|description|prep|build|install|files|clean|changelog|preinstall|preun|postinstall|postun|pretrans|posttrans|pre|post|triggerin|triggerun|verifyscript|check|triggerpostun|triggerprein|trigger)/;\n
   var control_flow_complex = /^%(ifnarch|ifarch|if)/; // rpm control flow macros\n
   var control_flow_simple = /^%(else|endif)/; // rpm control flow macros\n
   var operators = /^(\\!|\\?|\\<\\=|\\<|\\>\\=|\\>|\\=\\=|\\&\\&|\\|\\|)/; // operators in control flow macros\n
@@ -83,8 +83,8 @@ CodeMirror.defineMode("rpm-spec", function() {\n
       if (ch == "#") { stream.skipToEnd(); return "comment"; }\n
 \n
       if (stream.sol()) {\n
-        if (stream.match(preamble)) { return "preamble"; }\n
-        if (stream.match(section)) { return "section"; }\n
+        if (stream.match(preamble)) { return "header"; }\n
+        if (stream.match(section)) { return "atom"; }\n
       }\n
 \n
       if (stream.match(/^\\$\\w+/)) { return "def"; } // Variables like \'$RPM_BUILD_ROOT\'\n
@@ -101,21 +101,29 @@ CodeMirror.defineMode("rpm-spec", function() {\n
         if (stream.eol()) { state.controlFlow = false; }\n
       }\n
 \n
-      if (stream.match(arch)) { return "number"; }\n
+      if (stream.match(arch)) {\n
+        if (stream.eol()) { state.controlFlow = false; }\n
+        return "number";\n
+      }\n
 \n
       // Macros like \'%make_install\' or \'%attr(0775,root,root)\'\n
       if (stream.match(/^%[\\w]+/)) {\n
         if (stream.match(/^\\(/)) { state.macroParameters = true; }\n
-        return "macro";\n
+        return "keyword";\n
       }\n
       if (state.macroParameters) {\n
         if (stream.match(/^\\d+/)) { return "number";}\n
         if (stream.match(/^\\)/)) {\n
           state.macroParameters = false;\n
-          return "macro";\n
+          return "keyword";\n
         }\n
       }\n
-      if (stream.match(/^%\\{\\??[\\w \\-]+\\}/)) { return "macro"; } // Macros like \'%{defined fedora}\'\n
+\n
+      // Macros like \'%{defined fedora}\'\n
+      if (stream.match(/^%\\{\\??[\\w \\-\\:\\!]+\\}/)) {\n
+        if (stream.eol()) { state.controlFlow = false; }\n
+        return "def";\n
+      }\n
 \n
       //TODO: Include bash script sub-parser (CodeMirror supports that)\n
       stream.next();\n
@@ -137,7 +145,7 @@ CodeMirror.defineMIME("text/x-rpm-spec", "rpm-spec");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3817</int> </value>
+            <value> <int>3775</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897132.01</string> </value>
+            <value> <string>ts60604384.82</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -267,6 +267,7 @@ CodeMirror.defineMode("scheme", function () {\n
             return state.indentStack.indent;\n
         },\n
 \n
+        closeBrackets: {pairs: "()[]{}\\"\\""},\n
         lineComment: ";;"\n
     };\n
 });\n
@@ -284,7 +285,7 @@ CodeMirror.defineMIME("text/x-scheme", "scheme");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>13393</int> </value>
+            <value> <int>13439</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

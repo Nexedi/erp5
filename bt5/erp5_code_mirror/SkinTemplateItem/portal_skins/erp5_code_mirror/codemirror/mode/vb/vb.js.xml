@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897134.16</string> </value>
+            <value> <string>ts60604387.79</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -57,13 +57,14 @@ CodeMirror.defineMode("vb", function(conf, parserConf) {\n
     var middleKeywords = [\'else\',\'elseif\',\'case\', \'catch\'];\n
     var endKeywords = [\'next\',\'loop\'];\n
 \n
-    var wordOperators = wordRegexp([\'and\', \'or\', \'not\', \'xor\', \'in\']);\n
-    var commonkeywords = [\'as\', \'dim\', \'break\',  \'continue\',\'optional\', \'then\',  \'until\',\n
+    var operatorKeywords = [\'and\', \'or\', \'not\', \'xor\', \'in\'];\n
+    var wordOperators = wordRegexp(operatorKeywords);\n
+    var commonKeywords = [\'as\', \'dim\', \'break\',  \'continue\',\'optional\', \'then\',  \'until\',\n
                           \'goto\', \'byval\',\'byref\',\'new\',\'handles\',\'property\', \'return\',\n
                           \'const\',\'private\', \'protected\', \'friend\', \'public\', \'shared\', \'static\', \'true\',\'false\'];\n
     var commontypes = [\'integer\',\'string\',\'double\',\'decimal\',\'boolean\',\'short\',\'char\', \'float\',\'single\'];\n
 \n
-    var keywords = wordRegexp(commonkeywords);\n
+    var keywords = wordRegexp(commonKeywords);\n
     var types = wordRegexp(commontypes);\n
     var stringPrefixes = \'"\';\n
 \n
@@ -75,8 +76,8 @@ CodeMirror.defineMode("vb", function(conf, parserConf) {\n
 \n
     var indentInfo = null;\n
 \n
-\n
-\n
+    CodeMirror.registerHelper("hintWords", "vb", openingKeywords.concat(middleKeywords).concat(endKeywords)\n
+                                .concat(operatorKeywords).concat(commonKeywords).concat(commontypes));\n
 \n
     function indent(_stream, state) {\n
       state.currentIndent++;\n
@@ -291,8 +292,9 @@ CodeMirror.defineMode("vb", function(conf, parserConf) {\n
             if (trueText.match(closing) || trueText.match(doubleClosing) || trueText.match(middle)) return conf.indentUnit*(state.currentIndent-1);\n
             if(state.currentIndent < 0) return 0;\n
             return state.currentIndent * conf.indentUnit;\n
-        }\n
+        },\n
 \n
+        lineComment: "\'"\n
     };\n
     return external;\n
 });\n
@@ -310,7 +312,7 @@ CodeMirror.defineMIME("text/x-vb", "vb");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8494</int> </value>
+            <value> <int>8774</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

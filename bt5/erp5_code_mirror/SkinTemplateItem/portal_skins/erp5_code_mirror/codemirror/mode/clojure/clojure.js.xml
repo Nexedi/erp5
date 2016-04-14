@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897138.86</string> </value>
+            <value> <string>ts60604376.21</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -87,7 +87,8 @@ CodeMirror.defineMode("clojure", function (options) {\n
         sign: /[+-]/,\n
         exponent: /e/i,\n
         keyword_char: /[^\\s\\(\\[\\;\\)\\]]/,\n
-        symbol: /[\\w*+!\\-\\._?:<>\\/\\xa1-\\uffff]/\n
+        symbol: /[\\w*+!\\-\\._?:<>\\/\\xa1-\\uffff]/,\n
+        block_indent: /^(?:def|with)[^\\/]+$|\\/(?:def|with)/\n
     };\n
 \n
     function stateStack(indent, type, prev) { // represents a state stack object\n
@@ -123,6 +124,9 @@ CodeMirror.defineMode("clojure", function (options) {\n
 \n
             if ( \'.\' == stream.peek() ) {\n
                 stream.eat(\'.\');\n
+                stream.eatWhile(tests.digit);\n
+            } else if (\'/\' == stream.peek() ) {\n
+                stream.eat(\'/\');\n
                 stream.eatWhile(tests.digit);\n
             }\n
 \n
@@ -167,7 +171,7 @@ CodeMirror.defineMode("clojure", function (options) {\n
             }\n
 \n
             // skip spaces\n
-            if (stream.eatSpace()) {\n
+            if (state.mode != "string" && stream.eatSpace()) {\n
                 return null;\n
             }\n
             var returnType = null;\n
@@ -215,7 +219,7 @@ CodeMirror.defineMode("clojure", function (options) {\n
                         }\n
 \n
                         if (keyWord.length > 0 && (indentKeys.propertyIsEnumerable(keyWord) ||\n
-                                                   /^(?:def|with)/.test(keyWord))) { // indent-word\n
+                                                   tests.block_indent.test(keyWord))) { // indent-word\n
                             pushStack(state, indentTemp + INDENT_WORD_SKIP, ch);\n
                         } else { // non-indent word\n
                             // we continue eating the spaces\n
@@ -262,11 +266,14 @@ CodeMirror.defineMode("clojure", function (options) {\n
             return state.indentStack.indent;\n
         },\n
 \n
+        closeBrackets: {pairs: "()[]{}\\"\\""},\n
         lineComment: ";;"\n
     };\n
 });\n
 \n
 CodeMirror.defineMIME("text/x-clojure", "clojure");\n
+CodeMirror.defineMIME("text/x-clojurescript", "clojure");\n
+CodeMirror.defineMIME("application/edn", "clojure");\n
 \n
 });\n
 
@@ -279,7 +286,7 @@ CodeMirror.defineMIME("text/x-clojure", "clojure");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>14815</int> </value>
+            <value> <int>15189</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

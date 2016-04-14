@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897138.3</string> </value>
+            <value> <string>ts60604385.49</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -41,134 +41,123 @@
   else // Plain browser env\n
     mod(CodeMirror);\n
 })(function(CodeMirror) {\n
-"use strict";\n
-\n
-CodeMirror.defineMode("smarty", function(config) {\n
   "use strict";\n
 \n
-  // our default settings; check to see if they\'re overridden\n
-  var settings = {\n
-    rightDelimiter: \'}\',\n
-    leftDelimiter: \'{\',\n
-    smartyVersion: 2 // for backward compatibility\n
-  };\n
-  if (config.hasOwnProperty("leftDelimiter")) {\n
-    settings.leftDelimiter = config.leftDelimiter;\n
-  }\n
-  if (config.hasOwnProperty("rightDelimiter")) {\n
-    settings.rightDelimiter = config.rightDelimiter;\n
-  }\n
-  if (config.hasOwnProperty("smartyVersion") && config.smartyVersion === 3) {\n
-    settings.smartyVersion = 3;\n
-  }\n
+  CodeMirror.defineMode("smarty", function(config, parserConf) {\n
+    var rightDelimiter = parserConf.rightDelimiter || "}";\n
+    var leftDelimiter = parserConf.leftDelimiter || "{";\n
+    var version = parserConf.version || 2;\n
+    var baseMode = CodeMirror.getMode(config, parserConf.baseMode || "null");\n
 \n
-  var keyFunctions = ["debug", "extends", "function", "include", "literal"];\n
-  var last;\n
-  var regs = {\n
-    operatorChars: /[+\\-*&%=<>!?]/,\n
-    validIdentifier: /[a-zA-Z0-9_]/,\n
-    stringChar: /[\'"]/\n
-  };\n
+    var keyFunctions = ["debug", "extends", "function", "include", "literal"];\n
+    var regs = {\n
+      operatorChars: /[+\\-*&%=<>!?]/,\n
+      validIdentifier: /[a-zA-Z0-9_]/,\n
+      stringChar: /[\'"]/\n
+    };\n
 \n
-  var helpers = {\n
-    cont: function(style, lastType) {\n
+    var last;\n
+    function cont(style, lastType) {\n
       last = lastType;\n
       return style;\n
-    },\n
-    chain: function(stream, state, parser) {\n
+    }\n
+\n
+    function chain(stream, state, parser) {\n
       state.tokenize = parser;\n
       return parser(stream, state);\n
     }\n
-  };\n
 \n
+    // Smarty 3 allows { and } surrounded by whitespace to NOT slip into Smarty mode\n
+    function doesNotCount(stream, pos) {\n
+      if (pos == null) pos = stream.pos;\n
+      return version === 3 && leftDelimiter == "{" &&\n
+        (pos == stream.string.length || /\\s/.test(stream.string.charAt(pos)));\n
+    }\n
 \n
-  // our various parsers\n
-  var parsers = {\n
-\n
-    // the main tokenizer\n
-    tokenizer: function(stream, state) {\n
-      if (stream.match(settings.leftDelimiter, true)) {\n
-        if (stream.eat("*")) {\n
-          return helpers.chain(stream, state, parsers.inBlock("comment", "*" + settings.rightDelimiter));\n
-        } else {\n
-          // Smarty 3 allows { and } surrounded by whitespace to NOT slip into Smarty mode\n
-          state.depth++;\n
-          var isEol = stream.eol();\n
-          var isFollowedByWhitespace = /\\s/.test(stream.peek());\n
-          if (settings.smartyVersion === 3 && settings.leftDelimiter === "{" && (isEol || isFollowedByWhitespace)) {\n
-            state.depth--;\n
-            return null;\n
-          } else {\n
-            state.tokenize = parsers.smarty;\n
-            last = "startTag";\n
-            return "tag";\n
-          }\n
-        }\n
-      } else {\n
-        stream.next();\n
-        return null;\n
+    function tokenTop(stream, state) {\n
+      var string = stream.string;\n
+      for (var scan = stream.pos;;) {\n
+        var nextMatch = string.indexOf(leftDelimiter, scan);\n
+        scan = nextMatch + leftDelimiter.length;\n
+        if (nextMatch == -1 || !doesNotCount(stream, nextMatch + leftDelimiter.length)) break;\n
       }\n
-    },\n
+      if (nextMatch == stream.pos) {\n
+        stream.match(leftDelimiter);\n
+        if (stream.eat("*")) {\n
+          return chain(stream, state, tokenBlock("comment", "*" + rightDelimiter));\n
+        } else {\n
+          state.depth++;\n
+          state.tokenize = tokenSmarty;\n
+          last = "startTag";\n
+          return "tag";\n
+        }\n
+      }\n
+\n
+      if (nextMatch > -1) stream.string = string.slice(0, nextMatch);\n
+      var token = baseMode.token(stream, state.base);\n
+      if (nextMatch > -1) stream.string = string;\n
+      return token;\n
+    }\n
 \n
     // parsing Smarty content\n
-    smarty: function(stream, state) {\n
-      if (stream.match(settings.rightDelimiter, true)) {\n
-        if (settings.smartyVersion === 3) {\n
+    function tokenSmarty(stream, state) {\n
+      if (stream.match(rightDelimiter, true)) {\n
+        if (version === 3) {\n
           state.depth--;\n
           if (state.depth <= 0) {\n
-            state.tokenize = parsers.tokenizer;\n
+            state.tokenize = tokenTop;\n
           }\n
         } else {\n
-          state.tokenize = parsers.tokenizer;\n
+          state.tokenize = tokenTop;\n
         }\n
-        return helpers.cont("tag", null);\n
+        return cont("tag", null);\n
       }\n
 \n
-      if (stream.match(settings.leftDelimiter, true)) {\n
+      if (stream.match(leftDelimiter, true)) {\n
         state.depth++;\n
-        return helpers.cont("tag", "startTag");\n
+        return cont("tag", "startTag");\n
       }\n
 \n
       var ch = stream.next();\n
       if (ch == "$") {\n
         stream.eatWhile(regs.validIdentifier);\n
-        return helpers.cont("variable-2", "variable");\n
+        return cont("variable-2", "variable");\n
       } else if (ch == "|") {\n
-        return helpers.cont("operator", "pipe");\n
+        return cont("operator", "pipe");\n
       } else if (ch == ".") {\n
-        return helpers.cont("operator", "property");\n
+        return cont("operator", "property");\n
       } else if (regs.stringChar.test(ch)) {\n
-        state.tokenize = parsers.inAttribute(ch);\n
-        return helpers.cont("string", "string");\n
+        state.tokenize = tokenAttribute(ch);\n
+        return cont("string", "string");\n
       } else if (regs.operatorChars.test(ch)) {\n
         stream.eatWhile(regs.operatorChars);\n
-        return helpers.cont("operator", "operator");\n
+        return cont("operator", "operator");\n
       } else if (ch == "[" || ch == "]") {\n
-        return helpers.cont("bracket", "bracket");\n
+        return cont("bracket", "bracket");\n
       } else if (ch == "(" || ch == ")") {\n
-        return helpers.cont("bracket", "operator");\n
+        return cont("bracket", "operator");\n
       } else if (/\\d/.test(ch)) {\n
         stream.eatWhile(/\\d/);\n
-        return helpers.cont("number", "number");\n
+        return cont("number", "number");\n
       } else {\n
 \n
         if (state.last == "variable") {\n
           if (ch == "@") {\n
             stream.eatWhile(regs.validIdentifier);\n
-            return helpers.cont("property", "property");\n
+            return cont("property", "property");\n
           } else if (ch == "|") {\n
             stream.eatWhile(regs.validIdentifier);\n
-            return helpers.cont("qualifier", "modifier");\n
+            return cont("qualifier", "modifier");\n
           }\n
         } else if (state.last == "pipe") {\n
           stream.eatWhile(regs.validIdentifier);\n
-          return helpers.cont("qualifier", "modifier");\n
+          return cont("qualifier", "modifier");\n
         } else if (state.last == "whitespace") {\n
           stream.eatWhile(regs.validIdentifier);\n
-          return helpers.cont("attribute", "modifier");\n
+          return cont("attribute", "modifier");\n
         } if (state.last == "property") {\n
           stream.eatWhile(regs.validIdentifier);\n
-          return helpers.cont("property", null);\n
+          return cont("property", null);\n
         } else if (/\\s/.test(ch)) {\n
           last = "whitespace";\n
           return null;\n
@@ -184,37 +173,37 @@ CodeMirror.defineMode("smarty", function(config) {\n
         }\n
         for (var i=0, j=keyFunctions.length; i<j; i++) {\n
           if (keyFunctions[i] == str) {\n
-            return helpers.cont("keyword", "keyword");\n
+            return cont("keyword", "keyword");\n
           }\n
         }\n
         if (/\\s/.test(ch)) {\n
           return null;\n
         }\n
-        return helpers.cont("tag", "tag");\n
+        return cont("tag", "tag");\n
       }\n
-    },\n
+    }\n
 \n
-    inAttribute: function(quote) {\n
+    function tokenAttribute(quote) {\n
       return function(stream, state) {\n
         var prevChar = null;\n
         var currChar = null;\n
         while (!stream.eol()) {\n
           currChar = stream.peek();\n
           if (stream.next() == quote && prevChar !== \'\\\\\') {\n
-            state.tokenize = parsers.smarty;\n
+            state.tokenize = tokenSmarty;\n
             break;\n
           }\n
           prevChar = currChar;\n
         }\n
         return "string";\n
       };\n
-    },\n
+    }\n
 \n
-    inBlock: function(style, terminator) {\n
+    function tokenBlock(style, terminator) {\n
       return function(stream, state) {\n
         while (!stream.eol()) {\n
           if (stream.match(terminator)) {\n
-            state.tokenize = parsers.tokenizer;\n
+            state.tokenize = tokenTop;\n
             break;\n
           }\n
           stream.next();\n
@@ -222,30 +211,45 @@ CodeMirror.defineMode("smarty", function(config) {\n
         return style;\n
       };\n
     }\n
-  };\n
 \n
+    return {\n
+      startState: function() {\n
+        return {\n
+          base: CodeMirror.startState(baseMode),\n
+          tokenize: tokenTop,\n
+          last: null,\n
+          depth: 0\n
+        };\n
+      },\n
+      copyState: function(state) {\n
+        return {\n
+          base: CodeMirror.copyState(baseMode, state.base),\n
+          tokenize: state.tokenize,\n
+          last: state.last,\n
+          depth: state.depth\n
+        };\n
+      },\n
+      innerMode: function(state) {\n
+        if (state.tokenize == tokenTop)\n
+          return {mode: baseMode, state: state.base};\n
+      },\n
+      token: function(stream, state) {\n
+        var style = state.tokenize(stream, state);\n
+        state.last = last;\n
+        return style;\n
+      },\n
+      indent: function(state, text) {\n
+        if (state.tokenize == tokenTop && baseMode.indent)\n
+          return baseMode.indent(state.base, text);\n
+        else\n
+          return CodeMirror.Pass;\n
+      },\n
+      blockCommentStart: leftDelimiter + "*",\n
+      blockCommentEnd: "*" + rightDelimiter\n
+    };\n
+  });\n
 \n
-  // the public API for CodeMirror\n
-  return {\n
-    startState: function() {\n
-      return {\n
-        tokenize: parsers.tokenizer,\n
-        mode: "smarty",\n
-        last: null,\n
-        depth: 0\n
-      };\n
-    },\n
-    token: function(stream, state) {\n
-      var style = state.tokenize(stream, state);\n
-      state.last = last;\n
-      return style;\n
-    },\n
-    electricChars: ""\n
-  };\n
-});\n
-\n
-CodeMirror.defineMIME("text/x-smarty", "smarty");\n
-\n
+  CodeMirror.defineMIME("text/x-smarty", "smarty");\n
 });\n
 
 
@@ -257,7 +261,7 @@ CodeMirror.defineMIME("text/x-smarty", "smarty");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6419</int> </value>
+            <value> <int>6828</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

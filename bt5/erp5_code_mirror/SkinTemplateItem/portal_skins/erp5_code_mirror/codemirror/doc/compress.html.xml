@@ -74,6 +74,24 @@
       <input type="hidden" id="download" name="download" value="codemirror-compressed.js"/>\n
       <p>Version: <select id="version" onchange="setVersion(this);" style="padding: 1px;">\n
         <option value="http://codemirror.net/">HEAD</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=5.13.4;f=">5.13</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=5.13.2;f=">5.13</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=5.13.0;f=">5.13</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=5.12.0;f=">5.12</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=5.11.0;f=">5.11</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=5.10.0;f=">5.10</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=5.9.0;f=">5.9</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=5.8.0;f=">5.8</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=5.7.0;f=">5.7</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=5.6.0;f=">5.6</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=5.5.0;f=">5.5</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=5.4.0;f=">5.4</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=5.3.0;f=">5.3</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=5.2.0;f=">5.2</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=5.1.0;f=">5.1</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=5.0.0;f=">5.0</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.13.0;f=">4.13</option>\n
+        <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.12.0;f=">4.12</option>\n
         <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.11.0;f=">4.11</option>\n
         <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.10.0;f=">4.10</option>\n
         <option value="http://marijnhaverbeke.nl/git/codemirror?a=blob_plain;hb=4.9.0;f=">4.9</option>\n
@@ -138,11 +156,17 @@
         </optgroup>\n
         <optgroup label="Modes">\n
           <option value="http://codemirror.net/mode/apl/apl.js">apl.js</option>\n
+          <option value="http://codemirror.net/mode/asn.1/asn.1.js">asn.1.js</option>\n
+          <option value="http://codemirror.net/mode/asterisk/asterisk.js">asterisk.js</option>\n
+          <option value="http://codemirror.net/mode/asciiarmor/asciiarmor.js">asciiarmor.js</option>\n
+          <option value="http://codemirror.net/mode/brainfuck/brainfuck.js">brainfuck.js</option>\n
           <option value="http://codemirror.net/mode/clike/clike.js">clike.js</option>\n
           <option value="http://codemirror.net/mode/clojure/clojure.js">clojure.js</option>\n
+          <option value="http://codemirror.net/mode/cmake/cmake.js">cmake.js</option>\n
           <option value="http://codemirror.net/mode/cobol/cobol.js">cobol.js</option>\n
           <option value="http://codemirror.net/mode/coffeescript/coffeescript.js">coffeescript.js</option>\n
           <option value="http://codemirror.net/mode/commonlisp/commonlisp.js">commonlisp.js</option>\n
+          <option value="http://codemirror.net/mode/crystal/crystal.js">crystal.js</option>\n
           <option value="http://codemirror.net/mode/css/css.js">css.js</option>\n
           <option value="http://codemirror.net/mode/cypher/cypher.js">cypher.js</option>\n
           <option value="http://codemirror.net/mode/d/d.js">d.js</option>\n
@@ -155,7 +179,11 @@
           <option value="http://codemirror.net/mode/ebnf/ebnf.js">ebnf.js</option>\n
           <option value="http://codemirror.net/mode/ecl/ecl.js">ecl.js</option>\n
           <option value="http://codemirror.net/mode/eiffel/eiffel.js">eiffel.js</option>\n
+          <option value="http://codemirror.net/mode/elm/elm.js">eml.js</option>\n
           <option value="http://codemirror.net/mode/erlang/erlang.js">erlang.js</option>\n
+          <option value="http://codemirror.net/mode/factor/factor.js">factor.js</option>\n
+          <option value="http://codemirror.net/mode/fcl/fcl.js">fcl.js</option>\n
+          <option value="http://codemirror.net/mode/forth/forth.js">forth.js</option>\n
           <option value="http://codemirror.net/mode/fortran/fortran.js">fortran.js</option>\n
           <option value="http://codemirror.net/mode/gfm/gfm.js">gfm.js</option>\n
           <option value="http://codemirror.net/mode/gas/gas.js">gas.js</option>\n
@@ -163,7 +191,9 @@
           <option value="http://codemirror.net/mode/go/go.js">go.js</option>\n
           <option value="http://codemirror.net/mode/groovy/groovy.js">groovy.js</option>\n
           <option value="http://codemirror.net/mode/haml/haml.js">haml.js</option>\n
+          <option value="http://codemirror.net/mode/handlebars/handlebars.js">handlebars.js</option>\n
           <option value="http://codemirror.net/mode/haskell/haskell.js">haskell.js</option>\n
+          <option value="http://codemirror.net/mode/haskell-literate/haskell-literate.js">haskell-literate.js</option>\n
           <option value="http://codemirror.net/mode/haxe/haxe.js">haxe.js</option>\n
           <option value="http://codemirror.net/mode/htmlembedded/htmlembedded.js">htmlembedded.js</option>\n
           <option value="http://codemirror.net/mode/htmlmixed/htmlmixed.js">htmlmixed.js</option>\n
@@ -173,22 +203,26 @@
           <option value="http://codemirror.net/mode/javascript/javascript.js">javascript.js</option>\n
           <option value="http://codemirror.net/mode/jinja2/jinja2.js">jinja2.js</option>\n
           <option value="http://codemirror.net/mode/julia/julia.js">julia.js</option>\n
-          <option value="http://codemirror.net/mode/kotlin/kotlin.js">kotlin.js</option>\n
-          <option value="http://codemirror.net/mode/livescript/livescript.js">livescript.js</option>\n
+          <option value="http://codemirror.net/mode/jsx/jsx.js">jsx.js</option>\n
           <option value="http://codemirror.net/mode/lua/lua.js">lua.js</option>\n
           <option value="http://codemirror.net/mode/markdown/markdown.js">markdown.js</option>\n
+          <option value="http://codemirror.net/mode/mathematica/mathematica.js">mathematica.js</option>\n
           <option value="http://codemirror.net/mode/mirc/mirc.js">mirc.js</option>\n
           <option value="http://codemirror.net/mode/mllike/mllike.js">mllike.js</option>\n
           <option value="http://codemirror.net/mode/modelica/modelica.js">modelica.js</option>\n
+          <option value="http://codemirror.net/mode/mscgen/mscgen.js">mscgen.js</option>\n
+          <option value="http://codemirror.net/mode/mumps/mumps.js">mumps.js</option>\n
           <option value="http://codemirror.net/mode/nginx/nginx.js">nginx.js</option>\n
           <option value="http://codemirror.net/mode/ntriples/ntriples.js">ntriples.js</option>\n
           <option value="http://codemirror.net/mode/octave/octave.js">octave.js</option>\n
+          <option value="http://codemirror.net/mode/oz/oz.js">oz.js</option>\n
           <option value="http://codemirror.net/mode/pascal/pascal.js">pascal.js</option>\n
           <option value="http://codemirror.net/mode/pegjs/pegjs.js">pegjs.js</option>\n
           <option value="http://codemirror.net/mode/perl/perl.js">perl.js</option>\n
           <option value="http://codemirror.net/mode/php/php.js">php.js</option>\n
           <option value="http://codemirror.net/mode/pig/pig.js">pig.js</option>\n
           <option value="http://codemirror.net/mode/properties/properties.js">properties.js</option>\n
+          <option value="http://codemirror.net/mode/protobuf/protobuf.js">protobuf.js</option>\n
           <option value="http://codemirror.net/mode/python/python.js">python.js</option>\n
           <option value="http://codemirror.net/mode/puppet/puppet.js">puppet.js</option>\n
           <option value="http://codemirror.net/mode/q/q.js">q.js</option>\n
@@ -205,11 +239,12 @@
           <option value="http://codemirror.net/mode/slim/slim.js">slim.js</option>\n
           <option value="http://codemirror.net/mode/smalltalk/smalltalk.js">smalltalk.js</option>\n
           <option value="http://codemirror.net/mode/smarty/smarty.js">smarty.js</option>\n
-          <option value="http://codemirror.net/mode/smartymixed/smartymixed.js">smartymixed.js</option>\n
           <option value="http://codemirror.net/mode/solr/solr.js">solr.js</option>\n
           <option value="http://codemirror.net/mode/soy/soy.js">soy.js</option>\n
           <option value="http://codemirror.net/mode/sparql/sparql.js">sparql.js</option>\n
+          <option value="http://codemirror.net/mode/swift/swift.js">swift.js</option>\n
           <option value="http://codemirror.net/mode/spreadsheet/spreadsheet.js">spreadsheet.js</option>\n
+          <option value="http://codemirror.net/mode/stylus/stylus.js">stylus.js</option>\n
           <option value="http://codemirror.net/mode/sql/sql.js">sql.js</option>\n
           <option value="http://codemirror.net/mode/stex/stex.js">stex.js</option>\n
           <option value="http://codemirror.net/mode/tcl/tcl.js">tcl.js</option>\n
@@ -218,14 +253,21 @@
           <option value="http://codemirror.net/mode/tiki/tiki.js">tiki.js</option>\n
           <option value="http://codemirror.net/mode/toml/toml.js">toml.js</option>\n
           <option value="http://codemirror.net/mode/tornado/tornado.js">tornado.js</option>\n
+          <option value="http://codemirror.net/mode/troff/troff.js">troff.js</option>\n
+          <option value="http://codemirror.net/mode/ttcn/ttcn.js">ttcn.js</option>\n
+          <option value="http://codemirror.net/mode/ttcn-cfg/ttcn-cfg.js">ttcn-cfg.js</option>\n
           <option value="http://codemirror.net/mode/turtle/turtle.js">turtle.js</option>\n
+          <option value="http://codemirror.net/mode/twig/twig.js">twig.js</option>\n
           <option value="http://codemirror.net/mode/vb/vb.js">vb.js</option>\n
           <option value="http://codemirror.net/mode/vbscript/vbscript.js">vbscript.js</option>\n
           <option value="http://codemirror.net/mode/velocity/velocity.js">velocity.js</option>\n
           <option value="http://codemirror.net/mode/verilog/verilog.js">verilog.js</option>\n
+          <option value="http://codemirror.net/mode/vhdl/vhdl.js">vhdl.js</option>\n
+          <option value="http://codemirror.net/mode/vue/vue.js">vue.js</option>\n
           <option value="http://codemirror.net/mode/xml/xml.js">xml.js</option>\n
           <option value="http://codemirror.net/mode/xquery/xquery.js">xquery.js</option>\n
           <option value="http://codemirror.net/mode/yaml/yaml.js">yaml.js</option>\n
+          <option value="http://codemirror.net/mode/yaml-frontmatter/yaml-frontmatter.js">yaml-frontmatter.js</option>\n
           <option value="http://codemirror.net/mode/z80/z80.js">z80.js</option>\n
         </optgroup>\n
         <optgroup label="Add-ons">\n
@@ -250,6 +292,7 @@
           <option value="http://codemirror.net/addon/hint/javascript-hint.js">javascript-hint.js</option>\n
           <option value="http://codemirror.net/addon/lint/javascript-lint.js">javascript-lint.js</option>\n
           <option value="http://codemirror.net/addon/lint/json-lint.js">json-lint.js</option>\n
+          <option value="http://codemirror.net/addon/search/jump-to-line.js">jump-to-line.js</option>\n
           <option value="http://codemirror.net/addon/lint/lint.js">lint.js</option>\n
           <option value="http://codemirror.net/addon/mode/loadmode.js">loadmode.js</option>\n
           <option value="http://codemirror.net/addon/fold/markdown-fold.js">markdown-fold.js</option>\n

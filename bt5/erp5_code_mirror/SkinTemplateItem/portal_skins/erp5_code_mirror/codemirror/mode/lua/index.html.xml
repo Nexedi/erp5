@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Lua mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<link rel="stylesheet" href="../../theme/neat.css">\n
+<script src="../../addon/cm_edit/matchbrackets.js"></script>\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="lua.js"></script>\n
+<style>.CodeMirror {border: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Lua</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Lua mode</h2>\n
+<form><textarea id="code" name="code">\n
+--[[\n
+example useless code to show lua syntax highlighting\n
+this is multiline comment\n
+]]\n
+\n
+function blahblahblah(x)\n
+\n
+  local table = {\n
+    "asd" = 123,\n
+    "x" = 0.34,  \n
+  }\n
+  if x ~= 3 then\n
+    print( x )\n
+  elseif x == "string"\n
+    my_custom_function( 0x34 )\n
+  else\n
+    unknown_function( "some string" )\n
+  end\n
+\n
+  --single line comment\n
+  \n
+end\n
+\n
+function blablabla3()\n
+\n
+  for k,v in ipairs( table ) do\n
+    --abcde..\n
+    y=[=[\n
+  x=[[\n
+      x is a multi line string\n
+   ]]\n
+  but its definition is iside a highest level string!\n
+  ]=]\n
+    print(" \\"\\" ")\n
+\n
+    s = math.sin( x )\n
+  end\n
+\n
+end\n
+</textarea></form>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        matchBrackets: true,\n
+        theme: "neat"\n
+      });\n
+    </script>\n
+\n
+    <p>Loosely based on Franciszek\n
+    Wawrzak\'s <a href="http://codemirror.net/1/contrib/lua">CodeMirror\n
+    1 mode</a>. One configuration parameter is\n
+    supported, <code>specials</code>, to which you can provide an\n
+    array of strings to have those identifiers highlighted with\n
+    the <code>lua-special</code> style.</p>\n
+    <p><strong>MIME types defined:</strong> <code>text/x-lua</code>.</p>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

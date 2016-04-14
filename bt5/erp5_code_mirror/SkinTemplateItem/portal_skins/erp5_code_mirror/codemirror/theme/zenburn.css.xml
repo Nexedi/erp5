@@ -40,7 +40,7 @@
 \n
 .cm-s-zenburn .CodeMirror-gutters { background: #3f3f3f !important; }\n
 .cm-s-zenburn .CodeMirror-foldgutter-open, .CodeMirror-foldgutter-folded { color: #999; }\n
-.cm-s-zenburn .CodeMirror-cursor { border-left: 1px solid white !important; }\n
+.cm-s-zenburn .CodeMirror-cursor { border-left: 1px solid white; }\n
 .cm-s-zenburn { background-color: #3f3f3f; color: #dcdccc; }\n
 .cm-s-zenburn span.cm-builtin { color: #dcdccc; font-weight: bold; }\n
 .cm-s-zenburn span.cm-comment { color: #7f9f7f; }\n
@@ -63,8 +63,8 @@
 .cm-s-zenburn span.CodeMirror-nonmatchingbracket { border-bottom: 1px solid; background: none; }\n
 .cm-s-zenburn .CodeMirror-activeline { background: #000000; }\n
 .cm-s-zenburn .CodeMirror-activeline-background { background: #000000; }\n
-.cm-s-zenburn .CodeMirror-selected { background: #545454; }\n
-.cm-s-zenburn .CodeMirror-focused .CodeMirror-selected { background: #4f4f4f; }\n
+.cm-s-zenburn div.CodeMirror-selected { background: #545454; }\n
+.cm-s-zenburn .CodeMirror-focused div.CodeMirror-selected { background: #4f4f4f; }\n
 </string> </value>
         </item>
       </dictionary>

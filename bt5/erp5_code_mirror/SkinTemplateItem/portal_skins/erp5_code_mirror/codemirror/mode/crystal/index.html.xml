@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Crystal mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/cm_edit/matchbrackets.js"></script>\n
+<script src="crystal.js"></script>\n
+<style>\n
+  .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}\n
+  .cm-s-default span.cm-arrow { color: red; }\n
+</style>\n
+\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Crystal</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Crystal mode</h2>\n
+<form><textarea id="code" name="code">\n
+# Features of Crystal\n
+# - Ruby-inspired syntax.\n
+# - Statically type-checked but without having to specify the type of variables or method arguments.\n
+# - Be able to call C code by writing bindings to it in Crystal.\n
+# - Have compile-time evaluation and generation of code, to avoid boilerplate code.\n
+# - Compile to efficient native code.\n
+\n
+# A very basic HTTP server\n
+require "http/server"\n
+\n
+server = HTTP::Server.new(8080) do |request|\n
+  HTTP::Response.ok "text/plain", "Hello world, got #{request.path}!"\n
+end\n
+\n
+puts "Listening on http://0.0.0.0:8080"\n
+server.listen\n
+\n
+module Foo\n
+  def initialize(@foo); end\n
+\n
+  abstract def abstract_method : String\n
+\n
+  @[AlwaysInline]\n
+  def with_foofoo\n
+    with Foo.new(self) yield\n
+  end\n
+\n
+  struct Foo\n
+    def initialize(@foo); end\n
+\n
+    def hello_world\n
+      @foo.abstract_method\n
+    end\n
+  end\n
+end\n
+\n
+class Bar\n
+  include Foo\n
+\n
+  @@foobar = 12345\n
+\n
+  def initialize(@bar)\n
+    super(@bar.not_nil! + 100)\n
+  end\n
+\n
+  macro alias_method(name, method)\n
+    def {{ name }}(*args)\n
+      {{ method }}(*args)\n
+    end\n
+  end\n
+\n
+  def a_method\n
+    "Hello, World"\n
+  end\n
+\n
+  alias_method abstract_method, a_method\n
+\n
+  macro def show_instance_vars : Nil\n
+    {% for var in @type.instance_vars %}\n
+      puts "@{{ var }} = #{ @{{ var }} }"\n
+    {% end %}\n
+    nil\n
+  end\n
+end\n
+\n
+class Baz &lt; Bar; end\n
+\n
+lib LibC\n
+  fun c_puts = "puts"(str : Char*) : Int\n
+end\n
+\n
+$baz = Baz.new(100)\n
+$baz.show_instance_vars\n
+$baz.with_foofoo do\n
+  LibC.c_puts hello_world\n
+end\n
+</textarea></form>\n
+<script>\n
+  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+    mode: "text/x-crystal",\n
+    matchBrackets: true,\n
+    indentUnit: 2\n
+  });\n
+</script>\n
+\n
+<p><strong>MIME types defined:</strong> <code>text/x-crystal</code>.</p>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897135.67</string> </value>
+            <value> <string>ts60604388.57</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -37,54 +37,56 @@
 })(function(CodeMirror) {\n
 "use strict";\n
 \n
-CodeMirror.defineMode("xml", function(config, parserConfig) {\n
-  var indentUnit = config.indentUnit;\n
-  var multilineTagIndentFactor = parserConfig.multilineTagIndentFactor || 1;\n
-  var multilineTagIndentPastTag = parserConfig.multilineTagIndentPastTag;\n
-  if (multilineTagIndentPastTag == null) multilineTagIndentPastTag = true;\n
+var htmlConfig = {\n
+  autoSelfClosers: {\'area\': true, \'base\': true, \'br\': true, \'col\': true, \'command\': true,\n
+                    \'embed\': true, \'frame\': true, \'hr\': true, \'img\': true, \'input\': true,\n
+                    \'keygen\': true, \'link\': true, \'meta\': true, \'param\': true, \'source\': true,\n
+                    \'track\': true, \'wbr\': true, \'menuitem\': true},\n
+  implicitlyClosed: {\'dd\': true, \'li\': true, \'optgroup\': true, \'option\': true, \'p\': true,\n
+                     \'rp\': true, \'rt\': true, \'tbody\': true, \'td\': true, \'tfoot\': true,\n
+                     \'th\': true, \'tr\': true},\n
+  contextGrabbers: {\n
+    \'dd\': {\'dd\': true, \'dt\': true},\n
+    \'dt\': {\'dd\': true, \'dt\': true},\n
+    \'li\': {\'li\': true},\n
+    \'option\': {\'option\': true, \'optgroup\': true},\n
+    \'optgroup\': {\'optgroup\': true},\n
+    \'p\': {\'address\': true, \'article\': true, \'aside\': true, \'blockquote\': true, \'dir\': true,\n
+          \'div\': true, \'dl\': true, \'fieldset\': true, \'footer\': true, \'form\': true,\n
+          \'h1\': true, \'h2\': true, \'h3\': true, \'h4\': true, \'h5\': true, \'h6\': true,\n
+          \'header\': true, \'hgroup\': true, \'hr\': true, \'menu\': true, \'nav\': true, \'ol\': true,\n
+          \'p\': true, \'pre\': true, \'section\': true, \'table\': true, \'ul\': true},\n
+    \'rp\': {\'rp\': true, \'rt\': true},\n
+    \'rt\': {\'rp\': true, \'rt\': true},\n
+    \'tbody\': {\'tbody\': true, \'tfoot\': true},\n
+    \'td\': {\'td\': true, \'th\': true},\n
+    \'tfoot\': {\'tbody\': true},\n
+    \'th\': {\'td\': true, \'th\': true},\n
+    \'thead\': {\'tbody\': true, \'tfoot\': true},\n
+    \'tr\': {\'tr\': true}\n
+  },\n
+  doNotIndent: {"pre": true},\n
+  allowUnquoted: true,\n
+  allowMissing: true,\n
+  caseFold: true\n
+}\n
 \n
-  var Kludges = parserConfig.htmlMode ? {\n
-    autoSelfClosers: {\'area\': true, \'base\': true, \'br\': true, \'col\': true, \'command\': true,\n
-                      \'embed\': true, \'frame\': true, \'hr\': true, \'img\': true, \'input\': true,\n
-                      \'keygen\': true, \'link\': true, \'meta\': true, \'param\': true, \'source\': true,\n
-                      \'track\': true, \'wbr\': true, \'menuitem\': true},\n
-    implicitlyClosed: {\'dd\': true, \'li\': true, \'optgroup\': true, \'option\': true, \'p\': true,\n
-                       \'rp\': true, \'rt\': true, \'tbody\': true, \'td\': true, \'tfoot\': true,\n
-                       \'th\': true, \'tr\': true},\n
-    contextGrabbers: {\n
-      \'dd\': {\'dd\': true, \'dt\': true},\n
-      \'dt\': {\'dd\': true, \'dt\': true},\n
-      \'li\': {\'li\': true},\n
-      \'option\': {\'option\': true, \'optgroup\': true},\n
-      \'optgroup\': {\'optgroup\': true},\n
-      \'p\': {\'address\': true, \'article\': true, \'aside\': true, \'blockquote\': true, \'dir\': true,\n
-            \'div\': true, \'dl\': true, \'fieldset\': true, \'footer\': true, \'form\': true,\n
-            \'h1\': true, \'h2\': true, \'h3\': true, \'h4\': true, \'h5\': true, \'h6\': true,\n
-            \'header\': true, \'hgroup\': true, \'hr\': true, \'menu\': true, \'nav\': true, \'ol\': true,\n
-            \'p\': true, \'pre\': true, \'section\': true, \'table\': true, \'ul\': true},\n
-      \'rp\': {\'rp\': true, \'rt\': true},\n
-      \'rt\': {\'rp\': true, \'rt\': true},\n
-      \'tbody\': {\'tbody\': true, \'tfoot\': true},\n
-      \'td\': {\'td\': true, \'th\': true},\n
-      \'tfoot\': {\'tbody\': true},\n
-      \'th\': {\'td\': true, \'th\': true},\n
-      \'thead\': {\'tbody\': true, \'tfoot\': true},\n
-      \'tr\': {\'tr\': true}\n
-    },\n
-    doNotIndent: {"pre": true},\n
-    allowUnquoted: true,\n
-    allowMissing: true,\n
-    caseFold: true\n
-  } : {\n
-    autoSelfClosers: {},\n
-    implicitlyClosed: {},\n
-    contextGrabbers: {},\n
-    doNotIndent: {},\n
-    allowUnquoted: false,\n
-    allowMissing: false,\n
-    caseFold: false\n
-  };\n
-  var alignCDATA = parserConfig.alignCDATA;\n
+var xmlConfig = {\n
+  autoSelfClosers: {},\n
+  implicitlyClosed: {},\n
+  contextGrabbers: {},\n
+  doNotIndent: {},\n
+  allowUnquoted: false,\n
+  allowMissing: false,\n
+  caseFold: false\n
+}\n
+\n
+CodeMirror.defineMode("xml", function(editorConf, config_) {\n
+  var indentUnit = editorConf.indentUnit\n
+  var config = {}\n
+  var defaults = config_.htmlMode ? htmlConfig : xmlConfig\n
+  for (var prop in defaults) config[prop] = defaults[prop]\n
+  for (var prop in config_) config[prop] = config_[prop]\n
 \n
   // Return variables for tokenizers\n
   var type, setStyle;\n
@@ -135,6 +137,7 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {\n
       return null;\n
     }\n
   }\n
+  inText.isInText = true;\n
 \n
   function inTag(stream, state) {\n
     var ch = stream.next();\n
@@ -213,7 +216,7 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {\n
     this.tagName = tagName;\n
     this.indent = state.indented;\n
     this.startOfLine = startOfLine;\n
-    if (Kludges.doNotIndent.hasOwnProperty(tagName) || (state.context \046\046 state.context.noIndent))\n
+    if (config.doNotIndent.hasOwnProperty(tagName) || (state.context \046\046 state.context.noIndent))\n
       this.noIndent = true;\n
   }\n
   function popContext(state) {\n
@@ -226,8 +229,8 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {\n
         return;\n
       }\n
       parentTagName = state.context.tagName;\n
-      if (!Kludges.contextGrabbers.hasOwnProperty(parentTagName) ||\n
-          !Kludges.contextGrabbers[parentTagName].hasOwnProperty(nextTagName)) {\n
+      if (!config.contextGrabbers.hasOwnProperty(parentTagName) ||\n
+          !config.contextGrabbers[parentTagName].hasOwnProperty(nextTagName)) {\n
         return;\n
       }\n
       popContext(state);\n
@@ -258,9 +261,9 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {\n
     if (type == "word") {\n
       var tagName = stream.current();\n
       if (state.context \046\046 state.context.tagName != tagName \046\046\n
-          Kludges.implicitlyClosed.hasOwnProperty(state.context.tagName))\n
+          config.implicitlyClosed.hasOwnProperty(state.context.tagName))\n
         popContext(state);\n
-      if (state.context \046\046 state.context.tagName == tagName) {\n
+      if ((state.context \046\046 state.context.tagName == tagName) || config.matchClosing === false) {\n
         setStyle = "tag";\n
         return closeState;\n
       } else {\n
@@ -294,7 +297,7 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {\n
       var tagName = state.tagName, tagStart = state.tagStart;\n
       state.tagName = state.tagStart = null;\n
       if (type == "selfcloseTag" ||\n
-          Kludges.autoSelfClosers.hasOwnProperty(tagName)) {\n
+          config.autoSelfClosers.hasOwnProperty(tagName)) {\n
         maybePopContext(state, tagName);\n
       } else {\n
         maybePopContext(state, tagName);\n
@@ -307,12 +310,12 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {\n
   }\n
   function attrEqState(type, stream, state) {\n
     if (type == "equals") return attrValueState;\n
-    if (!Kludges.allowMissing) setStyle = "error";\n
+    if (!config.allowMissing) setStyle = "error";\n
     return attrState(type, stream, state);\n
   }\n
   function attrValueState(type, stream, state) {\n
     if (type == "string") return attrContinuedState;\n
-    if (type == "word" \046\046 Kludges.allowUnquoted) {setStyle = "string"; return attrState;}\n
+    if (type == "word" \046\046 config.allowUnquoted) {setStyle = "string"; return attrState;}\n
     setStyle = "error";\n
     return attrState(type, stream, state);\n
   }\n
@@ -322,12 +325,14 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {\n
   }\n
 \n
   return {\n
-    startState: function() {\n
-      return {tokenize: inText,\n
-              state: baseState,\n
-              indented: 0,\n
-              tagName: null, tagStart: null,\n
-              context: null};\n
+    startState: function(baseIndent) {\n
+      var state = {tokenize: inText,\n
+                   state: baseState,\n
+                   indented: baseIndent || 0,\n
+                   tagName: null, tagStart: null,\n
+                   context: null}\n
+      if (baseIndent != null) state.baseIndent = baseIndent\n
+      return state\n
     },\n
 \n
     token: function(stream, state) {\n
@@ -360,19 +365,19 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {\n
         return fullLine ? fullLine.match(/^(\\s*)/)[0].length : 0;\n
       // Indent the starts of attribute names.\n
       if (state.tagName) {\n
-        if (multilineTagIndentPastTag)\n
+        if (config.multilineTagIndentPastTag !== false)\n
           return state.tagStart + state.tagName.length + 2;\n
         else\n
-          return state.tagStart + indentUnit * multilineTagIndentFactor;\n
+          return state.tagStart + indentUnit * (config.multilineTagIndentFactor || 1);\n
       }\n
-      if (alignCDATA \046\046 /\074!\\[CDATA\\[/.test(textAfter)) return 0;\n
+      if (config.alignCDATA \046\046 /\074!\\[CDATA\\[/.test(textAfter)) return 0;\n
       var tagAfter = textAfter \046\046 /^\074(\\/)?([\\w_:\\.-]*)/.exec(textAfter);\n
       if (tagAfter \046\046 tagAfter[1]) { // Closing tag spotted\n
         while (context) {\n
           if (context.tagName == tagAfter[2]) {\n
             context = context.prev;\n
             break;\n
-          } else if (Kludges.implicitlyClosed.hasOwnProperty(context.tagName)) {\n
+          } else if (config.implicitlyClosed.hasOwnProperty(context.tagName)) {\n
             context = context.prev;\n
           } else {\n
             break;\n
@@ -380,25 +385,30 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {\n
         }\n
       } else if (tagAfter) { // Opening tag spotted\n
         while (context) {\n
-          var grabbers = Kludges.contextGrabbers[context.tagName];\n
+          var grabbers = config.contextGrabbers[context.tagName];\n
           if (grabbers \046\046 grabbers.hasOwnProperty(tagAfter[2]))\n
             context = context.prev;\n
           else\n
             break;\n
         }\n
       }\n
-      while (context \046\046 !context.startOfLine)\n
+      while (context \046\046 context.prev \046\046 !context.startOfLine)\n
         context = context.prev;\n
       if (context) return context.indent + indentUnit;\n
-      else return 0;\n
+      else return state.baseIndent || 0;\n
     },\n
 \n
     electricInput: /\074\\/[\\s\\w:]+\076$/,\n
     blockCommentStart: "\074!--",\n
     blockCommentEnd: "--\076",\n
 \n
-    configuration: parserConfig.htmlMode ? "html" : "xml",\n
-    helperType: parserConfig.htmlMode ? "html" : "xml"\n
+    configuration: config.htmlMode ? "html" : "xml",\n
+    helperType: config.htmlMode ? "html" : "xml",\n
+\n
+    skipAttribute: function(state) {\n
+      if (state.state == attrValueState)\n
+        state.state = attrState\n
+    }\n
   };\n
 });\n
 \n
@@ -416,7 +426,7 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>12375</int> </value>
+            <value> <int>12570</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897151.02</string> </value>
+            <value> <string>ts60604369.54</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>74399</int> </value>
+            <value> <int>76242</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -564,6 +564,13 @@ testCM("markClearBetween", function(cm) {\n
   eq(cm.findMarksAt(Pos(1, 1)).length, 0);\n
 });\n
 \n
+testCM("findMarksMiddle", function(cm) {\n
+  var mark = cm.markText(Pos(1, 1), Pos(3, 1));\n
+  var found = cm.findMarks(Pos(2, 1), Pos(2, 2));\n
+  eq(found.length, 1);\n
+  eq(found[0], mark);\n
+}, {value: "line 0\\nline 1\\nline 2\\nline 3"});\n
+\n
 testCM("deleteSpanCollapsedInclusiveLeft", function(cm) {\n
   var from = Pos(1, 0), to = Pos(1, 1);\n
   var m = cm.markText(from, to, {collapsed: true, inclusiveLeft: true});\n
@@ -666,6 +673,14 @@ testCM("getAllMarks", function(cm) {\n
   eq(cm.getAllMarks().length, 2);\n
 });\n
 \n
+testCM("setValueClears", function(cm) {\n
+  cm.addLineClass(0, "wrap", "foo");\n
+  var mark = cm.markText(Pos(0, 0), Pos(1, 1), {inclusiveLeft: true, inclusiveRight: true});\n
+  cm.setValue("foo");\n
+  is(!cm.lineInfo(0).wrapClass);\n
+  is(!mark.find());\n
+}, {value: "a\\nb"});\n
+\n
 testCM("bug577", function(cm) {\n
   cm.setValue("a\\nb");\n
   cm.clearHistory();\n
@@ -728,7 +743,7 @@ testCM("selectAllNoScroll", function(cm) {\n
 });\n
 \n
 testCM("selectionPos", function(cm) {\n
-  if (phantom) return;\n
+  if (phantom || cm.getOption("inputStyle") != "textarea") return;\n
   cm.setSize(100, 100);\n
   addDoc(cm, 200, 100);\n
   cm.setSelection(Pos(1, 100), Pos(98, 100));\n
@@ -858,6 +873,7 @@ testCM("collapsedRangeCoordsChar", function(cm) {\n
 }, {value: "123456\\nabcdef\\nghijkl\\nmnopqr\\n"});\n
 \n
 testCM("collapsedRangeBetweenLinesSelected", function(cm) {\n
+  if (cm.getOption("inputStyle") != "textarea") return;\n
   var widget = document.createElement("span");\n
   widget.textContent = "\\u2194";\n
   cm.markText(Pos(0, 3), Pos(1, 0), {replacedWith: widget});\n
@@ -1050,6 +1066,14 @@ testCM("wrappingInlineWidget", function(cm) {\n
   eq(curR.bottom, cur1.bottom);\n
 }, {value: "1 2 3 xxx 4", lineWrapping: true});\n
 \n
+testCM("showEmptyWidgetSpan", function(cm) {\n
+  var marker = cm.markText(Pos(0, 2), Pos(0, 2), {\n
+    clearWhenEmpty: false,\n
+    replacedWith: document.createTextNode("X")\n
+  });\n
+  eq(cm.display.view[0].text.textContent, "abXc");\n
+}, {value: "abc"});\n
+\n
 testCM("changedInlineWidget", function(cm) {\n
   cm.setSize("10em");\n
   var w = document.createElement("span");\n
@@ -1138,6 +1162,7 @@ testCM("measureEndOfLine", function(cm) {\n
 }, {mode: "text/html", value: "<!-- foo barrr -->", lineWrapping: true}, ie_lt8 || opera_lt10);\n
 \n
 testCM("scrollVerticallyAndHorizontally", function(cm) {\n
+  if (cm.getOption("inputStyle") != "textarea") return;\n
   cm.setSize(100, 100);\n
   addDoc(cm, 40, 40);\n
   cm.setCursor(39);\n
@@ -1366,10 +1391,11 @@ testCM("verticalMovementCommandsWrapping", function(cm) {\n
     lineWrapping: true});\n
 \n
 testCM("rtlMovement", function(cm) {\n
+  if (cm.getOption("inputStyle") != "textarea") return;\n
   forEach(["خحج", "خحabcخحج", "abخحخحجcd", "abخde", "abخح2342خ1حج", "خ1ح2خح3حxج",\n
            "خحcd", "1خحcd", "abcdeح1ج", "خمرحبها مها!", "foobarر", "خ ة ق",\n
-           "<img src=\\"/בדיקה3.jpg\\">"], function(line) {\n
-    var inv = line.charAt(0) == "خ";\n
+           "<img src=\\"/בדיקה3.jpg\\">", "يتم السحب في 05 فبراير 2014"], function(line) {\n
+    var inv = line.charCodeAt(0) > 128;\n
     cm.setValue(line + "\\n"); cm.execCommand(inv ? "goLineEnd" : "goLineStart");\n
     var cursors = byClassName(cm.getWrapperElement(), "CodeMirror-cursors")[0];\n
     var cursor = cursors.firstChild;\n
@@ -1435,7 +1461,7 @@ testCM("lineChangeEvents", function(cm) {\n
 });\n
 \n
 testCM("scrollEntirelyToRight", function(cm) {\n
-  if (phantom) return;\n
+  if (phantom || cm.getOption("inputStyle") != "textarea") return;\n
   addDoc(cm, 500, 2);\n
   cm.setCursor(Pos(0, 500));\n
   var wrap = cm.getWrapperElement(), cur = byClassName(wrap, "CodeMirror-cursor")[0];\n
@@ -1619,7 +1645,7 @@ testCM("addLineClass", function(cm) {\n
   eq(byClassName(lines, "foo").length, 2);\n
   eq(byClassName(lines, "bar").length, 1);\n
   eq(byClassName(lines, "baz").length, 1);\n
-  eq(byClassName(lines, "gutter-class").length, 1);\n
+  eq(byClassName(lines, "gutter-class").length, 2); // Gutter classes are reflected in 2 nodes\n
   cm.removeLineClass(0, "text", "foo");\n
   cls(0, "bar", null, null, null);\n
   cm.removeLineClass(0, "text", "foo");\n
@@ -1692,6 +1718,8 @@ testCM("atomicMarker", function(cm) {\n
 \n
 testCM("selectionBias", function(cm) {\n
   cm.markText(Pos(0, 1), Pos(0, 3), {atomic: true});\n
+  cm.setCursor(Pos(0, 2));\n
+  eqPos(cm.getCursor(), Pos(0, 1));\n
   cm.setCursor(Pos(0, 2));\n
   eqPos(cm.getCursor(), Pos(0, 3));\n
   cm.setCursor(Pos(0, 2));\n
@@ -2126,6 +2154,13 @@ testCM("eventOrder", function(cm) {\n
   eq(seen.join(","), "change,change,activity,change");\n
 });\n
 \n
+testCM("splitSpaces_nonspecial", function(cm) {\n
+  eq(byClassName(cm.getWrapperElement(), "cm-invalidchar").length, 0);\n
+}, {\n
+  specialChars: /[\\u00a0]/,\n
+  value: "spaces ->            <- between"\n
+});\n
+\n
 test("core_rmClass", function() {\n
   var node = document.createElement("div");\n
   node.className = "foo-bar baz-quux yadda";\n
@@ -2154,6 +2189,21 @@ test("core_addClass", function() {\n
   CodeMirror.addClass(node, "b");\n
   eq(node.className, "a b");\n
 });\n
+\n
+testCM("lineSeparator", function(cm) {\n
+  eq(cm.lineCount(), 3);\n
+  eq(cm.getLine(1), "bar\\r");\n
+  eq(cm.getLine(2), "baz\\rquux");\n
+  cm.setOption("lineSeparator", "\\r");\n
+  eq(cm.lineCount(), 5);\n
+  eq(cm.getLine(4), "quux");\n
+  eq(cm.getValue(), "foo\\rbar\\r\\rbaz\\rquux");\n
+  eq(cm.getValue("\\n"), "foo\\nbar\\n\\nbaz\\nquux");\n
+  cm.setOption("lineSeparator", null);\n
+  cm.setValue("foo\\nbar\\r\\nbaz\\rquux");\n
+  eq(cm.lineCount(), 4);\n
+}, {value: "foo\\nbar\\r\\nbaz\\rquux",\n
+    lineSeparator: "\\n"});\n
 
 
 ]]></string> </value>

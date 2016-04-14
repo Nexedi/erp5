@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897139.19</string> </value>
+            <value> <string>ts60604377.18</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -54,10 +54,10 @@
 \n
   MT("mixin",\n
      "[qualifier .mixin] ([variable dark]; [variable-2 @color]) {",\n
-     "  [property color]: [variable darken]([variable-2 @color], [number 10%]);",\n
+     "  [property color]: [atom darken]([variable-2 @color], [number 10%]);",\n
      "}",\n
      "[qualifier .mixin] ([variable light]; [variable-2 @color]) {",\n
-     "  [property color]: [variable lighten]([variable-2 @color], [number 10%]);",\n
+     "  [property color]: [atom lighten]([variable-2 @color], [number 10%]);",\n
      "}",\n
      "[qualifier .mixin] ([variable-2 @_]; [variable-2 @color]) {",\n
      "  [property display]: [atom block];",\n
@@ -76,6 +76,9 @@
      "    }",\n
      "  }",\n
      "}");\n
+\n
+\n
+  MT("interpolation", ".@{[variable foo]} { [property font-weight]: [atom bold]; }");\n
 })();\n
 
 
@@ -87,7 +90,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1791</int> </value>
+            <value> <int>1871</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

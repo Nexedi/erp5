@@ -45,7 +45,7 @@
 }\n
 \n
 .cm-tw-box {\n
-\tborder-top-width: 0px ! important;\n
+\tborder-top-width: 0px !important;\n
 \tborder-style: solid;\n
 \tborder-width: 1px;\n
 \tborder-color: inherit;\n

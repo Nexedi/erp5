@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897136.09</string> </value>
+            <value> <string>ts60604381.5</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -42,40 +42,45 @@
 CodeMirror.defineMode("julia", function(_conf, parserConf) {\n
   var ERRORCLASS = \'error\';\n
 \n
-  function wordRegexp(words) {\n
-    return new RegExp("^((" + words.join(")|(") + "))\\\\b");\n
+  function wordRegexp(words, end) {\n
+    if (typeof end === \'undefined\') { end = "\\\\b"; }\n
+    return new RegExp("^((" + words.join(")|(") + "))" + end);\n
   }\n
 \n
-  var operators = parserConf.operators || /^\\.?[|&^\\\\%*+\\-<>!=\\/]=?|\\?|~|:|\\$|\\.[<>]|<<=?|>>>?=?|\\.[<>=]=|->?|\\/\\/|\\bin\\b/;\n
+  var octChar = "\\\\\\\\[0-7]{1,3}";\n
+  var hexChar = "\\\\\\\\x[A-Fa-f0-9]{1,2}";\n
+  var specialChar = "\\\\\\\\[abfnrtv0%?\'\\"\\\\\\\\]";\n
+  var singleChar = "([^\\\\u0027\\\\u005C\\\\uD800-\\\\uDFFF]|[\\\\uD800-\\\\uDFFF][\\\\uDC00-\\\\uDFFF])";\n
+  var operators = parserConf.operators || /^\\.?[|&^\\\\%*+\\-<>!=\\/]=?|\\?|~|:|\\$|\\.[<>]|<<=?|>>>?=?|\\.[<>=]=|->?|\\/\\/|\\bin\\b(?!\\()|[\\u2208\\u2209](?!\\()/;\n
   var delimiters = parserConf.delimiters || /^[;,()[\\]{}]/;\n
-  var identifiers = parserConf.identifiers|| /^[_A-Za-z\\u00A1-\\uFFFF][_A-Za-z0-9\\u00A1-\\uFFFF]*!*/;\n
+  var identifiers = parserConf.identifiers || /^[_A-Za-z\\u00A1-\\uFFFF][\\w\\u00A1-\\uFFFF]*!*/;\n
+  var charsList = [octChar, hexChar, specialChar, singleChar];\n
   var blockOpeners = ["begin", "function", "type", "immutable", "let", "macro", "for", "while", "quote", "if", "else", "elseif", "try", "finally", "catch", "do"];\n
   var blockClosers = ["end", "else", "elseif", "catch", "finally"];\n
-  var keywordList = [\'if\', \'else\', \'elseif\', \'while\', \'for\', \'begin\', \'let\', \'end\', \'do\', \'try\', \'catch\', \'finally\', \'return\', \'break\', \'continue\', \'global\', \'local\', \'const\', \'export\', \'import\', \'importall\', \'using\', \'function\', \'macro\', \'module\', \'baremodule\', \'type\', \'immutable\', \'quote\', \'typealias\', \'abstract\', \'bitstype\', \'ccall\'];\n
-  var builtinList = [\'true\', \'false\', \'enumerate\', \'open\', \'close\', \'nothing\', \'NaN\', \'Inf\', \'print\', \'println\', \'Int\', \'Int8\', \'Uint8\', \'Int16\', \'Uint16\', \'Int32\', \'Uint32\', \'Int64\', \'Uint64\', \'Int128\', \'Uint128\', \'Bool\', \'Char\', \'Float16\', \'Float32\', \'Float64\', \'Array\', \'Vector\', \'Matrix\', \'String\', \'UTF8String\', \'ASCIIString\', \'error\', \'warn\', \'info\', \'@printf\'];\n
+  var keywordList = [\'if\', \'else\', \'elseif\', \'while\', \'for\', \'begin\', \'let\', \'end\', \'do\', \'try\', \'catch\', \'finally\', \'return\', \'break\', \'continue\', \'global\', \'local\', \'const\', \'export\', \'import\', \'importall\', \'using\', \'function\', \'macro\', \'module\', \'baremodule\', \'type\', \'immutable\', \'quote\', \'typealias\', \'abstract\', \'bitstype\'];\n
+  var builtinList = [\'true\', \'false\', \'nothing\', \'NaN\', \'Inf\'];\n
 \n
   //var stringPrefixes = new RegExp("^[br]?(\'|\\")")\n
-  var stringPrefixes = /^(`|\'|"{3}|([br]?"))/;\n
+  var stringPrefixes = /^(`|"{3}|([brv]?"))/;\n
+  var chars = wordRegexp(charsList, "\'");\n
   var keywords = wordRegexp(keywordList);\n
   var builtins = wordRegexp(builtinList);\n
   var openers = wordRegexp(blockOpeners);\n
   var closers = wordRegexp(blockClosers);\n
-  var macro = /^@[_A-Za-z][_A-Za-z0-9]*/;\n
-  var symbol = /^:[_A-Za-z][_A-Za-z0-9]*/;\n
-  var indentInfo = null;\n
+  var macro = /^@[_A-Za-z][\\w]*/;\n
+  var symbol = /^:[_A-Za-z\\u00A1-\\uFFFF][\\w\\u00A1-\\uFFFF]*!*/;\n
+  var typeAnnotation = /^::[^,;"{()=$\\s]+({[^}]*}+)*/;\n
 \n
-  function in_array(state) {\n
-    var ch = cur_scope(state);\n
-    if(ch=="[" || ch=="{") {\n
+  function inArray(state) {\n
+    var ch = currentScope(state);\n
+    if (ch == \'[\') {\n
       return true;\n
     }\n
-    else {\n
-      return false;\n
-    }\n
+    return false;\n
   }\n
 \n
-  function cur_scope(state) {\n
-    if(state.scopes.length==0) {\n
+  function currentScope(state) {\n
+    if (state.scopes.length == 0) {\n
       return null;\n
     }\n
     return state.scopes[state.scopes.length - 1];\n
@@ -83,20 +88,25 @@ CodeMirror.defineMode("julia", function(_conf, parserConf) {\n
 \n
   // tokenizers\n
   function tokenBase(stream, state) {\n
-    // Handle scope changes\n
-    var leaving_expr = state.leaving_expr;\n
-    if(stream.sol()) {\n
-      leaving_expr = false;\n
+    // Handle multiline comments\n
+    if (stream.match(/^#=/, false)) {\n
+      state.tokenize = tokenComment;\n
+      return state.tokenize(stream, state);\n
     }\n
-    state.leaving_expr = false;\n
-    if(leaving_expr) {\n
-      if(stream.match(/^\'+/)) {\n
+\n
+    // Handle scope changes\n
+    var leavingExpr = state.leavingExpr;\n
+    if (stream.sol()) {\n
+      leavingExpr = false;\n
+    }\n
+    state.leavingExpr = false;\n
+    if (leavingExpr) {\n
+      if (stream.match(/^\'+/)) {\n
         return \'operator\';\n
       }\n
-\n
     }\n
 \n
-    if(stream.match(/^\\.{2,3}/)) {\n
+    if (stream.match(/^\\.{2,3}/)) {\n
       return \'operator\';\n
     }\n
 \n
@@ -105,99 +115,95 @@ CodeMirror.defineMode("julia", function(_conf, parserConf) {\n
     }\n
 \n
     var ch = stream.peek();\n
-    // Handle Comments\n
+\n
+    // Handle single line comments\n
     if (ch === \'#\') {\n
-        stream.skipToEnd();\n
-        return \'comment\';\n
-    }\n
-    if(ch===\'[\') {\n
-      state.scopes.push("[");\n
+      stream.skipToEnd();\n
+      return \'comment\';\n
     }\n
 \n
-    if(ch===\'{\') {\n
-      state.scopes.push("{");\n
+    if (ch === \'[\') {\n
+      state.scopes.push(\'[\');\n
     }\n
 \n
-    var scope=cur_scope(state);\n
+    if (ch === \'(\') {\n
+      state.scopes.push(\'(\');\n
+    }\n
 \n
-    if(scope===\'[\' && ch===\']\') {\n
+    var scope = currentScope(state);\n
+\n
+    if (scope == \'[\' && ch === \']\') {\n
       state.scopes.pop();\n
-      state.leaving_expr=true;\n
+      state.leavingExpr = true;\n
     }\n
 \n
-    if(scope===\'{\' && ch===\'}\') {\n
+    if (scope == \'(\' && ch === \')\') {\n
       state.scopes.pop();\n
-      state.leaving_expr=true;\n
-    }\n
-\n
-    if(ch===\')\') {\n
-      state.leaving_expr = true;\n
+      state.leavingExpr = true;\n
     }\n
 \n
     var match;\n
-    if(!in_array(state) && (match=stream.match(openers, false))) {\n
+    if (!inArray(state) && (match=stream.match(openers, false))) {\n
       state.scopes.push(match);\n
     }\n
 \n
-    if(!in_array(state) && stream.match(closers, false)) {\n
+    if (!inArray(state) && stream.match(closers, false)) {\n
       state.scopes.pop();\n
     }\n
 \n
-    if(in_array(state)) {\n
-      if(stream.match(/^end/)) {\n
+    if (inArray(state)) {\n
+      if (state.lastToken == \'end\' && stream.match(/^:/)) {\n
+        return \'operator\';\n
+      }\n
+      if (stream.match(/^end/)) {\n
         return \'number\';\n
       }\n
-\n
     }\n
 \n
-    if(stream.match(/^=>/)) {\n
+    if (stream.match(/^=>/)) {\n
       return \'operator\';\n
     }\n
-\n
 \n
     // Handle Number Literals\n
     if (stream.match(/^[0-9\\.]/, false)) {\n
       var imMatcher = RegExp(/^im\\b/);\n
-      var floatLiteral = false;\n
+      var numberLiteral = false;\n
       // Floats\n
-      if (stream.match(/^\\d*\\.(?!\\.)\\d+([ef][\\+\\-]?\\d+)?/i)) { floatLiteral = true; }\n
-      if (stream.match(/^\\d+\\.(?!\\.)\\d*/)) { floatLiteral = true; }\n
-      if (stream.match(/^\\.\\d+/)) { floatLiteral = true; }\n
-      if (floatLiteral) {\n
-          // Float literals may be "imaginary"\n
-          stream.match(imMatcher);\n
-          state.leaving_expr = true;\n
-          return \'number\';\n
-      }\n
+      if (stream.match(/^\\d*\\.(?!\\.)\\d*([Eef][\\+\\-]?\\d+)?/i)) { numberLiteral = true; }\n
+      if (stream.match(/^\\d+\\.(?!\\.)\\d*/)) { numberLiteral = true; }\n
+      if (stream.match(/^\\.\\d+/)) { numberLiteral = true; }\n
+      if (stream.match(/^0x\\.[0-9a-f]+p[\\+\\-]?\\d+/i)) { numberLiteral = true; }\n
       // Integers\n
-      var intLiteral = false;\n
-      // Hex\n
-      if (stream.match(/^0x[0-9a-f]+/i)) { intLiteral = true; }\n
-      // Binary\n
-      if (stream.match(/^0b[01]+/i)) { intLiteral = true; }\n
-      // Octal\n
-      if (stream.match(/^0o[0-7]+/i)) { intLiteral = true; }\n
-      // Decimal\n
-      if (stream.match(/^[1-9]\\d*(e[\\+\\-]?\\d+)?/)) {\n
-          intLiteral = true;\n
-      }\n
+      if (stream.match(/^0x[0-9a-f]+/i)) { numberLiteral = true; } // Hex\n
+      if (stream.match(/^0b[01]+/i)) { numberLiteral = true; } // Binary\n
+      if (stream.match(/^0o[0-7]+/i)) { numberLiteral = true; } // Octal\n
+      if (stream.match(/^[1-9]\\d*(e[\\+\\-]?\\d+)?/)) { numberLiteral = true; } // Decimal\n
       // Zero by itself with no other piece of number.\n
-      if (stream.match(/^0(?![\\dx])/i)) { intLiteral = true; }\n
-      if (intLiteral) {\n
+      if (stream.match(/^0(?![\\dx])/i)) { numberLiteral = true; }\n
+      if (numberLiteral) {\n
           // Integer literals may be "long"\n
           stream.match(imMatcher);\n
-          state.leaving_expr = true;\n
+          state.leavingExpr = true;\n
           return \'number\';\n
       }\n
     }\n
 \n
-    if(stream.match(/^(::)|(<:)/)) {\n
+    if (stream.match(/^<:/)) {\n
       return \'operator\';\n
     }\n
 \n
+    if (stream.match(typeAnnotation)) {\n
+      return \'builtin\';\n
+    }\n
+\n
     // Handle symbols\n
-    if(!leaving_expr && stream.match(symbol)) {\n
-      return \'string\';\n
+    if (!leavingExpr && stream.match(symbol) || stream.match(/:\\./)) {\n
+      return \'builtin\';\n
+    }\n
+\n
+    // Handle parametric types\n
+    if (stream.match(/^{[^}]*}(?=\\()/)) {\n
+      return \'builtin\';\n
     }\n
 \n
     // Handle operators and Delimiters\n
@@ -205,6 +211,11 @@ CodeMirror.defineMode("julia", function(_conf, parserConf) {\n
       return \'operator\';\n
     }\n
 \n
+    // Handle Chars\n
+    if (stream.match(/^\'/)) {\n
+      state.tokenize = tokenChar;\n
+      return state.tokenize(stream, state);\n
+    }\n
 \n
     // Handle Strings\n
     if (stream.match(stringPrefixes)) {\n
@@ -215,7 +226,6 @@ CodeMirror.defineMode("julia", function(_conf, parserConf) {\n
     if (stream.match(macro)) {\n
       return \'meta\';\n
     }\n
-\n
 \n
     if (stream.match(delimiters)) {\n
       return null;\n
@@ -229,43 +239,128 @@ CodeMirror.defineMode("julia", function(_conf, parserConf) {\n
       return \'builtin\';\n
     }\n
 \n
+    var isDefinition = state.isDefinition ||\n
+                       state.lastToken == \'function\' ||\n
+                       state.lastToken == \'macro\' ||\n
+                       state.lastToken == \'type\' ||\n
+                       state.lastToken == \'immutable\';\n
 \n
     if (stream.match(identifiers)) {\n
-      state.leaving_expr=true;\n
+      if (isDefinition) {\n
+        if (stream.peek() === \'.\') {\n
+          state.isDefinition = true;\n
+          return \'variable\';\n
+        }\n
+        state.isDefinition = false;\n
+        return \'def\';\n
+      }\n
+      if (stream.match(/^({[^}]*})*\\(/, false)) {\n
+        return callOrDef(stream, state);\n
+      }\n
+      state.leavingExpr = true;\n
       return \'variable\';\n
     }\n
+\n
     // Handle non-detected items\n
     stream.next();\n
     return ERRORCLASS;\n
   }\n
 \n
+  function callOrDef(stream, state) {\n
+    var match = stream.match(/^(\\(\\s*)/);\n
+    if (match) {\n
+      if (state.firstParenPos < 0)\n
+        state.firstParenPos = state.scopes.length;\n
+      state.scopes.push(\'(\');\n
+      state.charsAdvanced += match[1].length;\n
+    }\n
+    if (currentScope(state) == \'(\' && stream.match(/^\\)/)) {\n
+      state.scopes.pop();\n
+      state.charsAdvanced += 1;\n
+      if (state.scopes.length <= state.firstParenPos) {\n
+        var isDefinition = stream.match(/^\\s*?=(?!=)/, false);\n
+        stream.backUp(state.charsAdvanced);\n
+        state.firstParenPos = -1;\n
+        state.charsAdvanced = 0;\n
+        if (isDefinition)\n
+          return \'def\';\n
+        return \'builtin\';\n
+      }\n
+    }\n
+    // Unfortunately javascript does not support multiline strings, so we have\n
+    // to undo anything done upto here if a function call or definition splits\n
+    // over two or more lines.\n
+    if (stream.match(/^$/g, false)) {\n
+      stream.backUp(state.charsAdvanced);\n
+      while (state.scopes.length > state.firstParenPos)\n
+        state.scopes.pop();\n
+      state.firstParenPos = -1;\n
+      state.charsAdvanced = 0;\n
+      return \'builtin\';\n
+    }\n
+    state.charsAdvanced += stream.match(/^([^()]*)/)[1].length;\n
+    return callOrDef(stream, state);\n
+  }\n
+\n
+  function tokenComment(stream, state) {\n
+    if (stream.match(/^#=/)) {\n
+      state.weakScopes++;\n
+    }\n
+    if (!stream.match(/.*?(?=(#=|=#))/)) {\n
+      stream.skipToEnd();\n
+    }\n
+    if (stream.match(/^=#/)) {\n
+      state.weakScopes--;\n
+      if (state.weakScopes == 0)\n
+        state.tokenize = tokenBase;\n
+    }\n
+    return \'comment\';\n
+  }\n
+\n
+  function tokenChar(stream, state) {\n
+    var isChar = false, match;\n
+    if (stream.match(chars)) {\n
+      isChar = true;\n
+    } else if (match = stream.match(/\\\\u([a-f0-9]{1,4})(?=\')/i)) {\n
+      var value = parseInt(match[1], 16);\n
+      if (value <= 55295 || value >= 57344) { // (U+0,U+D7FF), (U+E000,U+FFFF)\n
+        isChar = true;\n
+        stream.next();\n
+      }\n
+    } else if (match = stream.match(/\\\\U([A-Fa-f0-9]{5,8})(?=\')/)) {\n
+      var value = parseInt(match[1], 16);\n
+      if (value <= 1114111) { // U+10FFFF\n
+        isChar = true;\n
+        stream.next();\n
+      }\n
+    }\n
+    if (isChar) {\n
+      state.leavingExpr = true;\n
+      state.tokenize = tokenBase;\n
+      return \'string\';\n
+    }\n
+    if (!stream.match(/^[^\']+(?=\')/)) { stream.skipToEnd(); }\n
+    if (stream.match(/^\'/)) { state.tokenize = tokenBase; }\n
+    return ERRORCLASS;\n
+  }\n
+\n
   function tokenStringFactory(delimiter) {\n
-    while (\'rub\'.indexOf(delimiter.charAt(0).toLowerCase()) >= 0) {\n
+    while (\'bruv\'.indexOf(delimiter.charAt(0).toLowerCase()) >= 0) {\n
       delimiter = delimiter.substr(1);\n
     }\n
-    var singleline = delimiter.length == 1;\n
     var OUTCLASS = \'string\';\n
 \n
     function tokenString(stream, state) {\n
       while (!stream.eol()) {\n
-        stream.eatWhile(/[^\'"\\\\]/);\n
+        stream.eatWhile(/[^"\\\\]/);\n
         if (stream.eat(\'\\\\\')) {\n
             stream.next();\n
-            if (singleline && stream.eol()) {\n
-              return OUTCLASS;\n
-            }\n
         } else if (stream.match(delimiter)) {\n
             state.tokenize = tokenBase;\n
+            state.leavingExpr = true;\n
             return OUTCLASS;\n
         } else {\n
-            stream.eat(/[\'"]/);\n
-        }\n
-      }\n
-      if (singleline) {\n
-        if (parserConf.singleLineStringErrors) {\n
-            return ERRORCLASS;\n
-        } else {\n
-            state.tokenize = tokenBase;\n
+            stream.eat(/["]/);\n
         }\n
       }\n
       return OUTCLASS;\n
@@ -274,51 +369,47 @@ CodeMirror.defineMode("julia", function(_conf, parserConf) {\n
     return tokenString;\n
   }\n
 \n
-  function tokenLexer(stream, state) {\n
-    indentInfo = null;\n
-    var style = state.tokenize(stream, state);\n
-    var current = stream.current();\n
-\n
-    // Handle \'.\' connected identifiers\n
-    if (current === \'.\') {\n
-      style = stream.match(identifiers, false) ? null : ERRORCLASS;\n
-      if (style === null && state.lastStyle === \'meta\') {\n
-          // Apply \'meta\' style to \'.\' connected identifiers when\n
-          // appropriate.\n
-        style = \'meta\';\n
-      }\n
-      return style;\n
-    }\n
-\n
-    return style;\n
-  }\n
-\n
   var external = {\n
     startState: function() {\n
       return {\n
         tokenize: tokenBase,\n
         scopes: [],\n
-        leaving_expr: false\n
+        weakScopes: 0,\n
+        lastToken: null,\n
+        leavingExpr: false,\n
+        isDefinition: false,\n
+        charsAdvanced: 0,\n
+        firstParenPos: -1\n
       };\n
     },\n
 \n
     token: function(stream, state) {\n
-      var style = tokenLexer(stream, state);\n
-      state.lastStyle = style;\n
+      var style = state.tokenize(stream, state);\n
+      var current = stream.current();\n
+\n
+      if (current && style) {\n
+        state.lastToken = current;\n
+      }\n
+\n
+      // Handle \'.\' connected identifiers\n
+      if (current === \'.\') {\n
+        style = stream.match(identifiers, false) || stream.match(macro, false) ||\n
+                stream.match(/\\(/, false) ? \'operator\' : ERRORCLASS;\n
+      }\n
       return style;\n
     },\n
 \n
     indent: function(state, textAfter) {\n
       var delta = 0;\n
-      if(textAfter=="end" || textAfter=="]" || textAfter=="}" || textAfter=="else" || textAfter=="elseif" || textAfter=="catch" || textAfter=="finally") {\n
+      if (textAfter == "]" || textAfter == ")" || textAfter == "end" || textAfter == "else" || textAfter == "elseif" || textAfter == "catch" || textAfter == "finally") {\n
         delta = -1;\n
       }\n
-      return (state.scopes.length + delta) * 4;\n
+      return (state.scopes.length + delta) * _conf.indentUnit;\n
     },\n
 \n
+    electricInput: /(end|else(if)?|catch|finally)$/,\n
     lineComment: "#",\n
-    fold: "indent",\n
-    electricChars: "edlsifyh]}"\n
+    fold: "indent"\n
   };\n
   return external;\n
 });\n
@@ -337,7 +428,7 @@ CodeMirror.defineMIME("text/x-julia", "julia");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8215</int> </value>
+            <value> <int>11430</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897132.45</string> </value>
+            <value> <string>ts60604388.2</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -45,7 +45,8 @@ CodeMirror.defineMode("verilog", function(config, parserConfig) {\n
       statementIndentUnit = parserConfig.statementIndentUnit || indentUnit,\n
       dontAlignCalls = parserConfig.dontAlignCalls,\n
       noIndentKeywords = parserConfig.noIndentKeywords || [],\n
-      multiLineStrings = parserConfig.multiLineStrings;\n
+      multiLineStrings = parserConfig.multiLineStrings,\n
+      hooks = parserConfig.hooks || {};\n
 \n
   function words(str) {\n
     var obj = {}, words = str.split(" ");\n
@@ -135,7 +136,11 @@ CodeMirror.defineMode("verilog", function(config, parserConfig) {\n
   var statementKeywords = words("always always_comb always_ff always_latch assert assign assume else export for foreach forever if import initial repeat while");\n
 \n
   function tokenBase(stream, state) {\n
-    var ch = stream.peek();\n
+    var ch = stream.peek(), style;\n
+    if (hooks[ch] && (style = hooks[ch](stream, state)) != false) return style;\n
+    if (hooks.tokenBase && (style = hooks.tokenBase(stream, state)) != false)\n
+      return style;\n
+\n
     if (/[,;:\\.]/.test(ch)) {\n
       curPunc = stream.next();\n
       return null;\n
@@ -308,12 +313,14 @@ CodeMirror.defineMode("verilog", function(config, parserConfig) {\n
     electricInput: buildElectricInputRegEx(),\n
 \n
     startState: function(basecolumn) {\n
-      return {\n
+      var state = {\n
         tokenize: null,\n
         context: new Context((basecolumn || 0) - indentUnit, 0, "top", false),\n
         indented: 0,\n
         startOfLine: true\n
       };\n
+      if (hooks.startState) hooks.startState(state);\n
+      return state;\n
     },\n
 \n
     token: function(stream, state) {\n
@@ -323,6 +330,7 @@ CodeMirror.defineMode("verilog", function(config, parserConfig) {\n
         state.indented = stream.indentation();\n
         state.startOfLine = true;\n
       }\n
+      if (hooks.token) hooks.token(stream, state);\n
       if (stream.eatSpace()) return null;\n
       curPunc = null;\n
       curKeyword = null;\n
@@ -332,17 +340,19 @@ CodeMirror.defineMode("verilog", function(config, parserConfig) {\n
 \n
       if (curPunc == ctx.type) {\n
         popContext(state);\n
-      }\n
-      else if ((curPunc == ";" && ctx.type == "statement") ||\n
+      } else if ((curPunc == ";" && ctx.type == "statement") ||\n
                (ctx.type && isClosing(curKeyword, ctx.type))) {\n
         ctx = popContext(state);\n
         while (ctx && ctx.type == "statement") ctx = popContext(state);\n
-      }\n
-      else if (curPunc == "{") { pushContext(state, stream.column(), "}"); }\n
-      else if (curPunc == "[") { pushContext(state, stream.column(), "]"); }\n
-      else if (curPunc == "(") { pushContext(state, stream.column(), ")"); }\n
-      else if (ctx && ctx.type == "endcase" && curPunc == ":") { pushContext(state, stream.column(), "statement"); }\n
-      else if (curPunc == "newstatement") {\n
+      } else if (curPunc == "{") {\n
+        pushContext(state, stream.column(), "}");\n
+      } else if (curPunc == "[") {\n
+        pushContext(state, stream.column(), "]");\n
+      } else if (curPunc == "(") {\n
+        pushContext(state, stream.column(), ")");\n
+      } else if (ctx && ctx.type == "endcase" && curPunc == ":") {\n
+        pushContext(state, stream.column(), "statement");\n
+      } else if (curPunc == "newstatement") {\n
         pushContext(state, stream.column(), "statement");\n
       } else if (curPunc == "newblock") {\n
         if (curKeyword == "function" && ctx && (ctx.type == "statement" || ctx.type == "endgroup")) {\n
@@ -363,13 +373,16 @@ CodeMirror.defineMode("verilog", function(config, parserConfig) {\n
 \n
     indent: function(state, textAfter) {\n
       if (state.tokenize != tokenBase && state.tokenize != null) return CodeMirror.Pass;\n
+      if (hooks.indent) {\n
+        var fromHook = hooks.indent(state);\n
+        if (fromHook >= 0) return fromHook;\n
+      }\n
       var ctx = state.context, firstChar = textAfter && textAfter.charAt(0);\n
       if (ctx.type == "statement" && firstChar == "}") ctx = ctx.prev;\n
       var closing = false;\n
       var possibleClosing = textAfter.match(closingBracketOrWord);\n
-      if (possibleClosing) {\n
+      if (possibleClosing)\n
         closing = isClosing(possibleClosing[0], ctx.type);\n
-      }\n
       if (ctx.type == "statement") return ctx.indented + (firstChar == "{" ? 0 : statementIndentUnit);\n
       else if (closingBracket.test(ctx.type) && ctx.align && !dontAlignCalls) return ctx.column + (closing ? 0 : 1);\n
       else if (ctx.type == ")" && !closing) return ctx.indented + statementIndentUnit;\n
@@ -382,13 +395,173 @@ CodeMirror.defineMode("verilog", function(config, parserConfig) {\n
   };\n
 });\n
 \n
-CodeMirror.defineMIME("text/x-verilog", {\n
-  name: "verilog"\n
-});\n
-CodeMirror.defineMIME("text/x-systemverilog", {\n
-  name: "systemverilog"\n
-});\n
+  CodeMirror.defineMIME("text/x-verilog", {\n
+    name: "verilog"\n
+  });\n
 \n
+  CodeMirror.defineMIME("text/x-systemverilog", {\n
+    name: "verilog"\n
+  });\n
+\n
+  // TLVVerilog mode\n
+\n
+  var tlvchScopePrefixes = {\n
+    ">": "property", "->": "property", "-": "hr", "|": "link", "?$": "qualifier", "?*": "qualifier",\n
+    "@-": "variable-3", "@": "variable-3", "?": "qualifier"\n
+  };\n
+\n
+  function tlvGenIndent(stream, state) {\n
+    var tlvindentUnit = 2;\n
+    var rtnIndent = -1, indentUnitRq = 0, curIndent = stream.indentation();\n
+    switch (state.tlvCurCtlFlowChar) {\n
+    case "\\\\":\n
+      curIndent = 0;\n
+      break;\n
+    case "|":\n
+      if (state.tlvPrevPrevCtlFlowChar == "@") {\n
+        indentUnitRq = -2; //-2 new pipe rq after cur pipe\n
+        break;\n
+      }\n
+      if (tlvchScopePrefixes[state.tlvPrevCtlFlowChar])\n
+        indentUnitRq = 1; // +1 new scope\n
+      break;\n
+    case "M":  // m4\n
+      if (state.tlvPrevPrevCtlFlowChar == "@") {\n
+        indentUnitRq = -2; //-2 new inst rq after  pipe\n
+        break;\n
+      }\n
+      if (tlvchScopePrefixes[state.tlvPrevCtlFlowChar])\n
+        indentUnitRq = 1; // +1 new scope\n
+      break;\n
+    case "@":\n
+      if (state.tlvPrevCtlFlowChar == "S")\n
+        indentUnitRq = -1; // new pipe stage after stmts\n
+      if (state.tlvPrevCtlFlowChar == "|")\n
+        indentUnitRq = 1; // 1st pipe stage\n
+      break;\n
+    case "S":\n
+      if (state.tlvPrevCtlFlowChar == "@")\n
+        indentUnitRq = 1; // flow in pipe stage\n
+      if (tlvchScopePrefixes[state.tlvPrevCtlFlowChar])\n
+        indentUnitRq = 1; // +1 new scope\n
+      break;\n
+    }\n
+    var statementIndentUnit = tlvindentUnit;\n
+    rtnIndent = curIndent + (indentUnitRq*statementIndentUnit);\n
+    return rtnIndent >= 0 ? rtnIndent : curIndent;\n
+  }\n
+\n
+  CodeMirror.defineMIME("text/x-tlv", {\n
+    name: "verilog",\n
+    hooks: {\n
+      "\\\\": function(stream, state) {\n
+        var vxIndent = 0, style = false;\n
+        var curPunc  = stream.string;\n
+        if ((stream.sol()) && ((/\\\\SV/.test(stream.string)) || (/\\\\TLV/.test(stream.string)))) {\n
+          curPunc = (/\\\\TLV_version/.test(stream.string))\n
+            ? "\\\\TLV_version" : stream.string;\n
+          stream.skipToEnd();\n
+          if (curPunc == "\\\\SV" && state.vxCodeActive) {state.vxCodeActive = false;};\n
+          if ((/\\\\TLV/.test(curPunc) && !state.vxCodeActive)\n
+            || (curPunc=="\\\\TLV_version" && state.vxCodeActive)) {state.vxCodeActive = true;};\n
+          style = "keyword";\n
+          state.tlvCurCtlFlowChar  = state.tlvPrevPrevCtlFlowChar\n
+            = state.tlvPrevCtlFlowChar = "";\n
+          if (state.vxCodeActive == true) {\n
+            state.tlvCurCtlFlowChar  = "\\\\";\n
+            vxIndent = tlvGenIndent(stream, state);\n
+          }\n
+          state.vxIndentRq = vxIndent;\n
+        }\n
+        return style;\n
+      },\n
+      tokenBase: function(stream, state) {\n
+        var vxIndent = 0, style = false;\n
+        var tlvisOperatorChar = /[\\[\\]=:]/;\n
+        var tlvkpScopePrefixs = {\n
+          "**":"variable-2", "*":"variable-2", "$$":"variable", "$":"variable",\n
+          "^^":"attribute", "^":"attribute"};\n
+        var ch = stream.peek();\n
+        var vxCurCtlFlowCharValueAtStart = state.tlvCurCtlFlowChar;\n
+        if (state.vxCodeActive == true) {\n
+          if (/[\\[\\]{}\\(\\);\\:]/.test(ch)) {\n
+            // bypass nesting and 1 char punc\n
+            style = "meta";\n
+            stream.next();\n
+          } else if (ch == "/") {\n
+            stream.next();\n
+            if (stream.eat("/")) {\n
+              stream.skipToEnd();\n
+              style = "comment";\n
+              state.tlvCurCtlFlowChar = "S";\n
+            } else {\n
+              stream.backUp(1);\n
+            }\n
+          } else if (ch == "@") {\n
+            // pipeline stage\n
+            style = tlvchScopePrefixes[ch];\n
+            state.tlvCurCtlFlowChar = "@";\n
+            stream.next();\n
+            stream.eatWhile(/[\\w\\$_]/);\n
+          } else if (stream.match(/\\b[mM]4+/, true)) { // match: function(pattern, consume, caseInsensitive)\n
+            // m4 pre proc\n
+            stream.skipTo("(");\n
+            style = "def";\n
+            state.tlvCurCtlFlowChar = "M";\n
+          } else if (ch == "!" && stream.sol()) {\n
+            // v stmt in tlv region\n
+            // state.tlvCurCtlFlowChar  = "S";\n
+            style = "comment";\n
+            stream.next();\n
+          } else if (tlvisOperatorChar.test(ch)) {\n
+            // operators\n
+            stream.eatWhile(tlvisOperatorChar);\n
+            style = "operator";\n
+          } else if (ch == "#") {\n
+            // phy hier\n
+            state.tlvCurCtlFlowChar  = (state.tlvCurCtlFlowChar == "")\n
+              ? ch : state.tlvCurCtlFlowChar;\n
+            stream.next();\n
+            stream.eatWhile(/[+-]\\d/);\n
+            style = "tag";\n
+          } else if (tlvkpScopePrefixs.propertyIsEnumerable(ch)) {\n
+            // special TLV operators\n
+            style = tlvkpScopePrefixs[ch];\n
+            state.tlvCurCtlFlowChar = state.tlvCurCtlFlowChar == "" ? "S" : state.tlvCurCtlFlowChar;  // stmt\n
+            stream.next();\n
+            stream.match(/[a-zA-Z_0-9]+/);\n
+          } else if (style = tlvchScopePrefixes[ch] || false) {\n
+            // special TLV operators\n
+            state.tlvCurCtlFlowChar = state.tlvCurCtlFlowChar == "" ? ch : state.tlvCurCtlFlowChar;\n
+            stream.next();\n
+            stream.match(/[a-zA-Z_0-9]+/);\n
+          }\n
+          if (state.tlvCurCtlFlowChar != vxCurCtlFlowCharValueAtStart) { // flow change\n
+            vxIndent = tlvGenIndent(stream, state);\n
+            state.vxIndentRq = vxIndent;\n
+          }\n
+        }\n
+        return style;\n
+      },\n
+      token: function(stream, state) {\n
+        if (state.vxCodeActive == true && stream.sol() && state.tlvCurCtlFlowChar != "") {\n
+          state.tlvPrevPrevCtlFlowChar = state.tlvPrevCtlFlowChar;\n
+          state.tlvPrevCtlFlowChar = state.tlvCurCtlFlowChar;\n
+          state.tlvCurCtlFlowChar = "";\n
+        }\n
+      },\n
+      indent: function(state) {\n
+        return (state.vxCodeActive == true) ? state.vxIndentRq : -1;\n
+      },\n
+      startState: function(state) {\n
+        state.tlvCurCtlFlowChar = "";\n
+        state.tlvPrevCtlFlowChar = "";\n
+        state.tlvPrevPrevCtlFlowChar = "";\n
+        state.vxCodeActive = true;\n
+        state.vxIndentRq = 0;\n
+      }\n
+    }\n
+  });\n
 });\n
 
 
@@ -400,7 +573,7 @@ CodeMirror.defineMIME("text/x-systemverilog", {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>12679</int> </value>
+            <value> <int>19212</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

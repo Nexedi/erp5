@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Smarty mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../xml/xml.js"></script>\n
+<script src="smarty.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Smarty</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Smarty mode</h2>\n
+<form><textarea id="code" name="code">\n
+{extends file="parent.tpl"}\n
+{include file="template.tpl"}\n
+\n
+{* some example Smarty content *}\n
+{if isset($name) && $name == \'Blog\'}\n
+  This is a {$var}.\n
+  {$integer = 451}, {$array[] = "a"}, {$stringvar = "string"}\n
+  {assign var=\'bob\' value=$var.prop}\n
+{elseif $name == $foo}\n
+  {function name=menu level=0}\n
+    {foreach $data as $entry}\n
+      {if is_array($entry)}\n
+        - {$entry@key}\n
+        {menu data=$entry level=$level+1}\n
+      {else}\n
+        {$entry}\n
+      {/if}\n
+    {/foreach}\n
+  {/function}\n
+{/if}</textarea></form>\n
+\n
+<p>Mode for Smarty version 2 or 3, which allows for custom delimiter tags.</p>\n
+\n
+<p>Several configuration parameters are supported:</p>\n
+\n
+<ul>\n
+  <li><code>leftDelimiter</code> and <code>rightDelimiter</code>,\n
+  which should be strings that determine where the Smarty syntax\n
+  starts and ends.</li>\n
+  <li><code>version</code>, which should be 2 or 3.</li>\n
+  <li><code>baseMode</code>, which can be a mode spec\n
+  like <code>"text/html"</code> to set a different background mode.</li>\n
+</ul>\n
+\n
+<p><strong>MIME types defined:</strong> <code>text/x-smarty</code></p>\n
+\n
+<h3>Smarty 2, custom delimiters</h3>\n
+\n
+<form><textarea id="code2" name="code2">\n
+{--extends file="parent.tpl"--}\n
+{--include file="template.tpl"--}\n
+\n
+{--* some example Smarty content *--}\n
+{--if isset($name) && $name == \'Blog\'--}\n
+  This is a {--$var--}.\n
+  {--$integer = 451--}, {--$array[] = "a"--}, {--$stringvar = "string"--}\n
+  {--assign var=\'bob\' value=$var.prop--}\n
+{--elseif $name == $foo--}\n
+  {--function name=menu level=0--}\n
+    {--foreach $data as $entry--}\n
+      {--if is_array($entry)--}\n
+        - {--$entry@key--}\n
+        {--menu data=$entry level=$level+1--}\n
+      {--else--}\n
+        {--$entry--}\n
+      {--/if--}\n
+    {--/foreach--}\n
+  {--/function--}\n
+{--/if--}</textarea></form>\n
+\n
+<h3>Smarty 3</h3>\n
+\n
+<textarea id="code3" name="code3">\n
+Nested tags {$foo={counter one=1 two={inception}}+3} are now valid in Smarty 3.\n
+\n
+<script>\n
+function test() {\n
+  console.log("Smarty 3 permits single curly braces followed by whitespace to NOT slip into Smarty mode.");\n
+}\n
+</script>\n
+\n
+{assign var=foo value=[1,2,3]}\n
+{assign var=foo value=[\'y\'=>\'yellow\',\'b\'=>\'blue\']}\n
+{assign var=foo value=[1,[9,8],3]}\n
+\n
+{$foo=$bar+2} {* a comment *}\n
+{$foo.bar=1}  {* another comment *}\n
+{$foo = myfunct(($x+$y)*3)}\n
+{$foo = strlen($bar)}\n
+{$foo.bar.baz=1}, {$foo[]=1}\n
+\n
+Smarty "dot" syntax (note: embedded {} are used to address ambiguities):\n
+\n
+{$foo.a.b.c}      => $foo[\'a\'][\'b\'][\'c\']\n
+{$foo.a.$b.c}     => $foo[\'a\'][$b][\'c\']\n
+{$foo.a.{$b+4}.c} => $foo[\'a\'][$b+4][\'c\']\n
+{$foo.a.{$b.c}}   => $foo[\'a\'][$b[\'c\']]\n
+\n
+{$object->method1($x)->method2($y)}</textarea>\n
+\n
+<script>\n
+var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+  lineNumbers: true,\n
+  mode: "smarty"\n
+});\n
+var editor = CodeMirror.fromTextArea(document.getElementById("code2"), {\n
+  lineNumbers: true,\n
+  mode: {\n
+    name: "smarty",\n
+    leftDelimiter: "{--",\n
+    rightDelimiter: "--}"\n
+  }\n
+});\n
+var editor = CodeMirror.fromTextArea(document.getElementById("code3"), {\n
+  lineNumbers: true,\n
+  mode: {name: "smarty", version: 3, baseMode: "text/html"}\n
+});\n
+</script>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

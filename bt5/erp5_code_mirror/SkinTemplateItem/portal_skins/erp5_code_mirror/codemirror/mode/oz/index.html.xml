@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Oz mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="oz.js"></script>\n
+<script type="text/javascript" src="../../addon/runmode/runmode.js"></script>\n
+<style>\n
+  .CodeMirror {border: 1px solid #aaa;}\n
+</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Oz</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Oz mode</h2>\n
+<textarea id="code" name="code">\n
+declare\n
+fun {Ints N Max}\n
+  if N == Max then nil\n
+  else\n
+    {Delay 1000}\n
+    N|{Ints N+1 Max}\n
+  end\n
+end\n
+\n
+fun {Sum S Stream}\n
+  case Stream of nil then S\n
+  [] H|T then S|{Sum H+S T} end\n
+end\n
+\n
+local X Y in\n
+  thread X = {Ints 0 1000} end\n
+  thread Y = {Sum 0 X} end\n
+  {Browse Y}\n
+end\n
+</textarea>\n
+<p>MIME type defined: <code>text/x-oz</code>.</p>\n
+\n
+<script type="text/javascript">\n
+var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+    lineNumbers: true,\n
+    mode: "text/x-oz",\n
+    readOnly: false\n
+});\n
+</script>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

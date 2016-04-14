@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897144.11</string> </value>
+            <value> <string>ts60604384.7</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -47,10 +47,11 @@ CodeMirror.defineMode("sass", function(config) {\n
   var keywords = ["true", "false", "null", "auto"];\n
   var keywordsRegexp = new RegExp("^" + keywords.join("|"));\n
 \n
-  var operators = ["\\\\(", "\\\\)", "=", ">", "<", "==", ">=", "<=", "\\\\+", "-", "\\\\!=", "/", "\\\\*", "%", "and", "or", "not"];\n
+  var operators = ["\\\\(", "\\\\)", "=", ">", "<", "==", ">=", "<=", "\\\\+", "-",\n
+                   "\\\\!=", "/", "\\\\*", "%", "and", "or", "not", ";","\\\\{","\\\\}",":"];\n
   var opRegexp = tokenRegexp(operators);\n
 \n
-  var pseudoElementsRegexp = /^::?[\\w\\-]+/;\n
+  var pseudoElementsRegexp = /^::?[a-zA-Z_][\\w\\-]*/;\n
 \n
   function urlTokens(stream, state) {\n
     var ch = stream.peek();\n
@@ -84,7 +85,7 @@ CodeMirror.defineMode("sass", function(config) {\n
         stream.next();\n
         state.tokenizer = tokenBase;\n
       } else {\n
-        stream.next();\n
+        stream.skipToEnd();\n
       }\n
 \n
       return "comment";\n
@@ -92,7 +93,7 @@ CodeMirror.defineMode("sass", function(config) {\n
   }\n
 \n
   function buildStringTokenizer(quote, greedy) {\n
-    if(greedy == null) { greedy = true; }\n
+    if (greedy == null) { greedy = true; }\n
 \n
     function stringTokenizer(stream, state) {\n
       var nextChar = stream.next();\n
@@ -163,109 +164,6 @@ CodeMirror.defineMode("sass", function(config) {\n
       return "operator";\n
     }\n
 \n
-    if (ch === ".") {\n
-      stream.next();\n
-\n
-      // Match class selectors\n
-      if (stream.match(/^[\\w-]+/)) {\n
-        indent(state);\n
-        return "atom";\n
-      } else if (stream.peek() === "#") {\n
-        indent(state);\n
-        return "atom";\n
-      } else {\n
-        return "operator";\n
-      }\n
-    }\n
-\n
-    if (ch === "#") {\n
-      stream.next();\n
-\n
-      // Hex numbers\n
-      if (stream.match(/[0-9a-fA-F]{6}|[0-9a-fA-F]{3}/))\n
-        return "number";\n
-\n
-      // ID selectors\n
-      if (stream.match(/^[\\w-]+/)) {\n
-        indent(state);\n
-        return "atom";\n
-      }\n
-\n
-      if (stream.peek() === "#") {\n
-        indent(state);\n
-        return "atom";\n
-      }\n
-    }\n
-\n
-    // Numbers\n
-    if (stream.match(/^-?[0-9\\.]+/))\n
-      return "number";\n
-\n
-    // Units\n
-    if (stream.match(/^(px|em|in)\\b/))\n
-      return "unit";\n
-\n
-    if (stream.match(keywordsRegexp))\n
-      return "keyword";\n
-\n
-    if (stream.match(/^url/) && stream.peek() === "(") {\n
-      state.tokenizer = urlTokens;\n
-      return "atom";\n
-    }\n
-\n
-    // Variables\n
-    if (ch === "$") {\n
-      stream.next();\n
-      stream.eatWhile(/[\\w-]/);\n
-\n
-      if (stream.peek() === ":") {\n
-        stream.next();\n
-        return "variable-2";\n
-      } else {\n
-        return "variable-3";\n
-      }\n
-    }\n
-\n
-    if (ch === "!") {\n
-      stream.next();\n
-      return stream.match(/^[\\w]+/) ? "keyword": "operator";\n
-    }\n
-\n
-    if (ch === "=") {\n
-      stream.next();\n
-\n
-      // Match shortcut mixin definition\n
-      if (stream.match(/^[\\w-]+/)) {\n
-        indent(state);\n
-        return "meta";\n
-      } else {\n
-        return "operator";\n
-      }\n
-    }\n
-\n
-    if (ch === "+") {\n
-      stream.next();\n
-\n
-      // Match shortcut mixin definition\n
-      if (stream.match(/^[\\w-]+/))\n
-        return "variable-3";\n
-      else\n
-        return "operator";\n
-    }\n
-\n
-    // Indent Directives\n
-    if (stream.match(/^@(else if|if|media|else|for|each|while|mixin|function)/)) {\n
-      indent(state);\n
-      return "meta";\n
-    }\n
-\n
-    // Other Directives\n
-    if (ch === "@") {\n
-      stream.next();\n
-      stream.eatWhile(/[\\w-]/);\n
-      return "meta";\n
-    }\n
-\n
     // Strings\n
     if (ch === \'"\' || ch === "\'") {\n
       stream.next();\n
@@ -273,18 +171,206 @@ CodeMirror.defineMode("sass", function(config) {\n
       return "string";\n
     }\n
 \n
-    // Pseudo element selectors\n
-    if (ch == ":" && stream.match(pseudoElementsRegexp))\n
-      return "keyword";\n
+    if(!state.cursorHalf){// state.cursorHalf === 0\n
+    // first half i.e. before : for key-value pairs\n
+    // including selectors\n
 \n
-    // atoms\n
-    if (stream.eatWhile(/[\\w-&]/)) {\n
-      // matches a property definition\n
-      if (stream.peek() === ":" && !stream.match(pseudoElementsRegexp, false))\n
-        return "property";\n
-      else\n
+      if (ch === ".") {\n
+        stream.next();\n
+        if (stream.match(/^[\\w-]+/)) {\n
+          indent(state);\n
+          return "atom";\n
+        } else if (stream.peek() === "#") {\n
+          indent(state);\n
+          return "atom";\n
+        }\n
+      }\n
+\n
+      if (ch === "#") {\n
+        stream.next();\n
+        // ID selectors\n
+        if (stream.match(/^[\\w-]+/)) {\n
+          indent(state);\n
+          return "atom";\n
+        }\n
+        if (stream.peek() === "#") {\n
+          indent(state);\n
+          return "atom";\n
+        }\n
+      }\n
+\n
+      // Variables\n
+      if (ch === "$") {\n
+        stream.next();\n
+        stream.eatWhile(/[\\w-]/);\n
+        return "variable-2";\n
+      }\n
+\n
+      // Numbers\n
+      if (stream.match(/^-?[0-9\\.]+/))\n
+        return "number";\n
+\n
+      // Units\n
+      if (stream.match(/^(px|em|in)\\b/))\n
+        return "unit";\n
+\n
+      if (stream.match(keywordsRegexp))\n
+        return "keyword";\n
+\n
+      if (stream.match(/^url/) && stream.peek() === "(") {\n
+        state.tokenizer = urlTokens;\n
         return "atom";\n
-    }\n
+      }\n
+\n
+      if (ch === "=") {\n
+        // Match shortcut mixin definition\n
+        if (stream.match(/^=[\\w-]+/)) {\n
+          indent(state);\n
+          return "meta";\n
+        }\n
+      }\n
+\n
+      if (ch === "+") {\n
+        // Match shortcut mixin definition\n
+        if (stream.match(/^\\+[\\w-]+/)){\n
+          return "variable-3";\n
+        }\n
+      }\n
+\n
+      if(ch === "@"){\n
+        if(stream.match(/@extend/)){\n
+          if(!stream.match(/\\s*[\\w]/))\n
+            dedent(state);\n
+        }\n
+      }\n
+\n
+\n
+      // Indent Directives\n
+      if (stream.match(/^@(else if|if|media|else|for|each|while|mixin|function)/)) {\n
+        indent(state);\n
+        return "meta";\n
+      }\n
+\n
+      // Other Directives\n
+      if (ch === "@") {\n
+        stream.next();\n
+        stream.eatWhile(/[\\w-]/);\n
+        return "meta";\n
+      }\n
+\n
+      if (stream.eatWhile(/[\\w-]/)){\n
+        if(stream.match(/ *: *[\\w-\\+\\$#!\\("\']/,false)){\n
+          return "property";\n
+        }\n
+        else if(stream.match(/ *:/,false)){\n
+          indent(state);\n
+          state.cursorHalf = 1;\n
+          return "atom";\n
+        }\n
+        else if(stream.match(/ *,/,false)){\n
+          return "atom";\n
+        }\n
+        else{\n
+          indent(state);\n
+          return "atom";\n
+        }\n
+      }\n
+\n
+      if(ch === ":"){\n
+        if (stream.match(pseudoElementsRegexp)){ // could be a pseudo-element\n
+          return "keyword";\n
+        }\n
+        stream.next();\n
+        state.cursorHalf=1;\n
+        return "operator";\n
+      }\n
+\n
+    } // cursorHalf===0 ends here\n
+    else{\n
+\n
+      if (ch === "#") {\n
+        stream.next();\n
+        // Hex numbers\n
+        if (stream.match(/[0-9a-fA-F]{6}|[0-9a-fA-F]{3}/)){\n
+          if(!stream.peek()){\n
+            state.cursorHalf = 0;\n
+          }\n
+          return "number";\n
+        }\n
+      }\n
+\n
+      // Numbers\n
+      if (stream.match(/^-?[0-9\\.]+/)){\n
+        if(!stream.peek()){\n
+          state.cursorHalf = 0;\n
+        }\n
+        return "number";\n
+      }\n
+\n
+      // Units\n
+      if (stream.match(/^(px|em|in)\\b/)){\n
+        if(!stream.peek()){\n
+          state.cursorHalf = 0;\n
+        }\n
+        return "unit";\n
+      }\n
+\n
+      if (stream.match(keywordsRegexp)){\n
+        if(!stream.peek()){\n
+          state.cursorHalf = 0;\n
+        }\n
+        return "keyword";\n
+      }\n
+\n
+      if (stream.match(/^url/) && stream.peek() === "(") {\n
+        state.tokenizer = urlTokens;\n
+        if(!stream.peek()){\n
+          state.cursorHalf = 0;\n
+        }\n
+        return "atom";\n
+      }\n
+\n
+      // Variables\n
+      if (ch === "$") {\n
+        stream.next();\n
+        stream.eatWhile(/[\\w-]/);\n
+        if(!stream.peek()){\n
+          state.cursorHalf = 0;\n
+        }\n
+        return "variable-3";\n
+      }\n
+\n
+      // bang character for !important, !default, etc.\n
+      if (ch === "!") {\n
+        stream.next();\n
+        if(!stream.peek()){\n
+          state.cursorHalf = 0;\n
+        }\n
+        return stream.match(/^[\\w]+/) ? "keyword": "operator";\n
+      }\n
+\n
+      if (stream.match(opRegexp)){\n
+        if(!stream.peek()){\n
+          state.cursorHalf = 0;\n
+        }\n
+        return "operator";\n
+      }\n
+\n
+      // attributes\n
+      if (stream.eatWhile(/[\\w-]/)) {\n
+        if(!stream.peek()){\n
+          state.cursorHalf = 0;\n
+        }\n
+        return "attribute";\n
+      }\n
+\n
+      //stream.eatSpace();\n
+      if(!stream.peek()){\n
+        state.cursorHalf = 0;\n
+        return null;\n
+      }\n
+\n
+    } // else ends here\n
 \n
     if (stream.match(opRegexp))\n
       return "operator";\n
@@ -300,14 +386,13 @@ CodeMirror.defineMode("sass", function(config) {\n
     var style = state.tokenizer(stream, state);\n
     var current = stream.current();\n
 \n
-    if (current === "@return")\n
+    if (current === "@return" || current === "}"){\n
       dedent(state);\n
-\n
-    if (style === "atom")\n
-      indent(state);\n
+    }\n
 \n
     if (style !== null) {\n
       var startOfToken = stream.pos - current.length;\n
+\n
       var withCurrentIndent = startOfToken + (config.indentUnit * state.indentCount);\n
 \n
       var newScopes = [];\n
@@ -332,6 +417,8 @@ CodeMirror.defineMode("sass", function(config) {\n
         tokenizer: tokenBase,\n
         scopes: [{offset: 0, type: "sass"}],\n
         indentCount: 0,\n
+        cursorHalf: 0,  // cursor half tells us if cursor lies after (1)\n
+                        // or before (0) colon (well... more or less)\n
         definedVars: [],\n
         definedMixins: []\n
       };\n
@@ -363,7 +450,7 @@ CodeMirror.defineMIME("text/x-sass", "sass");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7831</int> </value>
+            <value> <int>10059</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

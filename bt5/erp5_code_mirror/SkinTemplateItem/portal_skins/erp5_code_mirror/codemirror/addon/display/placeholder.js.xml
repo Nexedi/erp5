@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897116.97</string> </value>
+            <value> <string>ts60604372.61</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -42,10 +42,12 @@
     if (val && !prev) {\n
       cm.on("blur", onBlur);\n
       cm.on("change", onChange);\n
+      cm.on("swapDoc", onChange);\n
       onChange(cm);\n
     } else if (!val && prev) {\n
       cm.off("blur", onBlur);\n
       cm.off("change", onChange);\n
+      cm.off("swapDoc", onChange);\n
       clearPlaceholder(cm);\n
       var wrapper = cm.getWrapperElement();\n
       wrapper.className = wrapper.className.replace(" CodeMirror-empty", "");\n
@@ -65,7 +67,9 @@
     var elt = cm.state.placeholder = document.createElement("pre");\n
     elt.style.cssText = "height: 0; overflow: visible";\n
     elt.className = "CodeMirror-placeholder";\n
-    elt.appendChild(document.createTextNode(cm.getOption("placeholder")));\n
+    var placeHolder = cm.getOption("placeholder")\n
+    if (typeof placeHolder == "string") placeHolder = document.createTextNode(placeHolder)\n
+    elt.appendChild(placeHolder)\n
     cm.display.lineSpace.insertBefore(elt, cm.display.lineSpace.firstChild);\n
   }\n
 \n
@@ -94,7 +98,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1971</int> </value>
+            <value> <int>2139</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

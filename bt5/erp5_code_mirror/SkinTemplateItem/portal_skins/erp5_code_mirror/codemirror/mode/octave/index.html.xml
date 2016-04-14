@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Octave mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="octave.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Octave</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Octave mode</h2>\n
+\n
+    <div><textarea id="code" name="code">\n
+%numbers\n
+[1234 1234i 1234j]\n
+[.234 .234j 2.23i]\n
+[23e2 12E1j 123D-4 0x234]\n
+\n
+%strings\n
+\'asda\'\'a\'\n
+"asda""a"\n
+\n
+%identifiers\n
+a + as123 - __asd__\n
+\n
+%operators\n
+-\n
++\n
+=\n
+==\n
+>\n
+<\n
+>=\n
+<=\n
+&\n
+~\n
+...\n
+break zeros default margin round ones rand\n
+ceil floor size clear zeros eye mean std cov\n
+error eval function\n
+abs acos atan asin cos cosh exp log prod sum\n
+log10 max min sign sin sinh sqrt tan reshape\n
+return\n
+case switch\n
+else elseif end if otherwise\n
+do for while\n
+try catch\n
+classdef properties events methods\n
+global persistent\n
+\n
+%one line comment\n
+%{ multi \n
+line commment %}\n
+\n
+    </textarea></div>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        mode: {name: "octave",\n
+               version: 2,\n
+               singleLineStringErrors: false},\n
+        lineNumbers: true,\n
+        indentUnit: 4,\n
+        matchBrackets: true\n
+      });\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-octave</code>.</p>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

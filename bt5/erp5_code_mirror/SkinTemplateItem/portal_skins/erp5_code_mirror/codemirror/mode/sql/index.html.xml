@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: SQL Mode for CodeMirror</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css" />\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="sql.js"></script>\n
+<link rel="stylesheet" href="../../addon/hint/show-hint.css" />\n
+<script src="../../addon/hint/show-hint.js"></script>\n
+<script src="../../addon/hint/sql-hint.js"></script>\n
+<style>\n
+.CodeMirror {\n
+    border-top: 1px solid black;\n
+    border-bottom: 1px solid black;\n
+}\n
+        </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">SQL Mode for CodeMirror</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>SQL Mode for CodeMirror</h2>\n
+<form>\n
+            <textarea id="code" name="code">-- SQL Mode for CodeMirror\n
+SELECT SQL_NO_CACHE DISTINCT\n
+\t\t@var1 AS `val1`, @\'val2\', @global.\'sql_mode\',\n
+\t\t1.1 AS `float_val`, .14 AS `another_float`, 0.09e3 AS `int_with_esp`,\n
+\t\t0xFA5 AS `hex`, x\'fa5\' AS `hex2`, 0b101 AS `bin`, b\'101\' AS `bin2`,\n
+\t\tDATE \'1994-01-01\' AS `sql_date`, { T "1994-01-01" } AS `odbc_date`,\n
+\t\t\'my string\', _utf8\'your string\', N\'her string\',\n
+        TRUE, FALSE, UNKNOWN\n
+\tFROM DUAL\n
+\t-- space needed after \'--\'\n
+\t# 1 line comment\n
+\t/* multiline\n
+\tcomment! */\n
+\tLIMIT 1 OFFSET 0;\n
+</textarea>\n
+            </form>\n
+            <p><strong>MIME types defined:</strong> \n
+            <code><a href="?mime=text/x-sql">text/x-sql</a></code>,\n
+            <code><a href="?mime=text/x-mysql">text/x-mysql</a></code>,\n
+            <code><a href="?mime=text/x-mariadb">text/x-mariadb</a></code>,\n
+            <code><a href="?mime=text/x-cassandra">text/x-cassandra</a></code>,\n
+            <code><a href="?mime=text/x-plsql">text/x-plsql</a></code>,\n
+            <code><a href="?mime=text/x-mssql">text/x-mssql</a></code>,\n
+            <code><a href="?mime=text/x-hive">text/x-hive</a></code>.\n
+            <code><a href="?mime=text/x-pgsql">text/x-pgsql</a></code>.\n
+        </p>\n
+<script>\n
+window.onload = function() {\n
+  var mime = \'text/x-mariadb\';\n
+  // get mime type\n
+  if (window.location.href.indexOf(\'mime=\') > -1) {\n
+    mime = window.location.href.substr(window.location.href.indexOf(\'mime=\') + 5);\n
+  }\n
+  window.editor = CodeMirror.fromTextArea(document.getElementById(\'code\'), {\n
+    mode: mime,\n
+    indentWithTabs: true,\n
+    smartIndent: true,\n
+    lineNumbers: true,\n
+    matchBrackets : true,\n
+    autofocus: true,\n
+    extraKeys: {"Ctrl-Space": "autocomplete"},\n
+    hintOptions: {tables: {\n
+      users: {name: null, score: null, birthDate: null},\n
+      countries: {name: null, population: null, size: null}\n
+    }}\n
+  });\n
+};\n
+</script>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

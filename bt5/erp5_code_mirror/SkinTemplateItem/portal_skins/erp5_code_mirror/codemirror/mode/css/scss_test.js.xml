@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897139.85</string> </value>
+            <value> <string>ts60604377.25</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -99,7 +99,7 @@
     "[tag foo]#{[variable-2 $hello]} { [property color]:[atom #000]; }");\n
 \n
   MT(\'interpolation_error\',\n
-    "[tag foo]#{[error foo]} { [property color]:[atom #000]; }");\n
+    "[tag foo]#{[variable foo]} { [property color]:[atom #000]; }");\n
 \n
   MT("divide_operator",\n
     "[tag foo] { [property width]:[number 4] [operator /] [number 2] }");\n
@@ -121,7 +121,7 @@
 \n
   MT(\'indent_parentheses\',\n
      "[tag foo] {",\n
-     "  [property color]: [variable darken]([variable-2 $blue],",\n
+     "  [property color]: [atom darken]([variable-2 $blue],",\n
      "    [number 9%]);",\n
      "}");\n
 \n
@@ -142,7 +142,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3125</int> </value>
+            <value> <int>3124</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

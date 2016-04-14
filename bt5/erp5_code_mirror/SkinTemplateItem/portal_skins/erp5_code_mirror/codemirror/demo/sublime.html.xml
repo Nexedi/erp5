@@ -107,7 +107,8 @@ option to <code>"sublime"</code>.</p>\n
     autoCloseBrackets: true,\n
     matchBrackets: true,\n
     showCursorWhenSelecting: true,\n
-    theme: "monokai"\n
+    theme: "monokai",\n
+    tabSize: 2\n
   });\n
 </script>\n
 \n

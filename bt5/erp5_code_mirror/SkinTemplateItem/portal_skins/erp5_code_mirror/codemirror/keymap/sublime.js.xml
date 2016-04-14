@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts31074350.62</string> </value>
+            <value> <string>ts60604368.35</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -83,7 +83,9 @@
   cmds[map["Alt-Left"] = "goSubwordLeft"] = function(cm) { moveSubword(cm, -1); };\n
   cmds[map["Alt-Right"] = "goSubwordRight"] = function(cm) { moveSubword(cm, 1); };\n
 \n
-  cmds[map[ctrl + "Up"] = "scrollLineUp"] = function(cm) {\n
+  var scrollLineCombo = mac ? "Ctrl-Alt-" : "Ctrl-";\n
+\n
+  cmds[map[scrollLineCombo + "Up"] = "scrollLineUp"] = function(cm) {\n
     var info = cm.getScrollInfo();\n
     if (!cm.somethingSelected()) {\n
       var visibleBottomLine = cm.lineAtHeight(info.top + info.clientHeight, "local");\n
@@ -92,7 +94,7 @@
     }\n
     cm.scrollTo(null, info.top - cm.defaultTextHeight());\n
   };\n
-  cmds[map[ctrl + "Down"] = "scrollLineDown"] = function(cm) {\n
+  cmds[map[scrollLineCombo + "Down"] = "scrollLineDown"] = function(cm) {\n
     var info = cm.getScrollInfo();\n
     if (!cm.somethingSelected()) {\n
       var visibleTopLine = cm.lineAtHeight(info.top, "local")+1;\n
@@ -131,9 +133,10 @@
     cm.setSelections(extended);\n
   };\n
 \n
-  map["Shift-" + ctrl + "K"] = "deleteLine";\n
+  map["Shift-Ctrl-K"] = "deleteLine";\n
 \n
   function insertLine(cm, above) {\n
+    if (cm.isReadOnly()) return CodeMirror.Pass\n
     cm.operation(function() {\n
       var len = cm.listSelections().length, newSelection = [], last = -1;\n
       for (var i = 0; i < len; i++) {\n
@@ -149,9 +152,9 @@
     });\n
   }\n
 \n
-  cmds[map[ctrl + "Enter"] = "insertLineAfter"] = function(cm) { insertLine(cm, false); };\n
+  cmds[map[ctrl + "Enter"] = "insertLineAfter"] = function(cm) { return insertLine(cm, false); };\n
 \n
-  cmds[map["Shift-" + ctrl + "Enter"] = "insertLineBefore"] = function(cm) { insertLine(cm, true); };\n
+  cmds[map["Shift-" + ctrl + "Enter"] = "insertLineBefore"] = function(cm) { return insertLine(cm, true); };\n
 \n
   function wordAt(cm, pos) {\n
     var start = pos.ch, end = start, line = cm.getLine(pos.line);\n
@@ -218,6 +221,7 @@
   var swapLineCombo = mac ? "Cmd-Ctrl-" : "Shift-Ctrl-";\n
 \n
   cmds[map[swapLineCombo + "Up"] = "swapLineUp"] = function(cm) {\n
+    if (cm.isReadOnly()) return CodeMirror.Pass\n
     var ranges = cm.listSelections(), linesToMove = [], at = cm.firstLine() - 1, newSels = [];\n
     for (var i = 0; i < ranges.length; i++) {\n
       var range = ranges[i], from = range.from().line - 1, to = range.to().line;\n
@@ -244,6 +248,7 @@
   };\n
 \n
   cmds[map[swapLineCombo + "Down"] = "swapLineDown"] = function(cm) {\n
+    if (cm.isReadOnly()) return CodeMirror.Pass\n
     var ranges = cm.listSelections(), linesToMove = [], at = cm.lastLine() + 1;\n
     for (var i = ranges.length - 1; i >= 0; i--) {\n
       var range = ranges[i], from = range.to().line + 1, to = range.from().line;\n
@@ -266,7 +271,9 @@
     });\n
   };\n
 \n
-  map[ctrl + "/"] = "toggleComment";\n
+  cmds[map[ctrl + "/"] = "toggleCommentIndented"] = function(cm) {\n
+    cm.toggleComment({ indent: true });\n
+  }\n
 \n
   cmds[map[ctrl + "J"] = "joinLines"] = function(cm) {\n
     var ranges = cm.listSelections(), joined = [];\n
@@ -313,6 +320,7 @@
   map[ctrl + "T"] = "transposeChars";\n
 \n
   function sortLines(cm, caseSensitive) {\n
+    if (cm.isReadOnly()) return CodeMirror.Pass\n
     var ranges = cm.listSelections(), toSort = [], selected;\n
     for (var i = 0; i < ranges.length; i++) {\n
       var range = ranges[i];\n
@@ -436,6 +444,27 @@
   }\n
 \n
   map[cK + ctrl + "Backspace"] = "delLineLeft";\n
+\n
+  cmds[map["Backspace"] = "smartBackspace"] = function(cm) {\n
+    if (cm.somethingSelected()) return CodeMirror.Pass;\n
+\n
+    var cursor = cm.getCursor();\n
+    var toStartOfLine = cm.getRange({line: cursor.line, ch: 0}, cursor);\n
+    var column = CodeMirror.countColumn(toStartOfLine, null, cm.getOption("tabSize"));\n
+    var indentUnit = cm.getOption("indentUnit");\n
+\n
+    if (toStartOfLine && !/\\S/.test(toStartOfLine) && column % indentUnit == 0) {\n
+      var prevIndent = new Pos(cursor.line,\n
+        CodeMirror.findColumn(toStartOfLine, column - indentUnit, indentUnit));\n
+\n
+      // If no smart delete is happening (due to tab sizing) just do a regular delete\n
+      if (prevIndent.ch == cursor.ch) return CodeMirror.Pass;\n
+\n
+      return cm.replaceRange("", prevIndent, cursor, "+delete");\n
+    } else {\n
+      return CodeMirror.Pass;\n
+    }\n
+  };\n
 \n
   cmds[map[cK + ctrl + "K"] = "delLineRight"] = function(cm) {\n
     cm.operation(function() {\n
@@ -576,7 +605,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>20409</int> </value>
+            <value> <int>21595</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

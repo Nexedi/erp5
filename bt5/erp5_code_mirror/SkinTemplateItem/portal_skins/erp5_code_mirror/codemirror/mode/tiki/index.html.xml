@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Tiki wiki mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<link rel="stylesheet" href="tiki.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="tiki.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Tiki wiki</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Tiki wiki mode</h2>\n
+\n
+\n
+<div><textarea id="code" name="code">\n
+Headings\n
+!Header 1\n
+!!Header 2\n
+!!!Header 3\n
+!!!!Header 4\n
+!!!!!Header 5\n
+!!!!!!Header 6\n
+\n
+Styling\n
+-=titlebar=-\n
+^^ Box on multi\n
+lines\n
+of content^^\n
+__bold__\n
+\'\'italic\'\'\n
+===underline===\n
+::center::\n
+--Line Through--\n
+\n
+Operators\n
+~np~No parse~/np~\n
+\n
+Link\n
+[link|desc|nocache]\n
+\n
+Wiki\n
+((Wiki))\n
+((Wiki|desc))\n
+((Wiki|desc|timeout))\n
+\n
+Table\n
+||row1 col1|row1 col2|row1 col3\n
+row2 col1|row2 col2|row2 col3\n
+row3 col1|row3 col2|row3 col3||\n
+\n
+Lists:\n
+*bla\n
+**bla-1\n
+++continue-bla-1\n
+***bla-2\n
+++continue-bla-1\n
+*bla\n
++continue-bla\n
+#bla\n
+** tra-la-la\n
++continue-bla\n
+#bla\n
+\n
+Plugin (standard):\n
+{PLUGIN(attr="my attr")}\n
+Plugin Body\n
+{PLUGIN}\n
+\n
+Plugin (inline):\n
+{plugin attr="my attr"}\n
+</textarea></div>\n
+\n
+<script type="text/javascript">\n
+\tvar editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        mode: \'tiki\',      \n
+        lineNumbers: true\n
+    });\n
+</script>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -180,49 +180,79 @@ section.first {\n
   z-index: 25;\n
 }\n
 \n
-.bankinfo {\n
-  text-align: left;\n
-  display: none;\n
-  padding: 0 .5em;\n
+.yinyang {\n
   position: absolute;\n
-  border: 2px solid #aaa;\n
-  border-radius: 5px;\n
-  background: #eee;\n
-  top: 10px;\n
-  left: 30px;\n
+  top: -10px;\n
+  left: 0; right: 0;\n
+  margin: auto;\n
+  display: block;\n
+  height: 120px;\n
 }\n
 \n
-.bankinfo_close {\n
-  position: absolute;\n
-  top: 0; right: 6px;\n
-  font-weight: bold;\n
-  cursor: pointer;\n
-}\n
-\n
-.bigbutton {\n
-  cursor: pointer;\n
-  text-align: center;\n
-  padding: 0 1em;\n
-  display: inline-block;\n
-  color: white;\n
+.actions {\n
+  margin: 1em 0 0;\n
+  min-height: 100px;\n
   position: relative;\n
-  line-height: 1.9;\n
-  color: white !important;\n
-  background: #A21313;\n
 }\n
 \n
-.bigbutton.right {\n
-  border-bottom-left-radius: 100px;\n
-  border-top-left-radius: 100px;\n
+.actionspicture {\n
+  pointer-events: none;\n
+  position: absolute;\n
+  height: 100px;\n
+  top: 0; left: 0; right: 0;\n
 }\n
 \n
-.bigbutton.left {\n
-  border-bottom-right-radius: 100px;\n
-  border-top-right-radius: 100px;\n
+.actionlink {\n
+  pointer-events: auto;\n
+  font-family: arial;\n
+  font-size: 80%;\n
+  font-weight: bold;\n
+  position: absolute;\n
+  top: 0; bottom: 0;\n
+  line-height: 1;\n
+  height: 1em;\n
+  margin: auto;\n
 }\n
 \n
-.bigbutton:hover {\n
-  background: #E30808;\n
+.actionlink.download {\n
+  color: white;\n
+  right: 50%;\n
+  margin-right: 13px;\n
+  text-shadow: -1px 1px 3px #b00, -1px -1px 3px #b00, 1px 0px 3px #b00;\n
+}\n
+\n
+.actionlink.fund {\n
+  color: #b00;\n
+  left: 50%;\n
+  margin-left: 15px;\n
+}\n
+\n
+.actionlink:hover {\n
+  text-decoration: underline;\n
+}\n
+\n
+.actionlink a {\n
+  color: inherit;\n
+}\n
+\n
+.actionsleft {\n
+  float: left;\n
+}\n
+\n
+.actionsright {\n
+  float: right;\n
+  text-align: right;\n
+}\n
+\n
+@media screen and (max-width: 800px) {\n
+  .actions {\n
+    padding-top: 120px;\n
+  }\n
+  .actionsleft, .actionsright {\n
+    float: none;\n
+    text-align: left;\n
+    margin-bottom: 1em;\n
+  }\n
 }\n
 \n
 th {\n

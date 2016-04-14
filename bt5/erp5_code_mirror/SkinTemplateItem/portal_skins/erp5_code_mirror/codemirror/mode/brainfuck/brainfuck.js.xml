@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts60604375.88</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>brainfuck.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+// Brainfuck mode created by Michael Kaminsky https://github.com/mkaminsky11\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object")\n
+    mod(require("../../lib/codemirror"))\n
+  else if (typeof define == "function" && define.amd)\n
+    define(["../../lib/codemirror"], mod)\n
+  else\n
+    mod(CodeMirror)\n
+})(function(CodeMirror) {\n
+  "use strict"\n
+  var reserve = "><+-.,[]".split("");\n
+  /*\n
+  comments can be either:\n
+  placed behind lines\n
+\n
+        +++    this is a comment\n
+\n
+  where reserved characters cannot be used\n
+  or in a loop\n
+  [\n
+    this is ok to use [ ] and stuff\n
+  ]\n
+  or preceded by #\n
+  */\n
+  CodeMirror.defineMode("brainfuck", function() {\n
+    return {\n
+      startState: function() {\n
+        return {\n
+          commentLine: false,\n
+          left: 0,\n
+          right: 0,\n
+          commentLoop: false\n
+        }\n
+      },\n
+      token: function(stream, state) {\n
+        if (stream.eatSpace()) return null\n
+        if(stream.sol()){\n
+          state.commentLine = false;\n
+        }\n
+        var ch = stream.next().toString();\n
+        if(reserve.indexOf(ch) !== -1){\n
+          if(state.commentLine === true){\n
+            if(stream.eol()){\n
+              state.commentLine = false;\n
+            }\n
+            return "comment";\n
+          }\n
+          if(ch === "]" || ch === "["){\n
+            if(ch === "["){\n
+              state.left++;\n
+            }\n
+            else{\n
+              state.right++;\n
+            }\n
+            return "bracket";\n
+          }\n
+          else if(ch === "+" || ch === "-"){\n
+            return "keyword";\n
+          }\n
+          else if(ch === "<" || ch === ">"){\n
+            return "atom";\n
+          }\n
+          else if(ch === "." || ch === ","){\n
+            return "def";\n
+          }\n
+        }\n
+        else{\n
+          state.commentLine = true;\n
+          if(stream.eol()){\n
+            state.commentLine = false;\n
+          }\n
+          return "comment";\n
+        }\n
+        if(stream.eol()){\n
+          state.commentLine = false;\n
+        }\n
+      }\n
+    };\n
+  });\n
+CodeMirror.defineMIME("text/x-brainfuck","brainfuck")\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2174</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

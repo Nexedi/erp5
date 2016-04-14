@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts60604376.19</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function() {\n
+  var mode = CodeMirror.getMode({indentUnit: 2}, "text/x-c");\n
+  function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1)); }\n
+\n
+  MT("indent",\n
+     "[variable-3 void] [def foo]([variable-3 void*] [variable a], [variable-3 int] [variable b]) {",\n
+     "  [variable-3 int] [variable c] [operator =] [variable b] [operator +]",\n
+     "    [number 1];",\n
+     "  [keyword return] [operator *][variable a];",\n
+     "}");\n
+\n
+  MT("indent_switch",\n
+     "[keyword switch] ([variable x]) {",\n
+     "  [keyword case] [number 10]:",\n
+     "    [keyword return] [number 20];",\n
+     "  [keyword default]:",\n
+     "    [variable printf]([string \\"foo %c\\"], [variable x]);",\n
+     "}");\n
+\n
+  MT("def",\n
+     "[variable-3 void] [def foo]() {}",\n
+     "[keyword struct] [def bar]{}",\n
+     "[variable-3 int] [variable-3 *][def baz]() {}");\n
+\n
+  MT("double_block",\n
+     "[keyword for] (;;)",\n
+     "  [keyword for] (;;)",\n
+     "    [variable x][operator ++];",\n
+     "[keyword return];");\n
+\n
+  MT("preprocessor",\n
+     "[meta #define FOO 3]",\n
+     "[variable-3 int] [variable foo];",\n
+     "[meta #define BAR\\\\]",\n
+     "[meta 4]",\n
+     "[variable-3 unsigned] [variable-3 int] [variable bar] [operator =] [number 8];",\n
+     "[meta #include <baz> ][comment // comment]")\n
+\n
+\n
+  var mode_cpp = CodeMirror.getMode({indentUnit: 2}, "text/x-c++src");\n
+  function MTCPP(name) { test.mode(name, mode_cpp, Array.prototype.slice.call(arguments, 1)); }\n
+\n
+  MTCPP("cpp14_literal",\n
+    "[number 10\'000];",\n
+    "[number 0b10\'000];",\n
+    "[number 0x10\'000];",\n
+    "[string \'100000\'];");\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1699</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

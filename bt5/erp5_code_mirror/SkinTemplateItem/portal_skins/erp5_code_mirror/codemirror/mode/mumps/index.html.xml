@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+ï»¿<!doctype html>\n
+\n
+<title>CodeMirror: MUMPS mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="mumps.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">MUMPS</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>MUMPS mode</h2>\n
+\n
+\n
+<div><textarea id="code" name="code">\n
+ ; Lloyd Milligan\n
+ ; 03-30-2015\n
+ ;\n
+ ; MUMPS support for Code Mirror - Excerpts below from routine ^XUS\n
+ ;\n
+CHECKAV(X1) ;Check A/V code return DUZ or Zero. (Called from XUSRB)\n
+ N %,%1,X,Y,IEN,DA,DIK\n
+ S IEN=0\n
+ ;Start CCOW\n
+ I $E(X1,1,7)="~~TOK~~" D  Q:IEN>0 IEN\n
+ . I $E(X1,8,9)="~1" S IEN=$$CHKASH^XUSRB4($E(X1,8,255))\n
+ . I $E(X1,8,9)="~2" S IEN=$$CHKCCOW^XUSRB4($E(X1,8,255))\n
+ . Q\n
+ ;End CCOW\n
+ S X1=$$UP(X1) S:X1[":" XUTT=1,X1=$TR(X1,":")\n
+ S X=$P(X1,";") Q:X="^" -1 S:XUF %1="Access: "_X\n
+ Q:X\'?1.20ANP 0\n
+ S X=$$EN^XUSHSH(X) I \'$D(^VA(200,"A",X)) D LBAV Q 0\n
+ S %1="",IEN=$O(^VA(200,"A",X,0)),XUF(.3)=IEN D USER(IEN)\n
+ S X=$P(X1,";",2) S:XUF %1="Verify: "_X S X=$$EN^XUSHSH(X)\n
+ I $P(XUSER(1),"^",2)\'=X D LBAV Q 0\n
+ I $G(XUFAC(1)) S DIK="^XUSEC(4,",DA=XUFAC(1) D ^DIK\n
+ Q IEN\n
+ ;\n
+ ; Spell out commands\n
+ ;\n
+SET2() ;EF. Return error code (also called from XUSRB)\n
+ NEW %,X\n
+ SET XUNOW=$$HTFM^XLFDT($H),DT=$P(XUNOW,".")\n
+ KILL DUZ,XUSER\n
+ SET (DUZ,DUZ(2))=0,(DUZ(0),DUZ("AG"),XUSER(0),XUSER(1),XUTT,%UCI)=""\n
+ SET %=$$INHIBIT^XUSRB() IF %>0 QUIT %\n
+ SET X=$G(^%ZIS(1,XUDEV,"XUS")),XU1=$G(^(1))\n
+ IF $L(X) FOR I=1:1:15 IF $L($P(X,U,I)) SET $P(XOPT,U,I)=$P(X,U,I)\n
+ SET DTIME=600\n
+ IF \'$P(XOPT,U,11),$D(^%ZIS(1,XUDEV,90)),^(90)>2800000,^(90)\'>DT QUIT 8\n
+ QUIT 0\n
+ ;\n
+ ; Spell out commands and functions\n
+ ;\n
+ IF $PIECE(XUSER(0),U,11),$PIECE(XUSER(0),U,11)\'>DT QUIT 11 ;Terminated\n
+ IF $DATA(DUZ("ASH")) QUIT 0 ;If auto handle, Allow to sign-on p434\n
+ IF $PIECE(XUSER(0),U,7) QUIT 5 ;Disuser flag set\n
+ IF \'$LENGTH($PIECE(XUSER(1),U,2)) QUIT 21 ;p419, p434\n
+ Q 0\n
+ ;\n
+  </textarea></div>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+         mode: "mumps",\n
+         lineNumbers: true,\n
+         lineWrapping: true\n
+      });\n
+    </script>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

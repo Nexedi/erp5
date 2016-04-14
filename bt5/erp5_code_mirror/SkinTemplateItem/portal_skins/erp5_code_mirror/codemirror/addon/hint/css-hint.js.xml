@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897119.18</string> </value>
+            <value> <string>ts60604373.19</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -47,6 +47,10 @@
     var cur = cm.getCursor(), token = cm.getTokenAt(cur);\n
     var inner = CodeMirror.innerMode(cm.getMode(), token.state);\n
     if (inner.mode.name != "css") return;\n
+\n
+    if (token.type == "keyword" && "!important".indexOf(token.string) == 0)\n
+      return {list: ["!important"], from: CodeMirror.Pos(cur.line, token.start),\n
+              to: CodeMirror.Pos(cur.line, token.end)};\n
 \n
     var start = token.start, end = cur.ch, word = token.string.slice(0, end - start);\n
     if (/[^\\w$_-]/.test(word)) {\n
@@ -92,7 +96,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1951</int> </value>
+            <value> <int>2165</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

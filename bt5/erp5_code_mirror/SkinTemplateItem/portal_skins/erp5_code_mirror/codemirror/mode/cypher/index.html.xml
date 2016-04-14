@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Cypher Mode for CodeMirror</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css" />\n
+<link rel="stylesheet" href="../../theme/neo.css" />\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="cypher.js"></script>\n
+<style>\n
+.CodeMirror {\n
+    border-top: 1px solid black;\n
+    border-bottom: 1px solid black;\n
+}\n
+        </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Cypher Mode for CodeMirror</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Cypher Mode for CodeMirror</h2>\n
+<form>\n
+            <textarea id="code" name="code">// Cypher Mode for CodeMirror, using the neo theme\n
+MATCH (joe { name: \'Joe\' })-[:knows*2..2]-(friend_of_friend)\n
+WHERE NOT (joe)-[:knows]-(friend_of_friend)\n
+RETURN friend_of_friend.name, COUNT(*)\n
+ORDER BY COUNT(*) DESC , friend_of_friend.name\n
+</textarea>\n
+            </form>\n
+            <p><strong>MIME types defined:</strong> \n
+            <code><a href="?mime=application/x-cypher-query">application/x-cypher-query</a></code>\n
+        </p>\n
+<script>\n
+window.onload = function() {\n
+  var mime = \'application/x-cypher-query\';\n
+  // get mime type\n
+  if (window.location.href.indexOf(\'mime=\') > -1) {\n
+    mime = window.location.href.substr(window.location.href.indexOf(\'mime=\') + 5);\n
+  }\n
+  window.editor = CodeMirror.fromTextArea(document.getElementById(\'code\'), {\n
+    mode: mime,\n
+    indentWithTabs: true,\n
+    smartIndent: true,\n
+    lineNumbers: true,\n
+    matchBrackets : true,\n
+    autofocus: true,\n
+    theme: \'neo\'\n
+  });\n
+};\n
+</script>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

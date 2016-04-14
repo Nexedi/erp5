@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>liquibyte.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>.cm-s-liquibyte.CodeMirror {\n
+\tbackground-color: #000;\n
+\tcolor: #fff;\n
+\tline-height: 1.2em;\n
+\tfont-size: 1em;\n
+}\n
+.cm-s-liquibyte .CodeMirror-focused .cm-matchhighlight {\n
+\ttext-decoration: underline;\n
+\ttext-decoration-color: #0f0;\n
+\ttext-decoration-style: wavy;\n
+}\n
+.cm-s-liquibyte .cm-trailingspace {\n
+\ttext-decoration: line-through;\n
+\ttext-decoration-color: #f00;\n
+\ttext-decoration-style: dotted;\n
+}\n
+.cm-s-liquibyte .cm-tab {\n
+\ttext-decoration: line-through;\n
+\ttext-decoration-color: #404040;\n
+\ttext-decoration-style: dotted;\n
+}\n
+.cm-s-liquibyte .CodeMirror-gutters { background-color: #262626; border-right: 1px solid #505050; padding-right: 0.8em; }\n
+.cm-s-liquibyte .CodeMirror-gutter-elt div { font-size: 1.2em; }\n
+.cm-s-liquibyte .CodeMirror-guttermarker {  }\n
+.cm-s-liquibyte .CodeMirror-guttermarker-subtle {  }\n
+.cm-s-liquibyte .CodeMirror-linenumber { color: #606060; padding-left: 0; }\n
+.cm-s-liquibyte .CodeMirror-cursor { border-left: 1px solid #eee; }\n
+\n
+.cm-s-liquibyte span.cm-comment     { color: #008000; }\n
+.cm-s-liquibyte span.cm-def         { color: #ffaf40; font-weight: bold; }\n
+.cm-s-liquibyte span.cm-keyword     { color: #c080ff; font-weight: bold; }\n
+.cm-s-liquibyte span.cm-builtin     { color: #ffaf40; font-weight: bold; }\n
+.cm-s-liquibyte span.cm-variable    { color: #5967ff; font-weight: bold; }\n
+.cm-s-liquibyte span.cm-string      { color: #ff8000; }\n
+.cm-s-liquibyte span.cm-number      { color: #0f0; font-weight: bold; }\n
+.cm-s-liquibyte span.cm-atom        { color: #bf3030; font-weight: bold; }\n
+\n
+.cm-s-liquibyte span.cm-variable-2  { color: #007f7f; font-weight: bold; }\n
+.cm-s-liquibyte span.cm-variable-3  { color: #c080ff; font-weight: bold; }\n
+.cm-s-liquibyte span.cm-property    { color: #999; font-weight: bold; }\n
+.cm-s-liquibyte span.cm-operator    { color: #fff; }\n
+\n
+.cm-s-liquibyte span.cm-meta        { color: #0f0; }\n
+.cm-s-liquibyte span.cm-qualifier   { color: #fff700; font-weight: bold; }\n
+.cm-s-liquibyte span.cm-bracket     { color: #cc7; }\n
+.cm-s-liquibyte span.cm-tag         { color: #ff0; font-weight: bold; }\n
+.cm-s-liquibyte span.cm-attribute   { color: #c080ff; font-weight: bold; }\n
+.cm-s-liquibyte span.cm-error       { color: #f00; }\n
+\n
+.cm-s-liquibyte div.CodeMirror-selected { background-color: rgba(255, 0, 0, 0.25); }\n
+\n
+.cm-s-liquibyte span.cm-compilation { background-color: rgba(255, 255, 255, 0.12); }\n
+\n
+.cm-s-liquibyte .CodeMirror-activeline-background { background-color: rgba(0, 255, 0, 0.15); }\n
+\n
+/* Default styles for common addons */\n
+.cm-s-liquibyte .CodeMirror span.CodeMirror-matchingbracket { color: #0f0; font-weight: bold; }\n
+.cm-s-liquibyte .CodeMirror span.CodeMirror-nonmatchingbracket { color: #f00; font-weight: bold; }\n
+.CodeMirror-matchingtag { background-color: rgba(150, 255, 0, .3); }\n
+/* Scrollbars */\n
+/* Simple */\n
+.cm-s-liquibyte div.CodeMirror-simplescroll-horizontal div:hover, div.CodeMirror-simplescroll-vertical div:hover {\n
+\tbackground-color: rgba(80, 80, 80, .7);\n
+}\n
+.cm-s-liquibyte div.CodeMirror-simplescroll-horizontal div, div.CodeMirror-simplescroll-vertical div {\n
+\tbackground-color: rgba(80, 80, 80, .3);\n
+\tborder: 1px solid #404040;\n
+\tborder-radius: 5px;\n
+}\n
+.cm-s-liquibyte div.CodeMirror-simplescroll-vertical div {\n
+\tborder-top: 1px solid #404040;\n
+\tborder-bottom: 1px solid #404040;\n
+}\n
+.cm-s-liquibyte div.CodeMirror-simplescroll-horizontal div {\n
+\tborder-left: 1px solid #404040;\n
+\tborder-right: 1px solid #404040;\n
+}\n
+.cm-s-liquibyte div.CodeMirror-simplescroll-vertical {\n
+\tbackground-color: #262626;\n
+}\n
+.cm-s-liquibyte div.CodeMirror-simplescroll-horizontal {\n
+\tbackground-color: #262626;\n
+\tborder-top: 1px solid #404040;\n
+}\n
+/* Overlay */\n
+.cm-s-liquibyte div.CodeMirror-overlayscroll-horizontal div, div.CodeMirror-overlayscroll-vertical div {\n
+\tbackground-color: #404040;\n
+\tborder-radius: 5px;\n
+}\n
+.cm-s-liquibyte div.CodeMirror-overlayscroll-vertical div {\n
+\tborder: 1px solid #404040;\n
+}\n
+.cm-s-liquibyte div.CodeMirror-overlayscroll-horizontal div {\n
+\tborder: 1px solid #404040;\n
+}\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

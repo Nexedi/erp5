@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+  <head>\n
+    <title>CodeMirror: PEG.js Mode</title>\n
+    <meta charset="utf-8"/>\n
+    <link rel=stylesheet href="../../doc/docs.css">\n
+\n
+    <link rel="stylesheet" href="../../lib/codemirror.css">\n
+    <script src="../../lib/codemirror.js"></script>\n
+    <script src="../javascript/javascript.js"></script>\n
+    <script src="pegjs.js"></script>\n
+    <style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+  </head>\n
+  <body>\n
+    <div id=nav>\n
+      <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+      <ul>\n
+        <li><a href="../../index.html">Home</a>\n
+        <li><a href="../../doc/manual.html">Manual</a>\n
+        <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+      </ul>\n
+      <ul>\n
+        <li><a href="../index.html">Language modes</a>\n
+        <li><a class=active href="#">PEG.js Mode</a>\n
+      </ul>\n
+    </div>\n
+\n
+    <article>\n
+      <h2>PEG.js Mode</h2>\n
+      <form><textarea id="code" name="code">\n
+/*\n
+ * Classic example grammar, which recognizes simple arithmetic expressions like\n
+ * "2*(3+4)". The parser generated from this grammar then computes their value.\n
+ */\n
+\n
+start\n
+  = additive\n
+\n
+additive\n
+  = left:multiplicative "+" right:additive { return left + right; }\n
+  / multiplicative\n
+\n
+multiplicative\n
+  = left:primary "*" right:multiplicative { return left * right; }\n
+  / primary\n
+\n
+primary\n
+  = integer\n
+  / "(" additive:additive ")" { return additive; }\n
+\n
+integer "integer"\n
+  = digits:[0-9]+ { return parseInt(digits.join(""), 10); }\n
+\n
+letter = [a-z]+</textarea></form>\n
+      <script>\n
+        var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+          mode: {name: "pegjs"},\n
+          lineNumbers: true\n
+        });\n
+      </script>\n
+      <h3>The PEG.js Mode</h3>\n
+      <p> Created by Forbes Lindesay.</p>\n
+    </article>\n
+  </body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

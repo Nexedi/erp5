@@ -45,17 +45,36 @@
 <link rel="stylesheet" href="../lib/codemirror.css">\n
 <script src="../lib/codemirror.js"></script>\n
 <script src="../mode/javascript/javascript.js"></script>\n
+<script src="../mode/xml/xml.js"></script>\n
+<script src="../mode/htmlmixed/htmlmixed.js"></script>\n
 <script src="../addon/display/panel.js"></script>\n
 <style type="text/css">\n
-  .border {border: 1px solid black; border-bottom: 1px solid black;}\n
-  .add { background: orange; padding: 1px 3px; color: white !important; border-radius: 4px; }\n
-  .panel {\n
-    background-image: linear-gradient(to bottom, #ffffaa, #ffffdd);\n
-    padding: 3px 7px;\n
+  .border {\n
+    border: 1px solid #f7f7f7;\n
   }\n
-  .panel.top { border-bottom: 1px solid #dd6; }\n
-  .panel.bottom { border-top: 1px solid #dd6; }\n
-  .panel span { cursor: pointer; }\n
+  .add-panel {\n
+    background: orange;\n
+    padding: 3px 6px;\n
+    color: white !important; \n
+    border-radius: 3px;\n
+  }\n
+  .add-panel, .remove-panel {\n
+    cursor: pointer;\n
+  }\n
+  .remove-panel {\n
+    float: right;\n
+  }\n
+  .panel {\n
+    background: #f7f7f7;\n
+    padding: 3px 7px;\n
+    font-size: 0.85em;\n
+  }\n
+  .panel.top, .panel.after-top {\n
+    border-bottom: 1px solid #ddd;\n
+  }\n
+  .panel.bottom, .panel.before-bottom {\n
+    border-top: 1px solid #ddd;\n
+  }\n
 </style>\n
 \n
 <div id=nav>\n
@@ -72,32 +91,85 @@
 </div>\n
 \n
 <article>\n
-<h2>Panel Demo</h2>\n
-<form><div class="border"><textarea id="code" name="code"></textarea></div></form>\n
 \n
-<script id="localscript">var textarea = document.getElementById("code");\n
-var script = document.getElementById("localscript");\n
-textarea.value = (script.textContent ||\n
-                  script.innerText ||\n
-                  script.innerHTML);\n
+<h2>Panel Demo</h2>\n
+\n
+<div class="border">\n
+    <textarea id="code" name="code"></textarea>\n
+</div>\n
+\n
+<p>\n
+  The <a href="../doc/manual.html#addon_panel"><code>panel</code></a>\n
+  addon allows you to display panels above or below an editor.\n
+  <br>\n
+  Click the links below to add panels at the given position:\n
+</p>\n
+\n
+<div id="demo">\n
+<p>\n
+  <a class="add-panel" onclick="addPanel(\'top\')">top</a>\n
+  <a class="add-panel" onclick="addPanel(\'after-top\')">after-top</a>\n
+  <a class="add-panel" onclick="addPanel(\'before-bottom\')">before-bottom</a>\n
+  <a class="add-panel" onclick="addPanel(\'bottom\')">bottom</a>\n
+</p>\n
+<p>\n
+  You can also replace an existing panel:\n
+</p>\n
+<form onsubmit="return replacePanel(this);" name="replace_panel">\n
+  <input type="submit" value="Replace panel nÂ°" />\n
+  <input type="number" name="panel_id" min="1" value="1" />\n
+</form>\n
+\n
+<script>\n
+var textarea = document.getElementById("code");\n
+var demo = document.getElementById("demo");\n
+var numPanels = 0;\n
+var panels = {};\n
+var editor;\n
+\n
+textarea.value = demo.innerHTML.trim();\n
 editor = CodeMirror.fromTextArea(textarea, {\n
-  lineNumbers: true\n
+  lineNumbers: true,\n
+  mode: "htmlmixed"\n
 });\n
 \n
-function addPanel(where) {\n
+function makePanel(where) {\n
   var node = document.createElement("div");\n
-  node.className = "panel " + where;\n
-  var close = node.appendChild(document.createElement("span"));\n
-  close.textContent = "â Remove this panel";\n
-  var widget = editor.addPanel(node, {position: where});\n
-  CodeMirror.on(close, "click", function() { widget.clear(); });\n
-}</script>\n
+  var id = ++numPanels;\n
+  var widget, close, label;\n
 \n
-<p>The <a href="../doc/manual.html#addon_panel"><code>panel</code></a>\n
-addon allows you to display panels <a class=add\n
-href="javascript:addPanel(\'top\')">above</a> or <a class=add\n
-href="javascript:addPanel(\'bottom\')">below</a> an editor. Click the\n
-links in the previous paragraph to add panels to the editor.</p>\n
+  node.id = "panel-" + id;\n
+  node.className = "panel " + where;\n
+  close = node.appendChild(document.createElement("a"));\n
+  close.setAttribute("title", "Remove me!");\n
+  close.setAttribute("class", "remove-panel");\n
+  close.textContent = "â";\n
+  CodeMirror.on(close, "click", function() {\n
+    panels[node.id].clear();\n
+  });\n
+  label = node.appendChild(document.createElement("span"));\n
+  label.textContent = "I\'m panel nÂ°" + id;\n
+  return node;\n
+}\n
+function addPanel(where) {\n
+  var node = makePanel(where);\n
+  panels[node.id] = editor.addPanel(node, {position: where});\n
+}\n
+\n
+addPanel("top");\n
+addPanel("bottom");\n
+\n
+function replacePanel(form) {\n
+  var id = form.elements.panel_id.value;\n
+  var panel = panels["panel-" + id];\n
+  var node = makePanel("");\n
+\n
+  panels[node.id] = editor.addPanel(node, {replace: panel, position: "after-top"});\n
+  return false;\n
+}\n
+</script>\n
+\n
+</div>\n
 \n
 </article>
 

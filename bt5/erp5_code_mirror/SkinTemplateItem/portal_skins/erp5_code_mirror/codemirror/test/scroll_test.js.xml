@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897151.75</string> </value>
+            <value> <string>ts60604369.35</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -47,14 +47,14 @@
   function barV(cm) { return byClassName(cm.getWrapperElement(), "CodeMirror-vscrollbar")[0]; }\n
 \n
   function displayBottom(cm, scrollbar) {\n
-    if (scrollbar)\n
+    if (scrollbar && cm.display.scroller.offsetHeight > cm.display.scroller.clientHeight)\n
       return barH(cm).getBoundingClientRect().top;\n
     else\n
       return cm.getWrapperElement().getBoundingClientRect().bottom - 1;\n
   }\n
 \n
   function displayRight(cm, scrollbar) {\n
-    if (scrollbar)\n
+    if (scrollbar && cm.display.scroller.offsetWidth > cm.display.scroller.clientWidth)\n
       return barV(cm).getBoundingClientRect().left;\n
     else\n
       return cm.getWrapperElement().getBoundingClientRect().right - 1;\n
@@ -130,6 +130,16 @@
     cm.replaceSelection("\\n");\n
     is(cm.cursorCoords(null, "window").bottom < displayBottom(cm, false));\n
   }, {lineWrapping: true});\n
+\n
+  testCM("height_auto_with_gutter_expect_no_scroll_after_line_delete", function(cm) {\n
+    cm.setSize(null, "auto");\n
+    cm.setValue("x\\n");\n
+    cm.execCommand("goDocEnd");\n
+    cm.execCommand("delCharBefore");\n
+    eq(cm.getScrollInfo().top, 0);\n
+    cm.scrollTo(null, 10);\n
+    is(cm.getScrollInfo().top < 5);\n
+  }, {lineNumbers: true});\n
 })();\n
 
 
@@ -141,7 +151,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3804</int> </value>
+            <value> <int>4279</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

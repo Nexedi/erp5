@@ -112,6 +112,11 @@ highlighted by the mode shown in it).</p>\n
   string (since JS provides no way to find out where a group matched),\n
   and this property must hold an array of token styles that has one\n
   style for each matched group.</dd>\n
+  <dt><code><strong>sol</strong></code>: boolean</dt>\n
+  <dd>When true, this token will only match at the start of the line.\n
+  (The <code>^</code> regexp marker doesn\'t work as you\'d expect in\n
+  this context because of limitations in JavaScript\'s RegExp\n
+  API.)</dd>\n
   <dt><code><strong>next</strong>: string</code></dt>\n
   <dd>When a <code>next</code> property is present, the mode will\n
   transfer to the state named by the property when the token is\n

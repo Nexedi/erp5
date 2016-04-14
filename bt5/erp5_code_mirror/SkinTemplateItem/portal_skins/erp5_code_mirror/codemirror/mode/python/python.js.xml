@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897136.51</string> </value>
+            <value> <string>ts60604383.81</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -65,7 +65,7 @@
                         "unichr", "unicode", "xrange", "False", "True", "None"],\n
              keywords: ["exec", "print"]};\n
   var py3 = {builtins: ["ascii", "bytes", "exec", "print"],\n
-             keywords: ["nonlocal", "False", "True", "None"]};\n
+             keywords: ["nonlocal", "False", "True", "None", "async", "await"]};\n
 \n
   CodeMirror.registerHelper("hintWords", "python", commonKeywords.concat(commonBuiltins));\n
 \n
@@ -76,29 +76,29 @@
   CodeMirror.defineMode("python", function(conf, parserConf) {\n
     var ERRORCLASS = "error";\n
 \n
-    var singleDelimiters = parserConf.singleDelimiters || new RegExp("^[\\\\(\\\\)\\\\[\\\\]\\\\{\\\\}@,:`=;\\\\.]");\n
-    var doubleOperators = parserConf.doubleOperators || new RegExp("^((==)|(!=)|(<=)|(>=)|(<>)|(<<)|(>>)|(//)|(\\\\*\\\\*))");\n
-    var doubleDelimiters = parserConf.doubleDelimiters || new RegExp("^((\\\\+=)|(\\\\-=)|(\\\\*=)|(%=)|(/=)|(&=)|(\\\\|=)|(\\\\^=))");\n
-    var tripleDelimiters = parserConf.tripleDelimiters || new RegExp("^((//=)|(>>=)|(<<=)|(\\\\*\\\\*=))");\n
+    var singleDelimiters = parserConf.singleDelimiters || /^[\\(\\)\\[\\]\\{\\}@,:`=;\\.]/;\n
+    var doubleOperators = parserConf.doubleOperators || /^([!<>]==|<>|<<|>>|\\/\\/|\\*\\*)/;\n
+    var doubleDelimiters = parserConf.doubleDelimiters || /^(\\+=|\\-=|\\*=|%=|\\/=|&=|\\|=|\\^=)/;\n
+    var tripleDelimiters = parserConf.tripleDelimiters || /^(\\/\\/=|>>=|<<=|\\*\\*=)/;\n
 \n
-    if (parserConf.version && parseInt(parserConf.version, 10) == 3){\n
+    if (parserConf.version && parseInt(parserConf.version, 10) == 3) {\n
         // since http://legacy.python.org/dev/peps/pep-0465/ @ is also an operator\n
-        var singleOperators = parserConf.singleOperators || new RegExp("^[\\\\+\\\\-\\\\*/%&|\\\\^~<>!@]");\n
-        var identifiers = parserConf.identifiers|| new RegExp("^[_A-Za-z\\u00A1-\\uFFFF][_A-Za-z0-9\\u00A1-\\uFFFF]*");\n
+        var singleOperators = parserConf.singleOperators || /^[\\+\\-\\*\\/%&|\\^~<>!@]/;\n
+        var identifiers = parserConf.identifiers|| /^[_A-Za-z\\u00A1-\\uFFFF][_A-Za-z0-9\\u00A1-\\uFFFF]*/;\n
     } else {\n
-        var singleOperators = parserConf.singleOperators || new RegExp("^[\\\\+\\\\-\\\\*/%&|\\\\^~<>!]");\n
-        var identifiers = parserConf.identifiers|| new RegExp("^[_A-Za-z][_A-Za-z0-9]*");\n
+        var singleOperators = parserConf.singleOperators || /^[\\+\\-\\*\\/%&|\\^~<>!]/;\n
+        var identifiers = parserConf.identifiers|| /^[_A-Za-z][_A-Za-z0-9]*/;\n
     }\n
 \n
     var hangingIndent = parserConf.hangingIndent || conf.indentUnit;\n
 \n
     var myKeywords = commonKeywords, myBuiltins = commonBuiltins;\n
-    if(parserConf.extra_keywords != undefined){\n
+    if (parserConf.extra_keywords != undefined)\n
       myKeywords = myKeywords.concat(parserConf.extra_keywords);\n
-    }\n
-    if(parserConf.extra_builtins != undefined){\n
+\n
+    if (parserConf.extra_builtins != undefined)\n
       myBuiltins = myBuiltins.concat(parserConf.extra_builtins);\n
-    }\n
+\n
     if (parserConf.version && parseInt(parserConf.version, 10) == 3) {\n
       myKeywords = myKeywords.concat(py3.keywords);\n
       myBuiltins = myBuiltins.concat(py3.builtins);\n
@@ -113,13 +113,14 @@
 \n
     // tokenizers\n
     function tokenBase(stream, state) {\n
+      if (stream.sol()) state.indent = stream.indentation()\n
       // Handle scope changes\n
       if (stream.sol() && top(state).type == "py") {\n
         var scopeOffset = top(state).offset;\n
         if (stream.eatSpace()) {\n
           var lineOffset = stream.indentation();\n
           if (lineOffset > scopeOffset)\n
-            pushScope(stream, state, "py");\n
+            pushPyScope(state);\n
           else if (lineOffset < scopeOffset && dedent(stream, state))\n
             state.errorToken = true;\n
           return null;\n
@@ -188,17 +189,18 @@
 \n
       // Handle operators and Delimiters\n
       if (stream.match(tripleDelimiters) || stream.match(doubleDelimiters))\n
-        return null;\n
+        return "punctuation";\n
 \n
-      if (stream.match(doubleOperators)\n
-          || stream.match(singleOperators)\n
-          || stream.match(wordOperators))\n
+      if (stream.match(doubleOperators) || stream.match(singleOperators))\n
         return "operator";\n
 \n
       if (stream.match(singleDelimiters))\n
-        return null;\n
+        return "punctuation";\n
 \n
-      if (stream.match(keywords))\n
+      if (state.lastToken == "." && stream.match(identifiers))\n
+        return "property";\n
+\n
+      if (stream.match(keywords) || stream.match(wordOperators))\n
         return "keyword";\n
 \n
       if (stream.match(builtins))\n
@@ -251,16 +253,18 @@
       return tokenString;\n
     }\n
 \n
-    function pushScope(stream, state, type) {\n
-      var offset = 0, align = null;\n
-      if (type == "py") {\n
-        while (top(state).type != "py")\n
-          state.scopes.pop();\n
-      }\n
-      offset = top(state).offset + (type == "py" ? conf.indentUnit : hangingIndent);\n
-      if (type != "py" && !stream.match(/^(\\s|#.*)*$/, false))\n
-        align = stream.column() + 1;\n
-      state.scopes.push({offset: offset, type: type, align: align});\n
+    function pushPyScope(state) {\n
+      while (top(state).type != "py") state.scopes.pop()\n
+      state.scopes.push({offset: top(state).offset + conf.indentUnit,\n
+                         type: "py",\n
+                         align: null})\n
+    }\n
+\n
+    function pushBracketScope(stream, state, type) {\n
+      var align = stream.match(/^([\\s\\[\\{\\(]|#.*)*$/, false) ? null : stream.column() + 1\n
+      state.scopes.push({offset: state.indent + hangingIndent,\n
+                         type: type,\n
+                         align: align})\n
     }\n
 \n
     function dedent(stream, state) {\n
@@ -276,28 +280,16 @@
       var style = state.tokenize(stream, state);\n
       var current = stream.current();\n
 \n
-      // Handle \'.\' connected identifiers\n
-      if (current == ".") {\n
-        style = stream.match(identifiers, false) ? null : ERRORCLASS;\n
-        if (style == null && state.lastStyle == "meta") {\n
-          // Apply \'meta\' style to \'.\' connected identifiers when\n
-          // appropriate.\n
-          style = "meta";\n
-        }\n
-        return style;\n
-      }\n
-\n
       // Handle decorators\n
-      if (current == "@"){\n
-        if(parserConf.version && parseInt(parserConf.version, 10) == 3){\n
-            return stream.match(identifiers, false) ? "meta" : "operator";\n
-        } else {\n
-            return stream.match(identifiers, false) ? "meta" : ERRORCLASS;\n
-        }\n
+      if (current == "@") {\n
+        if (parserConf.version && parseInt(parserConf.version, 10) == 3)\n
+          return stream.match(identifiers, false) ? "meta" : "operator";\n
+        else\n
+          return stream.match(identifiers, false) ? "meta" : ERRORCLASS;\n
       }\n
 \n
       if ((style == "variable" || style == "builtin")\n
-          && state.lastStyle == "meta")\n
+          && state.lastToken == "meta")\n
         style = "meta";\n
 \n
       // Handle scope changes.\n
@@ -306,15 +298,15 @@
 \n
       if (current == "lambda") state.lambda = true;\n
       if (current == ":" && !state.lambda && top(state).type == "py")\n
-        pushScope(stream, state, "py");\n
+        pushPyScope(state);\n
 \n
       var delimiter_index = current.length == 1 ? "[({".indexOf(current) : -1;\n
       if (delimiter_index != -1)\n
-        pushScope(stream, state, "])}".slice(delimiter_index, delimiter_index+1));\n
+        pushBracketScope(stream, state, "])}".slice(delimiter_index, delimiter_index+1));\n
 \n
       delimiter_index = "])}".indexOf(current);\n
       if (delimiter_index != -1) {\n
-        if (top(state).type == current) state.scopes.pop();\n
+        if (top(state).type == current) state.indent = state.scopes.pop().offset - hangingIndent\n
         else return ERRORCLASS;\n
       }\n
       if (state.dedent > 0 && stream.eol() && top(state).type == "py") {\n
@@ -330,7 +322,7 @@
         return {\n
           tokenize: tokenBase,\n
           scopes: [{offset: basecolumn || 0, type: "py", align: null}],\n
-          lastStyle: null,\n
+          indent: basecolumn || 0,\n
           lastToken: null,\n
           lambda: false,\n
           dedent: 0\n
@@ -342,11 +334,9 @@
         if (addErr) state.errorToken = false;\n
         var style = tokenLexer(stream, state);\n
 \n
-        state.lastStyle = style;\n
-\n
-        var current = stream.current();\n
-        if (current && style)\n
-          state.lastToken = current;\n
+        if (style && style != "comment")\n
+          state.lastToken = (style == "keyword" || style == "punctuation") ? stream.current() : style;\n
+        if (style == "punctuation") style = null;\n
 \n
         if (stream.eol() && state.lambda)\n
           state.lambda = false;\n
@@ -357,16 +347,15 @@
         if (state.tokenize != tokenBase)\n
           return state.tokenize.isString ? CodeMirror.Pass : 0;\n
 \n
-        var scope = top(state);\n
-        var closing = textAfter && textAfter.charAt(0) == scope.type;\n
+        var scope = top(state), closing = scope.type == textAfter.charAt(0)\n
         if (scope.align != null)\n
-          return scope.align - (closing ? 1 : 0);\n
-        else if (closing && state.scopes.length > 1)\n
-          return state.scopes[state.scopes.length - 2].offset;\n
+          return scope.align - (closing ? 1 : 0)\n
         else\n
-          return scope.offset;\n
+          return scope.offset - (closing ? hangingIndent : 0)\n
       },\n
 \n
+      electricInput: /^\\s*[\\}\\]\\)]$/,\n
+      closeBrackets: {triples: "\'\\""},\n
       lineComment: "#",\n
       fold: "indent"\n
     };\n
@@ -395,7 +384,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>12869</int> </value>
+            <value> <int>12627</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

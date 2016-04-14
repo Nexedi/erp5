@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897150.22</string> </value>
+            <value> <string>ts60604364.41</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -24,17 +24,22 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>{\n
+            <value> <string encoding="cdata"><![CDATA[
+
+{\n
     "name": "codemirror",\n
-    "version":"4.11.0",\n
+    "version":"5.13.4",\n
     "main": "lib/codemirror.js",\n
     "description": "In-browser code editing made bearable",\n
-    "licenses": [{"type": "MIT",\n
-                  "url": "http://codemirror.net/LICENSE"}],\n
+    "license": "MIT",\n
     "directories": {"lib": "./lib"},\n
-    "scripts": {"test": "node ./test/run.js"},\n
+    "scripts": {\n
+      "test": "node ./test/run.js",\n
+      "lint": "bin/lint"\n
+    },\n
     "devDependencies": {"node-static": "0.6.0",\n
-                        "phantomjs": "1.9.2-5"},\n
+                        "phantomjs": "1.9.2-5",\n
+                        "blint": ">=0.1.1"},\n
     "bugs": "http://github.com/codemirror/CodeMirror/issues",\n
     "keywords": ["JavaScript", "CodeMirror", "Editor"],\n
     "homepage": "http://codemirror.net",\n
@@ -42,9 +47,16 @@
                     "email": "marijnh@gmail.com",\n
                     "web": "http://marijnhaverbeke.nl"}],\n
     "repository": {"type": "git",\n
-                   "url": "https://github.com/codemirror/CodeMirror.git"}\n
+                   "url": "https://github.com/codemirror/CodeMirror.git"},\n
+    "jspm": {\n
+      "directories": {},\n
+      "dependencies": {},\n
+      "devDependencies": {}\n
+    }\n
 }\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -52,7 +64,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>844</int> </value>
+            <value> <int>955</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

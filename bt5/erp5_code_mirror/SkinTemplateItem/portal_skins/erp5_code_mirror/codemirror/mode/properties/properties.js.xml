@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897142.78</string> </value>
+            <value> <string>ts60604383.51</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -79,7 +79,7 @@ CodeMirror.defineMode("properties", function() {\n
         state.position = "quote";\n
         return null;\n
       } else if (ch === "\\\\" && state.position === "quote") {\n
-        if (stream.next() !== "u") {    // u = Unicode sequence \\u1234\n
+        if (stream.eol()) {  // end of line?\n
           // Multiline value\n
           state.nextMultiline = true;\n
         }\n
@@ -114,7 +114,7 @@ CodeMirror.defineMIME("text/x-ini", "properties");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2195</int> </value>
+            <value> <int>2169</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

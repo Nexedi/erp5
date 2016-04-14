@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Sieve (RFC5228) mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="sieve.js"></script>\n
+<style>.CodeMirror {background: #f8f8f8;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Sieve (RFC5228)</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Sieve (RFC5228) mode</h2>\n
+<form><textarea id="code" name="code">\n
+#\n
+# Example Sieve Filter\n
+# Declare any optional features or extension used by the script\n
+#\n
+\n
+require ["fileinto", "reject"];\n
+\n
+#\n
+# Reject any large messages (note that the four leading dots get\n
+# "stuffed" to three)\n
+#\n
+if size :over 1M\n
+{\n
+  reject text:\n
+Please do not send me large attachments.\n
+Put your file on a server and send me the URL.\n
+Thank you.\n
+.... Fred\n
+.\n
+;\n
+  stop;\n
+}\n
+\n
+#\n
+# Handle messages from known mailing lists\n
+# Move messages from IETF filter discussion list to filter folder\n
+#\n
+if header :is "Sender" "owner-ietf-mta-filters@imc.org"\n
+{\n
+  fileinto "filter";  # move to "filter" folder\n
+}\n
+#\n
+# Keep all messages to or from people in my company\n
+#\n
+elsif address :domain :is ["From", "To"] "example.com"\n
+{\n
+  keep;               # keep in "In" folder\n
+}\n
+\n
+#\n
+# Try and catch unsolicited email.  If a message is not to me,\n
+# or it contains a subject known to be spam, file it away.\n
+#\n
+elsif anyof (not address :all :contains\n
+               ["To", "Cc", "Bcc"] "me@example.com",\n
+             header :matches "subject"\n
+               ["*make*money*fast*", "*university*dipl*mas*"])\n
+{\n
+  # If message header does not contain my address,\n
+  # it\'s from a list.\n
+  fileinto "spam";   # move to "spam" folder\n
+}\n
+else\n
+{\n
+  # Move all other (non-company) mail to "personal"\n
+  # folder.\n
+  fileinto "personal";\n
+}\n
+</textarea></form>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {});\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>application/sieve</code>.</p>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

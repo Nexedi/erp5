@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts60604378.27</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function() {\n
+  var mode = CodeMirror.getMode({indentUnit: 2}, "dylan");\n
+  function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1)); }\n
+\n
+  MT(\'comments\',\n
+     \'[comment // This is a line comment]\',\n
+     \'[comment /* This is a block comment */]\',\n
+     \'[comment /* This is a multi]\',\n
+     \'[comment line comment]\',\n
+     \'[comment */]\',\n
+     \'[comment /* And this is a /*]\',\n
+     \'[comment /* nested */ comment */]\');\n
+\n
+  MT(\'unary_operators\',\n
+     \'[operator -][variable a]\',\n
+     \'[operator -] [variable a]\',\n
+     \'[operator ~][variable a]\',\n
+     \'[operator ~] [variable a]\');\n
+\n
+  MT(\'binary_operators\',\n
+     \'[variable a] [operator +] [variable b]\',\n
+     \'[variable a] [operator -] [variable b]\',\n
+     \'[variable a] [operator *] [variable b]\',\n
+     \'[variable a] [operator /] [variable b]\',\n
+     \'[variable a] [operator ^] [variable b]\',\n
+     \'[variable a] [operator =] [variable b]\',\n
+     \'[variable a] [operator ==] [variable b]\',\n
+     \'[variable a] [operator ~=] [variable b]\',\n
+     \'[variable a] [operator ~==] [variable b]\',\n
+     \'[variable a] [operator <] [variable b]\',\n
+     \'[variable a] [operator <=] [variable b]\',\n
+     \'[variable a] [operator >] [variable b]\',\n
+     \'[variable a] [operator >=] [variable b]\',\n
+     \'[variable a] [operator &] [variable b]\',\n
+     \'[variable a] [operator |] [variable b]\',\n
+     \'[variable a] [operator :=] [variable b]\');\n
+\n
+  MT(\'integers\',\n
+     \'[number 1]\',\n
+     \'[number 123]\',\n
+     \'[number -123]\',\n
+     \'[number +456]\',\n
+     \'[number #b010]\',\n
+     \'[number #o073]\',\n
+     \'[number #xabcDEF123]\');\n
+\n
+  MT(\'floats\',\n
+     \'[number .3]\',\n
+     \'[number -1.]\',\n
+     \'[number -2.335]\',\n
+     \'[number +3.78d1]\',\n
+     \'[number 3.78s-1]\',\n
+     \'[number -3.32e+5]\');\n
+\n
+  MT(\'characters_and_strings\',\n
+     "[string \'a\']",\n
+     "[string \'\\\\\\\\\'\']",\n
+     \'[string ""]\',\n
+     \'[string "a"]\',\n
+     \'[string "abc def"]\',\n
+     \'[string "More escaped characters: \\\\\\\\\\\\\\\\ \\\\\\\\a \\\\\\\\b \\\\\\\\e \\\\\\\\f \\\\\\\\n \\\\\\\\r \\\\\\\\t \\\\\\\\0 ..."]\');\n
+\n
+  MT(\'brackets\',\n
+     \'[bracket #[[]]]\',\n
+     \'[bracket #()]\',\n
+     \'[bracket #(][number 1][bracket )]\',\n
+     \'[bracket [[][number 1][punctuation ,] [number 3][bracket ]]]\',\n
+     \'[bracket ()]\',\n
+     \'[bracket {}]\',\n
+     \'[keyword if] [bracket (][variable foo][bracket )]\',\n
+     \'[bracket (][number 1][bracket )]\',\n
+     \'[bracket [[][number 1][bracket ]]]\');\n
+\n
+  MT(\'hash_words\',\n
+     \'[punctuation ##]\',\n
+     \'[atom #f]\', \'[atom #F]\',\n
+     \'[atom #t]\', \'[atom #T]\',\n
+     \'[atom #all-keys]\',\n
+     \'[atom #include]\',\n
+     \'[atom #key]\',\n
+     \'[atom #next]\',\n
+     \'[atom #rest]\',\n
+     \'[string #"foo"]\',\n
+     \'[error #invalid]\');\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2738</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

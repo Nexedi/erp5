@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897295.92</string> </value>
+            <value> <string>ts60604372.04</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -109,7 +109,7 @@
     if (marks.length) {\n
       // Kludge to work around the IE bug from issue #1193, where text\n
       // input stops going to the textare whever this fires.\n
-      if (ie_lt8 && cm.state.focused) cm.display.input.focus();\n
+      if (ie_lt8 && cm.state.focused) cm.focus();\n
 \n
       var clear = function() {\n
         cm.operation(function() {\n
@@ -156,7 +156,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5268</int> </value>
+            <value> <int>5254</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

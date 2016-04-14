@@ -31,6 +31,7 @@
             <value> <string>.CodeMirror-Tern-completion {\n
   padding-left: 22px;\n
   position: relative;\n
+  line-height: 1.5;\n
 }\n
 .CodeMirror-Tern-completion:before {\n
   position: absolute;\n

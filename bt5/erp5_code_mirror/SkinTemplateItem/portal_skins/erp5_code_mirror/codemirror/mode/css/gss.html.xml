@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Closure Stylesheets (GSS) mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<link rel="stylesheet" href="../../addon/hint/show-hint.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="css.js"></script>\n
+<script src="../../addon/hint/show-hint.js"></script>\n
+<script src="../../addon/hint/css-hint.js"></script>\n
+<style>.CodeMirror {background: #f8f8f8;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Closure Stylesheets (GSS)</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Closure Stylesheets (GSS) mode</h2>\n
+<form><textarea id="code" name="code">\n
+/* Some example Closure Stylesheets */\n
+\n
+@provide \'some.styles\';\n
+\n
+@require \'other.styles\';\n
+\n
+@component {\n
+\n
+@def FONT_FAMILY           "Times New Roman", Georgia, Serif;\n
+@def FONT_SIZE_NORMAL      15px;\n
+@def FONT_NORMAL           normal FONT_SIZE_NORMAL FONT_FAMILY;\n
+\n
+@def BG_COLOR              rgb(235, 239, 249);\n
+\n
+@def DIALOG_BORDER_COLOR   rgb(107, 144, 218);\n
+@def DIALOG_BG_COLOR       BG_COLOR;\n
+\n
+@def LEFT_HAND_NAV_WIDTH    180px;\n
+@def LEFT_HAND_NAV_PADDING  3px;\n
+\n
+@defmixin size(WIDTH, HEIGHT) {\n
+  width: WIDTH;\n
+  height: HEIGHT;\n
+}\n
+\n
+body {\n
+  background-color: BG_COLOR;\n
+  margin: 0;\n
+  padding: 3em 6em;\n
+  font: FONT_NORMAL;\n
+  color: #000;\n
+}\n
+\n
+#navigation a {\n
+  font-weight: bold;\n
+  text-decoration: none !important;\n
+}\n
+\n
+.dialog {\n
+  background-color: DIALOG_BG_COLOR;\n
+  border: 1px solid DIALOG_BORDER_COLOR;\n
+}\n
+\n
+.content {\n
+  position: absolute;\n
+  margin-left: add(LEFT_HAND_NAV_PADDING,  /* padding left */\n
+                   LEFT_HAND_NAV_WIDTH,\n
+                   LEFT_HAND_NAV_PADDING); /* padding right */\n
+\n
+}\n
+\n
+.logo {\n
+  @mixin size(150px, 55px);\n
+  background-image: url(\'http://www.google.com/images/logo_sm.gif\');\n
+}\n
+\n
+}\n
+</textarea></form>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        extraKeys: {"Ctrl-Space": "autocomplete"},\n
+        lineNumbers: true,\n
+        matchBrackets: "text/x-less",\n
+        mode: "text/x-gss"\n
+      });\n
+    </script>\n
+\n
+    <p>A mode for <a href="https://github.com/google/closure-stylesheets">Closure Stylesheets</a> (GSS).</p>\n
+    <p><strong>MIME type defined:</strong> <code>text/x-gss</code>.</p>\n
+\n
+    <p><strong>Parsing/Highlighting Tests:</strong> <a href="../../test/index.html#gss_*">normal</a>,  <a href="../../test/index.html#verbose,gss_*">verbose</a>.</p>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>gss.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

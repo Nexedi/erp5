@@ -49,7 +49,7 @@
 <script src="../mode/css/css.js"></script>\n
 <script src="//ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>\n
 <script src="https://rawgithub.com/zaach/jsonlint/79b553fb65c192add9066da64043458981b3972b/lib/jsonlint.js"></script>\n
-<script src="https://rawgithub.com/stubbornella/csslint/master/release/csslint.js"></script>\n
+<script src="http://csslint.net/js/csslint.js"></script>\n
 <script src="../addon/lint/lint.js"></script>\n
 <script src="../addon/lint/javascript-lint.js"></script>\n
 <script src="../addon/lint/json-lint.js"></script>\n

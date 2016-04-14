@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>seti.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+\n
+    Name:       seti\n
+    Author:     Michael Kaminsky (http://github.com/mkaminsky11)\n
+\n
+    Original seti color scheme by Jesse Weed (https://github.com/jesseweed/seti-syntax)\n
+\n
+*/\n
+\n
+\n
+.cm-s-seti.CodeMirror {\n
+  background-color: #151718 !important;\n
+  color: #CFD2D1 !important;\n
+  border: none;\n
+}\n
+.cm-s-seti .CodeMirror-gutters {\n
+  color: #404b53;\n
+  background-color: #0E1112;\n
+  border: none;\n
+}\n
+.cm-s-seti .CodeMirror-cursor { border-left: solid thin #f8f8f0; }\n
+.cm-s-seti .CodeMirror-linenumber { color: #6D8A88; }\n
+.cm-s-seti.CodeMirror-focused div.CodeMirror-selected { background: rgba(255, 255, 255, 0.10); }\n
+.cm-s-seti .CodeMirror-line::selection, .cm-s-seti .CodeMirror-line > span::selection, .cm-s-seti .CodeMirror-line > span > span::selection { background: rgba(255, 255, 255, 0.10); }\n
+.cm-s-seti .CodeMirror-line::-moz-selection, .cm-s-seti .CodeMirror-line > span::-moz-selection, .cm-s-seti .CodeMirror-line > span > span::-moz-selection { background: rgba(255, 255, 255, 0.10); }\n
+.cm-s-seti span.cm-comment { color: #41535b; }\n
+.cm-s-seti span.cm-string, .cm-s-seti span.cm-string-2 { color: #55b5db; }\n
+.cm-s-seti span.cm-number { color: #cd3f45; }\n
+.cm-s-seti span.cm-variable { color: #55b5db; }\n
+.cm-s-seti span.cm-variable-2 { color: #a074c4; }\n
+.cm-s-seti span.cm-def { color: #55b5db; }\n
+.cm-s-seti span.cm-keyword { color: #ff79c6; }\n
+.cm-s-seti span.cm-operator { color: #9fca56; }\n
+.cm-s-seti span.cm-keyword { color: #e6cd69; }\n
+.cm-s-seti span.cm-atom { color: #cd3f45; }\n
+.cm-s-seti span.cm-meta { color: #55b5db; }\n
+.cm-s-seti span.cm-tag { color: #55b5db; }\n
+.cm-s-seti span.cm-attribute { color: #9fca56; }\n
+.cm-s-seti span.cm-qualifier { color: #9fca56; }\n
+.cm-s-seti span.cm-property { color: #a074c4; }\n
+.cm-s-seti span.cm-variable-3 { color: #9fca56; }\n
+.cm-s-seti span.cm-builtin { color: #9fca56; }\n
+.cm-s-seti .CodeMirror-activeline-background { background: #101213; }\n
+.cm-s-seti .CodeMirror-matchingbracket { text-decoration: underline; color: white !important; }\n
+
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,520 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: LiveScript mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<link rel="stylesheet" href="../../theme/solarized.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="livescript.js"></script>\n
+<style>.CodeMirror {font-size: 80%;border-top: 1px solid silver; border-bottom: 1px solid silver;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">LiveScript</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>LiveScript mode</h2>\n
+<form><textarea id="code" name="code">\n
+# LiveScript mode for CodeMirror\n
+# The following script, prelude.ls, is used to\n
+# demonstrate LiveScript mode for CodeMirror.\n
+#   https://github.com/gkz/prelude-ls\n
+\n
+export objToFunc = objToFunc = (obj) ->\n
+  (key) -> obj[key]\n
+\n
+export each = (f, xs) -->\n
+  if typeof! xs is \\Object\n
+    for , x of xs then f x\n
+  else\n
+    for x in xs then f x\n
+  xs\n
+\n
+export map = (f, xs) -->\n
+  f = objToFunc f if typeof! f isnt \\Function\n
+  type = typeof! xs\n
+  if type is \\Object\n
+    {[key, f x] for key, x of xs}\n
+  else\n
+    result = [f x for x in xs]\n
+    if type is \\String then result * \'\' else result\n
+\n
+export filter = (f, xs) -->\n
+  f = objToFunc f if typeof! f isnt \\Function\n
+  type = typeof! xs\n
+  if type is \\Object\n
+    {[key, x] for key, x of xs when f x}\n
+  else\n
+    result = [x for x in xs when f x]\n
+    if type is \\String then result * \'\' else result\n
+\n
+export reject = (f, xs) -->\n
+  f = objToFunc f if typeof! f isnt \\Function\n
+  type = typeof! xs\n
+  if type is \\Object\n
+    {[key, x] for key, x of xs when not f x}\n
+  else\n
+    result = [x for x in xs when not f x]\n
+    if type is \\String then result * \'\' else result\n
+\n
+export partition = (f, xs) -->\n
+  f = objToFunc f if typeof! f isnt \\Function\n
+  type = typeof! xs\n
+  if type is \\Object\n
+    passed = {}\n
+    failed = {}\n
+    for key, x of xs\n
+      (if f x then passed else failed)[key] = x\n
+  else\n
+    passed = []\n
+    failed = []\n
+    for x in xs\n
+      (if f x then passed else failed)push x\n
+    if type is \\String\n
+      passed *= \'\'\n
+      failed *= \'\'\n
+  [passed, failed]\n
+\n
+export find = (f, xs) -->\n
+  f = objToFunc f if typeof! f isnt \\Function\n
+  if typeof! xs is \\Object\n
+    for , x of xs when f x then return x\n
+  else\n
+    for x in xs when f x then return x\n
+  void\n
+\n
+export head = export first = (xs) ->\n
+  return void if not xs.length\n
+  xs.0\n
+\n
+export tail = (xs) ->\n
+  return void if not xs.length\n
+  xs.slice 1\n
+\n
+export last = (xs) ->\n
+  return void if not xs.length\n
+  xs[*-1]\n
+\n
+export initial = (xs) ->\n
+  return void if not xs.length\n
+  xs.slice 0 xs.length - 1\n
+\n
+export empty = (xs) ->\n
+  if typeof! xs is \\Object\n
+    for x of xs then return false\n
+    return yes\n
+  not xs.length\n
+\n
+export values = (obj) ->\n
+  [x for , x of obj]\n
+\n
+export keys = (obj) ->\n
+  [x for x of obj]\n
+\n
+export len = (xs) ->\n
+  xs = values xs if typeof! xs is \\Object\n
+  xs.length\n
+\n
+export cons = (x, xs) -->\n
+  if typeof! xs is \\String then x + xs else [x] ++ xs\n
+\n
+export append = (xs, ys) -->\n
+  if typeof! ys is \\String then xs + ys else xs ++ ys\n
+\n
+export join = (sep, xs) -->\n
+  xs = values xs if typeof! xs is \\Object\n
+  xs.join sep\n
+\n
+export reverse = (xs) ->\n
+  if typeof! xs is \\String\n
+  then (xs / \'\')reverse! * \'\'\n
+  else xs.slice!reverse!\n
+\n
+export fold = export foldl = (f, memo, xs) -->\n
+  if typeof! xs is \\Object\n
+    for , x of xs then memo = f memo, x\n
+  else\n
+    for x in xs then memo = f memo, x\n
+  memo\n
+\n
+export fold1 = export foldl1 = (f, xs) --> fold f, xs.0, xs.slice 1\n
+\n
+export foldr = (f, memo, xs) --> fold f, memo, xs.slice!reverse!\n
+\n
+export foldr1 = (f, xs) -->\n
+  xs.=slice!reverse!\n
+  fold f, xs.0, xs.slice 1\n
+\n
+export unfoldr = export unfold = (f, b) -->\n
+  if (f b)?\n
+    [that.0] ++ unfoldr f, that.1\n
+  else\n
+    []\n
+\n
+export andList = (xs) ->\n
+  for x in xs when not x\n
+    return false\n
+  true\n
+\n
+export orList = (xs) ->\n
+  for x in xs when x\n
+    return true\n
+  false\n
+\n
+export any = (f, xs) -->\n
+  f = objToFunc f if typeof! f isnt \\Function\n
+  for x in xs when f x\n
+    return yes\n
+  no\n
+\n
+export all = (f, xs) -->\n
+  f = objToFunc f if typeof! f isnt \\Function\n
+  for x in xs when not f x\n
+    return no\n
+  yes\n
+\n
+export unique = (xs) ->\n
+  result = []\n
+  if typeof! xs is \\Object\n
+    for , x of xs when x not in result then result.push x\n
+  else\n
+    for x   in xs when x not in result then result.push x\n
+  if typeof! xs is \\String then result * \'\' else result\n
+\n
+export sort = (xs) ->\n
+  xs.concat!sort (x, y) ->\n
+    | x > y =>  1\n
+    | x < y => -1\n
+    | _     =>  0\n
+\n
+export sortBy = (f, xs) -->\n
+  return [] unless xs.length\n
+  xs.concat!sort f\n
+\n
+export compare = (f, x, y) -->\n
+  | (f x) > (f y) =>  1\n
+  | (f x) < (f y) => -1\n
+  | otherwise     =>  0\n
+\n
+export sum = (xs) ->\n
+  result = 0\n
+  if typeof! xs is \\Object\n
+    for , x of xs then result += x\n
+  else\n
+    for x   in xs then result += x\n
+  result\n
+\n
+export product = (xs) ->\n
+  result = 1\n
+  if typeof! xs is \\Object\n
+    for , x of xs then result *= x\n
+  else\n
+    for x   in xs then result *= x\n
+  result\n
+\n
+export mean = export average = (xs) -> (sum xs) / len xs\n
+\n
+export concat = (xss) -> fold append, [], xss\n
+\n
+export concatMap = (f, xs) --> fold ((memo, x) -> append memo, f x), [], xs\n
+\n
+export listToObj = (xs) ->\n
+  {[x.0, x.1] for x in xs}\n
+\n
+export maximum = (xs) -> fold1 (>?), xs\n
+\n
+export minimum = (xs) -> fold1 (<?), xs\n
+\n
+export scan = export scanl = (f, memo, xs) -->\n
+  last = memo\n
+  if typeof! xs is \\Object\n
+  then [memo] ++ [last = f last, x for , x of xs]\n
+  else [memo] ++ [last = f last, x for x in xs]\n
+\n
+export scan1 = export scanl1 = (f, xs) --> scan f, xs.0, xs.slice 1\n
+\n
+export scanr = (f, memo, xs) -->\n
+  xs.=slice!reverse!\n
+  scan f, memo, xs .reverse!\n
+\n
+export scanr1 = (f, xs) -->\n
+  xs.=slice!reverse!\n
+  scan f, xs.0, xs.slice 1 .reverse!\n
+\n
+export replicate = (n, x) -->\n
+  result = []\n
+  i = 0\n
+  while i < n, ++i then result.push x\n
+  result\n
+\n
+export take = (n, xs) -->\n
+  | n <= 0\n
+    if typeof! xs is \\String then \'\' else []\n
+  | not xs.length => xs\n
+  | otherwise     => xs.slice 0, n\n
+\n
+export drop = (n, xs) -->\n
+  | n <= 0        => xs\n
+  | not xs.length => xs\n
+  | otherwise     => xs.slice n\n
+\n
+export splitAt = (n, xs) --> [(take n, xs), (drop n, xs)]\n
+\n
+export takeWhile = (p, xs) -->\n
+  return xs if not xs.length\n
+  p = objToFunc p if typeof! p isnt \\Function\n
+  result = []\n
+  for x in xs\n
+    break if not p x\n
+    result.push x\n
+  if typeof! xs is \\String then result * \'\' else result\n
+\n
+export dropWhile = (p, xs) -->\n
+  return xs if not xs.length\n
+  p = objToFunc p if typeof! p isnt \\Function\n
+  i = 0\n
+  for x in xs\n
+    break if not p x\n
+    ++i\n
+  drop i, xs\n
+\n
+export span = (p, xs) --> [(takeWhile p, xs), (dropWhile p, xs)]\n
+\n
+export breakIt = (p, xs) --> span (not) << p, xs\n
+\n
+export zip = (xs, ys) -->\n
+  result = []\n
+  for zs, i in [xs, ys]\n
+    for z, j in zs\n
+      result.push [] if i is 0\n
+      result[j]?push z\n
+  result\n
+\n
+export zipWith = (f,xs, ys) -->\n
+  f = objToFunc f if typeof! f isnt \\Function\n
+  if not xs.length or not ys.length\n
+    []\n
+  else\n
+    [f.apply this, zs for zs in zip.call this, xs, ys]\n
+\n
+export zipAll = (...xss) ->\n
+  result = []\n
+  for xs, i in xss\n
+    for x, j in xs\n
+      result.push [] if i is 0\n
+      result[j]?push x\n
+  result\n
+\n
+export zipAllWith = (f, ...xss) ->\n
+  f = objToFunc f if typeof! f isnt \\Function\n
+  if not xss.0.length or not xss.1.length\n
+    []\n
+  else\n
+    [f.apply this, xs for xs in zipAll.apply this, xss]\n
+\n
+export compose = (...funcs) ->\n
+  ->\n
+    args = arguments\n
+    for f in funcs\n
+      args = [f.apply this, args]\n
+    args.0\n
+\n
+export curry = (f) ->\n
+  curry$ f # using util method curry$ from livescript\n
+\n
+export id = (x) -> x\n
+\n
+export flip = (f, x, y) --> f y, x\n
+\n
+export fix = (f) ->\n
+  ( (g, x) -> -> f(g g) ...arguments ) do\n
+    (g, x) -> -> f(g g) ...arguments\n
+\n
+export lines = (str) ->\n
+  return [] if not str.length\n
+  str / \\\\n\n
+\n
+export unlines = (strs) -> strs * \\\\n\n
+\n
+export words = (str) ->\n
+  return [] if not str.length\n
+  str / /[ ]+/\n
+\n
+export unwords = (strs) -> strs * \' \'\n
+\n
+export max = (>?)\n
+\n
+export min = (<?)\n
+\n
+export negate = (x) -> -x\n
+\n
+export abs = Math.abs\n
+\n
+export signum = (x) ->\n
+  | x < 0     => -1\n
+  | x > 0     =>  1\n
+  | otherwise =>  0\n
+\n
+export quot = (x, y) --> ~~(x / y)\n
+\n
+export rem = (%)\n
+\n
+export div = (x, y) --> Math.floor x / y\n
+\n
+export mod = (%%)\n
+\n
+export recip = (1 /)\n
+\n
+export pi = Math.PI\n
+\n
+export tau = pi * 2\n
+\n
+export exp = Math.exp\n
+\n
+export sqrt = Math.sqrt\n
+\n
+# changed from log as log is a\n
+# common function for logging things\n
+export ln = Math.log\n
+\n
+export pow = (^)\n
+\n
+export sin = Math.sin\n
+\n
+export tan = Math.tan\n
+\n
+export cos = Math.cos\n
+\n
+export asin = Math.asin\n
+\n
+export acos = Math.acos\n
+\n
+export atan = Math.atan\n
+\n
+export atan2 = (x, y) --> Math.atan2 x, y\n
+\n
+# sinh\n
+# tanh\n
+# cosh\n
+# asinh\n
+# atanh\n
+# acosh\n
+\n
+export truncate = (x) -> ~~x\n
+\n
+export round = Math.round\n
+\n
+export ceiling = Math.ceil\n
+\n
+export floor = Math.floor\n
+\n
+export isItNaN = (x) -> x isnt x\n
+\n
+export even = (x) -> x % 2 == 0\n
+\n
+export odd = (x) -> x % 2 != 0\n
+\n
+export gcd = (x, y) -->\n
+  x = Math.abs x\n
+  y = Math.abs y\n
+  until y is 0\n
+    z = x % y\n
+    x = y\n
+    y = z\n
+  x\n
+\n
+export lcm = (x, y) -->\n
+  Math.abs Math.floor (x / (gcd x, y) * y)\n
+\n
+# meta\n
+export installPrelude = !(target) ->\n
+  unless target.prelude?isInstalled\n
+    target <<< out$ # using out$ generated by livescript\n
+    target <<< target.prelude.isInstalled = true\n
+\n
+export prelude = out$\n
+</textarea></form>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        theme: "solarized light",\n
+        lineNumbers: true\n
+      });\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-livescript</code>.</p>\n
+\n
+    <p>The LiveScript mode was written by Kenneth Bentley.</p>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

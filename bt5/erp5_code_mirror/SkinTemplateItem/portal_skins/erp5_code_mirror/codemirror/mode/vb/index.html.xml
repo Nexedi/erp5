@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: VB.NET mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<link href="http://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="vb.js"></script>\n
+<script type="text/javascript" src="../../addon/runmode/runmode.js"></script>\n
+<style>\n
+      .CodeMirror {border: 1px solid #aaa; height:210px; height: auto;}\n
+      .CodeMirror-scroll { overflow-x: auto; overflow-y: hidden;}\n
+      .CodeMirror pre { font-family: Inconsolata; font-size: 14px}\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">VB.NET</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>VB.NET mode</h2>\n
+\n
+<script type="text/javascript">\n
+function test(golden, text) {\n
+  var ok = true;\n
+  var i = 0;\n
+  function callback(token, style, lineNo, pos){\n
+\t\t//console.log(String(token) + " " + String(style) + " " + String(lineNo) + " " + String(pos));\n
+    var result = [String(token), String(style)];\n
+    if (golden[i][0] != result[0] || golden[i][1] != result[1]){\n
+      return "Error, expected: " + String(golden[i]) + ", got: " + String(result);\n
+      ok = false;\n
+    }\n
+    i++;\n
+  }\n
+  CodeMirror.runMode(text, "text/x-vb",callback); \n
+\n
+  if (ok) return "Tests OK";\n
+}\n
+function testTypes() {\n
+  var golden = [[\'Integer\',\'keyword\'],[\' \',\'null\'],[\'Float\',\'keyword\']]\n
+  var text =  "Integer Float";\n
+  return test(golden,text);\n
+}\n
+function testIf(){\n
+  var golden = [[\'If\',\'keyword\'],[\' \',\'null\'],[\'True\',\'keyword\'],[\' \',\'null\'],[\'End\',\'keyword\'],[\' \',\'null\'],[\'If\',\'keyword\']];\n
+  var text = \'If True End If\';\n
+  return test(golden, text);\n
+}\n
+function testDecl(){\n
+   var golden = [[\'Dim\',\'keyword\'],[\' \',\'null\'],[\'x\',\'variable\'],[\' \',\'null\'],[\'as\',\'keyword\'],[\' \',\'null\'],[\'Integer\',\'keyword\']];\n
+   var text = \'Dim x as Integer\';\n
+   return test(golden, text);\n
+}\n
+function testAll(){\n
+  var result = "";\n
+\n
+  result += testTypes() + "\\n";\n
+  result += testIf() + "\\n";\n
+  result += testDecl() + "\\n";\n
+  return result;\n
+\n
+}\n
+function initText(editor) {\n
+  var content = \'Class rocket\\nPrivate quality as Double\\nPublic Sub launch() as String\\nif quality > 0.8\\nlaunch = "Successful"\\nElse\\nlaunch = "Failed"\\nEnd If\\nEnd sub\\nEnd class\\n\';\n
+  editor.setValue(content);\n
+  for (var i =0; i< editor.lineCount(); i++) editor.indentLine(i);\n
+}\n
+function init() {\n
+    editor = CodeMirror.fromTextArea(document.getElementById("solution"), {\n
+        lineNumbers: true,\n
+        mode: "text/x-vb",\n
+        readOnly: false\n
+    });\n
+    runTest();\n
+}\n
+function runTest() {\n
+\tdocument.getElementById(\'testresult\').innerHTML = testAll();\n
+  initText(editor);\n
+\t\n
+}\n
+document.body.onload = init;\n
+</script>\n
+\n
+  <div id="edit">\n
+  <textarea style="width:95%;height:200px;padding:5px;" name="solution" id="solution" ></textarea>\n
+  </div>\n
+  <pre id="testresult"></pre>\n
+  <p>MIME type defined: <code>text/x-vb</code>.</p>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

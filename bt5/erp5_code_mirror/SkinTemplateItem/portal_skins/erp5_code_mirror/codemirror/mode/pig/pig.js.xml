@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897140.05</string> </value>
+            <value> <string>ts60604383.43</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -58,12 +58,6 @@ CodeMirror.defineMode("pig", function(_config, parserConfig) {\n
     return f(stream, state);\n
   }\n
 \n
-  var type;\n
-  function ret(tp, style) {\n
-    type = tp;\n
-    return style;\n
-  }\n
-\n
   function tokenComment(stream, state) {\n
     var isEnd = false;\n
     var ch;\n
@@ -74,7 +68,7 @@ CodeMirror.defineMode("pig", function(_config, parserConfig) {\n
       }\n
       isEnd = (ch == "*");\n
     }\n
-    return ret("comment", "comment");\n
+    return "comment";\n
   }\n
 \n
   function tokenString(quote) {\n
@@ -88,9 +82,10 @@ CodeMirror.defineMode("pig", function(_config, parserConfig) {\n
       }\n
       if (end || !(escaped || multiLineStrings))\n
         state.tokenize = tokenBase;\n
-      return ret("string", "error");\n
+      return "error";\n
     };\n
   }\n
+\n
 \n
   function tokenBase(stream, state) {\n
     var ch = stream.next();\n
@@ -100,11 +95,11 @@ CodeMirror.defineMode("pig", function(_config, parserConfig) {\n
       return chain(stream, state, tokenString(ch));\n
     // is it one of the special chars\n
     else if(/[\\[\\]{}\\(\\),;\\.]/.test(ch))\n
-      return ret(ch);\n
+      return null;\n
     // is it a number?\n
     else if(/\\d/.test(ch)) {\n
       stream.eatWhile(/[\\w\\.]/);\n
-      return ret("number", "number");\n
+      return "number";\n
     }\n
     // multi line comment or operator\n
     else if (ch == "/") {\n
@@ -113,47 +108,42 @@ CodeMirror.defineMode("pig", function(_config, parserConfig) {\n
       }\n
       else {\n
         stream.eatWhile(isOperatorChar);\n
-        return ret("operator", "operator");\n
+        return "operator";\n
       }\n
     }\n
     // single line comment or operator\n
     else if (ch=="-") {\n
       if(stream.eat("-")){\n
         stream.skipToEnd();\n
-        return ret("comment", "comment");\n
+        return "comment";\n
       }\n
       else {\n
         stream.eatWhile(isOperatorChar);\n
-        return ret("operator", "operator");\n
+        return "operator";\n
       }\n
     }\n
     // is it an operator\n
     else if (isOperatorChar.test(ch)) {\n
       stream.eatWhile(isOperatorChar);\n
-      return ret("operator", "operator");\n
+      return "operator";\n
     }\n
     else {\n
       // get the while word\n
       stream.eatWhile(/[\\w\\$_]/);\n
       // is it one of the listed keywords?\n
       if (keywords && keywords.propertyIsEnumerable(stream.current().toUpperCase())) {\n
-        if (stream.eat(")") || stream.eat(".")) {\n
-          //keywords can be used as variables like flatten(group), group.$0 etc..\n
-        }\n
-        else {\n
-          return ("keyword", "keyword");\n
-        }\n
+        //keywords can be used as variables like flatten(group), group.$0 etc..\n
+        if (!stream.eat(")") && !stream.eat("."))\n
+          return "keyword";\n
       }\n
       // is it one of the builtin functions?\n
       if (builtins && builtins.propertyIsEnumerable(stream.current().toUpperCase()))\n
-      {\n
-        return ("keyword", "variable-2");\n
-      }\n
+        return "variable-2";\n
       // is it one of the listed types?\n
       if (types && types.propertyIsEnumerable(stream.current().toUpperCase()))\n
-        return ("keyword", "variable-3");\n
+        return "variable-3";\n
       // default is a \'variable\'\n
-      return ret("variable", "pig-word");\n
+      return "variable";\n
     }\n
   }\n
 \n
@@ -224,7 +214,7 @@ CodeMirror.defineMode("pig", function(_config, parserConfig) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6112</int> </value>
+            <value> <int>5810</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

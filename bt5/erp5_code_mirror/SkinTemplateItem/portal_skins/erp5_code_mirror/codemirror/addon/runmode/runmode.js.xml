@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897121.98</string> </value>
+            <value> <string>ts60604374.42</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -44,7 +44,7 @@ CodeMirror.runMode = function(string, modespec, callback, options) {\n
   var ie = /MSIE \\d/.test(navigator.userAgent);\n
   var ie_lt9 = ie && (document.documentMode == null || document.documentMode < 9);\n
 \n
-  if (callback.nodeType == 1) {\n
+  if (callback.appendChild) {\n
     var tabSize = (options && options.tabSize) || CodeMirror.defaults.tabSize;\n
     var node = callback, col = 0;\n
     node.innerHTML = "";\n
@@ -108,7 +108,7 @@ CodeMirror.runMode = function(string, modespec, callback, options) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2501</int> </value>
+            <value> <int>2499</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

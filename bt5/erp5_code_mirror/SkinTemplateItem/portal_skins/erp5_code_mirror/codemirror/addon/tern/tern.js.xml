@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897117.92</string> </value>
+            <value> <string>ts60604375.23</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -87,6 +87,7 @@
     this.options = options || {};\n
     var plugins = this.options.plugins || (this.options.plugins = {});\n
     if (!plugins.doc_comment) plugins.doc_comment = true;\n
+    this.docs = Object.create(null);\n
     if (this.options.useWorker) {\n
       this.server = new WorkerServer(this);\n
     } else {\n
@@ -97,7 +98,6 @@
         plugins: plugins\n
       });\n
     }\n
-    this.docs = Object.create(null);\n
     this.trackChange = function(doc, change) { trackChange(self, doc, change); };\n
 \n
     this.cachedArgHints = null;\n
@@ -152,12 +152,22 @@
       var self = this;\n
       var doc = findDoc(this, cm.getDoc());\n
       var request = buildRequest(this, doc, query, pos);\n
+      var extraOptions = request.query && this.options.queryOptions && this.options.queryOptions[request.query.type]\n
+      if (extraOptions) for (var prop in extraOptions) request.query[prop] = extraOptions[prop];\n
 \n
       this.server.request(request, function (error, data) {\n
         if (!error && self.options.responseFilter)\n
           data = self.options.responseFilter(doc, query, request, error, data);\n
         c(error, data);\n
       });\n
+    },\n
+\n
+    destroy: function () {\n
+      closeArgHints(this)\n
+      if (this.worker) {\n
+        this.worker.terminate();\n
+        this.worker = null;\n
+      }\n
     }\n
   };\n
 \n
@@ -235,7 +245,7 @@
         var completion = data.completions[i], className = typeToIcon(completion.type);\n
         if (data.guess) className += " " + cls + "guess";\n
         completions.push({text: completion.name + after,\n
-                          displayText: completion.name,\n
+                          displayText: completion.displayName || completion.name,\n
                           className: className,\n
                           data: completion});\n
       }\n
@@ -280,10 +290,12 @@
           tip.appendChild(document.createTextNode(" — " + data.doc));\n
         if (data.url) {\n
           tip.appendChild(document.createTextNode(" "));\n
-          tip.appendChild(elt("a", null, "[docs]")).href = data.url;\n
+          var child = tip.appendChild(elt("a", null, "[docs]"));\n
+          child.href = data.url;\n
+          child.target = "_blank";\n
         }\n
       }\n
-      tempTooltip(cm, tip);\n
+      tempTooltip(cm, tip, ts);\n
       if (c) c();\n
     }, pos);\n
   }\n
@@ -461,8 +473,8 @@
 \n
   function atInterestingExpression(cm) {\n
     var pos = cm.getCursor("end"), tok = cm.getTokenAt(pos);\n
-    if (tok.start < pos.ch && (tok.type == "comment" || tok.type == "string")) return false;\n
-    return /\\w/.test(cm.getLine(pos.line).slice(Math.max(pos.ch - 1, 0), pos.ch + 1));\n
+    if (tok.start < pos.ch && tok.type == "comment") return false;\n
+    return /[\\w)\\]]/.test(cm.getLine(pos.line).slice(Math.max(pos.ch - 1, 0), pos.ch + 1));\n
   }\n
 \n
   // Variable renaming\n
@@ -483,11 +495,12 @@
     ts.request(cm, {type: "refs"}, function(error, data) {\n
       if (error) return showError(ts, cm, error);\n
       var ranges = [], cur = 0;\n
+      var curPos = cm.getCursor();\n
       for (var i = 0; i < data.refs.length; i++) {\n
         var ref = data.refs[i];\n
         if (ref.file == name) {\n
           ranges.push({anchor: ref.start, head: ref.end});\n
-          if (cmpPos(cur, ref.start) >= 0 && cmpPos(cur, ref.end) <= 0)\n
+          if (cmpPos(curPos, ref.start) >= 0 && cmpPos(curPos, ref.end) <= 0)\n
             cur = ranges.length - 1;\n
         }\n
       }\n
@@ -609,16 +622,34 @@
 \n
   // Tooltips\n
 \n
-  function tempTooltip(cm, content) {\n
+  function tempTooltip(cm, content, ts) {\n
+    if (cm.state.ternTooltip) remove(cm.state.ternTooltip);\n
     var where = cm.cursorCoords();\n
-    var tip = makeTooltip(where.right + 1, where.bottom, content);\n
+    var tip = cm.state.ternTooltip = makeTooltip(where.right + 1, where.bottom, content);\n
+    function maybeClear() {\n
+      old = true;\n
+      if (!mouseOnTip) clear();\n
+    }\n
     function clear() {\n
+      cm.state.ternTooltip = null;\n
       if (!tip.parentNode) return;\n
       cm.off("cursorActivity", clear);\n
+      cm.off(\'blur\', clear);\n
+      cm.off(\'scroll\', clear);\n
       fadeOut(tip);\n
     }\n
-    setTimeout(clear, 1700);\n
+    var mouseOnTip = false, old = false;\n
+    CodeMirror.on(tip, "mousemove", function() { mouseOnTip = true; });\n
+    CodeMirror.on(tip, "mouseout", function(e) {\n
+      if (!CodeMirror.contains(tip, e.relatedTarget || e.toElement)) {\n
+        if (old) clear();\n
+        else mouseOnTip = false;\n
+      }\n
+    });\n
+    setTimeout(maybeClear, ts.options.hintDelay ? ts.options.hintDelay : 1700);\n
     cm.on("cursorActivity", clear);\n
+    cm.on(\'blur\', clear);\n
+    cm.on(\'scroll\', clear);\n
   }\n
 \n
   function makeTooltip(x, y, content) {\n
@@ -643,7 +674,7 @@
     if (ts.options.showError)\n
       ts.options.showError(cm, msg);\n
     else\n
-      tempTooltip(cm, String(msg));\n
+      tempTooltip(cm, String(msg), ts);\n
   }\n
 \n
   function closeArgHints(ts) {\n
@@ -659,7 +690,7 @@
   // Worker wrapper\n
 \n
   function WorkerServer(ts) {\n
-    var worker = new Worker(ts.options.workerScript);\n
+    var worker = ts.worker = new Worker(ts.options.workerScript);\n
     worker.postMessage({type: "init",\n
                         defs: ts.options.defs,\n
                         plugins: ts.options.plugins,\n
@@ -706,7 +737,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>23383</int> </value>
+            <value> <int>24561</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

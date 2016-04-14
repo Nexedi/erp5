@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: JavaScript mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/cm_edit/matchbrackets.js"></script>\n
+<script src="../../addon/comment/continuecomment.js"></script>\n
+<script src="../../addon/comment/comment.js"></script>\n
+<script src="javascript.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">JavaScript</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>JavaScript mode</h2>\n
+\n
+\n
+<div><textarea id="code" name="code">\n
+// Demo code (the actual new parser character stream implementation)\n
+\n
+function StringStream(string) {\n
+  this.pos = 0;\n
+  this.string = string;\n
+}\n
+\n
+StringStream.prototype = {\n
+  done: function() {return this.pos >= this.string.length;},\n
+  peek: function() {return this.string.charAt(this.pos);},\n
+  next: function() {\n
+    if (this.pos &lt; this.string.length)\n
+      return this.string.charAt(this.pos++);\n
+  },\n
+  eat: function(match) {\n
+    var ch = this.string.charAt(this.pos);\n
+    if (typeof match == "string") var ok = ch == match;\n
+    else var ok = ch &amp;&amp; match.test ? match.test(ch) : match(ch);\n
+    if (ok) {this.pos++; return ch;}\n
+  },\n
+  eatWhile: function(match) {\n
+    var start = this.pos;\n
+    while (this.eat(match));\n
+    if (this.pos > start) return this.string.slice(start, this.pos);\n
+  },\n
+  backUp: function(n) {this.pos -= n;},\n
+  column: function() {return this.pos;},\n
+  eatSpace: function() {\n
+    var start = this.pos;\n
+    while (/\\s/.test(this.string.charAt(this.pos))) this.pos++;\n
+    return this.pos - start;\n
+  },\n
+  match: function(pattern, consume, caseInsensitive) {\n
+    if (typeof pattern == "string") {\n
+      function cased(str) {return caseInsensitive ? str.toLowerCase() : str;}\n
+      if (cased(this.string).indexOf(cased(pattern), this.pos) == this.pos) {\n
+        if (consume !== false) this.pos += str.length;\n
+        return true;\n
+      }\n
+    }\n
+    else {\n
+      var match = this.string.slice(this.pos).match(pattern);\n
+      if (match &amp;&amp; consume !== false) this.pos += match[0].length;\n
+      return match;\n
+    }\n
+  }\n
+};\n
+</textarea></div>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        continueComments: "Enter",\n
+        extraKeys: {"Ctrl-Q": "toggleComment"}\n
+      });\n
+    </script>\n
+\n
+    <p>\n
+      JavaScript mode supports several configuration options:\n
+      <ul>\n
+        <li><code>json</code> which will set the mode to expect JSON\n
+        data rather than a JavaScript program.</li>\n
+        <li><code>jsonld</code> which will set the mode to expect\n
+        <a href="http://json-ld.org">JSON-LD</a> linked data rather\n
+        than a JavaScript program (<a href="json-ld.html">demo</a>).</li>\n
+        <li><code>typescript</code> which will activate additional\n
+        syntax highlighting and some other things for TypeScript code\n
+        (<a href="typescript.html">demo</a>).</li>\n
+        <li><code>statementIndent</code> which (given a number) will\n
+        determine the amount of indentation to use for statements\n
+        continued on a new line.</li>\n
+        <li><code>wordCharacters</code>, a regexp that indicates which\n
+        characters should be considered part of an identifier.\n
+        Defaults to <code>/[\\w$]/</code>, which does not handle\n
+        non-ASCII identifiers. Can be set to something more elaborate\n
+        to improve Unicode support.</li>\n
+      </ul>\n
+    </p>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/javascript</code>, <code>application/json</code>, <code>application/ld+json</code>, <code>text/typescript</code>, <code>application/typescript</code>.</p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

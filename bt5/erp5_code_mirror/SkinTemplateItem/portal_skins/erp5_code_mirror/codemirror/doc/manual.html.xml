@@ -36,7 +36,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<!doctype html>\n
+ï»¿<!doctype html>\n
 \n
 <title>CodeMirror: User Manual</title>\n
 <meta charset="utf-8"/>\n
@@ -93,6 +93,12 @@
     </li>\n
     <li><a href="#addons">Addons</a></li>\n
     <li><a href="#modeapi">Writing CodeMirror Modes</a></li>\n
+    <li><a href="#vimapi">Vim Mode API</a>\n
+      <ul>\n
+        <li><a href="#vimapi_configuration">Configuration</a></li>\n
+        <li><a href="#vimapi_extending">Extending VIM</a></li>\n
+      </ul>\n
+    </li>\n
   </ul>\n
 </div>\n
 \n
@@ -101,7 +107,7 @@
 <section class=first id=overview>\n
     <h2 style="position: relative">\n
       User manual and reference guide\n
-      <span style="color: #888; font-size: 1rem; position: absolute; right: 0; bottom: 0">version 4.11.0</span>\n
+      <span style="color: #888; font-size: 1rem; position: absolute; right: 0; bottom: 0">version 5.13.4</span>\n
     </h2>\n
 \n
     <p>CodeMirror is a code-editor component that can be embedded in\n
@@ -132,7 +138,7 @@
     easy way to combine scripts.) For example:</p>\n
 \n
     <pre data-lang="text/html">&lt;script src="lib/codemirror.js">&lt;/script>\n
-&lt;link rel="stylesheet" href="../lib/codemirror.css">\n
+&lt;link rel="stylesheet" href="lib/codemirror.css">\n
 &lt;script src="mode/javascript/javascript.js">&lt;/script></pre>\n
 \n
     <p>(Alternatively, use a module loader. <a href="#modloader">More\n
@@ -213,7 +219,20 @@
 });</pre>\n
 \n
     <p>It will automatically load the modes that the mixed HTML mode\n
-    depends on (XML, JavaScript, and CSS).</p>\n
+    depends on (XML, JavaScript, and CSS). Do <em>not</em> use\n
+    RequireJS\' <code>paths</code> option to configure the path to\n
+    CodeMirror, since it will break loading submodules through\n
+    relative paths. Use\n
+    the <a href="http://requirejs.org/docs/api.html#packages"><code>packages</code></a>\n
+    configuration option instead, as in:</p>\n
+\n
+    <pre data-lang=javascript>require.config({\n
+  packages: [{\n
+    name: "codemirror",\n
+    location: "../path/to/codemirror",\n
+    main: "lib/codemirror"\n
+  }]\n
+});</pre>\n
 \n
 </section>\n
 \n
@@ -255,6 +274,16 @@
       mode names to their constructors, and the second maps MIME types\n
       to mode specs.</dd>\n
 \n
+      <dt id="option_lineSeparator"><code><strong>lineSeparator</strong>: string|null</code></dt>\n
+      <dd>Explicitly set the line separator for the editor. By default\n
+      (value <code>null</code>), the document will be split on CRLFs\n
+      as well as lone CRs and LFs, and a single LF will be used as\n
+      line separator in all output (such\n
+      as <a href="#getValue"><code>getValue</code></a>). When a\n
+      specific string is given, lines will only be split on that\n
+      string, and output will, by default, use that same\n
+      separator.</dd>\n
+\n
       <dt id="option_theme"><code><strong>theme</strong>: string</code></dt>\n
       <dd>The theme to style the editor with. You must make sure the\n
       CSS file defining the corresponding <code>.cm-s-[name]</code>\n
@@ -294,7 +323,7 @@
       should be replaced by a\n
       special <a href="#option_specialCharPlaceholder">placeholder</a>.\n
       Mostly useful for non-printing special characters. The default\n
-      is <code>/[\\u0000-\\u0019\\u00ad\\u200b\\u2028\\u2029\\ufeff]/</code>.</dd>\n
+      is <code>/[\\u0000-\\u0019\\u00ad\\u200b-\\u200f\\u2028\\u2029\\ufeff]/</code>.</dd>\n
       <dt id="option_specialCharPlaceholder"><code><strong>specialCharPlaceholder</strong>: function(char)Â âÂ Element</code></dt>\n
       <dd>A function that, given a special character identified by\n
       the <a href="#option_specialChars"><code>specialChars</code></a>\n
@@ -371,6 +400,17 @@
       option is set to true, it will be covered by an element with\n
       class <code>CodeMirror-gutter-filler</code>.</dd>\n
 \n
+      <dt id="option_inputStyle"><code><strong>inputStyle</strong>: string</code></dt>\n
+      <dd>Selects the way CodeMirror handles input and focus. The core\n
+      library defines the <code>"textarea"</code>\n
+      and <code>"contenteditable"</code> input models. On mobile\n
+      browsers, the default is <code>"contenteditable"</code>. On\n
+      desktop browsers, the default is <code>"textarea"</code>.\n
+      Support for IME and screen readers is better in\n
+      the <code>"contenteditable"</code> model. The intention is to\n
+      make it the default on modern desktop browsers in the\n
+      future.</dd>\n
+\n
       <dt id="option_readOnly"><code><strong>readOnly</strong>: boolean|string</code></dt>\n
       <dd>This disables editing of the editor content by the user. If\n
       the special value <code>"nocursor"</code> is given (instead of\n
@@ -380,6 +420,11 @@
       <dt id="option_showCursorWhenSelecting"><code><strong>showCursorWhenSelecting</strong>: boolean</code></dt>\n
       <dd>Whether the cursor should be drawn when a selection is\n
       active. Defaults to false.</dd>\n
+\n
+      <dt id="option_lineWiseCopyCut"><code><strong>lineWiseCopyCut</strong>: boolean</code></dt>\n
+      <dd>When enabled, which is the default, doing copy or cut when\n
+      there is no selection will copy or cut the whole lines that have\n
+      cursors on them.</dd>\n
 \n
       <dt id="option_undoDepth"><code><strong>undoDepth</strong>: integer</code></dt>\n
       <dd>The maximum number of undo levels that the editor stores.\n
@@ -413,6 +458,13 @@
     <dl>\n
       <dt id="option_dragDrop"><code><strong>dragDrop</strong>: boolean</code></dt>\n
       <dd>Controls whether drag-and-drop is enabled. On by default.</dd>\n
+\n
+      <dt id="option_allowDropFileTypes"><code><strong>allowDropFileTypes</strong>: array&lt;string&gt;</code></dt>\n
+      <dd>When set (default is <code>null</code>) only files whose\n
+      type is in the array can be dropped into the editor. The strings\n
+      should be MIME types, and will be checked against\n
+      the <a href="https://w3c.github.io/FileAPI/#dfn-type"><code>type</code></a>\n
+      of the <code>File</code> object as reported by the browser.</dd>\n
 \n
       <dt id="option_cursorBlinkRate"><code><strong>cursorBlinkRate</strong>: number</code></dt>\n
       <dd>Half-period in milliseconds used for cursor blinking. The default blink\n
@@ -472,18 +524,6 @@
       10 000. You can set this to <code>Infinity</code> to turn off\n
       this behavior.</dd>\n
 \n
-      <dt id="option_crudeMeasuringFrom"><code><strong>crudeMeasuringFrom</strong>: number</code></dt>\n
-      <dd>When measuring the character positions in long lines, any\n
-      line longer than this number (default is 10 000),\n
-      when <a href="#option_lineWrapping">line wrapping</a>\n
-      is <strong>off</strong>, will simply be assumed to consist of\n
-      same-sized characters. This means that, on the one hand,\n
-      measuring will be inaccurate when characters of varying size,\n
-      right-to-left text, markers, or other irregular elements are\n
-      present. On the other hand, it means that having such a line\n
-      won\'t freeze the user interface because of the expensiveness of\n
-      the measurements.</dd>\n
-\n
       <dt id="option_viewportMargin"><code><strong>viewportMargin</strong>: integer</code></dt>\n
       <dd>Specifies the amount of lines that are rendered above and\n
       below the part of the document that\'s currently scrolled into\n
@@ -525,13 +565,17 @@
       an array of strings representing the text that replaced the\n
       changed range (split by line). <code>removed</code> is the text\n
       that used to be between <code>from</code> and <code>to</code>,\n
-      which is overwritten by this change.</dd>\n
+      which is overwritten by this change. This event is\n
+      fired <em>before</em> the end of\n
+      an <a href="#operation">operation</a>, before the DOM updates\n
+      happen.</dd>\n
 \n
       <dt id="event_changes"><code><strong>"changes"</strong> (instance: CodeMirror, changes: array&lt;object&gt;)</code></dt>\n
       <dd>Like the <a href="#event_change"><code>"change"</code></a>\n
       event, but batched per <a href="#operation">operation</a>,\n
       passing an array containing all the changes that happened in the\n
-      operation.</dd>\n
+      operation. This event is fired after the operation finished, and\n
+      display changes it makes will trigger a new operation.</dd>\n
 \n
       <dt id="event_beforeChange"><code><strong>"beforeChange"</strong> (instance: CodeMirror, changeObj: object)</code></dt>\n
       <dd>This event is fired before a change is applied, and its\n
@@ -571,15 +615,22 @@
       <dd>Fired whenever new input is read from the hidden textarea\n
       (typed or pasted by the user).</dd>\n
 \n
-      <dt id="event_beforeSelectionChange"><code><strong>"beforeSelectionChange"</strong> (instance: CodeMirror, obj: {ranges, update})</code></dt>\n
+      <dt id="event_electricInput"><code><strong>"electricInput"</strong> (instance: CodeMirror, line: integer)</code></dt>\n
+      <dd>Fired if text input matched the\n
+      mode\'s <a href="#option_electricChars">electric</a> patterns,\n
+      and this caused the line\'s indentation to change.</dd>\n
+\n
+      <dt id="event_beforeSelectionChange"><code><strong>"beforeSelectionChange"</strong> (instance: CodeMirror, obj: {ranges, origin, update})</code></dt>\n
       <dd>This event is fired before the selection is moved. Its\n
       handler may inspect the set of selection ranges, present as an\n
       array of <code>{anchor, head}</code> objects in\n
       the <code>ranges</code> property of the <code>obj</code>\n
       argument, and optionally change them by calling\n
       the <code>update</code> method on this object, passing an array\n
-      of ranges in the same format. Handlers for this event have the\n
-      same restriction\n
+      of ranges in the same format. The object also contains\n
+      an <code>origin</code> property holding the origin string passed\n
+      to the selection-changing method, if any. Handlers for this\n
+      event have the same restriction\n
       as <a href="#event_beforeChange"><code>"beforeChange"</code></a>\n
       handlers â they should not do anything to directly update the\n
       state of the editor.</dd>\n
@@ -640,9 +691,12 @@
       should <em>not</em> try to change the state of the editor.</dd>\n
 \n
       <dt id="event_dom"><code><strong>"mousedown"</strong>,\n
-      <strong>"dblclick"</strong>, <strong>"contextmenu"</strong>, <strong>"keydown"</strong>, <strong>"keypress"</strong>,\n
-      <strong>"keyup"</strong>, <strong>"dragstart"</strong>, <strong>"dragenter"</strong>,\n
-      <strong>"dragover"</strong>, <strong>"drop"</strong>\n
+      <strong>"dblclick"</strong>, <strong>"touchstart"</strong>, <strong>"contextmenu"</strong>,\n
+      <strong>"keydown"</strong>, <strong>"keypress"</strong>,\n
+      <strong>"keyup"</strong>, <strong>"cut"</strong>, <strong>"copy"</strong>, <strong>"paste"</strong>,\n
+      <strong>"dragstart"</strong>, <strong>"dragenter"</strong>,\n
+      <strong>"dragover"</strong>, <strong>"dragleave"</strong>,\n
+      <strong>"drop"</strong>\n
       (instance: CodeMirror, event: Event)</code></dt>\n
       <dd>Fired when CodeMirror is handling a DOM event of this type.\n
       You can <code>preventDefault</code> the event, or give it a\n
@@ -886,10 +940,10 @@ editor.setOption("extraKeys", {\n
       <dd>Redo the last change to the selection, or the last text change if\n
       no selection changes remain.</dd>\n
 \n
-      <dt class=command id=command_goDocStart><code><strong>goDocStart</strong></code><span class=keybinding>Ctrl-Up (PC), Cmd-Up (Mac), Cmd-Home (Mac)</span></dt>\n
+      <dt class=command id=command_goDocStart><code><strong>goDocStart</strong></code><span class=keybinding>Ctrl-Home (PC), Cmd-Up (Mac), Cmd-Home (Mac)</span></dt>\n
       <dd>Move the cursor to the start of the document.</dd>\n
 \n
-      <dt class=command id=command_goDocEnd><code><strong>goDocEnd</strong></code><span class=keybinding>Ctrl-Down (PC), Cmd-End (Mac), Cmd-Down (Mac)</span></dt>\n
+      <dt class=command id=command_goDocEnd><code><strong>goDocEnd</strong></code><span class=keybinding>Ctrl-End (PC), Cmd-End (Mac), Cmd-Down (Mac)</span></dt>\n
       <dd>Move the cursor to the end of the document.</dd>\n
 \n
       <dt class=command id=command_goLineStart><code><strong>goLineStart</strong></code><span class=keybinding>Alt-Left (PC), Ctrl-A (Mac)</span></dt>\n
@@ -1258,7 +1312,7 @@ editor.setOption("extraKeys", {\n
 \n
       <dt id="getCursor"><code><strong>doc.getCursor</strong>(?start: string) â {line, ch}</code></dt>\n
       <dd>Retrieve one end of the <em>primary</em>\n
-      selection. <code>start</code> is a an optional string indicating\n
+      selection. <code>start</code> is an optional string indicating\n
       which end of the selection to return. It may\n
       be <code>"from"</code>, <code>"to"</code>, <code>"head"</code>\n
       (the side of the selection that moves when you press\n
@@ -1292,7 +1346,7 @@ editor.setOption("extraKeys", {\n
         <dd>Determines whether the selection head should be scrolled\n
         into view. Defaults to true.</dd>\n
         <dt id="selection_origin"><code><strong>origin</strong>: string</code></dt>\n
-        <dd>Detemines whether the selection history event may be\n
+        <dd>Determines whether the selection history event may be\n
         merged with the previous one. When an origin starts with the\n
         character <code>+</code>, and the last recorded selection had\n
         the same origin and was similar (close\n
@@ -1300,7 +1354,7 @@ editor.setOption("extraKeys", {\n
         collapsed or both non-collapsed), the new one will replace the\n
         old one. When it starts with <code>*</code>, it will always\n
         replace the previous event (if that had the same origin).\n
-        Built-in motion uses the <code>"+move"</code> origin.</dd>\n
+        Built-in motion uses the <code>"+move"</code> origin. User input uses the <code>"+input"</code> origin.</dd>\n
         <dt id="selection_bias"><code><strong>bias</strong>: number</code></dt>\n
         <dd>Determine the direction into which the selection endpoints\n
         should be adjusted when they fall inside\n
@@ -1339,7 +1393,7 @@ editor.setOption("extraKeys", {\n
       <dd>An equivalent\n
       of <a href="#extendSelection"><code>extendSelection</code></a>\n
       that acts on all selections at once.</dd>\n
-      <dt id="extendSelectionsBy"><code><strong>doc.extendSelectionsBy</strong>(f: function(range: {anchor, head}) âÂ {anchor,Â head}), ?options: object)</code></dt>\n
+      <dt id="extendSelectionsBy"><code><strong>doc.extendSelectionsBy</strong>(f: function(range: {anchor, head}) âÂ {line, ch}), ?options: object)</code></dt>\n
       <dd>Applies the given function to all existing selections, and\n
       calls <a href="#extendSelections"><code>extendSelections</code></a>\n
       on the result.</dd>\n
@@ -1427,7 +1481,7 @@ editor.setOption("extraKeys", {\n
       <dt id="removeOverlay"><code><strong>cm.removeOverlay</strong>(mode: string|object)</code></dt>\n
       <dd>Pass this the exact value passed for the <code>mode</code>\n
       parameter to <a href="#addOverlay"><code>addOverlay</code></a>,\n
-      or a string that corresponds to the <code>name</code> propery of\n
+      or a string that corresponds to the <code>name</code> property of\n
       that value, to remove an overlay again.</dd>\n
 \n
       <dt id="on"><code><strong>cm.on</strong>(type: string, func: (...args))</code></dt>\n
@@ -1525,7 +1579,7 @@ editor.setOption("extraKeys", {\n
       <dt id="clearHistory"><code><strong>doc.clearHistory</strong>()</code></dt>\n
       <dd>Clears the editor\'s undo history.</dd>\n
       <dt id="getHistory"><code><strong>doc.getHistory</strong>() â object</code></dt>\n
-      <dd>Get a (JSON-serializeable) representation of the undo history.</dd>\n
+      <dd>Get a (JSON-serializable) representation of the undo history.</dd>\n
       <dt id="setHistory"><code><strong>doc.setHistory</strong>(history: object)</code></dt>\n
       <dd>Replace the editor\'s undo history with the one provided,\n
       which must be a value as returned\n
@@ -1649,6 +1703,11 @@ editor.setOption("extraKeys", {\n
         <dt><code><strong>shared</strong>: boolean</code></dt><dd>See\n
         the corresponding <a href="#mark_shared">option</a>\n
         to <code>markText</code>.</dd>\n
+        <dt><code><strong>handleMouseEvents</strong>: boolean</code></dt>\n
+        <dd>As with <a href="#markText"><code>markText</code></a>,\n
+        this determines whether mouse events on the widget inserted\n
+        for this bookmark are handled by CodeMirror. The default is\n
+        false.</dd>\n
       </dl></dd>\n
 \n
       <dt id="findMarks"><code><strong>doc.findMarks</strong>(from: {line, ch}, to: {line, ch}) â array&lt;TextMarker&gt;</code></dt>\n
@@ -1718,7 +1777,7 @@ editor.setOption("extraKeys", {\n
       widget again, simply use DOM methods (move it somewhere else, or\n
       call <code>removeChild</code> on its parent).</dd>\n
 \n
-      <dt id="addLineWidget"><code><strong>cm.addLineWidget</strong>(line: integer|LineHandle, node: Element, ?options: object) â LineWidget</code></dt>\n
+      <dt id="addLineWidget"><code><strong>doc.addLineWidget</strong>(line: integer|LineHandle, node: Element, ?options: object) â LineWidget</code></dt>\n
       <dd>Adds a line widget, an element shown below a line, spanning\n
       the whole of the editor\'s width, and moving the lines below it\n
       downwards. <code>line</code> should be either an integer or a\n
@@ -1767,7 +1826,7 @@ editor.setOption("extraKeys", {\n
 \n
     <dl>\n
       <dt id="setSize"><code><strong>cm.setSize</strong>(width: number|string, height: number|string)</code></dt>\n
-      <dd>Programatically set the size of the editor (overriding the\n
+      <dd>Programmatically set the size of the editor (overriding the\n
       applicable <a href="#css-resize">CSS\n
       rules</a>). <code>width</code> and <code>height</code>\n
       can be either numbers (interpreted as pixels) or CSS units\n
@@ -1801,9 +1860,12 @@ editor.setOption("extraKeys", {\n
       If <code>mode</code> is <code>"local"</code>, they will be\n
       relative to the top-left corner of the editable document. If it\n
       is <code>"page"</code> or not given, they are relative to the\n
-      top-left corner of the page. <code>where</code> can be a boolean\n
-      indicating whether you want the start (<code>true</code>) or the\n
-      end (<code>false</code>) of the selection, or, if a <code>{line,\n
+      top-left corner of the page. If <code>mode</code>\n
+      is <code>"window"</code>, the coordinates are relative to the\n
+      top-left corner of the currently visible (scrolled)\n
+      window. <code>where</code> can be a boolean indicating whether\n
+      you want the start (<code>true</code>) or the end\n
+      (<code>false</code>) of the selection, or, if a <code>{line,\n
       ch}</code> object is given, it specifies the precise position at\n
       which you want to measure.</dd>\n
       <dt id="charCoords"><code><strong>cm.charCoords</strong>(pos: {line, ch}, ?mode: string) â {left, right, top, bottom}</code></dt>\n
@@ -1825,7 +1887,7 @@ editor.setOption("extraKeys", {\n
       height. <code>mode</code> can be one of the same strings\n
       that <a href="#coordsChar"><code>coordsChar</code></a>\n
       accepts.</dd>\n
-      <dt id="heightAtLine"><code><strong>cm.heightAtLine</strong>(line: number, ?mode: string) â number</code></dt>\n
+      <dt id="heightAtLine"><code><strong>cm.heightAtLine</strong>(line: integer|LineHandle, ?mode: string) â number</code></dt>\n
       <dd>Computes the height of the top of a line, in the coordinate\n
       system specified by <code>mode</code>\n
       (see <a href="#coordsChar"><code>coordsChar</code></a>), which\n
@@ -1853,7 +1915,8 @@ editor.setOption("extraKeys", {\n
       <dd>If your code does something to change the size of the editor\n
       element (window resizes are already listened for), or unhides\n
       it, you should probably follow up by calling this method to\n
-      ensure CodeMirror is still looking as intended.</dd>\n
+      ensure CodeMirror is still looking as intended. See also\n
+      the <a href="#addon_autorefresh">autorefresh addon</a>.</dd>\n
     </dl>\n
 \n
     <h3 id="api_mode">Mode, state, and token-related methods</h3>\n
@@ -1870,7 +1933,7 @@ editor.setOption("extraKeys", {\n
       the mode specification, rather than the resolved, instantiated\n
       <a href="#defineMode">mode object</a>.</dd>\n
 \n
-      <dt id="getModeAt"><code><strong>doc.getModeAt</strong>(pos: {line, ch}) â object</code></dt>\n
+      <dt id="getModeAt"><code><strong>cm.getModeAt</strong>(pos: {line, ch}) â object</code></dt>\n
       <dd>Gets the inner mode at a given position. This will return\n
       the same as <a href="#getMode"><code>getMode</code></a> for\n
       simple modes, but will return an inner mode for nesting modes\n
@@ -1980,10 +2043,20 @@ editor.setOption("extraKeys", {\n
           indentation by the given amount of spaces.</dd>\n
         </dl></dd>\n
 \n
-      <dt id="toggleOverwrite"><code><strong>cm.toggleOverwrite</strong>(?value: bool)</code></dt>\n
+      <dt id="toggleOverwrite"><code><strong>cm.toggleOverwrite</strong>(?value: boolean)</code></dt>\n
       <dd>Switches between overwrite and normal insert mode (when not\n
       given an argument), or sets the overwrite mode to a specific\n
       state (when given an argument).</dd>\n
+\n
+      <dt id="isReadOnly"><code><strong>cm.isReadOnly</strong>() â boolean</code></dt>\n
+      <dd>Tells you whether the editor\'s content can be edited by the\n
+      user.</dd>\n
+\n
+      <dt id="lineSeparator"><code><strong>doc.lineSeparator</strong>()</code></dt>\n
+      <dd>Returns the preferred line separator string for this\n
+      document, as per the <a href="#option_lineSeparator">option</a>\n
+      by the same name. When that option is <code>null</code>, the\n
+      string <code>"\\n"</code> is returned.</dd>\n
 \n
       <dt id="execCommand"><code><strong>cm.execCommand</strong>(name: string)</code></dt>\n
       <dd>Runs the <a href="#commands">command</a> with the given name on the editor.</dd>\n
@@ -2000,8 +2073,11 @@ editor.setOption("extraKeys", {\n
       <dt id="focus"><code><strong>cm.focus</strong>()</code></dt>\n
       <dd>Give the editor focus.</dd>\n
 \n
-      <dt id="getInputField"><code><strong>cm.getInputField</strong>() â TextAreaElement</code></dt>\n
-      <dd>Returns the hidden textarea used to read input.</dd>\n
+      <dt id="getInputField"><code><strong>cm.getInputField</strong>() â Element</code></dt>\n
+      <dd>Returns the input field for the editor. Will be a textarea\n
+      or an editable div, depending on the value of\n
+      the <a href="#option_inputStyle"><code>inputStyle</code></a>\n
+      option.</dd>\n
       <dt id="getWrapperElement"><code><strong>cm.getWrapperElement</strong>() â Element</code></dt>\n
       <dd>Returns the DOM node that represents the editor, and\n
       controls its size. Remove this from your tree to delete an\n
@@ -2075,7 +2151,7 @@ editor.setOption("extraKeys", {\n
       through <a href="#setOption"><code>setOption</code></a>.</dd>\n
 \n
       <dt id="defineInitHook"><code><strong>CodeMirror.defineInitHook</strong>(func: function)</code></dt>\n
-      <dd>If your extention just needs to run some\n
+      <dd>If your extension just needs to run some\n
       code whenever a CodeMirror instance is initialized,\n
       use <code>CodeMirror.defineInitHook</code>. Give it a function as\n
       its only argument, and from then on, that function will be called\n
@@ -2191,7 +2267,7 @@ editor.setOption("extraKeys", {\n
           to <code>findNext</code> or <code>findPrevious</code> did\n
           not return false. They will return <code>{line, ch}</code>\n
           objects pointing at the start and end of the match.</dd>\n
-          <dt><code><strong>replace</strong>(text: string)</code></dt>\n
+          <dt><code><strong>replace</strong>(text: string, ?origin:Â string)</code></dt>\n
           <dd>Replaces the currently found match with the given text\n
           and adjusts the cursor position to reflect the\n
           replacement.</dd>\n
@@ -2204,6 +2280,13 @@ editor.setOption("extraKeys", {\n
       on <code>searchcursor.js</code>, and will make use\n
       of <a href="#addon_dialog"><code>openDialog</code></a> when\n
       available to make prompting for search queries less ugly.</dd>\n
+\n
+      <dt id="addon_jump-to-line"><a href="../addon/search/jump-to-line.js"><code>search/jump-to-line.js</code></a></dt>\n
+      <dd>Implements a <code>jumpToLine</code> command and binding <code>Alt-G</code> to it.\n
+      Accepts <code>linenumber</code>, <code>+/-linenumber</code>, <code>line:char</code>,\n
+      <code>scroll%</code> and <code>:linenumber</code> formats.\n
+      This will make use of <a href="#addon_dialog"><code>openDialog</code></a>\n
+      when available to make prompting for line number neater.</dd>\n
 \n
       <dt id="addon_matchesonscrollbar"><a href="../addon/search/matchesonscrollbar.js"><code>search/matchesonscrollbar.js</code></a></dt>\n
       <dd>Adds a <code>showMatchesOnScrollbar</code> method to editor\n
@@ -2254,7 +2337,7 @@ editor.setOption("extraKeys", {\n
       the <code>CodeMirror-matchingtag</code> class). Also\n
       defines\n
       a <a href="#commands">command</a> <code>toMatchingTag</code>,\n
-      which you can bind a key to in order to jump to the tag mathing\n
+      which you can bind a key to in order to jump to the tag matching\n
       the one under the cursor. Depends on\n
       the <code>addon/fold/xml-fold.js</code>\n
       addon. <a href="../demo/matchtags.html">Demo here.</a></dd>\n
@@ -2267,22 +2350,29 @@ editor.setOption("extraKeys", {\n
       squiggly underline style for this class.</dd>\n
 \n
       <dt id="addon_closetag"><a href="../addon/cm_edit/closetag.js"><code>edit/closetag.js</code></a></dt>\n
-      <dd>Provides utility functions for adding automatic tag closing\n
-      to XML modes. See\n
+      <dd>Defines an <code>autoCloseTags</code> option that will\n
+      auto-close XML tags when \'<code>&gt;</code>\' or \'<code>/</code>\'\n
+      is typed, and\n
+      a <code>closeTag</code> <a href="#commands">command</a> that\n
+      closes the nearest open tag. Depends on\n
+      the <code>fold/xml-fold.js</code> addon. See\n
       the <a href="../demo/closetag.html">demo</a>.</dd>\n
 \n
       <dt id="addon_continuelist"><a href="../addon/cm_edit/continuelist.js"><code>edit/continuelist.js</code></a></dt>\n
       <dd>Markdown specific. Defines\n
       a <code>"newlineAndIndentContinueMarkdownList"</code> <a href="#commands">command</a>\n
-      command that can be bound to <code>enter</code> to automatically\n
+      that can be bound to <code>enter</code> to automatically\n
       insert the leading characters for continuing a list. See\n
       the <a href="../mode/markdown/index.html">Markdown mode\n
       demo</a>.</dd>\n
 \n
       <dt id="addon_comment"><a href="../addon/comment/comment.js"><code>comment/comment.js</code></a></dt>\n
-      <dd>Addon for commenting and uncommenting code. Adds three\n
+      <dd>Addon for commenting and uncommenting code. Adds four\n
       methods to CodeMirror instances:\n
       <dl>\n
+        <dt id="toggleComment"><code><strong>toggleComment</strong>(from: {line, ch}, to: {line, ch}, ?options: object)</code></dt>\n
+        <dd>Tries to uncomment the current selection, and if that\n
+        fails, line-comments it.</dd>\n
         <dt id="lineComment"><code><strong>lineComment</strong>(from: {line, ch}, to: {line, ch}, ?options: object)</code></dt>\n
         <dd>Set the lines in the given range to be line comments. Will\n
         fall back to <code>blockComment</code> when no line comment\n
@@ -2320,8 +2410,8 @@ editor.setOption("extraKeys", {\n
       </dl>\n
       The addon also defines\n
       a <code>toggleComment</code> <a href="#commands">command</a>,\n
-      which will try to uncomment the current selection, and if that\n
-      fails, line-comments it.</dd>\n
+      which is a shorthand command for calling\n
+      <code>toggleComment</code> with no options.</dd>\n
 \n
       <dt id="addon_foldcode"><a href="../addon/fold/foldcode.js"><code>fold/foldcode.js</code></a></dt>\n
       <dd>Helps with code folding. Adds a <code>foldCode</code> method\n
@@ -2409,11 +2499,11 @@ editor.setOption("extraKeys", {\n
       <dd>Can be used to run a CodeMirror mode over text without\n
       actually opening an editor instance.\n
       See <a href="../demo/runmode.html">the demo</a> for an example.\n
-      There are alternate versions of the file avaible for\n
+      There are alternate versions of the file available for\n
       running <a href="../addon/runmode/runmode-standalone.js">stand-alone</a>\n
       (without including all of CodeMirror) and\n
       for <a href="../addon/runmode/runmode.node.js">running under\n
-      node.js</a>.</dd>\n
+      node.js</a> (see <code>bin/source-highlight</code> for an example of using the latter).</dd>\n
 \n
       <dt id="addon_colorize"><a href="../addon/runmode/colorize.js"><code>runmode/colorize.js</code></a></dt>\n
       <dd>Provides a convenient way to syntax-highlight code snippets\n
@@ -2445,7 +2535,7 @@ editor.setOption("extraKeys", {\n
       between several modes.\n
       Defines <code>CodeMirror.multiplexingMode</code> which, when\n
       given as first argument a mode object, and as other arguments\n
-      any number of <code>{open, close, mode [, delimStyle, innerStyle]}</code>\n
+      any number of <code>{open, close, mode [, delimStyle, innerStyle, parseDelimiters]}</code>\n
       objects, will return a mode object that starts parsing using the\n
       mode passed as first argument, but will switch to another mode\n
       as soon as it encounters a string that occurs in one of\n
@@ -2455,10 +2545,15 @@ editor.setOption("extraKeys", {\n
       Pass <code>"\\n"</code> for <code>open</code> or <code>close</code>\n
       if you want to switch on a blank line.\n
       <ul><li>When <code>delimStyle</code> is specified, it will be the token\n
-      style returned for the delimiter tokens.</li>\n
+      style returned for the delimiter tokens (as well as\n
+      <code>[delimStyle]-open</code> on the opening token and\n
+      <code>[delimStyle]-close</code> on the closing token).</li>\n
       <li>When <code>innerStyle</code> is specified, it will be the token\n
-      style added for each inner mode token.</li></ul>\n
-      The outer mode will not see the content between the delimiters.\n
+      style added for each inner mode token.</li>\n
+      <li>When <code>parseDelimiters</code> is true, the content of\n
+      the delimiters will also be passed to the inner mode.\n
+      (And <code>delimStyle</code> is ignored.)</li></ul> The outer\n
+      mode will not see the content between the delimiters.\n
       See <a href="../demo/multiplex.html">this demo</a> for an\n
       example.</dd>\n
 \n
@@ -2473,7 +2568,9 @@ editor.setOption("extraKeys", {\n
       is an array of strings or objects (the completions),\n
       and <code>from</code> and <code>to</code> give the start and end\n
       of the token that is being completed as <code>{line, ch}</code>\n
-      objects.</dd>\n
+      objects. An optional <code>selectedHint</code> property (an\n
+      integer) can be added to the completion object to control the\n
+      initially selected hint.</dd>\n
       <dd>If no hinting function is given, the addon will\n
       use <code>CodeMirror.hint.auto</code>, which\n
       calls <a href="#getHelpers"><code>getHelpers</code></a> with\n
@@ -2518,7 +2615,10 @@ editor.setOption("extraKeys", {\n
         arguments <code>(cm, callback, ?options)</code>, and the\n
         completion interface will only be popped up when the hinting\n
         function calls the callback, passing it the object holding the\n
-        completions.</dd>\n
+        completions. By default, hinting only works when there is no\n
+        selection. You can give a hinting function\n
+        a <code>supportsSelection</code> property with a truthy value\n
+        to indicate that it supports selections.</dd>\n
         <dt><code><strong>completeSingle</strong>: boolean</code></dt>\n
         <dd>Determines whether, when only a single completion is\n
         available, it is completed without showing the dialog.\n
@@ -2536,9 +2636,9 @@ editor.setOption("extraKeys", {\n
         has <code>moveFocus(n)</code>, <code>setFocus(n)</code>, <code>pick()</code>,\n
         and <code>close()</code> methods (see the source for details),\n
         that can be used to change the focused element, pick the\n
-        current element or close the menu. Additionnaly <code>menuSize()</code>\n
+        current element or close the menu. Additionally <code>menuSize()</code>\n
         can give you access to the size of the current dropdown menu,\n
-        <code>length</code> give you the number of availlable completions, and\n
+        <code>length</code> give you the number of available completions, and\n
         <code>data</code> give you full access to the completion returned by the\n
         hinting function.</dd>\n
         <dt><code><strong>extraKeys</strong>: keymap</code></dt>\n
@@ -2641,17 +2741,30 @@ editor.setOption("extraKeys", {\n
       <dt id="addon_lint"><a href="../addon/lint/lint.js"><code>lint/lint.js</code></a></dt>\n
       <dd>Defines an interface component for showing linting warnings,\n
       with pluggable warning sources\n
-      (see <a href="../addon/lint/json-lint.js"><code>json-lint.js</code></a>,\n
+      (see <a href="../addon/lint/html-lint.js"><code>html-lint.js</code></a>,\n
+      <a href="../addon/lint/json-lint.js"><code>json-lint.js</code></a>,\n
       <a href="../addon/lint/javascript-lint.js"><code>javascript-lint.js</code></a>,\n
+      <a href="../addon/lint/coffeescript-lint.js"><code>coffeescript-lint.js</code></a>,\n
       and <a href="../addon/lint/css-lint.js"><code>css-lint.js</code></a>\n
       in the same directory). Defines a <code>lint</code> option that\n
-      can be set to a warning source (for\n
-      example <code>CodeMirror.lint.javascript</code>), or\n
-      to <code>true</code>, in which\n
-      case <a href="#getHelper"><code>getHelper</code></a> with\n
-      type <code>"lint"</code> is used to determined a validator\n
-      function. Depends on <code>addon/lint/lint.css</code>. A demo\n
-      can be found <a href="../demo/lint.html">here</a>.</dd>\n
+      can be set to an annotation source (for\n
+      example <code>CodeMirror.lint.javascript</code>), to an options\n
+      object (in which case the <code>getAnnotations</code> field is\n
+      used as annotation source), or simply to <code>true</code>. When\n
+      no annotation source is\n
+      specified, <a href="#getHelper"><code>getHelper</code></a> with\n
+      type <code>"lint"</code> is used to find an annotation function.\n
+      An annotation source function should, when given a document\n
+      string, an options object, and an editor instance, return an\n
+      array of <code>{message, severity, from, to}</code> objects\n
+      representing problems. When the function has\n
+      an <code>async</code> property with a truthy value, it will be\n
+      called with an additional second argument, which is a callback\n
+      to pass the array to. By default, the linter will run\n
+      (debounced) whenever the document is changed. You can pass\n
+      a <code>lintOnChange: false</code> option to disable that.\n
+      Depends on <code>addon/lint/lint.css</code>. A demo can be\n
+      found <a href="../demo/lint.html">here</a>.</dd>\n
 \n
       <dt id="addon_mark-selection"><a href="../addon/selection/mark-selection.js"><code>selection/mark-selection.js</code></a></dt>\n
       <dd>Causes the selected text to be marked with the CSS class\n
@@ -2662,8 +2775,18 @@ editor.setOption("extraKeys", {\n
       <dt id="addon_active-line"><a href="../addon/selection/active-line.js"><code>selection/active-line.js</code></a></dt>\n
       <dd>Defines a <code>styleActiveLine</code> option that, when enabled,\n
       gives the wrapper of the active line the class <code>CodeMirror-activeline</code>,\n
-      and adds a background with the class <code>CodeMirror-activeline-background</code>.\n
-      is enabled. See the <a href="../demo/activeline.html">demo</a>.</dd>\n
+      adds a background with the class <code>CodeMirror-activeline-background</code>,\n
+      and adds the class <code>CodeMirror-activeline-gutter</code> to the\n
+      line\'s gutter space is enabled. See the\n
+      <a href="../demo/activeline.html">demo</a>.</dd>\n
+\n
+      <dt id="addon_selection-pointer"><a href="../addon/selection/selection-pointer.js"><code>selection/selection-pointer.js</code></a></dt>\n
+      <dd>Defines a <code>selectionPointer</code> option which you can\n
+      use to control the mouse cursor appearance when hovering over\n
+      the selection. It can be set to a string,\n
+      like <code>"pointer"</code>, or to true, in which case\n
+      the <code>"default"</code> (arrow) cursor will be used. You can\n
+      see a demo <a href="../mode/htmlmixed/index.html">here</a>.</dd>\n
 \n
       <dt id="addon_loadmode"><a href="../addon/mode/loadmode.js"><code>mode/loadmode.js</code></a></dt>\n
       <dd>Defines a <code>CodeMirror.requireMode(modename,\n
@@ -2689,12 +2812,13 @@ editor.setOption("extraKeys", {\n
       properties <code>mimes</code>, which holds an array of MIME\n
       types for modes with multiple MIMEs associated,\n
       and <code>ext</code>, which holds an array of file extensions\n
-      associated with this mode. Three convenience\n
+      associated with this mode. Four convenience\n
       functions, <code>CodeMirror.findModeByMIME</code>,\n
-      and <code>CodeMirror.findModeByExtension</code>,\n
+      <code>CodeMirror.findModeByExtension</code>,\n
+      <code>CodeMirror.findModeByFileName</code>\n
       and <code>CodeMirror.findModeByName</code> are provided, which\n
-      return such an object given a MIME or extension string. Note\n
-      that, for historical reasons, this file resides in the\n
+      return such an object given a MIME, extension, file name or mode name\n
+      string. Note that, for historical reasons, this file resides in the\n
       top-level <code>mode</code> directory, not\n
       under <code>addon</code>. <a href="../demo/loadmode.html">Demo</a>.</dd>\n
 \n
@@ -2710,9 +2834,10 @@ editor.setOption("extraKeys", {\n
 \n
       <dt id="addon_placeholder"><a href="../addon/display/placeholder.js"><code>display/placeholder.js</code></a></dt>\n
       <dd>Adds a <code>placeholder</code> option that can be used to\n
-      make text appear in the editor when it is empty and not focused.\n
-      Also gives the editor a <code>CodeMirror-empty</code> CSS class\n
-      whenever it doesn\'t contain any text.\n
+      make content appear in the editor when it is empty and not\n
+      focused. It can hold either a string or a DOM node. Also gives\n
+      the editor a <code>CodeMirror-empty</code> CSS class whenever it\n
+      doesn\'t contain any text.\n
       See <a href="../demo/placeholder.html">the demo</a>.</dd>\n
 \n
       <dt id="addon_fullscreen"><a href="../addon/display/fullscreen.js"><code>display/fullscreen.js</code></a></dt>\n
@@ -2721,6 +2846,20 @@ editor.setOption("extraKeys", {\n
       taking up the whole browser window). Depends\n
       on <a href="../addon/display/fullscreen.css"><code>fullscreen.css</code></a>. <a href="../demo/fullscreen.html">Demo\n
       here</a>.</dd>\n
+\n
+      <dt id="addon_autorefresh"><a href="../addon/display/autorefresh.js"><code>display/autorefresh.js</code></a></dt>\n
+      <dd>This addon can be useful when initializing an editor in a\n
+      hidden DOM node, in cases where it is difficult to\n
+      call <a href="#refresh"><code>refresh</code></a> when the editor\n
+      becomes visible. It defines an option <code>autoRefresh</code>\n
+      which you can set to true to ensure that, if the editor wasn\'t\n
+      visible on initialization, it will be refreshed the first time\n
+      it becomes visible. This is done by polling every 250\n
+      milliseconds (you can pass a value like <code>{delay:\n
+      500}</code> as the option value to configure this). Note that\n
+      this addon will only refresh the editor <em>once</em> when it\n
+      first becomes visible, and won\'t take care of further restyling\n
+      and resizing.</dd>\n
 \n
       <dt id="addon_simplescrollbars"><a href="../addon/scroll/simplescrollbars.js"><code>scroll/simplescrollbars.js</code></a></dt>\n
       <dd>Defines two additional scrollbar\n
@@ -2741,14 +2880,14 @@ editor.setOption("extraKeys", {\n
       set of annotations. The method returns an object\n
       whose <code>update</code> method can be called with an array\n
       of <code>{from: Pos, to: Pos}</code> objects marking the ranges\n
-      to be higlighed. To detach the annotations, call the\n
+      to be highlighted. To detach the annotations, call the\n
       object\'s <code>clear</code> method.</dd>\n
 \n
       <dt id="addon_rulers"><a href="../addon/display/rulers.js"><code>display/rulers.js</code></a></dt>\n
       <dd>Adds a <code>rulers</code> option, which can be used to show\n
       one or more vertical rulers in the editor. The option, if\n
       defined, should be given an array of <code>{column [, className,\n
-      color, lineStyle, width]}</code> objects or numbers (wich\n
+      color, lineStyle, width]}</code> objects or numbers (which\n
       indicate a column). The ruler will be displayed at the column\n
       indicated by the number or the <code>column</code> property.\n
       The <code>className</code> property can be used to assign a\n
@@ -2760,13 +2899,40 @@ editor.setOption("extraKeys", {\n
       instances, which places a DOM node above or below an editor, and\n
       shrinks the editor to make room for the node. The method takes\n
       as first argument as DOM node, and as second an optional options\n
-      object. By default, the panel ends up above the editor. This can\n
-      be changed by passing a <code>position</code> option with the\n
-      value <code>"bottom"</code>. The object returned by this method\n
+      object. The <code>Panel</code> object returned by this method\n
       has a <code>clear</code> method that is used to remove the\n
       panel, and a <code>changed</code> method that can be used to\n
       notify the addon when the size of the panel\'s DOM node has\n
-      changed.</dd>\n
+      changed.<br/>\n
+      The method accepts the following options:\n
+      <dl>\n
+        <dt><code><strong>position</strong> : string</code></dt>\n
+        <dd>Controls the position of the newly added panel. The\n
+        following values are recognized:\n
+          <dl>\n
+            <dt><code><strong>top</strong> (default)</code></dt>\n
+            <dd>Adds the panel at the very top.</dd>\n
+            <dt><code><strong>after-top</strong></code></dt>\n
+            <dd>Adds the panel at the bottom of the top panels.</dd>\n
+            <dt><code><strong>bottom</strong></code></dt>\n
+            <dd>Adds the panel at the very bottom.</dd>\n
+            <dt><code><strong>before-bottom</strong></code></dt>\n
+            <dd>Adds the panel at the top of the bottom panels.</dd>\n
+          </dl>\n
+        </dd>\n
+        <dt><code><strong>before</strong> : Panel</code></dt>\n
+        <dd>The new panel will be added before the given panel.</dd>\n
+        <dt><code><strong>after</strong> : Panel</code></dt>\n
+        <dd>The new panel will be added after the given panel.</dd>\n
+        <dt><code><strong>replace</strong> : Panel</code></dt>\n
+        <dd>The new panel will replace the given panel.</dd>\n
+      </dl>\n
+      When using the <code>after</code>, <code>before</code> or <code>replace</code> options,\n
+      if the panel doesn\'t exists or has been removed,\n
+      the value of the <code>position</code> option will be used as a fallback.\n
+      <br>\n
+      A demo of the addon is available <a href="../demo/panel.html">here</a>.\n
+      </dd>\n
 \n
       <dt id="addon_hardwrap"><a href="../addon/wrap/hardwrap.js"><code>wrap/hardwrap.js</code></a></dt>\n
       <dd>Addon to perform hard line wrapping/breaking for paragraphs\n
@@ -2779,7 +2945,7 @@ editor.setOption("extraKeys", {\n
           <dt><code><strong>wrapRange</strong>(from: {line, ch}, to: {line, ch}, ?options: object)</code></dt>\n
           <dd>Wraps the given range as one big paragraph.</dd>\n
           <dt><code><strong>wrapParagraphsInRange</strong>(from: {line, ch}, to: {line, ch}, ?options: object)</code></dt>\n
-          <dd>Wrapps the paragraphs in (and overlapping with) the\n
+          <dd>Wraps the paragraphs in (and overlapping with) the\n
           given range individually.</dd>\n
         </dl>\n
         The following options are recognized:\n
@@ -2837,7 +3003,10 @@ editor.setOption("extraKeys", {\n
           <dd>When true (the default), changed pieces of text are\n
           highlighted.</dd>\n
         </dl>\n
-        <a href="../demo/merge.html">Demo here</a>.</dd>\n
+        The addon also defines commands <code>"goNextDiff"</code>\n
+        and <code>"goPrevDiff"</code> to quickly jump to the next\n
+        changed chunk. <a href="../demo/merge.html">Demo\n
+        here</a>.</dd>\n
 \n
       <dt id="addon_tern"><a href="../addon/tern/tern.js"><code>tern/tern.js</code></a></dt>\n
       <dd>Provides integration with\n
@@ -2938,7 +3107,7 @@ editor.setOption("extraKeys", {\n
 \n
       <dt><code><strong>peek</strong>() â string</code></dt>\n
       <dd>Returns the next character in the stream without advancing\n
-      it. Will return an <code>null</code> at the end of the\n
+      it. Will return a <code>null</code> at the end of the\n
       line.</dd>\n
       <dt><code><strong>next</strong>() â string</code></dt>\n
       <dd>Returns the next character in the stream and advances it.\n
@@ -3119,6 +3288,131 @@ editor.setOption("extraKeys", {\n
     second an object that specifies the properties that should be\n
     added. This is mostly useful to add utilities that can later be\n
     looked up through <a href="#getMode"><code>getMode</code></a>.</p>\n
+</section>\n
+\n
+<section id="vimapi">\n
+    <h2>VIM Mode API</h2>\n
+\n
+    <p>CodeMirror has a robust VIM mode that attempts to faithfully\n
+    emulate VIM\'s most useful features. It can be enabled by\n
+    including <a href="../keymap/vim.js"><code>keymap/vim.js</code>\n
+    </a> and setting the <code>keyMap</code> option to\n
+    <code>"vim"</code>.</p>\n
+\n
+    <h3 id="vimapi_configuration">Configuration</h3>\n
+\n
+    <p>VIM mode accepts configuration options for customizing\n
+    behavior at run time. These methods can be called at any time\n
+    and will affect all existing CodeMirror instances unless\n
+    specified otherwise. The methods are exposed on the\n
+    <code><strong>CodeMirror.Vim</strong></code> object.</p>\n
+\n
+    <dl>\n
+      <dt id="vimapi_setOption"><code><strong>setOption(name: string, value: any, ?cm: CodeMirror, ?cfg: object)</strong></code></dt>\n
+      <dd>Sets the value of a VIM option. <code>name</code> should\n
+      be the name of an option. If <code>cfg.scope</code> is not set\n
+      and <code>cm</code> is provided, then sets the global and\n
+      instance values of the option. Otherwise, sets either the\n
+      global or instance value of the option depending on whether\n
+      <code>cfg.scope</code> is <code>global</code> or\n
+      <code>local</code>.</dd>\n
+      <dt id="vimapi_getOption"><code><strong>getOption(name: string, ?cm: CodeMirror: ?cfg: object)</strong></code></dt>\n
+      <dd>Gets the current value of a VIM option. If\n
+      <code>cfg.scope</code> is not set and <code>cm</code> is\n
+      provided, then gets the instance value of the option, falling\n
+      back to the global value if not set. If <code>cfg.scope</code> is provided, then gets the <code>global</code> or\n
+      <code>local</code> value without checking the other.</dd>\n
+\n
+      <dt id="vimapi_map"><code><strong>map(lhs: string, rhs: string, ?context: string)</strong></code></dt>\n
+      <dd>Maps a key sequence to another key sequence. Implements\n
+      VIM\'s <code>:map</code> command. To map ; to : in VIM would be\n
+      <code><strong>:map ; :</strong></code>. That would translate to\n
+      <code><strong>CodeMirror.Vim.map(\';\', \':\');</strong></code>.\n
+      The <code>context</code> can be <code>normal</code>,\n
+      <code>visual</code>, or <code>insert</code>, which correspond\n
+      to <code>:nmap</code>, <code>:vmap</code>, and\n
+      <code>:imap</code>\n
+      respectively.</dd>\n
+\n
+      <dt id="vimapi_mapCommand"><code><strong>mapCommand(keys: string, type: string, name: string, ?args: object, ?extra: object)</strong></code></dt>\n
+      <dd>Maps a key sequence to a <code>motion</code>,\n
+      <code>operator</code>, or <code>action</code> type command.\n
+      The args object is passed through to the command when it is\n
+      invoked by the provided key sequence.\n
+      <code>extras.context</code> can be <code>normal</code>,\n
+      <code>visual</code>, or <code>insert</code>, to map the key\n
+      sequence only in the corresponding mode.\n
+      <code>extras.isEdit</code> is applicable only to actions,\n
+      determining whether it is recorded for replay for the\n
+      <code>.</code> single-repeat command.\n
+    </dl>\n
+\n
+    <h3 id="vimapi_extending">Extending VIM</h3>\n
+\n
+    <p>CodeMirror\'s VIM mode implements a large subset of VIM\'s core\n
+    editing functionality. But since there\'s always more to be\n
+    desired, there is a set of APIs for extending VIM\'s\n
+    functionality. As with the configuration API, the methods are\n
+    exposed on <code><strong>CodeMirror.Vim</strong></code> and may\n
+    be called at any time.</p>\n
+\n
+    <dl>\n
+      <dt id="vimapi_defineOption"><code><strong>defineOption(name: string, default: any, type: string, ?aliases: array&lt;string&gt;, ?callback: function (?value: any, ?cm: CodeMirror) â ?any)</strong></code></dt>\n
+      <dd>Defines a VIM style option and makes it available to the\n
+      <code>:set</code> command. Type can be <code>boolean</code> or\n
+      <code>string</code>, used for validation and by\n
+      <code>:set</code> to determine which syntax to accept. If a\n
+      <code>callback</code> is passed in, VIM does not store the value of the\n
+      option itself, but instead uses the callback as a setter/getter. If the\n
+      first argument to the callback is <code>undefined</code>, then the\n
+      callback should return the value of the option. Otherwise, it should set\n
+      instead. Since VIM options have global and instance values, whether a\n
+      <code>CodeMirror</code> instance is passed in denotes whether the global\n
+      or local value should be used. Consequently, it\'s possible for the\n
+      callback to be called twice for a single <code>setOption</code> or\n
+      <code>getOption</code> call. Note that right now, VIM does not support\n
+      defining buffer-local options that do not have global values. If an\n
+      option should not have a global value, either always ignore the\n
+      <code>cm</code> parameter in the callback, or always pass in a\n
+      <code>cfg.scope</code> to <code>setOption</code> and\n
+      <code>getOption</code>.</dd>\n
+\n
+      <dt id="vimapi_defineMotion"><code><strong>defineMotion(name: string, fn: function(cm: CodeMirror, head: {line, ch}, ?motionArgs: object}) â {line, ch})</strong></code></dt>\n
+      <dd>Defines a motion command for VIM. The motion should return\n
+      the desired result position of the cursor. <code>head</code>\n
+      is the current position of the cursor. It can differ from\n
+      <code>cm.getCursor(\'head\')</code> if VIM is in visual mode.\n
+      <code>motionArgs</code> is the object passed into\n
+      <strong><code>mapCommand()</code></strong>.</dd>\n
+\n
+      <dt id="vimapi_defineOperator"><strong><code>defineOperator(name: string, fn: function(cm: CodeMirror, ?operatorArgs: object, ranges: array&lt;{anchor, head}&gt;) â ?{line, ch})</code></strong></dt>\n
+      <dd>Defines an operator command, similar to <strong><code>\n
+      defineMotion</code></strong>. <code>ranges</code> is the range\n
+      of text the operator should operate on. If the cursor should\n
+      be set to a certain position after the operation finishes, it\n
+      can return a cursor object.</dd>\n
+\n
+      <dt id="vimapi_defineActon"><strong><code>defineAction(name: string, fn: function(cm: CodeMirror, ?actionArgs: object))</code></strong></dt>\n
+      <dd>Defines an action command, similar to\n
+      <strong><code>defineMotion</code></strong>. Action commands\n
+      can have arbitrary behavior, making them more flexible than\n
+      motions and operators, at the loss of orthogonality.</dd>\n
+\n
+      <dt id="vimapi_defineEx"><strong><code>defineEx(name: string, ?prefix: string, fn: function(cm: CodeMirror, ?params: object))</code></strong></dt>\n
+      <dd>Defines an Ex command, and maps it to <code>:name</code>.\n
+      If a prefix is provided, it, and any prefixed substring of the\n
+      <code>name</code> beginning with the <code>prefix</code> can\n
+      be used to invoke the command. If the <code>prefix</code> is\n
+      falsy, then <code>name</code> is used as the prefix. <code>\n
+      params.argString</code> contains the part of the prompted\n
+      string after the command name. <code>params.args</code> is\n
+      <code>params.argString</code> split by whitespace. If the\n
+      command was prefixed with a\n
+      <code><strong><a href="http://vimdoc.sourceforge.net/htmldoc/cmdline.html#cmdline-ranges">line range</a></strong></code>,\n
+      <code>params.line</code> and <code>params.lineEnd</code> will\n
+      be set.\n
+    </dl>\n
+\n
 </section>\n
 \n
 </article>\n

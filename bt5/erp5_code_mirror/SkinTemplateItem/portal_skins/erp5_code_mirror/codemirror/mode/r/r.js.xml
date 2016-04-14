@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897149.78</string> </value>
+            <value> <string>ts60604384.01</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -38,6 +38,8 @@
     mod(CodeMirror);\n
 })(function(CodeMirror) {\n
 "use strict";\n
+\n
+CodeMirror.registerHelper("wordChars", "r", /[\\w.]/);\n
 \n
 CodeMirror.defineMode("r", function(config) {\n
   function wordObj(str) {\n
@@ -198,7 +200,7 @@ CodeMirror.defineMIME("text/x-rsrc", "r");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5622</int> </value>
+            <value> <int>5677</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

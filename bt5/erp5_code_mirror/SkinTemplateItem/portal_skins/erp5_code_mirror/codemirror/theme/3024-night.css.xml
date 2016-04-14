@@ -28,7 +28,9 @@
         </item>
         <item>
             <key> <string>raw</string> </key>
-            <value> <string>/*\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
 \n
     Name:       3024 night\n
     Author:     Jan T. Sott (http://github.com/idleberg)\n
@@ -38,34 +40,38 @@
 \n
 */\n
 \n
-.cm-s-3024-night.CodeMirror {background: #090300; color: #d6d5d4;}\n
-.cm-s-3024-night div.CodeMirror-selected {background: #3a3432 !important;}\n
-.cm-s-3024-night .CodeMirror-gutters {background: #090300; border-right: 0px;}\n
+.cm-s-3024-night.CodeMirror { background: #090300; color: #d6d5d4; }\n
+.cm-s-3024-night div.CodeMirror-selected { background: #3a3432; }\n
+.cm-s-3024-night .CodeMirror-line::selection, .cm-s-3024-night .CodeMirror-line > span::selection, .cm-s-3024-night .CodeMirror-line > span > span::selection { background: rgba(58, 52, 50, .99); }\n
+.cm-s-3024-night .CodeMirror-line::-moz-selection, .cm-s-3024-night .CodeMirror-line > span::-moz-selection, .cm-s-3024-night .CodeMirror-line > span > span::-moz-selection { background: rgba(58, 52, 50, .99); }\n
+.cm-s-3024-night .CodeMirror-gutters { background: #090300; border-right: 0px; }\n
 .cm-s-3024-night .CodeMirror-guttermarker { color: #db2d20; }\n
 .cm-s-3024-night .CodeMirror-guttermarker-subtle { color: #5c5855; }\n
-.cm-s-3024-night .CodeMirror-linenumber {color: #5c5855;}\n
+.cm-s-3024-night .CodeMirror-linenumber { color: #5c5855; }\n
 \n
-.cm-s-3024-night .CodeMirror-cursor {border-left: 1px solid #807d7c !important;}\n
+.cm-s-3024-night .CodeMirror-cursor { border-left: 1px solid #807d7c; }\n
 \n
-.cm-s-3024-night span.cm-comment {color: #cdab53;}\n
-.cm-s-3024-night span.cm-atom {color: #a16a94;}\n
-.cm-s-3024-night span.cm-number {color: #a16a94;}\n
+.cm-s-3024-night span.cm-comment { color: #cdab53; }\n
+.cm-s-3024-night span.cm-atom { color: #a16a94; }\n
+.cm-s-3024-night span.cm-number { color: #a16a94; }\n
 \n
-.cm-s-3024-night span.cm-property, .cm-s-3024-night span.cm-attribute {color: #01a252;}\n
-.cm-s-3024-night span.cm-keyword {color: #db2d20;}\n
-.cm-s-3024-night span.cm-string {color: #fded02;}\n
+.cm-s-3024-night span.cm-property, .cm-s-3024-night span.cm-attribute { color: #01a252; }\n
+.cm-s-3024-night span.cm-keyword { color: #db2d20; }\n
+.cm-s-3024-night span.cm-string { color: #fded02; }\n
 \n
-.cm-s-3024-night span.cm-variable {color: #01a252;}\n
-.cm-s-3024-night span.cm-variable-2 {color: #01a0e4;}\n
-.cm-s-3024-night span.cm-def {color: #e8bbd0;}\n
-.cm-s-3024-night span.cm-bracket {color: #d6d5d4;}\n
-.cm-s-3024-night span.cm-tag {color: #db2d20;}\n
-.cm-s-3024-night span.cm-link {color: #a16a94;}\n
-.cm-s-3024-night span.cm-error {background: #db2d20; color: #807d7c;}\n
+.cm-s-3024-night span.cm-variable { color: #01a252; }\n
+.cm-s-3024-night span.cm-variable-2 { color: #01a0e4; }\n
+.cm-s-3024-night span.cm-def { color: #e8bbd0; }\n
+.cm-s-3024-night span.cm-bracket { color: #d6d5d4; }\n
+.cm-s-3024-night span.cm-tag { color: #db2d20; }\n
+.cm-s-3024-night span.cm-link { color: #a16a94; }\n
+.cm-s-3024-night span.cm-error { background: #db2d20; color: #807d7c; }\n
 \n
-.cm-s-3024-night .CodeMirror-activeline-background {background: #2F2F2F !important;}\n
-.cm-s-3024-night .CodeMirror-matchingbracket { text-decoration: underline; color: white !important;}\n
-</string> </value>
+.cm-s-3024-night .CodeMirror-activeline-background { background: #2F2F2F; }\n
+.cm-s-3024-night .CodeMirror-matchingbracket { text-decoration: underline; color: white !important; }\n
+
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>

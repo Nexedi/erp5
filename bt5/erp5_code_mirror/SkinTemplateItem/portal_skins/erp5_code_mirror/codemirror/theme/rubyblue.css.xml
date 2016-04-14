@@ -28,13 +28,17 @@
         </item>
         <item>
             <key> <string>raw</string> </key>
-            <value> <string>.cm-s-rubyblue.CodeMirror { background: #112435; color: white; }\n
-.cm-s-rubyblue div.CodeMirror-selected { background: #38566F !important; }\n
+            <value> <string encoding="cdata"><![CDATA[
+
+.cm-s-rubyblue.CodeMirror { background: #112435; color: white; }\n
+.cm-s-rubyblue div.CodeMirror-selected { background: #38566F; }\n
+.cm-s-rubyblue .CodeMirror-line::selection, .cm-s-rubyblue .CodeMirror-line > span::selection, .cm-s-rubyblue .CodeMirror-line > span > span::selection { background: rgba(56, 86, 111, 0.99); }\n
+.cm-s-rubyblue .CodeMirror-line::-moz-selection, .cm-s-rubyblue .CodeMirror-line > span::-moz-selection, .cm-s-rubyblue .CodeMirror-line > span > span::-moz-selection { background: rgba(56, 86, 111, 0.99); }\n
 .cm-s-rubyblue .CodeMirror-gutters { background: #1F4661; border-right: 7px solid #3E7087; }\n
 .cm-s-rubyblue .CodeMirror-guttermarker { color: white; }\n
 .cm-s-rubyblue .CodeMirror-guttermarker-subtle { color: #3E7087; }\n
 .cm-s-rubyblue .CodeMirror-linenumber { color: white; }\n
-.cm-s-rubyblue .CodeMirror-cursor { border-left: 1px solid white !important; }\n
+.cm-s-rubyblue .CodeMirror-cursor { border-left: 1px solid white; }\n
 \n
 .cm-s-rubyblue span.cm-comment { color: #999; font-style:italic; line-height: 1em; }\n
 .cm-s-rubyblue span.cm-atom { color: #F4C20B; }\n
@@ -50,8 +54,10 @@
 .cm-s-rubyblue span.cm-builtin, .cm-s-rubyblue span.cm-special { color: #FF9D00; }\n
 .cm-s-rubyblue span.cm-error { color: #AF2018; }\n
 \n
-.cm-s-rubyblue .CodeMirror-activeline-background {background: #173047 !important;}\n
-</string> </value>
+.cm-s-rubyblue .CodeMirror-activeline-background { background: #173047; }\n
+
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>

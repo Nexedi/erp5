@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Factor mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link href=\'http://fonts.googleapis.com/css?family=Droid+Sans+Mono\' rel=\'stylesheet\' type=\'text/css\'>\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/mode/simple.js"></script>\n
+<script src="factor.js"></script>\n
+<style>\n
+.CodeMirror {\n
+    font-family: \'Droid Sans Mono\', monospace;\n
+    font-size: 14px;\n
+}\n
+</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Factor</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+\n
+<h2>Factor mode</h2>\n
+\n
+<form><textarea id="code" name="code">\n
+! Copyright (C) 2008 Slava Pestov.\n
+! See http://factorcode.org/license.txt for BSD license.\n
+\n
+! A simple time server\n
+\n
+USING: accessors calendar calendar.format io io.encodings.ascii\n
+io.servers kernel threads ;\n
+IN: time-server\n
+\n
+: handle-time-client ( -- )\n
+    now timestamp>rfc822 print ;\n
+\n
+: <time-server> ( -- threaded-server )\n
+    ascii <threaded-server>\n
+        "time-server" >>name\n
+        1234 >>insecure\n
+        [ handle-time-client ] >>handler ;\n
+\n
+: start-time-server ( -- )\n
+    <time-server> start-server drop ;\n
+\n
+MAIN: start-time-server\n
+</textarea>\n
+  </form>\n
+\n
+<script>\n
+  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+    lineNumbers: true,\n
+    lineWrapping: true,\n
+    indentUnit: 2,\n
+    tabSize: 2,\n
+    autofocus: true,\n
+    mode: "text/x-factor"\n
+  });\n
+</script>\n
+<p/>\n
+<p>Simple mode that handles Factor Syntax (<a href="http://en.wikipedia.org/wiki/Factor_(programming_language)">Factor on WikiPedia</a>).</p>\n
+\n
+<p><strong>MIME types defined:</strong> <code>text/x-factor</code>.</p>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

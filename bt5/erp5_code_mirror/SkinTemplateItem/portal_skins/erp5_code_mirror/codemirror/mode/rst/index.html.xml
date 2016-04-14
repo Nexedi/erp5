@@ -1,0 +1,596 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: reStructuredText mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/mode/overlay.js"></script>\n
+<script src="rst.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">reStructuredText</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>reStructuredText mode</h2>\n
+<form><textarea id="code" name="code">\n
+.. This is an excerpt from Sphinx documentation: http://sphinx.pocoo.org/_sources/rest.txt\n
+\n
+.. highlightlang:: rest\n
+\n
+.. _rst-primer:\n
+\n
+reStructuredText Primer\n
+=======================\n
+\n
+This section is a brief introduction to reStructuredText (reST) concepts and\n
+syntax, intended to provide authors with enough information to author documents\n
+productively.  Since reST was designed to be a simple, unobtrusive markup\n
+language, this will not take too long.\n
+\n
+.. seealso::\n
+\n
+   The authoritative `reStructuredText User Documentation\n
+   &lt;http://docutils.sourceforge.net/rst.html&gt;`_.  The "ref" links in this\n
+   document link to the description of the individual constructs in the reST\n
+   reference.\n
+\n
+\n
+Paragraphs\n
+----------\n
+\n
+The paragraph (:duref:`ref &lt;paragraphs&gt;`) is the most basic block in a reST\n
+document.  Paragraphs are simply chunks of text separated by one or more blank\n
+lines.  As in Python, indentation is significant in reST, so all lines of the\n
+same paragraph must be left-aligned to the same level of indentation.\n
+\n
+\n
+.. _inlinemarkup:\n
+\n
+Inline markup\n
+-------------\n
+\n
+The standard reST inline markup is quite simple: use\n
+\n
+* one asterisk: ``*text*`` for emphasis (italics),\n
+* two asterisks: ``**text**`` for strong emphasis (boldface), and\n
+* backquotes: ````text```` for code samples.\n
+\n
+If asterisks or backquotes appear in running text and could be confused with\n
+inline markup delimiters, they have to be escaped with a backslash.\n
+\n
+Be aware of some restrictions of this markup:\n
+\n
+* it may not be nested,\n
+* content may not start or end with whitespace: ``* text*`` is wrong,\n
+* it must be separated from surrounding text by non-word characters.  Use a\n
+  backslash escaped space to work around that: ``thisis\\ *one*\\ word``.\n
+\n
+These restrictions may be lifted in future versions of the docutils.\n
+\n
+reST also allows for custom "interpreted text roles"\', which signify that the\n
+enclosed text should be interpreted in a specific way.  Sphinx uses this to\n
+provide semantic markup and cross-referencing of identifiers, as described in\n
+the appropriate section.  The general syntax is ``:rolename:`content```.\n
+\n
+Standard reST provides the following roles:\n
+\n
+* :durole:`emphasis` -- alternate spelling for ``*emphasis*``\n
+* :durole:`strong` -- alternate spelling for ``**strong**``\n
+* :durole:`literal` -- alternate spelling for ````literal````\n
+* :durole:`subscript` -- subscript text\n
+* :durole:`superscript` -- superscript text\n
+* :durole:`title-reference` -- for titles of books, periodicals, and other\n
+  materials\n
+\n
+See :ref:`inline-markup` for roles added by Sphinx.\n
+\n
+\n
+Lists and Quote-like blocks\n
+---------------------------\n
+\n
+List markup (:duref:`ref &lt;bullet-lists&gt;`) is natural: just place an asterisk at\n
+the start of a paragraph and indent properly.  The same goes for numbered lists;\n
+they can also be autonumbered using a ``#`` sign::\n
+\n
+   * This is a bulleted list.\n
+   * It has two items, the second\n
+     item uses two lines.\n
+\n
+   1. This is a numbered list.\n
+   2. It has two items too.\n
+\n
+   #. This is a numbered list.\n
+   #. It has two items too.\n
+\n
+\n
+Nested lists are possible, but be aware that they must be separated from the\n
+parent list items by blank lines::\n
+\n
+   * this is\n
+   * a list\n
+\n
+     * with a nested list\n
+     * and some subitems\n
+\n
+   * and here the parent list continues\n
+\n
+Definition lists (:duref:`ref &lt;definition-lists&gt;`) are created as follows::\n
+\n
+   term (up to a line of text)\n
+      Definition of the term, which must be indented\n
+\n
+      and can even consist of multiple paragraphs\n
+\n
+   next term\n
+      Description.\n
+\n
+Note that the term cannot have more than one line of text.\n
+\n
+Quoted paragraphs (:duref:`ref &lt;block-quotes&gt;`) are created by just indenting\n
+them more than the surrounding paragraphs.\n
+\n
+Line blocks (:duref:`ref &lt;line-blocks&gt;`) are a way of preserving line breaks::\n
+\n
+   | These lines are\n
+   | broken exactly like in\n
+   | the source file.\n
+\n
+There are also several more special blocks available:\n
+\n
+* field lists (:duref:`ref &lt;field-lists&gt;`)\n
+* option lists (:duref:`ref &lt;option-lists&gt;`)\n
+* quoted literal blocks (:duref:`ref &lt;quoted-literal-blocks&gt;`)\n
+* doctest blocks (:duref:`ref &lt;doctest-blocks&gt;`)\n
+\n
+\n
+Source Code\n
+-----------\n
+\n
+Literal code blocks (:duref:`ref &lt;literal-blocks&gt;`) are introduced by ending a\n
+paragraph with the special marker ``::``.  The literal block must be indented\n
+(and, like all paragraphs, separated from the surrounding ones by blank lines)::\n
+\n
+   This is a normal text paragraph. The next paragraph is a code sample::\n
+\n
+      It is not processed in any way, except\n
+      that the indentation is removed.\n
+\n
+      It can span multiple lines.\n
+\n
+   This is a normal text paragraph again.\n
+\n
+The handling of the ``::`` marker is smart:\n
+\n
+* If it occurs as a paragraph of its own, that paragraph is completely left\n
+  out of the document.\n
+* If it is preceded by whitespace, the marker is removed.\n
+* If it is preceded by non-whitespace, the marker is replaced by a single\n
+  colon.\n
+\n
+That way, the second sentence in the above example\'s first paragraph would be\n
+rendered as "The next paragraph is a code sample:".\n
+\n
+\n
+.. _rst-tables:\n
+\n
+Tables\n
+------\n
+\n
+Two forms of tables are supported.  For *grid tables* (:duref:`ref\n
+&lt;grid-tables&gt;`), you have to "paint" the cell grid yourself.  They look like\n
+this::\n
+\n
+   +------------------------+------------+----------+----------+\n
+   | Header row, column 1   | Header 2   | Header 3 | Header 4 |\n
+   | (header rows optional) |            |          |          |\n
+   +========================+============+==========+==========+\n
+   | body row 1, column 1   | column 2   | column 3 | column 4 |\n
+   +------------------------+------------+----------+----------+\n
+   | body row 2             | ...        | ...      |          |\n
+   +------------------------+------------+----------+----------+\n
+\n
+*Simple tables* (:duref:`ref &lt;simple-tables&gt;`) are easier to write, but\n
+limited: they must contain more than one row, and the first column cannot\n
+contain multiple lines.  They look like this::\n
+\n
+   =====  =====  =======\n
+   A      B      A and B\n
+   =====  =====  =======\n
+   False  False  False\n
+   True   False  False\n
+   False  True   False\n
+   True   True   True\n
+   =====  =====  =======\n
+\n
+\n
+Hyperlinks\n
+----------\n
+\n
+External links\n
+^^^^^^^^^^^^^^\n
+\n
+Use ```Link text &lt;http://example.com/&gt;`_`` for inline web links.  If the link\n
+text should be the web address, you don\'t need special markup at all, the parser\n
+finds links and mail addresses in ordinary text.\n
+\n
+You can also separate the link and the target definition (:duref:`ref\n
+&lt;hyperlink-targets&gt;`), like this::\n
+\n
+   This is a paragraph that contains `a link`_.\n
+\n
+   .. _a link: http://example.com/\n
+\n
+\n
+Internal links\n
+^^^^^^^^^^^^^^\n
+\n
+Internal linking is done via a special reST role provided by Sphinx, see the\n
+section on specific markup, :ref:`ref-role`.\n
+\n
+\n
+Sections\n
+--------\n
+\n
+Section headers (:duref:`ref &lt;sections&gt;`) are created by underlining (and\n
+optionally overlining) the section title with a punctuation character, at least\n
+as long as the text::\n
+\n
+   =================\n
+   This is a heading\n
+   =================\n
+\n
+Normally, there are no heading levels assigned to certain characters as the\n
+structure is determined from the succession of headings.  However, for the\n
+Python documentation, this convention is used which you may follow:\n
+\n
+* ``#`` with overline, for parts\n
+* ``*`` with overline, for chapters\n
+* ``=``, for sections\n
+* ``-``, for subsections\n
+* ``^``, for subsubsections\n
+* ``"``, for paragraphs\n
+\n
+Of course, you are free to use your own marker characters (see the reST\n
+documentation), and use a deeper nesting level, but keep in mind that most\n
+target formats (HTML, LaTeX) have a limited supported nesting depth.\n
+\n
+\n
+Explicit Markup\n
+---------------\n
+\n
+"Explicit markup" (:duref:`ref &lt;explicit-markup-blocks&gt;`) is used in reST for\n
+most constructs that need special handling, such as footnotes,\n
+specially-highlighted paragraphs, comments, and generic directives.\n
+\n
+An explicit markup block begins with a line starting with ``..`` followed by\n
+whitespace and is terminated by the next paragraph at the same level of\n
+indentation.  (There needs to be a blank line between explicit markup and normal\n
+paragraphs.  This may all sound a bit complicated, but it is intuitive enough\n
+when you write it.)\n
+\n
+\n
+.. _directives:\n
+\n
+Directives\n
+----------\n
+\n
+A directive (:duref:`ref &lt;directives&gt;`) is a generic block of explicit markup.\n
+Besides roles, it is one of the extension mechanisms of reST, and Sphinx makes\n
+heavy use of it.\n
+\n
+Docutils supports the following directives:\n
+\n
+* Admonitions: :dudir:`attention`, :dudir:`caution`, :dudir:`danger`,\n
+  :dudir:`error`, :dudir:`hint`, :dudir:`important`, :dudir:`note`,\n
+  :dudir:`tip`, :dudir:`warning` and the generic :dudir:`admonition`.\n
+  (Most themes style only "note" and "warning" specially.)\n
+\n
+* Images:\n
+\n
+  - :dudir:`image` (see also Images_ below)\n
+  - :dudir:`figure` (an image with caption and optional legend)\n
+\n
+* Additional body elements:\n
+\n
+  - :dudir:`contents` (a local, i.e. for the current file only, table of\n
+    contents)\n
+  - :dudir:`container` (a container with a custom class, useful to generate an\n
+    outer ``&lt;div&gt;`` in HTML)\n
+  - :dudir:`rubric` (a heading without relation to the document sectioning)\n
+  - :dudir:`topic`, :dudir:`sidebar` (special highlighted body elements)\n
+  - :dudir:`parsed-literal` (literal block that supports inline markup)\n
+  - :dudir:`epigraph` (a block quote with optional attribution line)\n
+  - :dudir:`highlights`, :dudir:`pull-quote` (block quotes with their own\n
+    class attribute)\n
+  - :dudir:`compound` (a compound paragraph)\n
+\n
+* Special tables:\n
+\n
+  - :dudir:`table` (a table with title)\n
+  - :dudir:`csv-table` (a table generated from comma-separated values)\n
+  - :dudir:`list-table` (a table generated from a list of lists)\n
+\n
+* Special directives:\n
+\n
+  - :dudir:`raw` (include raw target-format markup)\n
+  - :dudir:`include` (include reStructuredText from another file)\n
+    -- in Sphinx, when given an absolute include file path, this directive takes\n
+    it as relative to the source directory\n
+  - :dudir:`class` (assign a class attribute to the next element) [1]_\n
+\n
+* HTML specifics:\n
+\n
+  - :dudir:`meta` (generation of HTML ``&lt;meta&gt;`` tags)\n
+  - :dudir:`title` (override document title)\n
+\n
+* Influencing markup:\n
+\n
+  - :dudir:`default-role` (set a new default role)\n
+  - :dudir:`role` (create a new role)\n
+\n
+  Since these are only per-file, better use Sphinx\' facilities for setting the\n
+  :confval:`default_role`.\n
+\n
+Do *not* use the directives :dudir:`sectnum`, :dudir:`header` and\n
+:dudir:`footer`.\n
+\n
+Directives added by Sphinx are described in :ref:`sphinxmarkup`.\n
+\n
+Basically, a directive consists of a name, arguments, options and content. (Keep\n
+this terminology in mind, it is used in the next chapter describing custom\n
+directives.)  Looking at this example, ::\n
+\n
+   .. function:: foo(x)\n
+                 foo(y, z)\n
+      :module: some.module.name\n
+\n
+      Return a line of text input from the user.\n
+\n
+``function`` is the directive name.  It is given two arguments here, the\n
+remainder of the first line and the second line, as well as one option\n
+``module`` (as you can see, options are given in the lines immediately following\n
+the arguments and indicated by the colons).  Options must be indented to the\n
+same level as the directive content.\n
+\n
+The directive content follows after a blank line and is indented relative to the\n
+directive start.\n
+\n
+\n
+Images\n
+------\n
+\n
+reST supports an image directive (:dudir:`ref &lt;image&gt;`), used like so::\n
+\n
+   .. image:: gnu.png\n
+      (options)\n
+\n
+When used within Sphinx, the file name given (here ``gnu.png``) must either be\n
+relative to the source file, or absolute which means that they are relative to\n
+the top source directory.  For example, the file ``sketch/spam.rst`` could refer\n
+to the image ``images/spam.png`` as ``../images/spam.png`` or\n
+``/images/spam.png``.\n
+\n
+Sphinx will automatically copy image files over to a subdirectory of the output\n
+directory on building (e.g. the ``_static`` directory for HTML output.)\n
+\n
+Interpretation of image size options (``width`` and ``height``) is as follows:\n
+if the size has no unit or the unit is pixels, the given size will only be\n
+respected for output channels that support pixels (i.e. not in LaTeX output).\n
+Other units (like ``pt`` for points) will be used for HTML and LaTeX output.\n
+\n
+Sphinx extends the standard docutils behavior by allowing an asterisk for the\n
+extension::\n
+\n
+   .. image:: gnu.*\n
+\n
+Sphinx then searches for all images matching the provided pattern and determines\n
+their type.  Each builder then chooses the best image out of these candidates.\n
+For instance, if the file name ``gnu.*`` was given and two files :file:`gnu.pdf`\n
+and :file:`gnu.png` existed in the source tree, the LaTeX builder would choose\n
+the former, while the HTML builder would prefer the latter.\n
+\n
+.. versionchanged:: 0.4\n
+   Added the support for file names ending in an asterisk.\n
+\n
+.. versionchanged:: 0.6\n
+   Image paths can now be absolute.\n
+\n
+\n
+Footnotes\n
+---------\n
+\n
+For footnotes (:duref:`ref &lt;footnotes&gt;`), use ``[#name]_`` to mark the footnote\n
+location, and add the footnote body at the bottom of the document after a\n
+"Footnotes" rubric heading, like so::\n
+\n
+   Lorem ipsum [#f1]_ dolor sit amet ... [#f2]_\n
+\n
+   .. rubric:: Footnotes\n
+\n
+   .. [#f1] Text of the first footnote.\n
+   .. [#f2] Text of the second footnote.\n
+\n
+You can also explicitly number the footnotes (``[1]_``) or use auto-numbered\n
+footnotes without names (``[#]_``).\n
+\n
+\n
+Citations\n
+---------\n
+\n
+Standard reST citations (:duref:`ref &lt;citations&gt;`) are supported, with the\n
+additional feature that they are "global", i.e. all citations can be referenced\n
+from all files.  Use them like so::\n
+\n
+   Lorem ipsum [Ref]_ dolor sit amet.\n
+\n
+   .. [Ref] Book or article reference, URL or whatever.\n
+\n
+Citation usage is similar to footnote usage, but with a label that is not\n
+numeric or begins with ``#``.\n
+\n
+\n
+Substitutions\n
+-------------\n
+\n
+reST supports "substitutions" (:duref:`ref &lt;substitution-definitions&gt;`), which\n
+are pieces of text and/or markup referred to in the text by ``|name|``.  They\n
+are defined like footnotes with explicit markup blocks, like this::\n
+\n
+   .. |name| replace:: replacement *text*\n
+\n
+or this::\n
+\n
+   .. |caution| image:: warning.png\n
+                :alt: Warning!\n
+\n
+See the :duref:`reST reference for substitutions &lt;substitution-definitions&gt;`\n
+for details.\n
+\n
+If you want to use some substitutions for all documents, put them into\n
+:confval:`rst_prolog` or put them into a separate file and include it into all\n
+documents you want to use them in, using the :rst:dir:`include` directive.  (Be\n
+sure to give the include file a file name extension differing from that of other\n
+source files, to avoid Sphinx finding it as a standalone document.)\n
+\n
+Sphinx defines some default substitutions, see :ref:`default-substitutions`.\n
+\n
+\n
+Comments\n
+--------\n
+\n
+Every explicit markup block which isn\'t a valid markup construct (like the\n
+footnotes above) is regarded as a comment (:duref:`ref &lt;comments&gt;`).  For\n
+example::\n
+\n
+   .. This is a comment.\n
+\n
+You can indent text after a comment start to form multiline comments::\n
+\n
+   ..\n
+      This whole indented block\n
+      is a comment.\n
+\n
+      Still in the comment.\n
+\n
+\n
+Source encoding\n
+---------------\n
+\n
+Since the easiest way to include special characters like em dashes or copyright\n
+signs in reST is to directly write them as Unicode characters, one has to\n
+specify an encoding.  Sphinx assumes source files to be encoded in UTF-8 by\n
+default; you can change this with the :confval:`source_encoding` config value.\n
+\n
+\n
+Gotchas\n
+-------\n
+\n
+There are some problems one commonly runs into while authoring reST documents:\n
+\n
+* **Separation of inline markup:** As said above, inline markup spans must be\n
+  separated from the surrounding text by non-word characters, you have to use a\n
+  backslash-escaped space to get around that.  See `the reference\n
+  &lt;http://docutils.sf.net/docs/ref/rst/restructuredtext.html#inline-markup&gt;`_\n
+  for the details.\n
+\n
+* **No nested inline markup:** Something like ``*see :func:`foo`*`` is not\n
+  possible.\n
+\n
+\n
+.. rubric:: Footnotes\n
+\n
+.. [1] When the default domain contains a :rst:dir:`class` directive, this directive\n
+       will be shadowed.  Therefore, Sphinx re-exports it as :rst:dir:`rst-class`.\n
+</textarea></form>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+      });\n
+    </script>\n
+    <p>\n
+        The <code>python</code> mode will be used for highlighting blocks\n
+        containing Python/IPython terminal sessions: blocks starting with\n
+        <code>&gt;&gt;&gt;</code> (for Python) or <code>In [num]:</code> (for\n
+        IPython).\n
+\n
+        Further, the <code>stex</code> mode will be used for highlighting\n
+        blocks containing LaTex code.\n
+    </p>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-rst</code>.</p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

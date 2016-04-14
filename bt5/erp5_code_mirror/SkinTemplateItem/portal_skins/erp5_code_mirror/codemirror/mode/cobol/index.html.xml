@@ -1,0 +1,271 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: COBOL mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<link rel="stylesheet" href="../../theme/neat.css">\n
+<link rel="stylesheet" href="../../theme/elegant.css">\n
+<link rel="stylesheet" href="../../theme/erlang-dark.css">\n
+<link rel="stylesheet" href="../../theme/night.css">\n
+<link rel="stylesheet" href="../../theme/monokai.css">\n
+<link rel="stylesheet" href="../../theme/cobalt.css">\n
+<link rel="stylesheet" href="../../theme/eclipse.css">\n
+<link rel="stylesheet" href="../../theme/rubyblue.css">\n
+<link rel="stylesheet" href="../../theme/lesser-dark.css">\n
+<link rel="stylesheet" href="../../theme/xq-dark.css">\n
+<link rel="stylesheet" href="../../theme/xq-light.css">\n
+<link rel="stylesheet" href="../../theme/ambiance.css">\n
+<link rel="stylesheet" href="../../theme/blackboard.css">\n
+<link rel="stylesheet" href="../../theme/vibrant-ink.css">\n
+<link rel="stylesheet" href="../../theme/solarized.css">\n
+<link rel="stylesheet" href="../../theme/twilight.css">\n
+<link rel="stylesheet" href="../../theme/midnight.css">\n
+<link rel="stylesheet" href="../../addon/dialog/dialog.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/cm_edit/matchbrackets.js"></script>\n
+<script src="cobol.js"></script>\n
+<script src="../../addon/selection/active-line.js"></script>\n
+<script src="../../addon/search/search.js"></script>\n
+<script src="../../addon/dialog/dialog.js"></script>\n
+<script src="../../addon/search/searchcursor.js"></script>\n
+<style>\n
+        .CodeMirror {\n
+          border: 1px solid #eee;\n
+          font-size : 20px;\n
+          height : auto !important;\n
+        }\n
+        .CodeMirror-activeline-background {background: #555555 !important;}\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">COBOL</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>COBOL mode</h2>\n
+\n
+    <p> Select Theme <select onchange="selectTheme()" id="selectTheme">\n
+        <option>default</option>\n
+        <option>ambiance</option>\n
+        <option>blackboard</option>\n
+        <option>cobalt</option>\n
+        <option>eclipse</option>\n
+        <option>elegant</option>\n
+        <option>erlang-dark</option>\n
+        <option>lesser-dark</option>\n
+        <option>midnight</option>\n
+        <option>monokai</option>\n
+        <option>neat</option>\n
+        <option>night</option>\n
+        <option>rubyblue</option>\n
+        <option>solarized dark</option>\n
+        <option>solarized light</option>\n
+        <option selected>twilight</option>\n
+        <option>vibrant-ink</option>\n
+        <option>xq-dark</option>\n
+        <option>xq-light</option>\n
+    </select>    Select Font Size <select onchange="selectFontsize()" id="selectFontSize">\n
+          <option value="13px">13px</option>\n
+          <option value="14px">14px</option>\n
+          <option value="16px">16px</option>\n
+          <option value="18px">18px</option>\n
+          <option value="20px" selected="selected">20px</option>\n
+          <option value="24px">24px</option>\n
+          <option value="26px">26px</option>\n
+          <option value="28px">28px</option>\n
+          <option value="30px">30px</option>\n
+          <option value="32px">32px</option>\n
+          <option value="34px">34px</option>\n
+          <option value="36px">36px</option>\n
+        </select>\n
+<label for="checkBoxReadOnly">Read-only</label>\n
+<input type="checkbox" id="checkBoxReadOnly" onchange="selectReadOnly()">\n
+<label for="id_tabToIndentSpace">Insert Spaces on Tab</label>\n
+<input type="checkbox" id="id_tabToIndentSpace" onchange="tabToIndentSpace()">\n
+</p>\n
+<textarea id="code" name="code">\n
+---------1---------2---------3---------4---------5---------6---------7---------8\n
+12345678911234567892123456789312345678941234567895123456789612345678971234567898\n
+000010 IDENTIFICATION DIVISION.                                        MODTGHERE\n
+000020 PROGRAM-ID.       SAMPLE.\n
+000030 AUTHOR.           TEST SAM. \n
+000040 DATE-WRITTEN.     5 February 2013\n
+000041\n
+000042* A sample program just to show the form.\n
+000043* The program copies its input to the output,\n
+000044* and counts the number of records.\n
+000045* At the end this number is printed.\n
+000046\n
+000050 ENVIRONMENT DIVISION.\n
+000060 INPUT-OUTPUT SECTION.\n
+000070 FILE-CONTROL.\n
+000080     SELECT STUDENT-FILE     ASSIGN TO SYSIN\n
+000090         ORGANIZATION IS LINE SEQUENTIAL.\n
+000100     SELECT PRINT-FILE       ASSIGN TO SYSOUT\n
+000110         ORGANIZATION IS LINE SEQUENTIAL.\n
+000120\n
+000130 DATA DIVISION.\n
+000140 FILE SECTION.\n
+000150 FD  STUDENT-FILE\n
+000160     RECORD CONTAINS 43 CHARACTERS\n
+000170     DATA RECORD IS STUDENT-IN.\n
+000180 01  STUDENT-IN              PIC X(43).\n
+000190\n
+000200 FD  PRINT-FILE\n
+000210     RECORD CONTAINS 80 CHARACTERS\n
+000220     DATA RECORD IS PRINT-LINE.\n
+000230 01  PRINT-LINE              PIC X(80).\n
+000240\n
+000250 WORKING-STORAGE SECTION.\n
+000260 01  DATA-REMAINS-SWITCH     PIC X(2)      VALUE SPACES.\n
+000261 01  RECORDS-WRITTEN         PIC 99.\n
+000270\n
+000280 01  DETAIL-LINE.\n
+000290     05  FILLER              PIC X(7)      VALUE SPACES.\n
+000300     05  RECORD-IMAGE        PIC X(43).\n
+000310     05  FILLER              PIC X(30)     VALUE SPACES.\n
+000311 \n
+000312 01  SUMMARY-LINE.\n
+000313     05  FILLER              PIC X(7)      VALUE SPACES.\n
+000314     05  TOTAL-READ          PIC 99.\n
+000315     05  FILLER              PIC X         VALUE SPACE.\n
+000316     05  FILLER              PIC X(17)     \n
+000317                 VALUE  \'Records were read\'.\n
+000318     05  FILLER              PIC X(53)     VALUE SPACES.\n
+000319\n
+000320 PROCEDURE DIVISION.\n
+000321\n
+000330 PREPARE-SENIOR-REPORT.\n
+000340     OPEN INPUT  STUDENT-FILE\n
+000350          OUTPUT PRINT-FILE.\n
+000351     MOVE ZERO TO RECORDS-WRITTEN.\n
+000360     READ STUDENT-FILE\n
+000370         AT END MOVE \'NO\' TO DATA-REMAINS-SWITCH\n
+000380     END-READ.\n
+000390     PERFORM PROCESS-RECORDS\n
+000410         UNTIL DATA-REMAINS-SWITCH = \'NO\'.\n
+000411     PERFORM PRINT-SUMMARY.\n
+000420     CLOSE STUDENT-FILE\n
+000430           PRINT-FILE.\n
+000440     STOP RUN.\n
+000450\n
+000460 PROCESS-RECORDS.\n
+000470     MOVE STUDENT-IN TO RECORD-IMAGE.\n
+000480     MOVE DETAIL-LINE TO PRINT-LINE.\n
+000490     WRITE PRINT-LINE.\n
+000500     ADD 1 TO RECORDS-WRITTEN.\n
+000510     READ STUDENT-FILE\n
+000520         AT END MOVE \'NO\' TO DATA-REMAINS-SWITCH\n
+000530     END-READ. \n
+000540\n
+000550 PRINT-SUMMARY.\n
+000560     MOVE RECORDS-WRITTEN TO TOTAL-READ.\n
+000570     MOVE SUMMARY-LINE TO PRINT-LINE.\n
+000571     WRITE PRINT-LINE. \n
+000572\n
+000580\n
+</textarea>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        mode: "text/x-cobol",\n
+        theme : "twilight",\n
+        styleActiveLine: true,\n
+        showCursorWhenSelecting : true,  \n
+      });\n
+      function selectTheme() {\n
+        var themeInput = document.getElementById("selectTheme");\n
+        var theme = themeInput.options[themeInput.selectedIndex].innerHTML;\n
+        editor.setOption("theme", theme);\n
+      }\n
+      function selectFontsize() {\n
+        var fontSizeInput = document.getElementById("selectFontSize");\n
+        var fontSize = fontSizeInput.options[fontSizeInput.selectedIndex].innerHTML;\n
+        editor.getWrapperElement().style.fontSize = fontSize;\n
+        editor.refresh();\n
+      }\n
+      function selectReadOnly() {\n
+        editor.setOption("readOnly", document.getElementById("checkBoxReadOnly").checked);\n
+      }\n
+      function tabToIndentSpace() {\n
+        if (document.getElementById("id_tabToIndentSpace").checked) {\n
+            editor.setOption("extraKeys", {Tab: function(cm) { cm.replaceSelection("    ", "end"); }});\n
+        } else {\n
+            editor.setOption("extraKeys", {Tab: function(cm) { cm.replaceSelection("    ", "end"); }});\n
+        }\n
+      }\n
+    </script>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

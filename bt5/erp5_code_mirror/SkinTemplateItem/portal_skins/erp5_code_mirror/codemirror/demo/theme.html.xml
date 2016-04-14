@@ -45,15 +45,24 @@
 <link rel="stylesheet" href="../lib/codemirror.css">\n
 <link rel="stylesheet" href="../theme/3024-day.css">\n
 <link rel="stylesheet" href="../theme/3024-night.css">\n
+<link rel="stylesheet" href="../theme/abcdef.css">\n
 <link rel="stylesheet" href="../theme/ambiance.css">\n
 <link rel="stylesheet" href="../theme/base16-dark.css">\n
+<link rel="stylesheet" href="../theme/bespin.css">\n
 <link rel="stylesheet" href="../theme/base16-light.css">\n
 <link rel="stylesheet" href="../theme/blackboard.css">\n
 <link rel="stylesheet" href="../theme/cobalt.css">\n
+<link rel="stylesheet" href="../theme/colorforth.css">\n
+<link rel="stylesheet" href="../theme/dracula.css">\n
 <link rel="stylesheet" href="../theme/eclipse.css">\n
 <link rel="stylesheet" href="../theme/elegant.css">\n
 <link rel="stylesheet" href="../theme/erlang-dark.css">\n
+<link rel="stylesheet" href="../theme/hopscotch.css">\n
+<link rel="stylesheet" href="../theme/icecoder.css">\n
+<link rel="stylesheet" href="../theme/isotope.css">\n
 <link rel="stylesheet" href="../theme/lesser-dark.css">\n
+<link rel="stylesheet" href="../theme/liquibyte.css">\n
+<link rel="stylesheet" href="../theme/material.css">\n
 <link rel="stylesheet" href="../theme/mbo.css">\n
 <link rel="stylesheet" href="../theme/mdn-like.css">\n
 <link rel="stylesheet" href="../theme/midnight.css">\n
@@ -64,15 +73,19 @@
 <link rel="stylesheet" href="../theme/paraiso-dark.css">\n
 <link rel="stylesheet" href="../theme/paraiso-light.css">\n
 <link rel="stylesheet" href="../theme/pastel-on-dark.css">\n
+<link rel="stylesheet" href="../theme/railscasts.css">\n
 <link rel="stylesheet" href="../theme/rubyblue.css">\n
+<link rel="stylesheet" href="../theme/seti.css">\n
 <link rel="stylesheet" href="../theme/solarized.css">\n
 <link rel="stylesheet" href="../theme/the-matrix.css">\n
 <link rel="stylesheet" href="../theme/tomorrow-night-bright.css">\n
 <link rel="stylesheet" href="../theme/tomorrow-night-eighties.css">\n
+<link rel="stylesheet" href="../theme/ttcn.css">\n
 <link rel="stylesheet" href="../theme/twilight.css">\n
 <link rel="stylesheet" href="../theme/vibrant-ink.css">\n
 <link rel="stylesheet" href="../theme/xq-dark.css">\n
 <link rel="stylesheet" href="../theme/xq-light.css">\n
+<link rel="stylesheet" href="../theme/yeti.css">\n
 <link rel="stylesheet" href="../theme/zenburn.css">\n
 <script src="../lib/codemirror.js"></script>\n
 <script src="../mode/javascript/javascript.js"></script>\n
@@ -114,15 +127,24 @@ function findSequence(goal) {\n
     <option selected>default</option>\n
     <option>3024-day</option>\n
     <option>3024-night</option>\n
+    <option>abcdef</option>\n
     <option>ambiance</option>\n
     <option>base16-dark</option>\n
     <option>base16-light</option>\n
+    <option>bespin</option>\n
     <option>blackboard</option>\n
     <option>cobalt</option>\n
+    <option>colorforth</option>\n
+    <option>dracula</option>\n
     <option>eclipse</option>\n
     <option>elegant</option>\n
     <option>erlang-dark</option>\n
+    <option>hopscotch</option>\n
+    <option>icecoder</option>\n
+    <option>isotope</option>\n
     <option>lesser-dark</option>\n
+    <option>liquibyte</option>\n
+    <option>material</option>\n
     <option>mbo</option>\n
     <option>mdn-like</option>\n
     <option>midnight</option>\n
@@ -133,16 +155,20 @@ function findSequence(goal) {\n
     <option>paraiso-dark</option>\n
     <option>paraiso-light</option>\n
     <option>pastel-on-dark</option>\n
+    <option>railscasts</option>\n
     <option>rubyblue</option>\n
+    <option>seti</option>\n
     <option>solarized dark</option>\n
     <option>solarized light</option>\n
     <option>the-matrix</option>\n
     <option>tomorrow-night-bright</option>\n
     <option>tomorrow-night-eighties</option>\n
+    <option>ttcn</option>\n
     <option>twilight</option>\n
     <option>vibrant-ink</option>\n
     <option>xq-dark</option>\n
     <option>xq-light</option>\n
+    <option>yeti</option>\n
     <option>zenburn</option>\n
 </select>\n
 </p>\n
@@ -155,15 +181,21 @@ function findSequence(goal) {\n
   });\n
   var input = document.getElementById("select");\n
   function selectTheme() {\n
-    var theme = input.options[input.selectedIndex].innerHTML;\n
+    var theme = input.options[input.selectedIndex].textContent;\n
     editor.setOption("theme", theme);\n
+    location.hash = "#" + theme;\n
   }\n
-  var choice = document.location.search &&\n
-               decodeURIComponent(document.location.search.slice(1));\n
+  var choice = (location.hash && location.hash.slice(1)) ||\n
+               (document.location.search &&\n
+                decodeURIComponent(document.location.search.slice(1)));\n
   if (choice) {\n
     input.value = choice;\n
     editor.setOption("theme", choice);\n
   }\n
+  CodeMirror.on(window, "hashchange", function() {\n
+    var theme = location.hash.slice(1);\n
+    if (theme) { input.value = theme; selectTheme(); }\n
+  });\n
 </script>\n
   </article>
 

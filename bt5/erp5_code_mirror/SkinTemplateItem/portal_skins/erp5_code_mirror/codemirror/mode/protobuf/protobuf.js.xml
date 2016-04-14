@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts60604383.59</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>protobuf.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+  "use strict";\n
+\n
+  function wordRegexp(words) {\n
+    return new RegExp("^((" + words.join(")|(") + "))\\\\b", "i");\n
+  };\n
+\n
+  var keywordArray = [\n
+    "package", "message", "import", "syntax",\n
+    "required", "optional", "repeated", "reserved", "default", "extensions", "packed",\n
+    "bool", "bytes", "double", "enum", "float", "string",\n
+    "int32", "int64", "uint32", "uint64", "sint32", "sint64", "fixed32", "fixed64", "sfixed32", "sfixed64"\n
+  ];\n
+  var keywords = wordRegexp(keywordArray);\n
+\n
+  CodeMirror.registerHelper("hintWords", "protobuf", keywordArray);\n
+\n
+  var identifiers = new RegExp("^[_A-Za-z\\xa1-\\uffff][_A-Za-z0-9\\xa1-\\uffff]*");\n
+\n
+  function tokenBase(stream) {\n
+    // whitespaces\n
+    if (stream.eatSpace()) return null;\n
+\n
+    // Handle one line Comments\n
+    if (stream.match("//")) {\n
+      stream.skipToEnd();\n
+      return "comment";\n
+    }\n
+\n
+    // Handle Number Literals\n
+    if (stream.match(/^[0-9\\.+-]/, false)) {\n
+      if (stream.match(/^[+-]?0x[0-9a-fA-F]+/))\n
+        return "number";\n
+      if (stream.match(/^[+-]?\\d*\\.\\d+([EeDd][+-]?\\d+)?/))\n
+        return "number";\n
+      if (stream.match(/^[+-]?\\d+([EeDd][+-]?\\d+)?/))\n
+        return "number";\n
+    }\n
+\n
+    // Handle Strings\n
+    if (stream.match(/^"([^"]|(""))*"/)) { return "string"; }\n
+    if (stream.match(/^\'([^\']|(\'\'))*\'/)) { return "string"; }\n
+\n
+    // Handle words\n
+    if (stream.match(keywords)) { return "keyword"; }\n
+    if (stream.match(identifiers)) { return "variable"; } ;\n
+\n
+    // Handle non-detected items\n
+    stream.next();\n
+    return null;\n
+  };\n
+\n
+  CodeMirror.defineMode("protobuf", function() {\n
+    return {token: tokenBase};\n
+  });\n
+\n
+  CodeMirror.defineMIME("text/x-protobuf", "protobuf");\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2113</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

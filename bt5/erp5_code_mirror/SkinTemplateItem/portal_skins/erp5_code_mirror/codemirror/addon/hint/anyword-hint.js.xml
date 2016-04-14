@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897118.73</string> </value>
+            <value> <string>ts60604373.14</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -49,7 +49,7 @@
     while (start && word.test(curLine.charAt(start - 1))) --start;\n
     var curWord = start != end && curLine.slice(start, end);\n
 \n
-    var list = [], seen = {};\n
+    var list = options && options.list || [], seen = {};\n
     var re = new RegExp(word.source, "g");\n
     for (var dir = -1; dir <= 1; dir += 2) {\n
       var line = cur.line, endLine = Math.min(Math.max(line + dir * range, editor.firstLine()), editor.lastLine()) + dir;\n
@@ -77,7 +77,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1653</int> </value>
+            <value> <int>1680</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

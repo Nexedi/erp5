@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897121.73</string> </value>
+            <value> <string>ts60604374.87</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -39,13 +39,19 @@
 })(function(CodeMirror) {\n
   "use strict";\n
 \n
-  CodeMirror.defineExtension("showMatchesOnScrollbar", function(query, caseFold, className) {\n
-    return new SearchAnnotation(this, query, caseFold, className);\n
+  CodeMirror.defineExtension("showMatchesOnScrollbar", function(query, caseFold, options) {\n
+    if (typeof options == "string") options = {className: options};\n
+    if (!options) options = {};\n
+    return new SearchAnnotation(this, query, caseFold, options);\n
   });\n
 \n
-  function SearchAnnotation(cm, query, caseFold, className) {\n
+  function SearchAnnotation(cm, query, caseFold, options) {\n
     this.cm = cm;\n
-    this.annotation = cm.annotateScrollbar(className || "CodeMirror-search-match");\n
+    this.options = options;\n
+    var annotateOptions = {listenForChanges: false};\n
+    for (var prop in options) annotateOptions[prop] = options[prop];\n
+    if (!annotateOptions.className) annotateOptions.className = "CodeMirror-search-match";\n
+    this.annotation = cm.annotateScrollbar(annotateOptions);\n
     this.query = query;\n
     this.caseFold = caseFold;\n
     this.gap = {from: cm.firstLine(), to: cm.lastLine() + 1};\n
@@ -69,11 +75,12 @@
       if (match.to.line >= this.gap.from) this.matches.splice(i--, 1);\n
     }\n
     var cursor = this.cm.getSearchCursor(this.query, CodeMirror.Pos(this.gap.from, 0), this.caseFold);\n
+    var maxMatches = this.options && this.options.maxMatches || MAX_MATCHES;\n
     while (cursor.findNext()) {\n
       var match = {from: cursor.from(), to: cursor.to()};\n
       if (match.from.line >= this.gap.to) break;\n
       this.matches.splice(i++, 0, match);\n
-      if (this.matches.length > MAX_MATCHES) break;\n
+      if (this.matches.length > maxMatches) break;\n
     }\n
     this.gap = null;\n
   };\n
@@ -126,7 +133,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3420</int> </value>
+            <value> <int>3808</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

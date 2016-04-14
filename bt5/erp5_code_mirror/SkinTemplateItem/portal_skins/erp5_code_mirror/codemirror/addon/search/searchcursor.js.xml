@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897121.6</string> </value>
+            <value> <string>ts60604374.95</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -176,10 +176,10 @@
     from: function() {if (this.atOccurrence) return this.pos.from;},\n
     to: function() {if (this.atOccurrence) return this.pos.to;},\n
 \n
-    replace: function(newText) {\n
+    replace: function(newText, origin) {\n
       if (!this.atOccurrence) return;\n
       var lines = CodeMirror.splitLines(newText);\n
-      this.doc.replaceRange(lines, this.pos.from, this.pos.to);\n
+      this.doc.replaceRange(lines, this.pos.from, this.pos.to, origin);\n
       this.pos.to = Pos(this.pos.from.line + lines.length - 1,\n
                         lines[lines.length - 1].length + (lines.length == 1 ? this.pos.from.ch : 0));\n
     }\n
@@ -205,9 +205,9 @@
   });\n
 \n
   CodeMirror.defineExtension("selectMatches", function(query, caseFold) {\n
-    var ranges = [], next;\n
+    var ranges = [];\n
     var cur = this.getSearchCursor(query, this.getCursor("from"), caseFold);\n
-    while (next = cur.findNext()) {\n
+    while (cur.findNext()) {\n
       if (CodeMirror.cmpPos(cur.to(), this.getCursor("to")) > 0) break;\n
       ranges.push({anchor: cur.from(), head: cur.to()});\n
     }\n
@@ -225,7 +225,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7720</int> </value>
+            <value> <int>7723</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

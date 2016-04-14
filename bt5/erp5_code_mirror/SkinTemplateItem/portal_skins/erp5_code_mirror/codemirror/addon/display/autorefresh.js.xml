@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts60604372.39</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>autorefresh.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"))\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror"], mod)\n
+  else // Plain browser env\n
+    mod(CodeMirror)\n
+})(function(CodeMirror) {\n
+  "use strict"\n
+\n
+  CodeMirror.defineOption("autoRefresh", false, function(cm, val) {\n
+    if (cm.state.autoRefresh) {\n
+      stopListening(cm, cm.state.autoRefresh)\n
+      cm.state.autoRefresh = null\n
+    }\n
+    if (val && cm.display.wrapper.offsetHeight == 0)\n
+      startListening(cm, cm.state.autoRefresh = {delay: val.delay || 250})\n
+  })\n
+\n
+  function startListening(cm, state) {\n
+    function check() {\n
+      if (cm.display.wrapper.offsetHeight) {\n
+        stopListening(cm, state)\n
+        if (cm.display.lastWrapHeight != cm.display.wrapper.clientHeight)\n
+          cm.refresh()\n
+      } else {\n
+        state.timeout = setTimeout(check, state.delay)\n
+      }\n
+    }\n
+    state.timeout = setTimeout(check, state.delay)\n
+    state.hurry = function() {\n
+      clearTimeout(state.timeout)\n
+      state.timeout = setTimeout(check, 50)\n
+    }\n
+    CodeMirror.on(window, "mouseup", state.hurry)\n
+    CodeMirror.on(window, "keyup", state.hurry)\n
+  }\n
+\n
+  function stopListening(_cm, state) {\n
+    clearTimeout(state.timeout)\n
+    CodeMirror.off(window, "mouseup", state.hurry)\n
+    CodeMirror.off(window, "keyup", state.hurry)\n
+  }\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1543</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

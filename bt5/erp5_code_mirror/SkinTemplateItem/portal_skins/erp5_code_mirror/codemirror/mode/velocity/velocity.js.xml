@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897147.52</string> </value>
+            <value> <string>ts60604388.01</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -62,7 +62,7 @@ CodeMirror.defineMode("velocity", function() {\n
         state.beforeParams = false;\n
         var ch = stream.next();\n
         // start of unparsed string?\n
-        if ((ch == "\'") && state.inParams) {\n
+        if ((ch == "\'") && !state.inString && state.inParams) {\n
             state.lastTokenWasBuiltin = false;\n
             return chain(stream, state, tokenString(ch));\n
         }\n
@@ -237,7 +237,7 @@ CodeMirror.defineMIME("text/velocity", "velocity");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7079</int> </value>
+            <value> <int>7098</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

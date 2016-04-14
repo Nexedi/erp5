@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21898385.1</string> </value>
+            <value> <string>ts60604373.9</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -74,6 +74,7 @@
     }\n
     var poll = setInterval(function() {\n
       if (tooltip) for (var n = node;; n = n.parentNode) {\n
+        if (n && n.nodeType == 11) n = n.host;\n
         if (n == document.body) return;\n
         if (!n) { hide(); break; }\n
       }\n
@@ -88,13 +89,12 @@
     this.timeout = null;\n
     this.hasGutter = hasGutter;\n
     this.onMouseOver = function(e) { onMouseOver(cm, e); };\n
+    this.waitingFor = 0\n
   }\n
 \n
-  function parseOptions(cm, options) {\n
+  function parseOptions(_cm, options) {\n
     if (options instanceof Function) return {getAnnotations: options};\n
     if (!options || options === true) options = {};\n
-    if (!options.getAnnotations) options.getAnnotations = cm.getHelper(CodeMirror.Pos(0, 0), "lint");\n
-    if (!options.getAnnotations) throw new Error("Required option \'getAnnotations\' missing (lint addon)");\n
     return options;\n
   }\n
 \n
@@ -144,13 +144,32 @@
     return tip;\n
   }\n
 \n
+  function lintAsync(cm, getAnnotations, passOptions) {\n
+    var state = cm.state.lint\n
+    var id = ++state.waitingFor\n
+    function abort() {\n
+      id = -1\n
+      cm.off("change", abort)\n
+    }\n
+    cm.on("change", abort)\n
+    getAnnotations(cm.getValue(), function(annotations, arg2) {\n
+      cm.off("change", abort)\n
+      if (state.waitingFor != id) return\n
+      if (arg2 && annotations instanceof CodeMirror) annotations = arg2\n
+      updateLinting(cm, annotations)\n
+    }, passOptions, cm);\n
+  }\n
+\n
   function startLinting(cm) {\n
     var state = cm.state.lint, options = state.options;\n
     var passOptions = options.options || options; // Support deprecated passing of `options` property in options\n
-    if (options.async)\n
-      options.getAnnotations(cm.getValue(), updateLinting, passOptions, cm);\n
-    else\n
-      updateLinting(cm, options.getAnnotations(cm.getValue(), passOptions, cm));\n
+    var getAnnotations = options.getAnnotations || cm.getHelper(CodeMirror.Pos(0, 0), "lint");\n
+    if (!getAnnotations) return;\n
+    if (options.async || getAnnotations.async) {\n
+      lintAsync(cm, getAnnotations, passOptions)\n
+    } else {\n
+      updateLinting(cm, getAnnotations(cm.getValue(), passOptions, cm));\n
+    }\n
   }\n
 \n
   function updateLinting(cm, annotationsNotSorted) {\n
@@ -190,13 +209,19 @@
 \n
   function onChange(cm) {\n
     var state = cm.state.lint;\n
+    if (!state) return;\n
     clearTimeout(state.timeout);\n
     state.timeout = setTimeout(function(){startLinting(cm);}, state.options.delay || 500);\n
   }\n
 \n
-  function popupSpanTooltip(ann, e) {\n
+  function popupTooltips(annotations, e) {\n
     var target = e.target || e.srcElement;\n
-    showTooltipFor(e, annotationTooltip(ann), target);\n
+    var tooltip = document.createDocumentFragment();\n
+    for (var i = 0; i < annotations.length; i++) {\n
+      var ann = annotations[i];\n
+      tooltip.appendChild(annotationTooltip(ann));\n
+    }\n
+    showTooltipFor(e, tooltip, target);\n
   }\n
 \n
   function onMouseOver(cm, e) {\n
@@ -204,17 +229,21 @@
     if (!/\\bCodeMirror-lint-mark-/.test(target.className)) return;\n
     var box = target.getBoundingClientRect(), x = (box.left + box.right) / 2, y = (box.top + box.bottom) / 2;\n
     var spans = cm.findMarksAt(cm.coordsChar({left: x, top: y}, "client"));\n
+\n
+    var annotations = [];\n
     for (var i = 0; i < spans.length; ++i) {\n
-      var ann = spans[i].__annotation;\n
-      if (ann) return popupSpanTooltip(ann, e);\n
+      annotations.push(spans[i].__annotation);\n
     }\n
+    if (annotations.length) popupTooltips(annotations, e);\n
   }\n
 \n
   CodeMirror.defineOption("lint", false, function(cm, val, old) {\n
     if (old && old != CodeMirror.Init) {\n
       clearMarks(cm);\n
-      cm.off("change", onChange);\n
+      if (cm.state.lint.options.lintOnChange !== false)\n
+        cm.off("change", onChange);\n
       CodeMirror.off(cm.getWrapperElement(), "mouseover", cm.state.lint.onMouseOver);\n
+      clearTimeout(cm.state.lint.timeout);\n
       delete cm.state.lint;\n
     }\n
 \n
@@ -222,12 +251,17 @@
       var gutters = cm.getOption("gutters"), hasLintGutter = false;\n
       for (var i = 0; i < gutters.length; ++i) if (gutters[i] == GUTTER_ID) hasLintGutter = true;\n
       var state = cm.state.lint = new LintState(cm, parseOptions(cm, val), hasLintGutter);\n
-      cm.on("change", onChange);\n
+      if (state.options.lintOnChange !== false)\n
+        cm.on("change", onChange);\n
       if (state.options.tooltips != false)\n
         CodeMirror.on(cm.getWrapperElement(), "mouseover", state.onMouseOver);\n
 \n
       startLinting(cm);\n
     }\n
+  });\n
+\n
+  CodeMirror.defineExtension("performLint", function() {\n
+    if (this.state.lint) startLinting(this);\n
   });\n
 });\n
 
@@ -240,7 +274,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7036</int> </value>
+            <value> <int>8032</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897135.95</string> </value>
+            <value> <string>ts60604368.7</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -41,40 +41,53 @@
 \n
   CodeMirror.modeInfo = [\n
     {name: "APL", mime: "text/apl", mode: "apl", ext: ["dyalog", "apl"]},\n
-    {name: "Asterisk", mime: "text/x-asterisk", mode: "asterisk"},\n
+    {name: "PGP", mimes: ["application/pgp", "application/pgp-keys", "application/pgp-signature"], mode: "asciiarmor", ext: ["pgp"]},\n
+    {name: "ASN.1", mime: "text/x-ttcn-asn", mode: "asn.1", ext: ["asn", "asn1"]},\n
+    {name: "Asterisk", mime: "text/x-asterisk", mode: "asterisk", file: /^extensions\\.conf$/i},\n
+    {name: "Brainfuck", mime: "text/x-brainfuck", mode: "brainfuck", ext: ["b", "bf"]},\n
     {name: "C", mime: "text/x-csrc", mode: "clike", ext: ["c", "h"]},\n
-    {name: "C++", mime: "text/x-c++src", mode: "clike", ext: ["cpp", "c++", "hpp", "h++"], alias: ["cpp"]},\n
+    {name: "C++", mime: "text/x-c++src", mode: "clike", ext: ["cpp", "c++", "cc", "cxx", "hpp", "h++", "hh", "hxx"], alias: ["cpp"]},\n
     {name: "Cobol", mime: "text/x-cobol", mode: "cobol", ext: ["cob", "cpy"]},\n
     {name: "C#", mime: "text/x-csharp", mode: "clike", ext: ["cs"], alias: ["csharp"]},\n
-    {name: "Clojure", mime: "text/x-clojure", mode: "clojure", ext: ["clj"]},\n
+    {name: "Clojure", mime: "text/x-clojure", mode: "clojure", ext: ["clj", "cljc", "cljx"]},\n
+    {name: "ClojureScript", mime: "text/x-clojurescript", mode: "clojure", ext: ["cljs"]},\n
+    {name: "Closure Stylesheets (GSS)", mime: "text/x-gss", mode: "css", ext: ["gss"]},\n
+    {name: "CMake", mime: "text/x-cmake", mode: "cmake", ext: ["cmake", "cmake.in"], file: /^CMakeLists.txt$/},\n
     {name: "CoffeeScript", mime: "text/x-coffeescript", mode: "coffeescript", ext: ["coffee"], alias: ["coffee", "coffee-script"]},\n
     {name: "Common Lisp", mime: "text/x-common-lisp", mode: "commonlisp", ext: ["cl", "lisp", "el"], alias: ["lisp"]},\n
-    {name: "Cypher", mime: "application/x-cypher-query", mode: "cypher"},\n
+    {name: "Cypher", mime: "application/x-cypher-query", mode: "cypher", ext: ["cyp", "cypher"]},\n
     {name: "Cython", mime: "text/x-cython", mode: "python", ext: ["pyx", "pxd", "pxi"]},\n
+    {name: "Crystal", mime: "text/x-crystal", mode: "crystal", ext: ["cr"]},\n
     {name: "CSS", mime: "text/css", mode: "css", ext: ["css"]},\n
     {name: "CQL", mime: "text/x-cassandra", mode: "sql", ext: ["cql"]},\n
     {name: "D", mime: "text/x-d", mode: "d", ext: ["d"]},\n
     {name: "Dart", mimes: ["application/dart", "text/x-dart"], mode: "dart", ext: ["dart"]},\n
     {name: "diff", mime: "text/x-diff", mode: "diff", ext: ["diff", "patch"]},\n
     {name: "Django", mime: "text/x-django", mode: "django"},\n
-    {name: "Dockerfile", mime: "text/x-dockerfile", mode: "dockerfile"},\n
+    {name: "Dockerfile", mime: "text/x-dockerfile", mode: "dockerfile", file: /^Dockerfile$/},\n
     {name: "DTD", mime: "application/xml-dtd", mode: "dtd", ext: ["dtd"]},\n
     {name: "Dylan", mime: "text/x-dylan", mode: "dylan", ext: ["dylan", "dyl", "intr"]},\n
     {name: "EBNF", mime: "text/x-ebnf", mode: "ebnf"},\n
     {name: "ECL", mime: "text/x-ecl", mode: "ecl", ext: ["ecl"]},\n
+    {name: "edn", mime: "application/edn", mode: "clojure", ext: ["edn"]},\n
     {name: "Eiffel", mime: "text/x-eiffel", mode: "eiffel", ext: ["e"]},\n
+    {name: "Elm", mime: "text/x-elm", mode: "elm", ext: ["elm"]},\n
     {name: "Embedded Javascript", mime: "application/x-ejs", mode: "htmlembedded", ext: ["ejs"]},\n
     {name: "Embedded Ruby", mime: "application/x-erb", mode: "htmlembedded", ext: ["erb"]},\n
     {name: "Erlang", mime: "text/x-erlang", mode: "erlang", ext: ["erl"]},\n
+    {name: "Factor", mime: "text/x-factor", mode: "factor", ext: ["factor"]},\n
+    {name: "FCL", mime: "text/x-fcl", mode: "fcl"},\n
+    {name: "Forth", mime: "text/x-forth", mode: "forth", ext: ["forth", "fth", "4th"]},\n
     {name: "Fortran", mime: "text/x-fortran", mode: "fortran", ext: ["f", "for", "f77", "f90"]},\n
     {name: "F#", mime: "text/x-fsharp", mode: "mllike", ext: ["fs"], alias: ["fsharp"]},\n
     {name: "Gas", mime: "text/x-gas", mode: "gas", ext: ["s"]},\n
     {name: "Gherkin", mime: "text/x-feature", mode: "gherkin", ext: ["feature"]},\n
-    {name: "GitHub Flavored Markdown", mime: "text/x-gfm", mode: "gfm"},\n
+    {name: "GitHub Flavored Markdown", mime: "text/x-gfm", mode: "gfm", file: /^(readme|contributing|history).md$/i},\n
     {name: "Go", mime: "text/x-go", mode: "go", ext: ["go"]},\n
-    {name: "Groovy", mime: "text/x-groovy", mode: "groovy", ext: ["groovy"]},\n
+    {name: "Groovy", mime: "text/x-groovy", mode: "groovy", ext: ["groovy", "gradle"]},\n
     {name: "HAML", mime: "text/x-haml", mode: "haml", ext: ["haml"]},\n
     {name: "Haskell", mime: "text/x-haskell", mode: "haskell", ext: ["hs"]},\n
+    {name: "Haskell (Literate)", mime: "text/x-literate-haskell", mode: "haskell-literate", ext: ["lhs"]},\n
     {name: "Haxe", mime: "text/x-haxe", mode: "haxe", ext: ["hx"]},\n
     {name: "HXML", mime: "text/x-hxml", mode: "haxe", ext: ["hxml"]},\n
     {name: "ASP.NET", mime: "application/x-aspx", mode: "htmlembedded", ext: ["aspx"], alias: ["asp", "aspx"]},\n
@@ -87,32 +100,38 @@
     {name: "JavaScript", mimes: ["text/javascript", "text/ecmascript", "application/javascript", "application/x-javascript", "application/ecmascript"],\n
      mode: "javascript", ext: ["js"], alias: ["ecmascript", "js", "node"]},\n
     {name: "JSON", mimes: ["application/json", "application/x-json"], mode: "javascript", ext: ["json", "map"], alias: ["json5"]},\n
-    {name: "JSON-LD", mime: "application/ld+json", mode: "javascript", alias: ["jsonld"]},\n
+    {name: "JSON-LD", mime: "application/ld+json", mode: "javascript", ext: ["jsonld"], alias: ["jsonld"]},\n
+    {name: "JSX", mime: "text/jsx", mode: "jsx", ext: ["jsx"]},\n
     {name: "Jinja2", mime: "null", mode: "jinja2"},\n
     {name: "Julia", mime: "text/x-julia", mode: "julia", ext: ["jl"]},\n
-    {name: "Kotlin", mime: "text/x-kotlin", mode: "kotlin", ext: ["kt"]},\n
+    {name: "Kotlin", mime: "text/x-kotlin", mode: "clike", ext: ["kt"]},\n
     {name: "LESS", mime: "text/x-less", mode: "css", ext: ["less"]},\n
     {name: "LiveScript", mime: "text/x-livescript", mode: "livescript", ext: ["ls"], alias: ["ls"]},\n
     {name: "Lua", mime: "text/x-lua", mode: "lua", ext: ["lua"]},\n
     {name: "Markdown", mime: "text/x-markdown", mode: "markdown", ext: ["markdown", "md", "mkd"]},\n
     {name: "mIRC", mime: "text/mirc", mode: "mirc"},\n
     {name: "MariaDB SQL", mime: "text/x-mariadb", mode: "sql"},\n
+    {name: "Mathematica", mime: "text/x-mathematica", mode: "mathematica", ext: ["m", "nb"]},\n
     {name: "Modelica", mime: "text/x-modelica", mode: "modelica", ext: ["mo"]},\n
+    {name: "MUMPS", mime: "text/x-mumps", mode: "mumps", ext: ["mps"]},\n
     {name: "MS SQL", mime: "text/x-mssql", mode: "sql"},\n
     {name: "MySQL", mime: "text/x-mysql", mode: "sql"},\n
-    {name: "Nginx", mime: "text/x-nginx-conf", mode: "nginx"},\n
+    {name: "Nginx", mime: "text/x-nginx-conf", mode: "nginx", file: /nginx.*\\.conf$/i},\n
+    {name: "NSIS", mime: "text/x-nsis", mode: "nsis", ext: ["nsh", "nsi"]},\n
     {name: "NTriples", mime: "text/n-triples", mode: "ntriples", ext: ["nt"]},\n
     {name: "Objective C", mime: "text/x-objectivec", mode: "clike", ext: ["m", "mm"]},\n
     {name: "OCaml", mime: "text/x-ocaml", mode: "mllike", ext: ["ml", "mli", "mll", "mly"]},\n
     {name: "Octave", mime: "text/x-octave", mode: "octave", ext: ["m"]},\n
+    {name: "Oz", mime: "text/x-oz", mode: "oz", ext: ["oz"]},\n
     {name: "Pascal", mime: "text/x-pascal", mode: "pascal", ext: ["p", "pas"]},\n
-    {name: "PEG.js", mime: "null", mode: "pegjs"},\n
+    {name: "PEG.js", mime: "null", mode: "pegjs", ext: ["jsonld"]},\n
     {name: "Perl", mime: "text/x-perl", mode: "perl", ext: ["pl", "pm"]},\n
     {name: "PHP", mime: "application/x-httpd-php", mode: "php", ext: ["php", "php3", "php4", "php5", "phtml"]},\n
-    {name: "Pig", mime: "text/x-pig", mode: "pig"},\n
+    {name: "Pig", mime: "text/x-pig", mode: "pig", ext: ["pig"]},\n
     {name: "Plain Text", mime: "text/plain", mode: "null", ext: ["txt", "text", "conf", "def", "list", "log"]},\n
-    {name: "PLSQL", mime: "text/x-plsql", mode: "sql"},\n
+    {name: "PLSQL", mime: "text/x-plsql", mode: "sql", ext: ["pls"]},\n
     {name: "Properties files", mime: "text/x-properties", mode: "properties", ext: ["properties", "ini", "in"], alias: ["ini", "properties"]},\n
+    {name: "ProtoBuf", mime: "text/x-protobuf", mode: "protobuf", ext: ["proto"]},\n
     {name: "Python", mime: "text/x-python", mode: "python", ext: ["py", "pyw"]},\n
     {name: "Puppet", mime: "text/x-puppet", mode: "puppet", ext: ["pp"]},\n
     {name: "Q", mime: "text/x-q", mode: "q", ext: ["q"]},\n
@@ -126,37 +145,45 @@
     {name: "Scala", mime: "text/x-scala", mode: "clike", ext: ["scala"]},\n
     {name: "Scheme", mime: "text/x-scheme", mode: "scheme", ext: ["scm", "ss"]},\n
     {name: "SCSS", mime: "text/x-scss", mode: "css", ext: ["scss"]},\n
-    {name: "Shell", mime: "text/x-sh", mode: "shell", ext: ["sh", "ksh", "bash"], alias: ["bash", "sh", "zsh"]},\n
-    {name: "Sieve", mime: "application/sieve", mode: "sieve"},\n
-    {name: "Slim", mimes: ["text/x-slim", "application/x-slim"], mode: "slim"},\n
+    {name: "Shell", mime: "text/x-sh", mode: "shell", ext: ["sh", "ksh", "bash"], alias: ["bash", "sh", "zsh"], file: /^PKGBUILD$/},\n
+    {name: "Sieve", mime: "application/sieve", mode: "sieve", ext: ["siv", "sieve"]},\n
+    {name: "Slim", mimes: ["text/x-slim", "application/x-slim"], mode: "slim", ext: ["slim"]},\n
     {name: "Smalltalk", mime: "text/x-stsrc", mode: "smalltalk", ext: ["st"]},\n
     {name: "Smarty", mime: "text/x-smarty", mode: "smarty", ext: ["tpl"]},\n
-    {name: "SmartyMixed", mime: "text/x-smarty", mode: "smartymixed"},\n
     {name: "Solr", mime: "text/x-solr", mode: "solr"},\n
     {name: "Soy", mime: "text/x-soy", mode: "soy", ext: ["soy"], alias: ["closure template"]},\n
     {name: "SPARQL", mime: "application/sparql-query", mode: "sparql", ext: ["rq", "sparql"], alias: ["sparul"]},\n
     {name: "Spreadsheet", mime: "text/x-spreadsheet", mode: "spreadsheet", alias: ["excel", "formula"]},\n
     {name: "SQL", mime: "text/x-sql", mode: "sql", ext: ["sql"]},\n
-    {name: "MariaDB", mime: "text/x-mariadb", mode: "sql"},\n
+    {name: "Squirrel", mime: "text/x-squirrel", mode: "clike", ext: ["nut"]},\n
+    {name: "Swift", mime: "text/x-swift", mode: "swift", ext: ["swift"]},\n
     {name: "sTeX", mime: "text/x-stex", mode: "stex"},\n
     {name: "LaTeX", mime: "text/x-latex", mode: "stex", ext: ["text", "ltx"], alias: ["tex"]},\n
     {name: "SystemVerilog", mime: "text/x-systemverilog", mode: "verilog", ext: ["v"]},\n
     {name: "Tcl", mime: "text/x-tcl", mode: "tcl", ext: ["tcl"]},\n
-    {name: "Textile", mime: "text/x-textile", mode: "textile"},\n
+    {name: "Textile", mime: "text/x-textile", mode: "textile", ext: ["textile"]},\n
     {name: "TiddlyWiki ", mime: "text/x-tiddlywiki", mode: "tiddlywiki"},\n
     {name: "Tiki wiki", mime: "text/tiki", mode: "tiki"},\n
-    {name: "TOML", mime: "text/x-toml", mode: "toml"},\n
+    {name: "TOML", mime: "text/x-toml", mode: "toml", ext: ["toml"]},\n
     {name: "Tornado", mime: "text/x-tornado", mode: "tornado"},\n
+    {name: "troff", mime: "text/troff", mode: "troff", ext: ["1", "2", "3", "4", "5", "6", "7", "8", "9"]},\n
+    {name: "TTCN", mime: "text/x-ttcn", mode: "ttcn", ext: ["ttcn", "ttcn3", "ttcnpp"]},\n
+    {name: "TTCN_CFG", mime: "text/x-ttcn-cfg", mode: "ttcn-cfg", ext: ["cfg"]},\n
     {name: "Turtle", mime: "text/turtle", mode: "turtle", ext: ["ttl"]},\n
     {name: "TypeScript", mime: "application/typescript", mode: "javascript", ext: ["ts"], alias: ["ts"]},\n
+    {name: "Twig", mime: "text/x-twig", mode: "twig"},\n
     {name: "VB.NET", mime: "text/x-vb", mode: "vb", ext: ["vb"]},\n
-    {name: "VBScript", mime: "text/vbscript", mode: "vbscript"},\n
+    {name: "VBScript", mime: "text/vbscript", mode: "vbscript", ext: ["vbs"]},\n
     {name: "Velocity", mime: "text/velocity", mode: "velocity", ext: ["vtl"]},\n
     {name: "Verilog", mime: "text/x-verilog", mode: "verilog", ext: ["v"]},\n
+    {name: "VHDL", mime: "text/x-vhdl", mode: "vhdl", ext: ["vhd", "vhdl"]},\n
     {name: "XML", mimes: ["application/xml", "text/xml"], mode: "xml", ext: ["xml", "xsl", "xsd"], alias: ["rss", "wsdl", "xsd"]},\n
     {name: "XQuery", mime: "application/xquery", mode: "xquery", ext: ["xy", "xquery"]},\n
-    {name: "YAML", mime: "text/x-yaml", mode: "yaml", ext: ["yaml"], alias: ["yml"]},\n
-    {name: "Z80", mime: "text/x-z80", mode: "z80", ext: ["z80"]}\n
+    {name: "YAML", mime: "text/x-yaml", mode: "yaml", ext: ["yaml", "yml"], alias: ["yml"]},\n
+    {name: "Z80", mime: "text/x-z80", mode: "z80", ext: ["z80"]},\n
+    {name: "mscgen", mime: "text/x-mscgen", mode: "mscgen", ext: ["mscgen", "mscin", "msc"]},\n
+    {name: "xu", mime: "text/x-xu", mode: "mscgen", ext: ["xu"]},\n
+    {name: "msgenny", mime: "text/x-msgenny", mode: "mscgen", ext: ["msgenny"]}\n
   ];\n
   // Ensure all modes have a mime property for backwards compatibility\n
   for (var i = 0; i < CodeMirror.modeInfo.length; i++) {\n
@@ -165,6 +192,7 @@
   }\n
 \n
   CodeMirror.findModeByMIME = function(mime) {\n
+    mime = mime.toLowerCase();\n
     for (var i = 0; i < CodeMirror.modeInfo.length; i++) {\n
       var info = CodeMirror.modeInfo[i];\n
       if (info.mime == mime) return info;\n
@@ -179,6 +207,16 @@
       if (info.ext) for (var j = 0; j < info.ext.length; j++)\n
         if (info.ext[j] == ext) return info;\n
     }\n
+  };\n
+\n
+  CodeMirror.findModeByFileName = function(filename) {\n
+    for (var i = 0; i < CodeMirror.modeInfo.length; i++) {\n
+      var info = CodeMirror.modeInfo[i];\n
+      if (info.file && info.file.test(filename)) return info;\n
+    }\n
+    var dot = filename.lastIndexOf(".");\n
+    var ext = dot > -1 && filename.substring(dot + 1, filename.length);\n
+    if (ext) return CodeMirror.findModeByExtension(ext);\n
   };\n
 \n
   CodeMirror.findModeByName = function(name) {\n
@@ -201,7 +239,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>10995</int> </value>
+            <value> <int>14057</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897118.08</string> </value>
+            <value> <string>ts60604375.29</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,7 +67,7 @@ function startServer(defs, plugins, scripts) {\n
   });\n
 }\n
 \n
-var console = {\n
+this.console = {\n
   log: function(v) { postMessage({type: "debug", message: v}); }\n
 };\n
 
@@ -80,7 +80,7 @@ var console = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1207</int> </value>
+            <value> <int>1208</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

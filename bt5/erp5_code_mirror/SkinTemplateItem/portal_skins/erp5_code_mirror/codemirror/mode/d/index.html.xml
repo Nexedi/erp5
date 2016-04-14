@@ -1,0 +1,334 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: D mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/cm_edit/matchbrackets.js"></script>\n
+<script src="d.js"></script>\n
+<style>.CodeMirror {border: 2px inset #dee;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">D</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>D mode</h2>\n
+<form><textarea id="code" name="code">\n
+/* D demo code // copied from phobos/sd/metastrings.d */\n
+// Written in the D programming language.\n
+\n
+/**\n
+Templates with which to do compile-time manipulation of strings.\n
+\n
+Macros:\n
+ WIKI = Phobos/StdMetastrings\n
+\n
+Copyright: Copyright Digital Mars 2007 - 2009.\n
+License:   <a href="http://www.boost.org/LICENSE_1_0.txt">Boost License 1.0</a>.\n
+Authors:   $(WEB digitalmars.com, Walter Bright),\n
+           Don Clugston\n
+Source:    $(PHOBOSSRC std/_metastrings.d)\n
+*/\n
+/*\n
+         Copyright Digital Mars 2007 - 2009.\n
+Distributed under the Boost Software License, Version 1.0.\n
+   (See accompanying file LICENSE_1_0.txt or copy at\n
+         http://www.boost.org/LICENSE_1_0.txt)\n
+ */\n
+module std.metastrings;\n
+\n
+/**\n
+Formats constants into a string at compile time.  Analogous to $(XREF\n
+string,format).\n
+\n
+Parameters:\n
+\n
+A = tuple of constants, which can be strings, characters, or integral\n
+    values.\n
+\n
+Formats:\n
+ *    The formats supported are %s for strings, and %%\n
+ *    for the % character.\n
+Example:\n
+---\n
+import std.metastrings;\n
+import std.stdio;\n
+\n
+void main()\n
+{\n
+  string s = Format!("Arg %s = %s", "foo", 27);\n
+  writefln(s); // "Arg foo = 27"\n
+}\n
+ * ---\n
+ */\n
+\n
+template Format(A...)\n
+{\n
+    static if (A.length == 0)\n
+        enum Format = "";\n
+    else static if (is(typeof(A[0]) : const(char)[]))\n
+        enum Format = FormatString!(A[0], A[1..$]);\n
+    else\n
+        enum Format = toStringNow!(A[0]) ~ Format!(A[1..$]);\n
+}\n
+\n
+template FormatString(const(char)[] F, A...)\n
+{\n
+    static if (F.length == 0)\n
+        enum FormatString = Format!(A);\n
+    else static if (F.length == 1)\n
+        enum FormatString = F[0] ~ Format!(A);\n
+    else static if (F[0..2] == "%s")\n
+        enum FormatString\n
+            = toStringNow!(A[0]) ~ FormatString!(F[2..$],A[1..$]);\n
+    else static if (F[0..2] == "%%")\n
+        enum FormatString = "%" ~ FormatString!(F[2..$],A);\n
+    else\n
+    {\n
+        static assert(F[0] != \'%\', "unrecognized format %" ~ F[1]);\n
+        enum FormatString = F[0] ~ FormatString!(F[1..$],A);\n
+    }\n
+}\n
+\n
+unittest\n
+{\n
+    auto s = Format!("hel%slo", "world", -138, \'c\', true);\n
+    assert(s == "helworldlo-138ctrue", "[" ~ s ~ "]");\n
+}\n
+\n
+/**\n
+ * Convert constant argument to a string.\n
+ */\n
+\n
+template toStringNow(ulong v)\n
+{\n
+    static if (v < 10)\n
+        enum toStringNow = "" ~ cast(char)(v + \'0\');\n
+    else\n
+        enum toStringNow = toStringNow!(v / 10) ~ toStringNow!(v % 10);\n
+}\n
+\n
+unittest\n
+{\n
+    static assert(toStringNow!(1uL << 62) == "4611686018427387904");\n
+}\n
+\n
+/// ditto\n
+template toStringNow(long v)\n
+{\n
+    static if (v < 0)\n
+        enum toStringNow = "-" ~ toStringNow!(cast(ulong) -v);\n
+    else\n
+        enum toStringNow = toStringNow!(cast(ulong) v);\n
+}\n
+\n
+unittest\n
+{\n
+    static assert(toStringNow!(0x100000000) == "4294967296");\n
+    static assert(toStringNow!(-138L) == "-138");\n
+}\n
+\n
+/// ditto\n
+template toStringNow(uint U)\n
+{\n
+    enum toStringNow = toStringNow!(cast(ulong)U);\n
+}\n
+\n
+/// ditto\n
+template toStringNow(int I)\n
+{\n
+    enum toStringNow = toStringNow!(cast(long)I);\n
+}\n
+\n
+/// ditto\n
+template toStringNow(bool B)\n
+{\n
+    enum toStringNow = B ? "true" : "false";\n
+}\n
+\n
+/// ditto\n
+template toStringNow(string S)\n
+{\n
+    enum toStringNow = S;\n
+}\n
+\n
+/// ditto\n
+template toStringNow(char C)\n
+{\n
+    enum toStringNow = "" ~ C;\n
+}\n
+\n
+\n
+/********\n
+ * Parse unsigned integer literal from the start of string s.\n
+ * returns:\n
+ *    .value = the integer literal as a string,\n
+ *    .rest = the string following the integer literal\n
+ * Otherwise:\n
+ *    .value = null,\n
+ *    .rest = s\n
+ */\n
+\n
+template parseUinteger(const(char)[] s)\n
+{\n
+    static if (s.length == 0)\n
+    {\n
+        enum value = "";\n
+        enum rest = "";\n
+    }\n
+    else static if (s[0] >= \'0\' && s[0] <= \'9\')\n
+    {\n
+        enum value = s[0] ~ parseUinteger!(s[1..$]).value;\n
+        enum rest = parseUinteger!(s[1..$]).rest;\n
+    }\n
+    else\n
+    {\n
+        enum value = "";\n
+        enum rest = s;\n
+    }\n
+}\n
+\n
+/********\n
+Parse integer literal optionally preceded by $(D \'-\') from the start\n
+of string $(D s).\n
+\n
+Returns:\n
+   .value = the integer literal as a string,\n
+   .rest = the string following the integer literal\n
+\n
+Otherwise:\n
+   .value = null,\n
+   .rest = s\n
+*/\n
+\n
+template parseInteger(const(char)[] s)\n
+{\n
+    static if (s.length == 0)\n
+    {\n
+        enum value = "";\n
+        enum rest = "";\n
+    }\n
+    else static if (s[0] >= \'0\' && s[0] <= \'9\')\n
+    {\n
+        enum value = s[0] ~ parseUinteger!(s[1..$]).value;\n
+        enum rest = parseUinteger!(s[1..$]).rest;\n
+    }\n
+    else static if (s.length >= 2 &&\n
+            s[0] == \'-\' && s[1] >= \'0\' && s[1] <= \'9\')\n
+    {\n
+        enum value = s[0..2] ~ parseUinteger!(s[2..$]).value;\n
+        enum rest = parseUinteger!(s[2..$]).rest;\n
+    }\n
+    else\n
+    {\n
+        enum value = "";\n
+        enum rest = s;\n
+    }\n
+}\n
+\n
+unittest\n
+{\n
+    assert(parseUinteger!("1234abc").value == "1234");\n
+    assert(parseUinteger!("1234abc").rest == "abc");\n
+    assert(parseInteger!("-1234abc").value == "-1234");\n
+    assert(parseInteger!("-1234abc").rest == "abc");\n
+}\n
+\n
+/**\n
+Deprecated aliases held for backward compatibility.\n
+*/\n
+deprecated alias toStringNow ToString;\n
+/// Ditto\n
+deprecated alias parseUinteger ParseUinteger;\n
+/// Ditto\n
+deprecated alias parseUinteger ParseInteger;\n
+\n
+</textarea></form>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        indentUnit: 4,\n
+        mode: "text/x-d"\n
+      });\n
+    </script>\n
+\n
+    <p>Simple mode that handle D-Syntax (<a href="http://www.dlang.org">DLang Homepage</a>).</p>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-d</code>\n
+    .</p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

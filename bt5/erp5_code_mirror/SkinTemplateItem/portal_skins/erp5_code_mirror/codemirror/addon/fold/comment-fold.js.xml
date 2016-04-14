@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897116.29</string> </value>
+            <value> <string>ts60604372.78</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -56,7 +56,9 @@ CodeMirror.registerGlobalHelper("fold", "comment", function(mode) {\n
       continue;\n
     }\n
     if (pass == 1 && found < start.ch) return;\n
-    if (/comment/.test(cm.getTokenTypeAt(CodeMirror.Pos(line, found + 1)))) {\n
+    if (/comment/.test(cm.getTokenTypeAt(CodeMirror.Pos(line, found + 1))) &&\n
+        (lineText.slice(found - endToken.length, found) == endToken ||\n
+         !/comment/.test(cm.getTokenTypeAt(CodeMirror.Pos(line, found))))) {\n
       startCh = found + startToken.length;\n
       break;\n
     }\n
@@ -93,7 +95,7 @@ CodeMirror.registerGlobalHelper("fold", "comment", function(mode) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1999</int> </value>
+            <value> <int>2147</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

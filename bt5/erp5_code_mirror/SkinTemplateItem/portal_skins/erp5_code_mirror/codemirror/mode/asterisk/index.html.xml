@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Asterisk dialplan mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="asterisk.js"></script>\n
+<style>\n
+      .CodeMirror {border: 1px solid #999;}\n
+      .cm-s-default span.cm-arrow { color: red; }\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Asterisk dialplan</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Asterisk dialplan mode</h2>\n
+<form><textarea id="code" name="code">\n
+; extensions.conf - the Asterisk dial plan\n
+;\n
+\n
+[general]\n
+;\n
+; If static is set to no, or omitted, then the pbx_config will rewrite\n
+; this file when extensions are modified.  Remember that all comments\n
+; made in the file will be lost when that happens.\n
+static=yes\n
+\n
+#include "/etc/asterisk/additional_general.conf\n
+\n
+[iaxprovider]\n
+switch => IAX2/user:[key]@myserver/mycontext\n
+\n
+[dynamic]\n
+#exec /usr/bin/dynamic-peers.pl\n
+\n
+[trunkint]\n
+;\n
+; International long distance through trunk\n
+;\n
+exten => _9011.,1,Macro(dundi-e164,${EXTEN:4})\n
+exten => _9011.,n,Dial(${GLOBAL(TRUNK)}/${FILTER(0-9,${EXTEN:${GLOBAL(TRUNKMSD)}})})\n
+\n
+[local]\n
+;\n
+; Master context for local, toll-free, and iaxtel calls only\n
+;\n
+ignorepat => 9\n
+include => default\n
+\n
+[demo]\n
+include => stdexten\n
+;\n
+; We start with what to do when a call first comes in.\n
+;\n
+exten => s,1,Wait(1)\t\t\t; Wait a second, just for fun\n
+same  => n,Answer\t\t\t; Answer the line\n
+same  => n,Set(TIMEOUT(digit)=5)\t; Set Digit Timeout to 5 seconds\n
+same  => n,Set(TIMEOUT(response)=10)\t; Set Response Timeout to 10 seconds\n
+same  => n(restart),BackGround(demo-congrats)\t; Play a congratulatory message\n
+same  => n(instruct),BackGround(demo-instruct)\t; Play some instructions\n
+same  => n,WaitExten\t\t\t; Wait for an extension to be dialed.\n
+\n
+exten => 2,1,BackGround(demo-moreinfo)\t; Give some more information.\n
+exten => 2,n,Goto(s,instruct)\n
+\n
+exten => 3,1,Set(LANGUAGE()=fr)\t\t; Set language to french\n
+exten => 3,n,Goto(s,restart)\t\t; Start with the congratulations\n
+\n
+exten => 1000,1,Goto(default,s,1)\n
+;\n
+; We also create an example user, 1234, who is on the console and has\n
+; voicemail, etc.\n
+;\n
+exten => 1234,1,Playback(transfer,skip)\t\t; "Please hold while..."\n
+\t\t\t\t\t; (but skip if channel is not up)\n
+exten => 1234,n,Gosub(${EXTEN},stdexten(${GLOBAL(CONSOLE)}))\n
+exten => 1234,n,Goto(default,s,1)\t\t; exited Voicemail\n
+\n
+exten => 1235,1,Voicemail(1234,u)\t\t; Right to voicemail\n
+\n
+exten => 1236,1,Dial(Console/dsp)\t\t; Ring forever\n
+exten => 1236,n,Voicemail(1234,b)\t\t; Unless busy\n
+\n
+;\n
+; # for when they\'re done with the demo\n
+;\n
+exten => #,1,Playback(demo-thanks)\t; "Thanks for trying the demo"\n
+exten => #,n,Hangup\t\t\t; Hang them up.\n
+\n
+;\n
+; A timeout and "invalid extension rule"\n
+;\n
+exten => t,1,Goto(#,1)\t\t\t; If they take too long, give up\n
+exten => i,1,Playback(invalid)\t\t; "That\'s not valid, try again"\n
+\n
+;\n
+; Create an extension, 500, for dialing the\n
+; Asterisk demo.\n
+;\n
+exten => 500,1,Playback(demo-abouttotry); Let them know what\'s going on\n
+exten => 500,n,Dial(IAX2/guest@pbx.digium.com/s@default)\t; Call the Asterisk demo\n
+exten => 500,n,Playback(demo-nogo)\t; Couldn\'t connect to the demo site\n
+exten => 500,n,Goto(s,6)\t\t; Return to the start over message.\n
+\n
+;\n
+; Create an extension, 600, for evaluating echo latency.\n
+;\n
+exten => 600,1,Playback(demo-echotest)\t; Let them know what\'s going on\n
+exten => 600,n,Echo\t\t\t; Do the echo test\n
+exten => 600,n,Playback(demo-echodone)\t; Let them know it\'s over\n
+exten => 600,n,Goto(s,6)\t\t; Start over\n
+\n
+;\n
+;\tYou can use the Macro Page to intercom a individual user\n
+exten => 76245,1,Macro(page,SIP/Grandstream1)\n
+; or if your peernames are the same as extensions\n
+exten => _7XXX,1,Macro(page,SIP/${EXTEN})\n
+;\n
+;\n
+; System Wide Page at extension 7999\n
+;\n
+exten => 7999,1,Set(TIMEOUT(absolute)=60)\n
+exten => 7999,2,Page(Local/Grandstream1@page&Local/Xlite1@page&Local/1234@page/n,d)\n
+\n
+; Give voicemail at extension 8500\n
+;\n
+exten => 8500,1,VoicemailMain\n
+exten => 8500,n,Goto(s,6)\n
+\n
+    </textarea></form>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        mode: "text/x-asterisk",\n
+        matchBrackets: true,\n
+        lineNumber: true\n
+      });\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-asterisk</code>.</p>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

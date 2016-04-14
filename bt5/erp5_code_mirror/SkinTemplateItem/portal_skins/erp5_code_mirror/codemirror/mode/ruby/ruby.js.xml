@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897143.12</string> </value>
+            <value> <string>ts60604384.32</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -53,7 +53,7 @@ CodeMirror.defineMode("ruby", function(config) {\n
     "caller", "lambda", "proc", "public", "protected", "private", "require", "load",\n
     "require_relative", "extend", "autoload", "__END__", "__FILE__", "__LINE__", "__dir__"\n
   ]);\n
-  var indentWords = wordObj(["def", "class", "case", "for", "while", "module", "then",\n
+  var indentWords = wordObj(["def", "class", "case", "for", "while", "until", "module", "then",\n
                              "catch", "loop", "proc", "begin"]);\n
   var dedentWords = wordObj(["end", "until"]);\n
   var matching = {"[": "]", "{": "}", "(": ")"};\n
@@ -65,7 +65,6 @@ CodeMirror.defineMode("ruby", function(config) {\n
   }\n
 \n
   function tokenBase(stream, state) {\n
-    curPunc = null;\n
     if (stream.sol() && stream.match("=begin") && stream.eol()) {\n
       state.tokenize.push(readBlockComment);\n
       return "comment";\n
@@ -260,6 +259,7 @@ CodeMirror.defineMode("ruby", function(config) {\n
     },\n
 \n
     token: function(stream, state) {\n
+      curPunc = null;\n
       if (stream.sol()) state.indented = stream.indentation();\n
       var style = state.tokenize[state.tokenize.length-1](stream, state), kwtype;\n
       var thisTok = curPunc;\n
@@ -303,7 +303,7 @@ CodeMirror.defineMode("ruby", function(config) {\n
         (state.continuedLine ? config.indentUnit : 0);\n
     },\n
 \n
-    electricChars: "}de", // enD and rescuE\n
+    electricInput: /^\\s*(?:end|rescue|\\})$/,\n
     lineComment: "#"\n
   };\n
 });\n
@@ -321,7 +321,7 @@ CodeMirror.defineMIME("text/x-ruby", "ruby");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>10445</int> </value>
+            <value> <int>10457</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

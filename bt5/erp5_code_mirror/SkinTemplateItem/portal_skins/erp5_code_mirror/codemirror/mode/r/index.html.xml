@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: R mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="r.js"></script>\n
+<style>\n
+      .CodeMirror { border-top: 1px solid silver; border-bottom: 1px solid silver; }\n
+      .cm-s-default span.cm-semi { color: blue; font-weight: bold; }\n
+      .cm-s-default span.cm-dollar { color: orange; font-weight: bold; }\n
+      .cm-s-default span.cm-arrow { color: brown; }\n
+      .cm-s-default span.cm-arg-is { color: brown; }\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">R</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>R mode</h2>\n
+<form><textarea id="code" name="code">\n
+# Code from http://www.mayin.org/ajayshah/KB/R/\n
+\n
+# FIRST LEARN ABOUT LISTS --\n
+X = list(height=5.4, weight=54)\n
+print("Use default printing --")\n
+print(X)\n
+print("Accessing individual elements --")\n
+cat("Your height is ", X$height, " and your weight is ", X$weight, "\\n")\n
+\n
+# FUNCTIONS --\n
+square <- function(x) {\n
+  return(x*x)\n
+}\n
+cat("The square of 3 is ", square(3), "\\n")\n
+\n
+                 # default value of the arg is set to 5.\n
+cube <- function(x=5) {\n
+  return(x*x*x);\n
+}\n
+cat("Calling cube with 2 : ", cube(2), "\\n")    # will give 2^3\n
+cat("Calling cube        : ", cube(), "\\n")     # will default to 5^3.\n
+\n
+# LEARN ABOUT FUNCTIONS THAT RETURN MULTIPLE OBJECTS --\n
+powers <- function(x) {\n
+  parcel = list(x2=x*x, x3=x*x*x, x4=x*x*x*x);\n
+  return(parcel);\n
+}\n
+\n
+X = powers(3);\n
+print("Showing powers of 3 --"); print(X);\n
+\n
+# WRITING THIS COMPACTLY (4 lines instead of 7)\n
+\n
+powerful <- function(x) {\n
+  return(list(x2=x*x, x3=x*x*x, x4=x*x*x*x));\n
+}\n
+print("Showing powers of 3 --"); print(powerful(3));\n
+\n
+# In R, the last expression in a function is, by default, what is\n
+# returned. So you could equally just say:\n
+powerful <- function(x) {list(x2=x*x, x3=x*x*x, x4=x*x*x*x)}\n
+</textarea></form>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {});\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-rsrc</code>.</p>\n
+\n
+    <p>Development of the CodeMirror R mode was kindly sponsored\n
+    by <a href="https://twitter.com/ubalo">Ubalo</a>.</p>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

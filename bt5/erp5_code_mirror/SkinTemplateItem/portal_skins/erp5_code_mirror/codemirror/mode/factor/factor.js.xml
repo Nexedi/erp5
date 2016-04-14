@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts60604378.8</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>factor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+// Factor syntax highlight - simple mode\n
+//\n
+// by Dimage Sapelkin (https://github.com/kerabromsmu)\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"), require("../../addon/mode/simple"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror", "../../addon/mode/simple"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+  "use strict";\n
+\n
+  CodeMirror.defineSimpleMode("factor", {\n
+    // The start state contains the rules that are intially used\n
+    start: [\n
+      // comments\n
+      {regex: /#?!.*/, token: "comment"},\n
+      // strings """, multiline --> state\n
+      {regex: /"""/, token: "string", next: "string3"},\n
+      {regex: /"/, token: "string", next: "string"},\n
+      // numbers: dec, hex, unicode, bin, fractional, complex\n
+      {regex: /(?:[+-]?)(?:0x[\\d,a-f]+)|(?:0o[0-7]+)|(?:0b[0,1]+)|(?:\\d+.?\\d*)/, token: "number"},\n
+      //{regex: /[+-]?/} //fractional\n
+      // definition: defining word, defined word, etc\n
+      {regex: /(\\:)(\\s+)(\\S+)(\\s+)(\\()/, token: ["keyword", null, "def", null, "keyword"], next: "stack"},\n
+      // vocabulary using --> state\n
+      {regex: /USING\\:/, token: "keyword", next: "vocabulary"},\n
+      // vocabulary definition/use\n
+      {regex: /(USE\\:|IN\\:)(\\s+)(\\S+)/, token: ["keyword", null, "variable-2"]},\n
+      // <constructors>\n
+      {regex: /<\\S+>/, token: "builtin"},\n
+      // "keywords", incl. ; t f . [ ] { } defining words\n
+      {regex: /;|t|f|if|\\.|\\[|\\]|\\{|\\}|MAIN:/, token: "keyword"},\n
+      // any id (?)\n
+      {regex: /\\S+/, token: "variable"},\n
+\n
+      {\n
+        regex: /./,\n
+        token: null\n
+      }\n
+    ],\n
+    vocabulary: [\n
+      {regex: /;/, token: "keyword", next: "start"},\n
+      {regex: /\\S+/, token: "variable-2"},\n
+      {\n
+        regex: /./,\n
+        token: null\n
+      }\n
+    ],\n
+    string: [\n
+      {regex: /(?:[^\\\\]|\\\\.)*?"/, token: "string", next: "start"},\n
+      {regex: /.*/, token: "string"}\n
+    ],\n
+    string3: [\n
+      {regex: /(?:[^\\\\]|\\\\.)*?"""/, token: "string", next: "start"},\n
+      {regex: /.*/, token: "string"}\n
+    ],\n
+    stack: [\n
+      {regex: /\\)/, token: "meta", next: "start"},\n
+      {regex: /--/, token: "meta"},\n
+      {regex: /\\S+/, token: "variable-3"},\n
+      {\n
+        regex: /./,\n
+        token: null\n
+      }\n
+    ],\n
+    // The meta property contains global information about the mode. It\n
+    // can contain properties like lineComment, which are supported by\n
+    // all modes, and also directives like dontIndentStates, which are\n
+    // specific to simple modes.\n
+    meta: {\n
+      dontIndentStates: ["start", "vocabulary", "string", "string3", "stack"],\n
+      lineComment: [ "!", "#!" ]\n
+    }\n
+  });\n
+\n
+  CodeMirror.defineMIME("text/x-factor", "factor");\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2919</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

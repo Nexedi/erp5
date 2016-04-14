@@ -1,0 +1,233 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts60604369.46</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>sql-hint-test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function() {\n
+  var Pos = CodeMirror.Pos;\n
+\n
+  var simpleTables = {\n
+    "users": ["name", "score", "birthDate"],\n
+    "xcountries": ["name", "population", "size"]\n
+  };\n
+\n
+  var schemaTables = {\n
+    "schema.users": ["name", "score", "birthDate"],\n
+    "schema.countries": ["name", "population", "size"]\n
+  };\n
+\n
+  var displayTextTables = [{\n
+    text: "mytable",\n
+    displayText: "mytable | The main table",\n
+    columns: [{text: "id", displayText: "id | Unique ID"},\n
+              {text: "name", displayText: "name | The name"}]\n
+  }];\n
+\n
+  namespace = "sql-hint_";\n
+\n
+  function test(name, spec) {\n
+    testCM(name, function(cm) {\n
+      cm.setValue(spec.value);\n
+      cm.setCursor(spec.cursor);\n
+      var completion = CodeMirror.hint.sql(cm, {tables: spec.tables});\n
+      if (!deepCompare(completion.list, spec.list))\n
+        throw new Failure("Wrong completion results " + JSON.stringify(completion.list) + " vs " + JSON.stringify(spec.list));\n
+      eqPos(completion.from, spec.from);\n
+      eqPos(completion.to, spec.to);\n
+    }, {\n
+      value: spec.value,\n
+      mode: "text/x-mysql"\n
+    });\n
+  }\n
+\n
+  test("keywords", {\n
+    value: "SEL",\n
+    cursor: Pos(0, 3),\n
+    list: ["SELECT"],\n
+    from: Pos(0, 0),\n
+    to: Pos(0, 3)\n
+  });\n
+\n
+  test("from", {\n
+    value: "SELECT * fr",\n
+    cursor: Pos(0, 11),\n
+    list: ["FROM"],\n
+    from: Pos(0, 9),\n
+    to: Pos(0, 11)\n
+  });\n
+\n
+  test("table", {\n
+    value: "SELECT xc",\n
+    cursor: Pos(0, 9),\n
+    tables: simpleTables,\n
+    list: ["xcountries"],\n
+    from: Pos(0, 7),\n
+    to: Pos(0, 9)\n
+  });\n
+\n
+  test("columns", {\n
+    value: "SELECT users.",\n
+    cursor: Pos(0, 13),\n
+    tables: simpleTables,\n
+    list: ["users.name", "users.score", "users.birthDate"],\n
+    from: Pos(0, 7),\n
+    to: Pos(0, 13)\n
+  });\n
+\n
+  test("singlecolumn", {\n
+    value: "SELECT users.na",\n
+    cursor: Pos(0, 15),\n
+    tables: simpleTables,\n
+    list: ["users.name"],\n
+    from: Pos(0, 7),\n
+    to: Pos(0, 15)\n
+  });\n
+\n
+  test("quoted", {\n
+    value: "SELECT `users`.`na",\n
+    cursor: Pos(0, 18),\n
+    tables: simpleTables,\n
+    list: ["`users`.`name`"],\n
+    from: Pos(0, 7),\n
+    to: Pos(0, 18)\n
+  });\n
+\n
+  test("quotedcolumn", {\n
+    value: "SELECT users.`na",\n
+    cursor: Pos(0, 16),\n
+    tables: simpleTables,\n
+    list: ["`users`.`name`"],\n
+    from: Pos(0, 7),\n
+    to: Pos(0, 16)\n
+  });\n
+\n
+  test("schema", {\n
+    value: "SELECT schem",\n
+    cursor: Pos(0, 12),\n
+    tables: schemaTables,\n
+    list: ["schema.users", "schema.countries",\n
+           "SCHEMA", "SCHEMA_NAME", "SCHEMAS"],\n
+    from: Pos(0, 7),\n
+    to: Pos(0, 12)\n
+  });\n
+\n
+  test("schemaquoted", {\n
+    value: "SELECT `sch",\n
+    cursor: Pos(0, 11),\n
+    tables: schemaTables,\n
+    list: ["`schema`.`users`", "`schema`.`countries`"],\n
+    from: Pos(0, 7),\n
+    to: Pos(0, 11)\n
+  });\n
+\n
+  test("schemacolumn", {\n
+    value: "SELECT schema.users.",\n
+    cursor: Pos(0, 20),\n
+    tables: schemaTables,\n
+    list: ["schema.users.name",\n
+           "schema.users.score",\n
+           "schema.users.birthDate"],\n
+    from: Pos(0, 7),\n
+    to: Pos(0, 20)\n
+  });\n
+\n
+  test("schemacolumnquoted", {\n
+    value: "SELECT `schema`.`users`.",\n
+    cursor: Pos(0, 24),\n
+    tables: schemaTables,\n
+    list: ["`schema`.`users`.`name`",\n
+           "`schema`.`users`.`score`",\n
+           "`schema`.`users`.`birthDate`"],\n
+    from: Pos(0, 7),\n
+    to: Pos(0, 24)\n
+  });\n
+\n
+  test("displayText_table", {\n
+    value: "SELECT myt",\n
+    cursor: Pos(0, 10),\n
+    tables: displayTextTables,\n
+    list: displayTextTables,\n
+    from: Pos(0, 7),\n
+    to: Pos(0, 10)\n
+  });\n
+\n
+  test("displayText_column", {\n
+    value: "SELECT mytable.",\n
+    cursor: Pos(0, 15),\n
+    tables: displayTextTables,\n
+    list: [{text: "mytable.id", displayText: "id | Unique ID"},\n
+           {text: "mytable.name", displayText: "name | The name"}],\n
+    from: Pos(0, 7),\n
+    to: Pos(0, 15)\n
+  });\n
+\n
+  test("alias_complete", {\n
+    value: "SELECT t. FROM users t",\n
+    cursor: Pos(0, 9),\n
+    tables: simpleTables,\n
+    list: ["t.name", "t.score", "t.birthDate"],\n
+    from: Pos(0, 7),\n
+    to: Pos(0, 9)\n
+  });\n
+\n
+  test("alias_complete_with_displayText", {\n
+    value: "SELECT t. FROM mytable t",\n
+    cursor: Pos(0, 9),\n
+    tables: displayTextTables,\n
+    list: [{text: "t.id", displayText: "id | Unique ID"},\n
+           {text: "t.name", displayText: "name | The name"}],\n
+    from: Pos(0, 7),\n
+    to: Pos(0, 9)\n
+  })\n
+\n
+  function deepCompare(a, b) {\n
+    if (!a || typeof a != "object")\n
+      return a === b;\n
+    if (!b || typeof b != "object")\n
+      return false;\n
+    for (var prop in a) if (!deepCompare(a[prop], b[prop])) return false;\n
+    return true;\n
+  }\n
+})();\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4607</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

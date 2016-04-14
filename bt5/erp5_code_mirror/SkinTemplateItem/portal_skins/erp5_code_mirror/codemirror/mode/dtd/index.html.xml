@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: DTD mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="dtd.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">DTD</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>DTD mode</h2>\n
+<form><textarea id="code" name="code"><?xml version="1.0" encoding="UTF-8"?>\n
+\n
+<!ATTLIST title\n
+  xmlns\tCDATA\t#FIXED\t"http://docbook.org/ns/docbook"\n
+  role\tCDATA\t#IMPLIED\n
+  %db.common.attributes;\n
+  %db.common.linking.attributes;\n
+>\n
+\n
+<!--\n
+  Try: http://docbook.org/xml/5.0/dtd/docbook.dtd\n
+-->\n
+\n
+<!DOCTYPE xsl:stylesheet\n
+  [\n
+    <!ENTITY nbsp   "&amp;#160;">\n
+    <!ENTITY copy   "&amp;#169;">\n
+    <!ENTITY reg    "&amp;#174;">\n
+    <!ENTITY trade  "&amp;#8482;">\n
+    <!ENTITY mdash  "&amp;#8212;">\n
+    <!ENTITY ldquo  "&amp;#8220;">\n
+    <!ENTITY rdquo  "&amp;#8221;">\n
+    <!ENTITY pound  "&amp;#163;">\n
+    <!ENTITY yen    "&amp;#165;">\n
+    <!ENTITY euro   "&amp;#8364;">\n
+    <!ENTITY mathml "http://www.w3.org/1998/Math/MathML">\n
+  ]\n
+>\n
+\n
+<!ELEMENT title (#PCDATA|inlinemediaobject|remark|superscript|subscript|xref|link|olink|anchor|biblioref|alt|annotation|indexterm|abbrev|acronym|date|emphasis|footnote|footnoteref|foreignphrase|phrase|quote|wordasword|firstterm|glossterm|coref|trademark|productnumber|productname|database|application|hardware|citation|citerefentry|citetitle|citebiblioid|author|person|personname|org|orgname|editor|jobtitle|replaceable|package|parameter|termdef|nonterminal|systemitem|option|optional|property|inlineequation|tag|markup|token|symbol|literal|code|constant|email|uri|guiicon|guibutton|guimenuitem|guimenu|guisubmenu|guilabel|menuchoice|mousebutton|keycombo|keycap|keycode|keysym|shortcut|accel|prompt|envar|filename|command|computeroutput|userinput|function|varname|returnvalue|type|classname|exceptionname|interfacename|methodname|modifier|initializer|ooclass|ooexception|oointerface|errorcode|errortext|errorname|errortype)*>\n
+\n
+<!ENTITY % db.common.attributes "\n
+  xml:id\tID\t#IMPLIED\n
+  version\tCDATA\t#IMPLIED\n
+  xml:lang\tCDATA\t#IMPLIED\n
+  xml:base\tCDATA\t#IMPLIED\n
+  remap\tCDATA\t#IMPLIED\n
+  xreflabel\tCDATA\t#IMPLIED\n
+  revisionflag\t(changed|added|deleted|off)\t#IMPLIED\n
+  dir\t(ltr|rtl|lro|rlo)\t#IMPLIED\n
+  arch\tCDATA\t#IMPLIED\n
+  audience\tCDATA\t#IMPLIED\n
+  condition\tCDATA\t#IMPLIED\n
+  conformance\tCDATA\t#IMPLIED\n
+  os\tCDATA\t#IMPLIED\n
+  revision\tCDATA\t#IMPLIED\n
+  security\tCDATA\t#IMPLIED\n
+  userlevel\tCDATA\t#IMPLIED\n
+  vendor\tCDATA\t#IMPLIED\n
+  wordsize\tCDATA\t#IMPLIED\n
+  annotations\tCDATA\t#IMPLIED\n
+\n
+"></textarea></form>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        mode: {name: "dtd", alignCDATA: true},\n
+        lineNumbers: true,\n
+        lineWrapping: true\n
+      });\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>application/xml-dtd</code>.</p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

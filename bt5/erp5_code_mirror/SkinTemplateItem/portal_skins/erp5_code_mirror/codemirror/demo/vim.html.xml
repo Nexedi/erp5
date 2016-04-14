@@ -44,6 +44,8 @@
 \n
 <link rel="stylesheet" href="../lib/codemirror.css">\n
 <link rel="stylesheet" href="../addon/dialog/dialog.css">\n
+<link rel="stylesheet" href="../theme/midnight.css">\n
+<link rel="stylesheet" href="../theme/solarized.css">\n
 <script src="../lib/codemirror.js"></script>\n
 <script src="../addon/dialog/dialog.js"></script>\n
 <script src="../addon/search/searchcursor.js"></script>\n
@@ -68,6 +70,14 @@
 \n
 <article>\n
 <h2>Vim bindings demo</h2>\n
+\n
+<p><strong style="color: #c33; text-decoration: none">Note:</strong> The CodeMirror vim bindings do not have an\n
+active maintainer. That means that if you report bugs in it, they are\n
+likely to go unanswered. It also means that if you want to help, you\n
+are very welcome to look\n
+at <a href="https://github.com/codemirror/codemirror/issues?q=is%3Aissue+is%3Aopen+label%3Avim">the\n
+open issues</a> and see which ones you can solve.</p>\n
+\n
 <form><textarea id="code" name="code">\n
 #include "syscalls.h"\n
 /* getchar:  simple buffered version */\n
@@ -85,17 +95,16 @@ int getchar(void)\n
 </textarea></form>\n
 <div style="font-size: 13px; width: 300px; height: 30px;">Key buffer: <span id="command-display"></span></div>\n
 \n
-<p>The vim keybindings are enabled by\n
-including <a href="../keymap/vim.js">keymap/vim.js</a> and setting\n
-the <code>vimMode</code> option to <code>true</code>. This will also\n
-automatically change the <code>keyMap</code> option to <code>"vim"</code>.</p>\n
+<p>The vim keybindings are enabled by including <code><a\n
+href="../keymap/vim.js">keymap/vim.js</a></code> and setting the\n
+<code>keyMap</code> option to <code>vim</code>.</p>\n
 \n
 <p><strong>Features</strong></p>\n
 \n
 <ul>\n
   <li>All common motions and operators, including text objects</li>\n
   <li>Operator motion orthogonality</li>\n
-  <li>Visual mode - characterwise, linewise, partial support for blockwise</li>\n
+  <li>Visual mode - characterwise, linewise, blockwise</li>\n
   <li>Full macro support (q, @)</li>\n
   <li>Incremental highlighted search (/, ?, #, *, g#, g*)</li>\n
   <li>Search/replace with confirm (:substitute, :%s)</li>\n
@@ -109,9 +118,13 @@ automatically change the <code>keyMap</code> option to <code>"vim"</code>.</p>\n
   <li>Cross-buffer yank/paste</li>\n
 </ul>\n
 \n
-<p>Note that while the vim mode tries to emulate the most useful features of\n
-vim as faithfully as possible, it does not strive to become a complete vim\n
-implementation</p>\n
+<p>For the full list of key mappings and Ex commands, refer to the\n
+<code>defaultKeymap</code> and <code>defaultExCommandMap</code> at the\n
+top of <code><a href="../keymap/vim.js">keymap/vim.js</a></code>.\n
+\n
+<p>Note that while the vim mode tries to emulate the most useful\n
+features of vim as faithfully as possible, it does not strive to\n
+become a complete vim implementation</p>\n
 \n
     <script>\n
       CodeMirror.commands.save = function(){ alert("Saving"); };\n

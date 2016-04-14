@@ -1,0 +1,421 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: C-like mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/cm_edit/matchbrackets.js"></script>\n
+<link rel="stylesheet" href="../../addon/hint/show-hint.css">\n
+<script src="../../addon/hint/show-hint.js"></script>\n
+<script src="clike.js"></script>\n
+<style>.CodeMirror {border: 2px inset #dee;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">C-like</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>C-like mode</h2>\n
+\n
+<div><textarea id="c-code">\n
+/* C demo code */\n
+\n
+#include <zmq.h>\n
+#include <pthread.h>\n
+#include <semaphore.h>\n
+#include <time.h>\n
+#include <stdio.h>\n
+#include <fcntl.h>\n
+#include <malloc.h>\n
+\n
+typedef struct {\n
+  void* arg_socket;\n
+  zmq_msg_t* arg_msg;\n
+  char* arg_string;\n
+  unsigned long arg_len;\n
+  int arg_int, arg_command;\n
+\n
+  int signal_fd;\n
+  int pad;\n
+  void* context;\n
+  sem_t sem;\n
+} acl_zmq_context;\n
+\n
+#define p(X) (context->arg_##X)\n
+\n
+void* zmq_thread(void* context_pointer) {\n
+  acl_zmq_context* context = (acl_zmq_context*)context_pointer;\n
+  char ok = \'K\', err = \'X\';\n
+  int res;\n
+\n
+  while (1) {\n
+    while ((res = sem_wait(&amp;context->sem)) == EINTR);\n
+    if (res) {write(context->signal_fd, &amp;err, 1); goto cleanup;}\n
+    switch(p(command)) {\n
+    case 0: goto cleanup;\n
+    case 1: p(socket) = zmq_socket(context->context, p(int)); break;\n
+    case 2: p(int) = zmq_close(p(socket)); break;\n
+    case 3: p(int) = zmq_bind(p(socket), p(string)); break;\n
+    case 4: p(int) = zmq_connect(p(socket), p(string)); break;\n
+    case 5: p(int) = zmq_getsockopt(p(socket), p(int), (void*)p(string), &amp;p(len)); break;\n
+    case 6: p(int) = zmq_setsockopt(p(socket), p(int), (void*)p(string), p(len)); break;\n
+    case 7: p(int) = zmq_send(p(socket), p(msg), p(int)); break;\n
+    case 8: p(int) = zmq_recv(p(socket), p(msg), p(int)); break;\n
+    case 9: p(int) = zmq_poll(p(socket), p(int), p(len)); break;\n
+    }\n
+    p(command) = errno;\n
+    write(context->signal_fd, &amp;ok, 1);\n
+  }\n
+ cleanup:\n
+  close(context->signal_fd);\n
+  free(context_pointer);\n
+  return 0;\n
+}\n
+\n
+void* zmq_thread_init(void* zmq_context, int signal_fd) {\n
+  acl_zmq_context* context = malloc(sizeof(acl_zmq_context));\n
+  pthread_t thread;\n
+\n
+  context->context = zmq_context;\n
+  context->signal_fd = signal_fd;\n
+  sem_init(&amp;context->sem, 1, 0);\n
+  pthread_create(&amp;thread, 0, &amp;zmq_thread, context);\n
+  pthread_detach(thread);\n
+  return context;\n
+}\n
+</textarea></div>\n
+\n
+<h2>C++ example</h2>\n
+\n
+<div><textarea id="cpp-code">\n
+#include <iostream>\n
+#include "mystuff/util.h"\n
+\n
+namespace {\n
+enum Enum {\n
+  VAL1, VAL2, VAL3\n
+};\n
+\n
+char32_t unicode_string = U"\\U0010FFFF";\n
+string raw_string = R"delim(anything\n
+you\n
+want)delim";\n
+\n
+int Helper(const MyType& param) {\n
+  return 0;\n
+}\n
+} // namespace\n
+\n
+class ForwardDec;\n
+\n
+template <class T, class V>\n
+class Class : public BaseClass {\n
+  const MyType<T, V> member_;\n
+\n
+ public:\n
+  const MyType<T, V>& Method() const {\n
+    return member_;\n
+  }\n
+\n
+  void Method2(MyType<T, V>* value);\n
+}\n
+\n
+template <class T, class V>\n
+void Class::Method2(MyType<T, V>* value) {\n
+  std::out << 1 >> method();\n
+  value->Method3(member_);\n
+  member_ = value;\n
+}\n
+</textarea></div>\n
+\n
+<h2>Objective-C example</h2>\n
+\n
+<div><textarea id="objectivec-code">\n
+/*\n
+This is a longer comment\n
+That spans two lines\n
+*/\n
+\n
+#import <Test/Test.h>\n
+@implementation YourAppDelegate\n
+\n
+// This is a one-line comment\n
+\n
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions{\n
+  char myString[] = "This is a C character array";\n
+  int test = 5;\n
+  return YES;\n
+}\n
+</textarea></div>\n
+\n
+<h2>Java example</h2>\n
+\n
+<div><textarea id="java-code">\n
+import com.demo.util.MyType;\n
+import com.demo.util.MyInterface;\n
+\n
+public enum Enum {\n
+  VAL1, VAL2, VAL3\n
+}\n
+\n
+public class Class<T, V> implements MyInterface {\n
+  public static final MyType<T, V> member;\n
+  \n
+  private class InnerClass {\n
+    public int zero() {\n
+      return 0;\n
+    }\n
+  }\n
+\n
+  @Override\n
+  public MyType method() {\n
+    return member;\n
+  }\n
+\n
+  public void method2(MyType<T, V> value) {\n
+    method();\n
+    value.method3();\n
+    member = value;\n
+  }\n
+}\n
+</textarea></div>\n
+\n
+<h2>Scala example</h2>\n
+\n
+<div><textarea id="scala-code">\n
+object FilterTest extends App {\n
+  def filter(xs: List[Int], threshold: Int) = {\n
+    def process(ys: List[Int]): List[Int] =\n
+      if (ys.isEmpty) ys\n
+      else if (ys.head < threshold) ys.head :: process(ys.tail)\n
+      else process(ys.tail)\n
+    process(xs)\n
+  }\n
+  println(filter(List(1, 9, 2, 8, 3, 7, 4), 5))\n
+}\n
+</textarea></div>\n
+\n
+<h2>Kotlin mode</h2>\n
+\n
+<div><textarea id="kotlin-code">\n
+package org.wasabi.http\n
+\n
+import java.util.concurrent.Executors\n
+import java.net.InetSocketAddress\n
+import org.wasabi.app.AppConfiguration\n
+import io.netty.bootstrap.ServerBootstrap\n
+import io.netty.channel.nio.NioEventLoopGroup\n
+import io.netty.channel.socket.nio.NioServerSocketChannel\n
+import org.wasabi.app.AppServer\n
+\n
+public class HttpServer(private val appServer: AppServer) {\n
+\n
+    val bootstrap: ServerBootstrap\n
+    val primaryGroup: NioEventLoopGroup\n
+    val workerGroup:  NioEventLoopGroup\n
+\n
+    init {\n
+        // Define worker groups\n
+        primaryGroup = NioEventLoopGroup()\n
+        workerGroup = NioEventLoopGroup()\n
+\n
+        // Initialize bootstrap of server\n
+        bootstrap = ServerBootstrap()\n
+\n
+        bootstrap.group(primaryGroup, workerGroup)\n
+        bootstrap.channel(javaClass<NioServerSocketChannel>())\n
+        bootstrap.childHandler(NettyPipelineInitializer(appServer))\n
+    }\n
+\n
+    public fun start(wait: Boolean = true) {\n
+        val channel = bootstrap.bind(appServer.configuration.port)?.sync()?.channel()\n
+\n
+        if (wait) {\n
+            channel?.closeFuture()?.sync()\n
+        }\n
+    }\n
+\n
+    public fun stop() {\n
+        // Shutdown all event loops\n
+        primaryGroup.shutdownGracefully()\n
+        workerGroup.shutdownGracefully()\n
+\n
+        // Wait till all threads are terminated\n
+        primaryGroup.terminationFuture().sync()\n
+        workerGroup.terminationFuture().sync()\n
+    }\n
+}\n
+</textarea></div>\n
+\n
+<h2>Ceylon mode</h2>\n
+\n
+<div><textarea id="ceylon-code">\n
+"Produces the [[stream|Iterable]] that results from repeated\n
+ application of the given [[function|next]] to the given\n
+ [[first]] element of the stream, until the function first\n
+ returns [[finished]]. If the given function never returns \n
+ `finished`, the resulting stream is infinite.\n
+\n
+ For example:\n
+\n
+     loop(0)(2.plus).takeWhile(10.largerThan)\n
+\n
+ produces the stream `{ 0, 2, 4, 6, 8 }`."\n
+tagged("Streams")\n
+shared {Element+} loop&lt;Element&gt;(\n
+        "The first element of the resulting stream."\n
+        Element first)(\n
+        "The function that produces the next element of the\n
+         stream, given the current element. The function may\n
+         return [[finished]] to indicate the end of the \n
+         stream."\n
+        Element|Finished next(Element element))\n
+    =&gt; let (start = first)\n
+    object satisfies {Element+} {\n
+        first =&gt; start;\n
+        empty =&gt; false;\n
+        function nextElement(Element element)\n
+                =&gt; next(element);\n
+        iterator()\n
+                =&gt; object satisfies Iterator&lt;Element&gt; {\n
+            variable Element|Finished current = start;\n
+            shared actual Element|Finished next() {\n
+                if (!is Finished result = current) {\n
+                    current = nextElement(result);\n
+                    return result;\n
+                }\n
+                else {\n
+                    return finished;\n
+                }\n
+            }\n
+        };\n
+    };\n
+</textarea></div>\n
+\n
+    <script>\n
+      var cEditor = CodeMirror.fromTextArea(document.getElementById("c-code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        mode: "text/x-csrc"\n
+      });\n
+      var cppEditor = CodeMirror.fromTextArea(document.getElementById("cpp-code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        mode: "text/x-c++src"\n
+      });\n
+      var javaEditor = CodeMirror.fromTextArea(document.getElementById("java-code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        mode: "text/x-java"\n
+      });\n
+      var objectivecEditor = CodeMirror.fromTextArea(document.getElementById("objectivec-code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        mode: "text/x-objectivec"\n
+      });\n
+      var scalaEditor = CodeMirror.fromTextArea(document.getElementById("scala-code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        mode: "text/x-scala"\n
+      });\n
+      var kotlinEditor = CodeMirror.fromTextArea(document.getElementById("kotlin-code"), {\n
+          lineNumbers: true,\n
+          matchBrackets: true,\n
+          mode: "text/x-kotlin"\n
+      });\n
+      var ceylonEditor = CodeMirror.fromTextArea(document.getElementById("ceylon-code"), {\n
+          lineNumbers: true,\n
+          matchBrackets: true,\n
+          mode: "text/x-ceylon"\n
+      });\n
+      var mac = CodeMirror.keyMap.default == CodeMirror.keyMap.macDefault;\n
+      CodeMirror.keyMap.default[(mac ? "Cmd" : "Ctrl") + "-Space"] = "autocomplete";\n
+    </script>\n
+\n
+    <p>Simple mode that tries to handle C-like languages as well as it\n
+    can. Takes two configuration parameters: <code>keywords</code>, an\n
+    object whose property names are the keywords in the language,\n
+    and <code>useCPP</code>, which determines whether C preprocessor\n
+    directives are recognized.</p>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-csrc</code>\n
+    (C), <code>text/x-c++src</code> (C++), <code>text/x-java</code>\n
+    (Java), <code>text/x-csharp</code> (C#),\n
+    <code>text/x-objectivec</code> (Objective-C),\n
+    <code>text/x-scala</code> (Scala), <code>text/x-vertex</code>\n
+    <code>x-shader/x-fragment</code> (shader programs),\n
+    <code>text/x-squirrel</code> (Squirrel) and\n
+    <code>text/x-ceylon</code> (Ceylon)</p>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

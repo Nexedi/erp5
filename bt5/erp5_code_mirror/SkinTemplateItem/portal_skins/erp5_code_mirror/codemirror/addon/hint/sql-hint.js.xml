@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897119.32</string> </value>
+            <value> <string>ts60604373.45</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -48,77 +48,153 @@
   };\n
   var Pos = CodeMirror.Pos;\n
 \n
+  function isArray(val) { return Object.prototype.toString.call(val) == "[object Array]" }\n
+\n
   function getKeywords(editor) {\n
     var mode = editor.doc.modeOption;\n
     if (mode === "sql") mode = "text/x-sql";\n
     return CodeMirror.resolveMode(mode).keywords;\n
   }\n
 \n
+  function getText(item) {\n
+    return typeof item == "string" ? item : item.text;\n
+  }\n
+\n
+  function wrapTable(name, value) {\n
+    if (isArray(value)) value = {columns: value}\n
+    if (!value.text) value.text = name\n
+    return value\n
+  }\n
+\n
+  function parseTables(input) {\n
+    var result = {}\n
+    if (isArray(input)) {\n
+      for (var i = input.length - 1; i >= 0; i--) {\n
+        var item = input[i]\n
+        result[getText(item).toUpperCase()] = wrapTable(getText(item), item)\n
+      }\n
+    } else if (input) {\n
+      for (var name in input)\n
+        result[name.toUpperCase()] = wrapTable(name, input[name])\n
+    }\n
+    return result\n
+  }\n
+\n
+  function getTable(name) {\n
+    return tables[name.toUpperCase()]\n
+  }\n
+\n
+  function shallowClone(object) {\n
+    var result = {};\n
+    for (var key in object) if (object.hasOwnProperty(key))\n
+      result[key] = object[key];\n
+    return result;\n
+  }\n
+\n
   function match(string, word) {\n
     var len = string.length;\n
-    var sub = word.substr(0, len);\n
+    var sub = getText(word).substr(0, len);\n
     return string.toUpperCase() === sub.toUpperCase();\n
   }\n
 \n
   function addMatches(result, search, wordlist, formatter) {\n
-    for (var word in wordlist) {\n
-      if (!wordlist.hasOwnProperty(word)) continue;\n
-      if (Array.isArray(wordlist)) {\n
-        word = wordlist[word];\n
-      }\n
-      if (match(search, word)) {\n
-        result.push(formatter(word));\n
+    if (isArray(wordlist)) {\n
+      for (var i = 0; i < wordlist.length; i++)\n
+        if (match(search, wordlist[i])) result.push(formatter(wordlist[i]))\n
+    } else {\n
+      for (var word in wordlist) if (wordlist.hasOwnProperty(word)) {\n
+        var val = wordlist[word]\n
+        if (!val || val === true)\n
+          val = word\n
+        else\n
+          val = val.displayText ? {text: val.text, displayText: val.displayText} : val.text\n
+        if (match(search, val)) result.push(formatter(val))\n
       }\n
     }\n
   }\n
 \n
-  function nameCompletion(cur, token, result, editor) {\n
-    var useBacktick = (token.string.charAt(0) == "`");\n
-    var string = token.string.substr(1);\n
-    var prevToken = editor.getTokenAt(Pos(cur.line, token.start));\n
-    if (token.string.charAt(0) == "." || prevToken.string == "."){\n
-      //Suggest colunm names\n
-      if (prevToken.string == ".") {\n
-        var prevToken = editor.getTokenAt(Pos(cur.line, token.start - 1));\n
-      }\n
-      var table = prevToken.string;\n
-      //Check if backtick is used in table name. If yes, use it for columns too.\n
-      var useBacktickTable = false;\n
-      if (table.match(/`/g)) {\n
-        useBacktickTable = true;\n
-        table = table.replace(/`/g, "");\n
-      }\n
-      //Check if table is available. If not, find table by Alias\n
-      if (!tables.hasOwnProperty(table))\n
-        table = findTableByAlias(table, editor);\n
-      var columns = tables[table];\n
-      if (!columns) return;\n
+  function cleanName(name) {\n
+    // Get rid name from backticks(`) and preceding dot(.)\n
+    if (name.charAt(0) == ".") {\n
+      name = name.substr(1);\n
+    }\n
+    return name.replace(/`/g, "");\n
+  }\n
 \n
-      if (useBacktick) {\n
-        addMatches(result, string, columns, function(w) {return "`" + w + "`";});\n
-      }\n
-      else if(useBacktickTable) {\n
-        addMatches(result, string, columns, function(w) {return ".`" + w + "`";});\n
-      }\n
-      else {\n
-        addMatches(result, string, columns, function(w) {return "." + w;});\n
+  function insertBackticks(name) {\n
+    var nameParts = getText(name).split(".");\n
+    for (var i = 0; i < nameParts.length; i++)\n
+      nameParts[i] = "`" + nameParts[i] + "`";\n
+    var escaped = nameParts.join(".");\n
+    if (typeof name == "string") return escaped;\n
+    name = shallowClone(name);\n
+    name.text = escaped;\n
+    return name;\n
+  }\n
+\n
+  function nameCompletion(cur, token, result, editor) {\n
+    // Try to complete table, colunm names and return start position of completion\n
+    var useBacktick = false;\n
+    var nameParts = [];\n
+    var start = token.start;\n
+    var cont = true;\n
+    while (cont) {\n
+      cont = (token.string.charAt(0) == ".");\n
+      useBacktick = useBacktick || (token.string.charAt(0) == "`");\n
+\n
+      start = token.start;\n
+      nameParts.unshift(cleanName(token.string));\n
+\n
+      token = editor.getTokenAt(Pos(cur.line, token.start));\n
+      if (token.string == ".") {\n
+        cont = true;\n
+        token = editor.getTokenAt(Pos(cur.line, token.start));\n
       }\n
     }\n
-    else {\n
-      //Suggest table names or colums in defaultTable\n
-      while (token.start && string.charAt(0) == ".") {\n
-        token = editor.getTokenAt(Pos(cur.line, token.start - 1));\n
-        string = token.string + string;\n
-      }\n
-      if (useBacktick) {\n
-        addMatches(result, string, tables, function(w) {return "`" + w + "`";});\n
-        addMatches(result, string, defaultTable, function(w) {return "`" + w + "`";});\n
-      }\n
-      else {\n
-        addMatches(result, string, tables, function(w) {return w;});\n
-        addMatches(result, string, defaultTable, function(w) {return w;});\n
-      }\n
+\n
+    // Try to complete table names\n
+    var string = nameParts.join(".");\n
+    addMatches(result, string, tables, function(w) {\n
+      return useBacktick ? insertBackticks(w) : w;\n
+    });\n
+\n
+    // Try to complete columns from defaultTable\n
+    addMatches(result, string, defaultTable, function(w) {\n
+      return useBacktick ? insertBackticks(w) : w;\n
+    });\n
+\n
+    // Try to complete columns\n
+    string = nameParts.pop();\n
+    var table = nameParts.join(".");\n
+\n
+    var alias = false;\n
+    var aliasTable = table;\n
+    // Check if table is available. If not, find table by Alias\n
+    if (!getTable(table)) {\n
+      var oldTable = table;\n
+      table = findTableByAlias(table, editor);\n
+      if (table !== oldTable) alias = true;\n
     }\n
+\n
+    var columns = getTable(table);\n
+    if (columns && columns.columns)\n
+      columns = columns.columns;\n
+\n
+    if (columns) {\n
+      addMatches(result, string, columns, function(w) {\n
+        var tableInsert = table;\n
+        if (alias == true) tableInsert = aliasTable;\n
+        if (typeof w == "string") {\n
+          w = tableInsert + "." + w;\n
+        } else {\n
+          w = shallowClone(w);\n
+          w.text = tableInsert + "." + w.text;\n
+        }\n
+        return useBacktick ? insertBackticks(w) : w;\n
+      });\n
+    }\n
+\n
+    return start;\n
   }\n
 \n
   function eachWord(lineText, f) {\n
@@ -163,7 +239,7 @@
     //find valid range\n
     var prevItem = 0;\n
     var current = convertCurToNumber(editor.getCursor());\n
-    for (var i=0; i< separator.length; i++) {\n
+    for (var i = 0; i < separator.length; i++) {\n
       var _v = convertCurToNumber(separator[i]);\n
       if (current > prevItem && current <= _v) {\n
         validRange = { start: convertNumberToCur(prevItem), end: convertNumberToCur(_v) };\n
@@ -178,12 +254,10 @@
       var lineText = query[i];\n
       eachWord(lineText, function(word) {\n
         var wordUpperCase = word.toUpperCase();\n
-        if (wordUpperCase === aliasUpperCase && tables.hasOwnProperty(previousWord)) {\n
-            table = previousWord;\n
-        }\n
-        if (wordUpperCase !== CONS.ALIAS_KEYWORD) {\n
+        if (wordUpperCase === aliasUpperCase && getTable(previousWord))\n
+          table = previousWord;\n
+        if (wordUpperCase !== CONS.ALIAS_KEYWORD)\n
           previousWord = word;\n
-        }\n
       });\n
       if (table) break;\n
     }\n
@@ -191,10 +265,19 @@
   }\n
 \n
   CodeMirror.registerHelper("hint", "sql", function(editor, options) {\n
-    tables = (options && options.tables) || {};\n
+    tables = parseTables(options && options.tables)\n
     var defaultTableName = options && options.defaultTable;\n
-    defaultTable = (defaultTableName && tables[defaultTableName] || []);\n
+    var disableKeywords = options && options.disableKeywords;\n
+    defaultTable = defaultTableName && getTable(defaultTableName);\n
     keywords = keywords || getKeywords(editor);\n
+\n
+    if (defaultTableName && !defaultTable)\n
+      defaultTable = findTableByAlias(defaultTableName, editor);\n
+\n
+    defaultTable = defaultTable || [];\n
+\n
+    if (defaultTable.columns)\n
+      defaultTable = defaultTable.columns;\n
 \n
     var cur = editor.getCursor();\n
     var result = [];\n
@@ -213,11 +296,12 @@
       search = "";\n
     }\n
     if (search.charAt(0) == "." || search.charAt(0) == "`") {\n
-      nameCompletion(cur, token, result, editor);\n
+      start = nameCompletion(cur, token, result, editor);\n
     } else {\n
       addMatches(result, search, tables, function(w) {return w;});\n
       addMatches(result, search, defaultTable, function(w) {return w;});\n
-      addMatches(result, search, keywords, function(w) {return w.toUpperCase();});\n
+      if (!disableKeywords)\n
+        addMatches(result, search, keywords, function(w) {return w.toUpperCase();});\n
     }\n
 \n
     return {list: result, from: Pos(cur.line, start), to: Pos(cur.line, end)};\n
@@ -233,7 +317,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6499</int> </value>
+            <value> <int>8578</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

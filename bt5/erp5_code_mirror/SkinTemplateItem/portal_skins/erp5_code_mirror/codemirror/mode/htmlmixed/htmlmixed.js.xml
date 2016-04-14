@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897149.26</string> </value>
+            <value> <string>ts60604380.49</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -37,115 +37,146 @@
   else // Plain browser env\n
     mod(CodeMirror);\n
 })(function(CodeMirror) {\n
-"use strict";\n
+  "use strict";\n
 \n
-CodeMirror.defineMode("htmlmixed", function(config, parserConfig) {\n
-  var htmlMode = CodeMirror.getMode(config, {name: "xml",\n
-                                             htmlMode: true,\n
-                                             multilineTagIndentFactor: parserConfig.multilineTagIndentFactor,\n
-                                             multilineTagIndentPastTag: parserConfig.multilineTagIndentPastTag});\n
-  var cssMode = CodeMirror.getMode(config, "css");\n
+  var defaultTags = {\n
+    script: [\n
+      ["lang", /(javascript|babel)/i, "javascript"],\n
+      ["type", /^(?:text|application)\\/(?:x-)?(?:java|ecma)script$|^$/i, "javascript"],\n
+      ["type", /./, "text/plain"],\n
+      [null, null, "javascript"]\n
+    ],\n
+    style:  [\n
+      ["lang", /^css$/i, "css"],\n
+      ["type", /^(text\\/)?(x-)?(stylesheet|css)$/i, "css"],\n
+      ["type", /./, "text/plain"],\n
+      [null, null, "css"]\n
+    ]\n
+  };\n
 \n
-  var scriptTypes = [], scriptTypesConf = parserConfig && parserConfig.scriptTypes;\n
-  scriptTypes.push({matches: /^(?:text|application)\\/(?:x-)?(?:java|ecma)script$|^$/i,\n
-                    mode: CodeMirror.getMode(config, "javascript")});\n
-  if (scriptTypesConf) for (var i = 0; i < scriptTypesConf.length; ++i) {\n
-    var conf = scriptTypesConf[i];\n
-    scriptTypes.push({matches: conf.matches, mode: conf.mode && CodeMirror.getMode(config, conf.mode)});\n
-  }\n
-  scriptTypes.push({matches: /./,\n
-                    mode: CodeMirror.getMode(config, "text/plain")});\n
-\n
-  function html(stream, state) {\n
-    var tagName = state.htmlState.tagName;\n
-    if (tagName) tagName = tagName.toLowerCase();\n
-    var style = htmlMode.token(stream, state.htmlState);\n
-    if (tagName == "script" && /\\btag\\b/.test(style) && stream.current() == ">") {\n
-      // Script block: mode to change to depends on type attribute\n
-      var scriptType = stream.string.slice(Math.max(0, stream.pos - 100), stream.pos).match(/\\btype\\s*=\\s*("[^"]+"|\'[^\']+\'|\\S+)[^<]*$/i);\n
-      scriptType = scriptType ? scriptType[1] : "";\n
-      if (scriptType && /[\\"\\\']/.test(scriptType.charAt(0))) scriptType = scriptType.slice(1, scriptType.length - 1);\n
-      for (var i = 0; i < scriptTypes.length; ++i) {\n
-        var tp = scriptTypes[i];\n
-        if (typeof tp.matches == "string" ? scriptType == tp.matches : tp.matches.test(scriptType)) {\n
-          if (tp.mode) {\n
-            state.token = script;\n
-            state.localMode = tp.mode;\n
-            state.localState = tp.mode.startState && tp.mode.startState(htmlMode.indent(state.htmlState, ""));\n
-          }\n
-          break;\n
-        }\n
-      }\n
-    } else if (tagName == "style" && /\\btag\\b/.test(style) && stream.current() == ">") {\n
-      state.token = css;\n
-      state.localMode = cssMode;\n
-      state.localState = cssMode.startState(htmlMode.indent(state.htmlState, ""));\n
-    }\n
-    return style;\n
-  }\n
   function maybeBackup(stream, pat, style) {\n
-    var cur = stream.current();\n
-    var close = cur.search(pat), m;\n
-    if (close > -1) stream.backUp(cur.length - close);\n
-    else if (m = cur.match(/<\\/?$/)) {\n
+    var cur = stream.current(), close = cur.search(pat);\n
+    if (close > -1) {\n
+      stream.backUp(cur.length - close);\n
+    } else if (cur.match(/<\\/?$/)) {\n
       stream.backUp(cur.length);\n
       if (!stream.match(pat, false)) stream.match(cur);\n
     }\n
     return style;\n
   }\n
-  function script(stream, state) {\n
-    if (stream.match(/^<\\/\\s*script\\s*>/i, false)) {\n
-      state.token = html;\n
-      state.localState = state.localMode = null;\n
-      return null;\n
-    }\n
-    return maybeBackup(stream, /<\\/\\s*script\\s*>/,\n
-                       state.localMode.token(stream, state.localState));\n
-  }\n
-  function css(stream, state) {\n
-    if (stream.match(/^<\\/\\s*style\\s*>/i, false)) {\n
-      state.token = html;\n
-      state.localState = state.localMode = null;\n
-      return null;\n
-    }\n
-    return maybeBackup(stream, /<\\/\\s*style\\s*>/,\n
-                       cssMode.token(stream, state.localState));\n
+\n
+  var attrRegexpCache = {};\n
+  function getAttrRegexp(attr) {\n
+    var regexp = attrRegexpCache[attr];\n
+    if (regexp) return regexp;\n
+    return attrRegexpCache[attr] = new RegExp("\\\\s+" + attr + "\\\\s*=\\\\s*(\'|\\")?([^\'\\"]+)(\'|\\")?\\\\s*");\n
   }\n
 \n
-  return {\n
-    startState: function() {\n
-      var state = htmlMode.startState();\n
-      return {token: html, localMode: null, localState: null, htmlState: state};\n
-    },\n
+  function getAttrValue(text, attr) {\n
+    var match = text.match(getAttrRegexp(attr))\n
+    return match ? match[2] : ""\n
+  }\n
 \n
-    copyState: function(state) {\n
-      if (state.localState)\n
-        var local = CodeMirror.copyState(state.localMode, state.localState);\n
-      return {token: state.token, localMode: state.localMode, localState: local,\n
-              htmlState: CodeMirror.copyState(htmlMode, state.htmlState)};\n
-    },\n
+  function getTagRegexp(tagName, anchored) {\n
+    return new RegExp((anchored ? "^" : "") + "<\\/\\s*" + tagName + "\\s*>", "i");\n
+  }\n
 \n
-    token: function(stream, state) {\n
-      return state.token(stream, state);\n
-    },\n
-\n
-    indent: function(state, textAfter) {\n
-      if (!state.localMode || /^\\s*<\\//.test(textAfter))\n
-        return htmlMode.indent(state.htmlState, textAfter);\n
-      else if (state.localMode.indent)\n
-        return state.localMode.indent(state.localState, textAfter);\n
-      else\n
-        return CodeMirror.Pass;\n
-    },\n
-\n
-    innerMode: function(state) {\n
-      return {state: state.localState || state.htmlState, mode: state.localMode || htmlMode};\n
+  function addTags(from, to) {\n
+    for (var tag in from) {\n
+      var dest = to[tag] || (to[tag] = []);\n
+      var source = from[tag];\n
+      for (var i = source.length - 1; i >= 0; i--)\n
+        dest.unshift(source[i])\n
     }\n
-  };\n
-}, "xml", "javascript", "css");\n
+  }\n
 \n
-CodeMirror.defineMIME("text/html", "htmlmixed");\n
+  function findMatchingMode(tagInfo, tagText) {\n
+    for (var i = 0; i < tagInfo.length; i++) {\n
+      var spec = tagInfo[i];\n
+      if (!spec[0] || spec[1].test(getAttrValue(tagText, spec[0]))) return spec[2];\n
+    }\n
+  }\n
 \n
+  CodeMirror.defineMode("htmlmixed", function (config, parserConfig) {\n
+    var htmlMode = CodeMirror.getMode(config, {\n
+      name: "xml",\n
+      htmlMode: true,\n
+      multilineTagIndentFactor: parserConfig.multilineTagIndentFactor,\n
+      multilineTagIndentPastTag: parserConfig.multilineTagIndentPastTag\n
+    });\n
+\n
+    var tags = {};\n
+    var configTags = parserConfig && parserConfig.tags, configScript = parserConfig && parserConfig.scriptTypes;\n
+    addTags(defaultTags, tags);\n
+    if (configTags) addTags(configTags, tags);\n
+    if (configScript) for (var i = configScript.length - 1; i >= 0; i--)\n
+      tags.script.unshift(["type", configScript[i].matches, configScript[i].mode])\n
+\n
+    function html(stream, state) {\n
+      var style = htmlMode.token(stream, state.htmlState), tag = /\\btag\\b/.test(style), tagName\n
+      if (tag && !/[<>\\s\\/]/.test(stream.current()) &&\n
+          (tagName = state.htmlState.tagName && state.htmlState.tagName.toLowerCase()) &&\n
+          tags.hasOwnProperty(tagName)) {\n
+        state.inTag = tagName + " "\n
+      } else if (state.inTag && tag && />$/.test(stream.current())) {\n
+        var inTag = /^([\\S]+) (.*)/.exec(state.inTag)\n
+        state.inTag = null\n
+        var modeSpec = stream.current() == ">" && findMatchingMode(tags[inTag[1]], inTag[2])\n
+        var mode = CodeMirror.getMode(config, modeSpec)\n
+        var endTagA = getTagRegexp(inTag[1], true), endTag = getTagRegexp(inTag[1], false);\n
+        state.token = function (stream, state) {\n
+          if (stream.match(endTagA, false)) {\n
+            state.token = html;\n
+            state.localState = state.localMode = null;\n
+            return null;\n
+          }\n
+          return maybeBackup(stream, endTag, state.localMode.token(stream, state.localState));\n
+        };\n
+        state.localMode = mode;\n
+        state.localState = CodeMirror.startState(mode, htmlMode.indent(state.htmlState, ""));\n
+      } else if (state.inTag) {\n
+        state.inTag += stream.current()\n
+        if (stream.eol()) state.inTag += " "\n
+      }\n
+      return style;\n
+    };\n
+\n
+    return {\n
+      startState: function () {\n
+        var state = htmlMode.startState();\n
+        return {token: html, inTag: null, localMode: null, localState: null, htmlState: state};\n
+      },\n
+\n
+      copyState: function (state) {\n
+        var local;\n
+        if (state.localState) {\n
+          local = CodeMirror.copyState(state.localMode, state.localState);\n
+        }\n
+        return {token: state.token, inTag: state.inTag,\n
+                localMode: state.localMode, localState: local,\n
+                htmlState: CodeMirror.copyState(htmlMode, state.htmlState)};\n
+      },\n
+\n
+      token: function (stream, state) {\n
+        return state.token(stream, state);\n
+      },\n
+\n
+      indent: function (state, textAfter) {\n
+        if (!state.localMode || /^\\s*<\\//.test(textAfter))\n
+          return htmlMode.indent(state.htmlState, textAfter);\n
+        else if (state.localMode.indent)\n
+          return state.localMode.indent(state.localState, textAfter);\n
+        else\n
+          return CodeMirror.Pass;\n
+      },\n
+\n
+      innerMode: function (state) {\n
+        return {state: state.localState || state.htmlState, mode: state.localMode || htmlMode};\n
+      }\n
+    };\n
+  }, "xml", "javascript", "css");\n
+\n
+  CodeMirror.defineMIME("text/html", "htmlmixed");\n
 });\n
 
 
@@ -157,7 +188,7 @@ CodeMirror.defineMIME("text/html", "htmlmixed");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5008</int> </value>
+            <value> <int>5555</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

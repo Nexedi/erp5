@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897115.63</string> </value>
+            <value> <string>ts60604374.24</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -88,7 +88,7 @@
 \n
   function ensureState(states, name) {\n
     if (!states.hasOwnProperty(name))\n
-      throw new Error("Undefined state " + name + "in simple mode");\n
+      throw new Error("Undefined state " + name + " in simple mode");\n
   }\n
 \n
   function toRegex(val, caret) {\n
@@ -144,7 +144,7 @@
       var curState = states[state.state];\n
       for (var i = 0; i < curState.length; i++) {\n
         var rule = curState[i];\n
-        var matches = stream.match(rule.regex);\n
+        var matches = (!rule.data.sol || stream.sol()) && stream.match(rule.regex);\n
         if (matches) {\n
           if (rule.data.next) {\n
             state.state = rule.data.next;\n
@@ -249,7 +249,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7862</int> </value>
+            <value> <int>7899</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

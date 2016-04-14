@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts60604379.98</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>handlebars.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"), require("../../addon/mode/simple"), require("../../addon/mode/multiplex"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror", "../../addon/mode/simple", "../../addon/mode/multiplex"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+  "use strict";\n
+\n
+  CodeMirror.defineSimpleMode("handlebars-tags", {\n
+    start: [\n
+      { regex: /\\{\\{!--/, push: "dash_comment", token: "comment" },\n
+      { regex: /\\{\\{!/,   push: "comment", token: "comment" },\n
+      { regex: /\\{\\{/,    push: "handlebars", token: "tag" }\n
+    ],\n
+    handlebars: [\n
+      { regex: /\\}\\}/, pop: true, token: "tag" },\n
+\n
+      // Double and single quotes\n
+      { regex: /"(?:[^\\\\"]|\\\\.)*"?/, token: "string" },\n
+      { regex: /\'(?:[^\\\\\']|\\\\.)*\'?/, token: "string" },\n
+\n
+      // Handlebars keywords\n
+      { regex: />|[#\\/]([A-Za-z_]\\w*)/, token: "keyword" },\n
+      { regex: /(?:else|this)\\b/, token: "keyword" },\n
+\n
+      // Numeral\n
+      { regex: /\\d+/i, token: "number" },\n
+\n
+      // Atoms like = and .\n
+      { regex: /=|~|@|true|false/, token: "atom" },\n
+\n
+      // Paths\n
+      { regex: /(?:\\.\\.\\/)*(?:[A-Za-z_][\\w\\.]*)+/, token: "variable-2" }\n
+    ],\n
+    dash_comment: [\n
+      { regex: /--\\}\\}/, pop: true, token: "comment" },\n
+\n
+      // Commented code\n
+      { regex: /./, token: "comment"}\n
+    ],\n
+    comment: [\n
+      { regex: /\\}\\}/, pop: true, token: "comment" },\n
+      { regex: /./, token: "comment" }\n
+    ]\n
+  });\n
+\n
+  CodeMirror.defineMode("handlebars", function(config, parserConfig) {\n
+    var handlebars = CodeMirror.getMode(config, "handlebars-tags");\n
+    if (!parserConfig || !parserConfig.base) return handlebars;\n
+    return CodeMirror.multiplexingMode(\n
+      CodeMirror.getMode(config, parserConfig.base),\n
+      {open: "{{", close: "}}", mode: handlebars, parseDelimiters: true}\n
+    );\n
+  });\n
+\n
+  CodeMirror.defineMIME("text/x-handlebars-template", "handlebars");\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2172</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

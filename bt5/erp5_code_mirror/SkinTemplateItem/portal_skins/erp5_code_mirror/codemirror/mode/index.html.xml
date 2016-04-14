@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Language Modes</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../doc/docs.css">\n
+\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#">Language modes</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+\n
+  <h2>Language modes</h2>\n
+\n
+  <p>This is a list of every mode in the distribution. Each mode lives\n
+in a subdirectory of the <code>mode/</code> directory, and typically\n
+defines a single JavaScript file that implements the mode. Loading\n
+such file will make the language available to CodeMirror, through\n
+the <a href="../doc/manual.html#option_mode"><code>mode</code></a>\n
+option.</p>\n
+\n
+  <div style="-webkit-columns: 100px 2; -moz-columns: 100px 2; columns: 100px 2;">\n
+    <ul style="margin-top: 0">\n
+      <li><a href="apl/index.html">APL</a></li>\n
+      <li><a href="asn.1/index.html">ASN.1</a></li>\n
+      <li><a href="asterisk/index.html">Asterisk dialplan</a></li>\n
+      <li><a href="brainfuck/index.html">Brainfuck</a></li>\n
+      <li><a href="clike/index.html">C, C++, C#</a></li>\n
+      <li><a href="clike/index.html">Ceylon</a></li>\n
+      <li><a href="clojure/index.html">Clojure</a></li>\n
+      <li><a href="css/gss.html">Closure Stylesheets (GSS)</a></li>\n
+      <li><a href="cmake/index.html">CMake</a></li>\n
+      <li><a href="cobol/index.html">COBOL</a></li>\n
+      <li><a href="coffeescript/index.html">CoffeeScript</a></li>\n
+      <li><a href="commonlisp/index.html">Common Lisp</a></li>\n
+      <li><a href="crystal/index.html">Crystal</a></li>\n
+      <li><a href="css/index.html">CSS</a></li>\n
+      <li><a href="cypher/index.html">Cypher</a></li>\n
+      <li><a href="python/index.html">Cython</a></li>\n
+      <li><a href="d/index.html">D</a></li>\n
+      <li><a href="dart/index.html">Dart</a></li>\n
+      <li><a href="django/index.html">Django</a> (templating language)</li>\n
+      <li><a href="dockerfile/index.html">Dockerfile</a></li>\n
+      <li><a href="diff/index.html">diff</a></li>\n
+      <li><a href="dtd/index.html">DTD</a></li>\n
+      <li><a href="dylan/index.html">Dylan</a></li>\n
+      <li><a href="ebnf/index.html">EBNF</a></li>\n
+      <li><a href="ecl/index.html">ECL</a></li>\n
+      <li><a href="eiffel/index.html">Eiffel</a></li>\n
+      <li><a href="elm/index.html">Elm</a></li>\n
+      <li><a href="erlang/index.html">Erlang</a></li>\n
+      <li><a href="factor/index.html">Factor</a></li>\n
+      <li><a href="fcl/index.html">FCL</a></li>\n
+      <li><a href="forth/index.html">Forth</a></li>\n
+      <li><a href="fortran/index.html">Fortran</a></li>\n
+      <li><a href="mllike/index.html">F#</a></li>\n
+      <li><a href="gas/index.html">Gas</a> (AT&amp;T-style assembly)</li>\n
+      <li><a href="gherkin/index.html">Gherkin</a></li>\n
+      <li><a href="go/index.html">Go</a></li>\n
+      <li><a href="groovy/index.html">Groovy</a></li>\n
+      <li><a href="haml/index.html">HAML</a></li>\n
+      <li><a href="handlebars/index.html">Handlebars</a></li>\n
+      <li><a href="haskell/index.html">Haskell</a> (<a href="haskell-literate/index.html">Literate</a>)</li>\n
+      <li><a href="haxe/index.html">Haxe</a></li>\n
+      <li><a href="htmlembedded/index.html">HTML embedded</a> (JSP, ASP.NET)</li>\n
+      <li><a href="htmlmixed/index.html">HTML mixed-mode</a></li>\n
+      <li><a href="http/index.html">HTTP</a></li>\n
+      <li><a href="idl/index.html">IDL</a></li>\n
+      <li><a href="clike/index.html">Java</a></li>\n
+      <li><a href="jade/index.html">Jade</a></li>\n
+      <li><a href="javascript/index.html">JavaScript</a> (<a href="jsx/index.html">JSX</a>)</li>\n
+      <li><a href="jinja2/index.html">Jinja2</a></li>\n
+      <li><a href="julia/index.html">Julia</a></li>\n
+      <li><a href="kotlin/index.html">Kotlin</a></li>\n
+      <li><a href="css/less.html">LESS</a></li>\n
+      <li><a href="livescript/index.html">LiveScript</a></li>\n
+      <li><a href="lua/index.html">Lua</a></li>\n
+      <li><a href="markdown/index.html">Markdown</a> (<a href="gfm/index.html">GitHub-flavour</a>)</li>\n
+      <li><a href="mathematica/index.html">Mathematica</a></li>\n
+      <li><a href="mirc/index.html">mIRC</a></li>\n
+      <li><a href="modelica/index.html">Modelica</a></li>\n
+      <li><a href="mscgen/index.html">MscGen</a></li>\n
+      <li><a href="mumps/index.html">MUMPS</a></li>\n
+      <li><a href="nginx/index.html">Nginx</a></li>\n
+      <li><a href="nsis/index.html">NSIS</a></li>\n
+      <li><a href="ntriples/index.html">NTriples</a></li>\n
+      <li><a href="clike/index.html">Objective C</a></li>\n
+      <li><a href="mllike/index.html">OCaml</a></li>\n
+      <li><a href="octave/index.html">Octave</a> (MATLAB)</li>\n
+      <li><a href="oz/index.html">Oz</a></li>\n
+      <li><a href="pascal/index.html">Pascal</a></li>\n
+      <li><a href="pegjs/index.html">PEG.js</a></li>\n
+      <li><a href="perl/index.html">Perl</a></li>\n
+      <li><a href="asciiarmor/index.html">PGP (ASCII armor)</a></li>\n
+      <li><a href="php/index.html">PHP</a></li>\n
+      <li><a href="pig/index.html">Pig Latin</a></li>\n
+      <li><a href="properties/index.html">Properties files</a></li>\n
+      <li><a href="protobuf/index.html">ProtoBuf</a></li>\n
+      <li><a href="puppet/index.html">Puppet</a></li>\n
+      <li><a href="python/index.html">Python</a></li>\n
+      <li><a href="q/index.html">Q</a></li>\n
+      <li><a href="r/index.html">R</a></li>\n
+      <li><a href="rpm/index.html">RPM</a></li>\n
+      <li><a href="rst/index.html">reStructuredText</a></li>\n
+      <li><a href="ruby/index.html">Ruby</a></li>\n
+      <li><a href="rust/index.html">Rust</a></li>\n
+      <li><a href="sass/index.html">Sass</a></li>\n
+      <li><a href="spreadsheet/index.html">Spreadsheet</a></li>\n
+      <li><a href="clike/scala.html">Scala</a></li>\n
+      <li><a href="scheme/index.html">Scheme</a></li>\n
+      <li><a href="css/scss.html">SCSS</a></li>\n
+      <li><a href="shell/index.html">Shell</a></li>\n
+      <li><a href="sieve/index.html">Sieve</a></li>\n
+      <li><a href="slim/index.html">Slim</a></li>\n
+      <li><a href="smalltalk/index.html">Smalltalk</a></li>\n
+      <li><a href="smarty/index.html">Smarty</a></li>\n
+      <li><a href="solr/index.html">Solr</a></li>\n
+      <li><a href="soy/index.html">Soy</a></li>\n
+      <li><a href="stylus/index.html">Stylus</a></li>\n
+      <li><a href="sql/index.html">SQL</a> (several dialects)</li>\n
+      <li><a href="sparql/index.html">SPARQL</a></li>\n
+      <li><a href="clike/index.html">Squirrel</a></li>\n
+      <li><a href="swift/index.html">Swift</a></li>\n
+      <li><a href="stex/index.html">sTeX, LaTeX</a></li>\n
+      <li><a href="tcl/index.html">Tcl</a></li>\n
+      <li><a href="textile/index.html">Textile</a></li>\n
+      <li><a href="tiddlywiki/index.html">Tiddlywiki</a></li>\n
+      <li><a href="tiki/index.html">Tiki wiki</a></li>\n
+      <li><a href="toml/index.html">TOML</a></li>\n
+      <li><a href="tornado/index.html">Tornado</a> (templating language)</li>\n
+      <li><a href="troff/index.html">troff</a> (for manpages)</li>\n
+      <li><a href="ttcn/index.html">TTCN</a></li>\n
+      <li><a href="ttcn-cfg/index.html">TTCN Configuration</a></li>\n
+      <li><a href="turtle/index.html">Turtle</a></li>\n
+      <li><a href="twig/index.html">Twig</a></li>\n
+      <li><a href="vb/index.html">VB.NET</a></li>\n
+      <li><a href="vbscript/index.html">VBScript</a></li>\n
+      <li><a href="velocity/index.html">Velocity</a></li>\n
+      <li><a href="verilog/index.html">Verilog/SystemVerilog</a></li>\n
+      <li><a href="vhdl/index.html">VHDL</a></li>\n
+      <li><a href="vue/index.html">Vue.js app</a></li>\n
+      <li><a href="xml/index.html">XML/HTML</a></li>\n
+      <li><a href="xquery/index.html">XQuery</a></li>\n
+      <li><a href="yaml/index.html">YAML</a></li>\n
+      <li><a href="yaml-frontmatter/index.html">YAML frontmatter</a></li>\n
+      <li><a href="z80/index.html">Z80</a></li>\n
+    </ul>\n
+  </div>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

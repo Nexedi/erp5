@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: APL mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/cm_edit/matchbrackets.js"></script>\n
+<script src="./apl.js"></script>\n
+<style>\n
+\t.CodeMirror { border: 2px inset #dee; }\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">APL</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>APL mode</h2>\n
+<form><textarea id="code" name="code">\n
+â Conway\'s game of life\n
+\n
+â This example was inspired by the impressive demo at\n
+â http://www.youtube.com/watch?v=a9xAKttWgP4\n
+\n
+â Create a matrix:\n
+â     0 1 1\n
+â     1 1 0\n
+â     0 1 0\n
+creature â (3 3 âŽ â³ 9) â 1 2 3 4 7   â Original creature from demo\n
+creature â (3 3 âŽ â³ 9) â 1 3 6 7 8   â Glider\n
+\n
+â Place the creature on a larger board, near the centre\n
+board â Â¯1 â Â¯2 âœ 5 7 â creature\n
+\n
+â A function to move from one generation to the next\n
+life â {âš/ 1 âµ â§ 3 4 = â+/ +â¿ 1 0 Â¯1 â.â 1 0 Â¯1 âœÂš ââµ}\n
+\n
+â Compute n-th generation and format it as a\n
+â character matrix\n
+gen â {\' #\'[(life â£ âµ) board]}\n
+\n
+â Show first three generations\n
+(gen 1) (gen 2) (gen 3)\n
+</textarea></form>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        mode: "text/apl"\n
+      });\n
+    </script>\n
+\n
+    <p>Simple mode that tries to handle APL as well as it can.</p>\n
+    <p>It attempts to label functions/operators based upon\n
+    monadic/dyadic usage (but this is far from fully fleshed out).\n
+    This means there are meaningful classnames so hover states can\n
+    have popups etc.</p>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/apl</code> (APL code)</p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

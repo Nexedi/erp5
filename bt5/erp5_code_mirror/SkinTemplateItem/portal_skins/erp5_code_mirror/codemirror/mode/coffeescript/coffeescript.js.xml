@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897133.52</string> </value>
+            <value> <string>ts60604376.53</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -53,7 +53,7 @@ CodeMirror.defineMode("coffeescript", function(conf, parserConf) {\n
   var operators = /^(?:->|=>|\\+[+=]?|-[\\-=]?|\\*[\\*=]?|\\/[\\/=]?|[=!]=|<[><]?=?|>>?=?|%=?|&=?|\\|=?|\\^=?|\\~|!|\\?|(or|and|\\|\\||&&|\\?)=)/;\n
   var delimiters = /^(?:[()\\[\\]{},:`=;]|\\.\\.?\\.?)/;\n
   var identifiers = /^[_A-Za-z$][_A-Za-z$0-9]*/;\n
-  var properties = /^(@|this\\.)[_A-Za-z$][_A-Za-z$0-9]*/;\n
+  var atProp = /^@[_A-Za-z$][_A-Za-z$0-9]*/;\n
 \n
   var wordOperators = wordRegexp(["and", "or", "not",\n
                                   "is", "isnt", "in",\n
@@ -173,6 +173,8 @@ CodeMirror.defineMode("coffeescript", function(conf, parserConf) {\n
       }\n
     }\n
 \n
+\n
+\n
     // Handle operators and delimiters\n
     if (stream.match(operators) || stream.match(wordOperators)) {\n
       return "operator";\n
@@ -185,16 +187,16 @@ CodeMirror.defineMode("coffeescript", function(conf, parserConf) {\n
       return "atom";\n
     }\n
 \n
+    if (stream.match(atProp) || state.prop && stream.match(identifiers)) {\n
+      return "property";\n
+    }\n
+\n
     if (stream.match(keywords)) {\n
       return "keyword";\n
     }\n
 \n
     if (stream.match(identifiers)) {\n
       return "variable";\n
-    }\n
-\n
-    if (stream.match(properties)) {\n
-      return "property";\n
     }\n
 \n
     // Handle non-detected items\n
@@ -293,24 +295,11 @@ CodeMirror.defineMode("coffeescript", function(conf, parserConf) {\n
     var style = state.tokenize(stream, state);\n
     var current = stream.current();\n
 \n
-    // Handle "." connected identifiers\n
-    if (current === ".") {\n
-      style = state.tokenize(stream, state);\n
-      current = stream.current();\n
-      if (/^\\.[\\w$]+$/.test(current)) {\n
-        return "variable";\n
-      } else {\n
-        return ERRORCLASS;\n
-      }\n
-    }\n
-\n
     // Handle scope changes.\n
     if (current === "return") {\n
       state.dedent = true;\n
     }\n
-    if (((current === "->" || current === "=>") &&\n
-         !state.lambda &&\n
-         !stream.peek())\n
+    if (((current === "->" || current === "=>") && stream.eol())\n
         || style === "indent") {\n
       indent(stream, state);\n
     }\n
@@ -352,8 +341,7 @@ CodeMirror.defineMode("coffeescript", function(conf, parserConf) {\n
       return {\n
         tokenize: tokenBase,\n
         scope: {offset:basecolumn || 0, type:"coffee", prev: null, align: false},\n
-        lastToken: null,\n
-        lambda: false,\n
+        prop: false,\n
         dedent: 0\n
       };\n
     },\n
@@ -363,12 +351,9 @@ CodeMirror.defineMode("coffeescript", function(conf, parserConf) {\n
       if (fillAlign && stream.sol()) fillAlign.align = false;\n
 \n
       var style = tokenLexer(stream, state);\n
-      if (fillAlign && style && style != "comment") fillAlign.align = true;\n
-\n
-      state.lastToken = {style:style, content: stream.current()};\n
-\n
-      if (stream.eol() && stream.lambda) {\n
-        state.lambda = false;\n
+      if (style && style != "comment") {\n
+        if (fillAlign) fillAlign.align = true;\n
+        state.prop = style == "punctuation" && stream.current() == "."\n
       }\n
 \n
       return style;\n
@@ -393,6 +378,7 @@ CodeMirror.defineMode("coffeescript", function(conf, parserConf) {\n
 });\n
 \n
 CodeMirror.defineMIME("text/x-coffeescript", "coffeescript");\n
+CodeMirror.defineMIME("text/coffeescript", "coffeescript");\n
 \n
 });\n
 
@@ -405,7 +391,7 @@ CodeMirror.defineMIME("text/x-coffeescript", "coffeescript");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>10188</int> </value>
+            <value> <int>9884</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

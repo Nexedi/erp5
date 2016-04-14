@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897134.69</string> </value>
+            <value> <string>ts60604379.68</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -52,6 +52,7 @@ CodeMirror.defineMode("groovy", function(config) {\n
     "short static strictfp super switch synchronized threadsafe throw throws transient " +\n
     "try void volatile while");\n
   var blockKeywords = words("catch class do else finally for if switch try while enum interface def");\n
+  var standaloneKeywords = words("return break continue");\n
   var atoms = words("null true false this");\n
 \n
   var curPunc;\n
@@ -78,7 +79,7 @@ CodeMirror.defineMode("groovy", function(config) {\n
         stream.skipToEnd();\n
         return "comment";\n
       }\n
-      if (expectExpression(state.lastToken)) {\n
+      if (expectExpression(state.lastToken, false)) {\n
         return startString(ch, stream, state);\n
       }\n
     }\n
@@ -98,6 +99,7 @@ CodeMirror.defineMode("groovy", function(config) {\n
     if (atoms.propertyIsEnumerable(cur)) { return "atom"; }\n
     if (keywords.propertyIsEnumerable(cur)) {\n
       if (blockKeywords.propertyIsEnumerable(cur)) curPunc = "newstatement";\n
+      else if (standaloneKeywords.propertyIsEnumerable(cur)) curPunc = "standalone";\n
       return "keyword";\n
     }\n
     return "variable";\n
@@ -160,9 +162,10 @@ CodeMirror.defineMode("groovy", function(config) {\n
     return "comment";\n
   }\n
 \n
-  function expectExpression(last) {\n
+  function expectExpression(last, newline) {\n
     return !last || last == "operator" || last == "->" || /[\\.\\[\\{\\(,;:]/.test(last) ||\n
-      last == "newstatement" || last == "keyword" || last == "proplabel";\n
+      last == "newstatement" || last == "keyword" || last == "proplabel" ||\n
+      (last == "standalone" && !newline);\n
   }\n
 \n
   function Context(indented, column, type, align, prev) {\n
@@ -202,7 +205,7 @@ CodeMirror.defineMode("groovy", function(config) {\n
         state.indented = stream.indentation();\n
         state.startOfLine = true;\n
         // Automatic semicolon insertion\n
-        if (ctx.type == "statement" && !expectExpression(state.lastToken)) {\n
+        if (ctx.type == "statement" && !expectExpression(state.lastToken, true)) {\n
           popContext(state); ctx = state.context;\n
         }\n
       }\n
@@ -237,7 +240,7 @@ CodeMirror.defineMode("groovy", function(config) {\n
     indent: function(state, textAfter) {\n
       if (!state.tokenize[state.tokenize.length-1].isBase) return 0;\n
       var firstChar = textAfter && textAfter.charAt(0), ctx = state.context;\n
-      if (ctx.type == "statement" && !expectExpression(state.lastToken)) ctx = ctx.prev;\n
+      if (ctx.type == "statement" && !expectExpression(state.lastToken, true)) ctx = ctx.prev;\n
       var closing = firstChar == ctx.type;\n
       if (ctx.type == "statement") return ctx.indented + (firstChar == "{" ? 0 : config.indentUnit);\n
       else if (ctx.align) return ctx.column + (closing ? 0 : 1);\n
@@ -245,6 +248,7 @@ CodeMirror.defineMode("groovy", function(config) {\n
     },\n
 \n
     electricChars: "{}",\n
+    closeBrackets: {triples: "\'\\""},\n
     fold: "brace"\n
   };\n
 });\n
@@ -262,7 +266,7 @@ CodeMirror.defineMIME("text/x-groovy", "groovy");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7625</int> </value>
+            <value> <int>7878</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

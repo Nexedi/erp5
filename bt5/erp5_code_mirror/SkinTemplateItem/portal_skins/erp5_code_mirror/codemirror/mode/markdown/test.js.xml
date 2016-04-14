@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897148.27</string> </value>
+            <value> <string>ts60604381.84</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -34,6 +34,39 @@
   function MT(name) { test.mode(name, mode, Array.prototype.slice.call(arguments, 1)); }\n
   var modeHighlightFormatting = CodeMirror.getMode({tabSize: 4}, {name: "markdown", highlightFormatting: true});\n
   function FT(name) { test.mode(name, modeHighlightFormatting, Array.prototype.slice.call(arguments, 1)); }\n
+  var modeAtxNoSpace = CodeMirror.getMode({tabSize: 4}, {name: "markdown", allowAtxHeaderWithoutSpace: true});\n
+  function AtxNoSpaceTest(name) { test.mode(name, modeAtxNoSpace, Array.prototype.slice.call(arguments, 1)); }\n
+  var modeFenced = CodeMirror.getMode({tabSize: 4}, {name: "markdown", fencedCodeBlocks: true});\n
+  function FencedTest(name) { test.mode(name, modeFenced, Array.prototype.slice.call(arguments, 1)); }\n
+  var modeOverrideClasses = CodeMirror.getMode({tabsize: 4}, {\n
+    name: "markdown",\n
+    strikethrough: true,\n
+    tokenTypeOverrides: {\n
+      "header" : "override-header",\n
+      "code" : "override-code",\n
+      "quote" : "override-quote",\n
+      "list1" : "override-list1",\n
+      "list2" : "override-list2",\n
+      "list3" : "override-list3",\n
+      "hr" : "override-hr",\n
+      "image" : "override-image",\n
+      "linkInline" : "override-link-inline",\n
+      "linkEmail" : "override-link-email",\n
+      "linkText" : "override-link-text",\n
+      "linkHref" : "override-link-href",\n
+      "em" : "override-em",\n
+      "strong" : "override-strong",\n
+      "strikethrough" : "override-strikethrough"\n
+  }});\n
+  function TokenTypeOverrideTest(name) { test.mode(name, modeOverrideClasses, Array.prototype.slice.call(arguments, 1)); }\n
+  var modeFormattingOverride = CodeMirror.getMode({tabsize: 4}, {\n
+    name: "markdown",\n
+    highlightFormatting: true,\n
+    tokenTypeOverrides: {\n
+      "formatting" : "override-formatting"\n
+  }});\n
+  function FormatTokenTypeOverrideTest(name) { test.mode(name, modeFormattingOverride, Array.prototype.slice.call(arguments, 1)); }\n
+\n
 \n
   FT("formatting_emAsterisk",\n
      "[em&formatting&formatting-em *][em foo][em&formatting&formatting-em *]");\n
@@ -54,7 +87,7 @@
      "[comment&formatting&formatting-code ``][comment foo ` bar][comment&formatting&formatting-code ``]");\n
 \n
   FT("formatting_atxHeader",\n
-     "[header&header-1&formatting&formatting-header&formatting-header-1 #][header&header-1  foo # bar ][header&header-1&formatting&formatting-header&formatting-header-1 #]");\n
+     "[header&header-1&formatting&formatting-header&formatting-header-1 # ][header&header-1 foo # bar ][header&header-1&formatting&formatting-header&formatting-header-1 #]");\n
 \n
   FT("formatting_setextHeader",\n
      "foo",\n
@@ -69,11 +102,11 @@
      "[variable-2&formatting&formatting-list&formatting-list-ol 1. ][variable-2 foo]");\n
 \n
   FT("formatting_link",\n
-     "[link&formatting&formatting-link [][link foo][link&formatting&formatting-link ]]][string&formatting&formatting-link-string (][string http://example.com/][string&formatting&formatting-link-string )]");\n
+     "[link&formatting&formatting-link [][link foo][link&formatting&formatting-link ]]][string&formatting&formatting-link-string&url (][string&url http://example.com/][string&formatting&formatting-link-string&url )]");\n
 \n
   FT("formatting_linkReference",\n
-     "[link&formatting&formatting-link [][link foo][link&formatting&formatting-link ]]][string&formatting&formatting-link-string [][string bar][string&formatting&formatting-link-string ]]]",\n
-     "[link&formatting&formatting-link [][link bar][link&formatting&formatting-link ]]:] [string http://example.com/]");\n
+     "[link&formatting&formatting-link [][link foo][link&formatting&formatting-link ]]][string&formatting&formatting-link-string&url [][string&url bar][string&formatting&formatting-link-string&url ]]]",\n
+     "[link&formatting&formatting-link [][link bar][link&formatting&formatting-link ]]:] [string&url http://example.com/]");\n
 \n
   FT("formatting_linkWeb",\n
      "[link&formatting&formatting-link <][link http://example.com/][link&formatting&formatting-link >]");\n
@@ -113,13 +146,6 @@
      "    [comment foo]",\n
      "bar");\n
 \n
-  // Code blocks using 4 spaces with internal indentation\n
-  MT("codeBlocksUsing4SpacesIndentation",\n
-     " foo",\n
-     "    [comment bar]",\n
-     "        [comment hello]",\n
-     "    [comment world]");\n
-\n
   // Code blocks should end even after extra indented lines\n
   MT("codeBlocksWithTrailingIndentedLine",\n
      "    [comment foo]",\n
@@ -132,6 +158,12 @@
   MT("codeBlocksUsing1Tab",\n
      "\\t[comment foo]");\n
 \n
+  // No code blocks directly after paragraph\n
+  // http://spec.commonmark.org/0.19/#example-65\n
+  MT("noCodeBlocksAfterParagraph",\n
+     "Foo",\n
+     "    Bar");\n
+\n
   // Inline code using backticks\n
   MT("inlineCodeUsingBackticks",\n
      "foo [comment `bar`]");\n
@@ -139,7 +171,7 @@
   // Block code using single backtick (shouldn\'t work)\n
   MT("blockCodeSingleBacktick",\n
      "[comment `]",\n
-     "foo",\n
+     "[comment foo]",\n
      "[comment `]");\n
 \n
   // Unclosed backticks\n
@@ -194,10 +226,23 @@
   MT("atxH6",\n
      "[header&header-6 ###### foo]");\n
 \n
-  // H6 - 7x \'#\' should still be H6, per Dingus\n
-  // http://daringfireball.net/projects/markdown/dingus\n
-  MT("atxH6NotH7",\n
-     "[header&header-6 ####### foo]");\n
+  // http://spec.commonmark.org/0.19/#example-24\n
+  MT("noAtxH7",\n
+     "####### foo");\n
+\n
+  // http://spec.commonmark.org/0.19/#example-25\n
+  MT("noAtxH1WithoutSpace",\n
+     "#5 bolt");\n
+\n
+  // CommonMark requires a space after # but most parsers don\'t\n
+  AtxNoSpaceTest("atxNoSpaceAllowed_H1NoSpace",\n
+     "[header&header-1 #foo]");\n
+\n
+  AtxNoSpaceTest("atxNoSpaceAllowed_H4NoSpace",\n
+     "[header&header-4 ####foo]");\n
+\n
+  AtxNoSpaceTest("atxNoSpaceAllowed_H1Space",\n
+     "[header&header-1 # foo]");\n
 \n
   // Inline styles should be parsed inside headers\n
   MT("atxH1inline",\n
@@ -229,6 +274,25 @@
   MT("setextH2",\n
      "foo",\n
      "[header&header-2 ---]");\n
+\n
+  // http://spec.commonmark.org/0.19/#example-45\n
+  MT("setextH2AllowSpaces",\n
+     "foo",\n
+     "   [header&header-2 ----      ]");\n
+\n
+  // http://spec.commonmark.org/0.19/#example-44\n
+  MT("noSetextAfterIndentedCodeBlock",\n
+     "     [comment foo]",\n
+     "[hr ---]");\n
+\n
+  // http://spec.commonmark.org/0.19/#example-51\n
+  MT("noSetextAfterQuote",\n
+     "[quote&quote-1 > foo]",\n
+     "[hr ---]");\n
+\n
+  MT("noSetextAfterList",\n
+     "[variable-2 - foo]",\n
+     "[hr ---]");\n
 \n
   // Single-line blockquote with trailing space\n
   MT("blockquoteSpace",\n
@@ -279,6 +343,13 @@
      "",\n
      "hello");\n
 \n
+  // Header with leading space after continued blockquote (#3287, negative indentation)\n
+  MT("headerAfterContinuedBlockquote",\n
+     "[quote&quote-1 > foo]",\n
+     "[quote&quote-1 bar]",\n
+     "",\n
+     " [header&header-1 # hello]");\n
+\n
   // Check list types\n
 \n
   MT("listAsterisk",\n
@@ -315,10 +386,20 @@
      "1. bar",\n
      "2. hello");\n
 \n
+  // List after hr\n
+  MT("listAfterHr",\n
+     "[hr ---]",\n
+     "[variable-2 - bar]");\n
+\n
   // List after header\n
   MT("listAfterHeader",\n
      "[header&header-1 # foo]",\n
      "[variable-2 - bar]");\n
+\n
+  // hr after list\n
+  MT("hrAfterList",\n
+     "[variable-2 - foo]",\n
+     "[hr -----]");\n
 \n
   // Formatting in lists (*)\n
   MT("listAsteriskFormatting",\n
@@ -398,6 +479,18 @@
      "[variable-2 * bar]",\n
      "",\n
      "hello");\n
+\n
+  MT("listCommonMarkIndentationCode",\n
+     "[variable-2 * Code blocks also affect]",\n
+     "  [variable-3 * The next level starts where the contents start.]",\n
+     "   [variable-3 *    Anything less than that will keep the item on the same level.]",\n
+     "       [variable-3 * Each list item can indent the first level further and further.]",\n
+     "  [variable-3 * For the most part, this makes sense while writing a list.]",\n
+     "    [keyword * This means two items with same indentation can be different levels.]",\n
+     "     [keyword *  Each level has an indent requirement that can change between items.]",\n
+     "       [keyword * A list item that meets this will be part of the next level.]",\n
+     "   [variable-3 * Otherwise, it will be part of the level where it does meet this.]",\n
+     " [variable-2 * World]");\n
 \n
   // Blockquote\n
   MT("blockquote",\n
@@ -488,14 +581,14 @@
     "",\n
     "    [variable-3 * bar]",\n
     "",\n
-    "       [variable-2 hello]"\n
+    "       [variable-3 hello]"\n
   );\n
   MT("listNested",\n
     "[variable-2 * foo]",\n
     "",\n
     "    [variable-3 * bar]",\n
     "",\n
-    "      [variable-3 * foo]"\n
+    "      [keyword * foo]"\n
   );\n
 \n
   // Code followed by text\n
@@ -526,39 +619,39 @@
 \n
   // Inline link with title\n
   MT("linkTitle",\n
-     "[link [[foo]]][string (http://example.com/ \\"bar\\")] hello");\n
+     "[link [[foo]]][string&url (http://example.com/ \\"bar\\")] hello");\n
 \n
   // Inline link without title\n
   MT("linkNoTitle",\n
-     "[link [[foo]]][string (http://example.com/)] bar");\n
+     "[link [[foo]]][string&url (http://example.com/)] bar");\n
 \n
   // Inline link with image\n
   MT("linkImage",\n
-     "[link [[][tag ![[foo]]][string (http://example.com/)][link ]]][string (http://example.com/)] bar");\n
+     "[link [[][tag ![[foo]]][string&url (http://example.com/)][link ]]][string&url (http://example.com/)] bar");\n
 \n
   // Inline link with Em\n
   MT("linkEm",\n
-     "[link [[][link&em *foo*][link ]]][string (http://example.com/)] bar");\n
+     "[link [[][link&em *foo*][link ]]][string&url (http://example.com/)] bar");\n
 \n
   // Inline link with Strong\n
   MT("linkStrong",\n
-     "[link [[][link&strong **foo**][link ]]][string (http://example.com/)] bar");\n
+     "[link [[][link&strong **foo**][link ]]][string&url (http://example.com/)] bar");\n
 \n
   // Inline link with EmStrong\n
   MT("linkEmStrong",\n
-     "[link [[][link&strong **][link&em&strong *foo**][link&em *][link ]]][string (http://example.com/)] bar");\n
+     "[link [[][link&strong **][link&em&strong *foo**][link&em *][link ]]][string&url (http://example.com/)] bar");\n
 \n
   // Image with title\n
   MT("imageTitle",\n
-     "[tag ![[foo]]][string (http://example.com/ \\"bar\\")] hello");\n
+     "[tag ![[foo]]][string&url (http://example.com/ \\"bar\\")] hello");\n
 \n
   // Image without title\n
   MT("imageNoTitle",\n
-     "[tag ![[foo]]][string (http://example.com/)] bar");\n
+     "[tag ![[foo]]][string&url (http://example.com/)] bar");\n
 \n
   // Image with asterisks\n
   MT("imageAsterisks",\n
-     "[tag ![[*foo*]]][string (http://example.com/)] bar");\n
+     "[tag ![[*foo*]]][string&url (http://example.com/)] bar");\n
 \n
   // Not a link. Should be normal text due to square brackets being used\n
   // regularly in text, especially in quoted material, and no space is allowed\n
@@ -568,24 +661,24 @@
 \n
   // Reference-style links\n
   MT("linkReference",\n
-     "[link [[foo]]][string [[bar]]] hello");\n
+     "[link [[foo]]][string&url [[bar]]] hello");\n
 \n
   // Reference-style links with Em\n
   MT("linkReferenceEm",\n
-     "[link [[][link&em *foo*][link ]]][string [[bar]]] hello");\n
+     "[link [[][link&em *foo*][link ]]][string&url [[bar]]] hello");\n
 \n
   // Reference-style links with Strong\n
   MT("linkReferenceStrong",\n
-     "[link [[][link&strong **foo**][link ]]][string [[bar]]] hello");\n
+     "[link [[][link&strong **foo**][link ]]][string&url [[bar]]] hello");\n
 \n
   // Reference-style links with EmStrong\n
   MT("linkReferenceEmStrong",\n
-     "[link [[][link&strong **][link&em&strong *foo**][link&em *][link ]]][string [[bar]]] hello");\n
+     "[link [[][link&strong **][link&em&strong *foo**][link&em *][link ]]][string&url [[bar]]] hello");\n
 \n
   // Reference-style links with optional space separator (per docuentation)\n
   // "You can optionally use a space to separate the sets of brackets"\n
   MT("linkReferenceSpace",\n
-     "[link [[foo]]] [string [[bar]]] hello");\n
+     "[link [[foo]]] [string&url [[bar]]] hello");\n
 \n
   // Should only allow a single space ("...use *a* space...")\n
   MT("linkReferenceDoubleSpace",\n
@@ -593,7 +686,7 @@
 \n
   // Reference-style links with implicit link name\n
   MT("linkImplicit",\n
-     "[link [[foo]]][string [[]]] hello");\n
+     "[link [[foo]]][string&url [[]]] hello");\n
 \n
   // @todo It would be nice if, at some point, the document was actually\n
   // checked to see if the referenced link exists\n
@@ -601,47 +694,56 @@
   // Link label, for reference-style links (taken from documentation)\n
 \n
   MT("labelNoTitle",\n
-     "[link [[foo]]:] [string http://example.com/]");\n
+     "[link [[foo]]:] [string&url http://example.com/]");\n
 \n
   MT("labelIndented",\n
-     "   [link [[foo]]:] [string http://example.com/]");\n
+     "   [link [[foo]]:] [string&url http://example.com/]");\n
 \n
   MT("labelSpaceTitle",\n
-     "[link [[foo bar]]:] [string http://example.com/ \\"hello\\"]");\n
+     "[link [[foo bar]]:] [string&url http://example.com/ \\"hello\\"]");\n
 \n
   MT("labelDoubleTitle",\n
-     "[link [[foo bar]]:] [string http://example.com/ \\"hello\\"] \\"world\\"");\n
+     "[link [[foo bar]]:] [string&url http://example.com/ \\"hello\\"] \\"world\\"");\n
 \n
   MT("labelTitleDoubleQuotes",\n
-     "[link [[foo]]:] [string http://example.com/  \\"bar\\"]");\n
+     "[link [[foo]]:] [string&url http://example.com/  \\"bar\\"]");\n
 \n
   MT("labelTitleSingleQuotes",\n
-     "[link [[foo]]:] [string http://example.com/  \'bar\']");\n
+     "[link [[foo]]:] [string&url http://example.com/  \'bar\']");\n
 \n
   MT("labelTitleParenthese",\n
-     "[link [[foo]]:] [string http://example.com/  (bar)]");\n
+     "[link [[foo]]:] [string&url http://example.com/  (bar)]");\n
 \n
   MT("labelTitleInvalid",\n
-     "[link [[foo]]:] [string http://example.com/] bar");\n
+     "[link [[foo]]:] [string&url http://example.com/] bar");\n
 \n
   MT("labelLinkAngleBrackets",\n
-     "[link [[foo]]:] [string <http://example.com/>  \\"bar\\"]");\n
+     "[link [[foo]]:] [string&url <http://example.com/>  \\"bar\\"]");\n
 \n
   MT("labelTitleNextDoubleQuotes",\n
-     "[link [[foo]]:] [string http://example.com/]",\n
+     "[link [[foo]]:] [string&url http://example.com/]",\n
      "[string \\"bar\\"] hello");\n
 \n
   MT("labelTitleNextSingleQuotes",\n
-     "[link [[foo]]:] [string http://example.com/]",\n
+     "[link [[foo]]:] [string&url http://example.com/]",\n
      "[string \'bar\'] hello");\n
 \n
   MT("labelTitleNextParenthese",\n
-     "[link [[foo]]:] [string http://example.com/]",\n
+     "[link [[foo]]:] [string&url http://example.com/]",\n
      "[string (bar)] hello");\n
 \n
   MT("labelTitleNextMixed",\n
-     "[link [[foo]]:] [string http://example.com/]",\n
+     "[link [[foo]]:] [string&url http://example.com/]",\n
      "(bar\\" hello");\n
+\n
+  MT("labelEscape",\n
+     "[link [[foo \\\\]] ]]:] [string&url http://example.com/]");\n
+\n
+  MT("labelEscapeColon",\n
+     "[link [[foo \\\\]]: bar]]:] [string&url http://example.com/]");\n
+\n
+  MT("labelEscapeEnd",\n
+     "[[foo\\\\]]: http://example.com/");\n
 \n
   MT("linkWeb",\n
      "[link <http://example.com/>] foo");\n
@@ -750,16 +852,128 @@
      "\\\\",\n
      "[em *foo*]");\n
 \n
+  // Class override tests\n
+  TokenTypeOverrideTest("overrideHeader1",\n
+    "[override-header&override-header-1 # Foo]");\n
+\n
+  TokenTypeOverrideTest("overrideHeader2",\n
+    "[override-header&override-header-2 ## Foo]");\n
+\n
+  TokenTypeOverrideTest("overrideHeader3",\n
+    "[override-header&override-header-3 ### Foo]");\n
+\n
+  TokenTypeOverrideTest("overrideHeader4",\n
+    "[override-header&override-header-4 #### Foo]");\n
+\n
+  TokenTypeOverrideTest("overrideHeader5",\n
+    "[override-header&override-header-5 ##### Foo]");\n
+\n
+  TokenTypeOverrideTest("overrideHeader6",\n
+    "[override-header&override-header-6 ###### Foo]");\n
+\n
+  TokenTypeOverrideTest("overrideCode",\n
+    "[override-code `foo`]");\n
+\n
+  TokenTypeOverrideTest("overrideCodeBlock",\n
+    "[override-code ```]",\n
+    "[override-code foo]",\n
+    "[override-code ```]");\n
+\n
+  TokenTypeOverrideTest("overrideQuote",\n
+    "[override-quote&override-quote-1 > foo]",\n
+    "[override-quote&override-quote-1 > bar]");\n
+\n
+  TokenTypeOverrideTest("overrideQuoteNested",\n
+    "[override-quote&override-quote-1 > foo]",\n
+    "[override-quote&override-quote-1 >][override-quote&override-quote-2 > bar]",\n
+    "[override-quote&override-quote-1 >][override-quote&override-quote-2 >][override-quote&override-quote-3 > baz]");\n
+\n
+  TokenTypeOverrideTest("overrideLists",\n
+    "[override-list1 - foo]",\n
+    "",\n
+    "    [override-list2 + bar]",\n
+    "",\n
+    "        [override-list3 * baz]",\n
+    "",\n
+    "            [override-list1 1. qux]",\n
+    "",\n
+    "                [override-list2 - quux]");\n
+\n
+  TokenTypeOverrideTest("overrideHr",\n
+    "[override-hr * * *]");\n
+\n
+  TokenTypeOverrideTest("overrideImage",\n
+    "[override-image ![[foo]]][override-link-href&url (http://example.com/)]")\n
+\n
+  TokenTypeOverrideTest("overrideLinkText",\n
+    "[override-link-text [[foo]]][override-link-href&url (http://example.com)]");\n
+\n
+  TokenTypeOverrideTest("overrideLinkEmailAndInline",\n
+    "[override-link-email <][override-link-inline foo@example.com>]");\n
+\n
+  TokenTypeOverrideTest("overrideEm",\n
+    "[override-em *foo*]");\n
+\n
+  TokenTypeOverrideTest("overrideStrong",\n
+    "[override-strong **foo**]");\n
+\n
+  TokenTypeOverrideTest("overrideStrikethrough",\n
+    "[override-strikethrough ~~foo~~]");\n
+\n
+  FormatTokenTypeOverrideTest("overrideFormatting",\n
+    "[override-formatting-escape \\\\*]");\n
 \n
   // Tests to make sure GFM-specific things aren\'t getting through\n
 \n
   MT("taskList",\n
      "[variable-2 * [ ]] bar]");\n
 \n
-  MT("fencedCodeBlocks",\n
-     "[comment ```]",\n
+  MT("noFencedCodeBlocks",\n
+     "~~~",\n
      "foo",\n
-     "[comment ```]");\n
+     "~~~");\n
+\n
+  FencedTest("fencedCodeBlocks",\n
+     "[comment ```]",\n
+     "[comment foo]",\n
+     "[comment ```]",\n
+     "bar");\n
+\n
+  FencedTest("fencedCodeBlocksMultipleChars",\n
+     "[comment `````]",\n
+     "[comment foo]",\n
+     "[comment ```]",\n
+     "[comment foo]",\n
+     "[comment `````]",\n
+     "bar");\n
+\n
+  FencedTest("fencedCodeBlocksTildes",\n
+     "[comment ~~~]",\n
+     "[comment foo]",\n
+     "[comment ~~~]",\n
+     "bar");\n
+\n
+  FencedTest("fencedCodeBlocksTildesMultipleChars",\n
+     "[comment ~~~~~]",\n
+     "[comment ~~~]",\n
+     "[comment foo]",\n
+     "[comment ~~~~~]",\n
+     "bar");\n
+\n
+  FencedTest("fencedCodeBlocksMultipleChars",\n
+     "[comment `````]",\n
+     "[comment foo]",\n
+     "[comment ```]",\n
+     "[comment foo]",\n
+     "[comment `````]",\n
+     "bar");\n
+\n
+  FencedTest("fencedCodeBlocksMixed",\n
+     "[comment ~~~]",\n
+     "[comment ```]",\n
+     "[comment foo]",\n
+     "[comment ~~~]",\n
+     "bar");\n
 \n
   // Tests that require XML mode\n
 \n
@@ -790,7 +1004,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>20871</int> </value>
+            <value> <int>27934</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

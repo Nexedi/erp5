@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: FCL mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<link rel="stylesheet" href="../../theme/elegant.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/cm_edit/matchbrackets.js"></script>\n
+<script src="fcl.js"></script>\n
+<style>.CodeMirror {border:1px solid #999; background:#ffc}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">FCL</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>FCL mode</h2>\n
+<form><textarea id="code" name="code">\n
+  FUNCTION_BLOCK Fuzzy_FB\n
+      VAR_INPUT\n
+          TimeDay : REAL; (* RANGE(0 .. 23) *)\n
+          ApplicateHost: REAL;\n
+          TimeConfiguration: REAL;\n
+          TimeRequirements: REAL;\n
+      END_VAR\n
+\n
+      VAR_OUTPUT\n
+          ProbabilityDistribution: REAL;\n
+          ProbabilityAccess: REAL;\n
+      END_VAR\n
+\n
+      FUZZIFY TimeDay\n
+          TERM inside := (0, 0) (8, 1) (22,0);\n
+          TERM outside := (0, 1) (8, 0) (22, 1);\n
+      END_FUZZIFY\n
+\n
+      FUZZIFY ApplicateHost\n
+          TERM few := (0, 1) (100, 0) (200, 0);\n
+          TERM many := (0, 0) (100, 0) (200, 1);\n
+      END_FUZZIFY\n
+\n
+      FUZZIFY TimeConfiguration\n
+          TERM recently := (0, 1) (30, 1) (120, 0);\n
+          TERM long := (0, 0) (30, 0) (120, 1);\n
+      END_FUZZIFY\n
+\n
+      FUZZIFY TimeRequirements\n
+          TERM recently := (0, 1) (30, 1) (365, 0);\n
+          TERM long := (0, 0) (30, 0) (365, 1);\n
+      END_FUZZIFY\n
+\n
+      DEFUZZIFY ProbabilityAccess\n
+          TERM hight := 1;\n
+          TERM medium := 0.5;\n
+          TERM low := 0;\n
+          ACCU: MAX;\n
+          METHOD: COGS;\n
+          DEFAULT := 0;\n
+      END_DEFUZZIFY\n
+\n
+      DEFUZZIFY ProbabilityDistribution\n
+          TERM hight := 1;\n
+          TERM medium := 0.5;\n
+          TERM low := 0;\n
+          ACCU: MAX;\n
+          METHOD: COGS;\n
+          DEFAULT := 0;\n
+      END_DEFUZZIFY\n
+\n
+      RULEBLOCK No1\n
+          AND : MIN;\n
+          RULE 1 : IF TimeDay IS outside AND ApplicateHost IS few THEN ProbabilityAccess IS hight;\n
+          RULE 2 : IF ApplicateHost IS many THEN ProbabilityAccess IS hight;\n
+          RULE 3 : IF TimeDay IS inside AND ApplicateHost IS few THEN ProbabilityAccess IS low;\n
+      END_RULEBLOCK\n
+\n
+      RULEBLOCK No2\n
+          AND : MIN;\n
+          RULE 1 : IF ApplicateHost IS many THEN ProbabilityDistribution IS hight;\n
+      END_RULEBLOCK\n
+\n
+  END_FUNCTION_BLOCK\n
+</textarea></form>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        theme: "elegant",\n
+        matchBrackets: true,\n
+        indentUnit: 8,\n
+        tabSize: 8,\n
+        indentWithTabs: true,\n
+        mode: "text/x-fcl"\n
+      });\n
+    </script>\n
+\n
+    <p><strong>MIME type:</strong> <code>text/x-fcl</code></p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897146.23</string> </value>
+            <value> <string>ts60604378.13</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -182,20 +182,12 @@ CodeMirror.defineMode("dylan", function(_config) {\n
     return f(stream, state);\n
   }\n
 \n
-  var type, content;\n
-\n
-  function ret(_type, style, _content) {\n
-    type = _type;\n
-    content = _content;\n
-    return style;\n
-  }\n
-\n
   function tokenBase(stream, state) {\n
     // String\n
     var ch = stream.peek();\n
     if (ch == "\'" || ch == \'"\') {\n
       stream.next();\n
-      return chain(stream, state, tokenString(ch, "string", "string"));\n
+      return chain(stream, state, tokenString(ch, "string"));\n
     }\n
     // Comment\n
     else if (ch == "/") {\n
@@ -204,16 +196,17 @@ CodeMirror.defineMode("dylan", function(_config) {\n
         return chain(stream, state, tokenComment);\n
       } else if (stream.eat("/")) {\n
         stream.skipToEnd();\n
-        return ret("comment", "comment");\n
-      } else {\n
-        stream.skipTo(" ");\n
-        return ret("operator", "operator");\n
+        return "comment";\n
       }\n
+      stream.backUp(1);\n
     }\n
     // Decimal\n
-    else if (/\\d/.test(ch)) {\n
-      stream.match(/^\\d*(?:\\.\\d*)?(?:e[+\\-]?\\d+)?/);\n
-      return ret("number", "number");\n
+    else if (/[+\\-\\d\\.]/.test(ch)) {\n
+      if (stream.match(/^[+-]?[0-9]*\\.[0-9]*([esdx][+-]?[0-9]+)?/i) ||\n
+          stream.match(/^[+-]?[0-9]+([esdx][+-]?[0-9]+)/i) ||\n
+          stream.match(/^[+-]?\\d+/)) {\n
+        return "number";\n
+      }\n
     }\n
     // Hash\n
     else if (ch == "#") {\n
@@ -222,33 +215,73 @@ CodeMirror.defineMode("dylan", function(_config) {\n
       ch = stream.peek();\n
       if (ch == \'"\') {\n
         stream.next();\n
-        return chain(stream, state, tokenString(\'"\', "symbol", "string-2"));\n
+        return chain(stream, state, tokenString(\'"\', "string"));\n
       }\n
       // Binary number\n
       else if (ch == "b") {\n
         stream.next();\n
         stream.eatWhile(/[01]/);\n
-        return ret("number", "number");\n
+        return "number";\n
       }\n
       // Hex number\n
       else if (ch == "x") {\n
         stream.next();\n
         stream.eatWhile(/[\\da-f]/i);\n
-        return ret("number", "number");\n
+        return "number";\n
       }\n
       // Octal number\n
       else if (ch == "o") {\n
         stream.next();\n
         stream.eatWhile(/[0-7]/);\n
-        return ret("number", "number");\n
+        return "number";\n
       }\n
+      // Token concatenation in macros\n
+      else if (ch == \'#\') {\n
+        stream.next();\n
+        return "punctuation";\n
+      }\n
+      // Sequence literals\n
+      else if ((ch == \'[\') || (ch == \'(\')) {\n
+        stream.next();\n
+        return "bracket";\n
       // Hash symbol\n
-      else {\n
+      } else if (stream.match(/f|t|all-keys|include|key|next|rest/i)) {\n
+        return "atom";\n
+      } else {\n
         stream.eatWhile(/[-a-zA-Z]/);\n
-        return ret("hash", "keyword");\n
+        return "error";\n
       }\n
+    } else if (ch == "~") {\n
+      stream.next();\n
+      ch = stream.peek();\n
+      if (ch == "=") {\n
+        stream.next();\n
+        ch = stream.peek();\n
+        if (ch == "=") {\n
+          stream.next();\n
+          return "operator";\n
+        }\n
+        return "operator";\n
+      }\n
+      return "operator";\n
+    } else if (ch == ":") {\n
+      stream.next();\n
+      ch = stream.peek();\n
+      if (ch == "=") {\n
+        stream.next();\n
+        return "operator";\n
+      } else if (ch == ":") {\n
+        stream.next();\n
+        return "punctuation";\n
+      }\n
+    } else if ("[](){}".indexOf(ch) != -1) {\n
+      stream.next();\n
+      return "bracket";\n
+    } else if (".,".indexOf(ch) != -1) {\n
+      stream.next();\n
+      return "punctuation";\n
     } else if (stream.match("end")) {\n
-      return ret("end", "keyword");\n
+      return "keyword";\n
     }\n
     for (var name in patterns) {\n
       if (patterns.hasOwnProperty(name)) {\n
@@ -256,50 +289,62 @@ CodeMirror.defineMode("dylan", function(_config) {\n
         if ((pattern instanceof Array && pattern.some(function(p) {\n
           return stream.match(p);\n
         })) || stream.match(pattern))\n
-          return ret(name, patternStyles[name], stream.current());\n
+          return patternStyles[name];\n
       }\n
     }\n
+    if (/[+\\-*\\/^=<>&|]/.test(ch)) {\n
+      stream.next();\n
+      return "operator";\n
+    }\n
     if (stream.match("define")) {\n
-      return ret("definition", "def");\n
+      return "def";\n
     } else {\n
       stream.eatWhile(/[\\w\\-]/);\n
       // Keyword\n
       if (wordLookup[stream.current()]) {\n
-        return ret(wordLookup[stream.current()], styleLookup[stream.current()], stream.current());\n
+        return styleLookup[stream.current()];\n
       } else if (stream.current().match(symbol)) {\n
-        return ret("variable", "variable");\n
+        return "variable";\n
       } else {\n
         stream.next();\n
-        return ret("other", "variable-2");\n
+        return "variable-2";\n
       }\n
     }\n
   }\n
 \n
   function tokenComment(stream, state) {\n
-    var maybeEnd = false,\n
-    ch;\n
+    var maybeEnd = false, maybeNested = false, nestedCount = 0, ch;\n
     while ((ch = stream.next())) {\n
       if (ch == "/" && maybeEnd) {\n
-        state.tokenize = tokenBase;\n
-        break;\n
+        if (nestedCount > 0) {\n
+          nestedCount--;\n
+        } else {\n
+          state.tokenize = tokenBase;\n
+          break;\n
+        }\n
+      } else if (ch == "*" && maybeNested) {\n
+        nestedCount++;\n
       }\n
       maybeEnd = (ch == "*");\n
+      maybeNested = (ch == "/");\n
     }\n
-    return ret("comment", "comment");\n
+    return "comment";\n
   }\n
 \n
-  function tokenString(quote, type, style) {\n
+  function tokenString(quote, style) {\n
     return function(stream, state) {\n
-      var next, end = false;\n
+      var escaped = false, next, end = false;\n
       while ((next = stream.next()) != null) {\n
-        if (next == quote) {\n
+        if (next == quote && !escaped) {\n
           end = true;\n
           break;\n
         }\n
+        escaped = !escaped && next == "\\\\";\n
       }\n
-      if (end)\n
+      if (end || !escaped) {\n
         state.tokenize = tokenBase;\n
-      return ret(type, style);\n
+      }\n
+      return style;\n
     };\n
   }\n
 \n
@@ -335,7 +380,7 @@ CodeMirror.defineMIME("text/x-dylan", "dylan");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8778</int> </value>
+            <value> <int>9902</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

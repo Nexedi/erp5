@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897149.45</string> </value>
+            <value> <string>ts60604385.67</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -124,7 +124,7 @@
               else state.indent -= (stream.current() == "/}" || indentingTags.indexOf(state.tag) == -1 ? 2 : 1) * config.indentUnit;\n
               state.soyState.pop();\n
               return "keyword";\n
-            } else if (stream.match(/^(\\w+)(?==)/)) {\n
+            } else if (stream.match(/^([\\w?]+)(?==)/)) {\n
               if (stream.current() == "kind" && (match = stream.match(/^="([^"]+)/, false))) {\n
                 var kind = match[1];\n
                 state.kind.push(kind);\n
@@ -162,7 +162,7 @@
           return "comment";\n
         } else if (stream.match(stream.sol() ? /^\\s*\\/\\/.*/ : /^\\s+\\/\\/.*/)) {\n
           return "comment";\n
-        } else if (stream.match(/^\\{\\$\\w*/)) {\n
+        } else if (stream.match(/^\\{\\$[\\w?]*/)) {\n
           state.indent += 2 * config.indentUnit;\n
           state.soyState.push("variable");\n
           return "variable-2";\n
@@ -170,7 +170,7 @@
           state.indent += config.indentUnit;\n
           state.soyState.push("literal");\n
           return "keyword";\n
-        } else if (match = stream.match(/^\\{([\\/@\\\\]?\\w*)/)) {\n
+        } else if (match = stream.match(/^\\{([\\/@\\\\]?[\\w?]*)/)) {\n
           if (match[1] != "/switch")\n
             state.indent += (/^(\\/|(else|elseif|case|default)$)/.test(match[1]) && state.tag != "switch" ? 1 : 2) * config.indentUnit;\n
           state.tag = match[1];\n
@@ -234,7 +234,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7555</int> </value>
+            <value> <int>7564</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

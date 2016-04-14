@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: PHP mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/cm_edit/matchbrackets.js"></script>\n
+<script src="../htmlmixed/htmlmixed.js"></script>\n
+<script src="../xml/xml.js"></script>\n
+<script src="../javascript/javascript.js"></script>\n
+<script src="../css/css.js"></script>\n
+<script src="../clike/clike.js"></script>\n
+<script src="php.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">PHP</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>PHP mode</h2>\n
+<form><textarea id="code" name="code">\n
+<?php\n
+$a = array(\'a\' => 1, \'b\' => 2, 3 => \'c\');\n
+\n
+echo "$a[a] ${a[3] /* } comment */} {$a[b]} \\$a[a]";\n
+\n
+function hello($who) {\n
+\treturn "Hello $who!";\n
+}\n
+?>\n
+<p>The program says <?= hello("World") ?>.</p>\n
+<script>\n
+\talert("And here is some JS code"); // also colored\n
+</script>\n
+</textarea></form>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        mode: "application/x-httpd-php",\n
+        indentUnit: 4,\n
+        indentWithTabs: true\n
+      });\n
+    </script>\n
+\n
+    <p>Simple HTML/PHP mode based on\n
+    the <a href="../clike/">C-like</a> mode. Depends on XML,\n
+    JavaScript, CSS, HTMLMixed, and C-like modes.</p>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>application/x-httpd-php</code> (HTML with PHP code), <code>text/x-php</code> (plain, non-wrapped PHP code).</p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

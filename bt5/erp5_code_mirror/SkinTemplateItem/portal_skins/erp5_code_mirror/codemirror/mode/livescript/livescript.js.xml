@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897140.55</string> </value>
+            <value> <string>ts60604381.58</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -52,8 +52,8 @@
         var nr = Rules[next_rule];\n
         if (nr.splice) {\n
           for (var i$ = 0; i$ < nr.length; ++i$) {\n
-            var r = nr[i$], m;\n
-            if (r.regex && (m = stream.match(r.regex))) {\n
+            var r = nr[i$];\n
+            if (r.regex && stream.match(r.regex)) {\n
               state.next = r.next || state.next;\n
               return r.token;\n
             }\n
@@ -316,7 +316,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7644</int> </value>
+            <value> <int>7635</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

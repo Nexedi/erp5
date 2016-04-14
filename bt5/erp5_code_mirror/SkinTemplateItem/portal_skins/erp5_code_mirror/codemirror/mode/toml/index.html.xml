@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: TOML Mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="toml.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">TOML Mode</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>TOML Mode</h2>\n
+<form><textarea id="code" name="code">\n
+# This is a TOML document. Boom.\n
+\n
+title = "TOML Example"\n
+\n
+[owner]\n
+name = "Tom Preston-Werner"\n
+organization = "GitHub"\n
+bio = "GitHub Cofounder &amp; CEO\\nLikes tater tots and beer."\n
+dob = 1979-05-27T07:32:00Z # First class dates? Why not?\n
+\n
+[database]\n
+server = "192.168.1.1"\n
+ports = [ 8001, 8001, 8002 ]\n
+connection_max = 5000\n
+enabled = true\n
+\n
+[servers]\n
+\n
+  # You can indent as you please. Tabs or spaces. TOML don\'t care.\n
+  [servers.alpha]\n
+  ip = "10.0.0.1"\n
+  dc = "eqdc10"\n
+  \n
+  [servers.beta]\n
+  ip = "10.0.0.2"\n
+  dc = "eqdc10"\n
+  \n
+[clients]\n
+data = [ ["gamma", "delta"], [1, 2] ]\n
+\n
+# Line breaks are OK when inside arrays\n
+hosts = [\n
+  "alpha",\n
+  "omega"\n
+]\n
+</textarea></form>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        mode: {name: "toml"},\n
+        lineNumbers: true\n
+      });\n
+    </script>\n
+    <h3>The TOML Mode</h3>\n
+      <p> Created by Forbes Lindesay.</p>\n
+    <p><strong>MIME type defined:</strong> <code>text/x-toml</code>.</p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

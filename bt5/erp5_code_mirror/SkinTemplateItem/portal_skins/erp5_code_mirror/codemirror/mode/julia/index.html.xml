@@ -1,0 +1,256 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Julia mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="julia.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Julia</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Julia mode</h2>\n
+\n
+    <div><textarea id="code" name="code">\n
+#numbers\n
+1234\n
+1234im\n
+.234\n
+.234im\n
+2.23im\n
+2.3f3\n
+23e2\n
+0x234\n
+\n
+#strings\n
+\'a\'\n
+"asdf"\n
+r"regex"\n
+b"bytestring"\n
+\n
+"""\n
+multiline string\n
+"""\n
+\n
+#identifiers\n
+a\n
+as123\n
+function_name!\n
+\n
+#unicode identifiers\n
+# a = x\\ddot\n
+aâ = xÌ\n
+# a = v\\dot\n
+aâ = vÌ\n
+#F\\vec = m \\cdotp a\\vec\n
+Fâ = mÂ·aâ\n
+\n
+#literal identifier multiples\n
+3x\n
+4[1, 2, 3]\n
+\n
+#dicts and indexing\n
+x=[1, 2, 3]\n
+x[end-1]\n
+x={"julia"=>"language of technical computing"}\n
+\n
+\n
+#exception handling\n
+try\n
+  f()\n
+catch\n
+  @printf "Error"\n
+finally\n
+  g()\n
+end\n
+\n
+#types\n
+immutable Color{T<:Number}\n
+  r::T\n
+  g::T\n
+  b::T\n
+end\n
+\n
+#functions\n
+function change!(x::Vector{Float64})\n
+  for i = 1:length(x)\n
+    x[i] *= 2\n
+  end\n
+end\n
+\n
+#function invocation\n
+f(\'b\', (2, 3)...)\n
+\n
+#operators\n
+|=\n
+&=\n
+^=\n
+\\-\n
+%=\n
+*=\n
++=\n
+-=\n
+<=\n
+>=\n
+!=\n
+==\n
+%\n
+*\n
++\n
+-\n
+<\n
+>\n
+!\n
+=\n
+|\n
+&\n
+^\n
+\\\n
+?\n
+~\n
+:\n
+$\n
+<:\n
+.<\n
+.>\n
+<<\n
+<<=\n
+>>\n
+>>>>\n
+>>=\n
+>>>=\n
+<<=\n
+<<<=\n
+.<=\n
+.>=\n
+.==\n
+->\n
+//\n
+in\n
+...\n
+//\n
+:=\n
+.//=\n
+.*=\n
+./=\n
+.^=\n
+.%=\n
+.+=\n
+.-=\n
+\\=\n
+\\\\=\n
+||\n
+===\n
+&&\n
+|=\n
+.|=\n
+<:\n
+>:\n
+|>\n
+<|\n
+::\n
+x ? y : z\n
+\n
+#macros\n
+@spawnat 2 1+1\n
+@eval(:x)\n
+\n
+#keywords and operators\n
+if else elseif while for\n
+ begin let end do\n
+try catch finally return break continue\n
+global local const \n
+export import importall using\n
+function macro module baremodule \n
+type immutable quote\n
+true false enumerate\n
+\n
+\n
+    </textarea></div>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        mode: {name: "julia",\n
+               },\n
+        lineNumbers: true,\n
+        indentUnit: 4,\n
+        matchBrackets: true\n
+      });\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-julia</code>.</p>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

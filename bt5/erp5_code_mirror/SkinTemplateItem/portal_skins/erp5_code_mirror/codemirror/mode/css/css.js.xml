@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897139.7</string> </value>
+            <value> <string>ts60604376.87</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -40,18 +40,23 @@
 "use strict";\n
 \n
 CodeMirror.defineMode("css", function(config, parserConfig) {\n
+  var inline = parserConfig.inline\n
   if (!parserConfig.propertyKeywords) parserConfig = CodeMirror.resolveMode("text/css");\n
 \n
   var indentUnit = config.indentUnit,\n
       tokenHooks = parserConfig.tokenHooks,\n
+      documentTypes = parserConfig.documentTypes || {},\n
       mediaTypes = parserConfig.mediaTypes || {},\n
       mediaFeatures = parserConfig.mediaFeatures || {},\n
+      mediaValueKeywords = parserConfig.mediaValueKeywords || {},\n
       propertyKeywords = parserConfig.propertyKeywords || {},\n
       nonStandardPropertyKeywords = parserConfig.nonStandardPropertyKeywords || {},\n
+      fontProperties = parserConfig.fontProperties || {},\n
+      counterDescriptors = parserConfig.counterDescriptors || {},\n
       colorKeywords = parserConfig.colorKeywords || {},\n
       valueKeywords = parserConfig.valueKeywords || {},\n
-      fontProperties = parserConfig.fontProperties || {},\n
-      allowNested = parserConfig.allowNested;\n
+      allowNested = parserConfig.allowNested,\n
+      supportsAtComponent = parserConfig.supportsAtComponent === true;\n
 \n
   var type, override;\n
   function ret(style, tp) { type = tp; return style; }\n
@@ -85,6 +90,11 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
       if (/[\\d.]/.test(stream.peek())) {\n
         stream.eatWhile(/[\\w.%]/);\n
         return ret("number", "unit");\n
+      } else if (stream.match(/^-[\\w\\\\\\-]+/)) {\n
+        stream.eatWhile(/[\\w\\\\\\-]/);\n
+        if (stream.match(/^\\s*:/, false))\n
+          return ret("variable-2", "variable-definition");\n
+        return ret("variable-2", "variable");\n
       } else if (stream.match(/^\\w+-/)) {\n
         return ret("meta", "meta");\n
       }\n
@@ -94,7 +104,9 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
       return ret("qualifier", "qualifier");\n
     } else if (/[:;{}\\[\\]\\(\\)]/.test(ch)) {\n
       return ret(null, ch);\n
-    } else if (ch == "u" && stream.match("rl(")) {\n
+    } else if ((ch == "u" && stream.match(/rl(-prefix)?\\(/)) ||\n
+               (ch == "d" && stream.match("omain(")) ||\n
+               (ch == "r" && stream.match("egexp("))) {\n
       stream.backUp(1);\n
       state.tokenize = tokenParenthesized;\n
       return ret("property", "word");\n
@@ -138,13 +150,14 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     this.prev = prev;\n
   }\n
 \n
-  function pushContext(state, stream, type) {\n
-    state.context = new Context(type, stream.indentation() + indentUnit, state.context);\n
+  function pushContext(state, stream, type, indent) {\n
+    state.context = new Context(type, stream.indentation() + (indent === false ? 0 : indentUnit), state.context);\n
     return type;\n
   }\n
 \n
   function popContext(state) {\n
-    state.context = state.context.prev;\n
+    if (state.context.prev)\n
+      state.context = state.context.prev;\n
     return state.context.type;\n
   }\n
 \n
@@ -176,10 +189,15 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
       return pushContext(state, stream, "block");\n
     } else if (type == "}" && state.context.prev) {\n
       return popContext(state);\n
-    } else if (type == "@media") {\n
-      return pushContext(state, stream, "media");\n
-    } else if (type == "@font-face") {\n
-      return "font_face_before";\n
+    } else if (supportsAtComponent && /@component/.test(type)) {\n
+      return pushContext(state, stream, "atComponentBlock");\n
+    } else if (/^@(-moz-)?document$/.test(type)) {\n
+      return pushContext(state, stream, "documentTypes");\n
+    } else if (/^@(media|supports|(-moz-)?document|import)$/.test(type)) {\n
+      return pushContext(state, stream, "atBlock");\n
+    } else if (/^@(font-face|counter-style)/.test(type)) {\n
+      state.stateArg = type;\n
+      return "restricted_atBlock_before";\n
     } else if (/^@(-(moz|ms|o|webkit)-)?keyframes$/.test(type)) {\n
       return "keyframes";\n
     } else if (type && type.charAt(0) == "@") {\n
@@ -237,7 +255,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     if (type == "}" || type == "{") return popAndPass(type, stream, state);\n
     if (type == "(") return pushContext(state, stream, "parens");\n
 \n
-    if (type == "hash" && !/^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/.test(stream.current())) {\n
+    if (type == "hash" && !/^#([0-9a-fA-f]{3,4}|[0-9a-fA-f]{6}|[0-9a-fA-f]{8})$/.test(stream.current())) {\n
       override += " error";\n
     } else if (type == "word") {\n
       wordAsValue(stream);\n
@@ -257,6 +275,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     if (type == "{" || type == "}") return popAndPass(type, stream, state);\n
     if (type == ")") return popContext(state);\n
     if (type == "(") return pushContext(state, stream, "parens");\n
+    if (type == "interpolation") return pushContext(state, stream, "interpolation");\n
     if (type == "word") wordAsValue(stream);\n
     return "parens";\n
   };\n
@@ -269,47 +288,86 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     return pass(type, stream, state);\n
   };\n
 \n
-  states.media = function(type, stream, state) {\n
-    if (type == "(") return pushContext(state, stream, "media_parens");\n
-    if (type == "}") return popAndPass(type, stream, state);\n
+  states.documentTypes = function(type, stream, state) {\n
+    if (type == "word" && documentTypes.hasOwnProperty(stream.current())) {\n
+      override = "tag";\n
+      return state.context.type;\n
+    } else {\n
+      return states.atBlock(type, stream, state);\n
+    }\n
+  };\n
+\n
+  states.atBlock = function(type, stream, state) {\n
+    if (type == "(") return pushContext(state, stream, "atBlock_parens");\n
+    if (type == "}" || type == ";") return popAndPass(type, stream, state);\n
     if (type == "{") return popContext(state) && pushContext(state, stream, allowNested ? "block" : "top");\n
+\n
+    if (type == "interpolation") return pushContext(state, stream, "interpolation");\n
 \n
     if (type == "word") {\n
       var word = stream.current().toLowerCase();\n
-      if (word == "only" || word == "not" || word == "and")\n
+      if (word == "only" || word == "not" || word == "and" || word == "or")\n
         override = "keyword";\n
       else if (mediaTypes.hasOwnProperty(word))\n
         override = "attribute";\n
       else if (mediaFeatures.hasOwnProperty(word))\n
         override = "property";\n
+      else if (mediaValueKeywords.hasOwnProperty(word))\n
+        override = "keyword";\n
+      else if (propertyKeywords.hasOwnProperty(word))\n
+        override = "property";\n
+      else if (nonStandardPropertyKeywords.hasOwnProperty(word))\n
+        override = "string-2";\n
+      else if (valueKeywords.hasOwnProperty(word))\n
+        override = "atom";\n
+      else if (colorKeywords.hasOwnProperty(word))\n
+        override = "keyword";\n
       else\n
         override = "error";\n
     }\n
     return state.context.type;\n
   };\n
 \n
-  states.media_parens = function(type, stream, state) {\n
-    if (type == ")") return popContext(state);\n
-    if (type == "{" || type == "}") return popAndPass(type, stream, state, 2);\n
-    return states.media(type, stream, state);\n
+  states.atComponentBlock = function(type, stream, state) {\n
+    if (type == "}")\n
+      return popAndPass(type, stream, state);\n
+    if (type == "{")\n
+      return popContext(state) && pushContext(state, stream, allowNested ? "block" : "top", false);\n
+    if (type == "word")\n
+      override = "error";\n
+    return state.context.type;\n
   };\n
 \n
-  states.font_face_before = function(type, stream, state) {\n
+  states.atBlock_parens = function(type, stream, state) {\n
+    if (type == ")") return popContext(state);\n
+    if (type == "{" || type == "}") return popAndPass(type, stream, state, 2);\n
+    return states.atBlock(type, stream, state);\n
+  };\n
+\n
+  states.restricted_atBlock_before = function(type, stream, state) {\n
     if (type == "{")\n
-      return pushContext(state, stream, "font_face");\n
+      return pushContext(state, stream, "restricted_atBlock");\n
+    if (type == "word" && state.stateArg == "@counter-style") {\n
+      override = "variable";\n
+      return "restricted_atBlock_before";\n
+    }\n
     return pass(type, stream, state);\n
   };\n
 \n
-  states.font_face = function(type, stream, state) {\n
-    if (type == "}") return popContext(state);\n
+  states.restricted_atBlock = function(type, stream, state) {\n
+    if (type == "}") {\n
+      state.stateArg = null;\n
+      return popContext(state);\n
+    }\n
     if (type == "word") {\n
-      if (!fontProperties.hasOwnProperty(stream.current().toLowerCase()))\n
+      if ((state.stateArg == "@font-face" && !fontProperties.hasOwnProperty(stream.current().toLowerCase())) ||\n
+          (state.stateArg == "@counter-style" && !counterDescriptors.hasOwnProperty(stream.current().toLowerCase())))\n
         override = "error";\n
       else\n
         override = "property";\n
       return "maybeprop";\n
     }\n
-    return "font_face";\n
+    return "restricted_atBlock";\n
   };\n
 \n
   states.keyframes = function(type, stream, state) {\n
@@ -329,15 +387,17 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
   states.interpolation = function(type, stream, state) {\n
     if (type == "}") return popContext(state);\n
     if (type == "{" || type == ";") return popAndPass(type, stream, state);\n
-    if (type != "variable") override = "error";\n
+    if (type == "word") override = "variable";\n
+    else if (type != "variable" && type != "(" && type != ")") override = "error";\n
     return "interpolation";\n
   };\n
 \n
   return {\n
     startState: function(base) {\n
       return {tokenize: null,\n
-              state: "top",\n
-              context: new Context("top", base || 0, null)};\n
+              state: inline ? "block" : "top",\n
+              stateArg: null,\n
+              context: new Context(inline ? "block" : "top", base || 0, null)};\n
     },\n
 \n
     token: function(stream, state) {\n
@@ -356,12 +416,18 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
       var cx = state.context, ch = textAfter && textAfter.charAt(0);\n
       var indent = cx.indent;\n
       if (cx.type == "prop" && (ch == "}" || ch == ")")) cx = cx.prev;\n
-      if (cx.prev &&\n
-          (ch == "}" && (cx.type == "block" || cx.type == "top" || cx.type == "interpolation" || cx.type == "font_face") ||\n
-           ch == ")" && (cx.type == "parens" || cx.type == "media_parens") ||\n
-           ch == "{" && (cx.type == "at" || cx.type == "media"))) {\n
-        indent = cx.indent - indentUnit;\n
-        cx = cx.prev;\n
+      if (cx.prev) {\n
+        if (ch == "}" && (cx.type == "block" || cx.type == "top" ||\n
+                          cx.type == "interpolation" || cx.type == "restricted_atBlock")) {\n
+          // Resume indentation from parent context.\n
+          cx = cx.prev;\n
+          indent = cx.indent;\n
+        } else if (ch == ")" && (cx.type == "parens" || cx.type == "atBlock_parens") ||\n
+            ch == "{" && (cx.type == "at" || cx.type == "atBlock")) {\n
+          // Dedent relative to current context.\n
+          indent = Math.max(0, cx.indent - indentUnit);\n
+          cx = cx.prev;\n
+        }\n
       }\n
       return indent;\n
     },\n
@@ -381,6 +447,10 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     return keys;\n
   }\n
 \n
+  var documentTypes_ = [\n
+    "domain", "regexp", "url", "url-prefix"\n
+  ], documentTypes = keySet(documentTypes_);\n
+\n
   var mediaTypes_ = [\n
     "all", "aural", "braille", "handheld", "print", "projection", "screen",\n
     "tty", "tv", "embossed"\n
@@ -394,8 +464,15 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     "min-device-aspect-ratio", "max-device-aspect-ratio", "color", "min-color",\n
     "max-color", "color-index", "min-color-index", "max-color-index",\n
     "monochrome", "min-monochrome", "max-monochrome", "resolution",\n
-    "min-resolution", "max-resolution", "scan", "grid"\n
+    "min-resolution", "max-resolution", "scan", "grid", "orientation",\n
+    "device-pixel-ratio", "min-device-pixel-ratio", "max-device-pixel-ratio",\n
+    "pointer", "any-pointer", "hover", "any-hover"\n
   ], mediaFeatures = keySet(mediaFeatures_);\n
+\n
+  var mediaValueKeywords_ = [\n
+    "landscape", "portrait", "none", "coarse", "fine", "on-demand", "hover",\n
+    "interlace", "progressive"\n
+  ], mediaValueKeywords = keySet(mediaValueKeywords_);\n
 \n
   var propertyKeywords_ = [\n
     "align-content", "align-items", "align-self", "alignment-adjust",\n
@@ -403,8 +480,8 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     "animation-direction", "animation-duration", "animation-fill-mode",\n
     "animation-iteration-count", "animation-name", "animation-play-state",\n
     "animation-timing-function", "appearance", "azimuth", "backface-visibility",\n
-    "background", "background-attachment", "background-clip", "background-color",\n
-    "background-image", "background-origin", "background-position",\n
+    "background", "background-attachment", "background-blend-mode", "background-clip",\n
+    "background-color", "background-image", "background-origin", "background-position",\n
     "background-repeat", "background-size", "baseline-shift", "binding",\n
     "bleed", "bookmark-label", "bookmark-level", "bookmark-state",\n
     "bookmark-target", "border", "border-bottom", "border-bottom-color",\n
@@ -497,6 +574,16 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     "searchfield-results-decoration", "zoom"\n
   ], nonStandardPropertyKeywords = keySet(nonStandardPropertyKeywords_);\n
 \n
+  var fontProperties_ = [\n
+    "font-family", "src", "unicode-range", "font-variant", "font-feature-settings",\n
+    "font-stretch", "font-weight", "font-style"\n
+  ], fontProperties = keySet(fontProperties_);\n
+\n
+  var counterDescriptors_ = [\n
+    "additive-symbols", "fallback", "negative", "pad", "prefix", "range",\n
+    "speak-as", "suffix", "symbols", "system"\n
+  ], counterDescriptors = keySet(counterDescriptors_);\n
+\n
   var colorKeywords_ = [\n
     "aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige",\n
     "bisque", "black", "blanchedalmond", "blue", "blueviolet", "brown",\n
@@ -527,46 +614,50 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
   ], colorKeywords = keySet(colorKeywords_);\n
 \n
   var valueKeywords_ = [\n
-    "above", "absolute", "activeborder", "activecaption", "afar",\n
-    "after-white-space", "ahead", "alias", "all", "all-scroll", "alternate",\n
+    "above", "absolute", "activeborder", "additive", "activecaption", "afar",\n
+    "after-white-space", "ahead", "alias", "all", "all-scroll", "alphabetic", "alternate",\n
     "always", "amharic", "amharic-abegede", "antialiased", "appworkspace",\n
-    "arabic-indic", "armenian", "asterisks", "auto", "avoid", "avoid-column", "avoid-page",\n
+    "arabic-indic", "armenian", "asterisks", "attr", "auto", "avoid", "avoid-column", "avoid-page",\n
     "avoid-region", "background", "backwards", "baseline", "below", "bidi-override", "binary",\n
     "bengali", "blink", "block", "block-axis", "bold", "bolder", "border", "border-box",\n
-    "both", "bottom", "break", "break-all", "break-word", "button", "button-bevel",\n
-    "buttonface", "buttonhighlight", "buttonshadow", "buttontext", "cambodian",\n
+    "both", "bottom", "break", "break-all", "break-word", "bullets", "button", "button-bevel",\n
+    "buttonface", "buttonhighlight", "buttonshadow", "buttontext", "calc", "cambodian",\n
     "capitalize", "caps-lock-indicator", "caption", "captiontext", "caret",\n
-    "cell", "center", "checkbox", "circle", "cjk-earthly-branch",\n
+    "cell", "center", "checkbox", "circle", "cjk-decimal", "cjk-earthly-branch",\n
     "cjk-heavenly-stem", "cjk-ideographic", "clear", "clip", "close-quote",\n
-    "col-resize", "collapse", "column", "compact", "condensed", "contain", "content",\n
-    "content-box", "context-menu", "continuous", "copy", "cover", "crop",\n
-    "cross", "crosshair", "currentcolor", "cursive", "dashed", "decimal",\n
+    "col-resize", "collapse", "color", "color-burn", "color-dodge", "column", "column-reverse",\n
+    "compact", "condensed", "contain", "content",\n
+    "content-box", "context-menu", "continuous", "copy", "counter", "counters", "cover", "crop",\n
+    "cross", "crosshair", "currentcolor", "cursive", "cyclic", "darken", "dashed", "decimal",\n
     "decimal-leading-zero", "default", "default-button", "destination-atop",\n
-    "destination-in", "destination-out", "destination-over", "devanagari",\n
-    "disc", "discard", "document", "dot-dash", "dot-dot-dash", "dotted",\n
-    "double", "down", "e-resize", "ease", "ease-in", "ease-in-out", "ease-out",\n
+    "destination-in", "destination-out", "destination-over", "devanagari", "difference",\n
+    "disc", "discard", "disclosure-closed", "disclosure-open", "document",\n
+    "dot-dash", "dot-dot-dash",\n
+    "dotted", "double", "down", "e-resize", "ease", "ease-in", "ease-in-out", "ease-out",\n
     "element", "ellipse", "ellipsis", "embed", "end", "ethiopic", "ethiopic-abegede",\n
     "ethiopic-abegede-am-et", "ethiopic-abegede-gez", "ethiopic-abegede-ti-er",\n
     "ethiopic-abegede-ti-et", "ethiopic-halehame-aa-er",\n
     "ethiopic-halehame-aa-et", "ethiopic-halehame-am-et",\n
     "ethiopic-halehame-gez", "ethiopic-halehame-om-et",\n
     "ethiopic-halehame-sid-et", "ethiopic-halehame-so-et",\n
-    "ethiopic-halehame-ti-er", "ethiopic-halehame-ti-et",\n
-    "ethiopic-halehame-tig", "ew-resize", "expanded", "extra-condensed",\n
-    "extra-expanded", "fantasy", "fast", "fill", "fixed", "flat", "footnotes",\n
+    "ethiopic-halehame-ti-er", "ethiopic-halehame-ti-et", "ethiopic-halehame-tig",\n
+    "ethiopic-numeric", "ew-resize", "exclusion", "expanded", "extends", "extra-condensed",\n
+    "extra-expanded", "fantasy", "fast", "fill", "fixed", "flat", "flex", "flex-end", "flex-start", "footnotes",\n
     "forwards", "from", "geometricPrecision", "georgian", "graytext", "groove",\n
-    "gujarati", "gurmukhi", "hand", "hangul", "hangul-consonant", "hebrew",\n
+    "gujarati", "gurmukhi", "hand", "hangul", "hangul-consonant", "hard-light", "hebrew",\n
     "help", "hidden", "hide", "higher", "highlight", "highlighttext",\n
-    "hiragana", "hiragana-iroha", "horizontal", "hsl", "hsla", "icon", "ignore",\n
+    "hiragana", "hiragana-iroha", "horizontal", "hsl", "hsla", "hue", "icon", "ignore",\n
     "inactiveborder", "inactivecaption", "inactivecaptiontext", "infinite",\n
     "infobackground", "infotext", "inherit", "initial", "inline", "inline-axis",\n
-    "inline-block", "inline-table", "inset", "inside", "intrinsic", "invert",\n
-    "italic", "justify", "kannada", "katakana", "katakana-iroha", "keep-all", "khmer",\n
-    "landscape", "lao", "large", "larger", "left", "level", "lighter",\n
-    "line-through", "linear", "lines", "list-item", "listbox", "listitem",\n
+    "inline-block", "inline-flex", "inline-table", "inset", "inside", "intrinsic", "invert",\n
+    "italic", "japanese-formal", "japanese-informal", "justify", "kannada",\n
+    "katakana", "katakana-iroha", "keep-all", "khmer",\n
+    "korean-hangul-formal", "korean-hanja-formal", "korean-hanja-informal",\n
+    "landscape", "lao", "large", "larger", "left", "level", "lighter", "lighten",\n
+    "line-through", "linear", "linear-gradient", "lines", "list-item", "listbox", "listitem",\n
     "local", "logical", "loud", "lower", "lower-alpha", "lower-armenian",\n
     "lower-greek", "lower-hexadecimal", "lower-latin", "lower-norwegian",\n
-    "lower-roman", "lowercase", "ltr", "malayalam", "match",\n
+    "lower-roman", "lowercase", "ltr", "luminosity", "malayalam", "match", "matrix", "matrix3d",\n
     "media-controls-background", "media-current-time-display",\n
     "media-fullscreen-button", "media-mute-button", "media-play-button",\n
     "media-return-to-realtime-button", "media-rewind-button",\n
@@ -575,49 +666,53 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     "media-volume-slider-container", "media-volume-sliderthumb", "medium",\n
     "menu", "menulist", "menulist-button", "menulist-text",\n
     "menulist-textfield", "menutext", "message-box", "middle", "min-intrinsic",\n
-    "mix", "mongolian", "monospace", "move", "multiple", "myanmar", "n-resize",\n
+    "mix", "mongolian", "monospace", "move", "multiple", "multiply", "myanmar", "n-resize",\n
     "narrower", "ne-resize", "nesw-resize", "no-close-quote", "no-drop",\n
     "no-open-quote", "no-repeat", "none", "normal", "not-allowed", "nowrap",\n
-    "ns-resize", "nw-resize", "nwse-resize", "oblique", "octal", "open-quote",\n
+    "ns-resize", "numbers", "numeric", "nw-resize", "nwse-resize", "oblique", "octal", "open-quote",\n
     "optimizeLegibility", "optimizeSpeed", "oriya", "oromo", "outset",\n
     "outside", "outside-shape", "overlay", "overline", "padding", "padding-box",\n
-    "painted", "page", "paused", "persian", "plus-darker", "plus-lighter", "pointer",\n
-    "polygon", "portrait", "pre", "pre-line", "pre-wrap", "preserve-3d", "progress", "push-button",\n
-    "radio", "read-only", "read-write", "read-write-plaintext-only", "rectangle", "region",\n
-    "relative", "repeat", "repeat-x", "repeat-y", "reset", "reverse", "rgb", "rgba",\n
-    "ridge", "right", "round", "row-resize", "rtl", "run-in", "running",\n
-    "s-resize", "sans-serif", "scroll", "scrollbar", "se-resize", "searchfield",\n
+    "painted", "page", "paused", "persian", "perspective", "plus-darker", "plus-lighter",\n
+    "pointer", "polygon", "portrait", "pre", "pre-line", "pre-wrap", "preserve-3d",\n
+    "progress", "push-button", "radial-gradient", "radio", "read-only",\n
+    "read-write", "read-write-plaintext-only", "rectangle", "region",\n
+    "relative", "repeat", "repeating-linear-gradient",\n
+    "repeating-radial-gradient", "repeat-x", "repeat-y", "reset", "reverse",\n
+    "rgb", "rgba", "ridge", "right", "rotate", "rotate3d", "rotateX", "rotateY",\n
+    "rotateZ", "round", "row", "row-resize", "row-reverse", "rtl", "run-in", "running",\n
+    "s-resize", "sans-serif", "saturation", "scale", "scale3d", "scaleX", "scaleY", "scaleZ", "screen",\n
+    "scroll", "scrollbar", "se-resize", "searchfield",\n
     "searchfield-cancel-button", "searchfield-decoration",\n
     "searchfield-results-button", "searchfield-results-decoration",\n
     "semi-condensed", "semi-expanded", "separate", "serif", "show", "sidama",\n
-    "single", "skip-white-space", "slide", "slider-horizontal",\n
+    "simp-chinese-formal", "simp-chinese-informal", "single",\n
+    "skew", "skewX", "skewY", "skip-white-space", "slide", "slider-horizontal",\n
     "slider-vertical", "sliderthumb-horizontal", "sliderthumb-vertical", "slow",\n
-    "small", "small-caps", "small-caption", "smaller", "solid", "somali",\n
-    "source-atop", "source-in", "source-out", "source-over", "space", "square",\n
-    "square-button", "start", "static", "status-bar", "stretch", "stroke",\n
-    "sub", "subpixel-antialiased", "super", "sw-resize", "table",\n
+    "small", "small-caps", "small-caption", "smaller", "soft-light", "solid", "somali",\n
+    "source-atop", "source-in", "source-out", "source-over", "space", "space-around", "space-between", "spell-out", "square",\n
+    "square-button", "start", "static", "status-bar", "stretch", "stroke", "sub",\n
+    "subpixel-antialiased", "super", "sw-resize", "symbolic", "symbols", "table",\n
     "table-caption", "table-cell", "table-column", "table-column-group",\n
     "table-footer-group", "table-header-group", "table-row", "table-row-group",\n
+    "tamil",\n
     "telugu", "text", "text-bottom", "text-top", "textarea", "textfield", "thai",\n
     "thick", "thin", "threeddarkshadow", "threedface", "threedhighlight",\n
     "threedlightshadow", "threedshadow", "tibetan", "tigre", "tigrinya-er",\n
     "tigrinya-er-abegede", "tigrinya-et", "tigrinya-et-abegede", "to", "top",\n
+    "trad-chinese-formal", "trad-chinese-informal",\n
+    "translate", "translate3d", "translateX", "translateY", "translateZ",\n
     "transparent", "ultra-condensed", "ultra-expanded", "underline", "up",\n
     "upper-alpha", "upper-armenian", "upper-greek", "upper-hexadecimal",\n
     "upper-latin", "upper-norwegian", "upper-roman", "uppercase", "urdu", "url",\n
-    "vertical", "vertical-text", "visible", "visibleFill", "visiblePainted",\n
+    "var", "vertical", "vertical-text", "visible", "visibleFill", "visiblePainted",\n
     "visibleStroke", "visual", "w-resize", "wait", "wave", "wider",\n
-    "window", "windowframe", "windowtext", "x-large", "x-small", "xor",\n
+    "window", "windowframe", "windowtext", "words", "wrap", "wrap-reverse", "x-large", "x-small", "xor",\n
     "xx-large", "xx-small"\n
   ], valueKeywords = keySet(valueKeywords_);\n
 \n
-  var fontProperties_ = [\n
-    "font-family", "src", "unicode-range", "font-variant", "font-feature-settings",\n
-    "font-stretch", "font-weight", "font-style"\n
-  ], fontProperties = keySet(fontProperties_);\n
-\n
-  var allWords = mediaTypes_.concat(mediaFeatures_).concat(propertyKeywords_)\n
-    .concat(nonStandardPropertyKeywords_).concat(colorKeywords_).concat(valueKeywords_);\n
+  var allWords = documentTypes_.concat(mediaTypes_).concat(mediaFeatures_).concat(mediaValueKeywords_)\n
+    .concat(propertyKeywords_).concat(nonStandardPropertyKeywords_).concat(colorKeywords_)\n
+    .concat(valueKeywords_);\n
   CodeMirror.registerHelper("hintWords", "css", allWords);\n
 \n
   function tokenCComment(stream, state) {\n
@@ -632,30 +727,18 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     return ["comment", "comment"];\n
   }\n
 \n
-  function tokenSGMLComment(stream, state) {\n
-    if (stream.skipTo("-->")) {\n
-      stream.match("-->");\n
-      state.tokenize = null;\n
-    } else {\n
-      stream.skipToEnd();\n
-    }\n
-    return ["comment", "comment"];\n
-  }\n
-\n
   CodeMirror.defineMIME("text/css", {\n
+    documentTypes: documentTypes,\n
     mediaTypes: mediaTypes,\n
     mediaFeatures: mediaFeatures,\n
+    mediaValueKeywords: mediaValueKeywords,\n
     propertyKeywords: propertyKeywords,\n
     nonStandardPropertyKeywords: nonStandardPropertyKeywords,\n
+    fontProperties: fontProperties,\n
+    counterDescriptors: counterDescriptors,\n
     colorKeywords: colorKeywords,\n
     valueKeywords: valueKeywords,\n
-    fontProperties: fontProperties,\n
     tokenHooks: {\n
-      "<": function(stream, state) {\n
-        if (!stream.match("!--")) return false;\n
-        state.tokenize = tokenSGMLComment;\n
-        return tokenSGMLComment(stream, state);\n
-      },\n
       "/": function(stream, state) {\n
         if (!stream.eat("*")) return false;\n
         state.tokenize = tokenCComment;\n
@@ -668,6 +751,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
   CodeMirror.defineMIME("text/x-scss", {\n
     mediaTypes: mediaTypes,\n
     mediaFeatures: mediaFeatures,\n
+    mediaValueKeywords: mediaValueKeywords,\n
     propertyKeywords: propertyKeywords,\n
     nonStandardPropertyKeywords: nonStandardPropertyKeywords,\n
     colorKeywords: colorKeywords,\n
@@ -709,6 +793,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
   CodeMirror.defineMIME("text/x-less", {\n
     mediaTypes: mediaTypes,\n
     mediaFeatures: mediaFeatures,\n
+    mediaValueKeywords: mediaValueKeywords,\n
     propertyKeywords: propertyKeywords,\n
     nonStandardPropertyKeywords: nonStandardPropertyKeywords,\n
     colorKeywords: colorKeywords,\n
@@ -728,6 +813,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
         }\n
       },\n
       "@": function(stream) {\n
+        if (stream.eat("{")) return [null, "interpolation"];\n
         if (stream.match(/^(charset|document|font-face|import|(-(moz|ms|o|webkit)-)?keyframes|media|namespace|page|supports)\\b/, false)) return false;\n
         stream.eatWhile(/[\\w\\\\\\-]/);\n
         if (stream.match(/^\\s*:/, false))\n
@@ -742,6 +828,28 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
     helperType: "less"\n
   });\n
 \n
+  CodeMirror.defineMIME("text/x-gss", {\n
+    documentTypes: documentTypes,\n
+    mediaTypes: mediaTypes,\n
+    mediaFeatures: mediaFeatures,\n
+    propertyKeywords: propertyKeywords,\n
+    nonStandardPropertyKeywords: nonStandardPropertyKeywords,\n
+    fontProperties: fontProperties,\n
+    counterDescriptors: counterDescriptors,\n
+    colorKeywords: colorKeywords,\n
+    valueKeywords: valueKeywords,\n
+    supportsAtComponent: true,\n
+    tokenHooks: {\n
+      "/": function(stream, state) {\n
+        if (!stream.eat("*")) return false;\n
+        state.tokenize = tokenCComment;\n
+        return tokenCComment(stream, state);\n
+      }\n
+    },\n
+    name: "css",\n
+    helperType: "gss"\n
+  });\n
+\n
 });\n
 
 
@@ -753,7 +861,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>31664</int> </value>
+            <value> <int>37156</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

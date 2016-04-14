@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897151.44</string> </value>
+            <value> <string>ts60604369.12</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -198,7 +198,7 @@
     for (var i = 0; i < output.length; ++i) {\n
       var style = output[i].style, val = output[i].text;\n
       s +=\n
-      \'<td class="mt-token"\' + (i == diffAt * 2 ? " style=\'background: pink\'" : "") + \'>\' +\n
+      \'<td class="mt-token"\' + (i == diffAt ? " style=\'background: pink\'" : "") + \'>\' +\n
         \'<span class="cm-\' + esc(String(style)) + \'">\' +\n
         esc(val.replace(/ /g,\'\\xb7\')) +  // · MIDDLE DOT\n
         \'</span>\' +\n
@@ -228,7 +228,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7021</int> </value>
+            <value> <int>7017</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

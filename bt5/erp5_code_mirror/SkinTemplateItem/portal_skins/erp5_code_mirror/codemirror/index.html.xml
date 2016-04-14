@@ -48,7 +48,7 @@
 <script src="mode/javascript/javascript.js"></script>\n
 <script src="mode/css/css.js"></script>\n
 <script src="mode/htmlmixed/htmlmixed.js"></script>\n
-<script src="addon/edit/matchbrackets.js"></script>\n
+<script src="addon/cm_edit/matchbrackets.js"></script>\n
 \n
 <script src="doc/activebookmark.js"></script>\n
 \n
@@ -122,46 +122,42 @@
       matchBrackets: true\n
     });\n
   </script>\n
-  <div style="position: relative; margin: 1em 0;">\n
-    <a class="bigbutton left" href="http://codemirror.net/codemirror.zip">DOWNLOAD LATEST RELEASE</a>\n
-    <div><strong>version 4.11</strong> (<a href="doc/releases.html">Release notes</a>)</div>\n
-    <div>or use the <a href="doc/compress.html">minification helper</a></div>\n
-    <div style="position: absolute; top: 0; right: 0; text-align: right">\n
-      <span class="bigbutton right" onclick="document.getElementById(\'paypal\').submit();">DONATE WITH PAYPAL</span>\n
-      <div style="position: relative">\n
-        or <span onclick="document.getElementById(\'bankinfo\').style.display = \'block\';" class=quasilink>Bank</span>,\n
-        <span onclick="document.getElementById(\'bcinfo\').style.display = \'block\';" class=quasilink>Bitcoin</span>,\n
-        <a href="http://www.patreon.com/marijn">Patreon</a><br>\n
-        <a href="https://gratipay.com/marijnh/">Gratipay</a><br>\n
-        <div id=bankinfo class=bankinfo>\n
-          <span class=bankinfo_close onclick="document.getElementById(\'bankinfo\').style.display = \'\';">Ã</span>\n
-          Bank: <i>Rabobank</i><br/>\n
-          Country: <i>Netherlands</i><br/>\n
-          SWIFT: <i>RABONL2U</i><br/>\n
-          Account: <i>147850770</i><br/>\n
-          Name: <i>Marijn Haverbeke</i><br/>\n
-          IBAN: <i>NL26 RABO 0147 8507 70</i>\n
-        </div>\n
-        <div id=bcinfo class=bankinfo>\n
-          <span class=bankinfo_close onclick="document.getElementById(\'bcinfo\').style.display = \'\';">Ã</span>\n
-          Bitcoin address: 1HVnnU8E9yLPeFyNgNtUPB5deXBvUmZ6Nx\n
-        </div>\n
-        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" id="paypal">\n
-          <input type="hidden" name="cmd" value="_s-xclick"/>\n
-          <input type="hidden" name="hosted_button_id" value="3FVHS5FGUY7CC"/>\n
-        </form>\n
+\n
+  <div class=actions>\n
+    <div class=actionspicture>\n
+      <img src="doc/yinyang.png" class=yinyang>\n
+      <div class="actionlink download">\n
+        <a href="http://codemirror.net/codemirror.zip">DOWNLOAD</a>\n
       </div>\n
-      <div>\n
-        Purchase <a href="http://codemirror.com">commercial support</a>\n
+      <div class="actionlink fund">\n
+        <a href="https://marijnhaverbeke.nl/fund/">FUND</a>\n
       </div>\n
     </div>\n
+    <div class=actionsleft>\n
+      Get the current version: <a href="http://codemirror.net/codemirror.zip">5.13</a>.<br>\n
+      You can see the <a href="https://github.com/codemirror/codemirror" title="Github repository">code</a> or<br>\n
+      read the <a href="doc/releases.html">release notes</a>.<br>\n
+      There is a <a href="doc/compress.html">minification helper</a>.\n
+    </div>\n
+    <div class=actionsright>\n
+      Software needs maintenance,<br>\n
+      maintainers need to subsist.<br>\n
+      Current funding status = <img src="https://marijnhaverbeke.nl/fund/status_s.png" title="Current maintainer happiness" style="vertical-align: middle; height: 16px; width: 16px"><br>\n
+      You can help <a href="https://marijnhaverbeke.nl/fund/" title="Set up a monthly contribution">per month</a> or\n
+      <a title="Donate with Paypal" href="javascript:document.getElementById(\'paypal\').submit();">once</a>.\n
+      <form action="https://www.paypal.com/cgi-bin/webscr" method="post" id="paypal">\n
+        <input type="hidden" name="cmd" value="_s-xclick"/>\n
+        <input type="hidden" name="hosted_button_id" value="3FVHS5FGUY7CC"/>\n
+      </form>\n
+    </div>\n
   </div>\n
+  \n
 </section>\n
 \n
 <section id=features>\n
   <h2>Features</h2>\n
   <ul>\n
-    <li>Support for <a href="mode/index.html">over 60 languages</a> out of the box\n
+    <li>Support for <a href="mode/index.html">over 100 languages</a> out of the box\n
     <li>A powerful, <a href="mode/htmlmixed/index.html">composable</a> language mode <a href="doc/manual.html#modeapi">system</a>\n
     <li><a href="doc/manual.html#addon_show-hint">Autocompletion</a> (<a href="demo/xmlcomplete.html">XML</a>)\n
     <li><a href="doc/manual.html#addon_foldcode">Code folding</a>\n
@@ -204,13 +200,16 @@
   license that CodeMirror uses.</p>\n
 \n
   <p>Discussion around the project is done on\n
-  a <a href="http://discuss.codemirror.net">discussion forum</a>.\n
+  a <a href="https://discuss.codemirror.net">discussion forum</a>.\n
   There is also\n
   the <a href="http://groups.google.com/group/codemirror-announce">codemirror-announce</a>\n
   list, which is only used for major announcements (such as new\n
   versions). If needed, you can\n
   contact <a href="mailto:marijnh@gmail.com">the maintainer</a>\n
-  directly.</p>\n
+  directly. We aim to be an inclusive, welcoming community. To make\n
+  that explicit, we have\n
+  a <a href="http://contributor-covenant.org/version/1/1/0/">code of\n
+  conduct</a> that applies to communication around the project.</p>\n
 \n
   <p>A list of CodeMirror-related software that is not part of the\n
   main distribution is maintained\n
@@ -230,9 +229,9 @@
     <tr><th style="padding-right: 1em;">Internet Explorer</th><td>version 8 and up</td></tr>\n
     <tr><th>Opera</th><td>version 9 and up</td></tr>\n
   </table>\n
-  <p>Modern mobile browsers tend to partly work. Bug reports and\n
-  patches for mobile support are welcome, but the maintainer does not\n
-  have the time or budget to actually work on it himself.</p>\n
+  <p>Support for modern mobile browsers is experimental. Recent\n
+  versions of the iOS browser and Chrome on Android should work\n
+  pretty well.</p>\n
 </section>\n
 \n
 </article>

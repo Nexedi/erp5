@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Erlang mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<link rel="stylesheet" href="../../theme/erlang-dark.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/cm_edit/matchbrackets.js"></script>\n
+<script src="erlang.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Erlang</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Erlang mode</h2>\n
+<form><textarea id="code" name="code">\n
+%% -*- mode: erlang; erlang-indent-level: 2 -*-\n
+%%% Created :  7 May 2012 by mats cronqvist <masse@klarna.com>\n
+\n
+%% @doc\n
+%% Demonstrates how to print a record.\n
+%% @end\n
+\n
+-module(\'ex\').\n
+-author(\'mats cronqvist\').\n
+-export([demo/0,\n
+         rec_info/1]).\n
+\n
+-record(demo,{a="One",b="Two",c="Three",d="Four"}).\n
+\n
+rec_info(demo) -> record_info(fields,demo).\n
+\n
+demo() -> expand_recs(?MODULE,#demo{a="A",b="BB"}).\n
+\n
+expand_recs(M,List) when is_list(List) ->\n
+  [expand_recs(M,L)||L<-List];\n
+expand_recs(M,Tup) when is_tuple(Tup) ->\n
+  case tuple_size(Tup) of\n
+    L when L < 1 -> Tup;\n
+    L ->\n
+      try\n
+        Fields = M:rec_info(element(1,Tup)),\n
+        L = length(Fields)+1,\n
+        lists:zip(Fields,expand_recs(M,tl(tuple_to_list(Tup))))\n
+      catch\n
+        _:_ -> list_to_tuple(expand_recs(M,tuple_to_list(Tup)))\n
+      end\n
+  end;\n
+expand_recs(_,Term) ->\n
+  Term.\n
+</textarea></form>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        extraKeys: {"Tab":  "indentAuto"},\n
+        theme: "erlang-dark"\n
+      });\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-erlang</code>.</p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

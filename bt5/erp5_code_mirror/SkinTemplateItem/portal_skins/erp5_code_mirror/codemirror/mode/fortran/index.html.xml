@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Fortran mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="fortran.js"></script>\n
+<style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Fortran</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Fortran mode</h2>\n
+\n
+\n
+<div><textarea id="code" name="code">\n
+! Example Fortran code\n
+  program average\n
+\n
+  ! Read in some numbers and take the average\n
+  ! As written, if there are no data points, an average of zero is returned\n
+  ! While this may not be desired behavior, it keeps this example simple\n
+\n
+  implicit none\n
+\n
+  real, dimension(:), allocatable :: points\n
+  integer                         :: number_of_points\n
+  real                            :: average_points=0., positive_average=0., negative_average=0.\n
+\n
+  write (*,*) "Input number of points to average:"\n
+  read  (*,*) number_of_points\n
+\n
+  allocate (points(number_of_points))\n
+\n
+  write (*,*) "Enter the points to average:"\n
+  read  (*,*) points\n
+\n
+  ! Take the average by summing points and dividing by number_of_points\n
+  if (number_of_points > 0) average_points = sum(points) / number_of_points\n
+\n
+  ! Now form average over positive and negative points only\n
+  if (count(points > 0.) > 0) then\n
+     positive_average = sum(points, points > 0.) / count(points > 0.)\n
+  end if\n
+\n
+  if (count(points < 0.) > 0) then\n
+     negative_average = sum(points, points < 0.) / count(points < 0.)\n
+  end if\n
+\n
+  deallocate (points)\n
+\n
+  ! Print result to terminal\n
+  write (*,\'(a,g12.4)\') \'Average = \', average_points\n
+  write (*,\'(a,g12.4)\') \'Average of positive points = \', positive_average\n
+  write (*,\'(a,g12.4)\') \'Average of negative points = \', negative_average\n
+\n
+  end program average\n
+</textarea></div>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+        mode: "text/x-fortran"\n
+      });\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-Fortran</code>.</p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

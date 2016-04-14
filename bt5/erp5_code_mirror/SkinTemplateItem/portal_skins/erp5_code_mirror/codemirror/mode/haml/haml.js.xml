@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897143.56</string> </value>
+            <value> <string>ts60604379.8</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -113,8 +113,10 @@
           state.tokenize = rubyInQuote(")");\n
           return state.tokenize(stream, state);\n
         } else if (ch == "{") {\n
-          state.tokenize = rubyInQuote("}");\n
-          return state.tokenize(stream, state);\n
+          if (!stream.match(/^\\{%.*/)) {\n
+            state.tokenize = rubyInQuote("}");\n
+            return state.tokenize(stream, state);\n
+          }\n
         }\n
       }\n
 \n
@@ -195,7 +197,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5275</int> </value>
+            <value> <int>5332</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

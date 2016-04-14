@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: TTCN mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="ttcn.js"></script>\n
+<style type="text/css">\n
+    .CodeMirror {\n
+        border-top: 1px solid black;\n
+        border-bottom: 1px solid black;\n
+    }\n
+</style>\n
+<div id=nav>\n
+    <a href="http://codemirror.net"><h1>CodeMirror</h1>\n
+        <img id=logo src="../../doc/logo.png">\n
+    </a>\n
+\n
+    <ul>\n
+        <li><a href="../../index.html">Home</a>\n
+        <li><a href="../../doc/manual.html">Manual</a>\n
+        <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+    </ul>\n
+    <ul>\n
+        <li><a href="../index.html">Language modes</a>\n
+        <li><a class=active href="http://en.wikipedia.org/wiki/TTCN">TTCN</a>\n
+    </ul>\n
+</div>\n
+<article>\n
+    <h2>TTCN example</h2>\n
+    <div>\n
+        <textarea id="ttcn-code">\n
+module Templates {\n
+  /* import types from ASN.1 */\n
+  import from Types language "ASN.1:1997" all;\n
+\n
+  /* During the conversion phase from ASN.1 to TTCN-3 */\n
+  /* - the minus sign (Message-Type) within the identifiers will be replaced by underscore (Message_Type)*/\n
+  /* - the ASN.1 identifiers matching a TTCN-3 keyword (objid) will be postfixed with an underscore (objid_)*/\n
+\n
+  // simple types\n
+\n
+  template SenderID localObjid := objid {itu_t(0) identified_organization(4) etsi(0)};\n
+\n
+  // complex types\n
+\n
+  /* ASN.1 Message-Type mapped to TTCN-3 Message_Type */\n
+  template Message receiveMsg(template (present) Message_Type p_messageType) := {\n
+    header := p_messageType,\n
+    body := ?\n
+  }\n
+\n
+  /* ASN.1 objid mapped to TTCN-3 objid_ */\n
+  template Message sendInviteMsg := {\n
+      header := inviteType,\n
+      body := {\n
+        /* optional fields may be assigned by omit or may be ignored/skipped */\n
+        description := "Invite Message",\n
+        data := \'FF\'O,\n
+        objid_ := localObjid\n
+      }\n
+  }\n
+\n
+  template Message sendAcceptMsg modifies sendInviteMsg := {\n
+      header := acceptType,\n
+      body := {\n
+        description := "Accept Message"\n
+      }\n
+    };\n
+\n
+  template Message sendErrorMsg modifies sendInviteMsg := {\n
+      header := errorType,\n
+      body := {\n
+        description := "Error Message"\n
+      }\n
+    };\n
+\n
+  template Message expectedErrorMsg := {\n
+      header := errorType,\n
+      body := ?\n
+    };\n
+\n
+  template Message expectedInviteMsg modifies expectedErrorMsg := {\n
+      header := inviteType\n
+    };\n
+\n
+  template Message expectedAcceptMsg modifies expectedErrorMsg := {\n
+      header := acceptType\n
+    };\n
+\n
+} with { encode "BER:1997" }\n
+        </textarea>\n
+    </div>\n
+\n
+    <script> \n
+      var ttcnEditor = CodeMirror.fromTextArea(document.getElementById("ttcn-code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        mode: "text/x-ttcn"\n
+      });\n
+      ttcnEditor.setSize(600, 860);\n
+      var mac = CodeMirror.keyMap.default == CodeMirror.keyMap.macDefault;\n
+      CodeMirror.keyMap.default[(mac ? "Cmd" : "Ctrl") + "-Space"] = "autocomplete";\n
+    </script>\n
+    <br/>\n
+    <p><strong>Language:</strong> Testing and Test Control Notation\n
+        (<a href="http://en.wikipedia.org/wiki/TTCN">TTCN</a>)\n
+    </p>\n
+    <p><strong>MIME types defined:</strong> <code>text/x-ttcn,\n
+        text/x-ttcn3, text/x-ttcnpp</code>.</p>\n
+    <br/>\n
+    <p>The development of this mode has been sponsored by <a href="http://www.ericsson.com/">Ericsson\n
+    </a>.</p>\n
+    <p>Coded by Asmelash Tsegay Gebretsadkan </p>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

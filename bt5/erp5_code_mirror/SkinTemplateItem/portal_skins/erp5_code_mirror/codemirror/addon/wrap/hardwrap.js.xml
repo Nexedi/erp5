@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897121.84</string> </value>
+            <value> <string>ts60604375.34</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -60,11 +60,13 @@
   function findBreakPoint(text, column, wrapOn, killTrailingSpace) {\n
     for (var at = column; at > 0; --at)\n
       if (wrapOn.test(text.slice(at - 1, at + 1))) break;\n
-    if (at == 0) at = column;\n
-    var endOfText = at;\n
-    if (killTrailingSpace)\n
-      while (text.charAt(endOfText - 1) == " ") --endOfText;\n
-    return {from: endOfText, to: at};\n
+    for (var first = true;; first = false) {\n
+      var endOfText = at;\n
+      if (killTrailingSpace)\n
+        while (text.charAt(endOfText - 1) == " ") --endOfText;\n
+      if (endOfText == 0 && first) at = column;\n
+      else return {from: endOfText, to: at};\n
+    }\n
   }\n
 \n
   function wrapRange(cm, from, to, options) {\n
@@ -114,7 +116,8 @@
     if (changes.length) cm.operation(function() {\n
       for (var i = 0; i < changes.length; ++i) {\n
         var change = changes[i];\n
-        cm.replaceRange(change.text, change.from, change.to);\n
+        if (change.text || CodeMirror.cmpPos(change.from, change.to))\n
+          cm.replaceRange(change.text, change.from, change.to);\n
       }\n
     });\n
     return changes.length ? {from: changes[0].from, to: CodeMirror.changeEnd(changes[changes.length - 1])} : null;\n
@@ -175,7 +178,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5260</int> </value>
+            <value> <int>5414</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

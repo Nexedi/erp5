@@ -1,0 +1,210 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: RPM changes mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+    <link rel="stylesheet" href="../../lib/codemirror.css">\n
+    <script src="../../lib/codemirror.js"></script>\n
+    <script src="rpm.js"></script>\n
+    <link rel="stylesheet" href="../../doc/docs.css">\n
+    <style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>\n
+\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">RPM</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>RPM changes mode</h2>\n
+\n
+    <div><textarea id="code" name="code">\n
+-------------------------------------------------------------------\n
+Tue Oct 18 13:58:40 UTC 2011 - misterx@example.com\n
+\n
+- Update to r60.3\n
+- Fixes bug in the reflect package\n
+  * disallow Interface method on Value obtained via unexported name\n
+\n
+-------------------------------------------------------------------\n
+Thu Oct  6 08:14:24 UTC 2011 - misterx@example.com\n
+\n
+- Update to r60.2\n
+- Fixes memory leak in certain map types\n
+\n
+-------------------------------------------------------------------\n
+Wed Oct  5 14:34:10 UTC 2011 - misterx@example.com\n
+\n
+- Tweaks for gdb debugging\n
+- go.spec changes:\n
+  - move %go_arch definition to %prep section\n
+  - pass correct location of go specific gdb pretty printer and\n
+    functions to cpp as HOST_EXTRA_CFLAGS macro\n
+  - install go gdb functions & printer\n
+- gdb-printer.patch\n
+  - patch linker (src/cmd/ld/dwarf.c) to emit correct location of go\n
+    gdb functions and pretty printer\n
+</textarea></div>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        mode: {name: "rpm-changes"},\n
+        lineNumbers: true,\n
+        indentUnit: 4\n
+      });\n
+    </script>\n
+\n
+<h2>RPM spec mode</h2>\n
+    \n
+    <div><textarea id="code2" name="code2">\n
+#\n
+# spec file for package minidlna\n
+#\n
+# Copyright (c) 2011, Sascha Peilicke <saschpe@gmx.de>\n
+#\n
+# All modifications and additions to the file contributed by third parties\n
+# remain the property of their copyright owners, unless otherwise agreed\n
+# upon. The license for this file, and modifications and additions to the\n
+# file, is the same license as for the pristine package itself (unless the\n
+# license for the pristine package is not an Open Source License, in which\n
+# case the license is the MIT License). An "Open Source License" is a\n
+# license that conforms to the Open Source Definition (Version 1.9)\n
+# published by the Open Source Initiative.\n
+\n
+\n
+Name:           libupnp6\n
+Version:        1.6.13\n
+Release:        0\n
+Summary:        Portable Universal Plug and Play (UPnP) SDK\n
+Group:          System/Libraries\n
+License:        BSD-3-Clause\n
+Url:            http://sourceforge.net/projects/pupnp/\n
+Source0:        http://downloads.sourceforge.net/pupnp/libupnp-%{version}.tar.bz2\n
+BuildRoot:      %{_tmppath}/%{name}-%{version}-build\n
+\n
+%description\n
+The portable Universal Plug and Play (UPnP) SDK provides support for building\n
+UPnP-compliant control points, devices, and bridges on several operating\n
+systems.\n
+\n
+%package -n libupnp-devel\n
+Summary:        Portable Universal Plug and Play (UPnP) SDK\n
+Group:          Development/Libraries/C and C++\n
+Provides:       pkgconfig(libupnp)\n
+Requires:       %{name} = %{version}\n
+\n
+%description -n libupnp-devel\n
+The portable Universal Plug and Play (UPnP) SDK provides support for building\n
+UPnP-compliant control points, devices, and bridges on several operating\n
+systems.\n
+\n
+%prep\n
+%setup -n libupnp-%{version}\n
+\n
+%build\n
+%configure --disable-static\n
+make %{?_smp_mflags}\n
+\n
+%install\n
+%makeinstall\n
+find %{buildroot} -type f -name \'*.la\' -exec rm -f {} \';\'\n
+\n
+%post -p /sbin/ldconfig\n
+\n
+%postun -p /sbin/ldconfig\n
+\n
+%files\n
+%defattr(-,root,root,-)\n
+%doc ChangeLog NEWS README TODO\n
+%{_libdir}/libixml.so.*\n
+%{_libdir}/libthreadutil.so.*\n
+%{_libdir}/libupnp.so.*\n
+\n
+%files -n libupnp-devel\n
+%defattr(-,root,root,-)\n
+%{_libdir}/pkgconfig/libupnp.pc\n
+%{_libdir}/libixml.so\n
+%{_libdir}/libthreadutil.so\n
+%{_libdir}/libupnp.so\n
+%{_includedir}/upnp/\n
+\n
+%changelog</textarea></div>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code2"), {\n
+        mode: {name: "rpm-spec"},\n
+        lineNumbers: true,\n
+        indentUnit: 4\n
+      });\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-rpm-spec</code>, <code>text/x-rpm-changes</code>.</p>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

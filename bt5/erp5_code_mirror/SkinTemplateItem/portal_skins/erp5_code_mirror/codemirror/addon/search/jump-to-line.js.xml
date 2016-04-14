@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts60604374.75</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jump-to-line.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others\n
+// Distributed under an MIT license: http://codemirror.net/LICENSE\n
+\n
+// Defines jumpToLine command. Uses dialog.js if present.\n
+\n
+(function(mod) {\n
+  if (typeof exports == "object" && typeof module == "object") // CommonJS\n
+    mod(require("../../lib/codemirror"), require("../dialog/dialog"));\n
+  else if (typeof define == "function" && define.amd) // AMD\n
+    define(["../../lib/codemirror", "../dialog/dialog"], mod);\n
+  else // Plain browser env\n
+    mod(CodeMirror);\n
+})(function(CodeMirror) {\n
+  "use strict";\n
+\n
+  function dialog(cm, text, shortText, deflt, f) {\n
+    if (cm.openDialog) cm.openDialog(text, f, {value: deflt, selectValueOnOpen: true});\n
+    else f(prompt(shortText, deflt));\n
+  }\n
+\n
+  var jumpDialog =\n
+      \'Jump to line: <input type="text" style="width: 10em" class="CodeMirror-search-field"/> <span style="color: #888" class="CodeMirror-search-hint">(Use line:column or scroll% syntax)</span>\';\n
+\n
+  function interpretLine(cm, string) {\n
+    var num = Number(string)\n
+    if (/^[-+]/.test(string)) return cm.getCursor().line + num\n
+    else return num - 1\n
+  }\n
+\n
+  CodeMirror.commands.jumpToLine = function(cm) {\n
+    var cur = cm.getCursor();\n
+    dialog(cm, jumpDialog, "Jump to line:", (cur.line + 1) + ":" + cur.ch, function(posStr) {\n
+      if (!posStr) return;\n
+\n
+      var match;\n
+      if (match = /^\\s*([\\+\\-]?\\d+)\\s*\\:\\s*(\\d+)\\s*$/.exec(posStr)) {\n
+        cm.setCursor(interpretLine(cm, match[1]), Number(match[2]))\n
+      } else if (match = /^\\s*([\\+\\-]?\\d+(\\.\\d+)?)\\%\\s*/.exec(posStr)) {\n
+        var line = Math.round(cm.lineCount() * Number(match[1]) / 100);\n
+        if (/^[-+]/.test(match[1])) line = cur.line + line + 1;\n
+        cm.setCursor(line - 1, cur.ch);\n
+      } else if (match = /^\\s*\\:?\\s*([\\+\\-]?\\d+)\\s*/.exec(posStr)) {\n
+        cm.setCursor(interpretLine(cm, match[1]), cur.ch);\n
+      }\n
+    });\n
+  };\n
+\n
+  CodeMirror.keyMap["default"]["Alt-G"] = "jumpToLine";\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1940</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Swift mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="../../addon/cm_edit/matchbrackets.js"></script>\n
+<script src="./swift.js"></script>\n
+<style>\n
+\t.CodeMirror { border: 2px inset #dee; }\n
+    </style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Swift</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>Swift mode</h2>\n
+<form><textarea id="code" name="code">\n
+//\n
+//  TipCalculatorModel.swift\n
+//  TipCalculator\n
+//\n
+//  Created by Main Account on 12/18/14.\n
+//  Copyright (c) 2014 Razeware LLC. All rights reserved.\n
+//\n
+\n
+import Foundation\n
+\n
+class TipCalculatorModel {\n
+\n
+  var total: Double\n
+  var taxPct: Double\n
+  var subtotal: Double {\n
+    get {\n
+      return total / (taxPct + 1)\n
+    }\n
+  }\n
+\n
+  init(total: Double, taxPct: Double) {\n
+    self.total = total\n
+    self.taxPct = taxPct\n
+  }\n
+\n
+  func calcTipWithTipPct(tipPct: Double) -> Double {\n
+    return subtotal * tipPct\n
+  }\n
+\n
+  func returnPossibleTips() -> [Int: Double] {\n
+\n
+    let possibleTipsInferred = [0.15, 0.18, 0.20]\n
+    let possibleTipsExplicit:[Double] = [0.15, 0.18, 0.20]\n
+\n
+    var retval = [Int: Double]()\n
+    for possibleTip in possibleTipsInferred {\n
+      let intPct = Int(possibleTip*100)\n
+      retval[intPct] = calcTipWithTipPct(possibleTip)\n
+    }\n
+    return retval\n
+\n
+  }\n
+\n
+}\n
+</textarea></form>\n
+\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+        lineNumbers: true,\n
+        matchBrackets: true,\n
+        mode: "text/x-swift"\n
+      });\n
+    </script>\n
+\n
+    <p>A simple mode for Swift</p>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-swift</code> (Swift code)</p>\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

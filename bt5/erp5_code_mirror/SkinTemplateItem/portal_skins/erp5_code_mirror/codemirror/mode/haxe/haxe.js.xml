@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21897139.05</string> </value>
+            <value> <string>ts60604380.33</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -44,23 +44,21 @@ CodeMirror.defineMode("haxe", function(config, parserConfig) {\n
 \n
   // Tokenizer\n
 \n
-  var keywords = function(){\n
-    function kw(type) {return {type: type, style: "keyword"};}\n
-    var A = kw("keyword a"), B = kw("keyword b"), C = kw("keyword c");\n
-    var operator = kw("operator"), atom = {type: "atom", style: "atom"}, attribute = {type:"attribute", style: "attribute"};\n
+  function kw(type) {return {type: type, style: "keyword"};}\n
+  var A = kw("keyword a"), B = kw("keyword b"), C = kw("keyword c");\n
+  var operator = kw("operator"), atom = {type: "atom", style: "atom"}, attribute = {type:"attribute", style: "attribute"};\n
   var type = kw("typedef");\n
-    return {\n
-      "if": A, "while": A, "else": B, "do": B, "try": B,\n
-      "return": C, "break": C, "continue": C, "new": C, "throw": C,\n
-      "var": kw("var"), "inline":attribute, "static": attribute, "using":kw("import"),\n
+  var keywords = {\n
+    "if": A, "while": A, "else": B, "do": B, "try": B,\n
+    "return": C, "break": C, "continue": C, "new": C, "throw": C,\n
+    "var": kw("var"), "inline":attribute, "static": attribute, "using":kw("import"),\n
     "public": attribute, "private": attribute, "cast": kw("cast"), "import": kw("import"), "macro": kw("macro"),\n
-      "function": kw("function"), "catch": kw("catch"), "untyped": kw("untyped"), "callback": kw("cb"),\n
-      "for": kw("for"), "switch": kw("switch"), "case": kw("case"), "default": kw("default"),\n
-      "in": operator, "never": kw("property_access"), "trace":kw("trace"),\n
+    "function": kw("function"), "catch": kw("catch"), "untyped": kw("untyped"), "callback": kw("cb"),\n
+    "for": kw("for"), "switch": kw("switch"), "case": kw("case"), "default": kw("default"),\n
+    "in": operator, "never": kw("property_access"), "trace":kw("trace"),\n
     "class": type, "abstract":type, "enum":type, "interface":type, "typedef":type, "extends":type, "implements":type, "dynamic":type,\n
-      "true": atom, "false": atom, "null": atom\n
-    };\n
-  }();\n
+    "true": atom, "false": atom, "null": atom\n
+  };\n
 \n
   var isOperatorChar = /[+\\-*&%=<>!?|]/;\n
 \n
@@ -69,14 +67,13 @@ CodeMirror.defineMode("haxe", function(config, parserConfig) {\n
     return f(stream, state);\n
   }\n
 \n
-  function nextUntilUnescaped(stream, end) {\n
+  function toUnescaped(stream, end) {\n
     var escaped = false, next;\n
     while ((next = stream.next()) != null) {\n
       if (next == end && !escaped)\n
-        return false;\n
+        return true;\n
       escaped = !escaped && next == "\\\\";\n
     }\n
-    return escaped;\n
   }\n
 \n
   // Used as scratch variables to communicate multiple values without\n
@@ -89,70 +86,58 @@ CodeMirror.defineMode("haxe", function(config, parserConfig) {\n
 \n
   function haxeTokenBase(stream, state) {\n
     var ch = stream.next();\n
-    if (ch == \'"\' || ch == "\'")\n
+    if (ch == \'"\' || ch == "\'") {\n
       return chain(stream, state, haxeTokenString(ch));\n
-    else if (/[\\[\\]{}\\(\\),;\\:\\.]/.test(ch))\n
+    } else if (/[\\[\\]{}\\(\\),;\\:\\.]/.test(ch)) {\n
       return ret(ch);\n
-    else if (ch == "0" && stream.eat(/x/i)) {\n
+    } else if (ch == "0" && stream.eat(/x/i)) {\n
       stream.eatWhile(/[\\da-f]/i);\n
       return ret("number", "number");\n
-    }\n
-    else if (/\\d/.test(ch) || ch == "-" && stream.eat(/\\d/)) {\n
-      stream.match(/^\\d*(?:\\.\\d*)?(?:[eE][+\\-]?\\d+)?/);\n
+    } else if (/\\d/.test(ch) || ch == "-" && stream.eat(/\\d/)) {\n
+      stream.match(/^\\d*(?:\\.\\d*(?!\\.))?(?:[eE][+\\-]?\\d+)?/);\n
       return ret("number", "number");\n
-    }\n
-    else if (state.reAllowed && (ch == "~" && stream.eat(/\\//))) {\n
-      nextUntilUnescaped(stream, "/");\n
+    } else if (state.reAllowed && (ch == "~" && stream.eat(/\\//))) {\n
+      toUnescaped(stream, "/");\n
       stream.eatWhile(/[gimsu]/);\n
       return ret("regexp", "string-2");\n
-    }\n
-    else if (ch == "/") {\n
+    } else if (ch == "/") {\n
       if (stream.eat("*")) {\n
         return chain(stream, state, haxeTokenComment);\n
-      }\n
-      else if (stream.eat("/")) {\n
+      } else if (stream.eat("/")) {\n
         stream.skipToEnd();\n
         return ret("comment", "comment");\n
-      }\n
-      else {\n
+      } else {\n
         stream.eatWhile(isOperatorChar);\n
         return ret("operator", null, stream.current());\n
       }\n
-    }\n
-    else if (ch == "#") {\n
+    } else if (ch == "#") {\n
         stream.skipToEnd();\n
         return ret("conditional", "meta");\n
-    }\n
-    else if (ch == "@") {\n
+    } else if (ch == "@") {\n
       stream.eat(/:/);\n
       stream.eatWhile(/[\\w_]/);\n
       return ret ("metadata", "meta");\n
-    }\n
-    else if (isOperatorChar.test(ch)) {\n
+    } else if (isOperatorChar.test(ch)) {\n
       stream.eatWhile(isOperatorChar);\n
       return ret("operator", null, stream.current());\n
-    }\n
-    else {\n
-    var word;\n
-    if(/[A-Z]/.test(ch))\n
-    {\n
-      stream.eatWhile(/[\\w_<>]/);\n
-      word = stream.current();\n
-      return ret("type", "variable-3", word);\n
-    }\n
-    else\n
-    {\n
+    } else {\n
+      var word;\n
+      if(/[A-Z]/.test(ch)) {\n
+        stream.eatWhile(/[\\w_<>]/);\n
+        word = stream.current();\n
+        return ret("type", "variable-3", word);\n
+      } else {\n
         stream.eatWhile(/[\\w_]/);\n
         var word = stream.current(), known = keywords.propertyIsEnumerable(word) && keywords[word];\n
         return (known && state.kwAllowed) ? ret(known.type, known.style, word) :\n
                        ret("variable", "variable", word);\n
-    }\n
+      }\n
     }\n
   }\n
 \n
   function haxeTokenString(quote) {\n
     return function(stream, state) {\n
-      if (!nextUntilUnescaped(stream, quote))\n
+      if (toUnescaped(stream, quote))\n
         state.tokenize = haxeTokenBase;\n
       return ret("string", "string");\n
     };\n
@@ -204,27 +189,25 @@ CodeMirror.defineMode("haxe", function(config, parserConfig) {\n
           cc.pop()();\n
         if (cx.marked) return cx.marked;\n
         if (type == "variable" && inScope(state, content)) return "variable-2";\n
-    if (type == "variable" && imported(state, content)) return "variable-3";\n
+        if (type == "variable" && imported(state, content)) return "variable-3";\n
         return style;\n
       }\n
     }\n
   }\n
 \n
-  function imported(state, typename)\n
-  {\n
-  if (/[a-z]/.test(typename.charAt(0)))\n
-    return false;\n
-  var len = state.importedtypes.length;\n
-  for (var i = 0; i<len; i++)\n
-    if(state.importedtypes[i]==typename) return true;\n
+  function imported(state, typename) {\n
+    if (/[a-z]/.test(typename.charAt(0)))\n
+      return false;\n
+    var len = state.importedtypes.length;\n
+    for (var i = 0; i<len; i++)\n
+      if(state.importedtypes[i]==typename) return true;\n
   }\n
 \n
-\n
   function registerimport(importname) {\n
-  var state = cx.state;\n
-  for (var t = state.importedtypes; t; t = t.next)\n
-    if(t.name == importname) return;\n
-  state.importedtypes = { name: importname, next: state.importedtypes };\n
+    var state = cx.state;\n
+    for (var t = state.importedtypes; t; t = t.next)\n
+      if(t.name == importname) return;\n
+    state.importedtypes = { name: importname, next: state.importedtypes };\n
   }\n
   // Combinator utils\n
 \n
@@ -236,13 +219,20 @@ CodeMirror.defineMode("haxe", function(config, parserConfig) {\n
     pass.apply(null, arguments);\n
     return true;\n
   }\n
+  function inList(name, list) {\n
+    for (var v = list; v; v = v.next)\n
+      if (v.name == name) return true;\n
+    return false;\n
+  }\n
   function register(varname) {\n
     var state = cx.state;\n
     if (state.context) {\n
       cx.marked = "def";\n
-      for (var v = state.localVars; v; v = v.next)\n
-        if (v.name == varname) return;\n
+      if (inList(varname, state.localVars)) return;\n
       state.localVars = {name: varname, next: state.localVars};\n
+    } else if (state.globalVars) {\n
+      if (inList(varname, state.globalVars)) return;\n
+      state.globalVars = {name: varname, next: state.globalVars};\n
     }\n
   }\n
 \n
@@ -257,6 +247,7 @@ CodeMirror.defineMode("haxe", function(config, parserConfig) {\n
     cx.state.localVars = cx.state.context.vars;\n
     cx.state.context = cx.state.context.prev;\n
   }\n
+  popcontext.lex = true;\n
   function pushlex(type, info) {\n
     var result = function() {\n
       var state = cx.state;\n
@@ -280,7 +271,7 @@ CodeMirror.defineMode("haxe", function(config, parserConfig) {\n
       if (type == wanted) return cont();\n
       else if (wanted == ";") return pass();\n
       else return cont(f);\n
-    };\n
+    }\n
     return f;\n
   }\n
 \n
@@ -294,25 +285,26 @@ CodeMirror.defineMode("haxe", function(config, parserConfig) {\n
     if (type == "attribute") return cont(maybeattribute);\n
     if (type == "function") return cont(functiondef);\n
     if (type == "for") return cont(pushlex("form"), expect("("), pushlex(")"), forspec1, expect(")"),\n
-                                      poplex, statement, poplex);\n
+                                   poplex, statement, poplex);\n
     if (type == "variable") return cont(pushlex("stat"), maybelabel);\n
     if (type == "switch") return cont(pushlex("form"), expression, pushlex("}", "switch"), expect("{"),\n
-                                         block, poplex, poplex);\n
+                                      block, poplex, poplex);\n
     if (type == "case") return cont(expression, expect(":"));\n
     if (type == "default") return cont(expect(":"));\n
     if (type == "catch") return cont(pushlex("form"), pushcontext, expect("("), funarg, expect(")"),\n
-                                        statement, poplex, popcontext);\n
+                                     statement, poplex, popcontext);\n
     if (type == "import") return cont(importdef, expect(";"));\n
     if (type == "typedef") return cont(typedef);\n
     return pass(pushlex("stat"), expression, expect(";"), poplex);\n
   }\n
   function expression(type) {\n
     if (atomicTypes.hasOwnProperty(type)) return cont(maybeoperator);\n
+    if (type == "type" ) return cont(maybeoperator);\n
     if (type == "function") return cont(functiondef);\n
     if (type == "keyword c") return cont(maybeexpression);\n
     if (type == "(") return cont(pushlex(")"), maybeexpression, expect(")"), poplex, maybeoperator);\n
     if (type == "operator") return cont(expression);\n
-    if (type == "[") return cont(pushlex("]"), commasep(expression, "]"), poplex, maybeoperator);\n
+    if (type == "[") return cont(pushlex("]"), commasep(maybeexpression, "]"), poplex, maybeoperator);\n
     if (type == "{") return cont(pushlex("}"), commasep(objprop, "}"), poplex, maybeoperator);\n
     return cont();\n
   }\n
@@ -346,14 +338,14 @@ CodeMirror.defineMode("haxe", function(config, parserConfig) {\n
   }\n
 \n
   function importdef (type, value) {\n
-  if(type == "variable" && /[A-Z]/.test(value.charAt(0))) { registerimport(value); return cont(); }\n
-  else if(type == "variable" || type == "property" || type == "." || value == "*") return cont(importdef);\n
+    if(type == "variable" && /[A-Z]/.test(value.charAt(0))) { registerimport(value); return cont(); }\n
+    else if(type == "variable" || type == "property" || type == "." || value == "*") return cont(importdef);\n
   }\n
 \n
   function typedef (type, value)\n
   {\n
-  if(type == "variable" && /[A-Z]/.test(value.charAt(0))) { registerimport(value); return cont(); }\n
-  else if (type == "type" && /[A-Z]/.test(value.charAt(0))) { return cont(); }\n
+    if(type == "variable" && /[A-Z]/.test(value.charAt(0))) { registerimport(value); return cont(); }\n
+    else if (type == "type" && /[A-Z]/.test(value.charAt(0))) { return cont(); }\n
   }\n
 \n
   function maybelabel(type) {\n
@@ -391,16 +383,19 @@ CodeMirror.defineMode("haxe", function(config, parserConfig) {\n
     if (type == ",") return cont(vardef1);\n
   }\n
   function forspec1(type, value) {\n
-  if (type == "variable") {\n
-    register(value);\n
-  }\n
-  return cont(pushlex(")"), pushcontext, forin, expression, poplex, statement, popcontext);\n
+    if (type == "variable") {\n
+      register(value);\n
+      return cont(forin, expression)\n
+    } else {\n
+      return pass()\n
+    }\n
   }\n
   function forin(_type, value) {\n
     if (value == "in") return cont();\n
   }\n
   function functiondef(type, value) {\n
-    if (type == "variable") {register(value); return cont(functiondef);}\n
+    //function names starting with upper-case letters are recognised as types, so cludging them together here.\n
+    if (type == "variable" || type == "type") {register(value); return cont(functiondef);}\n
     if (value == "new") return cont(functiondef);\n
     if (type == "(") return cont(pushlex(")"), pushcontext, commasep(funarg, ")"), poplex, typeuse, statement, popcontext);\n
   }\n
@@ -420,21 +415,23 @@ CodeMirror.defineMode("haxe", function(config, parserConfig) {\n
   }\n
 \n
   // Interface\n
-\n
   return {\n
     startState: function(basecolumn) {\n
-    var defaulttypes = ["Int", "Float", "String", "Void", "Std", "Bool", "Dynamic", "Array"];\n
-      return {\n
+      var defaulttypes = ["Int", "Float", "String", "Void", "Std", "Bool", "Dynamic", "Array"];\n
+      var state = {\n
         tokenize: haxeTokenBase,\n
         reAllowed: true,\n
         kwAllowed: true,\n
         cc: [],\n
         lexical: new HaxeLexical((basecolumn || 0) - indentUnit, 0, "block", false),\n
         localVars: parserConfig.localVars,\n
-    importedtypes: defaulttypes,\n
+        importedtypes: defaulttypes,\n
         context: parserConfig.localVars && {vars: parserConfig.localVars},\n
         indented: 0\n
       };\n
+      if (parserConfig.globalVars && typeof parserConfig.globalVars == "object")\n
+        state.globalVars = parserConfig.globalVars;\n
+      return state;\n
     },\n
 \n
     token: function(stream, state) {\n
@@ -554,7 +551,7 @@ CodeMirror.defineMIME("text/x-hxml", "hxml");\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>17064</int> </value>
+            <value> <int>17568</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

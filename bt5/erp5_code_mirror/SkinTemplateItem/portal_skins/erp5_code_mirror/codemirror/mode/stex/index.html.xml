@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: sTeX mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="stex.js"></script>\n
+<style>.CodeMirror {background: #f8f8f8;}</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">sTeX</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+<h2>sTeX mode</h2>\n
+<form><textarea id="code" name="code">\n
+\\begin{module}[id=bbt-size]\n
+\\importmodule[balanced-binary-trees]{balanced-binary-trees}\n
+\\importmodule[\\KWARCslides{dmath/en/cardinality}]{cardinality}\n
+\n
+\\begin{frame}\n
+  \\frametitle{Size Lemma for Balanced Trees}\n
+  \\begin{itemize}\n
+  \\item\n
+    \\begin{assertion}[id=size-lemma,type=lemma] \n
+    Let $G=\\tup{V,E}$ be a \\termref[cd=binary-trees]{balanced binary tree} \n
+    of \\termref[cd=graph-depth,name=vertex-depth]{depth}$n>i$, then the set\n
+     $\\defeq{\\livar{V}i}{\\setst{\\inset{v}{V}}{\\gdepth{v} = i}}$ of\n
+    \\termref[cd=graphs-intro,name=node]{nodes} at \n
+    \\termref[cd=graph-depth,name=vertex-depth]{depth} $i$ has\n
+    \\termref[cd=cardinality,name=cardinality]{cardinality} $\\power2i$.\n
+   \\end{assertion}\n
+  \\item\n
+    \\begin{sproof}[id=size-lemma-pf,proofend=,for=size-lemma]{via induction over the depth $i$.}\n
+      \\begin{spfcases}{We have to consider two cases}\n
+        \\begin{spfcase}{$i=0$}\n
+          \\begin{spfstep}[display=flow]\n
+            then $\\livar{V}i=\\set{\\livar{v}r}$, where $\\livar{v}r$ is the root, so\n
+            $\\eq{\\card{\\livar{V}0},\\card{\\set{\\livar{v}r}},1,\\power20}$.\n
+          \\end{spfstep}\n
+        \\end{spfcase}\n
+        \\begin{spfcase}{$i>0$}\n
+          \\begin{spfstep}[display=flow]\n
+           then $\\livar{V}{i-1}$ contains $\\power2{i-1}$ vertexes \n
+           \\begin{justification}[method=byIH](IH)\\end{justification}\n
+          \\end{spfstep}\n
+          \\begin{spfstep}\n
+           By the \\begin{justification}[method=byDef]definition of a binary\n
+              tree\\end{justification}, each $\\inset{v}{\\livar{V}{i-1}}$ is a leaf or has\n
+            two children that are at depth $i$.\n
+          \\end{spfstep}\n
+          \\begin{spfstep}\n
+           As $G$ is \\termref[cd=balanced-binary-trees,name=balanced-binary-tree]{balanced} and $\\gdepth{G}=n>i$, $\\livar{V}{i-1}$ cannot contain\n
+            leaves.\n
+          \\end{spfstep}\n
+          \\begin{spfstep}[type=conclusion]\n
+           Thus $\\eq{\\card{\\livar{V}i},{\\atimes[cdot]{2,\\card{\\livar{V}{i-1}}}},{\\atimes[cdot]{2,\\power2{i-1}}},\\power2i}$.\n
+          \\end{spfstep}\n
+        \\end{spfcase}\n
+      \\end{spfcases}\n
+    \\end{sproof}\n
+  \\item \n
+    \\begin{assertion}[id=fbbt,type=corollary]\t\n
+      A fully balanced tree of depth $d$ has $\\power2{d+1}-1$ nodes.\n
+    \\end{assertion}\n
+  \\item\n
+      \\begin{sproof}[for=fbbt,id=fbbt-pf]{}\n
+        \\begin{spfstep}\n
+          Let $\\defeq{G}{\\tup{V,E}}$ be a fully balanced tree\n
+        \\end{spfstep}\n
+        \\begin{spfstep}\n
+          Then $\\card{V}=\\Sumfromto{i}1d{\\power2i}= \\power2{d+1}-1$.\n
+        \\end{spfstep}\n
+      \\end{sproof}\n
+    \\end{itemize}\n
+  \\end{frame}\n
+\\begin{note}\n
+  \\begin{omtext}[type=conclusion,for=binary-tree]\n
+    This shows that balanced binary trees grow in breadth very quickly, a consequence of\n
+    this is that they are very shallow (and this compute very fast), which is the essence of\n
+    the next result.\n
+  \\end{omtext}\n
+\\end{note}\n
+\\end{module}\n
+\n
+%%% Local Variables: \n
+%%% mode: LaTeX\n
+%%% TeX-master: "all"\n
+%%% End: \\end{document}\n
+</textarea></form>\n
+    <script>\n
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {});\n
+    </script>\n
+\n
+    <p><strong>MIME types defined:</strong> <code>text/x-stex</code>.</p>\n
+\n
+    <p><strong>Parsing/Highlighting Tests:</strong> <a href="../../test/index.html#stex_*">normal</a>,  <a href="../../test/index.html#verbose,stex_*">verbose</a>.</p>\n
+\n
+  </article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

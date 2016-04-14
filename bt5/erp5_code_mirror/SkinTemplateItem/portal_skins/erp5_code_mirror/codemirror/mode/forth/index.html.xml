@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Forth mode</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="../../doc/docs.css">\n
+\n
+<link href=\'http://fonts.googleapis.com/css?family=Droid+Sans+Mono\' rel=\'stylesheet\' type=\'text/css\'>\n
+<link rel="stylesheet" href="../../lib/codemirror.css">\n
+<link rel=stylesheet href="../../theme/colorforth.css">\n
+<script src="../../lib/codemirror.js"></script>\n
+<script src="forth.js"></script>\n
+<style>\n
+.CodeMirror {\n
+    font-family: \'Droid Sans Mono\', monospace;\n
+    font-size: 14px;\n
+}\n
+</style>\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../../doc/logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../../index.html">Home</a>\n
+    <li><a href="../../doc/manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a href="../index.html">Language modes</a>\n
+    <li><a class=active href="#">Forth</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+\n
+<h2>Forth mode</h2>\n
+\n
+<form><textarea id="code" name="code">\n
+\\ Insertion sort\n
+\n
+: cell-  1 cells - ;\n
+\n
+: insert ( start end -- start )\n
+  dup @ >r ( r: v )\n
+  begin\n
+    2dup <\n
+  while\n
+    r@ over cell- @ <\n
+  while\n
+    cell-\n
+    dup @ over cell+ !\n
+  repeat then\n
+  r> swap ! ;\n
+\n
+: sort ( array len -- )\n
+  1 ?do\n
+    dup i cells + insert\n
+  loop drop ;</textarea>\n
+  </form>\n
+\n
+<script>\n
+  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {\n
+    lineNumbers: true,\n
+    lineWrapping: true,\n
+    indentUnit: 2,\n
+    tabSize: 2,\n
+    autofocus: true,\n
+    theme: "colorforth",\n
+    mode: "text/x-forth"\n
+  });\n
+</script>\n
+\n
+<p>Simple mode that handle Forth-Syntax (<a href="http://en.wikipedia.org/wiki/Forth_%28programming_language%29">Forth on WikiPedia</a>).</p>\n
+\n
+<p><strong>MIME types defined:</strong> <code>text/x-forth</code>.</p>\n
+\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
