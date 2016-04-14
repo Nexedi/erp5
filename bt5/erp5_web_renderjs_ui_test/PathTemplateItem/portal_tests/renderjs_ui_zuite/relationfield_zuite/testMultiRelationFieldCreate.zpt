@@ -90,51 +90,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>type</td>
-  <td>//input[@name='subfield_my_bar_category_title_list_0']</td>
-  <td>A new foo</td>
-</tr>
-
-<tr>
-  <td>fireEvent</td>
-  <td>//input[@name='subfield_my_bar_category_title_list_0']</td>
-  <td>input</td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class='subfield_my_bar_category_title_list_0']/div/div/div/div/a[@class='ui-first-child ui-last-child ui-btn ui-corner-all ui-btn-inherit ui-btn-active ui-btn-icon-right ui-icon-delete']</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='subfield_my_bar_category_title_list_1']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>type</td>
-  <td>//input[@name='subfield_my_bar_category_title_list_1']</td>
-  <td>Another new foo</td>
-</tr>
-
-<tr>
-  <td>fireEvent</td>
-  <td>//input[@name='subfield_my_bar_category_title_list_1']</td>
-  <td>input</td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class='subfield_my_bar_category_title_list_1']/div/div/div/div/a[@class='ui-first-child ui-last-child ui-btn ui-corner-all ui-btn-inherit ui-btn-active ui-btn-icon-right ui-icon-delete']</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
   <td></td>
 </tr>
 
@@ -157,51 +113,198 @@
   <td></td>
 </tr>
 
+
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>blur</td>
+</tr>
+
 <tr>
   <td>click</td>
   <td>//li[@data-relative-url='portal_categories/foo_category/a/a1']</td>
   <td></td>
 </tr>
+
+
+
+<tr>
+  <td>type</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>A New Foo</td>
+</tr>
+
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>input</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@name="Foo"]
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>blur</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//li[@name="Foo"]
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//div[@class="ui-tag-list ui-tag-list-inset"]//li</td>
+  <td>Create:Foo</td>
+</tr>
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//a[contains(@class, "ui-icon-plus")]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>Another Foo</td>
+</tr>
+
+
+
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>input</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@name="Foo"]
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>blur</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//li[@name="Foo"]
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//div[@class="ui-tag-list ui-tag-list-inset"]//li</td>
+  <td>Create:Foo</td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//a[contains(@class, "ui-icon-plus")]</td>
+  <td></td>
+</tr>
+
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
 <tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td></td>
+</tr>
+
+
+<tr>
   <td>verifyValue</td>
-  <td>//input[@name='subfield_my_bar_category_title_list_0']</td>
-  <td>A new foo</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>A New Foo</td>
 </tr>
 
 <tr>
   <td>verifyValue</td>
-  <td>//input[@name='subfield_my_bar_category_title_list_1']</td>
-  <td>Another new foo</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>Another Foo</td>
 </tr>
 
-<tr>
-  <td>verifyValue</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
-  <td>a1</td>
-</tr>
 
-<!--
 <tr>
   <td>click</td>
-  <td>//div[@class='subfield_my_bar_category_title_list_0']/a</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//a[contains(@class, "ui-icon-plane")]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Jump']</td>
+  <td>//a[@data-i18n="Edit"]</td>
   <td></td>
 </tr>
 
+
 <tr>
-  <td>verifyValue</td>
-  <td>//input[@name='field_my_title']</td>
-  <td>A new foo</td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope="field_my_title"]//p</td>
+  <td>A New Foo</td>
 </tr>
--->
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="Foo: A New Foo"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//a[contains(@class, "ui-icon-plane")]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//a[contains(@class, "ui-icon-plane")]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Edit"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope="field_my_title"]//p</td>
+  <td>Another Foo</td>
+</tr>
+
+
 
 </tbody></table>
 </body>
