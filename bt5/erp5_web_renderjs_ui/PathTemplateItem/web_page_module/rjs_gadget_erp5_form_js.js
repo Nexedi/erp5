@@ -196,6 +196,7 @@
                       form_gadget.props.gadget_list.push(field_gadget);
                       var suboptions = options[renderered_field.key] || suboption_dict;
                       suboptions.field_json = renderered_field;
+                      suboptions.field_json.view = options.view;
                       return field_gadget.render(suboptions);
                     });
                 }
@@ -294,6 +295,37 @@
           return result;
         });
 
+    })
+      .declareMethod("getNonSavedValue", function () {
+      var form_gadget = this,
+        k,
+        field_gadget,
+        count = form_gadget.props.gadget_list.length,
+        data = {},
+        queue = new RSVP.Queue();
+
+      function extendData(field_data) {
+        var key;
+        for (key in field_data) {
+          if (field_data.hasOwnProperty(key)) {
+            data[key] = field_data[key];
+          }
+        }
+      }
+
+      for (k = 0; k < count; k += 1) {
+        field_gadget = form_gadget.props.gadget_list[k];
+        // XXX Hack until better defined
+        if (field_gadget.getNonSavedValue !== undefined) {
+          queue
+            .push(field_gadget.getNonSavedValue.bind(field_gadget))
+            .push(extendData);
+        }
+      }
+      return queue
+        .push(function () {
+          return data;
+        });
     });
 
 }(window, document, rJS, RSVP));

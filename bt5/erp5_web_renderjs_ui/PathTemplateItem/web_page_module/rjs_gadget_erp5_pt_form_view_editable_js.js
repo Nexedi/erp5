@@ -34,6 +34,13 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+    .allowPublicAcquisition('getNonSavedPageContent', function () {
+      var gadget = this;
+      return gadget.getDeclaredGadget("erp5_form")
+        .push(function (erp5_form) {
+          return erp5_form.getNonSavedValue();
+        });
+    })
     .declareMethod('triggerSubmit', function () {
       this.props.element.querySelector('button').click();
     })

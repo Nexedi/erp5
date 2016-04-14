@@ -221,7 +221,44 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
         {"portal_type": portal_type_list}
       ).asSearchTextExpression(sql_catalog)})
     }
+    title = field.get_value("title"),
+    column_list = field.get_value("columns")
+    proxy_listbox_ids = field.get_value("proxy_listbox_ids")
+
+    if len(proxy_listbox_ids):
+      listbox_ids = proxy_listbox_ids
+    else:
+      listbox_ids = [('Base_viewRelatedObjectListBase/listbox','default')]
+    listbox = {}
+
+    for grain in listbox_ids:
+      tmp = grain[0].split('/')
+      form = getattr(context, tmp[0])
+      for listbox_field in form.get_fields():
+        if listbox_field.getId() == tmp[1]:
+          #get original definition
+          result = renderField(context, listbox_field, getFormRelativeUrl(form))
+          #overwrite, like Base_getRelatedObjectParameter does
+          if result["portal_type"] == []:
+            result["portal_type"] = field.get_value('portal_type')
+          result["query"] = url_template_dict["jio_search_template"] % {
+            "query": make_query({"query": sql_catalog.buildQuery(
+              dict(portal_type = [x[1] for x in result["portal_type"]],
+                **result["default_params"]), ignore_unknown_columns=True
+           ).asSearchTextExpression(sql_catalog)})
+          }
+          result.pop("list_method_template", None)
+          result["list_method"] = "portal_catalog"
+          result["title"] = title
+          #set default listbox's column list to relation's column list
+          if tmp[0] == 'Base_viewRelatedObjectListBase' and len(column_list) > 0:
+            result["column_list"] = column_list 
+          listbox[grain[1]] = result
+          break
+    
+
     result = {
+      "url": relative_url,
       "portal_types": portal_type_list,
       "query": query,
       "catalog_index": field.get_value('catalog_index'),
@@ -233,10 +270,17 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "css_class": field.get_value("css_class"),
       "hidden": field.get_value("hidden"),
       "description": field.get_value("description"),
-      "title": field.get_value("title"),
-      "required": field.get_value("required")
+      "title": title,
+      "required": field.get_value("required"),
+      "proxy_listbox_ids_len": len(proxy_listbox_ids),
+      "listbox": listbox
     }
-    result["default"] = getFieldDefault(traversed_document, field, result["key"], value)
+    tmp = getFieldDefault(traversed_document, field, result["key"], value)
+    if isinstance(tmp, list):
+      result["default"] = tmp
+    else:
+      result["default"] = [tmp]
+
     result["relation_field_id"] = traversed_document.Field_getSubFieldKeyDict(
       field,
       "relation",
@@ -246,13 +290,8 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       field,
       "item", key=result["key"]
     )
-
-    if jump_reference_list:
-      url = [jump_reference.getRelativeUrl() for jump_reference in jump_reference_list]
-      uid = [jump_reference.getUid() for jump_reference in jump_reference_list]
-      result["relation_item_relative_url"] = url
-      result["relation_item_uid"] = uid
-
+    result["relation_item_relative_url"] = [jump_reference.getRelativeUrl() for jump_reference in jump_reference_list]
+      
   elif meta_type == "CheckBoxField":
     result = {
       "type": meta_type,

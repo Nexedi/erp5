@@ -24,6 +24,7 @@
         field_json = options.field_json || {};
       this.props.value = field_json.value || field_json.default || "";
       this.props.editable = field_json.editable;
+      this.props.field_json = options.field_json;
       if (field_json.editable) {
         element = document.createElement('input');
         element.setAttribute("type", "text");
@@ -49,6 +50,15 @@
         input = this.element.querySelector('input');
         result[input.getAttribute('name')] = input.value;
       }
+      return result;
+    })
+    .declareMethod('getNonSavedValue', function () {
+      var input,
+        result = {},
+        props = this.props;
+      input = this.element.querySelector('input');
+      props.field_json.default = input.value;
+      result[props.field_json.key] = props.field_json;
       return result;
     })
 

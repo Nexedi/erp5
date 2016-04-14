@@ -26,6 +26,9 @@
            {{#each head_value}}
               <th  data-i18n="{{data-i18n}}" class="{{class_value}}">{{text}}</th>
            {{/each}}
+           {{#if line_icon}}
+             <th></th>
+           {{/if}}
          </tr>
        </thead>
       </table>
@@ -42,6 +45,9 @@
            {{#each head_value}}
               <th  data-i18n="{{data-i18n}}" class="{{class_value}}">{{text}}</th>
            {{/each}}
+           {{#if line_icon}}
+             <th></th>
+           {{/if}}
          </tr>
        </thead>
       </table>
@@ -72,6 +78,11 @@
                 {{/if}}
               </th>
            {{/each}}
+           {{#if line_icon}}
+             <th>
+               <a href ="{{jump}}" class="ui-body-inherit ui-btn-icon-right ui-link ui-btn ui-corner-all ui-icon-mail-forward"></a>
+            </th>
+           {{/if}}
          </tr>
         {{/each}}
        </tbody>
@@ -107,6 +118,11 @@
                 {{/if}}
               </th>
            {{/each}}
+           {{#if line_icon}}
+             <th>
+               <a href ="{{jump}}" class="ui-body-inherit ui-btn-icon-right ui-link ui-btn ui-corner-all ui-icon-mail-forward"></a>
+             </th>
+            {{/if}}
          </tr>
         {{/each}}
        </tbody>

@@ -5,21 +5,84 @@
     <meta name="viewport" content="width=device-width, user-scalable=no" />
     <title>ERP5 Relationstringfield</title>
 
-    <!-- renderjs -->
     <script src="rsvp.js" type="text/javascript"></script>
     <script src="renderjs.js" type="text/javascript"></script>
     <script src="URI.js" type="text/javascript"></script>
-    <!-- custom script -->
-    <script src="gadget_erp5_field_relationstring.js" type="text/javascript"></script>
+    <script src="handlebars.js" type="text/javascript"></script>
     <script src="gadget_global.js" type="text/javascript"></script>
+    <script src="gadget_erp5_field_relationstring.js" type="text/javascript"></script>
 
 
+
+    <script id="create-template" type="text/x-handlebars-template">
+      <div class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all">
+        <div class="ui-controlgroup-controls">
+          <li class="ui-first-child ui-last-child ui-input-text">Create:{{text}}
+          </li>
+      </div>
+    </script>
+
+
+    <script id="relation-input-template" type="text/x-handlebars-template">
+      <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset ui-input-has-clear ui-input-has-icon {{readonly}}">
+        <input type='text' title={{title}} name={{name}} autocomplete="off" data-enhanced="true"  {{required}} value="{{value}}" >
+        <a href="#" tabindex="-1" class="ui-hidden-accessible">&nbsp;</a>
+        <div class="ui-tag-list ui-tag-list-inset">
+         {{#if create_object}}
+            <div class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all">
+              <div class="ui-controlgroup-controls">
+                <li class="ui-first-child ui-last-child ui-input-text">Create:{{create_object}}
+                </li>
+              </div>
+            </div>
+         {{/if}}  
+        </div>
+        <ul class="ui-listview ui-corner-all search_ul"></ul>
+      </div>
+      {{#if create_object}}
+        <a href='#' tabindex="-1" class="ui-btn ui-corner-all ui-btn-icon-notext ui-icon-plus ui-shadow-inset ui-btn-inline ui-disabled" >Jump to this document</a>
+      {{else}}
+        {{#if error_text}}
+            <a href='#' tabindex="-1" class="ui-btn ui-corner-all ui-btn-icon-notext ui-icon-warning ui-shadow-inset ui-btn-inline ui-disabled">Jump to this document</a>
+        {{else}}
+          {{#if jump_unknown}}
+              <a href='#' tabindex="-1" class="ui-btn ui-corner-all ui-btn-icon-notext ui-icon-warning ui-shadow-inset ui-btn-inline ui-disabled">Jump to this document</a>
+          {{else}}
+            {{#if href}}
+              {{#if allow_jump}}
+                <a href={{href}} tabindex="-1" class="ui-btn ui-corner-all ui-btn-icon-notext ui-icon-plane ui-shadow-inset ui-btn-inline" >Jump to this document</a>
+              {{else}}
+                <a href='#' tabindex="-1" class="ui-btn ui-corner-all ui-btn-icon-notext ui-icon-plane ui-shadow-inset ui-btn-inline ui-disabled">Jump to this document</a>
+              {{/if}}
+            {{else}}
+              <a href='#' tabindex="-1" class="ui-btn ui-corner-all ui-btn-icon-notext ui-icon-plane ui-shadow-inset ui-btn-inline ui-disabled">Jump to this document</a>
+           {{/if}}
+          {{/if}}
+        {{/if}}
+      {{/if}}
+    </script>
+    
+    
+    <script id="relation-listview-template" type="text/x-handlebars-template">
+      {{#if list.length}}
+        <li class="ui-autocomplete ui-li ui-li-divider ui-bar-inherit ui-first-child" role="heading">Select from the {{list.length}} Search Results</li>
+        {{#each list}}
+          <li class="ui-li-static ui-body-inherit ui-icon-mail-forward ui-btn-icon-right" data-relative-url={{id}} >{{value}}</li>
+        {{/each}}
+        {{#each type}}
+         <li class="ui-li-static ui-body-inherit ui-bar-inherit ui-icon-plus ui-btn-icon-right" data-create-object="{{this}}" name="{{this}}">Create New {{this}}: {{../value}}</li>
+        {{/each}}
+      {{else}}
+        <li class="ui-autocomplete ui-li ui-li-divider ui-bar-inherit ui-first-child" role="heading">No result</li>
+        {{#each type}}
+         <li class="ui-li-static ui-body-inherit ui-bar-inherit ui-icon-plus ui-btn-icon-right" data-create-object="{{this}}" name="{{this}}">Create New {{this}}: {{../value}}</li>
+        {{/each}}
+      {{/if}}
+      <li class="ui-li-static ui-body-inherit ui-last-child ui-bar-inherit ui-icon-search ui-btn-icon-right" data-explore=true >Explore the Search Result List</li>
+    </script>
+  
   </head>
+
   <body>
-    <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset ui-input-has-clear ui-input-has-icon">
-      <input type='text' autocomplete="off" data-enhanced="true" />
-      <a href="#" tabindex="-1" class="ui-hidden-accessible">&nbsp;</a>
-    </div>
-    <a href="#" tabindex="-1" class="ui-btn ui-corner-all ui-btn-icon-notext ui-icon-plane ui-shadow-inset ui-btn-inline ui-disabled">Jump to this document</a>
   </body>
 </html>
