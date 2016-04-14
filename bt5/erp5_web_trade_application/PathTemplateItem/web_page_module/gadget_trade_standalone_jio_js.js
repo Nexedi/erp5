@@ -92,7 +92,6 @@
         .push(function () {
           return RSVP.all([
             gadget.getSetting('hateoas_url'),
-            gadget.getSetting('default_view_reference')
           ]);
         })
         .push(function (setting_list) {
@@ -156,7 +155,7 @@
           remote_sub_storage: {
             type: "erp5",
             url: setting_list[0],
-            default_view_reference: setting_list[1]
+            default_view_reference: "jio_view"
           }
         });
 
@@ -293,6 +292,15 @@
   .declareMethod('get', function () {
       var storage = this.state_parameter_dict.jio_storage.state_parameter_dict.jio_storage;
       return storage.get.apply(storage, arguments);
+    })
+  
+  .declareMethod('post', function () {
+      var storage = this.state_parameter_dict.jio_storage.state_parameter_dict.jio_storage;
+      return storage.post.apply(storage, arguments);
+    })
+  .declareMethod('put', function () {
+      var storage = this.state_parameter_dict.jio_storage.state_parameter_dict.jio_storage;
+      return storage.put.apply(storage, arguments);
     });
 
 

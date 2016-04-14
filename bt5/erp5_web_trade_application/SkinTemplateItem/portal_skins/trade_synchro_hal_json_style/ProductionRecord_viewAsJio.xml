@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ERP5 Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>action</string> </key>
+            <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>enctype</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <list>
+                <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>groups</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>my_comment</string>
+                        <string>my_product</string>
+                        <string>my_consumed_dry_quantity_1</string>
+                        <string>my_quantity_unit</string>
+                        <string>my_date</string>
+                        <string>my_nextowner</string>
+                        <string>my_nextlocation</string>
+                        <string>my_consumed_product_5</string>
+                        <string>my_consumed_quantity_unit_5</string>
+                        <string>my_consumed_product_1</string>
+                        <string>my_consumed_quantity_unit_1</string>
+                        <string>my_consumed_product_2</string>
+                        <string>my_consumed_quantity_unit_2</string>
+                        <string>my_consumed_product_3</string>
+                        <string>my_consumed_quantity_unit_3</string>
+                        <string>my_consumed_product_4</string>
+                        <string>my_consumed_quantity_unit_4</string>
+                        <string>my_batch</string>
+                        <string>my_consumed_batch_5</string>
+                        <string>my_consumed_batch_1</string>
+                        <string>my_consumed_batch_2</string>
+                        <string>my_consumed_batch_3</string>
+                        <string>my_consumed_batch_4</string>
+                        <string>my_previouslocation_5</string>
+                        <string>my_previouslocation_1</string>
+                        <string>my_previouslocation_2</string>
+                        <string>my_previouslocation_3</string>
+                        <string>my_previouslocation_4</string>
+                        <string>my_sync_flag</string>
+                        <string>my_local_validation</string>
+                        <string>my_consumed_batch_10</string>
+                        <string>my_consumed_product_10</string>
+                        <string>my_consumed_quantity_unit_10</string>
+                        <string>my_previouslocation_10</string>
+                        <string>my_consumed_batch_6</string>
+                        <string>my_consumed_product_6</string>
+                        <string>my_consumed_quantity_unit_6</string>
+                        <string>my_previouslocation_6</string>
+                        <string>my_consumed_batch_7</string>
+                        <string>my_consumed_product_7</string>
+                        <string>my_consumed_quantity_unit_7</string>
+                        <string>my_previouslocation_7</string>
+                        <string>my_consumed_batch_8</string>
+                        <string>my_consumed_product_8</string>
+                        <string>my_consumed_quantity_unit_8</string>
+                        <string>my_previouslocation_8</string>
+                        <string>my_consumed_batch_9</string>
+                        <string>my_consumed_product_9</string>
+                        <string>my_consumed_quantity_unit_9</string>
+                        <string>my_previouslocation_9</string>
+                        <string>my_doc_id</string>
+                        <string>my_financial_cost</string>
+                        <string>my_estimated_production_cost</string>
+                        <string>my_price_currency</string>
+                        <string>my_consumed_dry_quantity_2</string>
+                        <string>my_quantity_unit2</string>
+                        <string>my_cost_ratio1</string>
+                        <string>my_cost_ratio2</string>
+                        <string>my_drc</string>
+                        <string>my_product2</string>
+                        <string>my_wet_quantity</string>
+                        <string>my_dry_quantity</string>
+                        <string>my_cost_ratio3</string>
+                        <string>my_product3</string>
+                        <string>my_consumed_dry_quantity_3</string>
+                        <string>my_quantity_unit3</string>
+                        <string>my_dry_quantity3</string>
+                        <string>my_dry_quantity2</string>
+                        <string>my_consumed_drc_1</string>
+                        <string>my_consumed_drc_10</string>
+                        <string>my_consumed_drc_2</string>
+                        <string>my_consumed_drc_3</string>
+                        <string>my_consumed_drc_4</string>
+                        <string>my_consumed_drc_5</string>
+                        <string>my_consumed_drc_6</string>
+                        <string>my_consumed_drc_7</string>
+                        <string>my_consumed_drc_8</string>
+                        <string>my_consumed_drc_9</string>
+                        <string>my_consumed_wet_quantity_6</string>
+                        <string>my_consumed_wet_quantity_7</string>
+                        <string>my_consumed_wet_quantity_8</string>
+                        <string>my_consumed_dry_quantity_4</string>
+                        <string>my_consumed_dry_quantity_5</string>
+                        <string>my_consumed_dry_quantity_6</string>
+                        <string>my_consumed_dry_quantity_7</string>
+                        <string>my_consumed_dry_quantity_8</string>
+                        <string>my_consumed_dry_quantity_9</string>
+                        <string>my_consumed_dry_quantity_10</string>
+                        <string>my_consumed_wet_quantity_1</string>
+                        <string>my_consumed_wet_quantity_2</string>
+                        <string>my_consumed_wet_quantity_3</string>
+                        <string>my_consumed_wet_quantity_4</string>
+                        <string>my_consumed_wet_quantity_5</string>
+                        <string>my_consumed_wet_quantity_9</string>
+                        <string>my_consumed_wet_quantity_10</string>
+                        <string>my_nextlocation3</string>
+                        <string>my_nextlocation2</string>
+                        <string>my_inputusername</string>
+                        <string>my_copy_of</string>
+                        <string>my_hidden_in_html5_app_flag</string>
+                        <string>my_record_revision</string>
+                        <string>my_production_use</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ProductionRecord_viewAsJio</string> </value>
+        </item>
+        <item>
+            <key> <string>method</string> </key>
+            <value> <string>POST</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>ProductionRecord_viewAsJio</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>ERP5 Form</string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_view</string> </value>
+        </item>
+        <item>
+            <key> <string>row_length</string> </key>
+            <value> <int>4</int> </value>
+        </item>
+        <item>
+            <key> <string>stored_encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Production Record</string> </value>
+        </item>
+        <item>
+            <key> <string>unicode_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
