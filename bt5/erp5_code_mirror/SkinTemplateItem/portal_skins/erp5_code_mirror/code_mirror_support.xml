@@ -44,6 +44,7 @@
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/dialog/dialog.js"></script>\n
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/search/searchcursor.js"></script>\n
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/search/search.js"></script>\n
+<script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/search/jump-to-line.js"></script>\n
 \n
 <!-- Python autocomplete (Ctrl-Space, see below)\n
      TODO-arnau: Add ERP5 autocompletion?\n
