@@ -6,6 +6,18 @@
   var gadget_klass = rJS(window);
   // DEFAULT_VIEW_REFERENCE = "view";
 
+  function loadNonSavedPageValue(gadget, result) {
+    var key;
+    for (key in result) {
+      if (result.hasOwnProperty(key)) {
+        if (gadget.props.stored_page_value[result[key].key]) {
+          result[key] = gadget.props.stored_page_value[result[key].key];
+        }
+      }
+    }
+  }
+
+
   gadget_klass
     /////////////////////////////////////////////////////////////////
     // ready
@@ -29,10 +41,24 @@
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("redirect", "redirect")
-
+    .declareAcquiredMethod("getNonSavedPageContent", "getNonSavedPageContent")
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+    .allowPublicAcquisition("jio_allDocs", function (param_list) {
+      var gadget = this;
+      return gadget.jio_allDocs(param_list[0])
+        .push(function (result) {
+          var i;
+          if (result.data.rows.length) {
+            for (i = 0; i < result.data.rows.length; i += 1) {
+              loadNonSavedPageValue(gadget, result.data.rows[i].value);
+            }
+          }
+          return result;
+        });
+    })
     .declareMethod('triggerSubmit', function () {
       return this.getDeclaredGadget('fg')
         .push(function (g) {
@@ -71,11 +97,15 @@
           erp5_document = result;
           queue
             .push(function () {
+              return gadget.getNonSavedPageContent(options.jio_key);
+            })
+            .push(function (result) {
+              gadget.props.stored_page_value = result;
               return gadget.jio_getAttachment(uri.segment(2), "view");
             })
             .push(function (result) {
               erp5_form = result;
-
+              loadNonSavedPageValue(gadget, erp5_document._embedded._view);
               var url = "gadget_erp5_pt_" + erp5_form.pt;
               // XXX Hardcoded specific behaviour for form_view
               if ((options.editable !== undefined) && (erp5_form.pt === "form_view")) {
@@ -97,6 +127,7 @@
               sub_options.editable = options.editable;
 
               form_gadget = result;
+              gadget.props.form_gadget = result;
               return form_gadget.render(sub_options);
             })
             .push(function () {

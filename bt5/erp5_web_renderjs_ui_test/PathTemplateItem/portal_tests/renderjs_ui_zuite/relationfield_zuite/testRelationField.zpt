@@ -64,51 +64,7 @@
   <td>Quantity</td>
   <td></td>
 </tr>
-<tr>
-  <td>click</td>
-  <td>link=Foo: 2</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Foos</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Add</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>select</td>
-  <td>//select[@name='field_your_portal_type']</td>
-  <td>label=Foo</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Save</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Quantity</td>
-  <td></td>
-</tr>
+
 
 <tr>
   <td>waitForElementPresent</td>

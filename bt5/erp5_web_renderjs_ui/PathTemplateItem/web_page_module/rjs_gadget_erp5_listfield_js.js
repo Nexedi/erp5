@@ -21,6 +21,7 @@
     .ready(function (g) {
       return g.getElement()
         .push(function (element) {
+          g.props = {};
           g.element = element;
         });
     })
@@ -44,6 +45,7 @@
         tmp = "",
         wrap = document.createElement("select");
 
+      gadget.props.field_json = field_json;
       select.setAttribute('name', field_json.key);
       for (i = 0; i < field_json.items.length; i += 1) {
         if (field_json.items[i][1] === field_json.default) {
@@ -100,6 +102,15 @@
       var input = this.element.querySelector('select'),
         result = {};
       result[input.getAttribute('name')] = input.options[input.selectedIndex].value;
+      return result;
+    })
+    .declareMethod('getNonSavedValue', function () {
+      var input,
+        result = {},
+        props = this.props;
+      input = this.element.querySelector('select');
+      props.field_json.default = input.options[input.selectedIndex].value;
+      result[props.field_json.key] = props.field_json;
       return result;
     })
     .declareService(function () {

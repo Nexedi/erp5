@@ -235,9 +235,11 @@
         j;
 
       gadget.props.field_json = field_json;
+      gadget.props.field_id = options.field_id;
       gadget.props.extended_search = options.extended_search;
       gadget.props.hide_class = options.hide_enabled ? "" : "ui-disabled";
       gadget.props.sort_list = [];
+      gadget.props.command = field_json.command || 'index';
 
       //only display which is in listbox's column list
       if (field_json.sort_column_list.length) {
@@ -391,9 +393,10 @@
           for (i = 0; i < counter; i += 1) {
             promise_list.push(
               gadget.getUrlFor({
-                command: 'index',
+                command: gadget.props.command,
                 options: {
                   jio_key: result.data.rows[i].id,
+                  uid: result.data.rows[i].value.uid,
                   selection_index: begin_from + i,
                   query: query_string,
                   list_method_template: field_json.list_method_template,
@@ -515,6 +518,37 @@
       return queue
         .push(function () {
           data[form_gadget.props.listbox_uid_dict.key] = form_gadget.props.listbox_uid_dict.value;
+          return data;
+        });
+    })
+    .declareMethod("getNonSavedValue", function () {
+      var form_gadget = this,
+        k,
+        field_gadget,
+        count = form_gadget.props.cell_gadget_list.length,
+        data = {},
+        queue = new RSVP.Queue();
+
+      function extendData(field_data) {
+        var key;
+        for (key in field_data) {
+          if (field_data.hasOwnProperty(key)) {
+            data[key] = field_data[key];
+          }
+        }
+      }
+
+      for (k = 0; k < count; k += 1) {
+        field_gadget = form_gadget.props.cell_gadget_list[k];
+        // XXX Hack until better defined
+        if (field_gadget.getNonSavedValue !== undefined) {
+          queue
+            .push(field_gadget.getNonSavedValue.bind(field_gadget))
+            .push(extendData);
+        }
+      }
+      return queue
+        .push(function () {
           return data;
         });
     })

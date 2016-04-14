@@ -2080,6 +2080,12 @@ html .ui-listview li:nth-child(even) > .ui-btn {
   background-color: #fff;
   background-color: rgba(0,0,0,0);
 }
+
+/* fix relation string field background transparent error */ 
+html .ui-listview li.ui-autocomplete ~ li {
+  background-color: white;
+}
+
 /*
    -------------------------------------------------------------------------
    ----------------------------- Controlgroup ------------------------------
@@ -2116,7 +2122,6 @@ html body .ui-tag-list-inset {
   position: absolute;
   top: 0;
   right: 0;
-  left: 3em;
   white-space: nowrap;
   overflow: hidden;
 }

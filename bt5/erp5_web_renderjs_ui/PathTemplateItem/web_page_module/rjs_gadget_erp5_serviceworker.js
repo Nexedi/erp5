@@ -3,7 +3,7 @@
 (function (self, caches, fetch) {
   "use strict";
 
-  var CACHE_NAME = 'Tue, 12 Apr 2016 16:30:00 GMT',
+  var CACHE_NAME = 'Thu, 14 Apr 2016 08:35:00 GMT',
     // Files required to make this app work offline
     REQUIRED_FILES = [
       './',
@@ -78,6 +78,8 @@
       'gadget_erp5_page_logout.js',
       'gadget_erp5_page_preference.html',
       'gadget_erp5_page_preference.js',
+      'gadget_erp5_page_relation_search.html',
+      'gadget_erp5_page_relation_search.js',
       'gadget_erp5_page_search.html',
       'gadget_erp5_page_search.js',
       'gadget_erp5_page_tab.html',

@@ -8,6 +8,7 @@
       return gadget.getElement()
         .push(function (element) {
           gadget.element = element;
+          gadget.props = {};
         });
     })
     .declareAcquiredMethod("notifyValid", "notifyValid")
@@ -24,6 +25,7 @@
         'value',
         field_json.value || field_json.default || ""
       );
+      this.props.field_json = options.field_json;
       if (field_json.precision !== "") {
         step = 1 / Math.pow(10, field_json.precision);
       }
@@ -56,6 +58,15 @@
             return result;
           });
       }
+      return result;
+    })
+    .declareMethod('getNonSavedValue', function () {
+      var input,
+        result = {},
+        props = this.props;
+      input = this.element.querySelector('input');
+      props.field_json.default = input.value;
+      result[props.field_json.key] = props.field_json;
       return result;
     })
 

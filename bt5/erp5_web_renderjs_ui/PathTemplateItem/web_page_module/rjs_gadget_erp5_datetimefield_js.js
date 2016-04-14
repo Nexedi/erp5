@@ -39,6 +39,7 @@
         select_option,
         value = field_json.value || field_json.default || "";
       this.props.field_json = field_json;
+      this.props.field_id = options.field_id;
 
 
       if (field_json.timezone_style) {
@@ -195,6 +196,56 @@
         result[field_json.subfield_day_key] = "";
       }
       return result;
+    })
+    .declareMethod('getNonSavedValue', function () {
+      var result = {},
+        gadget = this,
+        props = this.props;
+      function convertFormat(value) {
+        if (value) {
+          if (value <= 9) {
+            return "0" + value;
+          }
+          return value;
+        }
+        return "00";
+      }
+
+      return gadget.getContent()
+        .push(function (content) {
+          var day,
+            month,
+            year,
+            minute,
+            hour,
+            zone_list = {"GMT-12": "-1200", "GMT-11": "-1100",
+                   "GMT-9": "-0900", "GMT-8": "-0800",
+                   "GMT-7": "-0700", "GMT-6": "-0600",
+                   "GMT-5": "-0500", "GMT-4": "-0400",
+                   "GMT-3": "-0300", "GMT-2": "-0200",
+                   "GMT-1": "-0100", "GMT": "+0000",
+                   "GMT+1": "+0100", "GMT+2": "+0200",
+                   "GMT+3": "+0300", "GMT+4": "+0400",
+                   "GMT+5": "+0500", "GMT+6": "+0600",
+                   "GMT+7": "+0700", "GMT+8": "+0800",
+                   "GMT+9": "+0900", "GMT+10": "+1000",
+                   "GMT+11": "+1100", "GMT+12": "+1200"},
+            timezone;
+          day = convertFormat(content[props.field_json.subfield_day_key]);
+          month = convertFormat(content[props.field_json.subfield_month_key]);
+          year = content[props.field_json.subfield_year_key];
+          minute = convertFormat(content[props.field_json.subfield_minute_key]);
+          hour = content[props.field_json.subfield_hour_key];
+          if (content[props.field_json.subfield_ampm_key] === "pm") {
+            hour += 12;
+          }
+          hour = convertFormat(hour);
+          timezone = content[props.field_json.subfield_timezone_key] || "GMT";
+          timezone = zone_list[timezone];
+          props.field_json.default = year + "-" + month + "-" + day + "T" + hour + ":" + minute  + timezone;
+          result[props.field_json.key] = props.field_json;
+          return result;
+        });
     })
     .declareMethod('checkValidity', function () {
       var gadget = this,
