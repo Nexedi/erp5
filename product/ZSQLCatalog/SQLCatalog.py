@@ -34,6 +34,7 @@ from Shared.DC.ZRDB.TM import TM
 from Acquisition import aq_parent, aq_inner, aq_base
 from zLOG import LOG, WARNING, INFO, TRACE, ERROR
 from ZODB.POSException import ConflictError
+from Products.CMFCore import permissions
 from Products.PythonScripts.Utility import allow_class
 
 import time
@@ -678,7 +679,7 @@ class Catalog(Folder,
       role_key_dict[role.strip()] = column.strip()
     return role_key_dict.items()
 
-  security.declarePrivate('getSQLCatalogSecurityUidGroupsColumnsDict')
+  security.declareProtected(permissions.ManagePortal, 'getSQLCatalogSecurityUidGroupsColumnsDict')
   def getSQLCatalogSecurityUidGroupsColumnsDict(self):
     """
     Return a mapping of local_roles_group_id name to the name of the column
