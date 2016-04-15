@@ -78,7 +78,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: object.getPortalType() in portal.getPortalModuleTypeList()</string> </value>
+            <value> <string>python: "selection_name" in request and object.getPortalType() in portal.getPortalModuleTypeList()</string> </value>
         </item>
       </dictionary>
     </pickle>
