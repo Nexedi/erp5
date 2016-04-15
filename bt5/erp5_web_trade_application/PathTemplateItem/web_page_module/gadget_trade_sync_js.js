@@ -58,7 +58,9 @@
         })
         .push(function () {
          // alert(translateString('Synchronisation Finished'));
-        alert('Synchronisation Finished');
+        //alert('Synchronisation Finished');
+        $(".synchro-form").append("Synchronisation Finished");
+        
           return;
         });
     });
