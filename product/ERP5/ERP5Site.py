@@ -2036,11 +2036,7 @@ class ERP5Generator(PortalGenerator):
 
   # this lists only the skin layers of Products.CMFDefault we are actually
   # interested in.
-  CMFDEFAULT_FOLDER_LIST = [ 'zpt_content'
-                           , 'zpt_generic'
-                           , 'zpt_control'
-                           , 'Images'
-                           ]
+  CMFDEFAULT_FOLDER_LIST = ['Images']
   def addCMFDefaultDirectoryViews(self, p):
     """Semi-manually create DirectoryViews since CMFDefault 2.X no longer
     registers the "skins" directory, only its subdirectories, making it
