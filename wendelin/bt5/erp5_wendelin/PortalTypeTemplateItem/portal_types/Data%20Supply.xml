@@ -50,7 +50,7 @@ It is used by Ingestion Policy.</string> </value>
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>Supply</string> </value>
+            <value> <string>Delivery</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>

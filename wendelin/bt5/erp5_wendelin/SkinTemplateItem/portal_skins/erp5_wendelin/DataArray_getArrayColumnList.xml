@@ -49,6 +49,26 @@
             </value>
         </item>
         <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# return columns from shape of axis 1 of ndarray\n
+# never return more than the first 100 columns\n
+array = context.getArray()\n
+\n
+if array is None:\n
+  return []\n
+\n
+else:\n
+  if len(context.getArrayShape()) < 2:\n
+    return [(\'index\', \'Index\'), (\'1\', \'1\')]\n
+  else:\n
+    return [(\'index\', \'Index\')] + [(str(i), str(i)) for i in range(min(context.getArrayShape()[1], 100))]\n
+
+
+]]></string> </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
