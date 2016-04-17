@@ -49,6 +49,22 @@
             </value>
         </item>
         <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Handle appended data chunks.\n
+"""\n
+data_stream = state_change[\'object\']\n
+argument_list = state_change[\'kwargs\'][\'workflow_method_args\']\n
+\n
+# call you own script to handle newly appended data which \n
+# is not processed yet, pass data stream start end offset only\n
+end_offset = data_stream.getSize()\n
+packet_size = len(argument_list[0])\n
+start_offset = end_offset - packet_size\n
+data_stream.activate().DataStream_transformTail(start_offset, end_offset)\n
+</string> </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change,**kw</string> </value>
         </item>

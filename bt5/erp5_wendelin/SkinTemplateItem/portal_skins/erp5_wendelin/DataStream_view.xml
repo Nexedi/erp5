@@ -90,7 +90,6 @@
                         <string>my_filename</string>
                         <string>my_size</string>
                         <string>my_file</string>
-                        <string>my_append_file</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
