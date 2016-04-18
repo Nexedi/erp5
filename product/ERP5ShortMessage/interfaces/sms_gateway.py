@@ -31,17 +31,23 @@ from zope.interface import Interface
 
 class ISmsGateway(Interface):
 
-    def send(self, text, recipient,
+    def send(text, recipient,
              sender=None, sender_title=None,
-             message_type="text",test=False, **kw):
-      """Send a message."""
+             message_type="text", test=False, **kw):
+      """Send a message.
+      
+      TODO: write
 
-    def receive(self, REQUEST):
+      TODO: is getAllowedMessageType part of this API ?
+      shouldn't we rely on content_type ? ( text/plain -> SMS, text/html -> MMS ? )
+      """
+
+    def receive(REQUEST):
       """Public handler to push notification from the gateway"""
 
-    def getAllowedMessageType(self):
-      """List of all allowed message type when send a message."""
+    def getAllowedMessageType():
+      """List of all allowed message type when sending a message."""
 
-    def getMessageStatus(self, message_id):
-      """Retrive the status of a message
+    def getMessageStatus(message_id):
+      """Retrieve the status of a message
          Should return x in ['sent', 'delivered', 'queued', 'failed']"""
