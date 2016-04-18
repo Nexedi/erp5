@@ -6,6 +6,23 @@
 
   var gadget_klass = rJS(window);
 
+  function getViewLink(gadget, id, action_id) {
+    return gadget.jio_getAttachment(id, 'links')
+      .push(function (result) {
+        var i, i_len, links;
+        links = result._links.action_object_view;
+        if (links.constructor !== Array) {
+          links = [links];
+        }
+        for (i = 0, i_len = links.length; i < i_len; i += 1) {
+          if (links[i].name === action_id) {
+            return links[i];
+          }
+        }
+        return undefined;
+      });
+  }
+
   gadget_klass
     .ready(function (g) {
       g.props = {};
@@ -32,12 +49,11 @@
             result.short_title ? result.short_title : ""; 
           gadget.props.element.querySelector("p").textContent = 
             result.description ? result.description : ""; 
-          return gadget.jio_getAttachment(id, "links");
+          return getViewLink(gadget, id, "section_content");
         })
         .push(function (result) {
-          return gadget.jio_getAttachment(id,
-            // Should not be harcoded. You should look for section_content in list 
-            result._links.action_object_view[3].href);
+          // XX Should it raise if result is undefined? 
+          return gadget.jio_getAttachment(id, result.href);
         })
         .push(function (result) {
           list_method_template = result._embedded._view.listbox.list_method_template;
