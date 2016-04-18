@@ -91,8 +91,9 @@ class DummyGateway(XMLObject):
          Return message id
          """
       #Check messsage type
-      if message_type not in self.getAllowedMessageType():
-        raise ValueError, "Type of message in not allowed"
+      # XXX does it make sense to check message type in dummy gateway ? -jerome
+      #if message_type not in self.getAllowedMessageType():
+      #  raise ValueError, "Type of message in not allowed"
 
       #Send message (or test)
       if test or self.isSimulationMode():
