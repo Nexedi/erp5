@@ -55,50 +55,29 @@ class DummyGateway(XMLObject):
 
     add_permission = Permissions.AddPortalContent
 
-    zope.interface.implements(interfaces.ISmsGateway)
+    zope.interface.implements(
+        interfaces.ISmsSendingGateway,
+        interfaces.ISmsReceivingGateway)
 
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative properi ties
+    # Declarative properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject
                       , PropertySheet.Reference
                       , PropertySheet.SMSGateway
                       )
 
-    security.declarePublic('getAllowedMessageType')
-    def getAllowedMessageType(self):
-      """List of all message type"""
-      return ['text',]
-
     security.declareProtected(Permissions.ManagePortal, 'send')
-    def send(self, text,recipient,sender=None, sender_title=None,
-              message_type="text",test=False,**kw):
-      """Send a message.
-         Parameters:
-         text -- message
-         recipient -- phone url of destination_reference. Could be a list
-         sender -- phone url of source
-         sender_title -- Use it as source if the gateway has title mode enable
-         message_type -- Only 'text' is available today
-         test -- Force the test mode
-
-         Kw Parameters:
-         quality -- Quality of the SMS (default,n)
-
-         Return message id
-         """
-      #Check messsage type
-      if message_type not in self.getAllowedMessageType():
-        raise ValueError, "Type of message in not allowed"
-
+    def send(self, text, recipient, sender):
+      """Send a short message.
+      """
       #Send message (or test)
-      if test or self.isSimulationMode():
+      if self.isSimulationMode():
         return None
-      else:
-        return self._generateRandomMessageId()
+      return self._generateRandomMessageId()
 
     security.declareProtected(Permissions.ManagePortal, 'getMessageStatus')
     def getMessageStatus(self, message_id):

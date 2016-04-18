@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>from_url=None, from_title=None, to_url=None, reply_url=None, subject=None,            body=None, attachment_format=None, attachment_list=None,download=False,**kw</string> </value>
+            <value> <string>from_url=None, from_title=None, to_url=None, reply_url=None, subject=None, body=None, attachment_format=None, attachment_list=None, download=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

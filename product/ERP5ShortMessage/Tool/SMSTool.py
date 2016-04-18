@@ -50,24 +50,22 @@ class SMSTool(BaseTool):
   manage_overview = DTMLFile('explainSMSTool', _dtmldir )
 
   security.declareProtected(ManagePortal, 'send')
-  def send(self, text,recipient, sender=None, sender_title=None,
-           message_type="text", test=False, gateway_reference='default',
-           document_relative_url=None, activate_kw=None, **kw):
-    """
+  def send(self, text, recipient, sender, gateway_reference='default',
+           document_relative_url=None, activate_kw=None):
+    """Send the message
+
+    gateway_reference: send message throught the gateway with this reference.
     document_relative_url (optional) : allows to send back result to a document
     activate_kw (optional) : Call SMSTool_afterSend if founded in activity with
-                            message_id_list and document_relative_url
+                            message_id and document_relative_url
     """
 
     gateway = self.find(gateway_reference)
 
-    message_id_list =  gateway.send(text=text,
-                                    recipient=recipient,
-                                    sender=sender,
-                                    sender_title=sender_title,
-                                    message_type=message_type,
-                                    test=test,
-                                    **kw)
+    message_id = gateway.send(
+            text=text,
+            recipient=recipient,
+            sender=sender)
 
     if getattr(self, 'SMSTool_afterSend'):
       # We need to use activities in order to avoid any conflict
@@ -75,9 +73,9 @@ class SMSTool(BaseTool):
       if activate_kw is not None:
         send_activate_kw.update(**activate_kw)
       self.activate(**send_activate_kw).SMSTool_afterSend(
-              message_id_list,
+              message_id,
               document_relative_url=document_relative_url,
-              gateway_relative_url=gateway.getRelativeUrl(),**kw)
+              gateway_relative_url=gateway.getRelativeUrl())
 
   security.declareProtected(ManagePortal, 'getMessageStatus')
   def getMessageStatus(self,message_id, gateway_reference='default'):

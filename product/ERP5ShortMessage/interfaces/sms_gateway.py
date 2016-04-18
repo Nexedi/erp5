@@ -29,19 +29,33 @@
 from zope.interface import Interface
 
 
-class ISmsGateway(Interface):
+class ISmsSendingGateway(Interface):
+  """SMS Gateway allow sending Short Messages to phones.
+  """
 
-    def send(self, text, recipient,
-             sender=None, sender_title=None,
-             message_type="text",test=False, **kw):
-      """Send a message."""
+  def send(text, recipient, sender):
+    """Send a message.
+    
+    * text: the message as an utf-8 encoded string
+    * recipient: relative URL of recipient person or organisation. Recipient must have a defaut mobile phone
+    * sender: relative URL of sender person or organisation.
 
-    def receive(self, REQUEST):
-      """Public handler to push notification from the gateway"""
+    On most implementations, returns a message-id that can be later passed to
+    getMessageStatus to check the status of the message.
+    """
 
-    def getAllowedMessageType(self):
-      """List of all allowed message type when send a message."""
+  def getMessageStatus(message_id):
+    """Retrieve the status of a message
+       Should return x in ['sent', 'delivered', 'queued', 'failed']"""
 
-    def getMessageStatus(self, message_id):
-      """Retrive the status of a message
-         Should return x in ['sent', 'delivered', 'queued', 'failed']"""
+
+class ISmsReceivingGateway(Interface):
+  """Gateway to subscribe to events fired when Short Messages are send to SMS interface.
+  """
+
+  def receive(REQUEST):
+    """Public handler to push notifications from the gateway
+
+    REQUEST parameters are service provider dependent.
+    """
+

@@ -61,7 +61,9 @@ class EssendexGateway(XMLObject):
 
     add_permission = Permissions.AddPortalContent
 
-    zope.interface.implements(interfaces.ISmsGateway)
+    zope.interface.implements(
+        interfaces.ISmsSendingGateway,
+        interfaces.ISmsReceivingGateway)
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -75,10 +77,6 @@ class EssendexGateway(XMLObject):
                       )
 
     api_url = "https://www.esendex.com/secure/messenger/formpost"
-    security.declarePublic('getAllowedMessageType')
-    def getAllowedMessageType(self):
-      """List of all message type"""
-      return ['text', 'binary', 'smartMessage', 'unicode']
 
     security.declarePrivate("_fetchPageAsDict")
     def _fetchPageAsDict(self,page):
@@ -132,32 +130,17 @@ class EssendexGateway(XMLObject):
       return timedelta.seconds + (timedelta.days * 24 * 60 * 60)
 
     security.declareProtected(Permissions.ManagePortal, 'send')
-    def send(self, text,recipient,sender=None, sender_title=None,
-              message_type="text",test=False,**kw):
+    def send(self, text, recipient, sender):
       """Send a message.
-         Parameters:
-         text -- message
-         recipient -- phone url of destination_reference. Could be a list
-         sender -- phone url of source
-         sender_title -- Use it as source if the gateway has title mode enable
-         message_type -- Only 'text' is available today
-         test -- Force the test mode
+      """
+      traverse = self.getPortalObject().restrictedTraverse
+      message_type = self.getProperty('essendex_message_type', 'text')
+      assert message_type in ('text', 'binary', 'smartMessage', 'unicode')
 
-         Kw Parameters:
-         validity_period -- Validity Period of SMS (default,0)
+      validity_period = self.getProperty('essendex_validity_period', 0)
 
-         Return message id (or list if multiple recipient)
-         """
-
-      if message_type not in self.getAllowedMessageType():
-        raise ValueError, "Type of message in not allowed"
-
-      validity_period = kw.get('validity_period',0)
-
-      if not isinstance(recipient, str):
-        recipient = ",".join([self._transformPhoneUrlToGatewayNumber(x) for x in recipient])
-      else:
-        recipient = self._transformPhoneUrlToGatewayNumber(recipient)
+      recipient = self._transformPhoneUrlToGatewayNumber(
+          traverse(recipient).getDefaultMobileTelephoneValue().asURL())
 
       base_url = self.api_url + "/SendSMS.aspx"
       params = {'Username': self.getGatewayUser(),
@@ -170,16 +153,13 @@ class EssendexGateway(XMLObject):
                 'PlainText': 1,
                 }
 
+      if self.isTitleMode():
+        params['Originator'] = traverse(sender).getDefaultMobileTelephoneValue().getTitle()
+      else:
+        params['Originator'] = self._transformPhoneUrlToGatewayNumber(
+            traverse(sender).getDefaultMobileTelephoneValue().asURL()) or self.getDefaultSender()
 
-
-      if sender_title and self.isTitleMode():
-        params['Originator'] = sender_title
-      elif sender:
-        params['Originator'] = self._transformPhoneUrlToGatewayNumber(sender)
-      elif self.getDefaultSender():
-        params['Originator'] = self.getDefaultSender()
-
-      if test or self.isSimulationMode():
+      if self.isSimulationMode():
         params['Test'] = 1
         LOG("EssendexGateway", INFO, params)
 
