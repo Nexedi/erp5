@@ -49,6 +49,22 @@
             </value>
         </item>
         <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Add a data supply structure for a data ingestion on a portal ingestion policy.\n
+"""\n
+data_supply = context.data_supply_module.newContent( \\\n
+                portal_type=\'Data Supply\', **data_supply_kw)\n
+data_supply.validate()\n
+\n
+# add default line\n
+data_supply_line = data_supply.newContent(portal_type=\'Data Supply Line\', \\\n
+                                          **data_supply_line_kw)\n
+\n
+return data_supply\n
+</string> </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>data_supply_kw, data_supply_line_kw</string> </value>
         </item>
