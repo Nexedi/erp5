@@ -38,7 +38,6 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.dynamic.accessor_holder import getPropertySheetValueList, \
     getAccessorHolderList
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 
@@ -48,24 +47,6 @@ from Products.ERP5Type.Accessor.Translation import TRANSLATION_DOMAIN_CONTENT_TR
 from sys import exc_info
 from zLOG import LOG, ERROR
 from Products.CMFCore.exceptions import zExceptions_Unauthorized
-
-def getCurrentUserIdOrAnonymousToken():
-  """Return connected user_id or simple token for
-  Anonymous users in scope of transaction.
-  """
-  tv = getTransactionalVariable()
-  USER_ID_KEY = '_user_id'
-  ANONYMOUS_OWNER_ROLE_VALUE = 'Anonymous Owner'
-  try:
-    return tv[USER_ID_KEY]
-  except KeyError:
-    user = getSecurityManager().getUser()
-    if user is not None:
-      user_id = user.getId()
-    else:
-      user_id = ANONYMOUS_OWNER_ROLE_VALUE
-    tv[USER_ID_KEY] = user_id
-    return user_id
 
 class LocalRoleAssignorMixIn(object):
     """Mixin class used by type informations to compute and update local roles
@@ -392,7 +373,11 @@ class ERP5TypeInformation(XMLObject,
       if temp_object:
         # Setup only Owner local role on Document like
         # container._setObject(set_owner=True) does.
-        user_id = getCurrentUserIdOrAnonymousToken()
+        user = getSecurityManager().getUser()
+        if user is not None:
+          user_id = user.getId()
+        else:
+          user_id = 'Anonymous Owner'
         ob.manage_setLocalRoles(user_id, ['Owner'])
       else:
         if activate_kw is not None:
