@@ -1545,15 +1545,15 @@ class SimulationTool(BaseTool):
         else:
           group_by_id_list_append(group_by_id)
       # Add related key group by
-      if 'select_list' in new_kw.get("related_key_dict_passthrough", []):
-        for group_by_id in new_kw["related_key_dict_passthrough"]['group_by_list']:
-          if group_by_id in new_kw["related_key_dict_passthrough"]["select_list"]:
-            group_by_id_list_append(group_by_id)
-          else:
-            # XXX-Aurel : to review & change, must prevent coming here before
-            raise ValueError, "Impossible to group by %s" %(group_by_id)
-      elif "group_by" in new_kw.get("related_key_dict_passthrough", []):
-        raise ValueError, "Impossible to group by %s" %(new_kw["related_key_dict_passthrough"]['group_by_list'],)
+      related_key_dict_passthrough = new_kw.get("related_key_dict_passthrough", {})
+      group_by_list = related_key_dict_passthrough.get('group_by_list', [])
+      cannot_group_by = set(group_by_list).difference(
+        related_key_dict_passthrough.get('select_list', []),
+      )
+      if cannot_group_by:
+        # XXX-Aurel : to review & change, must prevent coming here before
+        raise ValueError("Impossible to group by %s" % (cannot_group_by, ))
+      group_by_id_list += group_by_list
 
       if len(group_by_id_list):
         def getInventoryListKey(line):
