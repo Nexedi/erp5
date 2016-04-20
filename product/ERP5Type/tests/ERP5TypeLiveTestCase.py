@@ -179,7 +179,7 @@ class ERP5TypeLiveTestLoader(ERP5TypeTestLoader):
             import erp5.component.test
 
             try:
-                __import__('erp5.component.test.' + name,
+                __import__('erp5.component.test.' + name.split('.')[0],
                            fromlist=['erp5.component.test'],
                            level=0)
             except ImportError:
