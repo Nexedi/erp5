@@ -55,6 +55,7 @@ value_renderer = {
   'float': valueFloatRenderer,
   'DateTime': valueDateTimeRenderer,
   'NoneType': valueNoneRenderer,
+  'bool': int,
 }
 
 value_search_text_renderer = {
