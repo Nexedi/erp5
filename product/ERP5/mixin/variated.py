@@ -370,16 +370,6 @@ class VariatedMixin:
     # display is on left
     return [x[1] for x in vrcil]
 
-  # Context related methods
-  security.declarePublic('newVariationValue')
-  def newVariationValue(self, context=None, REQUEST=None, **kw):
-    # PERFORMANCE ISSUE
-    from Products.ERP5.VariationValue import newVariationValue
-    if context is None:
-      return newVariationValue(REQUEST=REQUEST, **kw)
-    else:
-      return newVariationValue(context=context, REQUEST=REQUEST, **kw)
-
   # Provide a string representation of variations
   security.declarePublic('getVariationText')
   def getVariationText(self):

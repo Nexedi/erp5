@@ -53,7 +53,7 @@ class IVariated(Interface):
   # The following methods are intended to access to the
   # variation value of a variated object. Discrete variations
   # are based on categories. General variations are encapsulated
-  # into VariationValue instances.
+  # into Individual Variation instances.
 
   # Property Variation Accessors
   def getVariationPropertyList():

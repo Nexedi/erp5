@@ -32,7 +32,6 @@ from collections import defaultdict
 from math import log
 from AccessControl import ClassSecurityInfo
 from Products.ERP5.mixin.variated import VariatedMixin
-from Products.ERP5.VariationValue import VariationValue
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Base import Base
 from Products.CMFCategory.Renderer import Renderer
@@ -47,9 +46,6 @@ class Amount(Base, VariatedMixin):
     A mix-in class which provides some utilities
     (variations, conversions, etc.)
 
-    Utilities include
-
-    - getVariation accesors (allows to access variations of whatever)
 
     -
   """
@@ -187,28 +183,6 @@ class Amount(Base, VariatedMixin):
     return self.portal_categories.getItemList(
                                     self.getVariationBaseCategoryList(),
                                     display_id=display_id,**kw)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariationValue')
-  def getVariationValue(self):
-    """
-      New Method for dicrete and countinuous variations
-      using a VariantValue instance
-
-      A new instance of VariationValue is created with categories
-      and attributes set to what they should be.
-
-      A this point, we only implement discrete variations
-    """
-    return VariationValue(context = self)
-
-  def _setVariationValue(self, variation_value):
-    return variation_value.setVariationValue(self)
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'setVariationValue')
-  def setVariationValue(self, variation_value):
-    self._setVariationValue(variation_value)
-    self.reindexObject()
 
   security.declareProtected(Permissions.AccessContentsInformation, \
                             'getVariationRangeCategoryItemList')
