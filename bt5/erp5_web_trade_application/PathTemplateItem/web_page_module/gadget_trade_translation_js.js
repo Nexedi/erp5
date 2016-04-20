@@ -4,13 +4,68 @@
   "use strict";
 
   function translate(gadget,string) {
-   // var language = gadget.getSetting('language');
-   var language;
-    return new RSVP.Queue()
+    
+    var language;
+    
+    
+      new RSVP.Queue()
         .push(function () {
           return RSVP.all([
             gadget.getSetting('language'),
           ]);
+        })
+            .push(function (setting_list) {
+
+         language=setting_list[0];
+      if (language === undefined){
+               language = 'en';
+               gadget.setSetting('language','en');
+      }
+      
+       console.log("1111111111111111111");
+      console.log(language);
+      
+
+      
+    })
+    
+                   language = 'en';
+
+                  return translation_data[language][string] || string;
+
+    
+   // var language = gadget.getSetting('language');
+  /* var language;
+    
+    new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.getSetting('language'),
+          ]);
+        })
+            .push(function (setting_list) {
+
+         language=setting_list[0];
+      console.log("1111111111111111111");
+      console.log(language);
+      
+      
+      
+    })
+     
+     if (language === undefined){
+               language = 'en';
+               gadget.setSetting('language','en');
+
+     
+
+    };
+        return translation_data[language][string] || string;*/
+  
+    
+  /*  new RSVP.Queue()
+        .push(function () {
+          return gadget.getSetting('panel_gadget');
         })
         .push(function (setting_list) {
       
@@ -21,11 +76,17 @@
 
     if (language === undefined){
                language = 'zh';
+new RSVP.Queue()
+        .push(function () {
+          gadget.setSetting('language','zh');
 
-        gadget.setSetting('language','zh');
+          
+        })
 
     }
-    return translation_data[language][string] || string;
+               language = 'zh';
+
+    return translation_data[language][string] || string;*/
   }
 
   rJS(window)
