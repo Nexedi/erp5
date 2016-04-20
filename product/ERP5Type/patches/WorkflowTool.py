@@ -22,10 +22,12 @@ from types import StringTypes
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type.Globals import InitializeClass
 from Products.CMFCore.WorkflowTool import WorkflowTool
-from Products.CMFCore.WorkflowCore import ObjectMoved, ObjectDeleted
+from Products.CMFCore.WorkflowCore import ObjectDeleted
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
+from Products.DCWorkflow.utils import Message as _
+from Products.DCWorkflow.Transitions import TRIGGER_USER_ACTION
 
 from Products.CMFCore.utils import getToolByName
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
@@ -36,7 +38,6 @@ from sets import ImmutableSet
 from Acquisition import aq_base
 from Persistence import Persistent
 from Products.ERP5Type.Globals import PersistentMapping
-from itertools import izip
 from MySQLdb import ProgrammingError, OperationalError
 from DateTime import DateTime
 
@@ -946,5 +947,33 @@ def _isJumpToStatePossibleFor(self, ob, state_id, wf_id=None):
 
 WorkflowTool._jumpToStateFor = _jumpToStateFor
 WorkflowTool._isJumpToStatePossibleFor = _isJumpToStatePossibleFor
+
+security.declarePublic('canDoActionFor')
+def canDoActionFor(self, ob, action, wf_id=None, guard_kw={}):
+  """ Check we can perform the given workflow action on 'ob'.
+  """
+  if wf_id is None:
+    workflow_list = self.getWorkflowsFor(ob) or ()
+  else:
+    workflow = self.getWorkflowById(wf_id)
+    if workflow:
+      workflow_list = (workflow,)
+    else:
+      workflow_list = ()
+
+  for workflow in workflow_list:
+    state_definition = workflow._getWorkflowStateOf(ob)
+    if state_definition is not None:
+      if action in state_definition.transitions:
+        transition_definition = workflow.transitions.get(action, None)
+        if transition_definition is not None and \
+           transition_definition.trigger_type == TRIGGER_USER_ACTION:
+          return workflow._checkTransitionGuard(transition_definition, ob, **guard_kw)
+
+  raise WorkflowException(_(u"No workflow provides the '${action_id}' action.",
+          mapping={'action_id': action}))
+
+
+WorkflowTool.canDoActionFor = canDoActionFor
 
 InitializeClass(WorkflowTool)
