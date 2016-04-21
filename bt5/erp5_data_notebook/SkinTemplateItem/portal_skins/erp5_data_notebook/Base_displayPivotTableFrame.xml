@@ -49,13 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>memcached_tool = context.getPortalObject().portal_memcached\n
-memcached_dict = memcached_tool.getMemcachedDict(key_prefix=\'pivottablejs\', plugin_path=\'portal_memcached/default_memcached_plugin\')\n
-return memcached_dict[key]\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>key</string> </value>
         </item>
