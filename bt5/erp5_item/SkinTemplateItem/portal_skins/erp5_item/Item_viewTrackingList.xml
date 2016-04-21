@@ -76,6 +76,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>my_jsplumb_graph</string>
                       </list>
                     </value>
                 </item>
