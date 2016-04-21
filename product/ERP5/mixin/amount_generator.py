@@ -477,13 +477,11 @@ class AmountGeneratorMixin:
         amount._setCategoryList(property_dict.pop('category_list', ()))
         if amount.getQuantityUnit():
           del property_dict['quantity_unit']
-        amount._edit(
-          quantity=quantity,
-          # XXX Are title, int_index and description useful ??
-          title=self.getTitle(),
-          int_index=self.getIntIndex(),
-          description=self.getDescription(),
-          **property_dict)
+        amount._setQuantity(quantity)
+        amount._setTitle(self.getTitle())
+        amount._setDescription(self.getDescription())
+        for x in property_dict.iteritems():
+          amount._setProperty(*x)
         # convert to default management unit if possible
         amount._setQuantity(amount.getConvertedQuantity())
         amount._setQuantityUnit(amount.getResourceDefaultQuantityUnit())
