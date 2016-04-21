@@ -1087,10 +1087,11 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     """
       Return acquisition movement types.
     """
-    return tuple(list(self.getPortalOrderMovementTypeList()) +
-                 list(self.getPortalDeliveryMovementTypeList()) +
-                 list(self.getPortalTaxMovementTypeList()) +
-                 list(self.getPortalInvoiceMovementTypeList()))
+    r = list(self.getPortalOrderMovementTypeList())
+    r += self.getPortalDeliveryMovementTypeList()
+    r += self.getPortalTaxMovementTypeList()
+    r += self.getPortalInvoiceMovementTypeList()
+    return tuple(r)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalMovementTypeList')
@@ -1098,12 +1099,13 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     """
       Return movement types.
     """
-    return tuple(list(self.getPortalOrderMovementTypeList()) +
-                 list(self.getPortalDeliveryMovementTypeList()) +
-                 list(self.getPortalInvoiceMovementTypeList()) +
-                 list(self.getPortalTaxMovementTypeList()) +
-                 list(self.getPortalAccountingMovementTypeList()) +
-                 ['Simulation Movement'])
+    r = list(self.getPortalOrderMovementTypeList())
+    r += self.getPortalDeliveryMovementTypeList()
+    r += self.getPortalInvoiceMovementTypeList()
+    r += self.getPortalTaxMovementTypeList()
+    r += self.getPortalAccountingMovementTypeList()
+    r.append('Simulation Movement')
+    return tuple(r)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalSimulatedMovementTypeList')
@@ -1111,8 +1113,9 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     """
       Return simulated movement types.
     """
-    return tuple([x for x in self.getPortalMovementTypeList() \
-                  if x not in self.getPortalContainerTypeList()])
+    r = set(self.getPortalMovementTypeList())
+    r.difference_update(self.getPortalContainerTypeList())
+    return tuple(r)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalContainerTypeList')
