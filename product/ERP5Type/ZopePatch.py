@@ -53,7 +53,6 @@ from Products.ERP5Type.patches import OFSFile
 from Products.ERP5Type.patches import OFSFolder
 from Products.ERP5Type.patches import OFSUninstalled
 from Products.ERP5Type.patches import PersistentMapping
-from Products.ERP5Type.patches import DateTimePatch
 from Products.ERP5Type.patches import PythonScript
 from Products.ERP5Type.patches import MailHost
 from Products.ERP5Type.patches import MailTemplates
@@ -86,6 +85,14 @@ from Products.ERP5Type.patches import DTMLDocument
 from Products.ERP5Type.patches import CMFCoreUtils
 from Products.ERP5Type.patches import ZopePageTemplate
 from Products.ERP5Type.patches import ZSQLMethod
+
+from DateTime import DateTime
+if hasattr(DateTime(), '__slots__'):
+  # DateTime >= 3.x
+  from Products.ERP5Type.patches import DateTime3Patch
+else:
+  # DateTime < 3.x
+  from Products.ERP5Type.patches import DateTimePatch
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager

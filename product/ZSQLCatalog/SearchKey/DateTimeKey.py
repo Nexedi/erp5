@@ -33,14 +33,22 @@ from SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
 from zLOG import LOG
-from DateTime.DateTime import DateTime, DateTimeError, _cache
+from DateTime.DateTime import DateTime, DateTimeError
+from DateTime.pytz_support import PytzCache
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SearchText import parse
 
+try:
+  # DateTime >= 3.x
+  from DateTime.DateTime import _MONTH_LEN
+except ImportError:
+  # DateTime < 3.x
+  _MONTH_LEN = DateTime._month_len
+
 MARKER = []
 
-timezone_dict = _cache._zmap
+timezone_dict = PytzCache._zmap
 
 date_completion_format_dict = {
   None: ['01/01/%s', '01/%s'],
@@ -104,7 +112,7 @@ def castDate(value, change_timezone=True):
 delimiter_list = ' -/.:,+'
 
 def getMonthLen(datetime):
-  return datetime._month_len[datetime.isLeapYear()][datetime.month()]
+  return _MONTH_LEN[datetime.isLeapYear()][datetime.month()]
 
 def getYearLen(datetime):
   return 365 + datetime.isLeapYear()

@@ -33,6 +33,14 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Message import Message
 
+try:
+  # DateTime >= 3.x
+  from DateTime.DateTime import _DAYS, _MONTHS
+except ImportError:
+  # DateTime < 3.x
+  _DAYS = DateTime._days
+  _MONTHS = DateTime._months
+
 class PeriodicityMixin:
   """
   Periodicity is a Mixin Class used to calculate date periodicity.
@@ -227,7 +235,7 @@ class PeriodicityMixin:
     """
     returns something like ['Sunday','Monday',...]
     """
-    return DateTime._days
+    return _DAYS
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWeekDayItemList')
   def getWeekDayItemList(self):
@@ -242,9 +250,9 @@ class PeriodicityMixin:
     """
     returns something like [('January', 1), ('February', 2),...]
     """
-    # DateTime._months return '' as first item
-    return [(Message(domain='erp5_ui', message=DateTime._months[i]), i) \
-            for i in range(1, len(DateTime._months))]
+    # DateTime's _MONTHS return '' as first item
+    return [(Message(domain='erp5_ui', message=_MONTHS[i]), i) \
+            for i in range(1, len(_MONTHS))]
 
   security.declareProtected(Permissions.AccessContentsInformation,'getPeriodicityWeekDayList')
   def getPeriodicityWeekDayList(self):
