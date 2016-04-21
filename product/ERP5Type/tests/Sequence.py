@@ -75,7 +75,7 @@ class Step:
     self._required = required
     self._max_replay = max_replay
 
-  def play(self, context, sequence=None, quiet=0):
+  def play(self, context, sequence=None, quiet=1):
     method_name = 'step' + self._method_name
     method = getattr(context,method_name)
     # We can in same cases replay many times the same step,
@@ -119,7 +119,7 @@ class Sequence:
         line_list.append('      %s' % step._method_name)
     return '\n'.join(line_list)
 
-  def play(self, context, sequence=None, sequence_number=0, quiet=0):
+  def play(self, context, sequence=None, sequence_number=0, quiet=1):
     if not quiet:
       if self._played_index == 0:
         ZopeTestCase._print('\nStarting New Sequence %i... ' % sequence_number)
@@ -149,7 +149,7 @@ class Sequence:
   def setdefault(self, key, default=None):
     return self._dict.setdefault(key, default)
 
-  def __call__(self, sequence_string, sequence_number=0, quiet=0):
+  def __call__(self, sequence_string, sequence_number=0, quiet=1):
     """
     add some steps and directly runs them, this allows to easily write
     such code when sequence are unable to handle too complex cases :
@@ -202,7 +202,7 @@ class SequenceList:
     self.addSequence(sequence)
     return sequence
 
-  def play(self, context, quiet=0):
+  def play(self, context, quiet=1):
     i = 1
     for sequence in self._sequence_list:
       sequence._played_index = 0
