@@ -299,7 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.restrictedTraverse(\'web_page_module/wendelin_information_gadget.html\').getDocumentValue(name=\'wendelin_information_gadget\').getData()</string> </value>
+            <value> <string>python: context.restrictedTraverse(\'web_page_module/wendelin_information_gadget.html\').getDocumentValue(name=\'wendelin_information_gadget\').asStrippedHTML()</string> </value>
         </item>
       </dictionary>
     </pickle>
