@@ -782,10 +782,10 @@ class SimulationTool(BaseTool):
       new_kw['related_key_dict'] = related_key_dict.copy()
       new_kw['related_key_dict_passthrough'] = kw
       # Check we do not get a known group_by
+      related_group_by = []
       if group_by:
         if isinstance(group_by, basestring):
           group_by = (group_by,)
-        related_group_by = []
         for value in group_by:
           if value == "node_uid":
             group_by_node = 1
@@ -817,7 +817,7 @@ class SimulationTool(BaseTool):
             group_by_date = 1
           else:
             related_group_by.append(value)
-        if len(related_group_by):
+        if related_group_by:
           new_kw['related_key_dict_passthrough']['group_by_list'] = related_group_by
 
       #variation_category_uid_list = self._generatePropertyUidList(variation_category)
@@ -879,10 +879,7 @@ class SimulationTool(BaseTool):
       # the caller can also pass select_dict or select_list. select_expression,
       # which is deprecated in ZSQLCatalog is not supported here.
       select_dict = kw.get('select_dict', {})
-      # we support select_list, if passed
-      select_list = kw.get('select_list', [])
-      for select_key in kw.get('select_list', []):
-        select_dict[select_key] = None
+      select_dict.update(dict.fromkeys(list(kw.get('select_list', [])) + related_group_by))
       new_kw['select_dict'] = select_dict
       related_key_select_expression_list = []
 
