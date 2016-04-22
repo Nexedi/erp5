@@ -354,7 +354,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'isDeletable')
-  def isDeletable(self):
+  def isDeletable(self, **kw):
     return not self.isFrozen() and not self._isTreeDelivered()
 
   # Simulation Dates - acquire target dates

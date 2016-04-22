@@ -2686,7 +2686,7 @@ class Base( CopyContainer,
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isDeletable')
-  def isDeletable(self, check_relation):
+  def isDeletable(self, check_relation=True):
     """Test if object can be delete"""
     container = self.getParentValue()
     portal = container.getPortalObject()
