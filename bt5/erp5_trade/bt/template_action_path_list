@@ -8,6 +8,8 @@ Container Line | view
 Container Line | view_quantity
 Container | view
 Delivery Cell | view
+Delivery Node Module | view
+Delivery Node | view
 Delivery Root Simulation Rule | view
 Delivery Simulation Rule | view
 Duplicate Inventory Constraint | view

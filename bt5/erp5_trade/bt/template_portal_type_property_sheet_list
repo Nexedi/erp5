@@ -1,5 +1,6 @@
 Business Process | Reference
 Business Process | Version
+Delivery Node | DeliveryNode
 Sale Order | PaymentCondition
 Sale Trade Condition | PaymentCondition
 Trade Model Path | PaymentCondition
