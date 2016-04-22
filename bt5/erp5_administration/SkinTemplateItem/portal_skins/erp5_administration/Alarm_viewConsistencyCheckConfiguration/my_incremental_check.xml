@@ -173,7 +173,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Only Check Documents Created since Last Run</string> </value>
+                    <value> <string>Only Check Documents Indexed since Last Run</string> </value>
                 </item>
               </dictionary>
             </value>
