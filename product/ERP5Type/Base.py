@@ -2686,8 +2686,14 @@ class Base( CopyContainer,
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isDeletable')
-  def isDeletable(self, check_relation=True):
-    """Test if object can be delete"""
+  def isDeletable(self, check_relation):
+    """Test if object can be deleted
+
+    The lack of default value for `check_relation` is intentional. Because
+    checking relation can take a lot of time, it forces the caller to choose
+    between performance (e.g. to control the visibility of an action) and
+    correctness (e.g. just before deleting objects).
+    """
     container = self.getParentValue()
     portal = container.getPortalObject()
     return (portal.portal_workflow.isTransitionPossible(self, 'delete')
