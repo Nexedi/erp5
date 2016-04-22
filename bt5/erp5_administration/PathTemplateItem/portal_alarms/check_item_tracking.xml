@@ -11,6 +11,10 @@
             <value> <string>Alarm_checkItemTracking</string> </value>
         </item>
         <item>
+            <key> <string>configuration_form_id</string> </key>
+            <value> <string>Alarm_viewItemTrackingConfiguration</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
