@@ -124,6 +124,7 @@
                         <string>my_view_mode_listbox_start_date</string>
                         <string>my_view_mode_aggregate_title_list</string>
                         <string>my_view_mode_movement_quantity</string>
+                        <string>my_view_mode_listbox_specialise_transformation_title</string>
                       </list>
                     </value>
                 </item>

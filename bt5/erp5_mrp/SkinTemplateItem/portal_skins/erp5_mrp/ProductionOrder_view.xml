@@ -86,6 +86,7 @@
                         <string>listbox_quantity_unit</string>
                         <string>listbox_reference</string>
                         <string>listbox_stop_date</string>
+                        <string>listbox_specialise_title</string>
                       </list>
                     </value>
                 </item>
