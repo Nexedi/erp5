@@ -94,10 +94,10 @@ if creation_date_range_min or creation_date_range_max:
 select_dict = params.get('select_dict') or {}
 select_dict['total_debit'] = None
 select_dict['total_credit'] = None
-# XXX: force mapping of reference column to catalog, to take advantage of (portl_type, reference) index.
+# XXX: force mapping of reference column to catalog, to take advantage of (portal_type, reference) index.
 # Without this, ColumnMapper would choose to use accounting_transaction.reference, because a lot of
 # columns from that table are used. But it does not realise there is no portal_type column *and*
-# a (portl_type, reference) index exists on catalog.
+# a (portal_type, reference) index exists on catalog.
 select_dict['catalog.reference'] = None
 select_dict['specific_reference'] = None
 select_dict['project_uid'] = None
