@@ -139,4 +139,7 @@ class Domain(Predicate, MetaNode, MetaResource):
     result.extend(self.portal_catalog(selection_domain = self))
     return result
 
+  def getPrice(self):
+    """Workaround price lookup error on domains)"""
+    return None
 
