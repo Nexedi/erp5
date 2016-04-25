@@ -31,6 +31,7 @@ from App.config import getConfiguration
 import shutil
 import os
 import tempfile
+from lxml import etree
 
 class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
   """
@@ -1068,3 +1069,93 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     for property_id, property_value in file_document_kw.iteritems():
       self.assertEqual(getattr(file_page, property_id), property_value)
+
+  def test_twoFileImportExportForZopePageTemplateISO_8859_15(self):
+    """
+      Test Business Template Import And Export With ZopePageTemplate with
+      output_encoding iso-8859-15. Test checks that the encoding
+      does not change on export
+    """
+    skin_folder_id = 'dummy_test_folder'
+    if skin_folder_id in self.portal.portal_skins.objectIds():
+      self.portal.portal_skins.manage_delObjects([skin_folder_id])
+
+    self.portal.portal_skins.manage_addProduct['OFSP'].\
+                                  manage_addFolder(skin_folder_id)
+    skin_folder = self.portal.portal_skins[skin_folder_id]
+
+    page_template_id = 'dummy_page_template'
+    if page_template_id in skin_folder.objectIds():
+      skin_folder.manage_delObjects([page_template_id])
+    page_template_text = '<html></html>'
+    page_template_kw = {"id": page_template_id,
+                         "_text": page_template_text,
+                         "content_type": "text/html"}
+    page_template = skin_folder.manage_addProduct['PageTemplates'].\
+                      manage_addPageTemplate(id=page_template_id,
+                                             text=page_template_text)
+
+    page_template.output_encoding = 'iso-8859-15'
+
+    self.template.edit(template_skin_id_list=[skin_folder_id+'/'+page_template_id,])
+
+    template_path = os.path.join(self.cfg.instancehome, self.export_dir)
+
+    page_template_path = os.path.join(template_path,
+      'SkinTemplateItem', 'portal_skins',
+      skin_folder_id, page_template_id)
+
+    self.template.build()
+    self.template.export(path=self.export_dir, local=True)
+
+    # check that .xml and .zpt were exported
+    self.assertTrue(os.path.exists(page_template_path + '.xml'))
+    self.assertTrue(os.path.exists(page_template_path + '.zpt'))
+
+    # check that the encoding value on the .xml file is iso-8859-15
+    root = etree.parse(page_template_path + '.xml').getroot()
+    self.assertEquals('iso-8859-15',
+      root.xpath('.//item[key/string[.="output_encoding"]]/value/string')[0].text)
+
+    # delete the business template and the zope page templatefrom the portal
+    self.template_tool.manage_delObjects(self.template.getId())
+    self.portal.portal_skins[skin_folder_id].manage_delObjects([page_template_id])
+
+    # import the business template from the file-system
+    import_template = self.template_tool.download(url='file:'+template_path)
+    self.assertFalse(import_template is None)
+    self.assertEqual(import_template.getPortalType(), 'Business Template')
+
+    # delete all elements from the export directory
+    file_object_list = [x for x in os.listdir(template_path)]
+    for file_object in file_object_list:
+      file_object_path = os.path.join(template_path, file_object)
+      if os.path.isfile(file_object_path):
+        os.unlink(file_object_path)
+      else:
+        shutil.rmtree(file_object_path)
+    # check that export directory is empty
+    self.assertEquals(os.listdir(template_path), [])
+
+    # install the imported business template
+    import_template.install()
+
+    # check that the page template has the expected attributes
+    # but the installed version encoding is utf-8
+    page_template = self.portal.portal_skins[skin_folder_id][page_template_id]
+    for property_id, property_value in page_template_kw.iteritems():
+      self.assertEqual(getattr(page_template, property_id), property_value)
+    self.assertEquals(page_template.output_encoding, 'utf-8')
+
+    # uninstall and export the business template
+    import_template.uninstall()
+    import_template.export(path=self.export_dir, local=True)
+
+    # check that .xml and .zpt were exported
+    self.assertTrue(os.path.exists(page_template_path + '.xml'))
+    self.assertTrue(os.path.exists(page_template_path + '.zpt'))
+
+    # check that the encoding value on the .xml file is iso-8859-15
+    root = etree.parse(page_template_path + '.xml').getroot()
+    self.assertEquals('iso-8859-15',
+      root.xpath('.//item[key/string[.="output_encoding"]]/value/string')[0].text)
