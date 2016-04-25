@@ -92,15 +92,18 @@ if creation_date_range_min or creation_date_range_max:
                 range='max')
 
 select_dict = params.get('select_dict') or {}
-select_dict.update(dict(total_debit=None,
-                        total_credit=None,
-                        reference=None,
-                        specific_reference=None,
-                        project_uid=None,
-                        payment_uid=None,
-                        mirror_section_uid=None,
-                        operation_date=None))
-
+select_dict['total_debit'] = None
+select_dict['total_credit'] = None
+# XXX: force mapping of reference column to catalog, to take advantage of (portl_type, reference) index.
+# Without this, ColumnMapper would choose to use accounting_transaction.reference, because a lot of
+# columns from that table are used. But it does not realise there is no portal_type column *and*
+# a (portl_type, reference) index exists on catalog.
+select_dict['catalog.reference'] = None
+select_dict['specific_reference'] = None
+select_dict['project_uid'] = None
+select_dict['payment_uid'] = None
+select_dict['mirror_section_uid'] = None
+select_dict['operation_date'] = None
 params['select_dict'] = select_dict
 
 # We group by uid to really filter duplicated lines, but this makes generated
