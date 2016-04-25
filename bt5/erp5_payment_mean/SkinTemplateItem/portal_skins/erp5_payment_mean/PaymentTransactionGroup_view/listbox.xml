@@ -11,7 +11,7 @@
             <value>
               <list>
                 <string>columns</string>
-                <string>editable_columns</string>
+                <string>count_method</string>
                 <string>list_method</string>
                 <string>selection_name</string>
                 <string>stat_method</string>
@@ -59,10 +59,6 @@
               <dictionary>
                 <item>
                     <key> <string>columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -132,22 +128,17 @@
                           <string>getTranslatedSimulationStateTitle</string>
                           <string>State</string>
                         </tuple>
+                        <tuple>
+                          <string>specialise_title</string>
+                          <string>Mandate</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>editable_columns</string> </key>
+                    <key> <string>count_method</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>total_price</string>
-                          <string>total_price</string>
-                        </tuple>
-                        <tuple>
-                          <string>date</string>
-                          <string>date</string>
-                        </tuple>
-                      </list>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -161,7 +152,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -171,7 +162,7 @@
                 <item>
                     <key> <string>stat_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -196,12 +187,25 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>PaymentTransactionGroup_getPaymentTransactionLineList</string> </value>
+            <value> <string>PaymentTransactionGroup_countPaymentTransactionLine</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="Method" module="Products.Formulator.MethodField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>PaymentTransactionGroup_getPaymentTransactionLineList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
