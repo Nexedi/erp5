@@ -82,3 +82,10 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
     for config in config_list:
       config["test_suite_title"] = config["test_suite_title"] + "-%s" % title
     return json.dumps(config_list)
+
+  security.declarePublic("generateConfiguration")
+  def generateConfiguration(self, test_suite_title, batch_mode=0):
+    generated_configuration = {"configuration_list": [{}]}
+    if batch_mode:
+      return generated_configuration
+    return json.dumps(generated_configuration)
