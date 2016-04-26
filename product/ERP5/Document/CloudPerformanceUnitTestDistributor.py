@@ -85,6 +85,10 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
 
   security.declarePublic("generateConfiguration")
   def generateConfiguration(self, test_suite_title, batch_mode=0):
+    """ Disable this feature due Backward compatibility, as test_suite_title 
+        is modified on startTestSuite the original method cannot find the 
+        right Test Suite.
+    """
     generated_configuration = {"configuration_list": [{}]}
     if batch_mode:
       return generated_configuration
