@@ -196,3 +196,24 @@ class PropertySheet(Folder):
         LOG("ERP5Type.Core.PropertySheet", INFO,
             "Invalid property '%s' for Property Sheet '%s': %s" % \
             (property_definition.getId(), self.getId(), str(e)))
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getRecursivePortalTypeValueList')
+  def getRecursivePortalTypeValueList(self):
+    """
+    Get all the Portal Types where this Property Sheet is used
+    """
+    portal = self.getPortalObject()
+    property_sheet_id = self.getId()
+    import erp5.portal_type
+    portal_type_value_list = []
+    for portal_type in portal.portal_types.contentValues():
+      portal_type_class = getattr(erp5.portal_type, portal_type.getId())
+      portal_type_class.loadClass()
+
+      for klass in portal_type_class.mro():
+        if (klass.__module__ == 'erp5.accessor_holder.property_sheet' and
+            klass.__name__ == property_sheet_id):
+          portal_type_value_list.append(portal_type)
+
+    return portal_type_value_list

@@ -98,6 +98,7 @@ Property Existence Constraint | predicate
 Property Existence Constraint | view
 Property Sheet Tool | migrate_ps_from_fs
 Property Sheet Tool | view
+Property Sheet | jump_portal_types
 Property Sheet | view
 Property Type Validity Constraint | predicate
 Property Type Validity Constraint | view
