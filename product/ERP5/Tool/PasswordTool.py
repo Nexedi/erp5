@@ -106,8 +106,7 @@ class PasswordTool(BaseTool):
     url = "%s?%s" %(base_url, parameter)
     return url
 
-  security.declareProtected('Manage users', 'getResetPasswordUrl')
-  def getExpirationDateForKey(self, key=None):
+  def _getExpirationDateForKey(self, key=None):
     return self._password_request_dict[key][1]
 
   security.declarePublic('mailPasswordResetRequest')
@@ -168,7 +167,7 @@ class PasswordTool(BaseTool):
     # send mail
     message_dict = {'instance_name':self.getPortalObject().getTitle(),
                     'reset_password_link':url,
-                    'expiration_date':self.getExpirationDateForKey(key)}
+                    'expiration_date':self._getExpirationDateForKey(key)}
     if substitution_method_parameter_dict is not None:
       message_dict.update(substitution_method_parameter_dict)
 
