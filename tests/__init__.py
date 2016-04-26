@@ -30,7 +30,7 @@ class _ERP5(ERP5TypeTestSuite):
   def _getAllTestList(self):
     test_list = []
     path = sys.path[0]
-    component_re = re.compile(".*/erp5_web_trade_application_test/TestTemplateItem/portal_components"
+    component_re = re.compile(".*/erp5_web_renderjs_ui_test/TestTemplateItem/portal_components"
                               "/test\.[^.]+\.([^.]+).py$")
     for test_path in (
         glob('%s/product/*/tests/test*.py' % path) +
