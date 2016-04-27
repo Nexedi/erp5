@@ -199,12 +199,13 @@ class TrashTool(BaseTool):
     """
     def getChildObjects(obj):
       object_list = []
+      childObjects = []
       if hasattr(aq_base(obj), 'objectValues'):
         childObjects = obj.objectValues()
       if hasattr(aq_base(obj), 'isHidden'):
         if not obj.isHidden:
           object_list.append(obj)
-      if len(childObjects) > 0:
+      if childObjects:
         for o in childObjects:
           object_list.extend(getChildObjects(o))
       else:
