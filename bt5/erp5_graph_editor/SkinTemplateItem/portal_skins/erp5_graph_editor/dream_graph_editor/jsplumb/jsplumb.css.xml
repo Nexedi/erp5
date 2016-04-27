@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts31928725.88</string> </value>
+            <value> <string>ts58011676.25</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -35,10 +35,6 @@
     overflow: hidden;\n
     background-color: #eaedef;\n
     text-align: center;\n
-}\n
-\n
-.selected {\n
-    color: #bd0b0b!important\n
 }\n
 \n
 .window,\n
@@ -147,7 +143,7 @@ path {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2379</int> </value>
+            <value> <int>2335</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
