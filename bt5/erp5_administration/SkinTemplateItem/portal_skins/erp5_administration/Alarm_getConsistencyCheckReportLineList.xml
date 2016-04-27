@@ -56,7 +56,7 @@
 """\n
 \n
 if active_process is None:\n
-  active_process = context.getLastActiveProcess()\n
+  active_process = context.getLastActiveProcess(include_active=True)\n
 else:\n
   active_process = context.getPortalObject().restrictedTraverse(active_process)\n
 \n
