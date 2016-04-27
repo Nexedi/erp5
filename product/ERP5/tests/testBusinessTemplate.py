@@ -7556,6 +7556,63 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def stepSetPropertyOnModule(self, sequence=None, **kw):
+    module_id = sequence.get('module_id')
+    module = self.getPortalObject()[module_id]
+    for name, value in self.object_property_dict.iteritems():
+      module.setProperty(name, value)
+
+  def stepAddModulePropertyToBusinessTemplate(self, sequence=None, **kw):
+    module_id = sequence.get('module_id')
+    bt_object_property_list = []
+    for property_name, _ in self.object_property_dict.iteritems():
+      bt_object_property_list.append("%s | %s" % (module_id, property_name))
+    bt = sequence.get('export_bt')
+    bt.edit(template_object_property_list=bt_object_property_list)
+
+  def stepCheckModuleProperty(self, sequence=None, **kw):
+    module_id = sequence.get('module_id')
+    module = self.getPortalObject()[module_id]
+    for name, value in self.object_property_dict.iteritems():
+      self.assertEqual(module.getProperty(name), value)
+
+  def stepCheckModulePropertyIsNone(self, sequence=None, **kw):
+    module_id = sequence.get('module_id')
+    module = self.getPortalObject()[module_id]
+    for property_name, _ in self.object_property_dict.iteritems():
+      self.assertEqual(module.getProperty(property_name), None)
+
+  test_object_property_string = """
+        CreatePortalType
+        CreateModuleAndObjects
+        stepSetPropertyOnModule
+        CheckModuleProperty
+        CreateNewBusinessTemplate
+        UseExportBusinessTemplate
+        AddModulePropertyToBusinessTemplate
+        BuildBusinessTemplate
+        CheckBuiltBuildingState
+        SaveBusinessTemplate
+        RemoveModule
+        CreateModuleAndObjects
+        CheckModulePropertyIsNone
+        UseExportBusinessTemplate
+        stepInstallCurrentBusinessTemplate
+        CheckModuleProperty
+      """
+
+  def test_ExportAndImportObjectProperty(self):
+    sequence = Sequence()
+    self.object_property_dict = {'business_application': 'base'}
+    sequence.setSequenceString(self.test_object_property_string)
+    sequence.play(self)
+
+  # Same test as before, but with a category_list property
+  def test_ExportAndImportObjectPropertyList(self):
+    sequence = Sequence()
+    self.object_property_dict = {'business_application_list': ('base', 'extended')}
+    sequence.setSequenceString(self.test_object_property_string)
+    sequence.play(self)
 
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 

@@ -4948,6 +4948,80 @@ class LocalRolesTemplateItem(BaseTemplateItem):
           delattr(obj, '__ac_local_roles_group_id_dict__')
         obj.reindexObject()
 
+class ObjectPropertyTemplateItem(BaseTemplateItem):
+
+  xml_tag = "object_property_list"
+
+  def build(self, context, **kw):
+    p = context.getPortalObject()
+    for key in self._archive:
+      relative_url, property_name = key.split(' | ')
+      property_value = p.unrestrictedTraverse(relative_url) \
+                             .getProperty(property_name)
+      self._objects.setdefault(relative_url, {})[property_name] = property_value
+
+  def generateXml(self, path=None):
+    xml_data = '<%s>' % self.xml_tag
+    for relative_url in self._objects:
+      xml_data += '\n  <object relative_url="%s">' % relative_url
+      for property_name, property_value in self._objects[relative_url].iteritems():
+        xml_data += '\n    <property name="%s">' % property_name.replace('_list', '')
+        if property_name.endswith('_list'):
+          for value in property_value:
+            xml_data += '\n      <item>%s</item>' % value
+        else:
+          xml_data += '\n      <item>%s</item>' % property_value
+        xml_data += '\n    </property>'
+      xml_data += '\n  </object>'
+    xml_data += '\n</%s>' % self.xml_tag
+    return xml_data
+
+  def export(self, context, bta, **kw):
+    path = self.__class__.__name__
+    if self._objects.keys():
+      xml_data = self.generateXml()
+      bta.addObject(xml_data, name=self.xml_tag, path=path)
+
+  def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
+    xml = parse(file)
+    object_list = xml.findall('object')
+    for obj in object_list:
+      for obj_property in obj.findall('property'):
+        item_list = []
+        for item in obj_property.findall('item'):
+          item_list.append(item.text)
+        property_name = obj_property.get('name') + ('' if len(item_list) <= 1 else '_list')
+        self._objects[obj.get('relative_url')] = {property_name: item_list}
+
+  def preinstall(self, context, installed_item, **kw):
+    modified_object_list = {}
+    for relative_url in self._objects:
+      new_object = self._objects[relative_url]
+      try:
+        old_object = installed_item._objects[relative_url]
+      except KeyError:
+        modified_object_list.update({relative_url : ['New', self.__class__.__name__[:-12]]})
+      else:
+        modified_object_list.update({relative_url : ['Modified', self.__class__.__name__[:-12]]})
+    return modified_object_list
+
+  def install(self, context, trashbin, **kw):
+    portal = context.getPortalObject()
+    for relative_url in self._objects:
+      obj = portal.unrestrictedTraverse(relative_url)
+      for property_name, property_value in self._objects[relative_url].iteritems():
+        obj.setProperty(property_name, property_value)
+
+  def uninstall(self, context, **kw):
+    portal = context.getPortalObject()
+    for relative_url in self._objects:
+      obj = portal.unrestrictedTraverse(relative_url)
+      for property_name in self._objects[relative_url]:
+        obj.setProperty(property_name, None)
+
 class bt(dict):
   """Fake 'bt' item to read bt/* files through BusinessTemplateArchive"""
 
@@ -5183,6 +5257,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._catalog_local_role_key_item = \
           CatalogLocalRoleKeyTemplateItem(
                self.getTemplateCatalogLocalRoleKeyList())
+      self._object_property_item = \
+          ObjectPropertyTemplateItem(self.getTemplateObjectPropertyList())
       try:
         self._catalog_security_uid_column_item = \
           CatalogSecurityUidColumnTemplateItem(
@@ -5964,6 +6040,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'CatalogRoleKey' : '_catalog_role_key_item',
         'CatalogLocalRoleKey' : '_catalog_local_role_key_item',
         'CatalogSecurityUidColumn' : '_catalog_security_uid_column_item',
+        'ObjectProperty': '_object_property_item',
         }
 
       object_id = REQUEST.object_id
@@ -6033,7 +6110,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                      '_portal_type_roles_item',
                      '_portal_type_base_category_item',
                      '_local_roles_item',
-                     '_portal_type_workflow_chain_item',]
+                     '_portal_type_workflow_chain_item',
+                     '_object_property_item',]
 
       # Text objects (no need to export them into XML)
       # XXX Bad naming
