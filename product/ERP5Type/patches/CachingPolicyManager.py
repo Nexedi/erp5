@@ -1,5 +1,5 @@
 from Products.CMFCore.CachingPolicyManager import CachingPolicy, \
-    CachingPolicyManager
+    CachingPolicyManager, createCPContext
 from App.special_dtml import DTMLFile
 from Products.CMFCore.Expression import Expression
 from App.Common import rfc1123_date
@@ -170,6 +170,31 @@ def getHeaders( self, expr_context ):
             headers.append( ( 'ETag', self._etag_func( expr_context ) ) )
 
     return headers
+
+def getModTimeAndETag( self, content, view_method, keywords, time=None):
+    """
+        Return the modification time and ETag for the content object,
+        view method, and keywords as the tuple (modification_time, etag,
+        set_last_modified_header), where modification_time is a DateTime,
+        or None.
+    """
+    # XXX: this method violates the rules for tools/utilities:
+    # createCPContext depends on a non-utility tool
+    context = createCPContext( content, view_method, keywords, time=time )
+    for policy_id, policy in self.listPolicies():
+        if policy.testPredicate(context):
+            if not policy.getEnable304s():
+                return None
+            last_modified = policy._mtime_func(context)
+            if type(last_modified) is type(''):
+                last_modified = DateTime(last_modified)
+
+            content_etag = None
+            if policy.getETagFunc():
+                content_etag = policy._etag_func(context)
+
+            return (last_modified, content_etag, policy.getLastModified())
+    return None
 
 
 
@@ -461,4 +486,4 @@ CachingPolicyManager._updatePolicy = _updatePolicy
 CachingPolicyManager.addPolicy = addPolicy
 CachingPolicyManager._addPolicy = _addPolicy
 CachingPolicyManager.manage_cachingPolicies = DTMLFile( 'cachingPolicies', _dtmldir )
-
+CachingPolicyManager.getModTimeAndETag = getModTimeAndETag
