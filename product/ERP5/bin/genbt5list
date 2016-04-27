@@ -96,6 +96,7 @@ item_name_list = (
   'catalog_role_key',
   'catalog_local_role_key',
   'catalog_security_uid_column',
+  'object_property',
 )
 
 item_set = set(('CatalogDateTimeKey' if x == 'catalog_datetime_key' else
