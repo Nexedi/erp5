@@ -34,8 +34,8 @@ class _ERP5(ERP5TypeTestSuite):
                               "/test\.[^.]+\.([^.]+).py$")
     for test_path in (
         glob('%s/product/*/tests/test*.py' % path) +
-        glob('%s/bt5/erp5_web_renderjs_ui_test/TestTemplateItem/test*.py' % path) +
-        glob('%s/bt5/erp5_web_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path)):
+        glob('%s/bt5/erp5_web_trade_application_test/TestTemplateItem/test*.py' % path) +
+        glob('%s/bt5/erp5_web_trade_application_test/TestTemplateItem/portal_components/test.*.test*.py' % path)):
       component_re_match = component_re.match(test_path)
       if component_re_match is not None:
         test_case = "%s:%s" % (component_re_match.group(1),
