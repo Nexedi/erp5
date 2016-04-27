@@ -148,7 +148,7 @@ class MovementSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
           # * modify 'delivery' value on simulation movements that are
           #   related to the new delivery.
           # * recalculate quantity on simulation movements
-          for simulation_moment in new:
+          for simulation_movement in new:
             simulation_movement.setDelivery(
               simulation_movement.getDelivery().replace(
               '%s/' % old_delivery_url, '%s/' % new_delivery_url))
