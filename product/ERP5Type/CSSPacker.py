@@ -33,7 +33,7 @@ def compressCSS(css):
       This compressor remove the comments, eol
       and all the possible tabs.
     """
-    white_space_regex = re.compile("[\n|\t|\r]")
+    white_space_regex = re.compile("[\n\t\r]")
     commment_regex =  re.compile("/\*.*?\*/")
     class_regex = re.compile(r"([^{]*?){(.*?)}")
     style = re.compile(r"([\w\s-]*):([^;]*);?")
