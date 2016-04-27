@@ -1,4 +1,5 @@
 business_process_module
+delivery_node_module
 internal_order_module
 internal_packing_list_module
 internal_trade_condition_module

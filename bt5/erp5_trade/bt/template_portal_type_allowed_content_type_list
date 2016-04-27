@@ -5,6 +5,11 @@ Container Line | Container Cell
 Container | Container
 Container | Container Line
 Delivery Builder | First Causality Movement Group
+Delivery Node Module | Delivery Node
+Delivery Node | Address
+Delivery Node | Email
+Delivery Node | Fax
+Delivery Node | Telephone
 Delivery Root Simulation Rule | Category Membership Divergence Tester
 Delivery Root Simulation Rule | DateTime Divergence Tester
 Delivery Root Simulation Rule | Float Divergence Tester

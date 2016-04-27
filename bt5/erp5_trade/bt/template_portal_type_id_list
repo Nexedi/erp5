@@ -5,6 +5,8 @@ Container
 Container Cell
 Container Line
 Delivery Cell
+Delivery Node
+Delivery Node Module
 Delivery Root Simulation Rule
 Delivery Simulation Rule
 Duplicate Inventory Constraint

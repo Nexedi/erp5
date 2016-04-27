@@ -108,8 +108,8 @@ class TestXHTMLMixin(ERP5TypeTestCase):
       business_template = business_template.getObject()
       for modifiable_field in business_template.BusinessTemplate_getModifiableFieldList():
         # Do not consider 'Check delegated values' as an error
-        if modifiable_field.choice_item_list[0][1] != \
-                                              "0_check_delegated_value":
+        if modifiable_field.choice_item_list[0][1] not in \
+            ("0_check_delegated_value", "0_keep_non_proxy_field"):
           error_list.append((modifiable_field.object_id,
                             modifiable_field.choice_item_list[0][0]))
     if error_list:
