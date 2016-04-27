@@ -95,7 +95,7 @@ def _findPredicateList(container_list, portal_type):
   mask_set = set()
   for container in container_list:
     mask_list = []
-    for ob in container.contentValues(portal_type=portal_type):
+    for ob in container.objectValues(portal_type=portal_type):
       if isinstance(ob, Predicate):
         # reference is used to hide lines on farther containers
         reference = ob.getProperty('reference')

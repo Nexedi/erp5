@@ -212,8 +212,13 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
       """
       returns true is the object contains no submovement (line or cell)
       """
-      portal_type = self.getPortalMovementTypeList()
-      return len(self.contentValues(filter={'portal_type': portal_type})) == 0
+      object_list = self.objectValues()
+      if object_list:
+        portal_type = self.getPortalObject().getPortalMovementTypeList()
+        for ob in object_list:
+          if ob.getPortalType() in portal_type:
+            return False
+      return True
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getMovedItemUidList')
     def getMovedItemUidList(self):
