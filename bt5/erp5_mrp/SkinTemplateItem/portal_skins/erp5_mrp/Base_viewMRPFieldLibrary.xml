@@ -112,7 +112,7 @@
                         <string>my_translated_simulation_state_title</string>
                         <string>my_reference</string>
                         <string>my_causality_title</string>
-                        <string>my_packing_list_listbox</string>
+                        <string>my_view_mode_packing_list_listbox</string>
                         <string>my_translated_causality_state_title</string>
                         <string>my_int_index</string>
                         <string>my_price</string>
@@ -125,6 +125,7 @@
                         <string>my_view_mode_aggregate_title_list</string>
                         <string>my_view_mode_movement_quantity</string>
                         <string>my_view_mode_listbox_specialise_transformation_title</string>
+                        <string>my_view_mode_packing_list_listbox_variation_title</string>
                       </list>
                     </value>
                 </item>
