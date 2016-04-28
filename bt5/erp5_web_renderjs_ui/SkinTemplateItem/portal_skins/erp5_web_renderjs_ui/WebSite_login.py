@@ -13,10 +13,27 @@ portal.setupCurrentSkin(REQUEST)
 
 if (portal.portal_membership.isAnonymousUser()):
   RESPONSE.expireCookie('__ac', path='/')
-  url = '%s/login_form?portal_status_message=%s' % (context.absolute_url(), context.Base_translateString('Login and/or password is incorrect.'))
-  url = came_from and '%s&came_from=%s' % (url, came_from) or url;
+
+  is_user_account_blocked = REQUEST.get('is_user_account_blocked', False)
+  is_user_account_password_expired = REQUEST.get('is_user_account_password_expired', False)
+  
+  if is_user_account_blocked:
+    message = context.Base_translateString('Account is blocked.')
+  elif is_user_account_password_expired:
+    if (portal.portal_preferences.isPreferredSystemRecoverExpiredPassword()):
+      message = context.Base_translateString('Password is expired. You will soon receive an email with details about how you can recover it.')
+    else:
+      message = context.Base_translateString('Password is expired.')
+  else:
+    message = context.Base_translateString('Login and/or password is incorrect.')
+
+  url = '%s/login_form?portal_status_message=%s' % (context.absolute_url(), message)
+  url = came_from and '%s&came_from=%s' % (url, came_from) or url
   RESPONSE.redirect(url)
 else:
+  # XXX How to warn user that password will expire?
+  # is_user_account_password_expired_expire_date = REQUEST.get('is_user_account_password_expired_expire_date', 0)
+
   # XXX Hardcoded behaviour for JS app.
   # Expect came_from to be an URL template
   person = portal.ERP5Site_getAuthenticatedMemberPersonValue()
