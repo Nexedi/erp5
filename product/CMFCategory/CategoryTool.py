@@ -256,8 +256,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         relative_url = \
         self._removeDuplicateBaseCategoryIdInCategoryPath(base_category,
                                                                  relative_url)
-        node = self.unrestrictedTraverse(relative_url)
-        value = node
+        value = self.unrestrictedTraverse(relative_url)
       except (TypeError, KeyError, NotFound):
         value = None
 
@@ -843,10 +842,13 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                       'getSingleCategoryAcquiredMembershipList' )
     def getSingleCategoryAcquiredMembershipList(self, context, base_category, base=0,
                                          spec=(), filter=None, _acquired_object_set=None, **kw ):
+      # XXX: This cache is rarely useful, and the overhead quite important.
+      #      It would certainly become counter-productive if any significative
+      #      improvement was done to the cached methods.
       cache = getReadOnlyTransactionCache()
       if cache is not None:
-        key = ('getSingleCategoryAcquiredMembershipList', context.getPhysicalPath(), base_category, base, spec,
-               filter, str(kw))
+        key = ('getSingleCategoryAcquiredMembershipList', context,
+               base_category, base, spec, filter, repr(kw))
         try:
           return cache[key]
         except KeyError:
@@ -1758,19 +1760,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
         __traceback_info__ = relative_url
 
         validate = getSecurityManager().validate
-        def restrictedGetOb(container, key, default):
+        def restrictedGetOb(container):
           obj = container._getOb(key, None)
-          if obj is not None:
-            try:
-              if not validate(container, container, key, obj):
-                raise Unauthorized('unauthorized access to element %s' % key)
-            except Unauthorized:
-              # if user can't access object try to return default passed
-              if default is not _marker:
-                return default
-              else:
-                raise
-          return obj
+          if obj is None or validate(container, container, key, obj):
+            return obj
+          # if user can't access object try to return default passed
+          if default is _marker:
+            raise Unauthorized('unauthorized access to element %s' % key)
+          return default
 
         # XXX Currently, resolveCategory accepts that a category might
         # not start with a Base Category, but with a Module. This is
@@ -1781,28 +1778,28 @@ class CategoryTool( UniqueObject, Folder, Base ):
         if stack:
           portal = aq_inner(self.getPortalObject())
           key = stack.pop()
-          obj = restrictedGetOb(self, key, default)
+          obj = restrictedGetOb(self)
           if obj is None:
-            obj = restrictedGetOb(portal, key, default)
+            obj = restrictedGetOb(portal)
             if obj is not None:
               obj = obj.__of__(self)
           else:
             while stack:
               container = obj
               key = stack.pop()
-              obj = restrictedGetOb(container, key, default)
+              obj = restrictedGetOb(container)
               if obj is not None:
                 break
-              obj = restrictedGetOb(self, key, default)
+              obj = restrictedGetOb(self)
               if obj is None:
-                obj = restrictedGetOb(portal, key, default)
+                obj = restrictedGetOb(portal)
                 if obj is not None:
                   obj = obj.__of__(container)
                 break
 
           while obj is not None and stack:
             key = stack.pop()
-            obj = restrictedGetOb(obj, key, default)
+            obj = restrictedGetOb(obj)
 
         if obj is None:
           LOG('CMFCategory', WARNING,

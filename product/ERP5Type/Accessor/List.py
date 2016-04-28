@@ -223,43 +223,44 @@ class ListGetter(Base.Getter):
     func_code.co_argcount = 1
     func_defaults = ()
 
+    _list_type_list = tuple, list, set
+
     def __init__(self, id, key, property_type, default=None, storage_id=None):
       self._id = id
       self.__name__ = id
       self._key = key
       self._property_type = property_type
       self._null = type_definition[property_type]['null']
+      assert None in self._null and not any(
+          isinstance(x, self._list_type_list) for x in self._null), self._null
       self._default = default
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       self._storage_id = storage_id
       self._is_tales_type = (property_type == 'tales')
 
-    def __call__(self, instance, *args, **kw):
-      if len(args) > 0:
-        default = args[0]
-      else:
-        default = self._default
-      list_value = getattr(aq_base(instance), self._storage_id, default)
-      # We should not use here self._null but None instead XXX
-      if list_value not in self._null:
+    def __call__(aq_base=aq_base, list_type_list=_list_type_list):
+      def __call__(self, instance, *args, **kw):
+        list_value = getattr(aq_base(instance), self._storage_id, None)
+        # We should not use here self._null but None instead XXX
+        if list_value in self._null:
+          list_value = args[0] if args else self._default
+          if list_value in self._null:
+            return list_value
         if self._is_tales_type:
           if kw.get('evaluate', 1):
-            if type(list_value) != type(''):
+            if type(list_value) is not str:
               LOG('ListGetter', 0, 'instance = %r, self._storage_id = %r, list_value = %r' % (instance, self._storage_id, list_value,)) # If we reach this point, something strange is going on
             list_value = evaluateTales(instance=instance, value=list_value)
           else:
             return list_value
         # Even if it is already a list, return a copy as callers
         # expect to be able to modify it on place
-        if isinstance(list_value, (list, tuple, set)):
+        if isinstance(list_value, list_type_list):
           return list(list_value) # Make sure we return a list rather than a tuple
         return list_value
-      if default is None:
-        return None # nothing was defined as default so None is the appropriate value
-      if isinstance(default, (list, tuple, set)):
-        return list(default) # Make sure we return a list rather than a tuple
-      return default
+      return __call__
+    __call__ = __call__()
 
     psyco.bind(__call__)
 

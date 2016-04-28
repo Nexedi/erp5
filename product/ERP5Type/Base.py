@@ -89,7 +89,6 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, super_user
 
 from zope.interface import classImplementsOnly, implementedBy
 
-from string import join
 import sys, re
 
 from cStringIO import StringIO
@@ -1718,7 +1717,7 @@ class Base( CopyContainer,
     objectlist = [self.getPhysicalRoot()]
     for element in pathlist[1:] :
       objectlist.append(objectlist[-1][element])
-    return '/' + join([object.getTitle() for object in objectlist[1:]], '/')
+    return '/' + '/'.join(object.getTitle() for object in objectlist[1:])
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getCompactLogicalPath')
   def getCompactLogicalPath(self, REQUEST=None) :
@@ -1730,14 +1729,14 @@ class Base( CopyContainer,
     objectlist = [self.getPhysicalRoot()]
     for element in pathlist[1:] :
       objectlist.append(objectlist[-1][element])
-    return '/' + join([object.getCompactTitle() for object in objectlist[1:]], '/')
+    return '/' + '/'.join(object.getCompactTitle() for object in objectlist[1:])
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getUrl')
   def getUrl(self, REQUEST=None):
     """
       Returns the absolute path of an object
     """
-    return join(self.getPhysicalPath(),'/')
+    return '/'.join(self.getPhysicalPath())
 
   # Old name - for compatibility
   security.declareProtected(Permissions.AccessContentsInformation, 'getPath')
