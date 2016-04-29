@@ -41,7 +41,10 @@
     })
     .declareMethod("render", function (options) {
       var page_gadget = this,
-          sycn_method;
+          gadget,
+          sycn_method,
+          element,
+          textNode;
       page_gadget.options = options;
       if(page_gadget.options.doc.sync_flag==1){
         
@@ -56,6 +59,7 @@
 
 return  page_gadget.getDeclaredGadget("erp5_form")
         .push(function (form_gadget) {
+          gadget=form_gadget;
           return form_gadget.render({
             erp5_document: {"_embedded": {"_view": {
         
@@ -65,7 +69,7 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default":"Sale price of a specific product to a specific customer",
                 "css_class": "ui-content-header-inline",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "sale_price",
                 "hidden": 0,
                 "type": "ReadonlyField"
@@ -77,8 +81,8 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.inputusername,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
-                "key": "username",
+                "editable": 0,
+                "key": "inputusername",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -88,7 +92,7 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": state,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "state",
                 "hidden": 0,
                 "type": "ReadonlyField"
@@ -104,14 +108,14 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "hidden": 0,
                 "type": "StringField"
               },
-              "client": {
+              "nextowner": {
                 "description": "",
                 "title": "Client",
                 "default": page_gadget.options.doc.nextowner,
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
-                "key": "client",
+                "key": "nextowner",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -121,8 +125,8 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.previousowner,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
-                "key": "organisation",
+                "editable": 0,
+                "key": "previousowner",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -132,8 +136,8 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.previouslocation,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
-                "key": "warehouse",
+                "editable": 0,
+                "key": "previouslocation",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -143,8 +147,8 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.base_price,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
-                "key": "price",
+                "editable": 0,
+                "key": "base_price",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -163,8 +167,8 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                         ],
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
-                "key": "currency",
+                "editable": 0,
+                "key": "price_currency",
                 "hidden": 0,
                 "type": "ListField"
               },
@@ -174,7 +178,7 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.priced_quantity,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "priced_quantity",
                 "hidden": 0,
                 "type": "StringField"
@@ -189,7 +193,7 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                         ],
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "quantity_unit",
                 "hidden": 0,
                 "type": "ListField"
@@ -200,7 +204,7 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.total_dry_quantity,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "total_dry_quantity",
                 "hidden": 0,
                 "type": "StringField"
@@ -211,7 +215,7 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.total_amount_price,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "total_amount_price",
                 "hidden": 0,
                 "type": "StringField"
@@ -222,7 +226,7 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.date,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "date",
                 "hidden": 0,
                 "type": "StringField"
@@ -233,7 +237,7 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.contract_no,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "contract_no",
                 "hidden": 0,
                 "type": "StringField"
@@ -244,7 +248,7 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.batch,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "batch",
                 "hidden": 0,
                 "type": "TextAreaField"
@@ -255,7 +259,7 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.comment,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "comment",
                 "hidden": 0,
                 "type": "StringField"
@@ -269,8 +273,8 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                         ],
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
-                "key": "sync_method",
+                "editable": 0,
+                "key": "sync_flag",
                 "hidden": 0,
                 "type": "RadioField"
               },
@@ -280,7 +284,7 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": "Client",
                 "css_class": "ui-content-header-inline",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "client_head",
                 "hidden": 0,
                 "type": "ReadonlyField"
@@ -294,8 +298,8 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.nextowner_title,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
-                "key": "client",
+                "editable": 0,
+                "key": "nextowner_title",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -305,8 +309,8 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.nextowner_reference,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
-                "key": "client_reference",
+                "editable": 0,
+                "key": "nextowner_reference",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -316,8 +320,8 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.default_telephone_coordinate_text,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
-                "key": "telephone",
+                "editable": 0,
+                "key": "default_telephone_coordinate_text",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -327,8 +331,8 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.default_address_city,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
-                "key": "address_city",
+                "editable": 0,
+                "key": "default_address_city",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -362,8 +366,8 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                         ],
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
-                "key": "region",
+                "editable": 0,
+                "key": "default_address_region",
                 "hidden": 0,
                 "type": "ListField"
               },
@@ -373,8 +377,8 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.default_address_street_address,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
-                "key": "address_street",
+                "editable": 0,
+                "key": "default_address_street_address",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -384,8 +388,8 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.default_address_zip_code,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
-                "key": "postal_code",
+                "editable": 0,
+                "key": "default_address_zip_code",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -395,8 +399,8 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "default": page_gadget.options.doc.default_email_coordinate_text,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
-                "key": "email",
+                "editable": 0,
+                "key": "default_email_coordinate_text",
                 "hidden": 0,
                 "type": "StringField"
               }
@@ -410,11 +414,12 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                  "left",
                 [["sale_price"],
                   ["username"], ["state"], ["product"],
-                ["client"], ["organisation"], ["warehouse"],
+                ["nextowner"], ["organisation"], ["warehouse"],
                 ["price"], ["currency"], ["priced_quantity"],
                 ["quantity_unit"],["total_dry_quantity"], ["total_amount_price"], 
                 ["date"],["contract_no"], ["batch"], 
-                ["comment"],["sync_method"]]],
+                ["comment"],["sync_method"]]
+                ],
                 
                 [
                 "right",
@@ -422,20 +427,57 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 ["client"], ["client_reference"], ["telephone"],
                 ["address_city"], ["region"], ["address_street"],
                 ["postal_code"], ["email"]]
+                ]
+                 
               ]
-                          
-                
-                           
-                       
-                          
-                          
-                          
-                          
-                          ]
    
             }
           });
+        })
+
+
+        .push(function () {
+                  /*  gadget.props.element.querySelector('[name="inputusername"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="product"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="nextowner"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="previousowner"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="previouslocation"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="base_price"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="priced_quantity"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="price_currency"]').setAttribute('disabled', 'disabled');
+                    gadget.props.element.querySelector('[name="quantity_unit"]').setAttribute('disabled', 'disabled');
+                    gadget.props.element.querySelector('[name="total_dry_quantity"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="total_amount_price"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="date"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="contract_no"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="batch"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="comment"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="sync_flag"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="nextowner_title"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="nextowner_reference"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="default_telephone_coordinate_text"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="default_address_city"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="default_address_region"]').setAttribute('disabled', 'disabled');
+                    gadget.props.element.querySelector('[name="default_address_street_address"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="default_address_zip_code"]').setAttribute('readOnly', 'readOnly');
+                    gadget.props.element.querySelector('[name="default_email_coordinate_text"]').setAttribute('readOnly', 'readOnly');
+  
+  
+                    element = document.createElement('h3');
+                    textNode= document.createTextNode('Sale price of a specific product to a specific customer');
+                    element.setAttribute("class", "ui-content-header-inline");
+                    element.setAttribute('data-i18n', "Sale price of a specific product to a specific customer");
+                    element.appendChild(textNode);
+                    //.prepend(element);
+                    $( ".left" ).prepend(element);*/
+
         });
+
+
+
+
+
+
     })
 
    /* .declareService(function () {
