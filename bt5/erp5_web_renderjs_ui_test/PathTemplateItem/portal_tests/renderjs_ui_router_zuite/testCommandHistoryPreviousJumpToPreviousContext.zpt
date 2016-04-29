@@ -70,7 +70,7 @@
 <!-- create a second history context by creating a subdocument -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Edit' and contains(@href, '#!change') and contains(@href, 'n.editable=true')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Editable' and contains(@href, '#!change') and contains(@href, 'n.editable=true')]</td>
   <td></td>
 </tr>
 <tr>
@@ -95,12 +95,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Tabs' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Tabs' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
   <td></td>
 </tr>
 <tr>
@@ -108,9 +108,23 @@
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_tab.html']</td>
   <td></td>
 </tr>
+
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='View' and contains(@href, '#!change') and contains(@href, 'n.view=view') and contains(@href, 'u.page=') and contains(@href, 'u.editable=')]</td>
+  <td>//a[@data-i18n="Viewable"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Editable"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='View' and contains(@href, '#!change') and contains(@href, 'u.page=') and contains(@href, 'u.editable=')]</td>
   <td></td>
 </tr>
 <tr>

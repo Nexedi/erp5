@@ -174,34 +174,18 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n="Tabs"]</td>
-  <td></td>
-</tr>
+
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="View"]</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n="View"]</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="field_my_short_title"]</td>
+  <td>//input[@name="field_my_short_title"]</td>
   <td></td>
 </tr>
 
 
 <tr>
-  <td>verifyText</td>
-  <td>//div[@data-gadget-scope="field_my_short_title"]</td>
+  <td>verifyValue</td>
+  <td>//input[@name="field_my_short_title"]</td>
   <td>test_clone</td>
 </tr>
 

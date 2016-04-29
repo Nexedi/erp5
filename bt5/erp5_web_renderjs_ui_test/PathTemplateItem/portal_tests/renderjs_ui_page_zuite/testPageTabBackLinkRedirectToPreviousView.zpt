@@ -32,7 +32,7 @@
 <!-- Get the list of tabs -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Tabs' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
   <td></td>
 </tr>
 <tr>
@@ -64,14 +64,14 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Tabs' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
   <td></td>
 </tr>
 
 <!-- Follow breadcrumb link -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Tabs' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
   <td></td>
 </tr>
 <tr>

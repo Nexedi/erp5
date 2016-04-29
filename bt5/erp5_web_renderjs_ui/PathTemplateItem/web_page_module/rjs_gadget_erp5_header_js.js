@@ -141,7 +141,8 @@
           ['back_url', 'Back', 'times']
         ],
         possible_right_link_list = [
-          ['edit_url', 'Edit', 'pencil']
+          ['edit_url', 'Editable', 'pencil'],
+          ['view_url', 'Viewable', 'eye']
         ],
         possible_right_button_list = [
           ['save_action', 'Save', 'check', 'submit'],
@@ -149,7 +150,7 @@
           ['filter_action', 'Filter', 'filter', 'submit']
         ],
         possible_sub_header_list = [
-          ['tab_url', 'Tabs', 'eye'],
+          ['tab_url', 'Views', 'eye'],
           ['jump_url', 'Jump', 'plane'],
           ['delete_url', 'Delete', 'times'],
           ['export_url', 'Export', 'share-square-o'],
