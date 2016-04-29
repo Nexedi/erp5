@@ -7,3 +7,13 @@ web_page_module/rjs_jio_js
 web_page_module/rjs_jio_renderjs_storage_js
 web_page_module/rjs_renderjs_js
 web_page_module/gkr_js_cookie.js
+currency_module/CNY
+currency_module/EUR
+currency_module/HKG
+currency_module/IDR
+currency_module/MYR
+currency_module/SGD
+currency_module/THB
+currency_module/USD
+quantity_unit_conversion_module/conversion_group_weight
+quantity_unit_conversion_module/conversion_group_weight/**
