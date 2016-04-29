@@ -26,48 +26,17 @@
     .declareAcquiredMethod("get", "jio_get")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod('allDocs', 'jio_allDocs')
-    .declareAcquiredMethod("getSetting", "getSetting")
-    .declareAcquiredMethod("setSetting", "setSetting")
 
     .declareMethod("render", function (options) {
       var gadget = this;
       gadget.options = options;
-        
-        var login;
-     new RSVP.Queue()
-        .push(function () {
-          return RSVP.all([
-            gadget.getSetting('jid'),
-          ]);
-        })
-        .push(function (setting_list) {
-      
-     login=setting_list; 
-    });
-       new RSVP.Queue()
+      return new RSVP.Queue()
         .push(function (result_list) {
-        
-    
-          return gadget.translateHtml(template({jid:login}));
+          return gadget.translateHtml(template({jid:Cookies.get('jid')}));
         })
         .push(function (html) {
           gadget.props.element.innerHTML = html;
-
-        var language;
-     new RSVP.Queue()
-        .push(function () {
-          return RSVP.all([
-            gadget.getSetting('language'),
-          ]);
-        })
-        .push(function (setting_list) {
-      
-     language=setting_list; 
-    });
-        
-        console.log(language);
-        
-          var element = gadget.props.element.querySelector("input[type=radio][value="+language+"]");
+          var element = gadget.props.element.querySelector("input[type=radio][value="+Cookies.get('language')+"]");
           if(element){
             element.setAttribute('checked', 'checked');
           }
@@ -105,27 +74,22 @@
           if (checked_element != null){
             var language = checked_element.value;
             if (language){
-              //Cookies.set('language', language, {expires:36500});
-              gadget.setSetting('language', language);
+              Cookies.set('language', language, {expires:36500});
             }
           }
           var login = gadget.props.element.querySelector("input[name=jid]").value;
           var passwd = gadget.props.element.querySelector("input[name=passwd]").value;
           if(login){
-           /* Cookies.remove('jid');
+            Cookies.remove('jid');
             Cookies.remove('jid', {path:''});
             Cookies.remove('jid', {path:'/'});
-            Cookies.set('jid', login, {expires:36500, path:'/'})*/
-            gadget.setSetting('jid', login);
-
+            Cookies.set('jid', login, {expires:36500, path:'/'})
           }
           if(login && passwd){
-           /* Cookies.remove('__ac');
+            Cookies.remove('__ac');
             Cookies.remove('__ac', {path:''});
             Cookies.remove('__ac', {path:'/'});
-            Cookies.set('__ac', window.btoa(login + ":" + passwd), {expires:36500, path:'/'})*/
-            gadget.setSetting('__ac', passwd);
-
+            Cookies.set('__ac', window.btoa(login + ":" + passwd), {expires:36500, path:'/'})
           }
           location.reload();
         })
@@ -153,7 +117,7 @@
             function (click_event) {
               return new RSVP.Queue()
                 .push(function () {
-                  indexedDB.deleteDatabase("jio:trade")
+                  indexedDB.deleteDatabase("jio:erp5js_gkr_"+Cookies.get('jid'))
                   alert('Deleted');
                 })
             }

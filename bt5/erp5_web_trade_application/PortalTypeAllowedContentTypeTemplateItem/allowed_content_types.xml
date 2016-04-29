@@ -1,0 +1,8 @@
+<allowed_content_type_list>
+ <portal_type id="Sale Price Record Module">
+  <item>Sale Price Record</item>
+ </portal_type>
+ <portal_type id="Sale Price Validation Item Module">
+  <item>Sale Price Validation Item</item>
+ </portal_type>
+</allowed_content_type_list>

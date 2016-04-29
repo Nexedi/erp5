@@ -5,99 +5,70 @@
 
   function translate(gadget,string) {
     
-    var language;
-    
-    
-      new RSVP.Queue()
-        .push(function () {
-          return RSVP.all([
-            gadget.getSetting('language'),
-          ]);
-        })
-            .push(function (setting_list) {
+   
+     var language = gadget.props.language;
 
-         language=setting_list[0];
-      if (language === undefined){
-               language = 'en';
-               gadget.setSetting('language','en');
-      }
-      
-       console.log("1111111111111111111");
-      console.log(language);
-      
+       return translation_data[language][string] || string;
 
-      
-    })
-    
-                   language = 'en';
-
-                  return translation_data[language][string] || string;
-
-    
-   // var language = gadget.getSetting('language');
-  /* var language;
-    
-    new RSVP.Queue()
-        .push(function () {
-          return RSVP.all([
-            gadget.getSetting('language'),
-          ]);
-        })
-            .push(function (setting_list) {
-
-         language=setting_list[0];
-      console.log("1111111111111111111");
-      console.log(language);
-      
-      
-      
-    })
-     
-     if (language === undefined){
-               language = 'en';
-               gadget.setSetting('language','en');
-
-     
-
-    };
-        return translation_data[language][string] || string;*/
-  
-    
-  /*  new RSVP.Queue()
-        .push(function () {
-          return gadget.getSetting('panel_gadget');
-        })
-        .push(function (setting_list) {
-      
-     language=setting_list; 
-    });
-    console.log("test");
-    console.log(language);
-
-    if (language === undefined){
-               language = 'zh';
-new RSVP.Queue()
-        .push(function () {
-          gadget.setSetting('language','zh');
-
-          
-        })
-
-    }
-               language = 'zh';
-
-    return translation_data[language][string] || string;*/
+   
   }
 
-  rJS(window)
+  
+  function getInfo(gadget){
+    
+   return new RSVP.Queue()
+        .push(function () {
+           console.log("eeee");
+
+          return  gadget.getSetting('language');
+          
+        })
+            .push(function (setting_list) {
+     console.log(setting_list);
+      cosnole.log("eeee");
+
+         gadget.props.language=setting_list;
+            if (gadget.props.language === undefined){
+                       gadget.props.language='en';
+                    gadget.setSetting('language','en') ;     
+
+            }})
+ 
+  }
+rJS(window)
 
     /////////////////////////////////////////////////////////////////
     // ready
     /////////////////////////////////////////////////////////////////
     .ready(function (gadget) {
       gadget.property_dict = {};
+      gadget.props = {};
+      getInfo(gadget);
+ 
     })
   
+
+/*.ready(function (gadget) {
+return new RSVP.Queue()
+        .push(function () {
+          return  gadget.getSetting('language');
+          
+        })
+            .push(function (setting_list) {
+      
+
+         gadget.props.language=setting_list;
+            if (gadget.props.language === undefined){
+                       gadget.props.language='en';
+                    gadget.setSetting('language','en') ;     
+
+            }})
+ 
+
+  })*/
+
+
+
     //////////////////////////////////////////////
     // acquired method
     //////////////////////////////////////////////
@@ -106,6 +77,9 @@ new RSVP.Queue()
 
     .declareMethod('translate', function (string) {
       // XXX Allow to change the language
+      
+    
+    
       return translate(this,string);
     })
 
@@ -115,6 +89,7 @@ new RSVP.Queue()
         route_text, has_breaks, l, l_len, gadget;
 
       gadget = this;
+
 
       // skip if no translations available
       if (gadget.property_dict.translation_disabled) {
@@ -196,5 +171,6 @@ new RSVP.Queue()
       // return string
       return temp.innerHTML;
     });
+     
 
 }(document, window, rJS, translation_data));

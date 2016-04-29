@@ -1,4 +1,10 @@
+portal_categories/action_type/object_jio_view
+portal_categories/caching_policy/must-revalidate
 web_page_module/gadget_trade**
+web_page_module/gkr_js_cookie.js
+web_page_module/rjs_jio_js
+web_page_module/rjs_jio_renderjs_storage_js
+web_page_module/rjs_renderjs_js
 web_page_module/super_test_panel_html
 web_page_module/super_test_panel_js
 web_site_module/super_test
