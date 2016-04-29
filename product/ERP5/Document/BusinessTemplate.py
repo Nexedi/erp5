@@ -979,11 +979,9 @@ class ObjectTemplateItem(BaseTemplateItem):
 
   def build_sub_objects(self, context, id_list, url, **kw):
     # XXX duplicates code from build
-    p = context.getPortalObject()
     for id in id_list:
       relative_url = '/'.join([url,id])
-      obj = p.unrestrictedTraverse(relative_url)
-      obj = obj._getCopy(context)
+      obj = context._getOb(id)
       obj = self.removeProperties(obj, 1,
                                   self.isKeepWorkflowObject(relative_url),
                                   self.isKeepWorkflowObjectLastHistoryOnly(relative_url))
@@ -992,7 +990,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         # we must keep groups because they are deleted along with subobjects
         groups = deepcopy(obj.groups)
       if id_list:
-        self.build_sub_objects(context, id_list, relative_url)
+        self.build_sub_objects(obj, id_list, relative_url, copied=True)
         for id_ in list(id_list):
           obj._delObject(id_)
       if hasattr(aq_base(obj), 'groups'):
@@ -1021,7 +1019,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         # we must keep groups because they are deleted along with subobjects
         groups = deepcopy(obj.groups)
       if len(id_list) > 0:
-        self.build_sub_objects(context, id_list, relative_url)
+        self.build_sub_objects(obj, id_list, relative_url)
         for id_ in list(id_list):
           obj._delObject(id_)
       if hasattr(aq_base(obj), 'groups'):
@@ -1742,7 +1740,7 @@ class PathTemplateItem(ObjectTemplateItem):
           groups = deepcopy(obj.groups)
         if len(id_list) > 0:
           if include_subobjects:
-            self.build_sub_objects(context, id_list, relative_url)
+            self.build_sub_objects(obj, id_list, relative_url)
           for id_ in list(id_list):
             obj._delObject(id_)
         if hasattr(aq_base(obj), 'groups'):
@@ -1889,17 +1887,15 @@ class CategoryTemplateItem(ObjectTemplateItem):
     ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
 
   def build_sub_objects(self, context, id_list, url, **kw):
-    p = context.getPortalObject()
     for id in id_list:
       relative_url = '/'.join([url,id])
-      obj = p.unrestrictedTraverse(relative_url)
-      obj = obj._getCopy(context)
+      obj = context._getOb(id)
       obj = self.removeProperties(obj, 1,
                                   self.isKeepWorkflowObject(relative_url),
                                   self.isKeepWorkflowObjectLastHistoryOnly(relative_url))
       id_list = obj.objectIds()
       if id_list:
-        self.build_sub_objects(context, id_list, relative_url)
+        self.build_sub_objects(obj, id_list, relative_url)
         for id_ in list(id_list):
           obj._delObject(id_)
       self._objects[relative_url] = obj
@@ -1924,7 +1920,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
       include_sub_categories = obj.__of__(context).getProperty('business_template_include_sub_categories', 0)
       id_list = obj.objectIds()
       if len(id_list) > 0 and include_sub_categories:
-        self.build_sub_objects(context, id_list, relative_url)
+        self.build_sub_objects(obj, id_list, relative_url)
         for id_ in list(id_list):
           obj._delObject(id_)
       else:
