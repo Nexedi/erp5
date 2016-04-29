@@ -67,12 +67,12 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Tabs']</td>
+  <td>//a[@data-i18n='Views']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Tabs']</td>
+  <td>//a[@data-i18n='Views']</td>
   <td></td>
 </tr>
 
@@ -146,7 +146,7 @@
 
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n="Tabs"]</td>
+  <td>//a[@data-i18n="Views"]</td>
   <td></td>
 </tr>
 

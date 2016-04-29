@@ -118,19 +118,40 @@
 
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n="Tabs"]</td>
+  <td>//a[@data-i18n="Views"]</td>
   <td></td>
 </tr>
 
+
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="View"]</td>
+  <td>//div[@data-gadget-scope="header"]//a[@data-i18n="Viewable"]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n="View"]</td>
+  <td>//div[@data-gadget-scope="header"]//a[@data-i18n="Viewable"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope="header"]//a[@data-i18n="Editable"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@role="main"]//a[@data-i18n="View"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//div[@role="main"]//a[@data-i18n="View"]</td>
   <td></td>
 </tr>
 

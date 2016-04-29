@@ -149,7 +149,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Edit']</td>
+  <td>//a[@data-i18n='Editable']</td>
   <td></td>
 </tr>
 
