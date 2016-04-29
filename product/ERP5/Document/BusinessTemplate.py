@@ -5140,14 +5140,21 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._setTemplateFormatVersion(1)
       self.storeTemplateItemData()
 
-      # Build each part
-      for item_name in item_name_list:
-        item = getattr(self, item_name)
-        if item is None:
-          continue
-        if self.getBtForDiff():
-          item.is_bt_for_diff = 1
-        item.build(self)
+      try:
+        # Temporarily disable needless _unindexObject calls.
+        from Products.ERP5Type.CopySupport import CopyContainer
+        orig_beforeDelete = CopyContainer.manage_beforeDelete
+        CopyContainer.manage_beforeDelete = lambda *args, **kw: None
+        # Build each part
+        for item_name in item_name_list:
+          item = getattr(self, item_name)
+          if item is None:
+            continue
+          if self.getBtForDiff():
+            item.is_bt_for_diff = 1
+          item.build(self)
+      finally:
+        CopyContainer.manage_beforeDelete = orig_beforeDelete
       # update _p_jar property of objects cleaned by removeProperties
       transaction.savepoint(optimistic=True)
       if update_revision:
