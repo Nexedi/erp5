@@ -30,11 +30,21 @@
 </tr>
 
 <!-- Generate links to parents -->
+
 <tr>
-  <td>assertTextPresent</td>
-  <td>Editables</td>
+  <td>click</td>
+  <td>//div[@data-gadget-scope="header"]//a[@data-i18n="Edit"]</td>
   <td></td>
 </tr>
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='View' and contains(@href, '#!change') and contains(@href, 'n.view=') and contains(@href, 'u.page=') and contains(@href, 'n.editable=true')]</td>
+  <td></td>
+</tr>
+
 
 <tr>
   <td>assertElementPresent</td>
@@ -46,6 +56,7 @@
   <td>//div[@data-gadget-scope='m']//a[text()='Duration Field' and contains(@href, '#!change') and contains(@href, 'view_duration_field') and contains(@href, 'u.page=') and contains(@href, 'n.editable=true')]</td>
   <td></td>
 </tr>
+
 
 <!-- Follow one link -->
 <tr>

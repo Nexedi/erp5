@@ -49,6 +49,8 @@
         parent_queue,
         gadget = this,
         erp5_document,
+        tab_title = "Tabs",
+        tab_icon = options.editable ? "pencil" : "eye",
         jump_list;
 
       function handleParent(parent_link) {
@@ -100,16 +102,10 @@
           if (jump_list.constructor !== Array) {
             jump_list = [jump_list];
           }
-
-          promise_list.push(gadget.getUrlFor({command: 'change', options: {
-            view: "view",
-            page: undefined,
-            editable: undefined
-          }}));
           for (i = 0; i < view_list.length; i += 1) {
             promise_list.push(gadget.getUrlFor({command: 'change', options: {
               view: view_list[i].href,
-              editable: true,
+              editable: options.editable,
               page: undefined
             }}));
           }
@@ -126,7 +122,7 @@
         })
         .push(function (all_result) {
           var i, j;
-          j = 1;
+          j = 0;
           for (i = 0; i < view_list.length; i += 1) {
             tab_list.push({
               title: view_list[i].title,
@@ -143,18 +139,11 @@
             });
             j += 1;
           }
+
           return gadget.translateHtml(table_template({
-            definition_title: "Views",
-            definition_i18n: "Views",
-            definition_icon: "eye",
-            documentlist: [{
-              title: view_list[0].title,
-              link: all_result[0]
-            }]
-          }) + table_template({
-            definition_title: "Editables",
-            definition_i18n: "Editables",
-            definition_icon: "edit",
+            definition_title: tab_title,
+            definition_i18n: tab_title,
+            definition_icon: tab_icon,
             documentlist: tab_list
           }) + table_template({
             definition_title: "Jumps",
@@ -175,14 +164,23 @@
             gadget.getUrlFor({command: 'change', options: {
               page: undefined
             }}),
-            calculatePageTitle(gadget, erp5_document)
+            calculatePageTitle(gadget, erp5_document),
+            gadget.getUrlFor({command: 'change', options: {
+              editable: options.editable ? undefined : true
+            }})
           ]);
         })
         .push(function (url_list) {
-          return gadget.updateHeader({
+          var dict = {
             back_url: url_list[0],
             page_title: url_list[1]
-          });
+          };
+          if (options.editable) {
+            dict.view_url = url_list[2];
+          } else {
+            dict.edit_url = url_list[2];
+          }
+          return gadget.updateHeader(dict);
         });
     });
 

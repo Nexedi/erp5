@@ -141,7 +141,8 @@
           ['back_url', 'Back', 'times']
         ],
         possible_right_link_list = [
-          ['edit_url', 'Edit', 'pencil']
+          ['edit_url', 'Edit', 'pencil'],
+          ['view_url', 'View', 'eye']
         ],
         possible_right_button_list = [
           ['save_action', 'Save', 'check', 'submit'],

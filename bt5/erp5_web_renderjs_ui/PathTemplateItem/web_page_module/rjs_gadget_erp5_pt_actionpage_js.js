@@ -62,7 +62,7 @@
           }
 
           for (i = 0; i < view_list.length; i += 1) {
-            promise_list.push(gadget.getUrlFor({command: 'change', options: {view: view_list[i].href, page: undefined, editable: undefined}}));
+            promise_list.push(gadget.getUrlFor({command: 'change', options: {view: view_list[i].href, page: undefined, editable: options.editable}}));
           }
           if (erp5_document._links.action_object_clone_action) {
             view_list.push(erp5_document._links.action_object_clone_action);
