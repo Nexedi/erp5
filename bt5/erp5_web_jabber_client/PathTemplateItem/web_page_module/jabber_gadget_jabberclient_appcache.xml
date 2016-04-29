@@ -102,15 +102,15 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CACHE MANIFEST\n
-# generated on Mon, 4 Mar 2016 09:00:00 +0000\n
+# generated on Fri, 29 Apr 2016 14:26:00 +0200\n
 \n
 CACHE:\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
+//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
+//netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?v=4.2.0\n
+//netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0\n
+//netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
+//netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
+//netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
 URI.js\n
 i18next.js\n
 gadget_translation.html\n
@@ -281,7 +281,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>supertristan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -295,7 +295,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.36450.62962.7253</string> </value>
+                <value> <string>950.24150.51658.47623</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -313,7 +313,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1457082921.88</float>
+                        <float>1461932807.84</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
