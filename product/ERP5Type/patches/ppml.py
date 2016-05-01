@@ -13,7 +13,6 @@
 #
 ##############################################################################
 
-import string
 import re
 
 # Import everything right now, not after
@@ -45,9 +44,8 @@ reprs3 = reprs.copy()
 for c in map(chr,range(32, 256)): reprs3[c] = reprs.get(c, repr(c)[1:-1])
 ### patch end
 
-def convert(S, find=None):
+def convert(S):
     new = ''
-    encoding = 'repr'
     ### patch begin: if the input string is a valid utf8 string, only
     ###              [\x00-\x1f] characters will be escaped to make a more
     ###              readable output.
@@ -60,26 +58,22 @@ def convert(S, find=None):
         new = ''.join([reprs.get(x, x) for x in S])
     ### patch end
     if len(new) > (1.4*len(S)):
-        encoding = 'base64'
-        new = base64.encodestring(S)[:-1]
-    elif new.find('>') >= 0 or new.find('<') >= 0 or new.find('&') >= 0:
-        if new.find(']]>') <0 :
-            new = '<![CDATA[\n\n%s\n\n]]>' % new
-            encoding = 'cdata'
+        return 'base64', base64.encodestring(S)[:-1]
+    elif '>' in new or '<' in S or '&' in S:
+        if not ']]>' in S:
+            return 'cdata', '<![CDATA[\n\n%s\n\n]]>' % new
         else:
-            new = ''.join([reprs2.get(x, x) for x in new])
-    return encoding, new
+            return 'repr', ''.join([reprs2.get(x, x) for x in new])
+    return 'repr', new
 
 ppml.convert = convert
 
 # For optimization.
 def unconvert(encoding,S):
     if encoding == 'base64':
-        original = base64.decodestring(S)
+        return base64.decodestring(S)
     else:
-        x = S.replace('\n', '')
-        original = eval("'"+x+"'")
-    return original
+        return eval("'" + S.replace('\n', '') + "'")
 
 ppml.unconvert = unconvert
 
@@ -94,7 +88,7 @@ class Global:
         id = ''
         if hasattr(self, 'id'):
             if self.mapping.isMarked(self.id): id=' id="%s"' % self.mapping[self.id]
-        name=string.lower(self.__class__.__name__)
+        name=self.__class__.__name__.lower()
         return '%s<%s%s name="%s" module="%s"/>\n' % (
             ' '*indent, name, id, self.name, self.module)
 
@@ -110,7 +104,7 @@ class Scalar:
 
     def __str__(self, indent=0):
         id = ''
-        name=string.lower(self.__class__.__name__)
+        name=self.__class__.__name__.lower()
         result = '%s<%s%s>%s</%s>\n' % (
             ' '*indent, name, id, self.value(), name)
         if hasattr(self, 'id'):
@@ -155,7 +149,7 @@ class String(Scalar):
             encoding = '' # JPS repr is default encoding
         else:
             encoding = ' encoding="%s"' % encoding
-        name=string.lower(self.__class__.__name__)
+        name=self.__class__.__name__.lower()
         result = '<%s%s%s>%s</%s>' % (name, id, encoding, v, name)
         if hasattr(self, 'id'):
             # The value is Immutable - let us add it the the immutable mapping
@@ -183,7 +177,7 @@ class Wrapper:
         id = ''
         if hasattr(self, 'id'):
             if self.mapping.isMarked(self.id): id=' id="%s"' % self.mapping[self.id]
-        name=string.lower(self.__class__.__name__)
+        name=self.__class__.__name__.lower()
         v=self._v
         i=' '*indent
         if isinstance(v,Scalar):
@@ -203,7 +197,7 @@ class Collection:
         id = ''
         if hasattr(self, 'id'):
             if self.mapping.isMarked(self.id): id=' id="%s"' % self.mapping[self.id]
-        name=string.lower(self.__class__.__name__)
+        name=self.__class__.__name__.lower()
         i=' '*indent
         if self:
             return '%s<%s%s>\n%s%s</%s>\n' % (
@@ -221,20 +215,17 @@ class Dictionary(Collection):
     def __setitem__(self, k, v): self._d.append((k,v))
     def value(self, indent):
         #self._d.sort(lambda a, b: cmp(a[0]._v, b[0]._v)) # Sort the sequence by key JPS Improvement
-        return string.join(
-            map(lambda i, ind=' '*indent, indent=indent+4:
-                '%s<item>\n'
-                '%s'
-                '%s'
-                '%s</item>\n'
+        ind = ' ' * indent
+        indent = indent + 4
+        return ''.join(
+            '%s<item>\n%s%s%s</item>\n'
                 %
                 (ind,
                  Key(i[0], self.mapping).__str__(indent),
                  Value(i[1], self.mapping).__str__(indent),
-                 ind),
-                self._d
-                ),
-            '')
+                 ind)
+                 for i in self._d
+            )
 
 ppml.Dictionary = Dictionary
 
@@ -253,9 +244,9 @@ class Sequence(Collection):
     def extend(self, v): self._subs.extend(v)
 
     def value(self, indent):
-        return string.join(map(
-            lambda v, indent=indent: v.__str__(indent),
-            self._subs),'')
+        return ''.join(
+            v.__str__(indent) for v in
+            self._subs)
 
 ppml.Sequence = Sequence
 
@@ -265,7 +256,7 @@ class Persistent(Wrapper):
         id = ''
         if hasattr(self, 'id'):
             if self.mapping.isMarked(self.id): id=' id="%s"' % self.mapping[self.id]
-        name=string.lower(self.__class__.__name__)
+        name=self.__class__.__name__.lower()
         v=self._v
         i=' '*indent
         if isinstance(v,String):
@@ -496,7 +487,7 @@ class ToXMLUnpickler(Unpickler):
     dispatch[NONE] = load_none
 
     def load_int(self):
-        self.append(Int(string.atoi(self.readline()[:-1]), self.id_mapping))
+        self.append(Int(int(self.readline()[:-1]), self.id_mapping))
     dispatch[INT] = load_int
 
     def load_binint(self):
@@ -512,11 +503,11 @@ class ToXMLUnpickler(Unpickler):
     dispatch[BININT2] = load_binint2
 
     def load_long(self):
-        self.append(Long(string.atol(self.readline()[:-1], 0), self.id_mapping))
+        self.append(Long(long(self.readline()[:-1], 0), self.id_mapping))
     dispatch[LONG] = load_long
 
     def load_float(self):
-        self.append(Float(string.atof(self.readline()[:-1]), self.id_mapping))
+        self.append(Float(float(self.readline()[:-1]), self.id_mapping))
     dispatch[FLOAT] = load_float
 
     def load_binfloat(self, unpack=struct.unpack):
@@ -712,7 +703,7 @@ def save_object(self, tag, data):
         #OBJECT
         v='('+data[2]
         x=data[3][1:]
-        stop=string.rfind(x,'t')  # This seems
+        stop=x.rfind('t')  # This seems
         if stop>=0: x=x[:stop]    # wrong!
         v=save_put(self, v+x+'o', data[1])
         v=v+data[4]+'b' # state
@@ -728,6 +719,23 @@ def save_object(self, tag, data):
 
 ppml.save_object = save_object
 
+def save_pickle_start(self, tag, attrs):
+    return [tag, attrs]
+
+def save_pickle(self, tag, data):
+    return data[2] + '.'
+
+def save_none(self, tag, data):
+    return 'N'
+
+def save_long(self, tag, data):
+    return 'L'+data[2]+'L\012'
+
+def save_item(self, tag, data):
+    return ''.join(data[2:])
+
+def save_value(self, tag, data):
+    return data[2]
 
 class xmlPickler(NoBlanks, xyap):
     # XXX fix a bug in xyap.
@@ -743,13 +751,13 @@ class xmlPickler(NoBlanks, xyap):
         append(top)
 
     start_handlers={
-        'pickle': lambda self, tag, attrs: [tag, attrs],
+        'pickle': save_pickle_start,
         }
     end_handlers={
-        'pickle': lambda self, tag, data: data[2]+'.',
-        'none': lambda self, tag, data: 'N',
+        'pickle': save_pickle,
+        'none': save_none,
         'int': save_int,
-        'long': lambda self, tag, data: 'L'+data[2]+'L\012',
+        'long': save_long,
         'float': save_float,
         'string': save_string,
         'unicode': save_unicode,
@@ -757,12 +765,12 @@ class xmlPickler(NoBlanks, xyap):
         'tuple': save_tuple,
         'list': save_list,
         'dictionary': save_dict,
-        'item': lambda self, tag, data, j=string.join: j(data[2:],''),
-        'value': lambda self, tag, data: data[2],
-        'key' : lambda self, tag, data: data[2],
+        'item': save_item,
+        'value': save_value,
+        'key' : save_value,
         'object': save_object,
-        'klass': lambda self, tag, data: data[2],
-        'state': lambda self, tag, data: data[2],
+        'klass': save_value,
+        'state': save_value,
         'global': save_global,
         'persistent': save_persis,
         }
@@ -778,10 +786,10 @@ ppml.Tuple = Tuple
 
 # Copied from OFS.XMLExportImport.importXML (of Zope 2.12)
 # Imported and used directly by Products.ERP5.Document.BusinessTemplate
+from OFS.XMLExportImport import save_record, save_zopedata, start_zopedata
+from tempfile import TemporaryFile
+import xml.parsers.expat
 def importXML(jar, file, clue=''):
-    from OFS.XMLExportImport import save_record, save_zopedata, start_zopedata
-    from tempfile import TemporaryFile
-    import xml.parsers.expat
     if type(file) is str:
         file=open(file, 'rb')
     outfile=TemporaryFile()
