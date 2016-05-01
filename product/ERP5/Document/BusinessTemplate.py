@@ -5231,19 +5231,27 @@ Business Template is a set of definitions, such as skins, portal types and categ
         else:
           installed_bt = self.portal_templates._getOb(INSTALLED_BT_FOR_DIFF)
 
-      for item_name in item_name_list:
-        new_item = getattr(self, item_name, None)
-        installed_item = getattr(installed_bt, item_name, None)
-        if new_item is not None:
-          if installed_item is not None and hasattr(installed_item, '_objects'):
-            modified_object = new_item.preinstall(context=self,
-                                                  installed_item=installed_item,
-                                                  installed_bt=installed_bt)
-            if len(modified_object) > 0:
-              modified_object_list.update(modified_object)
-          else:
-            for path in new_item._objects.keys():
-              modified_object_list.update({path : ['New', new_item.__class__.__name__[:-12]]})
+      try:
+        # Temporarily use dumb convert() to speed up the detection of
+        # modified objects.
+        import Products.ERP5Type.patches.ppml as ppml_
+        orig_convert = ppml_.convert
+        ppml_.convert = lambda S, find=None: ('repr', S)
+        for item_name in item_name_list:
+          new_item = getattr(self, item_name, None)
+          installed_item = getattr(installed_bt, item_name, None)
+          if new_item is not None:
+            if installed_item is not None and hasattr(installed_item, '_objects'):
+              modified_object = new_item.preinstall(context=self,
+                                                    installed_item=installed_item,
+                                                    installed_bt=installed_bt)
+              if len(modified_object) > 0:
+                modified_object_list.update(modified_object)
+            else:
+              for path in new_item._objects.keys():
+                modified_object_list.update({path : ['New', new_item.__class__.__name__[:-12]]})
+      finally:
+        ppml_.convert = orig_convert
 
       if reinstall:
         self.portal_templates.manage_delObjects(ids=[INSTALLED_BT_FOR_DIFF])
