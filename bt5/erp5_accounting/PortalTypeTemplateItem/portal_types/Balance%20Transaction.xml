@@ -30,6 +30,12 @@
             <value> <int>0</int> </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>content_icon</string> </key>
             <value> <string>transaction_icon.gif</string> </value>
         </item>
@@ -65,9 +71,7 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>BalanceTransaction_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
