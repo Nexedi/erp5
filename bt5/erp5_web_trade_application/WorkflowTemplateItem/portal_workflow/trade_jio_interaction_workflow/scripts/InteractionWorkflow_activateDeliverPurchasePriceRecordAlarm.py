@@ -1,1 +1,1 @@
-sci['object'].getPortalObject().portal_alarms.gkr_deliver_purchase_price_record.activeSense()
+sci['object'].getPortalObject().portal_alarms.trade_deliver_purchase_price_record.activeSense()
