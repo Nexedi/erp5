@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>GKRRecord_init</string> </value>
+            <value> <string>TRADERecord_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
