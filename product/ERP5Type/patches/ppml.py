@@ -53,7 +53,7 @@ def convert(S):
         if not isinstance(S, unicode):
             S.decode('utf8')
     except UnicodeDecodeError:
-        new = ''.join([reprs3.get(x) for x in S])
+        return 'base64', base64.encodestring(S)[:-1]
     else:
         new = ''.join([reprs.get(x, x) for x in S])
     ### patch end
