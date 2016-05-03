@@ -45,63 +45,88 @@
       var gadget = this,
         erp5_document,
         result_list,
-        action,
-        view_list;
+        view_list,
+        action_list;
 
       return gadget.jio_getAttachment(options.jio_key, "links")
         .push(function (result) {
-          var i,
+          var i, i_len,
             promise_list = [
               gadget.getUrlFor({command: 'change', options: {page: undefined}})
             ];
           erp5_document = result;
           view_list = erp5_document._links.action_workflow || [];
-
+          action_list = []; // erp5_document._links.action_object_action
           if (view_list.constructor !== Array) {
             view_list = [view_list];
           }
-
+          if (action_list.constructor !== Array) {
+            view_list = [view_list];
+          }
           for (i = 0; i < view_list.length; i += 1) {
-            promise_list.push(gadget.getUrlFor({command: 'change', options: {view: view_list[i].href, page: undefined, editable: options.editable}}));
+            promise_list.push(
+              gadget.getUrlFor({
+                command: 'change',
+                options: {
+                  view: view_list[i].href,
+                  page: undefined,
+                  editable: options.editable
+                }
+              })
+            );
           }
           if (erp5_document._links.action_object_clone_action) {
-            view_list.push(erp5_document._links.action_object_clone_action);
-            promise_list.push(gadget.getUrlFor({
-              command: 'change',
-              options: {
-                view: erp5_document._links.action_object_clone_action.href,
-                page: undefined,
-                editable: true
-              }
-            }));
+            action_list.push(erp5_document._links.action_object_clone_action);
+          }
+          for (i = 0, i_len = action_list.length; i < i_len; i += 1) {
+            promise_list.push(
+              gadget.getUrlFor({
+                command: 'change',
+                options: {
+                  view: action_list[i].href,
+                  page: undefined,
+                  editable: true
+                }
+              })
+            );
           }
           return RSVP.all(promise_list);
         })
         .push(function (all_result) {
           var i,
-            tab_list = [];
+            tab_list = [],
+            action_tab_list = [];
 
           result_list = all_result;
 
-          for (i = 1; i < all_result.length; i += 1) {
+          for (i = 0; i < view_list.length; i += 1) {
             tab_list.push({
-              title: view_list[i - 1].title,
-              link: all_result[i],
-              i18n: view_list[i - 1].title
+              title: view_list[i].title,
+              link: all_result[i + 1],
+              i18n: view_list[i].title
             });
           }
-          if (erp5_document._links.action_object_clone_action) {
-            action = tab_list.pop();
+          for (i = 0; i < action_list.length; i += 1) {
+            action_tab_list.push({
+              title: action_list[i].title,
+              link: all_result[i + 1 + view_list.length],
+              i18n: action_list[i].title
+            });
           }
           return RSVP.all([
-            gadget.translateHtml(table_template({
-              definition_title: "Workflow Transitions",
-              documentlist: tab_list,
-              definition_i18n: "Workflow-Transitions",
-              section_i18n: "Actions",
-              section_title: "Actions",
-              action: action
-            })),
+            gadget.translateHtml(
+              table_template({
+                definition_title: "Workflow Transitions",
+                definition_icon: "random",
+                documentlist: tab_list,
+                definition_i18n: "Workflow-Transitions"
+              }) + table_template({
+                definition_i18n: "Actions",
+                definition_title: "Actions",
+                definition_icon: "gear",
+                documentlist: action_tab_list
+              })
+            ),
             calculatePageTitle(gadget, erp5_document)
           ]);
         })
