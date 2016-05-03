@@ -166,12 +166,24 @@
             <value> <string>default-src \'none\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data:; script-src \'self\' \'unsafe-eval\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
+            <key> <string>container_layout</string> </key>
+            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+        </item>
+        <item>
+            <key> <string>content_layout</string> </key>
+            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+        </item>
+        <item>
             <key> <string>criterion_property</string> </key>
             <value>
               <tuple>
                 <string>validation_state</string>
               </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>custom_render_method_id</string> </key>
+            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -405,7 +417,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>supercedriclen</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -419,7 +431,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.57124.59721.43776</string> </value>
+                <value> <string>950.61729.30992.48930</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -437,7 +449,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1459350997.13</float>
+                        <float>1462270185.79</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

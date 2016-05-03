@@ -1,7 +1,7 @@
 /*global window, rJS, RSVP, URI, location,
-    loopEventListener, btoa, SimpleQuery, ComplexQuery, Query */
+    loopEventListener, btoa, ComplexQuery, Query */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, RSVP, SimpleQuery, ComplexQuery, Query) {
+(function (window, rJS, RSVP) {
   "use strict";
 
   var gadget_klass = rJS(window);
@@ -40,34 +40,43 @@
       var gadget = this,
         id = options.id,
         list_method_template;
-      console.log(options);
       gadget.props.options = options;
       return gadget.jio_get(id)
         .push(function (result) {
-          gadget.props.element.querySelector("a").setAttribute("href",id + "/");
-          gadget.props.element.querySelector("h1").textContent = 
-            result.short_title ? result.short_title : ""; 
-          gadget.props.element.querySelector("p").textContent = 
-            result.description ? result.description : ""; 
-          return getViewLink(gadget, id, "section_content");
+          gadget.props.element.querySelector("h1").textContent =
+            result.short_title || "";
+          gadget.props.element.querySelector("p").textContent =
+            result.description || "";
+          return RSVP.all([
+            getViewLink(gadget, id, "section_content"),
+            getViewLink(gadget, id, "layout_configuration")
+          ]);
         })
         .push(function (result) {
           // XX Should it raise if result is undefined? 
-          return gadget.jio_getAttachment(id, result.href);
+          return RSVP.all([
+            gadget.jio_getAttachment(id, result[0].href),
+            gadget.jio_getAttachment(id, result[1].href)
+          ]);
         })
         .push(function (result) {
-          list_method_template = result._embedded._view.listbox.list_method_template;
+          list_method_template = result[0]._embedded._view.listbox.list_method_template;
+          gadget.props.element.querySelector("a").setAttribute(
+            "href",
+            result[1]._embedded._view.my_configuration_resource_base_url.default
+          );
           return gadget.jio_allDocs({
-              query: '(portal_type:"Image" OR portal_type:"Web Illustration") AND strict_publication_section_relative_url:"publication_section/application/logo"',
-              list_method_template: list_method_template,
-              select_list: ['relative_url', 'reference']
-            });
+            query: '(portal_type:"Image" OR portal_type:"Web Illustration") AND strict_publication_section_relative_url:"publication_section/application/logo"',
+            list_method_template: list_method_template,
+            select_list: ['relative_url', 'reference']
+          });
         })
         .push(function (result) {
           if (result.data.total_rows !== 0) {
-            gadget.props.element.querySelector("img").setAttribute("src",
+            gadget.props.element.querySelector("img").setAttribute(
+              "src",
               result.data.rows[0].value.reference + "?format=png&display=thumbnail"
-              )
+            );
           } else {
             // XXX Here we should have a fallback image
           }
@@ -93,4 +102,4 @@
     });
 
 
-}(window, rJS, RSVP, SimpleQuery, ComplexQuery, Query));
+}(window, rJS, RSVP));
