@@ -17,7 +17,8 @@
             {
               removeButtons: 'NewPage,Preview',
               removePlugins: '',
-              disableNativeSpellChecker: false
+              disableNativeSpellChecker: false,
+              extraAllowedContent: "details section article"
             }
           );
           g.props.ckeditor.addCommand('saveRJS', {
