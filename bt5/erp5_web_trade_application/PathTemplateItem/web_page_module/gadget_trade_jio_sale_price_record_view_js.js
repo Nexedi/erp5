@@ -13,6 +13,9 @@
     // Init local properties
     .ready(function (g) {
       g.props = {};
+      g.props.region=[];
+      g.props.quantity_unit=[];
+      g.props.currency=[];
     })
 
     // Assign the element to a variable
@@ -32,6 +35,7 @@
     .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod('allDocs', 'jio_allDocs')
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -43,6 +47,8 @@
       var page_gadget = this,
           gadget,
           sycn_method,
+          title,
+          relative_url,
           element,
           textNode;
       page_gadget.options = options;
@@ -55,9 +61,74 @@
         
       }
       
-      var state=translateString(getWorkflowState(page_gadget.options.doc.portal_type, page_gadget.options.jio_key, page_gadget.options.doc.sync_flag, page_gadget.options.doc.local_validation, page_gadget.options.doc.local_state));
+      var state=translateString(getWorkflowState(page_gadget.options.doc.portal_type, page_gadget.options.jio_key, page_gadget.options.doc.sync_flag,   page_gadget.options.doc.local_validation, page_gadget.options.doc.local_state));
+    
+     return new RSVP.Queue()
+        
+       .push(function () {
+      
+          return RSVP.all([
 
-return  page_gadget.getDeclaredGadget("erp5_form")
+           page_gadget.allDocs({
+            query: 'portal_type: "Currency" AND validation_state: "validated"',
+            select_list: ["title", "logical_path", "relative_url"],
+            // sort_on: [["id", "ascending"]],
+            limit: [0, 1234567890]
+          }),
+      
+           page_gadget.allDocs({
+            query: 'portal_type: "Category" AND relative_url: "quantity_unit/%"',
+            select_list: ["title", "logical_path", "category_relative_url"],
+            // sort_on: [["id", "ascending"]],
+            limit: [0, 1234567890]
+          }),
+      
+      
+      
+           page_gadget.allDocs({
+            query: 'portal_type: "Category" AND relative_url: "region/%"',
+            select_list: ["title", "logical_path", "category_relative_url"],
+            // sort_on: [["id", "ascending"]],
+            limit: [0, 1234567890]
+          })
+      
+      
+          ]);
+            })
+        .push(function (allresult) {
+            var i,j;
+            for (i = 0; i < allresult[0].data.total_rows; i += 1) {
+              title=allresult[0].data.rows[i].value.title;
+              relative_url=allresult[0].data.rows[i].value.relative_url;
+              page_gadget.props.currency.push([title,relative_url]);
+             }
+
+      
+      
+            for (i = 0; i < allresult[1].data.total_rows; i += 1) {
+              title= allresult[1].data.rows[i].value.logical_path || allresult[1].data.rows[i].value.title;
+              relative_url=allresult[1].data.rows[i].value.category_relative_url;
+              page_gadget.props.quantity_unit.push([title,relative_url]);
+  
+            
+            }
+      
+      
+            for (i = 0; i < allresult[2].data.total_rows; i += 1) {
+              title=allresult[2].data.rows[i].value.logical_path || allresult[2].data.rows[i].value.title;
+              relative_url=allresult[2].data.rows[i].value.category_relative_urll;
+              page_gadget.props.region.push([title,relative_url]);
+
+            
+           }
+      
+          return;
+      
+      })
+       .push(function () {
+
+          return  page_gadget.getDeclaredGadget("erp5_form")
+      })
         .push(function (form_gadget) {
           gadget=form_gadget;
           return form_gadget.render({
@@ -156,18 +227,10 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "description": "",
                 "title": "Currency",
                 "default": page_gadget.options.doc.price_currency,
-                "items":[["RMB","currency_module/CNY"],
-                         ["Euro","currency_module/EUR"],
-                         ["Hong Kong Dollar","currency_module/HKG"],
-                         ["Rupee","currency_module/IDR"],
-                         ["Ringgit","currency_module/MYR"],
-                         ["Singapore Dollar","currency_module/SGD"],
-                         ["Thai Baht","currency_module/THB"],
-                         ["US Dollar","currency_module/USD"]
-                        ],
+                "items":page_gadget.props.currency,
                 "css_class": "",
                 "required": 1,
-                "editable": 0,
+                "editable": 1,
                 "key": "price_currency",
                 "hidden": 0,
                 "type": "ListField"
@@ -187,13 +250,10 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "description": "",
                 "title": "Quantity Unit",
                 "default": page_gadget.options.doc.quantity_unit,
-                "items":[["Weight","weight"],
-                         ["Weight/Kilogram","weight/kg"],
-                         ["Weight/Ton","weight/ton"],
-                        ],
+                "items": page_gadget.props.quantity_unit,
                 "css_class": "",
                 "required": 1,
-                "editable": 0,
+                "editable": 1,
                 "key": "quantity_unit",
                 "hidden": 0,
                 "type": "ListField"
@@ -340,33 +400,10 @@ return  page_gadget.getDeclaredGadget("erp5_form")
                 "description": "",
                 "title": "Region",
                 "default": page_gadget.options.doc.default_address_region,
-                "items":[["Africa","africa"],
-                         ["America","america"],
-                         ["Asia","asia"],
-                         ["Asia/Cambodia","asia/cambodia"],
-                         ["Asia/Singapore-Malaysia-Indonesia","asia/sin_mal_ind"],
-                         ["Asia/Singapore-Malaysia-Indonesia/Indonesia","asia/sin_mal_ind/indonesia"],
-                         ["Asia/Singapore-Malaysia-Indonesia/Malaysia","asia/sin_mal_ind/malaysia"],
-                         ["Asia/Thailand","asia/thailand"],
-                         ["China","china"],
-                         ["China/Dongbei","china/dongbei"],
-                         ["China/Guangdong","china/guangdong"],
-                         ["China/Hainan","china/hainan"],
-                         ["China/Huabei","china/huabei"],
-                         ["China/Huadong","china/huadong"],
-                         ["China/Huanan","china/huanan"],
-                         ["China/Huazhong","china/huazhong"],
-                         ["China/Other","china/other"],
-                         ["China/Shandong","china/shandong"],
-                         ["China/Xibei","china/xibei"],
-                         ["China/Xinan","china/xinan"],
-                         ["China/Yunnan","china/yunnan"],
-                         ["Europe","europe"],
-                         ["Rest of the world","row"],
-                        ],
+                "items":page_gadget.props.region,
                 "css_class": "",
                 "required": 1,
-                "editable": 0,
+                "editable": 1,
                 "key": "default_address_region",
                 "hidden": 0,
                 "type": "ListField"
