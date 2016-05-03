@@ -176,11 +176,12 @@
 
 
   function renderErrorMessage(gadget) {
+    var options = {};
+    options.extended_search = undefined;
+    options[gadget.props.field_json.key + "_sort_list:json"] = undefined;
     return gadget.getUrlFor({
       command: 'store_and_change',
-      options: {
-        "extended_search": ""
-      }
+      options: options
     })
       .push(function (url) {
         return gadget.translateHtml(error_message_template(
