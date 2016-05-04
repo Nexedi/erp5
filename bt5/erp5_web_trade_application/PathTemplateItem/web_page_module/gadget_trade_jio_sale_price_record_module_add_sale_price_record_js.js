@@ -38,7 +38,8 @@
         .push(function (html) {
           gadget.props.element.innerHTML = html;
           return gadget.updateHeader({
-            title: "New Sale Price Record"
+            title: "New Sale Price Record",
+            add_action: true
           });
         })
         .push(function () {
@@ -56,6 +57,7 @@
         .push(function () {
           return gadget.props.deferred.promise;
         })
+
         .push(function () {
 
           return promiseEventListener(
@@ -103,7 +105,10 @@
         });
 
     })
-
+    .declareMethod('triggerSubmit', function () {
+      //this.props.element.querySelector('button').click();
+    console.log("button add");
+    })
     /////////////////////////////////////////
     // Fill currencies
     /////////////////////////////////////////

@@ -142,6 +142,9 @@
         possible_right_button_list = [
           ['save_action', 'Save', 'check', 'submit'],
           ['submit_action', 'Proceed', 'check', 'submit'],
+          ['add_action', 'Add', 'check', 'submit'],
+
+          
         ],
         possible_sub_header_list = [
           ['tab_url', 'Tabs', 'eye'],
