@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_trade_jio_sale_price_record_module_add_sale_price_record.js</string> </value>
+            <value> <string>gadget_trade_jio_sale_price_record_module_add_sale_price_record1.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -242,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>950.31847.7935.64102</string> </value>
+                <value> <string>950.63105.6074.48247</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1460627035.02</float>
+                        <float>1462354375.17</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
