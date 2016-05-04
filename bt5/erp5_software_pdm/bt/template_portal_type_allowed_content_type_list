@@ -2,7 +2,10 @@ Software Licence Module | Software Licence
 Software Product Module | Software Product
 Software Product | Purchase Supply Line
 Software Product | Sale Supply Line
+Software Publication Line | Software Publication Cell
+Software Publication Line | Software Publication Line
 Software Publication Module | Software Publication
+Software Publication | Software Publication Line
 Software Release Module | Software Release
 Software Release | Drawing
 Software Release | File
