@@ -2,6 +2,9 @@
  <portal_type id="Software Product">
   <item>Sale Supply Line</item>
  </portal_type>
+ <portal_type id="Software Publication Line">
+  <item>Internal Order Cell</item>
+ </portal_type>
  <portal_type id="Software Release">
   <item>Drawing</item>
   <item>File</item>
