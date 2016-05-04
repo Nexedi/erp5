@@ -166,7 +166,8 @@ def _recursiveRemoveUid(obj):
 def _delObjectWithoutHook(obj, id):
   """OFS.ObjectManager._delObject without calling manage_beforeDelete."""
   ob = obj._getOb(id)
-  obj._objects = tuple([i for i in obj._objects if i['id'] != id])
+  if obj._objects:
+    obj._objects = tuple([i for i in obj._objects if i['id'] != id])
   obj._delOb(id)
   try:
     ob._v__object_deleted__ = 1
