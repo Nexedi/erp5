@@ -333,7 +333,7 @@ class TemplateTool (BaseTool):
       try:
         os.close(tempid) # Close the opened fd as soon as possible.
         file_path, headers = urlretrieve(url, temppath)
-        if re.search(r'<title>Revision \d+:', open(file_path, 'r').read()):
+        if re.search(r'<title>.*Revision \d+:', open(file_path, 'r').read()):
           # this looks like a subversion repository, try to check it out
           LOG('ERP5', INFO, 'TemplateTool doing a svn checkout of %s' % url)
           return self._download_svn(url, bt_id)
