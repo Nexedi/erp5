@@ -2347,7 +2347,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self._ignore_log_errors()
       logged_errors = [ logrecord for logrecord in self.logged
                         if logrecord.name == 'CMFCategory' ]
-      self.assertEqual('Could not access object region/gamma',
+      self.assertEqual('Could not get object region/gamma',
                         logged_errors[0].getMessage())
 
     def test_list_accessors(self):

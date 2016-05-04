@@ -1002,8 +1002,8 @@ class Base( CopyContainer,
       #LOG("Get Acquired Property self",0,str(self))
       #LOG("Get Acquired Property portal_type",0,str(portal_type))
       #LOG("Get Acquired Property base_category",0,str(base_category))
-      #super_list = self._getValueList(base_category, portal_type=portal_type) # We only do a single jump
-      super_list = self._getAcquiredValueList(base_category, portal_type=portal_type,
+      #super_list = self.getValueList(base_category, portal_type=portal_type) # We only do a single jump
+      super_list = self.getAcquiredValueList(base_category, portal_type=portal_type,
                                               checked_permission=checked_permission) # Full acquisition
       super_list = [o for o in super_list if o.getPhysicalPath() != self.getPhysicalPath()] # Make sure we do not create stupid loop here
       #LOG("Get Acquired Property super_list",0,str(super_list))
@@ -1131,11 +1131,11 @@ class Base( CopyContainer,
             super_list.append(acquisition_object)
           except (KeyError, AttributeError):
             pass
-      super_list.extend(self._getAcquiredValueList(
-                                          base_category,
-                                          portal_type=portal_type,
-                                          checked_permission=checked_permission))
-                                          # Full acquisition
+      super_list += self.getAcquiredValueList(
+        base_category,
+        portal_type=portal_type,
+        checked_permission=checked_permission,
+        ) # Full acquisition
       super_list = [o for o in super_list if o.getPhysicalPath() != self.getPhysicalPath()] # Make sure we do not create stupid loop here
       if len(super_list) > 0:
         value = []
@@ -1891,7 +1891,59 @@ class Base( CopyContainer,
                               checked_permission=None)
     self.reindexObject()
 
+  # Unrestricted category value getters
+
   def _getDefaultValue(self, id, spec=(), filter=None, default=_MARKER, **kw):
+    path = self._getDefaultCategoryMembership(id, base=1, spec=spec,
+                                              filter=filter, **kw)
+    if path:
+      return self._getCategoryTool()._resolveCategory(path)
+    if default is not _MARKER:
+      return default
+
+  def _getValueList(self, id, spec=(), filter=None, default=_MARKER, **kw):
+    ref_list = self._getCategoryMembershipList(id, base=1, spec=spec,
+                                               filter=filter, **kw)
+    if ref_list:
+      resolveCategory = self._getCategoryTool()._resolveCategory
+      value_list = []
+      for path in ref_list:
+        value = resolveCategory(path)
+        if value is not None:
+          value_list.append(value)
+      return value_list if value_list or default is _MARKER else default
+    return ref_list if default is _MARKER else default
+
+  def _getDefaultAcquiredValue(self, id, spec=(), filter=None, portal_type=(),
+                               evaluate=1, checked_permission=None,
+                               default=None, **kw):
+    path = self._getDefaultAcquiredCategoryMembership(
+      id, spec=spec, filter=filter, portal_type=portal_type,
+      base=1, checked_permission=checked_permission, **kw)
+    if path:
+      return self._getCategoryTool()._resolveCategory(path)
+    if default is not _MARKER:
+      return default
+
+  def _getAcquiredValueList(self, id, spec=(), filter=None, default=_MARKER,
+                            **kw):
+    ref_list = self._getAcquiredCategoryMembershipList(id, base=1, spec=spec,
+                                                       filter=filter, **kw)
+    if ref_list:
+      resolveCategory = self._getCategoryTool()._resolveCategory
+      value_list = []
+      for path in ref_list:
+        value = resolveCategory(path)
+        if value is not None:
+          value_list.append(value)
+      return value_list if value_list or default is _MARKER else default
+    return ref_list if default is _MARKER else default
+
+  # Restricted category value getters
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDefaultValue')
+  def getDefaultValue(self, id, spec=(), filter=None, default=_MARKER, **kw):
     path = self._getDefaultCategoryMembership(id, base=1, spec=spec,
                                               filter=filter, **kw)
     if path:
@@ -1900,51 +1952,50 @@ class Base( CopyContainer,
       return default
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDefaultValue')
-  getDefaultValue = _getDefaultValue
-
-  def _getValueList(self, id, spec=(), filter=None, default=_MARKER, **kw):
-    ref_list = []
-    for path in self._getCategoryMembershipList(id, base=1, spec=spec,
-                                                filter=filter, **kw):
-      category = self._getCategoryTool().resolveCategory(path)
-      if category is not None:
-        ref_list.append(category)
-    return ref_list if ref_list or default is _MARKER else default
+                            'getValueList')
+  def getValueList(self, id, spec=(), filter=None, default=_MARKER, **kw):
+    ref_list = self._getCategoryMembershipList(id, base=1, spec=spec,
+                                               filter=filter, **kw)
+    if ref_list:
+      resolveCategory = self._getCategoryTool().resolveCategory
+      value_list = []
+      for path in ref_list:
+        value = resolveCategory(path)
+        if value is not None:
+          value_list.append(value)
+      return value_list if value_list or default is _MARKER else default
+    return ref_list if default is _MARKER else default
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getValueList')
-  getValueList = _getValueList
-
-  def _getDefaultAcquiredValue(self, id, spec=(), filter=None, portal_type=(),
-                               evaluate=1, checked_permission=None,
-                               default=None, **kw):
-    path = self._getDefaultAcquiredCategoryMembership(id, spec=spec, filter=filter,
-                                                  portal_type=portal_type, base=1,
-                                                  checked_permission=checked_permission,
-                                                  **kw)
+                            'getDefaultAcquiredValue')
+  def getDefaultAcquiredValue(self, id, spec=(), filter=None, portal_type=(),
+                              evaluate=1, checked_permission=None,
+                              default=None, **kw):
+    path = self._getDefaultAcquiredCategoryMembership(
+      id, spec=spec, filter=filter, portal_type=portal_type,
+      base=1, checked_permission=checked_permission, **kw)
     if path:
       return self._getCategoryTool().resolveCategory(path)
     if default is not _MARKER:
       return default
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDefaultAcquiredValue')
-  getDefaultAcquiredValue = _getDefaultAcquiredValue
-
-  def _getAcquiredValueList(self, id, spec=(), filter=None, default=_MARKER,
-                            **kw):
-    ref_list = []
-    for path in self._getAcquiredCategoryMembershipList(id, base=1,
-                                                spec=spec,  filter=filter, **kw):
-      category = self._getCategoryTool().resolveCategory(path)
-      if category is not None:
-        ref_list.append(category)
-    return ref_list if ref_list or default is _MARKER else default
-
-  security.declareProtected(Permissions.AccessContentsInformation,
                             'getAcquiredValueList')
-  getAcquiredValueList = _getAcquiredValueList
+  def getAcquiredValueList(self, id, spec=(), filter=None, default=_MARKER,
+                            **kw):
+    ref_list = self._getAcquiredCategoryMembershipList(id, base=1, spec=spec,
+                                                       filter=filter, **kw)
+    if ref_list:
+      resolveCategory = self._getCategoryTool().resolveCategory
+      value_list = []
+      for path in ref_list:
+        value = resolveCategory(path)
+        if value is not None:
+          value_list.append(value)
+      return value_list if value_list or default is _MARKER else default
+    return ref_list if default is _MARKER else default
+
+  ###
 
   def _getDefaultRelatedValue(self, id, spec=(), filter=None, portal_type=(),
                               strict_membership=0, strict="deprecated",

@@ -33,8 +33,6 @@ from warnings import warn
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_inner
 
-from Products.CMFCore.utils import getToolByName
-
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Document import newTempBase
@@ -44,7 +42,6 @@ from Products.ERP5Type.Cache import readOnlyTransactionCache
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from Products.ERP5Type.Globals import PersistentMapping
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.CMFCore.Expression import Expression
 
@@ -199,13 +196,6 @@ class Predicate(XMLObject):
       result = expression(createExpressionContext(context))
     return result
 
-  @UnrestrictedMethod
-  def _unrestrictedResolveCategory(self, *args):
-    # Categories used on predicate can be not available to user query, which
-    # shall be applied with predicate.
-    portal_categories = getToolByName(self, 'portal_categories')
-    return portal_categories.resolveCategory(*args)
-
   security.declareProtected( Permissions.AccessContentsInformation,
                              'buildSQLQuery' )
   def buildSQLQuery(self, strict_membership=0, table='category',
@@ -248,7 +238,8 @@ class Predicate(XMLObject):
               f = (i,) if i in f else ()
             catalog_kw[p] = list(f)
 
-    portal_catalog = getToolByName(self, 'portal_catalog')
+    portal = self.getPortalObject()
+    resolveCategory = portal.portal_categories._resolveCategory
 
     from_table_dict = {}
 
@@ -260,7 +251,7 @@ class Predicate(XMLObject):
     for category in self.getMembershipCriterionCategoryList():
       base_category = category.split('/')[0] # Retrieve base category
       if membership_dict.has_key(base_category):
-        category_value = self._unrestrictedResolveCategory(category, None)
+        category_value = resolveCategory(category)
         if category_value is not None:
           table_alias = "single_%s_%s" % (table, base_category)
           from_table_dict[table_alias] = 'category'
@@ -282,7 +273,7 @@ class Predicate(XMLObject):
     for category in self.getMembershipCriterionCategoryList():
       base_category = category.split('/')[0] # Retrieve base category
       if multimembership_dict.has_key(base_category):
-        category_value = self._unrestrictedResolveCategory(category)
+        category_value = resolveCategory(category)
         if category_value is not None:
           join_count += 1
           table_alias = "multi_%s_%s" % (table, join_count)
@@ -317,7 +308,7 @@ class Predicate(XMLObject):
       catalog_kw['where_expression'] = SQLQuery(sql_text)
     # force implicit join
     catalog_kw['implicit_join'] = True
-    sql_query = portal_catalog.buildSQLQuery(**catalog_kw)
+    sql_query = portal.portal_catalog.buildSQLQuery(**catalog_kw)
     # XXX from_table_list is None most of the time after the explicit_join work
     for alias, table in sql_query['from_table_list']:
       if from_table_dict.has_key(alias):
@@ -359,15 +350,15 @@ class Predicate(XMLObject):
   def searchResults(self, **kw):
     """
     """
-    portal_catalog = getToolByName(self, 'portal_catalog')
-    return portal_catalog.searchResults(build_sql_query_method=self.buildSQLQuery,**kw)
+    return self.getPortalObject().portal_catalog.searchResults(
+      build_sql_query_method=self.buildSQLQuery, **kw)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'countResults')
   def countResults(self, REQUEST=None, used=None, **kw):
     """
     """
-    portal_catalog = getToolByName(self, 'portal_catalog')
-    return portal_catalog.countResults(build_sql_query_method=self.buildSQLQuery,**kw)
+    return self.getPortalObject().portal_catalog.countResults(
+      build_sql_query_method=self.buildSQLQuery, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getCriterionList' )
   def getCriterionList(self, **kw):

@@ -122,7 +122,7 @@ class DefaultGetter(BaseGetter):
         LOG("ERP5Type Deprecated Getter Id:",0, self._id)
       if args:
         kw['default'] = args[0]
-      return instance._getDefaultAcquiredValue(self._key, **kw)
+      return instance.getDefaultAcquiredValue(self._key, **kw)
 
     psyco.bind(__call__)
 
@@ -153,7 +153,7 @@ class ListGetter(BaseGetter):
         LOG("ERP5Type Deprecated Getter Id:",0, self._id)
       if args:
         kw['default'] = args[0]
-      return instance._getAcquiredValueList(self._key, **kw)
+      return instance.getAcquiredValueList(self._key, **kw)
 
     psyco.bind(__call__)
 

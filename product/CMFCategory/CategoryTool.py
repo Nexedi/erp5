@@ -1678,11 +1678,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                 display_id = 'title')
 
     security.declarePublic('resolveCategory')
-    def resolveCategory(self, relative_url,  default=_marker):
+    def resolveCategory(self, relative_url):
         """
           Finds an object from a relative_url
           Method is public since we use restrictedTraverse
         """
+        return self._resolveCategory(relative_url, True)
+
+    def _resolveCategory(self, relative_url, restricted=False):
         if not isinstance(relative_url, str):
           # Handle parent base category is a special way
           return relative_url
@@ -1759,15 +1762,16 @@ class CategoryTool( UniqueObject, Folder, Base ):
         stack.reverse()
         __traceback_info__ = relative_url
 
-        validate = getSecurityManager().validate
-        def restrictedGetOb(container):
-          obj = container._getOb(key, None)
-          if obj is None or validate(container, container, key, obj):
-            return obj
-          # if user can't access object try to return default passed
-          if default is _marker:
+        if restricted:
+          validate = getSecurityManager().validate
+          def getOb(container):
+            obj = container._getOb(key, None)
+            if obj is None or validate(container, container, key, obj):
+              return obj
             raise Unauthorized('unauthorized access to element %s' % key)
-          return default
+        else:
+          def getOb(container):
+            return container._getOb(key, None)
 
         # XXX Currently, resolveCategory accepts that a category might
         # not start with a Base Category, but with a Module. This is
@@ -1778,32 +1782,32 @@ class CategoryTool( UniqueObject, Folder, Base ):
         if stack:
           portal = aq_inner(self.getPortalObject())
           key = stack.pop()
-          obj = restrictedGetOb(self)
+          obj = getOb(self)
           if obj is None:
-            obj = restrictedGetOb(portal)
+            obj = getOb(portal)
             if obj is not None:
               obj = obj.__of__(self)
           else:
             while stack:
               container = obj
               key = stack.pop()
-              obj = restrictedGetOb(container)
+              obj = getOb(container)
               if obj is not None:
                 break
-              obj = restrictedGetOb(self)
+              obj = getOb(self)
               if obj is None:
-                obj = restrictedGetOb(portal)
+                obj = getOb(portal)
                 if obj is not None:
                   obj = obj.__of__(container)
                 break
 
           while obj is not None and stack:
             key = stack.pop()
-            obj = restrictedGetOb(obj)
+            obj = getOb(obj)
 
         if obj is None:
           LOG('CMFCategory', WARNING,
-              'Could not access object %s' % relative_url)
+              'Could not get object %s' % relative_url)
 
         if cache is not None:
           cache[cache_key] = obj
