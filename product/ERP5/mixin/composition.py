@@ -221,7 +221,7 @@ class CompositionMixin:
     while effective_index < len(effective_list):
       if effective_index >= 0:
         # we don't use getSpecialiseValueList to avoid acquisition on the parent
-        model_list = effective_list[effective_index].getValueList('specialise',
+        model_list = effective_list[effective_index]._getValueList('specialise',
                                         portal_type=specialise_type_list or ())
       effective_index += 1
       for model in model_list:
@@ -243,7 +243,7 @@ class CompositionMixin:
     """
     portal_type_set = set()
     specialise_list = []
-    for value in self.getValueList('specialise'):
+    for value in self._getValueList('specialise'):
       portal_type = value.getPortalType()
       if not (portal_type in exclude_specialise_type_list or
           specialise_type_list and portal_type not in specialise_type_list):
