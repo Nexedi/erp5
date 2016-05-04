@@ -38,11 +38,14 @@ reprs2={}
 reprs2['<'] = "\\074"
 reprs2['>'] = "\\076"
 reprs2['&'] = "\\046"
-### patch begin: create a conversion table for [\x00-\xff]. this table is
-###              used for a binary string.
-reprs3 = reprs.copy()
-for c in map(chr,range(32, 256)): reprs3[c] = reprs.get(c, repr(c)[1:-1])
-### patch end
+
+reprs_re = re.compile('|'.join(re.escape(k) for k in reprs.keys()))
+def sub_reprs(m):
+  return reprs[m.group(0)]
+
+reprs2_re = re.compile('|'.join(re.escape(k) for k in reprs2.keys()))
+def sub_reprs2(m):
+  return reprs2[m.group(0)]
 
 def convert(S):
     new = ''
@@ -55,15 +58,15 @@ def convert(S):
     except UnicodeDecodeError:
         return 'base64', base64.encodestring(S)[:-1]
     else:
-        new = ''.join([reprs.get(x, x) for x in S])
+        new = reprs_re.sub(sub_reprs, S)
     ### patch end
     if len(new) > (1.4*len(S)):
         return 'base64', base64.encodestring(S)[:-1]
     elif '>' in new or '<' in S or '&' in S:
         if not ']]>' in S:
-            return 'cdata', '<![CDATA[\n\n%s\n\n]]>' % new
+            return 'cdata', '<![CDATA[\n\n' + new + '\n\n]]>'
         else:
-            return 'repr', ''.join([reprs2.get(x, x) for x in new])
+            return 'repr', reprs2_re.sub(sub_reprs2, new)
     return 'repr', new
 
 ppml.convert = convert
