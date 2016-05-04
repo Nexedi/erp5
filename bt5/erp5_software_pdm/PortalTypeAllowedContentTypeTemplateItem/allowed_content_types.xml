@@ -9,6 +9,13 @@
  <portal_type id="Software Product Module">
   <item>Software Product</item>
  </portal_type>
+ <portal_type id="Software Publication">
+  <item>Software Publication Line</item>
+ </portal_type>
+ <portal_type id="Software Publication Line">
+  <item>Software Publication Cell</item>
+  <item>Software Publication Line</item>
+ </portal_type>
  <portal_type id="Software Publication Module">
   <item>Software Publication</item>
  </portal_type>

@@ -48,6 +48,7 @@
             <value>
               <tuple>
                 <string>product</string>
+                <string>resource</string>
               </tuple>
             </value>
         </item>
@@ -65,9 +66,7 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>SoftwareProduct_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
@@ -95,8 +94,20 @@
             </value>
         </item>
         <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>type_class</string> </key>
             <value> <string>SoftwareProduct</string> </value>
+        </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>type_mixin</string> </key>
