@@ -260,7 +260,7 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
                                               portal_type = 'Simulation Movement'):
         # And apply
         getattr(my_simulation_movement.getObject(), method_id)()
-      for c in self.contentValues(filter={'portal_type': 'Delivery Cell'}):
+      for c in self.objectValues(portal_type='Delivery Cell'):
         for my_simulation_movement in c.getDeliveryRelatedValueList(
                                               portal_type = 'Simulation Movement'):
           # And apply
@@ -359,11 +359,11 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
       """Returns a list of messages that contains the divergences for that line
       and the cells it may contain.
       """
-      divergence_list = []
       if self.hasCellContent():
-        for cell in self.contentValues(filter={
-                'portal_type': self.getPortalDeliveryMovementTypeList()}):
-          divergence_list.extend(cell.getDivergenceList())
+        divergence_list = []
+        for cell in self.objectValues(portal_type=self.getPortalObject()
+            .getPortalDeliveryMovementTypeList()):
+          divergence_list += cell.getDivergenceList()
         return divergence_list
       else:
         return Movement.getDivergenceList(self)

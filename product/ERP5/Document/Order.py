@@ -119,7 +119,9 @@ class Order(Delivery):
 
     def getTotalQuantity(self, **kw) :
       """Returns the total quantity for this Order. """
-      kw.setdefault('portal_type', self.getPortalOrderMovementTypeList())
+      if 'portal_type' not in kw:
+        kw['portal_type'] = self.getPortalObject() \
+          .getPortalOrderMovementTypeList()
       if kw.get('fast'):
         kw['only_accountable'] = False
       return Delivery.getTotalQuantity(self, **kw)

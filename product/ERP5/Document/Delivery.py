@@ -102,9 +102,9 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         base_contribution must be a relative url of a category. If passed, then
         fast parameter is ignored.
       """
-      result = None
-      kw.setdefault( 'portal_type',
-                     self.getPortalDeliveryMovementTypeList())
+      if 'portal_type' not in kw:
+        kw['portal_type'] = self.getPortalObject() \
+          .getPortalDeliveryMovementTypeList()
       if base_contribution is None:
         if fast:
           # XXX fast ignores base_contribution for now, but it should be possible
@@ -160,7 +160,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         portal types. You should use getTotalPrice(base_contribution=) instead.
       """
       total_price = self.getTotalPrice(fast=fast, src__=src__, **kw)
-      kw['portal_type'] = self.getPortalTaxMovementTypeList()
+      kw['portal_type'] = self.getPortalObject().getPortalTaxMovementTypeList()
       return total_price + self.getTotalPrice(fast=fast, src__=src__, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -175,8 +175,9 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         So if the order is not in the catalog, getTotalQuantity(fast=1)
         will return 0, this is not a bug.
       """
-      kw.setdefault('portal_type',
-                    self.getPortalDeliveryMovementTypeList())
+      if 'portal_type' not in kw:
+        kw['portal_type'] = self.getPortalObject() \
+          .getPortalDeliveryMovementTypeList()
       if fast:
         kw['section_uid'] = self.getDestinationSectionUid()
         kw['stock.explanation_uid'] = self.getUid()
@@ -272,7 +273,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         This does not contain Container Line or Container Cell.
       """
       return self.getMovementList(portal_type=
-                          self.getPortalSimulatedMovementTypeList())
+        self.getPortalObject().getPortalSimulatedMovementTypeList())
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInvoiceMovementList')
@@ -282,7 +283,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         This does not contain Container Line or Container Cell.
       """
       return self.getMovementList(portal_type=
-                            self.getPortalInvoiceMovementTypeList())
+        self.getPortalObject().getPortalInvoiceMovementTypeList())
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getContainerList')
@@ -291,11 +292,8 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         Return a list of root containers.
         This does not contain sub-containers.
       """
-      container_list = []
-      for m in self.contentValues(filter={'portal_type':
-                                  self.getPortalContainerTypeList()}):
-        container_list.append(m)
-      return container_list
+      return self.objectValues(portal_type=
+        self.getPortalObject().getPortalContainerTypeList())
 
     #######################################################
     # Causality computation
@@ -460,13 +458,11 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     #######################################################
     # Stock Management
     def _getMovementResourceList(self):
-      resource_dict = {}
-      for m in self.contentValues(filter={
-                      'portal_type': self.getPortalMovementTypeList()}):
-        r = m.getResource()
-        if r is not None:
-          resource_dict[r] = 1
-      return resource_dict.keys()
+      resource_set = {m.getResource()
+        for m in self.objectValues(portal_type=
+          self.getPortalObject().getPortalMovementTypeList())}
+      resource_set.discard(None)
+      return list(resource_set)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventory')
@@ -698,11 +694,10 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       return self.asComposedDocument().build(explanation=self)
 
     def _createRootAppliedRule(self):
-      portal = self.getPortalObject()
       # Only create RAR if we are not in a "too early" or "too late" state.
       state = self.getSimulationState()
       if (state != 'deleted' and
-          state not in portal.getPortalDraftOrderStateList()):
+          state not in self.getPortalObject().getPortalDraftOrderStateList()):
         return super(Delivery, self)._createRootAppliedRule()
 
     security.declareProtected( Permissions.AccessContentsInformation,
