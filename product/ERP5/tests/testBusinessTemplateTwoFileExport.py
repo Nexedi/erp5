@@ -1159,3 +1159,65 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     root = etree.parse(page_template_path + '.xml').getroot()
     self.assertEquals('iso-8859-15',
       root.xpath('.//item[key/string[.="output_encoding"]]/value/string')[0].text)
+
+  def test_twoFileImportExportPreinstallForPythonScript(self):
+    """
+      Check that preinstall works correctly in
+      the two file export case for PythonScript
+    """
+    skin_folder_id = 'dummy_test_folder'
+    if skin_folder_id in self.portal.portal_skins.objectIds():
+      self.portal.portal_skins.manage_delObjects([skin_folder_id])
+
+    self.portal.portal_skins.manage_addProduct['OFSP'].manage_addFolder(skin_folder_id)
+    skin_folder = self.portal.portal_skins[skin_folder_id]
+
+    python_script_id = 'dummy_test_script'
+    if python_script_id in skin_folder.objectIds():
+      skin_folder.manage_delObjects([python_script_id])
+    skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(id=python_script_id)
+    python_script = skin_folder[python_script_id]
+    python_script.ZPythonScript_edit('', "foo")
+
+    self.template.edit(template_skin_id_list=['%s/%s' % (skin_folder_id, python_script_id)])
+
+    python_script_path = os.path.join(self.cfg.instancehome, self.export_dir,
+                                             'SkinTemplateItem', 'portal_skins',
+                                             skin_folder_id,python_script_id)
+
+    self.template.build()
+    self.tic()
+    self.template.export(path=self.export_dir, local=True)
+
+    # check that PythonScript was exported as two files
+    self.assertTrue(os.path.exists('%s.xml' % python_script_path))
+    self.assertTrue(os.path.exists('%s.py' % python_script_path))
+
+    self.template.install()
+    self.tic()
+
+    template_path = os.path.join(self.cfg.instancehome, self.export_dir)
+    import_template = self.template_tool.download(url='file:'+template_path)
+
+    # check that preinstalling the import_template no difference is found
+    result = import_template.preinstall()
+    self.assertEquals(result, {})
+
+    # edit python PythonScript code
+    self.portal.portal_skins[skin_folder_id][python_script_id]._body = "bar"
+
+    # check that preinstalling the import_template still no difference is found
+    # since the change was in the portal and not installed
+    result = import_template.preinstall()
+    self.assertEquals(result, {})
+
+    import_template.build()
+    import_template.install()
+    self.tic()
+
+    second_import_template = self.template_tool.download(url='file:'+template_path)
+    # check that preinstalling the second_import_template
+    # the PythonScript is recognised as modified
+    result = second_import_template.preinstall()
+    self.assertEquals(result.get('portal_skins/%s/%s' % (skin_folder_id, python_script_id)),
+                      ('Modified', 'Skin'))
