@@ -1,3 +1,2 @@
-memcached_tool = context.getPortalObject().portal_memcached
-memcached_dict = memcached_tool.getMemcachedDict(key_prefix='pivottablejs', plugin_path='portal_memcached/default_memcached_plugin')
-return memcached_dict[key]
+cache_factory = context.getPortalObject().portal_caches.erp5_pivottable_frame_cache
+return cache_factory.get(key)

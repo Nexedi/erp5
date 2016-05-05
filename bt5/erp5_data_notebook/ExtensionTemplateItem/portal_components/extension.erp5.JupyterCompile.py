@@ -400,9 +400,7 @@ class ProcessorList(object):
       
 
 def storeIFrame(self, html, key):
-  memcached_tool = self.getPortalObject().portal_memcached
-  memcached_dict = memcached_tool.getMemcachedDict(key_prefix='pivottablejs', plugin_path='portal_memcached/default_memcached_plugin')
-  memcached_dict[key] = html
+  self.portal_caches.erp5_pivottable_frame_cache.set(key, html)
   return True
 
 # WARNING! 
