@@ -63,6 +63,9 @@
           })
           .push(function (doc) {
           
+          
+          
+          
           doc.parent_relative_url = "sale_price_record_module";
           doc.portal_type = "Sale Price Record";
           doc.doc_id = getSequentialID('SPR');
@@ -79,9 +82,11 @@
           
           
           
-          if (doc.sync_flag != "1"){
+         if (doc.sync_flag != "1"){
             doc.portal_type = 'Sale Price Record Temp' // For to avoid sync
           }
+          console.log("teststt");
+          console.log(doc);
 
           //addTemporaryCustomer(gadget);
 
@@ -119,14 +124,11 @@
 
           
       page_gadget.options = options;
-      if(page_gadget.options.doc.sync_flag==1){
         
-       sycn_method="Ready To Sync"; 
-      }else{
+       sycn_method= "1"; 
+      
         
-       sycn_method="Do Not Sync"; 
-        
-      }
+      
       
       var state=translateString(getWorkflowState(page_gadget.options.doc.portal_type, page_gadget.options.jio_key, page_gadget.options.doc.sync_flag,   page_gadget.options.doc.local_validation, page_gadget.options.doc.local_state));
     
@@ -379,8 +381,8 @@
                 "description": "",
                 "title": "Sync Method",
                 "default": sycn_method,
-                "items":[["Ready To Sync","Ready To Sync"],
-                         ["Do Not Sync","Do Not Sync"],
+                "items":[["Ready To Sync","1"],
+                         ["Do Not Sync","0"],
                         ],
                 "css_class": "",
                 "required": 1,

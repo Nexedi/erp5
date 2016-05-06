@@ -174,7 +174,7 @@
                 "default": page_gadget.options.doc.product,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "product",
                 "hidden": 0,
                 "type": "StringField"
@@ -185,7 +185,7 @@
                 "default": page_gadget.options.doc.nextowner,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "nextowner",
                 "hidden": 0,
                 "type": "StringField"
@@ -230,7 +230,7 @@
                 "items":page_gadget.props.currency,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "price_currency",
                 "hidden": 0,
                 "type": "ListField"
@@ -253,7 +253,7 @@
                 "items": page_gadget.props.quantity_unit,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "quantity_unit",
                 "hidden": 0,
                 "type": "ListField"
@@ -403,7 +403,7 @@
                 "items":page_gadget.props.region,
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "default_address_region",
                 "hidden": 0,
                 "type": "ListField"
