@@ -72,8 +72,10 @@ class InternetProtocolAddress(Coordinate):
     if result is None:
       if self.isDetailed():
         tmp_list = []
-        for prop in PropertySheet.InternetProtocolAddress._properties:
-          property_id = prop['id']
+        for prop in self.portal_property_sheets.\
+             InternetProtocolAddress.objectValues(
+               portal_type="Standard Property"):
+          property_id = prop.getReference()
           getter_name = 'get%s' % convertToUpperCase(property_id)
           getter_method = getattr(self, getter_name)
           value = getter_method('')
@@ -115,8 +117,10 @@ network_interface:eth0"""
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
   def isDetailed(self):
-    for prop in PropertySheet.InternetProtocolAddress._properties:
-      property_id = prop['id']
+    for prop in self.portal_property_sheets.\
+           InternetProtocolAddress.objectValues(
+             portal_type="Standard Property"):
+      property_id = prop.getReference()
       tester_name = 'has%s' % convertToUpperCase(property_id)
       tester_method = getattr(self, tester_name)
       value = tester_method()
