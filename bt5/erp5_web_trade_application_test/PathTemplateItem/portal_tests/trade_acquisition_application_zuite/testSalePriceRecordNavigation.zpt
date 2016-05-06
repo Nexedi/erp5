@@ -93,7 +93,7 @@
 </tr>
 <tr>
   <td>pause</td>
-  <td>5000</td>
+  <td>50</td>
   <td></td>
 </tr>
 <tr>
@@ -149,7 +149,7 @@
 
 <tr>
   <td>pause</td>
-  <td>2000</td>
+  <td>10</td>
   <td></td>
 </tr>
 <tr>
@@ -182,7 +182,7 @@
 
 <tr>
   <td>click</td>
-  <td>//input[@value='Add']</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Add' and @type='submit']</td>
   <td></td>
 </tr>
 
@@ -264,66 +264,66 @@
   <td></td>
 </tr>
 <tr>
-  <td>verifyValue</td>
-  <td>name=product</td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='product']/p</td>
   <td>Xiaohe Product</td>
 </tr>
 <tr>
-  <td>verifyValue</td>
-  <td>name=nextowner</td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='nextowner']/p</td>
   <td>广垦橡胶集团</td>
 </tr>
 <tr>
-  <td>verifyValue</td>
-  <td>name=previousowner</td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope="previousowner"]/p</td>
   <td>Xiaohe</td>
 </tr>
 <tr>
-  <td>verifyValue</td>
-  <td>name=previouslocation</td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope="previouslocation"]/p</td>
   <td>lille</td>
 </tr>
 <tr>
-  <td>verifyValue</td>
-  <td>name=base_price</td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope="base_price"]/p</td>
   <td>33.56</td>
 </tr>
 <tr>
 <tr>
-  <td>verifyValue</td>
-  <td>name=priced_quantity</td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope="priced_quantity"]/p</td>
   <td>66</td>
 </tr>
 <tr>
-  <td>verifyValue</td>
-  <td>name=contract_no</td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope="contract_no"]/p</td>
   <td>123456</td>
 </tr>
 <tr>
-  <td>verifyValue</td>
-  <td>name=comment</td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope="comment"]/p</td>
   <td>A great record</td>
 </tr>
 <tr>
-  <td>verifyValue</td>
-  <td>name=nextowner_title</td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope="nextowner_title"]/p</td>
   <td>广垦橡胶集团</td>
 </tr>
 
 <tr>
-  <td>verifyValue</td>
-  <td>name=nextowner_reference</td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope="nextowner_reference"]/p</td>
   <td>GKR</td>
 </tr>
 
 <tr>
-  <td>verifyValue</td>
-  <td>name=default_address_city</td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope="default_address_city"]/p</td>
   <td>广州市</td>
 </tr>
 <tr>
-  <td>verifyValue</td>
-  <td>name=default_address_street_address</td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope="default_address_street_address"]/p</td>
   <td>天河区粤垦路38号</td>
 </tr>
 
