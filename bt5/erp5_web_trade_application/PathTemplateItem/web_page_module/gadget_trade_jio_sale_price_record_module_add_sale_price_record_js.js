@@ -97,10 +97,16 @@
         
         
         .push(function () {
-          return form_gadget.redirect({
-            jio_key: form_gadget.options.jio_key,
-            page: "view"
-          });
+        
+           return RSVP.all([
+              form_gadget.notifySubmitted(),
+              form_gadget.redirect({
+                jio_key: form_gadget.options.jio_key,
+                page: "view"              
+            
+              })
+            ]);
+       
         });
           
          
