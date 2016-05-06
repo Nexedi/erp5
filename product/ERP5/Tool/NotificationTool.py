@@ -368,7 +368,7 @@ class NotificationTool(BaseTool):
       event_list.append(event)
 
     for event in event_list:
-      if event.isTempObject():
+      if event.isTempObject() or (not portal.portal_workflow.isTransitionPossible(event, 'start')):
         event.send(**low_level_kw)
       else:
         event.start(**low_level_kw)
