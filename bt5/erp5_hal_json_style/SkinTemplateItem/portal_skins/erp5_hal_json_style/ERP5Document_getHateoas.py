@@ -3,6 +3,9 @@ import json
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 from DateTime import DateTime
 from ZODB.POSException import ConflictError
+import datetime
+import time
+from email.Utils import formatdate
 
 if REQUEST is None:
   REQUEST = context.REQUEST
@@ -193,6 +196,8 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
     if same_type(date_value, DateTime()):
       # Serialize DateTime
       date_value = date_value.rfc822()
+    elif isinstance(date_value, datetime.date):
+      date_value = formatdate(time.mktime(date_value.timetuple()))
     result["default"] = date_value
     for subkey in ("year", "month", "day", "hour", "minute", "ampm", "timezone"):
       result["subfield_%s_key" % subkey] = traversed_document.Field_getSubFieldKeyDict(field, subkey, key=result["key"])
@@ -1082,6 +1087,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           if same_type(property_value, DateTime()):
             # Serialize DateTime
             property_value = property_value.rfc822()
+          elif isinstance(property_value, datetime.date):
+            property_value = formatdate(time.mktime(property_value.timetuple()))
           elif getattr(property_value, 'translate', None) is not None:
             property_value = "%s" % property_value
           document_result[select] = property_value
