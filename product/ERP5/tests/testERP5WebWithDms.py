@@ -43,7 +43,7 @@ from Products.ERP5.Document.Document import ConversionError
 from PIL import Image
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
-IMAGE_COMPARE_TOLERANCE = 800
+IMAGE_COMPARE_TOLERANCE = 850
 
 
 def makeFilePath(name):

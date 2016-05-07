@@ -2274,8 +2274,8 @@ return 1
       del convert_kw['quality']
       image_document_image_size_no_quality,image_document_file_size_no_quality = self.getURLSizeList(url, **convert_kw)
       # check file sizes
-      self.assertTrue(image_document_file_size_100p > image_document_file_size_no_quality and \
-                      image_document_file_size_no_quality > image_document_file_size_5p,
+      self.assertTrue(image_document_file_size_100p >= image_document_file_size_no_quality and \
+                      image_document_file_size_no_quality >= image_document_file_size_5p,
                       "%s should be more then %s and %s should be more them %s" % \
                        (image_document_file_size_100p,
                         image_document_file_size_no_quality,
