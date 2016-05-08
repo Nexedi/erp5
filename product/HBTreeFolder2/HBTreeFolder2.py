@@ -24,7 +24,6 @@ from App.special_dtml import DTMLFile
 from Persistence import Persistent, PersistentMapping
 from Acquisition import aq_base
 from BTrees.OOBTree import OOBTree
-from BTrees.OIBTree import OIBTree, union
 from BTrees.Length import Length
 from ZODB.POSException import ConflictError
 from OFS.ObjectManager import BadRequestException, BeforeDeleteException
@@ -180,11 +179,8 @@ class HBTreeFolder2Base (Persistent):
     def _populateFromFolder(self, source):
         """Fill this folder with the contents of another folder.
         """
-        for name in source.objectIds():
-            value = source._getOb(name, None)
-            if value is not None:
-                self._setOb(name, aq_base(value))
-
+        for name, value in source.objectItems():
+            self._setOb(name, aq_base(value))
 
     security.declareProtected(view_management_screens, 'manage_fixCount')
     def manage_fixCount(self, dry_run=0):
@@ -260,7 +256,7 @@ class HBTreeFolder2Base (Persistent):
                 error=sys.exc_info())
             try:
                 self._htree = OOBTree(self._htree) # XXX hFix needed
-            except:
+            except Exception:
                 LOG('HBTreeFolder2', ERROR, 'Failed to fix %s.' % path,
                     error=sys.exc_info())
                 raise
@@ -420,7 +416,7 @@ class HBTreeFolder2Base (Persistent):
         h = self._htree
         recurse_stack = []
         try:
-          for sub_id in min and self.hashId(min) or ('',):
+          for sub_id in self.hashId(min) if min else ('',):
             if recurse_stack:
               i.next()
               if type(h) is not OOBTree:
@@ -492,8 +488,6 @@ class HBTreeFolder2Base (Persistent):
                               'objectItems')
     def objectItems(self, base_id=_marker):
         # Returns a list of (id, subobject) tuples of the current object.
-        # If 'spec' is specified, returns only objects whose meta_type match
-        # 'spec'
         return HBTreeObjectItems(self, base_id)
 
     # superValues() looks for the _objects attribute, but the implementation
@@ -548,7 +542,7 @@ class HBTreeFolder2Base (Persistent):
             raise
         except ConflictError:
             raise
-        except:
+        except Exception:
             LOG('Zope', ERROR, 'manage_beforeDelete() threw',
                 error=sys.exc_info())
         self._delOb(id)
