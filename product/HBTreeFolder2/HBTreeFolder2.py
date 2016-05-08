@@ -12,9 +12,9 @@
 #
 ##############################################################################
 
-import sys
+import operator, sys
 from cgi import escape
-from itertools import chain, islice
+from itertools import chain, imap, islice
 from urllib import quote
 from random import randint
 from types import StringType
@@ -71,22 +71,27 @@ class ExhaustedUniqueIdsError (Exception):
 class HBTreeObjectIds(object):
 
     _index = float('inf')
+    _items = tuple
 
     def __init__(self, tree, base_id=_marker):
-        self._tree = tree
         if base_id is _marker:
-            tree_id_list = tree.getTreeIdList()
             self._count = tree._count
-        else:
-            tree_id_list = base_id,
-        check = tree._checkObjectId
-        self._keys = lambda: (x for base_id in tree_id_list
-                                for x in (tree._htree if base_id is None else
-                                          tree._getTree(base_id)).keys()
-                                if check((base_id, x)))
+            self._items = tree._htree_iteritems
+            return
+        h = tree._htree
+        if base_id:
+            try:
+                for sub_id in tree.hashId(base_id):
+                    h = h[sub_id]
+                    if type(h) is not OOBTree:
+                        return
+            except KeyError:
+                return
+        self._items = lambda: (i for i in h.iteritems()
+                                 if type(i[1]) is not OOBTree)
 
     def _count(self):
-        count = sum(1 for x in self._keys())
+        count = sum(1 for x in self._items())
         self._count = lambda: count
         return count
 
@@ -94,7 +99,9 @@ class HBTreeObjectIds(object):
         return self._count()
 
     def __iter__(self):
-        return self._keys()
+        return imap(self._item_result, self._items())
+
+    _item_result = operator.itemgetter(0)
 
     def __getitem__(self, item):
         if isinstance(item, slice):
@@ -104,39 +111,35 @@ class HBTreeObjectIds(object):
         i = self._index
         self._index = item + 1
         i = item - i
+        if i < 0:
+            self._iitems = items = self._items()
+            i = islice(items, item, None)
+        elif i:
+            i = islice(self._iitems, i, None)
+        else:
+            i = self._iitems
         try:
-            if i < 0:
-                self._ikeys = keys = self._keys()
-                return islice(keys, item, None).next()
-            return (islice(self._ikeys, i, None) if i else self._ikeys).next()
+            return self._item_result(next(i))
         except StopIteration:
-            del self._index, self._ikeys
+            del self._index, self._iitems
             raise IndexError
+
 ContainerAssertions[HBTreeObjectIds] = 1
 
 class HBTreeObjectItems(HBTreeObjectIds):
 
-    def __iter__(self):
-        getOb = self._tree._getOb
-        return ((x, getOb(x)) for x in self._keys())
+    def __init__(self, tree, base_id=_marker):
+        HBTreeObjectIds.__init__(self, tree, base_id)
+        self._item_result = lambda item: (item[0], item[1].__of__(tree))
 
-    def __getitem__(self, item):
-        if isinstance(item, slice):
-            return map(self.__getitem__, xrange(*item.indices(self._count())))
-        object_id = HBTreeObjectIds.__getitem__(self, item)
-        return object_id, self._tree._getOb(object_id)
 ContainerAssertions[HBTreeObjectItems] = 1
 
 class HBTreeObjectValues(HBTreeObjectIds):
 
-    def __iter__(self):
-        getOb = self._tree._getOb
-        return (getOb(x) for x in self._keys())
+    def __init__(self, tree, base_id=_marker):
+        HBTreeObjectIds.__init__(self, tree, base_id)
+        self._item_result = lambda item: item[1].__of__(tree)
 
-    def __getitem__(self, item):
-        if isinstance(item, slice):
-            return map(self.__getitem__, xrange(*item.indices(self._count())))
-        return self._tree._getOb(HBTreeObjectIds.__getitem__(self, item))
 ContainerAssertions[HBTreeObjectValues] = 1
 
 
