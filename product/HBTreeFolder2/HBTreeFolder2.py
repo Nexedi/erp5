@@ -182,10 +182,10 @@ class HBTreeFolder2Base (Persistent):
 
 
     security.declareProtected(view_management_screens, 'manage_fixCount')
-    def manage_fixCount(self):
+    def manage_fixCount(self, dry_run=0):
         """Calls self._fixCount() and reports the result as text.
         """
-        old, new = self._fixCount()
+        old, new = self._fixCount(dry_run)
         path = '/'.join(self.getPhysicalPath())
         if old == new:
             return "No count mismatch detected in HBTreeFolder2 at %s." % path
@@ -194,15 +194,14 @@ class HBTreeFolder2Base (Persistent):
                     "Count was %d; corrected to %d" % (path, old, new))
 
 
-    def _fixCount(self):
-        """Checks if the value of self._count disagrees with
-        len(self.objectIds()). If so, corrects self._count. Returns the
-        old and new count values. If old==new, no correction was
-        performed.
+    def _fixCount(self, dry_run=0):
+        """Checks if the value of self._count disagrees with the content of
+        the htree. If so, corrects self._count. Returns the old and new count
+        values. If old==new, no correction was performed.
         """
         old = self._count()
-        new = len(self.objectIds())
-        if old != new:
+        new = sum(1 for x in self._htree_iteritems())
+        if old != new and not dry_run:
             self._count.set(new)
         return old, new
 
