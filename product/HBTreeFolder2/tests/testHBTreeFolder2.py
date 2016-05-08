@@ -47,6 +47,8 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
           f._setOb(id, ff)
           f._getOb(id)
         for id in "a-a", "b", "c-a":
+          if id != "c-a":
+            self.assertRaises(KeyError, f._setOb, id, ff)
           self.assertRaises(KeyError, f._getOb, id)
           self.assertRaises(KeyError, f._delOb, id)
         self.assertEqual(len(f), 1 + len(ok))

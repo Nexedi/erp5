@@ -308,25 +308,17 @@ class HBTreeFolder2Base (Persistent):
         if type(object) is OOBTree:
           raise ValueError('HBTreeFolder2 can not store OOBTree objects')
         htree = self._htree
-        id_list = self.hashId(id)
-        for idx in xrange(len(id_list) - 1):
-          sub_id = id_list[idx]
-          if not htree.has_key(sub_id):
-            # Create a new level
-            htree[sub_id] = OOBTree()
-            if isinstance(sub_id, (int, long)):
-              tree_id = 0
-              for id in id_list[:idx+1]:
-                  tree_id = tree_id + id * MAX_OBJECT_PER_LEVEL
-            else:
-              tree_id = H_SEPARATOR.join(id_list[:idx+1])
-
-          htree = htree[sub_id]
-
-        # set object in subtree
-        ob_id = id_list[-1]
+        for sub_id in self.hashId(id)[:-1]:
+          try:
+            htree = htree[sub_id]
+          except KeyError:
+            htree[sub_id] = htree = OOBTree()
+            continue
+          if type(htree) is not OOBTree:
+            assert self._htree[sub_id] is htree, (htree, id)
+            raise KeyError('There is already an item whose id is %r' % sub_id)
         if htree.has_key(id):
-            raise KeyError('There is already an item named "%s".' % id)
+          raise KeyError('There is already an item named %r.' % id)
         htree[id] = object
         self._count.change(1)
 
