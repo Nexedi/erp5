@@ -904,30 +904,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
         return False
       return CMFBTreeFolder.has_key(self, id)
 
-  def treeIds(self, base_id=None):
-    """ Return a list of subtree ids
-    """
-    if self._folder_handler == HBTREE_HANDLER:
-      return CMFHBTreeFolder.treeIds(self, base_id)
-    else:
-      return CMFBTreeFolder.treeIds(self, base_id)
-
-  def _getTree(self, base_id):
-    """ Return the tree wich has the base_id
-    """
-    if self._folder_handler == HBTREE_HANDLER:
-      return CMFHBTreeFolder._getTree(self, base_id)
-    else:
-      return CMFBTreeFolder._getTree(self, base_id)
-
-  def _getTreeIdList(self, htree=None):
-    """ recursively build a list of btree ids
-    """
-    if self._folder_handler == HBTREE_HANDLER:
-      return CMFHBTreeFolder._getTreeIdList(self, htree)
-    else:
-      return CMFBTreeFolder._getTreeIdList(self, htree)
-
   def getTreeIdList(self, htree=None):
     """ recursively build a list of btree ids
     """
@@ -935,38 +911,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
       return CMFHBTreeFolder.getTreeIdList(self, htree)
     else:
       return CMFBTreeFolder.getTreeIdList(self, htree)
-
-  def _treeObjectValues(self, base_id=None):
-    """ return object values for a given btree
-    """
-    if self._folder_handler == HBTREE_HANDLER:
-      return CMFHBTreeFolder._treeObjectValues(self, base_id)
-    else:
-      return CMFBTreeFolder._treeObjectValues(self, base_id)
-
-  def _treeObjectIds(self, base_id=None):
-    """ return object ids for a given btree
-    """
-    if self._folder_handler == HBTREE_HANDLER:
-      return CMFHBTreeFolder._treeObjectIds(self, base_id)
-    else:
-      return CMFBTreeFolder._treeObjectIds(self, base_id)
-
-  def _isNotBTree(self, obj):
-    """ test object is not a btree
-    """
-    if self._folder_handler == HBTREE_HANDLER:
-      return CMFHBTreeFolder._isNotBTree(self, obj)
-    else:
-      return CMFBTreeFolder._isNotBTree(self, obj)
-
-  def _checkObjectId(self, id):
-    """ test id is not in btree id list
-    """
-    if self._folder_handler == HBTREE_HANDLER:
-      return CMFHBTreeFolder._checkObjectId(self, id)
-    else:
-      return CMFBTreeFolder._checkObjectId(self, id)
 
   def objectIds(self, spec=None, **kw):
     if self._folder_handler == HBTREE_HANDLER:
