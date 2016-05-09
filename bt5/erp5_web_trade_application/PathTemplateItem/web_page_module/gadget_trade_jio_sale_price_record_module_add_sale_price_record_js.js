@@ -48,7 +48,9 @@
   
   
   
-  
+   /////////////////////////////////////////
+   // Form submit
+   /////////////////////////////////////////
   
     .declareService(function () {
       var form_gadget = this;
@@ -62,33 +64,20 @@
             return erp5_form.getContent();
           })
           .push(function (doc) {
-          
-          
-          
-          
+      
           doc.parent_relative_url = "sale_price_record_module";
           doc.portal_type = "Sale Price Record";
           doc.doc_id = getSequentialID('SPR');
           doc.local_validation = "self";
           doc.record_revision = 1;
-          
-          
-          
-          
-          
-          
-          console.log(doc);
-          
-          
-          
-          
+         
          if (doc.sync_flag != "1"){
             doc.portal_type = 'Sale Price Record Temp' // For to avoid sync
           }
           console.log("teststt");
           console.log(doc);
 
-          //addTemporaryCustomer(gadget);
+          addTemporaryCustomer(form_gadget);
 
           return form_gadget.jio_post(doc);
           
@@ -120,6 +109,175 @@
         formSubmit
       );
     })
+  
+  
+  
+  
+  /////////////////////////////////////////
+    // Nextowner title changed.
+    /////////////////////////////////////////
+    .declareService(function () {
+      var gadget = this;
+
+      return new RSVP.Queue()
+        
+        .push(function () {
+          return loopEventListener(
+            gadget.props.element.querySelector('input[name="nextowner_title"]'),
+            "input",
+            false,
+            function (evt) {
+              return new RSVP.Queue()
+                .push(function () {
+                  // Wait for user to finish typing
+                  return RSVP.delay(100);
+                })
+                .push(function () {
+                  var normalized_value = normalizeTitle(evt.target.value);
+                  if (normalized_value != evt.target.value){
+                    evt.target.value = normalized_value;
+                  }
+                  gadget.props.element.querySelector('[name="nextowner"]').value = evt.target.value;
+                })
+                .push(function () {
+                  return gadget.allDocs({
+                    query: 'portal_type:("Organisation" OR "Organisation Temp") AND title_lowercase: "' + evt.target.value.toLowerCase() + '"',
+                    limit: [0, 2]
+                  });
+                })
+                .push(function(result){
+                  if (result !== undefined && result.data.total_rows == 1) {
+                    gadget.jio_get(result.data.rows[0].id).then(
+                      function(doc){
+                        if(doc.title!=evt.target.value){
+                          gadget.props.element.querySelector('[name=nextowner_title]').value=doc.title;
+                          gadget.props.element.querySelector('[name=nextowner]').value=doc.title
+                        }
+                      }
+                    );
+                    var event = document.createEvent("UIEvents");
+                    event.initUIEvent("input", true, true, window, 1);
+                    gadget.props.element.querySelector('input[name="nextowner"]').dispatchEvent(event);
+                  }
+                })
+            })
+        });
+    })
+
+  
+  
+  
+  
+  
+  
+  
+  
+  /////////////////////////////////////////
+    // Nextowner changed.
+    /////////////////////////////////////////
+    .declareService(function () {
+      var gadget = this;
+
+      return new RSVP.Queue()
+        
+        .push(function () {
+          return loopEventListener(
+            gadget.props.element.querySelector('input[name="nextowner"]'),
+            "input",
+            false,
+            function (evt) {
+              return new RSVP.Queue()
+                .push(function () {
+                  // Wait for user to finish typing
+                  return RSVP.delay(100);
+                })
+                .push(function () {
+                  var normalized_value = normalizeTitle(evt.target.value);
+                  if (normalized_value != evt.target.value){
+                    evt.target.value = normalized_value;
+                  }
+                  return gadget.allDocs({
+                    query: 'portal_type:("Organisation" OR "Organisation Temp") AND title_lowercase: "' + evt.target.value.toLowerCase() + '"',
+                    limit: [0, 2]
+                  });
+                })
+                .push(function (result) {
+                  if (result.data.total_rows === 1) {
+                    gadget.jio_get(result.data.rows[0].id).then(
+                      function(doc){
+                        if(doc.title!=evt.target.value){
+                          gadget.props.element.querySelector('[name=nextowner]').value=doc.title
+                        }
+                      }
+                    );
+                    return gadget.jio_get(result.data.rows[0].id);
+                  }
+                })
+                .push(function (result) {
+                 var tmp;
+                  if (result !== undefined) {
+                    // Fill the product fieldset
+                    gadget.props.element.querySelector('[name="nextowner_title"]').setAttribute('disabled', 'disabled');
+                    gadget.props.element.querySelector('[name="nextowner_reference"]').setAttribute('disabled', 'disabled');
+                    gadget.props.element.querySelector('[name="default_telephone_coordinate_text"]').setAttribute('disabled', 'disabled');
+                    gadget.props.element.querySelector('[name="default_address_city"]').setAttribute('disabled', 'disabled');
+                    gadget.props.element.querySelector('[name="default_address_region"]').setAttribute('disabled', 'disabled');
+                    gadget.props.element.querySelector('[name="default_address_street_address"]').setAttribute('disabled', 'disabled');
+                    gadget.props.element.querySelector('[name="default_address_zip_code"]').setAttribute('disabled', 'disabled');
+                    gadget.props.element.querySelector('[name="default_email_coordinate_text"]').setAttribute('disabled', 'disabled');
+
+                    gadget.props.element.querySelector('[name="nextowner_title"]').value = result.title || "";
+                    gadget.props.element.querySelector('[name="nextowner_reference"]').value = result.reference || "";
+                    gadget.props.element.querySelector('[name="default_telephone_coordinate_text"]').value = result.default_telephone_coordinate_text || "";
+                    gadget.props.element.querySelector('[name="default_address_city"]').value = result.default_address_city || "";
+                    gadget.props.element.querySelector('[name="default_address_region"]').value = result.default_address_region || "";
+                    tmp = gadget.props.element.querySelector('[name="default_address_region"]').querySelector('option:checked');
+                    if (tmp !== null) {
+                      tmp.selected = true;
+                    }
+                    tmp = result.default_address_region || "";
+                    if (tmp !== "") {
+                      tmp = gadget.props.element.querySelector('[name="default_address_region"]').querySelector('[value="' + tmp + '"]');
+                      if (tmp !== null) {
+                        tmp.selected = true;
+                      }
+                    }
+                    $(gadget.props.element.querySelector('[name="default_address_region"]')).selectmenu('refresh');
+                    gadget.props.element.querySelector('[name="default_address_street_address"]').value = result.default_address_street_address || "";
+                    gadget.props.element.querySelector('[name="default_address_zip_code"]').value = result.default_address_zip_code || "";
+                    gadget.props.element.querySelector('[name="default_email_coordinate_text"]').value = result.default_email_coordinate_text || "";
+                  } else {
+                    gadget.props.element.querySelector('[name="nextowner_title"]').disabled = false;
+                    gadget.props.element.querySelector('[name="nextowner_reference"]').disabled = false;
+                    gadget.props.element.querySelector('[name="default_telephone_coordinate_text"]').disabled = false;
+                    gadget.props.element.querySelector('[name="default_address_city"]').disabled = false;
+                    gadget.props.element.querySelector('[name="default_address_region"]').disabled = false;
+                    gadget.props.element.querySelector('[name="default_address_street_address"]').disabled = false;
+                    gadget.props.element.querySelector('[name="default_address_zip_code"]').disabled = false;
+                    gadget.props.element.querySelector('[name="default_email_coordinate_text"]').disabled = false;
+
+                    gadget.props.element.querySelector('[name="nextowner_title"]').value = "";
+                    gadget.props.element.querySelector('[name="nextowner_reference"]').value = "";
+                    gadget.props.element.querySelector('[name="default_telephone_coordinate_text"]').value = "";
+                    gadget.props.element.querySelector('[name="default_address_city"]').value = "";
+                    tmp = gadget.props.element.querySelector('[name="default_address_region"]').querySelector('option:checked');
+                    if (tmp !== null) {
+                      tmp.selected = false;
+                    }
+                    $(gadget.props.element.querySelector('[name="default_address_region"]')).selectmenu('enable');
+                    $(gadget.props.element.querySelector('[name="default_address_region"]')).selectmenu('refresh');
+                    gadget.props.element.querySelector('[name="default_address_street_address"]').value = "";
+                    gadget.props.element.querySelector('[name="default_address_zip_code"]').value = "";
+                    gadget.props.element.querySelector('[name="default_email_coordinate_text"]').value = "";
+                  }
+                });
+            }
+          );
+        });
+    })
+
+
+
 
     .declareMethod("render", function (options) {
       var page_gadget = this,
@@ -197,7 +355,7 @@
       
             for (i = 0; i < allresult[2].data.total_rows; i += 1) {
               title=allresult[2].data.rows[i].value.logical_path || allresult[2].data.rows[i].value.title;
-              relative_url=allresult[2].data.rows[i].value.category_relative_urll;
+              relative_url=allresult[2].data.rows[i].value.category_relative_url;
               page_gadget.props.region.push([title,relative_url]);
 
             
@@ -230,7 +388,7 @@
               "product": {
                 "description": "",
                 "title": "Product Title",
-                "default": page_gadget.options.doc.product,
+                "default": "",
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -241,7 +399,7 @@
               "nextowner": {
                 "description": "",
                 "title": "Client",
-                "default": page_gadget.options.doc.nextowner,
+                "default": "",
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -252,7 +410,7 @@
               "organisation": {
                 "description": "",
                 "title": "Sales Organisation",
-                "default": page_gadget.options.doc.previousowner,
+                "default": "",
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -263,7 +421,7 @@
               "warehouse": {
                 "description": "",
                 "title": "Sender Warehouse",
-                "default": page_gadget.options.doc.previouslocation,
+                "default": "",
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -274,7 +432,7 @@
               "price": {
                 "description": "",
                 "title": "Price",
-                "default": page_gadget.options.doc.base_price,
+                "default": "",
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -285,7 +443,7 @@
               "currency": {
                 "description": "",
                 "title": "Currency",
-                "default": page_gadget.options.doc.price_currency,
+                "default": "",
                 "items":page_gadget.props.currency,
                 "css_class": "",
                 "required": 1,
@@ -297,7 +455,7 @@
               "priced_quantity": {
                 "description": "",
                 "title": "Priced Quantity",
-                "default": page_gadget.options.doc.priced_quantity,
+                "default": "",
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -308,7 +466,7 @@
                "quantity_unit": {
                 "description": "",
                 "title": "Quantity Unit",
-                "default": page_gadget.options.doc.quantity_unit,
+                "default": "",
                 "items": page_gadget.props.quantity_unit,
                 "css_class": "",
                 "required": 1,
@@ -320,7 +478,7 @@
               "total_dry_quantity": {
                 "description": "",
                 "title": "Quantity",
-                "default": page_gadget.options.doc.total_dry_quantity,
+                "default": "",
                 "css_class": "",
                 "required": 0,
                 "editable": 1,
@@ -331,7 +489,7 @@
               "total_amount_price": {
                 "description": "",
                 "title": "Total Price",
-                "default": page_gadget.options.doc.total_amount_price,
+                "default": "",
                 "css_class": "",
                 "required": 0,
                 "editable": 1,
@@ -342,7 +500,7 @@
               "date": {
                 "description": "",
                 "title": "Input Date",
-                "default": page_gadget.options.doc.date,
+                "default": "",
                 "css_class": "",
                 "required": 0,
                 "editable": 1,
@@ -353,7 +511,7 @@
               "contract_no": {
                 "description": "",
                 "title": "Contract No",
-                "default": page_gadget.options.doc.contract_no,
+                "default": "",
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -364,7 +522,7 @@
               "batch": {
                 "description": "",
                 "title": "Batch",
-                "default": page_gadget.options.doc.batch,
+                "default": "",
                 "css_class": "",
                 "required": 0,
                 "editable": 1,
@@ -375,7 +533,7 @@
               "comment": {
                 "description": "",
                 "title": "Comment",
-                "default": page_gadget.options.doc.comment,
+                "default": "",
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -401,7 +559,7 @@
                "username": {
                 "description": "",
                 "title": "Input User Name",
-                "default": page_gadget.options.doc.inputusername,
+                "default": "",
                 "css_class": "",
                 "required": 0,
                 "editable": 1,
@@ -427,7 +585,7 @@
               "client": {
                 "description": "",
                 "title": "Client",
-                "default": page_gadget.options.doc.nextowner_title,
+                "default": "",
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -438,7 +596,7 @@
               "client_reference": {
                 "description": "",
                 "title": "Client Reference",
-                "default": page_gadget.options.doc.nextowner_reference,
+                "default": "",
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -449,7 +607,7 @@
               "telephone": {
                 "description": "",
                 "title": "Default Telephone",
-                "default": page_gadget.options.doc.default_telephone_coordinate_text,
+                "default": "",
                 "css_class": "",
                 "required": 0,
                 "editable": 1,
@@ -460,7 +618,7 @@
               "address_city": {
                 "description": "",
                 "title": "Default Address City",
-                "default": page_gadget.options.doc.default_address_city,
+                "default": "",
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -471,7 +629,7 @@
               "region": {
                 "description": "",
                 "title": "Region",
-                "default": page_gadget.options.doc.default_address_region,
+                "default": "",
                 "items":page_gadget.props.region,
                 "css_class": "",
                 "required": 1,
@@ -483,7 +641,7 @@
               "address_street": {
                 "description": "",
                 "title": "Street Address",
-                "default": page_gadget.options.doc.default_address_street_address,
+                "default": "",
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -494,7 +652,7 @@
               "postal_code": {
                 "description": "",
                 "title": "Postal Code",
-                "default": page_gadget.options.doc.default_address_zip_code,
+                "default": "",
                 "css_class": "",
                 "required": 0,
                 "editable": 1,
@@ -505,7 +663,7 @@
               "email": {
                 "description": "",
                 "title": "Email",
-                "default": page_gadget.options.doc.default_email_coordinate_text,
+                "default": "",
                 "css_class": "",
                 "required": 0,
                 "editable": 1,

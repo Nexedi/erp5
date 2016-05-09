@@ -116,7 +116,7 @@
       
             for (i = 0; i < allresult[2].data.total_rows; i += 1) {
               title=allresult[2].data.rows[i].value.logical_path || allresult[2].data.rows[i].value.title;
-              relative_url=allresult[2].data.rows[i].value.category_relative_urll;
+              relative_url=allresult[2].data.rows[i].value.category_relative_url;
               page_gadget.props.region.push([title,relative_url]);
 
             
