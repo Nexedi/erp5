@@ -53,8 +53,10 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
           self.assertRaises(KeyError, f._delOb, id)
         self.assertEqual(len(f), 1 + len(ok))
         self.assertEqual(f.getTreeIdList(), [None, "b", "c-a"])
+        self.assertEqual(len(f._htree), 4)
         for id in ok:
           f._delOb(id)
+        self.assertEqual(len(f._htree), 1)
         self.assertEqual(len(f), 1)
         self.assertEqual(f.getTreeIdList(), [None])
         self.assertEqual(ff.getTreeIdList(), [])

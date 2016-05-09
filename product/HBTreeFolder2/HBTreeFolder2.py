@@ -322,7 +322,9 @@ class HBTreeFolder2Base (Persistent):
         """Remove the named object from the folder.
         """
         htree = self._htree
+        h = []
         for sub_id in self.hashId(id)[:-1]:
+          h.append((htree, sub_id))
           htree = htree.get(sub_id)
           if type(htree) is not OOBTree:
             raise KeyError(id)
@@ -330,6 +332,9 @@ class HBTreeFolder2Base (Persistent):
           raise KeyError(id)
         del htree[id]
         self._count.change(-1)
+        while h and not htree:
+          htree, sub_id = h.pop()
+          del htree[sub_id]
 
     security.declareProtected(view_management_screens, 'getBatchObjectListing')
     def getBatchObjectListing(self, REQUEST=None):
