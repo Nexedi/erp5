@@ -39,6 +39,21 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
         self.f._setOb(ff.id, ff)
         self.ff = self.f._getOb(ff.id)
 
+    def testKey(self):
+        f = self.f
+        ff = f.item
+        ok = "a", "b-a", "b-b", "c-a-b", "c-a-d"
+        for id in ok:
+          f._setOb(id, ff)
+          f._getOb(id)
+        for id in "a-a", "b", "c-a":
+          self.assertRaises(KeyError, f._getOb, id)
+          self.assertRaises(KeyError, f._delOb, id)
+        self.assertEqual(len(f), 1 + len(ok))
+        for id in ok:
+          f._delOb(id)
+        self.assertEqual(len(f), 1)
+
     def testAdded(self):
         self.assertEqual(self.ff.id, 'item')
 
@@ -99,11 +114,12 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
 
     def testWrapped(self):
         # Verify that the folder returns wrapped versions of objects.
-        base = self.getBase(self.f._getOb('item'))
-        self.assert_(self.f._getOb('item') is not base)
-        self.assert_(self.f['item'] is not base)
-        self.assert_(self.f.get('item') is not base)
-        self.assert_(self.getBase(self.f._getOb('item')) is base)
+        base = self.f.item
+        for x in (self.f._getOb('item'),
+                  self.f['item'],
+                  self.f.get('item')):
+            self.assertIsNot(base, x)
+            self.assertIs(base, self.getBase(x))
 
     def testGenerateId(self):
         ids = {}

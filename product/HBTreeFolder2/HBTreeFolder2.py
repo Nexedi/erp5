@@ -142,6 +142,10 @@ ContainerAssertions[HBTreeObjectValues] = 1
 
 class HBTreeFolder2Base (Persistent):
     """Base for BTree-based folders.
+
+    BUG: Due to wrong design, we can't store 2 objects <A> and <A>-<B>
+         where <A> does not contain '-'. We detect conflicts at the
+         root level using 'type(ob) is OOBTree'
     """
 
     security = ClassSecurityInfo()
@@ -264,51 +268,44 @@ class HBTreeFolder2Base (Persistent):
             return 0
 
     def hashId(self, id):
-        """Return a tuple of ids
-        """
-        # XXX: why tolerate non-string ids ?
-        id_list = str(id).split(H_SEPARATOR)     # We use '-' as the separator by default
-        if len(id_list) > 1:
-          return tuple(id_list)
-        else:
-          return [id,]
+        return id.split(H_SEPARATOR)
 
-#         try:                             # We then try int hashing
-#           id_int = int(id)
-#         except ValueError:
-#           return id_list
-#         result = []
-#         while id_int:
-#           result.append(id_int % MAX_OBJECT_PER_LEVEL)
-#           id_int = id_int / MAX_OBJECT_PER_LEVEL
-#         result.reverse()
-#         return tuple(result)
+    def _htree_get(self, id):
+        id_list = self.hashId(id)
+        if len(id_list) == 1:
+          ob = self._htree[id]
+          if type(ob) is OOBTree:
+            raise KeyError
+        else:
+          ob = self._htree[id_list.pop(0)]
+          if type(ob) is not OOBTree:
+            raise KeyError
+          id_list[-1] = id
+          for sub_id in id_list:
+            ob = ob[sub_id]
+        return ob
 
     def _getOb(self, id, default=_marker):
+        """Return the named object from the folder
         """
-            Return the named object from the folder.
-        """
-        htree = self._htree
-        ob = htree
-        id_list = self.hashId(id)
-        for sub_id in id_list[0:-1]:
+        try:
+          return self._htree_get(id).__of__(self)
+        except KeyError:
           if default is _marker:
-            ob = ob[sub_id]
-          else:
-            ob = ob.get(sub_id, _marker)
-            if ob is _marker:
-              return default
-        if default is _marker:
-          ob = ob[id]
-        else:
-          ob = ob.get(id, _marker)
-          if ob is _marker:
-            return default
-        return ob.__of__(self)
+            raise KeyError(id)
+        return default
+
+    def __getitem__(self, id):
+        try:
+          return self._htree_get(id).__of__(self)
+        except KeyError:
+          raise KeyError(id)
 
     def _setOb(self, id, object):
         """Store the named object in the folder.
         """
+        if type(object) is OOBTree:
+          raise ValueError('HBTreeFolder2 can not store OOBTree objects')
         htree = self._htree
         id_list = self.hashId(id)
         for idx in xrange(len(id_list) - 1):
@@ -340,9 +337,12 @@ class HBTreeFolder2Base (Persistent):
         """Remove the named object from the folder.
         """
         htree = self._htree
-        id_list = self.hashId(id)
-        for sub_id in id_list[0:-1]:
-          htree = htree[sub_id]
+        for sub_id in self.hashId(id)[:-1]:
+          htree = htree.get(sub_id)
+          if type(htree) is not OOBTree:
+            raise KeyError(id)
+        if type(htree[id]) is OOBTree:
+          raise KeyError(id)
         del htree[id]
         self._count.change(-1)
 
@@ -413,15 +413,9 @@ class HBTreeFolder2Base (Persistent):
     def has_key(self, id):
         """Indicates whether the folder has an item by ID.
         """
-        htree = self._htree
-        id_list = self.hashId(id)
-        for sub_id in id_list[0:-1]:
-          if not isinstance(htree, OOBTree):
-            return 0
-          if not htree.has_key(sub_id):
-            return 0
-          htree = htree[sub_id]
-        if not htree.has_key(id):
+        try:
+          self._htree_get(id)
+        except KeyError:
           return 0
         return 1
 
@@ -610,8 +604,10 @@ class HBTreeFolder2Base (Persistent):
 
     security.declareProtected(access_contents_information, 'get')
     def get(self, name, default=None):
-        return self._getOb(name, default)
-
+        try:
+          return self._htree_get(name).__of__(self)
+        except KeyError:
+          return default
 
     # Utility for generating unique IDs.
 
@@ -644,10 +640,10 @@ class HBTreeFolder2Base (Persistent):
         # to subitems, and __bobo_traverse__ hooks don't work with
         # restrictedTraverse() unless __getattr__() is also present.
         # Oh well.
-        res = self._getOb(name, None)
-        if res is None:
-            raise AttributeError, name
-        return res
+        try:
+            return self._htree_get(name)
+        except KeyError:
+            raise AttributeError(name)
 
 
 InitializeClass(HBTreeFolder2Base)
