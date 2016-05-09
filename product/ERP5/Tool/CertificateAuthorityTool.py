@@ -76,7 +76,7 @@ class CertificateAuthorityTool(BaseTool):
   portal_type = 'Certificate Authority Tool'
   security = ClassSecurityInfo()
   allowed_types = ()
-  isIndexable = 0
+  isIndexable = 1
 
   certificate_authority_path = os.environ.get('CA_PATH', '')
   openssl_binary = binary_search('openssl')
