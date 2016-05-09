@@ -166,7 +166,6 @@ class HBTreeFolder2Base (Persistent):
     _count = None     # A BTrees.Length
     _v_nextid = 0     # The integer component of the next generated ID
     title = ''
-    _tree_list = None
 
 
     def __init__(self, id=None):
@@ -177,7 +176,6 @@ class HBTreeFolder2Base (Persistent):
     def _initBTrees(self):
         self._htree = OOBTree()
         self._count = Length()
-        self._tree_list = PersistentMapping()
 
     def _populateFromFolder(self, source):
         """Fill this folder with the contents of another folder.
@@ -322,13 +320,9 @@ class HBTreeFolder2Base (Persistent):
                   tree_id = tree_id + id * MAX_OBJECT_PER_LEVEL
             else:
               tree_id = H_SEPARATOR.join(id_list[:idx+1])
-            # Index newly created level
-            self._tree_list[tree_id] = None
 
           htree = htree[sub_id]
 
-        if len(id_list) == 1 and not htree.has_key(None):
-            self._tree_list[None] = None
         # set object in subtree
         ob_id = id_list[-1]
         if htree.has_key(id):
@@ -463,62 +457,34 @@ class HBTreeFolder2Base (Persistent):
             pass
 
     security.declareProtected(access_contents_information,
-                              'treeIds')
-    def treeIds(self, base_id=None):
-        """ Return a list of subtree ids
-        """
-        tree = self._getTree(base_id=base_id)
-        return [k for k, v in self._htree.items() if isinstance(v, OOBTree)]
-
-
-    def _getTree(self, base_id):
-        """ Return the tree wich has the base_id
-        """
-        htree = self._htree
-        id_list = self.hashId(base_id)
-        for sub_id in id_list:
-          if not isinstance(htree, OOBTree):
-            return None
-          if not htree.has_key(sub_id):
-            raise IndexError, base_id
-          htree = htree[sub_id]
-        return htree
-
-    def _getTreeIdList(self, htree=None):
-        """ recursively build a list of btree ids
-        """
-        if htree is None:
-          htree = self._htree
-          btree_list = []
-        else:
-          btree_list = []
-        for obj_id in htree.keys():
-          obj = htree[obj_id]
-          if isinstance(obj, OOBTree):
-            btree_list.extend(["%s-%s"%(obj_id, x) for x in self._getTreeIdList(htree=obj)])
-            btree_list.append(obj_id)
-
-        return btree_list
-
-    security.declareProtected(access_contents_information,
                               'getTreeIdList')
     def getTreeIdList(self, htree=None):
         """ Return list of all tree ids
         """
-        if self._tree_list is None or len(self._tree_list.keys()) == 0:
-            tree_list = self._getTreeIdList(htree=htree)
-            self._tree_list = PersistentMapping()
-            for tree in tree_list:
-                self._tree_list[tree] = None
-        return sorted(self._tree_list.keys())
-
-    def _checkObjectId(self, ids):
-        """ test id is not in btree id list
-        """
-        base_id, obj_id = ids
-        if base_id is not None:
-            obj_id = "%s%s%s" %(base_id, H_SEPARATOR, obj_id)
-        return not self._tree_list.has_key(obj_id)
+        r = []
+        s = [(None, self._htree.iteritems())]
+        while s:
+          base_id, items = s.pop()
+          if base_id:
+            for k, v in items:
+              if type(v) is not OOBTree:
+                r.append(base_id)
+                # As an optimization, and because _htree_iteritems does not
+                # support mixed buckets except at the root, we consider that
+                # this one only contains leafs.
+                break
+              s.append((base_id + H_SEPARATOR + k, v.iteritems()))
+          else:
+            for k, v in items:
+              if type(v) is not OOBTree:
+                r.append(base_id)
+                for k, v in items:
+                  if type(v) is OOBTree:
+                    s.append((k, v.iteritems()))
+                break
+              s.append((k, v.iteritems()))
+        r.sort()
+        return r
 
     security.declareProtected(access_contents_information,
                               'objectValues')
