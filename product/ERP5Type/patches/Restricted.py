@@ -236,6 +236,12 @@ safe_builtins['__import__'] = guarded_import
 
 ModuleSecurityInfo('transaction').declarePublic('doom')
 
+import hmac
+allow_module('hmac')
+# HMAC does not sub-class object so ContainerAssertions
+# does not work
+hmac.HMAC.__allow_access_to_unprotected_subobjects__ = 1
+
 import decimal
 allow_module('decimal')
 ContainerAssertions[decimal.Decimal] = 1
