@@ -118,9 +118,7 @@ class AcknowledgementTool(BaseTool):
       portal = self.getPortalObject()
       person_value = portal.ERP5Site_getAuthenticatedMemberPersonValue(
                                                       user_name=user_name)
-      if person_value is None:
-        raise ValueError('No user found')
-      else:
+      if person_value is not None:
         now = DateTime()
         # First look at all event that define the current user as destination
         all_document_list = [x.getObject() for x in \
