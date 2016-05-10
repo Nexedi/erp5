@@ -1,3 +1,23 @@
+from time import sleep
+
+def waitForActivities(self, count=1000):
+  """
+    We wait until all activities are finished
+
+    RuntimeError is raised in case there is no way
+    to finish activities.
+  """
+  activity_tool = self.getPortalObject().portal_activities
+  for x in xrange(count):
+    x = activity_tool.getMessageList()
+    if not x:
+      return 'Done.'
+    if all(x.processing_node == -2 for x in x):
+      break
+    activity_tool.process_timer(None, None)
+    sleep(1)
+  raise RuntimeError('tic is looping forever.')
+
 def UpdateImage(image):
   image._update_image_info()
 
