@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>computers.html</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+  <head>\n
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
+    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
+    <title>Nexedi ERP5 | Computers</title>\n
+\n
+    <!-- TODO: gadget mobile meta -->\n
+    <!-- TODO: schema.org? -->\n
+    <!-- TODO: all JQM widgets should have enhanced markup vs letting JQM enhance -->\n
+    <!-- normalize -->\n
+    <link rel="stylesheet" href="css/normalize.css">\n
+    <!-- JQM structure -->\n
+    <link rel="stylesheet" href="css/jquery-mobile/jquery-mobile.latest.css">\n
+    <!-- JQM extensions -->\n
+    <link rel="stylesheet" href="css/extensions.css">\n
+    <!-- fontawesome icons -->\n
+    <link rel="stylesheet" href="css/fontawesome.css">\n
+    <!-- JQM custom themes (slapos-white, slapos-black, slapos-active) -->\n
+    <link rel="stylesheet" href="css/themes.css">\n
+    <!-- generic CSS -->\n
+    <link rel="stylesheet" href="css/css.css">\n
+\n
+  </head>\n
+  <body>\n
+\n
+    <div id="computers" data-role="page" data-theme="slapos-white">\n
+\n
+      <!-- left panel -->\n
+      <div data-role="panel" id="menu_computers" data-theme="slapos-black" class="panel" data-position="left" data-display="push">\n
+       <div class="panel_element panel_element_first panel_header">\n
+          <input type="search" data-role="button" value="" placeholder="Search" class="panel_search" />\n
+          <a href="#menu" class="panel-close" data-role="button" data-iconpos="notext" data-icon="remove" data-rel="close">Close</a>\n
+        </div>\n
+\n
+        <div class="panel_element">\n
+          <!-- gadget modules -->\n
+          <ul data-role="listview" class="listview" data-theme="slapos-black">\n
+            <li data-role="list-divider">Modules</li>\n
+            <li class="listview_item listview_icon"><a href="webpages.html"><span class="ui-li-icon ui-li-icon-custom ui-icon-file-alt ui-icon">&nbsp;</span><h3>Webpages</h3><p>Generated Webpages</p></a></li>\n
+          </ul>\n
+        </div>\n
+\n
+        <div class="panel_element">\n
+          <ul data-role="listview" class="listview" data-theme="slapos-black">\n
+            <li data-role="list-divider">General</li>\n
+            <li class="listview_item listview_icon"><a href=""><span class="ui-li-icon ui-li-icon-custom ui-icon-folder-open-alt ui-icon">&nbsp;</span><h3>Software</h3></a></li>\n
+            <li class="listview_item listview_icon"><a href=""><span class="ui-li-icon ui-li-icon-custom ui-icon-book ui-icon">&nbsp;</span><h3>Documentation</h3></a></li>\n
+            <li class="listview_item listview_icon"><a href=""><span class="ui-li-icon ui-li-icon-custom ui-icon-cloud-download ui-icon">&nbsp;</span><h3>Download</h3></a></li>\n
+            <li class="listview_item listview_icon"><a href=""><span class="ui-li-icon ui-li-icon-custom ui-icon-comments ui-icon">&nbsp;</span><h3>Forum</h3></a></li>\n
+            <li class="listview_item listview_icon"><a href=""><span class="ui-li-icon ui-li-icon-custom ui-icon-microphone ui-icon">&nbsp;</span><h3>Blog</h3></a></li>\n
+          </ul>\n
+        </div>\n
+        <div class="panel_element" data-theme="slapos-black">\n
+          <ul class="list mini">\n
+            <li><a href="http://nexedi.com/">Nexedi &copy; 2013</a></li>\n
+          </ul>\n
+        </div>\n
+      </div>\n
+      \n
+      <!-- gadget header -->\n
+      <div data-role="header" data-position="fixed">\n
+        <div class="wrap left">\n
+          <div data-role="controlgroup" data-type="horizontal" class="buttongroup">\n
+            <a href="#menu_computers" data-rel="panel" data-role="button" data-icon="reorder" class="responsive">Navigate</a>\n
+          </div>\n
+        </div>\n
+        <h1>Computers</h1>\n
+        <div class="wrap right">\n
+          <div data-role="controlgroup" data-type="horizontal" class="buttongroup">\n
+            <a href="#popup_computers" data-rel="popup" data-transition="pop" data-position-to="window" data-role="button" data-icon="user" class="responsive">Login</a>\n
+            <a href="#communicate_computers" data-rel="panel" data-role="button" data-icon="comments" class="responsive">Communicate</a>\n
+          </div>\n
+        </div>\n
+      </div>\n
+\n
+      <!-- popup login -->\n
+      <div data-role="popup" id="popup_computers" data-overlay-theme="slapos-black" data-tolerance="30,30,30,30" data-shadow="false" data-theme="slapos-white" class="popup single ui-content">\n
+        <div class="popup_element logo_wrap">\n
+          <img src="img/slapos.png" alt="slapos logo" />\n
+        </div>\n
+        <div class="popup_element">\n
+          <p>Sign in using</p>\n
+          <div data-role="controlgroup">\n
+            <a href="#" data-role="button" class="signin_google" data-iconpos="left" data-icon="google-plus-sign">Google</a>\n
+            <a href="#" data-role="button" class="signin_fb" data-iconpos="left" data-icon="facebook-sign">Facebook</a>\n
+          </div>\n
+          <p>Classic login</p>\n
+          <div data-role="controlgroup" data-type="horizontal" class="input_board">\n
+            <label class="ui-hidden-accessible">Login</label>\n
+            <input name="login" type="text" value="" placeholder="Login" data-icon="user" />\n
+            <label class="ui-hidden-accessible">Password</label>\n
+            <input name="password" type="password" value="" placeholder="Password" data-icon="lock" />\n
+          </div>\n
+          <span class="mini right note">\n
+          <a href="#">Forgot Password</a>\n
+          </span>\n
+        </div>\n
+\n
+        <div class="popup_element">\n
+          <p class="mini">\n
+          <span class="note">Please note:</span>\n
+          To maintain sufficient resources, a minimal fee of 1 EUR will be\n
+          charged if you use SlapOS services for <strong>more than 24\n
+          hours</strong>. By clicking on one of the signup buttons, you\n
+          agree that you are subscribing to a payable service. All services\n
+          you request will be invoiced to you at the end of the month.\n
+          </p>\n
+\n
+          <p>\n
+          To find out more, please refer to\n
+          </p>\n
+\n
+          <a href="pricing.html" data-role="button" data-iconpos="left" data-icon="euro">SlapOS Pricing</a>\n
+        </div>\n
+      </div>\n
+\n
+      <!-- content -->\n
+      <div class="ui-content">\n
+\n
+        <div class="content_element content_element_fullscreen">\n
+          <table class="table_default erp5_gadget" data-gadget="listbox" data-gadget-id="listbox_01">\n
+            <!-- dynamic -->\n
+          </table>\n
+        </div>\n
+\n
+        <div class="content_element content_element_fullscreen">\n
+          <table class="table_default erp5_gadget" data-gadget="listbox" data-gadget-id="listbox_02">\n
+            <!-- dynamic -->\n
+          </table>\n
+        </div>\n
+      </div>\n
+\n
+      <!-- footer -->\n
+      <div data-role="footer" data-position="fixed">\n
+        <div data-role="navbar" class="navbar">\n
+            <ul>\n
+              <li><a href="#" data-icon="compass">Browse</a></li>\n
+              <li><a class="new_item" href="computer.html?mode=add" data-icon="plus"><span class="navbar_add">Add</span>/<span class="navbar_clone">Clone</span></a></li>\n
+              <li><a class="remove_item" href="#" data-icon="minus">Remove</a></li>\n
+              <li><a href="#" data-icon="cog">Action</a></li>\n
+              <li><a href="#" data-icon="share">Import/Export</a></li>\n
+            </ul>\n
+        </div>\n
+      </div>\n
+\n
+      <!-- right panel -->\n
+      <div data-role="panel" id="communicate_computers" data-theme="slapos-black" class="panel" data-position="right" data-display="push">\n
+\n
+      </div>\n
+    </div>\n
+\n
+    <!-- Jquery, JQM, JQM extensions -->\n
+    <script src="js/libs/jquery/jquery.js"></script>\n
+    <script src="js/libs/jquery-mobile/jquery-mobile.js"></script>\n
+    <script src="js/extensions.js"></script>\n
+    <!-- dragdrop -->\n
+    <script src="http://view.jqueryui.com/master/ui/jquery.ui.mouse.js" ></script>\n
+    <script src="http://view.jqueryui.com/master/ui/jquery.ui.sortable.js" ></script>\n
+    <script src="https://rawgithub.com/furf/jquery-ui-touch-punch/master/jquery.ui.touch-punch.min.js" ></script>\n
+    <script>\n
+      $.ui.sortable.initSelector = ":jqmData(sortable=\'true\')";\n
+    </script>\n
+\n
+    <!-- JIO -->\n
+    <script src="js/libs/jio/sha256.amd.js"></script>\n
+    <script src="js/libs/jio/jio.js"></script>\n
+    <script src="js/libs/jio/complex_queries.js"></script>\n
+    <script src="js/libs/jio/localstorage.js"></script>\n
+    <!-- custom script -->\n
+    <script src="js/erp5_loader.js"></script>\n
+  </body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
