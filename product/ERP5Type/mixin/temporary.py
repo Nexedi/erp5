@@ -80,6 +80,14 @@ class TemporaryDocumentMixin(object):
   def getTitle(self):
     return getattr(self,'title',None)
 
+  def edit(self, *args, **kw):
+    if getattr(self, "_original", None) is None:
+      return super(TemporaryDocumentMixin, self).edit(*args, **kw)
+    # Object created with Base.asContext, so do not touch borrowed
+    # workflow history, in particular if it is persistent.
+    # This also avoids security issues.
+    return self._edit(restricted=1, *args, **kw)
+
 # Make some methods public.
 for method_id in ('reindexObject', 'recursiveReindexObject',
                   'activate', 'setUid', 'setTitle', 'getTitle',
