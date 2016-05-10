@@ -1371,6 +1371,13 @@ html .ui-table-header:before {
     padding-left: 0;
     padding-right: 0;
 }
+/* multiline */
+.ui-input-has-multiline {
+  padding-left: 2.375em;
+}
+.ui-input-has-multiline textarea {
+  width: 100%;
+}
 /* correctly display loader TODO: REMOVE */
 html body .ui-input-has-clear .ui-icon-spinner:after {
     font-size: 1.5em;
