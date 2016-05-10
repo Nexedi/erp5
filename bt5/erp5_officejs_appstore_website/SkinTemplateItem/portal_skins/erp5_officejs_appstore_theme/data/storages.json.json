@@ -1,0 +1,17 @@
+[
+  {
+    "widget": "storage",
+    "definition": {
+      "type": "local",
+      "username": "appstore",
+      "application_name": "settings"
+    }
+  }, {
+    "widget": "storage",
+    "definition": {
+      "type":"local",
+      "username":"appstore",
+      "application_name": "items"
+    }
+  }
+]
