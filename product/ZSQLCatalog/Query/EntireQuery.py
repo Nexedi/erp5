@@ -131,7 +131,8 @@ class EntireQuery(object):
           column = alias
           if '.' in alias:
             # If given column is pre-mapped, strip table name from its alias.
-            _, alias = alias.replace('`', '').split('.')
+            _, alias = alias.split('.')
+            alias = alias.strip('`()')
         else:
           column = raw_column
         try:
