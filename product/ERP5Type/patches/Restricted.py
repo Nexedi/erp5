@@ -170,6 +170,7 @@ allow_module('crypt')
 ##
 
 allow_module('pprint')
+allow_module('quopri')
 ModuleSecurityInfo('json').declarePublic('dumps', 'loads')
 
 import re
