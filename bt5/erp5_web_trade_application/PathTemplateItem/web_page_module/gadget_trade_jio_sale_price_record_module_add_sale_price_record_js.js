@@ -700,11 +700,13 @@
             }
           });
         })
+     .push(function () {
+                   gadget.props.element.querySelector('[name="date"]').setAttribute('type', 'date');
 
 
         
 
-
+     })
 
     })
 
