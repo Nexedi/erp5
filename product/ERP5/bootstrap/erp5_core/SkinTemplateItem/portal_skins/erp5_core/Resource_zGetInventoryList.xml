@@ -45,7 +45,11 @@ convert_quantity_result\r\n
 quantity_unit_uid\r\n
 stock_table_id=stock\r\n
 transformed_uid\r\n
-transformed_variation_text</string> </value>
+transformed_variation_text\r\n
+interpolation_method\r\n
+interpolation_method_from_date\r\n
+interpolation_method_to_date\r\n
+interpolation_method_at_date</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>

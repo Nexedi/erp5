@@ -559,6 +559,8 @@ class SimulationTool(BaseTool):
         omit_output=0,
         omit_asset_increase=0,
         omit_asset_decrease=0,
+        # interpolation_method
+        interpolation_method='default',
         # group by
         group_by_node=0,
         group_by_node_category=0,
@@ -645,6 +647,24 @@ class SimulationTool(BaseTool):
           date_dict['range'] = 'ngt'
         if date_dict:
           column_value_dict['date'] = date_dict
+        if interpolation_method != 'default':
+          assert from_date and to_date
+          # if we consider flow, we also select movement whose mirror date is
+          # in the from_date/to_date range and movement whose
+          # start_date/stop_date contains the report range.
+          column_value_dict['date'] = ComplexQuery(
+                  Query(date=(from_date, to_date), range='minmax'),
+                  Query(mirror_date=(from_date, to_date), range='minmax'),
+                  ComplexQuery(
+                      Query(mirror_date=from_date, range='min'),
+                      Query(date=to_date, range='max'),
+                      operator="AND"),
+                  ComplexQuery(
+                      Query(date=from_date, range='min'),
+                      Query(mirror_date=to_date, range='max'),
+                      operator="AND"),
+                  operator="OR"
+              )
       else:
         column_value_dict['date'] = {'query': [to_date], 'range': 'ngt'}
         column_value_dict['mirror_date'] = {'query': [from_date], 'range': 'nlt'}
@@ -1011,6 +1031,12 @@ class SimulationTool(BaseTool):
       output_simulation_state - only take rows with specified simulation_state
                         and quantity < 0
 
+      interpolation_method - XXX name ???? how to evaluate flow movement.
+        * full (default): Consider the movement decreases 100% of source stock on
+          start date and increase 100% of the destination node stock on stop date.
+        * linear: consider the movement decreases source stock and increase
+          destination stock linearly between start date and stop date.
+
       ignore_variation -  do not take into account variation in inventory
                         calculation (useless on getInventory, but useful on
                         getInventoryList)
@@ -1185,6 +1211,7 @@ class SimulationTool(BaseTool):
                          omit_simulation=0,
                          only_accountable=True,
                          default_stock_table='stock',
+                         interpolation_method='default',
                          selection_domain=None, selection_report=None,
                          statistic=0, inventory_list=1,
                          precision=None, connection_id=None,
@@ -1263,6 +1290,7 @@ class SimulationTool(BaseTool):
         'stock_table_id': default_stock_table,
         'src__': src__,
         'ignore_variation': ignore_variation,
+        'interpolation_method': interpolation_method,
         'standardise': standardise,
         'omit_simulation': omit_simulation,
         'only_accountable': only_accountable,
@@ -1308,7 +1336,7 @@ class SimulationTool(BaseTool):
           kw['from_date'] = cached_date
       else:
         cached_result = []
-      sql_kw, new_kw = self._generateKeywordDict(**kw)
+      sql_kw, new_kw = self._generateKeywordDict(interpolation_method=interpolation_method, **kw)
       # Copy kw content as _generateSQLKeywordDictFromKeywordDict
       # remove some values from it
       try:
@@ -1321,6 +1349,22 @@ class SimulationTool(BaseTool):
       stock_sql_kw = self._generateSQLKeywordDictFromKeywordDict(
           table=default_stock_table, sql_kw=sql_kw, new_kw=new_kw_copy)
       stock_sql_kw.update(base_inventory_kw)
+
+        # TODO: move in _generateSQLKeywordDictFromKeywordDict
+      if interpolation_method == 'linear':
+          # XXX only DateTime instance are supported
+        from_date = kw.get('from_date')
+        if from_date:
+          from_date = from_date.toZone("UTC")
+        to_date = kw.get('to_date')
+        if to_date:
+          to_date = to_date.toZone("UTC")
+        # TODO: support at_date ?
+        stock_sql_kw['interpolation_method_from_date'] = from_date
+        stock_sql_kw['interpolation_method_to_date'] = to_date
+      elif interpolation_method != 'default':
+        raise ValueError("Unsupported interpolation_method %r" % (interpolation_method,))
+
       delta_result = self.Resource_zGetInventoryList(
           **stock_sql_kw)
       if src__:

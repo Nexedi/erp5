@@ -1,26 +1,52 @@
 SELECT
+<dtml-if expr="interpolation_method == 'linear'">
+  @interpolation_ratio := CASE
+     WHEN <dtml-var stock_table_id>.mirror_date = <dtml-var stock_table_id>.date THEN 1
+     ELSE (
+      UNIX_TIMESTAMP(LEAST(<dtml-sqlvar flow_valuation_method_to_date type="datetime">,
+            GREATEST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date) ))
+       - UNIX_TIMESTAMP(GREATEST(<dtml-sqlvar flow_valuation_method_from_date type="datetime">,
+                  LEAST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date))))
+      / ( UNIX_TIMESTAMP(GREATEST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date)) -
+         UNIX_TIMESTAMP(LEAST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date)) ) END
+<dtml-else>
+  @interpolation_ratio := 1
+</dtml-if> flow_ratio,
+
 <dtml-if expr="precision is not None">
-  SUM(ROUND(<dtml-var stock_table_id>.quantity
-    <dtml-if transformed_uid> * transformation.quantity</dtml-if>, <dtml-var precision>)) AS inventory,
-  SUM(ROUND(<dtml-var stock_table_id>.quantity
-    <dtml-if transformed_uid> * transformation.quantity</dtml-if>, <dtml-var precision>)) AS total_quantity,
+  SUM(ROUND(
+    <dtml-var stock_table_id>.quantity
+    <dtml-if transformed_uid> * transformation.quantity</dtml-if>
+    * @interpolation_ratio, <dtml-var precision>)) AS inventory,
+  SUM(ROUND(
+    <dtml-var stock_table_id>.quantity
+    <dtml-if transformed_uid> * transformation.quantity</dtml-if>
+    * @interpolation_ratio, <dtml-var precision>)) AS total_quantity,
   <dtml-if convert_quantity_result>
     SUM(ROUND(<dtml-var stock_table_id>.quantity * measure.quantity
       <dtml-if quantity_unit_uid> / quantity_unit_conversion.quantity</dtml-if>
-      <dtml-if transformed_uid> * transformation.quantity</dtml-if>, <dtml-var precision>))
+    * @interpolation_ratio, <dtml-var precision>))
     AS converted_quantity,
   </dtml-if>
-  IFNULL(SUM(ROUND(<dtml-var stock_table_id>.total_price, <dtml-var precision>)), 0) AS total_price
+
+  IFNULL(SUM(ROUND(
+    <dtml-var stock_table_id>.total_price * @interpolation_ratio, <dtml-var precision>)), 0) AS total_price
 <dtml-else>
-  SUM(<dtml-var stock_table_id>.quantity <dtml-if transformed_uid> * transformation.quantity</dtml-if>) AS inventory,
-  SUM(<dtml-var stock_table_id>.quantity <dtml-if transformed_uid> * transformation.quantity</dtml-if>) AS total_quantity,
+  SUM(<dtml-var stock_table_id>.quantity
+      <dtml-if transformed_uid> * transformation.quantity</dtml-if>
+      * @interpolation_ratio
+     ) AS inventory,
+  SUM(<dtml-var stock_table_id>.quantity
+      <dtml-if transformed_uid> * transformation.quantity</dtml-if>
+      * @interpolation_ratio
+     ) AS total_quantity,
   <dtml-if convert_quantity_result>
     ROUND(SUM(<dtml-var stock_table_id>.quantity * measure.quantity
       <dtml-if quantity_unit_uid> / quantity_unit_conversion.quantity</dtml-if>
-      <dtml-if transformed_uid> * transformation.quantity</dtml-if>), 12)
+      <dtml-if transformed_uid> * transformation.quantity</dtml-if> * @flow_ratio), 12)
     AS converted_quantity,
   </dtml-if>
-  IFNULL(SUM(<dtml-var stock_table_id>.total_price), 0) AS total_price
+  IFNULL(SUM(<dtml-var stock_table_id>.total_price) * @flow_ratio, 0) AS total_price
 </dtml-if>
 <dtml-if inventory_list>
   ,
