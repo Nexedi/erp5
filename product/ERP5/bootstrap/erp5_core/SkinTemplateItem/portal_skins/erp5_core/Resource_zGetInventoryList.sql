@@ -1,3 +1,6 @@
+<dtml-if group_by_time_interval_list>
+SELECT slots.time_interval_index, q.* FROM (
+</dtml-if>
 SELECT
 <dtml-if expr="precision is not None">
   SUM(ROUND(<dtml-var stock_table_id>.quantity
@@ -56,6 +59,8 @@ SELECT
   COUNT(DISTINCT <dtml-var stock_table_id>.uid) AS stock_uid,
   MAX(<dtml-var stock_table_id>.date) AS date
 </dtml-if>
+<dtml-if group_by_time_interval_list>, time_interval_index as _time_interval_index</dtml-if>
+
 <dtml-if select_expression>, <dtml-var select_expression></dtml-if>
 
 FROM
@@ -69,6 +74,55 @@ FROM
   </dtml-if>
 </dtml-in>
 , <dtml-var stock_table_id>
+
+   <dtml-if group_by_time_interval_list>
+     RIGHT JOIN
+       ( <dtml-in prefix="time_interval" expr="_.list(_.enumerate(group_by_time_interval_list))">
+         SELECT
+           <dtml-sqlvar expr="time_interval_key" type="int"> time_interval_index,
+           <dtml-sqlvar expr="time_interval_item.get('from_date')" type="datetime" optional> time_interval_from_date,
+           <dtml-sqlvar expr="time_interval_item.get('at_date')" type="datetime" optional> time_interval_at_date,
+           <dtml-sqlvar expr="time_interval_item.get('to_date')" type="datetime" optional> time_interval_to_date
+
+         <dtml-unless time_interval_end>UNION ALL</dtml-unless>
+       </dtml-in> ) slots
+     ON
+     <dtml-if group_by_time_interval_list>
+     (
+       ( time_interval_from_date is not null AND
+        ( time_interval_at_date is not null AND
+         GREATEST(`stock`.`date`, `stock`.`mirror_date`) >= time_interval_from_date AND
+         LEAST(`stock`.`date`, `stock`.`mirror_date`) <= time_interval_at_date
+        ) OR (
+          (
+            time_interval_to_date is not null AND
+            GREATEST(`stock`.`date`, `stock`.`mirror_date`) >= time_interval_from_date AND
+            LEAST(`stock`.`date`, `stock`.`mirror_date`) < time_interval_to_date
+          ) OR (
+            GREATEST(`stock`.`date`, `stock`.`mirror_date`) >= time_interval_from_date AND
+            time_interval_at_date is null AND time_interval_to_date is null
+          )
+        )
+       ) OR (
+         time_interval_from_date is null AND (
+           ( time_interval_at_date is not null AND
+            ( LEAST(`stock`.`date`, `stock`.`mirror_date`) <= time_interval_at_date )
+           ) OR  LEAST(`stock`.`date`, `stock`.`mirror_date`) < time_interval_to_date
+         )
+       )
+     )
+     <dtml-else>
+     (
+       ( time_interval_from_date is null OR stock.date >= time_interval_from_date )
+       AND ( time_interval_at_date is null OR stock.date <= time_interval_at_date )
+       AND ( time_interval_to_date is null OR stock.date < time_interval_to_date )
+     )
+     </dtml-if>
+   </dtml-if>
+
+
+
+
 </dtml-if>
 <dtml-if quantity_unit_uid> <dtml-comment>XXX quantity unit conversion will not work when using implict_join=False</dtml-comment>
   LEFT JOIN quantity_unit_conversion ON
@@ -116,9 +170,28 @@ WHERE
 <dtml-if group_by_expression>
 GROUP BY
     <dtml-if transformed_uid>transformation.transformed_uid,</dtml-if>
+    <dtml-if group_by_time_interval_list>time_interval_index,</dtml-if>
     <dtml-var group_by_expression>
+
 </dtml-if>
 <dtml-if order_by_expression>
 ORDER BY
   <dtml-var order_by_expression>
+<dtml-else>
+  <dtml-if group_by_time_interval_list>
+    ORDER BY time_interval_index
+  </dtml-if>
+</dtml-if>
+<dtml-if group_by_time_interval_list>
+) q
+  RIGHT JOIN
+    ( <dtml-in prefix="time_interval" expr="_.list(_.enumerate(group_by_time_interval_list))">
+      SELECT
+        <dtml-sqlvar expr="time_interval_key" type="int"> time_interval_index,
+        <dtml-sqlvar expr="time_interval_item.get('from_date')" type="datetime" optional> time_interval_from_date,
+        <dtml-sqlvar expr="time_interval_item.get('at_date')" type="datetime" optional> time_interval_at_date,
+        <dtml-sqlvar expr="time_interval_item.get('to_date')" type="datetime" optional> time_interval_to_date
+
+      <dtml-unless time_interval_end>UNION ALL</dtml-unless>
+    </dtml-in> ) slots ON (q._time_interval_index = slots.time_interval_index)
 </dtml-if>

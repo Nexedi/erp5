@@ -599,6 +599,7 @@ class SimulationTool(BaseTool):
         group_by_function_category=0,
         group_by_function_category_strict_membership=0,
         group_by_date=0,
+        group_by_time_interval_list=(),
         # sort_on
         sort_on=None,
         group_by=None,
@@ -980,6 +981,14 @@ class SimulationTool(BaseTool):
         new_kw['related_key_select_expression_list'] =\
                 related_key_select_expression_list
 
+      for slot_index, time_sequence in enumerate(group_by_time_interval_list):
+        if not (time_sequence.get('from_date') or time_sequence.get('at_date') or time_sequence.get('to_date')):
+          raise ValueError(
+              "Invalid time sequence {slot_index}: {time_sequence!r}".format(
+              slot_index=slot_index,
+              time_sequence=time_sequence,
+          ))
+      sql_kw['group_by_time_interval_list'] = group_by_time_interval_list
       return sql_kw, new_kw
 
     #######################################################
@@ -1189,6 +1198,7 @@ class SimulationTool(BaseTool):
         group_by_section_category=0,
         group_by_section_category_strict_membership=0,
         group_by_resource=None,
+        group_by_time_interval_list=(),
         group_by=None,
         **ignored):
       """
@@ -1208,7 +1218,8 @@ class SimulationTool(BaseTool):
            group_by_function or group_by_mirror_section or group_by_payment or \
            group_by_sub_variation or group_by_variation or \
            group_by_movement or group_by_date or group_by_section_category or\
-           group_by_section_category_strict_membership:
+           group_by_section_category_strict_membership or \
+           group_by_time_interval_list:
           if group_by_resource is None:
             group_by_resource = 1
           new_group_by_dict['group_by_resource'] = group_by_resource
@@ -1315,7 +1326,8 @@ class SimulationTool(BaseTool):
       # Get cached data
       if getattr(self, "Resource_zGetInventoryCacheResult", None) is not None and \
               optimisation__ and (not kw.get('from_date')) and \
-              'transformed_resource' not in kw:
+              'transformed_resource' not in kw \
+              and "group_by_time_interval_list" not in kw:
         # Here is the different kind of date
         # from_date : >=
         # to_date   : <

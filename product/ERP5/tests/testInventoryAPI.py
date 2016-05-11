@@ -1267,6 +1267,232 @@ class TestInventoryList(InventoryAPITestCase):
     self.assertEqual([r.inventory for r in inventory_list
         if r.strict_use_uid == use.use1.use12.getUid()], [11])
 
+  def test_group_by_time_interval(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+
+    # Create 3 groups of movements:
+    self._makeMovement(quantity=1, start_date=DateTime('2016/01/01'))
+
+    self._makeMovement(quantity=3, start_date=DateTime('2016/02/01'))
+    self._makeMovement(quantity=5, start_date=DateTime('2016/02/02'))
+
+    self._makeMovement(quantity=7, start_date=DateTime('2016/03/01'))
+
+    # Create "noise" movement that we should not select
+    self._makeMovement(
+        quantity=10,
+        start_date=DateTime('2016/02/01'),
+        destination_value=self.portal.organisation_module.newContent())
+
+    inventory_list = getInventoryList(
+        node_uid=self.node.getUid(),
+        group_by_time_interval_list=[
+            {
+                'at_date': DateTime('2016/01/01').latestTime()
+            },
+            {
+                'from_date': DateTime('2016/02/01'),
+                'to_date': DateTime('2016/03/01')
+            },
+            {
+                'from_date': DateTime('2016/03/01')
+            },
+        ])
+
+    # by default, time sequence are returned sorted by keys.
+    self.assertEqual(3, len(inventory_list))
+
+    self.assertEqual(1, inventory_list[0].total_quantity)
+    self.assertEqual(0, inventory_list[0].time_interval_index)
+
+    self.assertEqual(3 + 5, inventory_list[1].total_quantity)
+    self.assertEqual(1, inventory_list[1].time_interval_index)
+
+    self.assertEqual(7, inventory_list[2].total_quantity)
+    self.assertEqual(2, inventory_list[2].time_interval_index)
+
+    # now using all combinations of from_date, at_date & to_date
+    inventory_list = getInventoryList(
+        node_uid=self.node.getUid(),
+        group_by_time_interval_list=[
+            {
+                'at_date': DateTime('2016/01/01').latestTime()
+            },
+            {
+                'to_date': DateTime('2016/01/02')
+            },  # equivalent to above
+            {
+                'from_date': DateTime('2016/02/01'),
+                'at_date': DateTime('2016/02/29').latestTime()
+            },
+            {
+                'from_date': DateTime('2016/02/01'),
+                'to_date': DateTime('2016/03/01')
+            },
+            {
+                'from_date': DateTime('2016/03/01')
+            },
+        ])
+    self.assertEqual(
+        [1, 1, 3 + 5, 3 + 5, 7],
+        [brain.inventory for brain in inventory_list],
+    )
+
+  def test_group_by_time_interval_empty_slots_are_returned(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+
+    self._makeMovement(
+        title="M1", quantity=3, start_date=DateTime('2016/01/01'))
+
+    self._makeMovement(
+        title="M2", quantity=5, start_date=DateTime('2016/02/01'))
+
+    inventory_list = getInventoryList(
+        node_uid=self.node.getUid(),
+        group_by_time_interval_list=[
+            # before M1 -> empty
+            {
+                'at_date': DateTime('2001/01/01').latestTime()
+            },
+            {
+                'to_date': DateTime('2001/01/01')
+            },
+            {
+                'from_date': DateTime('1999/01/01'),
+                'to_date': DateTime('2001/01/01')
+            },
+            {
+                'from_date': DateTime('1999/01/01'),
+                'at_date': DateTime('2001/01/01')
+            },
+
+            # selecting M1
+            {
+                'from_date': DateTime('2016/01/01'),
+                'to_date': DateTime('2016/01/02')
+            },
+
+            # between M1 & M2 -> empty
+            {
+                'from_date': DateTime('2016/01/02'),
+                'at_date': DateTime('2001/01/03')
+            },
+            {
+                'from_date': DateTime('2016/01/02'),
+                'to_date': DateTime('2001/01/03')
+            },
+
+            # selecting M2
+            {
+                'from_date': DateTime('2016/02/01'),
+                'to_date': DateTime('2016/02/03')
+            },
+
+            # after M2 -> empty
+            {
+                'from_date': DateTime('2016/02/03'),
+                'to_date': DateTime('2016/02/04')
+            },
+            {
+                'from_date': DateTime('2016/02/03'),
+                'at_date': DateTime('2001/02/04')
+            },
+            {
+                'from_date': DateTime('2016/02/03')
+            },
+        ])
+
+    self.assertEqual(
+        [
+            None,
+            None,
+            None,
+            None,
+            3,
+            None,
+            None,
+            5,
+            None,
+            None,
+            None,
+        ],
+        [x.inventory for x in inventory_list],
+    )
+
+  def test_group_by_time_interval_and_other_group_by(self):
+    # group_by_time_interval_list can be used with other "group by" parameters
+    getInventoryList = self.getSimulationTool().getInventoryList
+
+    another_resource = self._makeResource()
+    self._makeMovement(
+        title="M1", quantity=5, start_date=DateTime('2016/01/01'))
+    self._makeMovement(
+        title="M2", quantity=7, start_date=DateTime('2016/01/03'))
+    self._makeMovement(
+        title="M3",
+        quantity=11,
+        resource_value=another_resource,
+        start_date=DateTime('2016/01/03'))
+
+    self.assertEqual(
+        {
+            (0, self.resource.uid): 5,
+            (1, self.resource.uid): 7,
+            (1, another_resource.uid): 11,
+        },
+        {(brain.time_interval_index, brain.resource_uid): brain.inventory
+         for brain in getInventoryList(
+             node_uid=self.node.getUid(),
+             group_by_resource=True,
+             group_by_time_interval_list=[
+                 {
+                     'at_date': DateTime('2016/01/02')
+                 },
+                 {
+                     'from_date': DateTime('2016/01/02')
+                 },
+             ])},
+    )
+
+  def test_group_by_time_interval_invalid_inputs(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+
+    self._makeMovement(
+        title="M1", quantity=3, start_date=DateTime('2016/01/02'))
+
+    # no from_date, at_date or to_date on a slot raise a ValueError
+    with self.assertRaises(ValueError):
+      getInventoryList(
+          node_uid=self.node.getUid(),
+          group_by_time_interval_list=[{}],
+      )
+
+    # intervals where start_date > stop_date are valid, but select nothing
+    self.assertEqual(
+        {0: None},
+        {
+            brain.time_interval_index: brain.inventory
+            for brain in getInventoryList(
+                node_uid=self.node.getUid(),
+                group_by_time_interval_list=[{
+                    'from_date': DateTime('2016/01/03'),
+                    'at_date': DateTime('2016/01/01')
+                }])
+        },
+    )
+    self.assertEqual(
+        {0: None},
+        {
+            brain.time_interval_index: brain.inventory
+            for brain in getInventoryList(
+                node_uid=self.node.getUid(),
+                group_by_time_interval_list=[{
+                    'from_date': DateTime('2016/01/03'),
+                    'to_date': DateTime('2016/01/01')
+                }])
+        },
+    )
+
   def test_OmitInputOmitOutput(self):
     getInventoryList = self.getSimulationTool().getInventoryList
     self._makeMovement(quantity=1, price=1)

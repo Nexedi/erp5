@@ -46,7 +46,8 @@ convert_quantity_result\n
 quantity_unit_uid\n
 stock_table_id=stock\n
 transformed_uid\n
-transformed_variation_text</string> </value>
+transformed_variation_text\n
+group_by_time_interval_list:list</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
