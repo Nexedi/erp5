@@ -1,4 +1,5 @@
 from zExceptions import Unauthorized
+import hmac
 if REQUEST is not None:
   raise Unauthorized
 
@@ -14,8 +15,9 @@ if access_token_document.getValidationState() == 'validated':
     reference = request.getHeader("X-ACCESS-TOKEN-SECRET", None)
     if reference is None:
       reference = request.form.get("access_token_secret", "INVALID_REFERERENCE")
-  
-    if access_token_document.getReference() != reference:
+
+    # use hmac.compare_digest and not string comparison to avoid timing attacks
+    if not hmac.compare_digest(access_token_document.getReference(), reference):
       return None
     
     agent_document = access_token_document.getAgentValue()
