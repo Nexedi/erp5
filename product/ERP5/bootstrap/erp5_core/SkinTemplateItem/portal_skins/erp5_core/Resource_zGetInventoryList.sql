@@ -1,26 +1,47 @@
+<dtml-let interpolation_ratio="SimulationTool_zGetInterpolationMethod(
+  stock_table_id=stock_table_id,
+  interpolation_method=interpolation_method,
+  interpolation_method_from_date=interpolation_method_from_date,
+  interpolation_method_to_date=interpolation_method_to_date,
+  interpolation_method_at_date=interpolation_method_at_date,
+  group_by_time_sequence_list=group_by_time_sequence_list,
+  src__=1)">
+
 SELECT
 <dtml-if expr="precision is not None">
-  SUM(ROUND(<dtml-var stock_table_id>.quantity
-    <dtml-if transformed_uid> * transformation.quantity</dtml-if>, <dtml-var precision>)) AS inventory,
-  SUM(ROUND(<dtml-var stock_table_id>.quantity
-    <dtml-if transformed_uid> * transformation.quantity</dtml-if>, <dtml-var precision>)) AS total_quantity,
+  SUM(ROUND(
+    <dtml-var stock_table_id>.quantity
+    <dtml-if transformed_uid> * transformation.quantity</dtml-if>
+    * <dtml-var interpolation_ratio>, <dtml-var precision>)) AS inventory,
+  SUM(ROUND(
+    <dtml-var stock_table_id>.quantity
+    <dtml-if transformed_uid> * transformation.quantity</dtml-if>
+    * <dtml-var interpolation_ratio>, <dtml-var precision>)) AS total_quantity,
   <dtml-if convert_quantity_result>
     SUM(ROUND(<dtml-var stock_table_id>.quantity * measure.quantity
       <dtml-if quantity_unit_uid> / quantity_unit_conversion.quantity</dtml-if>
-      <dtml-if transformed_uid> * transformation.quantity</dtml-if>, <dtml-var precision>))
+    * <dtml-var interpolation_ratio>, <dtml-var precision>))
     AS converted_quantity,
   </dtml-if>
-  IFNULL(SUM(ROUND(<dtml-var stock_table_id>.total_price, <dtml-var precision>)), 0) AS total_price
+
+  IFNULL(SUM(ROUND(
+    <dtml-var stock_table_id>.total_price * <dtml-var interpolation_ratio>, <dtml-var precision>)), 0) AS total_price
 <dtml-else>
-  SUM(<dtml-var stock_table_id>.quantity <dtml-if transformed_uid> * transformation.quantity</dtml-if>) AS inventory,
-  SUM(<dtml-var stock_table_id>.quantity <dtml-if transformed_uid> * transformation.quantity</dtml-if>) AS total_quantity,
+  SUM(<dtml-var stock_table_id>.quantity
+      <dtml-if transformed_uid> * transformation.quantity</dtml-if>
+      * <dtml-var interpolation_ratio>
+     ) AS inventory,
+  SUM(<dtml-var stock_table_id>.quantity
+      <dtml-if transformed_uid> * transformation.quantity</dtml-if>
+      * <dtml-var interpolation_ratio>
+     ) AS total_quantity,
   <dtml-if convert_quantity_result>
     ROUND(SUM(<dtml-var stock_table_id>.quantity * measure.quantity
       <dtml-if quantity_unit_uid> / quantity_unit_conversion.quantity</dtml-if>
-      <dtml-if transformed_uid> * transformation.quantity</dtml-if>), 12)
+      <dtml-if transformed_uid> * transformation.quantity</dtml-if> * <dtml-var interpolation_ratio>), 12)
     AS converted_quantity,
   </dtml-if>
-  IFNULL(SUM(<dtml-var stock_table_id>.total_price), 0) AS total_price
+  IFNULL(SUM(<dtml-var stock_table_id>.total_price * <dtml-var interpolation_ratio>), 0) AS total_price
 </dtml-if>
 <dtml-if inventory_list>
   ,
@@ -56,6 +77,8 @@ SELECT
   COUNT(DISTINCT <dtml-var stock_table_id>.uid) AS stock_uid,
   MAX(<dtml-var stock_table_id>.date) AS date
 </dtml-if>
+<dtml-if group_by_time_sequence_list>, slot_index </dtml-if> <dtml-comment>XXX is this really needed? are empty slots returned ? </dtml-comment>
+
 <dtml-if select_expression>, <dtml-var select_expression></dtml-if>
 
 FROM
@@ -69,6 +92,55 @@ FROM
   </dtml-if>
 </dtml-in>
 , <dtml-var stock_table_id>
+
+   <dtml-if group_by_time_sequence_list>
+     RIGHT JOIN
+       ( <dtml-in prefix="time_slot" expr="_.list(_.enumerate(group_by_time_sequence_list))">
+         SELECT
+           <dtml-sqlvar expr="time_slot_key" type="int"> slot_index,
+           <dtml-sqlvar expr="time_slot_item.get('from_date')" type="datetime" optional> slot_from_date,
+           <dtml-sqlvar expr="time_slot_item.get('at_date')" type="datetime" optional> slot_at_date,
+           <dtml-sqlvar expr="time_slot_item.get('to_date')" type="datetime" optional> slot_to_date
+
+         <dtml-unless time_slot_end>UNION ALL</dtml-unless>
+       </dtml-in> ) slots
+     ON
+     <dtml-if group_by_time_sequence_list>
+     (
+       ( slot_from_date is not null AND
+        ( slot_at_date is not null AND
+         GREATEST(`stock`.`date`, `stock`.`mirror_date`) >= slot_from_date AND
+         LEAST(`stock`.`date`, `stock`.`mirror_date`) <= slot_at_date
+        ) OR (
+          (
+            slot_to_date is not null AND
+            GREATEST(`stock`.`date`, `stock`.`mirror_date`) >= slot_from_date AND
+            LEAST(`stock`.`date`, `stock`.`mirror_date`) < slot_to_date
+          ) OR (
+            GREATEST(`stock`.`date`, `stock`.`mirror_date`) >= slot_from_date AND
+            slot_at_date is null AND slot_to_date is null
+          )
+        )
+       ) OR (
+         slot_from_date is null AND (
+           ( slot_at_date is not null AND
+            ( LEAST(`stock`.`date`, `stock`.`mirror_date`) <= slot_at_date )
+           ) OR  LEAST(`stock`.`date`, `stock`.`mirror_date`) < slot_to_date
+         )
+       )
+     )
+     <dtml-else>
+     (
+       ( slot_from_date is null OR stock.date >= slot_from_date )
+       AND ( slot_at_date is null OR stock.date <= slot_at_date )
+       AND ( slot_to_date is null OR stock.date < slot_to_date )
+     )
+     </dtml-if>
+   </dtml-if>
+
+
+
+
 </dtml-if>
 <dtml-if quantity_unit_uid> <dtml-comment>XXX quantity unit conversion will not work when using implict_join=False</dtml-comment>
   LEFT JOIN quantity_unit_conversion ON 
@@ -116,9 +188,16 @@ WHERE
 <dtml-if group_by_expression>
 GROUP BY
     <dtml-if transformed_uid>transformation.transformed_uid,</dtml-if>
+    <dtml-if group_by_time_sequence_list>slot_index,</dtml-if>
     <dtml-var group_by_expression>
+
 </dtml-if>
 <dtml-if order_by_expression>
 ORDER BY
   <dtml-var order_by_expression>
+<dtml-else>
+  <dtml-if group_by_time_sequence_list>
+    ORDER BY slot_index
+  </dtml-if>
 </dtml-if>
+</dtml-let>
