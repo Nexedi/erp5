@@ -41,6 +41,7 @@ from Products.ERP5Type import PropertySheet, Permissions
 from urllib import quote
 from Products.ERP5Type.Globals import DTMLFile, get_request
 from AccessControl import Unauthorized, ClassSecurityInfo
+from DateTime import DateTime
 from ZODB.POSException import ConflictError
 from zExceptions import Redirect
 from Acquisition import aq_base
@@ -1058,21 +1059,17 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         are different. And if you specify keep_empty_value, then empty values
         will not be delegated(force_delegate option is high priority).
         """
+        copy_type_list = (bytes, unicode, int, long, float, bool, list, tuple,
+                          dict, DateTime)
         def copy(field, value_type):
             new_dict = {}
             for key, value in getFieldDict(field, value_type).iteritems():
-                if (keep_empty_value is False and
-                    (value=='' or
-                     value==0 or
-                     (isinstance(value, (tuple, list)) and len(value)==0)
-                     )
-                    ):
-                    continue
                 if isinstance(aq_base(value), (Method, TALESMethod)):
                     value = copyMethod(value)
-                elif value is not None and not isinstance(value,
-                        (str, unicode, int, long, float, bool, list, tuple, dict)):
-                    raise ValueError, '%s:%s' % (type(value), repr(value))
+                elif not (value is None or isinstance(value, copy_type_list)):
+                    raise ValueError('%s:%r' % (type(value), value))
+                elif not (keep_empty_value or value):
+                    continue
                 new_dict[key] = value
             return new_dict
 
