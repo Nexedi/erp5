@@ -9,6 +9,10 @@ else:
     return ()
 child_list, resource_list = portal.portal_categories.use.restrictedTraverse(category_relative_url).Category_getUseCategoryListAndResourceList()
 domain_list = []
+if child_list:
+  resource_uid_by_use_uid_dict = {}
+  for row in portal.portal_catalog(select_list=['default_use_uid'], default_use_uid=[x.getUid() for x in child_list]):
+    resource_uid_by_use_uid_dict.setdefault(row.default_use_uid, []).append(row.uid)
 for child in child_list:
   domain = parent.generateTempDomain(id=child.getId())
   domain.edit(
@@ -16,8 +20,8 @@ for child in child_list:
     membership_criterion_category=(child.getRelativeUrl(), ),
     domain_generator_method_id=script.id,
   )
-  domain.setCriterionPropertyList(['related_resource_from_use_category_uid'])
-  domain.setCriterion('related_resource_from_use_category_uid', identity=child.getUid())
+  domain.setCriterionPropertyList(['strict_resource_uid'])
+  domain.setCriterion('strict_resource_uid', identity=resource_uid_by_use_uid_dict[child.getUid()])
   domain_list.append(domain)
 for resource in resource_list:
   domain = parent.generateTempDomain(id=resource.getId())
