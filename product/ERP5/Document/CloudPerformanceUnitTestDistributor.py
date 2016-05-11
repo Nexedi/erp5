@@ -96,6 +96,6 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
       generated_configuration = {"configuration_list": [json.loads(cluster_configuration)]}
     except ValueError:
       generated_configuration = {"configuration_list": [{}]}
-     if batch_mode:
-       return generated_configuration
-     return json.dumps(generated_configuration)
+    if batch_mode:
+      return generated_configuration
+    return json.dumps(generated_configuration)
