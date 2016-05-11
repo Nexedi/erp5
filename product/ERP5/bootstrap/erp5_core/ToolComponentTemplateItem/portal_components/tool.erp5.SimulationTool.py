@@ -513,6 +513,15 @@ class SimulationTool(BaseTool):
       from_table_dict[alias] = table
     sql_kw.update(catalog_sql_kw)
     sql_kw['from_table_list'] = from_table_dict.items()
+    # When group_by_time_sequence_list is used, the ZSQL method template
+    # will use a variable slot_index, we want to select it, group and order
+    # by it.
+    if sql_kw.get('group_by_time_sequence_list'):
+      new_kw['group_by_list'] = new_kw.get('group_by_list', []) + ['slot_index']
+      new_kw['order_by_list'] = new_kw.get('order_by_list', []) + [('slot_index', )]
+      new_kw.setdefault('select_dict', {})['slot_index'] = 'slot_index'
+
+    sql_kw.update(ctool.buildSQLQuery(**new_kw))
     return sql_kw
 
   def _generateKeywordDict(self,
@@ -562,6 +571,8 @@ class SimulationTool(BaseTool):
       omit_output=0,
       omit_asset_increase=0,
       omit_asset_decrease=0,
+      # interpolation_method
+      interpolation_method='default',
       # group by
       group_by_node=0,
       group_by_node_category=0,
@@ -598,6 +609,7 @@ class SimulationTool(BaseTool):
       group_by_function_category=0,
       group_by_function_category_strict_membership=0,
       group_by_date=0,
+      group_by_time_sequence_list=None,
       # sort_on
       sort_on=None,
       group_by=None,
@@ -688,6 +700,43 @@ class SimulationTool(BaseTool):
         date_dict['range'] = 'ngt'
       if date_dict:
         column_value_dict['date'] = date_dict
+        if interpolation_method != 'default':
+          if not group_by_time_sequence_list:
+            if not (from_date and (to_date or at_date)):
+              raise ValueError("date_range is required to use interpolation_method")
+            # if we consider flow, we also select movement whose mirror date is
+            # in the from_date/to_date range and movement whose
+            # start_date/stop_date contains the report range.
+            # The selected range is wider, but the selected movements will have an
+            # "interpolation_ratio" applied to their quantity and prices.
+            if to_date:
+              column_value_dict['date'] = ComplexQuery(
+                    Query(date=(from_date, to_date), range='minmax'),
+                    Query(mirror_date=(from_date, to_date), range='minmax'),
+                    ComplexQuery(
+                        Query(mirror_date=from_date, range='min'),
+                        Query(date=to_date, range='max'),
+                        logical_operator="AND"),
+                    ComplexQuery(
+                        Query(date=from_date, range='min'),
+                        Query(mirror_date=to_date, range='max'),
+                        logical_operator="AND"),
+                    logical_operator="OR"
+                )
+            else:
+              column_value_dict['date'] = ComplexQuery(
+                    Query(date=(from_date, at_date), range='minngt'),
+                    Query(mirror_date=(from_date, at_date), range='minngt'),
+                    ComplexQuery(
+                        Query(mirror_date=from_date, range='min'),
+                        Query(date=at_date, range='ngt'),
+                        logical_operator="AND"),
+                    ComplexQuery(
+                        Query(date=from_date, range='min'),
+                        Query(mirror_date=at_date, range='ngt'),
+                        logical_operator="AND"),
+                    logical_operator="OR"
+                )
     else:
       column_value_dict['date'] = {'query': [to_date], 'range': 'ngt'}
       column_value_dict['mirror_date'] = {'query': [from_date], 'range': 'nlt'}
@@ -979,6 +1028,7 @@ class SimulationTool(BaseTool):
       new_kw['related_key_select_expression_list'] =\
               related_key_select_expression_list
 
+    sql_kw['group_by_time_sequence_list'] = group_by_time_sequence_list
     return sql_kw, new_kw
 
   #######################################################
@@ -1061,6 +1111,17 @@ class SimulationTool(BaseTool):
 
     output_simulation_state - only take rows with specified simulation_state
                       and quantity < 0
+ 
+    interpolation_method - Method to consider movements when calculating flows.
+      * (default): Consider the movement decreases 100% of source stock on
+        start date and increase 100% of the destination node stock on stop
+        date.
+      * linear: consider the movement decreases source stock and increase
+        destination stock linearly between start date and stop date.
+      * all_or_nothing: consider only movement who starts after the beginning of
+        the query period and finishes after the end of the query period.
+      * one_for_all: consider the movement fully as long as it is partially
+        contained in the query period.
 
     ignore_variation -  do not take into account variation in inventory
                       calculation (useless on getInventory, but useful on
@@ -1186,6 +1247,7 @@ class SimulationTool(BaseTool):
       group_by_section_category=0,
       group_by_section_category_strict_membership=0,
       group_by_resource=None,
+      group_by_time_sequence_list=(),
       group_by=None,
       **ignored):
     """
@@ -1205,7 +1267,8 @@ class SimulationTool(BaseTool):
          group_by_function or group_by_mirror_section or group_by_payment or \
          group_by_sub_variation or group_by_variation or \
          group_by_movement or group_by_date or group_by_section_category or\
-         group_by_section_category_strict_membership:
+         group_by_section_category_strict_membership or \
+         group_by_time_sequence_list:
         if group_by_resource is None:
           group_by_resource = 1
         new_group_by_dict['group_by_resource'] = group_by_resource
@@ -1222,6 +1285,7 @@ class SimulationTool(BaseTool):
                        omit_simulation=0,
                        only_accountable=True,
                        default_stock_table='stock',
+                       interpolation_method='default',
                        statistic=0, inventory_list=1,
                        precision=None, connection_id=None,
                        **kw):
@@ -1299,6 +1363,7 @@ class SimulationTool(BaseTool):
       'stock_table_id': default_stock_table,
       'src__': src__,
       'ignore_variation': ignore_variation,
+      'interpolation_method': interpolation_method,
       'standardise': standardise,
       'omit_simulation': omit_simulation,
       'only_accountable': only_accountable,
@@ -1312,7 +1377,8 @@ class SimulationTool(BaseTool):
     # Get cached data
     if getattr(self, "Resource_zGetInventoryCacheResult", None) is not None and \
             optimisation__ and (not kw.get('from_date')) and \
-            'transformed_resource' not in kw:
+            'transformed_resource' not in kw\
+            and "group_by_time_sequence_list" not in kw:
       # Here is the different kind of date
       # from_date : >=
       # to_date   : <
@@ -1342,7 +1408,7 @@ class SimulationTool(BaseTool):
         kw['from_date'] = cached_date
     else:
       cached_result = []
-    sql_kw, new_kw = self._generateKeywordDict(**kw)
+    sql_kw, new_kw = self._generateKeywordDict(interpolation_method=interpolation_method, **kw)
     # Copy kw content as _generateSQLKeywordDictFromKeywordDict
     # remove some values from it
     try:
@@ -1355,6 +1421,25 @@ class SimulationTool(BaseTool):
     stock_sql_kw = self._generateSQLKeywordDictFromKeywordDict(
         table=default_stock_table, sql_kw=sql_kw, new_kw=new_kw_copy)
     stock_sql_kw.update(base_inventory_kw)
+
+    # TODO: move in this interpolation_method handling in _generateSQLKeywordDictFromKeywordDict ?
+    if interpolation_method in ('linear', 'all_or_nothing', 'one_for_all'):
+        # XXX only DateTime instance are supported
+      from_date = kw.get('from_date')
+      if from_date:
+        from_date = from_date.toZone("UTC")
+      to_date = kw.get('to_date')
+      if to_date:
+        to_date = to_date.toZone("UTC")
+      at_date = kw.get('at_date')
+      if at_date:
+        at_date = at_date.toZone("UTC")
+      stock_sql_kw['interpolation_method_from_date'] = from_date
+      stock_sql_kw['interpolation_method_to_date'] = to_date
+      stock_sql_kw['interpolation_method_at_date'] = at_date
+    elif interpolation_method != 'default':
+      raise ValueError("Unsupported interpolation_method %r" % (interpolation_method,))
+
     delta_result = self.Resource_zGetInventoryList(
         **stock_sql_kw)
     if src__:
