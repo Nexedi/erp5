@@ -85,11 +85,17 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
 
   security.declarePublic("generateConfiguration")
   def generateConfiguration(self, test_suite_title, batch_mode=0):
-    """ Disable this feature due Backward compatibility, as test_suite_title 
-        is modified on startTestSuite the original method cannot find the 
-        right Test Suite.
     """
-    generated_configuration = {"configuration_list": [{}]}
-    if batch_mode:
-      return generated_configuration
-    return json.dumps(generated_configuration)
+    return the list of configuration to create instances, in the case of ERP5 unit tests,
+    we will have only one configuration (unlike scalability tests). But for API consistency,
+    always return a list.
+    """
+    test_suite = self._getTestSuiteFromTitle("ERP5-Cloud-Reliability")
+    cluster_configuration = test_suite.getClusterConfiguration() or '{}'
+    try:
+      generated_configuration = {"configuration_list": [json.loads(cluster_configuration)]}
+    except ValueError:
+      generated_configuration = {"configuration_list": [{}]}
+     if batch_mode:
+       return generated_configuration
+     return json.dumps(generated_configuration)
