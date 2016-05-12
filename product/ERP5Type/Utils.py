@@ -1361,15 +1361,8 @@ def assertAttributePortalType(o, attribute_name, portal_type):
             error=err)
 
 #####################################################
-# Monkey Patch
+# Miscellaneous
 #####################################################
-
-from types import FunctionType
-def monkeyPatch(from_class,to_class):
-  for id, m in from_class.__dict__.items():
-      if type(m) is FunctionType:
-          setattr(to_class, id, m)
-
 
 def sleep(t=5):
   """
