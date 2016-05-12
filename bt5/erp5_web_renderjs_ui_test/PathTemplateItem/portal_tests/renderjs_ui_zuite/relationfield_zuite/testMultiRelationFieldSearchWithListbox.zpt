@@ -54,16 +54,8 @@
   <td>//button[@data-i18n='Proceed']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Save</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Quantity</td>
-  <td></td>
-</tr>
+
+
 
 <tr>
   <td>waitForElementPresent</td>
@@ -75,6 +67,23 @@
   <td>//a[@data-i18n='Views']</td>
   <td></td>
 </tr>
+
+
+<tr>
+  <td>storeLocation</td>
+ 	<td>url</td>
+ 	<td></td>
+</tr>
+
+ 
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tr>
+ 	<td>open</td>
+ 	<td>${url}</td>
+ 	<td></td>
+</tr>
+
 
 <tr>
   <td>waitForElementPresent</td>
@@ -88,21 +97,11 @@
   <td></td>
 </tr>
 
-
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name="field_my_title"]</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
   <td></td>
 </tr>
-
-
-<tr>
-  <td>type</td>
-  <td>//input[@name="field_my_title"]</td>
-  <td>TEST</td>
-</tr>
-
-
 
 <tr>
   <td>type</td>
@@ -136,36 +135,18 @@
 </tr>
 
 
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
-
-<tr>
-  <td>storeLocation</td>
- 	<td>url</td>
- 	<td></td>
-</tr>
-
- 
-<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
-
-<tr>
- 	<td>open</td>
- 	<td>${url}</td>
- 	<td></td>
-</tr>
-
-
-
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
   <td></td>
 </tr>
+
 
 <tr>
   <td>type</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
-  <td>TEST</td>
+  <td>A New Foo</td>
 </tr>
 
 <tr>
@@ -176,7 +157,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//li[@data-relative-url="foo_module/2"]
+  <td>//li[@name="Foo"]
   <td></td>
 </tr>
 
@@ -189,15 +170,50 @@
 
 <tr>
   <td>click</td>
-  <td>//li[@data-relative-url="foo_module/2"]
+  <td>//li[@name="Foo"]
   <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//div[@class="ui-tag-list ui-tag-list-inset"]//li</td>
+  <td>Create:Foo</td>
 </tr>
 
 
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td>TEST</td>
+</tr>
+
+
+
+<tr>
+  <td>click</td>
+  <td>//input[@name="field_my_frozen"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertChecked</td>
+  <td>//input[@name="field_my_frozen"]</td>
   <td></td>
 </tr>
 
@@ -205,10 +221,8 @@
 <tr>
   <td>type</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
-  <td>TEST</td>
+  <td>search</td>
 </tr>
-
-
 
 <tr>
   <td>fireEvent</td>
@@ -218,9 +232,10 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//li[@data-relative-url="foo_module/2"]
+  <td>//li[@data-explore="true"]</td>
   <td></td>
 </tr>
+
 
 
 <tr>
@@ -231,36 +246,75 @@
 
 <tr>
   <td>click</td>
-  <td>//li[@data-relative-url="foo_module/2"]
+  <td>//li[@data-explore="true"]</td>
   <td></td>
 </tr>
 
 
 
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="search"]</td>
+  <td></td>
+</tr>
 
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+<tr>
+  <td>type</td>
+  <td>//input[@name="search"]</td>
+  <td></td>
+</tr>
+
 
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Views']</td>
+  <td>//input[@class="search_button"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//a[@data-i18n="Previous"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Previous"]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
+  <td>//tbody/tr[1]</td>
   <td></td>
 </tr>
 
+
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
+  <td>//tbody/tr[1]//a</td>
   <td></td>
 </tr>
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td>TEST</td>
+</tr>
+
+
+<tr>
+  <td>assertChecked</td>
+  <td>//input[@name="field_my_frozen"]</td>
   <td></td>
 </tr>
 
@@ -268,18 +322,31 @@
 <tr>
   <td>verifyValue</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
-  <td>TEST</td>
+  <td>A New Foo</td>
 </tr>
+
+
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//div[@class="ui-tag-list ui-tag-list-inset"]//li</td>
+  <td>Create:Foo</td>
+</tr>
+
+
 
 <tr>
   <td>verifyValue</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
-  <td>TEST</td>
+  <td>2</td>
 </tr>
 
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[3]</td>
+  <td></td>
+</tr>
 
-
-
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
 </tbody></table>
 </body>

@@ -54,16 +54,8 @@
   <td>//button[@data-i18n='Proceed']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Save</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Quantity</td>
-  <td></td>
-</tr>
+
+
 
 <tr>
   <td>waitForElementPresent</td>
@@ -76,67 +68,6 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name="field_my_title"]</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>type</td>
-  <td>//input[@name="field_my_title"]</td>
-  <td>TEST</td>
-</tr>
-
-
-
-<tr>
-  <td>type</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
-  <td>a1</td>
-</tr>
-
-<tr>
-  <td>fireEvent</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
-  <td>input</td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//li[@data-relative-url='portal_categories/foo_category/a/a1']</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>fireEvent</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
-  <td>blur</td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//li[@data-relative-url='portal_categories/foo_category/a/a1']</td>
-  <td></td>
-</tr>
-
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
 <tr>
   <td>storeLocation</td>
@@ -154,98 +85,6 @@
 </tr>
 
 
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>type</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
-  <td>TEST</td>
-</tr>
-
-<tr>
-  <td>fireEvent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
-  <td>input</td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//li[@data-relative-url="foo_module/2"]
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>fireEvent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
-  <td>blur</td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//li[@data-relative-url="foo_module/2"]
-  <td></td>
-</tr>
-
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>type</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
-  <td>TEST</td>
-</tr>
-
-
-
-<tr>
-  <td>fireEvent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
-  <td>input</td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//li[@data-relative-url="foo_module/2"]
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>fireEvent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
-  <td>blur</td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//li[@data-relative-url="foo_module/2"]
-  <td></td>
-</tr>
-
-
-
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
-
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Views']</td>
-  <td></td>
-</tr>
-
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Relation Fields']</td>
@@ -258,6 +97,7 @@
   <td></td>
 </tr>
 
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
@@ -266,19 +106,105 @@
 
 
 <tr>
-  <td>verifyValue</td>
+  <td>type</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
-  <td>TEST</td>
+  <td>unknowntext</td>
 </tr>
 
 <tr>
-  <td>verifyValue</td>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>input</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@name="Foo"]
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>blur</td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
-  <td>TEST</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>search</td>
+</tr>
+
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>input</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@data-explore="true"]</td>
+  <td></td>
 </tr>
 
 
 
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>blur</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//li[@data-explore="true"]</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="search"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//h1[@class="ui-title"]//a</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//a[contains(@class, "ui-icon-warning")]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//a[contains(@class, "ui-icon-warning")]</td>
+  <td></td>
+</tr>
 
 
 </tbody></table>

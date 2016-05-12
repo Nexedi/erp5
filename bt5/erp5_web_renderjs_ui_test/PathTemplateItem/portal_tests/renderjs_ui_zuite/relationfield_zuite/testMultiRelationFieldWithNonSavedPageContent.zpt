@@ -1,0 +1,499 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Add']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Add</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Proceed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//select[@name='field_your_portal_type']</td>
+  <td>label=Foo</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Proceed']</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Views']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Views']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>storeLocation</td>
+ 	<td>url</td>
+ 	<td></td>
+</tr>
+
+ 
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tr>
+ 	<td>open</td>
+ 	<td>${url}</td>
+ 	<td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Relation Fields']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Relation Fields']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>A New Foo</td>
+</tr>
+
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>input</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@name="Foo"]
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>blur</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//li[@name="Foo"]
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//div[@class="ui-tag-list ui-tag-list-inset"]//li</td>
+  <td>Create:Foo</td>
+</tr>
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td>TEST</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_my_foo_line_foo_category_title"]</td>
+  <td>TEST1</td>
+</tr>
+
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_my_foo_line_foo_category_title"]</td>
+  <td>input</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@name='Category']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_my_foo_line_foo_category_title"]</td>
+  <td>blur</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//li[@name='Category']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Create:Category</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//input[@name="field_my_frozen"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertChecked</td>
+  <td>//input[@name="field_my_frozen"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>search</td>
+</tr>
+
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>input</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@data-explore="true"]</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>blur</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//li[@data-explore="true"]</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="search"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//h1[@class="ui-title"]//a</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td>TEST</td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name="field_my_foo_line_foo_category_title"]</td>
+  <td>TEST1</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Create:Category</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertChecked</td>
+  <td>//input[@name="field_my_frozen"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>A New Foo</td>
+</tr>
+
+
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//div[@class="ui-tag-list ui-tag-list-inset"]//li</td>
+  <td>Create:Foo</td>
+</tr>
+
+
+
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>search</td>
+</tr>
+
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[3]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>input</td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@data-explore="true"]</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>blur</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//li[@data-explore="true"]</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="search"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="Modules"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Foos"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="Foos"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//tbody/tr[1]/th/a</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//tbody/tr[1]/th/a</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Views"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="Views"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Relation Fields']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Relation Fields']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Actions']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Editable']</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Editable']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyNotValue</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td>TEST</td>
+</tr>
+
+
+
+<tr>
+  <td>verifyNotValue</td>
+  <td>//input[@name="field_my_foo_line_foo_category_title"]</td>
+  <td>TEST1</td>
+</tr>
+<tr>
+  <td>verifyTextNotPresent</td>
+  <td>Create:Category</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertNotChecked</td>
+  <td>//input[@name="field_my_frozen"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyNotValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>A New Foo</td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//div[@class="ui-tag-list ui-tag-list-inset"]//li</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>
