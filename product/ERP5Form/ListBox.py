@@ -1929,7 +1929,6 @@ class ListBoxRenderer:
       domain_found = 0
       if self.isDomainTreeMode():
         domain_selection = self.getDomainSelection()
-        selection.edit(domain=domain_selection)
         if domain_selection is not None:
           for k, d in domain_selection.asDomainDict().iteritems():
             if k is not None:
@@ -1958,6 +1957,8 @@ class ListBoxRenderer:
         domain_context = context
         domain_list_method = list_method
         domain_count_method = count_method
+        domain_selection = None
+      selection.edit(domain=domain_selection)
 
       if list_method is not None:
         if count_method is not None and not selection.invert_mode and max_lines > 0:
