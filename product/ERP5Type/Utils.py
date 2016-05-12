@@ -31,6 +31,7 @@
 import os
 import re
 import string
+import threading
 import time
 import warnings
 import sys
@@ -1370,6 +1371,41 @@ def sleep(t=5):
   """
   time.sleep(t)
 
+def stopProcess(process, graceful=5):
+    if process.pid and process.returncode is None:
+        if graceful:
+            process.terminate()
+            t = threading.Timer(graceful, process.kill)
+            t.start()
+            # PY3: use waitid(WNOWAIT) and call process.poll() after t.cancel()
+            r = process.wait()
+            t.cancel()
+            return r
+        process.kill()
+        return process.wait()
+
+from ctypes import CDLL, util as ctypes_util, get_errno, c_int, c_long
+libc = CDLL(ctypes_util.find_library('c'), use_errno=True)
+
+class Prctl(object):
+
+    def __init__(self, option, nargs=1):
+        self.option = option
+        self.args0 = (0,) * (4 - nargs)
+
+    def __call__(self, *args):
+        try:
+            prctl = self._prctl
+        except AttributeError:
+            prctl = self._prctl = libc.prctl
+            prctl.argtypes = c_int, c_long, c_long, c_long, c_long
+        r = prctl(self.option, *(args + self.args0))
+        if r == -1:
+            e = get_errno()
+            raise OSError(e, os.strerror(e))
+        return r
+
+PR_SET_PDEATHSIG = Prctl(1)
 
 #####################################################
 # Timezones

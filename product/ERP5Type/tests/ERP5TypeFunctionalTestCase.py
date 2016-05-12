@@ -28,6 +28,7 @@
 ##############################################################################
 
 import os
+import signal
 import sys
 import time
 import re
@@ -38,6 +39,7 @@ from ZPublisher.HTTPResponse import HTTPResponse
 from zExceptions.ExceptionFormatter import format_exception
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, \
                                                _getConversionServerDict
+from Products.ERP5Type.Utils import stopProcess, PR_SET_PDEATHSIG
 
 # REGEX FOR ZELENIUM TESTS
 TEST_PASS_RE = re.compile('<th[^>]*>Tests passed</th>\n\s*<td[^>]*>([^<]*)')
@@ -68,7 +70,20 @@ bt5_dir_list = ','.join([
 class TimeoutError(Exception):
   pass
 
-class Xvfb:
+class Process(object):
+
+  def preexec_fn(self):
+    PR_SET_PDEATHSIG(signal.SIGTERM)
+
+  def _exec(self, *args, **kw):
+    self.process = subprocess.Popen(preexec_fn=self.preexec_fn, *args, **kw)
+
+  def quit(self):
+    if hasattr(self, 'process'):
+      stopProcess(self.process)
+      del self.process
+
+class Xvfb(Process):
   def __init__(self, fbdir):
     self.display_list = [":%s" % i for i in range(123, 144)]
     self.display = None
@@ -77,7 +92,7 @@ class Xvfb:
   def _runCommand(self, display):
     xvfb_bin = os.environ.get("xvfb_bin", "Xvfb")
     with open(os.devnull, 'w') as null:
-      self.process = subprocess.Popen(
+      self._exec(
         (xvfb_bin, '-fbdir' , self.fbdir, display,
         '-screen', '0', '1280x1024x24'),
         stdout=null, stderr=null, close_fds=True)
@@ -109,20 +124,12 @@ class Xvfb:
     print 'Xvfb : %d' % self.process.pid
     print 'Take screenshots using xwud -in %s/Xvfb_screen0' % self.fbdir
 
-  def quit(self):
-    if hasattr(self, 'process'):
-      self.process.terminate()
-
-class Browser:
+class Browser(Process):
 
   def __init__(self, profile_dir, host, port):
     self.profile_dir = profile_dir
     self.host = host
     self.port = port
-
-  def quit(self):
-    if getattr(self, "process", None) is not None:
-      self.process.kill()
 
   def _run(self, url, display):
     """ This method should be implemented on a subclass """
@@ -160,8 +167,7 @@ class Browser:
         self.environ["XAUTHORITY"] = xauth
 
   def _runCommand(self, *args):
-    print " ".join(args)
-    self.process = subprocess.Popen(args, close_fds=True, env=self.environ)
+    self._exec(args, close_fds=True, env=self.environ)
 
 class Firefox(Browser):
   """ Use firefox to open run all the tests"""
@@ -300,32 +306,30 @@ class FunctionalTestRunner:
                        self.user, self.password)
 
   def test(self, debug=0):
+    xvfb = Xvfb(self.instance_home)
     try:
-      xvfb = Xvfb(self.instance_home)
-      start = time.time()
+      end = time.time() + self.timeout
       if not debug:
         print("\nSet 'erp5_debug_mode' environment variable to 1"
               " to use your existing display instead of Xvfb.")
         xvfb.run()
-      self.browser.run(self._getTestURL() , xvfb.display)
-      while True:
-        status = self.getStatus()
-        if status is not None and not '>ONGOING<' in status:
-          break
-        time.sleep(10)
-        if (time.time() - start) > float(self.timeout):
+      try:
+        self.browser.run(self._getTestURL() , xvfb.display)
+        while time.time() < end:
+          status = self.getStatus()
+          if status and '>ONGOING<' not in status:
+            break
+          time.sleep(10)
+          if self.browser.process.poll() is not None:
+            raise RuntimeError('Test browser is no longer running.')
+        else:
           # TODO: here we could take a screenshot and display it in the report
           # (maybe using data: scheme inside a <img>)
           raise TimeoutError("Test took more than %s seconds" % self.timeout)
-        if self.browser.process.poll():
-          raise RuntimeError('Test browser is no longer running.')
-    except:
-      print("ERP5TypeFunctionalTestCase.test Exception: %r" % (sys.exc_info(),))
-      raise
+      finally:
+        self.browser.quit()
     finally:
       xvfb.quit()
-      if getattr(self, "browser", None) is not None:
-        self.browser.quit()
 
   def processResult(self):
     file_content = self.getStatus().encode("utf-8", "replace")
