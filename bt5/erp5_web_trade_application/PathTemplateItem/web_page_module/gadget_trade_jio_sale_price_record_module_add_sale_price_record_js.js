@@ -1,11 +1,10 @@
 /*globals window, rJS, Handlebars, RSVP*/
 /*jslint indent: 2, nomen: true, maxlen: 80*/
-(function (window, document, RSVP, rJS, Handlebars, promiseEventListener, loopEventListener, $) {
+(function (window, document, RSVP, rJS, Handlebars,
+            promiseEventListener, loopEventListener, $) {
   "use strict";
 
-  
-  
-  
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // ready
@@ -13,9 +12,9 @@
     // Init local properties
     .ready(function (g) {
       g.props = {};
-      g.props.region=[];
-      g.props.quantity_unit=[];
-      g.props.currency=[];
+      g.props.region = [];
+      g.props.quantity_unit = [];
+      g.props.currency = [];
     })
 
     // Assign the element to a variable
@@ -45,13 +44,11 @@
       this.props.element.querySelector('button').click();
 
     })
-  
-  
-  
+
    /////////////////////////////////////////
    // Form submit
    /////////////////////////////////////////
-  
+
     .declareService(function () {
       var form_gadget = this;
 
@@ -64,41 +61,36 @@
             return erp5_form.getContent();
           })
           .push(function (doc) {
-      
-          doc.parent_relative_url = "sale_price_record_module";
-          doc.portal_type = "Sale Price Record";
-          doc.doc_id = getSequentialID('SPR');
-          doc.local_validation = "self";
-          doc.record_revision = 1;
-         
-         if (doc.sync_flag != "1"){
-            doc.portal_type = 'Sale Price Record Temp' // For to avoid sync
-          }
-          console.log("teststt");
-          console.log(doc);
 
-          addTemporaryCustomer(form_gadget);
+            doc.parent_relative_url = "sale_price_record_module";
+            doc.portal_type = "Sale Price Record";
+            doc.doc_id = getSequentialID('SPR');
+            doc.local_validation = "self";
+            doc.record_revision = 1;
+            if (doc.sync_flag !== "1") {
+              doc.portal_type = 'Sale Price Record Temp'; // For to avoid sync
+            }
 
-          return form_gadget.jio_post(doc);
-          
-            
+
+            addTemporaryCustomer(form_gadget);
+
+            return form_gadget.jio_post(doc);
+
           })
-        
-        
-        .push(function () {
-        
-           return RSVP.all([
+
+          .push(function () {
+
+            return RSVP.all([
               form_gadget.notifySubmitted(),
               form_gadget.redirect({
                 jio_key: form_gadget.options.jio_key,
-                page: "view"              
-            
+                page: "view"
+
               })
             ]);
-       
-        });
-          
-         
+
+          });
+
       }
 
       // Listen to form submit
@@ -109,10 +101,7 @@
         formSubmit
       );
     })
-  
-  
-  
-  
+
   /////////////////////////////////////////
     // Nextowner title changed.
     /////////////////////////////////////////
@@ -120,7 +109,7 @@
       var gadget = this;
 
       return new RSVP.Queue()
-        
+
         .push(function () {
           return loopEventListener(
             gadget.props.element.querySelector('input[name="nextowner_title"]'),
@@ -134,44 +123,47 @@
                 })
                 .push(function () {
                   var normalized_value = normalizeTitle(evt.target.value);
-                  if (normalized_value != evt.target.value){
+                  if (normalized_value !== evt.target.value) {
                     evt.target.value = normalized_value;
                   }
-                  gadget.props.element.querySelector('[name="nextowner"]').value = evt.target.value;
+                  gadget.props.element.querySelector('[name="nextowner"]')
+                    .value = evt.target.value;
                 })
                 .push(function () {
                   return gadget.allDocs({
-                    query: 'portal_type:("Organisation" OR "Organisation Temp") AND title_lowercase: "' + evt.target.value.toLowerCase() + '"',
+                    query: 'portal_type:("Organisation"' +
+                      'OR "Organisation Temp") AND title_lowercase: "'
+                      + evt.target.value.toLowerCase() + '"',
                     limit: [0, 2]
                   });
                 })
-                .push(function(result){
-                  if (result !== undefined && result.data.total_rows == 1) {
+                .push(function (result) {
+                  if (result !== undefined && result.data.total_rows === 1) {
                     gadget.jio_get(result.data.rows[0].id).then(
-                      function(doc){
-                        if(doc.title!=evt.target.value){
-                          gadget.props.element.querySelector('[name=nextowner_title]').value=doc.title;
-                          gadget.props.element.querySelector('[name=nextowner]').value=doc.title
+                      function (doc) {
+                        if (doc.title !== evt.target.value) {
+                          gadget.props.element
+                            .querySelector('[name=nextowner_title]')
+                            .value = doc.title;
+                          gadget.props.element
+                            .querySelector('[name=nextowner]')
+                            .value = doc.title;
                         }
                       }
                     );
                     var event = document.createEvent("UIEvents");
                     event.initUIEvent("input", true, true, window, 1);
-                    gadget.props.element.querySelector('input[name="nextowner"]').dispatchEvent(event);
+                    gadget.props.element
+                      .querySelector('input[name="nextowner"]')
+                      .dispatchEvent(event);
                   }
-                })
-            })
+                });
+            }
+          );
         });
     })
 
-  
-  
-  
-  
-  
-  
-  
-  
+
   /////////////////////////////////////////
     // Nextowner changed.
     /////////////////////////////////////////
@@ -179,7 +171,7 @@
       var gadget = this;
 
       return new RSVP.Queue()
-        
+
         .push(function () {
           return loopEventListener(
             gadget.props.element.querySelector('input[name="nextowner"]'),
@@ -193,20 +185,25 @@
                 })
                 .push(function () {
                   var normalized_value = normalizeTitle(evt.target.value);
-                  if (normalized_value != evt.target.value){
+                  if (normalized_value !== evt.target.value) {
                     evt.target.value = normalized_value;
                   }
                   return gadget.allDocs({
-                    query: 'portal_type:("Organisation" OR "Organisation Temp") AND title_lowercase: "' + evt.target.value.toLowerCase() + '"',
+                    query:
+                      'portal_type:("Organisation" OR "Organisation Temp")'
+                       + 'AND title_lowercase: "'
+                       + evt.target.value.toLowerCase() + '"',
                     limit: [0, 2]
                   });
                 })
                 .push(function (result) {
                   if (result.data.total_rows === 1) {
                     gadget.jio_get(result.data.rows[0].id).then(
-                      function(doc){
-                        if(doc.title!=evt.target.value){
-                          gadget.props.element.querySelector('[name=nextowner]').value=doc.title
+                      function (doc) {
+                        if (doc.title !== evt.target.value) {
+                          gadget.props.element
+                            .querySelector('[name=nextowner]').value
+                            = doc.title;
                         }
                       }
                     );
@@ -214,23 +211,51 @@
                   }
                 })
                 .push(function (result) {
-                 var tmp;
+                  var tmp;
                   if (result !== undefined) {
                     // Fill the product fieldset
-                    gadget.props.element.querySelector('[name="nextowner_title"]').setAttribute('disabled', 'disabled');
-                    gadget.props.element.querySelector('[name="nextowner_reference"]').setAttribute('disabled', 'disabled');
-                    gadget.props.element.querySelector('[name="default_telephone_coordinate_text"]').setAttribute('disabled', 'disabled');
-                    gadget.props.element.querySelector('[name="default_address_city"]').setAttribute('disabled', 'disabled');
-                    gadget.props.element.querySelector('[name="default_address_region"]').setAttribute('disabled', 'disabled');
-                    gadget.props.element.querySelector('[name="default_address_street_address"]').setAttribute('disabled', 'disabled');
-                    gadget.props.element.querySelector('[name="default_address_zip_code"]').setAttribute('disabled', 'disabled');
-                    gadget.props.element.querySelector('[name="default_email_coordinate_text"]').setAttribute('disabled', 'disabled');
+                    gadget.props.element
+                      .querySelector('[name="nextowner_title"]')
+                      .setAttribute('disabled', 'disabled');
+                    gadget.props.element
+                      .querySelector('[name="nextowner_reference"]')
+                      .setAttribute('disabled', 'disabled');
+                    gadget.props.element
+                      .querySelector('[name=' +
+                                     '"default_telephone_coordinate_text"]')
+                      .setAttribute('disabled', 'disabled');
+                    gadget.props.element
+                      .querySelector('[name="default_address_city"]')
+                      .setAttribute('disabled', 'disabled');
+                    gadget.props.element
+                      .querySelector('[name="default_address_region"]')
+                      .setAttribute('disabled', 'disabled');
+                    gadget.props.element
+                      .querySelector('[name="default_address_street_address"]')
+                      .setAttribute('disabled', 'disabled');
+                    gadget.props.element
+                      .querySelector('[name="default_address_zip_code"]')
+                      .setAttribute('disabled', 'disabled');
+                    gadget.props.element
+                      .querySelector('[name="default_email_coordinate_text"]')
+                      .setAttribute('disabled', 'disabled');
 
-                    gadget.props.element.querySelector('[name="nextowner_title"]').value = result.title || "";
-                    gadget.props.element.querySelector('[name="nextowner_reference"]').value = result.reference || "";
-                    gadget.props.element.querySelector('[name="default_telephone_coordinate_text"]').value = result.default_telephone_coordinate_text || "";
-                    gadget.props.element.querySelector('[name="default_address_city"]').value = result.default_address_city || "";
-                    gadget.props.element.querySelector('[name="default_address_region"]').value = result.default_address_region || "";
+                    gadget.props.element
+                      .querySelector('[name="nextowner_title"]')
+                      .value = result.title || "";
+                    gadget.props.element
+                      .querySelector('[name="nextowner_reference"]')
+                      .value = result.reference || "";
+                    gadget.props.element
+                      .querySelector('[name=' +
+                                     '"default_telephone_coordinate_text"]')
+                      .value = result.default_telephone_coordinate_text || "";
+                    gadget.props.element
+                      .querySelector('[name="default_address_city"]')
+                      .value = result.default_address_city || "";
+                    gadget.props.element
+                      .querySelector('[name="default_address_region"]')
+                      .value = result.default_address_region || "";
                     tmp = gadget.props.element.querySelector('[name="default_address_region"]').querySelector('option:checked');
                     if (tmp !== null) {
                       tmp.selected = true;
@@ -701,7 +726,9 @@
           });
         })
      .push(function () {
-                   gadget.props.element.querySelector('[name="date"]').setAttribute('type', 'date');
+                  gadget.props.element.querySelector('[name="date"]').setAttribute('type', 'date');
+     
+
 
 
         
