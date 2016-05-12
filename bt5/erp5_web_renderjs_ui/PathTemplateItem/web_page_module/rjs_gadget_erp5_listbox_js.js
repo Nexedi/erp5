@@ -46,7 +46,8 @@
     return gadget.translateHtml(template(
       {
         "head_value": gadget.props.head_value,
-        "show_anchor": gadget.props.field_json.show_anchor
+        "show_anchor": gadget.props.field_json.show_anchor,
+        "line_icon": gadget.props.field_json.line_icon
       }
     ));
   }
@@ -236,9 +237,11 @@
         j;
 
       gadget.props.field_json = field_json;
+      gadget.props.field_id = options.field_id;
       gadget.props.extended_search = options.extended_search;
       gadget.props.hide_class = options.hide_enabled ? "" : "ui-disabled";
       gadget.props.sort_list = [];
+      gadget.props.command = field_json.command || 'index';
 
       //only display which is in listbox's column list
       if (field_json.sort_column_list.length) {
@@ -392,9 +395,10 @@
           for (i = 0; i < counter; i += 1) {
             promise_list.push(
               gadget.getUrlFor({
-                command: 'index',
+                command: gadget.props.command,
                 options: {
                   jio_key: result.data.rows[i].id,
+                  uid: result.data.rows[i].value.uid,
                   selection_index: begin_from + i,
                   query: query_string,
                   list_method_template: field_json.list_method_template,
@@ -430,7 +434,8 @@
             body_value.push({
               "value": result.data.rows[i].value.uid,
               "jump": tmp_url,
-              "tr_value": tr_value
+              "tr_value": tr_value,
+              "line_icon": field_json.line_icon
             });
           }
           gadget.props.body_value = body_value;
@@ -458,7 +463,8 @@
 
         }).push(function (url_list) {
           var foot = {};
-          foot.colspan = field_json.column_list.length + gadget.props.field_json.show_anchor;
+          foot.colspan = field_json.column_list.length + field_json.show_anchor + 
+            (field_json.line_icon? 1 : 0);
           foot.default_colspan = foot.colspan;
           foot.previous_classname = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child";
           foot.previous_url = url_list[0];
@@ -487,7 +493,7 @@
     })
 
 
-    .declareMethod("getContent", function () {
+    .declareMethod("getContent", function (format) {
       var form_gadget = this,
         k,
         field_gadget,
@@ -509,7 +515,7 @@
         // XXX Hack until better defined
         if (field_gadget.getContent !== undefined) {
           queue
-            .push(field_gadget.getContent.bind(field_gadget))
+            .push(field_gadget.getContent.bind(field_gadget, format))
             .push(extendData);
         }
       }

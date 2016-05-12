@@ -347,6 +347,18 @@
           return router_gadget.redirect.apply(router_gadget, param_list);
         });
     })
+    .allowPublicAcquisition("relation_jump", function (param_list) {
+      return this.getDeclaredGadget('router')
+        .push(function (router_gadget) {
+          return router_gadget.relation_jump.apply(router_gadget, param_list);
+        });
+    })
+    .allowPublicAcquisition("getNonSavedPageContent", function (param_list) {
+      return this.getDeclaredGadget('router')
+        .push(function (router_gadget) {
+          return router_gadget.getNonSavedPageContent.apply(router_gadget, param_list);
+        });
+    })
     .allowPublicAcquisition('reload', function () {
       return location.reload();
     })

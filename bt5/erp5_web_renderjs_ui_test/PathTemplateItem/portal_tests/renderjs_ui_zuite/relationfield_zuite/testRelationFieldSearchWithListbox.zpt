@@ -49,51 +49,63 @@
   <td>//select[@name='field_your_portal_type']</td>
   <td>label=Foo</td>
 </tr>
+
 <tr>
   <td>click</td>
   <td>//button[@data-i18n='Proceed']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Save</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Quantity</td>
-  <td></td>
-</tr>
-
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Views']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Views']</td>
+  <td>//a[@data-i18n="Views"]</td>
   <td></td>
 </tr>
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
+  <td>//a[@data-i18n="Views"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>storeLocation</td>
+ 	<td>url</td>
+ 	<td></td>
+</tr>
+
+ 
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tr>
+ 	<td>open</td>
+ 	<td>${url}</td>
+ 	<td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Relation Fields"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="Relation Fields"]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>//input[@name="field_my_successor_title"]</td>
   <td></td>
 </tr>
+
+
 
 <tr>
   <td>type</td>
@@ -113,44 +125,129 @@
   <td></td>
 </tr>
 
+
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>blur</td>
+</tr>
+
 <tr>
   <td>click</td>
   <td>//li[@data-relative-url='portal_categories/foo_category/a/a1']</td>
   <td></td>
 </tr>
 
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td>TEST</td>
+</tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_my_successor_title"]</td>
+  <td>search</td>
+</tr>
+
+
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_my_successor_title"]</td>
+  <td>input</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@data-explore="true"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_my_successor_title"]</td>
+  <td>blur</td>
+</tr>
 
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Views']</td>
+  <td>//li[@data-explore="true"]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
+  <td>//input[@name="search"]</td>
   <td></td>
 </tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="search"]</td>
+  <td></td>
+</tr>
+
+
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
+  <td>//input[@class="search_button"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//a[@data-i18n="Previous"]</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>//a[@data-i18n="Previous"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//tbody/tr[1]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//tbody/tr[1]//a</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_my_successor_title"]</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>verifyValue</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
-  <td>a1</td>
+  <td>//input[@name="field_my_successor_title"]</td>
+  <td>2</td>
 </tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td>TEST</td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+
+
 </tbody></table>
 </body>
 </html>

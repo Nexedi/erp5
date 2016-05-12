@@ -125,7 +125,7 @@
         input.setAttribute('disabled', 'disabled');
       }
     })
-    .declareMethod('getContent', function () {
+    .declareMethod('getContent', function (format) {
       var input = this.element.querySelector('input'),
         result = {},
         select,
@@ -135,7 +135,34 @@
         date,
         hour,
         minute,
+        timezone,
+        zone_list = {"GMT-12": "-1200", "GMT-11": "-1100",
+                   "GMT-9": "-0900", "GMT-8": "-0800",
+                   "GMT-7": "-0700", "GMT-6": "-0600",
+                   "GMT-5": "-0500", "GMT-4": "-0400",
+                   "GMT-3": "-0300", "GMT-2": "-0200",
+                   "GMT-1": "-0100", "GMT": "+0000",
+                   "GMT+1": "+0100", "GMT+2": "+0200",
+                   "GMT+3": "+0300", "GMT+4": "+0400",
+                   "GMT+5": "+0500", "GMT+6": "+0600",
+                   "GMT+7": "+0700", "GMT+8": "+0800",
+                   "GMT+9": "+0900", "GMT+10": "+1000",
+                   "GMT+11": "+1100", "GMT+12": "+1200"},
         value = input.value;
+      if (format === "json") {
+        if (field_json.date_only) {
+          value += "T00:00";
+        }
+        if (field_json.timezone_style) {
+          //set timezone
+          select = this.element.querySelector("select");
+          timezone = select.options[select.selectedIndex].value;
+        } else {
+          timezone = "GMT";
+        }
+        result[field_json.key] = value + zone_list[timezone];
+        return result;
+      }
       if (value !== "") {
         if (field_json.date_only === 0) {
           value += "+0000";

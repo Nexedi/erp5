@@ -26,6 +26,7 @@
     COMMAND_SELECTION_PREVIOUS = "selection_previous",
     COMMAND_SELECTION_NEXT = "selection_next",
     COMMAND_HISTORY_PREVIOUS = "history_previous",
+    COMMAND_RELATION_RETURN = "relation_return",
     COMMAND_PUSH_HISTORY = "push_history",
     REDIRECT_TIMEOUT = 5000,
     VALID_URL_COMMAND_DICT = {};
@@ -37,6 +38,7 @@
   VALID_URL_COMMAND_DICT[COMMAND_SELECTION_PREVIOUS] = null;
   VALID_URL_COMMAND_DICT[COMMAND_SELECTION_NEXT] = null;
   VALID_URL_COMMAND_DICT[COMMAND_HISTORY_PREVIOUS] = null;
+  VALID_URL_COMMAND_DICT[COMMAND_RELATION_RETURN] = null;
   VALID_URL_COMMAND_DICT[COMMAND_PUSH_HISTORY] = null;
   VALID_URL_COMMAND_DICT[COMMAND_LOGIN] = null;
   VALID_URL_COMMAND_DICT[COMMAND_RAW] = null;
@@ -306,6 +308,7 @@
 
   function execIndexCommand(gadget, previous_options, next_options) {
     var jio_key = next_options.jio_key,
+      queue,
       selection_options = {};
     delete next_options.jio_key;
     // selection_options.index = next_options.index;
@@ -313,7 +316,8 @@
     selection_options.list_method_template = next_options.list_method_template;
     selection_options["sort_list:json"] = next_options["sort_list:json"] || [];
     // Store selection in local DB
-    return addSelection(gadget, selection_options)
+    queue = addSelection(gadget, selection_options);
+    queue
       .push(function (id) {
         next_options.selection = id;
         // XXX Implement history management
@@ -321,8 +325,18 @@
       })
       .push(function (id) {
         next_options.history = id;
-        return addNavigationHistoryAndDisplay(gadget, jio_key, next_options);
+        if (gadget.props.stored_data) {
+          queue.push(function () {
+            var tmp = gadget.props.stored_data;
+            delete gadget.props.stored_data;
+            return gadget.props.stored_gadget.put(id, tmp);
+          });
+        }
+        queue.push(function () {
+          return addNavigationHistoryAndDisplay(gadget, jio_key, next_options);
+        });
       });
+    return queue;
   }
 
   function execPushHistoryCommand(gadget, previous_options, next_options) {
@@ -479,6 +493,22 @@
   }
 
 
+  function execRelationReturnCommand(gadget, previous_options, next_options) {
+    var history = previous_options.history,
+      target_index = previous_options.target_index,
+      field = previous_options.back_field;
+    return gadget.props.stored_gadget.get(history)
+      .push(function (results) {
+        if (next_options.uid) {
+          results[field].value[target_index] =  "";
+          results[field].relation_item_relative_url[target_index] = next_options.jio_key;
+          results[field].uid = next_options.uid;
+        }
+        gadget.props.stored_data = results;
+        return execHistoryPreviousCommand(gadget, previous_options);
+      });
+  }
+
   function execLoginCommand(gadget, previous_options, next_options) {
     var me = next_options.me;
     return gadget.setSetting('me', me)
@@ -621,6 +651,9 @@
     if (command_options.path === COMMAND_HISTORY_PREVIOUS) {
       return execHistoryPreviousCommand(gadget, previous_options);
     }
+    if (command_options.path === COMMAND_RELATION_RETURN) {
+      return execRelationReturnCommand(gadget, previous_options, next_options);
+    }
     if (command_options.path === COMMAND_PUSH_HISTORY) {
       return execPushHistoryCommand(gadget, previous_options, next_options);
     }
@@ -662,7 +695,7 @@
             if (keyvalue.length === 2) {
               key = decodeURIComponent(keyvalue[0]);
               tmp = decodeURIComponent(keyvalue[1]);
-              if ((tmp) && (endsWith(key, ":json"))) {
+              if (tmp && (endsWith(key, ":json"))) {
                 tmp = JSON.parse(tmp);
               }
               args[key] = tmp;
@@ -734,6 +767,16 @@
           });
         });
     })
+    .ready(function (g) {
+      return g.getDeclaredGadget("store_gadget")
+        .push(function (stored_gadget) {
+          g.props.stored_gadget = stored_gadget;
+          return stored_gadget.createJio({
+            type: "indexeddb",
+            database: "store"
+          });
+        });
+    })
 
     .declareMethod('getCommandUrlFor', function (options) {
       var command = options.command,
@@ -773,6 +816,18 @@
           // fail if nothing happens
           return RSVP.timeout(REDIRECT_TIMEOUT);
         });
+    })
+
+    .declareMethod('relation_jump', function (options) {
+      this.props.stored_data = options.options.stored_data;
+      delete options.options.stored_data;
+      return this.redirect(options);
+    })
+    .declareMethod('getNonSavedPageContent', function () {
+      var tmp;
+      tmp = this.props.stored_data || {};
+      delete this.props.stored_data;
+      return tmp;
     })
 
     .declareMethod('getUrlParameter', function (key) {

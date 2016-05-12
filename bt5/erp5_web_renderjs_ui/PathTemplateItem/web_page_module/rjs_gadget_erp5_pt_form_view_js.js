@@ -37,7 +37,8 @@
           for (key in rendered_form) {
             if (rendered_form.hasOwnProperty(key) && (key[0] !== "_")) {
               rendered_field = rendered_form[key];
-              if ((rendered_field.type !== "ListBox") && ((!rendered_field.default) || (rendered_field.hidden === 1) || (rendered_field.default.length === 0))) {
+              if ((rendered_field.type !== "ListBox") && ((!rendered_field.default) || (rendered_field.hidden === 1) || (rendered_field.default.length === 0)
+                   || (rendered_field.default.length === 1 && (!rendered_field.default[0])))) {
                 delete rendered_form[key];
               } else {
                 rendered_field.editable = 0;
