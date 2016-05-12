@@ -267,8 +267,6 @@ page.open(address, function (status) {
 
 class FunctionalTestRunner:
 
-  remote_code_url_list = None
-
   # There is no test that can take more than 6 hours
   timeout = 6.0 * 3600
 
@@ -288,20 +286,9 @@ class FunctionalTestRunner:
 
   def getStatus(self):
     transaction.begin()
-    if self.remote_code_url_list is not None:
-      # Zuite Results are posted at the root of the portal in this case
-      return self.portal.portal_tests.TestTool_getResults()
-    else:
-      return self.portal.portal_tests.TestTool_getResults(self.run_only)
+    return self.portal.portal_tests.TestTool_getResults(self.run_only)
 
   def _getTestURL(self):
-    if self.remote_code_url_list is not None:
-      remote_code_url = "&".join(["url_list:list=%s" % url for url in self.remote_code_url_list])
-      if self.run_only != "":
-        remote_code_url += "&zuite_id=%s" % self.run_only
-      return '%s/portal_tests/Zuite_runSeleniumTest?%s&resultsUrl=../postResults&__ac_name=%s&__ac_password=%s' \
-                 % (self.portal.portal_url(), remote_code_url, self.user, self.password)
-
     return ZELENIUM_BASE_URL % (self.portal.portal_url(), self.run_only,
                        self.user, self.password)
 
@@ -410,18 +397,24 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
         return True
     return False
 
-  def testCheckZuitePageTemplatesValidHTML(self):
+  def testFunctionalTestRunner(self):
     # Check the zuite page templates can be rendered, because selenium test
     # runner does not report error in case there are errors in the page
     # template.
     tests_tool = self.portal.portal_tests
+
+    if self.remote_code_url_list:
+      # This does not really run tests. It initializes a zuite
+      # and redirect to a url to would actually run them.
+      tests_tool.Zuite_runSeleniumTest(self.remote_code_url_list, self.run_only)
+      self.commit()
+
     for page_template_path, page_template in tests_tool.ZopeFind(
-              tests_tool, obj_metatypes=['Page Template'], search_sub=1):
+        tests_tool[self.run_only] if self.run_only else tests_tool,
+        obj_metatypes=('Page Template',), search_sub=1):
       try:
         page_template.pt_render()
-      except (KeyboardInterrupt, SystemExit):
-        raise
-      except:
+      except Exception:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         self.fail('Rendering of %s failed with error:\n%s' % (
           page_template_path,
@@ -431,14 +424,8 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
             exc_traceback,
             as_html=False))))
 
-
-  def testFunctionalTestRunner(self):
-    # first of all, abort to get rid of the mysql participation in this
-    # transaction
+    # abort to get rid of the mysql participation in this transaction
     self.portal._p_jar.sync()
-
-    if self.remote_code_url_list is not None:
-      self.runner.remote_code_url_list = self.remote_code_url_list
 
     debug = self.foreground or os.environ.get("erp5_debug_mode")
     error = None
