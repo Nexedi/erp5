@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_text_router.js</string> </value>
+            <value> <string>gadget_officejs_spreadsheet_serviceworker.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_text_router_js</string> </value>
+            <value> <string>gadget_officejs_spreadsheet_serviceworker.js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -99,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Text Router Gadget JS</string> </value>
+            <value> <string>Office ServiceWorker</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -163,7 +163,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>bk</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -185,7 +185,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1450796064.81</float>
+                        <float>1462137222.38</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -230,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.50294.65237.43212</string> </value>
+                <value> <string>951.11227.12888.61969</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -248,7 +248,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1463147142.93</float>
+                        <float>1463172559.45</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -305,7 +305,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1450795757.87</float>
+                        <float>1462135001.37</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

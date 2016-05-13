@@ -3,6 +3,18 @@
 (function (window, rJS) {
   "use strict";
 
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('gadget_officejs_spreadsheet_serviceworker.js')
+    .then(function (reg) {
+      // registration worked
+      console.log('Registration succeeded. Scope is ' + reg.scope);
+    })
+    .then(undefined, function (error) {
+      // registration failed
+      console.log('Registration failed with ' + error);
+    });
+  }
+
   var gadget_klass = rJS(window),
     MAIN_PAGE_PREFIX = "gadget_officejs_",
     DEFAULT_PAGE = "spreadsheet_list",
