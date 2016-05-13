@@ -15,15 +15,6 @@
           <tal:block tal:condition="python:not here.portal_membership.isAnonymousUser()">
             <div class="index_html" style="margin:20px 40px 0 40px; padding:0; text-align:left;">
              <div class="document">
-              <div class="actions">
-                <metal:block define-slot="tabs" />
-              </div>
-              <div class="content editable">
-              <div id="container" style="margin: 1em">
-                <metal:block define-slot="content" />
-              </div>
-                <p class="clear" />
-              </div>
               <tal:block tal:condition="python: here.getPortalObject().restrictedTraverse('portal_gadgets', None) is not None">
                   <tal:block tal:condition="exists:here/ERP5Site_viewHomeAreaRenderer"
                             tal:replace="structure python: here.ERP5Site_viewHomeAreaRenderer(create_default_pad=True, 
