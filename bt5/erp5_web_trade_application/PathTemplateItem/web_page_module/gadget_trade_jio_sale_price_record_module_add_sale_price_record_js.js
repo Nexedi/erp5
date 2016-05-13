@@ -1,7 +1,10 @@
-/*globals window, rJS, Handlebars, RSVP*/
+/*globals window, document, RSVP, rJS,promiseEventListener,
+            loopEventListener, jQuery,
+            getSequentialID, addTemporaryCustomer, normalizeTitle*/
 /*jslint indent: 2, nomen: true, maxlen: 80*/
-(function (window, document, RSVP, rJS, Handlebars,
-            promiseEventListener, loopEventListener, $) {
+(function (window, document, RSVP, rJS,
+           loopEventListener, $
+           ) {
   "use strict";
 
 
@@ -256,44 +259,94 @@
                     gadget.props.element
                       .querySelector('[name="default_address_region"]')
                       .value = result.default_address_region || "";
-                    tmp = gadget.props.element.querySelector('[name="default_address_region"]').querySelector('option:checked');
+                    tmp = gadget.props.element
+                      .querySelector('[name="default_address_region"]')
+                      .querySelector('option:checked');
                     if (tmp !== null) {
                       tmp.selected = true;
                     }
                     tmp = result.default_address_region || "";
                     if (tmp !== "") {
-                      tmp = gadget.props.element.querySelector('[name="default_address_region"]').querySelector('[value="' + tmp + '"]');
+                      tmp = gadget.props.element
+                        .querySelector('[name="default_address_region"]')
+                        .querySelector('[value="' + tmp + '"]');
                       if (tmp !== null) {
                         tmp.selected = true;
                       }
                     }
-                    $(gadget.props.element.querySelector('[name="default_address_region"]')).selectmenu('refresh');
-                    gadget.props.element.querySelector('[name="default_address_street_address"]').value = result.default_address_street_address || "";
-                    gadget.props.element.querySelector('[name="default_address_zip_code"]').value = result.default_address_zip_code || "";
-                    gadget.props.element.querySelector('[name="default_email_coordinate_text"]').value = result.default_email_coordinate_text || "";
+                    $(gadget.props.element
+                      .querySelector('[name="default_address_region"]'))
+                      .selectmenu('refresh');
+                    gadget.props.element
+                      .querySelector('[name="default_address_street_address"]')
+                      .value = result.default_address_street_address || "";
+                    gadget.props.element
+                      .querySelector('[name="default_address_zip_code"]')
+                      .value = result.default_address_zip_code || "";
+                    gadget.props.element
+                      .querySelector('[name="default_email_coordinate_text"]')
+                      .value = result.default_email_coordinate_text || "";
                   } else {
-                    gadget.props.element.querySelector('[name="nextowner_title"]').disabled = false;
-                    gadget.props.element.querySelector('[name="nextowner_reference"]').disabled = false;
-                    gadget.props.element.querySelector('[name="default_telephone_coordinate_text"]').disabled = false;
-                    gadget.props.element.querySelector('[name="default_address_city"]').disabled = false;
-                    gadget.props.element.querySelector('[name="default_address_region"]').disabled = false;
-                    gadget.props.element.querySelector('[name="default_address_street_address"]').disabled = false;
-                    gadget.props.element.querySelector('[name="default_address_zip_code"]').disabled = false;
-                    gadget.props.element.querySelector('[name="default_email_coordinate_text"]').disabled = false;
+                    gadget.props.element
+                      .querySelector('[name="nextowner_title"]')
+                      .disabled = false;
+                    gadget.props.element
+                      .querySelector('[name="nextowner_reference"]')
+                      .disabled = false;
+                    gadget.props.element
+                      .querySelector('[name='
+                                     + '"default_telephone_coordinate_text"]')
+                      .disabled = false;
+                    gadget.props.element
+                      .querySelector('[name="default_address_city"]')
+                      .disabled = false;
+                    gadget.props.element
+                      .querySelector('[name="default_address_region"]')
+                      .disabled = false;
+                    gadget.props.element
+                      .querySelector('[name="default_address_street_address"]')
+                      .disabled = false;
+                    gadget.props.element
+                      .querySelector('[name="default_address_zip_code"]')
+                      .disabled = false;
+                    gadget.props.element
+                      .querySelector('[name="default_email_coordinate_text"]')
+                      .disabled = false;
 
-                    gadget.props.element.querySelector('[name="nextowner_title"]').value = "";
-                    gadget.props.element.querySelector('[name="nextowner_reference"]').value = "";
-                    gadget.props.element.querySelector('[name="default_telephone_coordinate_text"]').value = "";
-                    gadget.props.element.querySelector('[name="default_address_city"]').value = "";
-                    tmp = gadget.props.element.querySelector('[name="default_address_region"]').querySelector('option:checked');
+                    gadget.props.element
+                      .querySelector('[name="nextowner_title"]')
+                      .value = "";
+                    gadget.props.element
+                      .querySelector('[name="nextowner_reference"]')
+                      .value = "";
+                    gadget.props.element
+                      .querySelector('[name='
+                                     + '"default_telephone_coordinate_text"]')
+                      .value = "";
+                    gadget.props.element
+                      .querySelector('[name="default_address_city"]')
+                      .value = "";
+                    tmp = gadget.props.element
+                      .querySelector('[name="default_address_region"]')
+                      .querySelector('option:checked');
                     if (tmp !== null) {
                       tmp.selected = false;
                     }
-                    $(gadget.props.element.querySelector('[name="default_address_region"]')).selectmenu('enable');
-                    $(gadget.props.element.querySelector('[name="default_address_region"]')).selectmenu('refresh');
-                    gadget.props.element.querySelector('[name="default_address_street_address"]').value = "";
-                    gadget.props.element.querySelector('[name="default_address_zip_code"]').value = "";
-                    gadget.props.element.querySelector('[name="default_email_coordinate_text"]').value = "";
+                    $(gadget.props.element
+                      .querySelector('[name="default_address_region"]'))
+                      .selectmenu('enable');
+                    $(gadget.props.element
+                      .querySelector('[name="default_address_region"]'))
+                      .selectmenu('refresh');
+                    gadget.props.element
+                      .querySelector('[name="default_address_street_address"]')
+                      .value = "";
+                    gadget.props.element
+                      .querySelector('[name="default_address_zip_code"]')
+                      .value = "";
+                    gadget.props.element
+                      .querySelector('[name="default_email_coordinate_text"]')
+                      .value = "";
                   }
                 });
             }
@@ -306,102 +359,96 @@
 
     .declareMethod("render", function (options) {
       var page_gadget = this,
-          gadget,
-          sycn_method,
-          title,
-          relative_url;
+        sycn_method,
+        gadget,
+        title,
+        relative_url;
 
-          
       page_gadget.options = options;
-        
-       sycn_method= "1"; 
-      
-        
-      
-      
-      var state=translateString(getWorkflowState(page_gadget.options.doc.portal_type, page_gadget.options.jio_key, page_gadget.options.doc.sync_flag,   page_gadget.options.doc.local_validation, page_gadget.options.doc.local_state));
-    
-     return new RSVP.Queue()
-     .push(function () {
+      sycn_method = "1";
+
+      return new RSVP.Queue()
+        .push(function () {
           return page_gadget.updateHeader({
             title: "New Sale Price Record",
             add_action: true
           });
         })
-        
-       .push(function () {
-      
+        .push(function () {
+
           return RSVP.all([
 
-           page_gadget.allDocs({
-            query: 'portal_type: "Currency" AND validation_state: "validated"',
-            select_list: ["title", "logical_path", "relative_url"],
-            // sort_on: [["id", "ascending"]],
-            limit: [0, 1234567890]
-          }),
-      
-           page_gadget.allDocs({
-            query: 'portal_type: "Category" AND relative_url: "quantity_unit/%"',
-            select_list: ["title", "logical_path", "category_relative_url"],
-            // sort_on: [["id", "ascending"]],
-            limit: [0, 1234567890]
-          }),
-      
-      
-      
-           page_gadget.allDocs({
-            query: 'portal_type: "Category" AND relative_url: "region/%"',
-            select_list: ["title", "logical_path", "category_relative_url"],
-            // sort_on: [["id", "ascending"]],
-            limit: [0, 1234567890]
-          })
-      
-      
-          ]);
+            page_gadget.allDocs({
+              query: 'portal_type:' +
+                '"Currency" AND validation_state: "validated"',
+              select_list: ["title", "logical_path", "relative_url"],
+              // sort_on: [["id", "ascending"]],
+              limit: [0, 1234567890]
+            }),
+
+            page_gadget.allDocs({
+              query: 'portal_type:' +
+                '"Category" AND relative_url: "quantity_unit/%"',
+              select_list: ["title", "logical_path", "category_relative_url"],
+              // sort_on: [["id", "ascending"]],
+              limit: [0, 1234567890]
+            }),
+
+            page_gadget.allDocs({
+              query: 'portal_type:' +
+                '"Category" AND relative_url: "region/%"',
+              select_list: ["title", "logical_path", "category_relative_url"],
+              // sort_on: [["id", "ascending"]],
+              limit: [0, 1234567890]
             })
+
+          ]);
+        })
         .push(function (allresult) {
-            var i,j;
-            for (i = 0; i < allresult[0].data.total_rows; i += 1) {
-              title=allresult[0].data.rows[i].value.title;
-              relative_url=allresult[0].data.rows[i].value.relative_url;
-              page_gadget.props.currency.push([title,relative_url]);
-             }
+          var i;
+          for (i = 0; i < allresult[0].data.total_rows; i += 1) {
+            title = allresult[0].data.rows[i].value.title;
+            relative_url = allresult[0].data.rows[i].value.relative_url;
+            page_gadget.props.currency.push([title, relative_url]);
+          }
 
-      
-      
-            for (i = 0; i < allresult[1].data.total_rows; i += 1) {
-              title= allresult[1].data.rows[i].value.logical_path || allresult[1].data.rows[i].value.title;
-              relative_url=allresult[1].data.rows[i].value.category_relative_url;
-              page_gadget.props.quantity_unit.push([title,relative_url]);
-  
-            
-            }
-      
-      
-            for (i = 0; i < allresult[2].data.total_rows; i += 1) {
-              title=allresult[2].data.rows[i].value.logical_path || allresult[2].data.rows[i].value.title;
-              relative_url=allresult[2].data.rows[i].value.category_relative_url;
-              page_gadget.props.region.push([title,relative_url]);
 
-            
-           }
-      
+          for (i = 0; i < allresult[1].data.total_rows; i += 1) {
+            title =  allresult[1].data.rows[i]
+              .value.logical_path || allresult[1].data.rows[i]
+              .value.title;
+            relative_url = allresult[1].data.rows[i]
+              .value.category_relative_url;
+            page_gadget.props.quantity_unit.push([title, relative_url]);
+
+          }
+
+          for (i = 0; i < allresult[2].data.total_rows; i += 1) {
+            title = allresult[2].data.rows[i]
+              .value.logical_path || allresult[2].data.rows[i]
+              .value.title;
+            relative_url = allresult[2].data.rows[i]
+              .value.category_relative_url;
+            page_gadget.props.region.push([title, relative_url]);
+
+          }
+
           return;
-      
-      })
-       .push(function () {
 
-          return  page_gadget.getDeclaredGadget("erp5_form")
-      })
+        })
+        .push(function () {
+
+          return page_gadget.getDeclaredGadget("erp5_form");
+        })
         .push(function (form_gadget) {
-          gadget=form_gadget;
+          gadget = form_gadget;
           return form_gadget.render({
             erp5_document: {"_embedded": {"_view": {
-        
-               "sale_price": {
+              "sale_price": {
                 "description": "",
                 "title": "",
-                "default":"Sale price of a specific product to a specific customer",
+                "default": "Sale price" +
+                  "of a specific product to a specific customer",
                 "css_class": "ui-content-header-inline",
                 "required": 1,
                 "editable": 1,
@@ -409,7 +456,7 @@
                 "hidden": 0,
                 "type": "ReadonlyField"
               },
-        
+
               "product": {
                 "description": "",
                 "title": "Product Title",
@@ -469,7 +516,7 @@
                 "description": "",
                 "title": "Currency",
                 "default": "",
-                "items":page_gadget.props.currency,
+                "items": page_gadget.props.currency,
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -488,7 +535,7 @@
                 "hidden": 0,
                 "type": "StringField"
               },
-               "quantity_unit": {
+              "quantity_unit": {
                 "description": "",
                 "title": "Quantity Unit",
                 "default": "",
@@ -570,9 +617,9 @@
                 "description": "",
                 "title": "Sync Method",
                 "default": sycn_method,
-                "items":[["Ready To Sync","1"],
-                         ["Do Not Sync","0"],
-                        ],
+                "items": [["Ready To Sync", "1"],
+                          ["Do Not Sync", "0"]
+                         ],
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -580,8 +627,8 @@
                 "hidden": 0,
                 "type": "RadioField"
               },
-              
-               "username": {
+
+              "username": {
                 "description": "",
                 "title": "Input User Name",
                 "default": "",
@@ -592,7 +639,7 @@
                 "hidden": 0,
                 "type": "StringField"
               },
-        
+
               "client_head": {
                 "description": "",
                 "title": "",
@@ -604,9 +651,7 @@
                 "hidden": 0,
                 "type": "ReadonlyField"
               },
-              
-              
-              
+
               "client": {
                 "description": "",
                 "title": "Client",
@@ -655,7 +700,7 @@
                 "description": "",
                 "title": "Region",
                 "default": "",
-                "items":page_gadget.props.region,
+                "items": page_gadget.props.region,
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -696,47 +741,42 @@
                 "hidden": 0,
                 "type": "StringField"
               }
-         
+
             }}},
             form_definition: {
               group_list: [
-                
-                
-                [
-                 "left",
-                [["sale_price"],["product"],
-                ["nextowner"], ["organisation"], ["warehouse"],
-                ["price"], ["currency"], ["priced_quantity"],
-                ["quantity_unit"],["total_dry_quantity"], ["total_amount_price"], 
-                ["date"],["contract_no"], ["batch"], 
-                ["comment"],["sync_method"],["username"], ]
-                ],
-                
-                [
-                "right",
-                [["client_head"],
-                ["client"], ["client_reference"], ["telephone"],
-                ["address_city"], ["region"], ["address_street"],
-                ["postal_code"], ["email"]]
-                ]
-                 
+
+                ["left",
+                  [["sale_price"], ["product"],
+                    ["nextowner"], ["organisation"], ["warehouse"],
+                    ["price"], ["currency"], ["priced_quantity"],
+                    ["quantity_unit"], ["total_dry_quantity"],
+                    ["total_amount_price"],
+                    ["date"], ["contract_no"], ["batch"],
+                    ["comment"], ["sync_method"], ["username"]]
+                  ],
+
+                ["right",
+                  [["client_head"],
+                    ["client"], ["client_reference"], ["telephone"],
+                    ["address_city"], ["region"], ["address_street"],
+                    ["postal_code"], ["email"]]
+                  ]
+
               ]
-   
+
             }
           });
         })
-     .push(function () {
-                  gadget.props.element.querySelector('[name="date"]').setAttribute('type', 'date');
-     
+        .push(function () {
+          gadget.props.element
+            .querySelector('[name="date"]')
+            .setAttribute('type', 'date');
+
+        });
+
+    });
 
 
-
-        
-
-     })
-
-    })
-
-   
-
-}(window, document, RSVP, rJS, Handlebars, promiseEventListener, loopEventListener, jQuery));
+}(window, document, RSVP, rJS,
+  loopEventListener, jQuery));

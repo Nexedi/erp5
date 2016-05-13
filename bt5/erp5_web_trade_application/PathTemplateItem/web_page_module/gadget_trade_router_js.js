@@ -1,5 +1,6 @@
-/*global window, rJS */
-/*jslint nomen: true, indent: 2, maxerr: 3*/
+/*global window, rJS, loopEventListener, document, RSVP */
+/*jslint nomen: true*/
+/*jslint indent: 2, maxlen: 80*/
 (function (window, rJS) {
   "use strict";
 
@@ -24,7 +25,8 @@
             if (subhash !== '') {
               keyvalue = subhash.split('=');
               if (keyvalue.length === 2) {
-                args[decodeURIComponent(keyvalue[0])] = decodeURIComponent(keyvalue[1]);
+                args[decodeURIComponent(keyvalue[0])]
+                  = decodeURIComponent(keyvalue[1]);
               }
             }
           }
@@ -54,7 +56,7 @@
       };
     })
 
-    .declareMethod("getCommandUrlFor", function(options) {
+    .declareMethod("getCommandUrlFor", function (options) {
       var prefix = '',
         result,
         key;
@@ -62,7 +64,8 @@
       for (key in options) {
         if (options.hasOwnProperty(key) && options[key] !== undefined) {
           // Don't keep empty values
-          result += prefix + encodeURIComponent(key) + "=" + encodeURIComponent(options[key]);
+          result += prefix + encodeURIComponent(key)
+            + "=" + encodeURIComponent(options[key]);
           prefix = '&';
         }
       }
@@ -74,16 +77,14 @@
         window.location.replace(options.url);
         return RSVP.timeout(REDIRECT_TIMEOUT); // timeout if not redirected
       }
-      else {
-        return this.getCommandUrlFor(options)
-          .push(function (hash) {
-            window.location.replace(hash);
+      return this.getCommandUrlFor(options)
+        .push(function (hash) {
+          window.location.replace(hash);
             // prevent returning unexpected response
             // wait for the hash change to occur
             // fail if nothing happens
-            return RSVP.timeout(REDIRECT_TIMEOUT);
-          });
-      }
+          return RSVP.timeout(REDIRECT_TIMEOUT);
+        });
     })
 
     .declareMethod('route', function (options) {
@@ -91,7 +92,8 @@
         args = options.args;
       gadget.options = options;
       if (args.jio_key === undefined || args.jio_key === '') {
-        if (args.page === undefined || args.page === '' || args.page === "document_list") {
+        if (args.page === undefined || args.page === ''
+            || args.page === "document_list") {
           args.page = DEFAULT_PAGE;
         }
         return {
@@ -102,7 +104,8 @@
       return gadget.jio_get(args.jio_key)
         .push(function (doc) {
           var sub_options = {},
-            base_portal_type = doc.portal_type.toLowerCase().replace(/\s/g, "_");
+            base_portal_type = doc.portal_type
+              .toLowerCase().replace(/\s/g, "_");
           sub_options = {
             doc: doc,
             jio_key: args.jio_key,
@@ -125,7 +128,6 @@
           };
         });
     })
-    
     .declareAcquiredMethod('jio_get', 'jio_get')
     .declareAcquiredMethod('renderApplication', 'renderApplication')
     .declareMethod('start', function () {

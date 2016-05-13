@@ -1,4 +1,4 @@
-/*jslint nomen: true, indent: 2, maxerr: 3 */
+/*jslint indent: 2, nomen: true, maxlen: 80*/
 /*global window, rJS, Handlebars, document, loopEventListener, RSVP */
 (function (window, rJS, Handlebars, document, loopEventListener, RSVP) {
   "use strict";
@@ -55,7 +55,8 @@
         .push(function (element) {
           g.props.element = element;
           g.props.sub_header_element = element.querySelector(".ui-subheader");
-          g.props.sub_header_ul = g.props.sub_header_element.querySelector("ul");
+          g.props.sub_header_ul = g.props
+            .sub_header_element.querySelector("ul");
           g.props.left_link = element.querySelector(".ui-btn-left > div");
           g.props.right_link = element.querySelector(".ui-btn-right > div");
           g.props.title_element = element.querySelector("h1");
@@ -102,7 +103,8 @@
         // Directly modify the previous calculated header
         // in order not to remove the submit input
         // and still receive 'submit' event
-        var class_list = this.props.right_link.querySelector('button').classList;
+        var class_list = this.props.right_link
+          .querySelector('button').classList;
         if (class_list.contains('ui-icon-check')) {
           class_list.remove('ui-icon-check');
           class_list.add('ui-icon-warning');
@@ -118,7 +120,8 @@
     .declareMethod('notifySubmitted', function () {
       if (!this.stats.submitted) {
         this.stats.submitted = true;
-        // Change modify here, to allow user to redo some modification and being correctly notified
+        // Change modify here,
+        //to allow user to redo some modification and being correctly notified
         this.stats.modified = false;
         return this.render(this.stats.options);
       }
@@ -142,9 +145,7 @@
         possible_right_button_list = [
           ['save_action', 'Save', 'check', 'submit'],
           ['submit_action', 'Proceed', 'check', 'submit'],
-          ['add_action', 'Add', 'check', 'submit'],
-
-          
+          ['add_action', 'Add', 'check', 'submit']
         ],
         possible_sub_header_list = [
           ['tab_url', 'Tabs', 'eye'],
@@ -181,14 +182,20 @@
       // Handle main title
       if (options.hasOwnProperty("page_title")) {
         title_link.title = options.page_title;
-        // Updating globally the page title. Does not follow RenderJS philosophy, but, it is enough for now
+        // Updating globally the page title.
+        //Does not follow RenderJS philosophy, but, it is enough for now
         document.title = title_link.title;
       }
       if (options.hasOwnProperty("breadcrumb_url")) {
         title_link.url = options.breadcrumb_url;
-        promise_list.push(gadget.translateHtml(header_title_link_template(title_link)));
+        promise_list.push(gadget
+                          .translateHtml(
+            header_title_link_template(title_link)
+          )
+                         );
       } else {
-        promise_list.push(gadget.translateHtml(header_title_template(title_link)));
+        promise_list.push(gadget
+                          .translateHtml(header_title_template(title_link)));
       }
 
       // Handle left link
@@ -216,9 +223,11 @@
         }
       }
       if (left_link !== undefined) {
-        promise_list.push(gadget.translateHtml(header_link_template(left_link)));
+        promise_list.push(gadget
+                          .translateHtml(header_link_template(left_link)));
       } else if (left_button !== undefined) {
-        promise_list.push(gadget.translateHtml(header_button_template(left_button)));
+        promise_list.push(gadget
+                          .translateHtml(header_button_template(left_button)));
       } else {
         promise_list.push("");
       }
@@ -269,14 +278,18 @@
       }
       if (right_button !== undefined) {
         if (right_button.icon === 'spinner') {
-          right_button.class = "ui-disabled ui-icon-spin";
+          right_button.class
+            = "ui-disabled ui-icon-spin";
         }
-        promise_list.push(gadget.translateHtml(header_button_template(right_button)));
+        promise_list.push(gadget
+                          .translateHtml(header_button_template(right_button)));
       } else if (right_link !== undefined) {
         if (right_link.icon === 'spinner') {
-          right_link.class = "ui-disabled ui-icon-spin";
+          right_link.class
+            = "ui-disabled ui-icon-spin";
         }
-        promise_list.push(gadget.translateHtml(header_link_template(right_link)));
+        promise_list.push(gadget
+                          .translateHtml(header_link_template(right_link)));
       } else {
         promise_list.push("");
       }

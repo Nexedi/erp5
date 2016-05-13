@@ -1,4 +1,5 @@
-/*globals window, rJS, Handlebars, RSVP, rJS,Handlebars, promiseEventListener, loopEventListener,jQuery*/
+/*globals window, rJS, Handlebars, RSVP, rJS,Handlebars, promiseEventListener, loopEventListener,jQuery,
+translateString, getWorkflowState, document, getSequentialID */
 /*jslint indent: 2, nomen: true, maxlen: 80*/
 (function (window, document, RSVP, rJS, promiseEventListener, $) {
   "use strict";

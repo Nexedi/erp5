@@ -1,5 +1,6 @@
 /*global window, rJS, RSVP, Handlebars, loopEventListener */
-/*jslint nomen: true, indent: 2 */
+/*jslint nomen: true, indent: 2, maxlen: 80 */
+
 (function (window, rJS, RSVP, Handlebars, loopEventListener) {
   "use strict";
 
@@ -72,14 +73,20 @@
       // Create the search query
       if (option_dict.search) {
         for (k = 0, k_len = option_dict.column_list.length; k < k_len; k += 1) {
-          search_list.push(option_dict.column_list[k].select + ':"%' + option_dict.search + '%"');
+          search_list.push(option_dict.column_list[k].select
+                           + ':"%' + option_dict.search + '%"');
         }
-        option_dict.query.query = '(' + search_list.join(' OR ') + ') AND ' + option_dict.query.query;
+        option_dict.query.query = '('
+          + search_list.join(' OR ')
+          + ') AND '
+          + option_dict.query.query;
       }
       option_dict.begin_from = parseInt(option_dict.begin_from, 10) || 0;
       // Display 10 lines by default
       option_dict.line_count = option_dict.line_count || 10;
-      option_dict.query.limit = [option_dict.begin_from, option_dict.line_count + 1];
+      option_dict.query.limit =
+        [option_dict.begin_from,
+          option_dict.line_count + 1];
 
       return gadget.jio_allDocs(option_dict.query)
         .push(function (result) {
@@ -88,8 +95,16 @@
             i_len,
             i;
           all_docs_result = result;
-          for (i = 0, i_len = Math.min(result.data.total_rows, option_dict.line_count); i < i_len; i += 1) {
-            promise_list.push(gadget.getUrlFor({jio_key: result.data.rows[i].id, page: 'view'}));
+          for (i = 0, i_len = Math.min(result.data.total_rows,
+                                       option_dict.line_count);
+               i < i_len; i += 1) {
+            promise_list.push(
+              gadget.getUrlFor({
+                jio_key: result.data.rows[i].id,
+                page: 'view'
+              }
+                              )
+            );
           }
 
           // Calculate next/previous links if needed
@@ -130,19 +145,31 @@
 
           // build handlebars object
 
-          for (j = 0, j_len = Math.min(all_docs_result.data.total_rows, option_dict.line_count); j < j_len; j += 1) {
+          for (j = 0, j_len = Math.min(
+              all_docs_result.data.total_rows,
+              option_dict.line_count
+            );
+               j < j_len;
+               j += 1) {
             cell_list = [];
-            for (i = 0, i_len = option_dict.column_list.length; i < i_len; i += 1) {
+            for (i = 0,
+                 i_len = option_dict.column_list.length;
+                 i < i_len; i += 1) {
               cell_list.push({
                 "href": link_list[j],
-                "value": all_docs_result.data.rows[j].value[option_dict.column_list[i].select]
+                "value": all_docs_result.data.rows[j]
+                  .value[option_dict.column_list[i].select]
               });
             }
             row_list.push({"cell_list": cell_list});
           }
 
           for (i = 0; i < option_dict.column_list.length; i += 1) {
-            translated_column_list.push(gadget.translate(option_dict.column_list[i].title));
+            translated_column_list
+              .push(gadget.translate(
+                option_dict.column_list[i].title
+              )
+                   );
           }
           return RSVP.all([
             row_list,
@@ -156,12 +183,16 @@
             previous_class = "ui-disabled",
             next_class = "ui-disabled",
             count_text = "",
-            total = Math.min(all_docs_result.data.total_rows, option_dict.line_count);
+            total = Math.min(
+              all_docs_result.data.total_rows,
+              option_dict.line_count
+            );
 
           if (total === 1) {
             count_text = option_dict.begin_from + total;
           } else if (total > 1) {
-            count_text = (option_dict.begin_from + 1) + " - " + (option_dict.begin_from + total);
+            count_text = (option_dict.begin_from + 1)
+              + " - " + (option_dict.begin_from + total);
           }
 
           if (previous_href !== null) {
