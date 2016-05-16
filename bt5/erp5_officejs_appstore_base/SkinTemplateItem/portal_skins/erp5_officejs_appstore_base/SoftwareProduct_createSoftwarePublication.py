@@ -26,7 +26,7 @@ software_release = portal.software_release_module.newContent(
   title=context.getTitle() + ' release ' + version_title + '-' + version,
   # XXX the follow_up lkink is actually nonsense and redundant
   follow_up=context.getRelativeUrl(),
-  version=version,
+  version=version_title,
 )
 
 # Create Software Publication Line
@@ -49,7 +49,7 @@ section.edit(
   title="%s %s" % (context.getTitle(), version_title),
   short_title=context.getTitle(),
   description=context.getDescription(),
-  id=version,
+  id=version_title,
 )
 
 section.setCriterionPropertyList([
@@ -59,6 +59,7 @@ section.setCriterionPropertyList([
 
 section.setCriterion('version', version)
 section.setCriterion('validation_state', 'submitted')
+section.setMembershipCriterionCategoryList(['follow_up/' + software_release.getRelativeUrl()])
 
 # Clone all curent Web Document and share them with the correct Version
 web_document_list = portal.portal_catalog(

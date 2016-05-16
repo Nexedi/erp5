@@ -29,6 +29,10 @@ version_web_section = web_site[software_release.getVersion()]
 version_web_section.setCriterion('validation_state', 'published')
 version_web_section.publish()
 
+web_site.edit(
+  configuration_latest_version=software_release.getVersion(),
+)
+
 # Is latest Websection what we want?
 if "latest" not in web_site.objectIds():
   latest_web_section = version_web_section.Base_createCloneDocument(batch_mode=True)
@@ -42,6 +46,6 @@ else:
   latest_web_section.setAggregate(version_web_section.getAggregate())
 
 # Archive former versions
-for web_section in web_site.objectValues(portal_type="Web Section"):
-  if web_section.getId() not in ('latest', 'development', 'hateoas', version_web_section.getId()):
-    web_section.setCriterion('validation_state', 'archived')
+#for web_section in web_site.objectValues(portal_type="Web Section"):
+#  if web_section.getId() not in ('latest', 'development', 'hateoas', version_web_section.getId()):
+#    web_section.setCriterion('validation_state', 'archived')

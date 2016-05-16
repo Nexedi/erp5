@@ -42,6 +42,8 @@ path_list = [software_product_rurl]
 print "    Processing File List \r===============================\r"
 for document_brain in document_list:
   document = document_brain.getObject()
+  if document.getFollowUp():
+    continue
   print document.getId()
   new_document = document.Base_createCloneDocument(batch_mode=True)
   new_id = base_id + new_document.getReference().replace('.', '_')
