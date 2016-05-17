@@ -1,3 +1,30 @@
+var rJS_g;
+rJS(window)
+  .ready(function (g) {
+    rJS_g = g;
+  });
+function reloadGadgetFields() {
+  __RenderJSGadget.__ready_list[1] // loadSubGadgetDOMDeclaration
+  (rJS_g).then(function () {
+    var list_gadget = document.querySelectorAll("[data-gadget-url]"), list = [];
+    for (var i = 0; i < list_gadget.length; i += 1) {
+      var url = list_gadget[i].getAttribute("data-gadget-url");
+      if (url !== undefined && url !== null)
+        list.push(rJS_g.getDeclaredGadget(
+          list_gadget[i].getAttribute("data-gadget-scope")));
+    }
+    return RSVP.all(list);
+  }).then(function (results) {
+    var g, list = [];
+    for (var i = 0; i < results.length; i += 1) {
+      g = results[i];
+      list.push(g.render({
+        value: g.__element.getAttribute("data-gadget-value")}));
+    }
+    return RSVP.all(list);
+  }).fail(function (error) { console.warn(error); });
+}
+
 // global layout is saved here
 var last_layout = '';
 
@@ -299,6 +326,7 @@ function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){
     initialize();
     // execute JS code provided by server
     eval(javascript);
+    reloadGadgetFields();
     // give some timeout as we can be sometimes two fast loading a tab
     setTimeout("$('#loading-wrapper').first().hide();", 250 );}
 }
