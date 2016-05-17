@@ -203,15 +203,18 @@ class WebSite(WebSection):
 
     security.declarePrivate( 'manage_afterClone' )
     def manage_afterClone(self, item):
+      self._cleanupBeforeTraverseHooks()
+      WebSection.manage_afterClone(self, item)
+
+    def _cleanupBeforeTraverseHooks(self):
       # unregister all before traversal hooks that do not belong to us.
       my_handle = self.meta_type + '/' + self.getId()
       handle_to_unregister_list = []
-      for priority, handle in self.__before_traverse__.keys():
-        if handle != my_handle:
+      for (priority, handle), hook in self.__before_traverse__.items():
+        if isinstance(hook, WebSiteTraversalHook) and handle != my_handle:
           handle_to_unregister_list.append(handle)
       for handle in handle_to_unregister_list:
         BeforeTraverse.unregisterBeforeTraverse(self, handle)
-      WebSection.manage_afterClone(self, item)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPermanentURLList')
     def getPermanentURLList(self, document):
@@ -278,8 +281,12 @@ class WebSite(WebSection):
         return []
 
     def _edit(self, **kw):
-      # migrate beforeTraverse hook if missing
-      if getattr(self, '__before_traverse__', None) is None and self.getPortalType() == 'Web Site':
-        handle = self.meta_type + '/' + self.getId()
-        BeforeTraverse.registerBeforeTraverse(self, WebSiteTraversalHook(), handle)
+      if self.getPortalType() == 'Web Site':
+        if getattr(self, '__before_traverse__', None) is None:
+          # migrate beforeTraverse hook if missing
+          handle = self.meta_type + '/' + self.getId()
+          BeforeTraverse.registerBeforeTraverse(self, WebSiteTraversalHook(), handle)
+        else:
+          # cleanup beforeTraverse hooks that may exist after this document was cloned.
+          self._cleanupBeforeTraverseHooks()
       super(WebSite, self)._edit(**kw)
