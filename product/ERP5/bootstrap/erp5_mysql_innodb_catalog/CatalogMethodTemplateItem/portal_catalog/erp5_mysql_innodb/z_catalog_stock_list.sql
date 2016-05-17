@@ -69,6 +69,31 @@ WHERE
   <dtml-if "row_list">
 REPLACE INTO
   stock
+(
+  `uid`,
+  `order_id`,
+  `explanation_uid`,
+  `node_uid`,
+  `section_uid`,
+  `payment_uid`,
+  `function_uid`,
+  `project_uid`,
+  `funding_uid`,
+  `payment_request_uid`,
+  `mirror_section_uid`,
+  `mirror_node_uid`,
+  `resource_uid`,
+  `quantity`,
+  `is_cancellation`,
+  `is_accountable`,
+  `date`,
+  `mirror_date`,
+  `total_price`,
+  `portal_type`,
+  `simulation_state`,
+  `variation_text`,
+  `sub_variation_text`
+)
 VALUES
     <dtml-in prefix="row" expr="row_list">
 (
