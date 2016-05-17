@@ -37,6 +37,7 @@ from Products.ERP5.mixin.property_recordable import PropertyRecordableMixin
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
+from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from zExceptions import Forbidden
 
@@ -78,7 +79,7 @@ class RecordablePropertyMetaClass(ExtensionClass):
       setter.__name__ = accessor_name
       return setter
 
-    def getterWrapper(accessor_name, property_name):
+    def getterWrapper(accessor_name, property_name, property_getter):
       dictionary['security'].declareProtected(Permissions.AccessContentsInformation,
                                               accessor_name)
 
@@ -97,17 +98,19 @@ class RecordablePropertyMetaClass(ExtensionClass):
           except (AttributeError, KeyError):
             pass
 
-        return getattr(super(ComponentMixin, self), accessor_name)()
+        return property_getter(self)
 
       getter.__name__ = accessor_name
       return getter
 
-    for property_name in dictionary['_recorded_property_name_tuple']:
+    for (property_name,
+         property_getter) in dictionary['_recorded_property_name_getter_dict'].iteritems():
       setter_name = '_set' + convertToUpperCase(property_name)
       dictionary[setter_name] = setterWrapper(setter_name, property_name)
 
       getter_name = 'get' + convertToUpperCase(property_name)
-      dictionary[getter_name] = getterWrapper(getter_name, property_name)
+      dictionary[getter_name] = getterWrapper(getter_name, property_name,
+                                              property_getter)
 
     # docstring required for publishing any object
     dictionary['__doc__'] = metacls.__doc__
@@ -159,10 +162,23 @@ class ComponentMixin(PropertyRecordableMixin, Base):
                      'TextDocument',
                      'Component')
 
-  _recorded_property_name_tuple = (
-    'reference',
-    'version',
-    'text_content')
+  _recorded_property_name_getter_dict = {
+    'reference': BaseAccessor.Getter('getReference',
+                                     'reference',
+                                     'string',
+                                     storage_id='default_reference'),
+    'version': BaseAccessor.Getter('getVersion',
+                                   'version',
+                                   'string',
+                                   default=''),
+    'text_content': BaseAccessor.Getter('getTextContent',
+                                        'text_content',
+                                        'string'),
+    'description': BaseAccessor.Getter('getDescription',
+                                       'description',
+                                       'string',
+                                       default='')
+    }
 
   _message_reference_not_set = "Reference must be set"
   _message_invalid_reference = "Reference cannot end with '_version' or "\
@@ -175,6 +191,15 @@ class ComponentMixin(PropertyRecordableMixin, Base):
 
   _message_text_content_not_set = "No source code"
   _message_text_content_error = "Error in Source Code: ${error_message}"
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getValidationState')
+  def getValidationState(self):
+    """
+    Needed for bootstrap when the WorkflowState Accessor is not defined yet
+    """
+    return self.workflow_history[
+      'component_validation_workflow'][-1]['validation_state']
 
   security.declareProtected(Permissions.ModifyPortalContent, 'checkConsistency')
   def checkConsistency(self, *args, **kw):
@@ -270,7 +295,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     reference, version and text_content
     """
     if not self.checkConsistency():
-      for property_name in self._recorded_property_name_tuple:
+      for property_name in self._recorded_property_name_getter_dict:
         self.clearRecordedProperty(property_name)
 
       self.validate()
