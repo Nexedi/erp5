@@ -211,6 +211,14 @@ ModuleSecurityInfo('os.path').declarePublic(
 # Also allow some handy data properties.
   'sep', 'pardir', 'curdir', 'extsep',
 )
+ModuleSecurityInfo('email.mime.application').declarePublic('MIMEApplication')
+ModuleSecurityInfo('email.mime.audio').declarePublic('MIMEAudio')
+ModuleSecurityInfo('email.mime.base').declarePublic('MIMEBase')
+ModuleSecurityInfo('email.mime.image').declarePublic('MIMEImage')
+ModuleSecurityInfo('email.mime.message').declarePublic('MIMEMessage')
+ModuleSecurityInfo('email.mime.multipart').declarePublic('MIMEMultipart')
+ModuleSecurityInfo('email.mime.nonmultipart').declarePublic('MIMENonMultipart')
+ModuleSecurityInfo('email.mime.text').declarePublic('MIMEText')
 
 # Alias modules - only applied to restricted python.
 MNAME_MAP = {
