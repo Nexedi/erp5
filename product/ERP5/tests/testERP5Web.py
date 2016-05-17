@@ -169,6 +169,33 @@ class TestERP5Web(ERP5TypeTestCase):
     except:
       self.fail('Cataloging of the Web Site failed.')
 
+  def test_WebSiteTraversalHook_on_newContent(self):
+    """a WebSiteTraversalHook is added on websites automatically.
+    """
+    web_site = self.portal.web_site_module.newContent(
+      portal_type='Web Site',
+    )
+    self.assertEquals(1, len(web_site.__before_traverse__))
+
+  def test_WebSiteTraversalHook_on_clone(self):
+    """a WebSiteTraversalHook is correctly updated after cloning a website.
+    """
+    web_site = self.portal.web_site_module.newContent(
+      portal_type='Web Site',
+    )
+    cloned_web_site = web_site.Base_createCloneDocument(batch_mode=True)
+    self.assertEquals(1, len(cloned_web_site.__before_traverse__))
+
+  def test_WebSiteTraversalHook_on_change_id(self):
+    """a WebSiteTraversalHook is correctly updated after changing website id.
+    """
+    web_site = self.portal.web_site_module.newContent(
+      portal_type='Web Site',
+    )
+    self.tic()
+    web_site.setId("new_id")
+    self.assertEquals(1, len(web_site.__before_traverse__))
+
   def test_02_EditSimpleWebPage(self):
     """
       Simple Case of creating a web page.
