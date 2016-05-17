@@ -201,6 +201,18 @@ class WebSite(WebSection):
         BeforeTraverse.registerBeforeTraverse(item, WebSiteTraversalHook(), handle)
       WebSection.manage_afterAdd(self, item, container)
 
+    security.declarePrivate( 'manage_afterClone' )
+    def manage_afterClone(self, item):
+      # unregister all before traversal hooks that do not belong to us.
+      my_handle = self.meta_type + '/' + self.getId()
+      handle_to_unregister_list = []
+      for priority, handle in self.__before_traverse__.keys():
+        if handle != my_handle:
+          handle_to_unregister_list.append(handle)
+      for handle in handle_to_unregister_list:
+        BeforeTraverse.unregisterBeforeTraverse(self, handle)
+      WebSection.manage_afterClone(self, item)
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getPermanentURLList')
     def getPermanentURLList(self, document):
       """
