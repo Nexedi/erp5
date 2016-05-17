@@ -210,6 +210,7 @@ ModuleSecurityInfo('os.path').declarePublic(
 # Also allow some handy data properties.
   'sep', 'pardir', 'curdir', 'extsep',
 )
+ModuleSecurityInfo('email').declarePublic('mime', 'encoders')
 
 # Alias modules - only applied to restricted python.
 MNAME_MAP = {
