@@ -6,7 +6,7 @@
                            enctype string:multipart/form-data;
                            portal context/portal_url/getPortalObject;
                            global css_list python:['%s/tabber_style.css' % (portal.absolute_url(),)];
-                           global js_list python:['%s/erp5_tabber.js' % (portal.absolute_url(),)]">
+                           global js_list python:['erp5_tabber.js', 'rsvp.js', 'renderjs.js', 'erp5_knowledge_box.js', 'erp5_gadgetfield.js']">
       <tal:block metal:use-macro="here/main_template/macros/master">
         <tal:block metal:fill-slot="main">
           <tal:block tal:condition="here/portal_membership/isAnonymousUser">
