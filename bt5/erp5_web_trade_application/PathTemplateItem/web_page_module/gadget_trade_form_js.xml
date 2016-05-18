@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -64,30 +64,14 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
-            <key> <string>contributors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_trade_jio_sale_price_record_module_add_sale_price_record.html</string> </value>
+            <value> <string>gadget_trade_form.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -97,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_trade_jio_sale_price_record_module_add_sale_price_record_html</string> </value>
+            <value> <string>gadget_trade_form_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -105,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -115,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>ERP5 Trade Record Jio Sale Price Record Module Add Sale Price Record</string> </value>
+            <value> <string>Gadget Trade Form JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -201,7 +185,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1462354401.79</float>
+                        <float>1463583115.65</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -246,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>951.16268.12344.23876</string> </value>
+                <value> <string>951.18073.40380.57975</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -264,7 +248,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1463583396.06</float>
+                        <float>1463583017.86</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -321,7 +305,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1462354317.11</float>
+                        <float>1463582856.26</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

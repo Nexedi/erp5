@@ -2,10 +2,196 @@
             loopEventListener, jQuery,
             getSequentialID, addTemporaryCustomer, normalizeTitle*/
 /*jslint indent: 2, nomen: true, maxlen: 80*/
-(function (window, document, RSVP, rJS,
-           loopEventListener, $
+(function (window, RSVP, rJS,
+           loopEventListener
            ) {
   "use strict";
+
+
+  /////////////////////////////////////////
+  // Nextowner changed.
+  /////////////////////////////////////////
+  function nextownerChange(gadget) {
+    var page_gadget = gadget,
+      nextowner_gadget,
+      form_gadget,
+      resultTmp;
+    return new RSVP.Queue()
+      .push(function () {
+        return page_gadget.getDeclaredGadget("erp5_form");
+      })
+
+      .push(function (gadget) {
+        form_gadget = gadget;
+        return form_gadget.getDeclaredGadget("nextowner");
+
+      })
+      .push(function (string_gadget) {
+        nextowner_gadget = string_gadget;
+        return nextowner_gadget.getContent();
+      })
+      .push(function (changeValue) {
+
+        return gadget.allDocs({
+          query: 'portal_type:("Organisation"' +
+                   'OR "Organisation Temp") AND title_lowercase: "'
+                  + changeValue.nextowner.toLowerCase() + '"',
+          limit: [0, 2]
+        });
+      })
+
+      .push(function (result) {
+        if (result.data.total_rows === 1) {
+          return gadget.jio_get(result.data.rows[0].id);
+        }
+      })
+
+      .push(function (result) {
+        resultTmp = result;
+        if (resultTmp !== undefined) {
+
+          return RSVP.all([
+            form_gadget.getDeclaredGadget("nextowner_title"),
+            form_gadget.getDeclaredGadget("nextowner_reference"),
+            form_gadget.getDeclaredGadget("default_telephone_coordinate_text"),
+            form_gadget.getDeclaredGadget("default_address_city"),
+            form_gadget.getDeclaredGadget("default_address_region"),
+            form_gadget.getDeclaredGadget("default_address_street_address"),
+            form_gadget.getDeclaredGadget("default_address_zip_code"),
+            form_gadget.getDeclaredGadget("default_email_coordinate_text")
+          ]);
+
+        }
+
+      })
+      .push(function (all_result) {
+        if (all_result !== undefined) {
+          return RSVP.all([
+            all_result[0].render({
+              field_json : {
+                "description": "",
+                "title": "Client",
+                "default": resultTmp.title,
+                "css_class": "",
+                "required": 1,
+                "editable": 0,
+                "key": "nextowner_title",
+                "hidden": 0,
+                "type": "StringField",
+                "change" : 1
+              }
+            }),
+            all_result[1].render({
+              field_json : {
+                "description": "",
+                "title": "Client Reference",
+                "default": resultTmp.reference,
+                "css_class": "",
+                "required": 1,
+                "editable": 0,
+                "key": "nextowner_reference",
+                "hidden": 0,
+                "type": "StringField",
+                "change" : 1
+
+              }
+            }),
+            all_result[2].render({
+              field_json : {
+                "description": "",
+                "title": "Default Telephone",
+                "default": resultTmp.default_telephone_coordinate_text,
+                "css_class": "",
+                "required": 0,
+                "editable": 0,
+                "key": "default_telephone_coordinate_text",
+                "hidden": 0,
+                "type": "StringField",
+                "change" : 1
+
+              }
+            }),
+            all_result[3].render({
+              field_json : {
+                "description": "",
+                "title": "Default Address City",
+                "default": resultTmp.default_address_city,
+                "css_class": "",
+                "required": 1,
+                "editable": 0,
+                "key": "default_address_city",
+                "hidden": 0,
+                "type": "StringField",
+                "change" : 1
+
+              }
+            }),
+           /* all_result[4].render({
+              field_json : {
+                "description": "",
+                "title": "Region",
+                "default": resultTmp.default_address_region,
+                "css_class": "",
+                "required": 1,
+                "editable": 0,
+                "key": "default_address_region",
+                "hidden": 0,
+                "type": "ListField",
+                "change" : 1
+
+              }
+            }),*/
+            all_result[5].render({
+              field_json : {
+                "description": "",
+                "title": "Street Address",
+                "default": resultTmp.default_address_street_address,
+                "css_class": "",
+                "required": 1,
+                "editable": 0,
+                "key": "default_address_street_address",
+                "hidden": 0,
+                "type": "StringField",
+                "change" : 1
+
+              }
+            }),
+            all_result[6].render({
+              field_json : {
+                "description": "",
+                "title": "Postal Code",
+                "default": resultTmp.default_address_zip_code,
+                "css_class": "",
+                "required": 0,
+                "editable": 0,
+                "key": "default_address_zip_code",
+                "hidden": 0,
+                "type": "StringField",
+                "change" : 1
+
+              }
+            }),
+            all_result[7].render({
+              field_json : {
+                "description": "",
+                "title": "Email",
+                "default": resultTmp.default_email_coordinate_text,
+                "css_class": "",
+                "required": 0,
+                "editable": 0,
+                "key": "default_email_coordinate_text",
+                "hidden": 0,
+                "type": "StringField",
+                "change" : 1
+
+              }
+            })
+          ]);
+
+        }
+      });
+
+  }
 
 
   rJS(window)
@@ -40,6 +226,13 @@
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod('allDocs', 'jio_allDocs')
 
+    .allowPublicAcquisition("inputChange", function (param_list) {
+      this.stringChange = param_list[0];
+      if (this.stringChange === "nextowner") {
+        return nextownerChange(this);
+      }
+
+    })
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
@@ -105,7 +298,7 @@
       );
     })
 
-  /////////////////////////////////////////
+ /* /////////////////////////////////////////
     // Nextowner title changed.
     /////////////////////////////////////////
     .declareService(function () {
@@ -115,7 +308,7 @@
 
         .push(function () {
           return loopEventListener(
-            gadget.props.element.querySelector('input[name="nextowner_title"]'),
+            gadget.props.element.querySelector('input'),
             "input",
             false,
             function (evt) {
@@ -355,7 +548,7 @@
     })
 
 
-
+*/
 
     .declareMethod("render", function (options) {
       var page_gadget = this,
@@ -374,6 +567,7 @@
             add_action: true
           });
         })
+
         .push(function () {
 
           return RSVP.all([
@@ -778,5 +972,5 @@
     });
 
 
-}(window, document, RSVP, rJS,
-  loopEventListener, jQuery));
+}(window, RSVP, rJS,
+  loopEventListener));
