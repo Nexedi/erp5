@@ -13,4 +13,4 @@ if follow_up_related_document_list:
     Query(uid=[x.getUid() for x in follow_up_related_document_list]),
     operator='or')
 
-return portal_catalog(portal_type=portal_type, **kw)
+return portal_catalog(portal_type=portal_type, limit=limit, **kw)
