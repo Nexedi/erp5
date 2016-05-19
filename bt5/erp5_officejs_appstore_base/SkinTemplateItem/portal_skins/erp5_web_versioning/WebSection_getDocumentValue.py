@@ -59,40 +59,6 @@ web_page_list = context.searchResults(
   limit=1,
   **kw)
 
-# Search the catalog for all documents matching the reference
-# this will only return documents which are accessible by the user
-# This is used as a fallback
-if len(web_page_list) == 0:
-  web_page_list = portal_catalog(reference=name,
-                                 effective_date=effective_date,
-                                 portal_type=valid_portal_type_list,
-                                 validation_state=validation_state,
-                                 language=(language, ''),
-                                 sort_on=(('language', 'descending'), ) + base_sort,
-                                 limit=1,
-                                 **kw)
-
-if len(web_page_list) == 0 and language != 'en':
-  # Search again with English as a fallback.
-  web_page_list = portal_catalog(reference=name,
-                                 effective_date=effective_date,
-                                 portal_type=valid_portal_type_list,
-                                 validation_state=validation_state,
-                                 language='en',
-                                 sort_on=base_sort,
-                                 limit=1,
-                                 **kw)
-
-if len(web_page_list) == 0:
-  # Search again without the language
-  web_page_list = portal_catalog(reference=name,
-                                 effective_date=effective_date,
-                                 portal_type=valid_portal_type_list,
-                                 validation_state=validation_state,
-                                 sort_on=base_sort,
-                                 limit=1,
-                                 **kw)
-
 if len(web_page_list) == 0:
   # Default returns None
   web_page = None
