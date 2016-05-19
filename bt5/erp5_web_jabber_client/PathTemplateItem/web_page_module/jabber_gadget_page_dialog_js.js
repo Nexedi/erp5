@@ -76,7 +76,6 @@
       ul.setAttribute("data-role", "listview");
       gadget.props.jid = options.jid;
       template_container.children[0].focus();
-      template_container.children[0].select();
       return gadget.updateHeader({
         page_title: options.jid
       })
