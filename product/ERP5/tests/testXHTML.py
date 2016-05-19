@@ -410,6 +410,7 @@ class TestXHTML(TestXHTMLMixin):
                                        # reviewed. Many bt like erp5_project are
                                        # using obsolete field library of trade
       'erp5_xhtml_style',
+      'erp5_dhtml_style',
       'erp5_jquery_plugin_svg_editor',
       'erp5_jquery_plugin_spinbtn',
       'erp5_jquery_plugin_jquerybbq',
