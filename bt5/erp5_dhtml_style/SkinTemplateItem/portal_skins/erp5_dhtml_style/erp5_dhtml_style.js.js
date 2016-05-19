@@ -26,29 +26,26 @@ $(function() {
   // Make the parallel list field adding more elements automatically.
   $('.input .extensible_parallel_list_field').change(function(event) {
     event.preventDefault();
-    var select_element = $(event.target)
-    var add_element = true;
-    var to_clone_element = select_element
-    var parent = select_element.parent()
-    if (parent[0].nodeName == 'DIV') {
-      to_clone_element = parent
-      parent = parent.parent()
+    var select_element = $(event.target);
+    var to_clone_element = select_element;
+    var parent = select_element.parent();
+    var parent_is_div = parent[0].nodeName == 'DIV';
+    if (parent_is_div) {
+      to_clone_element = parent;
+      parent = parent.parent();
     }
-    var select_list = parent.find('select')
-    for(var x = select_list.length; x;) {
-      current_select = select_list[--x]
-      if (current_select.selectedIndex == 0)
-      {
-        add_element = false;
-      }
+    var select_list = parent.find('select');
+    for (var i = select_list.length; i--;) {
+      if (!select_list[i].selectedIndex)
+        return;
     }
-    if (add_element) {
-      parent.append(jQuery('<label>&nbsp;</label>'))
-      var cloned_element = to_clone_element.clone(true)
-      cloned_element[0].selectedIndex = 0
-      cloned_element.appendTo(parent)
-      parent.append(jQuery('<p class="clear">'))
-    }
+    var clear = $('<p class="clear">');
+    parent.append(parent_is_div ? $('<label>&nbsp;</label>') : clear);
+    var cloned_element = to_clone_element.clone(true);
+    cloned_element[0].selectedIndex = 0;
+    cloned_element.appendTo(parent);
+    if (parent_is_div)
+      parent.append(clear);
   });
 
 });
