@@ -49,8 +49,11 @@ class TestXHTMLMixin(ERP5TypeTestCase):
 
   # some forms have intentionally empty listbox selections like RSS generators
   FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS']
-  IGNORE_FILE_LIST = ['require.js','require.min.js','wz_dragdrop.js',
-                      'renderjs.js','jio.js','rsvp.js','handlebars.js']
+  JSL_IGNORE_FILE_LIST = ('require.js','require.min.js','wz_dragdrop.js',
+                          'renderjs.js','jio.js','rsvp.js','handlebars.js')
+  JSL_IGNORE_SKIN_LIST = ('erp5_ace_editor', 'erp5_code_mirror',
+                          'erp5_fckeditor', 'erp5_jquery', 'erp5_jquery_ui',
+                          'erp5_svg_editor', 'erp5_xinha_editor')
 
   def changeSkin(self, skin_name):
     """
@@ -165,34 +168,25 @@ class TestXHTMLMixin(ERP5TypeTestCase):
   def test_javascript_lint(self):
     skins_tool = self.portal.portal_skins
     path_list = []
-    for script_path, script in skins_tool.ZopeFind(
-              skins_tool, obj_metatypes=['File','DTML Method','DTML Document'], search_sub=1):
-      is_required_check_path = True
-      ignore_bts = ['erp5_jquery','erp5_fckeditor','erp5_xinha_editor', 'erp5_svg_editor',
-                    'erp5_jquery_ui', 'erp5_ace_editor', 'erp5_code_mirror']
+    for script_path, script in skins_tool.ZopeFind(skins_tool,
+        obj_metatypes=('File','DTML Method','DTML Document'), search_sub=1):
       if script_path.endswith('.js'):
-        for ignore_bt_name in ignore_bts:
-          if script_path.startswith(ignore_bt_name):
-            is_required_check_path = False
-        for ignore_file in self.IGNORE_FILE_LIST:
-          if script_path.endswith(ignore_file):
-            is_required_check_path = False
-        if is_required_check_path:
+        x = script_path.split('/', 1)
+        if not (x[0] in self.JSL_IGNORE_SKIN_LIST or
+                x[1] in self.JSL_IGNORE_FILE_LIST):
           path_list.append(script_path)
-    def jsl(check_path):
+    portal_skins_path = self.portal.getId() + '/portal_skins/'
+    args = ('jsl', '-stdin', '-nologo', '-nosummary', '-conf',
+            os.path.join(os.path.dirname(__file__), 'jsl.conf'))
+    for path in path_list:
+      check_path = portal_skins_path + path
       body = self.publish(check_path).getBody()
-      conf_file = os.path.join(os.path.dirname(__file__), 'jsl.conf')
       try:
-        stdout, stderr = Popen(['jsl', '-stdin', '-nologo', '-nosummary', '-conf', conf_file],
-                               stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True).communicate(body)
+        stdout, stderr = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE,
+                               close_fds=True).communicate(body)
       except OSError, e:
         raise OSError, '%r\n%r' % (os.environ, e)
       self.assertEqual(stdout, '', 'jsl result of %s : %s' % (check_path, stdout))
-    portal_skins_path = '%s/portal_skins' % self.portal.getId()
-    for path in path_list:
-      check_path = '%s/%s' % (portal_skins_path, path)
-      jsl(check_path)
-
 
   def test_html_file(self):
     path_list = os.environ.get('CGI_PATH',
