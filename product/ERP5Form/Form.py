@@ -1049,6 +1049,9 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
 
       return proxy_dict_list
 
+    _proxy_copy_type_list = (bytes, unicode, int, long, float, bool, list,
+                             tuple, dict, DateTime)
+
     security.declareProtected('Change Formulator Forms', 'proxifyField')
     def proxifyField(self, field_dict=None, force_delegate=False,
                      keep_empty_value=False, REQUEST=None):
@@ -1059,14 +1062,13 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         are different. And if you specify keep_empty_value, then empty values
         will not be delegated(force_delegate option is high priority).
         """
-        copy_type_list = (bytes, unicode, int, long, float, bool, list, tuple,
-                          dict, DateTime)
         def copy(field, value_type):
             new_dict = {}
             for key, value in getFieldDict(field, value_type).iteritems():
                 if isinstance(aq_base(value), (Method, TALESMethod)):
                     value = copyMethod(value)
-                elif not (value is None or isinstance(value, copy_type_list)):
+                elif not (value is None or
+                          isinstance(value, self._proxy_copy_type_list)):
                     raise ValueError('%s:%r' % (type(value), value))
                 elif not (keep_empty_value or value):
                     continue
@@ -1186,9 +1188,9 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
             for key, value in getFieldDict(field, value_type).iteritems():
                 if isinstance(aq_base(value), (Method, TALESMethod)):
                     value = copyMethod(value)
-                elif value is not None and not isinstance(value,
-                        (str, unicode, int, long, float, bool, list, tuple, dict)):
-                    raise ValueError, '%s:%s' % (type(value), repr(value))
+                elif not (value is None or
+                          isinstance(value, self._proxy_copy_type_list)):
+                    raise ValueError('%s:%r' % (type(value), value))
                 new_dict[key] = value
             return new_dict
 
