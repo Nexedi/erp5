@@ -73,7 +73,8 @@
   },
   "languages": {
     "english": "English",
-    "chinese": "中文"
+    "chinese": "中文",
+    "pick": "语言:"
   },
   "category": {
     "title": "类别",
@@ -154,16 +155,28 @@
         "description": "一款基于renderJS模板的jabber客户端"
       },
       "text_editor_js": {
-        "title": "文本编辑 JS",
-        "description": "A simple text editor synchronizing data in the Cloud."
+        "title": "文本编辑",
+        "description": "一款简易的云端数据同步的文本编辑"
       },
       "workflow_js": {
-        "title": "工作流程 JS",
+        "title": "工作流程",
         "description": "COMING SOON."
       },
       "contacts_js": {
-        "title": "联络 JS",
+        "title": "联络",
         "description": "COMING SOON"
+      },
+      "spreadsheet_editor": {
+        "title": "电子表格编辑",
+        "description": "电子表格式的任务管理应用."
+      },
+      "svg_editor": {
+        "title": "SVG 编辑",
+        "description": "SVG文件任务管理应用"
+      },
+      "monitor_js": {
+        "title": "监测",
+        "description": "云监测工具"
       }
     },
     "field_list": {

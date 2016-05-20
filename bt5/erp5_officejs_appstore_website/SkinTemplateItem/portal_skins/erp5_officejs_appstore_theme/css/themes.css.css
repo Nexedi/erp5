@@ -1452,7 +1452,7 @@ html .ui-filterable {
   .ui-listview.responsive .ui-li-has-thumb .ui-li-thumb {
     max-width: 8em;
     max-height: 8em;
-    left: 20%;
+    left: 31%;
     top: 5%;
   }
 
@@ -1580,7 +1580,14 @@ html .ui-filterable {
 
 /* Second breakpoint is 63.75em (1020px). 4 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
 @media ( min-width: 63.75em ) {
-
+  .ui-listview.responsive .ui-li-has-thumb > img:first-child, 
+  .ui-listview.responsive .ui-li-has-thumb > .ui-btn > img:first-child, 
+  .ui-listview.responsive .ui-li-has-thumb .ui-li-thumb {
+    max-width: 8em;
+    max-height: 8em;
+    left: 25%;
+    top: 5%;
+  }
   /* Set a max-width for the last breakpoint to prevent too much stretching on large screens.
   By setting the max-width equal to the breakpoint width minus padding we keep square tiles. */
   /* responsive content */
