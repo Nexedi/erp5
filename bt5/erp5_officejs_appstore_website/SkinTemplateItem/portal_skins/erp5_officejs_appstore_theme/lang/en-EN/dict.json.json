@@ -73,7 +73,8 @@
   },
   "languages": {
     "english": "English",
-    "chinese": "中文"
+    "chinese": "中文",
+    "pick": "Languages:"
   },
   "category": {
     "title": "Categories",
@@ -164,6 +165,18 @@
       "contacts_js": {
         "title": "Contacts JS",
         "description": "COMING SOON"
+      },
+      "spreadsheet_editor": {
+        "title": "Spreadsheet Editor",
+        "description": "Task manager application with Spreadsheet documents."
+      },
+      "svg_editor": {
+        "title": "SVG Editor",
+        "description": "Task manager application with SVG documents."
+      },
+      "monitor_js": {
+        "title": "Monitor",
+        "description": "Cloud Monitoring Tool"
       }
     },
     "field_list": {
