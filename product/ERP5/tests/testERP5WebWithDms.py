@@ -29,9 +29,14 @@
 
 import unittest
 import os
+import quopri
+import functools
 from StringIO import StringIO
 from lxml import etree
+from base64 import b64decode, b64encode
+from email.parser import Parser as EmailParser
 
+import transaction
 from AccessControl import Unauthorized
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
@@ -44,6 +49,23 @@ from PIL import Image
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
 IMAGE_COMPARE_TOLERANCE = 850
+
+XSMALL_SVG_IMAGE_ICON_DATA = '''<svg width="30" height="35" xmlns="http://www.w3.org/2000/svg">
+  <path d="m5,5l15,0l0,5l5,0l0,20l-20,0z" stroke-width="1.5" stroke="gray" fill="skyblue"/>
+  <path d="m6,29l8,-8l5,5l2,-2l3,3l0,2z" stroke-width="0" fill="green"/>
+  <path d="m25,10l0,-1l-4,-4l-1,0l0,5z" stroke-width="1.5" stroke="gray" fill="white"/>
+  <path d="m8,15c5,-8 10,-2 10,0z" stroke-width="0" fill="white"/>
+</svg>'''
+XSMALL_PNG_IMAGE_ICON_DATA = b64decode('''
+iVBORw0KGgoAAAANSUhEUgAAAB4AAAAjCAIAAAAMti2GAAABkElEQVRIiWP8//8/A20AE43MHbJG
+syBzduzY8fLlSyJ1vnv3joGBQUtLy93dnbDRL168ePj0OSO/CDFG///8meH//xMnTvz48cPf35+A
+0QwMDIz8ImzWgcQY/XPbbHlpSQEBgQsXLjAwMGCajm40qSAgIICBgQGr6ZQajWw6Ozu7h4cHdYx+
++fLlwoUL4dxr165Rx2hGLr4f3z49ePIMxmdEU0DAaHZmRlNRThMxTg5mxo+//p1+9f3M6+8QKTaH
+cGSVv46uF+JhJdZodmbGKFV+cU6oGn42JhcZbnEulq0PPxPwEQMDA57ciGYuHOgKsZuIclJktIsM
+D6a5EGAqRpTROANk68PPRHocFxiaJd+o0WQaffbR8jUX8kgymqgyBNncEINJRBpN2NXI5pLkdgJG
+Y5pFvE34AgSXzrOPljMwMCgKWeIPJZxG43fR2UfLIRbAbfJjcERTgz1ASE0PcGsIGE1GOsMK0APk
+/6e3ek9E9ERmk2rQv49vGHgkcBotISHBQDbglkDTzjjaCKab0QBziJyFukqO6AAAAABJRU5ErkJg
+gg==''')
 
 
 def makeFilePath(name):
@@ -68,6 +90,26 @@ def compare_image(image_data_1, image_data_2):
   data2 = process_image(image_data_2)
   return abs(sum([data1[x] - data2[x] for x in range(len(data1))]))
 
+def customScript(script_id, script_param, script_code):
+  def wrapper(func):
+    @functools.wraps(func)
+    def wrapped(self, *args, **kwargs):
+      if script_id in self.portal.portal_skins.custom.objectIds():
+        raise ValueError('Precondition failed: %s exists in custom' % script_id)
+      createZODBPythonScript(
+        self.portal.portal_skins.custom,
+        script_id,
+        script_param,
+        script_code,
+      )
+      try:
+        func(self, *args, **kwargs)
+      finally:
+        if script_id in self.portal.portal_skins.custom.objectIds():
+          self.portal.portal_skins.custom.manage_delObjects(script_id)
+        transaction.commit()
+    return wrapped
+  return wrapper
 
 class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
   """Test for erp5_web business template.
@@ -1080,6 +1122,416 @@ return True
          <image xlink:href="http://www.erp5.com/user-XXX-XXX"
     """
     self._testImageConversionFromSVGToPNG_http_url("Web Page")
+
+  def test_WebPageAsEmbeddedHtml_simplePage(self):
+    """Test convert one simple html page to embedded html file"""
+    # Test init part
+    web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
+    html_data = "<p>World</p>"
+    page = web_page_module.newContent(portal_type="Web Page")
+    page.edit(text_content=html_data)
+    # Test part
+    ehtml_data = page.WebPage_exportAsSingleFile(format="embedded_html")
+    self.assertEqual(ehtml_data, html_data)
+
+  def test_WebPageAsMhtml_simplePage(self):
+    """Test convert one simple html page to mhtml file"""
+    # Test init part
+    web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
+    title = "Hello"
+    html_data = "<p>World</p>"
+    page = web_page_module.newContent(portal_type="Web Page")
+    page.edit(title=title, text_content=html_data)
+    # Test part
+    mhtml_data = page.WebPage_exportAsSingleFile(format="mhtml")
+    message = EmailParser().parsestr(mhtml_data)
+    self.assertEqual(message.get_params(), [
+      ("multipart/related", ""),
+      ("type", "text/html"),
+      ("boundary", message.get_boundary()),
+    ])
+    self.assertEqual(message.get("Subject"), title)
+    htmlmessage, = message.get_payload()
+    self.assertEqual(  # should have only one content transfer encoding header
+      len([h for h in htmlmessage.keys() if h == "Content-Transfer-Encoding"]),
+      1,
+    )
+    self.assertEqual(
+      htmlmessage.get("Content-Transfer-Encoding"),
+      "quoted-printable",
+    )
+    self.assertEqual(htmlmessage.get("Content-Location"), page.absolute_url())
+    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()), html_data)
+
+  def test_WebPageAsEmbeddedHtml_pageWithScript(self):
+    """Test convert one html page with script to embedded html file"""
+    # Test init part
+    web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
+    html_data = "<script>alert('Hello');</script><p>World</p>"
+    page = web_page_module.newContent(portal_type="Web Page")
+    page.edit(text_content=html_data)
+    # Test part
+    ehtml_data = page.WebPage_exportAsSingleFile(format="embedded_html")
+    self.assertEqual(ehtml_data, "<p>World</p>")
+
+  def test_WebPageAsMhtml_pageWithScript(self):
+    """Test convert one html page with script to mhtml file"""
+    # Test init part
+    web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
+    title = "Hello"
+    html_data = "<script>alert('Hello');</script><p>World</p>"
+    page = web_page_module.newContent(portal_type="Web Page")
+    page.edit(title=title, text_content=html_data)
+    # Test part
+    mhtml_data = page.WebPage_exportAsSingleFile(format="mhtml")
+    message = EmailParser().parsestr(mhtml_data)
+    htmlmessage, = message.get_payload()
+    self.assertEqual(  # should have only one content transfer encoding header
+      len([h for h in htmlmessage.keys() if h == "Content-Transfer-Encoding"]),
+      1,
+    )
+    self.assertEqual(
+      htmlmessage.get("Content-Transfer-Encoding"),
+      "quoted-printable",
+    )
+    self.assertEqual(htmlmessage.get("Content-Location"), page.absolute_url())
+    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()), "<p>World</p>")
+
+  def test_WebPageAsEmbeddedHtml_pageWithMoreThanOneImage(self):
+    """Test convert one html page with images to embedded html file"""
+    # Test init part
+    web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
+    image_module = self.portal.getDefaultModule(portal_type="Image")
+    svg = image_module.newContent(portal_type="Image")
+    svg.edit(content_type="image/svg+xml", data=XSMALL_SVG_IMAGE_ICON_DATA)
+    svg.publish()
+    png = image_module.newContent(portal_type="Image")
+    png.edit(content_type="image/png", data=XSMALL_PNG_IMAGE_ICON_DATA)
+    png.publish()
+    page = web_page_module.newContent(portal_type="Web Page")
+    page.edit(text_content="".join([
+      "<p>Hello</p>",
+      '<img src="/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="/%s?format=" />' % png.getRelativeUrl(),
+      '<img src="/%s?format=png" />' % svg.getRelativeUrl(),
+    ]))
+    # Test part
+    ehtml_data = page.WebPage_exportAsSingleFile(format="embedded_html")
+    self.assertTrue(ehtml_data.startswith("".join([
+      "<p>Hello</p>",
+      '<img src="data:image/svg+xml;base64,%s" />' % b64encode(XSMALL_SVG_IMAGE_ICON_DATA),
+      '<img src="data:image/png;base64,%s" />' % b64encode(XSMALL_PNG_IMAGE_ICON_DATA),
+      '<img src="data:image/png;base64,'
+    ])))
+
+  def test_WebPageAsMhtml_pageWithMoreThanOneImage(self):
+    """Test convert one html page with images to mhtml file"""
+    # Test init part
+    web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
+    image_module = self.portal.getDefaultModule(portal_type="Image")
+    svg = image_module.newContent(portal_type="Image")
+    svg.edit(content_type="image/svg+xml", data=XSMALL_SVG_IMAGE_ICON_DATA)
+    svg.publish()
+    png = image_module.newContent(portal_type="Image")
+    png.edit(content_type="image/png", data=XSMALL_PNG_IMAGE_ICON_DATA)
+    png.publish()
+    page = web_page_module.newContent(portal_type="Web Page")
+    page.edit(text_content="".join([
+      "<p>Hello</p>",
+      '<img src="/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="/%s?format=" />' % png.getRelativeUrl(),
+      '<img src="/%s?format=png" />' % svg.getRelativeUrl(),
+    ]))
+    # Test part
+    mhtml_data = page.WebPage_exportAsSingleFile(format="mhtml")
+    message = EmailParser().parsestr(mhtml_data)
+    htmlmessage, svgmessage, pngmessage, svgtopngmessage = message.get_payload()
+    self.assertEqual(
+      quopri.decodestring(htmlmessage.get_payload()),
+      "".join([
+        "<p>Hello</p>",
+        '<img src="%s?format=" />' % svg.absolute_url(),
+        '<img src="%s?format=" />' % png.absolute_url(),
+        '<img src="%s?format=png" />' % svg.absolute_url(),
+      ]),
+    )
+    for content_type, ext, message, obj, data in [
+          ("image/svg+xml", "", svgmessage, svg, XSMALL_SVG_IMAGE_ICON_DATA),
+          ("image/png", "", pngmessage, png, XSMALL_PNG_IMAGE_ICON_DATA),
+          ("image/png", "png", svgtopngmessage, svg, None),
+        ]:
+      __traceback_info__ = (content_type, "?format=" + ext)
+      self.assertEqual(
+        message.get("Content-Location"),
+        obj.absolute_url() + "?format=" + ext,
+      )
+      self.assertEqual(  # should have only one content transfer encoding header
+        len([h for h in message.keys() if h == "Content-Transfer-Encoding"]),
+        1,
+      )
+      self.assertEqual(message.get("Content-Type"), content_type)
+      encoding = message.get("Content-Transfer-Encoding")
+      self.assertIn(encoding, ("base64", "quoted-printable"))
+      # quoted printable encoding is accepted for svg images
+      if data:
+        if encoding == "base64":
+          self.assertEqual(
+            b64decode(message.get_payload()),
+            data,
+          )
+        elif encoding == "quoted-printable":
+          self.assertEqual(
+            quopri.decodestring(message.get_payload()),
+            data,
+          )
+        else:
+          raise ValueError("unhandled encoding %r" % encoding)
+      else:
+        self.assertTrue(len(message.get_payload()) > 0)
+
+  @customScript("ERP5Site_getWebSiteDomainDict", "", 'return {"test.portal.erp": context.getPortalObject()}')
+  def test_WebPageAsEmbeddedHtml_pageWithDifferentHref(self):
+    """Test convert one html page with images to embedded html file"""
+    # Test init part
+    # XXX use web site domain properties instead of @customScript
+    web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
+    image_module = self.portal.getDefaultModule(portal_type="Image")
+    svg = image_module.newContent(portal_type="Image")
+    svg.edit(content_type="image/svg+xml", data=XSMALL_SVG_IMAGE_ICON_DATA)
+    svg.publish()
+    page = web_page_module.newContent(portal_type="Web Page")
+    page.edit(text_content="".join([
+      "<p>Hello</p>",
+      '<img src="%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="//test.portal.erp/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="http://test.portal.erp/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="https://test.portal.erp/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="//example.com/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="http://example.com/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="https://example.com/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="data:image/svg+xml,&lt;svg&gt;&lt;/svg&gt;" />',
+      '<img src="tel:1234567890" />',
+      '<img src="mailto:me" />',
+    ]))
+    protocol = page.absolute_url().split(":", 1)[0] + ":"
+    # Test part
+    ehtml_data = page.WebPage_exportAsSingleFile(format="embedded_html")
+    self.assertEqual(ehtml_data, "".join([
+      "<p>Hello</p>",
+    ] + ([
+      '<img src="data:image/svg+xml;base64,%s" />' % b64encode(XSMALL_SVG_IMAGE_ICON_DATA),
+    ] * 5) + [
+      '<img src="%s//example.com/%s?format=" />' % (protocol, svg.getRelativeUrl()),
+      '<img src="http://example.com/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="https://example.com/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="data:image/svg+xml,&lt;svg&gt;&lt;/svg&gt;" />',
+      '<img src="tel:1234567890" />',
+      '<img src="mailto:me" />',
+    ]))
+
+  @customScript("ERP5Site_getWebSiteDomainDict", "", 'return {"test.portal.erp": context.getPortalObject()}')
+  def test_WebPageAsMhtml_pageWithDifferentHref(self):
+    """Test convert one html page with images to mhtml file"""
+    # Test init part
+    # XXX use web site domain properties instead of @customScript
+    web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
+    image_module = self.portal.getDefaultModule(portal_type="Image")
+    svg = image_module.newContent(portal_type="Image")
+    svg.edit(content_type="image/svg+xml", data=XSMALL_SVG_IMAGE_ICON_DATA)
+    svg.publish()
+    page = web_page_module.newContent(portal_type="Web Page")
+    page.edit(text_content="".join([
+      "<p>Hello</p>",
+      '<img src="%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="//test.portal.erp/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="http://test.portal.erp/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="https://test.portal.erp/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="//example.com/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="http://example.com/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="https://example.com/%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="data:image/svg+xml,&lt;svg&gt;&lt;/svg&gt;" />',
+      '<img src="tel:1234567890" />',
+      '<img src="mailto:me" />',
+    ]))
+    protocol = page.absolute_url().split(":", 1)[0] + ":"
+    # Test part
+    mhtml_data = page.WebPage_exportAsSingleFile(format="mhtml")
+    message = EmailParser().parsestr(mhtml_data)
+    self.assertEqual(len(message.get_payload()), 6)
+    htmlmessage = message.get_payload()[0]
+    self.assertEqual(
+      quopri.decodestring(htmlmessage.get_payload()),
+      "".join([
+        "<p>Hello</p>",
+        '<img src="%s/%s?format=" />' % (page.absolute_url(), svg.getRelativeUrl()),
+        '<img src="%s?format=" />' % svg.absolute_url(),
+        '<img src="%s//test.portal.erp/%s?format=" />' % (protocol, svg.getRelativeUrl()),
+        '<img src="http://test.portal.erp/%s?format=" />' % svg.getRelativeUrl(),
+        '<img src="https://test.portal.erp/%s?format=" />' % svg.getRelativeUrl(),
+        '<img src="%s//example.com/%s?format=" />' % (protocol, svg.getRelativeUrl()),
+        '<img src="http://example.com/%s?format=" />' % svg.getRelativeUrl(),
+        '<img src="https://example.com/%s?format=" />' % svg.getRelativeUrl(),
+        '<img src="data:image/svg+xml,&lt;svg&gt;&lt;/svg&gt;" />',
+        '<img src="tel:1234567890" />',
+        '<img src="mailto:me" />',
+      ]),
+    )
+    for message, location in [
+          (message.get_payload()[1], "%s/%s?format=" % (page.absolute_url(), svg.getRelativeUrl())),
+          (message.get_payload()[2], "%s?format=" % svg.absolute_url()),
+          (message.get_payload()[3], "%s//test.portal.erp/%s?format=" % (protocol, svg.getRelativeUrl())),
+          (message.get_payload()[4], "http://test.portal.erp/%s?format=" % svg.getRelativeUrl()),
+          (message.get_payload()[5], "https://test.portal.erp/%s?format=" % svg.getRelativeUrl()),
+        ]:
+      self.assertEqual(
+        message.get("Content-Location"),
+        location,
+      )
+      self.assertEqual(  # should have only one content transfer encoding header
+        len([h for h in message.keys() if h == "Content-Transfer-Encoding"]),
+        1,
+      )
+      encoding = message.get("Content-Transfer-Encoding")
+      self.assertIn(encoding, ("base64", "quoted-printable"))
+      # quoted printable encoding is accepted for svg images
+      if encoding == "base64":
+        self.assertEqual(
+          b64decode(message.get_payload()),
+          XSMALL_SVG_IMAGE_ICON_DATA,
+        )
+      elif encoding == "quoted-printable":
+        self.assertEqual(
+          quopri.decodestring(message.get_payload()),
+          XSMALL_SVG_IMAGE_ICON_DATA,
+        )
+      else:
+        raise ValueError("unhandled encoding %r" % encoding)
+
+  def test_WebPageAsEmbeddedHtml_pageWith1000Image(self):
+    """Test convert one html page with 1000 images to embedded html file"""
+    # Test init part
+    web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
+    image_module = self.portal.getDefaultModule(portal_type="Image")
+    page = web_page_module.newContent(portal_type="Web Page")
+    text_content_list = ["<p>Hello</p>"]
+    for i in range(0, 1000, 5):
+      svg = image_module.newContent(portal_type="Image")
+      svg.edit(content_type="image/svg+xml", data=XSMALL_SVG_IMAGE_ICON_DATA)
+      svg.publish()
+      png = image_module.newContent(portal_type="Image")
+      png.edit(content_type="image/png", data=XSMALL_PNG_IMAGE_ICON_DATA)
+      png.publish()
+      text_content_list += [
+        '<img src="/%s?format=" />' % svg.getRelativeUrl(),
+        '<img src="/%s?format=" />' % png.getRelativeUrl(),
+        '<img src="/%s?format=png" />' % svg.getRelativeUrl(),
+        '<img src="/%s?format=jpg" />' % png.getRelativeUrl(),
+        '<img src="/%s?format=jpg" />' % svg.getRelativeUrl(),
+      ]
+    page.edit(text_content="".join(text_content_list))
+    # Test part
+    ehtml_data = page.WebPage_exportAsSingleFile(format="embedded_html")
+    self.assertEqual(ehtml_data.count("<img"), 1000)
+
+  def test_WebPageAsMhtml_pageWith1000Image(self):
+    """Test convert one html page with 1000 images to mhtml file"""
+    # Test init part
+    web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
+    image_module = self.portal.getDefaultModule(portal_type="Image")
+    page = web_page_module.newContent(portal_type="Web Page")
+    text_content_list = ["<p>Hello</p>"]
+    for i in range(0, 1000, 5):
+      svg = image_module.newContent(portal_type="Image")
+      svg.edit(content_type="image/svg+xml", data=XSMALL_SVG_IMAGE_ICON_DATA)
+      svg.publish()
+      png = image_module.newContent(portal_type="Image")
+      png.edit(content_type="image/png", data=XSMALL_PNG_IMAGE_ICON_DATA)
+      png.publish()
+      text_content_list += [
+        '<img src="/%s?format=" />' % svg.getRelativeUrl(),
+        '<img src="/%s?format=" />' % png.getRelativeUrl(),
+        '<img src="/%s?format=png" />' % svg.getRelativeUrl(),
+        '<img src="/%s?format=jpg" />' % png.getRelativeUrl(),
+        '<img src="/%s?format=jpg" />' % svg.getRelativeUrl(),
+      ]
+    page.edit(text_content="".join(text_content_list))
+    # Test part
+    mhtml_data = page.WebPage_exportAsSingleFile(format="mhtml")
+    message = EmailParser().parsestr(mhtml_data)
+    self.assertEqual(len(message.get_payload()), 1001)
+
+  def test_WebPageAsEmbeddedHtml_pageWithStyle(self):
+    """Test convert one html page with style tag to embedded html file"""
+    # Test init part
+    web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
+    image_module = self.portal.getDefaultModule(portal_type="Image")
+    img = image_module.newContent(portal_type="Image")
+    img.edit(content_type="image/svg+xml", data=XSMALL_SVG_IMAGE_ICON_DATA)
+    img.publish()
+    page = web_page_module.newContent(portal_type="Web Page")
+    page.edit(
+      text_content="<style>%s</style><p>Hello</p>" % (
+        'body { background-image: url(  "/%s?format=" ); }' % (
+          img.getRelativeUrl())),
+    )
+    # Test part
+    ehtml_data = page.WebPage_exportAsSingleFile(format="embedded_html")
+    self.assertEqual(
+      ehtml_data,
+      "<style>%s</style><p>Hello</p>" % (
+        'body { background-image: url(data:image/svg+xml;base64,%s); }' % (
+          b64encode(XSMALL_SVG_IMAGE_ICON_DATA))),
+    )
+
+  def test_WebPageAsMhtml_pageWithStyle(self):
+    """Test convert one html page with style tag to mhtml file"""
+    # Test init part
+    web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
+    image_module = self.portal.getDefaultModule(portal_type="Image")
+    img = image_module.newContent(portal_type="Image")
+    img.edit(content_type="image/svg+xml", data=XSMALL_SVG_IMAGE_ICON_DATA)
+    img.publish()
+    page = web_page_module.newContent(portal_type="Web Page")
+    page.edit(
+      text_content="<style>%s</style><p>Hello</p>" % (
+        'body { background-image: url(  "/%s?format=" ); }' % (
+          img.getRelativeUrl())),
+    )
+    # Test part
+    mhtml_data = page.WebPage_exportAsSingleFile(format="mhtml")
+    message = EmailParser().parsestr(mhtml_data)
+    htmlmessage, imagemessage = message.get_payload()
+    self.assertEqual(
+      quopri.decodestring(htmlmessage.get_payload()),
+      "<style>%s</style><p>Hello</p>" % (
+        "body { background-image: url(%s?format=); }" % (
+          img.absolute_url())),
+    )
+    self.assertEqual(
+      imagemessage.get("Content-Location"),
+      img.absolute_url() + "?format=",
+    )
+    self.assertEqual(  # should have only one content transfer encoding header
+      len([h for h in imagemessage.keys() if h == "Content-Transfer-Encoding"]),
+      1,
+    )
+    encoding = imagemessage.get("Content-Transfer-Encoding")
+    self.assertIn(encoding, ("base64", "quoted-printable"))
+    # quoted printable encoding is accepted for svg images
+    if encoding == "base64":
+      self.assertEqual(
+        b64decode(imagemessage.get_payload()),
+        XSMALL_SVG_IMAGE_ICON_DATA,
+      )
+    elif encoding == "quoted-printable":
+      self.assertEqual(
+        quopri.decodestring(imagemessage.get_payload()),
+        XSMALL_SVG_IMAGE_ICON_DATA,
+      )
+    else:
+      raise ValueError("unhandled encoding %r" % encoding)
 
 def test_suite():
   suite = unittest.TestSuite()
