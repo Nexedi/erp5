@@ -21,6 +21,11 @@
       "attributes": {"data-info":"records"}
     }]
   }, {
+    "type": "p",
+    "direct": {"className": "translate ui-content-element responsive"},
+    "attributes": {"data-i18n":"pages.home.info_officejs"},
+    "logic": {"text": "OfficeJS is the only appstore compatible with Windows, MacOS, Android, Firefox OS, Linux, XiaomiOS, Bada, Tizen etc. Start browsing and using available applications. No login required."}
+  }, {
     "generate":"widget",
     "type": "listview",
     "class_list": "responsive",
