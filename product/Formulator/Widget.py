@@ -1704,12 +1704,15 @@ def render_tag(tag, **kw):
   return "<%s %s %s" % (tag, attr_str, extra)
 
 def render_element(tag, **kw):
-  if kw.has_key('contents'):
-    contents = kw['contents']
-    del kw['contents']
-    return "%s>\n%s</%s>" % (apply(render_tag, (tag, ), kw), contents, tag)
+  contents = kw.pop('contents', '')
+  if contents:
+    t = "%s>\n%s</%s>"
+  elif tag in ('area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+               'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'):
+    return render_tag(tag, **kw) + " />"
   else:
-    return apply(render_tag, (tag, ), kw) + " />"
+    t = "%s>%s</%s>"
+  return t % (render_tag(tag, **kw), contents, tag)
 
 
 ##############################################################################
