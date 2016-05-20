@@ -4638,8 +4638,14 @@
     window.localStorage.clear();
 
     // initalize translations
+    var lng = window.navigator.userLanguage || window.navigator.language;
+    if (lng.indexOf("zh") !== 0) {
+      lng = "en-EN";
+    } else {
+      lng = "zh-CN";
+    }
     $.i18n.init({
-      lng: 'zh-CN',
+      lng: lng,
       load: 'current',
       fallbackLng: false,
       resGetPath: 'lang/__lng__/__ns__.json',
