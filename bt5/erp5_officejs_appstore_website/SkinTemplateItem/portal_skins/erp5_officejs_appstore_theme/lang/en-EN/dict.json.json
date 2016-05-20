@@ -2,7 +2,7 @@
   "global": {
     "home": "Home",
     "search_apps": "Search Apps",
-    "default_page_title": "",
+    "default_page_title": "OfficeJS Appstore",
     "menu": "Menu",
     "pagination": {
       "first": "First",
