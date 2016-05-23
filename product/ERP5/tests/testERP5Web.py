@@ -43,6 +43,55 @@ HTTP_OK = 200
 MOVED_TEMPORARILY = 302
 
 
+class WebTraversalHookTestMixin(object):
+  """Mixin class to test the WebSiteTraversalHook on both websection and website.
+  """
+  def getBusinessTemplateList(self):
+    return ('erp5_base', 'erp5_web', )
+
+  def test_TraversalHook_on_newContent(self):
+    """a WebSiteTraversalHook is added on websections and websites automatically.
+    """
+    self.assertEquals(1, len(self.web_section.__before_traverse__))
+    self.assertIsInstance(
+      self.web_section.__before_traverse__.values()[0],
+      self.traversal_hook_class)
+
+  def test_TraversalHook_on_clone(self):
+    """a WebSiteTraversalHook is correctly updated after cloning a websection/website.
+    """
+    cloned_web_section = self.web_section.Base_createCloneDocument(batch_mode=True)
+    self.assertEquals(1, len(cloned_web_section.__before_traverse__))
+
+  def test_TraversalHook_on_change_id(self):
+    """a TraversalHook is correctly updated after changing websection id.
+    """
+    self.tic()
+    self.web_section.setId("new_id")
+    self.assertEquals(1, len(self.web_section.__before_traverse__))
+
+class TestWebSiteTraversalHook(WebTraversalHookTestMixin, ERP5TypeTestCase):
+  def afterSetUp(self):
+    super(TestWebSiteTraversalHook, self).afterSetUp()
+    self.web_section = self.portal.web_site_module.newContent(
+      portal_type='Web Site',
+    )
+    from Products.ERP5Type.Document.WebSite import WebSiteTraversalHook
+    self.traversal_hook_class = WebSiteTraversalHook
+
+class TestWebSectionTraversalHook(WebTraversalHookTestMixin, ERP5TypeTestCase):
+  def afterSetUp(self):
+    super(TestWebSectionTraversalHook, self).afterSetUp()
+    web_site = self.portal.web_site_module.newContent(
+      portal_type='Web Site',
+    )
+    self.web_section = web_site.newContent(portal_type='Web Section')
+
+    from Products.ERP5Type.Document.WebSection import WebSectionTraversalHook
+    self.traversal_hook_class = WebSectionTraversalHook
+
+
+
 class TestERP5Web(ERP5TypeTestCase):
   """Test for erp5_web business template.
   """
@@ -169,32 +218,7 @@ class TestERP5Web(ERP5TypeTestCase):
     except:
       self.fail('Cataloging of the Web Site failed.')
 
-  def test_WebSiteTraversalHook_on_newContent(self):
-    """a WebSiteTraversalHook is added on websites automatically.
-    """
-    web_site = self.portal.web_site_module.newContent(
-      portal_type='Web Site',
-    )
-    self.assertEquals(1, len(web_site.__before_traverse__))
 
-  def test_WebSiteTraversalHook_on_clone(self):
-    """a WebSiteTraversalHook is correctly updated after cloning a website.
-    """
-    web_site = self.portal.web_site_module.newContent(
-      portal_type='Web Site',
-    )
-    cloned_web_site = web_site.Base_createCloneDocument(batch_mode=True)
-    self.assertEquals(1, len(cloned_web_site.__before_traverse__))
-
-  def test_WebSiteTraversalHook_on_change_id(self):
-    """a WebSiteTraversalHook is correctly updated after changing website id.
-    """
-    web_site = self.portal.web_site_module.newContent(
-      portal_type='Web Site',
-    )
-    self.tic()
-    web_site.setId("new_id")
-    self.assertEquals(1, len(web_site.__before_traverse__))
 
   def test_02_EditSimpleWebPage(self):
     """
@@ -1959,4 +1983,6 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestERP5Web))
   suite.addTest(unittest.makeSuite(TestERP5WebWithSimpleSecurity))
   suite.addTest(unittest.makeSuite(TestERP5WebCategoryPublicationWorkflow))
+  suite.addTest(unittest.makeSuite(TestWebSiteTraversalHook))
+  suite.addTest(unittest.makeSuite(TestWebSectionTraversalHook))
   return suite
