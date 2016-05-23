@@ -474,6 +474,7 @@ class AmountGeneratorMixin:
           property_dict['causality_value_list'][-1]
             .getRelativeUrl().replace('/', '_'),
           notify_workflow=False)
+        amount._base = delivery_amount
         amount._setCategoryList(property_dict.pop('category_list', ()))
         if amount.getQuantityUnit():
           del property_dict['quantity_unit']
