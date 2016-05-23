@@ -28,10 +28,8 @@
 ##############################################################################
 
 import zope.interface
+from AccessControl import allow_class
 from Products.ERP5Type import interfaces
-from Products.ERP5Type.Globals import InitializeClass
-from Products.PythonScripts.Utility import allow_class
-from AccessControl import ClassSecurityInfo
 
 class AggregatedAmountList(list):
   """
@@ -40,42 +38,26 @@ class AggregatedAmountList(list):
   """
   zope.interface.implements(interfaces.IAmountList)
 
-  meta_type = "AggregatedAmountList"
-  security = ClassSecurityInfo()
-#  security.declareObjectPublic()
-
-  security.declarePublic('getTotalPrice')
   def getTotalPrice(self):
     """
       Return total base price
     """
-    result = sum(filter(lambda y: y is not None,
-                        map(lambda x: x.getTotalPrice(), self)))
+    result = 0
+    for amount in self:
+      total_price = amount.getTotalPrice()
+      if total_price:
+        result += total_price
     return result
 
-  security.declarePublic('getTotalDuration')
   def getTotalDuration(self):
     """
       Return total duration
     """
-    result = sum(filter(lambda y: y is not None,
-                        map(lambda x: x.getDuration(), self)))
+    result = 0
+    for amount in self:
+      duration = amount.getDuration()
+      if duration:
+        result += duration
     return result
 
-  def multiplyQuantity(self,context=None):
-    """
-      Take into account the quantity of the
-      context. Change the quantity of each element.
-    """
-    quantity = None
-    if context is not None:
-      if context.getQuantity() is not None:
-        quantity = context.getQuantity()
-    if quantity is not None:
-      for x in self:
-        previous_quantity = x.getQuantity()
-        if previous_quantity is not None:
-          x.edit(quantity=context.getQuantity()*previous_quantity)
-
-InitializeClass(AggregatedAmountList)
 allow_class(AggregatedAmountList)
