@@ -55,7 +55,7 @@ implements_tuple_list = [
   (('Products.ERP5.Document.EmailDocument', 'EmailDocument'), 'IDocument'),
   (('Products.ERP5.Document.Event', 'Event'), 'IDocument'),
   # IAmountList
-  (('Products.ERP5.AggregatedAmountList', 'AggregatedAmountList'), 'IAmountList'),
+  (('Products.ERP5.GeneratedAmountList', 'GeneratedAmountList'), 'IAmountList'),
 ]
 # IMovementGroup
 for movement_group_class_name in ['MovementGroup', 'BaseVariantMovementGroup',

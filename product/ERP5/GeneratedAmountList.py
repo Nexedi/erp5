@@ -31,7 +31,7 @@ import zope.interface
 from AccessControl import allow_class
 from Products.ERP5Type import interfaces
 
-class AggregatedAmountList(list):
+class GeneratedAmountList(list):
   """
     Temporary object needed to aggregate Amount value
     And to calculate some report or total value
@@ -60,4 +60,25 @@ class AggregatedAmountList(list):
         result += duration
     return result
 
-allow_class(AggregatedAmountList)
+  def aggregate(self):
+    # XXX: Do we handle rounding correctly ?
+    #      What to do if only total price is rounded ??
+    aggregate_dict = {}
+    result_list = self.__class__()
+    for amount in self:
+      key = (amount.getPrice(), amount.getEfficiency(),
+             amount.getReference(), amount.categories)
+      aggregate = aggregate_dict.get(key)
+      if aggregate is None:
+        aggregate_dict[key] = [amount, amount.getQuantity()]
+        result_list.append(amount)
+      else:
+        aggregate[1] += amount.getQuantity()
+    for amount, quantity in aggregate_dict.itervalues():
+      # Before we ignore 'quantity==0' amount here for better performance,
+      # but it is not a good idea, especially when the first expand causes
+      # non-zero quantity and then quantity becomes zero.
+      amount._setQuantity(quantity)
+    return result_list
+
+allow_class(GeneratedAmountList)

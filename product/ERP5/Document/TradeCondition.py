@@ -39,7 +39,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Utils import deprecated
 from Products.ERP5.mixin.composition import _getEffectiveModel
 from Products.ERP5.Document.Transformation import Transformation
-from Products.ERP5.AggregatedAmountList import AggregatedAmountList
+from Products.ERP5.GeneratedAmountList import GeneratedAmountList
 from Products.ERP5.Document.MappedValue import MappedValue
 from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
 from Products.ERP5.mixin.variated import VariatedMixin
