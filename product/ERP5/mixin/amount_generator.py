@@ -32,7 +32,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Acquisition import aq_base, Implicit
-from Products.ERP5.AggregatedAmountList import AggregatedAmountList
+from Products.ERP5.GeneratedAmountList import GeneratedAmountList
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5.Document.MappedValue import MappedValue
@@ -281,7 +281,7 @@ class AmountGeneratorMixin:
       portal.getPortalAmountGeneratorCellTypeList()
 
     # Set empty result by default
-    result = AggregatedAmountList()
+    result = GeneratedAmountList()
 
     args = (getTransactionalVariable().setdefault(
               "amount_generator.BaseAmountDict", {}),
@@ -517,7 +517,7 @@ class AmountGeneratorMixin:
     # XXX: Do we handle rounding correctly ?
     #      What to do if only total price is rounded ??
     aggregate_dict = {}
-    result_list = AggregatedAmountList()
+    result_list = GeneratedAmountList()
     for amount in generated_amount_list:
       key = (amount.getPrice(), amount.getEfficiency(),
              amount.getReference(), amount.categories)

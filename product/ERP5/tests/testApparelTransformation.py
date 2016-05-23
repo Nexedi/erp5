@@ -529,7 +529,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
 
   def stepVerifySpecialisedTransformationAggregatedAmountList(self, sequence=None, sequence_list=None, **kw):
     """
-      Verify the return of AggregatedAmountList for a transformation which includes another one
+      Verify the return of GeneratedAmountList for a transformation which includes another one
     """
     expected_list = [
       {'id':('size/Baby', 'colour/apparel_model_module/1/1', 'morphology/apparel_model_module/1/4'),
@@ -672,7 +672,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
 
       # Check global quantity
       total_price = aggregated_amount_list.getTotalPrice()
-      error_msg = 'Total price for AggregatedAmountList differs between ' \
+      error_msg = 'Total price for GeneratedAmountList differs between ' \
                   'expected (%s) and aggregated (%s) (%s)' % \
                   (total_price, expected['total'], expected['id'])
       self.assertEqual(round(total_price, 10), round(expected['total'], 10),

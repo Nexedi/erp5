@@ -31,7 +31,7 @@ import zope.interface
 from AccessControl import allow_class
 from Products.ERP5Type import interfaces
 
-class AggregatedAmountList(list):
+class GeneratedAmountList(list):
   """
     Temporary object needed to aggregate Amount value
     And to calculate some report or total value
@@ -60,4 +60,4 @@ class AggregatedAmountList(list):
         result += duration
     return result
 
-allow_class(AggregatedAmountList)
+allow_class(GeneratedAmountList)
