@@ -47,6 +47,7 @@ class DummyTraversalHook(object):
   def __call__(self, container, request):
     return
 
+
 class WebTraversalHookTestMixin(object):
   """Mixin class to test the WebSiteTraversalHook on both websection and website.
   """
@@ -109,6 +110,7 @@ class TestWebSiteTraversalHook(WebTraversalHookTestMixin, ERP5TypeTestCase):
     from Products.ERP5Type.Document.WebSite import WebSiteTraversalHook
     self.traversal_hook_class = WebSiteTraversalHook
 
+
 class TestWebSectionTraversalHook(WebTraversalHookTestMixin, ERP5TypeTestCase):
   def afterSetUp(self):
     super(TestWebSectionTraversalHook, self).afterSetUp()
@@ -119,7 +121,6 @@ class TestWebSectionTraversalHook(WebTraversalHookTestMixin, ERP5TypeTestCase):
 
     from Products.ERP5Type.Document.WebSection import WebSectionTraversalHook
     self.traversal_hook_class = WebSectionTraversalHook
-
 
 
 class TestERP5Web(ERP5TypeTestCase):
