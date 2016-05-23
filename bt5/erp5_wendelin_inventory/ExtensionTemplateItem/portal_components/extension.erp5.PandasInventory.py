@@ -313,7 +313,7 @@ class CategoryProcessor(object):
     transaction.commit()
     if duplicate_category:
       print 'Duplication added to the array: %s' % total_duplication 
-    return array
+    return
   
   def _getCategoriesDf(self):
     '''
