@@ -151,6 +151,21 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         BeforeTraverse.registerBeforeTraverse(item, WebSectionTraversalHook(), handle)
       super(WebSection, self).manage_afterAdd(item, container)
 
+    security.declarePrivate( 'manage_afterClone' )
+    def manage_afterClone(self, item):
+      self._cleanupBeforeTraverseHooks()
+      super(WebSection, self).manage_afterClone(item)
+
+    def _cleanupBeforeTraverseHooks(self):
+      # unregister all before traversal hooks that do not belong to us.
+      my_handle = self.meta_type + '/' + self.getId()
+      handle_to_unregister_list = []
+      for (priority, handle), hook in self.__before_traverse__.items():
+        if isinstance(hook, WebSectionTraversalHook) and handle != my_handle:
+          handle_to_unregister_list.append(handle)
+      for handle in handle_to_unregister_list:
+        BeforeTraverse.unregisterBeforeTraverse(self, handle)
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getLayoutProperty')
     def getLayoutProperty(self, key, default=None):
       """
@@ -427,8 +442,12 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
       return result
 
     def _edit(self, **kw):
-      # migrate beforeTraverse hook if missing
-      if getattr(self, '__before_traverse__', None) is None and self.getPortalType() == 'Web Section':
-        handle = self.meta_type + '/' + self.getId()
-        BeforeTraverse.registerBeforeTraverse(self, WebSectionTraversalHook(), handle)
+      if self.getPortalType() == 'Web Section':
+        if getattr(self, '__before_traverse__', None) is None:
+          # migrate beforeTraverse hook if missing
+          handle = self.meta_type + '/' + self.getId()
+          BeforeTraverse.registerBeforeTraverse(self, WebSectionTraversalHook(), handle)
+        else:
+          # cleanup beforeTraverse hooks that may exist after this document was cloned.
+          self._cleanupBeforeTraverseHooks()
       super(WebSection, self)._edit(**kw)
