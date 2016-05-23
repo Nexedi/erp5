@@ -46,6 +46,8 @@ WEBSECTION_KEY = 'web_section_value'
 MARKER = []
 
 class WebSectionTraversalHook(Persistent):
+  """Traversal hook to change the skin selection for this websection.
+  """
   def __call__(self, container, request):
     if not request.get('ignore_layout', None):
       # If a skin selection is defined in this web section, change the skin now.
@@ -139,16 +141,16 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
 
     security.declarePrivate( 'manage_beforeDelete' )
     def manage_beforeDelete(self, item, container):
-      if item is self and self.getPortalType() == 'Web Section':
+      if item is self:
         handle = self.meta_type + '/' + self.getId()
         BeforeTraverse.unregisterBeforeTraverse(item, handle)
       super(WebSection, self).manage_beforeDelete(item, container)
 
     security.declarePrivate( 'manage_afterAdd' )
     def manage_afterAdd(self, item, container):
-      if item is self and self.getPortalType() == 'Web Section':
+      if item is self:
         handle = self.meta_type + '/' + self.getId()
-        BeforeTraverse.registerBeforeTraverse(item, WebSectionTraversalHook(), handle)
+        BeforeTraverse.registerBeforeTraverse(item, self._getTraversalHookClass()(), handle)
       super(WebSection, self).manage_afterAdd(item, container)
 
     security.declarePrivate( 'manage_afterClone' )
@@ -156,12 +158,17 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
       self._cleanupBeforeTraverseHooks()
       super(WebSection, self).manage_afterClone(item)
 
+    def _getTraversalHookClass(self):
+      return WebSectionTraversalHook
+
+    _traversal_hook_class = WebSectionTraversalHook
+
     def _cleanupBeforeTraverseHooks(self):
       # unregister all before traversal hooks that do not belong to us.
       my_handle = self.meta_type + '/' + self.getId()
       handle_to_unregister_list = []
       for (priority, handle), hook in self.__before_traverse__.items():
-        if isinstance(hook, WebSectionTraversalHook) and handle != my_handle:
+        if isinstance(hook, self._getTraversalHookClass()) and handle != my_handle:
           handle_to_unregister_list.append(handle)
       for handle in handle_to_unregister_list:
         BeforeTraverse.unregisterBeforeTraverse(self, handle)
@@ -442,11 +449,13 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
       return result
 
     def _edit(self, **kw):
-      if self.getPortalType() == 'Web Section':
+      # XXX it is unclear if we should keep this behavior in other potential subclasses.
+      # Probably yes.
+      if self.getPortalType() in ('Web Section', 'Web Site'):
         if getattr(self, '__before_traverse__', None) is None:
           # migrate beforeTraverse hook if missing
           handle = self.meta_type + '/' + self.getId()
-          BeforeTraverse.registerBeforeTraverse(self, WebSectionTraversalHook(), handle)
+          BeforeTraverse.registerBeforeTraverse(self, self._getTraversalHookClass()(), handle)
         else:
           # cleanup beforeTraverse hooks that may exist after this document was cloned.
           self._cleanupBeforeTraverseHooks()
