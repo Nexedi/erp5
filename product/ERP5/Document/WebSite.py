@@ -28,6 +28,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5.Document.WebSection import WebSection
+from Products.ERP5.Document.WebSection import WebSectionTraversalHook
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Cache import CachingMethod
 
@@ -40,12 +41,13 @@ from warnings import warn
 WEBSITE_KEY = 'web_site_value'
 WEBSITE_LANGUAGE_KEY = 'web_site_language'
 
-class WebSiteTraversalHook(Persistent):
-  """
-    This is used by WebSite to rewrite URLs in such way
-    that once a user gets into a Web Site object, all
-    documents referenced by the web site are accessed
-    through the web site rather than directly.
+class WebSiteTraversalHook(WebSectionTraversalHook):
+  """Traversal Hook for websites
+
+  * Change the skin selection to the one defined on the website (same as websection)
+  * Select default website language
+  * Change URL generation so that content URLs includes the website in the URL
+
     We inherit for persistent, so that pickle mechanism ignores _v_request .
   """
 
@@ -110,11 +112,8 @@ class WebSiteTraversalHook(Persistent):
     self._v_request = request
     request.physicalPathToVirtualPath = self._physicalPathToVirtualPath
 
-    if not request.get('ignore_layout', None):
-      # If a skin selection is defined in this web site, change the skin now.
-      skin_selection_name = container.getSkinSelectionName()
-      if skin_selection_name and request.get('portal_skin', None) is None:
-        container.getPortalObject().changeSkin(skin_selection_name)
+    # Set skin selection
+    WebSectionTraversalHook.__call__(self, container, request)
 
     # Set default language if any
     default_language = container.getDefaultAvailableLanguage()
@@ -186,35 +185,8 @@ class WebSite(WebSection):
             DeprecationWarning, stacklevel=2)
       return self.getExtensibleContent(request, name)
 
-    # Virtual Hosting Support
-    security.declarePrivate( 'manage_beforeDelete' )
-    def manage_beforeDelete(self, item, container):
-      if item is self:
-        handle = self.meta_type + '/' + self.getId()
-        BeforeTraverse.unregisterBeforeTraverse(item, handle)
-      WebSection.manage_beforeDelete(self, item, container)
-
-    security.declarePrivate( 'manage_afterAdd' )
-    def manage_afterAdd(self, item, container):
-      if item is self:
-        handle = self.meta_type + '/' + self.getId()
-        BeforeTraverse.registerBeforeTraverse(item, WebSiteTraversalHook(), handle)
-      WebSection.manage_afterAdd(self, item, container)
-
-    security.declarePrivate( 'manage_afterClone' )
-    def manage_afterClone(self, item):
-      self._cleanupBeforeTraverseHooks()
-      WebSection.manage_afterClone(self, item)
-
-    def _cleanupBeforeTraverseHooks(self):
-      # unregister all before traversal hooks that do not belong to us.
-      my_handle = self.meta_type + '/' + self.getId()
-      handle_to_unregister_list = []
-      for (priority, handle), hook in self.__before_traverse__.items():
-        if isinstance(hook, WebSiteTraversalHook) and handle != my_handle:
-          handle_to_unregister_list.append(handle)
-      for handle in handle_to_unregister_list:
-        BeforeTraverse.unregisterBeforeTraverse(self, handle)
+    def _getTraversalHookClass(self):
+      return WebSiteTraversalHook
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPermanentURLList')
     def getPermanentURLList(self, document):
@@ -280,13 +252,3 @@ class WebSite(WebSection):
       else:
         return []
 
-    def _edit(self, **kw):
-      if self.getPortalType() == 'Web Site':
-        if getattr(self, '__before_traverse__', None) is None:
-          # migrate beforeTraverse hook if missing
-          handle = self.meta_type + '/' + self.getId()
-          BeforeTraverse.registerBeforeTraverse(self, WebSiteTraversalHook(), handle)
-        else:
-          # cleanup beforeTraverse hooks that may exist after this document was cloned.
-          self._cleanupBeforeTraverseHooks()
-      super(WebSite, self)._edit(**kw)
