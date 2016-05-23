@@ -503,42 +503,12 @@ class AmountGeneratorMixin:
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAggregatedAmountList')
-  def getAggregatedAmountList(self, amount_list=None, rounding=False,
-                              amount_generator_type_list=None,
-                              generate_empty_amounts=True):
+  def getAggregatedAmountList(self, *args, **kw):
     """
     Implementation of a generic transformation algorith which is
     applicable to payroll, tax generation and BOMs. Return the
     list of amounts with aggregation.
     """
-    generated_amount_list = self.getGeneratedAmountList(
-      amount_list=amount_list, rounding=rounding,
-      amount_generator_type_list=amount_generator_type_list)
-    # XXX: Do we handle rounding correctly ?
-    #      What to do if only total price is rounded ??
-    aggregate_dict = {}
-    result_list = GeneratedAmountList()
-    for amount in generated_amount_list:
-      key = (amount.getPrice(), amount.getEfficiency(),
-             amount.getReference(), amount.categories)
-      aggregate = aggregate_dict.get(key)
-      if aggregate is None:
-        aggregate_dict[key] = [amount, amount.getQuantity()]
-        result_list.append(amount)
-      else:
-        aggregate[1] += amount.getQuantity()
-    for amount, quantity in aggregate_dict.itervalues():
-      # Before we ignore 'quantity==0' amount here for better
-      # performance, but it is not a good idea, especially when the
-      # first expand causes non-zero quantity and then quantity
-      # becomes zero.
-      amount._setQuantity(quantity)
-    if 0:
-      print 'getAggregatedAmountList(%r) -> (%s)' % (
-        self.getRelativeUrl(),
-        ', '.join('(%s, %s, %s)'
-                  % (x.getResourceTitle(), x.getQuantity(), x.getPrice())
-                  for x in result_list))
-    return result_list
+    return self.getGeneratedAmountList(*args, **kw).aggregate()
 
 InitializeClass(AmountGeneratorMixin)
