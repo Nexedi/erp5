@@ -79,7 +79,7 @@ class TestERP5Interfaces(ERP5TypeTestCase):
 addTestMethodDynamically(TestERP5Interfaces, implements_tuple_list)
 
 for failing_method in [
-    'test_Products.ERP5.AggregatedAmountList_AggregatedAmountList_implements_IAmountList',
+    'test_Products.ERP5.GeneratedAmountList_GeneratedAmountList_implements_IAmountList',
     'test_Products.ERP5.Document.BusinessLink_BusinessLink_implements_IBusinessLink',
     'test_Products.ERP5.Document.BusinessLink_BusinessLink_implements_ICategoryAccessProvider',
     'test_Products.ERP5.Document.TradeModelCell_TradeModelCell_implements_IVariated',
