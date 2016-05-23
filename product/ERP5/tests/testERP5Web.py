@@ -43,6 +43,10 @@ HTTP_OK = 200
 MOVED_TEMPORARILY = 302
 
 
+class DummyTraversalHook(object):
+  def __call__(self, container, request):
+    return
+
 class WebTraversalHookTestMixin(object):
   """Mixin class to test the WebSiteTraversalHook on both websection and website.
   """
@@ -69,6 +73,32 @@ class WebTraversalHookTestMixin(object):
     self.tic()
     self.web_section.setId("new_id")
     self.assertEquals(1, len(self.web_section.__before_traverse__))
+
+  def test_TraversalHook_cleanup_on_edit(self):
+    """Old traversal hooks from cloned objects are automatically cleaned up
+    when section is edited.
+    """
+    # artificially put this websection in a similar state that websection were before
+    # we fix the bug keeping traversal hooks on clone.
+    from ZPublisher import BeforeTraverse
+    handle = '%s/different_id_than_%s' % (self.web_section.meta_type, self.web_section.getId())
+    BeforeTraverse.registerBeforeTraverse(self.web_section, self.traversal_hook_class(), handle)
+
+    BeforeTraverse.registerBeforeTraverse(
+      self.web_section,
+      DummyTraversalHook(),
+      'unrelated_traversal_hook_that_should_be_kept')
+    self.assertEquals(3, len(self.web_section.__before_traverse__))
+
+    self.tic()
+    self.web_section.edit(title=self.id())
+    # We have cleaned up the useless before traversal hook, but keep the unrelated one
+    self.assertEquals(2, len(self.web_section.__before_traverse__))
+    self.assertEquals(1, len([hook for hook in
+      self.web_section.__before_traverse__.values() if isinstance(hook, self.traversal_hook_class)]))
+    self.assertEquals(1, len([hook for hook in
+      self.web_section.__before_traverse__.values() if isinstance(hook, DummyTraversalHook)]))
+
 
 class TestWebSiteTraversalHook(WebTraversalHookTestMixin, ERP5TypeTestCase):
   def afterSetUp(self):
