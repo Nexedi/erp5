@@ -397,7 +397,7 @@ class ProcessorList(object):
       return self.processors.get(something.__class__, self.default_processor)
     else:
       return self.processors.get(something.__name__, self.default_processor)
-      
+
 
 def storeIFrame(self, html, key):
   self.portal_caches.erp5_pivottable_frame_cache.set(key, html)
@@ -408,7 +408,7 @@ def storeIFrame(self, html, key):
 # This is a highly experimental PivotTableJs integration which does not follow
 # ERP5 Javascrpt standards and it will be refactored to use JIO and RenderJS.
 #
-def erp5PivotTableUI(self, df, erp5_url):
+def erp5PivotTableUI(self, df):
   from IPython.display import IFrame
   template = """
   <!DOCTYPE html>
@@ -477,5 +477,6 @@ def erp5PivotTableUI(self, df, erp5_url):
   from hashlib import sha512
   key = sha512(html_string).hexdigest()
   storeIFrame(self, html_string, key)
-  url = "%s/Base_displayPivotTableFrame?key=%s" % (erp5_url, key)
+  iframe_host = self.REQUEST['HTTP_X_FORWARDED_HOST'].split(',')[0]
+  url = "https://%s/erp5/Base_displayPivotTableFrame?key=%s" % (iframe_host, key)
   return IFrame(src=url, width='100%', height='500')

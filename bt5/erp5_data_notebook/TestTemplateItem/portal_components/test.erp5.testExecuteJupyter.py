@@ -452,7 +452,7 @@ class DataFrameMock(object):
         return "column1, column2; 1, 2;" 
 
 my_df = DataFrameMock()
-iframe = context.Base_erp5PivotTableUI(my_df, 'https://localhost:2202/erp5')
+iframe = context.Base_erp5PivotTableUI(my_df)
 context.Base_renderAsHtml(iframe)
 '''
     reference = 'Test.Notebook.PivotTableJsIntegration %s' % time.time()
@@ -467,3 +467,4 @@ context.Base_renderAsHtml(iframe)
     # of the pivot table page's html.
     pivottable_frame_display_path = 'Base_displayPivotTableFrame?key=853524757258b19805d13beb8c6bd284a7af4a974a96a3e5a4847885df069a74d3c8c1843f2bcc4d4bb3c7089194b57c90c14fe8dd0c776d84ce0868e19ac411'
     self.assertTrue(pivottable_frame_display_path in json_result['code_result'])
+
