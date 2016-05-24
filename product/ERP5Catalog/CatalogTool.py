@@ -140,7 +140,7 @@ class IndexableObjectWrapper(object):
         allowed_role_set.discard('Owner')
 
         # XXX make this a method of base ?
-        local_roles_group_id_group_id = deepcopy(getattr(ob,
+        local_roles_group_id_dict = deepcopy(getattr(ob,
           '__ac_local_roles_group_id_dict__', {}))
 
         # If we acquire a permission, then we also want to acquire the local
@@ -153,7 +153,7 @@ class IndexableObjectWrapper(object):
                 getattr(local_roles_container,
                         '__ac_local_roles_group_id_dict__',
                         {}).items():
-              local_roles_group_id_group_id.setdefault(role_definition_group, set()
+              local_roles_group_id_dict.setdefault(role_definition_group, set()
                 ).update(user_and_role_list)
           else:
             break
@@ -161,11 +161,8 @@ class IndexableObjectWrapper(object):
         allowed_by_local_roles_group_id = {}
         allowed_by_local_roles_group_id[''] = allowed_role_set
 
-        user_role_dict = {}
-        user_view_permission_role_dict = {}
         optimized_role_set = set()
-        # First parse optimized roles and build optimized_role_set
-        for role_definition_group, user_and_role_list in local_roles_group_id_group_id.items():
+        for role_definition_group, user_and_role_list in local_roles_group_id_dict.iteritems():
           group_allowed_set = allowed_by_local_roles_group_id.setdefault(
             role_definition_group, set())
           for user, role in user_and_role_list:
@@ -173,30 +170,33 @@ class IndexableObjectWrapper(object):
               prefix = 'user:' + user
               group_allowed_set.update((prefix, '%s:%s' % (prefix, role)))
               optimized_role_set.add((user, role))
-
-        # Then parse other roles
+        user_role_dict = {}
+        user_view_permission_role_dict = {}
         for user, (roles, user_exists) in localroles.iteritems():
           prefix = 'user:' + user
           for role in roles:
+            is_not_in_optimised_role_set = (user, role) not in optimized_role_set
             if user_exists and role in role_dict:
-              # If role is monovalued, check if key is a user.
-              # If not, continue to index it in roles_and_users table.
-              if (user, role) not in optimized_role_set:
-                user_role_dict[role] = user # Only add to user_role_dict if not in optimized_role_set (double check)
+              # User is a user (= not a group) and role is configured as
+              # monovalued.
+              if is_not_in_optimised_role_set:
+                user_role_dict[role] = user
               if role in allowed_role_set:
+                # ...and local role grants view permission.
                 user_view_permission_role_dict[role] = user
             elif role in allowed_role_set:
-              for group in local_roles_group_id_group_id.get(user, ('', )):
+              # User is a group and local role grants view permission.
+              for group in local_roles_group_id_dict.get(user, ('', )):
                 group_allowed_set = allowed_by_local_roles_group_id.setdefault(
                   group, set())
-                if (user, role) not in optimized_role_set:
-                  # add only if not already added to optimized_role_set to avoid polluting indexation table
-                  group_allowed_set.update((prefix, '%s:%s' % (prefix, role)))
+                if is_not_in_optimised_role_set:
+                  group_allowed_set.add(prefix)
+                  group_allowed_set.add('%s:%s' % (prefix, role))
 
         # sort `allowed` principals
         sorted_allowed_by_local_roles_group_id = {}
         for local_roles_group_id, allowed in \
-                allowed_by_local_roles_group_id.items():
+                allowed_by_local_roles_group_id.iteritems():
           sorted_allowed_by_local_roles_group_id[local_roles_group_id] = tuple(
             sorted(allowed))
 
