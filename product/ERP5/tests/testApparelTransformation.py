@@ -619,56 +619,12 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
           resource=produced_resource,
       )
       aggregated_amount_list = context.getAggregatedAmountList()
-      expected_amount_list = expected['amount']
 
-      expected_amount_list_len = len(expected_amount_list)
-      actual_amount_list_len = len(aggregated_amount_list)
-      error_msg = 'number of Amount differs between expected (%d) and ' \
-                  'aggregated (%d) for categories %s' % \
-                   (expected_amount_list_len, actual_amount_list_len,
-                    expected['id'])
-      # Check the number of aggregated components
-      self.assertEqual(actual_amount_list_len, expected_amount_list_len,
-                        error_msg)
-
-      # Check quantity for each component
-      for i in range(len(aggregated_amount_list)):
-        a_amount = aggregated_amount_list[i]
-        a_price = a_amount.getTotalPrice()
-        e_price = expected_amount_list[i]
-        error = 0
-        if e_price is None and a_price is not None:
-          error = 1
-        if a_price is None and e_price is not None:
-          error = 1
-        if e_price is not None and a_price is not None:
-          if round(a_price,10) != round(e_price,10):
-            error = 1
-        error_msg = 'Total price differs between expected (%s) and aggregated' \
-                    ' (%s) Amounts (resource : %s, id_categories : %s, ' \
-                    'amount.categories : %s)' % \
-                    (e_price, a_price, a_amount.getResource(),
-                     expected['id'], a_amount.getCategoryList())
-        self.assertFalse(error, error_msg)
-
-      # Check duration for each component
-        a_duration = a_amount.getDuration()
-        e_duration = expected['duration'][i]
-        error = 0
-        if e_duration is None and a_duration is not None:
-          error = 1
-        if a_duration is None and e_duration is not None:
-          error = 1
-        if e_duration is not None and a_duration is not None:
-          if round(a_duration,10) != round(e_duration,10):
-            error = 1
-        error_msg = 'Duration differs between expected (%s) and aggregated (%s)' \
-                    ' Amounts (resource : %s, id_categories : %s, ' \
-                    'amount.categories : %s)' % \
-                    (e_duration, a_duration,
-                     a_amount.getResource(), expected['id'],
-                     a_amount.getCategoryList())
-        self.assertFalse(error, error_msg)
+      # Check total price and duration for each component
+      r = lambda x: x and round(x, 10)
+      self.assertEqual(set(zip(expected['amount'], expected['duration'])),
+        {(r(x.getTotalPrice()), r(x.getDuration()))
+         for x in aggregated_amount_list})
 
       # Check global quantity
       total_price = aggregated_amount_list.getTotalPrice()
