@@ -851,11 +851,10 @@ class Catalog(Folder,
     security_uid = None
     for key in wrapped_object.getLocalRolesGroupIdDict().iteritems():
       local_roles_group_id, allowed_roles_and_users = key
-      allowed_roles_and_users = tuple(sorted(allowed_roles_and_users))
-      if self.security_uid_dict.has_key(key):
+      if key in self.security_uid_dict:
         local_roles_group_id_to_security_uid_mapping[local_roles_group_id] \
                 = self.security_uid_dict[key]
-      elif self.security_uid_dict.has_key(allowed_roles_and_users)\
+      elif allowed_roles_and_users in self.security_uid_dict \
            and not local_roles_group_id:
         # This key is present in security_uid_dict without
         # local_roles_group_id, it has been inserted before
