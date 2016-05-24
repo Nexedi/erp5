@@ -31,6 +31,7 @@ from collections import defaultdict
 import zope.interface
 from AccessControl import allow_class
 from Products.ERP5Type import interfaces
+from Products.ERP5.Document.RoundingModel import RoundingProxy
 
 class GeneratedAmountList(list):
   """
@@ -92,10 +93,14 @@ class GeneratedAmountList(list):
       # but it is not a good idea, especially when the first expand causes
       # non-zero quantity and then quantity becomes zero.
       aggregate = newTempAmount(amount.aq_parent, '', notify_workflow=False)
-      result_list.append(aggregate)
-      aggregate.__dict__.update(amount.__dict__)
+      aggregate.__dict__.update(amount.aq_base.__dict__)
       aggregate._setQuantity(quantity)
-      del aggregate._base
+      if isinstance(amount, RoundingProxy):
+        aggregate = amount.getPortalObject().portal_roundings.getRoundingProxy(
+          aggregate)
+      else:
+        del aggregate._base
+      result_list.append(aggregate)
     return result_list
 
   def split(self):
