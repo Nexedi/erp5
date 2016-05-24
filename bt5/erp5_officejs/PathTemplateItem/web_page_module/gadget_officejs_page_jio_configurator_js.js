@@ -101,8 +101,9 @@
         return gadget.getSetting('jio_storage_description');
       }).push(function (jio_storage_description) {
         if (jio_storage_description === undefined) {
-          gadget.props.element.querySelector(".message h3").appendChild(document.createTextNode("Please choose a storage before continuing"));
+          gadget.props.element.querySelector(".message h3").appendChild(document.createTextNode("Welcome! Please start by choosing a storage:"));
           gadget.props.element.querySelector(".message").setAttribute("style", "");
+          gadget.props.element.querySelector(".document-access").setAttribute("style", "display: none;");
         }
         return;
       }).push(function () {
