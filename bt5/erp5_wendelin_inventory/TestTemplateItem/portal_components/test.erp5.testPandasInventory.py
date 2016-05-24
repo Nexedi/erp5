@@ -165,7 +165,7 @@ class PandasInventoryTest(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     
-    array = self.portal.Base_fillPandasInventoryCategoryList(
+    self.portal.Base_fillPandasInventoryCategoryList(
         'TestingImportCategoryInformation',
         verbose=False, 
         duplicate_category=False
@@ -174,6 +174,10 @@ class PandasInventoryTest(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     
+    array = self.portal.portal_catalog(
+      reference='TestingImportCategoryInformation', 
+      portal_type='Data Array'
+    )[0].getObject().getArray()
     resource_category_array = array[:][['resource_category']]
     self.assertTrue(all([item != '' for item in resource_category_array]))
     
