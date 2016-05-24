@@ -162,9 +162,10 @@ class IndexableObjectWrapper(object):
 
         # Then parse other roles
         for user, roles in localroles.iteritems():
+          user_exists = getUserById(user) is not None
           prefix = 'user:' + user
           for role in roles:
-            if (role in role_dict) and (getUserById(user) is not None):
+            if user_exists and role in role_dict:
               # If role is monovalued, check if key is a user.
               # If not, continue to index it in roles_and_users table.
               if (user, role) not in optimized_role_set:
