@@ -6,6 +6,9 @@
   // jIO call wrapper for redirection to authentication page if needed
   function wrapJioCall(gadget, method_name, argument_list) {
     var storage = gadget.state_parameter_dict.jio_storage;
+    if (storage === undefined) {
+      return gadget.redirect({page: "jio_configurator"});
+    }
     return storage[method_name].apply(storage, argument_list)
       .push(undefined, function (error) {
         if ((error.target !== undefined) && (error.target.status === 401)) {
@@ -43,16 +46,7 @@
     .declareMethod('createJio', function (jio_options) {
       var gadget = this;
       if (jio_options === undefined) {
-        jio_options = {
-          type: "query",
-          sub_storage: {
-            type: "uuid",
-            sub_storage: {
-              type: "indexeddb",
-              database: "officejs"
-            }
-          }
-        };
+        return;
       }
       this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);
       return this.getSetting("jio_storage_name")

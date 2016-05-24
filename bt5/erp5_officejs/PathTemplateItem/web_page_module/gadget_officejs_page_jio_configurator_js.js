@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, URI, location,
+/*global window, document, rJS, RSVP, URI, location,
     loopEventListener*/
 /*jslint nomen: true, indent: 2, maxerr: 3*/
 (function (window, rJS, RSVP) {
@@ -92,10 +92,19 @@
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("reload", "reload")
     .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod("getSetting", "getSetting")
     .declareMethod("render", function () {
       var gadget = this;
       return gadget.updateHeader({
         title: "Storage Configuration"
+      }).push(function () {
+        return gadget.getSetting('jio_storage_description');
+      }).push(function (jio_storage_description) {
+        if (jio_storage_description === undefined) {
+          gadget.props.element.querySelector(".message h3").appendChild(document.createTextNode("Please choose a storage before continuing"));
+          gadget.props.element.querySelector(".message").setAttribute("style", "");
+        }
+        return;
       }).push(function () {
         return gadget.props.deferred.resolve();
       });
