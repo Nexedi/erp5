@@ -71,8 +71,14 @@
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type_group_filter</string> </key>
+            <value>
               <list>
-                <string>Base Type</string>
+                <string>type_definition</string>
               </list>
             </value>
         </item>

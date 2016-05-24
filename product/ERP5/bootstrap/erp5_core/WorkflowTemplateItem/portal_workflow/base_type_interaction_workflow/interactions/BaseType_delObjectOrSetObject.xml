@@ -68,8 +68,14 @@
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type_group_filter</string> </key>
+            <value>
               <list>
-                <string>Base Type</string>
+                <string>type_definition</string>
               </list>
             </value>
         </item>
@@ -78,6 +84,10 @@
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>temporary_document_disallowed</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
