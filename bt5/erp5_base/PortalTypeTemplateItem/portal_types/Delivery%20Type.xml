@@ -21,6 +21,14 @@
             <value> <string>Delivery Type is a Base Type which allows its portal type instances to define a list of ledger to which they can belong to.</string> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>type_definition</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Delivery Type</string> </value>
         </item>

@@ -261,6 +261,8 @@ class ERP5TypeInformation(XMLObject,
       # Documents need to have portal types associated to them
       # just to be able to spawn temporary objects with the same behavior
       'abstract',
+      # Definition of types
+      'type_definition',
       # Trade
       'discount', 'payment_condition', 'payment_node',
       'supply', 'supply_path', 'inventory_movement',
