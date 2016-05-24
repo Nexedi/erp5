@@ -103,8 +103,6 @@
           gadget.props.element.innerHTML = html;
           return gadget.updateHeader({
             title: options.doc.title + " | Web Page",
-            back_url: "#page=text_editor_list",
-            panel_action: false,
             save_action: true
           });
         })
