@@ -15,32 +15,60 @@
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
     .declareAcquiredMethod("notifyChange", "notifyChange")
+    .declareAcquiredMethod("inputChange", "inputChange")
+
+
     .declareMethod('getTextContent', function () {
       return this.props.value;
     })
     .declareMethod('render', function (options) {
       var element,
         text,
+        input,
         field_json = options.field_json || {};
       this.props.value = field_json.value || field_json.default || "";
       this.props.editable = field_json.editable;
-      if (field_json.editable) {
-        element = document.createElement('input');
-        element.setAttribute("type", "text");
-        element.setAttribute('value', this.props.value);
-        element.setAttribute('name', field_json.key);
-        element.setAttribute('title', field_json.title);
-        if (field_json.required === 1) {
-          element.setAttribute('required', 'required');
+
+      if (field_json.change) {
+        input = this.element.querySelector('input');
+        input.value = this.props.value;
+        this.notifyValid();
+
+        if (field_json.disabled) {
+          input.setAttribute("disabled", "disabled");
+
+        } else {
+
+          input.disabled = false;
+
+
         }
+
       } else {
-        element = document.createElement("p");
-        element.setAttribute("class", "ui-content-non-editable");
-        text = document.createTextNode(this.props.value);
-        element.appendChild(text);
+
+        if (field_json.editable) {
+          element = document.createElement('input');
+          if (field_json.key === "date") {
+            element.setAttribute("type", "date");
+          } else {
+            element.setAttribute("type", "text");
+          }
+          element.setAttribute('value', this.props.value);
+          element.setAttribute('name', field_json.key);
+          element.setAttribute('title', field_json.title);
+          if (field_json.required === 1) {
+            element.setAttribute('required', 'required');
+          }
+        } else {
+          element = document.createElement("p");
+          element.setAttribute("class", "ui-content-non-editable");
+          text = document.createTextNode(this.props.value);
+          element.appendChild(text);
+        }
+        this.element.appendChild(element);
       }
-      this.element.appendChild(element);
-    })
+    }
+      )
 
     .declareMethod('getContent', function () {
       var input,
@@ -65,6 +93,37 @@
           });
       }
       return result;
+    })
+
+    .declareService(function () {
+      ////////////////////////////////////
+      // Check field validity when the value changes
+      ////////////////////////////////////
+      var field_gadget = this;
+      if (!field_gadget.props.editable) {
+        return;
+      }
+
+      function inputChange() {
+        return new RSVP.Queue()
+          .push(function () {
+            return field_gadget.getContent();
+
+          })
+          .push(function (contentChange) {
+            return field_gadget.inputChange(contentChange);
+
+          }
+            );
+      }
+
+      // Listen to input change
+      return loopEventListener(
+        field_gadget.element.querySelector('input'),
+        'input',
+        false,
+        inputChange
+      );
     })
 
     .declareService(function () {

@@ -72,6 +72,7 @@
           g.props.element = element;
         });
     })
+    .declareAcquiredMethod("inputChange", "inputChange")
 
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .allowPublicAcquisition("notifyInvalid", function (param_list, scope) {
@@ -95,6 +96,10 @@
         });
     })
 
+    .allowPublicAcquisition("inputChange", function (param_list, scope) {
+
+      return this.inputChange(param_list[0], scope);
+    })
     .allowPublicAcquisition("getFieldTypeGadgetUrl", function (param_list) {
       return getFieldTypeGadgetUrl(param_list[0]);
     })
@@ -107,7 +112,7 @@
         erp5_document = options.erp5_document,
         form_definition = options.form_definition,
         rendered_form = erp5_document._embedded._view,
-        group_list = form_definition.group_list,
+        group_list,
         queue = new RSVP.Queue(),
         form_gadget = this,
         suboption_dict = {},
@@ -116,7 +121,23 @@
       delete options.erp5_document;
       delete options.form_definition;
 
-//       options = options.form_gadget || {};
+      if (options.gadget !== undefined) {
+        return queue
+          .push(function () {
+
+            return form_gadget.getDeclaredGadget(options.gadget);
+
+          })
+          .push(function (field_gadget) {
+            return field_gadget.render(rendered_form);
+
+
+          });
+
+      }
+      group_list = form_definition.group_list;
+
+      // options = options.form_gadget || {};
       form_gadget.state_parameter_dict = options.form_gadget || {};
       // XXX Hardcoded for searchfield - remove later!
       if (form_definition.extended_search) {

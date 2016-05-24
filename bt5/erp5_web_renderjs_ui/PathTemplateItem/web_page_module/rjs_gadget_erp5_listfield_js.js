@@ -37,53 +37,74 @@
     })
     .declareMethod('render', function (options) {
       var i,
+        span,
         template,
+        input,
         gadget = this,
         select = this.element.querySelector('select'),
         field_json = options.field_json,
         tmp = "",
         wrap = document.createElement("select");
 
-      select.setAttribute('name', field_json.key);
-      for (i = 0; i < field_json.items.length; i += 1) {
-        if (field_json.items[i][1] === field_json.default) {
-          template = selected_option_template;
+      if (field_json.change) {
+        this.notifyValid();
+
+        if (field_json.default !== undefined) {
+          span = this.element.querySelector('span');
+          input = select.querySelector('[value="' + field_json.default + '"]');
+          span.textContent = input.innerHTML;
+          select.setAttribute('disabled', 'disabled');
         } else {
-          template = option_template;
+          span = this.element.querySelector('span');
+          span.textContent = "";
+          select.disabled = false;
+
         }
-        tmp += template({
-          value: field_json.items[i][1],
-          text: field_json.items[i][0]
-        });
-      }
+
+
+      } else {
+
+        select.setAttribute('name', field_json.key);
+        for (i = 0; i < field_json.items.length; i += 1) {
+          if (field_json.items[i][1] === field_json.default) {
+            template = selected_option_template;
+          } else {
+            template = option_template;
+          }
+          tmp += template({
+            value: field_json.items[i][1],
+            text: field_json.items[i][0]
+          });
+        }
 
       // need a <select> for transport
-      wrap.innerHTML = tmp;
+        wrap.innerHTML = tmp;
 
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.translateHtml(wrap.outerHTML);
-        })
-        .push(function (my_translated_html) {
+        return new RSVP.Queue()
+          .push(function () {
+            return gadget.translateHtml(wrap.outerHTML);
+          })
+          .push(function (my_translated_html) {
           // XXX: no fan...
-          var select_div,
-            div = document.createElement("div");
+            var select_div,
+              div = document.createElement("div");
 
-          div.innerHTML = my_translated_html;
+            div.innerHTML = my_translated_html;
 
-          select_div = div.querySelector("select");
-          select.innerHTML = select_div.innerHTML;
+            select_div = div.querySelector("select");
+            select.innerHTML = select_div.innerHTML;
 
-          if (field_json.required === 1) {
-            select.setAttribute('required', 'required');
-          }
-          if (field_json.editable !== 1) {
-            select.setAttribute('readonly', 'readonly');
-            select.setAttribute('data-wrapper-class', 'ui-state-readonly');
-            // select.setAttribute('disabled', 'disabled');
+            if (field_json.required === 1) {
+              select.setAttribute('required', 'required');
+            }
+            if (field_json.editable !== 1) {
+              select.setAttribute('readonly', 'readonly');
+              select.setAttribute('data-wrapper-class', 'ui-state-readonly');
+              // select.setAttribute('disabled', 'disabled');
 
-          }
-        });
+            }
+          });
+      }
     })
     .declareMethod('checkValidity', function () {
       var result;
