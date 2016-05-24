@@ -41,6 +41,8 @@
  <key>stock_function_category_uid | category/category_uid/z_related_function_uid_from_stock</key>
  <key>stock_funding_category_strict_membership_uid | category/category_uid/z_related_strict_membership_funding_uid_from_stock</key>
  <key>stock_funding_category_uid | category/category_uid/z_related_funding_uid_from_stock</key>
+ <key>stock_ledger_category_strict_membership_uid | category/category_uid/z_related_strict_membership_ledger_uid_from_stock</key>
+ <key>stock_ledger_category_uid | category/category_uid/z_related_ledger_uid_from_stock</key>
  <key>stock_mirror_section_category_strict_membership_uid | category/category_uid/z_related_strict_membership_mirror_section_uid_from_stock</key>
  <key>stock_mirror_section_category_uid | category/category_uid/z_related_mirror_section_uid_from_stock</key>
  <key>stock_mirror_section_title | catalog/title/z_related_mirror_section_uid_from_stock</key>
