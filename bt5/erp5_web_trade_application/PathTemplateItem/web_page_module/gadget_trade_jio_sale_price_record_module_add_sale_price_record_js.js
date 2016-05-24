@@ -13,29 +13,23 @@
   /////////////////////////////////////////
   function nextownerChange(gadget) {
     var page_gadget = gadget,
-      nextowner_gadget,
-      form_gadget,
-      resultTmp;
+      result_tmp,
+      disabled,
+      nextowner_title,
+      nextowner_reference,
+      default_telephone_coordinate_text,
+      default_address_city,
+      default_address_region,
+      default_address_street_address,
+      default_address_zip_code,
+      default_email_coordinate_text;
     return new RSVP.Queue()
       .push(function () {
-        return page_gadget.getDeclaredGadget("erp5_form");
-      })
-
-      .push(function (gadget) {
-        form_gadget = gadget;
-        return form_gadget.getDeclaredGadget("nextowner");
-
-      })
-      .push(function (string_gadget) {
-        nextowner_gadget = string_gadget;
-        return nextowner_gadget.getContent();
-      })
-      .push(function (changeValue) {
 
         return gadget.allDocs({
           query: 'portal_type:("Organisation"' +
                    'OR "Organisation Temp") AND title_lowercase: "'
-                  + changeValue.nextowner.toLowerCase() + '"',
+                  + page_gadget.stringChange.toLowerCase() + '"',
           limit: [0, 2]
         });
       })
@@ -46,153 +40,255 @@
         }
       })
 
-      .push(function (result) {
-        resultTmp = result;
-        if (resultTmp !== undefined) {
 
-          return RSVP.all([
-            form_gadget.getDeclaredGadget("nextowner_title"),
-            form_gadget.getDeclaredGadget("nextowner_reference"),
-            form_gadget.getDeclaredGadget("default_telephone_coordinate_text"),
-            form_gadget.getDeclaredGadget("default_address_city"),
-            form_gadget.getDeclaredGadget("default_address_region"),
-            form_gadget.getDeclaredGadget("default_address_street_address"),
-            form_gadget.getDeclaredGadget("default_address_zip_code"),
-            form_gadget.getDeclaredGadget("default_email_coordinate_text")
-          ]);
+      .push(function (result) {
+        result_tmp = result;
+        return page_gadget.getDeclaredGadget("erp5_form");
+      })
+      .push(function (form_gadget) {
+        if (result_tmp !== undefined) {
+          nextowner_title =  result_tmp.title;
+          nextowner_reference =  result_tmp.reference;
+          default_telephone_coordinate_text =
+            result_tmp.default_telephone_coordinate_text;
+          default_address_city =  result_tmp.default_address_city;
+          default_address_region =  result_tmp.default_address_region;
+          default_address_street_address =
+            result_tmp.default_address_street_address;
+          default_address_zip_code =
+            result_tmp.default_address_zip_code;
+          default_email_coordinate_text =
+            result_tmp.default_email_coordinate_text;
+          disabled = 1;
 
         }
+        return RSVP.all([
 
-      })
-      .push(function (all_result) {
-        if (all_result !== undefined) {
-          return RSVP.all([
-            all_result[0].render({
+          form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
               field_json : {
                 "description": "",
                 "title": "Client",
-                "default": resultTmp.title,
+                "default": nextowner_title,
                 "css_class": "",
                 "required": 1,
-                "editable": 0,
+                "editable": 1,
                 "key": "nextowner_title",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1
+                "change" : 1,
+                "disabled" : disabled
               }
-            }),
-            all_result[1].render({
+            }
+                                         }},
+
+            gadget: "nextowner_title"
+          }),
+
+          form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
               field_json : {
                 "description": "",
                 "title": "Client Reference",
-                "default": resultTmp.reference,
+                "default": nextowner_reference,
                 "css_class": "",
                 "required": 1,
-                "editable": 0,
+                "editable": 1,
                 "key": "nextowner_reference",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1
+                "change" : 1,
+                "disabled" : disabled
 
               }
-            }),
-            all_result[2].render({
+            }
+                                         }},
+
+            gadget: "nextowner_reference"
+          }),
+
+          form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
               field_json : {
                 "description": "",
                 "title": "Default Telephone",
-                "default": resultTmp.default_telephone_coordinate_text,
+                "default": default_telephone_coordinate_text,
                 "css_class": "",
                 "required": 0,
-                "editable": 0,
+                "editable": 1,
                 "key": "default_telephone_coordinate_text",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1
+                "change" : 1,
+                "disabled" : disabled
 
               }
-            }),
-            all_result[3].render({
+            }
+                                         }},
+
+            gadget: "default_telephone_coordinate_text"
+          }),
+
+          form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
               field_json : {
                 "description": "",
                 "title": "Default Address City",
-                "default": resultTmp.default_address_city,
+                "default": default_address_city,
                 "css_class": "",
                 "required": 1,
-                "editable": 0,
+                "editable": 1,
                 "key": "default_address_city",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1
+                "change" : 1,
+                "disabled" : disabled
 
               }
-            }),
-           /* all_result[4].render({
+            }
+                                         }},
+
+            gadget: "default_address_city"
+          }),
+
+          form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
               field_json : {
                 "description": "",
                 "title": "Region",
-                "default": resultTmp.default_address_region,
+                "default": default_address_region,
                 "css_class": "",
                 "required": 1,
-                "editable": 0,
+                "editable": 1,
                 "key": "default_address_region",
                 "hidden": 0,
                 "type": "ListField",
-                "change" : 1
+                "change" : 1,
+                "disabled" : disabled
 
               }
-            }),*/
-            all_result[5].render({
+
+            }
+                                         }},
+
+            gadget: "default_address_region"
+          }),
+
+          form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
               field_json : {
                 "description": "",
                 "title": "Street Address",
-                "default": resultTmp.default_address_street_address,
+                "default": default_address_street_address,
                 "css_class": "",
                 "required": 1,
-                "editable": 0,
+                "editable": 1,
                 "key": "default_address_street_address",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1
+                "change" : 1,
+                "disabled" : disabled
 
               }
-            }),
-            all_result[6].render({
+            }
+                                         }},
+
+            gadget: "default_address_street_address"
+          }),
+
+          form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
               field_json : {
                 "description": "",
                 "title": "Postal Code",
-                "default": resultTmp.default_address_zip_code,
+                "default": default_address_zip_code,
                 "css_class": "",
                 "required": 0,
-                "editable": 0,
+                "editable": 1,
                 "key": "default_address_zip_code",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1
+                "change" : 1,
+                "disabled" : disabled
 
               }
-            }),
-            all_result[7].render({
+            }
+                                         }},
+
+            gadget: "default_address_zip_code"
+          }),
+
+          form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
               field_json : {
                 "description": "",
                 "title": "Email",
-                "default": resultTmp.default_email_coordinate_text,
+                "default": default_email_coordinate_text,
                 "css_class": "",
                 "required": 0,
-                "editable": 0,
+                "editable": 1,
                 "key": "default_email_coordinate_text",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1
+                "change" : 1,
+                "disabled" : disabled
 
               }
-            })
-          ]);
 
-        }
+            }
+                                         }},
+            gadget: "default_email_coordinate_text"
+          })
+        ]);
+
+
       });
 
   }
 
+
+
+  /////////////////////////////////////////
+  // Nextowner title changed.
+  /////////////////////////////////////////
+  function nextownerTitleChange(gadget) {
+    var page_gadget = gadget;
+    nextownerChange(page_gadget);
+
+
+    return new RSVP.Queue()
+
+      .push(function () {
+        return page_gadget.getDeclaredGadget("erp5_form");
+      })
+      .push(function (form_gadget) {
+        return form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
+              field_json : {
+                "description": "",
+                "title": "Client",
+                "default": page_gadget.stringChange,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "nextowner",
+                "hidden": 0,
+                "type": "StringField",
+                "change" : 1,
+                "disabled" : 0
+
+              }
+            }
+                                         }},
+
+            gadget: "nextowner"
+          });
+
+
+
+      });
+
+  }
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -227,9 +323,16 @@
     .declareAcquiredMethod('allDocs', 'jio_allDocs')
 
     .allowPublicAcquisition("inputChange", function (param_list) {
-      this.stringChange = param_list[0];
-      if (this.stringChange === "nextowner") {
+      this.gadgetChange = param_list[1];
+      if (this.gadgetChange === "nextowner") {
+        this.stringChange = param_list[0].nextowner;
+
         return nextownerChange(this);
+      } else if (this.gadgetChange === "nextowner_title") {
+        this.stringChange = param_list[0].nextowner_title;
+
+        return nextownerTitleChange(this);
+
       }
 
     })
@@ -298,257 +401,7 @@
       );
     })
 
- /* /////////////////////////////////////////
-    // Nextowner title changed.
-    /////////////////////////////////////////
-    .declareService(function () {
-      var gadget = this;
 
-      return new RSVP.Queue()
-
-        .push(function () {
-          return loopEventListener(
-            gadget.props.element.querySelector('input'),
-            "input",
-            false,
-            function (evt) {
-              return new RSVP.Queue()
-                .push(function () {
-                  // Wait for user to finish typing
-                  return RSVP.delay(100);
-                })
-                .push(function () {
-                  var normalized_value = normalizeTitle(evt.target.value);
-                  if (normalized_value !== evt.target.value) {
-                    evt.target.value = normalized_value;
-                  }
-                  gadget.props.element.querySelector('[name="nextowner"]')
-                    .value = evt.target.value;
-                })
-                .push(function () {
-                  return gadget.allDocs({
-                    query: 'portal_type:("Organisation"' +
-                      'OR "Organisation Temp") AND title_lowercase: "'
-                      + evt.target.value.toLowerCase() + '"',
-                    limit: [0, 2]
-                  });
-                })
-                .push(function (result) {
-                  if (result !== undefined && result.data.total_rows === 1) {
-                    gadget.jio_get(result.data.rows[0].id).then(
-                      function (doc) {
-                        if (doc.title !== evt.target.value) {
-                          gadget.props.element
-                            .querySelector('[name=nextowner_title]')
-                            .value = doc.title;
-                          gadget.props.element
-                            .querySelector('[name=nextowner]')
-                            .value = doc.title;
-                        }
-                      }
-                    );
-                    var event = document.createEvent("UIEvents");
-                    event.initUIEvent("input", true, true, window, 1);
-                    gadget.props.element
-                      .querySelector('input[name="nextowner"]')
-                      .dispatchEvent(event);
-                  }
-                });
-            }
-          );
-        });
-    })
-
-
-  /////////////////////////////////////////
-    // Nextowner changed.
-    /////////////////////////////////////////
-    .declareService(function () {
-      var gadget = this;
-
-      return new RSVP.Queue()
-
-        .push(function () {
-          return loopEventListener(
-            gadget.props.element.querySelector('input[name="nextowner"]'),
-            "input",
-            false,
-            function (evt) {
-              return new RSVP.Queue()
-                .push(function () {
-                  // Wait for user to finish typing
-                  return RSVP.delay(100);
-                })
-                .push(function () {
-                  var normalized_value = normalizeTitle(evt.target.value);
-                  if (normalized_value !== evt.target.value) {
-                    evt.target.value = normalized_value;
-                  }
-                  return gadget.allDocs({
-                    query:
-                      'portal_type:("Organisation" OR "Organisation Temp")'
-                       + 'AND title_lowercase: "'
-                       + evt.target.value.toLowerCase() + '"',
-                    limit: [0, 2]
-                  });
-                })
-                .push(function (result) {
-                  if (result.data.total_rows === 1) {
-                    gadget.jio_get(result.data.rows[0].id).then(
-                      function (doc) {
-                        if (doc.title !== evt.target.value) {
-                          gadget.props.element
-                            .querySelector('[name=nextowner]').value
-                            = doc.title;
-                        }
-                      }
-                    );
-                    return gadget.jio_get(result.data.rows[0].id);
-                  }
-                })
-                .push(function (result) {
-                  var tmp;
-                  if (result !== undefined) {
-                    // Fill the product fieldset
-                    gadget.props.element
-                      .querySelector('[name="nextowner_title"]')
-                      .setAttribute('disabled', 'disabled');
-                    gadget.props.element
-                      .querySelector('[name="nextowner_reference"]')
-                      .setAttribute('disabled', 'disabled');
-                    gadget.props.element
-                      .querySelector('[name=' +
-                                     '"default_telephone_coordinate_text"]')
-                      .setAttribute('disabled', 'disabled');
-                    gadget.props.element
-                      .querySelector('[name="default_address_city"]')
-                      .setAttribute('disabled', 'disabled');
-                    gadget.props.element
-                      .querySelector('[name="default_address_region"]')
-                      .setAttribute('disabled', 'disabled');
-                    gadget.props.element
-                      .querySelector('[name="default_address_street_address"]')
-                      .setAttribute('disabled', 'disabled');
-                    gadget.props.element
-                      .querySelector('[name="default_address_zip_code"]')
-                      .setAttribute('disabled', 'disabled');
-                    gadget.props.element
-                      .querySelector('[name="default_email_coordinate_text"]')
-                      .setAttribute('disabled', 'disabled');
-
-                    gadget.props.element
-                      .querySelector('[name="nextowner_title"]')
-                      .value = result.title || "";
-                    gadget.props.element
-                      .querySelector('[name="nextowner_reference"]')
-                      .value = result.reference || "";
-                    gadget.props.element
-                      .querySelector('[name=' +
-                                     '"default_telephone_coordinate_text"]')
-                      .value = result.default_telephone_coordinate_text || "";
-                    gadget.props.element
-                      .querySelector('[name="default_address_city"]')
-                      .value = result.default_address_city || "";
-                    gadget.props.element
-                      .querySelector('[name="default_address_region"]')
-                      .value = result.default_address_region || "";
-                    tmp = gadget.props.element
-                      .querySelector('[name="default_address_region"]')
-                      .querySelector('option:checked');
-                    if (tmp !== null) {
-                      tmp.selected = true;
-                    }
-                    tmp = result.default_address_region || "";
-                    if (tmp !== "") {
-                      tmp = gadget.props.element
-                        .querySelector('[name="default_address_region"]')
-                        .querySelector('[value="' + tmp + '"]');
-                      if (tmp !== null) {
-                        tmp.selected = true;
-                      }
-                    }
-                    $(gadget.props.element
-                      .querySelector('[name="default_address_region"]'))
-                      .selectmenu('refresh');
-                    gadget.props.element
-                      .querySelector('[name="default_address_street_address"]')
-                      .value = result.default_address_street_address || "";
-                    gadget.props.element
-                      .querySelector('[name="default_address_zip_code"]')
-                      .value = result.default_address_zip_code || "";
-                    gadget.props.element
-                      .querySelector('[name="default_email_coordinate_text"]')
-                      .value = result.default_email_coordinate_text || "";
-                  } else {
-                    gadget.props.element
-                      .querySelector('[name="nextowner_title"]')
-                      .disabled = false;
-                    gadget.props.element
-                      .querySelector('[name="nextowner_reference"]')
-                      .disabled = false;
-                    gadget.props.element
-                      .querySelector('[name='
-                                     + '"default_telephone_coordinate_text"]')
-                      .disabled = false;
-                    gadget.props.element
-                      .querySelector('[name="default_address_city"]')
-                      .disabled = false;
-                    gadget.props.element
-                      .querySelector('[name="default_address_region"]')
-                      .disabled = false;
-                    gadget.props.element
-                      .querySelector('[name="default_address_street_address"]')
-                      .disabled = false;
-                    gadget.props.element
-                      .querySelector('[name="default_address_zip_code"]')
-                      .disabled = false;
-                    gadget.props.element
-                      .querySelector('[name="default_email_coordinate_text"]')
-                      .disabled = false;
-
-                    gadget.props.element
-                      .querySelector('[name="nextowner_title"]')
-                      .value = "";
-                    gadget.props.element
-                      .querySelector('[name="nextowner_reference"]')
-                      .value = "";
-                    gadget.props.element
-                      .querySelector('[name='
-                                     + '"default_telephone_coordinate_text"]')
-                      .value = "";
-                    gadget.props.element
-                      .querySelector('[name="default_address_city"]')
-                      .value = "";
-                    tmp = gadget.props.element
-                      .querySelector('[name="default_address_region"]')
-                      .querySelector('option:checked');
-                    if (tmp !== null) {
-                      tmp.selected = false;
-                    }
-                    $(gadget.props.element
-                      .querySelector('[name="default_address_region"]'))
-                      .selectmenu('enable');
-                    $(gadget.props.element
-                      .querySelector('[name="default_address_region"]'))
-                      .selectmenu('refresh');
-                    gadget.props.element
-                      .querySelector('[name="default_address_street_address"]')
-                      .value = "";
-                    gadget.props.element
-                      .querySelector('[name="default_address_zip_code"]')
-                      .value = "";
-                    gadget.props.element
-                      .querySelector('[name="default_email_coordinate_text"]')
-                      .value = "";
-                  }
-                });
-            }
-          );
-        });
-    })
-
-
-*/
 
     .declareMethod("render", function (options) {
       var page_gadget = this,
@@ -616,6 +469,7 @@
             page_gadget.props.quantity_unit.push([title, relative_url]);
 
           }
+          page_gadget.props.region.push(["", ""]);
 
           for (i = 0; i < allresult[2].data.total_rows; i += 1) {
             title = allresult[2].data.rows[i]
