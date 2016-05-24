@@ -174,6 +174,9 @@ class InventoryAPITestCase(ERP5TypeTestCase):
               'use/use2',
               'function/function1',
               'function/function1/function2',
+              'ledger/accounting',
+              'ledger/accounting/detailed',
+              'ledger/accounting/general',
            # we create a huge group category for consolidation tests
            ) + self.GROUP_CATEGORIES + self.VARIATION_CATEGORIES
 
@@ -462,6 +465,47 @@ class TestInventory(InventoryAPITestCase):
             funding_category_strict_membership='function/function1')
     self.assertInventoryEquals(100,
             funding_category_strict_membership='function/function1/function2')
+
+  def test_Ledger(self):
+    """Tests inventory on ledger"""
+    self._makeMovement(quantity=100, source_value=None,
+                       ledger='accounting/general')
+    self._makeMovement(quantity=50, source_value=None,
+                       ledger='accounting/detailed')
+
+    self.assertInventoryEquals(100, ledger='ledger/accounting/general')
+    self.assertInventoryEquals(50, ledger='ledger/accounting/detailed')
+    self.assertInventoryEquals(150, ledger=['ledger/accounting/general',
+                                            'ledger/accounting/detailed'])
+
+  def test_LedgerUid(self):
+    """Tests inventory on ledger uid"""
+    ledger = self.portal.portal_categories.ledger
+    self._makeMovement(quantity=100, source_value=None,
+                       ledger='accounting/general')
+
+    self.assertInventoryEquals(100,
+                            ledger_uid=ledger.accounting.general.getUid())
+    self.assertInventoryEquals(0,
+                            ledger_uid=ledger.accounting.detailed.getUid())
+
+  def test_LedgerCategory(self):
+    """Tests inventory on ledger category"""
+    self._makeMovement(quantity=100, source_value=None,
+                       ledger='accounting/general')
+
+    self.assertInventoryEquals(100, ledger_category='ledger/accounting')
+    self.assertInventoryEquals(100, ledger='ledger/accounting/general')
+
+  def test_LedgerCategoryStrictMembership(self):
+    """Tests inventory on ledger category strict membership"""
+    self._makeMovement(quantity=100, source_value=None,
+                       ledger='accounting/general')
+
+    self.assertInventoryEquals(0,
+            ledger_category_strict_membership='ledger/accounting')
+    self.assertInventoryEquals(100,
+            ledger_category_strict_membership='ledger/accounting/general')
 
   def test_PaymentRequest(self):
     """Tests inventory on payment_request"""
@@ -1033,6 +1077,23 @@ class TestInventoryList(InventoryAPITestCase):
       funding1.getUid()][0].inventory, 2)
     self.assertEqual([r for r in inventory_list if r.funding_uid ==
       funding2.getUid()][0].inventory, 3)
+
+  def test_GroupByLedger(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    ledger = self.portal.portal_categories.ledger
+
+    self._makeMovement(ledger='accounting/general', quantity=100)
+    self._makeMovement(ledger='accounting/general', quantity=30)
+    self._makeMovement(ledger='accounting/detailed', quantity=70)
+
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      group_by_ledger=1)
+
+    self.assertEqual(2, len(inventory_list))
+    self.assertEqual([r for r in inventory_list if r.ledger_uid ==
+      ledger.accounting.general.getUid()][0].inventory, 130)
+    self.assertEqual([r for r in inventory_list if r.ledger_uid ==
+      ledger.accounting.detailed.getUid()][0].inventory, 70)
 
   def test_GroupByPaymentRequest(self):
     getInventoryList = self.getSimulationTool().getInventoryList
@@ -1764,6 +1825,31 @@ class TestMovementHistoryList(InventoryAPITestCase):
                                   node_category=node_category,
                                   section_category=section_category)
         self.assertEqual(len(movement_history_list), 0)
+
+  def testLedger(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    ledger = self.portal.portal_categories.ledger
+
+    mvt = self._makeMovement(quantity=100, ledger="accounting/general")
+    another_mvt = self._makeMovement(quantity=50, ledger="accounting/detailed")
+
+    # first ledger
+    mvt_history_list = getMovementHistoryList(
+                            node_uid=self.node.getUid(),
+                            ledger_uid=ledger.accounting.general.getUid())
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(100, mvt_history_list[0].total_quantity)
+
+    # second ledger
+    mvt_history_list = getMovementHistoryList(
+                            node_uid=self.node.getUid(),
+                            ledger_uid=ledger.accounting.detailed.getUid())
+    self.assertEqual(1, len(mvt_history_list))
+    self.assertEqual(50, mvt_history_list[0].total_quantity)
+
+    # non existing ledger
+    self.assertEqual(0, len(getMovementHistoryList(
+                            ledger_uid = self.node.getUid())))
 
 
   # Date tests:
