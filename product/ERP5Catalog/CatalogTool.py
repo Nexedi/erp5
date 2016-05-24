@@ -98,13 +98,27 @@ class IndexableObjectWrapper(object):
               skip_role(role[1:])
             elif role not in skip_role_set:
               new_role(role)
-          if len(new_role_list)>0:
-            localroles[key] = new_role_list
+          if new_role_list:
+            localroles[key] = [new_role_list, False]
 
         portal = ob.getPortalObject()
         role_dict = dict(portal.portal_catalog.getSQLCatalog().\
                                               getSQLCatalogRoleKeysList())
-        getUserById = portal.acl_users.getUserById
+        for user_info in portal.acl_users.searchUsers(id=tuple(localroles), exact_match=True):
+          key = user_info['id']
+          try:
+            localroles[key][1] = True
+          except KeyError:
+            # We found a bug, report it but do not make indexation fail.
+            LOG(
+              'CatalogTool.IndexableObjectWrapper',
+              PROBLEM,
+              'searchUser(id=%r, exact_match=True) returned an entry with '
+              'id=%r. This is very likely a bugin a PAS plugin !' % (
+                tuple(localroles),
+                key,
+              ),
+            )
 
         allowed_dict = {}
 
@@ -161,8 +175,7 @@ class IndexableObjectWrapper(object):
               optimized_role_set.add((user, role))
 
         # Then parse other roles
-        for user, roles in localroles.iteritems():
-          user_exists = getUserById(user) is not None
+        for user, (roles, user_exists) in localroles.iteritems():
           prefix = 'user:' + user
           for role in roles:
             if user_exists and role in role_dict:
