@@ -27,6 +27,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5.Document.PresencePeriod import PresencePeriod
 
 class GroupCalendarAssignment(PresencePeriod):
@@ -37,6 +38,10 @@ class GroupCalendarAssignment(PresencePeriod):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # XXX GroupCalendarAssignment are not a delivery, but we enable this to be able
+  # to search them by date in the module.
+  isDelivery = ConstantGetter('isDelivery', value=True)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                            'getPeriodList')
