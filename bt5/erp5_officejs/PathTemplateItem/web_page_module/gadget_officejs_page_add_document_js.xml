@@ -64,14 +64,30 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/1</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>creators</string> </key>
+            <value>
+              <tuple>
+                <string>cedric.le.ninivin</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_add_text_document.js</string> </value>
+            <value> <string>gadget_officejs_page_add_document.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,12 +97,31 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_add_text_document_js</string> </value>
+            <value> <string>gadget_officejs_page_add_document_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>modification_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1455284351.49</float>
+                    <string>UTC</string>
+                  </tuple>
+                </state>
+              </object>
             </value>
         </item>
         <item>
@@ -101,7 +136,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Add Text Document JS</string> </value>
+            <value> <string>OfficeJS Add Document JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -220,7 +255,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>supercedriclen</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -234,7 +269,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.34038.48545.63795</string> </value>
+                <value> <string>951.28187.42881.35293</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,7 +287,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443093586.17</float>
+                        <float>1464189839.22</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -64,6 +64,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/1</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -74,8 +82,16 @@
             <value> <string>text/html</string> </value>
         </item>
         <item>
+            <key> <string>creators</string> </key>
+            <value>
+              <tuple>
+                <string>cedric.le.ninivin</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_add_text_document.html</string> </value>
+            <value> <string>gadget_officejs_page_document_list.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,12 +101,31 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_add_text_document_html</string> </value>
+            <value> <string>gadget_officejs_page_document_list_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>modification_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1455284352.14</float>
+                    <string>UTC</string>
+                  </tuple>
+                </state>
+              </object>
             </value>
         </item>
         <item>
@@ -105,7 +140,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Add Text Document</string> </value>
+            <value> <string>OfficeJS Document List</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -193,7 +228,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440178952.39</float>
+                        <float>1440093439.17</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -224,7 +259,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>supercedriclen</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -238,7 +273,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.18366.40175.43093</string> </value>
+                <value> <string>951.28165.23904.20428</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -256,7 +291,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440439606.24</float>
+                        <float>1464188540.8</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -313,7 +348,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440178690.82</float>
+                        <float>1440093226.03</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

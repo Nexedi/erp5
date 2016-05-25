@@ -33,6 +33,7 @@
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod('getSetting', 'getSetting')
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
       var gadget = this;
@@ -60,11 +61,19 @@
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
-          return gadget.getUrlFor({page: "add_text_document"});
+          return RSVP.all([
+            gadget.getSetting("portal_type"),
+            gadget.getSetting("document_title_plural")
+          ]);
+        })
+        .push(function (answer_list) {
+          gadget.props.portal_type = answer_list[0];
+          gadget.props.document_title_plural = answer_list[1];
+          return gadget.getUrlFor({page: "add_document"});
         })
         .push(function (url) {
           return gadget.updateHeader({
-            title: "Text Documents",
+            title: gadget.props.document_title_plural,
             add_url: url
           });
         })
@@ -73,7 +82,7 @@
         })
         .push(function (listbox) {
           return listbox.render({
-            search_page: 'text_editor_list',
+            search_page: 'document_list',
             search: options.search,
             column_list: [{
               select: 'title',
@@ -95,11 +104,11 @@
               title: 'Modification Date'
             }],
             query: {
-              query: 'portal_type:("Web Page")',
+              query: 'portal_type:("' + gadget.props.portal_type + '")',
               select_list: ['title', 'reference', 'language',
                             'description', 'version', 'modification_date'],
-              limit: [0, 30]
-              //sort_on: [["date", "descending"]]
+              limit: [0, 30],
+              sort_on: [["modification_date", "descending"]]
             }
           });
         });

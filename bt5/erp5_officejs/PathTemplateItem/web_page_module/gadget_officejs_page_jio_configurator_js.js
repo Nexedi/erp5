@@ -5,48 +5,51 @@
   "use strict";
 
   function setERP5Configuration(gadget) {
-    var old_date = new Date(),
-      configuration = {};
-    // We are looking for documents modified in the past 3 month
-    old_date = new Date(old_date.getFullYear(), old_date.getMonth() - 3);
-    configuration = {
-      type: "replicate",
-      // XXX This drop the signature lists...
-      query: {
-        query: 'portal_type:"Web Page" '
-        // XX Synchonizing the whole module is too much, here is a way to start quietly
-        // Supsended until modification_date is handled for synchronization
-          + ' AND modification_date:>="'
-          + old_date.toISOString() + '" ',
-        limit: [0, 1234567890]
-      },
-      use_remote_post: true,
-      conflict_handling: 1,
-      check_local_modification: true,
-      check_local_creation: true,
-      check_local_deletion: false,
-      check_remote_modification: true,
-      check_remote_creation: true,
-      check_remote_deletion: true,
-      local_sub_storage: {
-        type: "query",
-        sub_storage: {
-          type: "uuid",
-          sub_storage: {
-            type: "indexeddb",
-            database: "officejs-erp5"
+    return gadget.getSetting("portal_type")
+      .push(function (portal_type) {
+        var old_date = new Date(),
+          configuration = {};
+        // We are looking for documents modified in the past 3 month
+        old_date = new Date(old_date.getFullYear(), old_date.getMonth() - 3);
+        configuration = {
+          type: "replicate",
+          // XXX This drop the signature lists...
+          query: {
+            query: 'portal_type:' + portal_type
+            // XX Synchonizing the whole module is too much, here is a way to start quietly
+            // Supsended until modification_date is handled for synchronization
+              + ' AND modification_date:>="'
+              + old_date.toISOString() + '" ',
+            limit: [0, 1234567890]
+          },
+          use_remote_post: true,
+          conflict_handling: 1,
+          check_local_modification: true,
+          check_local_creation: true,
+          check_local_deletion: false,
+          check_remote_modification: true,
+          check_remote_creation: true,
+          check_remote_deletion: true,
+          local_sub_storage: {
+            type: "query",
+            sub_storage: {
+              type: "uuid",
+              sub_storage: {
+                type: "indexeddb",
+                database: "officejs-erp5"
+              }
+            }
+          },
+          remote_sub_storage: {
+            type: "erp5",
+            url: (new URI("hateoas"))
+              .absoluteTo(location.href)
+              .toString(),
+            default_view_reference: "jio_view"
           }
-        }
-      },
-      remote_sub_storage: {
-        type: "erp5",
-        url: (new URI("hateoas"))
-          .absoluteTo(location.href)
-          .toString(),
-        default_view_reference: "jio_view"
-      }
-    };
-    return gadget.setSetting('jio_storage_description', configuration)
+        };
+        return gadget.setSetting('jio_storage_description', configuration);
+      })
       .push(function () {
         return gadget.setSetting('jio_storage_name', "ERP5");
       })

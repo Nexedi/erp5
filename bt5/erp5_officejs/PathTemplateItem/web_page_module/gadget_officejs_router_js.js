@@ -5,7 +5,7 @@
 
   var gadget_klass = rJS(window),
     MAIN_PAGE_PREFIX = "gadget_officejs_",
-    DEFAULT_PAGE = "text_editor_list",
+    DEFAULT_PAGE = "document_list",
     REDIRECT_TIMEOUT = 5000;
 
   function listenHashChange(gadget) {
@@ -52,6 +52,10 @@
       gadget.props = {
         start_deferred: RSVP.defer()
       };
+      return gadget.getElement()
+        .push(function (element) {
+          gadget.props.element = element;
+        });
     })
 
     .declareMethod("getCommandUrlFor", function(options) {
@@ -127,6 +131,26 @@
     .declareAcquiredMethod('jio_get', 'jio_get')
     .declareAcquiredMethod('renderApplication', 'renderApplication')
     .declareMethod('start', function () {
+      var gadget = this,
+        element_list =
+          gadget.props.element.querySelectorAll("[data-renderjs-configuration]"),
+        len = element_list.length,
+        key,
+        value,
+        i,
+        queue = new RSVP.Queue();
+
+      function push(a, b) {
+        queue.push(function () {
+          return gadget.setSetting(a, b);
+        });
+      }
+
+      for (i = 0; i < len; i += 1) {
+        key = element_list[i].getAttribute('data-renderjs-configuration');
+        value = element_list[i].textContent;
+        push(key, value);
+      }
       this.props.start_deferred.resolve();
     })
     .declareService(function () {

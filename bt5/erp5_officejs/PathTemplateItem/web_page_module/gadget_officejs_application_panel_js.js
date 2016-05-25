@@ -50,6 +50,10 @@
         });
     })
 
+
+    .declareAcquiredMethod('getSetting', 'getSetting')
+    .declareAcquiredMethod('setSetting', 'setSetting')
+
     .declareMethod('toggle', function () {
       this.props.jelement.panel("toggle");
     })
@@ -59,7 +63,29 @@
     })
 
     .declareMethod('render', function () {
-      return;
+      // Extract configuration parameters stored in HTML
+      // XXX Will work only if top gadget...
+      var gadget = this,
+        element_list =
+          gadget.props.element.querySelectorAll("[data-renderjs-configuration]"),
+        len = element_list.length,
+        key,
+        value,
+        i,
+        queue = new RSVP.Queue();
+
+      function push(a, b) {
+        queue.push(function () {
+          return gadget.setSetting(a, b);
+        });
+      }
+
+      for (i = 0; i < len; i += 1) {
+        key = element_list[i].getAttribute('data-renderjs-configuration');
+        value = element_list[i].textContent;
+        push(key, value);
+      }
+      return queue;
     })
 
     /////////////////////////////////////////////////////////////////

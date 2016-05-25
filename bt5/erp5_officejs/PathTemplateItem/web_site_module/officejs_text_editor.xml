@@ -437,11 +437,11 @@
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
-            <value> <string>gadget_officejs_text_editor_application_panel.html</string> </value>
+            <value> <string>gadget_officejs_application_panel.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
-            <value> <string>gadget_officejs_router.html</string> </value>
+            <value> <string>gadget_officejs_text_editor_router.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -481,7 +481,7 @@
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
-            <value> <string>WebSection_viewHateoasPreference</string> </value>
+            <value> <string>WebSection_viewRenderJSPreference</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -722,7 +722,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>supercedriclen</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -736,7 +736,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>950.31827.25865.23859</string> </value>
+                <value> <string>951.28218.17096.4539</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -754,7 +754,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1460563397.66</float>
+                        <float>1464191710.27</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
