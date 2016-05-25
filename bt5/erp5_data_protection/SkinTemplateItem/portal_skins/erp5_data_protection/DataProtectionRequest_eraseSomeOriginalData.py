@@ -21,6 +21,12 @@ if property_id_list:
   edit_message = portal.Base_translateString('Properties deleted by data protection manager: ${items}',
                                              mapping={'items': ', '.join(property_id_list)})
   portal.portal_workflow.doActionFor(document_to_cleanup, 'edit_action', comment=edit_message)
+
+  if 'data' in edit_kw:
+    # Drop filename too, to prevent triggering guess mime type interaction workflow which run with user permission
+    edit_kw['filename'] = None
+    edit_kw['content_type'] = None
+
   document_to_cleanup.edit(**edit_kw)
   clean_up_done = True
 
