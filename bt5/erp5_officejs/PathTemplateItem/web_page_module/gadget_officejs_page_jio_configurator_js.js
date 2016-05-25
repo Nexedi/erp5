@@ -68,6 +68,9 @@
     };
     return gadget.setSetting('jio_storage_description', configuration)
       .push(function () {
+        return gadget.setSetting('jio_storage_name', "LOCAL");
+      })
+      .push(function () {
         return gadget.reload();
       });
   }
@@ -98,12 +101,23 @@
       return gadget.updateHeader({
         title: "Storage Configuration"
       }).push(function () {
-        return gadget.getSetting('jio_storage_description');
-      }).push(function (jio_storage_description) {
-        if (jio_storage_description === undefined) {
+        return gadget.getSetting('jio_storage_name');
+      }).push(function (jio_storage_name) {
+        switch (jio_storage_name) {
+        case "ERP5":
+          gadget.props.element.querySelector("form.select-erp5-form button").classList.add("ui-btn-active");
+          break;
+        case "DAV":
+          gadget.props.element.querySelector("form.select-dav-form button").classList.add("ui-btn-active");
+          break;
+        case "LOCAL":
+          gadget.props.element.querySelector("form.select-local-form button").classList.add("ui-btn-active");
+          break;
+        default:
           gadget.props.element.querySelector(".message h3").appendChild(document.createTextNode("Welcome! Please start by choosing a storage:"));
           gadget.props.element.querySelector(".message").setAttribute("style", "");
           gadget.props.element.querySelector(".document-access").setAttribute("style", "display: none;");
+          break;
         }
         return;
       }).push(function () {
