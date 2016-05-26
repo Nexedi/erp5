@@ -1,6 +1,7 @@
 /*globals window, document, RSVP, rJS,promiseEventListener,
             loopEventListener, jQuery,
-            getSequentialID, addTemporaryCustomer, normalizeTitle*/
+            getSequentialID, addTemporaryCustomer, normalizeTitle,
+            fillMyInputUserName*/
 /*jslint indent: 2, nomen: true, maxlen: 80*/
 (function (window, RSVP, rJS,
            loopEventListener
@@ -62,6 +63,10 @@
           disabled = 1;
 
         }
+        if (page_gadget.nextownerTitleChange) {
+          nextowner_title = page_gadget.stringChange;
+          page_gadget.nextownerTitleChange = 0;
+        }
         return RSVP.all([
 
           form_gadget.render({
@@ -99,7 +104,6 @@
                 "type": "StringField",
                 "change" : 1,
                 "disabled" : disabled
-
               }
             }
                                          }},
@@ -121,7 +125,6 @@
                 "type": "StringField",
                 "change" : 1,
                 "disabled" : disabled
-
               }
             }
                                          }},
@@ -143,7 +146,6 @@
                 "type": "StringField",
                 "change" : 1,
                 "disabled" : disabled
-
               }
             }
                                          }},
@@ -188,7 +190,6 @@
                 "type": "StringField",
                 "change" : 1,
                 "disabled" : disabled
-
               }
             }
                                          }},
@@ -210,7 +211,6 @@
                 "type": "StringField",
                 "change" : 1,
                 "disabled" : disabled
-
               }
             }
                                          }},
@@ -232,7 +232,6 @@
                 "type": "StringField",
                 "change" : 1,
                 "disabled" : disabled
-
               }
 
             }
@@ -253,8 +252,9 @@
   /////////////////////////////////////////
   function nextownerTitleChange(gadget) {
     var page_gadget = gadget;
-    nextownerChange(page_gadget);
+    page_gadget.nextownerTitleChange = 1;
 
+    nextownerChange(page_gadget);
 
     return new RSVP.Queue()
 
@@ -262,33 +262,38 @@
         return page_gadget.getDeclaredGadget("erp5_form");
       })
       .push(function (form_gadget) {
-        return form_gadget.render({
-            erp5_document: {"_embedded": {"_view": {
-              field_json : {
-                "description": "",
-                "title": "Client",
-                "default": page_gadget.stringChange,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "nextowner",
-                "hidden": 0,
-                "type": "StringField",
-                "change" : 1,
-                "disabled" : 0
 
-              }
+        return form_gadget.render({
+          erp5_document: {"_embedded": {"_view": {
+            field_json : {
+              "description": "",
+              "title": "Client",
+              "default": page_gadget.stringChange,
+              "css_class": "",
+              "required": 1,
+              "editable": 1,
+              "key": "nextowner",
+              "hidden": 0,
+              "type": "StringField",
+              "change" : 1,
+              "disabled" : 0
             }
+          }
                                          }},
 
-            gadget: "nextowner"
-          });
+          gadget: "nextowner"
+        });
 
 
 
       });
 
+
   }
+
+
+
+
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -328,7 +333,8 @@
         this.stringChange = param_list[0].nextowner;
 
         return nextownerChange(this);
-      } else if (this.gadgetChange === "nextowner_title") {
+      }
+      if (this.gadgetChange === "nextowner_title") {
         this.stringChange = param_list[0].nextowner_title;
 
         return nextownerTitleChange(this);
@@ -533,7 +539,7 @@
                 "default": "",
                 "css_class": "",
                 "required": 1,
-                "editable": 1,
+                "editable": 0,
                 "key": "previousowner",
                 "hidden": 0,
                 "type": "StringField"
@@ -682,7 +688,7 @@
                 "default": "",
                 "css_class": "",
                 "required": 0,
-                "editable": 1,
+                "editable": 0,
                 "key": "inputusername",
                 "hidden": 0,
                 "type": "StringField"
@@ -823,7 +829,80 @@
 
         });
 
+    })
+
+    /////////////////////////////////////////
+    // Initialization
+    /////////////////////////////////////////
+    .declareService(function () {
+      var page_gadget = this,
+        result_tmp;
+
+      return new RSVP.Queue()
+        .push(function () {
+          return page_gadget.allDocs({
+            query: 'portal_type:"Organisation" AND is_my_main_organisation:1',
+            select_list: ["title", "reference"],
+            // sort_on: [["title", "ascending"]],
+            limit: [0, 2]
+          });
+        })
+        .push(function (result) {
+          if (result !== undefined && result.data.total_rows === 1) {
+            return page_gadget.get(result.data.rows[0].id);
+          }
+        })
+        .push(function (result) {
+          result_tmp = result;
+          if (result !== undefined) {
+            return page_gadget.getDeclaredGadget("erp5_form");
+
+          }
+        })
+
+        .push(function (form_gadget) {
+          if (result_tmp !== undefined) {
+
+            return form_gadget.render({
+              erp5_document: {"_embedded": {"_view": {
+                field_json : {
+                  "description": "",
+                  "title": "Sales Organisation",
+                  "default": result_tmp.title,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "previousowner",
+                  "hidden": 0,
+                  "type": "StringField",
+                  "change" : 1,
+                  "disabled" : 1
+                }
+              }
+                                           }},
+
+              gadget: "previousowner"
+            });
+          }
+
+
+
+        });
+    })
+
+
+    /////////////////////////////////////////
+    // Fill inputusername
+    /////////////////////////////////////////
+    .declareService(function () {
+      var gadget = this;
+
+      return new RSVP.Queue()
+        .push(function () {
+          fillMyInputUserName(gadget);
+        });
     });
+
 
 
 }(window, RSVP, rJS,

@@ -12,7 +12,7 @@
   function getFieldTypeGadgetUrl(type) {
     var field_url = 'gadget_erp5_field_readonly.html';
     if (type === 'ListField') {
-      field_url = 'gadget_erp5_field_list.html';
+      field_url = 'gadget_trade_field_list.html';
     } else if ((type === 'ParallelListField') ||
                (type === 'MultiListField')) {
       field_url = 'gadget_erp5_field_multilist.html';
@@ -96,11 +96,9 @@
         });
     })
 
-    .allowPublicAcquisition("inputChange", function (param_list,scope) {
-    
-   return this.inputChange(scope);
-    
-    })
+    .allowPublicAcquisition("inputChange", function (param_list, scope) {
+    return this.inputChange(scope);
+  })
     .allowPublicAcquisition("getFieldTypeGadgetUrl", function (param_list) {
       return getFieldTypeGadgetUrl(param_list[0]);
     })

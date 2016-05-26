@@ -99,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Trade Form JS</string> </value>
+            <value> <string>Gadget ERP5 Form JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -230,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>951.18073.40380.57975</string> </value>
+                <value> <string>951.18097.21550.14660</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -248,7 +248,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1463583017.86</float>
+                        <float>1463731843.29</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

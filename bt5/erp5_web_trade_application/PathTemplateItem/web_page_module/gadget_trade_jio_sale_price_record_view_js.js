@@ -1,8 +1,290 @@
 /*globals window, rJS, Handlebars, RSVP, rJS,Handlebars, promiseEventListener, loopEventListener,jQuery,
-translateString, getWorkflowState, document, getSequentialID */
+translateString, getWorkflowState, document, getSequentialID, addTemporaryCustomer */
 /*jslint indent: 2, nomen: true, maxlen: 80*/
 (function (window, document, RSVP, rJS, promiseEventListener, $) {
   "use strict";
+
+ /////////////////////////////////////////
+  // Nextowner changed.
+  /////////////////////////////////////////
+  function nextownerChange(gadget) {
+    var page_gadget = gadget,
+      result_tmp,
+      disabled,
+      nextowner_title,
+      nextowner_reference,
+      default_telephone_coordinate_text,
+      default_address_city,
+      default_address_region,
+      default_address_street_address,
+      default_address_zip_code,
+      default_email_coordinate_text;
+    return new RSVP.Queue()
+      .push(function () {
+
+        return gadget.allDocs({
+          query: 'portal_type:("Organisation"' +
+                   'OR "Organisation Temp") AND title_lowercase: "'
+                  + page_gadget.stringChange.toLowerCase() + '"',
+          limit: [0, 2]
+        });
+      })
+
+      .push(function (result) {
+        if (result.data.total_rows === 1) {
+          return gadget.jio_get(result.data.rows[0].id);
+        }
+      })
+
+
+      .push(function (result) {
+        result_tmp = result;
+        return page_gadget.getDeclaredGadget("erp5_form");
+      })
+      .push(function (form_gadget) {
+        if (result_tmp !== undefined) {
+          nextowner_title =  result_tmp.title;
+          nextowner_reference =  result_tmp.reference;
+          default_telephone_coordinate_text =
+            result_tmp.default_telephone_coordinate_text;
+          default_address_city =  result_tmp.default_address_city;
+          default_address_region =  result_tmp.default_address_region;
+          default_address_street_address =
+            result_tmp.default_address_street_address;
+          default_address_zip_code =
+            result_tmp.default_address_zip_code;
+          default_email_coordinate_text =
+            result_tmp.default_email_coordinate_text;
+          disabled = 1;
+
+        }
+        if (page_gadget.nextownerTitleChange) {
+          nextowner_title = page_gadget.stringChange;
+          page_gadget.nextownerTitleChange = 0;
+        }
+        return RSVP.all([
+
+          form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
+              field_json : {
+                "description": "",
+                "title": "Client",
+                "default": nextowner_title,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "nextowner_title",
+                "hidden": 0,
+                "type": "StringField",
+                "change" : 1,
+                "disabled" : disabled
+              }
+            }
+                                         }},
+
+            gadget: "nextowner_title"
+          }),
+
+          form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
+              field_json : {
+                "description": "",
+                "title": "Client Reference",
+                "default": nextowner_reference,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "nextowner_reference",
+                "hidden": 0,
+                "type": "StringField",
+                "change" : 1,
+                "disabled" : disabled
+              }
+            }
+                                         }},
+
+            gadget: "nextowner_reference"
+          }),
+
+          form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
+              field_json : {
+                "description": "",
+                "title": "Default Telephone",
+                "default": default_telephone_coordinate_text,
+                "css_class": "",
+                "required": 0,
+                "editable": 1,
+                "key": "default_telephone_coordinate_text",
+                "hidden": 0,
+                "type": "StringField",
+                "change" : 1,
+                "disabled" : disabled
+              }
+            }
+                                         }},
+
+            gadget: "default_telephone_coordinate_text"
+          }),
+
+          form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
+              field_json : {
+                "description": "",
+                "title": "Default Address City",
+                "default": default_address_city,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "default_address_city",
+                "hidden": 0,
+                "type": "StringField",
+                "change" : 1,
+                "disabled" : disabled
+              }
+            }
+                                         }},
+
+            gadget: "default_address_city"
+          }),
+
+          form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
+              field_json : {
+                "description": "",
+                "title": "Region",
+                "default": default_address_region,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "default_address_region",
+                "hidden": 0,
+                "type": "ListField",
+                "change" : 1,
+                "disabled" : disabled
+
+              }
+
+            }
+                                         }},
+
+            gadget: "default_address_region"
+          }),
+
+          form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
+              field_json : {
+                "description": "",
+                "title": "Street Address",
+                "default": default_address_street_address,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "default_address_street_address",
+                "hidden": 0,
+                "type": "StringField",
+                "change" : 1,
+                "disabled" : disabled
+              }
+            }
+                                         }},
+
+            gadget: "default_address_street_address"
+          }),
+
+          form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
+              field_json : {
+                "description": "",
+                "title": "Postal Code",
+                "default": default_address_zip_code,
+                "css_class": "",
+                "required": 0,
+                "editable": 1,
+                "key": "default_address_zip_code",
+                "hidden": 0,
+                "type": "StringField",
+                "change" : 1,
+                "disabled" : disabled
+              }
+            }
+                                         }},
+
+            gadget: "default_address_zip_code"
+          }),
+
+          form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
+              field_json : {
+                "description": "",
+                "title": "Email",
+                "default": default_email_coordinate_text,
+                "css_class": "",
+                "required": 0,
+                "editable": 1,
+                "key": "default_email_coordinate_text",
+                "hidden": 0,
+                "type": "StringField",
+                "change" : 1,
+                "disabled" : disabled
+              }
+
+            }
+                                         }},
+            gadget: "default_email_coordinate_text"
+          })
+        ]);
+
+
+      });
+
+  }
+
+
+
+  /////////////////////////////////////////
+  // Nextowner title changed.
+  /////////////////////////////////////////
+  function nextownerTitleChange(gadget) {
+    var page_gadget = gadget;
+    page_gadget.nextownerTitleChange = 1;
+
+    nextownerChange(page_gadget);
+
+    return new RSVP.Queue()
+
+      .push(function () {
+        return page_gadget.getDeclaredGadget("erp5_form");
+      })
+      .push(function (form_gadget) {
+
+        return form_gadget.render({
+          erp5_document: {"_embedded": {"_view": {
+            field_json : {
+              "description": "",
+              "title": "Client",
+              "default": page_gadget.stringChange,
+              "css_class": "",
+              "required": 1,
+              "editable": 1,
+              "key": "nextowner",
+              "hidden": 0,
+              "type": "StringField",
+              "change" : 1,
+              "disabled" : 0
+            }
+          }
+                                         }},
+
+          gadget: "nextowner"
+        });
+
+
+
+      });
+
+
+  }
 
 
   rJS(window)
@@ -37,6 +319,22 @@ translateString, getWorkflowState, document, getSequentialID */
 
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod('allDocs', 'jio_allDocs')
+
+    .allowPublicAcquisition("inputChange", function (param_list) {
+      this.gadgetChange = param_list[1];
+      if (this.gadgetChange === "nextowner") {
+        this.stringChange = param_list[0].nextowner;
+
+        return nextownerChange(this);
+      }
+      if (this.gadgetChange === "nextowner_title") {
+        this.stringChange = param_list[0].nextowner_title;
+
+        return nextownerTitleChange(this);
+
+      }
+
+    })
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -120,6 +418,8 @@ translateString, getWorkflowState, document, getSequentialID */
             page_gadget.props.quantity_unit.push([title, relative_url]);
 
           }
+          page_gadget.props.region.push(["", ""]);
+
 
           for (i = 0; i < allresult[2].data.total_rows; i += 1) {
             title = allresult[2].data.rows[i].value.logical_path
@@ -160,7 +460,7 @@ translateString, getWorkflowState, document, getSequentialID */
                 "default": page_gadget.options.doc.inputusername,
                 "css_class": "",
                 "required": 1,
-                "editable": editable,
+                "editable": 0,
                 "key": "inputusername",
                 "hidden": 0,
                 "type": "StringField"
@@ -248,7 +548,7 @@ translateString, getWorkflowState, document, getSequentialID */
                 "title": "Priced Quantity",
                 "default": page_gadget.options.doc.priced_quantity,
                 "css_class": "",
-                "required": 1,
+                "required": 0,
                 "editable": editable,
                 "key": "priced_quantity",
                 "hidden": 0,
@@ -271,7 +571,7 @@ translateString, getWorkflowState, document, getSequentialID */
                 "title": "Quantity",
                 "default": page_gadget.options.doc.total_dry_quantity,
                 "css_class": "",
-                "required": 1,
+                "required": 0,
                 "editable": editable,
                 "key": "total_dry_quantity",
                 "hidden": 0,
@@ -282,7 +582,7 @@ translateString, getWorkflowState, document, getSequentialID */
                 "title": "Total Price",
                 "default": page_gadget.options.doc.total_amount_price,
                 "css_class": "",
-                "required": 1,
+                "required": 0,
                 "editable": editable,
                 "key": "total_amount_price",
                 "hidden": 0,
@@ -315,7 +615,7 @@ translateString, getWorkflowState, document, getSequentialID */
                 "title": "Batch",
                 "default": page_gadget.options.doc.batch,
                 "css_class": "",
-                "required": 1,
+                "required": 0,
                 "editable": editable,
                 "key": "batch",
                 "hidden": 0,
@@ -386,7 +686,7 @@ translateString, getWorkflowState, document, getSequentialID */
                 "default":
                    page_gadget.options.doc.default_telephone_coordinate_text,
                 "css_class": "",
-                "required": 1,
+                "required": 0,
                 "editable": editable,
                 "key": "default_telephone_coordinate_text",
                 "hidden": 0,
@@ -432,7 +732,7 @@ translateString, getWorkflowState, document, getSequentialID */
                 "title": "Postal Code",
                 "default": page_gadget.options.doc.default_address_zip_code,
                 "css_class": "",
-                "required": 1,
+                "required": 0,
                 "editable": editable,
                 "key": "default_address_zip_code",
                 "hidden": 0,
@@ -444,7 +744,7 @@ translateString, getWorkflowState, document, getSequentialID */
                 "default":
                   page_gadget.options.doc.default_email_coordinate_text,
                 "css_class": "",
-                "required": 1,
+                "required": 0,
                 "editable": editable,
                 "key": "default_email_coordinate_text",
                 "hidden": 0,
@@ -485,29 +785,151 @@ translateString, getWorkflowState, document, getSequentialID */
         .push(function () {
           var btn, t, btn2, t2;
 
-          btn = document.createElement("BUTTON");
-          btn.setAttribute('name', 'create_new_version');
-          t = document.createTextNode("Update Data");
-          btn.appendChild(t);
-
           btn2 = document.createElement("BUTTON");
           btn2.setAttribute('name', 'create_sale_record');
           t2 = document.createTextNode("Create Sale Record");
           btn2.appendChild(t2);
 
-          gadget.props.element.querySelector('.right').appendChild(btn);
           gadget.props.element.querySelector('.right').appendChild(btn2);
+
+          if (page_gadget.options.jio_key.indexOf('sale_price_record_module/')
+              === 0) {
+            btn = document.createElement("BUTTON");
+            btn.setAttribute('name', 'create_new_version');
+            t = document.createTextNode("Update Data");
+            btn.appendChild(t);
+            gadget.props.element.querySelector('.right').appendChild(btn);
+
+          } else {
+            return page_gadget.updateHeader({
+              title: "New Sale Price Record",
+              save_action: true
+            });
+          }
 
 
 
         });
 
 
+    })
 
+    /////////////////////////////////////////
+    // New version of the the Sale Price Record
+    /////////////////////////////////////////
+    .declareService(function () {
+      var gadget = this,
+        cloned_doc,
+        current_doc,
+        new_id;
 
+      if (gadget.props.element
+          .querySelector('[name=create_new_version]') === null) {
+        return;
+      }
 
+      return new RSVP.Queue()
+        .push(function () {
+
+          return promiseEventListener(
+            gadget.props.element.querySelector('[name=create_new_version]'),
+            'click',
+            false
+          );
+        })
+        .push(function () {
+          return gadget.jio_get(gadget.options.jio_key);
+        })
+        .push(function (result) {
+          current_doc = result;
+          cloned_doc = JSON.parse(JSON.stringify(result));
+
+          // Do not sync the cloned document
+          cloned_doc.copy_of = gadget.options.jio_key;
+          cloned_doc.hidden_in_html5_app_flag = "0";
+          delete cloned_doc.local_state;
+          delete cloned_doc.sync_flag;
+          cloned_doc.portal_type = 'Sale Price Record Temp';
+          cloned_doc.record_revision = (cloned_doc.record_revision || 1) + 1;
+
+          current_doc.hidden_in_html5_app_flag = "1";
+
+          return gadget.jio_post(cloned_doc);
+        })
+        .push(function (id) {
+          new_id = id;
+          // Hide the document
+          //at the end in order to still view it in case of issue
+          // Better have 2 docs than none visible
+          return gadget.jio_put(gadget.options.jio_key, current_doc);
+        })
+        .push(function () {
+          return gadget.redirect({
+            jio_key: new_id,
+            page: "view"
+          });
+        });
 
     })
+
+
+   /////////////////////////////////////////
+   // Form submit
+   /////////////////////////////////////////
+
+    .declareService(function () {
+      var form_gadget = this;
+
+      function formSubmit() {
+        return form_gadget.notifySubmitting()
+          .push(function () {
+            return form_gadget.getDeclaredGadget("erp5_form");
+          })
+          .push(function (erp5_form) {
+            return erp5_form.getContent();
+          })
+          .push(function (doc) {
+
+            doc.parent_relative_url = "sale_price_record_module";
+            doc.portal_type = "Sale Price Record";
+            doc.doc_id = form_gadget.options.doc.doc_id;
+            doc.local_validation = "self";
+            doc.record_revision =  form_gadget.options.doc.record_revision || 1;
+            if (doc.sync_flag !== "1") {
+              doc.portal_type = 'Sale Price Record Temp'; // For to avoid sync
+            }
+
+
+            addTemporaryCustomer(form_gadget);
+
+            return form_gadget.jio_post(doc);
+
+          })
+
+          .push(function () {
+
+            return RSVP.all([
+              form_gadget.notifySubmitted(),
+              form_gadget.redirect({
+                jio_key: "sale_price_record_module",
+                page: "view"
+
+              })
+            ]);
+
+          });
+
+      }
+
+      // Listen to form submit
+      return loopEventListener(
+        form_gadget.props.element.querySelector('form'),
+        'submit',
+        false,
+        formSubmit
+      );
+    })
+
 
       /////////////////////////////////////////
     // Create Sale Record
