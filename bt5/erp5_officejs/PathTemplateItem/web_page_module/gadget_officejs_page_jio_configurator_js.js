@@ -15,10 +15,10 @@
           type: "replicate",
           // XXX This drop the signature lists...
           query: {
-            query: 'portal_type:' + portal_type
+            query: 'portal_type:"' + portal_type
             // XX Synchonizing the whole module is too much, here is a way to start quietly
             // Supsended until modification_date is handled for synchronization
-              + ' AND modification_date:>="'
+              + '" AND modification_date:>="'
               + old_date.toISOString() + '" ',
             limit: [0, 1234567890]
           },
