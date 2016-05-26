@@ -99,17 +99,12 @@
 <tr>
   <td>type</td>
   <td>name=product</td>
-  <td>Xiaohe Product</td>
+  <td>Xiaohe Product12</td>
 </tr>
 <tr>
   <td>type</td>
   <td>name=nextowner</td>
   <td>广垦橡胶集团</td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>name=previousowner</td>
-  <td>Xiaohe</td>
 </tr>
 <tr>
   <td>type</td>
@@ -250,7 +245,7 @@
 
 <tr>
   <td>click</td>
-  <td>link=Xiaohe Product</td>
+  <td>link=Xiaohe Product12</td>
   <td></td>
 </tr>
 <tr>
@@ -266,17 +261,12 @@
 <tr>
   <td>verifyText</td>
   <td>//div[@data-gadget-scope='product']/p</td>
-  <td>Xiaohe Product</td>
+  <td>Xiaohe Product12</td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>//div[@data-gadget-scope='nextowner']/p</td>
   <td>广垦橡胶集团</td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>//div[@data-gadget-scope="previousowner"]/p</td>
-  <td>Xiaohe</td>
 </tr>
 <tr>
   <td>verifyText</td>
