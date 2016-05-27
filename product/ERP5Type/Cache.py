@@ -35,6 +35,7 @@ from Acquisition import aq_base
 from BTrees.Length import Length
 from CachePlugins.BaseCache import CachedMethodError
 from persistent import Persistent
+from ZODB.POSException import ConflictError
 from zLOG import LOG, WARNING
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -374,3 +375,31 @@ def transactional_cached(key_method=_default_key_method):
         return result
     return wrapper
   return decorator
+
+
+class AsynchronousCache(Persistent):
+
+  value = None
+
+  def __getstate__(self):
+    value = self.value
+    return (self.key,) if value is None else (self.key, value)
+
+  def __setstate__(self, state):
+    if len(state) > 1:
+      self.key, self.value = state
+    else:
+      self.key, = state
+
+  def __repr__(self):
+    if self.value is None:
+      return '<%s(%r)>' % (self.__class__.__name__, self.key)
+    return '<%s(%r) = %r>' % (self.__class__.__name__, self.key, self.value)
+
+  def _p_resolveConflict(self, old_state, saved_state, new_state):
+    if saved_state == new_state:
+      return saved_state
+    key = saved_state[0]
+    if key != new_state[0] or len(saved_state) == len(new_state):
+      raise ConflictError
+    return key,

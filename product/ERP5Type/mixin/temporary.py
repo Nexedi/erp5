@@ -92,6 +92,16 @@ class TemporaryDocumentMixin(object):
     # This also avoids security issues.
     return self._edit(restricted=1, *args, **kw)
 
+  def getAsynchronousCache(self, synchronous=None):
+    return super(TemporaryDocumentMixin, self).getAsynchronousCache(True)
+
+  def updateAsynchronousCache(self, key=None, **kw):
+    # This is usually called from an interaction. A possible implementation is
+    # to invalidate the cache (by deleting '_asynchronous_cache' if it exists),
+    # but this would only make sense if the interaction isn't triggered once
+    # in the transaction.
+    raise TypeError("Cache can't be asynchronous on temporary objects")
+
 # Make some methods public.
 for method_id in ('reindexObject', 'recursiveReindexObject',
                   'activate', 'setUid', 'setTitle', 'getTitle',

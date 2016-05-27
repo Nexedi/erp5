@@ -71,7 +71,7 @@ from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.mixin.property_translatable import PropertyTranslatableBuiltInDictMixIn
 from Products.ERP5Type.XMLExportImport import Base_asXML
-from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransactionCache
+from Products.ERP5Type.Cache import AsynchronousCache, CachingMethod
 from Accessor import WorkflowState
 from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -3433,6 +3433,52 @@ class Base( CopyContainer,
     self.getParentValue()._delObject(self.getId())
 
     return new_document
+
+  # Asynchronous Cache
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            "getAsynchronousCache")
+  def getAsynchronousCache(self, synchronous=False):
+    key = self._getAsynchronousCache(True)
+    try:
+      cache = self._asynchronous_cache
+      value = cache.value
+      if cache.key == key and not (synchronous and value is None):
+        return value
+    except AttributeError:
+      cache = self._asynchronous_cache = AsynchronousCache()
+    if synchronous:
+      cache.key = key
+      self._updateAsynchronousCache()
+      return cache.value
+    self.updateAsynchronousCache(key)
+
+  def _getAsynchronousCache(self, key):
+    return self._getTypeBasedMethod("getAsynchronousCache")(key)
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            "updateAsynchronousCache")
+  def updateAsynchronousCache(self, key=None, **kw):
+    if key is None:
+      key = self._getAsynchronousCache(True)
+      if key is None:
+        raise ValueError("%r: None is not a valid key value" % self)
+    try:
+      cache = self._asynchronous_cache
+      cache.value = None
+    except AttributeError:
+      cache = self._asynchronous_cache = AsynchronousCache()
+    cache.key = key
+    self.activate(serialization_tag='asynchronous_cache:%s' % self.getUid(),
+                  **kw)._updateAsynchronousCache()
+
+  def _updateAsynchronousCache(self):
+    # We don't care if key is outdated. It will be reset on next access.
+    cache = self._asynchronous_cache
+    if cache.value is None:
+      value = cache.value = self._getAsynchronousCache(False)
+      if value is None:
+        raise ValueError("%r: None is not a valid cache value" % self)
 
 InitializeClass(Base)
 
