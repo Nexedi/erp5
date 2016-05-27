@@ -87,12 +87,11 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
         Returns the title if it exists or a combination of
         first name, middle name and last name
       """
-      if not self.title:
-        title = ' '.join([x for x in (self.getFirstName(),
-                                      self.getMiddleName(),
-                                      self.getLastName()) if x])
-        if title:
-          return title
+      title = ' '.join([x for x in (self.getFirstName(),
+                                    self.getMiddleName(),
+                                    self.getLastName()) if x])
+      if title:
+        return title
       return super(Person, self).getTitle(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -102,12 +101,11 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
         Returns the title if it exists or a combination of
         first name, middle name and last name
       """
-      if not self.title:
-        title = ' '.join([x for x in (self.getTranslatedFirstName(**kw),
-                                      self.getTranslatedMiddleName(**kw),
-                                      self.getTranslatedLastName(**kw)) if x])
-        if title:
-          return title
+      title = ' '.join([x for x in (self.getTranslatedFirstName(**kw),
+                                    self.getTranslatedMiddleName(**kw),
+                                    self.getTranslatedLastName(**kw)) if x])
+      if title:
+        return title
       return super(Person, self).getTranslatedTitle(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,

@@ -174,9 +174,9 @@ class TestPerson(ERP5TypeTestCase):
     p.edit( first_name='first',
             last_name='last',
             title='title' )
-    self.assertEqual('title', p.getTitle())
+    self.assertEqual('first last', p.getTitle())
     p.edit(middle_name='middle')
-    self.assertEqual('title', p.getTitle())
+    self.assertEqual('first middle last', p.getTitle())
 
   def testGetTitleOrId(self):
     p = self._makeOne(id='person')
