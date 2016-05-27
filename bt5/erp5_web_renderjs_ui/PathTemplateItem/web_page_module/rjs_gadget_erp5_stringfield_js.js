@@ -29,7 +29,7 @@
       this.props.value = field_json.value || field_json.default || "";
       this.props.editable = field_json.editable;
 
-      if (field_json.change) {
+      if (this.props.change !== undefined) {
         input = this.element.querySelector('input');
         input.value = this.props.value;
         this.notifyValid();
@@ -66,6 +66,7 @@
           element.appendChild(text);
         }
         this.element.appendChild(element);
+        this.props.change = true;
       }
     }
       )

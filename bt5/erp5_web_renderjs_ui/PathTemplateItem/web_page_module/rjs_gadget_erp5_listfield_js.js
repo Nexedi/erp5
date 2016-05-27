@@ -21,6 +21,7 @@
     .ready(function (g) {
       return g.getElement()
         .push(function (element) {
+          g.props = {};
           g.element = element;
         });
     })
@@ -29,8 +30,11 @@
     // acquired method
     //////////////////////////////////////////////
     .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
+    .declareAcquiredMethod("notifyChange", "notifyChange")
+    .declareAcquiredMethod("notifyValid", "notifyValid")
+
+
     .declareMethod('getTextContent', function () {
       var select = this.element.querySelector('select');
       return select.options[select.selectedIndex || 0].text;
@@ -46,7 +50,7 @@
         tmp = "",
         wrap = document.createElement("select");
 
-      if (field_json.change) {
+      if (this.props.change !== undefined) {
         this.notifyValid();
 
         if (field_json.default !== undefined) {
@@ -63,7 +67,7 @@
 
 
       } else {
-
+        this.props.change =true;
         select.setAttribute('name', field_json.key);
         for (i = 0; i < field_json.items.length; i += 1) {
           if (field_json.items[i][1] === field_json.default) {
@@ -123,6 +127,29 @@
       result[input.getAttribute('name')] = input.options[input.selectedIndex].value;
       return result;
     })
+
+    .declareService(function () {
+      ////////////////////////////////////
+      // Check field validity when the value changes
+      ////////////////////////////////////
+      var field_gadget = this;
+
+      function notifyChange() {
+        return RSVP.all([
+          field_gadget.checkValidity(),
+          field_gadget.notifyChange()
+        ]);
+      }
+
+      // Listen to input change
+      return loopEventListener(
+        field_gadget.element.querySelector('select'),
+        'change',
+        false,
+        notifyChange
+      );
+    })
+
     .declareService(function () {
       ////////////////////////////////////
       // Inform when the field input is invalid
