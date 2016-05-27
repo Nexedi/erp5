@@ -798,8 +798,8 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                      dict(source_value=account_module.goods_sales,
                           source_credit=300.0)))
 
-  def createLedgerDataSet(self):
-    # create some ledgers
+  @UnrestrictedMethod
+  def createLedgerCategories(self):
     ledger = self.portal.portal_categories.ledger
     self.accounting_ledger = ledger.get('accounting', None)
     if self.accounting_ledger is None:
@@ -810,10 +810,15 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     if self.accounting_ledger.get('detailed', None) is None:
       self.accounting_ledger.newContent(portal_type='Category', id='detailed')
 
+  def createLedgerDataSet(self):
+    # create some ledgers
+    self.createLedgerCategories()
+
     account_module = self.portal.account_module
     self._makeOne(
               portal_type='Sale Invoice Transaction',
               title='Ledger detailed',
+              reference='lad',
               simulation_state='delivered',
               destination_section_value=self.organisation_module.client_1,
               ledger='accounting/detailed',
@@ -830,6 +835,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self._makeOne(
               portal_type='Sale Invoice Transaction',
               title='Ledger general',
+              reference='lag',
               simulation_state='delivered',
               destination_section_value=self.organisation_module.client_1,
               ledger='accounting/general',
@@ -2191,6 +2197,39 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           debit_price=700, credit_price=0, running_total_price=700, )
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=700, credit_price=0)
+
+
+  def testAccountStatementLedger(self):
+    # test account statement on a ledger
+    self.createLedgerDataSet()
+
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.receivable.getRelativeUrl()
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['ledger'] = 'ledger/accounting/general'
+    request_form['hide_analytic'] = False
+    request_form['export'] = False
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewAccountStatementReport')
+    self.assertEqual(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getExplanationTitleAndAnalytics=
+            'Ledger general\nlag',
+          date=DateTime(2006, 2, 2),
+          debit_price=500, credit_price=0, running_total_price=500, )
+    self.assertTrue(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit_price=500, credit_price=0)
 
 
   def testTrialBalance(self):
