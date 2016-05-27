@@ -65,6 +65,9 @@ if not 'parent_portal_type' in params:
 # Remove unsupported inventory API parameters
 params.pop('detailed_from_date_summary', None)
 
+if kw.get('ledger', None):
+  params['ledger'] = kw.get('ledger')
+
 period_start_date = params.pop('period_start_date', None)
 if period_start_date and params.get('node_uid'):
   # find the node for this node_uid
