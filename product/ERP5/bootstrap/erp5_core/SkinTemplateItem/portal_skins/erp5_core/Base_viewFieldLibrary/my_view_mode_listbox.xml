@@ -603,7 +603,7 @@ string:Base_viewListMode?proxy_form_id=${form/getId}&proxy_field_id=${field/getI
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: \'%s_%s_selection\' % (request.get("proxy_form_id") or context.portal_selections.getSelectionParamsFor(\'%s_list_mode_proxy_selection\' % context.REQUEST.get(\'selection_name\', \'\')).get(\'proxy_form_id\') or form.getId(), request.get("proxy_field_id") or context.portal_selections.getSelectionParamsFor(\'%s_list_mode_proxy_selection\' % context.REQUEST.get(\'selection_name\', \'\')).get(\'proxy_field_id\') or field.getId())</string> </value>
+            <value> <string>python: context.Base_getViewModeListboxSelectionName(form=form, field=field, REQUEST=request)</string> </value>
         </item>
       </dictionary>
     </pickle>
