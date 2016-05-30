@@ -43,11 +43,21 @@ for line in accounting_transaction_line_value_list:
       source_section = \
         source_section.Organisation_getMappingRelatedOrganisation()
       section_relative_url = source_section.getRelativeUrl()
+
+    # For compatibility, we do not want to prevent grouping existing sales/purchase
+    # invoices where mirror account exists, but we do not keep accounting for the
+    # mirror section. If the mirror section does not have a group, we ignore the
+    # mirror account.
+    mirror_account = ''
+    destination_section = line.getDestinationSectionValue(
+                                    portal_type='Organisation')
+    if destination_section is not None and destination_section.hasGroup():
+      mirror_account = line.getDestination(portal_type='Account')
     lines_per_node.setdefault(
                   (line.getSource(portal_type='Account'),
                    section_relative_url,
                    line.getDestinationSection(),
-                   line.getDestination(portal_type='Account'),
+                   mirror_account,
                    line.AccountingTransactionLine_getGroupingExtraParameterList(source=True),
                    ), []).append(
       dict(total_price=line.getSourceInventoriatedTotalAssetPrice() or 0,
@@ -61,11 +71,15 @@ for line in accounting_transaction_line_value_list:
       destination_section = \
         destination_section.Organisation_getMappingRelatedOrganisation()
       section_relative_url = destination_section.getRelativeUrl()
+    mirror_account = ''
+    source_section = line.getSourceSectionValue(portal_type='Organisation')
+    if source_section is not None and source_section.hasGroup():
+      mirror_account = line.getSource(portal_type='Account')
     lines_per_node.setdefault(
               (line.getDestination(portal_type='Account'),
                section_relative_url,
                line.getSourceSection(),
-               line.getSource(portal_type='Account'),
+               mirror_account,
                line.AccountingTransactionLine_getGroupingExtraParameterList(source=False),
                ), []).append(
     dict(total_price=line.getDestinationInventoriatedTotalAssetPrice() or 0,
