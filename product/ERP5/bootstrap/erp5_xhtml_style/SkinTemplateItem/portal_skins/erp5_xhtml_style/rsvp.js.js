@@ -735,11 +735,11 @@ define("rsvp/promise",
     __exports__.Promise = Promise;
   });
 define("rsvp/queue",
-  ["rsvp/promise","rsvp/timeout","exports"],
+  ["rsvp/promise","rsvp/resolve","exports"],
   function(__dependency1__, __dependency2__, __exports__) {
     "use strict";
     var Promise = __dependency1__.Promise;
-    var delay = __dependency2__.delay;
+    var resolve = __dependency2__.resolve;
 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
     function ResolvedQueueError(message) {
@@ -789,7 +789,7 @@ define("rsvp/queue",
         notify = progress;
       }, canceller);
 
-      promise_list.push(delay());
+      promise_list.push(resolve());
       promise_list.push(promise_list[0].then(function () {
         promise_list.splice(0, 2);
         if (promise_list.length === 0) {
@@ -954,128 +954,9 @@ define("rsvp/timeout",
     __exports__.delay = delay;
     __exports__.timeout = timeout;
   });
-define("rsvp/watcher",
-  ["rsvp/promise","rsvp/queue","rsvp/cancellation_error","exports"],
-  function(__dependency1__, __dependency2__, __dependency3__, __exports__) {
-    "use strict";
-    var Promise = __dependency1__.Promise;
-    var Queue = __dependency2__.Queue;
-    var CancellationError = __dependency3__.CancellationError;
-
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
-    function ResolvedMonitorError(message) {
-      this.name = "resolved";
-      if ((message !== undefined) && (typeof message !== "string")) {
-        throw new TypeError('You must pass a string.');
-      }
-      this.message = message || "Default Message";
-    }
-    ResolvedMonitorError.prototype = new Error();
-    ResolvedMonitorError.prototype.constructor = ResolvedMonitorError;
-
-    function isFunction(x){
-      return typeof x === "function";
-    }
-
-    var Monitor = function() {
-      var monitor = this,
-        promise_list = [],
-        promise,
-        reject,
-        notify,
-        resolved;
-
-      if (!(this instanceof Monitor)) {
-        return new Monitor();
-      }
-
-      function canceller() {
-        var len = promise_list.length,
-          i;
-        for (i = 0; i < len; i += 1) {
-          promise_list[i].cancel();
-        }
-        // Clean it to speed up other canceller run
-        promise_list = [];
-      }
-
-      promise = new Promise(function(done, fail, progress) {
-        reject = function (rejectedReason) {
-          if (resolved) {return;}
-          monitor.isRejected = true;
-          monitor.rejectedReason = rejectedReason ;
-          resolved = true;
-          canceller();
-          return fail(rejectedReason);
-        };
-        notify = progress;
-      }, canceller);
-
-      monitor.cancel = function () {
-        if (resolved) {return;}
-        resolved = true;
-        promise.cancel();
-        promise.fail(function (rejectedReason) {
-          monitor.isRejected = true;
-          monitor.rejectedReason = rejectedReason;
-        });
-      };
-      monitor.then = function () {
-        return promise.then.apply(promise, arguments);
-      };
-
-      monitor.monitor = function(promise_to_monitor) {
-        if (resolved) {
-          throw new ResolvedMonitorError();
-        }
-        var queue = new Queue()
-          .push(function () {
-            return promise_to_monitor;
-          })
-          .push(function (fulfillmentValue) {
-            // Promise to monitor is fullfilled, remove it from the list
-            var len = promise_list.length,
-              promise_to_monitor,
-              new_promise_list = [],
-              i;
-            for (i = 0; i < len; i += 1) {
-              promise_to_monitor = promise_list[i];
-              if (!(promise_to_monitor.isFulfilled ||
-                  promise_to_monitor.isRejected)) {
-                new_promise_list.push(promise_to_monitor);
-              }
-            }
-            promise_list = new_promise_list;
-          }, function (rejectedReason) {
-            if (rejectedReason instanceof CancellationError) {
-              if (!(promise_to_monitor.isFulfilled && promise_to_monitor.isRejected)) {
-                // The queue could be cancelled before the first push is run
-                promise_to_monitor.cancel();
-              }
-            }
-            reject(rejectedReason);
-            throw rejectedReason;
-          }, function (notificationValue) {
-            notify(notificationValue);
-            return notificationValue;
-          });
-
-        promise_list.push(queue);
-
-        return this;
-      };
-    };
-
-    Monitor.prototype = Object.create(Promise.prototype);
-    Monitor.prototype.constructor = Monitor;
-
-
-    __exports__.Monitor = Monitor;
-    __exports__.ResolvedMonitorError = ResolvedMonitorError;
-  });
 define("rsvp",
-  ["rsvp/events","rsvp/cancellation_error","rsvp/promise","rsvp/node","rsvp/all","rsvp/queue","rsvp/watcher","rsvp/timeout","rsvp/hash","rsvp/rethrow","rsvp/defer","rsvp/config","rsvp/resolve","rsvp/reject","exports"],
-  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __dependency6__, __dependency7__, __dependency8__, __dependency9__, __dependency10__, __dependency11__, __dependency12__, __dependency13__, __dependency14__, __exports__) {
+  ["rsvp/events","rsvp/cancellation_error","rsvp/promise","rsvp/node","rsvp/all","rsvp/queue","rsvp/timeout","rsvp/hash","rsvp/rethrow","rsvp/defer","rsvp/config","rsvp/resolve","rsvp/reject","exports"],
+  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __dependency6__, __dependency7__, __dependency8__, __dependency9__, __dependency10__, __dependency11__, __dependency12__, __dependency13__, __exports__) {
     "use strict";
     var EventTarget = __dependency1__.EventTarget;
     var CancellationError = __dependency2__.CancellationError;
@@ -1085,16 +966,14 @@ define("rsvp",
     var any = __dependency5__.any;
     var Queue = __dependency6__.Queue;
     var ResolvedQueueError = __dependency6__.ResolvedQueueError;
-    var Monitor = __dependency7__.Monitor;
-    var ResolvedMonitorError = __dependency7__.ResolvedMonitorError;
-    var delay = __dependency8__.delay;
-    var timeout = __dependency8__.timeout;
-    var hash = __dependency9__.hash;
-    var rethrow = __dependency10__.rethrow;
-    var defer = __dependency11__.defer;
-    var config = __dependency12__.config;
-    var resolve = __dependency13__.resolve;
-    var reject = __dependency14__.reject;
+    var delay = __dependency7__.delay;
+    var timeout = __dependency7__.timeout;
+    var hash = __dependency8__.hash;
+    var rethrow = __dependency9__.rethrow;
+    var defer = __dependency10__.defer;
+    var config = __dependency11__.config;
+    var resolve = __dependency12__.resolve;
+    var reject = __dependency13__.reject;
 
     function configure(name, value) {
       config[name] = value;
@@ -1108,8 +987,6 @@ define("rsvp",
     __exports__.any = any;
     __exports__.Queue = Queue;
     __exports__.ResolvedQueueError = ResolvedQueueError;
-    __exports__.Monitor = Monitor;
-    __exports__.ResolvedMonitorError = ResolvedMonitorError;
     __exports__.delay = delay;
     __exports__.timeout = timeout;
     __exports__.hash = hash;
