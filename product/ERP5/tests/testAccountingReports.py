@@ -1226,6 +1226,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               start_date=DateTime(2006, 2, 4),
               lines=(dict(source_value=account_module.receivable,
                           grouping_reference='B',
+                          grouping_date=DateTime(2006, 3, 1),
                           source_debit=400.0),
                      dict(source_value=account_module.payable,
                           source_credit=400.0)))
@@ -1243,6 +1244,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           source_debit=400.0),
                      dict(source_value=account_module.receivable,
                           grouping_reference='B',
+                          grouping_date=DateTime(2006, 3, 1),
                           source_credit=400.0)))
     t4.stop()
     t4.deliver()
@@ -1347,6 +1349,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               start_date=DateTime(2006, 2, 2),
               lines=(dict(source_value=account_module.receivable,
                           grouping_reference='A',
+                          grouping_date=DateTime(2006, 2, 25, 2, 3),
                           source_debit=200.0),
                      dict(source_value=account_module.payable,
                           source_credit=200.0)))
@@ -1366,6 +1369,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           source_debit=200.0),
                      dict(source_value=account_module.receivable,
                           grouping_reference='A',
+                          grouping_date=DateTime(2006, 2, 25, 2, 3),
                           source_credit=200.0)))
     # we validate t2 later, otherwise grouping reference will be cleaned up
     t2.stop()
