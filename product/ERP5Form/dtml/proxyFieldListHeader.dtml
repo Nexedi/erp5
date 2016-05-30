@@ -19,9 +19,11 @@
   Field
   </div>
   </td>
+  <dtml-if "_['URL'].endswith(('/manage_main', '/manage_edit'))">
   <td align="left" valign="top">
   <div class="form-label">
   Description
   </div>
   </td>
+  </dtml-if>
 </tr>

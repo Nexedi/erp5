@@ -1,3 +1,4 @@
+<style>form td:not(:last-child) { padding-right: 1em; }</style>
 <dtml-var manage_page_header>
 <dtml-var manage_tabs>
 
@@ -49,16 +50,13 @@ This tab can therefore not be used.
 </dtml-if>
 </dtml-let>
 </dtml-in>
+</table>
 
-  <tr>
-    <td align="left" valign="top">
     <div class="form-element">
     <input class="form-element" type="submit" name="submit" 
      value="Save Changes" /> 
     </div>
-    </td>
-  </tr>
-</table>
+
 </form>
 
 <dtml-var manage_page_footer>

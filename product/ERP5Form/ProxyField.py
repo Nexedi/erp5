@@ -101,6 +101,7 @@ class ProxyWidget(Widget.Widget):
                                 description= \
                                   "ID of the master form.",
                                 default="",
+                                display_width=40,
                                 required=1)
 
   field_id = fields.StringField(
@@ -109,12 +110,13 @@ class ProxyWidget(Widget.Widget):
                                 description= \
                                   "ID of the field in the master form.",
                                 default="",
+                                display_width=40,
                                 required=1)
 
   target = fields.HyperLinkField(
                                 'target',
                                 title='Proxy Target',
-                                description="Link to the master field edit form",
+                                description="Link to the master field edit form.",
                                 default='Click to edit the target',
                                 href='manage_edit_target',
                                 required=0)

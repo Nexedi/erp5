@@ -1,3 +1,4 @@
+<style>form td:not(:last-child) { padding-right: 1em; }</style>
 <dtml-var manage_page_header>
 <dtml-let help_product="'Formulator'" help_topic=meta_type>
 <dtml-var manage_tabs>
@@ -42,6 +43,9 @@ Surcharge <dtml-var meta_type> properties here.
       <td><div class="form-element">
       <dtml-var "field.meta_type">
       </div></td>
+      <td><div class="form-element">
+      <dtml-var "field.get_value('description')">
+      </div></td>
     </tr>
   </dtml-let>
   </dtml-in>
@@ -50,7 +54,8 @@ Surcharge <dtml-var meta_type> properties here.
   </dtml-let>
   </dtml-in>
 
-
+</table>
+<table cellspacing="0" cellpadding="2" border="0">
 <!-- Then, display Template Field properties -->
   
   <dtml-if "current_field is not None">
@@ -123,19 +128,13 @@ Surcharge <dtml-var meta_type> properties here.
   </dtml-let>
   </dtml-if>
   </dtml-let>
+</table>
 
-    <tr>
-      <td align="left" valign="top">
       <div class="form-element">
       <input class="form-element" type="submit" name="submit" 
        value="Save Changes" /> 
       </div>
-      </td>
-    </tr>
 
-
-
-</table>
 </form>
 
 <script type="text/javascript">
