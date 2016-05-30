@@ -136,7 +136,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Foo_view</string> </value>
+            <value> <string>Foo_viewWithListModeRenderer</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
