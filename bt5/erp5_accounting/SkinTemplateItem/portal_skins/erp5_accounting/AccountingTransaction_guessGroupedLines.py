@@ -7,7 +7,7 @@ of related accounting transactions using causality.
 
 from Products.ERP5Type.Utils import int2letter
 
-# this dict associates (node, section, mirror_section, mirror_node, extra_grouping_parameter) to a list of
+# this dict associates (node, section, mirror_section, extra_grouping_parameter) to a list of
 # accounting lines info (total_price, date and path)
 lines_per_node = {}
 
@@ -43,11 +43,11 @@ for line in accounting_transaction_line_value_list:
       source_section = \
         source_section.Organisation_getMappingRelatedOrganisation()
       section_relative_url = source_section.getRelativeUrl()
+
     lines_per_node.setdefault(
                   (line.getSource(portal_type='Account'),
                    section_relative_url,
                    line.getDestinationSection(),
-                   line.getDestination(portal_type='Account'),
                    line.AccountingTransactionLine_getGroupingExtraParameterList(source=True),
                    ), []).append(
       dict(total_price=line.getSourceInventoriatedTotalAssetPrice() or 0,
@@ -65,7 +65,6 @@ for line in accounting_transaction_line_value_list:
               (line.getDestination(portal_type='Account'),
                section_relative_url,
                line.getSourceSection(),
-               line.getSource(portal_type='Account'),
                line.AccountingTransactionLine_getGroupingExtraParameterList(source=False),
                ), []).append(
     dict(total_price=line.getDestinationInventoriatedTotalAssetPrice() or 0,
@@ -73,7 +72,7 @@ for line in accounting_transaction_line_value_list:
          path=line.getRelativeUrl()))
 
 changed_line_list = []
-for (node, section, mirror_section, mirror_node, extra_parameter), line_info_list in lines_per_node.items():
+for (node, section, mirror_section, _), line_info_list in lines_per_node.items():
   if node is None:
     continue
   total_price = sum([l['total_price'] for l in line_info_list])
@@ -92,7 +91,7 @@ for (node, section, mirror_section, mirror_node, extra_parameter), line_info_lis
     grouping_reference = portal.portal_ids.generateNewId(id_generator='uid',
                                                   id_group=id_group,
                                                   default=previous_default + 1)
-                                                  
+
     # convert from int to letters
     string_reference = int2letter(grouping_reference)
 

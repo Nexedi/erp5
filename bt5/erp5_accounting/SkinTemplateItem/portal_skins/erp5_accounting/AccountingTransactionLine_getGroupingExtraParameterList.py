@@ -5,3 +5,19 @@ For instance, we can refuse to group together lines for different order by retur
 
 The returned value must be hashable.
 """
+
+# By default we take into account mirror section.
+# The rationale is that when using internal accounting transaction between
+# two entities of the group, the grouping has to be valid for both sides
+# (source_section & destination_section).
+
+# This behavior was introduced in nexedi/erp5@f3bebea3 for compatibility,
+# some old sites where accounting lines have been grouped together regardless of
+# the mirror node can decide to ignore the mirror account.
+# Maybe to ignore mirror account for transactions created before the date they
+# deployed this new versions.
+# This can be achieved easily by customizing this script.
+
+if source:
+  return context.getSource(portal_type='Account')
+return context.getDestination(portal_type='Account')
