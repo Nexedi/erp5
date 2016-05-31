@@ -54,6 +54,16 @@ Surcharge <dtml-var meta_type> properties here.
   </dtml-let>
   </dtml-in>
 
+    <tr>
+      <td align="left" valign="top">
+        <div class="form-label">Proxy Target</div>
+      </td>
+      <td align="left" valign="top">
+        <a href="manage_edit_target">Click to edit the target</a>
+      </td>
+      <td></td><td></td>
+    </tr>
+
 </table>
 <table cellspacing="0" cellpadding="2" border="0">
 <!-- Then, display Template Field properties -->

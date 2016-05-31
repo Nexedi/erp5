@@ -53,6 +53,16 @@ This tab can therefore not be used.
   </dtml-let>
   </dtml-in>
 
+    <tr>
+      <td align="left" valign="top">
+        <div class="form-label">Proxy Target</div>
+      </td>
+      <td align="left" valign="top">
+        <a href="manage_tales_target">Click to edit the target</a>
+      </td>
+      <td></td>
+    </tr>
+
 </table>
 <table cellspacing="0" cellpadding="2" border="0">
 

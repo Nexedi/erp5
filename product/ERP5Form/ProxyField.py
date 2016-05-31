@@ -92,7 +92,6 @@ class ProxyWidget(Widget.Widget):
   property_names = [
     'form_id',
     'field_id',
-    'target',
   ]
 
   form_id = fields.StringField(
@@ -112,14 +111,6 @@ class ProxyWidget(Widget.Widget):
                                 default="",
                                 display_width=40,
                                 required=1)
-
-  target = fields.HyperLinkField(
-                                'target',
-                                title='Proxy Target',
-                                description="Link to the master field edit form.",
-                                default='Click to edit the target',
-                                href='manage_edit_target',
-                                required=0)
 
   # Field API Methods, delegated to the template field widget
   render = WidgetDelegatedMethod('render', default='')
@@ -570,14 +561,26 @@ class ProxyField(ZMIField):
     return self.overrides.get(id, "")
 
   security.declareProtected('Edit target', 'manage_edit_target')
-  def manage_edit_target(self, REQUEST):
+  def manage_edit_target(self, RESPONSE):
     """
     Edit target field of this proxy
     """
     proxy_field = self.getTemplateField()
     if proxy_field:
-      url = "%s/manage_main" % proxy_field.absolute_url()
-      REQUEST.RESPONSE.redirect(url)
+      RESPONSE.redirect(proxy_field.absolute_url() + "/manage_main")
+    else:
+      # FIXME: should show some error message
+      # ("form_id and field_id don't define a valid template")
+      pass
+
+  security.declareProtected('Edit target', 'manage_tales_target')
+  def manage_tales_target(self, RESPONSE):
+    """
+    Edit target field of this proxy
+    """
+    proxy_field = self.getTemplateField()
+    if proxy_field:
+      RESPONSE.redirect(proxy_field.absolute_url() + "/manage_talesForm")
     else:
       # FIXME: should show some error message
       # ("form_id and field_id don't define a valid template")
