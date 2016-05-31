@@ -49,7 +49,7 @@
     .declareService(function () {
       var g = this,
         i,
-        list_gadget = document.getElementsByClassName("gadget"),
+        list_gadget = document.querySelectorAll("[data-gadget-url]"),
         all_gadget,
         list = [],
         gadget_attributes = [],

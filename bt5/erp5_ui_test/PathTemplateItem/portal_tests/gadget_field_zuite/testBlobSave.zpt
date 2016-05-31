@@ -66,6 +66,12 @@
 </tr>
 
 <tr>
+  <td>verifyValue</td>
+  <td>//div[@class="file_gadget"]/input</td>
+  <td>test</td>
+</tr>
+
+<tr>
   <td>clickAndWait</td>
   <td>//button[@title='Save']</td>
   <td></td>

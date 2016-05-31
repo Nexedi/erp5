@@ -29,16 +29,15 @@ class GadgetWidget(Widget.TextWidget):
       return self.render_view(field, value, REQUEST, render_prefix, key)
 
   def render_view(self, field, value, REQUEST=None, render_prefix=None, key=None):
-     kw = {}
-     kw['data-gadget-url'] = field.get_value('gadget_url')
-     kw['data-gadget-scope'] = field.id
-     if key is not None:
-       kw['data-gadget-editable'] = key
-     kw['class'] = "gadget"
-     kw['data-gadget-value'] = value
-     kw['data-gadget-sandbox'] = field.get_value('js_sandbox')
-     return Widget.render_element("div",
-                      **kw)
+    kw = {
+      'data-gadget-sandbox': field.get_value('js_sandbox'),
+      'data-gadget-scope': field.id,
+      'data-gadget-url': field.get_value('gadget_url'),
+      'data-gadget-value': value,
+    }
+    if key is not None:
+      kw['data-gadget-editable'] = key
+    return Widget.render_element("div", extra=field.get_value('extra'), **kw)
 
   def get_javascript_list(self, field, REQUEST=None):
      """
