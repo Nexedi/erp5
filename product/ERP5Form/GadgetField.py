@@ -5,12 +5,14 @@ from Products.Formulator import Validator
 from zLOG import LOG, ERROR
 from cStringIO import StringIO
 
-class GadgetWidget(Widget.TextWidget):
+class GadgetWidget(Widget.Widget):
   """
   A widget that displays a renderjs gadget
   """
-  property_names = Widget.TextWidget.property_names + \
-       ['gadget_url', 'js_sandbox']
+  property_names = Widget.Widget.property_names + \
+       ['gadget_url', 'js_sandbox', 'extra']
+
+  default = Widget.TextWidget.default
 
   gadget_url = fields.StringField('gadget_url',
                          title='Gadget Url',
