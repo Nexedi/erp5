@@ -175,7 +175,7 @@ class TestOOoImport(TestOOoImportMixin):
     num = 10
     person_list = self.getPortal().person_module.objectValues()
     self.assertEqual(
-      sorted(['John Doe %s' % (i) for i in range(num)]),
+      ['John'] * num,
       sorted([person_list[i].getTitle() for i in range(num)]))
     self.assertEqual(
       sorted(['John' for i in range(num)]),
@@ -202,7 +202,7 @@ class TestOOoImport(TestOOoImportMixin):
     num = 10
     person_list = self.getPortal().person_module.objectValues()
     self.assertEqual(
-      sorted(['John Doe %s' % (i) for i in range(num)]),
+      ['John'] * num,
       sorted([person_list[i].getTitle() for i in range(num)]))
     self.assertEqual(
       sorted(['John' for i in range(num)]),
@@ -218,7 +218,7 @@ class TestOOoImport(TestOOoImportMixin):
     num = 10
     person_list = self.getPortal().person_module.objectValues()
     self.assertEqual(
-      sorted(['John Doe é %s' % (i) for i in range(num)]),
+      ['John'] * num,
       sorted([person_list[i].getTitle() for i in range(num)]))
     self.assertEqual(
       sorted(['John' for i in range(num)]),
@@ -239,7 +239,7 @@ class TestOOoImport(TestOOoImportMixin):
     num = 10
     person_list = self.getPortal().person_module.objectValues()
     self.assertEqual(
-      sorted(['John Doe %s' % (i) for i in range(num)]),
+      ['John'] * num,
       sorted([person_list[i].getTitle() for i in range(num)]))
     self.assertEqual(
       sorted(['John' for i in range(num)]),

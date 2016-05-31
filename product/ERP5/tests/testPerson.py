@@ -89,6 +89,10 @@ class TestPerson(ERP5TypeTestCase):
     ## its reference must NOT be resetted
     self.assertEqual(person_copy_obj.getReference(), person.getReference())
 
+  def test_PersonGetTitleDefined(self):
+    p = self._makeOne(title="title")
+    self.assertEqual("title", p.getTitle())
+
   # title & first_name, last_name
   def testEmptyTitleFallbackOnId(self):
     p = self._makeOne(id=self.id())
