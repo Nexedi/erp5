@@ -43,7 +43,8 @@ getStopDate\r\n
 isAccountable\r\n
 getPortalType\r\n
 getVariationText\r\n
-getSubVariationText</string> </value>
+getSubVariationText\r\n
+asMovementList</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>

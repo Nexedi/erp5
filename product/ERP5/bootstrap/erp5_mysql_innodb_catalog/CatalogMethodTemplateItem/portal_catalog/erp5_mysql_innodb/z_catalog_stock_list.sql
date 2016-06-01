@@ -10,62 +10,65 @@ WHERE
 <dtml-let row_list="[]" uid_dict="{}">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if "not(isInventoryMovement[loop_item]) and isMovement[loop_item] and getResourceUid[loop_item]">
-      <dtml-if "getDestinationUid[loop_item]">
-        <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">
-        <dtml-call expr="row_list.append([
-                    uid[loop_item], 
-                    uid_dict[uid[loop_item]],
-                    getExplanationUid[loop_item],
-                    getDestinationUid[loop_item],
-                    getDestinationSectionUid[loop_item],
-                    getDestinationPaymentUid[loop_item],
-                    getDestinationFunctionUid[loop_item],
-                    getDestinationProjectUid[loop_item], 
-                    getDestinationFundingUid[loop_item], 
-                    getDestinationPaymentRequestUid[loop_item], 
-                    getSourceSectionUid[loop_item], 
-                    getSourceUid[loop_item], 
-                    getResourceUid[loop_item],
-                    getInventoriatedQuantity[loop_item],
-                    isCancellationAmount[loop_item],
-                    isAccountable[loop_item],
-                    getStopDate[loop_item], 
-                    getStartDate[loop_item], 
-                    getDestinationInventoriatedTotalAssetPrice[loop_item], 
-                    getPortalType[loop_item], 
-                    getSimulationState[loop_item], 
-                    getVariationText[loop_item],
-                    getSubVariationText[loop_item]])">
-      </dtml-if>
-      <dtml-if "getSourceUid[loop_item]">
-        <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">
-        <dtml-call expr="row_list.append([
-                    uid[loop_item], 
-                    uid_dict[uid[loop_item]],
-                    getExplanationUid[loop_item],
-                    getSourceUid[loop_item],
-                    getSourceSectionUid[loop_item],
-                    getSourcePaymentUid[loop_item],
-                    getSourceFunctionUid[loop_item],
-                    getSourceProjectUid[loop_item], 
-                    getSourceFundingUid[loop_item], 
-                    getSourcePaymentRequestUid[loop_item], 
-                    getDestinationSectionUid[loop_item], 
-                    getDestinationUid[loop_item], 
-                    getResourceUid[loop_item],
-                    -(getInventoriatedQuantity[loop_item] or 0), 
-                    isCancellationAmount[loop_item],
-                    isAccountable[loop_item],
-                    getStartDate[loop_item], 
-                    getStopDate[loop_item],
-                    getSourceInventoriatedTotalAssetPrice[loop_item], 
-                    getPortalType[loop_item], 
-                    getSimulationState[loop_item], 
-                    getVariationText[loop_item],
-                    getSubVariationText[loop_item]])">
-      </dtml-if>
+      <dtml-in prefix="mov" expr="asMovementList[loop_item]" no_push_item>
+        <dtml-if "getDestinationUid[loop_item]">
+          <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">
+          <dtml-call expr="row_list.append([
+                      uid[loop_item], 
+                      uid_dict[uid[loop_item]],
+                      getExplanationUid[loop_item],
+                      getDestinationUid[loop_item],
+                      getDestinationSectionUid[loop_item],
+                      getDestinationPaymentUid[loop_item],
+                      getDestinationFunctionUid[loop_item],
+                      getDestinationProjectUid[loop_item], 
+                      getDestinationFundingUid[loop_item], 
+                      getDestinationPaymentRequestUid[loop_item], 
+                      getSourceSectionUid[loop_item], 
+                      getSourceUid[loop_item], 
+                      getResourceUid[loop_item],
+                      (mov_item.getInventoriatedQuantity() or 0),
+                      isCancellationAmount[loop_item],
+                      isAccountable[loop_item],
+                      mov_item.getStopDate(),
+                      mov_item.getStartDate(),
+                      getDestinationInventoriatedTotalAssetPrice[loop_item], 
+                      getPortalType[loop_item], 
+                      getSimulationState[loop_item], 
+                      getVariationText[loop_item],
+                      getSubVariationText[loop_item]])">
+        </dtml-if>
+        <dtml-if "getSourceUid[loop_item]">
+          <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">
+          <dtml-call expr="row_list.append([
+                      uid[loop_item], 
+                      uid_dict[uid[loop_item]],
+                      getExplanationUid[loop_item],
+                      getSourceUid[loop_item],
+                      getSourceSectionUid[loop_item],
+                      getSourcePaymentUid[loop_item],
+                      getSourceFunctionUid[loop_item],
+                      getSourceProjectUid[loop_item], 
+                      getSourceFundingUid[loop_item], 
+                      getSourcePaymentRequestUid[loop_item], 
+                      getDestinationSectionUid[loop_item], 
+                      getDestinationUid[loop_item], 
+                      getResourceUid[loop_item],
+                      -(mov_item.getInventoriatedQuantity() or 0),
+                      isCancellationAmount[loop_item],
+                      isAccountable[loop_item],
+                      mov_item.getStartDate(),
+                      mov_item.getStopDate(),
+                      getSourceInventoriatedTotalAssetPrice[loop_item], 
+                      getPortalType[loop_item], 
+                      getSimulationState[loop_item], 
+                      getVariationText[loop_item],
+                      getSubVariationText[loop_item]])">
+        </dtml-if>
+     </dtml-in>
     </dtml-if>
-  </dtml-in>  
+  </dtml-in>
+
   <dtml-if "row_list">
 REPLACE INTO
   stock
