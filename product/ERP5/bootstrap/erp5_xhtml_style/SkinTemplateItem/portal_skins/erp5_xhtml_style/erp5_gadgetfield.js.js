@@ -63,6 +63,13 @@
         url = list_gadget[i].getAttribute("data-gadget-url");
         key = list_gadget[i].getAttribute("data-gadget-editable");
         value = list_gadget[i].getAttribute("data-gadget-value");
+        if (value === null)
+          try {
+            value = JSON.parse(list_gadget[i].getAttribute("data-gadget-json"));
+          } catch(e) {
+            console.log(e); /* same remark as below (when render() fails) */
+            continue;
+          }
         //renderable 
         if (url !== undefined && url !== null) {
           tmp = {};

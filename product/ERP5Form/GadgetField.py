@@ -4,6 +4,7 @@ from Products.Formulator.DummyField import fields
 from Products.Formulator import Validator
 from zLOG import LOG, ERROR
 from cStringIO import StringIO
+from json import dumps
 
 class GadgetWidget(Widget.Widget):
   """
@@ -11,8 +12,15 @@ class GadgetWidget(Widget.Widget):
   """
   property_names = Widget.Widget.property_names + \
        ['gadget_url', 'js_sandbox', 'extra']
+  property_names.insert(property_names.index('default') + 1, 'json_value')
 
   default = Widget.TextWidget.default
+
+  json_value = fields.CheckBoxField('json_value',
+                                title='JSON Value',
+                                description='Serialize value to JSON.',
+                                default=0,
+                                required=0)
 
   gadget_url = fields.StringField('gadget_url',
                          title='Gadget Url',
@@ -34,8 +42,11 @@ class GadgetWidget(Widget.Widget):
     kw = {
       'data-gadget-sandbox': field.get_value('js_sandbox'),
       'data-gadget-url': field.get_value('gadget_url'),
-      'data-gadget-value': value,
     }
+    if field.get_value('json_value'):
+      kw['data-gadget-json'] = dumps(value)
+    else:
+      kw['data-gadget-value'] = value
     if key is not None:
       kw['data-gadget-editable'] = key
     return Widget.render_element("div", extra=field.get_value('extra'), **kw)
