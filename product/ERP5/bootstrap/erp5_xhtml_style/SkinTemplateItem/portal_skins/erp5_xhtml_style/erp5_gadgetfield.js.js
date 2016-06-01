@@ -105,7 +105,12 @@
                     "key": sub_key,
                     "value": sub_value
                   }
-                )
+                ).push(undefined, function (error) {
+                  /* TODO: Highlight the gadget element with a small colored
+                   *       error message. Clicking on the element could unroll
+                   *       more information like the traceback. */
+                  console.log(error);
+                })
               );
             }
             if (gadget_attributes[i].sandbox === "iframe") {
