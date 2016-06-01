@@ -13,8 +13,23 @@
     })
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+      .allowPublicAcquisition('updateHeader', function () {
+      return;
+    })
+
+      .allowPublicAcquisition('getUrlParameter', function (argument_list) {
+      return this.getUrlParameter(argument_list)
+        .push(function (result) {
+          if ((result === undefined) && (argument_list[0] === 'field_listbox_sort_list:json')) {
+            return [['doc_id', 'descending']];
+          }
+          return result;
+        });
+    })
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
       return this.jio_allDocs.apply(this, param_list)
         .push(function (result) {
@@ -47,71 +62,59 @@
           });
         })
         .push(function () {
-          return gadget.getDeclaredGadget("listbox");
+          return gadget.getDeclaredGadget("form_list");
         })
-        .push(function (listbox) {
-          return listbox.render({
-            jio_key: options.jio_key,
-            search: options.search,
-            begin_from: options.begin_from,
-            column_list: [{
-              select: 'doc_id',
-              title: 'ID'
-            }, {
-              select: 'product',
-              title: 'Product'
-            }, {
-              select: 'priced_quantity',
-              title: 'Priced Quantity'
-            }, {
-              select: 'quantity_unit',
-              title: 'Quantity Unit'
-            }, {
-              select: 'base_price',
-              title: 'Price'
-            }, {
-              select: 'price_currency',
-              title: 'Currency'
-            }, {
-              select: 'nextowner',
-              title: 'Client'
-            }, {
-              select: 'comment',
-              title: 'Comment'
-            }, {
-              select: 'date',
-              title: 'Input Date'
-            }, {
-              select: 'inputusername',
-              title: 'Input User Name'
-            }, {
-              select: 'state',
-              title: 'State'
-            }],
-            query: {
-              /*
-              new ComplexQuery({
-                operator: "NOT",
-                query_list: [new SimpleQuery({
-                  key: key,
-                  operator: simple_operator,
-                  type: "simple",
-                  value: value
-                })],
-                type: "complex"
-              })
-              */
-              query: 'portal_type:' +
+        .push(function (form_gadget) {
+        var column_list = [
+            ['doc_id', 'ID'],
+            ['product', 'Product'],
+            ['priced_quantity', 'Priced Quantity'],
+            ['quantity_unit', 'Quantity Unit'],
+            ['base_price', 'Price'],
+            ['price_currency', 'Currency'],
+            ['nextowner', 'Client'],
+            ['comment', 'Comment'],
+            ['date', 'Input Date'],
+            ['inputusername', 'Input User Name'],
+            ['state', 'State'],
+
+          ];
+        
+        
+        return form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
+              "listbox": {
+                "column_list": column_list,
+                "show_anchor": 0,
+                "default_params": {},
+                "editable": 1,
+                "editable_column_list": [],
+                "key": "field_listbox",
+                "lines": 30,
+                "list_method": "portal_catalog",
+                "query": 'portal_type:' +
                 '("Sale Price Record" OR "Sale Price Record Temp")',
-              select_list:
-                 ['doc_id', 'product', 'priced_quantity',
-                  'quantity_unit', 'base_price', 'price_currency',
-                   'nextowner', 'comment', 'date', 'inputusername',
-                   'local_state', 'sync_flag', 'local_validation',
-                   'portal_type'],
-              sort_on: [["doc_id", "descending"]]
+                "portal_type": [],
+                "search_column_list": column_list,
+                "sort_column_list": column_list,
+                "title": "Documents",
+                "type": "ListBox"
+              }
+            }},
+              "_links": {
+                "type": {
+                  // form_list display portal_type in header
+                  name: ""
+                }
+              }},
+            form_definition: {
+              group_list: [[
+                "bottom",
+                [["listbox"]]
+              ], ["hidden", ["listbox_modification_date"]]]
             }
           });
+
         });
     });
 

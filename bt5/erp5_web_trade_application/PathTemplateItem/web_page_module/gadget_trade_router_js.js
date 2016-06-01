@@ -61,6 +61,14 @@
         result,
         key;
       result = "#";
+    //edit later ???????????????
+    if(options.command === "index"){
+      
+      result += "jio_key="+options.options.jio_key+"&page=view";
+      
+      
+    
+    } else {
       for (key in options) {
         if (options.hasOwnProperty(key) && options[key] !== undefined) {
           // Don't keep empty values
@@ -68,7 +76,7 @@
             + "=" + encodeURIComponent(options[key]);
           prefix = '&';
         }
-      }
+      }}
       return result;
     })
 
@@ -127,6 +135,9 @@
             options: sub_options
           };
         });
+    })
+  .declareMethod('getUrlParameter', function (key) {
+      return this.options[key];
     })
     .declareAcquiredMethod('jio_get', 'jio_get')
     .declareAcquiredMethod('renderApplication', 'renderApplication')

@@ -76,7 +76,6 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
                 "key": "nextowner_title",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1,
                 "disabled" : disabled
               }
             }
@@ -97,7 +96,6 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
                 "key": "nextowner_reference",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1,
                 "disabled" : disabled
               }
             }
@@ -118,7 +116,6 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
                 "key": "default_telephone_coordinate_text",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1,
                 "disabled" : disabled
               }
             }
@@ -139,7 +136,6 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
                 "key": "default_address_city",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1,
                 "disabled" : disabled
               }
             }
@@ -160,7 +156,6 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
                 "key": "default_address_region",
                 "hidden": 0,
                 "type": "ListField",
-                "change" : 1,
                 "disabled" : disabled
 
               }
@@ -183,7 +178,6 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
                 "key": "default_address_street_address",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1,
                 "disabled" : disabled
               }
             }
@@ -204,7 +198,6 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
                 "key": "default_address_zip_code",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1,
                 "disabled" : disabled
               }
             }
@@ -225,7 +218,6 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
                 "key": "default_email_coordinate_text",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1,
                 "disabled" : disabled
               }
 
@@ -270,7 +262,6 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
               "key": "nextowner",
               "hidden": 0,
               "type": "StringField",
-              "change" : 1,
               "disabled" : 0
             }
           }
@@ -902,7 +893,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
 
             addTemporaryCustomer(form_gadget);
 
-            return form_gadget.jio_post(doc);
+            return form_gadget.jio_put(form_gadget.options.jio_key,doc);
 
           })
 

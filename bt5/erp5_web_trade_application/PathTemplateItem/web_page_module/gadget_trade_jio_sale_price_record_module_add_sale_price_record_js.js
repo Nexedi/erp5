@@ -81,7 +81,6 @@
                 "key": "nextowner_title",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1,
                 "disabled" : disabled
               }
             }
@@ -102,7 +101,6 @@
                 "key": "nextowner_reference",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1,
                 "disabled" : disabled
               }
             }
@@ -123,7 +121,6 @@
                 "key": "default_telephone_coordinate_text",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1,
                 "disabled" : disabled
               }
             }
@@ -144,7 +141,6 @@
                 "key": "default_address_city",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1,
                 "disabled" : disabled
               }
             }
@@ -165,7 +161,6 @@
                 "key": "default_address_region",
                 "hidden": 0,
                 "type": "ListField",
-                "change" : 1,
                 "disabled" : disabled
 
               }
@@ -188,7 +183,6 @@
                 "key": "default_address_street_address",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1,
                 "disabled" : disabled
               }
             }
@@ -209,7 +203,6 @@
                 "key": "default_address_zip_code",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1,
                 "disabled" : disabled
               }
             }
@@ -230,7 +223,6 @@
                 "key": "default_email_coordinate_text",
                 "hidden": 0,
                 "type": "StringField",
-                "change" : 1,
                 "disabled" : disabled
               }
 
@@ -275,7 +267,6 @@
               "key": "nextowner",
               "hidden": 0,
               "type": "StringField",
-              "change" : 1,
               "disabled" : 0
             }
           }
