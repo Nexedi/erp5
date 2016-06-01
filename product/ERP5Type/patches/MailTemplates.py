@@ -15,8 +15,8 @@ try:
 except ImportError:
   BaseMailTemplate = None
 
-from email.Header import make_header
-from email.Utils import make_msgid
+from email.Header import Header
+from email.Utils import make_msgid, formataddr, getaddresses
 
 if BaseMailTemplate is not None:
   def _process_utf8(self,kw):
@@ -60,14 +60,32 @@ if BaseMailTemplate is not None:
                                                    headers.get(header))))
           if value is not None:
               values[key]=value
+
               # turn some sequences in coma-seperated strings
               if isinstance(value, (tuple, list)):
                   value = ', '.join(value)
               # make sure we have no unicode headers
               if isinstance(value,unicode):
                   value = value.encode(encoding)
-              if key=='subject':
-                  value = make_header([(value, 'utf-8')]).encode()
+
+              if key == 'subject':
+                  try:
+                      # Try to keep header non encoded
+                      value = Header(value.encode("ascii"))
+                  except UnicodeDecodeError:
+                      value = Header(value, "UTF-8")
+
+              else:
+                  value_list = getaddresses([value])
+                  dest_list = []
+                  for name, email in value_list:
+                      try:
+                          name = Header(name.encode("ascii"))
+                      except UnicodeDecodeError:
+                          name = Header(name, "UTF-8")
+                      dest_list.append(formataddr((name.encode(), email)))
+                  value = ", ".join(dest_list)
+
               headers[header]=value
       # check required values have been supplied
       errors = []

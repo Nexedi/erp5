@@ -34,6 +34,8 @@ from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import DummyMailHost
+from email import message_from_string
+from email.header import decode_header
 
 
 class TestBug(ERP5TypeTestCase):
@@ -215,7 +217,8 @@ class TestBug(ERP5TypeTestCase):
     mfrom, mto, messageText = last_message
     self.assertEqual('dummy <loggedperson@localhost>', mfrom)
     self.assertEqual(['person1@localhost'], mto)
-    self.assertTrue(bug.getTitle().replace(" ", "_") in messageText)
+    message = message_from_string(messageText)
+    self.assertTrue(decode_header(message['Subject'])[0][0].endswith(bug.getTitle()))
 
   def stepCheckBugMessageNotification(self, sequence=None,
                                          sequence_list=None, **kw):
@@ -228,7 +231,8 @@ class TestBug(ERP5TypeTestCase):
     mfrom, mto, messageText = last_message
     self.assertEqual('person2@localhost', mfrom)
     self.assertEqual(['person1@localhost'], mto)
-    self.assertTrue(bug.getTitle().replace(" ", "_") in messageText)
+    message = message_from_string(messageText)
+    self.assertTrue(decode_header(message['Subject'])[0][0].endswith(bug.getTitle()))
 
   def stepSetSourceProject(self, sequence=None, sequence_list=None, **kw):
     """

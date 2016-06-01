@@ -995,12 +995,25 @@ class TestCRMMailSend(BaseTestCRM):
             title='Recipient,',
             subordination_value=customer_organisation,
             default_email_text='recipient@example.com')
+    portal.person_module.newContent(
+            id='non_ascii_recipient',
+            # The ',' below is to force quoting of the name in e-mail
+            # addresses on Zope 2.12
+            title='Recipient, 🐈 fan',
+            subordination_value=customer_organisation,
+            default_email_text='recipient@example.com')
     # also create the sender
     portal.person_module.newContent(
             id='me',
             # The ',' below is to force quoting of the name in e-mail
             # addresses on Zope 2.12
             title='Me,',
+            default_email_text='me@erp5.org')
+    portal.person_module.newContent(
+            id='non_ascii_me',
+            # The ',' below is to force quoting of the name in e-mail
+            # addresses on Zope 2.12
+            title='Me, 🐈 fan',
             default_email_text='me@erp5.org')
 
     # set preference
@@ -1128,8 +1141,8 @@ class TestCRMMailSend(BaseTestCRM):
   def test_MailMessageEncoding(self):
     # test sending a mail message with non ascii characters
     event = self.portal.event_module.newContent(portal_type='Mail Message')
-    event.setSource('person_module/me')
-    event.setDestination('person_module/recipient')
+    event.setSource('person_module/non_ascii_me')
+    event.setDestinationList(['person_module/non_ascii_recipient'])
     event.setTitle('Héhé')
     event.setTextContent('Hàhà')
     self.portal.portal_workflow.doActionFor(event, 'start_action')
@@ -1137,12 +1150,14 @@ class TestCRMMailSend(BaseTestCRM):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEqual('"Me," <me@erp5.org>', mfrom)
-    self.assertEqual(['"Recipient," <recipient@example.com>'], mto)
+    self.assertEqual('=?utf-8?q?Me=2C_=F0=9F=90=88_fan?= <me@erp5.org>', mfrom)
+    self.assertEqual(['=?utf-8?q?Recipient=2C_=F0=9F=90=88_fan?= <recipient@example.com>'], mto)
 
     message = message_from_string(messageText)
 
     self.assertEqual('Héhé', decode_header(message['Subject'])[0][0])
+    self.assertEqual('Me, 🐈 fan', decode_header(message['From'])[0][0])
+    self.assertEqual('Recipient, 🐈 fan', decode_header(message['To'])[0][0])
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
@@ -1756,7 +1771,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.tic()
     mail_message = self.portal.event_module.newContent(portal_type="Mail Message")
     relative_url_list = [z.getRelativeUrl() for z in self.portal.person_module.searchFolder()]
-    self.assertEqual(3, len(relative_url_list))
+    self.assertEqual(5, len(relative_url_list))
     mail_message.setDestinationList(relative_url_list)
     mail_message.setSource(relative_url_list[0])
     mail_text_content = "Body Text Content"
@@ -1774,12 +1789,12 @@ class TestCRMMailSend(BaseTestCRM):
     message_list = [i for i in portal_activities.getMessageList() \
                     if i.kw.has_key("event_relative_url")]
     try:
-      # 3 recipients -> 3 activities
-      self.assertEqual(3, len(message_list))
+      # 5 recipients -> 5 activities
+      self.assertEqual(5, len(message_list))
     finally:
       self.tic()
 
-    self.assertEqual(3, len(self.portal.MailHost._message_list))
+    self.assertEqual(5, len(self.portal.MailHost._message_list))
     for message_info in self.portal.MailHost._message_list:
       self.assertTrue(mail_text_content in message_info[-1])
       message = message_from_string(message_info[-1])
