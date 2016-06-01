@@ -382,7 +382,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       pass
 
     reference_list = [r[1] for r in self.getSearchableReferenceList()]
-    result = self.Base_getImplicitSuccessorValueList(reference_list)
+    result = self._getTypeBasedMethod('getImplicitSuccessorValueList')(reference_list)
     tv[cache_key] = result
     return result
 
