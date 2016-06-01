@@ -17,13 +17,13 @@ doc_line_dict = {}
 for line in line_list:
   doc_lines = doc_line_dict.setdefault(line.explanation_uid, [])
   doc_lines.append(line)
-  
+
 for result in document_list:
   try:
     line_list = doc_line_dict[result['uid']]
   except KeyError:
     line_list = []
-  
+
   period = result['start_date']
   if period is not None:
     period = period.strftime(date_format)
@@ -47,11 +47,11 @@ for result in document_list:
       line_dict = product_dict[client_title]
   else:
     line_dict = product_dict
-    
+
   if report_group_by != "client":
     # client_title -> product_title -> period -> amount/quantity...
     # or product_title -> period -> amount/quantity...
-    for line in line_list: 
+    for line in line_list:
       # FIXME: if two resources have the same title, do we want to group ?
       product_title = line.resource_title
       if not line_dict.has_key(product_title):
