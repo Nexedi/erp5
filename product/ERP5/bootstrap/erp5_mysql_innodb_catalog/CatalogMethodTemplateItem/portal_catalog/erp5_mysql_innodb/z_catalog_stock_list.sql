@@ -10,7 +10,8 @@ WHERE
 <dtml-let row_list="[]" uid_dict="{}">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if "not(isInventoryMovement[loop_item]) and isMovement[loop_item] and getResourceUid[loop_item]">
-      <dtml-in prefix="mov" expr="asMovementList[loop_item]" no_push_item>
+      <dtml-in prefix="movement" expr="asMovementList[loop_item]" no_push_item>
+        <dtml-let movement_item_quantity="movement_item.getInventoriatedQuantity() or 0">
         <dtml-if "getDestinationUid[loop_item]">
           <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">
           <dtml-call expr="row_list.append([
@@ -27,11 +28,11 @@ WHERE
                       getSourceSectionUid[loop_item], 
                       getSourceUid[loop_item], 
                       getResourceUid[loop_item],
-                      (mov_item.getInventoriatedQuantity() or 0),
+                      movement_item_quantity,
                       isCancellationAmount[loop_item],
                       isAccountable[loop_item],
-                      mov_item.getStopDate(),
-                      mov_item.getStartDate(),
+                      movement_item.getStopDate(),
+                      movement_item.getStartDate(),
                       getDestinationInventoriatedTotalAssetPrice[loop_item], 
                       getPortalType[loop_item], 
                       getSimulationState[loop_item], 
@@ -54,17 +55,18 @@ WHERE
                       getDestinationSectionUid[loop_item], 
                       getDestinationUid[loop_item], 
                       getResourceUid[loop_item],
-                      -(mov_item.getInventoriatedQuantity() or 0),
+                      -movement_item_quantity,
                       isCancellationAmount[loop_item],
                       isAccountable[loop_item],
-                      mov_item.getStartDate(),
-                      mov_item.getStopDate(),
+                      movement_item.getStartDate(),
+                      movement_item.getStopDate(),
                       getSourceInventoriatedTotalAssetPrice[loop_item], 
                       getPortalType[loop_item], 
                       getSimulationState[loop_item], 
                       getVariationText[loop_item],
                       getSubVariationText[loop_item]])">
         </dtml-if>
+        </dtml-let>
      </dtml-in>
     </dtml-if>
   </dtml-in>
