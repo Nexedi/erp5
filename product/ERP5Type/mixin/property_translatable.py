@@ -66,6 +66,7 @@ class PropertyTranslatableBuiltInDictMixIn:
   def deletePropertyTranslation(self, property_id, language):
     try:
       del self._getTranslationDict()[(property_id, language)]
+      self._p_changed = True
     except KeyError:
       pass
 

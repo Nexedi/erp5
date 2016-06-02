@@ -35,19 +35,17 @@ for document in document_list:
         if original_text is not None and translation_method is not None:
           temporary_translated_text = translation_method(language=content_language)
           if original_text != temporary_translated_text:
-             translated_text = temporary_translated_text
-      if translated_text:
-        temporary_result.append({'uid': uid,
-                                 'property_name': property_name,
-                                 'content_language': content_language,
-                                 'translated_text': translated_text,
-                                 })
-    # also add original content
-    if original_text is not None:
+            translated_text = temporary_translated_text
       temporary_result.append({'uid': uid,
                                'property_name': property_name,
-                               'content_language': '',
-                               'translated_text': original_text,
+                               'content_language': content_language,
+                               'translated_text': translated_text,
                                })
+    # also add original content
+    temporary_result.append({'uid': uid,
+                             'property_name': property_name,
+                             'content_language': '',
+                             'translated_text': original_text,
+                             })
     result.extend(temporary_result)
 return result
