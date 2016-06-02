@@ -245,6 +245,12 @@ safe_builtins['__import__'] = guarded_import
 
 ModuleSecurityInfo('transaction').declarePublic('doom')
 
+ModuleSecurityInfo('urllib').declarePublic(
+  'urlencode',
+  'quote', 'unquote',
+  'quote_plus', 'unquote_plus',
+)
+
 import hmac
 allow_module('hmac')
 # HMAC does not sub-class object so ContainerAssertions
