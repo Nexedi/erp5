@@ -36,7 +36,7 @@ from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5Type.Base import Base, removeIContentishInterface
 from Products.CMFDefault.File import File as CMFFile
 from OFS.Image import Pdata
-import cStringIO
+from cStringIO import StringIO
 from Products.ERP5Type.Utils import deprecated
 
 def _unpackData(data):
@@ -172,24 +172,15 @@ class File(Document, CMFFile):
   def _setData(self, data):
     """
     """
-    size = None
     # update_data use len(data) when size is None, which breaks this method.
     # define size = 0 will prevent len be use and keep the consistency of
     # getData() and setData()
     if data is None:
       size = 0
-    if not isinstance(data, Pdata) and data is not None:
-      file = cStringIO.StringIO(data)
-      data, size = self._read_data(file)
-    if getattr(self, 'update_data', None) is not None:
-      # We call this method to make sure size is set and caches reset
-      self.update_data(data, size=size)
     else:
-      self._baseSetData(data) # XXX - It would be better to always use this accessor
-      self._setSize(size)
-      self.ZCacheable_invalidate()
-      self.ZCacheable_set(None)
-      self.http__refreshEtag()
+      data, size = self._read_data(data)
+    # We call this method to make sure size is set and caches reset
+    self.update_data(data, size=size)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   def getData(self, default=None):
