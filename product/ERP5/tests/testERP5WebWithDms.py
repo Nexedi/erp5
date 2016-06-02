@@ -1533,6 +1533,31 @@ return True
     else:
       raise ValueError("unhandled encoding %r" % encoding)
 
+  def test_WebPageImplicitSuccessorValueList(self):
+    # Test init part
+    web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
+    image_module = self.portal.getDefaultModule(portal_type="Image")
+    img_list = []
+    for i in range(4):
+      img = image_module.newContent(data=XSMALL_SVG_IMAGE_ICON_DATA)
+      img.publish()
+      img_list.append(img)
+    page = web_page_module.newContent(text_content="".join([
+      "<p>Hello</p>",
+      '<a href="/%s/view" />' % img_list[0].getRelativeUrl(),
+      '<a href="/%s/view" />' % img_list[0].getRelativeUrl(),
+      '<img src="/%s?format=" />' % img_list[1].getRelativeUrl(),
+      '<iframe src="/%s" />' % img_list[2].getRelativeUrl(),
+      '<style>body { background-image: url(/%s); }</style>' % img_list[3].getRelativeUrl(),
+    ]))
+    self.tic()
+    # Test part
+    successor_list = page.getImplicitSuccessorValueList()
+    self.assertEqual(
+      sorted([i.getUid() for i in img_list]),
+      sorted([s.getUid() for s in successor_list]),
+    )
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5WebWithDms))
