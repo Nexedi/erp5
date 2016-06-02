@@ -27,7 +27,7 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from App.config import getConfiguration
+from runUnitTest import tests_home
 import shutil
 import os
 import tempfile
@@ -71,14 +71,12 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
                             ]
 
   def afterSetUp(self):
-    self.cfg = getConfiguration()
-    self.export_dir = tempfile.mkdtemp()
+    self.export_dir = tempfile.mkdtemp(dir=tests_home)
     self.template_tool = self.getTemplateTool()
     self.template = self._createNewBusinessTemplate(self.template_tool)
 
   def beforeTearDown(self):
-    export_dir_path = os.path.join(self.cfg.instancehome, self.export_dir)
-    if os.path.exists(export_dir_path):
+    if os.path.exists(self.export_dir):
       shutil.rmtree(self.export_dir)
 
   def _createNewBusinessTemplate(self, template_tool):
@@ -99,15 +97,9 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
     self.tic()
 
   def _importBusinessTemplate(self):
-    template_id = self.template.getId()
-    template_path = os.path.join(self.cfg.instancehome, self.export_dir)
-    self.template_tool.manage_delObjects(template_id)
-
-    import_template = self.template_tool.download(url='file:'+template_path)
-
-    self.assertFalse(import_template is None)
+    self.template_tool.manage_delObjects(self.template.getId())
+    import_template = self.template_tool.download(url='file:'+self.export_dir)
     self.assertEqual(import_template.getPortalType(), 'Business Template')
-
     return import_template
 
   def _exportAndReImport(self, xml_document_path,
@@ -139,7 +131,7 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
 
     self.template.edit(template_test_id_list=['portal_components/'+test_component_id,])
 
-    test_component_path = os.path.join(self.cfg.instancehome, self.export_dir,
+    test_component_path = os.path.join(self.export_dir,
                                        'TestTemplateItem', 'portal_components',
                                        test_component_id)
     import_template = self._exportAndReImport(
@@ -178,7 +170,7 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
 
     self._buildAndExportBusinessTemplate()
 
-    web_page_module_path = os.path.join(self.cfg.instancehome, self.export_dir,
+    web_page_module_path = os.path.join(self.export_dir,
                                         'PathTemplateItem', 'web_page_module')
 
     for web_file in [(html_file_id, '.html', html_document_kw),
@@ -229,8 +221,8 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
 
     self.template.edit(template_skin_id_list=[skin_folder_id+'/'+python_script_id,])
 
-    python_script_path = os.path.join(self.cfg.instancehome, self.export_dir,
-                                             'SkinTemplateItem', 'portal_skins',skin_folder_id,python_script_id)
+    python_script_path = os.path.join(self.export_dir,
+      'SkinTemplateItem', 'portal_skins', skin_folder_id, python_script_id)
 
 
     import_template = self._exportAndReImport(
@@ -257,8 +249,8 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
     self.template.edit(template_path_list=['image_module/'+image_file_id,])
 
 
-    image_document_path = os.path.join(self.cfg.instancehome, self.export_dir,
-                                     'PathTemplateItem', 'image_module',image_file_id)
+    image_document_path = os.path.join(self.export_dir,
+      'PathTemplateItem', 'image_module',image_file_id)
 
     import_template = self._exportAndReImport(
                                   image_document_path+".xml",
@@ -325,7 +317,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     self.template.edit(template_path_list=['document_module/'+file_id,])
 
-    file_document_path = os.path.join(self.cfg.instancehome, self.export_dir,
+    file_document_path = os.path.join(self.export_dir,
                                      'PathTemplateItem', 'document_module',
                                       file_id)
 
@@ -521,7 +513,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     self.template.edit(template_skin_id_list=[skin_folder_id+'/'+test_file_id,])
 
-    file_document_path = os.path.join(self.cfg.instancehome, self.export_dir,
+    file_document_path = os.path.join(self.export_dir,
                                              'SkinTemplateItem', 'portal_skins',
                                               skin_folder_id,test_file_id)
 
@@ -577,7 +569,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     self.template.edit(template_catalog_method_id_list=[catalog_id+'/'+method_id])
     self._buildAndExportBusinessTemplate()
 
-    method_document_path = os.path.join(self.cfg.instancehome, self.export_dir,
+    method_document_path = os.path.join(self.export_dir,
                                      'CatalogMethodTemplateItem',
                                      'portal_catalog',
                                       catalog_id, method_id)
@@ -625,7 +617,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     self.template.edit(template_skin_id_list=[skin_folder_id+'/'+method_id,])
 
-    method_document_path = os.path.join(self.cfg.instancehome, self.export_dir,
+    method_document_path = os.path.join(self.export_dir,
                                              'SkinTemplateItem', 'portal_skins',
                                               skin_folder_id, method_id)
     import_template = self._exportAndReImport(
@@ -667,8 +659,8 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     self.template.edit(template_skin_id_list=[skin_folder_id+'/'+page_template_id,])
 
-    page_template_path = os.path.join(self.cfg.instancehome, self.export_dir,
-                                             'SkinTemplateItem', 'portal_skins',skin_folder_id,page_template_id)
+    page_template_path = os.path.join(self.export_dir,
+      'SkinTemplateItem', 'portal_skins', skin_folder_id, page_template_id)
 
     import_template = self._exportAndReImport(
                                   page_template_path+".xml",
@@ -716,8 +708,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     self.template.edit(template_skin_id_list=[skin_folder_id+'/'+dtml_method_id,])
 
-    dtml_method_path = os.path.join(self.cfg.instancehome,
-                                    self.export_dir,
+    dtml_method_path = os.path.join(self.export_dir,
                                     'SkinTemplateItem',
                                     'portal_skins',
                                     skin_folder_id,dtml_method_id)
@@ -769,7 +760,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     self.template.edit(template_skin_id_list=[skin_folder_id+'/'+dtml_method_id,])
 
-    dtml_method_path = os.path.join(self.cfg.instancehome, self.export_dir,
+    dtml_method_path = os.path.join(self.export_dir,
                                              'SkinTemplateItem', 'portal_skins',
                                               skin_folder_id,dtml_method_id)
 
@@ -814,7 +805,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     self.template.edit(template_skin_id_list=[skin_folder_id+'/'+OOo_template_id,])
 
-    OOo_template_path = os.path.join(self.cfg.instancehome, self.export_dir,
+    OOo_template_path = os.path.join(self.export_dir,
                                              'SkinTemplateItem', 'portal_skins',
                                               skin_folder_id, OOo_template_id)
 
@@ -890,7 +881,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     self.template.edit(template_path_list=['test_page_module/'+test_page_id,])
 
-    test_page_document_path = os.path.join(self.cfg.instancehome, self.export_dir,
+    test_page_document_path = os.path.join(self.export_dir,
                                      'PathTemplateItem', 'test_page_module',
                                       test_page_id)
 
@@ -934,8 +925,8 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     self.template.edit(template_skin_id_list=[skin_folder_id+'/'+python_script_id,])
 
-    python_script_path = os.path.join(self.cfg.instancehome, self.export_dir,
-                                             'SkinTemplateItem', 'portal_skins',skin_folder_id,python_script_id)
+    python_script_path = os.path.join(self.export_dir,
+      'SkinTemplateItem', 'portal_skins',skin_folder_id,python_script_id)
 
 
     import_template = self._exportAndReImport(
@@ -953,7 +944,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     for property_id, property_value in python_script_kw.iteritems():
       self.assertEqual(getattr(python_script_page, property_id), property_value)
 
-  def test_templateFolderIsCleanedUpInImportEndReexport(self):
+  def test_templateFolderIsCleanedUpInImportAndReexport(self):
     """
       Test that when TemplateTool.importAndReExportBusinessTemplateListFromPath is
       invoked the template folder is cleaned.
@@ -977,7 +968,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     self.template.edit(template_test_id_list=['portal_components/'+test_component_id,])
 
-    test_component_path = os.path.join(self.cfg.instancehome, self.export_dir,
+    test_component_path = os.path.join(self.export_dir,
                                        'TestTemplateItem', 'portal_components',
                                         test_component_id)
 
@@ -1013,7 +1004,8 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     text_file_in_portal_components.close()
     self.assertTrue(os.path.exists(text_file_in_portal_components_path))
     # invoke importAndReExportBusinessTemplateListFromPath
-    self.template_tool.importAndReExportBusinessTemplateListFromPath(repository_list=['/tmp'])
+    self.template_tool.importAndReExportBusinessTemplateListFromPath(
+      repository_list=[tests_home])
     self.tic()
     # assert that unrelated objects were deleted
     self.assertFalse(os.path.exists(text_file_path))
@@ -1046,7 +1038,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     self.template.edit(template_path_list=['document_module/'+file_id,])
 
-    file_document_path = os.path.join(self.cfg.instancehome, self.export_dir,
+    file_document_path = os.path.join(self.export_dir,
                                      'PathTemplateItem', 'document_module',
                                       file_id)
 
@@ -1099,9 +1091,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     self.template.edit(template_skin_id_list=[skin_folder_id+'/'+page_template_id,])
 
-    template_path = os.path.join(self.cfg.instancehome, self.export_dir)
-
-    page_template_path = os.path.join(template_path,
+    page_template_path = os.path.join(self.export_dir,
       'SkinTemplateItem', 'portal_skins',
       skin_folder_id, page_template_id)
 
@@ -1122,20 +1112,20 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     self.portal.portal_skins[skin_folder_id].manage_delObjects([page_template_id])
 
     # import the business template from the file-system
-    import_template = self.template_tool.download(url='file:'+template_path)
+    import_template = self.template_tool.download(url='file:'+self.export_dir)
     self.assertFalse(import_template is None)
     self.assertEqual(import_template.getPortalType(), 'Business Template')
 
     # delete all elements from the export directory
-    file_object_list = [x for x in os.listdir(template_path)]
+    file_object_list = [x for x in os.listdir(self.export_dir)]
     for file_object in file_object_list:
-      file_object_path = os.path.join(template_path, file_object)
+      file_object_path = os.path.join(self.export_dir, file_object)
       if os.path.isfile(file_object_path):
         os.unlink(file_object_path)
       else:
         shutil.rmtree(file_object_path)
     # check that export directory is empty
-    self.assertEquals(os.listdir(template_path), [])
+    self.assertEqual(os.listdir(self.export_dir), [])
 
     # install the imported business template
     import_template.install()
@@ -1181,7 +1171,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     self.template.edit(template_skin_id_list=['%s/%s' % (skin_folder_id, python_script_id)])
 
-    python_script_path = os.path.join(self.cfg.instancehome, self.export_dir,
+    python_script_path = os.path.join(self.export_dir,
                                              'SkinTemplateItem', 'portal_skins',
                                              skin_folder_id,python_script_id)
 
@@ -1196,8 +1186,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     self.template.install()
     self.tic()
 
-    template_path = os.path.join(self.cfg.instancehome, self.export_dir)
-    import_template = self.template_tool.download(url='file:'+template_path)
+    import_template = self.template_tool.download(url='file:'+self.export_dir)
 
     # check that preinstalling the import_template no difference is found
     result = import_template.preinstall()
@@ -1215,7 +1204,8 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     import_template.install()
     self.tic()
 
-    second_import_template = self.template_tool.download(url='file:'+template_path)
+    second_import_template = self.template_tool.download(
+      url='file:'+self.export_dir)
     # check that preinstalling the second_import_template
     # the PythonScript is recognised as modified
     result = second_import_template.preinstall()
