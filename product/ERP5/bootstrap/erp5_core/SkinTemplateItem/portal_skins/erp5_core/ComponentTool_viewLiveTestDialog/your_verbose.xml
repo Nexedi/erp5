@@ -129,7 +129,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -153,6 +153,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
