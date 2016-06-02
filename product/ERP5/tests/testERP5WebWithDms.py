@@ -1533,6 +1533,59 @@ return True
     else:
       raise ValueError("unhandled encoding %r" % encoding)
 
+  @customScript("ERP5Site_getWebSiteDomainDict", "", """return {
+    "test.portal.erp": context.getPortalObject(),
+    "test.site.erp": context.getPortalObject().web_site_module.test,
+  }""")
+  def test_WebPageImplicitSuccessorValueList(self):
+    # Test init part
+    # XXX use web site domain properties instead of @customScript
+    web_site = self.setupWebSite()
+    web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
+    image_module = self.portal.getDefaultModule(portal_type="Image")
+    img_list = []
+    for i in range(13):
+      img = image_module.newContent(
+        data=XSMALL_SVG_IMAGE_ICON_DATA,
+        reference="P-IMG-implicit.successor.value.list.test.%d" % i,
+        version="001",
+        language="en",
+      )
+      img.publish()
+      img_list.append(img)
+    page = web_page_module.newContent(
+      reference="P-WP-implicit.successor.value.list.test",
+      version="001",
+      language="en",
+      text_content="".join([
+        "<p>Hello</p>",
+        '<a href="%s" />' % img_list[0].getRelativeUrl(),
+        '<a href="%s" />' % img_list[0].getRelativeUrl(),
+        '<a href="./%s" />' % img_list[1].getRelativeUrl(),
+        '<a href="/%s" />' % img_list[2].getRelativeUrl(),
+        '<a href="%s/view" />' % img_list[3].getRelativeUrl(),
+        '<a href="P-IMG-implicit.successor.value.list.test.4" />',
+        '<a href="./P-IMG-implicit.successor.value.list.test.5" />',
+        '<a href="./P-IMG-implicit.successor.value.list.test.6/view" />',
+        '<a href="/P-IMG-implicit.successor.value.list.test.7/view" />',
+        '<a href="//test.site.erp/P-IMG-implicit.successor.value.list.test.8/view" />',
+        '<a href="http://test.site.erp/P-IMG-implicit.successor.value.list.test.9/view" />',
+        '<img src="P-IMG-implicit.successor.value.list.test.10?format=" />',
+        '<iframe src="/%s" />' % img_list[11].getRelativeUrl(),
+        '<style>body { background-image: url("P-IMG-implicit.successor.value.list.test.12?format=png"); }</style>',
+      ]),
+    )
+    page.publish()
+    self.tic()
+    # Test part
+    successor_list = self.portal.web_site_module.test\
+      .restrictedTraverse("P-WP-implicit.successor.value.list.test")\
+      .getImplicitSuccessorValueList()
+    self.assertEqual(
+      sorted([s.getUid() for s in successor_list]),
+      sorted([i.getUid() for i in img_list]),
+    )
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5WebWithDms))
