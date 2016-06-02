@@ -18,7 +18,6 @@ quantity_unit_conversion_module/conversion_group_weight/**
 web_page_module/gadget_trade**
 web_page_module/gkr_js_cookie.js
 web_page_module/rjs_jio_js
-web_page_module/rjs_jio_renderjs_storage_js
 web_page_module/rjs_renderjs_js
 web_page_module/super_test_panel_html
 web_page_module/super_test_panel_js
