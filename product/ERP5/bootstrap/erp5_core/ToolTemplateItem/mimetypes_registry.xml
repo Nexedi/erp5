@@ -11011,9 +11011,9 @@
             <key> <string>extensions</string> </key>
             <value>
               <tuple>
+                <string>bin</string>
                 <string>obj</string>
                 <string>so</string>
-                <string>bin</string>
                 <string>a</string>
               </tuple>
             </value>
@@ -17635,9 +17635,9 @@
             <key> <string>extensions</string> </key>
             <value>
               <tuple>
+                <string>jpg</string>
                 <string>pjpg</string>
                 <string>jpeg</string>
-                <string>jpg</string>
                 <string>jpe</string>
               </tuple>
             </value>

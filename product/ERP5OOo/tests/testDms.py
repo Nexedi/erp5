@@ -1612,7 +1612,7 @@ class TestDocument(TestDocumentMixin):
     image_count = builder._image_count
     failure_message = 'Expected image not found in ODF zipped archive'
     # fetch image from zipped archive content then compare with ERP5 Image
-    self.assertEqual(builder.extract('Pictures/%s.pjpg' % image_count),
+    self.assertEqual(builder.extract('Pictures/%s.jpg' % image_count),
                       image.getData(), failure_message)
 
     # Continue the test with image resizing support

@@ -286,7 +286,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
   def test_twoFileImportExportForImageIdentifyingTypeByContentType(self):
     """
       Test Business Template Import And Export With Image In Image Module
-      where extension (.pjpg) is found by content_type
+      where extension (.jpg) is found by content_type
     """
     image_data = """MalformedBase64HereiVBORw0KGgoAAAANSUhEUgAAAAUA
 AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
@@ -297,7 +297,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
       data = image_data,
       content_type = "image/jpeg",
       portal_type = "Image",
-    ), '.pjpg')
+    ), '.jpg')
 
   def test_twoFileImportExportForImageNotIdentifyingType(self):
     """
@@ -356,14 +356,14 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
   def test_twoFileImportExportForFileIdentifyingTypeByContentTypeObj(self):
     """
       Test Business Template Import And Export With File
-      where extension (.obj) is identified by the content_type
+      where extension (.bin) is identified by the content_type
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo",
       data = "a test file",
       content_type = "application/octet-stream",
       portal_type = "File",
-    ), '.obj')
+    ), '.bin')
 
   def test_twoFileImportExportForFileIdentifyingTypeByContentTypeEpub(self):
     """

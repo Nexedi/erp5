@@ -86,6 +86,7 @@ from Products.ERP5Type.patches import DTMLDocument
 from Products.ERP5Type.patches import CMFCoreUtils
 from Products.ERP5Type.patches import ZopePageTemplate
 from Products.ERP5Type.patches import ZSQLMethod
+from Products.ERP5Type.patches import MimetypesRegistry
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
