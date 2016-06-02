@@ -275,10 +275,12 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
     image_data = """iVBORw0KGgoAAAANSUhEUgAAAAUA
 AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 9TXL0Y4OHwAAAABJRU5ErkJggg=="""
-    image_document_kw = {"title": "foo", "data": image_data,
-                         "portal_type": "Image"}
 
-    self._checkTwoFileImportExportForImageInImageModule(image_document_kw, '.png')
+    self._checkTwoFileImportExportForImageInImageModule(dict(
+      title = "foo",
+      data = image_data,
+      portal_type = "Image",
+    ), '.png')
 
 
   def test_twoFileImportExportForImageIdentifyingTypeByContentType(self):
@@ -289,11 +291,13 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     image_data = """MalformedBase64HereiVBORw0KGgoAAAANSUhEUgAAAAUA
 AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 9TXL0Y4OHwAAAABJRU5ErkJggg=="""
-    image_document_kw = {"title": "foo", "data": image_data,
-                         "portal_type": "Image", "content_type": "image/jpeg"}
 
-    self._checkTwoFileImportExportForImageInImageModule(image_document_kw,
-                                                        '.pjpg')
+    self._checkTwoFileImportExportForImageInImageModule(dict(
+      title = "foo",
+      data = image_data,
+      content_type = "image/jpeg",
+      portal_type = "Image",
+    ), '.pjpg')
 
   def test_twoFileImportExportForImageNotIdentifyingType(self):
     """
@@ -303,11 +307,12 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     image_data = """MalformedBase64HereiVBORw0KGgoAAAANSUhEUgAAAAUA
 AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 9TXL0Y4OHwAAAABJRU5ErkJggg=="""
-    image_document_kw = {"title": "foo", "data": image_data,
-                         "portal_type": "Image"}
 
-    self._checkTwoFileImportExportForImageInImageModule(image_document_kw,
-                                                        '.bin')
+    self._checkTwoFileImportExportForImageInImageModule(dict(
+      title = "foo",
+      data = image_data,
+      portal_type = "Image",
+    ), '.bin')
 
   def _checkTwoFileImportExportForDocumentInDocumentModule(self,
                                                             file_document_kw,
@@ -341,88 +346,71 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
       Test Business Template Import And Export With File
       where extension (.js) is identified by the content_type
     """
-    file_content = "a test file"
-    file_content_type = "text/javascript"
-    file_title = "foo"
-
-    file_document_kw = {"title": file_title, "data": file_content,
-                        "content_type": file_content_type,
-                        "portal_type": "File"}
-
-    self._checkTwoFileImportExportForDocumentInDocumentModule(file_document_kw,
-                                                              '.js')
+    self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
+      title = "foo",
+      data = "a test file",
+      content_type = "text/javascript",
+      portal_type = "File",
+    ), '.js')
 
   def test_twoFileImportExportForFileIdentifyingTypeByContentTypeObj(self):
     """
       Test Business Template Import And Export With File
       where extension (.obj) is identified by the content_type
     """
-    file_content = "a test file"
-    file_content_type = "application/octet-stream"
-    file_title = "foo"
-    file_document_kw = {"title": file_title, "data": file_content,
-                        "content_type": file_content_type,
-                        "portal_type": "File"}
-
-    self._checkTwoFileImportExportForDocumentInDocumentModule(file_document_kw,
-                                                              '.obj')
+    self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
+      title = "foo",
+      data = "a test file",
+      content_type = "application/octet-stream",
+      portal_type = "File",
+    ), '.obj')
 
   def test_twoFileImportExportForFileIdentifyingTypeByContentTypeEpub(self):
     """
       Test Business Template Import And Export With File
       where extension (.epub) is identified by the content_type
     """
-    file_content = "a test file"
-    file_content_type = "application/epub+zip"
-    file_title = "foo"
-    file_document_kw = {"title": file_title, "data": file_content,
-                        "content_type": file_content_type,
-                        "portal_type": "File"}
-
-    self._checkTwoFileImportExportForDocumentInDocumentModule(file_document_kw,
-                                                              '.epub')
+    self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
+      title = "foo",
+      data = "a test file",
+      content_type = "application/epub+zip",
+      portal_type = "File",
+    ), '.epub')
 
   def test_twoFileImportExportForFileIdentifyingTypeByTitleJS(self):
     """
       Test Business Template Import And Export With File
       where extension (.js) is identified by the title
     """
-    file_content = "a test file"
-    file_title = "foo.js"
-    file_document_kw = {"title": file_title, "data": file_content,
-                        "portal_type": "File"}
-
-    self._checkTwoFileImportExportForDocumentInDocumentModule(file_document_kw,
-                                                              '.js')
+    self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
+      title = "foo.js",
+      data = "a test file",
+      portal_type = "File",
+    ), '.js')
 
   def test_twoFileImportExportForFileIdentifyingTypeByReferenceJS(self):
     """
       Test Business Template Import And Export With File
       where extension (.js) is identified by the reference
     """
-    file_content = "<script> ... </script>"
-    file_title = "foo"
-    file_document_kw = {"title": file_title, "data": file_content,
-                        "default_reference": file_title+".js",
-                        "portal_type": "File"}
-
-    self._checkTwoFileImportExportForDocumentInDocumentModule(file_document_kw,
-                                                              '.js')
+    self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
+      title = "foo",
+      data = "<script> ... </script>",
+      default_reference = "foo.js",
+      portal_type = "File",
+    ), '.js')
 
   def test_twoFileImportExportForFileNotIdentifyingTypeEmptyContentType(self):
     """
       Test Business Template Import And Export With File
       where extension is not identified, so it is exported as .bin
     """
-    file_content = "a test file"
-    file_content_type = None
-    file_title = "foo"
-    file_document_kw = {"title": file_title, "data": file_content,
-                        "content_type": file_content_type,
-                        "portal_type": "File"}
-
-    self._checkTwoFileImportExportForDocumentInDocumentModule(file_document_kw,
-                                                              '.bin')
+    self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
+      title = "foo",
+      data = "a test file",
+      content_type = None,
+      portal_type = "File",
+    ), '.bin')
 
   def test_twoFileImportExportForFileNotIdentifyingTypeBinaryContentType(self):
     """
@@ -431,15 +419,12 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
       but it is identified as binary in the mimetypes_registry so it is
       exported as .bin.
     """
-    file_content = "a test file"
-    file_content_type = 'video/wavelet'
-    file_title = "foo"
-    file_document_kw = {"title": file_title, "data": file_content,
-                        "content_type": file_content_type,
-                        "portal_type": "File"}
-
-    self._checkTwoFileImportExportForDocumentInDocumentModule(file_document_kw,
-                                                              '.bin')
+    self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
+      title = "foo",
+      data = "a test file",
+      content_type = "video/wavelet",
+      portal_type = "File",
+    ), '.bin')
 
   def test_twoFileImportExportForFileNotIdentifyingTypeNonBinaryContentType(self):
     """
@@ -448,15 +433,12 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
       but it is identified as non-binary in the mimetypes_registry so it is
       exported as .txt.
     """
-    file_content = "a test file"
-    file_content_type = 'text/x-uri'
-    file_title = "foo"
-    file_document_kw = {"title": file_title, "data": file_content,
-                        "content_type": file_content_type,
-                        "portal_type": "File"}
-
-    self._checkTwoFileImportExportForDocumentInDocumentModule(file_document_kw,
-                                                              '.txt')
+    self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
+      title = "foo",
+      data = "a test file",
+      content_type = "text/x-uri",
+      portal_type = "File",
+    ), '.txt')
 
   def test_twoFileImportExportForFileIdentifyingTypeByTitleXML(self):
     """
@@ -469,14 +451,12 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 <surname>Doe</surname>
 </person>
     """
-    file_title = "foo.xml"
-    file_content_type = None
-    file_document_kw = {"title": file_title, "data": file_content,
-                        "content_type": file_content_type,
-                        "portal_type": "File"}
-
-    self._checkTwoFileImportExportForDocumentInDocumentModule(file_document_kw,
-                                                              '._xml')
+    self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
+      title = "foo.xml",
+      data = file_content,
+      content_type = None,
+      portal_type = "File",
+    ), '._xml')
 
   def test_twoFileImportExportForFileInPortalSkinsIdentifyingTypeByTitleXML(self):
     """
@@ -534,13 +514,11 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
   def test_twoFileImportExportForPDF(self):
     """Test Business Template Import And Export With A PDF Document"""
-    pdf_data = """pdf content, maybe should update for base64 sample"""
-
-    pdf_document_kw = {"title": "foo.pdf", "data": pdf_data,
-                         "portal_type": "PDF"}
-
-    self._checkTwoFileImportExportForDocumentInDocumentModule(pdf_document_kw,
-                                                              '.pdf')
+    self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
+      title = "foo.pdf",
+      data ="pdf content, maybe should update for base64 sample" ,
+      portal_type = "PDF",
+    ), '.pdf')
 
   def test_twoFileImportExportForCatalogMethodInCatalog(self):
     """Test Business Template Import And Export With Catalog Method In Catalog"""
@@ -800,7 +778,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     if OOo_template_id in skin_folder.objectIds():
       skin_folder.manage_delObjects([OOo_template_id])
 
-    addOOoTemplate =skin_folder.manage_addProduct['ERP5OOo'].addOOoTemplate
+    addOOoTemplate = skin_folder.manage_addProduct['ERP5OOo'].addOOoTemplate
     addOOoTemplate(id=OOo_template_id, title=OOo_template_data)
 
     self.template.edit(template_skin_id_list=[skin_folder_id+'/'+OOo_template_id,])
@@ -829,43 +807,34 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
       Test Business Template Import And Export With Spreadsheed where the
       extension is not identified, so it is exported as '.bin'
     """
-    # XXX addding a dummy string in data leads to 'NotConvertedError'
-    spreadsheet_data = ''
-
-    spreadsheet_document_kw = {"title": "foo", "data": spreadsheet_data,
-                         "portal_type": "Spreadsheet"}
-
-    self._checkTwoFileImportExportForDocumentInDocumentModule(spreadsheet_document_kw,
-                                                              '.bin')
+    self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
+      title = "foo",
+      data = "", # XXX a dummy string in data leads to 'NotConvertedError'
+      portal_type = "Spreadsheet",
+    ), '.bin')
 
   def test_twoFileImportExportForSpreadsheetIdentifyingTypeByContentType(self):
     """
       Test Business Template Import And Export With Spreadsheed where the
       extension is identified by content_type, so it is exported as '.ods'
     """
-    # XXX addding a dummy string in data leads to 'NotConvertedError'
-    spreadsheet_data = ''
-
-    spreadsheet_document_kw = {"title": "foo", "data": spreadsheet_data,
-              "portal_type": "Spreadsheet",
-              "content_type": "application/vnd.oasis.opendocument.spreadsheet"}
-
-    self._checkTwoFileImportExportForDocumentInDocumentModule(spreadsheet_document_kw,
-                                                              '.ods')
+    self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
+      title = "foo",
+      data = "", # XXX a dummy string in data leads to 'NotConvertedError'
+      content_type = "application/vnd.oasis.opendocument.spreadsheet",
+      portal_type = "Spreadsheet",
+    ), '.ods')
 
   def test_twoFileImportExportForSpreadsheetIdentifyingTypeByTitle(self):
     """
       Test Business Template Import And Export With Spreadsheed where the
       extension is identified by title, so it is exported as '.xlsx'
     """
-    # XXX addding a dummy string in data leads to 'NotConvertedError'
-    spreadsheet_data = ''
-
-    spreadsheet_document_kw = {"title": "foo.xlsx", "data": spreadsheet_data,
-                         "portal_type": "Spreadsheet"}
-
-    self._checkTwoFileImportExportForDocumentInDocumentModule(spreadsheet_document_kw,
-                                                              '.xlsx')
+    self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
+      title = "foo.xlsx",
+      data = "", # XXX a dummy string in data leads to 'NotConvertedError'
+      portal_type = "Spreadsheet",
+    ), '.xlsx')
 
   def test_twoFileImportExportForTestPage(self):
     """Test Business Template Import And Export With A Test Page Document"""
