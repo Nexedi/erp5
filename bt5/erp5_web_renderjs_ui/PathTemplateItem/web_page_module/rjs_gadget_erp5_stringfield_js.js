@@ -15,20 +15,17 @@
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
     .declareAcquiredMethod("notifyChange", "notifyChange")
-    .declareAcquiredMethod("inputChange", "inputChange")
-
-
+    .declareAcquiredMethod("inputChange", "inputChange")	
     .declareMethod('getTextContent', function () {
       return this.props.value;
     })
     .declareMethod('render', function (options) {
       var element,
         text,
-        input,
+        input,	
         field_json = options.field_json || {};
       this.props.value = field_json.value || field_json.default || "";
       this.props.editable = field_json.editable;
-
       if (this.props.change !== undefined) {
         input = this.element.querySelector('input');
         input.value = this.props.value;
@@ -105,6 +102,31 @@
         return;
       }
 
+      function notifyChange() {
+        return RSVP.all([
+          field_gadget.checkValidity(),
+          field_gadget.notifyChange()
+        ]);
+      }
+
+      // Listen to input change
+      return loopEventListener(
+        field_gadget.element.querySelector('input'),
+        'change',
+        false,
+        notifyChange
+      );
+    })
+
+    .declareService(function () {
+      ////////////////////////////////////
+      // Check field validity when the value changes
+      ////////////////////////////////////
+      var field_gadget = this;
+      if (!field_gadget.props.editable) {
+        return;
+      }
+
       function inputChange() {
         return new RSVP.Queue()
           .push(function () {
@@ -126,32 +148,7 @@
         inputChange
       );
     })
-
-    .declareService(function () {
-      ////////////////////////////////////
-      // Check field validity when the value changes
-      ////////////////////////////////////
-      var field_gadget = this;
-      if (!field_gadget.props.editable) {
-        return;
-      }
-
-      function notifyChange() {
-        return RSVP.all([
-          field_gadget.checkValidity(),
-          field_gadget.notifyChange()
-        ]);
-      }
-
-      // Listen to input change
-      return loopEventListener(
-        field_gadget.element.querySelector('input'),
-        'change',
-        false,
-        notifyChange
-      );
-    })
-
+    
     .declareService(function () {
       ////////////////////////////////////
       // Inform when the field input is invalid

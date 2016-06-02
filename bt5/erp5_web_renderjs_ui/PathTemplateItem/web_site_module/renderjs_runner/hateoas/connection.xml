@@ -109,6 +109,12 @@
             </value>
         </item>
         <item>
+            <key> <string>__translation_dict</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
             <key> <string>_identity_criterion</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>

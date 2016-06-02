@@ -72,8 +72,7 @@
           g.props.element = element;
         });
     })
-    .declareAcquiredMethod("inputChange", "inputChange")
-
+    .declareAcquiredMethod("inputChange", "inputChange")	
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .allowPublicAcquisition("notifyInvalid", function (param_list, scope) {
       return this.getDeclaredGadget(scope)
@@ -95,11 +94,12 @@
           gadget_element.previousElementSibling.querySelector("span").textContent = "";
         });
     })
-
-    .allowPublicAcquisition("inputChange", function (param_list, scope) {
+   .allowPublicAcquisition("inputChange", function (param_list, scope) {
 
       return this.inputChange(param_list[0], scope);
     })
+    
+    
     .allowPublicAcquisition("getFieldTypeGadgetUrl", function (param_list) {
       return getFieldTypeGadgetUrl(param_list[0]);
     })
@@ -120,7 +120,7 @@
 
       delete options.erp5_document;
       delete options.form_definition;
-
+      
       if (options.gadget !== undefined) {
         return queue
           .push(function () {
@@ -137,7 +137,7 @@
       }
       group_list = form_definition.group_list;
 
-      // options = options.form_gadget || {};
+      //options = options.form_gadget || {};
       form_gadget.state_parameter_dict = options.form_gadget || {};
       // XXX Hardcoded for searchfield - remove later!
       if (form_definition.extended_search) {
