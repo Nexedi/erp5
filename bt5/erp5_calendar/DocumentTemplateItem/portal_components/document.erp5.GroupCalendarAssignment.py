@@ -46,14 +46,36 @@ class GroupCalendarAssignment(PresencePeriod):
   security.declareProtected(Permissions.AccessContentsInformation,
                            'getPeriodList')
   def getPeriodList(self):
+    """Returns the list of periods covered by this group calendar assignment.
+
+    The periods returned by this method are defined by:
+     - quantity
+     - resource
+     - start and stop dates
+    and optionally a periodicity definition, as defined by product/ERP5/mixin/periodicity_mixin.py
+
+    This can be scriptable using a type based method, for example to disable some non applicable periods.
+
+    The default implementation will consider all the periods from the associated group calendar,
+    only for the time frame of this calendar assignment.
+    """
     period_list = []
 
     method = self._getTypeBasedMethod("getPeriodList")
     if method is None:
       group_calendar = self.getSpecialiseValue()
       if group_calendar is not None:
-        period_list = group_calendar.objectValues(
-                                  portal_type=self.getPortalCalendarPeriodTypeList())
+        start_date = self.getStartDate()
+        stop_date = self.getStopDate()
+        period_list = []
+        for period in group_calendar.objectValues(
+            portal_type=self.getPortalCalendarPeriodTypeList()):
+          period_list.append(
+            period.asContext(
+              start_date=max(period.getStartDate(start_date), start_date),
+              periodicity_stop_date=min(
+                period.getPeriodicityStopDate(stop_date), stop_date))
+          )
     else:
       period_list = method()
     return period_list
@@ -62,13 +84,12 @@ class GroupCalendarAssignment(PresencePeriod):
     result = []
     start_date = self.getStartDate()
     stop_date = self.getStopDate()
-    if not(None in (self.getDestinationUid(), start_date)):
+    if not(None in (self.getDestinationUid(), start_date, stop_date)):
       period_list = self.getPeriodList()
-      if len(period_list):
-        for period in period_list:
-          for date_period_data in period._getDatePeriodDataList():
-            if date_period_data['start_date'].greaterThanEqualTo(start_date):
-              if stop_date is None or date_period_data['stop_date'].lessThanEqualTo(
-                  stop_date):
-                result.append(date_period_data)
+      for period in period_list:
+        for date_period_data in period._getDatePeriodDataList():
+          if date_period_data['start_date'].greaterThanEqualTo(start_date):
+            if stop_date is None or date_period_data['stop_date'].lessThanEqualTo(
+                stop_date):
+              result.append(date_period_data)
     return result
