@@ -68,6 +68,7 @@ from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetD
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from OFS.Traversable import NotFound
 from OFS import SimpleItem, XMLExportImport
+from OFS.Image import Pdata
 from cStringIO import StringIO
 from copy import deepcopy
 from zExceptions import BadRequest
@@ -121,24 +122,29 @@ INSTALLED_BT_FOR_DIFF = 'installed_bt_for_diff'
 _MARKER = []
 
 SEPARATELY_EXPORTED_PROPERTY_DICT = {
+  # For objects whose class name is 'class_name', the 'property_name'
+  # attribute is removed from the XML export, and the value is exported in a
+  # separate file, with extension specified by 'extension'.
+  # 'extension' must be None for auto-detection.
+  #
   # class_name: (extension, property_name),
-  "Document Component":  ("py",   "text_content"),
-  "DTMLMethod":          (None,   "raw"),
-  "Extension Component": ("py",   "text_content"),
-  "File":                (None,   "data"),
-  "Image":               (None,   "data"),
-  "OOoTemplate":         ("oot",  "_text"),
-  "PDF":                 ("pdf",  "data"),
-  "Python Script":       ("py",   "_body"),
-  "PythonScript":        ("py",   "_body"),
-  "Spreadsheet":         (None,   "data"),
-  "SQL":                 ("sql",  "src"),
-  "Test Component":      ("py",   "text_content"),
-  "Test Page":           (None,   "text_content"),
-  "Web Page":            (None,   "text_content"),
-  "Web Script":          (None,   "text_content"),
-  "Web Style":           (None,   "text_content"),
-  "ZopePageTemplate":    ("zpt",  "_text"),
+  "Document Component":  ("py",   0, "text_content"),
+  "DTMLMethod":          (None,   0, "raw"),
+  "Extension Component": ("py",   0, "text_content"),
+  "File":                (None,   0, "data"),
+  "Image":               (None,   0, "data"),
+  "OOoTemplate":         ("oot",  1, "_text"),
+  "PDF":                 ("pdf",  0, "data"),
+  "Python Script":       ("py",   0, "_body"),
+  "PythonScript":        ("py",   0, "_body"),
+  "Spreadsheet":         (None,   0, "data"),
+  "SQL":                 ("sql",  0, "src"),
+  "Test Component":      ("py",   0, "text_content"),
+  "Test Page":           (None,   0, "text_content"),
+  "Web Page":            (None,   0, "text_content"),
+  "Web Script":          (None,   0, "text_content"),
+  "Web Style":           (None,   0, "text_content"),
+  "ZopePageTemplate":    ("zpt",  1, "_text"),
 }
 
 def _getCatalog(acquisition_context):
@@ -814,18 +820,26 @@ class ObjectTemplateItem(BaseTemplateItem):
         bta.addObject(obj, name=key, ext='.py')
       else:
         try:
-          extension, record_id = \
+          extension, unicode_data, record_id = \
             SEPARATELY_EXPORTED_PROPERTY_DICT[obj.__class__.__name__]
         except KeyError:
           pass
         else:
-          # we copy the object from the context. Sometimes this changes
-          # output_encoding, so we keep it here to restore.
-          output_encoding = getattr(aq_base(obj), 'output_encoding', _MARKER)
           while 1: # not a loop
             obj = obj._getCopy(context)
+            data = getattr(aq_base(obj), record_id, None)
+            if unicode_data:
+              if type(data) is not unicode:
+                break
+              try:
+                data = data.encode(aq_base(obj).output_encoding)
+              except (AttributeError, UnicodeEncodeError):
+                break
+            elif type(data) is not bytes:
+              if not isinstance(data, Pdata):
+                break
+              data = bytes(data)
             try:
-              data = getattr(aq_base(obj), record_id)
               # Delete this attribute from the object.
               # in case the related Portal Type does not exist, the object may be broken.
               # So we cannot delattr, but we can delete the key of its its broken state
@@ -835,32 +849,19 @@ class ObjectTemplateItem(BaseTemplateItem):
               else:
                 delattr(obj, record_id)
             except (AttributeError, KeyError):
-              # property was not set on instance,
+              # property was acquired on a class,
               # do nothing, only .xml metadata will be exported
               break
             # export a separate file with the data
-            if isinstance(data, unicode):
-              data = str(data.encode('utf-8'))
-            elif not isinstance(data, str):
-              data = str(data)
             if not extension:
               extension = self.guessExtensionOfDocument(obj, key,
                 data if record_id == 'data' else None)
             bta.addObject(StringIO(data), key, path=path,
               ext='._xml' if extension == 'xml' else '.' + extension)
             break
-
           # since we get the obj from context we should
           # again remove useless properties
           obj = self.removeProperties(obj, 1, keep_workflow_history = True)
-
-          if output_encoding is not _MARKER:
-            if isinstance(obj, ERP5BaseBroken):
-              self._objects[obj_key].__Broken_state__['output_encoding'] = \
-                output_encoding
-              obj._p_changed = 1
-            else:
-              obj.output_encoding = output_encoding
           transaction.savepoint(optimistic=True)
 
         f = StringIO()
@@ -873,7 +874,6 @@ class ObjectTemplateItem(BaseTemplateItem):
         bta.addObject(xml_data, key + '.catalog_keys', path=path)
         
   def _importFile(self, file_name, file_obj, catalog_method_template_item = 0):
-    transactional_variable = getTransactionalVariable()
     obj_key, file_ext = os.path.splitext(file_name)
     # id() for installing several bt5 in the same transaction
     transactional_variable_obj_key = "%s-%s" % (id(self), obj_key)
@@ -886,14 +886,16 @@ class ObjectTemplateItem(BaseTemplateItem):
         # For ZODB Components: if .xml have been processed before, set the
         # source code property, otherwise store it in a transactional variable
         # so that it can be set once the .xml has been processed
-        file_obj_content = file_obj.read()
+        data = file_obj.read()
         try:
           obj = self._objects[obj_key]
         except KeyError:
-          transactional_variable[transactional_variable_obj_key] = file_obj_content
+          getTransactionalVariable()[transactional_variable_obj_key] = data
         else:
-          exported_property_type = SEPARATELY_EXPORTED_PROPERTY_DICT[
-            obj.__class__.__name__][1]
+          unicode_data, property_name = SEPARATELY_EXPORTED_PROPERTY_DICT[
+            obj.__class__.__name__][1:]
+          if unicode_data:
+            data = data.decode(obj.output_encoding)
           # if we have instance of InitGhostBase, 'unghost' it so we can
           # identify if it is broken
           if isinstance(self._objects[obj_key], InitGhostBase):
@@ -901,10 +903,10 @@ class ObjectTemplateItem(BaseTemplateItem):
           # in case the Portal Type does not exist, the object may be broken.
           # So we cannot setattr, but we can change the attribute in its broken state
           if isinstance(self._objects[obj_key], ERP5BaseBroken):
-            self._objects[obj_key].__Broken_state__[exported_property_type] = file_obj_content
+            self._objects[obj_key].__Broken_state__[property_name] = data
             self._objects[obj_key]._p_changed = 1
           else:
-            setattr(self._objects[obj_key], exported_property_type, file_obj_content)
+            setattr(self._objects[obj_key], property_name, data)
             self._objects[obj_key] = self.removeProperties(self._objects[obj_key], 1, keep_workflow_history = True)
     else:
       connection = self.getConnection(self.aq_parent)
@@ -917,9 +919,12 @@ class ObjectTemplateItem(BaseTemplateItem):
         obj = connection.importFile(file_obj, customImporters=customImporters)
       self._objects[obj_key] = obj
 
-      if transactional_variable.get(transactional_variable_obj_key, None) != None:
-        exported_property_type = SEPARATELY_EXPORTED_PROPERTY_DICT[
-          obj.__class__.__name__][1]
+      data = getTransactionalVariable().get(transactional_variable_obj_key)
+      if data is not None:
+        unicode_data, property_name = SEPARATELY_EXPORTED_PROPERTY_DICT[
+          obj.__class__.__name__][1:]
+        if unicode_data:
+          data = data.decode(obj.output_encoding)
         # if we have instance of InitGhostBase, 'unghost' it so we can
         # identify if it is broken
         if isinstance(self._objects[obj_key], InitGhostBase):
@@ -927,10 +932,10 @@ class ObjectTemplateItem(BaseTemplateItem):
         # in case the related Portal Type does not exist, the object may be broken.
         # So we cannot setattr, but we can change the attribute in its broken state
         if isinstance(self._objects[obj_key], ERP5BaseBroken):
-          self._objects[obj_key].__Broken_state__[exported_property_type] = transactional_variable[transactional_variable_obj_key]
+          self._objects[obj_key].__Broken_state__[property_name] = data
           self._objects[obj_key]._p_changed = 1
         else:
-          setattr(self._objects[obj_key], exported_property_type, transactional_variable[transactional_variable_obj_key])
+          setattr(self._objects[obj_key], property_name, data)
           self._objects[obj_key] = self.removeProperties(self._objects[obj_key], 1, keep_workflow_history = True)
 
       # When importing a Business Template, there is no way to determine if it

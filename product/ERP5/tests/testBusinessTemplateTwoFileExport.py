@@ -27,6 +27,7 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from runUnitTest import tests_home
 import glob
 import shutil
@@ -629,16 +630,13 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     skin_folder = self.portal.portal_skins[skin_folder_id]
 
     page_template_id = 'dummy_page_template'
-    if page_template_id in skin_folder.objectIds():
-      skin_folder.manage_delObjects([page_template_id])
-    page_template_text = '<html></html>'
+    page_template_text = '<?xml version="1.0"?><foo/>'
     page_template_kw = {"id": page_template_id,
                          "_text": page_template_text,
-                         "content_type": "text/html",
+                         "content_type": "text/xml",
                          "output_encoding": "utf-8"}
-    skin_folder.manage_addProduct['PageTemplates'].\
-                      manage_addPageTemplate(id=page_template_id,
-                                             text=page_template_text)
+    skin_folder._setObject(page_template_id, ZopePageTemplate(
+      page_template_id, page_template_text, page_template_kw["content_type"]))
 
     self.template.edit(template_skin_id_list=[skin_folder_id+'/'+page_template_id,])
 
@@ -773,30 +771,30 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     skin_folder = self.portal.portal_skins[skin_folder_id]
 
     OOo_template_id = 'dummy_OOo_template'
-    OOo_template_data = 'dummy OOotemplate content'
+    OOo_template_data = u'dummy OOotemplate content …'
 
     OOo_template_kw = {"id": OOo_template_id,
                          "_text": OOo_template_data,
                          "output_encoding": "utf-8",
                          "content_type": "text/html"}
 
-    if OOo_template_id in skin_folder.objectIds():
-      skin_folder.manage_delObjects([OOo_template_id])
-
-    addOOoTemplate = skin_folder.manage_addProduct['ERP5OOo'].addOOoTemplate
-    addOOoTemplate(id=OOo_template_id, title=OOo_template_data)
+    from Products.ERP5OOo.OOoTemplate import OOoTemplate
+    skin_folder._setObject(OOo_template_id,
+      OOoTemplate(OOo_template_id, OOo_template_data, content_type=''))
 
     self.template.edit(template_skin_id_list=[skin_folder_id+'/'+OOo_template_id,])
 
-    OOo_template_path = os.path.join(self.export_dir,
-                                             'SkinTemplateItem', 'portal_skins',
-                                              skin_folder_id, OOo_template_id)
+    key = os.path.join('portal_skins', skin_folder_id, OOo_template_id)
+    OOo_template_path = os.path.join(self.export_dir, 'SkinTemplateItem', key)
 
     import_template = self._exportAndReImport(
                                   OOo_template_path,
                                   ".oot",
-                                  OOo_template_kw['_text'],
+                                  OOo_template_data.encode('utf-8'),
                                   ['_text'])
+
+    self.assertIs(type(import_template._skin_item._objects[key]._text),
+                  type(skin_folder[OOo_template_id]._text))
 
     self.portal.portal_skins[skin_folder_id].manage_delObjects([OOo_template_id])
 
@@ -1002,6 +1000,18 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
       portal_type = "File",
     ), None)
 
+  def test_twoFileImportExportForFileWithNullData(self):
+    """
+      Test Business Template Import And Export with File with data=None,
+      in which case there's nothing exported as a separate file.
+    """
+    self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
+      title = "foo",
+      data = None,
+      content_type = "text/javascript",
+      portal_type = "File",
+    ), None)
+
   def test_twoFileImportExportForZopePageTemplateISO_8859_15(self):
     """
       Test Business Template Import And Export With ZopePageTemplate with
@@ -1017,17 +1027,13 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     skin_folder = self.portal.portal_skins[skin_folder_id]
 
     page_template_id = 'dummy_page_template'
-    if page_template_id in skin_folder.objectIds():
-      skin_folder.manage_delObjects([page_template_id])
     page_template_text = '<html></html>'
     page_template_kw = {"id": page_template_id,
                          "_text": page_template_text,
-                         "content_type": "text/html"}
-    page_template = skin_folder.manage_addProduct['PageTemplates'].\
-                      manage_addPageTemplate(id=page_template_id,
-                                             text=page_template_text)
-
-    page_template.output_encoding = 'iso-8859-15'
+                         "content_type": "text/html",
+                         "output_encoding": "iso-8859-15"}
+    skin_folder._setObject(page_template_id, ZopePageTemplate(
+      page_template_id, page_template_text, page_template_kw["content_type"]))
 
     self.template.edit(template_skin_id_list=[skin_folder_id+'/'+page_template_id,])
 
@@ -1075,7 +1081,6 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     page_template = self.portal.portal_skins[skin_folder_id][page_template_id]
     for property_id, property_value in page_template_kw.iteritems():
       self.assertEqual(getattr(page_template, property_id), property_value)
-    self.assertEquals(page_template.output_encoding, 'utf-8')
 
     # uninstall and export the business template
     import_template.uninstall()
