@@ -102,8 +102,6 @@ try:
 except TypeError:
   pass
 cache_database = threading.local()
-from mimetypes import guess_extension
-from mimetypes import MimeTypes
 from Products.MimetypesRegistry.common import MimeTypeException
 import base64
 import binascii
@@ -754,100 +752,89 @@ class ObjectTemplateItem(BaseTemplateItem):
           return {exported_property_type: extension}
     return {}
 
-  def getMimetypesRegistryLookupResultOfContenType(self, content_type):
-    """Returns a lookup in mimetypes_registry based on the content_type"""
-    mimetypes_registry = self.getPortalObject().mimetypes_registry
-    try:
-      return mimetypes_registry.lookup(content_type)
-    except MimeTypeException:
-      return
-
-  def guessExtensionOfDocument(self, document, key, exported_property_type=None):
-    """Guesses and returns the extension of an ERP5 document.
-
-    The process followed is:
-    1. Try to guess extension by content type
-    2. Try to guess extension by the id of the document
-    3. Try to guess extension by the title of the document
-    4. Try to guess extension by the reference of the document
-    5. In the case of an image, try to guess extension by Base64 representation
-
-    In case everything fails then:
-    - '.bin' is returned for binary files
-    - '.txt' is returned for text
-    """
-    # Try to guess the extension based on the content_type of the document
-    # XXX Zope items like DTMLMethod would not
-    # implement getContentType method
-    extension = None
-    binary = 'not_identified'
-    content_type = None
-    if hasattr(document, 'getContentType'):
-      content_type = document.getContentType()
-    elif isinstance(document, ERP5BaseBroken):
-      content_type = getattr(document, "content_type", None)
-    if content_type:
-      lookup_result = self.getMimetypesRegistryLookupResultOfContenType(content_type)
-      if lookup_result:
-        # return first registered Extension (if any)
-        if lookup_result[0].extensions:
-          extension = lookup_result[0].extensions[0]
-        # If there is no extension return the first registered Glob (if any)
-        elif lookup_result[0].globs:
-          extension = str(lookup_result[0].globs[0]).replace('*', '')
-        if hasattr(lookup_result[0], 'binary'):
-          binary = lookup_result[0].binary
-      if extension:
-        if not extension.startswith('.'):
-          extension = '.'+extension
-        return extension
+  def _guessFilename(self, document, key, exported_property_type):
     # Try to guess the extension based on the id of the document
-    mime = MimeTypes()    
-    mime_type = mime.guess_type(key)
-    if mime_type[0]:
-      extension = guess_extension(mime_type[0])
-      return extension
+    yield key
     # Try to guess the extension based on the reference of the document
-    mime = MimeTypes()
-    reference = None
     if hasattr(document, 'getReference'):
-      reference = document.getReference()
+      yield document.getReference()
     elif isinstance(document, ERP5BaseBroken):
-      reference = getattr(document, "reference", None)
-    if reference:
-      mime_type = mime.guess_type(reference)
-      if mime_type[0]:
-        extension = guess_extension(mime_type[0])
-        return extension
+      yield getattr(document, "reference", None)
     # Try to guess the extension based on the title of the document
-    title = getattr(document, "title", None)
-    if title:
-      mime_type = mime.guess_type(title)
-      if mime_type[0]:
-        extension = guess_extension(mime_type[0])
-        return extension
+    yield getattr(document, "title", None)
     # Try to get type of image from its base64 encoding
     if exported_property_type == 'data':
       # XXX maybe decoding the whole file just for the extension is an overkill
       data = str(document.__dict__.get('data'))
       try:
         decoded_data = base64.decodestring(data)
+      except binascii.Error:
+        LOG('BusinessTemplate ', 0, 'data is not base 64')
+      else:
         for test in imghdr.tests:
           extension = test(decoded_data, None)
           if extension:
-            return '.'+extension
-      except binascii.Error:
-        LOG('BusinessTemplate ', 0, 'data is not base 64')
+            yield 'x.' + extension
+
+  def guessExtensionOfDocument(self, document, key, exported_property_type=None):
+    """Guesses and returns the extension of an ERP5 document.
+
+    The process followed is:
+    1. Try to guess extension by the id of the document
+    2. Try to guess extension by the title of the document
+    3. Try to guess extension by the reference of the document
+    4. In the case of an image, try to guess extension by Base64 representation
+
+    If there's a content type, we only return an extension that matches.
+
+    In case everything fails then:
+    - '.bin' is returned for binary files
+    - '.txt' is returned for text
+    """
+    # XXX Zope items like DTMLMethod would not implement getContentType method
+    mime = None
+    if hasattr(document, 'getContentType'):
+      content_type = document.getContentType()
+    elif isinstance(document, ERP5BaseBroken):
+      content_type = getattr(document, "content_type", None)
+    else:
+      content_type = None
+    # For stable export, people must have a MimeTypes Registry, so do not
+    # fallback on mimetypes. We prefer the mimetypes_registry because there
+    # are more extensions and we can have preferred extensions.
+    # See also https://bugs.python.org/issue1043134
+    mimetypes_registry = self.getPortalObject()['mimetypes_registry']
+    if content_type:
+      try:
+        mime = mimetypes_registry.lookup(content_type)[0]
+      except (IndexError, MimeTypeException):
+        pass
+
+    for key in self._guessFilename(document, key, exported_property_type):
+      if key:
+        ext = os.path.splitext(key)[1].lower()
+        if ext and (mimetypes_registry.lookupExtension(ext[1:]) is mime if mime
+               else mimetypes_registry.lookupExtension(ext[1:])):
+          return ext
+
+    if mime:
+      # return first registered extension (if any)
+      if mime.extensions:
+        return '.' + mime.extensions[0]
+      for ext in mime.globs:
+        if ext[0] == "*" and ext.count(".") == 1:
+          return ext[1:].encode("utf-8")
+
     # in case we could not read binary flag from mimetypes_registry then return
     # '.bin' for all the Portal Types where exported_property_type is data
     # (File, Image, Spreadsheet). Otherwise, return .bin if binary was returned
     # as 1.
-    if (binary == 'not_identified' and exported_property_type == 'data') or \
-       binary == 1:
+    binary = getattr(mime, 'binary', None)
+    if (binary is None and exported_property_type == 'data') or binary:
       return '.bin'
     # in all other cases return .txt
     return '.txt'
-      
+
   def export(self, context, bta, catalog_method_template_item = 0, **kw):
     """
       Export the business template : fill the BusinessTemplateArchive with
