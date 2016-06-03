@@ -12,4 +12,6 @@ uid_set = set()
 for o in context.WebPage_extractReferredObjectDict().values():
   if o is not None:
     uid_set.add(o.getUid())
-return context.portal_catalog(uid=list(uid_set))
+if uid_set:
+  return context.portal_catalog(uid=list(uid_set))
+return ()
