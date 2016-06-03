@@ -101,4 +101,29 @@
     });
   };
 
+  window.promiseDoWhile = function (loopFunction, input) {
+    // calls loopFunction(input) until it returns a non positive value
+
+    // this queue is to protect the inner loop queue from the
+    // `promiseDoWhile` caller, avoiding it to enqueue the inner
+    // loop queue.
+    return new RSVP.Queue()
+      .push(function () {
+        // here is the inner loop queue
+        var loop_queue = new RSVP.Queue();
+        function iterate(previous_iteration_result) {
+          if (!previous_iteration_result) {
+            return input;
+          }
+          loop_queue.push(iterate);
+          return loopFunction(input);
+        }
+        return loop_queue
+          .push(function () {
+            return loopFunction(input);
+          })
+          .push(iterate);
+      });
+  };
+
 }(window, RSVP, FileReader));
