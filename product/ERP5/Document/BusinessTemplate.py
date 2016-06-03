@@ -103,8 +103,6 @@ except TypeError:
   pass
 cache_database = threading.local()
 from Products.MimetypesRegistry.common import MimeTypeException
-import base64
-import binascii
 import imghdr
 
 # those attributes from CatalogMethodTemplateItem are kept for
@@ -763,16 +761,16 @@ class ObjectTemplateItem(BaseTemplateItem):
       yield getattr(document_base, "reference", None)
     # Try to guess the extension based on the title of the document
     yield getattr(document_base, "title", None)
+    # Try to guess from content
     if exported_property_type == 'data':
-      # XXX maybe decoding the whole file just for the extension is an overkill
-      data = str(document.__dict__.get('data'))
-      try:
-        decoded_data = base64.decodestring(data)
-      except binascii.Error:
-        LOG('BusinessTemplate ', 0, 'data is not base 64')
-      else:
+      data = getattr(document_base, exported_property_type, None)
+      if data:
+        try:
+          data = str(data)
+        except Exception:
+          return
         for test in imghdr.tests:
-          extension = test(decoded_data, None)
+          extension = test(data, None)
           if extension:
             yield 'x.' + extension
 
@@ -783,7 +781,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     1. Try to guess extension by the id of the document
     2. Try to guess extension by the title of the document
     3. Try to guess extension by the reference of the document
-    4. In the case of an image, try to guess extension by Base64 representation
+    4. Try to guess from content (only image data is tested)
 
     If there's a content type, we only return an extension that matches.
 

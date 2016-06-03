@@ -267,34 +267,29 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
       self.assertEqual(image_page.getProperty(property_id), property_value)
 
 
-  def test_twoFileImportExportForImageIdentifyingTypeByBase64(self):
+  png_data = """iVBORw0KGgoAAAANSUhEUgAAAAUA
+AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
+9TXL0Y4OHwAAAABJRU5ErkJggg==""".decode("base64")
+
+  def test_twoFileImportExportForImageIdentifyingTypeByContent(self):
     """
       Test Business Template Import And Export With Image In Image Module
       where extension is found by Base64 representation
     """
-    image_data = """iVBORw0KGgoAAAANSUhEUgAAAAUA
-AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
-9TXL0Y4OHwAAAABJRU5ErkJggg=="""
-
     self._checkTwoFileImportExportForImageInImageModule(dict(
       title = "foo",
-      data = image_data,
+      data = self.png_data,
       portal_type = "Image",
     ), '.png')
-
 
   def test_twoFileImportExportForImageIdentifyingTypeByContentType(self):
     """
       Test Business Template Import And Export With Image In Image Module
       where extension (.jpg) is found by content_type
     """
-    image_data = """MalformedBase64HereiVBORw0KGgoAAAANSUhEUgAAAAUA
-AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
-9TXL0Y4OHwAAAABJRU5ErkJggg=="""
-
     self._checkTwoFileImportExportForImageInImageModule(dict(
       title = "foo",
-      data = image_data,
+      data = self.png_data, # just to check priorities
       content_type = "image/jpeg",
       portal_type = "Image",
     ), '.jpg')
@@ -304,13 +299,9 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
       Test Business Template Import And Export With Image In Image Module
       where extension is not identified, so it is exported as '.bin'
     """
-    image_data = """MalformedBase64HereiVBORw0KGgoAAAANSUhEUgAAAAUA
-AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
-9TXL0Y4OHwAAAABJRU5ErkJggg=="""
-
     self._checkTwoFileImportExportForImageInImageModule(dict(
       title = "foo",
-      data = image_data,
+      data = "malformed data",
       portal_type = "Image",
     ), '.bin')
 
