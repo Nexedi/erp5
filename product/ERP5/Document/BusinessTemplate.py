@@ -120,6 +120,27 @@ catalog_method_filter_list = ('_filter_expression_archive',
 INSTALLED_BT_FOR_DIFF = 'installed_bt_for_diff'
 _MARKER = []
 
+SEPARATELY_EXPORTED_PROPERTY_DICT = {
+  # class_name: (extension, property_name),
+  "Document Component":  ("py",   "text_content"),
+  "DTMLMethod":          (None,   "raw"),
+  "Extension Component": ("py",   "text_content"),
+  "File":                (None,   "data"),
+  "Image":               (None,   "data"),
+  "OOoTemplate":         ("oot",  "_text"),
+  "PDF":                 ("pdf",  "data"),
+  "Python Script":       ("py",   "_body"),
+  "PythonScript":        ("py",   "_body"),
+  "Spreadsheet":         (None,   "data"),
+  "SQL":                 ("sql",  "src"),
+  "Test Component":      ("py",   "text_content"),
+  "Test Page":           (None,   "text_content"),
+  "Web Page":            (None,   "text_content"),
+  "Web Script":          (None,   "text_content"),
+  "Web Style":           (None,   "text_content"),
+  "ZopePageTemplate":    ("zpt",  "_text"),
+}
+
 def _getCatalog(acquisition_context):
   """
     Return the id of the SQLCatalog which correspond to the current BT.
@@ -699,58 +720,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         if id != '':
           self._archive["%s/%s" % (tool_id, id)] = None
 
-  def getClassNameAndExportedExtensionDict(self):
-    class_name_and_exported_extension_dict = {
-      "Web Page": {"extension": None, "exported_property_type": "text_content"},
-      "Web Style": {"extension": None, "exported_property_type": "text_content"},
-      "Web Script": {"extension": None, "exported_property_type": "text_content"},
-      "Test Page": {"extension": None, "exported_property_type": "text_content"},
-      "ZopePageTemplate": {"extension": ".zpt", "exported_property_type": "_text"},
-      "OOoTemplate": {"extension": ".oot", "exported_property_type": "_text"},
-      "Extension Component": {"extension": ".py", "exported_property_type": "text_content"},
-      "Test Component": {"extension": ".py", "exported_property_type": "text_content"},
-      "Document Component": {"extension": ".py", "exported_property_type": "text_content"},
-      "PythonScript": {"extension": ".py", "exported_property_type": "_body"},
-      "Python Script": {"extension": ".py", "exported_property_type": "_body"},
-      "Image": {"extension": None, "exported_property_type": "data"},
-      "File": {"extension": None, "exported_property_type": "data"},
-      "DTMLMethod": {"extension": None, "exported_property_type": "raw"},
-      "SQL": {"extension": '.sql', "exported_property_type": "src"},
-      "Spreadsheet": {"extension": None, "exported_property_type": "data"},
-      "PDF": {"extension": '.pdf', "exported_property_type": "data"}
-      }
-    return class_name_and_exported_extension_dict
-
-  def getPropertyAndExtensionExportedSeparatelyDict(self, document, key):
-    """Returns a dictionary with one element in the type of
-      {exported_property_type: extension}
-
-    exported_property_type is the key of the document where the actual data
-    exists. E.g. for a Extension Component this is 'text_content', while for a
-    PythonScript it is'_body'.
-
-    The extension can be default for some Portal Types, e.g. for PythonScript it
-    is always '.py', but for others like File guessExtensionOfDocument is used
-    to identify it.
-    """
-    class_name = document.__class__.__name__
-    class_name_and_exported_extension_dict = self.getClassNameAndExportedExtensionDict()
-    if class_name in class_name_and_exported_extension_dict.keys():
-      extension = class_name_and_exported_extension_dict[class_name]["extension"]
-      exported_property_type = class_name_and_exported_extension_dict[class_name]["exported_property_type"]
-      if extension:
-        return {exported_property_type: extension}
-      else:
-        extension = self.guessExtensionOfDocument(document, key, exported_property_type)
-        if extension:
-          # if the obtained extension was .xml, change it to ._xml so that it
-          # would not conflict with th .xml metadata document
-          if extension == '.xml':
-            extension = '._xml'
-          return {exported_property_type: extension}
-    return {}
-
-  def _guessFilename(self, document, key, exported_property_type):
+  def _guessFilename(self, document, key, data):
     # Try to guess the extension based on the id of the document
     yield key
     document_base = aq_base(document)
@@ -762,19 +732,13 @@ class ObjectTemplateItem(BaseTemplateItem):
     # Try to guess the extension based on the title of the document
     yield getattr(document_base, "title", None)
     # Try to guess from content
-    if exported_property_type == 'data':
-      data = getattr(document_base, exported_property_type, None)
-      if data:
-        try:
-          data = str(data)
-        except Exception:
-          return
-        for test in imghdr.tests:
-          extension = test(data, None)
-          if extension:
-            yield 'x.' + extension
+    if data:
+      for test in imghdr.tests:
+        extension = test(data, None)
+        if extension:
+          yield 'x.' + extension
 
-  def guessExtensionOfDocument(self, document, key, exported_property_type=None):
+  def guessExtensionOfDocument(self, document, key, data=None):
     """Guesses and returns the extension of an ERP5 document.
 
     The process followed is:
@@ -809,30 +773,30 @@ class ObjectTemplateItem(BaseTemplateItem):
       except (IndexError, MimeTypeException):
         pass
 
-    for key in self._guessFilename(document, key, exported_property_type):
+    for key in self._guessFilename(document, key, data):
       if key:
-        ext = os.path.splitext(key)[1].lower()
-        if ext and (mimetypes_registry.lookupExtension(ext[1:]) is mime if mime
-               else mimetypes_registry.lookupExtension(ext[1:])):
+        ext = os.path.splitext(key)[1][1:].lower()
+        if ext and (mimetypes_registry.lookupExtension(ext) is mime if mime
+               else mimetypes_registry.lookupExtension(ext)):
           return ext
 
     if mime:
       # return first registered extension (if any)
       if mime.extensions:
-        return '.' + mime.extensions[0]
+        return mime.extensions[0]
       for ext in mime.globs:
         if ext[0] == "*" and ext.count(".") == 1:
-          return ext[1:].encode("utf-8")
+          return ext[2:].encode("utf-8")
 
     # in case we could not read binary flag from mimetypes_registry then return
     # '.bin' for all the Portal Types where exported_property_type is data
     # (File, Image, Spreadsheet). Otherwise, return .bin if binary was returned
     # as 1.
     binary = getattr(mime, 'binary', None)
-    if (binary is None and exported_property_type == 'data') or binary:
-      return '.bin'
+    if binary or binary is None is not data:
+      return 'bin'
     # in all other cases return .txt
-    return '.txt'
+    return 'txt'
 
   def export(self, context, bta, catalog_method_template_item = 0, **kw):
     """
@@ -843,26 +807,25 @@ class ObjectTemplateItem(BaseTemplateItem):
       return
     path = self.__class__.__name__ + '/'
     for key, obj in self._objects.iteritems():
-      class_name = obj.__class__.__name__
-      property_and_extension_exported_separately_dict = self.getPropertyAndExtensionExportedSeparatelyDict(obj, key)
       # Back compatibility with filesystem Documents
       if isinstance(obj, str):
         if not key.startswith(path):
           key = path + key
         bta.addObject(obj, name=key, ext='.py')
       else:
-        if property_and_extension_exported_separately_dict:
-          for record_id, record in property_and_extension_exported_separately_dict.iteritems():
-            extension = record
-            # we copy the object from the context. Sometimes this changes
-            # output_encoding, so we keep it here to restore.
-            reset_output_encoding = False
-            if hasattr(obj, 'output_encoding'):
-              reset_output_encoding = True
-              output_encoding = obj.output_encoding
+        try:
+          extension, record_id = \
+            SEPARATELY_EXPORTED_PROPERTY_DICT[obj.__class__.__name__]
+        except KeyError:
+          pass
+        else:
+          # we copy the object from the context. Sometimes this changes
+          # output_encoding, so we keep it here to restore.
+          output_encoding = getattr(aq_base(obj), 'output_encoding', _MARKER)
+          while 1: # not a loop
             obj = obj._getCopy(context)
             try:
-              exported_property = getattr(obj, record_id)
+              data = getattr(aq_base(obj), record_id)
               # Delete this attribute from the object.
               # in case the related Portal Type does not exist, the object may be broken.
               # So we cannot delattr, but we can delete the key of its its broken state
@@ -874,27 +837,31 @@ class ObjectTemplateItem(BaseTemplateItem):
             except (AttributeError, KeyError):
               # property was not set on instance,
               # do nothing, only .xml metadata will be exported
-              pass
+              break
+            # export a separate file with the data
+            if isinstance(data, unicode):
+              data = str(data.encode('utf-8'))
+            elif not isinstance(data, str):
+              data = str(data)
+            if not extension:
+              extension = self.guessExtensionOfDocument(obj, key,
+                data if record_id == 'data' else None)
+            bta.addObject(StringIO(data), key, path=path,
+              ext='._xml' if extension == 'xml' else '.' + extension)
+            break
+
+          # since we get the obj from context we should
+          # again remove useless properties
+          obj = self.removeProperties(obj, 1, keep_workflow_history = True)
+
+          if output_encoding is not _MARKER:
+            if isinstance(obj, ERP5BaseBroken):
+              self._objects[obj_key].__Broken_state__['output_encoding'] = \
+                output_encoding
+              obj._p_changed = 1
             else:
-              # export a separate file with the data
-              if isinstance(exported_property, unicode):
-                exported_property = str(exported_property.encode('utf-8'))
-              elif not isinstance(exported_property, str):
-                exported_property = str(exported_property)
-              f = StringIO(exported_property)
-              bta.addObject(f, key, path=path, ext=extension)
-
-            # since we get the obj from context we should
-            # again remove useless properties
-            obj = self.removeProperties(obj, 1, keep_workflow_history = True)
-
-            if reset_output_encoding:
-              if isinstance(obj, ERP5BaseBroken):
-                self._objects[obj_key].__Broken_state__['output_encoding'] = output_encoding
-                obj._p_changed = 1
-              else:
-                obj.output_encoding = output_encoding
-            transaction.savepoint(optimistic=True)
+              obj.output_encoding = output_encoding
+          transaction.savepoint(optimistic=True)
 
         f = StringIO()
         XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
@@ -925,8 +892,8 @@ class ObjectTemplateItem(BaseTemplateItem):
         except KeyError:
           transactional_variable[transactional_variable_obj_key] = file_obj_content
         else:
-          obj_class_name = obj.__class__.__name__
-          exported_property_type = self.getClassNameAndExportedExtensionDict()[obj_class_name]['exported_property_type']
+          exported_property_type = SEPARATELY_EXPORTED_PROPERTY_DICT[
+            obj.__class__.__name__][1]
           # if we have instance of InitGhostBase, 'unghost' it so we can
           # identify if it is broken
           if isinstance(self._objects[obj_key], InitGhostBase):
@@ -951,8 +918,8 @@ class ObjectTemplateItem(BaseTemplateItem):
       self._objects[obj_key] = obj
 
       if transactional_variable.get(transactional_variable_obj_key, None) != None:
-        obj_class_name = obj.__class__.__name__
-        exported_property_type = self.getClassNameAndExportedExtensionDict()[obj_class_name]['exported_property_type']
+        exported_property_type = SEPARATELY_EXPORTED_PROPERTY_DICT[
+          obj.__class__.__name__][1]
         # if we have instance of InitGhostBase, 'unghost' it so we can
         # identify if it is broken
         if isinstance(self._objects[obj_key], InitGhostBase):
