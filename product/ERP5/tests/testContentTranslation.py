@@ -141,6 +141,15 @@ class TestContentTranslation(ERP5TypeTestCase):
     self.assertEqual(person,
       portal.portal_catalog.getResultValue(translated_title='Yusuke'))
 
+    # Deleting translation should update content_translation table.
+    person.setNobReadTranslatedFirstName('')
+    person.setNobReadTranslatedLastName('')
+    self.tic()
+    self.assertEqual(None,
+      portal.portal_catalog.getResultValue(translated_title='友介'))
+    self.assertEqual(person,
+      portal.portal_catalog.getResultValue(translated_title='Yusuke'))
+
     # documents for which translation is not set can also be found with
     # translated_title key
     not_translated_person = portal.person_module.newContent(portal_type='Person',
