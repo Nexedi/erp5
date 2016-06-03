@@ -1828,6 +1828,111 @@ class TestCalendar(ERP5ReportTestCase):
             to_date=DateTime(2016, 1, 31).latestTime(),
             node_uid=person.getUid()))
 
+  def test_GroupCalendarRepeatUntilPeriodicity(self):
+    """Test that when group presence period is repeated until periodicity stop date.
+    """
+    node = self.portal.organisation_module.newContent(portal_type='Organisation',)
+
+    group_calendar = self.portal.group_calendar_module.newContent(
+       portal_type='Group Calendar')
+    group_calendar_period = group_calendar.newContent(
+       portal_type='Group Presence Period')
+
+    # 2008/01/01 was a Tuesday
+    group_calendar_period.setStartDate('2008/01/01 08:00:00 UTC')
+    group_calendar_period.setStopDate('2008/01/01 18:00:00 UTC')
+    group_calendar_period.setQuantity(10)
+    group_calendar_period.setResourceValue(
+       self.portal.portal_categories.calendar_period_type.type1)
+    group_calendar_period.setPeriodicityWeekDayList(['Tuesday'])
+    # Repeat for two weeks only
+    group_calendar_period.setPeriodicityStopDate(DateTime('2008/01/09 00:00:00 UTC'))
+    self.tic()
+
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+       specialise_value=group_calendar,
+       resource_value=self.portal.portal_categories.calendar_period_type.type1,
+       start_date=DateTime('2008/01/01 08:00:00 UTC'),
+       stop_date=DateTime('2008/01/31 20:00:00 UTC'), # repeat for 1 month
+       destination_value=node)
+    assignment.confirm()
+    self.tic()
+
+    # group calendar assignments is for one month, but since the presence period
+    # is only for two weeks, this assignment only repeat twice.
+    self.assertEqual([
+      ( DateTime('2008/01/01 08:00:00 UTC'), DateTime('2008/01/01 18:00:00 UTC') ),
+      ( DateTime('2008/01/08 08:00:00 UTC'), DateTime('2008/01/08 18:00:00 UTC') ), ],
+      [ (m.getStopDate(), m.getStartDate()) for m in assignment.asMovementList() ] )
+
+  def test_GroupCalendarWithoutPeriodicityStopDateRepeatUntilGroupCalendarAssignmentStopDate(self):
+    """Test that when group presence period does not define periodicity stop date,
+    the group calendar assignment repeats until the stop date of the group calendar assignment.
+    """
+    node = self.portal.organisation_module.newContent(portal_type='Organisation',)
+
+    group_calendar = self.portal.group_calendar_module.newContent(
+       portal_type='Group Calendar')
+    group_calendar_period = group_calendar.newContent(
+       portal_type='Group Presence Period')
+
+    # 2008/01/01 was a Tuesday
+    group_calendar_period.setStartDate('2008/01/01 08:00:00 UTC')
+    group_calendar_period.setStopDate('2008/01/01 18:00:00 UTC')
+    group_calendar_period.setQuantity(10)
+    group_calendar_period.setResourceValue(
+       self.portal.portal_categories.calendar_period_type.type1)
+    group_calendar_period.setPeriodicityWeekDayList(['Tuesday'])
+    self.tic()
+
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+       specialise_value=group_calendar,
+       resource_value=self.portal.portal_categories.calendar_period_type.type1,
+       start_date=DateTime('2008/01/01 08:00:00 UTC'),
+       stop_date=DateTime('2008/01/31 20:00:00 UTC'), # repeat for 1 month
+       destination_value=node)
+    assignment.confirm()
+    self.tic()
+
+    # in 2008/01 the Tuesday were:
+    self.assertEqual([
+      ( DateTime('2008/01/01 08:00:00 UTC'), DateTime('2008/01/01 18:00:00 UTC') ),
+      ( DateTime('2008/01/08 08:00:00 UTC'), DateTime('2008/01/08 18:00:00 UTC') ),
+      ( DateTime('2008/01/15 08:00:00 UTC'), DateTime('2008/01/15 18:00:00 UTC') ),
+      ( DateTime('2008/01/22 08:00:00 UTC'), DateTime('2008/01/22 18:00:00 UTC') ),
+      ( DateTime('2008/01/29 08:00:00 UTC'), DateTime('2008/01/29 18:00:00 UTC') ), ],
+      [ (m.getStopDate(), m.getStartDate()) for m in assignment.asMovementList() ] )
+
+  def test_GroupCalendarWithoutPeriodicityStopDateAndGroupCalendarAssignmentWithoutStopDateDoNotRepeat(self):
+    """Test that when group presence period does not define periodicity stop
+    date and group calendar assignment does not define stop date either the
+    periodicity does not repeat.
+
+    """
+    node = self.portal.organisation_module.newContent(portal_type='Organisation',)
+
+    group_calendar = self.portal.group_calendar_module.newContent(
+       portal_type='Group Calendar')
+    group_calendar_period = group_calendar.newContent(
+       portal_type='Group Presence Period')
+
+    group_calendar_period.setStartDate('2008/01/01 08:00:00 UTC')
+    group_calendar_period.setStopDate('2008/01/01 18:00:00 UTC')
+    group_calendar_period.setQuantity(10)
+    group_calendar_period.setResourceValue(
+       self.portal.portal_categories.calendar_period_type.type1)
+    self.tic()
+
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+       specialise_value=group_calendar,
+       resource_value=self.portal.portal_categories.calendar_period_type.type1,
+       start_date=DateTime('2008/01/01 08:00:00 UTC'),
+       destination_value=node)
+    assignment.confirm()
+    self.tic()
+
+    self.assertEqual([], assignment.asMovementList())
+
   def test_PersonModule_viewLeaveRequestReport(self):
     # in this test, type1 is the type for presences, type2 & type3 are types
     # for leaves.
