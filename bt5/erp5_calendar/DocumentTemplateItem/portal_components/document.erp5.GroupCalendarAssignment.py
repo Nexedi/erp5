@@ -62,13 +62,17 @@ class GroupCalendarAssignment(PresencePeriod):
     result = []
     start_date = self.getStartDate()
     stop_date = self.getStopDate()
-    if not(None in (self.getDestinationUid(), start_date)):
+    if not(None in (self.getDestinationUid(), start_date, stop_date)):
       period_list = self.getPeriodList()
-      if len(period_list):
-        for period in period_list:
-          for date_period_data in period._getDatePeriodDataList():
-            if date_period_data['start_date'].greaterThanEqualTo(start_date):
-              if stop_date is None or date_period_data['stop_date'].lessThanEqualTo(
-                  stop_date):
-                result.append(date_period_data)
+      for period in period_list:
+        # only repeat this period for the time frame of ourselves
+        period = period.asContext(
+          start_date=max(period.getStartDate(start_date), start_date),
+          periodicity_stop_date=min(
+            period.getPeriodicityStopDate(stop_date), stop_date))
+        for date_period_data in period._getDatePeriodDataList():
+          if date_period_data['start_date'].greaterThanEqualTo(start_date):
+            if stop_date is None or date_period_data['stop_date'].lessThanEqualTo(
+                stop_date):
+              result.append(date_period_data)
     return result
