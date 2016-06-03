@@ -755,14 +755,14 @@ class ObjectTemplateItem(BaseTemplateItem):
   def _guessFilename(self, document, key, exported_property_type):
     # Try to guess the extension based on the id of the document
     yield key
+    document_base = aq_base(document)
     # Try to guess the extension based on the reference of the document
-    if hasattr(document, 'getReference'):
+    if hasattr(document_base, 'getReference'):
       yield document.getReference()
-    elif isinstance(document, ERP5BaseBroken):
-      yield getattr(document, "reference", None)
+    elif isinstance(document_base, ERP5BaseBroken):
+      yield getattr(document_base, "reference", None)
     # Try to guess the extension based on the title of the document
-    yield getattr(document, "title", None)
-    # Try to get type of image from its base64 encoding
+    yield getattr(document_base, "title", None)
     if exported_property_type == 'data':
       # XXX maybe decoding the whole file just for the extension is an overkill
       data = str(document.__dict__.get('data'))
@@ -791,12 +791,13 @@ class ObjectTemplateItem(BaseTemplateItem):
     - '.bin' is returned for binary files
     - '.txt' is returned for text
     """
+    document_base = aq_base(document)
     # XXX Zope items like DTMLMethod would not implement getContentType method
     mime = None
-    if hasattr(document, 'getContentType'):
+    if hasattr(document_base, 'getContentType'):
       content_type = document.getContentType()
-    elif isinstance(document, ERP5BaseBroken):
-      content_type = getattr(document, "content_type", None)
+    elif isinstance(document_base, ERP5BaseBroken):
+      content_type = getattr(document_base, "content_type", None)
     else:
       content_type = None
     # For stable export, people must have a MimeTypes Registry, so do not
