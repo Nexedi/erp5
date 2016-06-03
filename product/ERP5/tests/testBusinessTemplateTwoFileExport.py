@@ -28,6 +28,7 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from runUnitTest import tests_home
+import glob
 import shutil
 import os
 import tempfile
@@ -102,20 +103,30 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
     self.assertEqual(import_template.getPortalType(), 'Business Template')
     return import_template
 
-  def _exportAndReImport(self, xml_document_path,
-                        file_document_path, data, removed_property_list):
-
+  def _exportAndReImport(self, document_path, extension,
+                         data, removed_property_list):
     self._buildAndExportBusinessTemplate()
-    self.assertTrue(os.path.exists(xml_document_path))
-    self.assertTrue(os.path.exists(file_document_path))
-    test_file=open(file_document_path,'r+')
-    self.assertEqual(test_file.read(), data)
-    test_file.close()
-    xml_file=open(xml_document_path,'r+')
-    xml_file_content = xml_file.read()
-    xml_file.close()
+    xml_document_path = document_path + ".xml"
+    exported = glob.glob(document_path + ".*")
+    exported.remove(document_path + ".xml")
+    if extension:
+      try:
+        exported.remove(document_path + ".catalog_keys.xml")
+        self.assertEqual(extension, ".sql")
+      except ValueError:
+        pass
+      file_document_path = document_path + extension
+      self.assertEqual([os.path.basename(file_document_path)],
+                       map(os.path.basename, exported))
+      with open(file_document_path, 'rb') as test_file:
+        self.assertEqual(test_file.read(), data)
+    else:
+      self.assertFalse(exported)
+    with open(xml_document_path, 'rb') as xml_file:
+      xml_file_content = xml_file.read()
     for exported_property in removed_property_list:
-      self.assertFalse('<string>'+exported_property+'</string>' in xml_file_content)
+      self.assertNotIn('<string>'+exported_property+'</string>',
+                       xml_file_content)
 
     import_template = self._importBusinessTemplate()
     return import_template
@@ -135,8 +146,8 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
                                        'TestTemplateItem', 'portal_components',
                                        test_component_id)
     import_template = self._exportAndReImport(
-                                  test_component_path + ".xml",
-                                  test_component_path +".py",
+                                  test_component_path,
+                                  ".py",
                                   test_component_kw["text_content"],
                                   ['text_content'])
 
@@ -226,8 +237,8 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
 
 
     import_template = self._exportAndReImport(
-                                  python_script_path+".xml",
-                                  python_script_path+".py",
+                                  python_script_path,
+                                  ".py",
                                   python_script_kw["_body"],
                                   ['_body','_code'])
 
@@ -253,8 +264,8 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
       'PathTemplateItem', 'image_module',image_file_id)
 
     import_template = self._exportAndReImport(
-                                  image_document_path+".xml",
-                                  image_document_path+extension,
+                                  image_document_path,
+                                  extension,
                                   image_document_kw["data"],
                                   ['data'])
 
@@ -317,11 +328,14 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
                                      'PathTemplateItem', 'document_module',
                                       file_id)
 
+    try:
+      args = file_document_kw['data'], ('data',) if extension else ()
+    except KeyError:
+      args = None, ('data',)
     import_template = self._exportAndReImport(
-                                  file_document_path+".xml",
-                                  file_document_path+extension,
-                                  file_document_kw["data"],
-                                  ['data'])
+                                  file_document_path,
+                                  extension,
+                                  *args)
 
     self.portal.document_module.manage_delObjects([file_id])
 
@@ -489,8 +503,8 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
                                               skin_folder_id,test_file_id)
 
     import_template = self._exportAndReImport(
-                                  file_document_path+".xml",
-                                  file_document_path+"._xml",
+                                  file_document_path,
+                                  "._xml",
                                   file_document_kw["data"],
                                   ['data'])
 
@@ -544,8 +558,8 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
                                       catalog_id, method_id)
 
     import_template = self._exportAndReImport(
-                                  method_document_path + ".xml",
-                                  method_document_path +".sql",
+                                  method_document_path,
+                                  ".sql",
                                   'dummy_method_template',
                                   ['src'])
 
@@ -590,8 +604,8 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
                                              'SkinTemplateItem', 'portal_skins',
                                               skin_folder_id, method_id)
     import_template = self._exportAndReImport(
-                                  method_document_path+".xml",
-                                  method_document_path+".sql",
+                                  method_document_path,
+                                  ".sql",
                                   'dummy_method_template',
                                   ['src'])
 
@@ -632,8 +646,8 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
       'SkinTemplateItem', 'portal_skins', skin_folder_id, page_template_id)
 
     import_template = self._exportAndReImport(
-                                  page_template_path+".xml",
-                                  page_template_path+".zpt",
+                                  page_template_path,
+                                  ".zpt",
                                   page_template_kw['_text'],
                                   ['_text'])
 
@@ -683,8 +697,8 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
                                     skin_folder_id,dtml_method_id)
 
     import_template = self._exportAndReImport(
-                                  dtml_method_path+".xml",
-                                  dtml_method_path+".js",
+                                  dtml_method_path,
+                                  ".js",
                                   dtml_method_kw['raw'],
                                   ['raw'])
 
@@ -734,8 +748,8 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
                                               skin_folder_id,dtml_method_id)
 
     import_template = self._exportAndReImport(
-                                  dtml_method_path+".xml",
-                                  dtml_method_path+".txt",
+                                  dtml_method_path,
+                                  ".txt",
                                   dtml_method_kw['raw'],
                                   ['raw'])
 
@@ -779,8 +793,8 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
                                               skin_folder_id, OOo_template_id)
 
     import_template = self._exportAndReImport(
-                                  OOo_template_path+".xml",
-                                  OOo_template_path+".oot",
+                                  OOo_template_path,
+                                  ".oot",
                                   OOo_template_kw['_text'],
                                   ['_text'])
 
@@ -846,8 +860,8 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
                                       test_page_id)
 
     import_template = self._exportAndReImport(
-                                  test_page_document_path+".xml",
-                                  test_page_document_path+".html",
+                                  test_page_document_path,
+                                  ".html",
                                   test_page_data_kw["text_content"],
                                   ["text_content"])
 
@@ -890,8 +904,8 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
 
     import_template = self._exportAndReImport(
-                                  python_script_path+".xml",
-                                  python_script_path+".py",
+                                  python_script_path,
+                                  ".py",
                                   python_script_kw["_body"],
                                   ['_body','_code'])
 
@@ -982,45 +996,11 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
       Test Business Template Import And Export With File
       that has no data attribute. Only .xml metadata is exported
     """
-    file_title = "foo"
-
-    file_document_kw = {"title": file_title,
-                        "portal_type": "File"}
-
-    file_page = self.portal.document_module.newContent(**file_document_kw)
-
-    # 'data' is not in the __dict__ of the File instance
-    self.assertFalse('data' in file_page.__dict__)
-    # Nonetheless, 'data' is defined in File class as empty string
-    self.assertEquals(getattr(file_page, 'data'), '')
-
-    file_document_kw['id'] = file_id = file_page.getId()
-
-    self.template.edit(template_path_list=['document_module/'+file_id,])
-
-    file_document_path = os.path.join(self.export_dir,
-                                     'PathTemplateItem', 'document_module',
-                                      file_id)
-
-    self.template.build()
-    self.tic()
-    self.template.export(path=self.export_dir, local=True)
-    self.tic()
-
-    self.assertTrue(os.path.exists(file_document_path+'.xml'))
-    # check that there is no other file exported
-    self.assertEqual(len(os.listdir(file_document_path.rsplit('/', 1)[0])), 1)
-
-    import_template = self._importBusinessTemplate()
-
-    self.portal.document_module.manage_delObjects([file_id])
-
-    import_template.install()
-
-    file_page = self.portal.document_module[file_id]
-
-    for property_id, property_value in file_document_kw.iteritems():
-      self.assertEqual(getattr(file_page, property_id), property_value)
+    self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
+      title = "foo",
+      content_type = "text/javascript",
+      portal_type = "File",
+    ), None)
 
   def test_twoFileImportExportForZopePageTemplateISO_8859_15(self):
     """
