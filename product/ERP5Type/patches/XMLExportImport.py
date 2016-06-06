@@ -59,7 +59,11 @@ class OrderedPickler(Pickler):
         dispatch[PyStringMap] = save_dict
 
 def reorderPickle(jar, p):
-    from ZODB.ExportImport import Ghost, Unpickler, Pickler, StringIO, persistent_id
+    try:
+        from ZODB._compat import Unpickler, Pickler
+    except ImportError: # BBB: ZODB 3.10
+        from ZODB.ExportImport import Unpickler, Pickler
+    from ZODB.ExportImport import Ghost, persistent_id
 
     oids = {}
     storage = jar._storage
