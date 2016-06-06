@@ -89,7 +89,7 @@
                 "editable": 1,
                 "editable_column_list": [],
                 "key": "field_listbox",
-                "lines": 20,
+                "lines": 10,
                 "list_method": "portal_catalog",
                 "query": 'portal_type:' +
                 '("Sale Price Record" OR "Sale Price Record Temp")',
