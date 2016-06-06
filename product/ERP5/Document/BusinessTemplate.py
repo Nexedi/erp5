@@ -62,7 +62,7 @@ from Products.ERP5Type.Utils import readLocalTest, \
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken, InitGhostBase
+from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -89,7 +89,7 @@ import posixpath
 import transaction
 
 import threading
-from ZODB.broken import Broken
+from ZODB.broken import Broken, BrokenModified
 from Products.ERP5.genbt5list import BusinessTemplateRevision, \
   item_name_list, item_set
 
@@ -127,7 +127,7 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   # separate file, with extension specified by 'extension'.
   # 'extension' must be None for auto-detection.
   #
-  # class_name: (extension, property_name),
+  # class_name: (extension, unicode_data, property_name),
   "Document Component":  ("py",   0, "text_content"),
   "DTMLMethod":          (None,   0, "raw"),
   "Extension Component": ("py",   0, "text_content"),
@@ -872,7 +872,18 @@ class ObjectTemplateItem(BaseTemplateItem):
         # add all datas specific to catalog inside one file
         xml_data = self.generateXml(key)
         bta.addObject(xml_data, key + '.catalog_keys', path=path)
-        
+
+  def _restoreSeparatelyExportedProperty(self, obj, data):
+    unicode_data, property_name = SEPARATELY_EXPORTED_PROPERTY_DICT[
+      obj.__class__.__name__][1:]
+    if unicode_data:
+      data = data.decode(obj.output_encoding)
+    try:
+      setattr(obj, property_name, data)
+    except BrokenModified:
+      obj.__Broken_state__[property_name] = data
+      obj._p_changed = 1
+
   def _importFile(self, file_name, file_obj, catalog_method_template_item = 0):
     obj_key, file_ext = os.path.splitext(file_name)
     # id() for installing several bt5 in the same transaction
@@ -892,22 +903,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         except KeyError:
           getTransactionalVariable()[transactional_variable_obj_key] = data
         else:
-          unicode_data, property_name = SEPARATELY_EXPORTED_PROPERTY_DICT[
-            obj.__class__.__name__][1:]
-          if unicode_data:
-            data = data.decode(obj.output_encoding)
-          # if we have instance of InitGhostBase, 'unghost' it so we can
-          # identify if it is broken
-          if isinstance(self._objects[obj_key], InitGhostBase):
-            self._objects[obj_key].__class__.loadClass()
-          # in case the Portal Type does not exist, the object may be broken.
-          # So we cannot setattr, but we can change the attribute in its broken state
-          if isinstance(self._objects[obj_key], ERP5BaseBroken):
-            self._objects[obj_key].__Broken_state__[property_name] = data
-            self._objects[obj_key]._p_changed = 1
-          else:
-            setattr(self._objects[obj_key], property_name, data)
-            self._objects[obj_key] = self.removeProperties(self._objects[obj_key], 1, keep_workflow_history = True)
+          self._restoreSeparatelyExportedProperty(obj, data)
     else:
       connection = self.getConnection(self.aq_parent)
       __traceback_info__ = 'Importing %s' % file_name
@@ -921,22 +917,7 @@ class ObjectTemplateItem(BaseTemplateItem):
 
       data = getTransactionalVariable().get(transactional_variable_obj_key)
       if data is not None:
-        unicode_data, property_name = SEPARATELY_EXPORTED_PROPERTY_DICT[
-          obj.__class__.__name__][1:]
-        if unicode_data:
-          data = data.decode(obj.output_encoding)
-        # if we have instance of InitGhostBase, 'unghost' it so we can
-        # identify if it is broken
-        if isinstance(self._objects[obj_key], InitGhostBase):
-          self._objects[obj_key].__class__.loadClass()
-        # in case the related Portal Type does not exist, the object may be broken.
-        # So we cannot setattr, but we can change the attribute in its broken state
-        if isinstance(self._objects[obj_key], ERP5BaseBroken):
-          self._objects[obj_key].__Broken_state__[property_name] = data
-          self._objects[obj_key]._p_changed = 1
-        else:
-          setattr(self._objects[obj_key], property_name, data)
-          self._objects[obj_key] = self.removeProperties(self._objects[obj_key], 1, keep_workflow_history = True)
+        self._restoreSeparatelyExportedProperty(obj, data)
 
       # When importing a Business Template, there is no way to determine if it
       # has been already migrated or not in __init__() when it does not
