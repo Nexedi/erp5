@@ -363,6 +363,7 @@ class TestTemplateTool(ERP5TypeTestCase):
       # We don't export revision anymore.
       self.assertFalse(os.path.exists(os.path.join(root, 'bt', 'revision')))
       # Computed at download ...
+      revision = '+Kds1k1J41hzO4yIO+GcKQukNps='
       self.assertEqual(revision, template_tool.download(root).getRevision())
     finally:
       shutil.rmtree(root)
@@ -370,14 +371,14 @@ class TestTemplateTool(ERP5TypeTestCase):
     # ... at building by default ...
     bt.build()
     revision = bt.getRevision()
-    self.assertEqual('9rVhiz7Agr5G7L1jegm9yLuUD9U=', revision)
+    self.assertEqual('xR/n0PtLoc+1CR0AyJ+xGjbxsjE=', revision)
     self.portal.portal_skins.erp5_test.manage_renameObject('test_file',
                                                            'test_file2')
     bt.build(update_revision=False)
     self.assertEqual(revision, bt.getRevision())
     # ... and at export.
     bt.export(str(random.random()))
-    self.assertEqual('dhgvzCfmibJEiy5M+5axf9ZM3gA=', bt.getRevision())
+    self.assertEqual('fnLZVdsjkNDoC0JWstMY2XL1x+s=', bt.getRevision())
     self.abort()
 
   def test_getInstalledBusinessTemplateList(self):
