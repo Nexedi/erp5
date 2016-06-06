@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ung_mail.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>div.main-left {\n
+  background-color: #FFF !important;\n
+}\n
+\n
+div.main-left {\n
+  width: 12% !important;\n
+}\n
+div.main-right {\n
+  width: 88% !important;\n
+}\n
+\n
+div.favorite {\n
+  background-color: #c8d6ff;\n
+  border-top: 4px solid #BBCCFF;\n
+  padding-top: 1px;\n
+}\n
+\n
+button#compose-mail {\n
+  background-image: url("ung_images/button_background.png");\n
+  border: 1px solid #BBBBBB;\n
+  -moz-border-radius: 4px;\n
+  margin-top: 5px;\n
+}\n
+\n
+span.your_listbox-current-item-number {\n
+  display: none;\n
+}\n
+\n
+div.toolbar button.archive {\n
+  margin-left: 18px;\n
+}\n
+\n
+tr.listbox-label-line {\n
+  display: none;\n
+}\n
+\n
+div.toolbar {\n
+  border-bottom: 1px solid #DEDEDE;\n
+}\n
+\n
+span.listbox-current-page-start-number,\n
+ span.listbox-current-page-stop-number,\n
+ span.listbox-current-page-total-number {\n
+  font-weight: bold;\n
+}\n
+\n
+div.listbox-content table.listbox tbody tr td:last-child {\n
+  text-align: right;\n
+}\n
+\n
+div.mail-navigation {\n
+  font-size: 13px;\n
+  cursor: pointer;\n
+  margin-left: 15px;\n
+}\n
+\n
+div.separator {\n
+  border-bottom: 1px solid #E3E9FF\n
+}\n
+\n
+a#advertisement-name {\n
+  color: #0000CC;\n
+  margin-left: 8px;\n
+  text-decoration: underline;\n
+}\n
+\n
+div.favorite span {\n
+  font-size: 80%;\n
+}\n
+\n
+a#advertisement-url { \n
+  color: #006633 !important;\n
+  text-decoration: none;\n
+}\n
+\n
+div.favorite a {\n
+  float: left;\n
+  margin-top: 2px;\n
+}\n
+\n
+div.header-left fieldset.widget div.field {\n
+    display: inline-block;\n
+}\n
+\n
+img[alt="mail_logo_box"] {\n
+  position: relative;\n
+  top: 9px;\n
+  cursor: pointer;\n
+}\n
+\n
+div.main-left, div.main-right, div.main {\n
+  margin-top: 0em;\n
+}\n
+\n
+div.main-right button#save-mail,\n
+ div.main-right button#discard-mail,\n
+ div.main-right button#send-mail { \n
+  background-image: url("ung_images/button_background.png");\n
+  border: 1px solid #BBBBBB;\n
+  -moz-border-radius: 4px;\n
+  margin-left: 10px;\n
+  margin-top: 10px;\n
+}\n
+\n
+div.main-right table tbody tr td:first-child {\n
+  text-align: right;\n
+}\n
+\n
+div.main-right table tbody tr td label {\n
+  font-size: 80%;\n
+  font-weight: bold;\n
+}\n
+\n
+div.main-right table tbody tr td label[for="to"],\n
+ div.main-right table tbody tr td label[for="cc"],\n
+ div.main-right table tbody tr td label[for="bcc"] {\n
+  color: #0000CC;\n
+  text-decoration: underline;\n
+  white-space: nowrap;\n
+}\n
+\n
+div.main-right tr#cc, div.main-right tr#bcc{\n
+  display:none;\n
+}\n
+\n
+div.main-right span#add-cc-field,\n
+ div.main-right span#add-bcc-field {\n
+  font-size: 80%;\n
+  color: #20C;\n
+  text-decoration: underline;\n
+  cursor: pointer;\n
+}\n
+\n
+a.email {\n
+  color: #000;\n
+  text-decoration: none;\n
+}\n
+\n
+div.header-left {\n
+  margin-top: -9px !important;\n
+}\n
+\n
+div.listbox-tree {\n
+  display: none !important;\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,563 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>erp5.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_cache_namespace_keys</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>main_border_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>context_bar_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>navigation_bar_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>font_family</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>font_size</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>font_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>dialog_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>dialog_border_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>link_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>link_hover_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>button_description_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>document_border_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>document_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>listbox_label_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>listbox_odd_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>listbox_even_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>tooltip_border_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>tooltip_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>tooltip_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>listbox_hover_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>listbox_stat_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>alternate_font_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>group_border_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>alternate_font_color</string> </key>
+            <value> <string>#596dab</string> </value>
+        </item>
+        <item>
+            <key> <string>background_color</string> </key>
+            <value> <string>#ABD0F4</string> </value>
+        </item>
+        <item>
+            <key> <string>button_description_color</string> </key>
+            <value> <string>#000</string> </value>
+        </item>
+        <item>
+            <key> <string>context_bar_background_color</string> </key>
+            <value> <string>#98C3EC</string> </value>
+        </item>
+        <item>
+            <key> <string>dialog_background_color</string> </key>
+            <value> <string>#BDD8F8</string> </value>
+        </item>
+        <item>
+            <key> <string>dialog_border_color</string> </key>
+            <value> <string>#3D5474</string> </value>
+        </item>
+        <item>
+            <key> <string>document_background_color</string> </key>
+            <value> <string>#E3EAFA</string> </value>
+        </item>
+        <item>
+            <key> <string>document_border_color</string> </key>
+            <value> <string>#3D6474</string> </value>
+        </item>
+        <item>
+            <key> <string>font_color</string> </key>
+            <value> <string>#001730</string> </value>
+        </item>
+        <item>
+            <key> <string>font_family</string> </key>
+            <value> <string>Arial, Helvetica, sans-serif</string> </value>
+        </item>
+        <item>
+            <key> <string>font_size</string> </key>
+            <value> <string>12px</string> </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>group_border_color</string> </key>
+            <value> <string>#97B0D1</string> </value>
+        </item>
+        <item>
+            <key> <string>link_color</string> </key>
+            <value> <string>#002e3f</string> </value>
+        </item>
+        <item>
+            <key> <string>link_hover_color</string> </key>
+            <value> <string>#3D6474</string> </value>
+        </item>
+        <item>
+            <key> <string>listbox_even_background_color</string> </key>
+            <value> <string>#DAE6F6</string> </value>
+        </item>
+        <item>
+            <key> <string>listbox_hover_background_color</string> </key>
+            <value> <string>#BDD8F8</string> </value>
+        </item>
+        <item>
+            <key> <string>listbox_label_background_color</string> </key>
+            <value> <string>#C1DAEB</string> </value>
+        </item>
+        <item>
+            <key> <string>listbox_odd_background_color</string> </key>
+            <value> <string>#FFF</string> </value>
+        </item>
+        <item>
+            <key> <string>listbox_stat_background_color</string> </key>
+            <value> <string>#C1DAEB</string> </value>
+        </item>
+        <item>
+            <key> <string>main_border_color</string> </key>
+            <value> <string>#DDF0FF</string> </value>
+        </item>
+        <item>
+            <key> <string>navigation_bar_background_color</string> </key>
+            <value> <string>#97B0D1</string> </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<dtml-var expr="portal_skins.erp5_xhtml_style[\'erp5.css\'](portal_url=portal_url, \n
+main_border_color = main_border_color,\n
+context_bar_background_color = context_bar_background_color,\n
+navigation_bar_background_color = navigation_bar_background_color,\n
+background_color = background_color,\n
+font_family = font_family,\n
+font_size = font_size,\n
+font_color = font_color,\n
+dialog_background_color = dialog_background_color,\n
+dialog_border_color = dialog_border_color,\n
+link_color = link_color,\n
+link_hover_color = link_hover_color,\n
+button_description_color = button_description_color,\n
+document_border_color = document_border_color,\n
+document_background_color = document_background_color,\n
+listbox_label_background_color = listbox_label_background_color,\n
+listbox_odd_background_color = listbox_odd_background_color,\n
+listbox_even_background_color = listbox_even_background_color,\n
+tooltip_border_color = tooltip_border_color,\n
+tooltip_background_color = tooltip_background_color,\n
+tooltip_color = tooltip_color,\n
+listbox_hover_background_color = listbox_hover_background_color,\n
+listbox_stat_background_color = listbox_stat_background_color,\n
+alternate_font_color = alternate_font_color,\n
+group_border_color = group_border_color,)">\n
+\n
+\n
+\n
+/* customize some styles of erp5_xhtml_style/erp5.css */\n
+body {\n
+  background: #81B2DC url(<dtml-var expr="portal_url()">/tiolive_base_image/bg.png) repeat-y;\n
+}\n
+\n
+.ListSummary table {\n
+  background-color: <dtml-var document_background_color>;\n
+}\n
+\n
+#status #logged_in_as {\n
+  display: none;\n
+}\n
+\n
+\n
+/* TioLive selectors */\n
+#main_bar {\n
+  padding-bottom: 0px;\n
+  padding-top: 0px;\n
+}\n
+\n
+#top-bar {\n
+  background-color:#4780B0;\n
+  border-bottom:1px solid #FFFFFF;\n
+  overflow:hidden;\n
+}\n
+\n
+#fieldset-tiobar {\n
+  float:left;\n
+  overflow:hidden;\n
+  border-style: none;\n
+  font-size:11pt;\n
+}\n
+\n
+#fieldset-tiobar select{\n
+  margin-right: 5px;\n
+}\n
+\n
+#main_bar .second {\n
+  display: inline;\n
+}\n
+\n
+#tiologin {\n
+  font-size:9pt;\n
+  color:#FFFFFF;\n
+  float:left;\n
+  height:100%;\n
+  line-height:23px;\n
+  margin:0 100px 0 0;\n
+  padding:5px 0pt 0pt;\n
+  text-align: left;\n
+}\n
+\n
+#tiologin img#user-img{\n
+  margin-left: 5px;\n
+  vertical-align: middle;\n
+  padding: 3px;\n
+}\n
+\n
+#link-login{\n
+  float:left;\n
+}\n
+#link-login:link, #link-login:active, #link-login:visited {\n
+  color:#FFFFFF;\n
+  float:left;\n
+  height:100%;\n
+  line-height:23px;\n
+  font-size:9pt;\n
+  font-weight:normal;\n
+  text-transform:lowercase;\n
+}\n
+\n
+#fieldset-tiosearch {\n
+\n
+  float:left;\n
+\tborder:none;\n
+\tfont-size:1pt;\n
+\tcolor:#f6a801;\n
+\tbackground: url(<dtml-var expr="portal_url()">/tiolive_base_image/input-tiosearch.png) no-repeat transparent;\n
+\tbackground-position: 0 5px;\n
+\n
+}\n
+\n
+#fieldset-tiosearch button.input-submit {\n
+\n
+  border:none;\n
+  background: url(<dtml-var expr="portal_url()">/tiolive_base_image/input-tiosearch.png) no-repeat transparent;\n
+  background-position: 100px 0;\n
+\tcursor: pointer;\n
+  \n
+}\n
+\n
+#fieldset-tiosearch input.input-text, #fieldset-tiosearch input.input-text:hover, #fieldset-tiosearch input.input-text:focus {\n
+\n
+\tbackground: transparent;\n
+\tborder:none;\n
+\n
+}\n
+\n
+#fieldset-tiosearch {\n
+\n
+  margin: 0;\n
+\twidth:163px;\n
+\tright:5px;\n
+\toverflow: hidden;\n
+\tdisplay:block;\n
+\theight: 23px;\n
+\n
+}\n
+\n
+#fieldset-tiosearch input.input-text {\n
+\n
+  border: 0;\n
+  margin: 0;\n
+  padding: 0;\n
+  top: 0;\n
+  margin-left: 3px;\n
+\twidth:132px;\n
+  color: #777777;\n
+\n
+}\n
+\n
+#fieldset-tiosearch input.input-text:focus {color:#000000}\n
+\n
+#fieldset-tiosearch button.input-submit {\n
+\n
+  width: 23px;\n
+  height: 23px;\n
+  \n
+}\n
+\n
+#top-bar fieldset{\n
+\n
+  padding: 5px;\n
+\n
+}\n
+\n
+#transition_message {\n
+  color: #c40;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>tooltip_background_color</string> </key>
+            <value> <string>#FFD</string> </value>
+        </item>
+        <item>
+            <key> <string>tooltip_border_color</string> </key>
+            <value> <string>#000</string> </value>
+        </item>
+        <item>
+            <key> <string>tooltip_color</string> </key>
+            <value> <string>#000</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
