@@ -490,6 +490,7 @@ FROM (\n
 SELECT DISTINCT\n
   catalog.path as path,\n
   catalog.uid as uid,\n
+  stock.order_id as order_id,\n
   catalog.relative_url as relative_url,\n
   stock.date AS date_utc,\n
   stock.mirror_date AS mirror_date_utc,\n

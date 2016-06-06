@@ -1566,6 +1566,9 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertTrue(hasattr(brain, 'resource_relative_url'))
     self.assertEqual(brain.resource_relative_url, self.resource.getRelativeUrl())
 
+    # order_id is exposed on brains, useful to generate unique id, using "{uid}-{order_id}"
+    self.assertTrue(hasattr(brain, 'order_id'))
+
 
   def testBrainGetItem(self):
     """Test __getitem__ interface on brains."""
