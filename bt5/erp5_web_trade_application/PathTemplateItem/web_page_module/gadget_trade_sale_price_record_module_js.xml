@@ -10,9 +10,11 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
+                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -22,6 +24,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -40,6 +43,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -48,9 +53,11 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
+                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -76,7 +83,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_trade_jio_sale_price_record_module_view2.js</string> </value>
+            <value> <string>gadget_trade_jio_sale_price_record_module_view.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -164,7 +171,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>archive</string> </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -190,7 +197,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1464968264.89</float>
+                        <float>1464682792.55</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -199,7 +206,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>archived</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>
@@ -235,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>951.45337.16929.39765</string> </value>
+                <value> <string>951.45460.20483.61235</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -253,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1465219106.51</float>
+                        <float>1465226248.27</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -310,7 +317,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1464637960.1</float>
+                        <float>1464682781.66</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

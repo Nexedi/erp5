@@ -51,8 +51,8 @@
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
-          return gadget.getUrlFor({command: 'display', options: {jio_key: options.jio_key, page: "add_sale_price_record"}});
-        })
+          return gadget.getUrlFor({command: 'display', options: {jio_key: options.jio_key, page: "add_sale_price_record"}})
+           })
         .push(function (url) {
           return gadget.updateHeader({
             title: "Sale Price Record",
@@ -91,7 +91,7 @@
                 "key": "field_listbox",
                 "lines": 10,
                 "list_method": "portal_catalog",
-                "query": 'portal_type:' +
+                "query": 'urn:jio:allDocs?query='+'portal_type:' +
                 '("Sale Price Record" OR "Sale Price Record Temp")',
                 "portal_type": [],
                 "search_column_list": column_list,
