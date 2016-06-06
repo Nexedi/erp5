@@ -2251,21 +2251,27 @@ class Test(ERP5TypeTestCase):
     # Create a broken ghost object
     import erp5.portal_type
     name = self._testMethodName
-    ptype = self.portal.portal_types.newContent(name, type_class="File")
+    types_tool = self.portal.portal_types
+    ptype = types_tool.newContent(name, type_class="File")
     file = ptype.constructInstance(self.portal, name, data="foo")
     self.assertEqual(file.size, 3)
     self.commit()
-    self.portal._p_jar.cacheMinimize()
-    del file
-    delattr(erp5.portal_type, name)
-    ptype.setTypeClass(name)
-    self.commit()
-    file = self.portal.__dict__[name]
-    self.assertTrue(isinstance(file, InitGhostBase))
-    # Check that the class is unghosted before resolving __setattr__
-    self.assertRaises(BrokenModified, setattr, file, "size", 0)
-    self.assertTrue(isinstance(file, ERP5BaseBroken))
-    self.assertEqual(file.size, 3)
+    try:
+      self.portal._p_jar.cacheMinimize()
+      del file
+      delattr(erp5.portal_type, name)
+      ptype.setTypeClass(name)
+      self.commit()
+      file = self.portal.__dict__[name]
+      self.assertTrue(isinstance(file, InitGhostBase))
+      # Check that the class is unghosted before resolving __setattr__
+      self.assertRaises(BrokenModified, setattr, file, "size", 0)
+      self.assertTrue(isinstance(file, ERP5BaseBroken))
+      self.assertEqual(file.size, 3)
+    finally:
+      self.portal._delObject(name)
+      types_tool._delObject(name)
+      self.commit()
 
 def test_suite():
   suite = unittest.TestSuite()
