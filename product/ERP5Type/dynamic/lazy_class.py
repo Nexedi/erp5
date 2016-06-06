@@ -125,6 +125,8 @@ class GhostBaseMetaClass(ExtensionClass, AccessorHolderType):
       correct __setattr__ is used. For example, without this, a broken object
       (ERP5BaseBroken) would not raise.
       """
+      if name.startswith(('_p_', '_v_')):
+          return super(cls, self).__setattr__(name, value)
       self.__class__.loadClass()
       setattr(self, name, value)
     cls.__setattr__ = __setattr__
