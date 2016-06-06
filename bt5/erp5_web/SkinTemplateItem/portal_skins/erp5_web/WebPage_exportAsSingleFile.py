@@ -133,19 +133,19 @@ def handleHref(href):
   if not isHrefAUrl(href):
     return href
   try:
-    o = traverseHref(href)
+    obj = traverseHref(href)
   except (KeyError, Unauthorized):
     return makeHrefAbsolute(href)
-  return handleHrefObject(o, href)
+  return handleHrefObject(obj, href)
 
 def handleImageSource(src):
   if not isHrefAUrl(src):
     return src
   try:
-    o = traverseHref(src)
+    obj = traverseHref(src)
   except (KeyError, Unauthorized):
     return makeHrefAbsolute(src)
-  return handleImageSourceObject(o, src)
+  return handleImageSourceObject(obj, src)
 
 def replaceCssUrl(data):
   parts = context.Base_parseCssForUrl(data)
@@ -161,28 +161,28 @@ def replaceCssUrl(data):
       data += part[1]
   return data
 
-def handleImageSourceObject(o, src):
-  if hasattr(o, "convert"):
+def handleImageSourceObject(obj, src):
+  if hasattr(obj, "convert"):
     search = parseUrlSearch(extractUrlSearch(src))
     format_kw = {}
-    for k, x in search:
-      if k == "format" and x is not None:
-        format_kw["format"] = x
-      elif k == "display" and x is not None:
-        format_kw["display"] = x
+    for key, value in search:
+      if key == "format" and value is not None:
+        format_kw["format"] = value
+      elif key == "display" and value is not None:
+        format_kw["display"] = value
     if format_kw:
-      mime, data = o.convert(**format_kw)
+      mime, data = obj.convert(**format_kw)
       return handleLinkedData(mime, data, src)
 
-  return handleHrefObject(o, src, default_mimetype=bad_image_mime_type, default_data=bad_image_data)
+  return handleHrefObject(obj, src, default_mimetype=bad_image_mime_type, default_data=bad_image_data)
 
-def handleHrefObject(o, src, default_mimetype="text/html", default_data="<p>Linked page not found</p>"):
+def handleHrefObject(obj, src, default_mimetype="text/html", default_data="<p>Linked page not found</p>"):
   # handle File portal_skins/folder/file.png
   # XXX handle "?portal_skin=" parameter ?
-  if hasattr(o, "getContentType"):
-    mime = o.getContentType("")
+  if hasattr(obj, "getContentType"):
+    mime = obj.getContentType("")
     if mime:
-      data = getattr(o, "getData", lambda: str(o))() or ""
+      data = getattr(obj, "getData", lambda: str(obj))() or ""
       if isinstance(data, unicode):
         data = data.encode("utf-8")
       return handleLinkedData(mime, data, src)
@@ -191,8 +191,8 @@ def handleHrefObject(o, src, default_mimetype="text/html", default_data="<p>Link
   # handle Object.view
   # XXX handle url query parameters ? Not so easy because we need to
   # use the same behavior as when we call a script from browser URL bar.
-  if not hasattr(o, "getPortalType") and callable(o):
-    mime, data = "text/html", o()
+  if not hasattr(obj, "getPortalType") and callable(obj):
+    mime, data = "text/html", obj()
     if isinstance(data, unicode):
       data = data.encode("utf-8")
     return handleLinkedData(mime, data, src)
@@ -220,8 +220,12 @@ bad_image_mime_type = "image/png"
 
 request_protocol = context.REQUEST.SERVER_URL.split(":", 1)[0] + ":"
 site_object_dict = context.ERP5Site_getWebSiteDomainDict()
-base_url_root_object = portal
+base_url_root_object = getattr(context, "getWebSiteValue", str)() or portal
 base_url_object = context
+assert base_url_object.getRelativeUrl().startswith(base_url_root_object.getRelativeUrl())
+base_url = base_url_object.getRelativeUrl()[len(base_url_root_object.getRelativeUrl()):]
+if not base_url.startswith("/"):
+  base_url = "/" + base_url
 
 def handleLinkedData(mime, data, href):
   if format == "mhtml":
@@ -251,6 +255,7 @@ def isHrefAnAbsoluteUrl(href):
 def isHrefAUrl(href):
   return href.startswith("https://") or href.startswith("http://") or not href.split(":", 1)[0].isalpha()
 
+normalize_kw = {"keep_empty": False, "keep_trailing_slash": False}
 def traverseHref(url, allow_hash=False):
   url = url.split("?")[0]
   if not allow_hash:
@@ -258,16 +263,15 @@ def traverseHref(url, allow_hash=False):
   if url.startswith("https://") or url.startswith("http://") or url.startswith("//"):  # absolute url possibly on other sites
     site_url = "/".join(url.split("/", 3)[:3])
     domain = url.split("/", 3)[2]
+    site_object = site_object_dict[domain]
     relative_path = url[len(site_url):]
     relative_path = (relative_path[1:] if relative_path[:1] == "/" else relative_path)
-    site_object = site_object_dict.get(domain)
-    if site_object is None:
-      raise KeyError(relative_path.split("/")[0])
+    relative_path = context.Base_normalizeUrlPathname("/" + relative_path, **normalize_kw)[1:]
     return site_object.restrictedTraverse(str(relative_path))
   if url.startswith("/"):  # absolute path, relative url
-    return base_url_root_object.restrictedTraverse(str(url[1:]))
-  # relative url (just use a base url)
-  return base_url_object.restrictedTraverse(str(url))
+    return base_url_root_object.restrictedTraverse(str(context.Base_normalizeUrlPathname(url, **normalize_kw)[1:]))
+  # relative url
+  return base_url_root_object.restrictedTraverse(str(context.Base_normalizeUrlPathname(base_url + "/" + url, **normalize_kw)[1:]))
 
 def replaceFromDataUri(data_uri, replacer):
   header, data = data_uri.split(",")
@@ -290,16 +294,16 @@ def parseUrlSearch(search):
     search = search[1:]
   result = []
   for part in search.split("&"):
-    k = part.split("=")
-    v = "=".join(k[1:]) if len(k) else None
-    result.append((k[0], v))
+    key = part.split("=")
+    value = "=".join(key[1:]) if len(key) else None
+    result.append((key[0], value))
   return result
 
 def parseHtml(text):
   return context.Base_parseHtml(text)
 
-def escapeHtml(s):
-  return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")
+def escapeHtml(text):
+  return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")
 
 def anny(iterable, key=None):
   for i in iterable:
