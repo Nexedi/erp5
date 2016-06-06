@@ -118,6 +118,17 @@ class GhostBaseMetaClass(ExtensionClass, AccessorHolderType):
     # (which would even trigger migration, resulting in a ConflictError).
     cls.__getnewargs__ = None
 
+    def __setattr__(self, name, value):
+      """
+      When the first access to an object is a call to setattr, __getattribute__
+      is not involved. Here, we preempt persistent.__setattr__ so that the
+      correct __setattr__ is used. For example, without this, a broken object
+      (ERP5BaseBroken) would not raise.
+      """
+      self.__class__.loadClass()
+      setattr(self, name, value)
+    cls.__setattr__ = __setattr__
+
 InitGhostBase = GhostBaseMetaClass('InitGhostBase', (ERP5Base,), {})
 
 class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):

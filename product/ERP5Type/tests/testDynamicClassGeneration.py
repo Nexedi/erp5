@@ -33,7 +33,9 @@ import unittest
 
 import transaction
 from persistent import Persistent
+from ZODB.broken import BrokenModified
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
+from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken, InitGhostBase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 from zope.interface import Interface, implementedBy
@@ -276,7 +278,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
 
     # then change the type value to something not descending from Folder
     # and check behavior
-    ptype.setTypeClass('Address')
+    ptype.setTypeClass(types_tool.Address.getTypeClass())
 
     # while the class has not been reset is should still descend from Folder
     self.assertTrue(issubclass(module_class, Folder))
@@ -2244,6 +2246,26 @@ class Test(ERP5TypeTestCase):
     expected_msg_re_str = 'Ran 2 tests.*FAILED \(failures=1\)'
     self.assertNotEqual(re.search(expected_msg_re_str, output, re.DOTALL), None,
                         "Expected '%s' in '%s'" % (expected_msg_re_str, output))
+
+  def testERP5Broken(self):
+    # Create a broken ghost object
+    import erp5.portal_type
+    name = self._testMethodName
+    ptype = self.portal.portal_types.newContent(name, type_class="File")
+    file = ptype.constructInstance(self.portal, name, data="foo")
+    self.assertEqual(file.size, 3)
+    self.commit()
+    self.portal._p_jar.cacheMinimize()
+    del file
+    delattr(erp5.portal_type, name)
+    ptype.setTypeClass(name)
+    self.commit()
+    file = self.portal.__dict__[name]
+    self.assertTrue(isinstance(file, InitGhostBase))
+    # Check that the class is unghosted before resolving __setattr__
+    self.assertRaises(BrokenModified, setattr, file, "size", 0)
+    self.assertTrue(isinstance(file, ERP5BaseBroken))
+    self.assertEqual(file.size, 3)
 
 def test_suite():
   suite = unittest.TestSuite()
