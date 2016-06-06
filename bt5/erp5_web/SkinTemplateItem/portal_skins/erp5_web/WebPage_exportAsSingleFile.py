@@ -220,8 +220,12 @@ bad_image_mime_type = "image/png"
 
 request_protocol = context.REQUEST.SERVER_URL.split(":", 1)[0] + ":"
 site_object_dict = context.ERP5Site_getWebSiteDomainDict()
-base_url_root_object = portal
+base_url_root_object = getattr(context, "getWebSiteValue", str)() or portal
 base_url_object = context
+assert base_url_object.getRelativeUrl().startswith(base_url_root_object.getRelativeUrl())
+root_url = base_url_object.getRelativeUrl()[len(base_url_root_object.getRelativeUrl()):]
+if not root_url.startswith("/"):
+  root_url = "/" + root_url
 
 def handleLinkedData(mime, data, href):
   if format == "mhtml":
@@ -251,6 +255,7 @@ def isHrefAnAbsoluteUrl(href):
 def isHrefAUrl(href):
   return href.startswith("https://") or href.startswith("http://") or not href.split(":", 1)[0].isalpha()
 
+normalize_kw = {"keep_empty": False, "keep_trailing_slash": False}
 def traverseHref(url, allow_hash=False):
   url = url.split("?")[0]
   if not allow_hash:
@@ -258,16 +263,15 @@ def traverseHref(url, allow_hash=False):
   if url.startswith("https://") or url.startswith("http://") or url.startswith("//"):  # absolute url possibly on other sites
     site_url = "/".join(url.split("/", 3)[:3])
     domain = url.split("/", 3)[2]
+    site_object = site_object_dict[domain]
     relative_path = url[len(site_url):]
     relative_path = (relative_path[1:] if relative_path[:1] == "/" else relative_path)
-    site_object = site_object_dict.get(domain)
-    if site_object is None:
-      raise KeyError(relative_path.split("/")[0])
+    relative_path = context.Base_normalizeUrlPathname("/" + relative_path, **normalize_kw)[1:]
     return site_object.restrictedTraverse(str(relative_path))
   if url.startswith("/"):  # absolute path, relative url
-    return base_url_root_object.restrictedTraverse(str(url[1:]))
-  # relative url (just use a base url)
-  return base_url_object.restrictedTraverse(str(url))
+    return base_url_root_object.restrictedTraverse(str(context.Base_normalizeUrlPathname(url, **normalize_kw)[1:]))
+  # relative url
+  return base_url_root_object.restrictedTraverse(str(context.Base_normalizeUrlPathname(root_url + "/" + url, **normalize_kw)[1:]))
 
 def replaceFromDataUri(data_uri, replacer):
   header, data = data_uri.split(",")
