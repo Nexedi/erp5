@@ -6,7 +6,7 @@ from ZTUtils import make_query
 portal = context.getPortalObject()
 
 if (came_from is None):
-  came_from = context.getPermanentURL(context)
+  came_from = context.getPermanentURL(context.getWebSiteValue())
 
 portal.portal_skins.updateSkinCookie()
 portal.setupCurrentSkin(REQUEST)
