@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+\n
+<title>CodeMirror: Version 4 upgrade guide</title>\n
+<meta charset="utf-8"/>\n
+<link rel=stylesheet href="docs.css">\n
+<script src="activebookmark.js"></script>\n
+\n
+<div id=nav>\n
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="logo.png"></a>\n
+\n
+  <ul>\n
+    <li><a href="../index.html">Home</a>\n
+    <li><a href="manual.html">Manual</a>\n
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>\n
+  </ul>\n
+  <ul>\n
+    <li><a class=active href="#upgrade">Upgrade guide</a>\n
+    <li><a href="#multisel">Multiple selections</a>\n
+    <li><a href="#beforeSelectionChange">The beforeSelectionChange event</a>\n
+    <li><a href="#replaceSelection">replaceSelection and collapsing</a>\n
+    <li><a href="#changeEvent">change event data</a>\n
+    <li><a href="#showIfHidden">showIfHidden option to line widgets</a>\n
+    <li><a href="#module">Module loaders</a>\n
+    <li><a href="#shareddata">Mutating shared data structures</a></li>\n
+    <li><a href="#deprecated">Deprecated interfaces dropped</a>\n
+  </ul>\n
+</div>\n
+\n
+<article>\n
+\n
+<h2 id=upgrade>Upgrading to version 4</h2>\n
+\n
+<p>CodeMirror 4\'s interface is <em>very</em> close version 3, but it\n
+does fix a few awkward details in a backwards-incompatible ways. At\n
+least skim the text below before upgrading.</p>\n
+\n
+<section id=multisel><h2>Multiple selections</h2>\n
+\n
+<p>The main new feature in version 4 is multiple selections. The\n
+single-selection variants of methods are still there, but now\n
+typically act only on the <em>primary</em> selection (usually the last\n
+one added).</p>\n
+\n
+<p>The exception to this\n
+is <a href="manual.html#getSelection"><strong><code>getSelection</code></strong></a>,\n
+which will now return the content of <em>all</em> selections\n
+(separated by newlines, or whatever <code>lineSep</code> parameter you passed\n
+it).</p>\n
+\n
+</section>\n
+\n
+<section id=beforeSelectionChange><h2>The beforeSelectionChange event</h2>\n
+\n
+<p>This event still exists, but the object it is passed has\n
+a <a href="manual.html#event_beforeSelectionChange">completely new\n
+interface</a>, because such changes now concern multiple\n
+selections.</p>\n
+\n
+</section>\n
+\n
+<section id=replaceSelection><h2>replaceSelection\'s collapsing behavior</h2>\n
+\n
+<p>By\n
+default, <a href="manual.html#replaceSelection"><code>replaceSelection</code></a>\n
+would leave the newly inserted text selected. This is only rarely what\n
+you want, and also (slightly) more expensive in the new model, so the\n
+default was changed to <code>"end"</code>, meaning the old behavior\n
+must be explicitly specified by passing a second argument\n
+of <code>"around"</code>.</p>\n
+\n
+</section>\n
+\n
+<section id=changeEvent><h2>change event data</h2>\n
+\n
+<p>Rather than forcing client code to follow <code>next</code>\n
+pointers from one change object to the next, the library will now\n
+simply fire\n
+multiple <a href="manual.html#event_change"><code>"change"</code></a>\n
+events. Existing code will probably continue to work unmodified.</p>\n
+\n
+</section>\n
+\n
+<section id=showIfHidden><h2>showIfHidden option to line widgets</h2>\n
+\n
+<p>This option, which conceptually caused line widgets to be visible\n
+even if their line was hidden, was never really well-defined, and was\n
+buggy from the start. It would be a rather expensive feature, both in\n
+code complexity and run-time performance, to implement properly. It\n
+has been dropped entirely in 4.0.</p>\n
+\n
+</section>\n
+\n
+<section id=module><h2>Module loaders</h2>\n
+\n
+<p>All modules in the CodeMirror distribution are now wrapped in a\n
+shim function to make them compatible with both AMD\n
+(<a href="http://requirejs.org">requirejs</a>) and CommonJS (as used\n
+by <a href="http://nodejs.org/">node</a>\n
+and <a href="http://browserify.org/">browserify</a>) module loaders.\n
+When neither of these is present, they fall back to simply using the\n
+global <code>CodeMirror</code> variable.</p>\n
+\n
+<p>If you have a module loader present in your environment, CodeMirror\n
+will attempt to use it, and you might need to change the way you load\n
+CodeMirror modules.</p>\n
+\n
+</section>\n
+\n
+<section id=shareddata><h2>Mutating shared data structures</h2>\n
+\n
+<p>Data structures produced by the library should not be mutated\n
+unless explicitly allowed, in general. This is slightly more strict in\n
+4.0 than it was in earlier versions, which copied the position objects\n
+returned by <a href="manual.html#getCursor"><code>getCursor</code></a>\n
+for nebulous, historic reasons. In 4.0, mutating these\n
+objects <em>will</em> corrupt your editor\'s selection.</p>\n
+\n
+</section>\n
+\n
+<section id=deprecated><h2>Deprecated interfaces dropped</h2>\n
+\n
+<p>A few properties and methods that have been deprecated for a while\n
+are now gone. Most notably, the <code>onKeyEvent</code>\n
+and <code>onDragEvent</code> options (use the\n
+corresponding <a href="manual.html#event_dom">events</a> instead).</p>\n
+\n
+<p>Two silly methods, which were mostly there to stay close to the 0.x\n
+API, <code>setLine</code> and <code>removeLine</code> are now gone.\n
+Use the more\n
+flexible <a href="manual.html#replaceRange"><code>replaceRange</code></a>\n
+method instead.</p>\n
+\n
+<p>The long names for folding and completing functions\n
+(<code>CodeMirror.braceRangeFinder</code>, <code>CodeMirror.javascriptHint</code>,\n
+etc) are also gone\n
+(use <code>CodeMirror.fold.brace</code>, <code>CodeMirror.hint.javascript</code>).</p>\n
+\n
+<p>The <code>className</code> property in the return value\n
+of <a href="manual.html#getTokenAt"><code>getTokenAt</code></a>, which\n
+has been superseded by the <code>type</code> property, is also no\n
+longer present.</p>\n
+\n
+</section>\n
+</article>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>upgrade_v4.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

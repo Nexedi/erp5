@@ -1,0 +1,472 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/1</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_ooffice.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>gadget_ooffice_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>/*global window, rJS, DocsAPI, _*/\n
+/*jslint nomen: true, maxlen:80, indent:2*/\n
+(function (rJS, DocsAPI, _) {\n
+  "use strict";\n
+  // Document Editor event handlers\n
+  //function onRequestHistory() {\n
+  //  docEditor.refreshHistory({\n
+  //    \'currentVersion\': 3,\n
+  //    \'history\': [\n
+  //      {\n
+  //        \'user\': {\n
+  //          id: \'8952d4ee-e8a5-42bf-86f0-6cd77801ec15\',\n
+  //          name: \'РўР°С‚СЊСЏРЅР° Р©РµСЂР±Р°РєРѕРІР°\'\n
+  //        },\n
+  //        \'changes\': null,\n
+  //        \'created\': \'1/18/2015 6:38 PM\',\n
+  //        \'version\': 1,\n
+  //        \'version_group\': 1,\n
+  //        \'key\': \'wyX9AwRq_677SWKjhfk=\'\n
+  //      },\n
+  //      {\n
+  //        \'user\': {\n
+  //          id: \'8952d4ee-e8a5-42bf-86f0-6cd77801ec15\',\n
+  //          name: \'РўР°С‚СЊСЏРЅР° Р©РµСЂР±Р°РєРѕРІР°\'\n
+  //        },\n
+  //        \'changes\': [\n
+  //          {\n
+  //            \'user\': {\n
+  //              id: \'8952d4ee-e8a5-42bf-86f0-6cd77801ec15\',\n
+  //              name: \'РўР°С‚СЊСЏРЅР° Р©РµСЂР±Р°РєРѕРІР°\'\n
+  //            },\n
+  //            \'created\': \'1/19/2015 6:30 PM\'\n
+  //          },\n
+  //          {\n
+  //            \'user\': {\n
+  //              \'userid\': \'8952d4ee-e8a5-42bf-11f0-6cd77801ec15\',\n
+  //              \'username\': \'РђР»РµРєСЃР°РЅРґСЂ РўСЂРѕС„РёРјРѕРІ\'\n
+  //            },\n
+  //            \'created\': \'1/19/2015 6:32 PM\'\n
+  //          },\n
+  //          {\n
+  //            \'user\': {\n
+  //              id: \'8952d4ee-e8a5-42bf-86f0-6cd77801ec15\',\n
+  //              name: \'РўР°С‚СЊСЏРЅР° Р©РµСЂР±Р°РєРѕРІР°\'\n
+  //            },\n
+  //            \'created\': \'1/19/2015 6:38 PM\'\n
+  //          }\n
+  //        ],\n
+  //        \'created\': \'2/19/2015 6:38 PM\',\n
+  //        \'version\': 2,\n
+  //        \'version_group\': 1,\n
+  //        \'key\': \'wyX9AwRq_677SWKjhfk=\'\n
+  //      },\n
+  //      {\n
+  //        \'user\': {\n
+  //          id: \'895255ee-e8a5-42bf-86f0-6cd77801ec15\',\n
+  //          name: \'Me\'\n
+  //        },\n
+  //        \'changes\': null,\n
+  //        \'created\': \'2/21/2015 6:38 PM\',\n
+  //        \'version\': 3,\n
+  //        \'version_group\': 2,\n
+  //        \'key\': \'wyX9AwRq_677SWKjhfk=\'\n
+  //      },\n
+  //      {\n
+  //        \'user\': {\n
+  //          id: \'8952d4ee-e8a5-42bf-11f0-6cd77801ec15\',\n
+  //          name: \'РђР»РµРєСЃР°РЅРґСЂ РўСЂРѕС„РёРјРѕРІ\'\n
+  //        },\n
+  //        \'changes\': null,\n
+  //        \'created\': \'2/22/2015 6:37 PM\',\n
+  //        \'version\': 4,\n
+  //        \'version_group\': 3,\n
+  //        \'key\': \'wyX9AwRq_677SWKjhfk=\'\n
+  //      },\n
+  //      {\n
+  //        \'user\': {\n
+  //          id: \'8952d4ee-e8a5-42bf-11f0-6cd33801ec15\',\n
+  //          name: \'Р›РµРѕРЅРёРґ РћСЂР»РѕРІ\'\n
+  //        },\n
+  //        \'changes\': null,\n
+  //        \'created\': \'2/24/2015 6:29 PM\',\n
+  //        \'version\': 5,\n
+  //        \'version_group\': 3,\n
+  //        \'key\': \'wyX9AwRq_677SWKjhfk=\'\n
+  //      }]\n
+  //  });\n
+  //}\n
+  //\n
+  //function onRequestHistoryData(revision) {\n
+  //  docEditor.setHistoryData(\n
+  //      {\n
+  //        \'version\': revision.data,\n
+  //        \'url\': \'http://isa2\',\n
+  //        \'urlDiff\': \'http://isa2\'\n
+  //      }\n
+  //  );\n
+  //}\n
+  //\n
+  //function onRequestHistoryClose() {\n
+  //  // reload page\n
+  //}\n
+  //\n
+  function onDocEditorReady(event) {\n
+    if (event.target) {\n
+      console.log(\'Ready! Editor: \', event.target);\n
+    }\n
+  }\n
+\n
+  function onDocumentStateChange(event) {\n
+    var isModified = event.data;\n
+    console.log(isModified);\n
+  }\n
+\n
+  function onError(event) {\n
+    console.log(event.data);\n
+    // critical error happened\n
+    // examine event.data.errorCode and event.data.errorDescription for details\n
+  }\n
+\n
+  rJS(window)\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.cfg = {\n
+            mode: \'edit\',\n
+            lang: \'en\',\n
+            canCoAuthoring: false,\n
+            canBackToFolder: true,\n
+            canCreateNew: true,\n
+            createUrl: \'http://www.example.com/create\',\n
+            user: {\n
+              id: \'uid-901\',\n
+              name: \'Hamish Mitchell\'\n
+            },\n
+            recent: [\n
+              {\n
+                title: \'Memory.docx\',\n
+                url: \'http://onlyoffice.com\',\n
+                folder: \'Document Editor\'\n
+              },\n
+              {\n
+                title: \'Description.doc\',\n
+                url: \'http://onlyoffice.com\',\n
+                folder: \'Document Editor\'\n
+              },\n
+              {\n
+                title: \'DocEditor_right.xsl\',\n
+                url: \'http://onlyoffice.com\',\n
+                folder: \'Spreadsheet Editor\'\n
+              },\n
+              {\n
+                title: \'api.rtf\',\n
+                url: \'http://onlyoffice.com\',\n
+                folder: \'Unnamed folder\'\n
+              }\n
+            ],\n
+            templates: [\n
+              {\n
+                name: \'Contracts\',\n
+                icon: \'../../api/documents/resources/templates/contracts.png\'\n
+              },\n
+              {\n
+                name: \'Letter\',\n
+                icon: \'../../api/documents/resources/templates/letter.png\'\n
+              },\n
+              {\n
+                name: \'List\',\n
+                icon: \'../../api/documents/resources/templates/list.png\'\n
+              },\n
+              {\n
+                name: \'Plan\',\n
+                icon: \'../../api/documents/resources/templates/plan.png\'\n
+              }\n
+            ],\n
+            embedded: {\n
+              embedUrl: \'http://onlyoffice.com/embed\',\n
+              fullscreenUrl: \'http://onlyoffice.com/fullscreen\',\n
+              saveUrl: \'http://onlyoffice.com/download\',\n
+              shareUrl: \'http://tl.com/72b4la97\',\n
+              toolbarDocked: \'top\'\n
+            },\n
+            customization: {\n
+              //logoUrl: \'header logo url\', // default size 88 x 30\n
+              //logoUrlEmbedded: \'header logo url\', // default size 88 x 30\n
+              //backgroundColor: \'#ffffff\',\n
+              //textColor: \'#ff0000\',\n
+              //customer: {\n
+              //    name: \'SuperPuper\',\n
+              //    address: \'New-York, 125f-25\',\n
+              //    mail: \'support@gmail.com\',\n
+              //    www: \'www.superpuper.com\',\n
+              //    info: \'Some info\',\n
+              // logo:\'https://img.imgsmail.ru/r/default/portal/0.1.29/logo.png\'\n
+              //},\n
+              //goback: {text: \'Go To London\'}\n
+              about: true,\n
+              feedback: true\n
+            }\n
+          };\n
+          g.props.element = element;\n
+        });\n
+    })\n
+    .declareAcquiredMethod("submitContent", "triggerSubmit")\n
+    .declareAcquiredMethod("maximize", "triggerMaximize")\n
+    .declareMethod(\'render\', function (options) {\n
+      console.log(options.value);\n
+      this.props.docEditor = new DocsAPI.DocEditor(\'oospreadsheet_gadget\', {\n
+        //type: urlParams[\'type\'],\n
+        width: \'100%\',\n
+        height: \'100%\',\n
+        //documentType: urlParams[\'doctype\'],\n
+        document: {\n
+          //key: undefined,\n
+          //url: undefined,\n
+          title: options.title,\n
+          //fileType: undefined,\n
+          //vkey: undefined,\n
+          data: options.value || "",\n
+          permissions: {\n
+            edit: true,\n
+            download: true,\n
+            reader: true\n
+          }\n
+        },\n
+        editorConfig: this.props.cfg,\n
+        events: {\n
+          \'onReady\': onDocEditorReady,\n
+          \'onBack\': _.bind(function (event) {\n
+            this.maximize();\n
+          }, this),\n
+          \'onDocumentStateChange\': onDocumentStateChange,\n
+          \'onRequestEditRights\': _.bind(function (event) {\n
+            // occurs whenever the user tryes to enter edit mode\n
+            this.props.docEditor.applyEditRights(true,\n
+              "Someone is editing this document right now." +\n
+              " Please try again later.");\n
+          }, this),\n
+          //\'onRequestHistory\': onRequestHistory,\n
+          //\'onRequestHistoryData\': onRequestHistoryData,\n
+          //\'onRequestHistoryClose\': onRequestHistoryClose,\n
+          \'onSave\': _.bind(function (event) {\n
+            this.props.data = event.data;\n
+            this.submitContent();\n
+            return true;\n
+            // if you want to async save process return false\n
+            // and call api.processSaveResult when ready\n
+          }, this),\n
+          \'onError\': onError\n
+        }\n
+      });\n
+      this.props.key = options.key || "text_content";\n
+      return {};\n
+    })\n
+\n
+    .declareMethod(\'getContent\', function () {\n
+      var result = {};\n
+      result[this.props.key] = this.props.data;\n
+      return result;\n
+    });\n
+\n
+}(rJS, DocsAPI, _));</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>cedric.le.ninivin</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1448024013.93</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  This script return a list dictionary of editables services and\n
+  all their usefull information that permit to display a popup\n
+  to edit them.\n
+  In base cases, only \'Monthly Labour\' model line is editable (without any\n
+  contribution_share or slice)\n
+"""\n
+\n
+from Products.ERP5Type.Utils import cartesianProduct\n
+import pprint\n
+from Products.ERP5Type.Message import translateString\n
+\n
+def sortByIntIndex(a, b):\n
+  return cmp(a.getIntIndex(), b.getIntIndex())\n
+\n
+portal_type_list = [\'Pay Sheet Model Line\']\n
+sub_object_list = context.getInheritedObjectValueList(portal_type_list)\n
+sub_object_list.sort(sortByIntIndex)\n
+model_line_list = sub_object_list\n
+\n
+# remove editable model line\n
+model_line_list = [x.getObject() for x in model_line_list \\\n
+                            if x.getObject().isEditable()]\n
+\n
+line_list = []\n
+object_dict_list = []\n
+id = 0\n
+\n
+for model_line in model_line_list:\n
+  base_category_list = model_line.getVariationBaseCategoryList()\n
+  base_application_list = model_line.getBaseApplicationTitleList()\n
+  translated_base_application_list = [str(translateString(x)) for x in base_application_list]\n
+  base_application_list = \', \'.join(translated_base_application_list)\n
+  list_of_list = []\n
+  for base_category in base_category_list:\n
+    list = model_line.getVariationCategoryList(base_category_list=\\\n
+        base_category)\n
+    list_of_list.append(list)\n
+  cartesian_product = cartesianProduct(list_of_list)\n
+\n
+  previous_share = None\n
+  object_dict = {}\n
+\n
+  if cartesian_product == [[]]: \n
+    share_dict = {}\n
+    if 0:\n
+      share_dict[cell.getContributionShare()+\'_price\'] = 0\n
+      share_dict[cell.getContributionShare()+\'_quantity\'] = 0\n
+    continue\n
+\n
+  for tuple in cartesian_product:\n
+    share_dict = {}\n
+    cell = model_line.getCell(*tuple)\n
+    if cell is None:\n
+      continue\n
+\n
+    quantity = cell.getQuantity()\n
+    base = quantity\n
+\n
+    base_list = [str(translateString(base_application)) for base_application in \\\n
+        model_line.getBaseApplicationTitleList()]\n
+    base_name = \'+\'.join(base_list)\n
+\n
+    service = model_line.getResourceValue()\n
+    base_contribution_list = model_line.getBaseContributionList()\n
+\n
+    price = cell.getPrice()\n
+    if price is None:\n
+      price = 1\n
+    share_dict[cell.getContributionShare()+\'_price\'] = price\n
+    share_dict[cell.getContributionShare()+\'_quantity\'] = quantity\n
+\n
+    tuple_dict = {}\n
+    for item in tuple:\n
+      # the dict key is the base category and value is the category path\n
+      tuple_dict[item.split(\'/\')[0]]=context.portal_categories.restrictedTraverse(item).getTitle()\n
+      tuple_dict[item.split(\'/\')[0]+\'_relative_url\']=item\n
+\n
+    # we want to display as lines as a paysheet line as slices\n
+    # this is easier to read\n
+\n
+    salary_range = cell.getSalaryRange()\n
+    # if there is no slice on a contribution, the dict key will be \'no_slice\'\n
+    # it could be just one \'no_slice\' because a contribution have slice or not\n
+    if salary_range is None:\n
+      salary_range = \'no_slice\'\n
+\n
+    # check that another share on the same slice have not been already add\n
+    if not object_dict.has_key(salary_range):\n
+      salary_range_title = None\n
+      salary_range_relative_url = None\n
+      if tuple_dict.has_key(\'salary_range\'):\n
+        salary_range_title = tuple_dict[\'salary_range\']\n
+        salary_range_relative_url = tuple_dict[\'salary_range_relative_url\']\n
+      new_uid = "new_%s" % id\n
+      id += 1\n
+      object_dict[salary_range]={\n
+                    \'uid\':new_uid,\n
+                    \'salary_range_title\':salary_range_title,\n
+                    \'salary_range_relative_url\':salary_range_relative_url,\n
+                    \'base_name\':base_name,\n
+                    \'base\':base,\n
+                    \'model_line\': model_line.getRelativeUrl(),\n
+                    \'base_contribution_list\':base_contribution_list,\n
+                    \'base_application_list\': base_application_list,\n
+                    \'service_id\':service.getId()}\n
+      object_dict[salary_range].update(share_dict)\n
+\n
+    # if the slice already exists, just update the share\n
+    else:\n
+      object_dict[salary_range].update(share_dict)\n
+\n
+  object_dict_list.append(object_dict)\n
+\n
+  for object_key in model_line.getSalaryRangeList():\n
+    line_list.append(model_line.asContext(**object_dict[object_key]))\n
+  if object_dict.has_key(\'no_slice\'):\n
+    line_list.append(model_line.asContext(**object_dict[\'no_slice\']))\n
+\n
+\n
+if batch_mode:\n
+  object_dict_list = [x.values()[0] for x in object_dict_list]\n
+  return object_dict_list\n
+\n
+# sort results\n
+\n
+def sortByTitleAscending(x, y):\n
+  return cmp(x.getTitle(), y.getTitle())\n
+\n
+def sortByTitleDescending(x, y):\n
+  return cmp(y.getTitle(), x.getTitle())\n
+\n
+def sortByIntIndexAscending(x, y):\n
+  return cmp(x.getIntIndex(), y.getIntIndex())\n
+\n
+def sortByIntIndexDescending(x, y):\n
+  return cmp(y.getIntIndex(), x.getIntIndex())\n
+\n
+sortByDefaultSortMethod = sortByIntIndexAscending\n
+\n
+if kw.has_key(\'sort_on\'):\n
+  list = kw[\'sort_on\']\n
+  if list[0][0] == \'title\' and list[0][1]==\'ascending\':\n
+    line_list.sort(sortByTitleAscending)\n
+  elif list[0][0] == \'title\' and list[0][1]==\'descending\':\n
+    line_list.sort(sortByTitleDescending)\n
+  elif list[0][0] == \'int_index\' and list[0][1]==\'ascending\':\n
+    line_list.sort(sortByIntIndexAscending)\n
+  elif list[0][0] == \'int_index\' and list[0][1]==\'descending\':\n
+    line_list.sort(sortByIntIndexDescending)\n
+  else:\n
+    line_list.sort(sortByDefaultSortMethod)\n
+else:\n
+  line_list.sort(sortByDefaultSortMethod)\n
+\n
+\n
+\n
+#return pprint.pformat(line_list)\n
+return line_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>batch_mode=0, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetTransaction_getEditableObjectLineList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

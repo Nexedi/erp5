@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>OLE_documents_zipstring</string> </key>
+            <value> <string encoding="base64">UEsDBBQAAAAIAOeI4zbMBk1mQgEAAFEHAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZVLasMw
+EED3PYXR3lbbVTFxAi30BOkBJvLYEeiHZhSS21cO5NM2lKZYOw1I741GGmmx2ltT7TCS9q4TT82j
+qNAp32s3duJj/V6/iNXyYWHB6QGJ29OgyuscncNOpOhaD6SpdWCRWlatD+h6r5JFx+3X+e1kWj5U
+F/CgDdZ5YjxUFxn2Gmo+BOwEhGC0As55yp3rm6OruVY0FCJCT1tEFhfIkIypA/C2E1LIu5y3KW/e
+DXpM8ZgLPUti4EQbiGXwoBQazKGPUqUYp53mYhZ3FREMxgNjIXjwIYV8E1IhfPRjRCp30lPqxeDs
+vSkG1xZGJPmq2UKgoo472d+fDUpu6p4m6UZdC/6Ww51yxj3LqVdvwrOf/9fMv3OJDwZpdqxFhtke
+nvU22Y0DbUjyadgEN84Nn7ewyJz/xXNpF/LHt7j8BFBLAQIUABQAAAAIAOeI4zbMBk1mQgEAAFEH
+AAAVAAAAAAAAAAAAAAAAAAAAAABNRVRBLUlORi9tYW5pZmVzdC54bWxQSwUGAAAAAAEAAQBDAAAA
+dQEAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<office:document-content xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\' xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\' xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\' xmlns:ooo=\'http://openoffice.org/2004/office\' xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\' xmlns:dc=\'http://purl.org/dc/elements/1.1/\' xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\' xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\' xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\' xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\' xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\' xmlns:xforms=\'http://www.w3.org/2002/xforms\' xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\' xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\' xmlns:ooow=\'http://openoffice.org/2004/writer\' xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\' xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\' xmlns:dom=\'http://www.w3.org/2001/xml-events\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\' xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\' xmlns:oooc=\'http://openoffice.org/2004/calc\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\' xmlns:tal=\'http://xml.zope.org/namespaces/tal\' xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\' xmlns:metal=\'http://xml.zope.org/namespaces/metal\' tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\' office:version=\'1.0\' tal:define="global frame_width python:25.8; render_prefix render_prefix|nothing" metal:define-macro="master" i18n:domain="erp5_ui">\n
+  <tal:block metal:use-macro="here/style_macros/macros/style_macro"/>\n
+<office:body>\n
+  <office:spreadsheet>\n
+    <table:table table:style-name=\'ta1\' table:print=\'false\' tal:attributes="table:name python: unicode(here.getTitle(), \'utf-8\')" i18n:attributes="table:name">\n
+      \n
+      <!-- at least one table-column element is required for ODF to validate -->\n
+      <table:table-column\n
+            table:style-name=\'co2\'\n
+            table:number-columns-repeated=\'100\'\n
+            table:default-cell-style-name=\'Default\'/>\n
+\n
+      <!-- macro form_layout -->\n
+      <tal:block metal:define-macro="form_layout" tal:define="display_header python:False">\n
+        <tal:block tal:define="global group_list python:form.get_groups()"/>\n
+        <tal:block tal:repeat="group python: [g for g in group_list if g not in (\'hidden\', )]">\n
+          <tal:block tal:define="field_list python: form.get_fields_in_group(group)">\n
+            <tal:block tal:condition="python: field_list not in [None, []]">\n
+              <tal:block tal:repeat="field field_list">\n
+                <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'\n
+                           and field.meta_type == \'OOoChart\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'OOoChart\')">\n
+                  <table:table-row table:style-name=\'ro2\'>\n
+                    <table:table-cell table:style-name=\'report-column-title\'\n
+                                      office:value-type=\'string\'>\n
+                      <text:p tal:content="python:here.Localizer.erp5_ui.gettext(field.get_value (\'title\')).encode(\'utf-8\')">\n
+                      </text:p>\n
+                    </table:table-cell>\n
+                    <tal:block tal:define="display python: field.get_value(\'image_display\') "\n
+                               tal:condition="display">\n
+                      <tal:block tal:define="preferred_method_height_id python: \'getPreferred%sImageHeight\' % (display.capitalize());\n
+                                 preferred_method_width_id python: \'getPreferred%sImageWidth\'\n
+                                 % (display.capitalize());\n
+                                 " >\n
+                        <tal:block tal:define="global height python:\'%scm\' % (int((getattr(here.portal_preferences, preferred_method_height_id)())) * 0.020) ;\n
+                                   global width  python: \'%scm\' % (int((getattr(here.portal_preferences, preferred_method_width_id)())) * 0.020 );"/>\n
+                      </tal:block>\n
+                    </tal:block>\n
+                    <table:table-cell>\n
+                      <draw:frame draw:z-index="0" draw:style-name="gr1" svg:x="0.2cm" svg:y="0.2cm" svg:width="7.996cm" svg:height="6.999cm"\n
+                                  tal:attributes="svg:height python:height;\n
+                                  svg:width python:width">\n
+                        <tal:block tal:replace="structure python: field.render_odf(render_prefix=render_prefix)"/>\n
+                      </draw:frame>\n
+                    </table:table-cell>\n
+                  </table:table-row>\n
+                </tal:block>\n
+              </tal:block>\n
+            </tal:block>\n
+          </tal:block>\n
+        </tal:block>\n
+\n
+        <!-- save the context for the macros -->\n
+        <tal:block tal:define="dummy python: request.set(\'here\', here)">\n
+        <!-- Calculating by group the max length of columns to merge -->\n
+        <tal:block tal:repeat="group python: [g for g in group_list if g not in (\'hidden\', )]">\n
+            <!-- if we have other fields to display, calculate max column len, which will be used \n
+                later to make standard fields (ie. not listbox) using covered cells -->\n
+          <tal:block tal:define="global field_list python: form.get_fields_in_group(group)"/>\n
+          <tal:block tal:condition="python:len(field_list) &gt; 0">\n
+            <tal:block tal:define="global column_len python: 5"/>\n
+            <tal:block tal:repeat="field python:field_list">\n
+              <tal:block tal:condition="python:field.meta_type == \'ListBox\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'ListBox\')">\n
+                 <tal:block tal:define="column_list python: field.get_value(\'columns\');\n
+                                       global column_len python: max(column_len, len(column_list))" />\n
+              </tal:block>\n
+            </tal:block>\n
+            <tal:block tal:condition="report_item | nothing">\n
+               <tal:block tal:define="global column_len python: report_item.selection_columns and len(report_item.selection_columns) or column_len;"/>\n
+            </tal:block>\n
+            <!-- Display field -->\n
+            <tal:block tal:repeat="field python:field_list">\n
+              <tal:block metal:use-macro="form/field_ods_macro/macros/field_render" />\n
+            </tal:block>\n
+          </tal:block>\n
+          <table:table-row>\n
+            <table:table-cell table:style-name=\'Default\'/>\n
+          </table:table-row>\n
+        </tal:block>\n
+        </tal:block>\n
+      </tal:block>\n
+      </table:table>\n
+    </office:spreadsheet>\n
+  </office:body>\n
+</office:document-content>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/vnd.oasis.opendocument.spreadsheet</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>filename</string> </key>
+            <value> <string>object/aq_parent/title_or_id</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>form_view</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_stylesheet</string> </key>
+            <value> <string>Base_getODSMetaStyleSheet</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_xml_file_id</string> </key>
+            <value> <string>content.xml</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

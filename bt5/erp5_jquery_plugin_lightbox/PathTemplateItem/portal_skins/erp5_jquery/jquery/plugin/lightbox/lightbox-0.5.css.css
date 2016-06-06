@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts48651728.89</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>lightbox-0.5.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\r\n
+ * jQuery lightBox plugin\r\n
+ * This jQuery plugin was inspired and based on Lightbox 2 by Lokesh Dhakar (http://www.huddletogether.com/projects/lightbox2/)\r\n
+ * and adapted to me for use like a plugin from jQuery.\r\n
+ * @name jquery-lightbox-0.5.css\r\n
+ * @author Leandro Vieira Pinho - http://leandrovieira.com\r\n
+ * @version 0.5\r\n
+ * @date April 11, 2008\r\n
+ * @category jQuery plugin\r\n
+ * @copyright (c) 2008 Leandro Vieira Pinho (leandrovieira.com)\r\n
+ * @license CCAttribution-ShareAlike 2.5 Brazil - http://creativecommons.org/licenses/by-sa/2.5/br/deed.en_US\r\n
+ * @example Visit http://leandrovieira.com/projects/jquery/lightbox/ for more informations about this jQuery plugin\r\n
+ */\r\n
+#jquery-overlay {\r\n
+\tposition: absolute;\r\n
+\ttop: 0;\r\n
+\tleft: 0;\r\n
+\tz-index: 90;\r\n
+\twidth: 100%;\r\n
+\theight: 500px;\r\n
+}\r\n
+#jquery-lightbox {\r\n
+\tposition: absolute;\r\n
+\ttop: 0;\r\n
+\tleft: 0;\r\n
+\twidth: 100%;\r\n
+\tz-index: 100;\r\n
+\ttext-align: center;\r\n
+\tline-height: 0;\r\n
+}\r\n
+#jquery-lightbox a img { border: none; }\r\n
+#lightbox-container-image-box {\r\n
+\tposition: relative;\r\n
+\tbackground-color: #fff;\r\n
+\twidth: 250px;\r\n
+\theight: 250px;\r\n
+\tmargin: 0 auto;\r\n
+}\r\n
+#lightbox-container-image { padding: 10px; }\r\n
+#lightbox-loading {\r\n
+\tposition: absolute;\r\n
+\ttop: 40%;\r\n
+\tleft: 0%;\r\n
+\theight: 25%;\r\n
+\twidth: 100%;\r\n
+\ttext-align: center;\r\n
+\tline-height: 0;\r\n
+}\r\n
+#lightbox-nav {\r\n
+\tposition: absolute;\r\n
+\ttop: 0;\r\n
+\tleft: 0;\r\n
+\theight: 100%;\r\n
+\twidth: 100%;\r\n
+\tz-index: 10;\r\n
+}\r\n
+#lightbox-container-image-box > #lightbox-nav { left: 0; }\r\n
+#lightbox-nav a { outline: none;}\r\n
+#lightbox-nav-btnPrev, #lightbox-nav-btnNext {\r\n
+\twidth: 49%;\r\n
+\theight: 100%;\r\n
+\tzoom: 1;\r\n
+\tdisplay: block;\r\n
+}\r\n
+#lightbox-nav-btnPrev { \r\n
+\tleft: 0; \r\n
+\tfloat: left;\r\n
+}\r\n
+#lightbox-nav-btnNext { \r\n
+\tright: 0; \r\n
+\tfloat: right;\r\n
+}\r\n
+#lightbox-container-image-data-box {\r\n
+\tfont: 10px Verdana, Helvetica, sans-serif;\r\n
+\tbackground-color: #fff;\r\n
+\tmargin: 0 auto;\r\n
+\tline-height: 1.4em;\r\n
+\toverflow: auto;\r\n
+\twidth: 100%;\r\n
+\tpadding: 0 10px 0;\r\n
+}\r\n
+#lightbox-container-image-data {\r\n
+\tpadding: 0 10px; \r\n
+\tcolor: #666; \r\n
+}\r\n
+#lightbox-container-image-data #lightbox-image-details { \r\n
+\twidth: 70%; \r\n
+\tfloat: left; \r\n
+\ttext-align: left; \r\n
+}\t\r\n
+#lightbox-image-details-caption { font-weight: bold; }\r\n
+#lightbox-image-details-currentNumber {\r\n
+\tdisplay: block; \r\n
+\tclear: left; \r\n
+\tpadding-bottom: 1.0em;\t\r\n
+}\t\t\t\r\n
+#lightbox-secNav-btnClose {\r\n
+\twidth: 66px; \r\n
+\tfloat: right;\r\n
+\tpadding-bottom: 0.7em;\t\r\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2366</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jquery.lightbox-0.5.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

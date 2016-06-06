@@ -1,0 +1,722 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<!-- removed for now, causes problems in Firefox: manifest="svg-editor.manifest" -->\n
+<head>\n
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />\n
+<meta http-equiv="X-UA-Compatible" content="chrome=1"/>\n
+<link rel="icon" type="image/png" href="images/logo.png"/>\n
+<link rel="stylesheet" href="jgraduate/css/jPicker-1.0.12.css" type="text/css"/>\n
+<link rel="stylesheet" href="jgraduate/css/jgraduate.css" type="text/css"/>\n
+<link rel="stylesheet" href="svg-editor.css" type="text/css"/>\n
+<link rel="stylesheet" href="spinbtn/JQuerySpinBtn.css" type="text/css"/>\n
+\n
+<!-- Release version of script tags: -->\n
+<script type="text/javascript" src="jquery.js"></script>\n
+<script type="text/javascript" src="js-hotkeys/jquery.hotkeys.min.js"></script>\n
+<script type="text/javascript" src="jgraduate/jquery.jgraduate.min.js"></script>\n
+<script type="text/javascript" src="svgicons/jquery.svgicons.min.js"></script>\n
+<script type="text/javascript" src="jquerybbq/jquery.bbq.min.js"></script>\n
+<script type="text/javascript" src="spinbtn/JQuerySpinBtn.min.js"></script>\n
+<script type="text/javascript" src="svgcanvas.js"></script>\n
+<script type="text/javascript" src="svg-editor.js"></script>\n
+<script type="text/javascript" src="locale/locale.min.js"></script>\n
+<!-- you can load extensions here -->\n
+<!-- <script type="text/javascript" src="extensions/ext-helloworld.js"></script> -->\n
+\n
+\n
+<!-- Development version of script tags: \n
+<script type="text/javascript" src="jquery.js"></script>\n
+<script type="text/javascript" src="js-hotkeys/jquery.hotkeys.min.js"></script>\n
+<script type="text/javascript" src="jgraduate/jquery.jgraduate.min.js"></script>\n
+<script type="text/javascript" src="svgicons/jquery.svgicons.min.js"></script>\n
+<script type="text/javascript" src="jquerybbq/jquery.bbq.min.js"></script>\n
+<script type="text/javascript" src="spinbtn/JQuerySpinBtn.js"></script>\n
+<script type="text/javascript" src="svgcanvas.js"></script>\n
+<script type="text/javascript" src="svg-editor.js"></script>\n
+<script type="text/javascript" src="locale/locale.js"></script>\n
+-->\n
+\n
+<!-- always minified scripts -->\n
+<script type="text/javascript" src="jquery-ui/jquery-ui-1.8.custom.min.js"></script>\n
+<script type="text/javascript" src="jgraduate/jpicker-1.0.12.min.js"></script>\n
+\n
+<!-- feeds -->\n
+<link rel="alternate" type="application/atom+xml" title="SVG-edit General Discussion" href="http://groups.google.com/group/svg-edit/feed/atom_v1_0_msgs.xml" />\n
+<link rel="alternate" type="application/atom+xml" title="SVG-edit Updates (Issues/Fixes/Commits)" href="http://code.google.com/feeds/p/svg-edit/updates/basic" />\n
+\n
+<!-- Add script with custom handlers here -->\n
+<title>SVG-edit</title>\n
+</head>\n
+<body>\n
+<div id="svg_editor">\n
+\n
+<div id="workarea">\n
+<style id="styleoverrides" type="text/css" media="screen" scoped="scoped"></style>\n
+<div id="svgcanvas"></div>\n
+</div>\n
+\n
+<div id="sidepanels">\n
+\t<div id="layerpanel">\n
+\t\t<h3 id="layersLabel">Layers</h3>\n
+\t\t<fieldset id="layerbuttons">\n
+\t\t\t<div id="layer_new" class="layer_button"  title="New Layer"></div>\n
+\t\t\t<div id="layer_delete" class="layer_button"  title="Delete Layer"></div>\n
+\t\t\t<div id="layer_rename" class="layer_button"  title="Rename Layer"></div>\n
+\t\t\t<div id="layer_up" class="layer_button"  title="Move Layer Up"></div>\n
+\t\t\t<div id="layer_down" class="layer_button"  title="Move Layer Down"></div>\n
+\t\t</fieldset>\n
+\t\t\n
+\t\t<table id="layerlist">\n
+\t\t\t<tr class="layer">\n
+\t\t\t\t<td class="layervis"></td>\n
+\t\t\t\t<td class="layername">Layer 1</td>\n
+\t\t\t</tr>\n
+\t\t</table>\n
+\t\t<span id="selLayerLabel">Move elements to:</span>\n
+\t\t<select id="selLayerNames" title="Move selected elements to a different layer" disabled="disabled">\n
+\t\t\t<option selected="selected" value="layer1">Layer 1</option>\n
+\t\t</select>\n
+\t</div>\n
+\t<div id="sidepanel_handle" title="Drag left/right to resize side panel [X]">L a y e r s</div>\n
+</div>\n
+\n
+<div id="main_button">\n
+\t<div id="main_icon" class="buttonup" title="Main Menu">\n
+\t\t<span></span>\n
+\t\t<div id="logo"></div>\n
+\t\t<div class="dropdown"></div>\n
+\t</div>\n
+\t\t\n
+\t<div id="main_menu"> \n
+\t\n
+\t\t<!-- File-like buttons: New, Save, Source -->\n
+\t\t<ul>\n
+\t\t\t<li id="tool_clear">\n
+\t\t\t\t<div></div>\n
+\t\t\t\tNew Image [N]\n
+\t\t\t</li>\n
+\t\t\t\n
+\t\t\t<li id="tool_open" style="display:none;">\n
+\t\t\t\t<div id="fileinputs">\n
+\t\t\t\t\t<div></div>\n
+\t\t\t\t</div>\n
+\t\t\t\tOpen Image [O]\n
+\t\t\t</li>\n
+\t\t\t\n
+\t\t\t<li id="tool_import" style="display:none;">\n
+\t\t\t\t<div id="fileinputs_import">\n
+\t\t\t\t\t<div></div>\n
+\t\t\t\t</div>\n
+\t\t\t\tImport SVG\n
+\t\t\t</li>\n
+\t\t\t\n
+\t\t\t<li id="tool_save">\n
+\t\t\t\t<div></div>\n
+\t\t\t\tSave Image [S]\n
+\t\t\t</li>\n
+\t\t\t\n
+\t\t\t<li id="tool_export">\n
+\t\t\t\t<div></div>\n
+\t\t\t\tExport as PNG\n
+\t\t\t</li>\n
+\t\t\t\n
+\t\t\t<li id="tool_docprops">\n
+\t\t\t\t<div></div>\n
+\t\t\t\tDocument Properties [I]\n
+\t\t\t</li>\n
+\t\t</ul>\n
+\t\t\n
+\t\t<p>\n
+\t\t\t<a href="http://svg-edit.googlecode.com/" target="_blank">\n
+\t\t\t\tSVG-edit Home Page\n
+\t\t\t</a>\n
+\t\t</p>\n
+\n
+\t</div>\n
+</div>\n
+\n
+\n
+\n
+<div id="tools_top" class="tools_panel">\n
+\t\n
+\t<div id="editor_panel">\n
+\t\t<div class="push_button" id="tool_source" title="Edit Source [U]"></div>\n
+\t\t<div class="tool_button" id="tool_wireframe" title="Wireframe Mode [F]"></div>\n
+\t</div>\n
+\n
+    <!-- History buttons -->\n
+\t<div id="history_panel">\n
+\t\t<div class="tool_sep"></div>\n
+\t\t<div class="push_button tool_button_disabled" id="tool_undo" title="Undo [Z]"></div>\n
+\t\t<div class="push_button tool_button_disabled" id="tool_redo" title="Redo [Y]"></div>\n
+\t</div>\n
+\t\n
+\t<!-- Buttons when a single element is selected -->\n
+\t<div id="selected_panel">\n
+\t\t<div class="toolset">\n
+\t\t\t<div class="tool_sep"></div>\n
+\t\t\t<div class="push_button" id="tool_clone" title="Clone Element [C]"></div>\n
+\t\t\t<div class="push_button" id="tool_delete" title="Delete Element [Delete/Backspace]"></div>\n
+\t\t\t<div class="tool_sep"></div>\n
+\t\t\t<div class="push_button" id="tool_move_top" title="Move to Top [Shift+Up]"></div>\n
+\t\t\t<div class="push_button" id="tool_move_bottom" title="Move to Bottom [Shift+Down]"></div>\n
+\t\t\t<div class="push_button" id="tool_topath" title="Convert to Path"></div>\n
+\t\t\t<div class="push_button" id="tool_reorient" title="Reorient path"></div>\n
+\t\t\t<div class="tool_sep"></div>\n
+\t\t\t<label id="idLabel" title="Identify the element">\n
+\t\t\t\t<span>id:</span>\n
+\t\t\t\t<input id="elem_id" class="attr_changer" data-attr="id" size="10" type="text"/>\n
+\t\t\t</label>\n
+\t\t</div>\n
+\n
+\t\t<label id="tool_angle" title="Change rotation angle">\n
+\t\t\t<span id="angleLabel" class="icon_label"></span>\n
+\t\t\t<input id="angle" size="2" value="0" type="text"/>\n
+\t\t</label>\n
+\t\t\n
+\t\t<div class="toolset" id="tool_blur" title="Change gaussian blur value">\n
+\t\t\t<label>\n
+\t\t\t\t<span id="blurLabel" class="icon_label"></span>\n
+\t\t\t\t<input id="blur" size="2" value="0" type="text"/>\n
+\t\t\t</label>\n
+\t\t\t<div id="blur_dropdown" class="dropdown">\n
+\t\t\t\t<button></button>\n
+\t\t\t\t<ul>\n
+\t\t\t\t\t<li class="special"><div id="blur_slider"></div></li>\n
+\t\t\t\t</ul>\n
+\t\t\t</div>\n
+\t\t</div>\n
+\t\t\n
+\t\t<div class="dropdown toolset" id="tool_position" title="Align Element to Page">\n
+\t\t\t\t<div id="cur_position" class="icon_label"></div>\n
+\t\t\t\t<button></button>\n
+\t\t</div>\t\t\n
+\n
+\t\t<div id="xy_panel" class="toolset">\n
+\t\t\t<label>\n
+\t\t\t\tx: <input id="selected_x" class="attr_changer" title="Change X coordinate" size="3" data-attr="x"/>\n
+\t\t\t</label>\n
+\t\t\t<label>\n
+\t\t\t\ty: <input id="selected_y" class="attr_changer" title="Change Y coordinate" size="3" data-attr="y"/>\n
+\t\t\t</label>\n
+\t\t</div>\n
+\t</div>\n
+\n
+\t<!-- Buttons when multiple elements are selected -->\n
+\t<div id="multiselected_panel">\n
+\t\t<div class="tool_sep"></div>\n
+\t\t<div class="push_button" id="tool_clone_multi" title="Clone Elements [C]"></div>\n
+\t\t<div class="push_button" id="tool_delete_multi" title="Delete Selected Elements [Delete/Backspace]"></div>\n
+\t\t<div class="tool_sep"></div>\n
+\t\t<div class="push_button" id="tool_group" title="Group Elements [G]"></div>\n
+\t\t<div class="push_button" id="tool_alignleft" title="Align Left"></div>\n
+\t\t<div class="push_button" id="tool_aligncenter" title="Align Center"></div>\n
+\t\t<div class="push_button" id="tool_alignright" title="Align Right"></div>\n
+\t\t<div class="push_button" id="tool_aligntop" title="Align Top"></div>\n
+\t\t<div class="push_button" id="tool_alignmiddle" title="Align Middle"></div>\n
+\t\t<div class="push_button" id="tool_alignbottom" title="Align Bottom"></div>\n
+\t\t<label id="tool_align_relative"> \n
+\t\t\t<span id="relativeToLabel">relative to:</span>\n
+\t\t\t<select id="align_relative_to" title="Align relative to ...">\n
+\t\t\t<option id="selected_objects" value="selected">selected objects</option>\n
+\t\t\t<option id="largest_object" value="largest">largest object</option>\n
+\t\t\t<option id="smallest_object" value="smallest">smallest object</option>\n
+\t\t\t<option id="page" value="page">page</option>\n
+\t\t\t</select>\n
+\t\t</label>\n
+\t\t<div class="tool_sep"></div>\n
+\n
+\t</div>\n
+\n
+\t<div id="g_panel">\n
+\t\t<div class="tool_sep"></div>\n
+\t\t<div class="push_button" id="tool_ungroup" title="Ungroup Elements [G]"></div>\n
+\t</div>\n
+\n
+\t<div id="rect_panel">\n
+\t\t<div class="toolset">\n
+\t\t\t<label id="rect_width_tool" title="Change rectangle width">\n
+\t\t\t\t<span id="rwidthLabel" class="icon_label"></span>\n
+\t\t\t\t<input id="rect_width" class="attr_changer" size="3" data-attr="width"/>\n
+\t\t\t</label>\n
+\t\t\t<label id="rect_height_tool" title="Change rectangle height">\n
+\t\t\t\t<span id="rheightLabel" class="icon_label"></span>\n
+\t\t\t\t<input id="rect_height" class="attr_changer" size="3" data-attr="height"/>\n
+\t\t\t</label>\n
+\t\t</div>\n
+\t\t<label id="cornerRadiusLabel" title="Change Rectangle Corner Radius">\n
+\t\t\t<span class="icon_label"></span>\n
+\t\t\t<input id="rect_rx" size="3" value="0" type="text" data-attr="Corner Radius"/>\n
+\t\t</label>\n
+\t</div>\n
+\n
+\t<div id="image_panel">\n
+\t<div class="toolset">\n
+\t\t<label><span id="iwidthLabel" class="icon_label"></span>\n
+\t\t<input id="image_width" class="attr_changer" title="Change image width" size="3" data-attr="width"/>\n
+\t\t</label>\n
+\t\t<label><span id="iheightLabel" class="icon_label"></span>\n
+\t\t<input id="image_height" class="attr_changer" title="Change image height" size="3" data-attr="height"/>\n
+\t\t</label>\n
+\t</div>\n
+\t<div class="toolset">\n
+\t\t<label id="tool_image_url">url:\n
+\t\t\t<input id="image_url" type="text" title="Change URL" size="35"/>\n
+\t\t</label>\n
+\t\t<label id="tool_change_image">\n
+\t\t\t<button id="change_image_url" style="display:none;">Change Image</button>\n
+\t\t\t<span id="url_notice" title="NOTE: This image cannot be embedded. It will depend on this path to be displayed"></span>\n
+\t\t</label>\n
+\t</div>\n
+  </div>\n
+\n
+\t<div id="circle_panel">\n
+\t\t<div class="toolset">\n
+\t\t\t<label id="tool_circle_cx">cx:\n
+\t\t\t<input id="circle_cx" class="attr_changer" title="Change circle\'s cx coordinate" size="3" data-attr="cx"/>\n
+\t\t\t</label>\n
+\t\t\t<label id="tool_circle_cy">cy:\n
+\t\t\t<input id="circle_cy" class="attr_changer" title="Change circle\'s cy coordinate" size="3" data-attr="cy"/>\n
+\t\t\t</label>\n
+\t\t</div>\n
+\t\t<div class="toolset">\n
+\t\t\t<label id="tool_circle_r">r:\n
+\t\t\t<input id="circle_r" class="attr_changer" title="Change circle\'s radius" size="3" data-attr="r"/>\n
+\t\t\t</label>\n
+\t\t</div>\n
+\t</div>\n
+\n
+\t<div id="ellipse_panel">\n
+\t\t<div class="toolset">\n
+\t\t\t<label id="tool_ellipse_cx">cx:\n
+\t\t\t<input id="ellipse_cx" class="attr_changer" title="Change ellipse\'s cx coordinate" size="3" data-attr="cx"/>\n
+\t\t\t</label>\n
+\t\t\t<label id="tool_ellipse_cy">cy:\n
+\t\t\t<input id="ellipse_cy" class="attr_changer" title="Change ellipse\'s cy coordinate" size="3" data-attr="cy"/>\n
+\t\t\t</label>\n
+\t\t</div>\n
+\t\t<div class="toolset">\n
+\t\t\t<label id="tool_ellipse_rx">rx:\n
+\t\t\t<input id="ellipse_rx" class="attr_changer" title="Change ellipse\'s x radius" size="3" data-attr="rx"/>\n
+\t\t\t</label>\n
+\t\t\t<label id="tool_ellipse_ry">ry:\n
+\t\t\t<input id="ellipse_ry" class="attr_changer" title="Change ellipse\'s y radius" size="3" data-attr="ry"/>\n
+\t\t\t</label>\n
+\t\t</div>\n
+\t</div>\n
+\n
+\t<div id="line_panel">\n
+\t\t<div class="toolset">\n
+\t\t\t<label id="tool_line_x1">x1:\n
+\t\t\t<input id="line_x1" class="attr_changer" title="Change line\'s starting x coordinate" size="3" data-attr="x1"/>\n
+\t\t\t</label>\n
+\t\t\t<label id="tool_line_y1">y1:\n
+\t\t\t<input id="line_y1" class="attr_changer" title="Change line\'s starting y coordinate" size="3" data-attr="y1"/>\n
+\t\t\t</label>\n
+\t\t</div>\n
+\t\t<div class="toolset">\n
+\t\t\t<label id="tool_line_x2">x2:\n
+\t\t\t<input id="line_x2" class="attr_changer" title="Change line\'s ending x coordinate" size="3" data-attr="x2"/>\n
+\t\t\t</label>\n
+\t\t\t<label id="tool_line_y2">y2:\n
+\t\t\t<input id="line_y2" class="attr_changer" title="Change line\'s ending y coordinate" size="3" data-attr="y2"/>\n
+\t\t\t</label>\n
+\t\t</div>\n
+\t</div>\n
+\n
+\t<div id="text_panel">\n
+\t\t<div class="toolset">\n
+\t\t\t<div class="tool_button" id="tool_bold" title="Bold Text [B]"><span></span>B</div>\n
+\t\t\t<div class="tool_button" id="tool_italic" title="Italic Text [I]"><span></span>i</div>\n
+\t\t</div>\n
+\t\t\n
+\t\t<div class="toolset" id="tool_font_family">\n
+\t\t\t<label>\n
+\t\t\t\t<!-- Font family -->\n
+\t\t\t\t<input id="font_family" type="text" title="Change Font Family" size="12"/>\n
+\t\t\t</label>\n
+\t\t\t<div id="font_family_dropdown" class="dropdown">\n
+\t\t\t\t<button></button>\n
+\t\t\t\t<ul>\n
+\t\t\t\t\t<li style="font-family:serif">Serif</li>\n
+\t\t\t\t\t<li style="font-family:sans-serif">Sans-serif</li>\n
+\t\t\t\t\t<li style="font-family:cursive">Cursive</li>\n
+\t\t\t\t\t<li style="font-family:fantasy">Fantasy</li>\n
+\t\t\t\t\t<li style="font-family:monospace">Monospace</li>\n
+\t\t\t\t</ul>\n
+\t\t\t</div>\n
+\t\t</div>\n
+\n
+\t\t<label id="tool_font_size" title="Change Font Size">\n
+\t\t\t<span id="font_sizeLabel" class="icon_label"></span>\n
+\t\t\t<input id="font_size" size="3" value="0" type="text"/>\n
+\t\t</label>\n
+\t\t\n
+\t\t<!-- Not visible, but still used -->\n
+\t\t<input id="text" type="text" size="35"/>\n
+\t</div>\n
+\t\n
+\t<div id="path_node_panel">\n
+\t\t<div class="tool_sep"></div>\n
+\t\t<div class="tool_button" id="tool_node_link" title="Link Control Points"></div>\n
+\t\t<div class="tool_sep"></div>\n
+\t\t<label id="tool_node_x">x:\n
+\t\t\t<input id="path_node_x" class="attr_changer" title="Change node\'s x coordinate" size="3" data-attr="x"/>\n
+\t\t</label>\n
+\t\t<label id="tool_node_y">y:\n
+\t\t\t<input id="path_node_y" class="attr_changer" title="Change node\'s y coordinate" size="3" data-attr="y"/>\n
+\t\t</label>\n
+\t\t\n
+\t\t<select id="seg_type" title="Change Segment type">\n
+\t\t\t<option id="straight_segments" selected="selected" value="4">Straight</option>\n
+\t\t\t<option id="curve_segments" value="6">Curve</option>\n
+\t\t</select>\n
+\t\t<div class="tool_button" id="tool_node_clone" title="Clone Node"></div>\n
+\t\t<div class="tool_button" id="tool_node_delete" title="Delete Node"></div>\n
+\t\t<div class="tool_button" id="tool_openclose_path" title="Open/close sub-path"></div>\n
+\t\t<div class="tool_button" id="tool_add_subpath" title="Add sub-path"></div>\n
+\t</div>\n
+\t\n
+</div> <!-- tools_top -->\n
+\n
+<div id="tools_left" class="tools_panel">\n
+\t<div class="tool_button" id="tool_select" title="Select Tool [1]"></div>\n
+\t<div class="tool_button" id="tool_fhpath" title="Pencil Tool [2]"></div>\n
+\t<div class="tool_button" id="tool_line" title="Line Tool [3]"></div>\n
+\t<div class="tool_button flyout_current" id="tools_rect_show" title="Square/Rect Tool [4/Shift+4]">\n
+\t\t<div class="flyout_arrow_horiz"></div>\n
+\t</div>\n
+\t<div class="tool_button flyout_current" id="tools_ellipse_show" title="Ellipse/Circle Tool [5/Shift+5]">\n
+\t\t<div class="flyout_arrow_horiz"></div>\n
+\t</div>\n
+\t<div class="tool_button" id="tool_path" title="Path Tool [7]"></div>\n
+\t<div class="tool_button" id="tool_text" title="Text Tool [6]"></div>\n
+\t<div class="tool_button" id="tool_image" title="Image Tool [8]"></div>\n
+\t<div class="tool_button" id="tool_zoom" title="Zoom Tool [Ctrl+Up/Down]"></div>\n
+\t\n
+\t<div style="display: none">\n
+\t\t<div id="tool_rect" title="Rectangle"></div>\n
+\t\t<div id="tool_square" title="Square"></div>\n
+\t\t<div id="tool_fhrect" title="Free-Hand Rectangle"></div>\n
+\t\t<div id="tool_ellipse" title="Ellipse"></div>\n
+\t\t<div id="tool_circle" title="Circle"></div>\n
+\t\t<div id="tool_fhellipse" title="Free-Hand Ellipse"></div>\n
+\t</div>\n
+</div> <!-- tools_left -->\n
+\n
+<div id="tools_bottom" class="tools_panel">\n
+\n
+    <!-- Zoom buttons -->\n
+\t<div id="zoom_panel" class="toolset" title="Change zoom level">\n
+\t\t<label>\n
+\t\t<span id="zoomLabel" class="zoom_tool icon_label"></span>\n
+\t\t<input id="zoom" size="3" value="100" type="text" />\n
+\t\t</label>\n
+\t\t<div id="zoom_dropdown" class="dropdown">\n
+\t\t\t<button></button>\n
+\t\t\t<ul>\n
+\t\t\t\t<li>1000%</li>\n
+\t\t\t\t<li>400%</li>\n
+\t\t\t\t<li>200%</li>\n
+\t\t\t\t<li>100%</li>\n
+\t\t\t\t<li>50%</li>\n
+\t\t\t\t<li>25%</li>\n
+\t\t\t\t<li id="fit_to_canvas" data-val="canvas">Fit to canvas</li>\n
+\t\t\t\t<li id="fit_to_sel" data-val="selection">Fit to selection</li>\n
+\t\t\t\t<li id="fit_to_layer_content" data-val="layer">Fit to layer content</li>\n
+\t\t\t\t<li id="fit_to_all" data-val="content">Fit to all content</li>\n
+\t\t\t\t<li>100%</li>\n
+\t\t\t</ul>\n
+\t\t</div>\n
+\t\t<div class="tool_sep"></div>\n
+\t</div>\n
+\n
+\t<div id="tools_bottom_2">\n
+\t\t<div id="color_tools">\n
+\t\t\t<div class="color_tool" id="tool_fill">\n
+\t\t\t\t<label class="icon_label" for="fill_color" title="Change fill color"></label>\n
+\t\t\t\t<div class="color_block">\n
+\t\t\t\t\t<div id="fill_bg"></div>\n
+\t\t\t\t\t<div id="fill_color" class="color_block"></div>\n
+\t\t\t\t</div>\n
+\t\t\t</div>\n
+\t\t\n
+\t\t\t<div class="color_tool" id="tool_stroke">\n
+\t\t\t\t<div class="color_block">\n
+\t\t\t\t\t<label class="icon_label" title="Change stroke color"></label>\n
+\t\t\t\t</div>\n
+\t\t\t\t<div class="color_block">\n
+\t\t\t\t\t<div id="stroke_bg"></div>\n
+\t\t\t\t\t<div id="stroke_color" class="color_block" title="Change stroke color"></div>\n
+\t\t\t\t</div>\n
+\t\t\t\t\n
+\t\t\t\t<label>\n
+\t\t\t\t\t<input id="stroke_width" title="Change stroke width by 1, shift-click to change by 0.1" size="2" value="5" type="text" data-attr="Stroke Width"/>\n
+\t\t\t\t</label>\n
+\t\t\t\t\n
+\t\t\t\t<label class="stroke_tool">\n
+\t\t\t\t\t<select id="stroke_style" title="Change stroke dash style">\n
+\t\t\t\t\t\t<option selected="selected" value="none">&mdash;</option>\n
+\t\t\t\t\t\t<option value="2,2">...</option>\n
+\t\t\t\t\t\t<option value="5,5">- -</option>\n
+\t\t\t\t\t\t<option value="5,2,2,2">- .</option>\n
+\t\t\t\t\t\t<option value="5,2,2,2,2,2">- ..</option>\n
+\t\t\t\t\t</select>\n
+\t\t\t\t</label>\t\n
+\n
+ \t\t\t\t<div class="stroke_tool dropdown" id="stroke_linejoin">\n
+ \t\t\t\t\t<div>\n
+\t\t\t\t\t\t<div id="cur_linejoin" title="Linejoin: Miter"></div>\n
+\t\t\t\t\t\t<button></button>\n
+\t\t\t\t\t</div>\n
+ \t\t\t\t</div>\n
+ \t\t\t\t\n
+ \t\t\t\t<div class="stroke_tool dropdown" id="stroke_linecap">\n
+ \t\t\t\t\t<div>\n
+\t\t\t\t\t\t<div id="cur_linecap" title="Linecap: Butt"></div>\n
+\t\t\t\t\t\t<button></button>\n
+\t\t\t\t\t</div>\n
+ \t\t\t\t</div>\n
+\t\t\t\n
+\t\t\t\t<div id="toggle_stroke_tools" title="Show/hide more stroke tools">\n
+\t\t\t\t\t&gt;&gt;\n
+\t\t\t\t</div>\n
+\t\t\t\t\n
+\t\t\t</div>\n
+\t\t</div>\n
+\t\n
+\t\t<div class="toolset" id="tool_opacity" title="Change selected item opacity">\n
+\t\t\t<label>\n
+\t\t\t\t<span id="group_opacityLabel" class="icon_label"></span>\n
+\t\t\t\t<input id="group_opacity" size="3" value="100" type="text"/>\n
+\t\t\t</label>\n
+\t\t\t<div id="opacity_dropdown" class="dropdown">\n
+\t\t\t\t<button></button>\n
+\t\t\t\t<ul>\n
+\t\t\t\t\t<li>0%</li>\n
+\t\t\t\t\t<li>25%</li>\n
+\t\t\t\t\t<li>50%</li>\n
+\t\t\t\t\t<li>75%</li>\n
+\t\t\t\t\t<li>100%</li>\n
+\t\t\t\t\t<li class="special"><div id="opac_slider"></div></li>\n
+\t\t\t\t</ul>\n
+\t\t\t</div>\n
+\t\t</div>\n
+\n
+\t</div>\n
+\n
+\t<div id="tools_bottom_3">\n
+\t\t<div id="palette_holder"><div id="palette" title="Click to change fill color, shift-click to change stroke color"></div></div>\n
+\t</div>\n
+\t<div id="copyright"><span id="copyrightLabel">Powered by</span> <a href="http://svg-edit.googlecode.com/" target="_blank">SVG-edit v2.5</a></div>\n
+</div>\n
+\n
+<div id="option_lists">\n
+\t<ul id="linejoin_opts">\n
+\t\t<li class="tool_button current" id="linejoin_miter" title="Linejoin: Miter"></li>\n
+\t\t<li class="tool_button" id="linejoin_round" title="Linejoin: Round"></li>\n
+\t\t<li class="tool_button" id="linejoin_bevel" title="Linejoin: Bevel"></li>\n
+\t</ul>\n
+\t\n
+\t<ul id="linecap_opts">\n
+\t\t<li class="tool_button current" id="linecap_butt" title="Linecap: Butt"></li>\n
+\t\t<li class="tool_button" id="linecap_square" title="Linecap: Square"></li>\n
+\t\t<li class="tool_button" id="linecap_round" title="Linecap: Round"></li>\n
+\t</ul>\n
+\t\n
+\t<ul id="position_opts" class="optcols3">\n
+\t\t<li class="push_button" id="tool_posleft" title="Align Left"></li>\n
+\t\t<li class="push_button" id="tool_poscenter" title="Align Center"></li>\n
+\t\t<li class="push_button" id="tool_posright" title="Align Right"></li>\n
+\t\t<li class="push_button" id="tool_postop" title="Align Top"></li>\n
+\t\t<li class="push_button" id="tool_posmiddle" title="Align Middle"></li>\n
+\t\t<li class="push_button" id="tool_posbottom" title="Align Bottom"></li>\n
+\t</ul>\n
+</div>\n
+\n
+\n
+<!-- hidden divs -->\n
+<div id="color_picker"></div>\n
+\n
+</div> <!-- svg_editor -->\n
+\n
+<div id="svg_source_editor">\n
+\t<div id="svg_source_overlay"></div>\n
+\t<div id="svg_source_container">\n
+\t\t<div id="tool_source_back" class="toolbar_button">\n
+\t\t\t<button id="tool_source_save">Apply Changes</button>\n
+\t\t\t<button id="tool_source_cancel">Cancel</button>\n
+\t\t</div>\n
+\t\t<form>\n
+\t\t\t<textarea id="svg_source_textarea" spellcheck="false"></textarea>\n
+\t\t</form>\n
+\t</div>\n
+</div>\n
+\n
+<div id="svg_docprops">\n
+\t<div id="svg_docprops_overlay"></div>\n
+\t<div id="svg_docprops_container">\n
+\t\t<div id="tool_docprops_back" class="toolbar_button">\n
+\t\t\t<button id="tool_docprops_save">OK</button>\n
+\t\t\t<button id="tool_docprops_cancel">Cancel</button>\n
+\t\t</div>\n
+\n
+\n
+\t\t<fieldset id="svg_docprops_docprops">\n
+\t\t\t<legend id="svginfo_image_props">Image Properties</legend>\n
+\t\t\t<label>\n
+\t\t\t\t<span id="svginfo_title">Title:</span>\n
+\t\t\t\t<input type="text" id="canvas_title" size="24"/>\n
+\t\t\t</label>\t\t\t\n
+\t\n
+\t\t\t<fieldset id="change_resolution">\n
+\t\t\t\t<legend id="svginfo_dim">Canvas Dimensions</legend>\n
+\n
+\t\t\t\t<label><span id="svginfo_width">width:</span> <input type="text" id="canvas_width" size="6"/></label>\n
+\t\t\t\t\t\n
+\t\t\t\t<label><span id="svginfo_height">height:</span> <input type="text" id="canvas_height" size="6"/></label>\n
+\t\t\t\t\n
+\t\t\t\t<label>\n
+\t\t\t\t\t<select id="resolution">\n
+\t\t\t\t\t\t<option id="selectedPredefined" selected="selected">Select predefined:</option>\n
+\t\t\t\t\t\t<option>640x480</option>\n
+\t\t\t\t\t\t<option>800x600</option>\n
+\t\t\t\t\t\t<option>1024x768</option>\n
+\t\t\t\t\t\t<option>1280x960</option>\n
+\t\t\t\t\t\t<option>1600x1200</option>\n
+\t\t\t\t\t\t<option id="fitToContent" value="content">Fit to Content</option>\n
+\t\t\t\t\t</select>\n
+\t\t\t\t</label>\n
+\t\t\t</fieldset>\n
+\n
+\t\t\t<fieldset id="image_save_opts">\n
+\t\t\t\t<legend id="includedImages">Included Images</legend>\n
+\t\t\t\t<label><input type="radio" name="image_opt" value="embed" checked="checked"/> <span id="image_opt_embed">Embed data (local files)</span> </label>\n
+\t\t\t\t<label><input type="radio" name="image_opt" value="ref"/> <span id="image_opt_ref">Use file reference</span> </label>\n
+\t\t\t</fieldset>\t\t\t\n
+\n
+\n
+\t\t</fieldset>\n
+\n
+\t\t<fieldset id="svg_docprops_prefs">\n
+\t\t\t<legend id="svginfo_editor_prefs">Editor Preferences</legend>\n
+\n
+\t\t\t<label><span id="svginfo_lang">Language:</span>\n
+\t\t\t\t<!-- Source: http://en.wikipedia.org/wiki/Language_names -->\n
+\t\t\t\t<select id="lang_select">\n
+\t\t\t\t  <option id="lang_ar" value="ar">العربية</option>\n
+\t\t\t\t\t<option id="lang_cs" value="cs">Čeština</option>\n
+\t\t\t\t\t<option id="lang_de" value="de">Deutsch</option>\n
+\t\t\t\t\t<option id="lang_en" value="en" selected="selected">English</option>\n
+\t\t\t\t\t<option id="lang_es" value="es">Español</option>\n
+\t\t\t\t\t<option id="lang_fa" value="fa">فارسی</option>\n
+\t\t\t\t\t<option id="lang_fr" value="fr">Français</option>\n
+\t\t\t\t\t<option id="lang_fy" value="fy">Frysk</option>\n
+\t\t\t\t\t<option id="lang_hi" value="hi">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;, &#2361;&#2367;&#2306;&#2342;&#2368;</option>\n
+\t\t\t\t\t<option id="lang_ja" value="ja">日本語</option>\n
+\t\t\t\t\t<option id="lang_nl" value="nl">Nederlands</option>\n
+\t\t\t\t\t<option id="lang_pt-BR" value="pt-BR">Português (BR)</option>\n
+\t\t\t\t\t<option id="lang_ro" value="ro">Româneşte</option>\n
+\t\t\t\t\t<option id="lang_ru" value="ru">Русский</option>\n
+\t\t\t\t\t<option id="lang_sk" value="sk">Slovenčina</option>\n
+\t\t\t\t\t<option id="lang_zh-TW" value="zh-TW">繁體中文</option>\n
+\t\t\t\t</select>\n
+\t\t\t</label>\n
+\n
+\t\t\t<label><span id="svginfo_icons">Icon size:</span>\n
+\t\t\t\t<select id="iconsize">\n
+\t\t\t\t\t<option id="icon_small" value="s">Small</option>\n
+\t\t\t\t\t<option id="icon_medium" value="m" selected="selected">Medium</option>\n
+\t\t\t\t\t<option id="icon_large" value="l">Large</option>\n
+\t\t\t\t\t<option id="icon_xlarge" value="xl">Extra Large</option>\n
+\t\t\t\t</select>\n
+\t\t\t</label>\n
+\n
+\t\t\t<fieldset id="change_background">\n
+\t\t\t\t<legend id="svginfo_change_background">Editor Background</legend>\n
+\t\t\t\t<div id="bg_blocks"></div>\n
+\t\t\t\t<label><span id="svginfo_bg_url">URL:</span> <input type="text" id="canvas_bg_url" size="21"/></label>\n
+\t\t\t\t<p id="svginfo_bg_note">Note: Background will not be saved with image.</p>\n
+\t\t\t</fieldset>\n
+\t\t\t\n
+\t\t</fieldset>\n
+\n
+\t</div>\n
+</div>\n
+\n
+<div id="dialog_box">\n
+\t<div id="dialog_box_overlay"></div>\n
+\t<div id="dialog_container">\n
+\t\t<div id="dialog_content"></div>\n
+\t\t<div id="dialog_buttons"></div>\n
+\t</div>\n
+</div>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>svg-editor.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

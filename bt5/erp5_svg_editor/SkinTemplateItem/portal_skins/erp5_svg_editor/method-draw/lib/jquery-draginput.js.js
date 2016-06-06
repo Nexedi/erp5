@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>anonymous_http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts52852199.22</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery-draginput.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿// Mark MacKay http://method.ac MIT License\n
+\n
+\n
+$.fn.dragInput = function(cfg){\n
+  return this.each(function(){\n
+\n
+    this.repeating = false;\n
+    // Apply specified options or defaults:\n
+    // (Ought to refactor this some day to use $.extend() instead)\n
+    this.dragCfg = {\n
+      min: cfg && !isNaN(parseFloat(cfg.min)) ? Number(cfg.min) : null, // Fixes bug with min:0\n
+      max: cfg && !isNaN(parseFloat(cfg.max)) ? Number(cfg.max) : null,\n
+      step: cfg && Number(cfg.step) ? cfg.step : 1,\n
+      stepfunc: cfg && cfg.stepfunc ? cfg.stepfunc : false,\n
+      dragAdjust: cfg && cfg.dragAdjust ? cfg.dragAdjust : 1,\n
+      height: 70,\n
+      cursor: cfg && cfg.cursor ? Boolean(cfg.cursor) : false,\n
+      start: cfg && cfg.start ? Number(cfg.start) : 0,\n
+      _btn_width: 20,\n
+      _direction: null,\n
+      _delay: null,\n
+      _repeat: null,\n
+      callback: cfg && cfg.callback ? cfg.callback : null\n
+    };\n
+    // if a smallStep isn\'t supplied, use half the regular step\n
+    this.dragCfg.smallStep = cfg && cfg.smallStep ? cfg.smallStep : this.dragCfg.step/2;\n
+    var dragAdjust = this.dragCfg.dragAdjust;\n
+    var $label = $(this).parent();\n
+    var $input = $(this);\n
+    var cursorHeight = this.dragCfg.height;\n
+    var min = this.dragCfg.min;\n
+    var max = this.dragCfg.max\n
+    var step = this.dragCfg.step\n
+    var area = (max - min > 0) ?  (max - min) / step : 200;\n
+    var scale = area/cursorHeight * step;\n
+    var lastY = 0;\n
+    var attr = this.getAttribute("data-attr");\n
+    var canvas = methodDraw.canvas\n
+    var isTouch = svgedit.browser.isTouch();\n
+    var completed = true //for mousewheel\n
+    var $cursor = (area && this.dragCfg.cursor)\n
+      ? $("<div class=\'draginput_cursor\' />").appendTo($label) \n
+      : false\n
+    $input.attr("readonly", "readonly")\n
+    if ($cursor && !isNaN(this.dragCfg.start)) $cursor.css("top", (this.dragCfg.start*-1)/scale+cursorHeight)\n
+   \n
+    //this is where all the magic happens  \n
+    this.adjustValue = function(i, completed){\n
+      var v;\n
+      i = parseFloat(i);\n
+      if(isNaN(this.value)) {\n
+        v = this.dragCfg.reset;\n
+      } else if($.isFunction(this.dragCfg.stepfunc)) {\n
+        v = this.dragCfg.stepfunc(this, i);\n
+      } else {\n
+        v = Number((Number(this.value) + Number(i)).toFixed(5));\n
+      }\n
+      if (max !== null) v = Math.min(v, max);\n
+      if (min !== null) v = Math.max(v, min);\n
+      if ($cursor) this.updateCursor(v);\n
+      this.value = v;\n
+      $label.attr("data-value", v)\n
+      if ($.isFunction(this.dragCfg.callback)) this.dragCfg.callback(this, completed)\n
+    };\n
+          \n
+    $label.toggleClass("draginput", $label.is("label"))\n
+    \n
+    // when the mouse is down and moving\n
+    this.move = function(e, oy, val) {\n
+      if (isTouch) {\n
+        e = e.originalEvent.touches[0]\n
+      }\n
+      // just got started let\'s save for undo purposes\n
+      if (lastY === 0) {\n
+        lastY = oy;\n
+      }\n
+      var deltaY = (e.pageY - lastY) *-1\n
+      lastY = e.pageY;\n
+      val = (deltaY * scale) * dragAdjust\n
+      var fixed = (step < 1) ? 1 : 0\n
+      this.adjustValue(val.toFixed(fixed))  //no undo true\n
+    };\n
+    \n
+    //when the mouse is released\n
+    this.stop = function() {\n
+      var selectedElems = canvas.getSelectedElems();\n
+      $(\'body\').removeClass(\'dragging\');\n
+      $label.removeClass("active");\n
+      completed = true;\n
+      $(window).unbind("mousemove.draginput touchmove.draginput mouseup.draginput touchend.draginput");\n
+      lastY = 0;\n
+      if (selectedElems[0]) {\n
+        var batchCmd = canvas.undoMgr.finishUndoableChange();\n
+        if (!batchCmd.isEmpty()) canvas.undoMgr.addCommandToHistory(batchCmd);\n
+      }\n
+      this.adjustValue(0, completed)\n
+    }\n
+    \n
+    this.updateCursor = function(){\n
+      var value = parseFloat(this.value);\n
+      var pos = (value*-1)/scale+cursorHeight;\n
+      $cursor.css("top", pos);\n
+    }\n
+    \n
+    this.launch = function(e) {\n
+      var selectedElems = canvas.getSelectedElems();\n
+      if (isTouch) e = e.originalEvent.touches[0];\n
+      var oy = e.pageY;\n
+      var val = this.value;\n
+      var el = this;\n
+      canvas.undoMgr.beginUndoableChange(attr, selectedElems)\n
+      $(\'body\').addClass(\'dragging\');\n
+      $label.addClass(\'active\');\n
+      $(window).bind("mousemove.draginput touchmove.draginput", function(e){el.move(e, oy, parseFloat(val))})\n
+      $(window).bind("mouseup.draginput touchend.draginput", function(e){el.stop()})\n
+    }\n
+    \n
+    $(this)\n
+      .attr("readonly", "readonly")\n
+      .attr("data-scale", scale)\n
+      .attr("data-domain", cursorHeight)\n
+      .attr("data-cursor", ($cursor != false))\n
+          \n
+    .bind("mousedown touchstart", function(e){\n
+      this.blur();\n
+      this.launch(e);\n
+    })\n
+    \n
+    .bind("dblclick taphold", function(e) {\n
+      this.removeAttribute("readonly", "readonly");\n
+      this.focus();\n
+      this.select();\n
+    })\n
+    \n
+    .keydown(function(e){\n
+      // Respond to up/down arrow keys.\n
+      switch(e.keyCode){\n
+        case 13: this.adjustValue(0); this.blur();  break; // Enter\n
+      }\n
+    })\n
+    \n
+    .focus(function(e){\n
+      if (this.getAttribute("readonly") === "readonly") this.blur()\n
+    })\n
+    \n
+    .blur(function(e){\n
+      this.setAttribute("readonly", "readonly")\n
+    })\n
+    \n
+    .bind("mousewheel", function(e, delta, deltaX, deltaY){\n
+      var selectedElems = canvas.getSelectedElems();\n
+      if (completed) canvas.undoMgr.beginUndoableChange(attr, selectedElems)\n
+      completed = false\n
+      clearTimeout(window.undoTimeout)\n
+      window.undoTimeout = setTimeout(function(){\n
+        wheel_input.stop()\n
+      },200)\n
+      \n
+      var wheel_input = this;\n
+      if (deltaY > 0)\n
+        this.adjustValue(this.dragCfg.step);\n
+      else if (deltaY < 0)\n
+        this.adjustValue(-this.dragCfg.step);\n
+      e.preventDefault();\n
+      \n
+    })\n
+\n
+  });\n
+  \n
+};\n
+\n
+// public function\n
+$.fn.dragInput.updateCursor = function(el){\n
+  var value = parseFloat(el.value);\n
+  var scale = parseFloat(el.getAttribute("data-scale"));\n
+  var domain = parseFloat(el.getAttribute("data-domain"));\n
+  var pos = ((value*-1)/scale+domain) + "px";\n
+  var cursor = el.parentNode.lastChild\n
+  if (cursor.className == "draginput_cursor") cursor.style.top = pos;\n
+}\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6097</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

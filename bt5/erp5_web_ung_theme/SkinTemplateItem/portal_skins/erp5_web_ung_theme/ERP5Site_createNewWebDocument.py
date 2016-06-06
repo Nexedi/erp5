@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from zExceptions import Unauthorized\n
+\n
+if context.portal_membership.isAnonymousUser():\n
+  raise Unauthorized("You are not allowed to use this script")\n
+\n
+request = context.REQUEST\n
+template_name = template or request.get("template")\n
+if template_name is None:\n
+  return None\n
+\n
+template_relative_url = "portal_preferences/ung_preference/%s" % template_name\n
+# Create the new content in appropriate module\n
+portal = context.getPortalObject()\n
+template = portal.restrictedTraverse(template_relative_url)\n
+preference = template.getParentValue()\n
+\n
+preference.manage_copyObjects(ids=[template.getId()], REQUEST=request, RESPONSE=None)\n
+new_content_list = portal.web_page_module.manage_pasteObjects(request[\'__cp\'])\n
+new_content_id = new_content_list[0][\'new_id\']\n
+new_content = portal.web_page_module[new_content_id]\n
+new_content.makeTemplateInstance()\n
+\n
+portal_type = new_content.getPortalType()\n
+module = portal.getDefaultModule(portal_type)\n
+\n
+kw["webpage_path"] = new_content.getPath()\n
+return new_content.Base_redirect(keep_items = dict(editable_mode=1, **kw))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>template=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_createNewWebDocument</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

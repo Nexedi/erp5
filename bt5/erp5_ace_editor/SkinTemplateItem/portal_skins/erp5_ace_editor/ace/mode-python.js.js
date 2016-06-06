@@ -1,0 +1,342 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts83646621.41</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>mode-python.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* ***** BEGIN LICENSE BLOCK *****\n
+ * Distributed under the BSD license:\n
+ *\n
+ * Copyright (c) 2010, Ajax.org B.V.\n
+ * All rights reserved.\n
+ * \n
+ * Redistribution and use in source and binary forms, with or without\n
+ * modification, are permitted provided that the following conditions are met:\n
+ *     * Redistributions of source code must retain the above copyright\n
+ *       notice, this list of conditions and the following disclaimer.\n
+ *     * Redistributions in binary form must reproduce the above copyright\n
+ *       notice, this list of conditions and the following disclaimer in the\n
+ *       documentation and/or other materials provided with the distribution.\n
+ *     * Neither the name of Ajax.org B.V. nor the\n
+ *       names of its contributors may be used to endorse or promote products\n
+ *       derived from this software without specific prior written permission.\n
+ * \n
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND\n
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n
+ * DISCLAIMED. IN NO EVENT SHALL AJAX.ORG B.V. BE LIABLE FOR ANY\n
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\n
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
+ *\n
+ * ***** END LICENSE BLOCK ***** */\n
+\n
+define(\'ace/mode/python\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text\', \'ace/tokenizer\', \'ace/mode/python_highlight_rules\', \'ace/mode/folding/pythonic\', \'ace/range\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../lib/oop");\n
+var TextMode = require("./text").Mode;\n
+var Tokenizer = require("../tokenizer").Tokenizer;\n
+var PythonHighlightRules = require("./python_highlight_rules").PythonHighlightRules;\n
+var PythonFoldMode = require("./folding/pythonic").FoldMode;\n
+var Range = require("../range").Range;\n
+\n
+var Mode = function() {\n
+    this.HighlightRules = PythonHighlightRules;\n
+    this.foldingRules = new PythonFoldMode("\\\\:");\n
+};\n
+oop.inherits(Mode, TextMode);\n
+\n
+(function() {\n
+\n
+    this.lineCommentStart = "#";\n
+\n
+    this.getNextLineIndent = function(state, line, tab) {\n
+        var indent = this.$getIndent(line);\n
+\n
+        var tokenizedLine = this.getTokenizer().getLineTokens(line, state);\n
+        var tokens = tokenizedLine.tokens;\n
+\n
+        if (tokens.length && tokens[tokens.length-1].type == "comment") {\n
+            return indent;\n
+        }\n
+\n
+        if (state == "start") {\n
+            var match = line.match(/^.*[\\{\\(\\[\\:]\\s*$/);\n
+            if (match) {\n
+                indent += tab;\n
+            }\n
+        }\n
+\n
+        return indent;\n
+    };\n
+\n
+    var outdents = {\n
+        "pass": 1,\n
+        "return": 1,\n
+        "raise": 1,\n
+        "break": 1,\n
+        "continue": 1\n
+    };\n
+    \n
+    this.checkOutdent = function(state, line, input) {\n
+        if (input !== "\\r\\n" && input !== "\\r" && input !== "\\n")\n
+            return false;\n
+\n
+        var tokens = this.getTokenizer().getLineTokens(line.trim(), state).tokens;\n
+        \n
+        if (!tokens)\n
+            return false;\n
+        do {\n
+            var last = tokens.pop();\n
+        } while (last && (last.type == "comment" || (last.type == "text" && last.value.match(/^\\s+$/))));\n
+        \n
+        if (!last)\n
+            return false;\n
+        \n
+        return (last.type == "keyword" && outdents[last.value]);\n
+    };\n
+\n
+    this.autoOutdent = function(state, doc, row) {\n
+        \n
+        row += 1;\n
+        var indent = this.$getIndent(doc.getLine(row));\n
+        var tab = doc.getTabString();\n
+        if (indent.slice(-tab.length) == tab)\n
+            doc.remove(new Range(row, indent.length-tab.length, row, indent.length));\n
+    };\n
+\n
+}).call(Mode.prototype);\n
+\n
+exports.Mode = Mode;\n
+});\n
+\n
+define(\'ace/mode/python_highlight_rules\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text_highlight_rules\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../lib/oop");\n
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;\n
+\n
+var PythonHighlightRules = function() {\n
+\n
+    var keywords = (\n
+        "and|as|assert|break|class|continue|def|del|elif|else|except|exec|" +\n
+        "finally|for|from|global|if|import|in|is|lambda|not|or|pass|print|" +\n
+        "raise|return|try|while|with|yield"\n
+    );\n
+\n
+    var builtinConstants = (\n
+        "True|False|None|NotImplemented|Ellipsis|__debug__"\n
+    );\n
+\n
+    var builtinFunctions = (\n
+        "abs|divmod|input|open|staticmethod|all|enumerate|int|ord|str|any|" +\n
+        "eval|isinstance|pow|sum|basestring|execfile|issubclass|print|super|" +\n
+        "binfile|iter|property|tuple|bool|filter|len|range|type|bytearray|" +\n
+        "float|list|raw_input|unichr|callable|format|locals|reduce|unicode|" +\n
+        "chr|frozenset|long|reload|vars|classmethod|getattr|map|repr|xrange|" +\n
+        "cmp|globals|max|reversed|zip|compile|hasattr|memoryview|round|" +\n
+        "__import__|complex|hash|min|set|apply|delattr|help|next|setattr|" +\n
+        "buffer|dict|hex|object|slice|coerce|dir|id|oct|sorted|intern"\n
+    );\n
+    var keywordMapper = this.createKeywordMapper({\n
+        "invalid.deprecated": "debugger",\n
+        "support.function": builtinFunctions,\n
+        "constant.language": builtinConstants,\n
+        "keyword": keywords\n
+    }, "identifier");\n
+\n
+    var strPre = "(?:r|u|ur|R|U|UR|Ur|uR)?";\n
+\n
+    var decimalInteger = "(?:(?:[1-9]\\\\d*)|(?:0))";\n
+    var octInteger = "(?:0[oO]?[0-7]+)";\n
+    var hexInteger = "(?:0[xX][\\\\dA-Fa-f]+)";\n
+    var binInteger = "(?:0[bB][01]+)";\n
+    var integer = "(?:" + decimalInteger + "|" + octInteger + "|" + hexInteger + "|" + binInteger + ")";\n
+\n
+    var exponent = "(?:[eE][+-]?\\\\d+)";\n
+    var fraction = "(?:\\\\.\\\\d+)";\n
+    var intPart = "(?:\\\\d+)";\n
+    var pointFloat = "(?:(?:" + intPart + "?" + fraction + ")|(?:" + intPart + "\\\\.))";\n
+    var exponentFloat = "(?:(?:" + pointFloat + "|" +  intPart + ")" + exponent + ")";\n
+    var floatNumber = "(?:" + exponentFloat + "|" + pointFloat + ")";\n
+\n
+    var stringEscape =  "\\\\\\\\(x[0-9A-Fa-f]{2}|[0-7]{3}|[\\\\\\\\abfnrtv\'\\"]|U[0-9A-Fa-f]{8}|u[0-9A-Fa-f]{4})";\n
+\n
+    this.$rules = {\n
+        "start" : [ {\n
+            token : "comment",\n
+            regex : "#.*$"\n
+        }, {\n
+            token : "string",           // multi line """ string start\n
+            regex : strPre + \'"{3}\',\n
+            next : "qqstring3"\n
+        }, {\n
+            token : "string",           // " string\n
+            regex : strPre + \'"(?=.)\',\n
+            next : "qqstring"\n
+        }, {\n
+            token : "string",           // multi line \'\'\' string start\n
+            regex : strPre + "\'{3}",\n
+            next : "qstring3"\n
+        }, {\n
+            token : "string",           // \' string\n
+            regex : strPre + "\'(?=.)",\n
+            next : "qstring"\n
+        }, {\n
+            token : "constant.numeric", // imaginary\n
+            regex : "(?:" + floatNumber + "|\\\\d+)[jJ]\\\\b"\n
+        }, {\n
+            token : "constant.numeric", // float\n
+            regex : floatNumber\n
+        }, {\n
+            token : "constant.numeric", // long integer\n
+            regex : integer + "[lL]\\\\b"\n
+        }, {\n
+            token : "constant.numeric", // integer\n
+            regex : integer + "\\\\b"\n
+        }, {\n
+            token : keywordMapper,\n
+            regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\\\b"\n
+        }, {\n
+            token : "keyword.operator",\n
+            regex : "\\\\+|\\\\-|\\\\*|\\\\*\\\\*|\\\\/|\\\\/\\\\/|%|<<|>>|&|\\\\||\\\\^|~|<|>|<=|=>|==|!=|<>|="\n
+        }, {\n
+            token : "paren.lparen",\n
+            regex : "[\\\\[\\\\(\\\\{]"\n
+        }, {\n
+            token : "paren.rparen",\n
+            regex : "[\\\\]\\\\)\\\\}]"\n
+        }, {\n
+            token : "text",\n
+            regex : "\\\\s+"\n
+        } ],\n
+        "qqstring3" : [ {\n
+            token : "constant.language.escape",\n
+            regex : stringEscape\n
+        }, {\n
+            token : "string", // multi line """ string end\n
+            regex : \'"{3}\',\n
+            next : "start"\n
+        }, {\n
+            defaultToken : "string"\n
+        } ],\n
+        "qstring3" : [ {\n
+            token : "constant.language.escape",\n
+            regex : stringEscape\n
+        }, {\n
+            token : "string",  // multi line \'\'\' string end\n
+            regex : "\'{3}",\n
+            next : "start"\n
+        }, {\n
+            defaultToken : "string"\n
+        } ],\n
+        "qqstring" : [{\n
+            token : "constant.language.escape",\n
+            regex : stringEscape\n
+        }, {\n
+            token : "string",\n
+            regex : "\\\\\\\\$",\n
+            next  : "qqstring"\n
+        }, {\n
+            token : "string",\n
+            regex : \'"|$\',\n
+            next  : "start"\n
+        }, {\n
+            defaultToken: "string"\n
+        }],\n
+        "qstring" : [{\n
+            token : "constant.language.escape",\n
+            regex : stringEscape\n
+        }, {\n
+            token : "string",\n
+            regex : "\\\\\\\\$",\n
+            next  : "qstring"\n
+        }, {\n
+            token : "string",\n
+            regex : "\'|$",\n
+            next  : "start"\n
+        }, {\n
+            defaultToken: "string"\n
+        }]\n
+    };\n
+};\n
+\n
+oop.inherits(PythonHighlightRules, TextHighlightRules);\n
+\n
+exports.PythonHighlightRules = PythonHighlightRules;\n
+});\n
+\n
+define(\'ace/mode/folding/pythonic\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/folding/fold_mode\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../../lib/oop");\n
+var BaseFoldMode = require("./fold_mode").FoldMode;\n
+\n
+var FoldMode = exports.FoldMode = function(markers) {\n
+    this.foldingStartMarker = new RegExp("([\\\\[{])(?:\\\\s*)$|(" + markers + ")(?:\\\\s*)(?:#.*)?$");\n
+};\n
+oop.inherits(FoldMode, BaseFoldMode);\n
+\n
+(function() {\n
+\n
+    this.getFoldWidgetRange = function(session, foldStyle, row) {\n
+        var line = session.getLine(row);\n
+        var match = line.match(this.foldingStartMarker);\n
+        if (match) {\n
+            if (match[1])\n
+                return this.openingBracketBlock(session, match[1], row, match.index);\n
+            if (match[2])\n
+                return this.indentationBlock(session, row, match.index + match[2].length);\n
+            return this.indentationBlock(session, row);\n
+        }\n
+    }\n
+\n
+}).call(FoldMode.prototype);\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10365</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

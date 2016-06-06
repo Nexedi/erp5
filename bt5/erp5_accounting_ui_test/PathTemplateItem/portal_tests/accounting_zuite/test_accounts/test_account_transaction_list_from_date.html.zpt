@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html>\n
+<head><title>Test for Account transaction lisbox</title></head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="4">\n
+Test Transactions related to an account, with from date parameter\n
+</td></tr>\n
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionListSalesAndPayments">\n
+\n
+<!-- Setup {{{ -->\n
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounts</td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_jump</td>\n
+  <td>Accounting Preference</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_my_preferred_accounting_transaction_from_date_year</td>\n
+  <td>2005</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_my_preferred_accounting_transaction_from_date_month</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_my_preferred_accounting_transaction_from_date_day</td>\n
+  <td>12</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounts</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- {{{ Select Receivable account and check transaction list -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Receivable</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Transactions</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>89 records</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[preceding-sibling::label[contains(text(),\'From Date\')]]</td>\n
+  <td>2005/01/12</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- {{{ Summary Line -->\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]</td>\n
+  <td>Previous Balance</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]</td>\n
+  <td>2005/01/12</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[5]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[6]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[7]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[8]</td>\n
+  <td>217800.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[9]</td>\n
+  <td>3300</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[10]</td>\n
+  <td>214500.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[11]</td>\n
+  <td>214500.0</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- FIXME: Listbox lines are not tested, because we don\'t know which will from\n
+client 1 invoice or client 2 invoice will have the first uid. -->\n
+\n
+<!-- {{{ stat line -->\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[8]</td>\n
+  <td>1339800.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]</td>\n
+  <td>1339800.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]</td>\n
+  <td>0.0</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+</tbody></table>\n
+</body>\n
+</html> <!-- vim: syntax=html foldmethod=marker\n
+-->\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_account_transaction_list_from_date.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

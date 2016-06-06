@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jPicker-1.0.12.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>﻿.jPicker_Picker {\r\n
+  display: inline-block;\r\n
+  height: 24px; /* change this value if using a different sized color picker icon */\r\n
+  position: relative; /* make this element an absolute positioning container */\r\n
+  text-align: left; /* make the zero width children position to the left of container */\r\n
+  width: 25px; /* change this value if using a different sized color picker icon */\r\n
+}\r\n
+.jPicker_Color, .jPicker_Alpha {\r\n
+  background-position: 2px 2px;\r\n
+  display: block;\r\n
+  height: 100%;\r\n
+  left: 0px;\r\n
+  position: absolute;\r\n
+  top: 0px;\r\n
+  width: 100%;\r\n
+}\r\n
+.jPicker_Icon {\r\n
+  background-repeat: no-repeat;\r\n
+  cursor: pointer;\r\n
+  display: block;\r\n
+  height: 100%;\r\n
+  left: 0px;\r\n
+  position: absolute;\r\n
+  top: 0px;\r\n
+  width: 100%;\r\n
+}\r\n
+.jPicker_Container {\r\n
+  display: none;\r\n
+  z-index: 10; /* make sure container draws above color picker icon in Firefox/Safari/Chrome/Opera/etc. -\r\n
+                  IE calculates z-index so this won\'t work - we will hide all color picker icons placed after the selected one in code when shown in IE */\r\n
+}\r\n
+.jPicker_table {\r\n
+  background-color: #efefef;\r\n
+  border: 1px outset #666;\r\n
+  font-family: Arial, Helvetica, Sans-Serif;\r\n
+  font-size: 12px;\r\n
+  margin: 0px;\r\n
+  padding: 5px;\r\n
+  width: 550px;\r\n
+}\r\n
+.jPicker_table td {\r\n
+  margin: 0px;\r\n
+  padding: 0px;\r\n
+  vertical-align: top;\r\n
+}\r\n
+.jPicker_MoveBar {\r\n
+  background-color: #dddddd;\r\n
+  border: 1px outset #aaa;\r\n
+  cursor: move;\r\n
+  height: 12px;\r\n
+}\r\n
+.jPicker_Title {\r\n
+  font-size: 11px !important;\r\n
+  font-weight: bold;\r\n
+  margin: -2px 0px 0px 0px;\r\n
+  padding: 0px;\r\n
+  text-align: center;\r\n
+  width: 100%;\r\n
+}\r\n
+.jPicker_ColorMap {\r\n
+  border: 2px inset #eee;\r\n
+  cursor: crosshair;\r\n
+  height: 260px; /* IE 6 incorrectly draws border inside the width and height instead of outside - We will fix this to 256px later */\r\n
+  margin: 0px 5px 0px 5px;\r\n
+  overflow: hidden; /* hide the overdraw of the Color Map icon when at edge of viewing box */\r\n
+  padding: 0px;\r\n
+  position: relative; /* make this element an absolute positioning container */\r\n
+  width: 260px; /* IE 6 incorrectly draws border inside the width and height instead of outside - We will fix this to 256px later */\r\n
+}\r\n
+div[class="jPicker_ColorMap"] {\r\n
+  height: 256px; /* correct to 256px for browsers that support the "[class="xxx"]" selector (IE7+,Firefox,Safari,Chrome,Opera,etc.) */\r\n
+  width: 256px; /* correct to 256px for browsers that support the "[class="xxx"]" selector (IE7+,Firefox,Safari,Chrome,Opera,etc.) */\r\n
+}\r\n
+.jPicker_ColorBar {\r\n
+  border: 2px inset #eee;\r\n
+  cursor: n-resize;\r\n
+  height: 260px; /* IE 6 incorrectly draws border inside the width and height instead of outside - We will fix this to 256px later */\r\n
+  margin: 12px 10px 0px 5px;\r\n
+  padding: 0px;\r\n
+  position: relative;\r\n
+  width: 24px; /* IE 6 incorrectly draws border inside the width and height instead of outside - We will fix this to 20px later */\r\n
+}\r\n
+div[class="jPicker_ColorBar"] {\r\n
+  height: 256px; /* correct to 256px for browsers that support the "[class="xxx"]" selector (IE7+,Firefox,Safari,Chrome,Opera,etc.) */\r\n
+  width: 20px; /* correct to 20px for browsers that support the "[class="xxx"]" selector (IE7+,Firefox,Safari,Chrome,Opera,etc.) */\r\n
+}\r\n
+.jPicker_ColorMap_l1, .jPicker_ColorMap_l2, .jPicker_ColorMap_l3, .jPicker_ColorBar_l1, .jPicker_ColorBar_l2, .jPicker_ColorBar_l3, .jPicker_ColorBar_l4, .jPicker_ColorBar_l5, .jPicker_ColorBar_l6 {\r\n
+  background-color: transparent;\r\n
+  background-image: none;\r\n
+  display: block;\r\n
+  height: 256px; /* must specific pixel height. IE7/8 Quirks mode ignores opacity for an absolutely positioned item in a relative container with "overflow: visible". The marker in the colorBar\r\n
+                    would not be drawn if its overflow is set to hidden. */\r\n
+  left: 0px;\r\n
+  position: absolute;\r\n
+  top: 0px;\r\n
+}\r\n
+.jPicker_ColorMap_l1, .jPicker_ColorMap_l2, .jPicker_ColorMap_l3 {\r\n
+  width: 256px; /* must specific pixel width. IE7/8 Quirks mode ignores opacity for an absolutely positioned item in a relative container with "overflow: visible". The marker in the colorBar\r\n
+                   would not be drawn if its overflow is set to hidden. */\r\n
+}\r\n
+.jPicker_ColorBar_l1, .jPicker_ColorBar_l2, .jPicker_ColorBar_l3, .jPicker_ColorBar_l4, .jPicker_ColorBar_l5, .jPicker_ColorBar_l6 {\r\n
+  width: 20px; /* must specific pixel width. IE7/8 Quirks mode ignores opacity for an absolutely positioned item in a relative container with "overflow: visible". The marker in the colorBar\r\n
+                  would not be drawn if its overflow is set to hidden. */\r\n
+}\r\n
+.jPicker_ColorMap_l1, .jPicker_ColorMap_l2, .jPicker_ColorBar_l6 {\r\n
+  background-repeat: no-repeat;\r\n
+}\r\n
+.jPicker_ColorMap_l3, .jPicker_ColorBar_l5 {\r\n
+  background-repeat: repeat;\r\n
+}\r\n
+.jPicker_ColorBar_l1, .jPicker_ColorBar_l2, .jPicker_ColorBar_l3, .jPicker_ColorBar_l4 {\r\n
+  background-repeat: repeat-x;\r\n
+}\r\n
+.jPicker_ColorMap_Arrow {\r\n
+  display: block;\r\n
+  position: absolute;\r\n
+}\r\n
+.jPicker_ColorBar_Arrow {\r\n
+  display: block;\r\n
+  left: -10px; /* (arrow width / 2) - (element width / 2) - position arrows\' center in elements\' center */\r\n
+  position: absolute;\r\n
+}\r\n
+.jPicker_Preview {\r\n
+  font-size: x-small;\r\n
+  text-align: center;\r\n
+}\r\n
+.jPicker_Preview div {\r\n
+  border: 2px inset #eee;\r\n
+  height: 62px;\r\n
+  margin: 0px auto;\r\n
+  padding: 0px;\r\n
+  width: 62px;\r\n
+}\r\n
+.jPicker_Preview div span {\r\n
+  border: 1px solid #000;\r\n
+  display: block;\r\n
+  height: 30px;\r\n
+  margin: 0px auto;\r\n
+  padding: 0px;\r\n
+  width: 60px;\r\n
+}\r\n
+.jPicker_Preview div span.jPicker_Active {\r\n
+  border-bottom-width: 0px;\r\n
+}\r\n
+.jPicker_Preview div span.jPicker_Current {\r\n
+  border-top-width: 0px;\r\n
+  cursor: pointer;\r\n
+}\r\n
+.jPicker_OkCancel {\r\n
+  text-align: center;\r\n
+  width: 120px;\r\n
+}\r\n
+.jPicker_OkCancel input {\r\n
+  width: 100px;\r\n
+}\r\n
+.jPicker_OkCancel input.jPicker_Ok {\r\n
+  margin: 12px 0px 5px 0px;\r\n
+}\r\n
+.jPicker_Text {\r\n
+  text-align: left;\r\n
+}\r\n
+.jPicker_HueText, .jPicker_SaturationText, .jPicker_BrightnessText, .jPicker_RedText, .jPicker_GreenText, .jPicker_BlueText, .jPicker_AlphaText {\r\n
+  background-color: #fff;\r\n
+  border: 1px inset #aaa;\r\n
+  margin: 0px 0px 0px 5px;\r\n
+  text-align: left;\r\n
+  width: 30px;\r\n
+}\r\n
+.jPicker_HexText {\r\n
+  background-color: #fff;\r\n
+  border: 1px inset #aaa;\r\n
+  margin: 0px 0px 0px 5px;\r\n
+  width: 65px;\r\n
+}\r\n
+.jPicker_Grid {\r\n
+  text-align: center;\r\n
+}\r\n
+span.jPicker_QuickColor {\r\n
+  border: 1px inset #aaa;\r\n
+  cursor: pointer;\r\n
+  display: block;\r\n
+  float: left;\r\n
+  height: 13px;\r\n
+  line-height: 13px;\r\n
+  margin: 2px 2px 1px 2px;\r\n
+  padding: 0px;\r\n
+  width: 15px;\r\n
+}\r\n
+span[class="jPicker_QuickColor"] {\r\n
+  width: 13px;\r\n
+}</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

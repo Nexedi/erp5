@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""Returns the dict of parameters that have to be passed to getInventory/getMovementHistoryList\n
+for the cell_index. This script returns parameters even if the cell does not exist.\n
+"""\n
+\n
+portal = context.getPortalObject()\n
+budget_model = context.getParentValue().getSpecialiseValue()\n
+\n
+budget_cell = context.getCell(*cell_index)\n
+\n
+if budget_cell is None:\n
+  # if cell does not exist, use a temporary cell at those coordinates\n
+  budget_cell = context.newContent(portal_type=\'Budget Cell\', temp_object=True)\n
+  budget_cell.edit(\n
+     mapped_value_property_list=(\'quantity\',),\n
+     membership_criterion_base_category_list\n
+        =[bc for bc in context.getVariationBaseCategoryList() if bc not\n
+                in context.getMembershipCriterionBaseCategoryList()],\n
+     membership_criterion_category_list=cell_index)\n
+\n
+kw = budget_model.getInventoryQueryDict(budget_cell)\n
+\n
+if engaged_budget:\n
+  kw.setdefault(\'stock_explanation_simulation_state\',\n
+                  portal.getPortalReservedInventoryStateList() +\n
+                  portal.getPortalCurrentInventoryStateList() +\n
+                  portal.getPortalTransitInventoryStateList())\n
+\n
+# those are simulation state parameters equivalent to getCurrentInventoryQuery that can be passed to getMovementHistoryList\n
+kw.setdefault(\'simulation_state\', portal.getPortalCurrentInventoryStateList() + portal.getPortalTransitInventoryStateList())\n
+kw.setdefault(\'transit_simulation_state\', portal.getPortalTransitInventoryStateList())\n
+kw.setdefault(\'omit_transit\', False)\n
+\n
+return kw\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>cell_index=(), engaged_budget=False</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BudgetLine_getInventoryQueryDictForCellIndex</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

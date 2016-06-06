@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Search text query generator. Accepts a string and returns a ComplexQuery.\n
+  For example:\n
+\n
+  search_text = DMS reference:bt5-dms version:001 language:bg mine:yes (portal_type:Presentation OR portal_type:File) created:12m contributor_title:%tyagov%\n
+  \n
+  will parse search_text and generate a complexQuery which will return all documents which:\n
+  - have full_text searchable text containing "DMS"\n
+  - have reference equal to bt5-dms\n
+  - have portal_type "Presentation" OR "File"\n
+  - are created within last 12 months\n
+  - are owned by current logged in user\n
+  - are contributed by given Person\'s title\n
+  - etc ..\n
+"""\n
+if \'full_text\' in context.sql_search_tables:\n
+  column = \'SearchableText\'\n
+else:\n
+  column = \'title\'\n
+node = context.Base_getAdvancedSearchSyntaxTreeNode(value, column=column)\n
+if node is None:\n
+  return context.buildSingleQuery(column, value)\n
+else:\n
+  return context.buildQueryFromAbstractSyntaxTreeNode(node, column, ignore_unknown_columns=True)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>value</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SQLCatalog_makeSearchTextQuery</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

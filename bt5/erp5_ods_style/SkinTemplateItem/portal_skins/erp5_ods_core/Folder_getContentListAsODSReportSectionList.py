@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Form.Report import ReportSection\n
+from Products.ERP5Type.Message import translateString\n
+\n
+form = context\n
+request = context.REQUEST\n
+report_section_list = []\n
+portal = context.getPortalObject()\n
+selection_name = request.get(\'selection_name\', None)\n
+\n
+def getReportSectionListForObject(doc):\n
+  """ Get all possible report section for object. """\n
+  report_section_list = []\n
+  doc = doc.getObject()\n
+  title = doc.getTitle()\n
+  report_section_list.append(ReportSection(level = 1,\n
+                                           title = title,\n
+                                           form_id = None))\n
+  for action in portal.portal_actions.listFilteredActionsFor(doc)[\'object_view\']:\n
+    form_id = action[\'url\'].split(\'/\')[-1].split(\'?\')[0]\n
+    action_title = action[\'title\']\n
+    if action_title != \'History\' and action_title != \'Metadata\':\n
+      report_section_list.append(ReportSection(path = doc.getPath(),\n
+                                               form_id = form_id,\n
+                                               level = 2,\n
+                                               title = \'%s - %s\' % (title, translateString(action_title))))\n
+  return report_section_list\n
+\n
+if selection_name is not None:\n
+  checked_uid_list = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
+  if checked_uid_list:\n
+    getObject = portal.portal_catalog.getObject\n
+    for uid in checked_uid_list:\n
+      report_section_list.extend(getReportSectionListForObject(getObject(uid)))\n
+  else:\n
+    # get all documents in the selection\n
+    for doc in portal.portal_selections.callSelectionFor(selection_name, context=form):\n
+      report_section_list.extend(getReportSectionListForObject(doc))\n
+else:\n
+  # get only current (context) document\n
+  report_section_list.extend(getReportSectionListForObject(context))\n
+\n
+return report_section_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Folder_getContentListAsODSReportSectionList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

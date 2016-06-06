@@ -1,0 +1,324 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts95898958.25</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dailog.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>﻿.bbit-window {\n
+    zoom:1;\n
+    display:block;\n
+    z-index:999;\n
+    position:absolute;\n
+    left:0px;\n
+    top:0px;\n
+}\n
+\n
+.bbit-window .bbit-resizable-handle {\n
+    opacity:0;\n
+    -moz-opacity:0;\n
+    filter:alpha(opacity=0);\n
+}\n
+  \n
+.bbit-window-proxy {\n
+    border:1px solid;\n
+    z-index:12000;\n
+    overflow:hidden;\n
+    position:absolute;\n
+    left:0;top:0;\n
+    display:none;\n
+    opacity:.5;\n
+    -moz-opacity:.5;\n
+    filter:alpha(opacity=50);\n
+}\n
+\n
+.bbit-window-header {\n
+    overflow:hidden;\n
+    zoom:1;\n
+}\n
+\n
+.bbit-window-bwrap {\n
+    z-index:1;\n
+    position:relative;\n
+    zoom:1;\n
+    left:0;top:0;\n
+}\n
+\n
+.bbit-window-tl .bbit-window-header {\n
+    padding:5px 0 4px 0;\n
+}\n
+\n
+.bbit-window-header-text {\n
+  background:url(\'jquery/plugin/wdcalendar/wdcalendar_images/app-form.png\') no-repeat 3px center ; \n
+  padding-left:20px; \n
+  font-weight:bold;\n
+  color:#15428b;\n
+}\n
+\n
+\n
+.bbit-window-tc {\n
+\tbackground: transparent repeat-x 0 0;\n
+\toverflow:hidden;\n
+    zoom:1;\n
+}\n
+\n
+.bbit-window-tl {\n
+\tbackground: transparent no-repeat 0 0;\n
+\tpadding-left:6px;\n
+    zoom:1;\n
+    z-index:1;\n
+    position:relative;\n
+}\n
+\n
+.bbit-window-tr {\n
+\tbackground: transparent no-repeat right 0;\n
+\tpadding-right:6px;\n
+}\n
+\n
+.bbit-window-bc {\n
+\tbackground: transparent repeat-x 0 bottom;\n
+    zoom:1;\n
+}\n
+\n
+.bbit-window-bc .bbit-window-footer {\n
+    padding-bottom:6px;\n
+    zoom:1;\n
+    font-size:0;\n
+    line-height:0;\n
+}\n
+\n
+.bbit-window-bl {\n
+\tbackground: transparent no-repeat 0 bottom;\n
+\tpadding-left:6px;\n
+    zoom:1;\n
+}\n
+\n
+.bbit-window-br {\n
+\tbackground: transparent no-repeat right bottom;\n
+\tpadding-right:6px;\n
+    zoom:1;\n
+}\n
+\n
+.bbit-window-mc {\n
+    border:1px solid;\n
+    padding:0;\n
+    margin:0;\n
+}\n
+\n
+.bbit-window-ml {\n
+\tbackground: transparent repeat-y 0 0;\n
+\tpadding-left:6px;\n
+    zoom:1;\n
+}\n
+\n
+.bbit-window-mr {\n
+\tbackground: transparent repeat-y right 0;\n
+\tpadding-right:6px;\n
+    zoom:1;\n
+}\n
+\n
+.bbit-window-body {\n
+    overflow:hidden;\n
+    \n
+}\n
+\n
+.bbit-window-bwrap {\n
+    overflow:hidden;\n
+}\n
+\n
+.bbit-window-maximized .bbit-window-bl, .bbit-window-maximized .bbit-window-br,\n
+    .bbit-window-maximized .bbit-window-ml, .bbit-window-maximized .bbit-window-mr,\n
+    .bbit-window-maximized .bbit-window-tl, .bbit-window-maximized .bbit-window-tr {\n
+    padding:0;\n
+}\n
+\n
+.bbit-window-maximized .bbit-window-footer {\n
+    padding-bottom:0;\n
+}\n
+\n
+.bbit-window-maximized .bbit-window-tc {\n
+    padding-left:3px;\n
+    padding-right:3px;\n
+}\n
+\n
+.bbit-window-maximized .bbit-window-mc {\n
+    border-left:0 none;\n
+    border-right:0 none;\n
+}\n
+\n
+.bbit-window-tbar .bbit-toolbar, .bbit-window-bbar .bbit-toolbar {\n
+    border-left:0 none;\n
+    border-right: 0 none;\n
+}\n
+\n
+.bbit-window-bbar .bbit-toolbar {\n
+    border-top:1px solid;\n
+    border-bottom:0 none;\n
+}\n
+\n
+.bbit-window-draggable, .bbit-window-draggable .bbit-window-header-text {\n
+    cursor:move;\n
+}\n
+\n
+.bbit-window-maximized .bbit-window-draggable, .bbit-window-maximized .bbit-window-draggable .bbit-window-header-text {\n
+    cursor:default;\n
+}\n
+\n
+.bbit-window-body {\n
+    background:transparent;\n
+}\n
+\n
+.bbit-panel-ghost .bbit-window-tl {\n
+    border-bottom:1px solid;\n
+}\n
+\n
+.bbit-panel-collapsed .bbit-window-tl {\n
+    border-bottom:1px solid;\n
+}\n
+\n
+.bbit-window-maximized-ct {\n
+    overflow:hidden;\n
+}\n
+\n
+.bbit-window-maximized .bbit-resizable-handle {\n
+    display:none;\n
+}\n
+\n
+.bbit-window-sizing-ghost ul {\n
+    border:0 none !important;\n
+}\n
+\n
+.bbit-dlg-focus{\n
+\t-moz-outline:0 none;\n
+\toutline:0 none;\n
+\twidth:0;\n
+\theight:0;\n
+\toverflow:hidden;\n
+\tposition:absolute;\n
+\ttop:0;\n
+\tleft:0;\n
+}\n
+\n
+.ext-webkit .bbit-dlg-focus{\n
+    width: 1px;\n
+    height: 1px;\n
+}\n
+\n
+.bbit-dlg-mask{\n
+    z-index:10000;\n
+    display:none;\n
+    position:absolute;\n
+    top:0;\n
+    left:0;\n
+    -moz-opacity: 0.5;\n
+    opacity:.50;\n
+    filter: alpha(opacity=50);\n
+}\n
+\n
+body.ie6.bbit-body-masked select {\n
+\tvisibility:hidden;\n
+}\n
+\n
+body.ext-ie6.bbit-body-masked .bbit-window select {\n
+\tvisibility:visible;\n
+}\n
+\n
+.bbit-window-plain .bbit-window-mc {\n
+    border:none;\n
+}\n
+\n
+.bbit-window-plain .bbit-window-body {\n
+    border:solid 1px #a3bae9;\n
+    background:transparent !important;\n
+}\n
+\n
+.bbit-window-tc {\n
+\tbackground-image: url(jquery/plugin/wdcalendar/wdcalendar_images/top-bottom.png);\n
+}\n
+\n
+.bbit-window-tl {\n
+\tbackground-image: url(jquery/plugin/wdcalendar/wdcalendar_images/left-corners.png);\n
+}\n
+\n
+.bbit-window-tr {\n
+\tbackground-image: url(jquery/plugin/wdcalendar/wdcalendar_images/right-corners.png);\n
+}\n
+\n
+.bbit-window-bc {\n
+\tbackground-image: url(jquery/plugin/wdcalendar/wdcalendar_images/top-bottom.png);\n
+}\n
+\n
+.bbit-window-bl {\n
+\tbackground-image: url(jquery/plugin/wdcalendar/wdcalendar_images/left-corners.png);\n
+}\n
+\n
+.bbit-window-br {\n
+\tbackground-image: url(jquery/plugin/wdcalendar/wdcalendar_images/right-corners.png);\n
+}\n
+\n
+.bbit-window-mc {\n
+    border-color:#99bbe8;\n
+    font: normal 11px tahoma,arial,helvetica,sans-serif;\n
+    background-color:#c6d4e4;\n
+}\n
+\n
+.bbit-window-ml {\n
+\tbackground-image: url(jquery/plugin/wdcalendar/wdcalendar_images/left-right.png);\n
+}\n
+\n
+.bbit-window-mr {\n
+\tbackground-image: url(jquery/plugin/wdcalendar/wdcalendar_images/left-right.png);\n
+}\n
+div.bbit-tool\n
+{\n
+    font-size:1px;\n
+    background: url("jquery/plugin/wdcalendar/wdcalendar_images/tool-sprites.gif") no-repeat;\n
+}\n
+div.bbit-tool-close\n
+{\n
+    cursor:pointer;\n
+ float:right;\n
+ width:15px;\n
+ height:15px;   \n
+  background-position: 0px 0px;\n
+}\n
+div.hover.bbit-tool-close\n
+{\n
+   background-position: -15px 0px;\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5197</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dailog.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

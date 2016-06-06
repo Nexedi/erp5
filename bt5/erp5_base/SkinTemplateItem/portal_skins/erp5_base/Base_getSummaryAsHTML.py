@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Generate a HTML Summary of an object.\n
+  Use "No ZODB" approach if possible.  \n
+"""\n
+request = context.REQUEST\n
+portal = context.getPortalObject()\n
+is_temp_object = context.isTempObject()\n
+\n
+if not is_temp_object:\n
+  web_site = request.get(\'current_web_site\', context.getWebSiteValue())\n
+else:\n
+  web_site = portal.restrictedTraverse(context.web_site)\n
+web_site_url = web_site.absolute_url()\n
+\n
+if is_temp_object:\n
+  uid = context.uid\n
+  url = context.path\n
+  title = context.title\n
+  path = context.path\n
+  version = context.version\n
+  language = context.language\n
+  modification_date = context.modification_date\n
+  found = context.text\n
+  portal_type = context.object_portal_type\n
+  # empty as we still have no ZODB object to render it (it will be done with AJAX\n
+  inline_popup = None\n
+  owner_url = "Base_redirectToPersonByReference?reference=%s" %context.owner\n
+  owner_title = context.owner\n
+  reference = context.reference\n
+  reference_url = \'%s/%s\' %(web_site_url, path)\n
+  document_web_section_list = [web_site.restrictedTraverse(x) for x in context.section_list]\n
+else:\n
+  # a real ZODB object\n
+  uid = context.getUid()\n
+  url = context.absolute_url()\n
+  title = context.getTitle() or (hasattr(context, \'getReference\') and context.getReference()) or context.getId()\n
+  path = context.getRelativeUrl()\n
+  version = context.getVersion()\n
+  language = context.getLanguage()\n
+  modification_date = context.modification_date\n
+  document_web_section_list = web_site.getWebSectionValueList(context)\n
+  inline_popup = context.Document_getPopupInfo(web_site, document_web_section_list)\n
+  if isinstance(inline_popup, unicode):\n
+    inline_popup = inline_popup.encode(\'utf-8\')\n
+  found = context.Base_showFoundText()\n
+  portal_type = context.getTranslatedPortalType()\n
+  owner_list = context.Base_getOwnerInfoList()\n
+  if len(owner_list):\n
+    owner_url = owner_list[0]["url"]\n
+    owner_title = owner_list[0]["title"]\n
+  else:\n
+    owner_url = None\n
+    owner_title = None\n
+  reference = context.getReference\n
+  reference_url = web_site.getPermanentURL(context)\n
+\n
+local_parameter_dict = {\n
+  \'uid\': uid,\n
+  \'url\': url,\n
+  \'title\': title,\n
+  \'portal_type\': portal_type,\n
+  \'found\': found,\n
+  \'modification_date\': modification_date,\n
+  \'path\': path,\n
+  \'version\': version,\n
+  \'language\': language,\n
+  \'owner_url\': owner_url,\n
+  \'owner_title\': owner_title,\n
+  \'reference\': reference,\n
+  \'reference_url\': reference_url,\n
+  \'document_web_section_list\': document_web_section_list,\n
+  \'inline_popup\': inline_popup}\n
+\n
+html = context.Base_viewSummaryAsHTML(**local_parameter_dict)\n
+return html\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getSummaryAsHTML</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

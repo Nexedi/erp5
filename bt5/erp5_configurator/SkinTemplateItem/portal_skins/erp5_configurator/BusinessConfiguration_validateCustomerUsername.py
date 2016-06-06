@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># check that customer did not enter in form repeating user names\n
+reference_list = REQUEST.get(\'_original_field_your_reference\', [])\n
+for reference in reference_list:\n
+  if reference_list.count(reference) != 1:\n
+    # customer entered in form repeating user names\n
+    return 0\n
+\n
+portal = context.getPortalObject()\n
+reference = editor\n
+\n
+# check this is a not a reference from acl_user\n
+if portal.acl_users.getUserById(reference) is not None or  \\\n
+  portal.aq_parent.acl_users.getUserById(reference) is not None:\n
+    return 0\n
+\n
+# ... then check already created accounts\n
+if portal.portal_catalog.getResultValue(\n
+      reference = reference, \n
+      portal_type = "Person") is not None:\n
+  return 0\n
+\n
+# first check if a Business Configuration has not already "reserved" it\n
+# through a Person Configuration Item which when build will create a real\n
+# Nexedi ERP5 account.\n
+\n
+bc_key = REQUEST.get(\'business_configuration_key\', None)\n
+bc_path = None\n
+if bc_key is None:\n
+  configuration_save = portal.restrictedTraverse(REQUEST.get(\'configuration_save_url\'))\n
+  if configuration_save is not None:\n
+    bc_key = configuration_save.getParentValue().getRelativeUrl()\n
+\n
+if bc_key is not None:\n
+  bc_path = "NOT %%/%s/%%" % bc_key\n
+\n
+if portal.portal_catalog.getResultValue(\n
+                         reference = reference,\n
+                         portal_type=\'Person Configurator Item\',\n
+                         path = bc_path) is not None:\n
+  return 0\n
+\n
+return 1\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>editor, REQUEST</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessConfiguration_validateCustomerUsername</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Is valid username?</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

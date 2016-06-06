@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from DateTime import DateTime\n
+MESSAGE_TEMPLATE = \'\'\'\\\n
+msgid %(english)s\n
+msgstr %(translation)s\n
+\'\'\'\n
+\n
+def formatMessage(english, translation, term=None):\n
+  if term is not None:\n
+    return \'\'\'\\\n
+#: %s [Glossary term %s]\n
+msgid %s\n
+msgstr %s\n
+\'\'\' % (term.getComment(), term.getId(), english, translation)\n
+  return MESSAGE_TEMPLATE % dict(english=english, translation=translation)\n
+\n
+\n
+def format(string):\n
+  line_list = string.splitlines(True)\n
+  length = len(line_list)\n
+  if length==1:\n
+    return \'"%s"\' % string.replace(\'"\', \'\\\\"\').replace(\'\\n\', \'\\\\n\')\n
+  else:\n
+    return \'\\n\'.join([\'""\']+[format(i) for i in line_list])\n
+\n
+# po header\n
+now = DateTime().toZone(\'UTC\').strftime("%Y-%m-%d %H:%M+0000")\n
+print MESSAGE_TEMPLATE % (dict(english=\'""\',\n
+                               translation=\n
+r\'\'\'"Project-Id-Version: ERP5 Localized Interface\\n"\n
+"POT-Creation-Date: %s\\n"\n
+"PO-Revision-Date: %s\\n"\n
+"Last-Translator:  <>\\n"\n
+"Language-Team: %s <>\\n"\n
+"MIME-Version: 1.0\\n"\n
+"Content-Type: text/plain; charset=UTF-8\\n"\n
+"Content-Transfer-Encoding: 8bit\\n"\n
+\'\'\' % (now, now, language)))\n
+catalog = context.portal_catalog\n
+\n
+for i in catalog(portal_type=\'Glossary Term\',\n
+                 validation_state=\'validated\',\n
+                 business_field_id=business_field_list,\n
+                 language_id=language):\n
+  term = i.getObject()\n
+  reference = term.getReference()\n
+  business_field = term.getBusinessField()\n
+\n
+  english_term = catalog.getResultValue(portal_type=\'Glossary Term\',\n
+                                        validation_state=\'validated\',\n
+                                        language_id=\'en\',\n
+                                        reference=reference,\n
+                                        business_field_uid=term.getBusinessFieldUid())\n
+  if english_term is None:\n
+    continue\n
+    raise ValueError, \'Corresponding English term to "%s" does not exist in glossary.\' % term.Title()\n
+\n
+  translated_title = term.getTitle()\n
+  translated_description = term.getDescription()\n
+\n
+  english_title = english_term.getTitle()\n
+  english_description = english_term.getDescription()\n
+  english_relative_url = english_term.getRelativeUrl()\n
+\n
+  if translated_title:\n
+    if not english_title:\n
+      raise ValueError, \'Title of corresponding English term(%s) to "%s" is empty.\' % (english_relative_url, translated_title)\n
+    if translated_title!=english_title:\n
+      print formatMessage(english=format(english_title),\n
+                          translation=format(translated_title),\n
+                          term=term)\n
+\n
+  if translated_description:\n
+    if not english_description:\n
+      raise ValueError, \'Description of corresponding English term(%s) to "%s" is empty.\' % (english_relative_url, translated_description)\n
+\n
+    if translated_description!=english_description:\n
+      print formatMessage(english=format(english_description),\n
+                          translation=format(translated_description),\n
+                          term=term)\n
+\n
+RESPONSE = context.REQUEST.RESPONSE\n
+RESPONSE.setHeader(\'Content-disposition\', \'attachment;filename=translation.po\')\n
+RESPONSE.setHeader(\'Content-Type\', \'text/x-gettext-translation;charset=utf-8\')\n
+\n
+return printed\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>business_field_list, language, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>GlossaryModule_getPOFile</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

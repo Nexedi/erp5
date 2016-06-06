@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  Run upgrader\n
+"""\n
+portal = context.getPortalObject()\n
+portal_alarms = portal.portal_alarms\n
+\n
+after_method_id = \'Base_postCheckConsistencyResult\'\n
+def launchSenseAlarm(alarm_id, after_tag=[]):\n
+  """ Get the alarm and use sense"""\n
+  upgrader_alarm = getattr(portal_alarms, alarm_id, None)\n
+  if upgrader_alarm is not None:\n
+    # call solve method\n
+    kw = {"tag": alarm_id,\n
+      "after_method_id": after_method_id}\n
+    if len(after_tag) > 0:\n
+      kw["after_tag"] = after_tag\n
+    method_id = upgrader_alarm.getActiveSenseMethodId()\n
+    if method_id not in (None, \'\'):\n
+      method = getattr(upgrader_alarm.activate(**kw), method_id)\n
+      method()\n
+    return [alarm_id,]\n
+  return after_tag\n
+\n
+previous_tag = launchSenseAlarm(\'upgrader_check_pre_upgrade\')\n
+\n
+previous_tag = launchSenseAlarm(\'upgrader_check_upgrader\',\n
+                                   after_tag=previous_tag)\n
+\n
+previous_tag = launchSenseAlarm(\'upgrader_check_post_upgrade\',\n
+                 after_tag=previous_tag)\n
+\n
+active_process = context.newActiveProcess()\n
+context.activate(after_tag=previous_tag,\n
+  after_method_id=after_method_id).Alarm_postFullUpgradeNeed(\n
+  active_process=active_process.getRelativeUrl())\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>REQUEST=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Alarm_senseFullUpgradeNeed</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

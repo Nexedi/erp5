@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# Updates attributes of an Zope document\n
+# which is in a class inheriting from ERP5 Base\n
+#\n
+# TODO\n
+#   - Implement validation of matrix fields\n
+#   - Implement validation of list fields\n
+#\n
+from Products.Formulator.Errors import ValidationError, FormValidationError\n
+from ZTUtils import make_query\n
+\n
+request=context.REQUEST\n
+\n
+try:\n
+  # Define form basic fields\n
+  form = getattr(context,form_id)\n
+  edit_order = form.edit_order\n
+  # Validate\n
+  form.validate_all_to_request(request)\n
+  # Basic attributes\n
+  kw = {}\n
+  # Parse attributes\n
+  for f in form.get_fields():\n
+    k = f.id\n
+    v = getattr(request,k,None)\n
+    if v is not None:\n
+      if k[0:3] == \'my_\':\n
+        # We only take into account\n
+        # the object attributes\n
+        k = k[3:]\n
+        kw[k] = v\n
+  # Update listbox attributes\n
+  listbox = request.get(\'listbox\')\n
+  if listbox is not None:\n
+    listbox_field = form.get_field(\'listbox\')\n
+    gv = {}\n
+    if listbox_field.has_value(\'global_attributes\'):\n
+      hidden_attributes = map(lambda x:x[0], listbox_field.get_value(\'global_attributes\'))\n
+      for k in hidden_attributes:\n
+        gv[k] = getattr(request, k,None)\n
+    for property, v in listbox.items():\n
+      v.update(gv)\n
+      context.setCriterion(property, **v)\n
+  # Update basic attributes\n
+  context.edit(REQUEST=request, edit_order=edit_order, **kw)\n
+  context.reindexObject()\n
+except FormValidationError, validation_errors:\n
+  # Pack errors into the request\n
+  field_errors = form.ErrorFields(validation_errors)\n
+  request.set(\'field_errors\', field_errors)\n
+  return form(request)\n
+else:\n
+  # for web mode, we should use \'view\' instead of passed form_id\n
+  # after \'Save & View\'.\n
+  if context.REQUEST.get(\'is_web_mode\', False) and \\\n
+      not editable_mode:\n
+    form_id = \'view\'\n
+\n
+  if not selection_index:\n
+    redirect_url = \'%s/%s?%s\' % (\n
+      context.absolute_url(),\n
+      form_id,\n
+      make_query({\'ignore_layout\':ignore_layout,\n
+                  \'editable_mode\':editable_mode,\n
+                  \'portal_status_message\':\'Data Updated.\',\n
+                  })\n
+      )\n
+  else:\n
+    redirect_url = \'%s/%s?%s\' % (\n
+      context.absolute_url(),\n
+      form_id,\n
+      make_query({\'selection_index\':selection_index,\n
+                  \'selection_name\':selection_name,\n
+                  \'ignore_layout\':ignore_layout,\n
+                  \'editable_mode\':editable_mode,\n
+                  \'portal_status_message\':\'Data Updated.\',\n
+                  })\n
+      )\n
+\n
+request[ \'RESPONSE\' ].redirect( redirect_url )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, selection_index=0, selection_name=\'\', ignore_layout=0, editable_mode=1</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Predicate_edit</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

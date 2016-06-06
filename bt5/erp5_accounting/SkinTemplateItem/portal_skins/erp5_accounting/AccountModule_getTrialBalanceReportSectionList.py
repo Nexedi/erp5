@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>""" Trial balance.\n
+"""\n
+from Products.ERP5Form.Report import ReportSection\n
+\n
+request = context.REQUEST\n
+portal  = context.portal_url.getPortalObject()\n
+\n
+at_date  = request[\'at_date\']\n
+from_date = request.get(\'from_date\', None)\n
+portal_type = request.get(\'portal_type\', None)\n
+function = request.get(\'function\', None)\n
+funding = request.get(\'funding\', None)\n
+project = request.get(\'project\', None)\n
+simulation_state = request[\'simulation_state\']\n
+expand_accounts = request.get(\'expand_accounts\', False)\n
+show_empty_accounts = request[\'show_empty_accounts\']\n
+per_account_class_summary = request[\'per_account_class_summary\']\n
+gap_root = request.get(\'gap_root\', None)\n
+mirror_section_category = request.get(\'mirror_section_category_list\', None)\n
+show_detailed_balance_columns = request[\'show_detailed_balance_columns\']\n
+section_uid = portal.Base_getSectionUidListForSectionCategory(\n
+                                   request[\'section_category\'],\n
+                                   request[\'section_category_strict\'])\n
+\n
+period_start_date = portal.Base_getAccountingPeriodStartDateForSectionCategory(\n
+       section_category=request[\'section_category\'], date=from_date or at_date)\n
+# for the report summary\n
+request.set(\'period_start_date\', period_start_date)\n
+\n
+if not from_date:\n
+  from_date = period_start_date\n
+\n
+# currency precision\n
+currency = portal.Base_getCurrencyForSection(request[\'section_category\'])\n
+precision = portal.account_module.getQuantityPrecisionFromResource(currency)\n
+request.set(\'precision\', precision)\n
+\n
+\n
+# optional GAP filter\n
+node_uid = []\n
+gap_uid_list = []\n
+for gap in request.get(\'gap_list\', ()):\n
+  gap_uid_list.append(portal.portal_categories.gap.restrictedTraverse(gap).getUid())\n
+if gap_uid_list:\n
+  node_uid = [x.uid for x in portal.portal_catalog(\n
+                                   portal_type=\'Account\',\n
+                                   default_gap_uid=gap_uid_list)] or -1\n
+\n
+request.set(\'is_accounting_report\', True)\n
+group_analytic = request.get(\'group_analytic\', ())\n
+group_analytic_uid = ()\n
+\n
+extra_columns = ()\n
+if expand_accounts:\n
+  extra_columns += (\'mirror_section_title\', \'Third Party\'),\n
+\n
+possible_analytic_column_list = context.AccountModule_getAnalyticColumnList()\n
+for analytic in group_analytic:\n
+  if analytic == \'project\':\n
+    extra_columns += ((\'project_uid\', \'Project\', ), )\n
+    group_analytic_uid += (\'project_uid\',)\n
+  elif analytic == \'function\':\n
+    extra_columns += ((\'function_uid\',\n
+        context.AccountingTransactionLine_getFunctionBaseCategoryTitle()),)\n
+    group_analytic_uid += (\'function_uid\',)\n
+  elif analytic == \'funding\':\n
+    extra_columns += ((\'funding_uid\',\n
+        context.AccountingTransactionLine_getFundingBaseCategoryTitle()),)\n
+    group_analytic_uid += (\'funding_uid\',)\n
+  elif analytic == \'section\':\n
+    extra_columns += ((\'section_uid\', \'Section\'), (\'Movement_getSectionPriceCurrency\', \'Accounting Currency\'))\n
+    group_analytic_uid += (\'section_uid\',)\n
+  else:\n
+    for analytic_column in possible_analytic_column_list:\n
+      if analytic_column[0] == analytic:\n
+        uid_key = \'strict_%s\' % analytic_column[0].replace(\'_translated_title\', \'_uid\')\n
+        group_analytic_uid += (uid_key, )\n
+        extra_columns += ((uid_key, analytic_column[1]),)\n
+    \n
+\n
+if show_detailed_balance_columns:\n
+  selection_columns = (\n
+    (\'node_id\', \'GAP Account ID\'),\n
+    (\'node_title\', \'Account Name\'),\n
+  ) + extra_columns + (\n
+    (\'initial_debit_balance\', \'Initial Debit Balance\'),\n
+    (\'initial_credit_balance\', \'Initial Credit Balance\'),\n
+    (\'initial_balance\', \'Initial Balance\'),\n
+    (\'debit\', \'Debit Transactions\'),\n
+    (\'credit\', \'Credit Transactions\'),\n
+    (\'final_debit_balance\', \'Final Debit Balance\'),\n
+    (\'final_credit_balance\', \'Final Credit Balance\'),\n
+    (\'final_balance\', \'Final Balance\'),\n
+    (\'final_balance_if_debit\', \'Final Balance (Debit)\'),\n
+    (\'final_balance_if_credit\', \'Final Balance (Credit)\'),\n
+  )\n
+else:\n
+  selection_columns = (\n
+    (\'node_id\', \'GAP Account ID\'),\n
+    (\'node_title\', \'Account Name\'),\n
+  ) + extra_columns + (\n
+    (\'initial_balance\', \'Initial Balance\'),\n
+    (\'debit\', \'Debit Transactions\'),\n
+    (\'credit\', \'Credit Transactions\'),\n
+    (\'final_balance\', \'Final Balance\'),\n
+  )\n
+\n
+return [ ReportSection(\n
+            path=portal.account_module.getPhysicalPath(),\n
+            form_id=\'AccountModule_viewAccountListForTrialBalance\',\n
+            selection_name=\'trial_balance_selection\',\n
+            selection_columns=selection_columns,\n
+            selection_params=dict(show_empty_accounts=show_empty_accounts,\n
+                                  expand_accounts=expand_accounts,\n
+                                  at_date=at_date.latestTime(),\n
+                                  from_date=from_date.earliestTime(),\n
+                                  period_start_date=\n
+                                          period_start_date.earliestTime(),\n
+                                  section_uid=section_uid,\n
+                                  function=function,\n
+                                  funding=funding,\n
+                                  project=project,\n
+                                  portal_type=portal_type,\n
+                                  simulation_state=simulation_state,\n
+                                  precision=precision,\n
+                                  group_analytic=group_analytic_uid,\n
+                                  node_uid=node_uid,\n
+                                  mirror_section_category=\n
+                                          mirror_section_category,\n
+                                  per_account_class_summary=\n
+                                          per_account_class_summary,\n
+                                  gap_root=gap_root,\n
+                                  show_detailed_balance_columns=show_detailed_balance_columns), )]\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountModule_getTrialBalanceReportSectionList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

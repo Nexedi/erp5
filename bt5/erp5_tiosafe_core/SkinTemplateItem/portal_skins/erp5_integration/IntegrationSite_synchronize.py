@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>sync_list = []\n
+\n
+\n
+# First get sync object and sort them\n
+for synchronization in synchronization_list:\n
+  synchronization_object = context.restrictedTraverse(synchronization)\n
+  sync_list.append(synchronization_object)\n
+\n
+def cmp_sync(a,b):\n
+  return cmp(a.getIntIndex(), b.getIntIndex())\n
+sync_list.sort(cmp_sync)\n
+\n
+translateString = context.Base_translateString\n
+\n
+after_tag = []\n
+for sync in sync_list:\n
+  sub = sync.getDestinationSectionValue()\n
+  pub = sync.getSourceSectionValue()\n
+  if sub.getValidationState() != "validated":\n
+    portal_status_message = translateString("Subscription ${sub} not validated.",\n
+                                            mapping=dict(sub=sub.getTitle()))\n
+    break\n
+  if pub.getValidationState() != "validated":\n
+    portal_status_message = translateString("Publication ${pub} not validated.",\n
+                                            mapping=dict(pub=pub.getTitle()))\n
+    break\n
+  tag = context.getRelativeUrl()\n
+  if reset:\n
+    sub.resetSignatureList()\n
+    sub.resetAnchorList()\n
+    pub.resetSubscriberList()\n
+  context.portal_synchronizations.activate(activity="SQLQueue", tag=tag,\n
+                                           after_method_id=[\'reset\', \'manage_delObjects\', \'unindexObject\',\n
+                                                            \'sendHttpResponse\', \'PubSync\',\n
+                                                            \'activateSyncModif\', \'immediateReindexObject\'],\n
+                                           after_tag=after_tag).processClientSynchronization(sub.getPath())\n
+  afer_tag = [sub.getId(), pub.getId(), tag]\n
+  portal_status_message = translateString("Synchronization started.")\n
+\n
+# Add to the integration site view the clock which show activities -Aurel : really necessary ?\n
+context.activate(after_tag=after_tag).getTitle()\n
+\n
+if not batch_mode:\n
+  context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message))\n
+else:\n
+  return sub\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id=\'view\', reset=False, synchronization_list=[], batch_mode=False, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>IntegrationSite_synchronize</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

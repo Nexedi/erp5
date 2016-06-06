@@ -1,0 +1,449 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308809.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>comments.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+#comments-box {\r\n
+    display: table;\r\n
+    position: relative;\r\n
+    width: 100%;\r\n
+    height: 100%;\r\n
+    border-collapse: collapse;\r\n
+    font-size: 12px;\r\n
+    font-family: arial;\r\n
+\r\n
+    > div {\r\n
+        display: table-row;\r\n
+\r\n
+        &:not(:last-child) {\r\n
+\r\n
+        }\r\n
+    }\r\n
+\r\n
+    #comments-messages {\r\n
+        position: absolute;\r\n
+        overflow: hidden;\r\n
+        left: 0;\r\n
+        right: 0;\r\n
+        top: 0;\r\n
+        bottom: 45px;\r\n
+\r\n
+        .ps-scrollbar-y-rail {\r\n
+            margin-top: 5px;\r\n
+            margin-bottom: 5px;\r\n
+            right: 4px !important;\r\n
+        }\r\n
+    }\r\n
+\r\n
+    #comments-message-ct {\r\n
+        border-bottom: 1px solid @gray-dark;\r\n
+        position: absolute;\r\n
+        top: 55px;\r\n
+        bottom: 50px;\r\n
+        width: 260px;\r\n
+        overflow: hidden;\r\n
+        display: inline;\r\n
+    }\r\n
+\r\n
+    #comments-add-link-ct {\r\n
+        height: 45px;\r\n
+        text-align: center;\r\n
+        border-top: 1px solid @gray-dark;\r\n
+\r\n
+        label {\r\n
+            color: @black;\r\n
+            font-size: 12px;\r\n
+            font-family: arial;\r\n
+            line-height: normal;\r\n
+            border-bottom: 1px dotted @black;\r\n
+            padding-top: 15px;\r\n
+            outline: none;\r\n
+            height: 32px;\r\n
+            cursor: pointer;\r\n
+        }\r\n
+    }\r\n
+\r\n
+    #comments-new-comment-ct {\r\n
+        border-top: 1px solid @gray-dark;\r\n
+        height: 110px;\r\n
+        display: none;\r\n
+\r\n
+        #comments-inner-ct{\r\n
+            padding: 10px 20px;\r\n
+        }\r\n
+\r\n
+        textarea {\r\n
+           .user-select(text);\r\n
+            font-size: 12px;\r\n
+            width: 100%;\r\n
+            height: 62px;\r\n
+            resize: none;\r\n
+            margin-bottom: 5px;\r\n
+            border: 1px solid @gray-dark;\r\n
+        }\r\n
+    }\r\n
+\r\n
+    #comment-btn-cancel {\r\n
+        margin-left: 7px;\r\n
+    }\r\n
+}\r\n
+\r\n
+.dataview-ct {\r\n
+    width: 100%;\r\n
+    height: 100%;\r\n
+    font-size: 12px;\r\n
+    font-family: arial;\r\n
+    line-height: normal;\r\n
+    position: relative;\r\n
+    overflow: hidden;\r\n
+\r\n
+    textarea {\r\n
+        .user-select(text);\r\n
+        width: 100%;\r\n
+        height: 50px;\r\n
+        resize: none;\r\n
+        margin-bottom: 5px;\r\n
+        border: 1px solid @gray-dark;\r\n
+        word-break: break-all;\r\n
+        line-height: 15px;\r\n
+    }\r\n
+\r\n
+    .text-select {\r\n
+        .user-select(text);\r\n
+    }\r\n
+\r\n
+    .btn-fix {\r\n
+        margin-left: -3px;\r\n
+    }\r\n
+\r\n
+    .textarea-fix {\r\n
+        margin-left: -3px;\r\n
+        margin-top: -1px;\r\n
+    }\r\n
+\r\n
+    .separator-cmt {\r\n
+        border-bottom: 1px solid @gray-dark;\r\n
+        margin: 20px 0px 0px 0px;\r\n
+    }\r\n
+\r\n
+    .user-comment-item {\r\n
+        position: relative;\r\n
+        padding: 0px 20px 10px 20px;\r\n
+    }\r\n
+\r\n
+    .user-name {\r\n
+        color: @gray-darker;\r\n
+        font-weight: bold;\r\n
+        overflow: hidden;\r\n
+        text-overflow: ellipsis;\r\n
+        white-space: nowrap;\r\n
+        padding: 9px 0px 0 0px;\r\n
+        height: 25px;\r\n
+        cursor: default;\r\n
+    }\r\n
+\r\n
+    .user-date {\r\n
+        color: @gray-darker;\r\n
+        font-size: 11px;\r\n
+        white-space: nowrap;\r\n
+        padding: 0;\r\n
+        height: 12px;\r\n
+        overflow: hidden;\r\n
+        text-overflow: ellipsis;\r\n
+        cursor: default;\r\n
+    }\r\n
+\r\n
+    .user-quote {\r\n
+        color: @gray-darker;\r\n
+        font-style: italic;\r\n
+        margin-top: 10px;\r\n
+        padding: 0px 5px 5px 5px;\r\n
+        border-left: 1px solid #939393;\r\n
+        word-break: break-all;\r\n
+        white-space: pre-wrap;\r\n
+        cursor: pointer;\r\n
+    }\r\n
+\r\n
+    .user-message {\r\n
+        .user-select(text);\r\n
+        color: @black;\r\n
+        padding: 9px 0px 0 0px;\r\n
+        white-space: pre-wrap;\r\n
+        word-wrap: break-word;\r\n
+        cursor: pointer;\r\n
+    }\r\n
+\r\n
+    .user-reply {\r\n
+        color: @black;\r\n
+        margin-top: 10px;\r\n
+        white-space: pre-wrap;\r\n
+        width: auto;\r\n
+        border-bottom: 1px dotted @black;\r\n
+        height: 16px;\r\n
+        cursor: pointer;\r\n
+    }\r\n
+\r\n
+    .msg-reply {\r\n
+        max-height:150px;\r\n
+        word-break: break-word;\r\n
+    }\r\n
+\r\n
+    .edit-ct {\r\n
+        position: absolute;\r\n
+        right: 0;\r\n
+        top: 0;\r\n
+        margin: 10px 10px;\r\n
+        height: 30px;\r\n
+    }\r\n
+\r\n
+    .btns-reply-ct {\r\n
+        position: absolute;\r\n
+        right: 0;\r\n
+        top: 0;\r\n
+        height: 30px;\r\n
+        margin-top: 7px;\r\n
+    }\r\n
+\r\n
+    .reply-item-ct {\r\n
+        position: relative;\r\n
+        padding-bottom: 10px;\r\n
+        padding-left: 20px;\r\n
+    }\r\n
+\r\n
+    .btn-edit {\r\n
+        width: 16px;\r\n
+        height: 16px;\r\n
+        float: left;\r\n
+        margin: 5px 5px 0 0;\r\n
+        .background-ximage(\'@{common-image-path}/@{common-controls}\', \'@{common-image-path}/@{common-controls2x}\', 100px);\r\n
+        background-repeat: no-repeat;\r\n
+        background-color: transparent;\r\n
+        background-position: 0 -232px;\r\n
+        cursor: pointer;\r\n
+    }\r\n
+\r\n
+    .btn-delete {\r\n
+        width: 16px;\r\n
+        height: 16px;\r\n
+        float: left;\r\n
+        margin: 5px 5px 0 0;\r\n
+        .background-ximage(\'@{common-image-path}/@{common-controls}\', \'@{common-image-path}/@{common-controls2x}\', 100px);\r\n
+        background-repeat: no-repeat;\r\n
+        background-color: transparent;\r\n
+        background-position: -20px -232px;\r\n
+        cursor: pointer;\r\n
+    }\r\n
+\r\n
+    .btn-resolve {\r\n
+        color: @black;\r\n
+        display: block;\r\n
+        float: left;\r\n
+        padding-top: 5px;\r\n
+        margin-right: 15px;\r\n
+        margin-left: 5px;\r\n
+        border-bottom: 1px dotted @black;\r\n
+        height: 21px;\r\n
+        cursor: pointer;\r\n
+    }\r\n
+\r\n
+    .btn-resolve-check {\r\n
+        display: block;\r\n
+        float: left;\r\n
+        padding-top: 6px;\r\n
+        margin-right: 5px;\r\n
+        height: 21px;\r\n
+        cursor: pointer;\r\n
+    }\r\n
+\r\n
+    .inner-edit-ct {\r\n
+        padding: 7px 0px 0px 0px;\r\n
+\r\n
+        .btn-inner-close {\r\n
+            margin-left: 7px;\r\n
+        }\r\n
+    }\r\n
+\r\n
+    .reply-ct {\r\n
+        padding: 10px 0px 0px 0px;\r\n
+\r\n
+        .btn-close {\r\n
+            margin-left: 7px;\r\n
+        }\r\n
+    }\r\n
+    .reply-inner-ct {\r\n
+        padding: 0px 20px 0px 30px;\r\n
+    }\r\n
+\r\n
+    .reply-arrow {\r\n
+        .background-ximage(\'@{common-image-path}/@{common-controls}\', \'@{common-image-path}/@{common-controls2x}\', 100px);\r\n
+        background-repeat: no-repeat;\r\n
+        background-color: transparent;\r\n
+        background-position: -60px -232px;\r\n
+        width: 16px;\r\n
+        height: 16px;\r\n
+        margin-top: 10px;\r\n
+        position: absolute;\r\n
+    }\r\n
+\r\n
+    .lock-area {\r\n
+        display: block;\r\n
+        position: absolute;\r\n
+        left: 0;\r\n
+        top: 0;\r\n
+        right: 0;\r\n
+        bottom: 0;\r\n
+        background-color: #F4F4F4;\r\n
+        margin-top: 2px;\r\n
+        margin-bottom: -2px;\r\n
+        opacity: .5;\r\n
+        cursor: pointer;\r\n
+    }\r\n
+\r\n
+    .lock-author {\r\n
+        display: block;\r\n
+        position: absolute;\r\n
+        right: 0;\r\n
+        top: 0;\r\n
+        max-width: 150px;\r\n
+        line-height: 20px;\r\n
+        background-color: #EE3525;\r\n
+        margin: 18px 25px;\r\n
+        padding: 2px 10px;\r\n
+        color: #fff;\r\n
+        overflow: hidden;\r\n
+        text-overflow: ellipsis;\r\n
+        white-space: nowrap;\r\n
+        min-width: 100px;\r\n
+        text-align: center;\r\n
+        cursor: pointer;\r\n
+    }\r\n
+\r\n
+    .resolved {\r\n
+        width: 18px;\r\n
+        height: 16px;\r\n
+        float: left;\r\n
+        margin: 5px 5px 0 0;\r\n
+        .background-ximage(\'@{common-image-path}/@{common-controls}\', \'@{common-image-path}/@{common-controls2x}\', 100px);\r\n
+        background-repeat: no-repeat;\r\n
+        background-color: transparent;\r\n
+        background-position: -40px -232px;\r\n
+    }\r\n
+}\r\n
+\r\n
+.comments-caret {\r\n
+    width: 7px;\r\n
+    height: 7px;\r\n
+    border: 0;\r\n
+    .background-ximage(\'@{common-image-path}/@{common-controls}\', \'@{common-image-path}/@{common-controls2x}\', 100px);\r\n
+    background-repeat: no-repeat;\r\n
+    background-position: @arrow-small-offset-x @arrow-small-offset-y;\r\n
+    margin-top: 10px;\r\n
+    margin-left: -2px;\r\n
+    margin-right: 8px;\r\n
+    display: inline-block;\r\n
+    vertical-align: middle;\r\n
+}\r\n
+\r\n
+// POPOVER\r\n
+\r\n
+.comments-popover {\r\n
+    width:100%;\r\n
+    height:100%;\r\n
+    margin-bottom: 5px;\r\n
+}\r\n
+\r\n
+.comments-arrow-left {\r\n
+    position: absolute;\r\n
+    overflow: hidden;\r\n
+    left: -10px;\r\n
+    top: 20px;\r\n
+    width: 10px;\r\n
+    height: 30px;\r\n
+}\r\n
+\r\n
+.comments-arrow-left:after {\r\n
+    content: \'\';\r\n
+    position: absolute;\r\n
+    top: 5px;\r\n
+    left: 2px;\r\n
+    width: 15px;\r\n
+    height: 15px;\r\n
+    background-color: #ffffff;\r\n
+    -moz-transform: rotate(45deg);\r\n
+    -ms-transform: rotate(45deg);\r\n
+    -webkit-transform: rotate(45deg);\r\n
+    -o-transform: rotate(45deg);\r\n
+    transform: rotate(45deg);\r\n
+    border: solid 1px @gray-dark;\r\n
+}\r\n
+.comments-arrow-right {\r\n
+    position: absolute;\r\n
+    overflow: hidden;\r\n
+    left: 100%;\r\n
+    top: 20px;\r\n
+    width: 10px;\r\n
+    height: 30px;\r\n
+}\r\n
+.comments-arrow-right:after {\r\n
+    content: \'\';\r\n
+    position: absolute;\r\n
+    top: 5px;\r\n
+    left: -8px;\r\n
+    width: 15px;\r\n
+    height: 15px;\r\n
+    background-color: #ffffff;\r\n
+    -moz-transform: rotate(45deg);\r\n
+    -ms-transform: rotate(45deg);\r\n
+    -webkit-transform: rotate(45deg);\r\n
+    -o-transform: rotate(45deg);\r\n
+    transform: rotate(45deg);\r\n
+    border: solid 1px @gray-dark;\r\n
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);\r\n
+\r\n
+    body.safari & {\r\n
+        box-shadow: none;\r\n
+    }\r\n
+\r\n
+    body.chrome & {\r\n
+        box-shadow: none;\r\n
+    }\r\n
+}\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9187</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

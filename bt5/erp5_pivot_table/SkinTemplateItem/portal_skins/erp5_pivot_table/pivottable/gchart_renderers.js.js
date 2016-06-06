@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts32626242.52</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>gchart_renderers.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  var callWithJQuery;\n
+\n
+  callWithJQuery = function(pivotModule) {\n
+    if (typeof exports === "object" && typeof module === "object") {\n
+      return pivotModule(require("jquery"));\n
+    } else if (typeof define === "function" && define.amd) {\n
+      return define(["jquery"], pivotModule);\n
+    } else {\n
+      return pivotModule(jQuery);\n
+    }\n
+  };\n
+\n
+  callWithJQuery(function($) {\n
+    var makeGoogleChart;\n
+    makeGoogleChart = function(chartType, extraOptions) {\n
+      return function(pivotData, opts) {\n
+        var agg, colKey, colKeys, dataArray, dataTable, defaults, fullAggName, groupByTitle, h, hAxisTitle, headers, i, j, k, len, len1, numCharsInHAxis, options, ref, result, row, rowKey, rowKeys, title, tree2, v, vAxisTitle, val, wrapper, x, y;\n
+        defaults = {\n
+          localeStrings: {\n
+            vs: "vs",\n
+            by: "by"\n
+          },\n
+          gchart: {\n
+            width: function() {\n
+              return window.innerWidth / 1.4;\n
+            },\n
+            height: function() {\n
+              return window.innerHeight / 1.4;\n
+            }\n
+          }\n
+        };\n
+        opts = $.extend(defaults, opts);\n
+        rowKeys = pivotData.getRowKeys();\n
+        if (rowKeys.length === 0) {\n
+          rowKeys.push([]);\n
+        }\n
+        colKeys = pivotData.getColKeys();\n
+        if (colKeys.length === 0) {\n
+          colKeys.push([]);\n
+        }\n
+        fullAggName = pivotData.aggregatorName;\n
+        if (pivotData.valAttrs.length) {\n
+          fullAggName += "(" + (pivotData.valAttrs.join(", ")) + ")";\n
+        }\n
+        headers = (function() {\n
+          var i, len, results;\n
+          results = [];\n
+          for (i = 0, len = rowKeys.length; i < len; i++) {\n
+            h = rowKeys[i];\n
+            results.push(h.join("-"));\n
+          }\n
+          return results;\n
+        })();\n
+        headers.unshift("");\n
+        numCharsInHAxis = 0;\n
+        if (chartType === "ScatterChart") {\n
+          dataArray = [];\n
+          ref = pivotData.tree;\n
+          for (y in ref) {\n
+            tree2 = ref[y];\n
+            for (x in tree2) {\n
+              agg = tree2[x];\n
+              dataArray.push([parseFloat(x), parseFloat(y), fullAggName + ": \\n" + agg.format(agg.value())]);\n
+            }\n
+          }\n
+          dataTable = new google.visualization.DataTable();\n
+          dataTable.addColumn(\'number\', pivotData.colAttrs.join("-"));\n
+          dataTable.addColumn(\'number\', pivotData.rowAttrs.join("-"));\n
+          dataTable.addColumn({\n
+            type: "string",\n
+            role: "tooltip"\n
+          });\n
+          dataTable.addRows(dataArray);\n
+          hAxisTitle = pivotData.colAttrs.join("-");\n
+          vAxisTitle = pivotData.rowAttrs.join("-");\n
+          title = "";\n
+        } else {\n
+          dataArray = [headers];\n
+          for (i = 0, len = colKeys.length; i < len; i++) {\n
+            colKey = colKeys[i];\n
+            row = [colKey.join("-")];\n
+            numCharsInHAxis += row[0].length;\n
+            for (j = 0, len1 = rowKeys.length; j < len1; j++) {\n
+              rowKey = rowKeys[j];\n
+              agg = pivotData.getAggregator(rowKey, colKey);\n
+              if (agg.value() != null) {\n
+                val = agg.value();\n
+                if ($.isNumeric(val)) {\n
+                  if (val < 1) {\n
+                    row.push(parseFloat(val.toPrecision(3)));\n
+                  } else {\n
+                    row.push(parseFloat(val.toFixed(3)));\n
+                  }\n
+                } else {\n
+                  row.push(val);\n
+                }\n
+              } else {\n
+                row.push(null);\n
+              }\n
+            }\n
+            dataArray.push(row);\n
+          }\n
+          dataTable = google.visualization.arrayToDataTable(dataArray);\n
+          title = vAxisTitle = fullAggName;\n
+          hAxisTitle = pivotData.colAttrs.join("-");\n
+          if (hAxisTitle !== "") {\n
+            title += " " + opts.localeStrings.vs + " " + hAxisTitle;\n
+          }\n
+          groupByTitle = pivotData.rowAttrs.join("-");\n
+          if (groupByTitle !== "") {\n
+            title += " " + opts.localeStrings.by + " " + groupByTitle;\n
+          }\n
+        }\n
+        options = {\n
+          width: opts.gchart.width(),\n
+          height: opts.gchart.height(),\n
+          title: title,\n
+          hAxis: {\n
+            title: hAxisTitle,\n
+            slantedText: numCharsInHAxis > 50\n
+          },\n
+          vAxis: {\n
+            title: vAxisTitle\n
+          },\n
+          tooltip: {\n
+            textStyle: {\n
+              fontName: \'Arial\',\n
+              fontSize: 12\n
+            }\n
+          }\n
+        };\n
+        if (chartType === "ColumnChart") {\n
+          options.vAxis.minValue = 0;\n
+        }\n
+        if (chartType === "ScatterChart") {\n
+          options.legend = {\n
+            position: "none"\n
+          };\n
+          options.chartArea = {\n
+            \'width\': \'80%\',\n
+            \'height\': \'80%\'\n
+          };\n
+        } else if (dataArray[0].length === 2 && dataArray[0][1] === "") {\n
+          options.legend = {\n
+            position: "none"\n
+          };\n
+        }\n
+        for (k in extraOptions) {\n
+          v = extraOptions[k];\n
+          options[k] = v;\n
+        }\n
+        result = $("<div>").css({\n
+          width: "100%",\n
+          height: "100%"\n
+        });\n
+        wrapper = new google.visualization.ChartWrapper({\n
+          dataTable: dataTable,\n
+          chartType: chartType,\n
+          options: options\n
+        });\n
+        wrapper.draw(result[0]);\n
+        result.bind("dblclick", function() {\n
+          var editor;\n
+          editor = new google.visualization.ChartEditor();\n
+          google.visualization.events.addListener(editor, \'ok\', function() {\n
+            return editor.getChartWrapper().draw(result[0]);\n
+          });\n
+          return editor.openDialog(wrapper);\n
+        });\n
+        return result;\n
+      };\n
+    };\n
+    return $.pivotUtilities.gchart_renderers = {\n
+      "Line Chart": makeGoogleChart("LineChart"),\n
+      "Bar Chart": makeGoogleChart("ColumnChart"),\n
+      "Stacked Bar Chart": makeGoogleChart("ColumnChart", {\n
+        isStacked: true\n
+      }),\n
+      "Area Chart": makeGoogleChart("AreaChart", {\n
+        isStacked: true\n
+      }),\n
+      "Scatter Chart": makeGoogleChart("ScatterChart")\n
+    };\n
+  });\n
+\n
+}).call(this);\n
+\n
+//# sourceMappingURL=gchart_renderers.js.map
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6188</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

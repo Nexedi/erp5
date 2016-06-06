@@ -1,0 +1,288 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>portal = context.getPortalObject()\n
+translateString = portal.Base_translateString\n
+request = context.REQUEST\n
+quantity_renderer = portal.Base_viewFieldLibrary.my_view_mode_money_quantity.render_pdf\n
+paysheet = context\n
+\n
+model = paysheet.getSpecialiseValue().getEffectiveModel(\\\n
+    start_date=paysheet.getStartDate(),\n
+    stop_date=paysheet.getStopDate())\n
+\n
+def getFieldAsString(field):\n
+  return \', \'.join(getFieldAsLineList(field))\n
+\n
+def getFieldAsLineList(field):\n
+  """Returns the text as a list of lines."""\n
+  field = field or \'\'\n
+  text = field.replace(\'\\r\', \'\')\n
+  text_list = text.split(\'\\n\')\n
+  return [x for x in text_list if x]\n
+\n
+def getSocialCodeId(social_code_id):\n
+  s = \'\'\n
+  if social_code_id:\n
+    s += \'%s: %s\' % (translateString(\'Social Code\'), social_code_id)\n
+  return s\n
+\n
+def getCareerId(career_title):\n
+  s = \'\'\n
+  if career_title and career_title != \'default_career\':\n
+    s += \'%s: %s\' % (translateString(\'Career Title\'), career_title)\n
+  return s\n
+\n
+def getCollectiveAgreementId(collective_agreement):\n
+  s = \'\'\n
+  if collective_agreement:\n
+    s += \'%s: %s\' % (translateString(\'Collective Agreement\'), collective_agreement)\n
+  return s\n
+\n
+def getSalaryLevelId(salary_level):\n
+  s = \'\'\n
+  if salary_level:\n
+    s += \'%s: %s\' % (translateString(\'Salary Level\'), salary_level)\n
+  return s\n
+\n
+def getCareerCoefficientId(career_coefficient):\n
+  s = \'\'\n
+  if career_coefficient:\n
+    s += \'%s: %s\' % (translateString(\'Salary Coefficient\'), career_coefficient)\n
+  return s\n
+\n
+def getHiringDateId(date):\n
+  s = \'\'\n
+  if date:\n
+    s += \'%s: %s\' % (translateString(\'Hiring Date\'), date)\n
+  return s\n
+\n
+def getPriceCurrencyId(currency):\n
+  s = \'\'\n
+  if currency:\n
+    s += \'%s: %s\' % (translateString(\'Price Currency\'), currency)\n
+  return s\n
+\n
+getMovementTotalPriceFromCategory = paysheet.PaySheetTransaction_getMovementTotalPriceFromCategory\n
+getMovementQuantityFromCategory = paysheet.PaySheetTransaction_getMovementQuantityFromCategory\n
+\n
+salaire_net_imposable = getMovementTotalPriceFromCategory(\\\n
+    base_contribution=\'base_contribution/base_amount/payroll/base/income_tax\',\n
+    contribution_share=\'contribution_share/employee\')\n
+\n
+def getTaxableNetPayId(salaire_net_imposable):\n
+  s = \'\'\n
+  if salaire_net_imposable:\n
+    s += \'%s: %s\' % (translateString(\'Taxable Net Pay\'), salaire_net_imposable)\n
+  return s\n
+\n
+total_employee_tax = getMovementTotalPriceFromCategory(\\\n
+    no_base_contribution=True,\n
+    include_empty_contribution=False,\n
+    excluded_reference_list=[\'ticket_restaurant\',],\n
+    contribution_share=\'contribution_share/employee\')\n
+\n
+def getTotalEmployeeTaxId(total_employee_tax):\n
+  s = \'\'\n
+  if total_employee_tax:\n
+    s += \'%s: %s\' % (translateString(\'Total Employee Tax\'),\n
+        quantity_renderer(total_employee_tax*-1))\n
+  return s\n
+\n
+total_employer_tax = getMovementTotalPriceFromCategory(\\\n
+    no_base_contribution=True,\n
+    include_empty_contribution=False,\n
+    excluded_reference_list=[\'ticket_restaurant\',],\n
+    contribution_share=\'contribution_share/employer\')\n
+def getTotalEmployerTaxId(total_employer_tax):\n
+  s = \'\'\n
+  if total_employer_tax:\n
+    s += \'%s: %s\' % (translateString(\'Total Employer Tax\'),\n
+        quantity_renderer(total_employer_tax*-1))\n
+  return s\n
+\n
+year_to_date_total_employer_tax = paysheet.PaySheetTransaction_getYearToDateMovementTotalPriceFromCategory(\\\n
+    no_base_contribution=True,\n
+    include_empty_contribution=False,\n
+    excluded_reference_list=[\'ticket_restaurant\',],\n
+    contribution_share=\'contribution_share/employer\')\n
+\n
+preferred_date_order = portal.portal_preferences\\\n
+                       .getPreferredDateOrder() or \'ymd\'\n
+separator = \'/\'\n
+def getOrderedDate(date):\n
+  if date is None:\n
+    return \'\'\n
+  pattern = separator.join([\'%%%s\' % s for s in list(preferred_date_order)])\n
+  pattern = pattern.replace(\'y\', \'Y\')\n
+  return date.strftime(pattern)\n
+\n
+def getPaymentConditionText(paysheet):\n
+  date = \'\'\n
+  if paysheet.getProperty(\'default_payment_condition_payment_date\'):\n
+    date = getOrderedDate(paysheet.getProperty(\'default_payment_condition_payment_date\'))\n
+  if paysheet.getPaymentConditionPaymentEndOfMonth():\n
+    date = translateString("End of Month")\n
+  days = paysheet.getPaymentConditionPaymentTerm()\n
+  if days:\n
+    date = \'%s %s\' % (days, translateString(\'Days\'))\n
+\n
+  if date:\n
+    if paysheet.getProperty(\'default_payment_condition_payment_mode_title\'):\n
+      return \'%s: %s\' % (translateString(\'Payment\'),\n
+          translateString(\'${payment_mode} at ${payment_date}\',\n
+            mapping = {\'payment_mode\': paysheet.getProperty(\'default_payment_condition_payment_mode_title\'),\n
+                       \'payment_date\':date}))\n
+    else:\n
+      return \'%s: %s %s\' % (translateString(\'Payment\'),\n
+          translateString(\'at\'),\n
+          date)\n
+  return \'\'\n
+\n
+base_contribution = \'base_contribution/base_amount/payroll/report/salary/gross\'\n
+gross_salary = getMovementTotalPriceFromCategory(base_contribution,\n
+    contribution_share=\'contribution_share/employee\')\n
+year_to_date_gross_salary = paysheet.PaySheetTransaction_getYearToDateSlice(base_contribution)\n
+year_to_date_slice_a = paysheet.PaySheetTransaction_getYearToDateSlice(base_contribution, \'salary_range/france/tranche_a\')\n
+year_to_date_slice_b = paysheet.PaySheetTransaction_getYearToDateSlice(base_contribution, \'salary_range/france/tranche_b\')\n
+\n
+worked_hour_count = paysheet.getWorkTimeAnnotationLineQuantity(0)\n
+year_to_date_worked_hour_count = worked_hour_count + \\\n
+    paysheet.PaySheetTransaction_getYearToDateWorkTimeSalary() or 0\n
+\n
+#over_time_small_rate = paysheet.getAnnotationLineFromReference(reference=\'overtime_small_rate\')\n
+#over_time_big_rate = paysheet.getAnnotationLineFromReference(reference=\'overtime_big_rate\')\n
+bonus_worked_hour_count = getMovementQuantityFromCategory(\\\n
+    base_contribution=\'base_contribution/base_amount/payroll/report/overtime\')\n
+\n
+year_to_date_bonus_worked_hour_count = bonus_worked_hour_count + \\\n
+    paysheet.PaySheetTransaction_getYearToDateOvertimeHours() or 0\n
+\n
+year_to_date_bonus_worked_hour_amount = portal.PaySheetTransaction_getYearToDateBaseContributionTotalPrice(\\\n
+    paysheet=paysheet, base_contribution_list=\'payroll/report/overtime\') + \\\n
+    getMovementTotalPriceFromCategory(\\\n
+    base_contribution=\'base_contribution/base_amount/payroll/report/overtime\', \\\n
+    contribution_share=\'contribution_share/employee\') or 0\n
+\n
+year_to_date_taxable_net_salary = paysheet.PaySheetTransaction_getYearToDateSlice(\n
+    \'base_contribution/base_amount/payroll/base/income_tax\')\n
+\n
+def unicodeDict(d):\n
+  for k, v in d.items():\n
+    if isinstance(v, str):\n
+      d.update({k:unicode(v, \'utf8\')})\n
+  return d\n
+\n
+source_section = paysheet.getSourceSectionValue()\n
+career_args = {\'portal_type\': \'Career\',\n
+               \'parent_uid\': source_section.getUid(),\n
+               \'subordination_uid\': paysheet.getDestinationSectionUid(),\n
+               \'validation_state\': \'open\'}\n
+source_section_career_results = portal.portal_catalog(**career_args)\n
+\n
+source_section_career = (source_section_career_results[0].getObject()\n
+                         if len(source_section_career_results)\n
+                         else source_section.getDefaultCareerValue() or \'\')\n
+\n
+data_dict = {\n
+  \'source_section_title\': source_section.getProperty(\'corporate_name\') or\\\n
+                            source_section.getTitle(),\n
+  \'source_section_career_title\': getCareerId(source_section_career.getTitle()),\n
+  \'source_section_default_career_start_date\': getHiringDateId(paysheet.getSourceSectionValue() is not None\\\n
+          and getOrderedDate(source_section_career.getStartDate()) or \'\'),\n
+  \'source_section_default_career_stop_date\': paysheet.getSourceSectionValue() is not None\\\n
+          and getOrderedDate(source_section_career.getStopDate()) or \'\',\n
+  \'source_section_default_career_coefficient\' : getCareerCoefficientId(paysheet.getSourceSectionValue() is not None\\\n
+          and source_section.getProperty(\'career_salary_coefficient\') or \'\'),\n
+  \'source_section_default_career_salary_level\' : getSalaryLevelId(paysheet.getSourceSectionValue() is not None\\\n
+          and source_section.getProperty(\'default_career_salary_level\') or \'\'),\n
+  \'source_section_default_career_social_code\' : getSocialCodeId(paysheet.getSourceSection() and\n
+      paysheet.getSourceSectionValue().getProperty(\'social_code\') or \'\'),\n
+  \'source_section_default_career_collective_agreement_title\' : getCollectiveAgreementId(paysheet.getSourceSectionValue() is not None\\\n
+          and source_section.getProperty(\'default_career_collective_agreement_title\') or \'\'),\n
+  \'default_payment_condition_payment_text\' : paysheet.getDefaultPaymentConditionValue() is not None\\\n
+          and getPaymentConditionText(paysheet) or \'\',\n
+  \'price_currency\': getPriceCurrencyId(paysheet.getPriceCurrencyReference() or \'\'),\n
+  \'year\': str(paysheet.getStartDate() is not None and paysheet.getStartDate().year() or \'\'),\n
+  \'description\': getFieldAsLineList(paysheet.getDescription() or \'\'),\n
+  \'year_to_date_gross_salary\': year_to_date_gross_salary,\n
+  \'year_to_date_slice_a\': year_to_date_slice_a,\n
+  \'year_to_date_slice_b\': year_to_date_slice_b,\n
+  \'year_to_date_worked_hour_count\': year_to_date_worked_hour_count,\n
+  \'year_to_date_bonus_worked_hour_count\': year_to_date_bonus_worked_hour_count,\n
+  \'year_to_date_bonus_worked_hour_amount\': year_to_date_bonus_worked_hour_amount,\n
+  \'year_to_date_taxable_net_salary\': year_to_date_taxable_net_salary,\n
+  \'worked_hour_count\': worked_hour_count,\n
+  \'bonus_worked_hour_count\': bonus_worked_hour_count,\n
+  \'absence_hour_count\': 0, #XXX currently absence hour are not take into \n
+                           # account in payroll\n
+  \'salaire_net_imposable\': getTaxableNetPayId(salaire_net_imposable),\n
+  \'total_employee_tax\': getTotalEmployeeTaxId(total_employee_tax),\n
+  \'total_employer_tax\': getTotalEmployerTaxId(total_employer_tax),\n
+  \'year_to_date_total_employer_tax\': year_to_date_total_employer_tax,\n
+}\n
+\n
+return unicodeDict(data_dict)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetTransaction_getOtherInformationsDataDict</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

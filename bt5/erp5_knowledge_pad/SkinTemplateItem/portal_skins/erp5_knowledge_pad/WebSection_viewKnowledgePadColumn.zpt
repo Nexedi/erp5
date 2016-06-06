@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/global_definitions"/>\n
+\n
+<tal:block \n
+  tal:define="current_web_section python: context.REQUEST.get(\'current_web_section\', here);\n
+              current_web_section python:\n
+                  test(current_web_section.getPortalType()==\'Web Site\', here, current_web_section);\n
+              current_web_section_url python: current_web_section.absolute_url();\n
+              cancel_url string:${current_web_section_url}/view">\n
+\n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/>\n
+\n
+      <div class="portal-column"\n
+           tal:condition="python:active_knowledge_pad is not None"\n
+           tal:attributes="class python: test(isAnon or isAnonymousKnowledgePadUsed, \n
+                                              \'portal-column-undraggable\', \n
+                                              \'portal-column\');\n
+                           id python: \'portal-column-%s\' %pad_column">\n
+\n
+        <tal:block define="layout python:active_knowledge_pad.KnowledgePad_getBoxColumnLayout(real_context=here)"\n
+                   condition="python: len(layout)>=pad_column+1"\n
+                   replace="structure python:\n
+                  active_knowledge_pad.KnowledgePad_viewColumnWidget(section_layout=layout[pad_column],  \n
+                                                                     real_context=here,\n
+                                                                     cancel_url=cancel_url)"/>\n
+    </div>\n
+\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_viewKnowledgePadColumn</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode>Pad column renderer</unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

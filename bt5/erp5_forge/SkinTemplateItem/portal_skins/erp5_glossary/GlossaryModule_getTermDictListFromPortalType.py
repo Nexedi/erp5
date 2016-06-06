@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+skip_id_list = [\n
+  \'uid\', \'rid\', \'sid\', \'categories\',\n
+]\n
+remove_suffix_list = [\n
+  \'_id\', \'_relative_url\', \'_title\',\n
+]\n
+\n
+# First, create portal_type => business_field dict based on\n
+# Business Template definitions.\n
+bt_list = [x for x in \\\n
+           context.getPortalObject().portal_templates.contentValues() \\\n
+           if x.getInstallationState() in (\'installed\', \'not_installed\')]\n
+bt_list.sort(key=lambda x:int(x.getRevision() or 0))\n
+bt_dict = dict([(x.getTitle(), [y for y in x.getTemplatePortalTypeIdList()] + \\\n
+                               [y.split(\'|\')[1].strip() for y in x.getTemplatePortalTypePropertySheetList()] \\\n
+                 ) for x in bt_list])\n
+business_field_dict = {}\n
+prefix = \'erp5_\'\n
+for bt_title, bt_portal_type_list in bt_dict.items():\n
+  if bt_title.startswith(prefix):\n
+    bt_title = bt_title[len(prefix):]\n
+  for portal_type in bt_portal_type_list:\n
+    business_field_dict[portal_type] = bt_title\n
+\n
+# Then, create a glossary for each property.\n
+result = []\n
+language = \'en\'\n
+for portal_type in portal_type_list:\n
+  business_field = business_field_dict.get(portal_type, portal_type)\n
+  id_dict = {}\n
+  property_sheet_list = \\\n
+      context.GlossaryModule_getPropertySheetList(portal_type)\n
+  for property_sheet in property_sheet_list:\n
+    for property_id, property_desc in \\\n
+        context.GlossaryModule_getPropertySheetAttributeList(property_sheet):\n
+      for x in remove_suffix_list:\n
+        if property_id.endswith(x):\n
+          property_id = property_id[:-len(x)]\n
+      if id_dict.has_key(property_id) or property_id in skip_id_list:\n
+        continue\n
+      result.append({\'reference\':property_id,\n
+                     \'language\':language,\n
+                     \'business_field\':business_field,\n
+                     \'title\':\' \',\n
+                     \'description\':property_desc,\n
+                     \'field_path\':\'%s/%s\' % (portal_type, property_sheet)\n
+                     })\n
+      id_dict[property_id] = True\n
+\n
+#result.sort(key=lambda x:(x[\'business_field\'], x[\'reference\']))\n
+return result\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>portal_type_list</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Authenticated</string>
+                <string>Manager</string>
+                <string>Member</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>GlossaryModule_getTermDictListFromPortalType</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314653.68</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>move.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">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</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1569</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import translateString\n
+\n
+period = state_change[\'object\']\n
+portal = period.getPortalObject()\n
+\n
+period.Base_checkConsistency()\n
+\n
+# This tag is used in AccountingPeriod_createBalanceTransaction\n
+if portal.portal_activities.countMessageWithTag(\'BalanceTransactionCreation\'):\n
+  raise ValidationFailed(translateString("Balance transaction creation already in progress. Please try again later."))\n
+\n
+valid_simulation_state_list = [\'cancelled\', \'delivered\', \'deleted\', \'rejected\']\n
+all_state_list = [x[1] for x in\n
+  portal.Base_getTranslatedWorkflowStateItemList(wf_id=\'accounting_workflow\')]\n
+invalid_simulation_state_list = [state for state in all_state_list\n
+                                 if state not in valid_simulation_state_list]\n
+\n
+if period.getParentValue().getPortalType() == \'Organisation\':\n
+  # if this is a "main" accounting period, we refuse to close if the previous\n
+  # period is not already closed.\n
+  for other_period in period.getParentValue().contentValues(\n
+              portal_type=\'Accounting Period\',\n
+              checked_permission=\'View\'):\n
+    if other_period != period and \\\n
+       other_period.getSimulationState() not in (\'delivered\', \'cancelled\') and\\\n
+       other_period.getStartDate() < period.getStartDate():\n
+      raise ValidationFailed(translateString(\n
+        "Previous accounting periods has to be closed first."))\n
+\n
+section = period.getParentValue()\n
+while section.getPortalType() == period.getPortalType():\n
+  section = section.getParentValue()\n
+\n
+section_category = section.getGroup(base=True)\n
+if not section_category:\n
+  raise ValidationFailed, translateString("This Organisation must be member of a Group")\n
+\n
+\n
+# XXX copy and paste from AccountingPeriod_createBalanceTransaction !\n
+def isIndenpendantSection(section):\n
+  for ap in section.contentValues(\n
+              portal_type=\'Accounting Period\',\n
+              checked_permission=\'View\'):\n
+    if ap.getSimulationState() in (\'started\', \'stopped\', \'delivered\'):\n
+      return True\n
+  return False\n
+\n
+def getDependantSectionList(group, main_section):\n
+  section_list = []\n
+  recurse = True\n
+  for section in group.getGroupRelatedValueList(\n
+                            portal_type=\'Organisation\',\n
+                            strict_membership=True,\n
+                            checked_permission=\'View\'):\n
+    if section != main_section:\n
+      if isIndenpendantSection(section):\n
+        recurse = False\n
+      else:\n
+        section_list.append(section)\n
+  if recurse:\n
+    for subgroup in group.contentValues():\n
+      section_list.extend(getDependantSectionList(subgroup, main_section))\n
+\n
+  return section_list\n
+# /XXX\n
+\n
+section_uid = [section.getUid()] + [x.getUid() for x in getDependantSectionList(section.getGroupValue(), section)]\n
+\n
+\n
+movement_list = portal.portal_simulation.getMovementHistoryList(\n
+      section_uid=section_uid,\n
+      from_date=period.getStartDate().earliestTime(),\n
+      at_date=period.getStopDate().latestTime(),\n
+      simulation_state=invalid_simulation_state_list,\n
+      portal_type=portal.getPortalAccountingMovementTypeList(),\n
+      limit=1)\n
+\n
+if movement_list:\n
+  raise ValidationFailed, translateString(\n
+    "All Accounting Transactions for this organisation during the period have to be closed first.")\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>checkTransactionsState</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

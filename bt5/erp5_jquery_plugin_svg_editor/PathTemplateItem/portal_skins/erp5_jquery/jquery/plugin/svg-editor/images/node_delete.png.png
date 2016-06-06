@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts80005897.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>node_delete.png</string> </value>
+        </item>
+        <item>
+            <key> <string>__propsets__</string> </key>
+            <value>
+              <tuple>
+                <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAACFElEQVRIidXUT0iTcRzH8fdajMQw
+O3noZFAZSn+uKURGHaIo/9AK9HkaYThPyYiKghblRPcsLwlqhyIwi04x6NYhCpxC4fZ08FAeLeiw
+Q2roxvPp4J5a4RLcc/ELv8vv+fF6/3gOP9g0U6mTNCpGg7pBO73Fd6sNS/PMSbxRnjrNgCq9C7Qr
+yYqECuuVFkBNJc8LDgmOlfjmE7QIdrl7VcHsx78Cr9cPfBY4gitr4CMCCSYA4unOMxeGxlYqen6I
+OYmU8pxWElT9v0BPAXEEl9fAlwRH4xnjrGUbywnbVHBgdIJmRanVLVBVSbwo0lsUCf2DH7cyHecS
+GXMlYZuK20Z8XbBEJFIU+YPPdLa6uJUxBzaEFwI+QcqNDNeG57eHs59arKf5VdzoLxcfFcjBlxMo
+7/fr4vgzbetZVGv08bgnuGDJbHiSvH39ntxIcOi5aNKNcgKDxf+8tnX2JdOOcycaXY1s8Tu9VQ/u
+lhNIChYEzVbaaI9NdeUORKZUMbaYjR25mV32BXLfqGkuJxAQVFtpo93KGLmEbaov1RUD1ReWb8O4
+O4PpjjYXj9vm/bLB1VtpH6gu+rb7vItbttHnBR5gv14Q0ZfA8M+vhyOpfP90l1c4UKMgE1pwX0Pf
+ZF4HQ5PvvMEBGnWN2aLn9rvEKY14F9ihE4SV/R14pEX2KORdAKBeV7mk9wT1gb16CNrqbWCzzi/U
+fWFrirMUhQAAAABJRU5ErkJggg==</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>24</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>589</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>24</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PropertySheet" module="OFS.PropertySheets"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_md</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>xmlns</string> </key>
+                    <value> <unicode>http://apache.org/dav/props/</unicode> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <unicode>executable</unicode> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta</string> </key>
+                      <value>
+                        <dictionary>
+                          <item>
+                              <key> <string>__xml_attrs__</string> </key>
+                              <value>
+                                <dictionary/>
+                              </value>
+                          </item>
+                        </dictionary>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>executable</string> </key>
+            <value> <string>T</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Type.DateUtils import addToDate\n
+Base_translateString = context.Base_translateString\n
+\n
+task_portal_type = \'Task\'\n
+task_module = context.getDefaultModule(task_portal_type)\n
+\n
+def validateDay(date):\n
+  if (periodicity_month_day_list in ([], None, ())):\n
+    return 1\n
+  elif len(periodicity_month_day_list) > 0:\n
+    return date.day() in periodicity_month_day_list\n
+\n
+def validateWeek(date):\n
+  if (periodicity_week_day_list in ([], None, ())) and \\\n
+     (periodicity_week_list is None):\n
+    return 1\n
+  if periodicity_week_day_list not in (None, (), []):\n
+    if not (date.Day() in periodicity_week_day_list):\n
+      return 0\n
+  if periodicity_week_list not in (None, (), []):\n
+    if not (date.week() in periodicity_week_list):\n
+      return 0\n
+  return 1\n
+\n
+def validateMonth(date):\n
+  if (periodicity_month_list in ([], None, ())):\n
+    return 1\n
+  elif len(periodicity_month_list) > 0:\n
+    return date.month() in periodicity_month_list\n
+\n
+def getNextPeriodicalDate(current_date):\n
+  next_start_date = current_date\n
+  previous_date = next_start_date\n
+  next_start_date = addToDate(next_start_date, day=1)\n
+  while 1:\n
+    if (validateDay(next_start_date)) and \\\n
+       (validateWeek(next_start_date)) and \\\n
+       (validateMonth(next_start_date)):\n
+      break\n
+    else:\n
+      next_start_date = addToDate(next_start_date, day=1)\n
+  return next_start_date\n
+\n
+def getDatePeriodList(start_date):\n
+  result = []\n
+  # First date has to respect the periodicity config\n
+  next_start_date = getNextPeriodicalDate(start_date)\n
+  while (next_start_date is not None) and \\\n
+    (next_start_date <= periodicity_stop_date):\n
+    result.append(next_start_date)\n
+    next_start_date = getNextPeriodicalDate(next_start_date)\n
+  return result\n
+\n
+\n
+start_date = context.getStartDate()\n
+if start_date is None:\n
+  return context.REQUEST.RESPONSE.redirect(\n
+    \'%s?portal_status_message=%s\' % (\n
+    context.absolute_url(),\n
+    Base_translateString(\'Tasks can not be created, start date is empty.\')\n
+    ))\n
+else:\n
+  date_list = getDatePeriodList(start_date)\n
+  for next_date in date_list:\n
+    context.activate(activity="SQLQueue").Task_duplicate(next_date)\n
+  return context.REQUEST.RESPONSE.redirect(\n
+    \'%s?portal_status_message=%s\' % (\n
+    context.absolute_url(),\n
+    Base_translateString(\'${count} tasks created.\',\n
+                         mapping={\'count\':len(date_list)})\n
+    ))\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>periodicity_month_day_list=(), periodicity_month_list=(), periodicity_week_list=(), periodicity_stop_date=None, periodicity_week_day_list=(), **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Task_calculateDuplication</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+  <tal:block tal:replace="nothing">\n
+<!--\n
+XXX: each case must be handled separatelly in this precise representation :\n
+ - both top fields must be in the same div, so they must be identified\n
+   strictly by their name.\n
+ - the middle field is rendered like the two top ones, but outside of the\n
+   top block.\n
+ - the bottom block is rendered in another way (without its group name) so it\n
+   must be rendered separatelly.\n
+This leads to minor code duplication, but it\'s still code duplication.\n
+\n
+Breaks strict compatibility:\n
+  * Groups must be named one of "left", "right", "center", "bottom" otherwise they will not\n
+      be rendered.\n
+  * Group order doesn\'t matter. Case is sensitive.\n
+\n
+It is possible to specify a group id and a group title by naming a group following the\n
+  "group id (Group Title)" pattern. In this case the group id will be used as fieldset css\n
+  class and as tag id. The group title will be used as a legend for the fieldset. If no group\n
+  title is found, we use group id as title.\n
+-->\n
+  </tal:block>\n
+\n
+  <tal:block metal:define-macro="master">\n
+    <tal:block\n
+              tal:define="dummy        python: request.set(\'here\', here);\n
+              group_list   form/Form_getGroupTitleAndId;\n
+              field_render nocall: here/field_render/macros/field_render">\n
+      <tal:block tal:condition="preferred_html_style_developper_mode">\n
+        <tal:block metal:use-macro="developper_shortcut_render/macros/form" />\n
+      </tal:block>\n
+\n
+      <tal:block tal:repeat="group group_list">\n
+        <tal:block tal:define="gid     group/gid;">\n
+          <fieldset tal:condition="python: gid.find(\'hidden\') &lt; 0"\n
+              tal:attributes="class python:gid + test(request.get(\'editable_mode\', 0), \' editable\', \' viewable\');">\n
+            <legend i18n:translate="" i18n:domain="ui" tal:condition="group/gtitle" tal:content="group/gtitle" class="group_title"></legend>\n
+            <tal:block tal:repeat="field python: form.get_fields_in_group(group[\'goid\'])">\n
+              <tal:block metal:use-macro="field_render" />\n
+            </tal:block>\n
+          </fieldset>\n
+        </tal:block>\n
+      </tal:block>\n
+      <p class="clear"></p>\n
+    </tal:block>\n
+  </tal:block>\n
+</tal:block>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>form_render</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

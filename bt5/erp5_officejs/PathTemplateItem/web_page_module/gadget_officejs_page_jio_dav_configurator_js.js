@@ -1,0 +1,446 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_officejs_page_jio_dav_configurator.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>gadget_officejs_page_jio_dav_configurator_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>/*global window, rJS, RSVP, URI, location,\n
+    loopEventListener, btoa */\n
+/*jslint nomen: true, indent: 2, maxerr: 3*/\n
+(function (window, rJS, RSVP) {\n
+  "use strict";\n
+\n
+  function setjIODAVConfiguration(gadget) {\n
+    var configuration = {\n
+      type: "replicate",\n
+      // XXX This drop the signature lists...\n
+      query: {\n
+        query: \'portal_type:"Web Page" \',\n
+        // XX Synchonizing the whole module is too much, here is a way to start quietly\n
+        //+ \'AND local_roles: ("Owner") \'\n
+        //+ \'AND validation_state: ("draft", "released_alive", "shared_alive", "published_alive") \',\n
+        limit: [0, 1234567890]\n
+      },\n
+      use_remote_post: false,\n
+      conflict_handling: 2,\n
+      check_local_modification: true,\n
+      check_local_creation: true,\n
+      check_local_deletion: true,\n
+      check_remote_modification: true,\n
+      check_remote_creation: true,\n
+      check_remote_deletion: true,\n
+      local_sub_storage: {\n
+        type: "query",\n
+        sub_storage: {\n
+          type: "uuid",\n
+          sub_storage: {\n
+            type: "indexeddb",\n
+            database: "officejs-dav"\n
+          }\n
+        }\n
+      },\n
+      remote_sub_storage: {\n
+        type: "query",\n
+        sub_storage: {\n
+          type: "drivetojiomapping",\n
+          sub_storage: {\n
+            type: "dav",\n
+            url: gadget.props.element.querySelector("input[name=\'dav_url\']").value,\n
+            basic_login: btoa(gadget.props.element.querySelector("input[name=\'dav_username\']").value\n
+              + \':\' + gadget.props.element.querySelector("input[name=\'dav_password\']").value),\n
+            with_credentials: true\n
+          }\n
+        }\n
+      }\n
+    };\n
+    return gadget.setSetting(\'jio_storage_description\', configuration)\n
+      .push(function () {\n
+        return gadget.setSetting(\'jio_storage_name\', "DAV");\n
+      })\n
+      .push(function () {\n
+        return gadget.reload();\n
+      });\n
+  }\n
+\n
+  var gadget_klass = rJS(window);\n
+\n
+  gadget_klass\n
+    .ready(function (g) {\n
+      g.props = {};\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+          g.props.deferred = RSVP.defer();\n
+          return g.getSetting(\'jio_storage_name\');\n
+        })\n
+        .push(function (jio_storage_name) {\n
+          if (jio_storage_name === "DAV") {\n
+            return g.getSetting(\'jio_storage_description\')\n
+              .push(function (jio_storage_description) {\n
+                g.props.element.querySelector("input[name=\'dav_url\']").value =\n
+                  jio_storage_description.remote_sub_storage.sub_storage.sub_storage.url;\n
+              });\n
+          }\n
+        });\n
+    })\n
+    .declareAcquiredMethod("updateHeader", "updateHeader")\n
+    .declareAcquiredMethod("redirect", "redirect")\n
+    .declareAcquiredMethod("reload", "reload")\n
+    .declareAcquiredMethod("getSetting", "getSetting")\n
+    .declareAcquiredMethod("setSetting", "setSetting")\n
+    .declareMethod("render", function () {\n
+      var gadget = this;\n
+      return gadget.updateHeader({\n
+        title: "Connect To DAV Storage",\n
+        back_url: "#page=jio_configurator",\n
+        panel_action: false\n
+      }).push(function () {\n
+        return gadget.props.deferred.resolve();\n
+      });\n
+    })\n
+\n
+    /////////////////////////////////////////\n
+    // Form submit\n
+    /////////////////////////////////////////\n
+    .declareService(function () {\n
+      var gadget = this;\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return gadget.props.deferred.promise;\n
+        })\n
+        .push(function () {\n
+          return loopEventListener(\n
+            gadget.props.element.querySelector(\'form\'),\n
+            \'submit\',\n
+            true,\n
+            function () {\n
+              return setjIODAVConfiguration(gadget);\n
+            }\n
+          );\n
+        });\n
+    });\n
+\n
+\n
+}(window, rJS, RSVP));</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>OfficeJS jIO DAV Configurator Page JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>cedric.le.ninivin</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1442831622.16</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>947.53845.25131.55500</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1450259852.52</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>cedric.le.ninivin</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1442830548.22</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

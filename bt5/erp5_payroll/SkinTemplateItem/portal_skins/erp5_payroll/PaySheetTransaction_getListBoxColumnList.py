@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>\'\'\'\n
+  this small script return a list of the categories used in the paysheet lines\n
+\n
+  parameters :\n
+    - editable :  if editable = 1, the columns returned are editables columns\n
+                  else, all the columns are returned\n
+\'\'\'\n
+\n
+column_list = []\n
+editable_column_list = [(\'int_index\', \'PaySheet Order\'),\n
+                        (\'title\', \'Title\'),]\n
+\n
+not_editable_column_list = [(\'source_section_title\', \'Service Provider\'),\n
+                            (\'slice\', \'Slice\'),]\n
+\n
+column_list.extend(editable_column_list)\n
+\n
+if not editable:\n
+  column_list.extend(not_editable_column_list)\n
+\n
+column_list.append((\'base\', \'Base\'))\n
+\n
+\n
+# this following columns are add for both edibales and not\n
+for model_line in context.contentValues(portal_type=\'Pay Sheet Line\'):\n
+  for contribution_share in model_line.getContributionShareValueList():\n
+    price = (contribution_share.getId()+\'_price\', contribution_share.getTitle()+\' Share Rate\')\n
+    quantity = (contribution_share.getId()+\'_total_price\', \n
+                contribution_share.getTitle()+\' Share Amount\')\n
+    if price not in column_list:\n
+      column_list.append(price)\n
+      column_list.append(quantity)\n
+\n
+return column_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>editable=0</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetTransaction_getListBoxColumnList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

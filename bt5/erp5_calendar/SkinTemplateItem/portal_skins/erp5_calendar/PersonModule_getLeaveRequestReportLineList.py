@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.PythonScripts.standard import Object\n
+request = container.REQUEST\n
+portal = context.getPortalObject()\n
+stool = portal.portal_simulation\n
+\n
+person_value_list = portal.portal_categories.restrictedTraverse(\n
+    node_category).getGroupRelatedValueList(portal_type=\'Person\',\n
+                                            checked_permission=\'View\')\n
+\n
+# for stat\n
+total_time_per_resource = {}\n
+total_time = 0\n
+\n
+result_list = []\n
+\n
+# guess the list of resource used in presences\n
+presence_resource_uid_list = [inventory.resource_uid for inventory\n
+     in stool.getInventoryList(\n
+                          from_date=from_date,\n
+                          to_date=to_date,\n
+                          portal_type=(\'Presence Request Period\',\n
+                                       \'Group Calendar Assignment\'),\n
+                          group_by_resource=1)]\n
+\n
+\n
+for person in person_value_list:\n
+  result_dict = {}\n
+  person_total = 0\n
+\n
+  person_planned_time = person.getAvailableTime(\n
+                          from_date=from_date,\n
+                          to_date=to_date,\n
+                          resource=presence_resource_uid_list)\n
+\n
+  for inventory in stool.getInventoryList(\n
+                          from_date=from_date,\n
+                          to_date=to_date,\n
+                          node_uid=person.getUid(),\n
+                          portal_type=\'Leave Request Period\',\n
+                          group_by_resource=1):\n
+\n
+    resource = inventory.resource_relative_url\n
+\n
+    if inventory.resource_uid in presence_resource_uid_list:\n
+      raise ValueError, "This report does not work when same resource are"\\\n
+                        " used in presence and leave."\n
+\n
+    person_time = (person_planned_time - person.getAvailableTime(\n
+                      from_date=from_date,\n
+                      to_date=to_date,\n
+                      resource=presence_resource_uid_list +\n
+                              [inventory.resource_uid] )) / 60. / 60.\n
+\n
+    result_dict[resource] = person_time\n
+\n
+    total_time_per_resource[resource] = \\\n
+        person_time + total_time_per_resource.get(resource, 0)\n
+\n
+    person_total += person_time\n
+    total_time += person_time\n
+\n
+\n
+  result_list.append(\n
+      Object(\n
+        uid=\'new_0\',\n
+        person_title=person.getTitle(),\n
+        person_career_reference=person.getCareerReference(),\n
+        total=person_total,\n
+        **result_dict))\n
+\n
+result_list.sort(lambda a,b: cmp(\n
+        a.person_career_reference or a.person_title,\n
+        b.person_career_reference or b.person_title))\n
+\n
+request.set(\'total_time\', total_time)\n
+request.set(\'total_time_per_resource\', total_time_per_resource)\n
+\n
+return result_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>from_date, to_date, node_category, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PersonModule_getLeaveRequestReportLineList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

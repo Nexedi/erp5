@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308427.48</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>StatusBar.template</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\r\n
+<div class="statusbar">\r\n
+    <div id="status-tabs-scroll" class="status-group">\r\n
+        <button id="status-btn-tabfirst" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-tab-first">&nbsp;</span></button>\r\n
+        <button id="status-btn-tabback" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-tab-back">&nbsp;</span></button>\r\n
+        <button id="status-btn-tabnext" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-tab-next">&nbsp;</span></button>\r\n
+        <button id="status-btn-tablast" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-tab-last">&nbsp;</span></button>\r\n
+    </div>\r\n
+    <div id="status-addtabs-box" class="status-group">\r\n
+        <button id="status-btn-addtab" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-zoom-up">&nbsp;</span></button>\r\n
+    </div>\r\n
+    <div id="status-zoom-box" class="status-group">\r\n
+        <div class="separator short" />\r\n
+        <button id="status-btn-zoomdown" type="button" class="btn small btn-toolbar btn-toolbar-default"><span class="btn-icon btn-zoom-down">&nbsp;</span></button>\r\n
+        <div class="cnt-zoom">\r\n
+            <div class="dropdown-toggle" data-toggle="dropdown">\r\n
+                <label id="status-label-zoom" class="status-label">Zoom 100%</label>\r\n
+            </div>\r\n
+        </div>\r\n
+        <button id="status-btn-zoomup" type="button" class="btn small btn-toolbar btn-toolbar-default" style="margin-right:40px;"><span class="btn-icon btn-zoom-up">&nbsp;</span></button>\r\n
+    </div>\r\n
+    <!-- /** coauthoring begin **/ -->\r\n
+    <div id="status-users-box" class="status-group" style="display:none;">\r\n
+        <div class="separator short" />\r\n
+        <div id="status-users-block" style="display:inline-block; cursor:pointer; margin-left: 12px;">\r\n
+            <span id="status-users-icon" />\r\n
+            <label id="status-users-count" class="status-label">3</label>\r\n
+        </div>\r\n
+    </div>\r\n
+    <!-- /** coauthoring end **/ -->\r\n
+    <div id="status-math-box" class="status-group">\r\n
+        <div class="separator short" style="margin-right: 12px;" />\r\n
+        <label id="status-math-average" class="status-label">AVERAGE: 10</label>\r\n
+        <label id="status-math-count" class="status-label">COUNT: 3</label>\r\n
+        <label id="status-math-sum" class="status-label">SUM: 5</label>\r\n
+    </div>\r\n
+    <div id="status-sheets-bar-box">\r\n
+        <div id="status-sheets-bar" class="status-group">\r\n
+        </div>\r\n
+    </div>\r\n
+</div>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2610</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

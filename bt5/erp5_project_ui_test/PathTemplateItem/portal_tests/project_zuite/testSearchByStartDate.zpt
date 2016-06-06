@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html>\n
+<head><title>Test quick search on the project module.</title></head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="4">\n
+Test quick search on the project module.\n
+</td></tr>\n
+</thead>\n
+<tbody tal:define="init_method string:Zuite_createDataForProjectZuite;">\n
+\n
+<!-- Setup {{{ -->\n
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForProjectZuite/macros/init" />\n
+<!-- }}} -->\n
+\n
+<tr>\n
+  <td>verifyEditable</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[6]//input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[6]//input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[6]//input</td>\n
+  <td>&gt;=2010/03/01</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_doSelect:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyEditable</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[6]//input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[6]//input</td>\n
+  <td>&gt;=2010/03/01</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[6]</td>\n
+  <td>2010/03/01</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+</tbody></table>\n
+</body>\n
+</html> \n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testSearchByStartDate</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

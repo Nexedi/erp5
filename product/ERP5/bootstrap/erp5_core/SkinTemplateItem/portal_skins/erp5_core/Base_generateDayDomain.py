@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Type.Message import translateString\n
+from Products.ERP5Type.Document import newTempBase\n
+from string import zfill\n
+portal = context.getPortalObject()\n
+request = context.REQUEST\n
+domain_list = []\n
+\n
+selection_name = request.get(\'selection_name\')\n
+params = portal.portal_selections.getSelectionParamsFor(selection_name, request)\n
+\n
+bound_start = DateTime(params.get(\'bound_start\', DateTime()))\n
+bound_start = DateTime(bound_start.year() , bound_start.month() , bound_start.day()) \n
+\n
+bound_start = bound_start + params.get(\'bound_variation\', 0)\n
+bound_stop = bound_start + 1\n
+\n
+\n
+# Define date format using user Preferences\n
+date_order = portal.portal_preferences.getPreferredDateOrder()\n
+date_format = dict(ymd=\'%m/%d %H:00\',\n
+                   dmy=\'%d/%m %H:00\',\n
+                   mdy=\'%m/%d %H:00\').get(date_order, \'%m/%d %H:00\')\n
+\n
+category_list = []\n
+if depth == 0:\n
+  current_date = bound_start\n
+ # This zoom will show one day divided in columns that represents 3 hours.\n
+ # 0.125 means 3 hours in DateTime float format\n
+  while current_date < bound_stop:\n
+    # Create one Temp Object\n
+    o = newTempBase(portal, id=\'year\', uid=\'new_%s\' % zfill(\'year\',4))\n
+    # Setting Axis Dates start and stop\n
+    o.setProperty(\'start\',current_date)\n
+    o.setProperty(\'stop\', current_date + 0.125)\n
+    o.setProperty(\'relative_position\', int(current_date))\n
+\n
+    # Seting delimiter\n
+    if current_date.hour() == 12:\n
+      o.setProperty(\'delimiter_type\', 1)\n
+    else:\n
+      o.setProperty(\'delimiter_type\', 0)\n
+\n
+    title = translateString(\'${day_name} ${date}\',\n
+               mapping=dict(day_name=translateString(current_date.Day()),\n
+                            date=current_date.strftime(date_format)))\n
+    o.setProperty(\'title\', title)\n
+    tp = \'%s %s\' % (translateString(current_date.Day()), str(current_date))\n
+    o.setProperty(\'tooltip\', tp)\n
+\n
+    category_list.append(o)\n
+    \n
+    current_date  = current_date + 0.125\n
+\n
+else:\n
+  return domain_list\n
+\n
+for category in category_list:\n
+  domain = parent.generateTempDomain(id = \'sub\' + category.getProperty(\'id\'))\n
+  domain.edit(title = category.getTitle(),\n
+              membership_criterion_base_category = (\'parent\', ), \n
+              membership_criterion_category = (category,),\n
+              domain_generator_method_id = script.id,\n
+              uid = category.getUid())\n
+                \n
+  domain_list.append(domain)\n
+\n
+return domain_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>depth, parent, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_generateDayDomain</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/global_definitions"/>\n
+\n
+<div id="gadget_area_wrapper">\n
+\n
+    <tal:block tal:condition="python:not (isAnon or isAnonymousKnowledgePadUsed)"> \n
+      <div id="pad-navigation-wrapper">\n
+        <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/navigation"/>\n
+      </div>\n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/loading_message"/>\n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/knowledge_pad_security_check"/> \n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"/>\n
+    </tal:block>\n
+\n
+    <!-- Render active Knowledge pad -->\n
+    <div id="pad-body-wrapper"\n
+         tal:condition="python:active_knowledge_pad is not None">\n
+      <tal:block tal:replace="structure python: active_knowledge_pad.KnowledgePad_viewDashboardWidget(\n
+                                                                       columns=columns,\n
+                                                                       real_context=here,\n
+                                                                       cancel_url=cancel_url)"/>\n
+    </div>\n
+    <!-- Hidden dialogs -->\n
+    <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/hidden_dialogs"/>\n
+\n
+</div>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_viewHomeAreaRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

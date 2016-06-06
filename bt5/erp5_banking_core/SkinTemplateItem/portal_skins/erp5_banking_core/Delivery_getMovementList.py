@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>if portal_type is None:\n
+  portal_type = []\n
+\n
+# return context.getMovementList(portal_type=portal_type)\n
+# here we suppose we have only two level of portal type\n
+#context.log("Delivery_getMovementList", "portal_type = %s" %(portal_type,))\n
+#context.log("Delivery_getMovementList", "len portal_type = %s" % (len(portal_type),))\n
+\n
+if same_type(portal_type, ""):\n
+  return context.getMovementList(portal_type=portal_type)\n
+if len(portal_type) != 2:\n
+  # use catalog\n
+  return context.getMovementList(portal_type=portal_type)\n
+\n
+line_list = context.objectValues(portal_type=portal_type[0])\n
+\n
+invert = 0\n
+if len(line_list) == 0:\n
+  # try with the second portal type\n
+  line_list = context.objectValues(portal_type=portal_type[1])\n
+  invert = 1\n
+if len(line_list) == 0:\n
+  return []\n
+if len(portal_type) == 1:\n
+  return line_list\n
+cell_list = []\n
+for line in line_list:\n
+  if invert:\n
+    cell_type = portal_type[0]\n
+  else:\n
+    cell_type = portal_type[1]\n
+  cell_list.extend(list(line.objectValues(portal_type=cell_type)))\n
+\n
+cell_list = context.Base_sortCurrencyCashList(cell_list)\n
+\n
+return cell_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>portal_type=None, *argv, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Delivery_getMovementList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

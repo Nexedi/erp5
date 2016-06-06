@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Constraint import PropertyTypeValidity\n
+from Products.CMFActivity.ActiveResult import ActiveResult\n
+\n
+portal = context.getPortalObject()\n
+constraint_message_list = []\n
+\n
+if context.providesIConstraint():\n
+  # it is not possible to checkConsistency of Constraint itself, as method\n
+  # of this name implement consistency checking on object\n
+  return constraint_message_list\n
+\n
+missing_category_document = portal.portal_trash.newContent(\n
+  portal_type=\'Missing Category Document Constraint\',\n
+  temp_object=True)\n
+property_type_validity = PropertyTypeValidity(id=\'type_check\', description=\'Type Validity Check\')\n
+\n
+if fixit:\n
+  constraint_message_list.extend(context.fixConsistency())\n
+  constraint_message_list.extend(property_type_validity.fixConsistency(context))\n
+  constraint_message_list.extend(missing_category_document.fixConsistency(context))\n
+else:\n
+  constraint_message_list.extend(context.checkConsistency(fixit=fixit))\n
+  constraint_message_list.extend(property_type_validity.checkConsistency(context, fixit=fixit))\n
+  constraint_message_list.extend(missing_category_document.checkConsistency(context, fixit=fixit))\n
+\n
+if constraint_message_list:\n
+  portal.restrictedTraverse(active_process).postResult(ActiveResult(severity=100,\n
+                      constraint_message_list=constraint_message_list))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>fixit, active_process</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_checkAlarmConsistency</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

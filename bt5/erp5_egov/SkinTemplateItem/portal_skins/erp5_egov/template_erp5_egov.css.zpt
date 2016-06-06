@@ -1,0 +1,756 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>root_http_skin_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing"\n
+           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"/>\n
+\n
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+\n
+/* Define some constant to make the css flexible without pain */\n
+<tal:block\n
+  define="unit          python: \'px\';\n
+          LC_fullwidth  python: 5;\n
+          CC_padding    python: 0;\n
+          RC_fullwidth  python: 5;\n
+          min_width     python: 800;\n
+">\n
+\n
+html {\n
+ /* XXX width: 85%;  work with current layout technic but, background should be changed */\n
+  margin-right: auto;\n
+  margin-left: auto;\n
+  min-width: <tal:block  replace="python: (\'%s%s\') % (min_width, unit)"/>;\n
+}\n
+\n
+/*========================================================================================\n
+**  GENERAL LAYOUT\n
+**  Layout technique based on http://alistapart.com/articles/holygrail/\n
+**========================================================================================*/\n
+\n
+.document div.content {\n
+  background: light-grey;\n
+  /*border: .1em solid #ccc;*/\n
+  /*margin-right: 20px;*/\n
+  /*margin-left: 20px;*/\n
+  /*width: <tal:block  replace="python: (\'%s%s\') % (min_width+2, unit)"/>;*/\n
+  /*margin-left:11.5em;*/\n
+  /*margin-right:11.5em;*/\n
+  margin-bottom: 2em;\n
+}\n
+\n
+body {\n
+  min-width: <tal:block  replace="python: (\'%s%s\') % (min_width +2, unit)"/>;\n
+}\n
+\n
+form#main_form .document{\n
+  min-width: <tal:block  replace="python: (\'%s%s\') % (min_width, unit)"/>;\n
+  padding-left: <tal:block  replace="python: (\'%s%s\') % (LC_fullwidth, unit)"/>;\n
+  padding-right: <tal:block replace="python: (\'%s%s\') % (RC_fullwidth + CC_padding, unit)"/>;\n
+}\n
+\n
+#wrapper_footer{\n
+  float:left;\n
+}\n
+\n
+form#main_form div#wrapper_footer,\n
+form#main_form div#wrapper_header   /* Customisation of template_erp5_web is required to make header work */\n
+{\n
+  width: 100%;\n
+/*  margin-left: <tal:block  replace="python: (\'-%s%s\') % (LC_fullwidth, unit)"/>;\n
+  margin-right: <tal:block replace="python: (\'-%s%s\') % (RC_fullwidth + CC_padding, unit)"/>;*/\n
+  min-width: <tal:block replace="python: (\'%s%s\') % (min_width + LC_fullwidth + RC_fullwidth , unit)"/>;\n
+}\n
+\n
+\n
+form#main_form div#main_content,\n
+form#main_form div#wrapper_left,\n
+form#main_form div#wrapper_right {\n
+  position: relative;\n
+  float: left;\n
+}\n
+\n
+form#main_form div#wrapper_header,\n
+form#main_form div#wrapper_footer {\n
+  clear: both;\n
+}\n
+\n
+form#main_form div#wrapper_header{\n
+  position:absolute;\n
+  top:0;\n
+}\n
+\n
+form#main_form div#main_content{\n
+  width:100%;\n
+  float: left;\n
+  padding-top: 100px;\n
+}\n
+\n
+/*** IE Fix ***/\n
+* html form#main_form div#wrapper_left {\n
+  left: <tal:block replace="python: (\'%s%s\') % (RC_fullwidth, unit)"/>;\n
+}\n
+\n
+\n
+\n
+\n
+</tal:block>\n
+\n
+input[type="submit"]{\n
+  cursor:pointer;\n
+}\n
+\n
+/*========================================================================================\n
+** WIDGETS\n
+**\n
+** Widgets are built as a fieldset inside a wrapper div\n
+** We use the fact that widgets are always part of a wrapper div to\n
+** implement a different rendering from the standard form rendering\n
+**\n
+** TODO:\n
+** - it could be useful to add a new class to identity widgets more easily\n
+**========================================================================================*/\n
+\n
+/* Wrapper Layout\n
+-----------------------------------------------*/\n
+\n
+/* Standard wrapper */\n
+\n
+form#main_form div.wrapper div.column fieldset.widget {\n
+  background: #fff url(erp5-website-field.png) top repeat-x;\n
+  border: 1px solid #ccc;\n
+  color: #666;\n
+  padding: 2px;\n
+  margin: 0.5em 0;\n
+}\n
+\n
+form#main_form div.wrapper div.column fieldset.widget legend {\n
+  padding: 0.2em .5em;\n
+  font-weight: bold;\n
+  color: #666;\n
+  text-transform: capitalize;\n
+  background: #EEE;\n
+}\n
+\n
+form#main_form div.wrapper div.column fieldset.widget div.field label:after {content: ":"}\n
+\n
+/* Transparent wrapper - useful to display a logo */\n
+form#main_form div.wrapper div.transparent fieldset.widget {\n
+  border: 0;\n
+  background: transparent;\n
+  margin: 0 0;\n
+  padding: 0 0;\n
+}\n
+\n
+form#main_form div.wrapper div.transparent fieldset.widget legend {\n
+  display: None;\n
+}\n
+\n
+form#main_form div.wrapper div.transparent fieldset.widget label {\n
+  display: None;\n
+}\n
+\n
+/* Widget Layout\n
+-----------------------------------------------*/\n
+\n
+/* Special layout for logo widget */\n
+form#main_form div.column fieldset.widget div.field.logo {\n
+  padding: 2em 0 0;\n
+  border: 0;\n
+  background: transparent;\n
+}\n
+\n
+form#main_form div.wrapper div.field.logo label {\n
+  display: none;\n
+}\n
+\n
+/* Special layout for footer group */\n
+form#main_form div#wrapper_footer div.field {\n
+  margin: 0;\n
+  /*padding-top: 3px;*/\n
+  padding-bottom: 0px;\n
+  /*background: #999;*/\n
+}\n
+\n
+form#main_form div#wrapper_footer div.field .submission_wizard {\n
+  border-color: #777;\n
+  border-width: 1px 0 0;\n
+  border-style: solid;\n
+}\n
+\n
+form#main_form div#wrapper_footer fieldset.widget {\n
+  border-width: 0;\n
+  padding: 0;\n
+  margin: 0;\n
+  width: 100%;\n
+}\n
+\n
+form#main_form div#wrapper_footer fieldset.widget legend {\n
+  display: none;\n
+}\n
+\n
+form#main_form div#wrapper_footer div.field label {\n
+  display: none;\n
+}\n
+\n
+form#main_form div#wrapper_footer ul.onleft{\n
+  list-style: none;\n
+}\n
+\n
+form#main_form div#wrapper_footer ul.onleft li{\n
+  margin-right: 3em;\n
+  display: inline;\n
+}\n
+\n
+form#main_form div#wrapper_header fieldset.widget{\n
+  border: 0;\n
+  padding: 0;\n
+  margin: 0;\n
+  margin-top: 10px;\n
+  width: 100%;\n
+}\n
+\n
+form#main_form div#wrapper_header fieldset.widget div.field label{\n
+  display: none;\n
+}\n
+\n
+form#main_form div#wrapper_header fieldset.widget hr{\n
+  visibility:hidden;\n
+  clear:both;\n
+}\n
+\n
+form#main_form div#wrapper_header fieldset.widget ul.onleft {\n
+  list-style: none;\n
+  padding: 5px;\n
+  margin: 20px 0 0 45px;\n
+  /*background: white;*/\n
+  /*background: #fff url(erp5-website-field.png) top repeat-x;*/\n
+  background: white url(img/title_gradient_bar.gif) right repeat-y; \n
+}\n
+\n
+form#main_form div#wrapper_header fieldset.widget ul.onleft li{\n
+  margin-right: 1em;\n
+  display: inline;\n
+}\n
+\n
+form#main_form div#wrapper_header fieldset.widget .onright a{\n
+  background-repeat:no-repeat;\n
+  height: 40px;\n
+  padding: 20px 10px 10px 40px;\n
+}\n
+\n
+.draft_state,\n
+.assigned_state{\n
+  color: #AAA; \n
+}\n
+ \n
+.open_state,\n
+.validated_state{\n
+  color: green; \n
+}\n
+\n
+.paid_state{\n
+  color: blue; \n
+}\n
+\n
+.submitted_state{\n
+  color: #00CCCC; \n
+}\n
+\n
+.archived_state{\n
+  color: black; \n
+}\n
+\n
+.cancelled_state,\n
+.deleted_state{\n
+  color: red;\n
+}\n
+\n
+/* Special layout for search widget */\n
+form#main_form div.searchButton {\n
+  float: left;\n
+  margin-left: 0.3em;\n
+}\n
+\n
+form#main_form div.searchButton input {\n
+  height: 2em;\n
+}\n
+\n
+form#main_form div.searchInput {\n
+  float: left;\n
+}\n
+\n
+form#main_form div.searchInput input, textarea, select { /* This should be common XXX */\n
+  border: 1px solid #999;\n
+}\n
+\n
+/* Special layout for language widget */\n
+form#main_form div.languageSelector {\n
+  float: right;\n
+}\n
+\n
+\n
+\n
+\n
+\n
+\n
+#logged_in_as {\n
+  float: right;\n
+  text-align: right;\n
+  margin-right: 20px;\n
+  font-size: 110%;\n
+}\n
+\n
+#logged_in_as .login{\n
+  font-weight: bold;\n
+}\n
+\n
+#logged_in_as .logged_txt{\n
+  color: <dtml-var link_color>;\n
+/*   font-size: 90%; */\n
+}\n
+\n
+.anonymous{\n
+  color: red;\n
+  font-weight: bold;\n
+}\n
+\n
+span#language{\n
+  float: right;\n
+  margin-right: 20px;\n
+  margin-top: 10px;\n
+}\n
+\n
+\n
+\n
+.onleft{\n
+  float:left;\n
+}\n
+\n
+\n
+ul.onleft li span {\n
+  font-weight: bold;\n
+}\n
+\n
+.onright{\n
+  float:right;\n
+  text-align:right;\n
+} \n
+\n
+form#main_form span.onright{\n
+  padding: 22px 1px 22px 1px;\n
+}\n
+\n
+#status{\n
+  float: right; \n
+  width: 20%;\n
+}\n
+\n
+\n
+form#main_form div .onright a.home{\n
+  background-image: url(img/home.png); \n
+}  \n
+\n
+form#main_form div .onright a.help{\n
+  background-image: url(img/help.png); \n
+}  \n
+\n
+form#main_form div .onright a.preferences{\n
+  background-image: url(img/preferences.png); \n
+}  \n
+\n
+form#main_form div .onright a.logout{\n
+  background-image: url(img/logout.png); \n
+}  \n
+\n
+form#main_form div .onright a.login{\n
+  background-image: url(img/login.png); \n
+}  \n
+\n
+form#main_form div .onright a.print{\n
+  background-image: url(img/print.png); \n
+}  \n
+\n
+form#main_form #hidden_fieldset{\n
+  visibility:hidden;\n
+}\n
+\n
+\n
+/* add a border around the pdf pages */\n
+.other_page {\n
+  /*border: 1px solid #999;*/\n
+}\n
+\n
+.first_page {\n
+  /*border: 1px solid #999;*/\n
+  /*border-top:None;*/\n
+}\n
+\n
+\n
+/* Bottom Save buttons styling */\n
+\n
+div.bottom_actions{\n
+  position: relative;\n
+  width: 100%;\n
+  margin-left: auto;\n
+  margin-right: auto;\n
+}\n
+\n
+div.bottom_actions{\n
+  height: 8em;\n
+  margin-bottom: 10px;\n
+  z-index: 300;\n
+}\n
+\n
+div.bottom_actions button.saveEdit {\n
+  display:inline;\n
+  position:absolute;\n
+  right: 10em;\n
+}\n
+\n
+div.bottom_actions button.saveView {\n
+  display:inline;\n
+  position:absolute;\n
+  right:0em;\n
+}\n
+\n
+div.bottom_actions button.saveEdit .description {\n
+ position: relative;\n
+ top: 3px;\n
+ left: 2px;\n
+}\n
+\n
+div.bottom_actions button.saveView .description{\n
+ position: relative;\n
+ top: 3px;\n
+ left: 3px;\n
+}\n
+\n
+div.bottom_actions button.saveView .image,\n
+div.bottom_actions button.saveEdit .image{\n
+  float: left;\n
+  display: block;\n
+  width: 22px;\n
+  height: 22px;\n
+}\n
+\n
+div.bottom_actions button.saveEdit span.image {\n
+  background-image: url(\'<tal:block tal:replace="here/portal_url"/>/images/save.png\');\n
+}\n
+\n
+div.bottom_actions button.saveView span.image {\n
+  background-image: url(\'<tal:block tal:replace="here/portal_url"/>/images/save-preview.png\');\n
+}\n
+\n
+.input .attachment_missing{\n
+  color:red;\n
+  font-weight: bold;\n
+  font-size: 1.3em;\n
+}\n
+\n
+.section_description{\n
+  padding-top: 0.5em;\n
+  margin-left: 0.8em;\n
+  font-size: 1.1em;\n
+  font-style: italic;\n
+}\n
+\n
+div.section_title{\n
+  font-size:2em;\n
+  font-weight: bold;\n
+}\n
+\n
+.work_in_progress{\n
+  /*margin-top:1em;\n
+  margin-left:2em;*/\n
+  font-style: italic;\n
+  font-weight: bold;\n
+  color:orange;\n
+  background-repeat:no-repeat;\n
+  min-height: 40px;\n
+  padding-top: 10px;\n
+  padding-left: 60px;\n
+  padding-right: 20px;\n
+  background-image: url(img/work_in_progress.png); \n
+}\n
+\n
+.bottom_border{\n
+  width:100%;\n
+}\n
+\n
+.content .widget_space > .field > label{\n
+  display: none !important;\n
+}\n
+\n
+div#main_content fieldset {\n
+  margin: 0;\n
+  border:none;\n
+  padding: 0;\n
+}\n
+\n
+.content #fieldset_center,\n
+.content #fieldset_left,\n
+.content #fieldset_bottom{\n
+  margin-left: 3em;\n
+  margin-right: 3em;\n
+}\n
+\n
+.content #fieldset_left{\n
+  margin-top: 3em;\n
+}\n
+\n
+div#main_content fieldset.bottom{\n
+  padding:3em;\n
+}\n
+\n
+.inline,\n
+div.inline_label label,\n
+div.inline .input{\n
+  display: inline;\n
+  vertical-align:middle;\n
+}\n
+\n
+div.inline_label label{\n
+  display: inline !important;\n
+  float:none !important;\n
+}\n
+\n
+.document .actions{\n
+/*  margin-left: auto;*/\n
+  margin-right: auto;\n
+  width: 802px !important;\n
+  text-align: left;\n
+  margin-top: 20px;\n
+}\n
+\n
+\n
+\n
+/* ----------------------------------------------------- \n
+          PDFDocument_viewLoginInformation \n
+   ----------------------------------------------------*/\n
+\n
+   \n
+fieldset.white_background,\n
+fieldset.register_informations{\n
+  background: white !important;\n
+  margin-right: auto !important;\n
+/*  margin-left: auto !important;*/\n
+  padding: 2em 0 2em 0 !important;\n
+  border: 1px solid #999 !important;\n
+  width:800px !important;\n
+}\n
+\n
+.document .section_explanation{\n
+  background: white !important;\n
+  width:791px !important;\n
+  line-height: 3em;\n
+  marging-left: 2em;\n
+}\n
+\n
+div.section_explanation{\n
+  padding-left: 0.5em;\n
+}\n
+\n
+\n
+\n
+\n
+fieldset.white_background .input,\n
+fieldset.register_informations .input{\n
+  padding: 0 2em 0 2em;\n
+}\n
+\n
+fieldset.register_informations{\n
+  margin-top:60px !important;\n
+}\n
+\n
+.field .input .title{\n
+  margin-top: 1em;\n
+  margin-bottom:0.5em;\n
+  font-size: 1.7em;\n
+}\n
+\n
+.field .input .title .reference{\n
+  padding: 0.5em;\n
+  text-align: center;\n
+  font-weight: bold;\n
+}\n
+\n
+.field .input .explanation{\n
+  font-size: 1.2em;\n
+}\n
+  \n
+.field .input .site_address{\n
+  font-size: 2.6em;\n
+  text-align: center;\n
+  font-weight: bold;\n
+  color:#FF6633;\n
+  margin:1em;\n
+}\n
+\n
+.site_title{\n
+  padding-top: 5px;\n
+  padding-left: 25px;\n
+  font-size: 1.6em;\n
+  text-align: center;\n
+  font-weight: bold;\n
+  color:#296B4C;\n
+  margin:1em;\n
+}\n
+\n
+.notification_text{\n
+  font-size: 1.5em;\n
+}\n
+.notification_text .notification_bold{\n
+  font-size: 1.1em;\n
+  font-weight: bold;\n
+  color:#395F54;\n
+  margin-left: 0.2em;\n
+  margin-right: 0.2em;\n
+}\n
+\n
+.company_name{\n
+  font-size: 1em;\n
+  font-weight: bold;\n
+  color:#395F54;\n
+  text-align: center;\n
+  margin-left: 0.2em;\n
+  margin-right: 0.2em;\n
+}\n
+\n
+.login_and_password{\n
+  font-size: 1.2em;\n
+  line-height: 1em;\n
+  margin-bottom: 0.2em;\n
+}\n
+\n
+.login_and_password .password,\n
+.login_and_password .login{\n
+  font-weight: bold;\n
+  background: #EEE;\n
+  border: solid grey 1px;\n
+  padding: 0 4px;\n
+}\n
+\n
+.field .input .big_button,\n
+.field .input .next_step{\n
+  float:left;\n
+  height: 2em;\n
+  background:#FF6633;\n
+  text-decoration: underline;\n
+  color:white;\n
+  font-size:2em;\n
+  border: 1px solid black;\n
+  font-weight:bold;\n
+  cursor:pointer;\n
+}\n
+\n
+.field .input .big_button{\n
+  width: 20%;\n
+  margin-left: 40%;\n
+  margin-top: 2em;\n
+}\n
+\n
+.white_background .big_button .input{\n
+  margin:0 !important;\n
+  padding: 0 !important;\n
+}\n
+\n
+\n
+#main_form #main_content #fieldset_bottom .input .ListSummary{\n
+  margin-top: 100px;\n
+}\n
+\n
+#main_form #main_content #fieldset_bottom .input .ListSummary,\n
+#main_form #main_content #fieldset_bottom .input .ListContent{\n
+  margin-right: 10%;\n
+  margin-left: 10%;\n
+}\n
+\n
+\n
+.become_member_body  ul{\n
+  list-style-image: url(\'img/puce1.png\')\n
+}\n
+\n
+#information_area {\n
+  margin-top: 1em;\n
+  padding:0.5em 1em 0.5em 1em;\n
+  margin-bottom: 1em;\n
+  border-width: 1px;\n
+  border-style: dotted;\n
+  border-color: black;\n
+  color: red;\n
+  background-color: <dtml-var document_background_color>;\n
+  font-weight: bold;\n
+}\n
+\n
+.content .figure {\n
+  text-align: right;\n
+}\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>template_erp5_egov.css</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

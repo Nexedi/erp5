@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import translateString\n
+\n
+container.Event_checkConsistency(sci)\n
+\n
+portal = sci.getPortal()\n
+portal_workflow = portal.portal_workflow\n
+event = sci[\'object\']\n
+\n
+follow_up_ticket_type = portal_workflow.getInfoFor(event,\n
+                                                   \'follow_up_ticket_type\',\n
+                                                   wf_id=\'event_workflow\')\n
+\n
+follow_up_ticket_title = portal_workflow.getInfoFor(event,\n
+                                                    \'follow_up_ticket_title\',\n
+                                                    wf_id=\'event_workflow\')\n
+\n
+if follow_up_ticket_type not in ["", None] and \\\n
+     follow_up_ticket_title not in ["", None]:\n
+  return \n
+\n
+if not event.getFollowUp():\n
+  raise ValidationFailed(translateString(\'Follow up must be set to acknowledge an Event.\'))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>sci</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Event_checkConsistencyForAcknowledge</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

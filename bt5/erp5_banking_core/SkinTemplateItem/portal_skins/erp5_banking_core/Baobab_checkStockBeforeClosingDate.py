@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# Make sure that there is no stock on counters and that there\n
+# is not too much money into the usual cash\n
+# This is usefull when we close a counter date\n
+\n
+from Products.ERP5Type.Message import Message\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+if site is None:\n
+  root_site_url = context.Baobab_getUserAssignedRootSite()\n
+  site = context.portal_categories.restrictedTraverse(root_site_url)\n
+\n
+resource_uid_list = [x.uid for x in context.currency_cash_module.searchFolder()]\n
+\n
+\n
+counter_vault_list = context.Delivery_getVaultItemList(\n
+    user_site=0,base_site=site.getRelativeUrl(),all=1,\n
+    vault_type=(\'site/surface/banque_interne\',\'site/surface/gros_paiement\',\n
+               \'site/surface/gros_versement\',\'site/surface/operations_diverses\',\n
+               \'site/surface/salle_tri\',\n
+               \'site/surface/caisse_courante/encaisse_des_devises\'))\n
+for counter_vault in counter_vault_list:\n
+  counter_vault_url = counter_vault[1]\n
+  if counter_vault_url==\'\':\n
+    continue\n
+  counter_title = counter_vault[0]\n
+  inventory_list = context.portal_simulation.getCurrentInventoryList(\n
+                                                     node=counter_vault_url,\n
+                                                     resource_uid=resource_uid_list,\n
+                                                     group_by_resource=1,\n
+                                                     group_by_variation=1,\n
+                                                     ignore_variation=0)\n
+  if len(inventory_list)>0:\n
+    for inventory in inventory_list:\n
+      if inventory.total_quantity>0:\n
+        message = Message(domain=\'ui\',\n
+                    message=\'Sorry, some resources are still remaining here : $counter_title\',\n
+                    mapping={\'counter_title\':counter_title})\n
+        raise ValidationFailed,message\n
+\n
+max_price = context.portal_preferences.getPreferredUsualCashMaxRenderingPrice()\n
+if max_price is None:\n
+  message = Message(domain=\'ui\',\n
+              message=\'Sorry, you must defined the max price for the usual cash in your preference\')\n
+  raise ValidationFailed,message\n
+\n
+usual_cash = site.getRelativeUrl() + \'/surface/caisse_courante/encaisse_des_billets_et_monnaies\'\n
+inventory_list = context.portal_simulation.getCurrentInventoryList(\n
+                         node=usual_cash,\n
+                         resource_uid=resource_uid_list)\n
+total_price = sum([x.total_price for x in inventory_list])\n
+context.log(\'current_price\',total_price)\n
+\n
+if total_price > max_price:\n
+  message = Message(domain=\'ui\',\n
+              message=\'Sorry, the amount in the usual cash is too high\')\n
+  raise ValidationFailed,message\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>site=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Baobab_checkStockBeforeClosingDate</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

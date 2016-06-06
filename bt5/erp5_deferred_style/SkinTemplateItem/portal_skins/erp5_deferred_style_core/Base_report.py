@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Message import translateString\n
+\n
+request = container.REQUEST\n
+request.other.update(request_other)\n
+\n
+portal = context.getPortalObject()\n
+ap = portal.restrictedTraverse(active_process_url)\n
+\n
+with portal.Localizer.translationContext(localizer_language):\n
+  # set the selected skin\n
+  portal.portal_skins.changeSkin(skin_name)\n
+\n
+  report_section_list = [r.getResult() for r in ap.getResultList()]\n
+  assert len(report_section_list) == report_section_count\n
+  report_section_list.sort(key=lambda x: x[0])\n
+  \n
+  def dummyReportMethod():\n
+    return report_section_list\n
+\n
+  def decodeReportSection(data):\n
+    # BBB We use to encode in zlib\n
+    try:\n
+      return data.decode(\'bz2\')\n
+    except IOError:\n
+      return data.decode(\'zlib\')\n
+\n
+  report_data = context.restrictedTraverse(form_path).report_view.pt_render(\n
+      extra_context=dict(options={\'format\': format},\n
+                         rendered_report_item_list=(decodeReportSection(r[1]) for r in report_section_list),\n
+                         report_method=dummyReportMethod,\n
+                         form=portal.restrictedTraverse(form_path)))\n
+\n
+  attachment_name_list = [x[len(\' filename=\'):] for x in (request.RESPONSE.getHeader(\n
+                        \'content-disposition\') or \'\').split(\';\')\n
+                            if x.startswith(\' filename=\')]\n
+  if attachment_name_list:\n
+    attachment_name, = attachment_name_list\n
+  else:\n
+    assert \'inline\' in (request.RESPONSE.getHeader(\'content-disposition\') or \'\')\n
+    attachment_name = \'index.html\'\n
+  if attachment_name.startswith(\'"\'):\n
+    attachment_name = attachment_name[1:]\n
+  if attachment_name.endswith(\'"\'):\n
+    attachment_name = attachment_name[:-1]\n
+\n
+  attachment_list = (\n
+    {\'mime_type\': (request.RESPONSE.getHeader(\'content-type\') or \'application/octet-stream;\').split(\';\')[0],\n
+     \'content\': \'%s\' % report_data,\n
+     \'name\': attachment_name},)\n
+\n
+portal.ERP5Site_notifyReportComplete(\n
+  user_name=user_name,\n
+  subject=title,\n
+  message=\'\',\n
+  attachment_list=attachment_list)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>active_process_url, skin_name, localizer_language, title, request_other, form_path, user_name, format, report_section_count</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_report</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

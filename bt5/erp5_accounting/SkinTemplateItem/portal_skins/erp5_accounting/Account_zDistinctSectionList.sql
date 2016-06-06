@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Use_Database_Methods_Permission</string> </key>
+            <value>
+              <list>
+                <string>Member</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_col</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>uid</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>i</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>11</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>path</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>t</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>50</int> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>node_uid\r\n
+at_date\r\n
+section_uid:list\r\n
+simulation_state:list</string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string>ZSQLCatalog.zsqlbrain</string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string>ZSQLBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Account_zDistinctSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery())">\n
+SELECT DISTINCT\n
+  catalog.relative_url,\n
+  catalog.path,\n
+  catalog.title,\n
+  catalog.portal_type,\n
+  catalog.validation_state\n
+FROM\n
+  <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
+   <dtml-if "table_key not in (\'stock\', \'catalog\')">\n
+     <dtml-var table_item> AS <dtml-var table_key>,\n
+   </dtml-if>\n
+  </dtml-in>\n
+  catalog,\n
+  stock\n
+WHERE\n
+  stock.mirror_section_uid = catalog.uid\n
+<dtml-if node_uid>\n
+  AND stock.node_uid = <dtml-sqlvar node_uid type="string">\n
+</dtml-if>\n
+<dtml-if at_date>\n
+  AND stock.date <= <dtml-sqlvar at_date type="datetime">\n
+</dtml-if>\n
+<dtml-if simulation_state>\n
+  AND ( stock.simulation_state IN (<dtml-in simulation_state><dtml-sqlvar sequence-item type="string">\n
+                <dtml-unless sequence-end>, </dtml-unless></dtml-in>) )\n
+</dtml-if>\n
+\n
+<dtml-if section_uid>\n
+  AND (\n
+    stock.section_uid IN ( <dtml-in section_uid><dtml-sqlvar sequence-item type="int">\n
+        <dtml-unless sequence-end>, </dtml-unless> </dtml-in> )\n
+  )\n
+</dtml-if>\n
+\n
+  AND stock.portal_type in ( <dtml-in getPortalAccountingMovementTypeList><dtml-sqlvar\n
+    sequence-item type="string"><dtml-unless sequence-end>, </dtml-unless></dtml-in> )\n
+<dtml-if "query[\'where_expression\']">\n
+  AND <dtml-var "query[\'where_expression\']">\n
+</dtml-if>\n
+ORDER BY\n
+  catalog.portal_type, catalog.title\n
+</dtml-let>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

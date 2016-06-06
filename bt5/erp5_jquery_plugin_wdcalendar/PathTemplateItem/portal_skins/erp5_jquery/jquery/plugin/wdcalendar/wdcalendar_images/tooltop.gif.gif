@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts95900269.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tooltop.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhFAEjAMQfAP/t4v/48/7bxf/gzf/n2P/z7P/w5v1+Lv2weP344/3MovG4kuzLtf3w2Ozb
+z+2wiOLc2P3fvvfgzf2EN/Kldf2/jv2iaP3El/6ue/KZYf2ZVf/s4P7Zwf19LP355f///yH5BAEA
+AB8ALAAAAAAUASMAAAX/4CeOZGmeaDo6FKO+cCzPdG3feK7vvH0oh55wSCwaj8jki1LxICjKqHRK
+rVpfC03C05i4ruCweEw+TQae9CVTbrvf8B3lkk4nNI+4fs+PZ+t1EQcOfYWGbxQdiouMjY6PkI8T
+BIB1CJGYmZqbnJ2en6ChoqOkihQQEB2Vq6ytrq+wsbKztLW2t7i5uru8qx2oqr3Cw8TFxsfIybgd
+EhvBytDR0tPU1bcdHADP1tzd3t/gsx0C2uHm5+jpydjO6u7v8PGs7Nvy9vf41PT5/P3+w/v+CRxI
+0FXAgggT+juosKHDdwwfSpzoLSLFixiVWczIsSOvjR5DipQFcqTJk3VKgKJcGVIly5cYXcKc+VAm
+zZsIbeLc+U8nz5/4fAIdCm9cOaJIew4wgKGU06dQo0qdSrXqVAsECgQwQGCAAA5gw4odS7as2bNo
+06pdy7at27dw48qdS3etgAEEDATYW8AAgA2AAwseTLiw4cOIEytezLix48eQI0ueTHkxAANaA4QA
+ADs=</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>35</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>515</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>tooltop.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>276</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

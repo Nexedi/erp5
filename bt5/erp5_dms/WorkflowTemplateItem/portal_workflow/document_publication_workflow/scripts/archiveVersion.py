@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+This script is invoked each time a new document is published.\n
+The previous version is archived automatically if document has a past\n
+(None being infinitely in the past) publication date.\n
+\n
+This will only apply to documents with enough coordinates\n
+(ex. reference, language, version).\n
+"""\n
+from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, SimpleQuery\n
+document = state_change[\'object\']\n
+reference = document.getReference()\n
+if now is None:\n
+  now = DateTime()\n
+if not reference or document.getEffectiveDate() > now:\n
+  # If this object has no reference, we can not do anything\n
+  return\n
+\n
+portal = document.getPortalObject()\n
+portal_catalog = portal.portal_catalog\n
+language = document.getLanguage()\n
+search_kw = {\n
+  \'reference\': reference,\n
+  \'validation_state\': validation_state,\n
+  # exclude current workflow changed document\n
+  \'uid\': SimpleQuery(uid=document.getUid(), comparison_operator=\'!=\'),\n
+  \'effective_date\': ComplexQuery(\n
+    SimpleQuery(effective_date=None),\n
+    SimpleQuery(effective_date=now, comparison_operator=\'<=\'),\n
+    logical_operator=\'or\',\n
+  ),\n
+}\n
+if not language:\n
+  # If language is None, we have to check is this document\n
+  # is language independent. In this case, archival is possible\n
+  # But if a document exists with same reference and defined\n
+  # language, we can not do anything\n
+  for old_document in portal_catalog(**search_kw):\n
+    old_document = old_document.getObject()\n
+    if old_document.getValidationState() in validation_state and not old_document.getLanguage():\n
+      old_document.archive()\n
+  return\n
+\n
+# We can now archive all documents with same reference and language in published state\n
+search_kw[\'language\'] = language\n
+for old_document in portal_catalog(**search_kw):\n
+  old_document = old_document.getObject()\n
+  if old_document.getValidationState() in validation_state:\n
+    old_document.archive()\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change, validation_state=[\'published\', \'published_alive\', \'released\', \'released_alive\', \'shared\', \'shared_alive\'], now=None</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>archiveVersion</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

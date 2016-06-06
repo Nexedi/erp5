@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>\'\'\'\n
+  return the quantity composed by all quantity of paysheet line wich category of\n
+  category_list parameter is in variation_category_list of the PaySheet line \n
+  and wich has a base_contribution in the base_contribution_list\n
+\'\'\'\n
+if excluded_reference_list is None:\n
+  excluded_reference_list = []\n
+\n
+total_quantity = 0\n
+movement_list = context.getMovementList(portal_type=(\'Pay Sheet Line\', \'Pay Sheet Cell\'))\n
+for movement in movement_list:\n
+  # Reference must be checked on line\n
+  if excluded_reference_list:\n
+    if "Cell" in movement.getPortalType():\n
+      line = movement.getParentValue()\n
+    else:\n
+      line = movement\n
+    if line.getReference() in excluded_reference_list:\n
+      continue\n
+\n
+  if base_contribution is not None and movement.isMemberOf(base_contribution) or no_base_contribution:\n
+\n
+    # base_contribution is mandatory, but not contribution_share. If contribution_share is\n
+    # given, search with it, if not, care only about base_contribution\n
+    if contribution_share is not None and movement.isMemberOf(contribution_share):\n
+      total_quantity += movement.getQuantity()\n
+    elif include_empty_contribution and (contribution_share is None or len(movement.getContributionShareList()) == 0):\n
+      total_quantity += movement.getQuantity()\n
+\n
+return total_quantity\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>base_contribution=None, contribution_share=None, no_base_contribution=False, include_empty_contribution=True, excluded_reference_list=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetTransaction_getMovementQuantityFromCategory</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

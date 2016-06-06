@@ -1,0 +1,358 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test History Available from edit_workflow</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test History and edit_workflow</td></tr>\n
+</thead><tbody>\n
+\n
+<tr>\n
+  <td>store</td>\n
+  <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>\n
+  <td>base_url</td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Reset Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/FooModule_createObjects?portal_type=Bar&amp;num:int=1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/0</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_title</td>\n
+  <td>Version 1</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_title</td>\n
+  <td>Version 2</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_title</td>\n
+  <td>Version 3</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=History</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number x0_listbox-current-page-total-number"]</td>\n
+  <td>4 records</td> <!-- Creation + edited 3 times -->\n
+</tr>\n
+\n
+<!-- First modification -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@class=\'x0_listbox-data-line-1 DataB\']/td[4]/a</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTitle</td>\n
+  <td>Historical Comparison - Version 3*</td>\n
+  <td></td>\n
+</tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>click</td>\n
+  <td>//span[@id=\'x0_listbox_check\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//div[@id=\'x0_listbox_data_line_1\']//a</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@class=\'title_index\']/a[3]</td>\n
+  <td>Version 3</td>\n
+</tr>\n
+</tal:block>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1 records</td> <!-- Only one property changed. -->\n
+</tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]</td>\n
+  <td>title</td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
+  <td>Title 0</td> <!-- before -->\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]</td>\n
+  <td>Version 1</td> <!-- after -->\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]</td>\n
+  <td>Version 3</td> <!-- now -->\n
+</tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+\n
+</tal:block>\n
+<!-- Second modification -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=History</td>\n
+  <td></td>\n
+</tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
+<tr>\n
+<td>clickAndWait</td>\n
+  <td>//tr[@class=\'x0_listbox-data-line-2 DataA\']/td[4]/a</td>\n
+  <td></td>\n
+</tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>click</td>\n
+  <td>//span[@id=\'x0_listbox_check\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//div[@id=\'x0_listbox_data_line_2\']//a</td>\n
+  <td></td>\n
+</tr>\n
+</tal:block>\n
+<tr>\n
+  <td>assertTitle</td>\n
+  <td>Historical Comparison - Version 3*</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1 records</td> <!-- Only one property changed. -->\n
+</tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]</td>\n
+  <td>title</td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
+  <td>Version 1</td> <!-- before -->\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]</td>\n
+  <td>Version 2</td> <!-- after -->\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]</td>\n
+  <td>Version 3</td> <!-- now -->\n
+</tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+\n
+</tal:block>\n
+<!-- Jump to old revision -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=View Old Revision</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Version from *</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_title</td>\n
+  <td>Version 1</td>\n
+</tr>\n
+<!-- (subobjects are still the current version) -->\n
+\n
+<!-- Third modification -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=History</td> <!-- even if we show an old version  -->\n
+  <td></td>             <!-- all links points to current version -->\n
+</tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@class=\'x0_listbox-data-line-3 DataB\']/td[4]/a</td>\n
+  <td></td>\n
+</tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>click</td>\n
+  <td>//span[@id=\'x0_listbox_check\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//div[@id=\'x0_listbox_data_line_3\']//a</td>\n
+  <td></td>\n
+</tr>\n
+</tal:block>\n
+<tr>\n
+  <td>assertTitle</td>\n
+  <td>Historical Comparison - Version 3*</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1 records</td> <!-- Only one property changed. -->\n
+</tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]</td>\n
+  <td>title</td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
+  <td>Version 2</td> <!-- before -->\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]</td>\n
+  <td>Version 3</td> <!-- after -->\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]</td>\n
+  <td>Version 3</td> <!-- now -->\n
+</tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+\n
+</tal:block>\n
+</tbody></table>\n
+</body>\n
+</html>\n
+\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testHistory</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+This script returns only the quantity unit of the resource \n
+entered on the fast input\n
+"""\n
+request = context.REQUEST\n
+portal = context.getPortalObject()\n
+\n
+base_category = portal.portal_categories.quantity_unit\n
+list_method_id = portal.portal_preferences.\\\n
+    getPreferredCategoryChildItemListMethodId(\n
+                                  \'getCategoryChildCompactLogicalPathItemList\')\n
+\n
+method = getattr(base_category, list_method_id)\n
+item_list = method(base=0, local_sort_id=(\'int_index\', \'translated_title\'),\n
+                   checked_permission=\'View\')\n
+\n
+result_item_list = [(\'\', \'\')]\n
+\n
+resource_value = context.getResourceValue()\n
+if resource_value is None:\n
+  # Lookup for expected resource according parameters in REQUEST\n
+  resource_relative_url = request.form.get("field_listbox_resource_relative_url_%s" % context.getUid())\n
+  if resource_relative_url:\n
+    resource_value = portal.restrictedTraverse(resource_relative_url)\n
+  resource_title = request.form.get("field_listbox_title_%s" % context.getUid())\n
+  resource_reference = request.form.get("field_listbox_reference_%s" % context.getUid())\n
+  if resource_value is None and (resource_title or resource_reference):\n
+    # Querying catalog to find a resource according title and reference parameters\n
+    # like Delivery_updateFastInputLineList does.\n
+    line_portal_type_list = [x for x in context.getTypeInfo().getTypeAllowedContentTypeList() \\\n
+                             if x in portal.getPortalMovementTypeList()]\n
+    line_portal_type = line_portal_type_list[0]\n
+\n
+    if line_portal_type in portal.getPortalSaleTypeList():\n
+      use_list = portal.portal_preferences.getPreferredSaleUseList()\n
+    elif line_portal_type in portal.getPortalPurchaseTypeList():\n
+      use_list = portal.portal_preferences.getPreferredPurchaseUseList()\n
+    elif line_portal_type in portal.getPortalInternalTypeList():\n
+      use_list = portal.portal_preferences.getPreferredPurchaseUseList() \\\n
+               + portal.portal_preferences.getPreferredSaleUseList()\n
+    elif line_portal_type in portal.getPortalInventoryMovementTypeList():\n
+      use_list = portal.portal_preferences.getPreferredPurchaseUseList() \\\n
+                 + portal.portal_preferences.getPreferredSaleUseList()\n
+    else:\n
+      raise NotImplementedError(\'Line portal type not found %s\' % (line_portal_type,))\n
+    use_uid_list = [portal.portal_categories.getCategoryUid(use) for use in use_list]\n
+    resource_list = portal.portal_catalog(portal_type=portal.getPortalResourceTypeList(),\n
+                                          title=resource_title,\n
+                                          default_use_uid=use_uid_list,\n
+                                          reference=resource_reference)\n
+    if len(resource_list):\n
+      resource_value = resource_list[0]\n
+\n
+if resource_value is not None:\n
+ quantity_unit_list = [(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0))\n
+                       for x in resource_value.getQuantityUnitValueList()]\n
+ # return the first quantity_unit item of resource\n
+ result_item_list.extend(quantity_unit_list)\n
+\n
+return result_item_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SaleOrderLine_getQuantityUnitItemList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

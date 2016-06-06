@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Create a zuite or return an existing one after remove his contents.\n
+"""\n
+assert context.getPortalType() == "Test Tool", "bad context"\n
+if REQUEST:\n
+  raise RuntimeError("You can not call this script from the URL")\n
+\n
+if zuite_id is None:\n
+  raise ValueError("Zuite_id cannot be None!")\n
+\n
+if zuite_id not in context.objectIds():\n
+  factory = context.portal_tests.manage_addProduct[\'Zelenium\']\n
+  factory.manage_addZuite(id=zuite_id)\n
+\n
+zuite = getattr(context.portal_tests, zuite_id)\n
+if zuite.getMetaType() != "ERP5 Test Tool":\n
+  raise ValueError("Zuite is not a ERP5 Test Tool")\n
+\n
+zuite.manage_delObjects(zuite.objectIds())\n
+\n
+return zuite\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>zuite_id, REQUEST=None</string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Zuite_addZuite</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

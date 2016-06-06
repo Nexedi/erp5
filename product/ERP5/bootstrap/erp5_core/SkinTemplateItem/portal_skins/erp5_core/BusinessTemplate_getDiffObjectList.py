@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Type.Document import newTempBase\n
+from Products.ERP5Type.Cache import CachingMethod\n
+from Products.ERP5.Document.BusinessTemplate import TemplateConditionError\n
+\n
+# get selected business templates\n
+p = context.getPortalObject()\n
+portal_selections = p.portal_selections\n
+selection_name = \'business_template_selection\' # harcoded because we can also get delete_selection\n
+uids = portal_selections.getSelectionCheckedUidsFor(selection_name)\n
+\n
+if len(uids) > 2:\n
+  raise TemplateConditionError(\'Too many Business Templates selected\')\n
+\n
+bt1 = context.portal_catalog.getObject(uids[0])\n
+if bt1.getBuildingState() != \'built\':\n
+  raise TemplateConditionError(\'Business Template must be built to make diff\')\n
+\n
+# check if there is a second bt or if we compare to installed one\n
+if len(uids) == 2:\n
+  bt2 = context.portal_catalog.getObject(uids[1])\n
+  if bt2.getBuildingState() != \'built\':\n
+    raise TemplateConditionError(\'Business Template must be built to make diff\')\n
+else:\n
+  # compare to objects in ZODB\n
+  bt2 = bt1\n
+\n
+def getModifiedObjectList(bt1, bt2):\n
+  return bt1.preinstall(compare_to=bt2)\n
+\n
+getModifiedObjectList = CachingMethod(getModifiedObjectList, id=\'BusinessTemplate_getModifiedObjectList\', \\\n
+                        cache_factory=\'erp5_ui_medium\')\n
+\n
+if p.portal_templates.compareVersions(bt1.getVersion(), bt2.getVersion()) < 0:\n
+  modified_object_list = getModifiedObjectList(bt2, bt1)\n
+else:\n
+  modified_object_list = getModifiedObjectList(bt1, bt2)\n
+\n
+keys = modified_object_list.keys()\n
+keys.sort()\n
+\n
+i = 0\n
+object_list = []\n
+for object_id in keys:    \n
+  object_state, object_class = modified_object_list[object_id]\n
+  line = newTempBase(context, \'tmp_install_%s\' %(str(i)))\n
+  line.edit(object_id=object_id, object_state=object_state, object_class=object_class, bt1=bt1.getId(), bt2=bt2.getId())\n
+  line.setUid(\'new_%s\' % object_id)\n
+  object_list.append(line)\n
+  i += 1                                  \n
+\n
+return object_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessTemplate_getDiffObjectList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

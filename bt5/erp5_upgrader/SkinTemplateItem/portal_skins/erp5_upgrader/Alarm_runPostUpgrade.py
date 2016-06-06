@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Run Post upgrade\n
+"""\n
+portal_alarms = context.getPortalObject().portal_alarms\n
+active_process = context.newActiveProcess()\n
+\n
+# We should not run post upgrade if upgrader was not solved or never executed\n
+alarm = getattr(portal_alarms, \'upgrader_check_upgrader\')\n
+if not(force) and alarm.sense() in (None, True):\n
+  active_process.postActiveResult(summary=context.getTitle(),\n
+      severity=1,\n
+      detail=["Is required run upgrade before solve it. You need run active sense once at least on this alarm"])\n
+  return\n
+\n
+context.ERP5Site_checkUpgraderConsistency(fixit=True,\n
+  activate_kw=activate_kw,\n
+  active_process=active_process,\n
+  filter_dict={"constraint_type": "post_upgrade"})\n
+\n
+context.setEnabled(False)\n
+return\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>force=0, activate_kw={}, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Alarm_runPostUpgrade</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

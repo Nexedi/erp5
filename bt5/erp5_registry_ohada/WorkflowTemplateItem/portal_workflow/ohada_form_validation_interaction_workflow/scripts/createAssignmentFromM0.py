@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+This script collects *all* filled properties in the M0\n
+request_eform and creates a new Organisation record.\n
+"""\n
+\n
+# Initalize some useful variables\n
+person_module = context.getPortalObject().person_module\n
+request_eform = sci[\'object\']\n
+duration = request_eform.getDuration()\n
+duration_length =int(duration.split(\' \').pop(0))\n
+beginning_date = request_eform.getBeginningDate()\n
+y = beginning_date.year()\n
+m = beginning_date.month()\n
+d = beginning_date.day()\n
+stop_year = y+duration_length\n
+first_associate= person_module.newContent(portal_type =\'Person\')\n
+first_associate_assignment = first_associate.newContent(portal_type =\'Assignment\',\n
+  function = \'entreprise/associe\',\n
+  start_date =organisation.getStartDate(),\n
+  stop_date ="%04d/%02d/%02d" % (stop_year, m, d),\n
+  destination_value = organisation,\n
+)\n
+#Second Associate\n
+second_associate= person_module.newContent(portal_type =\'Person\')\n
+second_associate.edit(\n
+  last_name =request_eform.getSecondAssociateLastname(),\n
+  first_name = request_eform.getSecondAssociateFirstname(),\n
+  start_date = request_eform.getSecondAssociateBirthday(),\n
+  career_subordination_value = organisation,\n
+)\n
+second_associate_assignment = second_associate.newContent(portal_type =\'Assignment\',\n
+  function = \'entreprise/associe\',\n
+  start_date =organisation.getStartDate(),\n
+  stop_date=organisation.getStopDate(),\n
+  destination_value = organisation,\n
+)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>sci</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>createAssignmentFromM0</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

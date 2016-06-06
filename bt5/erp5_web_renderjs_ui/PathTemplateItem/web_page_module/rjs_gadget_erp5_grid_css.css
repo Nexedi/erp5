@@ -1,0 +1,535 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Style" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/team</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_erp5_grid.css</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>rjs_gadget_erp5_grid_css</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Style</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* custom grid css */\n
+/* assume there will be a gadget wrapping grid cell content, set to 100% */\n
+.ui-grid-container li > div {\n
+  display: table;\n
+  border-spacing: .25em;\n
+  width: 100%;\n
+}\n
+.ui-grid-container li > div .custom-grid-wrap {\n
+  display: table-row;\n
+}\n
+.ui-grid-container li > div .custom-grid-wrap .custom-grid {\n
+  display: table-cell;\n
+  border-width: 1px;\n
+  border-style: solid;\n
+  -webkit-box-sizing: border-box;\n
+  -moz-box-sizing: border-box;\n
+  box-sizing: border-box;\n
+}\n
+/* weather gadget should not have border around input */\n
+.ui-grid-container li > div .custom-grid-wrap .custom-grid-no-border {\n
+  border-width: 0;\n
+}\n
+/* I hate hardcoding, but for now... */\n
+.custom-map-dimensions .custom-grid {\n
+  height: 20em;\n
+}\n
+/* prevent table cells from breaking */\n
+.ui-grid-container li > div .custom-grid-wrap .custom-grid .ui-link {\n
+  text-overflow: ellipsis;\n
+  white-space: nowrap;\n
+  overflow: hidden;\n
+}\n
+@media (min-width: 62em) {\n
+  /* when setting %-max-width on td/th, only table-layout:fixed makes it work\n
+     (not in IE!) */\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table {\n
+    table-layout: fixed;\n
+  }\n
+  /* set width depending on number of cols... */\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(1),\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(1) {\n
+    max-width: 100%;\n
+  }\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(2),\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(2) ~ th,\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(2),\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(2) ~ td {\n
+    max-width: 50%;\n
+  }\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(3),\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(3) ~ th,\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(3),\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(3) ~ td {\n
+    max-width: 33.3333%;\n
+  }\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(4),\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(4) ~ th,\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(4),\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(4) ~ td {\n
+    max-width: 25%;\n
+  }\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(5),\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(5) ~ th,\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(5),\n
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(5) ~ td {\n
+    max-width: 20%;\n
+  }\n
+}\n
+\n
+/* set correct border-radius */\n
+.custom-grid .ui-header {\n
+  -webkit-border-bottom-left-radius: 0;\n
+  border-bottom-left-radius: 0;\n
+  -webkit-border-bottom-right-radius: 0;\n
+  border-bottom-right-radius: 0;\n
+  -webkit-border-top-left-radius: .3125em;\n
+  border-top-left-radius: .3125em;\n
+  -webkit-border-top-right-radius: .3125em;\n
+  border-top-right-radius: .3125em;\n
+}\n
+\n
+/* reset border-spacing and max-width of header */\n
+.custom-grid .ui-header .ui-controlgroup {\n
+  max-width: none;\n
+  min-width: 0;\n
+  border-spacing: 0;\n
+}\n
+/* remove button border */\n
+.custom-grid .ui-header .ui-controlgroup-controls .ui-btn {\n
+  border: 0 none;\n
+}\n
+/* remove top borders on tables inside grid */\n
+.custom-grid .ui-table-inset {\n
+  -webkit-border-top-left-radius: 0;\n
+  border-top-left-radius: 0;\n
+  -webkit-border-top-right-radius: 0;\n
+  border-top-right-radius: 0;\n
+}\n
+/* remove margin on search field */\n
+.custom-grid .ui-field-contain {\n
+  margin: 0;\n
+}\n
+\n
+/* add top border to table with header and search form in between */\n
+.custom-grid .ui-table-header ~ form ~ table {\n
+  border-top-width: 1px;\n
+}\n
+/* remove margin from listview and top borders */\n
+.custom-grid .ui-table-header ~ .ui-listview {\n
+  margin: 0;\n
+  -webkit-border-top-left-radius: 0;\n
+  border-top-left-radius: 0;\n
+  -webkit-border-top-right-radius: 0;\n
+  border-top-right-radius: 0;\n
+}\n
+.custom-grid .ui-table-header ~ .ui-listview > li.ui-first-child > a.ui-btn {\n
+  border-top-width: 0;\n
+}\n
+/* corners again */\n
+.custom-grid .ui-controlgroup-controls .ui-btn.ui-corner-all.ui-first-child {\n
+  -webkit-border-top-left-radius: .3125em;\n
+  border-top-left-radius: .3125em;\n
+    -webkit-border-bottom-left-radius: .3125em;\n
+  border-bottom-left-radius: .3125em;\n
+}\n
+.custom-grid .ui-controlgroup-controls .ui-btn.ui-corner-all.ui-last-child {\n
+  -webkit-border-top-right-radius: .3125em;\n
+  border-top-right-radius: .3125em;\n
+  -webkit-border-bottom-right-radius: .3125em;\n
+  border-bottom-right-radius: .3125em;\n
+}\n
+/* align tag-list */\n
+.custom-grid .ui-tag-list {\n
+  text-align: center;\n
+}\n
+\n
+/* search field - stretch field to available space */\n
+.custom-grid form .center {\n
+  width: 100%;\n
+  display: inline-block;\n
+  margin: 0;\n
+  padding: 0;\n
+}\n
+/* search field - remove spacing on field container */\n
+.custom-grid form .center .ui-field-contain {\n
+  margin: 0;\n
+  padding: 0;\n
+}\n
+.custom-grid form .center .ui-field-contain:after,\n
+.custom-grid form .center .ui-field-contain:before {\n
+  content: none;\n
+  display: none;\n
+}\n
+/* search field - remove corners and spacing */\n
+html.ui-mobile head + body .custom-grid form .center .ui-field-contain .ui-input-text {\n
+  -webkit-border-radius: 0;\n
+  border-radius: 0;\n
+}\n
+\n
+\n
+/* create button controlgroup */\n
+html body .custom-link-list {\n
+  margin: 0;\n
+}\n
+html body .custom-link-list span {\n
+  -webkit-border-radius: .325em;\n
+  border-radius: .325em;\n
+}\n
+html body .custom-link-list .ui-controlgroup-controls {\n
+  width: 100%;\n
+  border-spacing: 0;\n
+  margin: 0;\n
+  padding: 0;\n
+}\n
+html body .custom-link-list .ui-controlgroup-controls a {\n
+  display: inline-block;\n
+  margin: 0;\n
+  padding: 0.5em 0.5em 0.15em;\n
+  width: 24.66%;\n
+  -webkit-box-sizing: border-box;\n
+  -moz-box-sizing: border-box;\n
+  box-sizing: border-box;\n
+}\n
+/* make it responsive - XXX not perfect switching widths */\n
+@media (max-width: 48em) {\n
+  html body .custom-link-list .ui-controlgroup-controls a {\n
+    width: 49.6%;\n
+  }\n
+}\n
+@media (max-width: 32em) {\n
+  html body .custom-link-list .ui-controlgroup-controls a {\n
+    width: 99.5%;\n
+  }\n
+}\n
+/* make navigation bar responsive */\n
+html body .ui-custom-navigation-bar {\n
+  text-align: center;\n
+}\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Gadget ERP5 Grid CSS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1427902590.41</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>942.4437.49563.7185</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1427980281.68</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1427902548.67</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

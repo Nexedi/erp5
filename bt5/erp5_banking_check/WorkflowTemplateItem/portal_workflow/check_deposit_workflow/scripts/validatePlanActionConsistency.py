@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+\n
+transaction = state_change[\'object\']\n
+\n
+# Test if the account balance is sufficient.\n
+bank_account_dict = {}\n
+amount_dict = {}\n
+for check_operation_line in transaction.objectValues(portal_type=\'Check Operation Line\'):\n
+  account_value = check_operation_line.getSourcePaymentValue()\n
+  account_path = account_value.getRelativeUrl()\n
+  bank_account_dict[account_path] = account_value\n
+  amount_dict[account_path] = amount_dict.get(account_path, 0) + check_operation_line.getPrice()\n
+for account_path, amount in amount_dict.items():\n
+  error = transaction.BankAccount_checkBalance(account_path, amount)[\'error_code\']\n
+  source_bank_account = bank_account_dict[account_path]\n
+  if error == 1:\n
+    raise ValidationFailed, (Message(domain=\'ui\', message="Bank account $account is not sufficient.",\n
+      mapping={"account": source_bank_account.getInternalBankAccountNumber()}), )\n
+  elif error == 2:\n
+    raise ValidationFailed, (Message(domain=\'ui\', message="Bank account $account is not valid.",\n
+      mapping={"account": source_bank_account.getInternalBankAccountNumber()}), )\n
+  elif error != 0:\n
+    raise ValidationFailed, (Message(domain=\'ui\', message="Unknown error code."),)\n
+\n
+context.validateConsistency(state_change)\n
+\n
+if transaction.getSimulationState() == "draft":\n
+  context.createCheckDepositLine(state_change)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>validatePlanActionConsistency</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

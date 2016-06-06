@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308766.45</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>variables.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>//\n
+// Variables\n
+// --------------------------------------------------\n
+\n
+// Active color\n
+// -------------------------\n
+@green-darker:          #0f0;\n
+@green-dark:            #7e983f;\n
+@green:                 #8ca946;\n
+@green-light:           #98b259;\n
+@green-lighter:         #0f0;\n
+\n
+@brand-active:          @green-dark;\n
+@brand-active-light:    @green-light;\n
+\n
+@red:                   #d92b29;\n
+\n
+// Header\n
+// -------------------------\n
+@app-header-height:         20px;\n
+@app-header-bg-color:       @green;\n
+@app-header-bg-color-dark:  @green-dark;\n
+@app-header-bg-color-light: @green-light;</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>577</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

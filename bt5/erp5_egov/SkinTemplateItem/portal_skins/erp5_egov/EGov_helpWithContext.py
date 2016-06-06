@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>\'\'\'\n
+  This script generate some web page name related to the context\n
+  ex :\n
+  DeclarationTVA-Draft-PDFDocument_viewAttachmentList-Upload.Button-Citizen\n
+\'\'\'\n
+\n
+# get some information about the context\n
+absolute_url = context.getAbsoluteUrl()\n
+portal_type = context.getPortalType()\n
+request = context.REQUEST\n
+form_id = request.get(\'form_id\', None)\n
+\n
+# remove spaces\n
+portal_type = portal_type.replace(\' \', \'\')\n
+id = context.getId()\n
+\n
+web_page_name = []\n
+web_page_name.append(portal_type)\n
+if getattr(context, \'getValidationState\', None) and context.getValidationState():\n
+  web_page_name.append(context.getValidationState())\n
+\n
+if form_id:\n
+  web_page_name.append(form_id)\n
+\n
+web_site_id = context.getWebSiteValue().getId()\n
+if web_site_id == \'egovernment\':\n
+  web_page_name.append(\'Agent\')\n
+if web_site_id == \'ecitizen\':\n
+  web_page_name.append(\'Citizen\')\n
+\n
+return \'-\'.join(web_page_name)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>EGov_helpWithContext</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

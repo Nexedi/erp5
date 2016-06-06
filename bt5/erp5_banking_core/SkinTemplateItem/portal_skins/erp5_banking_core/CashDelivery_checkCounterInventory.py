@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# check that the amount of resources at `source` is greater or equal\n
+# than the amount of movement of type `portal_type` in this movement\n
+\n
+# returns 2 : no resource, 1 : insufficient balance, 0 : ok\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+# XXX this should be handled by a portal method.\n
+currency_cash_portal_type_list = [\'Banknote\', \'Coin\']\n
+\n
+inventory_dict = {}\n
+requested_dict = {}\n
+\n
+# test all movement\n
+tmp_list = context.contentValues(filter={\'portal_type\': portal_type})\n
+#context.log(\'tmp_list\', str((tmp_list, portal_type, context)))\n
+#context.log(\'source\',source)\n
+line_list = []\n
+resource_dict = {}\n
+node_dict = {}\n
+variation_text_dict = {}\n
+start_date = context.getStartDate()\n
+for l in tmp_list :\n
+  # The source can be different for every line (due to getBaobabSource approach)\n
+  if source is None:\n
+    source_counter = l.getBaobabSource()\n
+  else:\n
+    source_counter = source\n
+  # test if resource is a currency_cash\n
+  try:\n
+    if (l.getResourceValue().getPortalType() in currency_cash_portal_type_list) \\\n
+           and (same_source or l.getBaobabSource() == source_counter) :\n
+      line_list.append(l)\n
+      resource_dict[l.getResource()] = None\n
+      node_dict[source_counter] = None\n
+      for cell in l.objectValues() :\n
+        variation_text_dict[cell.getVariationText()] = None\n
+  except (AttributeError, KeyError):\n
+    pass\n
+#context.log("line list", line_list)\n
+if len(line_list) == 0 :\n
+  # no resource\n
+  return 2\n
+\n
+# in some case, we don\'t want to check balance\n
+if no_balance_check:\n
+  return 0\n
+\n
+serialize_dict = {}\n
+\n
+activity_tool = context.portal_activities\n
+def checkActivities(source_counter):\n
+  if activity_tool.countMessageWithTag(source_counter):\n
+    msg = Message(domain=\'ui\', message="There are operations pending for this vault that prevent form calculating its position. Please try again later.")\n
+    raise ValidationFailed, (msg,)\n
+\n
+inventory_list = context.portal_simulation.getCurrentInventoryList(\n
+                   #at_date=start_date,\n
+                   group_by_variation=1,\n
+                   group_by_node=1,\n
+                   group_by_resource=1,\n
+                   node=node_dict.keys(),\n
+                   resource=resource_dict.keys(),\n
+                   variation_text=variation_text_dict.keys())\n
+\n
+inventory_dict = {}\n
+inventory_column_id_order = [\'node_relative_url\', \'resource_relative_url\', \'variation_text\']\n
+inventory_parameter_id_order = [\'node\', \'resource\', \'variation_text\']\n
+for inventory_line in inventory_list:\n
+  inventory_key = tuple([inventory_line[x] for x in inventory_column_id_order])\n
+  inventory_dict[inventory_key] = inventory_line[\'inventory\']\n
+\n
+def getCurrentInventory(**criterion_dict):\n
+  inventory_key = tuple([criterion_dict[x] for x in inventory_parameter_id_order])\n
+  return inventory_dict.get(inventory_key, 0)\n
+\n
+for line in line_list :\n
+  line_resource = line.getResource()\n
+  # The source can be different for every line (due to getBaobabSource approach)\n
+  if source is None:\n
+    source_counter = line.getBaobabSource()\n
+  else:\n
+    source_counter = source\n
+  # Make sure there is no reindex with the tag of this counter\n
+  if not serialize_dict.has_key(source_counter):\n
+    serialize_dict[source_counter] = 1\n
+    if source_counter is None:\n
+      msg = Message(domain="ui", message="No source counter define to check inventory.")\n
+      raise ValidationFailed, (msg,)\n
+    #context.log("CashDelivery_checkCounterInventory", "source_counter = %s" %source_counter)\n
+    source_object = context.portal_categories.getCategoryValue(source_counter)\n
+    source_object.serialize()\n
+    checkActivities(source_counter)\n
+  # Reindex this line with this particular source_counter tag\n
+  activate_kw = {\'tag\':source_counter}\n
+  line.reindexObject(activate_kw=activate_kw)\n
+  if line.hasCellContent() :\n
+    for cell in line.objectValues() :\n
+      variation_text = cell.getVariationText()\n
+      #context.log(\'check cell : \', str((source_counter, line_resource, variation_text)))\n
+      inventory_value = getCurrentInventory(node=source_counter, resource = line_resource,\n
+          variation_text = variation_text)\n
+      #context.log(\'cell quantity\', cell.getQuantity())\n
+      #context.log(\'inventory value\', inventory_value)\n
+      if inventory_value - cell.getQuantity() < 0:\n
+        msg = Message(domain=\'ui\',\n
+                      message=\'Insufficient balance for $resource, letter $letter, status $status and variation $variation\',\n
+                      mapping={\'resource\':cell.getResourceTranslatedTitle(),\n
+                               \'letter\': cell.getEmissionLetterTitle(),\n
+                               \'status\': cell.getCashStatusTranslatedTitle(),\n
+                               \'variation\':cell.getVariationTitle()})\n
+        raise ValidationFailed, (msg,)\n
+  else :\n
+    raise ValueError, \'This script must not be used on movements without cells. It is deprecated and dangerous, therefor it raises.\'\n
+#    inventory_value = context.portal_simulation.getCurrentInventory(section=source_counter, resource=line_resource)\n
+#    if inventory_value - line.getQuantity() < 0 :\n
+#      msg = Message(domain=\'ui\', message=\'Insufficient balance for $resource, letter $letter, status $status and variation $variation\', mapping={\'resource\':line.getResourceTranslatedTitle(),\n
+#                                                                                                                      \'letter\': line.getEmissionLetterTitle(),\n
+#                                                                                                                      \'status\': line.getCashStatusTranslatedTitle(),\n
+#                                                                                                                      \'variation\':line.getVariationTitle()})\n
+#      raise ValidationFailed, (msg,)\n
+  \n
+return 0\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>source=None,  portal_type=None, same_source=0, no_balance_check=0, debug=0</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CashDelivery_checkCounterInventory</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

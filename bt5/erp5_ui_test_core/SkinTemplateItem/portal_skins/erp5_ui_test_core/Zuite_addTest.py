@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  Include a page template contains a into a Zuite\n
+"""\n
+if REQUEST:\n
+  raise RuntimeError("You can not call this script from the URL")\n
+\n
+assert context.getPortalType() == "Test Tool", "bad context"\n
+\n
+if test_id is None or test_id == \'\':\n
+  test_id = \'\'.join(list(filter(lambda a: a not in ["\'",\'_\', \'-\',\'.\',\' \',\'~\', \':\', \'/\', \'?\', \'#\', \'[\', \']\', \'@\', \'!\', \'$\', \'&\', \'(\', \')\', \'*\',\'+\',\';\',\'=\'], title)))\n
+\n
+if test_id not in context.objectIds():\n
+  factory = context.manage_addProduct[\'PageTemplates\']\n
+  factory.manage_addPageTemplate(test_id, title=title, text=text, REQUEST=None)\n
+  test = getattr(context, test_id, None)\n
+else:\n
+  test = getattr(context, test_id, None)\n
+  context.Zuite_editZPT(test, text)\n
+  test.setTitle(text)\n
+\n
+return test\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>test_id, title, text, REQUEST=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Zuite_addTest</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

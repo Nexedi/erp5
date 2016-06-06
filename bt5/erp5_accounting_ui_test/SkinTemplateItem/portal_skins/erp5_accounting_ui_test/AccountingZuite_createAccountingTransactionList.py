@@ -1,0 +1,345 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from DateTime import DateTime\n
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery\n
+\n
+# params\n
+section_title = \'My Organisation\'\n
+portal = context.getPortalObject()\n
+accounting_module = portal.accounting_module\n
+year = 2005\n
+default_date = DateTime(year, 01, 01)\n
+\n
+business_process = portal.portal_catalog.getResultValue(\n
+  reference=(\'default_erp5_business_process\', # erp5_configurator\n
+             \'erp5_default_business_process\'), # erp5_simulation_test\n
+  portal_type=\'Business Process\').getRelativeUrl()\n
+\n
+# if the previous test didn\'t change input data, no need to recreate content\n
+current_script_data_id = \'%s_month_count_%s_draft_%s_state_%s_payment_%s\' % (\n
+     month_count, add_draft_transactions, transaction_state,\n
+     add_related_payments, script.getId())\n
+\n
+if accounting_module.getProperty(\'current_content_script\',\n
+                                \'\') == current_script_data_id:\n
+  return "Accounting Transactions Created."\n
+\n
+# first, cleanup accounting module\n
+# XXX should be done in an external script / tool, because we have to\n
+# workaround some security checks\n
+if 1:\n
+  for module_id in [\'accounting_module\',\n
+                    \'sale_packing_list_module\',\n
+                    \'portal_simulation\', ]:\n
+    module = portal[module_id]\n
+    if len(module) > 200:\n
+      raise ValueError("Do not run this on production !!!")\n
+    module.manage_delObjects(list(module.objectIds()))\n
+\n
+def getAccountByTitle(title):\n
+  account_list = [x.getObject().getRelativeUrl() for x in\n
+    portal.portal_catalog(portal_type=\'Account\',\n
+                          title=SimpleQuery(title=title, comparison_operator=\'=\'))]\n
+  assert len(account_list) == 1, \\\n
+        \'%d account with title "%s"\' % (len(account_list), title)\n
+  return account_list[0]\n
+\n
+def getOrganisationByTitle(title):\n
+  document_list = [x.getObject().getRelativeUrl() for x in\n
+    portal.portal_catalog(portal_type=\'Organisation\',\n
+                          title=SimpleQuery(title=title, comparison_operator=\'=\'))]\n
+  assert len(document_list) == 1, \\\n
+        \'%d organisation with title "%s"\' % (len(document_list), title)\n
+  return document_list[0]\n
+section = getOrganisationByTitle(section_title)\n
+\n
+euro_resource = \'currency_module/euro\'\n
+\n
+def getBankAccountByTitle(title):\n
+  document_list = [x.getObject().getRelativeUrl() for x in\n
+    portal.portal_catalog(portal_type=\'Bank Account\',\n
+                          title=SimpleQuery(title=title, comparison_operator=\'=\'))]\n
+  assert len(document_list) == 1, \\\n
+      \'%d Bank Account with title "%s"\' % (len(document_list), title)\n
+  return document_list[0]\n
+\n
+product_list = [o.getObject() for o in portal.portal_catalog(\n
+                                  portal_type=\'Product\',\n
+                                  title=SimpleQuery(title=\'Dummy Product for testing\', comparison_operator=\'=\'))]\n
+if product_list:\n
+  product = product_list[0]\n
+else:\n
+  product = portal.product_module.newContent(portal_type=\'Product\',\n
+                              title=\'Dummy Product for testing\')\n
+\n
+for i in range(random.randint(5, 10)):\n
+  pl = portal.sale_packing_list_module.newContent(\n
+        portal_type=\'Sale Packing List\',\n
+        title=\'Dummy Packing List for testing\',\n
+        source_section=section,\n
+        source=section,\n
+        destination_section=getOrganisationByTitle(\'Client 1\'),\n
+        destination=getOrganisationByTitle(\'Client 1\'),\n
+        specialise=business_process,\n
+        start_date=default_date, )\n
+  line = pl.newContent(portal_type=\'Sale Packing List Line\',\n
+                resource_value=product,\n
+                quantity=random.randint(300, 500),\n
+                price=random.randint(300, 500))\n
+\n
+  # TODO: add an external method to modify workflow state of an object\n
+  #context.portal_tests.setSimulationStateFor(pl, \'stopped\')\n
+  #assert pl.getSimulationState() == \'stopped\'\n
+  #pl.recursiveReindexObject()\n
+\n
+for month in range(1, month_count + 1):\n
+  default_date = DateTime(year, month, 1)\n
+  tr = accounting_module.newContent(\n
+        title=\'Accounts opening\',\n
+        portal_type=\'Accounting Transaction\',\n
+        source_section=section,\n
+        created_by_builder=1,\n
+        start_date=default_date,\n
+        stop_date=default_date,\n
+        resource=euro_resource,\n
+    )\n
+\n
+  tr.newContent(portal_type=\'Accounting Transaction Line\',\n
+                source=getAccountByTitle(\'Equity\'),\n
+                quantity=20000)\n
+  tr.newContent(portal_type=\'Accounting Transaction Line\',\n
+                source=getAccountByTitle(\'Fixed Assets\'),\n
+                quantity=-15000)\n
+  tr.newContent(portal_type=\'Accounting Transaction Line\',\n
+                source=getAccountByTitle(\'Stocks\'),\n
+                quantity=-5000)\n
+  # TODO: "validated" should be renamed to "stopped"\n
+  if transaction_state == \'validated\':\n
+    tr.stop()\n
+    assert tr.getSimulationState() == \'stopped\'\n
+  elif transaction_state == \'delivered\':\n
+    tr.stop()\n
+    tr.deliver()\n
+    assert tr.getSimulationState() == \'delivered\'\n
+  else:\n
+    # other cases not supported for now\n
+    assert transaction_state == \'draft\'\n
+  \n
+  vat_rate = .1\n
+\n
+  for client_title, amount  in ((\'Client 1\', 2000), (\'Client 2\', 3000)):\n
+    default_date += 1\n
+    tr = accounting_module.newContent(\n
+          portal_type=\'Sale Invoice Transaction\',\n
+          title=\'%s Sale Invoice\' % client_title,\n
+          source_section=section,\n
+          destination_section=getOrganisationByTitle(client_title),\n
+          source=section,\n
+          destination=getOrganisationByTitle(client_title),\n
+          created_by_builder=1,\n
+          start_date=default_date,\n
+          stop_date=default_date,\n
+          specialise=business_process,\n
+          resource=euro_resource,\n
+      )\n
+    tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
+                  source=getAccountByTitle(\'Receivable\'),\n
+                  quantity=-(amount * (1 + vat_rate)))\n
+    tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
+                  source=getAccountByTitle(\'Collected VAT 10%\'),\n
+                  quantity=amount * vat_rate)\n
+    tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
+                  source=getAccountByTitle(\'Goods Sales\'),\n
+                  quantity=amount)\n
+    # add a random invoice line, which should not impact our tests\n
+    tr.newContent(portal_type=\'Invoice Line\',\n
+                  source=section,\n
+                  destination=getOrganisationByTitle(client_title),\n
+                  resource_value=product,\n
+                  quantity=random.randint(300, 400),\n
+                  price=random.randint(300, 400), )\n
+    if transaction_state == \'validated\':\n
+      tr.stop()\n
+      assert tr.getSimulationState() == \'stopped\'\n
+    elif transaction_state == \'delivered\':\n
+      tr.stop()\n
+      tr.deliver()\n
+      assert tr.getSimulationState() == \'delivered\'\n
+    else:\n
+      # other cases not supported for now\n
+      assert transaction_state == \'draft\'\n
+    if add_related_payments:\n
+      payment = accounting_module.newContent(\n
+            causality_value=tr,\n
+            portal_type=\'Payment Transaction\',\n
+            title=\'%s Payment\' % client_title,\n
+            source_section=section,\n
+            destination_section=getOrganisationByTitle(client_title),\n
+            created_by_builder=1,\n
+            start_date=default_date + .1, # make sure this will be after the invoice\n
+            stop_date=default_date + .1,\n
+            resource=euro_resource,\n
+        )\n
+      payment.newContent(portal_type=\'Accounting Transaction Line\',\n
+                    source=getAccountByTitle(\'Bank\'),\n
+                    quantity=-(amount * (1 + vat_rate)))\n
+      payment.newContent(portal_type=\'Accounting Transaction Line\',\n
+                    source=getAccountByTitle(\'Receivable\'),\n
+                    quantity=(amount * (1 + vat_rate)))\n
+      if transaction_state in (\'validated\', \'delivered\'):\n
+        payment.stop()\n
+        assert payment.getSimulationState() == \'stopped\'\n
+        if transaction_state == \'delivered\':\n
+          tr.deliver()\n
+          assert tr.getSimulationState() == \'delivered\'\n
+        if not keep_grouping_reference:\n
+          for line in payment.getMovementList(\n
+                          portal_type=payment.getPortalAccountingMovementTypeList()):\n
+            if line.getGroupingReference():\n
+               line.activate(after_path_and_method_id=(\n
+                  (payment.getPath(), line.getPath()),\n
+                    (\'recursiveImmediateReindexObject\',\n
+                      \'immediateReindexObject\')),\n
+               ).AccountingTransactionLine_resetGroupingReference()\n
+\n
+      else:\n
+        # other cases not supported for now\n
+        assert transaction_state == \'draft\'\n
+      \n
+\n
+  amount=7000\n
+  default_date += 1\n
+  tr = accounting_module.newContent(\n
+        portal_type=\'Purchase Invoice Transaction\',\n
+        title=\'First Purchase Invoice\',\n
+        destination_section=section,\n
+        source_section=getOrganisationByTitle(\'Supplier\'),\n
+        created_by_builder=1,\n
+        start_date=default_date-5, # In purchase invoice transaction, stop_date is accounting operation date.\n
+        stop_date=default_date,\n
+        specialise=business_process,\n
+        resource=euro_resource,\n
+    )\n
+  tr.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
+                destination=getAccountByTitle(\'Payable\'),\n
+                quantity=-(amount * (1 + vat_rate)))\n
+  tr.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
+                destination=getAccountByTitle(\'Refundable VAT 10%\'),\n
+                quantity=amount * vat_rate)\n
+  tr.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
+                destination=getAccountByTitle(\'Goods Purchase\'),\n
+                quantity=amount)\n
+  if transaction_state == \'validated\':\n
+    tr.stop()\n
+    assert tr.getSimulationState() == \'stopped\'\n
+  elif transaction_state == \'delivered\':\n
+    tr.stop()\n
+    tr.deliver()\n
+    assert tr.getSimulationState() == \'delivered\'\n
+  else:\n
+    # other cases not supported for now\n
+    assert transaction_state == \'draft\'\n
+  \n
+if add_draft_transactions:\n
+  # finally, add random accounting transcactions in draft state, which have no\n
+  # impact on the test\n
+  for client_title, amount  in ((\'Client 1\', 2000), (\'Client 2\', 3000)):\n
+    tr = accounting_module.newContent(\n
+          portal_type=\'Sale Invoice Transaction\',\n
+          title=\'%s Sale Invoice\' % client_title,\n
+          source_section=section,\n
+          destination_section=getOrganisationByTitle(client_title),\n
+          created_by_builder=1,\n
+          start_date=default_date,\n
+          stop_date=default_date,\n
+          resource=euro_resource,\n
+          specialise=business_process,\n
+      )\n
+    tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
+                  source=getAccountByTitle(\'Receivable\'),\n
+                  quantity=random.randint(300, 400),)\n
+    tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
+                  source=getAccountByTitle(\'Collected VAT 10%\'),\n
+                  quantity=random.randint(300, 400),)\n
+    tr.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
+                  source=getAccountByTitle(\'Goods Sales\'),\n
+                  quantity=random.randint(300, 400),)\n
+\n
+accounting_module.setProperty(\'current_content_script\',\n
+                              current_script_data_id)\n
+\n
+# test depends on this\n
+return "Accounting Transactions Created."\n
+# vim: syntax=python\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>month_count=1, add_draft_transactions=1, transaction_state=\'validated\', add_related_payments=0, keep_grouping_reference=0</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingZuite_createAccountingTransactionList</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

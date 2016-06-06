@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!-- ============================================================== -->\n
+<!--\n
+Description:\n
+  This macro render a tabbed search panel.\n
+-->\n
+\n
+<tal:block metal:define-macro="main">\n
+  <tal:block tal:define="global web_site_url web_site_url | nothing"/>\n
+  <tal:block tal:condition="not:web_site_url">\n
+    <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
+  </tal:block>\n
+  \n
+  <div class="tabber">\n
+    <div class="tabbertab">\n
+      <h2 i18n:translate="" i18n:domain="ui">Pending Applications</h2>\n
+      <img alt="Track Application Logo" src="img/track_application.png"/>\n
+      <tal:block tal:define="global portal_type_dict python:\n
+        here.getPortalTypeWorklistDictForWorkflow(context, \n
+        workflow_list=[\'egov_universal_workflow\', \'egov_anonymous_workflow\'])" />\n
+      <ul tal:condition="python: portal_type_dict">\n
+        <li tal:repeat="portal_type python: portal_type_dict.keys()">\n
+          <span class ="portal_type" tal:content="portal_type" \n
+            i18n:domain="ui" i18n:translate="">portal_type\n
+          </span>\n
+          : \n
+          <tal:block tal:repeat="worklist_list python: \n
+                                  portal_type_dict[portal_type].values()">\n
+            <span class="state" tal:attributes="class python:\'%s_state\' % \n
+              worklist_list[\'validation_state\']" \n
+              i18n:translate="" i18n:domain="ui" \n
+              tal:content="python: worklist_list[\'validation_state\']">\n
+              state\n
+            </span> : \n
+            <a class="action_number" tal:content="python: worklist_list[\'count\']"\n
+              href="link" tal:attributes="href worklist_list/formated_url">action_number\n
+            </a>\n
+            ; \n
+          </tal:block>\n
+        </li>\n
+      </ul>\n
+      <div tal:condition="python: not portal_type_dict">\n
+        Nothing to do !\n
+      </div>\n
+      <div class="clear"></div>\n
+    </div>\n
+  </div>\n
+  <div class="clear">\n
+  </div>\n
+</tal:block>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewAgentWorklistRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

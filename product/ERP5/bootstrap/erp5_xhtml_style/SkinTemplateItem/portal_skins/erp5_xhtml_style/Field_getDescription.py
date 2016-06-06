@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
+\n
+field = context\n
+field_id = field.getId()\n
+form = field.aq_parent\n
+form_id = form.getId()\n
+document = form.aq_parent\n
+if getattr(document, \'getPortalType\', None) is None:\n
+  document = None\n
+\n
+def getFieldDescription(field_id):\n
+  desc = field.get_value(\'description\')\n
+  if desc in (\'\', None):\n
+    split_id = field_id.split(\'_\', 1)\n
+    if split_id[0] == \'my\':\n
+      if document is None:\n
+        desc = \'Dummy field description for %s\' % (field_id, )\n
+      else:\n
+        try:\n
+          properties = document.propertyMap()\n
+        except AttributeError: # If context has no propertyMap, give up\n
+          properties = []\n
+        for property in properties:\n
+          if split_id[1] == property[\'id\']:\n
+            desc = property.get(\'description\', \'\')\n
+            break\n
+  return desc\n
+\n
+if document is not None:\n
+  getFieldDescription = CachingMethod(getFieldDescription, (\'getFieldDescription\', form_id), \\\n
+                                      cache_factory=\'erp5_ui_long\')\n
+return getFieldDescription(field_id)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Field_getDescription</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

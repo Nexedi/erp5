@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""Resets grouping reference on this line and all related lines.\n
+\n
+If the parameter keep_if_valid_group is true, then the grouping reference\n
+will be kept as is if the group is still valid, ie. the total quantity\n
+of all accounting lines in the group is 0.\n
+Returns the list of ungroupped lines.\n
+"""\n
+\n
+if not context.getGroupingReference():\n
+  # The line grouping reference can alredy have been removed, for example when two\n
+  # lines of the same transaction have the same grouping reference.\n
+  return []\n
+\n
+portal = context.getPortalObject()\n
+precision = context.getResourceValue(portal_type=\'Currency\').getQuantityPrecision()\n
+\n
+if context.AccountingTransaction_isSourceView():\n
+  node_uid = context.getSourceUid()\n
+  section_category = None\n
+  section = context.getSourceSectionValue()\n
+  if section is not None:\n
+    section = section.Organisation_getMappingRelatedOrganisation()\n
+    section_category = section.getGroup(base=1)\n
+  mirror_section_uid = context.getDestinationSectionUid()\n
+else:\n
+  node_uid = context.getDestinationUid()\n
+  section = context.getDestinationSectionValue()\n
+  if section is not None:\n
+    section = section.Organisation_getMappingRelatedOrganisation()\n
+    section_category = section.getGroup(base=1)\n
+  mirror_section_uid = context.getSourceSectionUid()\n
+\n
+line_list = portal.portal_simulation.getMovementHistoryList(\n
+                  portal_type=portal.getPortalAccountingMovementTypeList(),\n
+                  grouping_reference=context.getGroupingReference(),\n
+                  node_uid=node_uid,\n
+                  section_category=section_category,\n
+                  mirror_section_uid=mirror_section_uid)\n
+\n
+# If the group is still valid, we may want to keep it as is.\n
+if keep_if_valid_group and round(sum([(l.total_price or 0) for l in line_list]), precision) == 0:\n
+  return\n
+\n
+for line in line_list:\n
+  line.setGroupingReference(None)\n
+  line.setGroupingDate(None)\n
+\n
+return line_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>keep_if_valid_group=0</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionLine_resetGroupingReference</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

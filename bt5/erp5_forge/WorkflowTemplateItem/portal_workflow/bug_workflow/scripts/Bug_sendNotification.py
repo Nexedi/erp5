@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+bug = state_change["object"]\n
+history = bug.portal_workflow.getInfoFor(bug, \'history\',\n
+                                         wf_id=\'bug_workflow\')\n
+is_re_assign_action = False\n
+send_event = None\n
+for history_item in history[::-1]:\n
+  if same_type(history_item[\'action\'], \'\') and history_item[\'action\'].endswith(\'action\'):\n
+    send_event = history_item[\'send_event\']\n
+    is_re_assign_action = bool(history_item[\'action\'] == \'re_assign_action\')\n
+    break\n
+\n
+valid_transaction_list = ["confirm_action", "stop_action",\n
+                          "deliver_action", "set_ready_action", "cancel_action", "re_assign_action"]\n
+\n
+message = [ h for h in state_change.getHistory() \\\n
+                                        if h[\'action\'] in valid_transaction_list]\n
+\n
+comment = ""\n
+if len(message) > 0:\n
+  comment=message[-1]["comment"]\n
+\n
+state = bug.getSimulationStateTitle()\n
+if is_re_assign_action:\n
+  state = \'Re %s\' % (state)\n
+line = bug.newContent(title="%s %s was %s" % (bug.getPortalType(),\n
+                                              bug.getReference(),\n
+                                              state),\n
+                      portal_type="Bug Line",\n
+                      text_content=comment,\n
+                      content_type=\'text/plain\')\n
+if send_event:\n
+  # This will post The message Automatically.\n
+  line.start()\n
+else:\n
+  line.plan()\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Bug_sendNotification</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

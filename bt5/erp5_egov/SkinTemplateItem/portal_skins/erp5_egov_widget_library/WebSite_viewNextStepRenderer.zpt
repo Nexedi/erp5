@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<div class="next_step_action" tal:define="object_uid           here/getUid | nothing;\n
+              object_path          here/getPath | nothing;\n
+              form                 nocall: form | nothing;\n
+              form_id              form/id | template/title_or_id | nothing;\n
+              portal               here/getPortalObject;\n
+              form_action          python: form and form.action not in (\'\', None) and portal.portal_membership.checkPermission(\'Modify portal content\', here) and form.action or nothing;\n
+              local_parameter_list local_parameter_list | python: {};\n
+              "\n
+      tal:condition="python: portal.portal_membership.checkPermission(\'Modify portal content\', here)">\n
+\n
+<!--  <input type="hidden" name="form_action" value=""\n
+         tal:attributes="value request/form_action" />  -->\n
+  <input type="hidden" name="edit_document_url" value=""\n
+         tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), form_id)" />\n
+  <input type="hidden" name="view_document_url" value=""\n
+         tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), \'view\')" />\n
+<!--  <input type="hidden" name="actions" value=""\n
+         tal:attributes="value request/actions" />\n
+  <input type="hidden" name="current_action" value=""\n
+         tal:attributes="value request/current_action" />-->\n
+  <span class="onleft">\n
+    <input type="hidden" name="next_url" value="PDFDocument_viewLoginInformation" />\n
+    <button type="submit" class="save" title="Save" name="EGov_Base_editAndRedirect:method"  \n
+      i18n:attributes="title" i18n:domain="ui">\n
+      <span class="image"></span>\n
+      <span class="description" i18n:translate="" i18n:domain="ui">Save draft and continue later</span>\n
+    </button>\n
+\n
+  </span>\n
+  <div class="onright">\n
+    <div class="input">\n
+      <input class="hidden_label inline next_step" type="submit" tal:attributes="value python:context.getPortalObject().Base_translateString(\'Next Step >>\')" value="Next Step >>" name="EGov_Base_editAndNextStep:method" src=""/>\n
+    </div>\n
+  </div>\n
+  <div class="clear">\n
+  </div>\n
+</div>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewNextStepRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

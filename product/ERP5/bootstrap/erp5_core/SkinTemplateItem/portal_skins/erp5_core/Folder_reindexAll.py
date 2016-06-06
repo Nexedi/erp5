@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+folder = context\n
+\n
+activate_kw = {\n
+  \'tag\': object_tag,\n
+  \'after_tag\': folder_after_tag,\n
+}\n
+for key, value in activate_kw.items():\n
+  if value is None:\n
+    activate_kw.pop(key)\n
+\n
+# Reindex folder immediately\n
+folder.reindexObject(sql_catalog_id=sql_catalog_id)\n
+\n
+folder_id = folder.getId()\n
+if folder_after_tag is None:\n
+  folder_after_tag = ()\n
+bundle_tag = "%s_bundle_reindex" % folder_id\n
+bundle_object_tag = "%s_reindex" % folder_id\n
+\n
+# Spawn activities for bundles of content objects.\n
+# Bundle size, in object count\n
+BUNDLE_ITEM_COUNT=1000\n
+\n
+def Folder_reindexObjectList(id_list_list):\n
+  """\n
+    Create an activity calling Folder_reindexObjectList.\n
+  """\n
+  folder.activate(activity=\'SQLQueue\', priority=object_priority, \n
+                  **activate_kw).Folder_reindexObjectList(\n
+     id_list=None,\n
+     id_list_list=id_list_list,\n
+     object_priority=object_priority,\n
+     object_tag=object_tag,\n
+     object_after_tag=object_after_tag,\n
+     folder_tag=bundle_tag,\n
+     folder_after_tag=bundle_object_tag,\n
+     sql_catalog_id=sql_catalog_id,\n
+  )\n
+archive_test_script = getattr(context.getPortalObject(), "Archive_test", None)\n
+try:\n
+  tree_id_list = folder.getTreeIdList()\n
+except (NotImplementedError, AttributeError):\n
+  # Build a list of list, like this we parse ids only one time,\n
+  # and then Folder_reinexObjectList will work with one list at\n
+  # a time and remove it from the list of list\n
+  # This id_list_list can be quite big and generate quite big\n
+  # activities, but the effect is limited, because if we have too\n
+  # much objects (like millions), we should use HBTree Folders, and\n
+  # then the work will be splitted\n
+  id_list = [x for x in folder.objectIds()]\n
+  id_list_list = []\n
+  for bundle_index in xrange(len(id_list) / BUNDLE_ITEM_COUNT):\n
+    id_list_list.append(id_list[bundle_index * BUNDLE_ITEM_COUNT:((bundle_index + 1) * BUNDLE_ITEM_COUNT)])\n
+\n
+  remaining_object_id_count = len(id_list) % BUNDLE_ITEM_COUNT\n
+  if remaining_object_id_count > 0:\n
+    id_list_list.append(id_list[-remaining_object_id_count:])\n
+  Folder_reindexObjectList(id_list_list)\n
+else:\n
+  if archive_test_script is not None:\n
+    new_tree_id_list = []\n
+    for tree_id in tree_id_list:\n
+      if folder.Archive_test(tree_id=tree_id, start_tree=start_tree, stop_tree=stop_tree):\n
+        new_tree_id_list.append(tree_id)\n
+    tree_id_list = new_tree_id_list\n
+  else:\n
+    if start_tree is not None:\n
+      new_tree_id_list = []\n
+      for tree_id in tree_id_list:\n
+        if tree_id >= start_tree:\n
+          new_tree_id_list.append(tree_id)\n
+      tree_id_list = new_tree_id_list\n
+\n
+    if stop_tree is not None:\n
+      new_tree_id_list = []\n
+      for tree_id in tree_id_list:\n
+        if tree_id < stop_tree:\n
+          new_tree_id_list.append(tree_id)\n
+      tree_id_list = new_tree_id_list\n
+\n
+  if len(tree_id_list) == 0:\n
+    return\n
+\n
+  i = 0\n
+\n
+  tree_tag = "%s_tree" % folder_id\n
+\n
+  # Say to Folder_reindexTreeObjectList to call himself again and\n
+  # again until all tree_id_list are parsed. Also, make sure that\n
+  # the work of the previous Folder_reindexTreeObjectList is completely\n
+  # done\n
+  tree_after_tag = folder_after_tag + (bundle_tag, bundle_object_tag)\n
+  folder.activate(activity=\'SQLQueue\', priority=object_priority, \n
+      after_tag=tree_after_tag, tag=tree_tag,\n
+      ).Folder_reindexTreeObjectList(\n
+    tree_id=None,\n
+    tree_id_list=tree_id_list,\n
+    folder_tag=bundle_tag,\n
+    folder_after_tag=bundle_object_tag,\n
+    object_priority=object_priority,\n
+    sql_catalog_id=sql_catalog_id,\n
+    object_tag=bundle_object_tag,\n
+    tree_after_tag=tree_after_tag,\n
+    tree_tag=tree_tag,\n
+    )\n
+  \n
+  # Start an activity wich will wait the end of the module\n
+  folder_id_after_tag =  folder_after_tag + (tree_tag, bundle_tag, bundle_object_tag)\n
+  id_activate_kw = {}\n
+  if object_tag is not None:\n
+    id_activate_kw[\'tag\'] = object_tag\n
+\n
+  folder.activate(activity=\'SQLDict\', priority=object_priority, \n
+                  after_tag=folder_id_after_tag, **id_activate_kw).getId()\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>folder_tag=None, folder_after_tag=None, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, start_tree=None, stop_tree=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Folder_reindexAll</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,730 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts61784188.53</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>gadget.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/****************************************************************/\n
+/*   TODO: XXX-JPS                                              */\n
+/*     - missing docstring                                      */\n
+/*     - add dynamic properties                                 */\n
+/****************************************************************/\n
+\n
+/* CSS Web layout (one column) for Gadgets */\n
+\n
+#page_wrapper {\n
+  background: transparent;\n
+  padding: 0em;\n
+  min-height: 200px;\n
+}\n
+\n
+.portal-column {\n
+  width: 100%;\n
+  min-height: 100px;\n
+  margin-right: 5px;\n
+}\n
+\n
+#portal-column-2{\n
+ margin-right: 0px;\n
+}\n
+div.pad-actions{\n
+   float:none;\n
+}\n
+div.block {\n
+  margin-top: 0.5em;\n
+   margin-bottom: 5px;\n
+\n
+}\n
+\n
+.block li {\n
+  margin-left: 0.5em;\n
+}\n
+\n
+.block h3 span.gadget_title{\n
+  background: none;\n
+  border-top: none;\n
+}\n
+\n
+\n
+.box_inner_content {\n
+ border: 1px solid #c3c3ee;\n
+ border-top: none;\n
+ overflow: auto;\n
+}\n
+\n
+.edit-form {\n
+  border: none;\n
+  background-color: #ECECEC;\n
+  border-left: 1px solid #c3c3ee;\n
+  border-right: 1px solid #c3c3ee;\n
+}\n
+\n
+\n
+h3.handle {\n
+  margin: 0;\n
+  padding: 0 0 0 10px;\n
+  color: #000000;\n
+  font-size: 10px;\n
+  border: 1px solid #c3c3ee;\n
+  background: none;\n
+  background-color: #ECECEC;\n
+}\n
+\n
+h3.handle span.handle {\n
+  display: block;\n
+  min-height:20px;\n
+  padding: 5px 5px 0 0;\n
+  background: none;\n
+}\n
+\n
+\n
+#add_new_gadget_link {\n
+  border-bottom: none;\n
+}\n
+\n
+#page_wrapper .content{\n
+  border: none;\n
+}\n
+\n
+.tab {\n
+  background-color: #ECECEC;\n
+}\n
+\n
+.tab_selected {\n
+  background-color: #FFFFFF;\n
+  border-bottom:1px solid #FFFFFF;\n
+}\n
+\n
+.toggable_dialog {\n
+  left:200px;\n
+  top: 100px;\n
+  width: 200px;\n
+}\n
+\n
+.toggable_dialog button{\n
+  padding: 0em;\n
+  float:left;\n
+}\n
+\n
+.toggable_dialog h3{\n
+  margin-bottom: 1em;\n
+}\n
+\n
+#tabs li{\n
+  margin-left:0em;\n
+}\n
+\n
+.wait_block p{\n
+  text-align: center;\n
+}\n
+\n
+#add_new_tab_diloag_link{\n
+  margin-left: 0.5em;\n
+}\n
+\n
+.border_bottom0px{\n
+  border-bottom: 1px solid #FFFFFF;\n
+}\n
+\n
+/* Gadget container at bottom */\n
+div#km_left div#wrapper_bottom {\n
+  border:0 none;\n
+  clear:left;\n
+  margin:10px;\n
+}\n
+\n
+\n
+/* disable cursor for anonymous users */\n
+.portal-column-undraggable .handle{\n
+  cursor: default;\n
+}\n
+\n
+/* add space between fieldsets for gadgets */\n
+div.block fieldset > div {\n
+  margin-bottom: 0.3em;\n
+}\n
+div.block fieldset label{\n
+  text-align: left;\n
+  display: block;\n
+}\n
+\n
+/* This class is used to display gadgets in front page */\n
+.front_pad { \n
+  margin: 0;\n
+  padding:0 7px;\n
+}\n
+\n
+.front_pad_anonymous { \n
+  margin: 0;\n
+  padding:0 0;\n
+  margin-left: auto;\n
+  margin-right: auto;\n
+  width: 924px; /* splash picture width */\n
+}\n
+\n
+/* column gadget in bottom */\n
+div.bottom-gadget div.portal-column {\n
+   width:100%; \n
+}\n
+\n
+/* column gadget in right */\n
+div.right-gadget div.portal-column {\n
+   width:100%; \n
+}\n
+\n
+/* Add & Stick gadgets  side column management */\n
+div.gadget-management{\n
+  display:block;\n
+  float:right;\n
+  height: 20px;\n
+}\n
+\n
+div.right-gadget{\n
+  float:right;\n
+  display:block;\n
+  width: 100%;\n
+}\n
+\n
+/* hide labels for columns */\n
+div.gadget-management > label,\n
+div.right-gadget > label{\n
+  display:none;\n
+}\n
+\n
+div.draggable_wrapper{\n
+  background-color:transparent;\n
+}\n
+\n
+div.border_bottom1px,\n
+div.border_bottom0px{\n
+  border-bottom: none;\n
+}\n
+\n
+/* front page gadget tabs switcher */\n
+#tabs {\n
+  overflow: hidden;\n
+  border-bottom: none;\n
+  height: 35px;\n
+}\n
+\n
+#tabs ul {\n
+  list-style-type: none;\n
+  padding:10px 0 18px 0;\n
+  height:22px;\n
+  display: block;\n
+}\n
+\n
+#tabs ul li {\n
+  float:left;\n
+  padding: 0 0 0 10px;\n
+  height:22px;\n
+  background: url(km_img/tabs.png) no-repeat transparent;\n
+}\n
+\n
+#tabs ul li span {\n
+  display: block;\n
+  margin: 0;\n
+  height:22px;\n
+  line-height:24px;\n
+  padding-right:40px;\n
+  padding-top: 0em;\n
+}\n
+\n
+#tabs ul li span a.icon {\n
+  float:right;\n
+  width:10px;\n
+  height:10px;\n
+  text-indent:-999999px;\n
+  position: absolute;\n
+  top:5px;\n
+}\n
+\n
+\n
+#tabs ul li span a.edit { right:24px; }\n
+#tabs ul li span a.close { right:9px; }\n
+\n
+\n
+a#tabs-add:link, a#tabs-add:active, a#tabs-add:visited,\n
+a#tabs-hide:link, a#tabs-hide:active, a#tabs-hide:visited { padding: 0 10px 0 10px; }\n
+\n
+#tabs_switcher {\n
+  padding-top: 15px;\n
+  height:35px;\n
+  font-weight: normal;\n
+  border: none;\n
+}\n
+\n
+/* Gadget Navigation table */\n
+#pad-navigation-wrapper{\n
+  background: url("km_img/tabsbg.png") repeat-x scroll center bottom transparent;\n
+  font-size: 8pt;\n
+  height:50px;\n
+  border-bottom: none;\n
+  color: #9D968D;\n
+}\n
+\n
+#tabs ul li{\n
+  list-style-image: none;\n
+}\n
+\n
+#tabs ul li a, #tabs ul li.last a { background: none; }\n
+\n
+#tabs ul li a.tabs-hide:link, #tabs ul li a.tabs-hide:active, #tabs ul li a.tabs-hide:visited {\n
+  background: url(km_img/tabs-hide.png) no-repeat transparent;\n
+  background-position: 0 -4px;\n
+}\n
+\n
+#tabs ul li.last a.tabs-add {\n
+  background: url(km_img/tabs-add.png) no-repeat transparent;\n
+  background-position: 0 2px;\n
+}\n
+#tabs ul li.first a, \n
+#tabs ul li.last a { \n
+  font-weight: normal; \n
+}\n
+\n
+#tabs ul li.first a.tabs-hide:hover, #tabs ul li.last a.tabs-add:hover {\n
+  background-position: 0 -20px;\n
+}\n
+\n
+#tabs ul li {\n
+  background: url(km_img/tabs.png) no-repeat transparent;\n
+  background-position: 0 -44px;\n
+  color: #e9e9e9;\n
+}\n
+\n
+#tabs ul li span {\n
+  background: url(km_img/tabs.png) no-repeat transparent;\n
+  background-position: 100% -44px;\n
+  background-color: #E9E9E9;\n
+}\n
+#tabs ul li.tab,\n
+#tabs ul li.tab_selected{\n
+  border: none;\n
+}\n
+#tabs ul li.tab_selected, #tabs ul li:hover {\n
+  background-position: 0 0;\n
+}\n
+\n
+#tabs ul li.tab_selected span, #tabs ul li:hover span {\n
+  background-position: 100% 0;\n
+}\n
+  \n
+#tabs ul li.tab_selected:hover {\n
+  background-position: 0 -22px;\n
+  color:#fff;\n
+}\n
+\n
+#tabs ul li.tab_selected:hover span {\n
+  background-position: 100% -22px;\n
+}\n
+\n
+#tabs ul li.tab_selected:hover span a { color:#fafafa; }\n
+\n
+#tabs ul li span a { color: #e2e0d2; }\n
+\n
+#tabs ul li.first, #tabs ul li.last {\n
+  background: none;\n
+}\n
+\n
+/* Rename & Remove pad buttons */\n
+#tabs li span.rename_tab_dialog_image{\n
+  background: none;\n
+  margin-left: -40px;\n
+}\n
+\n
+#tabs li span.remove_tab_dialog_image{\n
+  background: none;\n
+  margin-left: -25px;\n
+}\n
+\n
+/* Add new tab link */\n
+#tabs ul #add_new_tab_dialog_link{\n
+  background: url(km_img/bullet.png) no-repeat 0 7px;\n
+  color: #9D968D;\n
+  padding-top: 4px;\n
+  margin-left: 10px;\n
+  padding-left: 13px;\n
+  font-size: 8pt;\n
+  font-weight: normal;\n
+}\n
+\n
+#tabs_switcher:hover,\n
+#tabs ul #add_new_tab_dialog_link:hover{color: #FFF; }\n
+\n
+\n
+/* Gadget window buttons */\n
+a.block-refresh,\n
+a.block-minimize,\n
+a.block-remove,\n
+a.block-edit-form{\n
+  background: url(km_img/window.png) no-repeat transparent;\n
+  height: 11px;\n
+  margin-top: 4px;\n
+}\n
+\n
+a.block-refresh { \n
+  background-position: 0 0;\n
+}\n
+\n
+a.block-minimize { \n
+  background-position: -17px 0;\n
+}\n
+\n
+a.block-remove { \n
+  background-position: -34px 0;\n
+}\n
+\n
+a.block-edit-form { \n
+  background-position: -51px 0;\n
+}\n
+\n
+a.block-minimize:hover { \n
+  background-position: -17px 100%;\n
+}\n
+\n
+a.block-remove:hover { \n
+  background-position: -34px 100%;\n
+}\n
+\n
+a.block-edit-form:hover { \n
+  background-position: -51px 100%;\n
+}\n
+\n
+\n
+/* Style for showing movement between gadget columns */\n
+div.block-hover {\n
+  border: 2px dashed #f00;\n
+}\n
+\n
+/* Gadget layout */\n
+.block h3.handle{\n
+  margin:0;\n
+  padding:3px 0;\n
+  display: block;\n
+  background: url(km_img/widgethead.png) repeat-x scroll 0 -2px #c1c0b4;\n
+  border-color:#C0BFB3 #C0BFB3 #9C9479;\n
+  border-style:solid;\n
+  border-width:1px;\n
+  color:#776D61;\n
+  font-size:10pt;\n
+}\n
+\n
+.block h3.handle span{\n
+  padding: 0;\n
+  padding-left: 15px;\n
+}\n
+\n
+.block h3.handle span.gadget_title{\n
+  float:left;\n
+  left:12px;\n
+  position:absolute;\n
+}\n
+\n
+.block .box_inner_content, \n
+.block .minimize_wrapper, \n
+.block .content {\n
+  width: auto;\n
+}\n
+\n
+.gadget {\n
+  margin:0;\n
+  padding:0;\n
+  border:none;\n
+}\n
+\n
+/* Gadget edit form */\n
+div.edit-form {\n
+  border: 1px solid #000;\n
+  overflow: auto;\n
+  background-color: #ECECEC;\n
+  margin:0;\n
+  padding:0;\n
+  padding-bottom:0.2em;\n
+}\n
+\n
+div.edit-form fieldset{\n
+  border: none;\n
+}\n
+\n
+div.block .content .field label, \n
+div.block .content .field .input{\n
+  padding-left: 0px;\n
+}\n
+\n
+div.edit-form label{\n
+  display:block;\n
+  font-weight:normal;\n
+}\n
+\n
+div.edit-form button{\n
+  margin-top: 0.5em;\n
+  margin-left: 0.5em;\n
+}\n
+\n
+div.edit-form div.field{\n
+  padding-left: 0.5em;\n
+}\n
+div.edit-form label,\n
+div.edit-form input{\n
+  width:auto;\n
+}\n
+\n
+\n
+/* listbox buttons in gadget mode */\n
+div.block table.listbox button.sort_button,\n
+div.block table.listbox thead tr th{\n
+  color:#000000;\n
+}\n
+\n
+div.block table.listbox button.sort_button:hover{\n
+  color: #FFFFFF;\n
+}\n
+\n
+/* Add gadgets link */\n
+#add_new_gadget_link{\n
+  margin-top:6px;\n
+  padding:0;  \n
+}\n
+\n
+#stick-gadgets,\n
+#unstick-gadgets,\n
+#add-gadgets{\n
+  cursor: pointer;\n
+  float:right;\n
+  margin-top:0px;\n
+  padding:5px 10px;\n
+  height: auto;\n
+  width:auto;\n
+  margin-left: 5px;\n
+  border-bottom: none;\n
+}\n
+\n
+#stick-gadgets a{\n
+  height:17px;\n
+  width:72px;\n
+}\n
+\n
+div#add-stick-gadget-tool-section{\n
+  margin-bottom: 1.4em;\n
+}\n
+\n
+.box_inner_content {\n
+ border:1px solid #c0bfb3;\n
+ border-top: none;\n
+ overflow: auto;\n
+}\n
+\n
+/* Gadget toggable dialog */\n
+div.toggable_dialog {\n
+  left:200px;\n
+  top: 100px;\n
+  width: 200px;\n
+  background-color: #C2C1C1;\n
+  border: 5px solid #C0BFB3;\n
+}\n
+\n
+div.toggable_dialog h3{\n
+  color: #000000;\n
+  margin-bottom: 1em;\n
+}\n
+\n
+div.toggable_dialog button{\n
+  padding: 0.1em;\n
+  margin-right: 0.2em;\n
+  float:left;\n
+}\n
+\n
+/* Message shown when knowledge pad is being created */\n
+div.wait_block p{\n
+  text-align: center;\n
+}\n
+\n
+#add_new_tab_diloag_link{\n
+  margin-left: 0.5em;\n
+}\n
+\n
+/* disable cursor for anonymous users,\n
+   disable "move" icon background */\n
+div.portal-column-undraggable .handle{\n
+  cursor: default;\n
+  background: url(km_img/widgethead.png) repeat-x scroll 0 -31px #C1C0B4;\n
+}\n
+div.portal-column-undraggable h3.handle span{\n
+  padding: 0;\n
+}\n
+\n
+/* Decrease padding for gadgets\' text */\n
+fieldset.gadget div.text{\n
+  padding: 3px 0;\n
+}\n
+\n
+/* Gadget Browser */\n
+div.gadget-website-browser {\n
+  padding-left:0.8em;\n
+  margin-top: 0.5em;\n
+}\n
+\n
+div.gadget-website-browser ul,\n
+div.gadget-website-browser li {\n
+  margin: 0em;\n
+  padding: 0em;\n
+}\n
+\n
+div.gadget-website-browser ul.level-1 {\n
+  padding-bottom: 0.5em;\n
+}\n
+\n
+div.gadget-website-browser ul.level-1,\n
+div.gadget-website-browser ul.level-2,\n
+div.gadget-website-browser ul.level-3,\n
+div.gadget-website-browser ul.level-4,\n
+div.gadget-website-browser ul.level-5,\n
+div.gadget-website-browser ul.level-6{\n
+  padding-left:1em;\n
+}\n
+\n
+div.gadget-website-browser ul.collapse-list-node{\n
+  list-style-type: none;\n
+  margin-left:-1.1em;\n
+}\n
+div.gadget-website-browser .collapse-content{\n
+  padding-left:1em;\n
+}\n
+\n
+div.gadget-website-browser .collapse-link{\n
+  cursor:pointer;\n
+  margin-left: 0.5em;\n
+}\n
+\n
+div.gadget-website-browser a,div.gadget-website-browser a:link,\n
+div.gadget-website-browser a:active,div.gadget-website-browser a:visited {\n
+  font-weight: normal;\n
+  color: inherit;\n
+}\n
+\n
+/* Gadget SubSection */\n
+div.gadget-subsection {\n
+  margin-top: 0.5em;\n
+}\n
+\n
+div.gadget-subsection div.input ul{\n
+  list-style-position: outside;\n
+  list-style-type:square;\n
+  margin: 0.5em;\n
+  margin-top: 0em;\n
+  padding: 0.5em;\n
+}\n
+\n
+/* Gadget My Documents */\n
+div.gadget-my-documents{\n
+}\n
+\n
+/* Gadget Latest Documents */\n
+div.gadget-latest-documents{\n
+}\n
+\n
+/* Gadget Documentation */\n
+div.gadget_documentation{\n
+  padding: 0.2em;\n
+}\n
+\n
+/* Gadget Advertisements */\n
+div.gadget_advertisement{\n
+  padding: 0.2em;\n
+}\n
+\n
+/* Gadget Relations  */\n
+div.gadget-relations .listbox-head-title span{\n
+  color: #000;\n
+}\n
+\n
+div.gadget-relations div.listbox-head-navigation,\n
+div.gadget-relations .listbox-label-line{\n
+  display: none;\n
+}\n
+\n
+/* Latest content  needs no listbox headers*/\n
+div.gadget-latest-documents div.listbox-head,\n
+div.gadget-latest-documents table.listbox thead{\n
+  display: none;\n
+}\n
+\n
+/* Tagged documents  needs no listbox headers*/\n
+div.gadget-tagged-documents div.listbox-head,\n
+div.gadget-tagged-documents table.listbox thead{\n
+  display: none;\n
+}\n
+\n
+/* My Documents gadget needs no listbox headers*/\n
+div.gadget-my-documents div.listbox-head,\n
+div.gadget-my-documents table.listbox thead{\n
+  display: none;\n
+}\n
+\n
+/* "Other versions", "History", "My Tasks", "My contacts", "Persons" gadgets needs no listbox headers */\n
+div.gadget-other-versions  div.listbox-head-content,\n
+div.gadget-history  div.listbox-head-content,\n
+div.gadget-my-tasks div.listbox-head-content,\n
+div.gadget-my-contacts div.listbox-head-content,\n
+div.gadget-persons div.listbox-head-content,\n
+div.gadget-tagged-documents div.listbox-head-content{\n
+  display: none;\n
+}\n
+\n
+/* Worklist gadget */\n
+div.block div.box_inner_content div.worklist_list ul {\n
+  padding-left: 1em;\n
+}\n
+\n
+\n
+/* Profile gadget */\n
+div.block fieldset.gadget-profile label{\n
+  width:100%;\n
+  color: #000;\n
+}\n
+div.block fieldset.gadget-profile div.field{\n
+  margin-top:5px;\n
+  padding-left: 5px;\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12257</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>KM Gadgets CSS</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

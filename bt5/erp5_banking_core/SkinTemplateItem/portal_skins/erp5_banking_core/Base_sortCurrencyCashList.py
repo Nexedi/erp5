@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>def sortCurrencyCashList(currency_cash_list):\n
+  """Sort a list of currency cash objects\n
+  """\n
+  def sortLines(a_source, b_source):\n
+    """This method helps sorting supported by Python\'s standard function.\n
+    """\n
+    # Get the currency cash objects. They can be defined as resources.\n
+    if a_source.getPortalType() in (\'Coin\', \'Banknote\'):\n
+      a = a_source\n
+      b = b_source\n
+    else :\n
+      a = a_source.getResourceValue()\n
+      b = b_source.getResourceValue()\n
+\n
+    # Second, compare the portal types.\n
+    result = cmp(a.getPortalType(), b.getPortalType())\n
+    if result != 0:\n
+      return result\n
+\n
+    # First, compare the base prices (such as 1000 and 2000 Francs CFA).\n
+    result = - cmp(a.getBasePrice(), b.getBasePrice())\n
+    if result != 0:\n
+      return result\n
+\n
+    # Last, compare the variations (such as the years 1994 and 2003).\n
+    result = cmp(a.getVariation(), b.getVariation())\n
+    return result\n
+\n
+  currency_cash_list.sort(sortLines)\n
+  return currency_cash_list\n
+\n
+return sortCurrencyCashList(currency_cash_list)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>currency_cash_list</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_sortCurrencyCashList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

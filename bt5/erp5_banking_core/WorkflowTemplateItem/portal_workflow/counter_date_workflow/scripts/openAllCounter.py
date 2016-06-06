@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+counter_date = state_change[\'object\']\n
+\n
+# First make sure that the site is defined\n
+site_value = counter_date.getSiteValue()\n
+if site_value is None:\n
+  msg = Message(domain=\'ui\',message="Sorry, the site is not defined")\n
+  raise ValidationFailed (msg,)\n
+\n
+# Then, make sure there is not any counter date open for this site\n
+site_value.serialize()\n
+site_uid = site_value.getUid()\n
+activity_tag = \'%s_CounterDay\' % (site_uid, )\n
+if context.getPortalObject().portal_activities.countMessageWithTag(activity_tag) != 0:\n
+  msg = Message(domain=\'ui\',message="Sorry, there is a pending counter date opening, please retry later")\n
+  raise ValidationFailed (msg,)\n
+counter_date.setDefaultActivateParameterDict({"tag": activity_tag})\n
+counter_date_list = [x.getObject() for x in counter_date.portal_catalog(portal_type=\'Counter Date\',site_uid=site_uid,simulation_state=\'open\')]\n
+for other_counter in counter_date_list:\n
+  if other_counter.getUid()!=counter_date.getUid():\n
+    counter_date.log("opened counter date is", other_counter.getPath())\n
+    msg = Message(domain=\'ui\',message="Sorry, there is already a counter date opened")\n
+    raise ValidationFailed (msg,)\n
+    \n
+listbox = state_change.kwargs.get(\'listbox\',None)\n
+\n
+# First make sure we can open a counter date only\n
+# if the date defined on the document is the current date\n
+start_date = counter_date.getStartDate()\n
+from DateTime import DateTime\n
+now = DateTime()\n
+\n
+# Check it is a working day\n
+if len(getattr(context.getPortalObject(), \'not_working_days\', "")) == 0:\n
+  pass\n
+else:\n
+  not_working_day_list = getattr(context.getPortalObject(), \'not_working_days\').split(" ")\n
+  if start_date.Day().lower() in not_working_day_list:\n
+    msg = Message(domain=\'ui\',message="Sorry, you cannot open the date on not working days")\n
+    raise ValidationFailed (msg,)\n
+\n
+\n
+# Check it is today\n
+check_date_is_today = state_change.kwargs.get(\'check_date_is_today\', 1)\n
+if check_date_is_today and now.Date() != start_date.Date():\n
+  msg = Message(domain=\'ui\',message="Sorry, the date is not today")\n
+  raise ValidationFailed (msg,)\n
+\n
+\n
+\n
+\n
+if listbox is not None:\n
+  for line in listbox:\n
+    if line["choice"] == "open":\n
+      counter = context.restrictedTraverse("%s" %(line[\'listbox_key\'],))\n
+      counter.open()\n
+\n
+\n
+# Set a reference\n
+first_day_of_year = DateTime(start_date.year(), 1, 1)\n
+counter_date_list = [x.getObject() for x  in context.portal_catalog(\n
+                                           portal_type=\'Counter Date\',site_uid=site_uid,\n
+                                           start_date={\'query\': first_day_of_year, \'range\': \'min\'},\n
+                                           sort_on=[(\'start_date\',\'descending\')],limit=1,\n
+                                           simulation_state=(\'open\',\'closed\'))]\n
+previous_reference = None\n
+if len(counter_date_list)>0:\n
+  previous_counter_date = counter_date_list[0]\n
+  previous_reference = previous_counter_date.getReference()\n
+if previous_reference not in (\'\',None):\n
+  reference = \'%i\' % (int(previous_reference)+1)\n
+else:\n
+  reference = \'1\'\n
+counter_date.setReference(reference)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change, *args, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>openAllCounter</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

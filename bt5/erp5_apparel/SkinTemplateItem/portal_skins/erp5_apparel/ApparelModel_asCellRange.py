@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+cell_range = []\n
+# Those value are define on property sheet of portal type\n
+resource = context.getDefaultResourceValue()\n
+if resource is None: # When we have a supply line in the resource\n
+  resource = context.getParent()\n
+\n
+base_category_list = resource.getVariationBaseCategoryList()\n
+\n
+for c in base_category_list:\n
+  # try to display line first, then column, and finally others\n
+  if matrixbox==1:\n
+    # XXX matrixbox is right_display (not as listfield) => invert display and value in item\n
+    cell_range.append(map(lambda x: (x[1], x[0]),\n
+                          resource.getVariationCategoryItemList(\n
+                                 base_category_list=(c,),\n
+                                 display_base_category=display_base_category,\n
+                                 omit_individual_variation=0, sort_id=\'id\')))\n
+  else:\n
+    cell_range.append(\n
+             resource.getVariationCategoryList(base_category_list=(c,),\n
+                                               omit_individual_variation=0, sort_id=\'id\'))\n
+\n
+\n
+predicate_list = context.contentValues(\n
+                              filter={\'portal_type\':\'Predicate Group\'})\n
+pred_ids = []\n
+if predicate_list != []:\n
+  if matrixbox == 1:\n
+    pred_ids = list(map(lambda x: (x.getRelativeUrl(), x.getTitle()), \n
+                                   predicate_list))\n
+  else:\n
+    pred_ids = list(map(lambda x: x.getRelativeUrl(), predicate_list))\n
+\n
+# Insert predicat list for display in columns\n
+cell_range.insert(1, pred_ids)\n
+\n
+# Remove empty range\n
+cell_range = filter(lambda x: x!=[], cell_range)\n
+\n
+return cell_range\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>matrixbox=0, display_base_category=1, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ApparelModel_asCellRange</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

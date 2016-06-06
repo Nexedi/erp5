@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+Update from time to time all time table lines to set end periodicity at\n
+end of following month\n
+"""\n
+now = context.Base_getNowDate().earliestTime()\n
+first_day_month_quantity = 0\n
+date_cursor = now\n
+while True:\n
+  if date_cursor.dd() == "01":\n
+    first_day_month_quantity += 1\n
+  if first_day_month_quantity == 13:\n
+    break\n
+  date_cursor += 1\n
+portal = context.getPortalObject()\n
+for time_table_line in portal.portal_catalog(portal_type="Time Table Line",\n
+                                             validation_state="!= invalidated"):\n
+  time_table_line.edit(periodicity_stop_date=date_cursor)\n
+# Now reindex all Group Calendar Assignment to take into account new changes\n
+portal.portal_catalog.searchAndActivate(\n
+    method_id="reindexObject",\n
+    activate_kw={"priority": 5},\n
+    simulation_state="!=cancelled AND !=draft",\n
+    portal_type="Group Calendar Assignment")\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TimeTableAlarm_updateTimeTableLineList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

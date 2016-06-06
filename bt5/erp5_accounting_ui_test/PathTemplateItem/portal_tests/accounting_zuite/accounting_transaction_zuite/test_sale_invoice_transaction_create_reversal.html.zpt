@@ -1,0 +1,379 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html>\n
+<head><title>Test for Creating Reversal Transaction for a Sale Invoice Transaction</title></head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="4">\n
+Test for Creating Reversal Transaction for a Sale Invoice Transaction\n
+</td></tr>\n
+<!-- XXX we do not need init method here ! -->\n
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">\n
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>\n
+\n
+<!-- Setup {{{ -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/AccountingZuite_markChanged</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounting</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Add a sale invoice transaction and check the accounting view {{{ -->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Add Sale Invoice Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>name=select_action</td>\n
+  <td>label=Add Accounting Transaction Lines</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>name=field_your_line_count</td>\n
+  <td>3</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>id=dialog_submit_button</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Accounting View</td>\n
+  <td/>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_source_section</td>\n
+  <td>organisation_module/my_organisation</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_destination_section_title</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_resource</td>\n
+  <td>currency_module/euro</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_title</td>\n
+  <td>A Dummy Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_destination_section_title</td>\n
+  <td>Client 1</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_my_start_date_year</td>\n
+  <td>2005</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_my_start_date_month</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_my_start_date_day</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>3 records</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>select</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/select</td>\n
+  <td>label=41 - Receivable</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[3]/select</td>\n
+  <td>label=4457 - Collected VAT 10%</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[3]/select</td>\n
+  <td>label=7 - Goods Sales</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]/input</td>\n
+  <td>10.0</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[4]/input</td>\n
+  <td>1.0</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[5]/input</td>\n
+  <td>11.0</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'Base_edit:method\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Data updated.</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Post the transaction to the GL {{{\n
+because the \'create reversal\' action is only available when simulation_state =\n
+delivered.\n
+-->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Post Transaction to General Ledger</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_callDialogMethod:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Status changed.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Posted</td>\n
+  <td></td>\n
+</tr>\n
+<!-- next step to delivered step. -->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Definitively Close Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_callDialogMethod:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Status changed.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Closed</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Create the reversal transaction and check values {{{ -->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Create Reversal Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_callDialogMethod:method</td>\n
+  <td></td>\n
+</tr> \n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Reversal Transaction for * created.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Accounting View</td>\n
+  <td/>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_source_section</td>\n
+  <td>organisation_module/my_organisation</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_destination_section_title</td>\n
+  <td>Client 1</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_title</td>\n
+  <td>Reversal Transaction for A Dummy Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Sale Invoice Transaction</td><!-- This is the portal_type -->\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>subfield_field_my_start_date_year</td>\n
+  <td>2005</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>subfield_field_my_start_date_month</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>subfield_field_my_start_date_day</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_resource</td>\n
+  <td>currency_module/euro</td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>3 records</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/select</td>\n
+  <td>account_module/goods_sales</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[3]/select</td>\n
+  <td>account_module/collected_vat</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[3]/select</td>\n
+  <td>account_module/receivable</td>\n
+</tr>\n
+<tr>\n
+  <td>assertFloatValue</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]/input</td>\n
+  <td>11.0</td>\n
+</tr>\n
+<tr>\n
+  <td>assertFloatValue</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[5]/input</td>\n
+  <td>0.0</td>\n
+</tr>\n
+<tr>\n
+  <td>assertFloatValue</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[4]/input</td>\n
+  <td>0.0</td>\n
+</tr>\n
+<tr>\n
+  <td>assertFloatValue</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[5]/input</td>\n
+  <td>1.0</td>\n
+</tr>\n
+<tr>\n
+  <td>assertFloatValue</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[4]/input</td>\n
+  <td>0.0</td> \n
+</tr>\n
+<tr>\n
+  <td>assertFloatValue</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[5]/input</td>\n
+  <td>10.0</td> \n
+</tr>\n
+<!-- }}} -->\n
+\n
+</tbody></table>\n
+</body>\n
+</html> <!-- vim: syntax=html foldmethod=marker\n
+-->\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_sale_invoice_transaction_create_reversal.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

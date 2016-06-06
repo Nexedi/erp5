@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""Create a credential update in relation with the person object of current user"""\n
+portal = context.getPortalObject()\n
+person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+\n
+if person is None:\n
+  portal_status_message = "Can\'t find corresponding person, it\'s not possible to update your credentials."\n
+else:\n
+  # create the credential update\n
+  module = portal.getDefaultModule(portal_type=\'Credential Update\')\n
+  credential_update = module.newContent(\n
+    portal_type="Credential Update",\n
+    first_name=first_name,\n
+    last_name=last_name,\n
+    gender=gender,\n
+    nationality=nationality,\n
+    default_credential_question_question=default_credential_question_question,\n
+    default_credential_question_question_free_text=default_credential_question_question_free_text,\n
+    default_credential_question_answer=default_credential_question_answer,\n
+    default_email_text=default_email_text,\n
+    default_telephone_telephone_country=default_telephone_telephone_country,\n
+    default_telephone_text=default_telephone_text,\n
+    default_mobile_telephone_telephone_country=default_mobile_telephone_telephone_country,\n
+    default_mobile_telephone_text=default_mobile_telephone_text,\n
+    default_fax_text=default_fax_text,\n
+    default_address_street_address=default_address_street_address,\n
+    default_address_city=default_address_city,\n
+    default_address_zip_code=default_address_zip_code,\n
+    default_address_region=default_address_region,\n
+    function=function,\n
+    activity_list=activity_list,\n
+    skill_list=skill_list,\n
+    date_of_birth=date_of_birth,\n
+    destination_decision=person.getRelativeUrl(),\n
+    default_image_file=default_image_file,\n
+    description=description)\n
+\n
+  if password:\n
+    credential_update.edit(password=password)\n
+\n
+  credential_update.submit()\n
+  portal_status_message = "Credential Update Created."\n
+\n
+  # if we are changing password for current logged in user then do it\n
+  # within same transaction and update client side credentials cookie \n
+  username = person.getReference()\n
+  if password and username == str(portal.portal_membership.getAuthenticatedMember()):\n
+    credential_update.accept()\n
+    portal.cookie_authentication.credentialsChanged(username, username, password)\n
+    portal_status_message = "Password changed."\n
+\n
+portal_status_message = context.Base_translateString(portal_status_message)\n
+return portal.Base_redirect(keep_items = {\'portal_status_message\': portal_status_message})\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>default_email_text=None, last_name=None, first_name=None, gender=None, nationality=None, password=None, date_of_birth=None, default_telephone_telephone_country=None, default_telephone_text=None, default_mobile_telephone_telephone_country=None, default_mobile_telephone_text=None, default_fax_text=None, default_credential_question_question=None, default_credential_question_question_free_text=None, default_credential_question_answer=None,  function=None, activity_list=None, skill_list=None, default_address_city=None, default_address_street_address=None, default_address_zip_code=None,default_address_region=None,default_image_file=None, description=None, dialog_id=\'\', **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_newPersonCredentialUpdate</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

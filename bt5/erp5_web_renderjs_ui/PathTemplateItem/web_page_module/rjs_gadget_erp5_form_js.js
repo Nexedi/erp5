@@ -1,0 +1,626 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_erp5_form.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>rjs_gadget_erp5_form_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+/*global window, document, rJS, RSVP*/\n
+(function (window, document, rJS, RSVP) {\n
+  "use strict";\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // Handlebars\n
+  /////////////////////////////////////////////////////////////////\n
+  // Precompile the templates while loading the first gadget instance\n
+  var gadget_klass = rJS(window);\n
+\n
+  function getFieldTypeGadgetUrl(type) {\n
+    var field_url = \'gadget_erp5_field_readonly.html\';\n
+    if (type === \'ListField\') {\n
+      field_url = \'gadget_erp5_field_list.html\';\n
+    } else if ((type === \'ParallelListField\') ||\n
+               (type === \'MultiListField\')) {\n
+      field_url = \'gadget_erp5_field_multilist.html\';\n
+    } else if (type === \'CheckBoxField\') {\n
+      field_url = \'gadget_erp5_field_checkbox.html\';\n
+    } else if (type === \'MultiCheckBoxField\') {\n
+      field_url = \'gadget_erp5_field_multicheckbox.html\';\n
+    } else if (type === \'StringField\') {\n
+      field_url = \'gadget_erp5_field_string.html\';\n
+    } else if (type === \'PasswordField\') {\n
+      field_url = \'gadget_erp5_field_password.html\';\n
+    } else if (type === \'RelationStringField\') {\n
+      field_url = \'gadget_erp5_field_relationstring.html\';\n
+    } else if (type === \'MultiRelationStringField\') {\n
+      field_url = \'gadget_erp5_field_multirelationstring.html\';\n
+    } else if (type === \'TextAreaField\') {\n
+      field_url = \'gadget_erp5_field_textarea.html\';\n
+    } else if (type === \'DateTimeField\') {\n
+      field_url = \'gadget_erp5_field_datetime.html\';\n
+    } else if (type === \'FloatField\') {\n
+      field_url = \'gadget_erp5_field_float.html\';\n
+    } else if (type === \'FileField\') {\n
+      field_url = \'gadget_erp5_field_file.html\';\n
+    } else if (type === \'IntegerField\') {\n
+      field_url = \'gadget_erp5_field_integer.html\';\n
+    } else if (type === \'ListBox\') {\n
+      field_url = \'gadget_erp5_field_listbox.html\';\n
+    } else if (type === \'EditorField\') {\n
+      field_url = \'gadget_erp5_field_textarea.html\';\n
+      // field_url = \'gadget_codemirror.html\';\n
+      // sandbox = \'iframe\';\n
+    } else if (type === \'GadgetField\') {\n
+      field_url = \'gadget_erp5_field_gadget.html\';\n
+    } else if (type === \'RadioField\') {\n
+      field_url = \'gadget_erp5_field_radio.html\';\n
+    } else if (type === \'ImageField\') {\n
+      field_url = \'gadget_erp5_field_image.html\';\n
+    } else if (type === \'EmailField\') {\n
+      field_url = \'gadget_erp5_field_email.html\';\n
+    }\n
+    return field_url;\n
+  }\n
+\n
+  gadget_klass\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
+\n
+    // Assign the element to a variable\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+        });\n
+    })\n
+\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
+    .allowPublicAcquisition("notifyInvalid", function (param_list, scope) {\n
+      return this.getDeclaredGadget(scope)\n
+        .push(function (gadget) {\n
+          return gadget.getElement();\n
+        })\n
+        .push(function (gadget_element) {\n
+          gadget_element.previousElementSibling.querySelector("span").textContent = " (" + param_list[0] + ")";\n
+        });\n
+    })\n
+\n
+    .allowPublicAcquisition("notifyValid", function (param_list, scope) {\n
+      /*jslint unparam:true*/\n
+      return this.getDeclaredGadget(scope)\n
+        .push(function (gadget) {\n
+          return gadget.getElement();\n
+        })\n
+        .push(function (gadget_element) {\n
+          gadget_element.previousElementSibling.querySelector("span").textContent = "";\n
+        });\n
+    })\n
+\n
+    .allowPublicAcquisition("getFieldTypeGadgetUrl", function (param_list) {\n
+      return getFieldTypeGadgetUrl(param_list[0]);\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareMethod(\'render\', function (options) {\n
+      var i,\n
+        erp5_document = options.erp5_document,\n
+        form_definition = options.form_definition,\n
+        rendered_form = erp5_document._embedded._view,\n
+        group_list = form_definition.group_list,\n
+        queue = new RSVP.Queue(),\n
+        form_gadget = this,\n
+        suboption_dict = {},\n
+        parent_element = document.createElement("div");\n
+\n
+      delete options.erp5_document;\n
+      delete options.form_definition;\n
+\n
+//       options = options.form_gadget || {};\n
+      form_gadget.state_parameter_dict = options.form_gadget || {};\n
+      // XXX Hardcoded for searchfield - remove later!\n
+      if (form_definition.extended_search) {\n
+        suboption_dict.extended_search = form_definition.extended_search;\n
+      }\n
+      // XXX Hardcoded for listbox\'s hide functionality\n
+      suboption_dict.hide_enabled = form_definition.hide_enabled;\n
+\n
+      form_gadget.props.gadget_list = [];\n
+      form_gadget.props.id = options.jio_key;\n
+\n
+      function addGroup(group) {\n
+        queue\n
+          .push(function () {\n
+            var j,\n
+              // XXX: > Romain: fieldset will be needed later for menus\n
+              fieldset_element = document.createElement("div"),\n
+              group_queue = new RSVP.Queue();\n
+\n
+            function addField(field) {\n
+              group_queue.push(function () {\n
+                if (rendered_form.hasOwnProperty(field[0])) {\n
+                  // Field is enabled in this context\n
+                  var field_queue = new RSVP.Queue(),\n
+                    sandbox = "public",\n
+                    field_url,\n
+                    // Don\'t change the structure without changing notifyValid and notifyInvalid\n
+                    field_element = document.createElement("div"),\n
+                    gadget_element = document.createElement("div"),\n
+                    label_element = document.createElement("label"),\n
+                    error_element = document.createElement("span"),\n
+                    renderered_field = rendered_form[field[0]];\n
+\n
+                  field_element.className = "ui-field-contain";\n
+                  if (renderered_field.hidden === 1) {\n
+                    // Hide field\n
+                    field_element.className = field_element.className + " ui-screen-hidden";\n
+                  }\n
+//                   field_element.setAttribute(\'data-role\', \'fieldcontain\');\n
+                  label_element.setAttribute(\'for\', renderered_field.key);\n
+                  label_element.textContent = renderered_field.title;\n
+                  label_element.setAttribute(\'data-i18n\', renderered_field.title);\n
+                  if (renderered_field.hasOwnProperty(\'error_text\')) {\n
+                    error_element.textContent = " (" + renderered_field.error_text + ")";\n
+                  }\n
+                  // error_element.setAttribute(\'class\', \'ui-state-error ui-corner-all\');\n
+                  label_element.appendChild(error_element);\n
+                  if (group[0] !== "bottom") {\n
+                    field_element.appendChild(label_element);\n
+                  }\n
+\n
+                  field_url = getFieldTypeGadgetUrl(renderered_field.type);\n
+\n
+                  return field_queue\n
+                    .push(function () {\n
+                      return form_gadget.translateHtml(field_element.innerHTML);\n
+                    })\n
+                    .push(function (my_translate_html) {\n
+                      field_element.innerHTML = my_translate_html;\n
+                      field_element.appendChild(gadget_element);\n
+                      fieldset_element.appendChild(field_element);\n
+                    })\n
+                    .push(function () {\n
+                      return form_gadget.declareGadget(field_url, {\n
+                        scope: renderered_field.key,\n
+                        element: gadget_element,\n
+                        sandbox: sandbox\n
+                      });\n
+                    })\n
+                    .push(function (field_gadget) {\n
+                      //XXXXX Hardcoded to get one listbox gadget\n
+                      //pt form list gadget will get this listbox\'s info\n
+                      //then pass to search field gadget\n
+                      if (field_url === "gadget_erp5_field_listbox.html") {\n
+                        form_gadget.props.listbox_gadget = field_gadget;\n
+                      }\n
+                      form_gadget.props.gadget_list.push(field_gadget);\n
+                      var suboptions = options[renderered_field.key] || suboption_dict;\n
+                      suboptions.field_json = renderered_field;\n
+                      return field_gadget.render(suboptions);\n
+                    });\n
+                }\n
+              });\n
+            }\n
+\n
+            fieldset_element.setAttribute("class", group[0]);\n
+            for (j = 0; j < group[1].length; j += 1) {\n
+              addField(group[1][j]);\n
+            }\n
+            return group_queue.push(function () {\n
+              parent_element.appendChild(fieldset_element);\n
+            });\n
+          });\n
+      }\n
+\n
+      for (i = 0; i < group_list.length; i += 1) {\n
+        addGroup(group_list[i]);\n
+      }\n
+\n
+      return queue\n
+        .push(function () {\n
+          var dom_element = form_gadget.props.element\n
+            .querySelector(".field_container");\n
+          while (dom_element.firstChild) {\n
+            dom_element.removeChild(dom_element.firstChild);\n
+          }\n
+          dom_element.appendChild(parent_element);\n
+          // return $(parent_element).trigger("create");\n
+\n
+        });\n
+    })\n
+\n
+    .declareMethod("getListboxInfo", function () {\n
+      //XXXXX get listbox gadget\'s info\n
+      var gadget = this;\n
+      if (gadget.props.listbox_gadget) {\n
+        return gadget.props.listbox_gadget.getListboxInfo();\n
+      }\n
+      return {};\n
+    })\n
+    .declareMethod("getContent", function () {\n
+      var form_gadget = this,\n
+        k,\n
+        field_gadget,\n
+        count = form_gadget.props.gadget_list.length,\n
+        data = {},\n
+        queue = new RSVP.Queue();\n
+\n
+      function extendData(field_data) {\n
+        var key;\n
+        for (key in field_data) {\n
+          if (field_data.hasOwnProperty(key)) {\n
+            data[key] = field_data[key];\n
+          }\n
+        }\n
+      }\n
+\n
+      for (k = 0; k < count; k += 1) {\n
+        field_gadget = form_gadget.props.gadget_list[k];\n
+        // XXX Hack until better defined\n
+        if (field_gadget.getContent !== undefined) {\n
+          queue\n
+            .push(field_gadget.getContent.bind(field_gadget))\n
+            .push(extendData);\n
+        }\n
+      }\n
+      return queue\n
+        .push(function () {\n
+          return data;\n
+        });\n
+    })\n
+    .declareMethod("checkValidity", function () {\n
+      var form_gadget = this,\n
+        k,\n
+        field_gadget,\n
+        count = form_gadget.props.gadget_list.length,\n
+        result = true,\n
+        queue = new RSVP.Queue();\n
+\n
+      function extendData(field_validity) {\n
+        result = result && field_validity;\n
+      }\n
+\n
+      for (k = 0; k < count; k += 1) {\n
+        field_gadget = form_gadget.props.gadget_list[k];\n
+        // XXX Hack until better defined\n
+        if (field_gadget.checkValidity !== undefined) {\n
+          queue\n
+            .push(field_gadget.checkValidity.bind(field_gadget))\n
+            .push(extendData);\n
+        }\n
+      }\n
+      return queue\n
+        .push(function () {\n
+          return result;\n
+        });\n
+\n
+    });\n
+\n
+}(window, document, rJS, RSVP));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Gadget ERP5 Form JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>romain</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1406898405.89</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>948.41569.55434.38451</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1456157203.52</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>romain</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1405427972.98</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

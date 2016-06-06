@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>def cleanString(str):\n
+  clean_item = str\n
+  if clean_item.find(\'"\') != -1:\n
+    clean_item = clean_item[1:-1].replace(\'""\', \'"\')\n
+  else:\n
+    if clean_item != \'\':\n
+      if clean_item.find(\'.\') != -1:\n
+        clean_item = float(clean_item)\n
+      else:\n
+        clean_item = int(clean_item)\n
+    else:\n
+      clean_item = None\n
+  return clean_item\n
+\n
+def splitCsvLine(str_line):\n
+  unclean_list = []\n
+  pieces_of_line = str_line.split(\',\')\n
+\n
+  p_stack = \'\'\n
+  for p in pieces_of_line:\n
+    if p_stack == \'\':\n
+      p_stack = p\n
+    else:\n
+      p_stack += \',%s\' % p\n
+    if p_stack.count(\'"\') % 2 == 0:\n
+      unclean_list.append(p_stack)\n
+      p_stack = \'\'\n
+\n
+  return [cleanString(x) for x in unclean_list]\n
+\n
+request  = context.REQUEST\n
+# Read first line (attribute\'s ids)\n
+first_line = import_file.readline()\n
+first_line = first_line.replace(\'\\n\', \'\')\n
+csv_property_list = splitCsvLine(first_line)\n
+# Read second line (attribute\'s titles)\n
+second_line = import_file.readline()\n
+\n
+# Read data lines\n
+method = context.activate\n
+\n
+i = 0\n
+for line in iter(import_file.readline, ""):\n
+  # XXX Currently, if the file is too big, there is too many\n
+  # activities created in only one transaction\n
+  # We need to reduce the number of activities\n
+  # Ex: create 1 activity which manages 100 lines, by created itself 100 \n
+  # others activities\n
+  i += 1\n
+  line = line.replace(\'\\n\', \'\')\n
+  csv_data_list = splitCsvLine(line)\n
+\n
+  attribute_value_dict = dict([(csv_property_list[x], csv_data_list[x]) \\\n
+                               for x in xrange(len(csv_property_list))])\n
+\n
+  method(priority=4, activity="SQLQueue").Base_importCsvLine(attribute_value_dict)\n
+redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+\'view\', \'portal_status_message=Importing+CSV+file.\')\n
+request[ \'RESPONSE\' ].redirect( redirect_url )\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>import_file, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_importCsvFile</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

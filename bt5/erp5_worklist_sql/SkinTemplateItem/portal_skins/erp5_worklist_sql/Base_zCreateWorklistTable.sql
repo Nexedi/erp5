@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_col</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_zCreateWorklistTable</string> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+DROP TABLE IF EXISTS worklist_cache\n
+<dtml-var sql_delimiter>\n
+CREATE TABLE `worklist_cache` (\n
+  `count` INT UNSIGNED NOT NULL,\n
+  `owner` VARCHAR(32) DEFAULT \'\',\n
+  `viewable_owner` VARCHAR(32) NOT NULL DEFAULT \'\',\n
+  `security_uid` INT UNSIGNED NOT NULL,\n
+  `portal_type` VARCHAR(255) NOT NULL,\n
+  `validation_state` VARCHAR(255) NULL,\n
+  `simulation_state` VARCHAR(255) NULL,\n
+  `parent_uid` BIGINT UNSIGNED default \'0\',\n
+  `title` varchar(255) default \'\',\n
+  `opportunity_state` varchar(255) default \'\',\n
+  `causality_state` varchar(255) default \'\',\n
+  `invoice_state` varchar(255) default \'\',\n
+  `payment_state` varchar(255) default \'\',\n
+  `event_state` varchar(255) default \'\',\n
+  `immobilisation_state` varchar(255) default \'\',\n
+  `reference` varchar(255) binary default \'\',\n
+  `grouping_reference` varchar(255) default \'\',\n
+  `source_reference` varchar(255) default \'\',\n
+  `destination_reference` varchar(255) default \'\',\n
+  `string_index` varchar(255),\n
+  `int_index` INT,\n
+  `float_index` real,\n
+  `has_cell_content` bool,\n
+  `creation_date` datetime,\n
+  `modification_date` datetime,\n
+  KEY `portal_simulation_security` (`portal_type`, `simulation_state`, `security_uid`),\n
+  KEY `portal_simulation_owner` (`portal_type`, `simulation_state`, `viewable_owner`),\n
+  KEY `portal_validation_security` (`portal_type`, `validation_state`, `security_uid`),\n
+  KEY `portal_validation_owner` (`portal_type`, `validation_state`, `viewable_owner`)\n
+) ENGINE=InnoDB
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

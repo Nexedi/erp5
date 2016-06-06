@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308803.05</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>perfect-scrollbar-patch-bug-23744.patch</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/x-diff</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# HG changeset patch\n
+# User Alexey Musinov\n
+# Date 1415710176 -10800\n
+#      Tue Nov 11 15:49:36 2014 +0300\n
+# Node ID 784fe548cf4cbfc0a6c96b295ae83c551ce22166\n
+# Parent  07b43d47bcf8afe8a2dabc8a0bce8c7dab3bd498\n
+ [Common] \xe2 perfect-scrollbar - \xf1\xea\xf0\xee\xeb\xe8\xed\xe3 \xed\xe0\xe4 \'textarea\' \xe8 \'input\' \xef\xe5\xf0\xe5\xe4\xe0\xe5\xf2\xf1\xff \xe2 \xfd\xf2\xe8 \xfd\xeb\xe5\xec\xe5\xed\xf2\xfb.\n
+\n
+diff -r 07b43d47bcf8 -r 784fe548cf4c apps/common/main/lib/mods/perfect-scrollbar.js\n
+--- a/apps/common/main/lib/mods/perfect-scrollbar.js\tMon Nov 10 19:37:33 2014 +0300\n
++++ b/apps/common/main/lib/mods/perfect-scrollbar.js\tTue Nov 11 15:49:36 2014 +0300\n
+@@ -313,6 +313,22 @@\n
+           var deltaX = e.deltaX * e.deltaFactor || deprecatedDeltaX,\n
+               deltaY = e.deltaY * e.deltaFactor || deprecatedDeltaY;\n
+ \n
++            if (e && e.target && (e.target.type === \'textarea\' || e.target.type === \'input\')) {\n
++                e.stopImmediatePropagation();\n
++                e.preventDefault();\n
++\n
++                var scroll = $(e.target).scrollTop(), wheelDeltaY = 0;\n
++                if (e.originalEvent) {\n
++                    if (e.originalEvent.wheelDelta) wheelDeltaY = e.originalEvent.wheelDelta / -40;\n
++                    if (e.originalEvent.deltaY) wheelDeltaY = e.originalEvent.deltaY;\n
++                    if (e.originalEvent.detail) wheelDeltaY = e.originalEvent.detail;\n
++                }\n
++\n
++                $(e.target).scrollTop(scroll - wheelDeltaY);\n
++\n
++                return;\n
++            }\n
++\n
+           shouldPrevent = false;\n
+           if (!settings.useBothWheelAxes) {\n
+             // deltaX will only be used for horizontal scrolling and deltaY will\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1575</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

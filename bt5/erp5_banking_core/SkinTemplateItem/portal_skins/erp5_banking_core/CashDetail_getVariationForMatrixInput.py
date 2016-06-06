@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+request = context.REQUEST\n
+default_emission_letter_list = getattr(request,\'my_emission_letter_list\',None)       # Find Emission letter on the REQUEST\n
+default_cash_status_list     = getattr(request,\'my_cash_status_list\',None)           # Find Cash Status on the REQUEST\n
+default_variation_list      = getattr(request,\'my_variation_list\',None)            # Find Variation on the REQUEST\n
+default_other_parameter_list      = getattr(request,\'my_other_parameter\',None)            # Find Variation on the REQUEST\n
+\n
+\n
+return_list = []\n
+return_list.append([\'displayed_resource\',\'Resource\'])\n
+\n
+\n
+if default_emission_letter_list is None:\n
+   default_emission_letter_list = getattr(request,\'field_my_emission_letter_list\',[])       # Find Emission letter on the REQUEST\n
+   default_cash_status_list     = getattr(request,\'field_my_cash_status_list\',[])           # Find Cash Status on the REQUEST\n
+   default_variation_list      = getattr(request,\'field_my_variation_list\',[])            # Find Variation on the REQUEST\n
+   default_other_parameter_list = getattr(request,\'field_my_other_parameter\', [])            # Find Variation on the REQUEST\n
+\n
+\n
+if len(default_other_parameter_list) > 2:\n
+   default_column_base = default_other_parameter_list[3]\n
+else :\n
+   default_column_base = \'variation\'\n
+\n
+allow_add_line = False\n
+if len(default_emission_letter_list) > 1 and default_column_base <> \'emission_letter\':\n
+   return_list.append([\'emission_letter\',\'Emission Letter\'])\n
+   allow_add_line = True\n
+if len(default_cash_status_list) > 1 and default_column_base <> \'cash_status\':\n
+   return_list.append([\'cash_status\',\'Cash Status\'])\n
+   allow_add_line = True\n
+if len(default_variation_list) > 1 and default_column_base <> \'variation\':\n
+   return_list.append([\'variation\',\'Variation\'])\n
+   allow_add_line = True\n
+\n
+if allow_add_line:\n
+   return_list.append([\'number_line_to_add\',\'Lines To Add\'])\n
+\n
+\n
+if default_column_base == \'cash_status\':\n
+   default_column_base_list = default_cash_status_list\n
+   column_category  = \'cash_status\'\n
+elif default_column_base == \'emission_letter\':\n
+   default_column_base_list = default_emission_letter_list\n
+   column_category  = \'emission_letter\'\n
+else:\n
+   default_column_base_list = default_variation_list\n
+   column_category  = \'variation\'\n
+\n
+\n
+\n
+if len(default_column_base_list) > 0 :\n
+   column_base_list =  [x for x in context.portal_categories[column_category].getCategoryChildTitleItemList()[1:]\n
+                        if x[1] in default_column_base_list]\n
+else:\n
+   column_base_list =  context.portal_categories[column_category].getCategoryChildTitleItemList()[1:]\n
+\n
+\n
+\n
+counter = 1\n
+for x in column_base_list:\n
+   return_list.append([\'column\'+str(counter),x[0]])\n
+   counter += 1\n
+return_list.append([\'price\',\'Price\'])\n
+return_list.append([\'resource_id\',\'Resource\'])\n
+return return_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CashDetail_getVariationForMatrixInput</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

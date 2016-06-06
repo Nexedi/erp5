@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+This script provides a facility to permit conversion by format.\n
+"""\n
+\n
+###Below is an example which pure auditors can only view in non editable\n
+### formats (pdf, html, txt, png, etc.)\n
+###\n
+from AccessControl import getSecurityManager\n
+user = getSecurityManager().getUser()\n
+role_list = user.getRolesInContext(context)\n
+## \n
+\n
+# Users involved in the document may view it in editable mode\n
+if "Associate" in role_list or "Assignee" in role_list or\\\n
+    "Assignor" in role_list or "Manager" in role_list or "Owner" in role_list:\n
+  return True\n
+# Reject original format\n
+if format is None:\n
+  return False\n
+##\n
+# All users with view permission may view the document \n
+# in read only mode\n
+if format in (\'html\', \'stripped-html\', \'text\', \'txt\', \'pdf\', \'png\', \'jpg\', \'gif\'):\n
+  return True\n
+if format.endswith(\'pdf\'):\n
+  return True\n
+if format.endswith(\'html\'):\n
+ return True\n
+##\n
+## # All other formats are prohibitted\n
+return False\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>format=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Document_isTargetFormatPermitted</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

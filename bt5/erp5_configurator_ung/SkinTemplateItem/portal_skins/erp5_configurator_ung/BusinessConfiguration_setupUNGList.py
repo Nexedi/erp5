@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>configuration_save_url = kw.get(\'configuration_save_url\', None)\n
+configuration_save = context.restrictedTraverse(configuration_save_url)\n
+\n
+user_number = context.getGlobalConfigurationAttr(\'user_number\')\n
+\n
+## get only form keys\n
+form_keys = [i for i in kw.keys() if i.startswith(\'field_your_\') and i!=\'field_your_search_text\']\n
+\n
+function = "function/ung_user"\n
+if user_number == 1:\n
+  # only one user\n
+  for key in (\'configuration_save_url\', \'transition\', \'client_id\', \'password_confirm\'):\n
+    kw.pop(key, None)\n
+  configuration_save.addConfigurationItem("Person Configurator Item",\n
+                                          function=function,\n
+                                          **kw)\n
+else:\n
+  # many users\n
+  for counter in range(user_number):\n
+    user_kw = {}\n
+    for key in form_keys:\n
+      new_key = key.replace("field_your_", "")\n
+      value = kw.get(key)\n
+      if value:\n
+        user_kw[new_key] = value[counter]\n
+    # add an user\n
+    user_kw.pop(\'password_confirm\', None)\n
+    configuration_save.addConfigurationItem("Person Configurator Item",\n
+                                            function=function,\n
+                                            **user_kw)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessConfiguration_setupUNGList</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Setup web site users</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

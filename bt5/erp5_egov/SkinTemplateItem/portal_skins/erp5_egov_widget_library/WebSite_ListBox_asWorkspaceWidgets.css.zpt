@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>root_http_skin_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing"\n
+           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"/>\n
+\n
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+\n
+/*========================================================================================\n
+  ListBox_asWorkspaceWidgets CSS.\n
+\n
+========================================================================================*/\n
+\n
+.workspace_widget_ListContent,\n
+.no_prending_application_explanation{\n
+  margin-top:1.7em;\n
+}\n
+\n
+.workspace_widget_ListContent li a{\n
+  text-decoration:underline;\n
+}\n
+\n
+.workspace_widget_ListContent li{\n
+  margin: 0 1em 0 1em;\n
+  line-height: 1em;\n
+  padding: 0.3em 0.3em 1.3em 0.3em;\n
+  /*float:left;*/\n
+  /*width:90%;*/\n
+}\n
+\n
+.workspace_widget_ListContent li.DataA{\n
+  background: #FFFFFF;\n
+}\n
+\n
+.workspace_widget_ListContent li.DataB{\n
+  background: #EEEEEE;\n
+}\n
+ \n
+.workspace_widget_ListContent li .workspace_widget_translated_portal_type,\n
+.workspace_widget_ListContent li .workspace_widget_id,\n
+.workspace_widget_ListContent li .modification_date{\n
+  float: left;\n
+}\n
+\n
+.workspace_widget_ListContent .workspace_widget_translated_validation_state_title,\n
+.workspace_widget_ListContent .workspace_widget_modification_date{\n
+  float: right;\n
+}\n
+ \n
+.workspace_widget_ListContent ul{\n
+  padding: 1em 1em 0 1em;\n
+  list-style-type:none;\n
+  list-style-position:outside;\n
+}\n
+\n
+.workspace_widget_ListContent .modification_date,\n
+.workspace_widget_ListContent .workspace_widget_modification_date{\n
+  font-style: italic;\n
+  font-size:0.8em;\n
+}\n
+\n
+.workspace_widget_listbox_title{\n
+  background:#DDDDEE;\n
+  border-bottom:1px solid #AAAAAA;\n
+  position:absolute;\n
+  top:0;\n
+  left:0;\n
+  width:100%;\n
+  text-align:center;\n
+  font-weight:bold;\n
+  font-size:1.2em;\n
+  height:1em;\n
+  padding-top:0.2em;\n
+  padding-bottom:0.4em;\n
+  margin-bottom:20px;\n
+}\n
+\n
+.full_listbox{\n
+  margin-right: 1em;\n
+  margin-top: 0.5em;\n
+  margin-bottom: 0.5em;\n
+  float:right; \n
+}\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_ListBox_asWorkspaceWidgets.css</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""Call by dialog to create a new credential request and redirect to the context\n
+Paramameter list :\n
+reference -- User login is mandatory (String)\n
+default_email_text -- Email is mandatory (String)"""\n
+# create the credential request\n
+portal = context.getPortalObject()\n
+module = portal.getDefaultModule(portal_type=\'Credential Request\')\n
+portal_preferences = portal.portal_preferences\n
+category_list = portal_preferences.getPreferredSubscriptionAssignmentCategoryList()\n
+\n
+if not context.CredentialRequest_checkLoginAvailability(reference):\n
+  message_str = "Selected login is already in use, please choose different one."\n
+  return portal.Base_redirect(keep_items = dict(portal_status_message=context.Base_translateString(message_str)))\n
+ \n
+credential_request = module.newContent(\n
+                portal_type="Credential Request",\n
+                first_name=first_name,\n
+                last_name=last_name,\n
+                reference=reference,\n
+                password=password,\n
+                default_credential_question_question=default_credential_question_question,\n
+                default_credential_question_question_free_text=default_credential_question_question_free_text,\n
+                default_credential_question_answer=default_credential_question_answer,\n
+                default_email_text=default_email_text,\n
+                default_telephone_text=default_telephone_text,\n
+                default_mobile_telephone_text=default_mobile_telephone_text,\n
+                default_fax_text=default_fax_text,\n
+                default_address_street_address=default_address_street_address,\n
+                default_address_city=default_address_city,\n
+                default_address_zip_code=default_address_zip_code,\n
+                default_address_region=default_address_region,\n
+                role_list=role_list,\n
+                function=function,\n
+                site=site,\n
+                activity_list=activity_list,\n
+                corporate_name=corporate_name,\n
+                date_of_birth=date_of_birth)\n
+\n
+credential_request.setCategoryList(category_list)\n
+# Same tag is used as in Document.Person._setReference, in order to protect against\n
+# concurrency between Credential Request and Person object too\n
+credential_request.reindexObject(activate_kw=dict(tag=\'Person_setReference_%s\' % reference.encode(\'hex\')))\n
+\n
+#We attach the current user to the credential request if not anonymous\n
+if not context.portal_membership.isAnonymousUser():\n
+  person = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
+  destination_decision = []\n
+  if person.getReference() == reference:\n
+    destination_decision.append(person.getRelativeUrl())\n
+  if person.getDefaultCareerSubordinationTitle() == corporate_name:\n
+    destination_decision.append(person.getDefaultCareerSubordination())\n
+  if destination_decision:\n
+    credential_request.setDestinationDecision(destination_decision)\n
+\n
+if portal_preferences.getPreferredCredentialAlarmAutomaticCall():\n
+  credential_request.submit("Automatic submit")\n
+  message_str = "Credential Request Created."\n
+else:\n
+  if portal_preferences.isPreferredEmailVerificationCheck():\n
+    # after_path_and_method_id argument is used below to not activate when\n
+    # Crededial request object is not indexed yet. This is needed because when\n
+    # the method searchAndActivate from catalog is called, if the object is not\n
+    # indexed, the e-mail is not sent.\n
+    method_id_list = (\'immediateReindexObject\', \'recursiveImmediateReindexObject\')\n
+    path_and_method_id = (credential_request.getPath(), method_id_list)\n
+    activity_kw = dict(activity=\'SQLQueue\',\n
+                       after_path_and_method_id=path_and_method_id)\n
+    credential_request.activate(**activity_kw).CredentialRequest_sendSubmittedNotification(\n
+      context_url=context.absolute_url(),\n
+      notification_reference=\'erp5-subscription.notification\')\n
+    message_str = "Thanks for your registration. You will be receive an email to activate your account."\n
+  else:\n
+    # no email verification is needed\n
+    credential_request.submit("Automatic submit")\n
+    message_str = "Credential Request Created."\n
+    \n
+\n
+return portal.Base_redirect(form_id=\'login_form\', \n
+                     keep_items = dict(portal_status_message=context.Base_translateString(message_str)))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>reference, default_email_text, first_name=None, last_name=None, password=None, date_of_birth=None, default_telephone_text=None, default_mobile_telephone_text=None, default_fax_text=None, corporate_name=None, default_credential_question_question=None, default_credential_question_question_free_text=None, default_credential_question_answer=None,  role_list=None, function=None, site=None, activity_list=None, default_address_city=None, default_address_street_address=None, default_address_zip_code=None,default_address_region=None, dialog_id=\'\', **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_newCredentialRequest</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

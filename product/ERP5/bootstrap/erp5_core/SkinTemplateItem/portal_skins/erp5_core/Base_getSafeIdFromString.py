@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  This function transform a string to a safe id.\n
+  It is used here to create a safe category id from a string.\n
+"""\n
+\n
+translation_map = { "a": [\'\\xe0\']\n
+                  , "e": [\'\\xe9\', \'\\xe8\']\n
+                  }\n
+\n
+clean_id = \'\'\n
+if string == None:\n
+  return None\n
+string = string.lower()\n
+string = string.strip()\n
+# oocalc inserts some strange chars when you press - key in a text cell.\n
+# Following line is a workaround for this, because \\u2013 does not exist in latin1\n
+string = string.replace(u\'\\u2013\', \'-\')\n
+for char in string.encode(\'iso8859_1\'):\n
+  if char == \'_\' or char.isalnum():\n
+    clean_id += char\n
+  elif char.isspace() or char in (\'+\', \'-\'):\n
+    clean_id += \'_\'\n
+  else:\n
+    for (safe_char, char_list) in translation_map.items():\n
+      if char in char_list:\n
+        clean_id += safe_char\n
+        break\n
+return clean_id\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>string=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getSafeIdFromString</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

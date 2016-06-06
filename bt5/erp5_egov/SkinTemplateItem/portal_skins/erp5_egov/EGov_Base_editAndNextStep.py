@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># Retrieve the edit action\n
+"""\n
+  Special edit method which returns to view mode.\n
+  The view_document_url is used to define the URL to return to\n
+  after editing the document.\n
+"""\n
+\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.CMFCore.utils import getToolByName\n
+\n
+request=context.REQUEST\n
+\n
+message = \'\'\n
+\n
+# add the attachments :\n
+translateString = context.Base_translateString\n
+\n
+if form_id == \'view\':\n
+  result, mode = context.asContext(edit=context.edit,\n
+            **{form_id: context.getTypeInfo().getERP5Form()}\n
+          ).Base_edit(\'PDFDocument_viewAttachmentReportSection\', silent_mode=1, field_prefix=\'your_\')\n
+else:\n
+  result, mode = context.Base_edit(\'PDFDocument_viewAttachmentReportSection\', silent_mode=1, field_prefix=\'your_\')\n
+\n
+\n
+attachment_count = 0\n
+\n
+bad_file = ""\n
+if mode == \'edit\':\n
+  (kw, encapsulated_editor_list) = result\n
+  if \'attachment_title\' in kw.keys():\n
+    if not same_type(kw[\'attachment_title\'], []):\n
+      attachment_title_list = []\n
+      attachment_file_list = []\n
+      attachment_title_list.append(kw[\'attachment_title\'])\n
+      attachment_file_list.append(kw[\'attachment\'])\n
+    else:\n
+      attachment_title_list = kw[\'attachment_title\']\n
+      attachment_file_list = kw[\'attachment\']\n
+    attachment_list = zip(attachment_file_list, attachment_title_list)\n
+    attachment_count = 0\n
+    type_dict = {}\n
+    type_allowed_content_type_list = context.getTypeInfo().getTypeAllowedContentTypeList()\n
+    for i in range(len(attachment_list)+1)[1:]:\n
+      type = getattr(context.getTypeInfo(), "getAttachmentModel%s" % i, None)\n
+      title = getattr(context.getTypeInfo(), "getAttachmentTitle%s" % i, None) \n
+      if title is not None and type is not None:\n
+        type_object = context.restrictedTraverse(context.getPortalObject().getUrl()+"/portal_types/"+type())\n
+        type_dict[title()] =  type_object.getId()\n
+        if type_object.getId() not in type_allowed_content_type_list: \n
+          type_allowed_content_type_list.append(type_object.getId())\n
+    context.getTypeInfo().setTypeAllowedContentTypeList(type_allowed_content_type_list)\n
+    # use hidden_content_type_list to hide action Add on interfaces (like Add File) \n
+    context.getTypeInfo().setTypeHiddenContentTypeList(type_allowed_content_type_list)\n
+\n
+    # XXX make sure it is a list\n
+    for attachment, title in attachment_list:\n
+      if attachment:\n
+        portal = context.getPortalObject()\n
+        attachment_portal_type =  context.EGov_guessPortalType(attachment)\n
+        if attachment_portal_type is not None and attachment_portal_type==type_dict[title]:\n
+            document_new_content_kw = {\n
+              \'file\': attachment,\n
+              \'portl_type\':type_dict[title],\n
+              \'container_path\':context.getUrl(),\n
+              \'file_name\':attachment.filename,\n
+            }\n
+            attachment_count += 1\n
+            container = getToolByName(portal, \'portal_contributions\', None)\n
+            document = container.newContent(**document_new_content_kw)\n
+            document_edit_kw = {\n
+              \'title\': title,\n
+            }\n
+            document.edit(**document_edit_kw)\n
+        else:\n
+            bad_file = "%s \'%s\' must be %s file"  % (bad_file, attachment.filename, type_dict[title])        \n
+\n
+message = ""\n
+if attachment_count or bad_file:\n
+  if attachment_count:\n
+    message = translateString("Added ${attachment_count} attachment(s) to the current form.",\n
+                             mapping = dict(attachment_count=attachment_count))\n
+  if bad_file:\n
+    message = translateString("${portal_status_message} ${bad_file}",\n
+                             mapping = dict(portal_status_message=message , bad_file=bad_file)) \n
+else:\n
+  if form_id != \'view\' and context.PDFDocument_getRequirementCount() != 0: \n
+    message = translateString("Please add ${missing_file} missing file(s) to continue.", \n
+                             mapping = dict(missing_file=context.PDFDocument_getRequirementCount())) \n
+\n
+\n
+\n
+next_url_dict = {\n
+   \'view\':\'PDFDocument_viewAttachmentList\',\n
+}\n
+\n
+# edit the document with the entered data before to change of state\n
+\n
+if form_id == \'view\':\n
+  base_edit_result = context.PDFDocument_edit(form_id=form_id, \n
+                  selection_index=selection_index, \n
+                  selection_name=selection_name, \n
+                  dialog_id=dialog_id, \n
+                  ignore_layout=ignore_layout, \n
+                  editable_mode=editable_mode, \n
+                  silent_mode=silent_mode, \n
+                  field_prefix=field_prefix)\n
+\n
+# if there is somme errors (like required field not filled),\n
+# return to the same page, and display Base_edit error message\n
+if request.get(\'field_errors\', \'\'):\n
+  return base_edit_result\n
+\n
+if form_id != \'view\' and context.PDFDocument_getRequirementCount() != 0:\n
+  return request[\'RESPONSE\'].redirect(\n
+             "%s/%s?portal_status_message=%s" %\n
+             (context.absolute_url(), form_id, message))\n
+\n
+\n
+if not next_url_dict.has_key(form_id):\n
+  next_url = \'PDFDocument_viewLoginInformation\'\n
+  # if the next url is PDFDocument_viewLoginInformation, submit the application\n
+\n
+  if context.getTypeInfo().getStepPrepayment():\n
+    submit_action = \'pending_action\'\n
+  else:\n
+    submit_action = \'submit_draft_action\'\n
+  try : \n
+    message=""\n
+    context.portal_workflow.doActionFor(context,\n
+                                      submit_action)\n
+  except ValidationFailed, message: \n
+    context.pdb()\n
+    return request[\'RESPONSE\'].redirect(\n
+               "%s/%s?portal_status_message=%s" %\n
+               (context.absolute_url(), form_id, message))\n
+  #context.submit()\n
+else:\n
+  next_url = next_url_dict[form_id]\n
+\n
+return context.Base_redirect(next_url, keep_items = dict(portal_status_message=message), **kw)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1, silent_mode=0, field_prefix=\'my_\', **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>EGov_Base_editAndNextStep</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

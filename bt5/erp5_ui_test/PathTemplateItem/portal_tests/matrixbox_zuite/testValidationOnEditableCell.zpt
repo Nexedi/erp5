@@ -1,0 +1,235 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test Validation on editable cells</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test validation on editable cells</td></tr>\n
+</thead><tbody>\n
+\n
+<tal:block metal:use-macro="here/MatrixBoxZuite_CommonTemplate/macros/init" />\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects?create_line:int=1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/1/FooLine_viewDynamicMatrixBox</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_matrixbox_quantity_cell_0_0_0</td>\n
+  <td>xx</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_matrixbox_quantity_cell_0_1_0</td>\n
+  <td>2</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_matrixbox_quantity_cell_0_0_0</td>\n
+  <td>xx</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//fieldset[@class=\'bottom editable\']/div[1]/div/div/table/tbody/tr[2]/td[2]</td>\n
+  <td>*You did not enter a floating point*</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_matrixbox_quantity_cell_0_1_0</td>\n
+  <td>2.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_matrixbox_quantity_cell_1_0_0</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_matrixbox_quantity_cell_1_1_0</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- create cells -->\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_matrixbox_quantity_cell_0_0_0</td>\n
+  <td>1</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_matrixbox_quantity_cell_0_1_0</td>\n
+  <td>2</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Data updated.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_matrixbox_quantity_cell_0_0_0</td>\n
+  <td>xx</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_matrixbox_quantity_cell_0_1_0</td>\n
+  <td>3</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_matrixbox_quantity_cell_0_0_0</td>\n
+  <td>xx</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//fieldset[@class=\'bottom editable\']/div[1]/div/div/table/tbody/tr[2]/td[2]</td>\n
+  <td>*You did not enter a floating point*</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_matrixbox_quantity_cell_0_1_0</td>\n
+  <td>3.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_matrixbox_quantity_cell_1_0_0</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_matrixbox_quantity_cell_1_1_0</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- cleanup and save -->\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_matrixbox_quantity_cell_0_0_0</td>\n
+  <td>1.0</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_matrixbox_quantity_cell_0_1_0</td>\n
+  <td>2.0</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Data updated.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+</tbody>\n
+</table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testValidationOnEditableCell</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

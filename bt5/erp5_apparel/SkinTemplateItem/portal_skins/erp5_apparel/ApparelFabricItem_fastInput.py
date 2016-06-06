@@ -1,0 +1,283 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# erp5_apparel/ApparelFabricItem_fastInput\n
+\n
+from Products.Formulator.Errors import ValidationError, FormValidationError\n
+request=context.REQUEST\n
+\n
+localizer = context.Localizer\n
+\n
+# define the name of input\n
+new_quantity_name = \'quantity\'\n
+new_net_width_name = \'net_width\'\n
+new_source_reference_name = \'title\'\n
+new_bath_name = \'grouping_reference\'\n
+new_comment_name = \'comment\'\n
+\n
+fabric_item_portal_type="Apparel Fabric Item"\n
+apparel_bath_portal_type = "Apparel Bath"\n
+inventory_cell_portal_type_list = ("Inventory Cell",)\n
+delivery_cell_portal_type_list = ("Purchase Packing List Cell",)\n
+cell_portal_type_list = inventory_cell_portal_type_list + delivery_cell_portal_type_list\n
+counter = 0\n
+created_item_list = []\n
+\n
+start_date = context.getStartDate()\n
+stop_date = context.getStopDate()\n
+\n
+error_message = \'\'\n
+\n
+try:\n
+  if context.getPortalType() == fabric_item_portal_type : # we create a sub_item\n
+    my_container = context\n
+  else : # we create a master_item\n
+    my_container = context.getPortalObject().apparel_fabric_item_module\n
+  # get only lines with a piece_number and a quantity\n
+  input_list = filter( (lambda x: (x[new_quantity_name] != \'\') and (x[new_quantity_name] > 0) ) ,listbox )\n
+  error_message = \'\'\n
+  for input in input_list:\n
+      title = input[new_source_reference_name]\n
+      catalog_list = context.portal_catalog(portal_type=fabric_item_portal_type,title=title)\n
+      if len(catalog_list)>0:\n
+        error_message += localizer.erp5_ui.gettext("Warning the item %s already exists.") % (title)\n
+\n
+  if error_message=="":\n
+    for input in input_list:\n
+      my_quantity = input[new_quantity_name]\n
+      # first check if needed if quantity compatible with parent_item\n
+      if my_container.getPortalType() == fabric_item_portal_type :\n
+        context.log(\'remaining quantity\', my_container.getRemainingQuantity())\n
+        if input[new_quantity_name] >= my_container.getRemainingQuantity() :\n
+          my_quantity = None\n
+      if my_quantity is not None :\n
+        counter += 1\n
+\n
+        if context.getPortalType() in cell_portal_type_list :\n
+          if context.getDestinationValue() is None:\n
+            error_message = localizer.erp5_ui.gettext("Warning select a destination.")\n
+            break\n
+\n
+        if context.getPortalType() == fabric_item_portal_type :\n
+          if input[new_net_width_name] in [\'\',None]:\n
+            input[new_net_width_name] = my_container.getLaizeUtile()\n
+          if input[new_source_reference_name] in [\'\',None]:\n
+            input[new_source_reference_name] = my_container.getSourceReference()\n
+          if input[new_bath_name] in [\'\',None]:\n
+            input[new_bath_name] = my_container.getBainTeinture()\n
+          if input[new_comment_name] in [\'\',None]:\n
+            input[new_comment_name] = my_container.getComment()\n
+\n
+        # look if the item does not already exist\n
+        title = input[new_source_reference_name]\n
+        new_item = my_container.newContent(portal_type = fabric_item_portal_type,\n
+                                                  quantity = input[new_quantity_name],\n
+                                                  net_width = input[new_net_width_name],\n
+                                                  source_reference = input[new_source_reference_name],\n
+                                                  title = title,\n
+                                                  grouping_reference = input[new_bath_name],\n
+                                                  comment = input[new_comment_name],)\n
+\n
+        if context.getPortalType() in cell_portal_type_list :\n
+          new_item.edit(resource = context.getResource(),\n
+                                      #destination = context.getDestination(),\n
+                                      variation_category_list = context.getVariationCategoryList())\n
+        created_item_list.append(new_item)\n
+\n
+    # sort item by their bath\n
+    bath_dict = {}\n
+    bath = \'\'\n
+    for item in created_item_list:\n
+      bath = str(item.grouping_reference)\n
+      if bath_dict.has_key(bath):\n
+        bath_dict[str(bath)].extend([item])\n
+      else:\n
+        bath_dict[str(bath)] = [item]\n
+\n
+    # get or create bath for each fabric item\n
+    bath_container = context.getPortalObject().apparel_bath_module\n
+    resource_uid = context.getResourceUid()\n
+    resource_title = context.getResourceTitle()\n
+    resource = context.getResource()\n
+    variation_category_list = context.getVariationCategoryList()\n
+    bath_object_list = {}\n
+    for bath_title in bath_dict.keys():\n
+      if bath_title != "None":\n
+        bath_list = context.portal_catalog(portal_type=apparel_bath_portal_type, resource_uid=resource_uid, title=bath_title)\n
+        if len(bath_list) > 0:\n
+          for bath in bath_list:\n
+            if bath.getVariationCategoryList() == variation_category_list:\n
+              bath = bath_list\n
+              bath_object = context.portal_catalog.getObject(bath.uid)\n
+              break\n
+        else:\n
+          bath_object = bath_container.newContent(portal_type = apparel_bath_portal_type,\n
+                              title = bath_title,\n
+                              resource = resource,\n
+                              variation_category_list = variation_category_list)\n
+        bath_object_list[bath_title] = bath_object\n
+\n
+\n
+    movement = context\n
+    # get bath on root movement\n
+    aggregate_list = movement.getAggregateValueList()\n
+    movement_bath = "None"\n
+    for item in aggregate_list:\n
+      if item.getPortalType() == apparel_bath_portal_type:\n
+        movement_bath = item.getTitle()\n
+        break\n
+    # must call splitQuantity to create new movement foreach new bath\n
+    context.updateAppliedRule()\n
+    movement_list = []\n
+    for bath in bath_dict.keys():\n
+      if bath != movement_bath:\n
+        quantity = 0\n
+        context.log(\'bath\', bath)\n
+        items = bath_dict[bath]\n
+        # get quantity for new movement\n
+        for item in items:\n
+          quantity += item.quantity\n
+        # create new movement\n
+        if bath != "None":\n
+          apparel_bath_list = [bath_object_list[bath].getRelativeUrl()]\n
+        else:\n
+          apparel_bath_list = [""]\n
+        new_movement = context.portal_simulation.solveMovement(movement, None, \'SplitQuantity\', additional_parameters={\'aggregate_list\':apparel_bath_list}, start_date=start_date, stop_date=stop_date, quantity=quantity)\n
+        movement_list.append(new_movement[0].getRelativeUrl())\n
+    # update root movement if require\n
+    if bath_dict.has_key(movement_bath):\n
+      items = bath_dict[movement_bath]\n
+      quantity = 0\n
+      for item in items:\n
+        quantity += item.quantity\n
+      movement.edit(quantity=quantity)\n
+\n
+    delivery_list = [context.getExplanationValue().getRelativeUrl()]\n
+    delivery = context.getExplanationValue()\n
+    # update line on packing list\n
+    order = context.getCausalityValue()\n
+    applied_rule = order.getCausalityRelatedValue(portal_type="Applied Rule")\n
+    order_portal_type = order.getPortalType()\n
+    if order_portal_type == \'Sale Order\':\n
+        delivery_builder = order.portal_deliveries.sale_packing_list_builder\n
+    elif order_portal_type == \'Purchase Order\':\n
+        delivery_builder = order.portal_deliveries.purchase_packing_list_builder\n
+    explanation_uid_list = [order.getUid(),context.getUid()]\n
+    delivery_builder.build(explanation_uid=explanation_uid_list, movement_relative_url_list=movement_list, delivery_relative_url_list=delivery_list)\n
+    lines = delivery.objectValues()\n
+    # udpate aggregate list on cells\n
+    variation_text = context.getVariationText()\n
+    for line in lines:\n
+      if line.getResourceUid() == resource_uid:\n
+        # get bath from line\n
+        line_aggregate_list = line.getAggregateValueList()\n
+        has_bath = 0\n
+        for item in line_aggregate_list:\n
+          if item.getPortalType() == apparel_bath_portal_type:\n
+            has_bath = 1\n
+            line_bath = item.getTitle()\n
+        if not has_bath:\n
+          line_bath = "None"\n
+        # update aggregate list on cell\n
+        cells = line.objectValues()\n
+        for cell in cells:\n
+          if cell.getVariationText() == variation_text:\n
+            # update aggregate list with items\n
+            cell_aggregate_list = cell.getAggregateValueList()\n
+            if bath_dict.has_key(line_bath):\n
+              # new items on cell\n
+              cell_item = bath_dict[line_bath]\n
+              cell_aggregate_list.extend(cell_item)\n
+              cell.setAggregateValueList(cell_aggregate_list)\n
+            # update quantity\n
+            total_quantity = sum([x.getQuantity() for x in cell_aggregate_list])\n
+            if cell.getPortalType() in inventory_cell_portal_type_list:\n
+              cell.setMappedValuePropertyList([\'inventory\',\'price\'])\n
+              cell.edit(inventory=total_quantity)\n
+            elif cell.getPortalType() in delivery_cell_portal_type_list:\n
+              cell.setMappedValuePropertyList([\'quantity\',\'price\'])\n
+              cell.edit(quantity=total_quantity)\n
+\n
+\n
+except FormValidationError, validation_errors:\n
+  redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
+                                  , \'portal_status_message=%s\' % localizer.erp5_ui.gettext("input failed.")\n
+                                  )\n
+else:\n
+  if error_message != \'\':\n
+    redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
+                                  , \'portal_status_message=%s\' % error_message\n
+                                  )\n
+  else:\n
+    redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
+                                  , \'portal_status_message=%s\' % (localizer.erp5_ui.gettext(" %s items created.") % (counter))\n
+                                  )\n
+\n
+request[ \'RESPONSE\' ].redirect( redirect_url )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ApparelFabricItem_fastInput</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  Return true if user account is blocked.\n
+"""\n
+from DateTime import DateTime\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
+\n
+request = context.REQUEST\n
+portal = context.getPortalObject()\n
+portal_preferences = portal.portal_preferences\n
+\n
+if not portal_preferences.isAuthenticationPolicyEnabled():\n
+  # no policy, no sense to block account\n
+  return 0\n
+\n
+now = DateTime()\n
+one_second = 1/24.0/60.0/60.0\n
+check_duration = portal_preferences.getPreferredAuthenticationFailureCheckDuration()\n
+block_duration = portal_preferences.getPreferredAuthenticationFailureBlockDuration()\n
+max_authentication_failures = portal_preferences.getPreferredMaxAuthenticationFailure()\n
+check_time = now - check_duration*one_second\n
+\n
+# some failures might be still unindexed\n
+tag = \'authentication_event_%s\' %context.getReference()\n
+unindexed_failures = portal.portal_activities.countMessageWithTag(tag)\n
+\n
+if unindexed_failures >= max_authentication_failures:\n
+  # no need to check further\n
+  return 1\n
+\n
+# some are already indexed\n
+kw = {\'portal_type\': \'Authentication Event\',\n
+      \'default_destination_uid\': context.getUid(),\n
+      \'creation_date\': Query(creation_date = check_time,\n
+                             range=\'min\'),\n
+      \'validation_state\' : \'confirmed\',\n
+      \'sort_on\' : ((\'creation_date\', \'ASC\',),),\n
+      \'limit\': max_authentication_failures\n
+      }\n
+indexed_failure_list = portal.portal_catalog(**kw)\n
+indexed_failures = len(indexed_failure_list)\n
+\n
+#context.log(\'== %s %s %s\' %(unindexed_failures, indexed_failures, max_authentication_failures))\n
+if (indexed_failures + unindexed_failures) >= max_authentication_failures:\n
+  last_authentication_failure = indexed_failure_list[-1].getObject()\n
+  block_timeout = last_authentication_failure.getCreationDate() + block_duration*one_second\n
+  if block_timeout >= now:\n
+    #context.log(\'block %s\' %context.getReference())\n
+    request.set(\'is_user_account_blocked\', True)\n
+    return 1\n
+\n
+return 0\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Person_isLoginBlocked</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

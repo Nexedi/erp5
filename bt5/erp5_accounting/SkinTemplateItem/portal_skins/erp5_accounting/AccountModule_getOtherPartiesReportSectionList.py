@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Client & vendors accounts.\n
+"""\n
+portal = context.portal_url.getPortalObject()\n
+\n
+from Products.ERP5Form.Report import ReportSection\n
+\n
+request = context.REQUEST\n
+at_date = request[\'at_date\']\n
+section_category = request[\'section_category\']\n
+simulation_state = request[\'simulation_state\']\n
+role_filter_list = request.get(\'mirror_section_category_list\', None)\n
+omit_balanced_accounts = request[\'omit_balanced_accounts\']\n
+from_date = request.get(\'from_date\', None)\n
+project = request.get(\'project\', None)\n
+\n
+currency = portal.Base_getCurrencyForSection(request[\'section_category\'])\n
+precision = portal.account_module.getQuantityPrecisionFromResource(currency)\n
+request.set(\'precision\', precision)\n
+\n
+request.other[\'is_accounting_report\'] = True\n
+\n
+# role_filter_list == None means no filter on the role\n
+if role_filter_list == [\'\'] :\n
+  role_filter_list = None\n
+\n
+section_uid = context.Base_getSectionUidListForSectionCategory(\n
+                                             request[\'section_category\'],\n
+                                             request[\'section_category_strict\'])\n
+result = []\n
+\n
+params =  {\n
+    \'at_date\' : at_date\n
+  , \'section_uid\': section_uid\n
+  , \'simulation_state\': simulation_state\n
+}\n
+\n
+params[\'hide_grouping\'] = request[\'omit_grouping_reference\']\n
+if from_date:\n
+  params[\'from_date\'] = from_date\n
+else :\n
+  params[\'no_from_date\'] = 1\n
+\n
+if project:\n
+  if project == \'None\':\n
+    params[\'project_uid\'] = project\n
+  else:\n
+    params[\'project_uid\'] = portal.restrictedTraverse(project).getUid()\n
+\n
+simulation_tool = portal.portal_simulation\n
+\n
+entity_columns = [\n
+                       (\'date\', \'Date\'),\n
+                       (\'Movement_getExplanationTranslatedPortalType\', \'Type\'),\n
+                       (\'Movement_getNodeGapId\', \'GAP\'),\n
+                       (\'Movement_getExplanationReference\', \'Invoice No\'),\n
+                       (\'Movement_getExplanationTitle\', \'Title\'),\n
+                       (\'Movement_getSpecificReference\', \'Reference\'),\n
+                       (\'getTranslatedSimulationStateTitle\', \'State\'),\n
+                       (\'debit_price\', \'Debit\'),\n
+                       (\'credit_price\', \'Credit\'),\n
+                       (\'running_total_price\', \'Balance\'),\n
+]\n
+\n
+if not params[\'hide_grouping\']  :\n
+  entity_columns.append((\'grouping_reference\',\n
+                         \'Grouping Reference\'))\n
+\n
+\n
+# TODO: this can be a simple getInventoryList with mirror section category\n
+# (role)\n
+for party in context.Account_zDistinctSectionList(\n
+                              section_uid=section_uid,\n
+                              at_date=at_date):\n
+  o = party.getObject()\n
+  keep_this_one = True\n
+  if role_filter_list:\n
+    keep_this_one = False\n
+    for role in role_filter_list:\n
+      if role and o.isMemberOf(role):\n
+        keep_this_one = True\n
+        break\n
+\n
+  if not keep_this_one:\n
+    continue\n
+\n
+  if o.getPortalType() == \'Person\' or\\\n
+      not o.isMemberOf(section_category):\n
+        # don\'t show entities belonging to the group we are reporting\n
+    if omit_balanced_accounts and (\n
+        round(simulation_tool.getInventoryAssetPrice(\n
+                    mirror_section_uid=party.uid,\n
+                    ignore_unknown_columns=True,\n
+                    precision=precision,\n
+                    node_category_strict_membership=(\n
+                          \'account_type/asset/receivable\',\n
+                          \'account_type/liability/payable\'),\n
+                    **params\n
+                    ), precision) == 0.):\n
+      pass\n
+    else:\n
+      title = o.getTitle()\n
+      if o.getProperty(\'role\', None):\n
+        title += \' (%s)\' % o.getRoleTranslatedTitle()\n
+      result.append(\n
+                 ReportSection(title=title,\n
+                               level=1,\n
+                               path=o.getPhysicalPath(),\n
+                               form_id=\'Entity_viewAccountingTransactionList\',\n
+                               selection_name=\'other_parties_report_selection\',\n
+                               selection_params=params,\n
+                               selection_columns=entity_columns,\n
+                               selection_sort_order=[(\'stock.date\', \'ascending\'),\n
+                                                      (\'stock.uid\', \'ascending\'),],))\n
+\n
+return result\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountModule_getOtherPartiesReportSectionList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

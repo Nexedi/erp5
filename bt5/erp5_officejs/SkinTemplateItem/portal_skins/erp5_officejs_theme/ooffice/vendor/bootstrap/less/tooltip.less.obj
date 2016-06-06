@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314532.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tooltip.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//\n
+// Tooltips\n
+// --------------------------------------------------\n
+\n
+\n
+// Base class\n
+.tooltip {\n
+  position: absolute;\n
+  z-index: @zindex-tooltip;\n
+  display: block;\n
+  visibility: visible;\n
+  font-size: @font-size-small;\n
+  line-height: 1.4;\n
+  .opacity(0);\n
+\n
+  &.in     { .opacity(.9); }\n
+  &.top    { margin-top:  -3px; padding: @tooltip-arrow-width 0; }\n
+  &.right  { margin-left:  3px; padding: 0 @tooltip-arrow-width; }\n
+  &.bottom { margin-top:   3px; padding: @tooltip-arrow-width 0; }\n
+  &.left   { margin-left: -3px; padding: 0 @tooltip-arrow-width; }\n
+}\n
+\n
+// Wrapper for the tooltip content\n
+.tooltip-inner {\n
+  max-width: @tooltip-max-width;\n
+  padding: 3px 8px;\n
+  color: @tooltip-color;\n
+  text-align: center;\n
+  text-decoration: none;\n
+  background-color: @tooltip-bg;\n
+  border-radius: @border-radius-base;\n
+}\n
+\n
+// Arrows\n
+.tooltip-arrow {\n
+  position: absolute;\n
+  width: 0;\n
+  height: 0;\n
+  border-color: transparent;\n
+  border-style: solid;\n
+}\n
+.tooltip {\n
+  &.top .tooltip-arrow {\n
+    bottom: 0;\n
+    left: 50%;\n
+    margin-left: -@tooltip-arrow-width;\n
+    border-width: @tooltip-arrow-width @tooltip-arrow-width 0;\n
+    border-top-color: @tooltip-arrow-color;\n
+  }\n
+  &.top-left .tooltip-arrow {\n
+    bottom: 0;\n
+    left: @tooltip-arrow-width;\n
+    border-width: @tooltip-arrow-width @tooltip-arrow-width 0;\n
+    border-top-color: @tooltip-arrow-color;\n
+  }\n
+  &.top-right .tooltip-arrow {\n
+    bottom: 0;\n
+    right: @tooltip-arrow-width;\n
+    border-width: @tooltip-arrow-width @tooltip-arrow-width 0;\n
+    border-top-color: @tooltip-arrow-color;\n
+  }\n
+  &.right .tooltip-arrow {\n
+    top: 50%;\n
+    left: 0;\n
+    margin-top: -@tooltip-arrow-width;\n
+    border-width: @tooltip-arrow-width @tooltip-arrow-width @tooltip-arrow-width 0;\n
+    border-right-color: @tooltip-arrow-color;\n
+  }\n
+  &.left .tooltip-arrow {\n
+    top: 50%;\n
+    right: 0;\n
+    margin-top: -@tooltip-arrow-width;\n
+    border-width: @tooltip-arrow-width 0 @tooltip-arrow-width @tooltip-arrow-width;\n
+    border-left-color: @tooltip-arrow-color;\n
+  }\n
+  &.bottom .tooltip-arrow {\n
+    top: 0;\n
+    left: 50%;\n
+    margin-left: -@tooltip-arrow-width;\n
+    border-width: 0 @tooltip-arrow-width @tooltip-arrow-width;\n
+    border-bottom-color: @tooltip-arrow-color;\n
+  }\n
+  &.bottom-left .tooltip-arrow {\n
+    top: 0;\n
+    left: @tooltip-arrow-width;\n
+    border-width: 0 @tooltip-arrow-width @tooltip-arrow-width;\n
+    border-bottom-color: @tooltip-arrow-color;\n
+  }\n
+  &.bottom-right .tooltip-arrow {\n
+    top: 0;\n
+    right: @tooltip-arrow-width;\n
+    border-width: 0 @tooltip-arrow-width @tooltip-arrow-width;\n
+    border-bottom-color: @tooltip-arrow-color;\n
+  }\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2576</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

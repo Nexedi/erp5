@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts39831393.75</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>contents.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.\r\n
+For licensing, see LICENSE.md or http://ckeditor.com/license\r\n
+*/\r\n
+\r\n
+body\r\n
+{\r\n
+\t/* Font */\r\n
+\tfont-family: sans-serif, Arial, Verdana, "Trebuchet MS";\r\n
+\tfont-size: 12px;\r\n
+\r\n
+\t/* Text color */\r\n
+\tcolor: #333;\r\n
+\r\n
+\t/* Remove the background color to make it transparent */\r\n
+\tbackground-color: #fff;\r\n
+\r\n
+\tmargin: 20px;\r\n
+}\r\n
+\r\n
+.cke_editable\r\n
+{\r\n
+\tfont-size: 13px;\r\n
+\tline-height: 1.6;\r\n
+}\r\n
+\r\n
+blockquote\r\n
+{\r\n
+\tfont-style: italic;\r\n
+\tfont-family: Georgia, Times, "Times New Roman", serif;\r\n
+\tpadding: 2px 0;\r\n
+\tborder-style: solid;\r\n
+\tborder-color: #ccc;\r\n
+\tborder-width: 0;\r\n
+}\r\n
+\r\n
+.cke_contents_ltr blockquote\r\n
+{\r\n
+\tpadding-left: 20px;\r\n
+\tpadding-right: 8px;\r\n
+\tborder-left-width: 5px;\r\n
+}\r\n
+\r\n
+.cke_contents_rtl blockquote\r\n
+{\r\n
+\tpadding-left: 8px;\r\n
+\tpadding-right: 20px;\r\n
+\tborder-right-width: 5px;\r\n
+}\r\n
+\r\n
+a\r\n
+{\r\n
+\tcolor: #0782C1;\r\n
+}\r\n
+\r\n
+ol,ul,dl\r\n
+{\r\n
+\t/* IE7: reset rtl list margin. (#7334) */\r\n
+\t*margin-right: 0px;\r\n
+\t/* preserved spaces for list items with text direction other than the list. (#6249,#8049)*/\r\n
+\tpadding: 0 40px;\r\n
+}\r\n
+\r\n
+h1,h2,h3,h4,h5,h6\r\n
+{\r\n
+\tfont-weight: normal;\r\n
+\tline-height: 1.2;\r\n
+}\r\n
+\r\n
+hr\r\n
+{\r\n
+\tborder: 0px;\r\n
+\tborder-top: 1px solid #ccc;\r\n
+}\r\n
+\r\n
+img.right\r\n
+{\r\n
+\tborder: 1px solid #ccc;\r\n
+\tfloat: right;\r\n
+\tmargin-left: 15px;\r\n
+\tpadding: 5px;\r\n
+}\r\n
+\r\n
+img.left\r\n
+{\r\n
+\tborder: 1px solid #ccc;\r\n
+\tfloat: left;\r\n
+\tmargin-right: 15px;\r\n
+\tpadding: 5px;\r\n
+}\r\n
+\r\n
+pre\r\n
+{\r\n
+\twhite-space: pre-wrap; /* CSS 2.1 */\r\n
+\tword-wrap: break-word; /* IE7 */\r\n
+\t-moz-tab-size: 4;\r\n
+\ttab-size: 4;\r\n
+}\r\n
+\r\n
+.marker\r\n
+{\r\n
+\tbackground-color: Yellow;\r\n
+}\r\n
+\r\n
+span[lang]\r\n
+{\r\n
+\tfont-style: italic;\r\n
+}\r\n
+\r\n
+figure\r\n
+{\r\n
+\ttext-align: center;\r\n
+\tborder: solid 1px #ccc;\r\n
+\tborder-radius: 2px;\r\n
+\tbackground: rgba(0,0,0,0.05);\r\n
+\tpadding: 10px;\r\n
+\tmargin: 10px 20px;\r\n
+\tdisplay: inline-block;\r\n
+}\r\n
+\r\n
+figure > figcaption\r\n
+{\r\n
+\ttext-align: center;\r\n
+\tdisplay: block; /* For IE8 */\r\n
+}\r\n
+\r\n
+a > img {\r\n
+\tpadding: 1px;\r\n
+\tmargin: 1px;\r\n
+\tborder: none;\r\n
+\toutline: 1px solid #0782C1;\r\n
+}\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1967</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

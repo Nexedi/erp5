@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># This script will try to guess what is the current currency\n
+# for the particular vault\n
+\n
+vault_list = vault.split(\'/\')\n
+currency_id = None\n
+# Well, this is not a nice way of doing, we should have\n
+# a mapping or something instead\n
+if \'encaisse_des_devises\' in vault_list:\n
+  vault_currency_title = vault_list[vault_list.index(\'encaisse_des_devises\')+1]\n
+  context.log(\'Baobab_getVaultCurrency, vault = \', vault_currency_title)\n
+  for currency in context.currency_module.objectValues():\n
+    context.log(\'Baobab_getVaultCurrency, cur = \', currency.getTitle())\n
+    currency_title = currency.getTitle().replace(\' \',\'_\').lower()\n
+    if currency_title == vault_currency_title:\n
+      return currency.getRelativeUrl()\n
+else:\n
+  return context.currency_module[context.Baobab_getPortalReferenceCurrencyID()].getRelativeUrl()\n
+\n
+raise ValueError, \'No currency found for vault %s\'  %vault\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>vault=None,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Baobab_getVaultCurrency</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

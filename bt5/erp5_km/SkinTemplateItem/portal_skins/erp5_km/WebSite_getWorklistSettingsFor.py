@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+This script builds a dictionary from the worklist definition.\n
+It includes some copy / paste of code from DCWorkflow. Refactoring\n
+needed through DCWorkflow API extension. \n
+"""\n
+\n
+kw = {}\n
+\n
+# Try to access the workflow defined by the action\n
+try:\n
+  workflow_tool = context.portal_workflow\n
+  workflow = getattr(workflow_tool, action[\'workflow_id\'])\n
+except:\n
+  return {}\n
+\n
+# If this is a worklist action, read the worklist definition\n
+worklist = getattr(workflow.worklists, action[\'worklist_id\'])\n
+for varkey in worklist.getVarMatchKeys():\n
+  kw[varkey] = worklist.getVarMatch(varkey)\n
+  \n
+# Automatically filter workflists per portal type\n
+# so that the same state can be used for different\n
+# worklists and they are not merged\n
+portal_type_list = workflow.getPortalTypeListForWorkflow()\n
+if not portal_type_list:\n
+  return {} # If no portal type uses the workflow, ignore it\n
+if not kw.has_key(\'portal_type\'):\n
+  # Set portal types which use the workflow\n
+  kw[\'portal_type\'] = portal_type_list\n
+    \n
+# Automatically add local role constraint\n
+# XXX TO BE DONE\n
+# Automatically add local role constraint\n
+# etc.\n
+\n
+# Return the dictionnary\n
+return kw\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>action</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_getWorklistSettingsFor</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

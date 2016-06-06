@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>anonymous_http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts52850395.17</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>grid-icon.xml</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/xml</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<svg xmlns="http://www.w3.org/2000/svg">\n
+<!-- \n
+  Sample icons file. This file looks like an SVG file with groups as its\n
+  children. Each group element has an ID that must match the ID of the button given\n
+  in the extension. The SVG inside the group makes up the actual icon, and\n
+  needs use a viewBox instead of width/height for it to scale properly.\n
+  \n
+  Multiple icons can be included, each within their own group.\n
+-->\n
+  <g id="view_grid">\n
+    <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">\n
+    <g>\n
+      <rect fill="#ffffff" stroke="#848484" x="2" y="2" width="20" height="20"/>\n
+      <line fill="none" stroke="#848484" x1="11.84375" y1="-1.53125" x2="11.84375" y2="18.46875" transform="rotate(90, 11.8429, 8.46955)"/>\n
+      <line fill="none" stroke="#848484" x1="11.90625" y1="5.21875" x2="11.90625" y2="25.21875" transform="rotate(90, 11.9054, 15.2196)"/>\n
+      <line fill="none" stroke="#848484" x1="8.5" y1="2.03125" x2="8.5" y2="22.03125"/>\n
+      <line fill="none" stroke="#848484" x1="15.5" y1="2.03125" x2="15.5" y2="22.03125"/>\n
+      <rect fill="#d8d8d8" stroke="#000000" stroke-width="0" x="3.25" y="3.28125" width="4" height="4"/>\n
+      <rect fill="#d8d8d8" stroke="#000000" stroke-width="0" x="10" y="3.28125" width="4" height="4"/>\n
+      <rect fill="#d8d8d8" stroke="#000000" stroke-width="0" x="16.75" y="3.28125" width="4" height="4"/>\n
+      <rect fill="#d8d8d8" stroke="#000000" stroke-width="0" x="3.28125" y="9.75" width="4" height="4"/>\n
+      <rect fill="#d8d8d8" stroke="#000000" stroke-width="0" x="10.03125" y="9.75" width="4" height="4"/>\n
+      <rect fill="#d8d8d8" stroke="#000000" stroke-width="0" x="16.78125" y="9.75" width="4" height="4"/>\n
+      <rect fill="#d8d8d8" stroke="#000000" stroke-width="0" x="3.3125" y="16.59375" width="4" height="4"/>\n
+      <rect fill="#d8d8d8" stroke="#000000" stroke-width="0" x="10.0625" y="16.59375" width="4" height="4"/>\n
+      <rect fill="#d8d8d8" stroke="#000000" stroke-width="0" x="16.8125" y="16.59375" width="4" height="4"/>\n
+    </g>\n
+    </svg>\n
+  </g>\n
+</svg>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2087</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+folder = context\n
+\n
+# Keep compatibility with id_list\n
+if id_list_list is not None:\n
+  if id_list is not None:\n
+    raise ValueError, "both id_list and id_list_list can be defined"\n
+  if len(id_list_list) == 0:\n
+    return None\n
+  id_list = id_list_list.pop()\n
+\n
+activate_kw = {\n
+  \'tag\': object_tag,\n
+  \'after_tag\': object_after_tag,\n
+  \'priority\': object_priority\n
+}\n
+for key, value in activate_kw.items():\n
+  if value is None:\n
+    activate_kw.pop(key)\n
+\n
+for id in id_list:\n
+  obj = getattr(folder, id, None)\n
+  if obj is not None:\n
+    obj.recursiveReindexObject(activate_kw=activate_kw,\n
+                               sql_catalog_id=sql_catalog_id)\n
+\n
+\n
+if id_list_list is not None:\n
+  if len(id_list_list) > 0:\n
+    if count is None:\n
+      count = 1\n
+    new_activity_kw = {}\n
+    # We do not want to wait until there is enough activities\n
+    # So add BUNDLE_ITEM_COUNT * node_len activities before waiting\n
+    node_len = len(context.portal_activities.getProcessingNodeList())\n
+    if count % node_len == 0:\n
+      new_activity_kw[\'after_tag\'] = folder_after_tag\n
+      count = 0\n
+    count += 1\n
+\n
+    # By calling again and again, we improve performance and we have\n
+    # less activities by the same time\n
+    folder.activate(activity=\'SQLQueue\',\n
+      priority=object_priority,\n
+      tag=folder_tag, **new_activity_kw).Folder_reindexObjectList(\n
+         None,\n
+         id_list_list=id_list_list,\n
+         object_priority=object_priority,\n
+         object_tag=object_tag,\n
+         sql_catalog_id=sql_catalog_id,\n
+         folder_tag=folder_tag,\n
+         folder_after_tag=folder_after_tag,\n
+         count=count,\n
+      )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>id_list, id_list_list=None, folder_tag=None, folder_after_tag=None, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, count=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Folder_reindexObjectList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

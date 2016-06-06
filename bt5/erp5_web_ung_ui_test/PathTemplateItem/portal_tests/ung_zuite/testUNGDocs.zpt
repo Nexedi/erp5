@@ -1,0 +1,634 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+  <title tal:content="template/getId"/>\n
+</head>\n
+<body>\n
+  <table cellpadding="1" cellspacing="1" border="1">\n
+    <thead>\n
+      <tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
+    </thead><tbody>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/init" />\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/login" />\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/ERP5Site_createNewWebDocument?template=web_illustration_template</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>storeEval</td>\n
+        <td>selenium.browserbot.getCurrentWindow().document.location.href.split("WebIllustration_viewEditor")[0]</td>\n
+        <td>url</td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${url}/WebIllustration_setSampleinTextContent</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>Done.</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${url}/WebIllustration_viewEditor?editable_mode:int=1</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForCondition</td>\n
+        <td>selenium.isElementPresent("//ellipse[@id=\'svg_1\']")</td>\n
+        <td>9000</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyAttribute</td>\n
+        <td>//ellipse[@id=\'svg_1\']@ry</td>\n
+        <td>46</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td>Web Illustration</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@name="document_state"]</td>\n
+        <td>Draft</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//span[@id="ui-dialog-title-edit_document"]</td>\n
+        <td>Rename Document</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//p[@id="more_properties"]</td>\n
+        <td>Edit More Properties</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//p[@id="more_properties"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//span[@class="ui-icon ui-icon-closethick"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@id="name"]</td>\n
+        <td>Functional UNG Test</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@class="ui-dialog-buttonset"]/button[1]/span</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td>Functional UNG Test</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextNotPresent</td>\n
+        <td>All Documents</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//a[@class="ung_docs"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@class="tree-open"]</td>\n
+        <td>All Documents</td>\n
+      </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="field_your_search_text"]</td>\n
+        <td>Functional UNG Test</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//input[@value="Search Docs"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextNotPresent</td>\n
+        <td>No result.</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/ERP5Site_createNewWebDocument?template=web_table_template</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td>Web Table</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyElementPresent</td>\n
+        <td>//td[@id=\'0_table0_cell_c0_r1\']</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyElementPresent</td>\n
+        <td>//td[@id=\'0_table0_cell_c1_r1\']</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//td[@id="jSheetTitle_0"]</td>\n
+        <td>Spreadsheet Playground</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//td[@id="jSheetMenu_0"]/span[@class="rootVoice"]</td>\n
+        <td>MENU</td>\n
+      </tr>\n
+      <tr>\n
+        <td>runScript</td>\n
+        <td>$("#0_table0_cell_c0_r0").html("Gabriel")</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>runScript</td>\n
+        <td>$("#0_table0_cell_c1_r1").html("Monnerat")</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//button[@class="save"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//td[@id=\'0_table0_cell_c0_r0\']</td>\n
+        <td>Gabriel</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//td[@id=\'0_table0_cell_c1_r1\']</td>\n
+        <td>Monnerat</td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/ERP5Site_createNewWebDocument?template=web_page_template</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td>Web Page</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@class="action_menu"]/li/ul/li[1]/a</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@name="document_state"]</td>\n
+        <td>Cancelled</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//a[@class="ung_docs"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@class="domain_selected"]</td>\n
+        <td>All Documents</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@class="favorite"]/a[2]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@class="domain_selected"]</td>\n
+        <td>All Documents</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//table[@class="listbox your_listbox your_listbox-table"]/tbody/tr[1]/td[1]/input</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//button[@class="delete"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[11]/td/a</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>setTimeout</td>\n
+        <td>30000</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextNotPresent</td>\n
+        <td>No result.</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//table/tbody/tr[1]/td[4]</td>\n
+        <td>Deleted</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//table[@class="listbox your_listbox your_listbox-table"]/tbody/tr[1]/td[1]/input</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//button[@class="delete"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//td[@class="listbox-table-no-result-row"]/span</td>\n
+        <td>No result.</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@class="domain_selected"]</td>\n
+        <td>Trash</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[3]/td/a</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//td[@class="listbox-table-no-result-row"]/span</td>\n
+        <td>No result.</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@class="domain_selected"]</td>\n
+        <td>Hidden</td>\n
+      </tr>\n
+      <!-- Test the abbreviation of the title -->\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/ERP5Site_createNewWebDocument?template=web_page_template</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@id="name"]</td>\n
+        <td>Add a Big Title to Test the abbreviation</td>\n
+      </tr>\n
+      <tr>\n
+        <td>setTimeout</td>\n
+        <td>30000</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@class="ui-dialog-buttonset"]/button[1]/span</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td>Add a Big Title to Test the ab...</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyValue</td>\n
+        <td>//input[@id="name"]</td>\n
+        <td>Add a Big Title to Test the abbreviation</td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@id="select_language"]/li/ul/li/span[@id="fr"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>Aide</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@id="select_language"]/li/ul/li/span[@id="en"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>Help</td>\n
+        <td></td>\n
+      </tr>\n
+      <tal:block tal:repeat="index python:range(2)">\n
+        <tr>\n
+          <td>clickAndWait</td>\n
+          <td>//a[@class="ung_docs"]</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>click</td>\n
+          <td>//input[@id="upload"]</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>select</td>\n
+          <td>//select[@name="portal_type"]</td>\n
+          <td>Web Table</td>\n
+        </tr>\n
+        <tr>\n
+          <td>click</td>\n
+          <td>//input[@id="submit_document"]</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyText</td>\n
+          <td>//span[@id=\'no-input-file\']</td>\n
+          <td>Please input a file</td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyTextPresent</td>\n
+          <td>Loading...</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyElementPresent</td>\n
+          <td>//input[@id="upload-file"]</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>type</td>\n
+          <td>//input[@id="upload-file"]</td>\n
+          <td tal:content="python: here.Zuite_getFilenameLocation(\'tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods\')"></td>\n
+        </tr>\n
+        <tr>\n
+          <td>clickAndWait</td>\n
+          <td>//input[@id="submit_document"]</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>waitForCondition</td>\n
+          <td>selenium.isTextPresent("Opening")</td>\n
+          <td>30000</td>\n
+        </tr>\n
+        <tr>\n
+          <td>waitForPageToLoad</td>\n
+          <td>30000</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>waitForCondition</td>\n
+          <td>selenium.isElementPresent("//a[@name=\'document_title\']")</td>\n
+          <td>30000</td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyTextPresent</td>\n
+          <td>TioLive Spreadsheet</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyAttribute</td>\n
+          <td>//td[@id=\'0_table0_cell_c0_r1\']@sdval</td>\n
+          <td>1</td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyAttribute</td>\n
+          <td>//td[@id=\'0_table0_cell_c1_r1\']@sdval</td>\n
+          <td>2</td>\n
+        </tr>\n
+      </tal:block>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//a[@class="ung_docs"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//input[@id="upload"]</td>\n
+         <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>select</td>\n
+        <td>//select[@name="portal_type"]</td>\n
+        <td>Web Page</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@id="upload-file"]</td>\n
+        <td tal:content="python: here.Zuite_getFilenameLocation(\'tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods\')"></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//input[@id="submit_document"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForCondition</td>\n
+        <td>selenium.isTextPresent("Opening")</td>\n
+        <td>30000</td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForPageToLoad</td>\n
+        <td>30000</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForCondition</td>\n
+        <td>selenium.isElementPresent("//a[@name=\'document_title\']")</td>\n
+        <td>30000</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>TioLive Spreadsheet</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//a[@class="ung_docs"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/ERP5Site_createNewWebDocument?template=web_page_template</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@name="document_title"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@id="name"]</td>\n
+        <td>Cancelled Document</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@class="ui-dialog-buttonset"]/button[1]/span</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//div[@class="action_menu"]/li/ul/li[1]/a</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//a[@class="ung_docs"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//table[@class="listbox your_listbox your_listbox-table"]/tbody/tr[1]/td[1]/input</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//button[@class="delete"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[11]/td/a</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyText</td>\n
+        <td>//table/tbody/tr[1]/td[3]</td>\n
+        <td>Cancelled Document</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//table[@class="listbox your_listbox your_listbox-table"]/tbody/tr[1]/td[1]/input</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//button[@class="delete"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/delete-all-documents"/>\n
+    </tbody>\n
+  </table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testUNGDocs</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

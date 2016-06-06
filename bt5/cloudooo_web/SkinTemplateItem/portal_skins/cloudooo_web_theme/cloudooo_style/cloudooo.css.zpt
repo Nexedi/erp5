@@ -1,0 +1,285 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+<tal:block tal:define="portal_path python:here.aq_parent.getWebSiteValue().absolute_url();\n
+                       images_path string:${portal_path}/cloudooo_image/;\n
+                       logo_reference python:here.aq_parent.getWebSiteValue().getLayoutProperty(\'layout_logo_reference\', \'cloudooo_image/logo.png\');\n
+                       page_width string:800px">\n
+\n
+\n
+/**********************/\n
+/* Global definitions */\n
+/**********************/\n
+*{margin:0;padding:0}\n
+body{ font-family:Arial,Helvetica,sans-serif;\n
+      text-align:center;\n
+      background:#59bae2 url(<tal:block tal:replace="images_path"/>body_bg.png) repeat-x top left;\n
+      font-size:11px;\n
+      color:#9C9C9C;\n
+      font-weight:bold}\n
+h1{color:#2e707c}\n
+h2{color:#3e95a5}\n
+input,textarea{font-size:18px;color:#8D8D8D}\n
+input{height:26px;}\n
+textarea{height:77px;width:247px;}\n
+a{color: #1D6598; text-decoration:none;}\n
+a:hover{cursor:pointer}\n
+ul {list-style-type:none;}\n
+\n
+/**********************/\n
+/*    Global Class    */\n
+/**********************/\n
+\n
+.left{width:49%;display:inline;float:left;background:url(<tal:block tal:replace="images_path"/>separation_contenu.png) no-repeat top right}\n
+.right{width:48%;display:inline;float:right}\n
+.center, .bottom{text-align:center}\n
+.clear, .bottom{clear:both;}\n
+.width30{width:30%}\n
+.width60{width:60%}\n
+.width100{width:100%}\n
+.widthAuto{width:auto}\n
+.alignr {text-align:right;}\n
+.nolabel label{display: none;}\n
+.hidden_fieldset{display: none;}\n
+fieldset{border:none;}\n
+.margin60{padding:60px 0}\n
+.margin20{margin:20px}\n
+.error{color:#910000}\n
+.error input, .error textarea {border:thin solid #910000;}\n
+.required{color:black}\n
+.description{font-size:1.1em;padding-bottom:1.3em;padding-left:15px;}\n
+a > img {border: none;}\n
+.sectionTitle {line-height:90px;}\n
+.inline label {display: inline-block;width: 150px;float:left;}\n
+.inline div {display:inline;}\n
+.field {padding-bottom: 3px;}\n
+.headline {color:#2e707c;font-size:1.1em;}\n
+.nobg { background:none;}\n
+\n
+\n
+/**********************/\n
+/*        Top         */\n
+/**********************/\n
+#logo{position:relative;margin-left:auto;margin-right:auto;\n
+      width:493px;height:130px;background: url(<tal:block tal:replace="images_path"/>logo.png) no-repeat top left}\n
+#login_menu{width:<tal:block tal:replace="page_width"/>;margin:120px auto 0px auto;padding-right:20px;text-align:right;\n
+\tcolor:#bae2e9;height:36px;-webkit-border-radius: 10px;-moz-border-radius:10px}\n
+#login_menu li{display:inline;padding:23px;line-height:44px;\n
+\tfont-size:16px;font-weight:bold;background:url(<tal:block tal:replace="images_path"/>login_bg.png) repeat-x center left}\n
+#login_menu .before{background:url(<tal:block tal:replace="images_path"/>before_login.png) no-repeat center left}\n
+#login_menu .after{background:url(<tal:block tal:replace="images_path"/>after_login.png) no-repeat center left}\n
+\n
+#menu li a, #login_menu li a {color:#BAE2E9;text-decoration:none;}\n
+\n
+#menu{width:<tal:block tal:replace="page_width"/>;margin:0px auto 0px auto;text-align:center;\n
+\tcolor:#bae2e9;height:44px;background:url(<tal:block tal:replace="images_path"/>menu_bg.png) repeat-x top left;\n
+\t-webkit-border-radius: 10px;-moz-border-radius:10px}\n
+#menu ul{list-style:none}\n
+#menu li{display:inline;padding:20px;margin-left:1px;line-height:44px;font-size:16px;font-weight:bold;\n
+\tbackground:url(<tal:block tal:replace="images_path"/>separation_menu.png) no-repeat center left}\n
+\n
+\n
+/**********************/\n
+/*      Content       */\n
+/**********************/\n
+\n
+/* Global container */\n
+.area{background-color:#f3fdff;-webkit-border-radius: 10px;-moz-border-radius:10px}\n
+#container{text-align:left;margin-left:auto;margin-right:auto;font-size:1.2em;width:<tal:block tal:replace="page_width"/>;min-height:400px;}\n
+#content{position:relative;display:block;width:<tal:block tal:replace="page_width"/>;min-height:400px;}  \n
+\n
+#content_padding{padding:20px}\n
+/* Div for 2 column design*/\n
+#content.twocolumns {width:<tal:block tal:replace="python: \'%spx\' % (int(page_width[:-2])-150)"/>;}\n
+#content.twocolumns .pdf-preview-content img{max-width: <tal:block tal:replace="python:\'%spx\' % (int(page_width[:-2])-150)"/>;}\n
+#sidebar {width:130px;min-height:200px;padding:4px;position:relative;right:0px;}\n
+#sidebar ul{list-style:none}\n
+#sidebar li{cursor:pointer}\n
+#sidebar a{vertical-align:super;}\n
+#sidebar img{height:30px}\n
+#sidebar h3{font-size:10pt;color:#767676;padding:2px 0;text-align:center;}\n
+\n
+#sidebar .text {padding:10px;width:auto;border-bottom:1px solid #E9E9E9;}\n
+\n
+/* Portal status message */\n
+#transition-message{line-height:10px;padding-top:10px;}\n
+\n
+/* Breadcrump */\n
+.breadcrump a {color:#FF9522;cursor:pointer;text-decoration:None;}\n
+.breadcrump li {display:inline;}\n
+.breadcrump a:hover {border-bottom:1px solid #CCCCCC;}\n
+\n
+/* Buttons */\n
+input.validate, input.cancel,#dialog_submit_button,#dialog_cancel_button{\n
+  border:none;font-size:11px;padding:0px 10px 0px 40px;\n
+  font-weight:bold;height:30px;-webkit-border-radius: 10px;-moz-border-radius:10px;cursor:pointer;}\n
+input.validate,#dialog_submit_button{\n
+  background:url(<tal:block tal:replace="images_path"/>button_validate_bg.png) repeat-x top left;color:#bae2e9}\n
+input.cancel,#dialog_cancel_button{\n
+  background:url(<tal:block tal:replace="images_path"/>button_cancel_bg.png) repeat-x top left;color:#eba4a4}\n
+\n
+#dialog_submit_button{float:right;}\n
+\n
+/*Login form title*/\n
+.userlogin {\n
+background:url(<tal:block tal:replace="images_path"/>user.png) no-repeat scroll left center transparent;padding-left:40px;\n
+}\n
+\n
+/* Avaible menu presentation (cf myspace render)*/\n
+.available_menu_option{display:inline;width:50%;float:left}\n
+.available_menu_option_center{margin:30px auto;font-size:14px}\n
+.available_menu_option img, .available_menu_option_center img{height:64px}\n
+.available_menu_option a, .available_menu_option_center a{color: #9C9C9C; text-decoration:none;}\n
+.available_menu_option a:hover, .available_menu_option_center a:hover{color:#1D6598;cursor:pointer}\n
+\n
+\n
+/**********************/\n
+/*      Footer       */\n
+/**********************/\n
+\n
+#footer{position:relative;width:100%;line-height:120px;height:120px;\n
+\tcolor:#e1fbff;font-size:15px;background:url(<tal:block tal:replace="images_path"/>foot.png) repeat-x center center}\n
+#footer a{text-decoration:none;color:#e1fbff}\n
+\n
+\n
+/***/\n
+.ui-resizable {\n
+position:relative;\n
+}\n
+.ui-resizable-handle {\n
+display:block;\n
+font-size:0.1px;\n
+position:absolute;\n
+z-index:99999;\n
+}\n
+.ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle {\n
+display:none;\n
+}\n
+.ui-resizable-n {\n
+cursor:n-resize;\n
+height:7px;\n
+left:0;\n
+top:-5px;\n
+width:100%;\n
+}\n
+.ui-resizable-s {\n
+bottom:-5px;\n
+cursor:s-resize;\n
+height:7px;\n
+left:0;\n
+width:100%;\n
+}\n
+.ui-resizable-e {\n
+cursor:e-resize;\n
+height:100%;\n
+right:-5px;\n
+top:0;\n
+width:7px;\n
+}\n
+.ui-resizable-w {\n
+cursor:w-resize;\n
+height:100%;\n
+left:-5px;\n
+top:0;\n
+width:7px;\n
+}\n
+.ui-resizable-se {\n
+bottom:1px;\n
+cursor:se-resize;\n
+height:12px;\n
+right:1px;\n
+width:12px;\n
+}\n
+.ui-resizable-sw {\n
+bottom:-5px;\n
+cursor:sw-resize;\n
+height:9px;\n
+left:-5px;\n
+width:9px;\n
+}\n
+.ui-resizable-nw {\n
+cursor:nw-resize;\n
+height:9px;\n
+left:-5px;\n
+top:-5px;\n
+width:9px;\n
+}\n
+.ui-resizable-ne {\n
+cursor:ne-resize;\n
+height:9px;\n
+right:-5px;\n
+top:-5px;\n
+width:9px;\n
+}\n
+.ui-selectable-helper {\n
+border:1px dotted black;\n
+position:absolute;\n
+z-index:100;\n
+}\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>cloudooo.css</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

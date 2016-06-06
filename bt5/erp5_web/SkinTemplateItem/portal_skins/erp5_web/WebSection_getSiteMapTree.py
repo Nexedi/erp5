@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  The goal of this script is provide a unified API to generate\n
+  the different lists and trees which are used in a Web Site. This includes\n
+  lists of subsections, lists of pages, site maps, navigation menus.\n
+\n
+  If a mapping is provided, the tree structure is mapped \n
+  with object properties defined in the mapping and the result\n
+  can be cached. If no mapping is provided, ZODB documents are provided\n
+  in the tree structure and the result can not be cached.\n
+\n
+  The script a representation in the form of a hierarchical site map.\n
+  The structure is provided as a tree so that it is easy to implement\n
+  recursive call with TAL/METAL:\n
+\n
+  {\n
+    \'url\'      : \'/erp5/web_site_module/mysite/mysection\',\n
+    \'level\'    : 1,\n
+    \'section\'  : <some section>,\n
+    \'document\' : None,\n
+    \'subsection\' : (\n
+                    {\n
+                      \'url\'      : \'/erp5/web_site_module/mysite/mysection/some-reference\',\n
+                      \'level\'    : 2,\n
+                      \'section\'  : None,\n
+                      \'document\' : <some document>,\n
+                      \'subsection\' : (),\n
+                    },\n
+                    {\n
+                      \'url\'      : \'/erp5/web_site_module/mysite/mysection/subsection\',\n
+                      \'level\'    : 2,\n
+                      \'section\'  : <some subsection>,\n
+                      \'document\' : None,\n
+                      \'subsection\' : (),\n
+                    }, \n
+                   ),\n
+  }\n
+"""\n
+\n
+def mapObject(property_dict):\n
+  result = {}\n
+  my_object = property_dict.get(\'section\', None)\n
+  if my_object is None: my_object = property_dict.get(\'document\', None)\n
+  if my_object is not None:\n
+    for key in property_mapping:\n
+      result[key] = my_object.getProperty(key)\n
+  result[\'url\'] = property_dict[\'url\']\n
+  result[\'level\'] = property_dict[\'level\']\n
+  result[\'subsection\'] = property_dict[\'subsection\']\n
+  return result\n
+\n
+def getSiteMapItemTree(section, depth=0, level=None):   \n
+  result = []\n
+  if not depth: return result\n
+  if level is None: level = 1\n
+  if include_document or (include_document is None and section.isSiteMapDocumentParent()):\n
+    default_document = None\n
+    if exclude_default_document:\n
+      default_document = section.getDefaultDocumentValue()\n
+    for document in section.getDocumentValueList(sort_on=\'title\'):\n
+      if default_document is not None and default_document.getPhysicalPath() == document.getPhysicalPath():\n
+        continue\n
+      result.append({\n
+                      \'url\'      : section.getPermanentURL(document),\n
+                      \'level\'    : level,\n
+                      \'section\'  : None,\n
+                      \'document\' : document,\n
+                      \'subsection\' : None,\n
+                    })\n
+  if include_subsection or (include_subsection is None and section.isSiteMapSectionParent()):\n
+    for subsection in section.contentValues(portal_type=\'Web Section\',\n
+                                            sort_on=(\'int_index\', \'translated_title\'),\n
+                                            checked_permission=\'View\'):\n
+      if subsection.isVisible():\n
+        subsection_result = getSiteMapItemTree(subsection, depth=depth - 1, level=level + 1)\n
+        if not subsection_result: subsection_result = None\n
+        result.append({\n
+                        \'url\'      : subsection.absolute_url(),\n
+                        \'level\'    : level,\n
+                        \'section\'  : subsection,\n
+                        \'document\' : None,\n
+                        \'subsection\'  : subsection_result,\n
+                      })\n
+\n
+  if section.isSiteMapSectionParent() and level == 1 and include_site_default_page:\n
+    site = context.getWebSiteValue()\n
+    result.insert(0, {\'url\': site.absolute_url(), \'level\': level, \'section\': site, \'document\': section.getDefaultDocumentValue(), \'subsection\': None})\n
+  if property_mapping:\n
+    return map(mapObject, result)\n
+  return result\n
+\n
+return getSiteMapItemTree(context, depth=depth)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>depth=1, include_subsection=None, include_document=None, property_mapping=(\'translated_title\',), exclude_default_document = False, include_site_default_page = False</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_getSiteMapTree</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

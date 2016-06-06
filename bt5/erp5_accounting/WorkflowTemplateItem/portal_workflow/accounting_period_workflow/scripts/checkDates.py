@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import translateString\n
+\n
+closing_period = state_change[\'object\']\n
+portal = closing_period.getPortalObject()\n
+valid_state_list = [\'started\', \'stopped\', \'delivered\']\n
+\n
+closing_period.Base_checkConsistency()\n
+\n
+start_date = closing_period.getStartDate()\n
+stop_date = closing_period.getStopDate()\n
+\n
+if start_date > stop_date:\n
+  raise ValidationFailed, translateString("Start date is after stop date.")\n
+\n
+period_list = closing_period.getParentValue().searchFolder(\n
+                              simulation_state=valid_state_list,\n
+                              sort_on=[(\'delivery.start_date\', \'asc\')],\n
+                              portal_type=\'Accounting Period\')\n
+\n
+for period in period_list:\n
+  period = period.getObject()\n
+  if period.getSimulationState() in valid_state_list:\n
+    if start_date <= period.getStopDate() and not stop_date <= period.getStartDate():\n
+      raise ValidationFailed, translateString(\n
+          "${date} is already in an open accounting period.",\n
+          mapping={\'date\': start_date})\n
+          \n
+if len(period_list) > 1:\n
+  last_period  = period_list[-1].getObject()\n
+  if last_period.getId() == closing_period.getId():\n
+    last_period  = period_list[-2].getObject()\n
+  if (start_date - last_period.getStopDate()) > 1:\n
+    raise ValidationFailed, translateString(\n
+        "Last opened period ends on ${last_openned_date},"+\n
+        " this period starts on ${this_period_start_date}."+\n
+        " Accounting Periods must be consecutive.",\n
+          mapping = { \'last_openned_date\': last_period.getStopDate(),\n
+                      \'this_period_start_date\': start_date } )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>checkDates</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

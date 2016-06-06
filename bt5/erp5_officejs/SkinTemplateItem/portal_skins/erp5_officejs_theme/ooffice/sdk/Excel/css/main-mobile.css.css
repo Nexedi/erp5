@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44318466.36</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>main-mobile.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>﻿@charset "UTF-8";\r\n
+\r\n
+/*\r\n
+ * Worksheet canvas\r\n
+ * --------------------------------------------------------\r\n
+ */\r\n
+\r\n
+#ws-canvas-outer {\r\n
+\tposition: absolute;\r\n
+\tleft: 0;\r\n
+\ttop: 0;\r\n
+\tright: 0;\r\n
+\tbottom: 0;\r\n
+}\r\n
+\r\n
+#ws-canvas {\r\n
+\tborder: 0;\r\n
+}\r\n
+\r\n
+#ws-canvas-overlay {\r\n
+\tborder: 0;\r\n
+\tposition: absolute;\r\n
+\tleft: 0;\r\n
+\ttop: 0;\r\n
+\tz-index: 1;\r\n
+}\r\n
+\r\n
+/*\r\n
+ * Worksheet scroll bars\r\n
+ * --------------------------------------------------------\r\n
+ */\r\n
+\r\n
+#ws-v-scrollbar {\r\n
+\tposition: absolute;\r\n
+\tright: 0;\r\n
+\twidth: 19px;\r\n
+\ttop: -1px;\r\n
+\tbottom: 18px;\r\n
+\toverflow: hidden;\r\n
+\tz-index: 10;\r\n
+}\r\n
+\r\n
+#ws-v-scroll-helper {\r\n
+\twidth: 1px;\r\n
+}\r\n
+\r\n
+#ws-h-scrollbar {\r\n
+\tposition: absolute;\r\n
+\tbottom: 0;\r\n
+\theight: 19px;\r\n
+\tleft: 0;\r\n
+\tright: 18px;\r\n
+\toverflow: hidden;\r\n
+\tz-index: 10;\r\n
+}\r\n
+\r\n
+#ws-h-scroll-helper {\r\n
+\theight: 1px;\r\n
+}\r\n
+\r\n
+#ws-scrollbar-corner {\r\n
+\tposition: absolute;\r\n
+\tright: 0;\r\n
+\tbottom: 0;\r\n
+\twidth: 18px;\r\n
+\theight: 18px;\r\n
+\tbackground-color: #DCE2E8;\r\n
+\tborder: 0;\r\n
+\tz-index: 10;\r\n
+}\r\n
+\r\n
+/* Scrollbars common */\r\n
+\r\n
+#ws-v-scrollbar .jspVerticalBar,\r\n
+#ws-h-scrollbar .jspHorizontalBar,\r\n
+#ws-v-scrollbar .jspTrack,\r\n
+#ws-h-scrollbar .jspTrack {\r\n
+\tbackground-color: #DCE2E8;\r\n
+}\r\n
+\r\n
+#ws-v-scrollbar .jspDrag,\r\n
+#ws-h-scrollbar .jspDrag {\r\n
+\tbackground-color: #C0C0C0;\r\n
+}\r\n
+#ws-v-scrollbar .jspDrag.jspHover,\r\n
+#ws-v-scrollbar .jspDrag.jspActive,\r\n
+#ws-h-scrollbar .jspDrag.jspHover,\r\n
+#ws-h-scrollbar .jspDrag.jspActive {\r\n
+\tbackground-color: #808080;\r\n
+}\r\n
+\r\n
+/* Vertical scrollbar */\r\n
+\r\n
+#ws-v-scrollbar .jspVerticalBar {\r\n
+\twidth: 7px;\r\n
+\tborder-left: 1px solid #C1C6CC;\r\n
+}\r\n
+#ws-v-scrollbar .jspTrack {\r\n
+\twidth: 8px;\r\n
+}\r\n
+\r\n
+/* Horizontal scrollbar */\r\n
+\r\n
+#ws-h-scrollbar .jspHorizontalBar {\r\n
+\theight: 7px;\r\n
+\tborder-top: 1px solid #C1C6CC;\r\n
+}\r\n
+#ws-h-scrollbar .jspTrack {\r\n
+\theight: 8px;\r\n
+}\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1742</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

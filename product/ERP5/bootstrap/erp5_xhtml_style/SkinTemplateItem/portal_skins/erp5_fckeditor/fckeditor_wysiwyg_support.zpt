@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block tal:define="baseHrefUrl        here/absolute_url;\n
+                       cleaninput         python: inputvalue;\n
+                       cleaninput         python: cleaninput.replace(\'\\\\\',\'\\\\\\\\\');\n
+                       cleaninput         python: cleaninput.replace(\'\\x27\',\'\\x5C\\x27\');\n
+                       cleaninput         python: cleaninput.replace(\'\\r\',\'\\x5C\\x72\');\n
+                       cleaninput         python: cleaninput.replace(\'\\n\',\'\\x5C\\x6E\');\n
+                       cleaninput         python: cleaninput.replace(\'\\xE2\\x80\\xA8\',\'\\\\u2028\');\n
+                       cleaninput         python: cleaninput.replace(\'\\xE2\\x80\\xA9\',\'\\\\u2029\');\n
+                       site_root          python: here.getWebSiteValue() or here.getPortalObject();\n
+                       portal_url         python: site_root.absolute_url();\n
+                       server_url         request/BASE0;\n
+                       portal_path        python: portal_url.replace(server_url, \'\') + \'/\';\n
+                       path_user          here/getRelativeUrl;\n
+                       cols               cols | python: 40;\n
+                       rows               rows | python: 18;\n
+                       editor_width       width | python: int(cols * 19.5);\n
+                       editor_height      height | python: int(rows * 24);\n
+                       editor_width       python: str(editor_width).replace(\'px\',\'\');\n
+                       editor_height      python: str(editor_height).replace(\'px\',\'\');\n
+                       editor_width       python: test(\'\\x25\' in editor_width, str(int(int(editor_width.replace(\'\\x25\',\'\'))*780/100)), editor_width);\n
+                       editor_height      python: test(\'\\x25\' in editor_height, str(int(int(editor_height.replace(\'\\x25\',\'\'))*780/100)), editor_height);\n
+                       link_browser       python:site_root.restrictedTraverse(\'FCKeditor_viewDocumentSelectionDialog\', None) is not None and \'true\' or \'false\';\n
+                       image_browser      link_browser;">\n
+  <script type="text/javascript" tal:attributes="src string:${portal_url}/fckeditor.js"></script>\n
+  <script type="text/javascript" tal:content="structure string:\n
+&lt;!--\n
+var oFCKeditor      = new FCKeditor(\'${inputname}\');\n
+var pathUser        = \'/${path_user}/\';\n
+oFCKeditor.BasePath = \'${portal_url}/\';\n
+oFCKeditor.Value    = \'${cleaninput}\';\n
+\n
+// set the base url for relative paths\n
+oFCKeditor.Config[\'BaseHref\'] = \'${baseHrefUrl}/\';\n
+\n
+// set the css for editor area\n
+oFCKeditor.Config[\'EditorAreaCSS\'] = \'${portal_path}erp5_editor.css\';\n
+\n
+// editor appearance\n
+oFCKeditor.ToolbarSet = \'ERP5WebZopeCmf\';\n
+oFCKeditor.Width      = \'100%\';\n
+oFCKeditor.Height     = ${editor_height};\n
+\n
+// enable Firefox\'s own spell checker\n
+oFCKeditor.Config[\'FirefoxSpellChecker\']\t= true ;\n
+\n
+// browsing for links\n
+oFCKeditor.Config[\'LinkBrowser\'] = ${link_browser};\n
+oFCKeditor.Config[\'LinkBrowserURL\'] = \'${baseHrefUrl}/FCKeditor_viewDocumentSelectionDialog\';\n
+\n
+// rapid upload activation for links\n
+oFCKeditor.Config[\'LinkUpload\'] = false ; // XXX should be implemented using portal_contributions\n
+\n
+// browsing for images\n
+oFCKeditor.Config[\'ImageBrowser\'] = ${image_browser};\n
+oFCKeditor.Config[\'ImageBrowserURL\'] = \'${baseHrefUrl}/FCKeditor_viewImageSelectionDialog\';\n
+\n
+// rapid upload activation for images\n
+oFCKeditor.Config[\'ImageUpload\'] = false ; // XXX should be implemented using portal_contributions\n
+\n
+oFCKeditor.Create();\n
+--&gt;"></script>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fckeditor_wysiwyg_support</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode>XXX contain hard-coded variables</unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

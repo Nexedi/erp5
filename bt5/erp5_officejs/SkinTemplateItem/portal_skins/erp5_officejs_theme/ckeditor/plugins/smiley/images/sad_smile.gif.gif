@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts39831393.85</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>sad_smile.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhFwAXAPYAAJdgAJdhAKFoAqFpAqRqAq9/DbV5BbZ8BruFDMyMCc+SDNOTC8uaFMudFuSb
+Cd6vG/+iAv+jA/+jB/+nBv+qB/+lCf+nDv+rCf+sCf+vC/+vDPqxDv+yDv+zD/+0D+emEOauF/+p
+Ev+qGv+rG/2tHeayGua3Hf+3Ev+6E/u6Fv+7Ff+/F/+2G/e7GP+/GP+9HeC3IeK6Iv60If2yLP+z
+M/67Mf+7Nv+1OP+2Ov29P/+8P/fCHffEHv/DGv/EG/3DHP/GHv/IH/fIIf/MIf/NIv/JJf/PJvLN
+Kv/QJP/VKP/cL/7EMv3RN//UOP+9Tf++UP7GSv3WRP7YQfzBUP/TXf7dXPzKbP/bY/vZZfzXc//X
+eP/Tff7Xfv3ibP3jev/QgP/Rgf/Shf/Zhf/Uif/Vjv/Wj/zen/7envvhg//kj//jmv/lm//gof/j
+ovzsqf/qrv/js//ktfzltv/muv/ruP/v0//v1P/x2P/23f/34//66P/++////gAAAAAAAAAAACH5
+BAEAAH0ALAAAAAAXABcAQAf/gH2Cg4N8hnyEiYJgJ0REQ0QmAAAlJZMgLioqXFtfhHYVHI1AHKUc
+GRgrQBckFnWJfGQyaF1KSUlIj0FFa3k2ZYiCfE4nPcY9Li4rKyooJycepTVWTsGwcGBOIiJOYHB7
+irB3ODZab3p6dGI6OHfWhTdLUUi4DQ2PDAzGLmpsN8F8RPQAQpCgEiXGDjY70YGFHBHB4EzQpOID
+AQQPjhx5gGCAA1RTRMCBFaYCBVQYMFygwBKChDDvwsmcCWtOmCcjRjwJMycmrDIhsrjxUqVJkytp
+8LQRAUzRHQtYpNzClWsIwR5U8oi4QyjOBSZGkCAREiAAjx1lWzB7gUdHHGFOa1YEGUKXSIECVu/+
+0HQCyplqfQL28OEDyDFkzBYyZGEG4iINyZalUHBAgAADCTaYyqEDzKA9NDigQKEAhpIhyoAkibEA
+A4kZN8AVGjPBVCmUGChMmABhjM/AdWhE2K07QgQINOr8VnTo0MxAADs=</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>23</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>782</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>23</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

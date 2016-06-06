@@ -1,0 +1,340 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Use_Database_Methods_Permission</string> </key>
+            <value>
+              <list>
+                <string>Member</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_col</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>uid</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>i</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>10</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>path</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>t</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>27</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>resource_title</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>t</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>16</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>resource_relative_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>t</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>13</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>resource_uid</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>i</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>8</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>section_uid</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>i</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>node_uid</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>i</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>10</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>variation_text</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>t</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>date</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>d</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>19</int> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>from_date\r\n
+at_date\r\n
+to_date\r\n
+input\r\n
+output\r\n
+from_table_list:list\r\n
+where_expression\r\n
+selection_domain\r\n
+selection_report\r\n
+order_by_expression\r\n
+group_by_expression\r\n
+join_on_item\r\n
+date_condition_in_join\r\n
+simulation_state_list:list</string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string>InventoryBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string>TrackingListBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Resource_zGetTrackingList</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+SELECT \n
+  item.aggregate_uid AS uid,\n
+  item_catalog.path AS path,\n
+  item.date AS date,\n
+  item.node_uid AS node_uid,\n
+  item.section_uid AS section_uid,\n
+  item.resource_uid AS resource_uid,\n
+  item.variation_text AS variation_text,\n
+  item.uid AS delivery_uid\n
+FROM\n
+  catalog as item_catalog\n
+<dtml-if from_table_list>\n
+  <dtml-in prefix="table" expr="from_table_list"> \n
+    <dtml-if expr="table_key != \'item\'">, <dtml-var table_item> AS <dtml-var table_key></dtml-if>\n
+  </dtml-in>\n
+</dtml-if>\n
+<dtml-if selection_domain>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>\n
+<dtml-if selection_report>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>\n
+, item\n
+\n
+\n
+<dtml-if join_on_item>\n
+  LEFT JOIN \n
+    item AS next_item\n
+  ON (\n
+    <dtml-if date_condition_in_join>\n
+    <dtml-if expr="at_date is not None">\n
+       next_item.date <= <dtml-sqlvar at_date type="string">\n
+    <dtml-else>\n
+       next_item.date < <dtml-sqlvar to_date type="string">\n
+    </dtml-if>\n
+    AND\n
+    </dtml-if>\n
+    next_item.aggregate_uid = item.aggregate_uid\n
+  AND\n
+    <dtml-if input>\n
+      next_item.date < item.date\n
+    <dtml-else>\n
+      next_item.date > item.date\n
+    </dtml-if>\n
+  <dtml-if simulation_state_list>\n
+   AND (\n
+    <dtml-in simulation_state_list>\n
+      next_item.simulation_state =  <dtml-sqlvar sequence-item type="string"> \n
+      <dtml-if sequence-end>\n
+      <dtml-else>\n
+        OR  \n
+      </dtml-if>\n
+    </dtml-in>\n
+    )\n
+  </dtml-if>\n
+  )\n
+</dtml-if>\n
+\n
+WHERE\n
+  1 = 1\n
+\n
+<dtml-if where_expression>\n
+  AND <dtml-var where_expression>\n
+</dtml-if>\n
+\n
+  AND item_catalog.uid = item.aggregate_uid\n
+\n
+<dtml-if join_on_item>\n
+  AND next_item.uid IS NULL\n
+</dtml-if>\n
+\n
+\n
+<dtml-if selection_domain>\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, join_table=\'item\', join_column=\'node_uid\')">\n
+</dtml-if>\n
+<dtml-if selection_report>\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
+</dtml-if>\n
+\n
+<dtml-if group_by_expression>\n
+GROUP BY <dtml-var group_by_expression>\n
+</dtml-if>\n
+\n
+<dtml-if order_by_expression>\n
+ORDER BY\n
+  <dtml-var order_by_expression>\n
+<dtml-else>\n
+ORDER BY item.date DESC\n
+</dtml-if>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

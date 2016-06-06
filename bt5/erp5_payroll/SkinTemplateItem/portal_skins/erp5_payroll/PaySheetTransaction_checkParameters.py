@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Check that all datas necessary to auto-calculate the pay sheet are set.\n
+"""\n
+paysheet = context\n
+employer = paysheet.getDestinationSection()\n
+employee = paysheet.getSourceSection()\n
+quantity_unit = paysheet.getWorkTimeAnnotationLineQuantityUnit() # XXX - to refactor\n
+\n
+Base_translateString = context.Base_translateString\n
+\n
+def redirect(msg):\n
+  return context.Base_redirect(form_id,\n
+      keep_items = dict(portal_status_message=Base_translateString(msg)))\n
+\n
+if not paysheet.getPriceCurrency():\n
+  return redirect(\'Currency must be defined\')\n
+\n
+if not paysheet.getStartDate():\n
+  return redirect(\'Work Period Start must be defined\')\n
+\n
+if not paysheet.getStopDate():\n
+  return redirect(\'Work Period End must be defined\')\n
+\n
+if not employee:\n
+  return redirect(\'The employee must be defined\')\n
+\n
+if not employer:\n
+  return redirect(\'The employer must be defined\')\n
+\n
+if not quantity_unit:\n
+  return redirect(\'The work duration unit must be defined\')\n
+\n
+employer_obj = paysheet.getDestinationSectionValue()\n
+employee_obj = paysheet.getSourceSectionValue()\n
+\n
+if not employee_obj.getCareerGrade():\n
+  return redirect(\'The employee must have a career grade\')\n
+\n
+if not employee_obj.getMaritalStatusId():\n
+  return redirect(\'The employee must have a marital status\')\n
+\n
+context.applyTransformation()\n
+msg = Base_translateString(\'Pay sheet lines updated.\')\n
+return context.Base_redirect(\'view\',\n
+                            keep_items=dict(portal_status_message=msg))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id=\'view\', cancel_url=\'\', **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetTransaction_checkParameters</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

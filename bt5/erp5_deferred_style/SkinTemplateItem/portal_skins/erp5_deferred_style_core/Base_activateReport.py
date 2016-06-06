@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>request = container.REQUEST\n
+\n
+portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
+\n
+person_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+if person_value is None:\n
+  portal.changeSkin(None)\n
+  return context.Base_redirect(\'view\', keep_items=dict(\n
+              portal_status_message=N_("No person found for your user")))\n
+\n
+if person_value.getDefaultEmailText(\'\') in (\'\', None):\n
+  portal.changeSkin(None)\n
+  return context.Base_redirect(\'view\', keep_items=dict(\n
+              portal_status_message=N_("You haven\'t defined your email address")))\n
+\n
+\n
+user_name = person_value.getReference()\n
+tag = \'active-report-%s\' % random.randint(0, 1000)\n
+priority = 2\n
+format = request.get(\'format\', \'\')\n
+skin_name = request[\'deferred_portal_skin\']\n
+\n
+# save request parameters (after calling the report_method which may tweak the\n
+# request). XXX we exclude some reserved names in a very ad hoc way\n
+request_other = {}\n
+for k, v in request.items():\n
+  if k not in (\'TraversalRequestNameStack\', \'AUTHENTICATED_USER\', \'URL\',\n
+      \'SERVER_URL\', \'AUTHENTICATION_PATH\', \'USER_PREF_LANGUAGES\', \'PARENTS\',\n
+      \'PUBLISHED\', \'AcceptLanguage\', \'AcceptCharset\', \'RESPONSE\', \'SESSION\',\n
+      \'ACTUAL_URL\'):\n
+    # XXX proxy fields stores a cache in request.other that cannot be pickled\n
+    if same_type(k, \'\') and k.startswith(\'field__proxyfield\'):\n
+      continue\n
+    # Remove FileUpload parameters\n
+    elif getattr(v, \'headers\', \'\'):\n
+      continue\n
+    request_other[k] = v\n
+\n
+\n
+\n
+context.activate(activity="SQLQueue", tag=tag, after_tag=after_tag,\n
+  priority=priority).Base_computeReportSection(\n
+    form=form.getId(), \n
+    request_other=request_other, \n
+    user_name=user_name, \n
+    tag=tag,\n
+    skin_name=skin_name, \n
+    format=format,\n
+    priority=priority, \n
+    **kw)\n
+\n
+context.activate(activity=\'SQLQueue\', after_tag=tag).getTitle()\n
+\n
+portal.changeSkin(None)\n
+return context.Base_redirect(\'view\', keep_items=dict(\n
+              portal_status_message=N_("Report Started")))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form, after_tag=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_activateReport</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

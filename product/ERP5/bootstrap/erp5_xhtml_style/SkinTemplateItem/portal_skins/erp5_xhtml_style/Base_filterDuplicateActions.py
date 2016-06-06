@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""This script filters duplicate actions for a document.\n
+Duplicate actions are actions with the same ID in the same action category.\n
+In case of duplicate, only the first action will be kept.\n
+\n
+`actions` is the mapping returned by ActionsTool.listFilteredActionsFor\n
+The script must be called on the context of the document.\n
+"""\n
+from Products.ERP5Type.Cache import CachingMethod\n
+def filterDuplicateActions(actions):\n
+  new_actions = {}\n
+\n
+  for action_category, action_list in actions.items():\n
+    existing_actions = set()\n
+    new_actions[action_category] = []\n
+    keep_action = new_actions[action_category].append\n
+\n
+    for action in action_list:\n
+      if action[\'id\'] not in existing_actions:\n
+        existing_actions.add(action[\'id\'])\n
+        keep_action(action)\n
+  return new_actions\n
+\n
+\n
+def hasDuplicateActions(portal_type, user_name):\n
+  len_actions = 0\n
+  len_filtered_actions = 0\n
+  for cat in actions.values():\n
+    len_actions += len(cat)\n
+  filtered_actions = filterDuplicateActions(actions)\n
+  for cat in filtered_actions.values():\n
+    len_filtered_actions += len(cat)\n
+  return len_actions != len_filtered_actions\n
+\n
+\n
+hasDuplicateActions = CachingMethod(\n
+                          hasDuplicateActions,\n
+                          id=\'Base_filterDuplicateActions.hasDuplicateActions\',\n
+                          cache_factory=\'erp5_ui_long\')\n
+\n
+user_name = getattr(container.REQUEST, \'AUTHENTICATED_USER\', \'\')\n
+\n
+if getattr(context, \'getPortalType\', None) is not None:\n
+  if hasDuplicateActions(context.getPortalType(), user_name):\n
+    return filterDuplicateActions(actions)\n
+return actions\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>actions</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_filterDuplicateActions</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>requirement = context\n
+reference_list = []\n
+\n
+# return reference if defined:\n
+reference = requirement.getReference()\n
+if reference: return reference\n
+\n
+# browse requirements parents until base found\n
+# assemble list of default reference items\n
+while requirement.getPortalType() == "Requirement":\n
+  reference = requirement.getReference()\n
+  reference_list.append(reference or str(requirement.getProperty(\'int_index\', \'\') or \'\') or requirement.getId())\n
+  requirement = requirement.getParentValue()\n
+  # Quick exit if some parent requirement defines a reference\n
+  if reference:\n
+    reference_list.reverse()\n
+    return \'-\'.join(reference_list)\n
+\n
+# Append default reference (R)\n
+reference_list.append(reference or \'R\')\n
+reference_list.reverse()\n
+return \'-\'.join(reference_list)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Requirement_getDefaultReference</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

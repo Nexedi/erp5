@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts97454081.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ung_mail_logo.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAH4AAAAcCAYAAACnHwvZAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
+GXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAU1JREFUaIHtms0RgjAQhZ+OlGAR
+XrEme7AEe7AmvFIEJeSAByeKDPmBxLDy9rsBOwwzH2+zTNj1fd9DoWO/9gMo66DiSVHxpBymTlaX
+CgBg7iZ4A1sbWw8Ax/P167hrblH1oToXpq2d16rTY9E9/x0RiR+/CLkwbe2VHluzRUSIV8oz2eq3
+wDDFvnZu60xbU7V9MYnP2e5jpdvrTMItq4tfOrDFMEcom/zVxQMf+TlSzzioLUGE+F/AluC5iBGf
+M/VKmM1O9SFcSwJLpxCTeEBTXxLaxI+TzTYUiko8oKkvhTjxuWBL8FxEik9JPctwlsqkeLu9Otxy
+nWLJlmxJNPVugol3yQ+9FKnkSn3s1iwbzqne3M1brk+yxKQDL/lDoTFymZYJkWu88nu83/G+tb5E
+0rvmlvRZZxMcSjtT0i07/a+eE231pKh4UlQ8KU/a8Hh2zEuTjwAAAABJRU5ErkJggg==</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>28</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>448</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ung_mail_logo.png</string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>126</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

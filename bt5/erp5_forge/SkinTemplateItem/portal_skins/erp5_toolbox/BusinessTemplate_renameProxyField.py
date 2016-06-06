@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+This dialog allows to change massively the template used by many\n
+proxy fields. In the top listbox of the dialog, inforations are\n
+entered like this :\n
+\n
+  original id                                  new id\n
+  Base_viewFieldLibrary.my_title Base_viewFieldLibrary.my_view_mode_title\n
+\n
+Then all proxy of this business template using the template described\n
+by the original id will use the new template described by the new id.\n
+\n
+Note that we do not directly change proxy fields, we first unproxify\n
+them, them proxify them again with the new template. Like this we should\n
+not loose informations\n
+"""\n
+message = "Proxy fields updated"\n
+portal_skins = context.getPortalObject().portal_skins\n
+\n
+# to_rename_dict contains user information about template change\n
+to_rename_dict = {}\n
+for line in listbox:\n
+  new_id = line[\'new_id\']\n
+  original_id = line[\'original_id\']\n
+  if \'\' not in (new_id, original_id):\n
+    to_rename_dict[original_id] = new_id\n
+\n
+# selected_dict contains the list of selected fields that needs\n
+# to change of template. The user can select or unselect any field\n
+# in the preview_listbox\n
+selected_dict = {}\n
+if preview_listbox is not None:\n
+  for line in preview_listbox:\n
+    if line[\'selected\']:\n
+      selected_dict[line[\'hidden_field_path\']] = None\n
+\n
+next_preview_listbox = []\n
+\n
+# Parse a document and it\'s sub objects in order to find all\n
+# ProxyField\n
+def iterate(document, skin_path):\n
+  for sub_object in document.objectValues():\n
+    if sub_object.meta_type == "ERP5 Form":\n
+      unproxify_dict = {}\n
+      proxify_dict = {}\n
+      for field in sub_object.objectValues():\n
+        if field.meta_type == "ProxyField":\n
+          form_id = field.get_value(\'form_id\')\n
+          field_id = field.get_value(\'field_id\')\n
+          key = "%s.%s" % (form_id, field_id)\n
+          if to_rename_dict.has_key(key):\n
+            field_path =  "%s/%s/%s" % (skin_path, sub_object.id, field.id)\n
+            if selected_dict.has_key(field_path):\n
+              unproxify_dict[field.id] = None\n
+              proxify_dict[field.id] = to_rename_dict[key]\n
+            next_preview_listbox.append(\n
+                {"original_id":key,\n
+                 "new_id":to_rename_dict[key],\n
+                 "field_path": field_path,\n
+                 "hidden_field_path": field_path,\n
+                  })\n
+\n
+      if len(unproxify_dict):\n
+        if not update:\n
+          # In order to not loose information, we unproxify, then proxify\n
+          # with new template\n
+          sub_object.unProxifyField(field_dict=unproxify_dict)\n
+          sub_object.proxifyField(field_dict=proxify_dict)\n
+\n
+    if sub_object.meta_type == "Folder":\n
+      skin_path = "%s/%s" % (skin_path, x.getId())\n
+      iterate(sub_object, skin_path=skin_path)\n
+\n
+# Only search ProxyFields within skin folder defined by this business template\n
+if len(to_rename_dict):\n
+  for skin_folder in [getattr(portal_skins, x) for x in \\\n
+      context.getTemplateSkinIdList()]:\n
+    iterate(skin_folder, skin_path = skin_folder.getId())\n
+\n
+if update:\n
+  # Prepare data in order to display the preview listbox\n
+  count = 1\n
+  next_preview_listbox.sort(key=lambda x: (x[\'original_id\'], x[\'field_path\']))\n
+  extra_kw = {}\n
+  for line in next_preview_listbox:\n
+    line["preview_listbox_key"] = "%03i" % count\n
+    line["selected"] = selected_dict.has_key(line["hidden_field_path"]) or preview_listbox is None\n
+    extra_kw["field_preview_listbox_hidden_field_path_new_%03i" % count] = line["hidden_field_path"]\n
+    extra_kw["field_preview_listbox_selected_new_%03i" % count] = line["selected"]\n
+    count += 1\n
+  # This is awfull hack, we should improve Base_updateDialogForm in\n
+  # order to handle data stored in REQUEST.form\n
+  for key, value in extra_kw.items():\n
+    context.REQUEST.form[key] = value\n
+  context.Base_updateDialogForm(listbox=listbox, \n
+      preview_listbox=next_preview_listbox)\n
+  return context.BusinessTemplate_renameProxyFieldDialog(**kw)\n
+else:\n
+  return context.Base_redirect(keep_items={"portal_status_message":message})\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=None, preview_listbox=None, update=False, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessTemplate_renameProxyField</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

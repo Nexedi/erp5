@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts08963575.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>erp5_discussion.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\n
+ ERP5 discussion forum.\n
+*/\n
+.discussion-post-body-container blockquote {\n
+    background: none repeat scroll 0 0 #fafafa;\n
+    border-left: 6px solid #e7e9ec;\n
+    font-style: italic;\n
+    padding: 5px 5px 5px 16px;\n
+}\n
+\n
+.attachment {\n
+  width:100%;\n
+  float:left;\n
+}\n
+\n
+.discussion-post-header{\n
+  background-color: #efefef;\n
+  color:#000000;\n
+  padding: 3px;  \n
+  margin: 0em;\n
+  height: 20px;\n
+}\n
+\n
+.discussion-post-header .thumbnail,\n
+.discussion-post-creator .title{\n
+  float:left;\n
+}\n
+\n
+.discussion-post-header .thumbnail{\n
+  /*width:14%;*/\n
+  margin:4px;\n
+}\n
+\n
+.discussion-post-header .title{\n
+  width:85%;\n
+  margin-top:4px;\n
+}\n
+\n
+a.discussion-post-title{\n
+  font-weight: bold;\n
+}\n
+\n
+.discussion-post-body-container{\n
+  float: left;\n
+  margin-left: 10px;\n
+  margin-top: 10px;\n
+  margin-bottom: 10px;\n
+  color: black;\n
+}\n
+\n
+\n
+.discussion-post-author-signature-container{\n
+  margin-left:10px; \n
+  margin-bottom:1em; \n
+  color:#aaa;\n
+  float:left;\n
+  width: 100%;\n
+  font-size: 90%;\n
+  border-bottom:1px solid #EEEEEE;\n
+}\n
+\n
+button.discussion-post-action-button{\n
+  padding: 3px;\n
+}\n
+\n
+blockquote {\n
+  background-color:#E9E9E9 ;\n
+  border:1px solid #8CACBB;\n
+  margin:5px;\n
+  padding:10px 15px;\n
+}\n
+\n
+.discussion-post-actions{\n
+  float:left;\n
+  clear:both;\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1195</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

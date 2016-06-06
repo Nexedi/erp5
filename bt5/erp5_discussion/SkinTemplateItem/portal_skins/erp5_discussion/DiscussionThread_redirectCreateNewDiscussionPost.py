@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+portal = context.getPortalObject()\n
+preferred_forum_quote_original_message= portal.ERP5Site_getUserPreferredForumSettingsDict()[\'preferred_forum_quote_original_message\']\n
+\n
+if discussion_post_uid is not None:\n
+  # set title & text_content\n
+  discussion_post = getattr(context, discussion_post_uid)\n
+  \n
+  title = discussion_post.getTitle()\n
+  if not title.lower().startswith(\'re:\'):\n
+    # stop exploding "Re: Re: .." to one level\n
+    title = \'Re: %s\' %title\n
+  context.REQUEST.set(\'discussion_post_title\', title)\n
+  if preferred_forum_quote_original_message:\n
+    author_dict = discussion_post.DiscussionPost_getAuthorDict()\n
+    text_content = \'<blockquote>From: %s<br/>%s</blockquote><br/>\' %(author_dict[\'author_title\'],\n
+                                                               discussion_post.getTextContent())\n
+    context.REQUEST.set(\'discussion_post_text_content\', text_content)\n
+\n
+return context.DiscussionThread_viewCreateNewDiscussionPostDialog()\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>discussion_post_uid=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>DiscussionThread_redirectCreateNewDiscussionPost</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

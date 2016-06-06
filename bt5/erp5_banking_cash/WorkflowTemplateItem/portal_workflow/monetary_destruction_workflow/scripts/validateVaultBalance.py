@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+\n
+transaction = state_change[\'object\']\n
+\n
+source_object = transaction.getSourceValue()\n
+vault = source_object.getPhysicalPath()\n
+\n
+# check again that we are in the good accounting date\n
+if check_source_counter_date:\n
+  transaction.Baobab_checkCounterDateOpen(site=source_object, date=transaction.getStartDate())\n
+\n
+if \'encaisse_des_externes\' not in vault and \\\n
+      \'encaisse_des_billets_retires_de_la_circulation\'  not in vault:\n
+   msg = Message(domain="ui", message="Invalid source.")\n
+   raise ValidationFailed, (msg,)\n
+\n
+if \'encaisse_des_externes\' in vault:\n
+   source_section = transaction.getSourceSection()\n
+   if source_section is None:\n
+     msg = Message(domain="ui", message="Invalid Foreign Agency.")\n
+     raise ValidationFailed, (msg,)\n
+\n
+ \n
+# In case of dematerialization, we must have only coins\n
+if transaction.isDematerialization():\n
+  for line in transaction.objectValues(portal_type=\'Monetary Destruction Line\'):\n
+    if line.getResourceValue().getPortalType() != \'Coin\':\n
+      msg = Message(domain="ui", message="Sorry, dematerialization is possible only with coins.")\n
+      raise ValidationFailed, (msg,)\n
+\n
+  # Not possible from auxiliary agency\n
+  if \'auxiliaire\' in vault:\n
+    msg = Message(domain="ui", message="You can\'t do this operation on auxiliary site.")\n
+    raise ValidationFailed, (msg,)\n
+  \n
+  # Also we must make sure that the source_section is defined\n
+  source_section = transaction.getSourceSection()\n
+  if source_section is None:\n
+    msg = Message(domain="ui", message="Sorry, dematerialization is possible only if the external agency is defined.")\n
+    raise ValidationFailed, (msg,)\n
+\n
+  if \'encaisse_des_billets_retires_de_la_circulation\' not in vault:\n
+    msg = Message(domain="ui", message="Invalid source.")\n
+    raise ValidationFailed, (msg,)\n
+\n
+  if source_section in source_object.getPath():\n
+    msg = Message(domain="ui", message="You can\'t used this site.")\n
+    raise ValidationFailed, (msg,)\n
+# Check specific for auxiliary agencies\n
+elif "principale" not in vault: \n
+  site = transaction.getSourceSection()\n
+  if site  in (None, ""):\n
+    msg = Message(domain="ui", message="You must select a foreign agency.")\n
+    raise ValidationFailed, (msg,)\n
+  source_country_site = transaction.Baobab_getVaultSite(source_object)\n
+  source_country  = transaction.Baobab_getCountryForSite(source_country_site)\n
+  site_country = transaction.Baobab_getCountryForSite(site)\n
+  if \'encaisse_des_externes\' in vault and \\\n
+         site_country == source_country:\n
+    msg = Message(domain="ui", message="You must select an agency from a foreign country.")    \n
+    raise ValidationFailed, (msg,)\n
+  elif \'encaisse_des_billets_retires_de_la_circulation\' in vault and \\\n
+         site_country != source_country:    \n
+    msg = Message(domain="ui", message="You must select an agency from the same country.")    \n
+    raise ValidationFailed, (msg,)\n
+\n
+\n
+# Get price and total_price.\n
+amount = transaction.getSourceTotalAssetPrice()\n
+total_price = transaction.getTotalPrice(portal_type=[\'Monetary Destruction Line\',\'Monetary Destruction Cell\'],fast=0)\n
+resource = transaction.CashDelivery_checkCounterInventory(source=source_object.getRelativeUrl(), portal_type=\'Monetary Destruction Line\')\n
+\n
+if resource == 2:\n
+  msg = Message(domain="ui", message="No Resource.")\n
+  raise ValidationFailed, (msg,)\n
+elif amount != total_price:\n
+  msg = Message(domain="ui", message="Amount differ from total price.")\n
+  raise ValidationFailed, (msg,)\n
+elif resource <> 0 :\n
+  msg = Message(domain="ui", message="Insufficient Balance.")\n
+  raise ValidationFailed, (msg,)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change, check_source_counter_date=1, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>validateVaultBalance</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,423 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html>\n
+<head><title>Test sort for Accounting module main listbox, without section</title></head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="4">\n
+Test sort for Accounting module main listbox, without section\n
+</td></tr>\n
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">\n
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>\n
+\n
+<!-- Setup {{{ -->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounting</td>\n
+</tr>\n
+<!-- we unselect section -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//a[@class=\'find\'][1]</td>\n
+  <td></td>\n
+</tr>\n
+  <tr>\n
+  <td>select</td>\n
+  <td>field_your_section_category</td>\n
+  <td>label=</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>dialog_submit_button</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+\n
+<!-- sort by title {{{ -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.operation_date:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4 records</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
+  <td>Accounts opening</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]</td>\n
+  <td>Client 1 Sale Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[2]</td>\n
+  <td>Client 2 Sale Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[2]</td>\n
+  <td>First Purchase Invoice</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- search and sort by title desc (regression) {{{ -->\n
+<tr>\n
+  <td>type</td>\n
+  <td>listbox_title</td>\n
+  <td>%</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:desc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4 records</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
+  <td>First Purchase Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]</td>\n
+  <td>Client 2 Sale Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[2]</td>\n
+  <td>Client 1 Sale Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[2]</td>\n
+  <td>Accounts opening</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- sort by type {{{ -->\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset title sorting -->\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
+    @value=\'listbox.translated_portal_type:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4 records</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
+  <td>Accounts opening</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]</td>\n
+  <td>First Purchase Invoice</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- sort by type desc {{{ -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
+    @value=\'listbox.translated_portal_type:desc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4 records</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[2]</td>\n
+  <td>First Purchase Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[2]</td>\n
+  <td>Accounts opening</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- sort by date {{{ -->\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_portal_type:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset type sorting -->\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_portal_type:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
+    @value=\'listbox.operation_date:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4 records</td>\n
+</tr>\n
+<!-- no error -->\n
+<!-- }}} -->\n
+\n
+<!-- sort by date desc {{{ -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
+    @value=\'listbox.operation_date:desc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4 records</td>\n
+</tr>\n
+<!-- no error -->\n
+<!-- }}} -->\n
+\n
+<!-- sort by reference {{{ -->\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.operation_date:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset date sorting -->\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.operation_date:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>listbox_reference</td>\n
+  <td>%</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
+    @value=\'listbox.reference:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>2 records</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
+  <td>Client 1 Sale Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]</td>\n
+  <td>Client 2 Sale Invoice</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- sort by reference desc {{{ -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
+    @value=\'listbox.reference:desc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>2 records</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
+  <td>Client 2 Sale Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]</td>\n
+  <td>Client 1 Sale Invoice</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- clear reference search {{{ -->\n
+<tr>\n
+  <td>type</td>\n
+  <td>listbox_reference</td>\n
+  <td></td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- sort by specific reference {{{ -->\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.reference:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset reference sorting -->\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
+    @value=\'listbox.reference:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
+    @value=\'listbox.specific_reference:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4 records</td>\n
+</tr>\n
+<!-- no error -->\n
+<!-- }}} -->\n
+\n
+<!-- sort by specific reference desc {{{ -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
+    @value=\'listbox.specific_reference:desc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4 records</td>\n
+</tr>\n
+<!-- no error -->\n
+<!-- }}} -->\n
+\n
+<!-- sort by simulation state {{{ -->\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.specific_reference:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset specific_reference sorting -->\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
+    @value=\'listbox.specific_reference:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
+    @value=\'listbox.translated_simulation_state_title:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4 records</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+</tbody></table>\n
+</body>\n
+</html> <!-- vim: syntax=html foldmethod=marker\n
+-->
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_accounting_transaction_module_sort_without_section.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

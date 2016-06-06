@@ -1,0 +1,509 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308808.52</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>buttons.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+.btn {\r\n
+    border-radius: 1px;\r\n
+\r\n
+    .btnsize(@value) {\r\n
+        min-width: @value;\r\n
+        height: @value;\r\n
+        line-height: @value - 2px;\r\n
+    }\r\n
+\r\n
+    &.small {\r\n
+        .btnsize(20px);\r\n
+    }\r\n
+\r\n
+    &.normal {\r\n
+        height: 22px;\r\n
+    }\r\n
+\r\n
+    &.large {\r\n
+        .btnsize(31px);\r\n
+    }\r\n
+\r\n
+    &.huge {\r\n
+        .btnsize(37px);\r\n
+    }\r\n
+\r\n
+    &.x-huge {\r\n
+        .btnsize(45px);\r\n
+    }\r\n
+\r\n
+    &[disabled] {\r\n
+        opacity: 1;\r\n
+    }\r\n
+    \r\n
+    &:focus {\r\n
+        outline: 0;\r\n
+        outline-offset: 0;\r\n
+    }\r\n
+\r\n
+    &:active, &.active {\r\n
+        -webkit-box-shadow: none;\r\n
+        box-shadow: none;\r\n
+    }\r\n
+\r\n
+    .caret {\r\n
+        width: 7px;\r\n
+        height: 7px;\r\n
+        border: 0;\r\n
+        background-repeat: no-repeat;\r\n
+        background-position: @arrow-small-offset-x @arrow-small-offset-y;\r\n
+        position: relative;\r\n
+        .background-ximage(\'@{common-image-path}/@{common-controls}\', \'@{common-image-path}/@{common-controls2x}\', 100px)\r\n
+    }\r\n
+\r\n
+    //&:active,\r\n
+    &:active:not(.disabled),\r\n
+    &.active:not(.disabled){\r\n
+        .caret {\r\n
+            background-position: @arrow-small-offset-x - 7px @arrow-small-offset-y;\r\n
+        }\r\n
+    }\r\n
+}\r\n
+\r\n
+.btn-toolbar {\r\n
+    display: inline-block;\r\n
+    position: relative;\r\n
+    margin: 0;\r\n
+    padding: 0;\r\n
+    border: 0;\r\n
+    .border-radius(1px);\r\n
+    background-color: transparent;\r\n
+\r\n
+    &:before,\r\n
+    &:after {\r\n
+        content: "";\r\n
+        display: none;\r\n
+    }\r\n
+\r\n
+    &:focus {\r\n
+        outline: 0;\r\n
+        outline-offset: 0;\r\n
+    }\r\n
+\r\n
+    &:hover,\r\n
+    .over {\r\n
+        outline: 0;\r\n
+        background-color: @secondary;\r\n
+    }\r\n
+\r\n
+\r\n
+    &:active:not(.disabled),\r\n
+    &.active:not(.disabled) {\r\n
+        outline: 0;\r\n
+        color: lighten(@gray-lighter, 10%);\r\n
+        background-color: @primary;\r\n
+    }\r\n
+\r\n
+    span.btn-icon {\r\n
+        .position();\r\n
+        padding: 0;\r\n
+        margin: 0;\r\n
+        position: absolute;\r\n
+        background-repeat: no-repeat;\r\n
+        .background-ximage(\'@{app-image-path}/toolbar-menu.png\', \'@{app-image-path}/toolbar-menu@2x.png\', 60px);\r\n
+    }\r\n
+\r\n
+    // Normal size\r\n
+    // ------------------------\r\n
+    &.btn-toolbar-default {\r\n
+        .btn.small;\r\n
+\r\n
+        &.dropdown-toggle {\r\n
+            min-width: 7px;\r\n
+            padding-left: 1px;\r\n
+            padding-right: 1px;\r\n
+        }\r\n
+\r\n
+        span.btn-icon {\r\n
+            width: 20px !important;\r\n
+            height: 20px;\r\n
+            line-height: 20px;\r\n
+        }\r\n
+    }\r\n
+\r\n
+    // Large size\r\n
+    // ------------------------\r\n
+    &.btn-toolbar-large {\r\n
+        .btn.large;\r\n
+\r\n
+        &.dropdown-toggle {\r\n
+            min-width: 7px;\r\n
+            padding-left: 1px;\r\n
+            padding-right: 1px;\r\n
+        }\r\n
+\r\n
+        span.btn-icon {\r\n
+            width: 30px !important;\r\n
+            height: 30px;\r\n
+            line-height: 20px;\r\n
+        }\r\n
+    }\r\n
+\r\n
+    // Button has color line\r\n
+    // ------------------------\r\n
+    .btn-color-value-line {\r\n
+        pointer-events: none;\r\n
+        position: absolute;\r\n
+        left: 3px;\r\n
+        bottom: 2px;\r\n
+        width: 14px;\r\n
+        height: 3px;\r\n
+        background-color: red;\r\n
+    }\r\n
+}\r\n
+\r\n
+.btn-category {\r\n
+    .btn.large;\r\n
+    width: 100%;\r\n
+    padding: 0;\r\n
+    display: block;\r\n
+    position: relative;\r\n
+    .border-radius(0);\r\n
+    background-color: transparent;\r\n
+    font-weight: bold;\r\n
+\r\n
+    &:hover,\r\n
+    .over {\r\n
+        outline: 0;\r\n
+        background-color: @secondary;\r\n
+    }\r\n
+\r\n
+    &:active,\r\n
+    &.active {\r\n
+        outline: 0;\r\n
+        background-color: @primary;\r\n
+        color: #fff;\r\n
+    }\r\n
+\r\n
+    span.btn-icon {\r\n
+        display: inline-block;\r\n
+        position: relative;\r\n
+        width: 20px;\r\n
+        height: 20px;\r\n
+        line-height: 20px;\r\n
+        background-repeat: no-repeat;\r\n
+        .background-ximage(\'@{app-image-path}/toolbar-menu.png\', \'@{app-image-path}/toolbar-menu@2x.png\', 60px)\r\n
+    }\r\n
+\r\n
+    &[disabled],\r\n
+    &.disabled {\r\n
+        color: #000;\r\n
+        opacity: 0.4;\r\n
+    }\r\n
+}\r\n
+\r\n
+// The clickable button for toggling the menu\r\n
+// Remove the gradient and set the same inset shadow as the :active state\r\n
+.btn-group {\r\n
+    > .btn-toolbar {\r\n
+        float: none;\r\n
+    }\r\n
+\r\n
+    &.open {\r\n
+        > .btn-toolbar {\r\n
+            &.btn-toolbar-default,\r\n
+            &.btn-toolbar-large {\r\n
+                color: lighten(@gray-lighter, 10%);\r\n
+\r\n
+                // Show no shadow for `.btn-link` since it has no other button styles.\r\n
+                &.btn-link {\r\n
+                    .box-shadow(none);\r\n
+                }\r\n
+            }\r\n
+        }\r\n
+\r\n
+        .dropdown-toggle {\r\n
+            .box-shadow(none);\r\n
+        }\r\n
+    }\r\n
+\r\n
+    &.over {\r\n
+        > button {\r\n
+            outline: 0;\r\n
+            background-color: @secondary;\r\n
+        }\r\n
+    }\r\n
+\r\n
+    &.open,\r\n
+    &.over {\r\n
+        &.split {\r\n
+            > button:first-child {\r\n
+                z-index: 3;\r\n
+                .box-inner-shadow(-1px 0 0 0 @gray-light);\r\n
+            }\r\n
+        }\r\n
+    }\r\n
+\r\n
+\r\n
+    &:not(.split) {\r\n
+        .btn-toolbar {\r\n
+            &.btn-toolbar-default {\r\n
+                &.dropdown-toggle {\r\n
+                    width: 100%;\r\n
+                    min-width: 28px;\r\n
+\r\n
+                    .caret {\r\n
+//                        float: right;\r\n
+                        position: relative;\r\n
+                        right: -8px;\r\n
+                    }\r\n
+                }\r\n
+\r\n
+                &.btn-text-value {\r\n
+                    .caret {\r\n
+                        margin: 6px 3px 6px 0;\r\n
+                    }\r\n
+                    .caption {\r\n
+                        vertical-align: middle\r\n
+                    }\r\n
+                    &[disabled],\r\n
+                    &.disabled {\r\n
+                        opacity: 0.65;\r\n
+                    }\r\n
+                }\r\n
+            }\r\n
+\r\n
+            &.btn-toolbar-large {\r\n
+                &.dropdown-toggle {\r\n
+                    width: 100%;\r\n
+                    min-width: 40px;\r\n
+\r\n
+                    .caret {\r\n
+                        float: right;\r\n
+                    }\r\n
+                }\r\n
+            }\r\n
+        }\r\n
+    }\r\n
+}\r\n
+\r\n
+.btn-color {\r\n
+    padding: 2px;\r\n
+    border:1px solid @input-border;\r\n
+    .border-radius(@border-radius-small);\r\n
+\r\n
+    span {\r\n
+        display:block;\r\n
+        border:1px solid @input-border;\r\n
+        background-color: transparent;\r\n
+    }\r\n
+\r\n
+    &,\r\n
+    &:hover,\r\n
+    .over,\r\n
+    &:active,\r\n
+    &.active {\r\n
+        outline: 0;\r\n
+        background: #ffffff  !important;\r\n
+        .box-shadow(none)  !important;\r\n
+    }\r\n
+\r\n
+    &[disabled],\r\n
+    &.disabled {\r\n
+        opacity: 0.35;\r\n
+    }\r\n
+\r\n
+    .transparent {\r\n
+        .background-ximage(\'@{common-image-path}/hsbcolorpicker/transparency_39x15.png\', \'@{common-image-path}/hsbcolorpicker/transparency_39x15@2x.png\', 39px);\r\n
+        background-repeat: no-repeat;\r\n
+        background-size: cover;\r\n
+        background-position: center center;\r\n
+    }\r\n
+}\r\n
+\r\n
+.btn-options {\r\n
+    padding: 0;\r\n
+    margin:0;\r\n
+    border: 0 none;\r\n
+    .box-shadow(none);\r\n
+    background-color: transparent;\r\n
+\r\n
+    span.btn-icon {\r\n
+        position: relative;\r\n
+        min-width: inherit;\r\n
+        height: inherit;\r\n
+        line-height: inherit;\r\n
+        padding: 0;\r\n
+        margin: 0;\r\n
+        display: inline-block;\r\n
+        background-repeat: no-repeat;\r\n
+    }\r\n
+\r\n
+    &:hover,\r\n
+    .over,\r\n
+    &:active,\r\n
+    &.active {\r\n
+        outline: 0;\r\n
+    }\r\n
+}\r\n
+\r\n
+.btn-text-default {\r\n
+    width: 75px;\r\n
+    height: 22px;\r\n
+    background: @input-bg;\r\n
+    border: 1px solid @input-border;\r\n
+    .border-radius(@border-radius-small);\r\n
+\r\n
+    &:hover,\r\n
+    .over {\r\n
+        outline: 0;\r\n
+        background-color: @secondary !important;\r\n
+    }\r\n
+\r\n
+    &:active,\r\n
+    &.active {\r\n
+        outline: 0;\r\n
+        background-color: @primary !important;\r\n
+        color: white;\r\n
+    }\r\n
+}\r\n
+\r\n
+.btn-icon-default {\r\n
+    width: 45px;\r\n
+    height: 22px;\r\n
+    background: @input-bg;\r\n
+    border: 1px solid @input-border;\r\n
+    .border-radius(@border-radius-small);\r\n
+\r\n
+    span.btn-icon {\r\n
+        width: 28px;\r\n
+        padding: 0;\r\n
+        margin: 0;\r\n
+        position: relative;\r\n
+        display: inline-block;\r\n
+        background-repeat: no-repeat;\r\n
+    }\r\n
+\r\n
+    &:hover,\r\n
+    .over {\r\n
+        outline: 0;\r\n
+        background-color: @secondary !important;\r\n
+    }\r\n
+\r\n
+    &:active,\r\n
+    &.active {\r\n
+        outline: 0;\r\n
+        background-color: @primary !important;\r\n
+    }\r\n
+\r\n
+    &[disabled],\r\n
+    &.disabled {\r\n
+        opacity: 0.65;\r\n
+    }\r\n
+}\r\n
+\r\n
+.btn-large-dataview {\r\n
+    display: inline-block;\r\n
+    width: 72px;\r\n
+    height: 58px;\r\n
+    padding: 2px;\r\n
+    margin:0;\r\n
+    box-shadow: none;\r\n
+    background-color: @input-bg;\r\n
+    border: 1px solid @input-border;\r\n
+    .border-radius(@border-radius-small);\r\n
+\r\n
+    span.btn-icon {\r\n
+        display: inline-block;\r\n
+        .btn.btnsize(52px);\r\n
+        padding: 0;\r\n
+        margin-right: 3px;\r\n
+        background-color: transparent;\r\n
+        background-repeat: no-repeat;\r\n
+        border: 1px solid @input-border;\r\n
+        position: relative;\r\n
+    }\r\n
+\r\n
+    &:hover,\r\n
+    .over,\r\n
+    &:active,\r\n
+    &.active {\r\n
+        outline: 0;\r\n
+        background-color: @input-bg !important;\r\n
+    }\r\n
+\r\n
+    &:active:not(.disabled),\r\n
+    &.active:not(.disabled) {\r\n
+        .caret {\r\n
+            background-position: @arrow-small-offset-x @arrow-small-offset-y;\r\n
+        }\r\n
+    }\r\n
+\r\n
+    &[disabled],\r\n
+    &.disabled {\r\n
+        opacity: 0.65;\r\n
+    }\r\n
+}\r\n
+\r\n
+// Dialog buttons\r\n
+// ------------------------\r\n
+\r\n
+.dlg-btn {\r\n
+    font-weight: bold;\r\n
+    width: 86px;\r\n
+    color: @gray-deep;\r\n
+    background-color: @secondary;\r\n
+\r\n
+    &:hover,\r\n
+    &.hover {\r\n
+        background-color: @secondary-hover;\r\n
+    }\r\n
+\r\n
+    &.primary {\r\n
+        color: #fff;\r\n
+        background-color: @primary;\r\n
+\r\n
+        &:hover,\r\n
+        &.hover {\r\n
+            background-color: @primary-hover;\r\n
+        }\r\n
+    }\r\n
+\r\n
+    &[disabled] {\r\n
+        opacity: 0.65;\r\n
+    }\r\n
+}\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9755</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

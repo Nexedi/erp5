@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Message import Message\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+if site is None:\n
+  if getattr(context,\'getSiteValue\',None) is not None:\n
+    site = context.getSiteValue()\n
+if site is None:\n
+  root_site_url = context.Baobab_getUserAssignedRootSite()\n
+  site = context.portal_categories.restrictedTraverse(root_site_url)\n
+\n
+resource_uid_list = [x.uid for x in context.currency_cash_module.searchFolder()]\n
+\n
+\n
+counter_vault_list = context.Delivery_getVaultItemList(\n
+    user_site=0,base_site=site.getRelativeUrl(),all=1,\n
+    vault_type=(\'site/surface/banque_interne\',\'site/surface/gros_paiement\',\n
+               \'site/surface/gros_versement\',\'site/surface/operations_diverses\',\n
+               \'site/surface/salle_tri\'))\n
+counter_vault_list.extend(context.Delivery_getVaultItemList(\n
+    user_site=0,base_site=site.getRelativeUrl(),all=1,\n
+    vault_type=(\'site/surface/caisse_courante\',)))\n
+total_inventory_list = []\n
+for counter_vault in counter_vault_list:\n
+  counter_title = counter_vault[0]\n
+  counter_vault_url = counter_vault[1]\n
+  if counter_vault_url in (\'\', None):\n
+    continue\n
+  counter_title = counter_vault[0]\n
+  temp_list = context.CounterModule_getVaultTransactionList(vault=counter_vault_url)\n
+  for temp_object in temp_list:\n
+    temp_object.setProperty(\'counter_title\',counter_title)\n
+  total_inventory_list.extend(temp_list)\n
+\n
+return total_inventory_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>site=None,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Baobab_getCounterStockList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

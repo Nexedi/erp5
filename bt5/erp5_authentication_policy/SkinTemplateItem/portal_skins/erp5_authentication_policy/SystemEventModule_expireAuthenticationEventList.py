@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Expire old Authentication Events.\n
+"""\n
+from DateTime import DateTime\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
+from Products.ERP5Type.Document import newTempBase\n
+\n
+portal = context.getPortalObject()\n
+portal_preferences = portal.portal_preferences\n
+\n
+now = DateTime()\n
+one_second = 1/24.0/60.0/60.0\n
+check_duration = portal_preferences.getPreferredAuthenticationFailureCheckDuration()\n
+check_time = now - check_duration*one_second\n
+\n
+kw = {\'portal_type\': \'Authentication Event\',\n
+      \'creation_date\': Query(creation_date = check_time,\n
+                             range=\'max\'),\n
+      \'validation_state\' : \'confirmed\'}\n
+failure_list = portal.portal_catalog(**kw)\n
+\n
+for failure in failure_list:\n
+  tag = \'expire_%s\' %failure.getUid()\n
+  failure.activate(tag = tag).expire(comment=\'System expire.\')\n
+  failure.activate(after_tag = tag).reindexObject()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SystemEventModule_expireAuthenticationEventList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

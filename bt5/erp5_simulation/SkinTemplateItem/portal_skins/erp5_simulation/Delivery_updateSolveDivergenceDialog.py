@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>request= context.REQUEST\n
+from Products.ERP5Type.Message import translateString\n
+\n
+listbox = request.get(\'listbox\')\n
+line_list = context.Delivery_getSolverDecisionList(listbox=listbox)\n
+\n
+if len(line_list) == 0:\n
+  message = translateString("Workflow state may have been updated by other user. Please try again.")\n
+  return context.Base_redirect(form_id, keep_items={\'portal_status_message\': message}, **kw)\n
+\n
+for listbox_key in listbox:\n
+  listbox_dict = listbox[listbox_key]\n
+  line = [x for x in line_list if x.getPath() == listbox_key][0]\n
+  uid = line.getUid()\n
+  for property in (\'solver\', \'solver_configuration\', \'delivery_solver\', \'comment\',):\n
+    value = listbox_dict.get(property, None)\n
+    key = \'field_listbox_%s_%s\' % (property, uid)\n
+    request.form[key] = request.other[key] = value\n
+    if property == \'solver_configuration\':\n
+      if value is not None:\n
+        line.updateConfiguration(**value.as_dict())\n
+    else:\n
+      line.setProperty(property, value)\n
+request.set(\'your_dialog_updated\', \'1\')\n
+return context.Delivery_viewSolveDivergenceDialog(listbox=listbox)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id=\'view\', listbox=[],**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Delivery_updateSolveDivergenceDialog</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

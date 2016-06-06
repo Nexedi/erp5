@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing">\n
+  <!--\n
+  This widget displays the breadcrumbs of the current context.\n
+\n
+  TODO:\n
+    - make sure translation is possible or working\n
+  -->\n
+</tal:block>\n
+\n
+<tal:block tal:define="current_web_section python:request.get(\'current_web_section\', here);\n
+                       current_web_document python:request.get(\'current_web_document\', here);\n
+                       portal_path python:request.get(\'current_web_section_url\', current_web_section.absolute_url());\n
+                       is_web_section_default_document python:request.get(\'is_web_section_default_document\',False);\n
+                       breadcrumb_list python: current_web_section.getBreadcrumbItemList(current_web_document);">\n
+<ul class="breadcrumb">\n
+  <li tal:repeat="breadcrumb python:breadcrumb_list[:(is_web_section_default_document and -1 or None)]">\n
+    <tal:block tal:define="is_last repeat/breadcrumb/end">\n
+      <a href="#"\n
+         tal:attributes="href python:current_web_section.getPermanentURL(breadcrumb[1]);\n
+                         title python:breadcrumb[2];\n
+                         class python: test(is_last, \'last-breadcrumb\', \'breadcrumb\')"\n
+         tal:content="python:breadcrumb[0]">Title</a>\n
+      <img tal:condition="not: is_last"\n
+             class="breadcrumb_separator"\n
+             src="../km_img/crumb.png" alt="&gt;"\n
+             tal:attributes="src string:${portal_path}/km_img/crumb.png"/>\n
+    </tal:block>\n
+  </li>\n
+</ul>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_viewBreadcrumbWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

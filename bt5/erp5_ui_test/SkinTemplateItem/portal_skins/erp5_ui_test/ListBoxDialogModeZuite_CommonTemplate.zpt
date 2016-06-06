@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>description</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>text</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+  <tal:block metal:define-macro="init">\n
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
+    <tr>\n
+      <td>open</td>\n
+      <td>${base_url}/foo_module/ListBoxDialogModeZuite_reset</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>assertTextPresent</td>\n
+      <td>Reset Successfully.</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>open</td>\n
+      <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>assertTextPresent</td>\n
+      <td>Done.</td>\n
+      <td></td>\n
+    </tr>\n
+\n
+  <tr>\n
+    <td>open</td>\n
+    <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>assertTextPresent</td>\n
+    <td>Created Successfully.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>open</td>\n
+    <td>${base_url}/bar_module/FooModule_createObjects?num:int=3;portal_type=Bar</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>assertTextPresent</td>\n
+    <td>Created Successfully.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>open</td>\n
+    <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+    <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>assertTextPresent</td>\n
+      <td>Done.</td>\n
+      <td></td>\n
+    </tr>\n
+\n
+\n
+    <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/goto_dialog" />\n
+    <tr>\n
+      <td>verifyText</td>\n
+      <td>//*[@class="listbox-data-line-0 DataA"]//a[not(@title)][1]</td>\n
+      <td>0</td>\n
+    </tr>\n
+    <tr>\n
+      <td>verifyText</td>\n
+      <td>//*[@class="listbox-data-line-1 DataB"]//a[not(@title)][1]</td>\n
+      <td>1</td>\n
+    </tr>\n
+    <tr>\n
+      <td>verifyText</td>\n
+      <td>//*[@class="listbox-data-line-2 DataA"]//a[not(@title)][1]</td>\n
+      <td>2</td>\n
+    </tr>\n
+    <tr>\n
+      <td>verifyElementNotPresent</td>\n
+      <td>//*[@class="listbox-data-line-3 DataB"]</td>\n
+      <td></td>\n
+    </tr>\n
+\n
+\n
+    </tal:block>\n
+\n
+  <tal:block metal:define-macro="goto_dialog">\n
+\n
+        <tr>\n
+          <td>open</td>\n
+          <td>${base_url}/foo_module/0</td>\n
+          <td></td>\n
+        </tr>\n
+\n
+        <tr>\n
+          <td>selectAndWait</td>\n
+          <td>select_action</td>\n
+          <td>Select Bar</td>\n
+        </tr>\n
+        <tr>\n
+          <td>assertTextPresent</td>\n
+          <td>Useless Field in Bar Selection Dialog</td>\n
+          <td></td>\n
+        </tr>\n
+    <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/enter_dialog_value" />\n
+  </tal:block>\n
+\n
+  <tal:block metal:define-macro="enter_dialog_value">\n
+    <tr>\n
+      <td>type</td>\n
+      <td>field_your_extra_text</td>\n
+      <td>Hardcoded text value</td>\n
+    </tr>\n
+\n
+\n
+  <tr>\n
+    <td>click</td>\n
+    <td>//*[@class=\'listbox-data-line-1 DataB\']//input[@type="checkbox"]</td>\n
+    <td></td>\n
+  </tr>\n
+    <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" />\n
+\n
+  </tal:block>\n
+\n
+\n
+  <tal:block metal:define-macro="verify_dialog">\n
+\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Useless Field in Bar Selection Dialog</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_your_extra_text</td>\n
+  <td>Hardcoded text value</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>\n
+  <td>on</td>\n
+</tr>\n
+\n
+  </tal:block>\n
+\n
+\n
+  </tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Common Template for ListBoxDialogModeZuite, it will reuse parts of the Listbox Zuite</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ListBoxDialogModeZuite_CommonTemplate</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode>Common Template for ListBoxDialogModeZuite</unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

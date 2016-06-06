@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314638.18</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>bookmark1.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAACF0lEQVRoBe2bPy8EURTFDaKhU2iV
+VD7Gfhe0EgWJ3YJCdgul+AY6ohGNQoWCBqHYBBGFREIQ/9bvyZNsspMsu+eNW9ybnMzbO2/OnnPP
+ZmeL2azRaPQoKsuyEXjGwLCCr4njjvUpOm+bep0vg2EFUFACeyBMUInAWVJoDBy9kKlK81HJVyPj
+VhrOl2qs64aNBSKX4wnLR2qM0BM2FohcjicsH6kxQk/YWCByOZ6wfKTGCD1hY4HI5XjC8pEaI/SE
+jQUil+MJy0dqjNATNhaIXI4nLB+pMUJP2FggcjmesHykxgg9YWOByOV4wvKRGiP0hI0FIpfjCctH
+aozQEzYWiFyOJywfqTFCT9hYIHI5nrB8pPmEb7Q/8k+l7f5XwmVsTYH3tPZa2ftbW8k7y7xDlWeX
+X3iofJT1LCisijT8iasKqAWz0eEix2cwDwrRUuRHeh1TK5h94PhdcV3lxVpsJT8UZXgTJ3PgPsfR
+E72Q9EbOOXmrCMMhvUnSvAAtj/KHHnXJnmmQPOnUhrcwsQSuQbu6YsMCWG23sZvzqQyHL6hdMAPq
+IcJ2IuOeG/bVQLg2cMgrleEdlIbbzRlGfi087j2P127L3UKovBVkUeAhxwrY/4vZeG34D9Un9+d9
+Xodb1SDoAz/cLLsrdcJ15IRv4wOEd/zTMV57DE8Z1IGsMsglZKQyDtEQOILzVUEK5wA8E+ARzhMF
+5xcZFwIeA0x9RgAAAABJRU5ErkJggg==</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>592</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

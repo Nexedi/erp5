@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block tal:define="dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\');\n
+                       global portal              here/portal_url/getPortalObject;\n
+                       global portal_path         portal/portal_url/getPortalPath;                       \n
+                       portal_preferences   python: here.getPortalObject().portal_preferences;\n
+                       global preferred_html_style_developper_mode   portal_preferences/getPreferredHtmlStyleDevelopperMode;\n
+                       global preferred_html_style_translator_mode   portal_preferences/getPreferredHtmlStyleTranslatorMode;\n
+                       global preferred_html_style_contextual_help   portal_preferences/getPreferredHtmlStyleContextualHelp;\n
+                       global developper_shortcut_render             python: (preferred_html_style_developper_mode or preferred_html_style_translator_mode) and here.developper_shortcut_render;                       \n
+                       layout_form_id here/getApplicableLayout | nothing;\n
+                       ignore_layout request/ignore_layout | nothing;\n
+                       editable_mode request/editable_mode | nothing;\n
+                       global layout_form python:(not layout_form_id or ignore_layout) or getattr(here, layout_form_id, None);\n
+                       default_layout string:view_master;\n
+                       layout_id layout_form/pt | default_layout;\n
+                       is_web_mode python: False;">\n
+\n
+      <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
+                             dummy python: request.set(\'here\',here)"\n
+                 tal:condition="python: layout_form_id and not ignore_layout">\n
+\n
+        <tal:block tal:condition="not: editable_mode" tal:repeat="group python: form.get_groups()">\n
+          <div tal:attributes="class group/lower" tal:condition="python: group.find(\'content\') >= 0">\n
+            <tal:block tal:condition="python: \'hidden\' not in group.lower()" tal:repeat="field python:form.get_fields_in_group(group)">\n
+              <tal:block tal:replace="structure python: field.render(None, request)"/>\n
+            </tal:block>\n
+          </div>\n
+        </tal:block>\n
+        <tal:block tal:condition="editable_mode" tal:repeat="group python: form.get_groups()">\n
+          <fieldset tal:condition="python: \'hidden\' not in group.lower()">\n
+            <legend tal:content="group"></legend>\n
+            <table tal:condition="python: \'content\' not in group.lower() and \'bottom\' not in group.lower()">\n
+              <tal:block tal:repeat="field python:form.get_fields_in_group(group)">\n
+                <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
+              </tal:block>\n
+            </table>\n
+            <tal:block tal:condition="python: \'content\' in group.lower() or \'bottom\' in group.lower()"\n
+              tal:repeat="field python:form.get_fields_in_group(group)">\n
+              <tal:block tal:define="value python:request.get(field.id, None)"\n
+               tal:replace="structure python:field.render(value, request)" />\n
+            </tal:block>\n
+          </fieldset>\n
+        </tal:block>\n
+      </tal:block>\n
+      <tal:block tal:condition="python: not layout_form_id or ignore_layout">\n
+        <tal:block metal:define-macro="form_layout">\n
+          <div class="Main" tal:define="field_errors python: request.get(\'field_errors\',{});\n
+                                        dummy python: request.set(\'here\',here)">\n
+            <tal:block tal:define="groups python: form.get_groups();\n
+                                    rows python:[];">\n
+              <tal:block tal:repeat="group groups">\n
+                <tal:block tal:condition="python: not (\'right\' in group.lower()) or\n
+                                                  len(rows)==0">\n
+                  <tal:block tal:define="dummy python: rows.append([])"/>\n
+                </tal:block>\n
+                <tal:block tal:condition="python: len(rows[-1])>1">\n
+                  <tal:block tal:define="dummy python: rows.append([])"/>\n
+                </tal:block>\n
+                <tal:block tal:condition="python: \'hidden\' not in group.lower()">\n
+                  <tal:block tal:define="dummy python: rows[-1].append(repeat[\'group\'].index)"/>\n
+                </tal:block>\n
+              </tal:block>\n
+              <tal:block tal:repeat="row rows">\n
+                <tal:block tal:condition="python: len(row)>0">\n
+                  <tal:block tal:condition="python: \'bottom\' not in groups[row[0]].lower()">\n
+                    <table width="100%" class="Border">\n
+                      <tr>\n
+                        <td tal:repeat="cell row" valign="top">\n
+                          <table width="100%">\n
+                            <tal:block tal:repeat="field python:form.get_fields_in_group(groups[cell])">\n
+                              <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
+                            </tal:block>\n
+                          </table>\n
+                        </td>\n
+                      </tr>\n
+                    </table>\n
+                  </tal:block>\n
+                  <tal:block tal:condition="python: \'bottom\' in groups[row[0]].lower()">\n
+                    <tal:block tal:repeat="cell row">\n
+                      <tal:block tal:repeat="field python:form.get_fields_in_group(groups[cell])">\n
+                        <tal:block tal:define="value python:request.get(field.id, None)"\n
+                         tal:replace="structure python:field.render(value, request)" />\n
+                      </tal:block>\n
+                    </tal:block>\n
+                  </tal:block>\n
+                </tal:block>\n
+              </tal:block>\n
+            </tal:block>\n
+          </div>\n
+        </tal:block>\n
+      </tal:block>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>form_empty</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

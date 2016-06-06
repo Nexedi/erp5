@@ -1,0 +1,766 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308811.89</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>variables.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//\r\n
+// Global values\r\n
+// --------------------------------------------------\r\n
+\r\n
+// Paths\r\n
+// -------------------------\r\n
+\r\n
+@app-image-path:        "resources/img";\r\n
+@common-image-path:     "../../common/main/resources/img";\r\n
+\r\n
+// Grays\r\n
+// -------------------------\r\n
+\r\n
+@gray-deep:             #444444; //rgb(68, 68, 68)\r\n
+@gray-darker:           #848484; //rgb(132, 132, 132)\r\n
+@gray-dark:             #cbcbcb; //rgb(203, 203, 203)\r\n
+@gray:                  #cfcfcf; //rgb(207, 207, 207)\r\n
+@gray-light:            #f1f1f1; //rgb(241, 241, 241)\r\n
+@gray-lighter:          #ededed; //rgb(237, 237, 237)\r\n
+@gray-soft:             #adadad; //rgb(173, 173, 173)\r\n
+\r\n
+@primary:               #7d858c; //rgb(125, 133, 140)\r\n
+@primary-hover:         #666d73; //rgb(102, 109, 115)\r\n
+@secondary:             #d8dadc; //rgb(216, 218, 220)\r\n
+@secondary-hover:       #cbced1; //rgb(203, 206, 209)\r\n
+\r\n
+@black:                 #000000;\r\n
+\r\n
+// Brand colors\r\n
+// -------------------------\r\n
+\r\n
+@brand-primary:         #428bca;\r\n
+@brand-success:         #5cb85c;\r\n
+@brand-warning:         #f0ad4e;\r\n
+@brand-danger:          #d9534f;\r\n
+@brand-info:            #5bc0de;\r\n
+\r\n
+// Scaffolding\r\n
+// -------------------------\r\n
+\r\n
+@body-bg:               #fff;\r\n
+@text-color:            @gray-dark;\r\n
+\r\n
+// Links\r\n
+// -------------------------\r\n
+\r\n
+@link-color:            @brand-primary;\r\n
+@link-hover-color:      darken(@link-color, 15%);\r\n
+\r\n
+// Typography\r\n
+// -------------------------\r\n
+\r\n
+@font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif;\r\n
+@font-family-serif:       Georgia, "Times New Roman", Times, serif;\r\n
+@font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;\r\n
+@font-family-tahoma:      tahoma, arial, verdana, sans-serif;\r\n
+@font-family-base:        @font-family-sans-serif;\r\n
+\r\n
+@font-size-base:          11px;\r\n
+@font-size-large:         13px;\r\n
+@font-size-small:         9px;\r\n
+\r\n
+@font-size-h1:            floor(@font-size-base * 2.6);\r\n
+@font-size-h2:            floor(@font-size-base * 2.15);\r\n
+@font-size-h3:            ceil(@font-size-base * 1.7);\r\n
+@font-size-h4:            ceil(@font-size-base * 1.25);\r\n
+@font-size-h5:            @font-size-base;\r\n
+@font-size-h6:            ceil(@font-size-base * 0.85);\r\n
+\r\n
+@line-height-base:        1.428571429; // 20/14\r\n
+@line-height-computed:    floor(@font-size-base * @line-height-base);\r\n
+\r\n
+@headings-font-family:    @font-family-base;\r\n
+@headings-font-weight:    500;\r\n
+@headings-line-height:    1.1;\r\n
+@headings-color:          inherit;\r\n
+\r\n
+\r\n
+// Iconography\r\n
+// -------------------------\r\n
+\r\n
+@icon-font-path:          "../fonts/";\r\n
+@icon-font-name:          "glyphicons-halflings-regular";\r\n
+\r\n
+\r\n
+// Components\r\n
+// -------------------------\r\n
+// Based on 14px font-size and 1.428 line-height (~20px to start)\r\n
+\r\n
+@padding-base-vertical:          1px;\r\n
+@padding-base-horizontal:        3px;\r\n
+\r\n
+@padding-large-vertical:         10px;\r\n
+@padding-large-horizontal:       16px;\r\n
+\r\n
+@padding-small-vertical:         1px;\r\n
+@padding-small-horizontal:       3px;\r\n
+\r\n
+@padding-xs-vertical:            1px;\r\n
+@padding-xs-horizontal:          5px;\r\n
+\r\n
+@line-height-large:              1.33;\r\n
+@line-height-small:              1.5;\r\n
+\r\n
+@border-radius-base:             4px;\r\n
+@border-radius-large:            6px;\r\n
+@border-radius-small:            2px;\r\n
+\r\n
+@component-active-color:         #fff;\r\n
+@component-active-bg:            @primary;\r\n
+\r\n
+@caret-width-base:               4px;\r\n
+@caret-width-large:              5px;\r\n
+\r\n
+// Tables\r\n
+// -------------------------\r\n
+\r\n
+@table-cell-padding:                 8px;\r\n
+@table-condensed-cell-padding:       5px;\r\n
+\r\n
+@table-bg:                           transparent; // overall background-color\r\n
+@table-bg-accent:                    #f9f9f9; // for striping\r\n
+@table-bg-hover:                     #f5f5f5;\r\n
+@table-bg-active:                    @table-bg-hover;\r\n
+\r\n
+@table-border-color:                 #ddd; // table and cell border\r\n
+\r\n
+\r\n
+// Buttons\r\n
+// -------------------------\r\n
+\r\n
+@btn-font-weight:                normal;\r\n
+\r\n
+@btn-default-color:              #333;\r\n
+@btn-default-bg:                 #fff;\r\n
+@btn-default-border:             #ccc;\r\n
+\r\n
+@btn-primary-color:              #fff;\r\n
+@btn-primary-bg:                 @brand-primary;\r\n
+@btn-primary-border:             darken(@btn-primary-bg, 5%);\r\n
+\r\n
+@btn-success-color:              #fff;\r\n
+@btn-success-bg:                 @brand-success;\r\n
+@btn-success-border:             darken(@btn-success-bg, 5%);\r\n
+\r\n
+@btn-warning-color:              #fff;\r\n
+@btn-warning-bg:                 @brand-warning;\r\n
+@btn-warning-border:             darken(@btn-warning-bg, 5%);\r\n
+\r\n
+@btn-danger-color:               #fff;\r\n
+@btn-danger-bg:                  @brand-danger;\r\n
+@btn-danger-border:              darken(@btn-danger-bg, 5%);\r\n
+\r\n
+@btn-info-color:                 #fff;\r\n
+@btn-info-bg:                    @brand-info;\r\n
+@btn-info-border:                darken(@btn-info-bg, 5%);\r\n
+\r\n
+@btn-link-disabled-color:        @gray-light;\r\n
+\r\n
+\r\n
+// Forms\r\n
+// -------------------------\r\n
+\r\n
+@input-bg:                       #fff;\r\n
+@input-bg-disabled:              @gray-lighter;\r\n
+\r\n
+@input-color:                    #000;\r\n
+@input-border:                   @gray;\r\n
+@input-border-radius:            @border-radius-base;\r\n
+@input-border-focus:             #66afe9;\r\n
+\r\n
+@input-color-placeholder:        @gray;\r\n
+\r\n
+@input-height-base:              (floor(@font-size-base * @line-height-base) + (@padding-base-vertical * 2) + 5);\r\n
+@input-height-large:             (ceil(@font-size-large * @line-height-large) + (@padding-large-vertical * 2) + 2);\r\n
+@input-height-small:             (floor(@font-size-small * @line-height-small) + (@padding-small-vertical * 2) + 2);\r\n
+\r\n
+@legend-color:                   @gray-dark;\r\n
+@legend-border-color:            #e5e5e5;\r\n
+\r\n
+@input-group-addon-bg:           @input-bg;\r\n
+@input-group-addon-border-color: @input-border;\r\n
+\r\n
+\r\n
+// Dropdowns\r\n
+// -------------------------\r\n
+\r\n
+@dropdown-bg:                    #fff;\r\n
+@dropdown-border:                rgba(0,0,0,.15);\r\n
+@dropdown-fallback-border:       #ccc;\r\n
+@dropdown-divider-bg:            #e5e5e5;\r\n
+\r\n
+@dropdown-link-color:            @gray-deep;\r\n
+@dropdown-link-hover-color:      darken(@gray-deep, 5%);\r\n
+@dropdown-link-hover-bg:         @secondary;\r\n
+\r\n
+@dropdown-link-active-color:     @component-active-color;\r\n
+@dropdown-link-active-bg:        @component-active-bg;\r\n
+\r\n
+@dropdown-link-disabled-color:   @gray;\r\n
+\r\n
+@dropdown-header-color:          @gray;\r\n
+\r\n
+\r\n
+// COMPONENT VARIABLES\r\n
+// --------------------------------------------------\r\n
+\r\n
+\r\n
+// Z-index master list\r\n
+// -------------------------\r\n
+// Used for a bird\'s eye view of components dependent on the z-axis\r\n
+// Try to avoid customizing these :)\r\n
+\r\n
+@zindex-navbar:            1000;\r\n
+@zindex-dropdown:          1000;\r\n
+@zindex-popover:           1010;\r\n
+@zindex-tooltip:           1030;\r\n
+@zindex-navbar-fixed:      1030;\r\n
+@zindex-modal-background:  1040;\r\n
+@zindex-modal:             1050;\r\n
+\r\n
+// Media queries breakpoints\r\n
+// --------------------------------------------------\r\n
+\r\n
+// Extra small screen / phone\r\n
+// Note: Deprecated @screen-xs and @screen-phone as of v3.0.1\r\n
+@screen-xs:                  480px;\r\n
+@screen-xs-min:              @screen-xs;\r\n
+@screen-phone:               @screen-xs-min;\r\n
+\r\n
+// Small screen / tablet\r\n
+// Note: Deprecated @screen-sm and @screen-tablet as of v3.0.1\r\n
+@screen-sm:                  768px;\r\n
+@screen-sm-min:              @screen-sm;\r\n
+@screen-tablet:              @screen-sm-min;\r\n
+\r\n
+// Medium screen / desktop\r\n
+// Note: Deprecated @screen-md and @screen-desktop as of v3.0.1\r\n
+@screen-md:                  992px;\r\n
+@screen-md-min:              @screen-md;\r\n
+@screen-desktop:             @screen-md-min;\r\n
+\r\n
+// Large screen / wide desktop\r\n
+// Note: Deprecated @screen-lg and @screen-lg-desktop as of v3.0.1\r\n
+@screen-lg:                  1200px;\r\n
+@screen-lg-min:              @screen-lg;\r\n
+@screen-lg-desktop:          @screen-lg-min;\r\n
+\r\n
+// So media queries don\'t overlap when required, provide a maximum\r\n
+@screen-xs-max:              (@screen-sm-min - 1);\r\n
+@screen-sm-max:              (@screen-md-min - 1);\r\n
+@screen-md-max:              (@screen-lg-min - 1);\r\n
+\r\n
+\r\n
+// Grid system\r\n
+// --------------------------------------------------\r\n
+\r\n
+// Number of columns in the grid system\r\n
+@grid-columns:              12;\r\n
+// Padding, to be divided by two and applied to the left and right of all columns\r\n
+@grid-gutter-width:         30px;\r\n
+\r\n
+// Navbar collapse\r\n
+\r\n
+// Point at which the navbar becomes uncollapsed\r\n
+@grid-float-breakpoint:     @screen-sm-min;\r\n
+// Point at which the navbar begins collapsing\r\n
+@grid-float-breakpoint-max: (@grid-float-breakpoint - 1);\r\n
+\r\n
+\r\n
+// Navbar\r\n
+// -------------------------\r\n
+\r\n
+// Basics of a navbar\r\n
+@navbar-height:                    50px;\r\n
+@navbar-margin-bottom:             @line-height-computed;\r\n
+@navbar-border-radius:             @border-radius-base;\r\n
+@navbar-padding-horizontal:        floor(@grid-gutter-width / 2);\r\n
+@navbar-padding-vertical:          ((@navbar-height - @line-height-computed) / 2);\r\n
+\r\n
+@navbar-default-color:             #777;\r\n
+@navbar-default-bg:                #f8f8f8;\r\n
+@navbar-default-border:            darken(@navbar-default-bg, 6.5%);\r\n
+\r\n
+// Navbar links\r\n
+@navbar-default-link-color:                #777;\r\n
+@navbar-default-link-hover-color:          #333;\r\n
+@navbar-default-link-hover-bg:             transparent;\r\n
+@navbar-default-link-active-color:         #555;\r\n
+@navbar-default-link-active-bg:            darken(@navbar-default-bg, 6.5%);\r\n
+@navbar-default-link-disabled-color:       #ccc;\r\n
+@navbar-default-link-disabled-bg:          transparent;\r\n
+\r\n
+// Navbar brand label\r\n
+@navbar-default-brand-color:               @navbar-default-link-color;\r\n
+@navbar-default-brand-hover-color:         darken(@navbar-default-brand-color, 10%);\r\n
+@navbar-default-brand-hover-bg:            transparent;\r\n
+\r\n
+// Navbar toggle\r\n
+@navbar-default-toggle-hover-bg:           #ddd;\r\n
+@navbar-default-toggle-icon-bar-bg:        #ccc;\r\n
+@navbar-default-toggle-border-color:       #ddd;\r\n
+\r\n
+\r\n
+// Inverted navbar\r\n
+//\r\n
+// Reset inverted navbar basics\r\n
+@navbar-inverse-color:                      @gray-light;\r\n
+@navbar-inverse-bg:                         #222;\r\n
+@navbar-inverse-border:                     darken(@navbar-inverse-bg, 10%);\r\n
+\r\n
+// Inverted navbar links\r\n
+@navbar-inverse-link-color:                 @gray-light;\r\n
+@navbar-inverse-link-hover-color:           #fff;\r\n
+@navbar-inverse-link-hover-bg:              transparent;\r\n
+@navbar-inverse-link-active-color:          @navbar-inverse-link-hover-color;\r\n
+@navbar-inverse-link-active-bg:             darken(@navbar-inverse-bg, 10%);\r\n
+@navbar-inverse-link-disabled-color:        #444;\r\n
+@navbar-inverse-link-disabled-bg:           transparent;\r\n
+\r\n
+// Inverted navbar brand label\r\n
+@navbar-inverse-brand-color:                @navbar-inverse-link-color;\r\n
+@navbar-inverse-brand-hover-color:          #fff;\r\n
+@navbar-inverse-brand-hover-bg:             transparent;\r\n
+\r\n
+// Inverted navbar toggle\r\n
+@navbar-inverse-toggle-hover-bg:            #333;\r\n
+@navbar-inverse-toggle-icon-bar-bg:         #fff;\r\n
+@navbar-inverse-toggle-border-color:        #333;\r\n
+\r\n
+\r\n
+// Navs\r\n
+// -------------------------\r\n
+\r\n
+@nav-link-padding:                          10px 15px;\r\n
+@nav-link-hover-bg:                         @gray-lighter;\r\n
+\r\n
+@nav-disabled-link-color:                   @gray-light;\r\n
+@nav-disabled-link-hover-color:             @gray-light;\r\n
+\r\n
+@nav-open-link-hover-color:                 #fff;\r\n
+\r\n
+// Tabs\r\n
+@nav-tabs-border-color:                     #ddd;\r\n
+\r\n
+@nav-tabs-link-hover-border-color:          @gray-lighter;\r\n
+\r\n
+@nav-tabs-active-link-hover-bg:             @body-bg;\r\n
+@nav-tabs-active-link-hover-color:          @gray;\r\n
+@nav-tabs-active-link-hover-border-color:   #ddd;\r\n
+\r\n
+@nav-tabs-justified-link-border-color:            #ddd;\r\n
+@nav-tabs-justified-active-link-border-color:     @body-bg;\r\n
+\r\n
+// Pills\r\n
+@nav-pills-border-radius:                   @border-radius-base;\r\n
+@nav-pills-active-link-hover-bg:            @component-active-bg;\r\n
+@nav-pills-active-link-hover-color:         @component-active-color;\r\n
+\r\n
+\r\n
+// Pagination\r\n
+// -------------------------\r\n
+\r\n
+@pagination-bg:                        #fff;\r\n
+@pagination-border:                    #ddd;\r\n
+\r\n
+@pagination-hover-bg:                  @gray-lighter;\r\n
+\r\n
+@pagination-active-bg:                 @brand-primary;\r\n
+@pagination-active-color:              #fff;\r\n
+\r\n
+@pagination-disabled-color:            @gray-light;\r\n
+\r\n
+\r\n
+// Pager\r\n
+// -------------------------\r\n
+\r\n
+@pager-border-radius:                  15px;\r\n
+@pager-disabled-color:                 @gray-light;\r\n
+\r\n
+\r\n
+// Jumbotron\r\n
+// -------------------------\r\n
+\r\n
+@jumbotron-padding:              30px;\r\n
+@jumbotron-color:                inherit;\r\n
+@jumbotron-bg:                   @gray-lighter;\r\n
+@jumbotron-heading-color:        inherit;\r\n
+@jumbotron-font-size:            ceil(@font-size-base * 1.5);\r\n
+\r\n
+\r\n
+// Form states and alerts\r\n
+// -------------------------\r\n
+\r\n
+@state-success-text:             #3c763d;\r\n
+@state-success-bg:               #dff0d8;\r\n
+@state-success-border:           darken(spin(@state-success-bg, -10), 5%);\r\n
+\r\n
+@state-info-text:                #31708f;\r\n
+@state-info-bg:                  #d9edf7;\r\n
+@state-info-border:              darken(spin(@state-info-bg, -10), 7%);\r\n
+\r\n
+@state-warning-text:             #8a6d3b;\r\n
+@state-warning-bg:               #fcf8e3;\r\n
+@state-warning-border:           darken(spin(@state-warning-bg, -10), 5%);\r\n
+\r\n
+@state-danger-text:              #a94442;\r\n
+@state-danger-bg:                #f2dede;\r\n
+@state-danger-border:            darken(spin(@state-danger-bg, -10), 5%);\r\n
+\r\n
+\r\n
+// Tooltips\r\n
+// -------------------------\r\n
+@tooltip-max-width:           200px;\r\n
+@tooltip-color:               #fff;\r\n
+@tooltip-bg:                  #000;\r\n
+\r\n
+@tooltip-arrow-width:         5px;\r\n
+@tooltip-arrow-color:         @tooltip-bg;\r\n
+\r\n
+\r\n
+// Popovers\r\n
+// -------------------------\r\n
+@popover-bg:                          #fff;\r\n
+@popover-max-width:                   276px;\r\n
+@popover-border-color:                rgba(0,0,0,.2);\r\n
+@popover-fallback-border-color:       #ccc;\r\n
+\r\n
+@popover-title-bg:                    darken(@popover-bg, 3%);\r\n
+\r\n
+@popover-arrow-width:                 10px;\r\n
+@popover-arrow-color:                 #fff;\r\n
+\r\n
+@popover-arrow-outer-width:           (@popover-arrow-width + 1);\r\n
+@popover-arrow-outer-color:           rgba(0,0,0,.25);\r\n
+@popover-arrow-outer-fallback-color:  #999;\r\n
+\r\n
+\r\n
+// Labels\r\n
+// -------------------------\r\n
+\r\n
+@label-default-bg:            @gray-light;\r\n
+@label-primary-bg:            @brand-primary;\r\n
+@label-success-bg:            @brand-success;\r\n
+@label-info-bg:               @brand-info;\r\n
+@label-warning-bg:            @brand-warning;\r\n
+@label-danger-bg:             @brand-danger;\r\n
+\r\n
+@label-color:                 #fff;\r\n
+@label-link-hover-color:      #fff;\r\n
+\r\n
+\r\n
+// Modals\r\n
+// -------------------------\r\n
+@modal-inner-padding:         20px;\r\n
+\r\n
+@modal-title-padding:         15px;\r\n
+@modal-title-line-height:     @line-height-base;\r\n
+\r\n
+@modal-content-bg:                             #fff;\r\n
+@modal-content-border-color:                   rgba(0,0,0,.2);\r\n
+@modal-content-fallback-border-color:          #999;\r\n
+\r\n
+@modal-backdrop-bg:           #000;\r\n
+@modal-header-border-color:   #e5e5e5;\r\n
+@modal-footer-border-color:   @modal-header-border-color;\r\n
+\r\n
+\r\n
+// Alerts\r\n
+// -------------------------\r\n
+@alert-padding:               15px;\r\n
+@alert-border-radius:         @border-radius-base;\r\n
+@alert-link-font-weight:      bold;\r\n
+\r\n
+@alert-success-bg:            @state-success-bg;\r\n
+@alert-success-text:          @state-success-text;\r\n
+@alert-success-border:        @state-success-border;\r\n
+\r\n
+@alert-info-bg:               @state-info-bg;\r\n
+@alert-info-text:             @state-info-text;\r\n
+@alert-info-border:           @state-info-border;\r\n
+\r\n
+@alert-warning-bg:            @state-warning-bg;\r\n
+@alert-warning-text:          @state-warning-text;\r\n
+@alert-warning-border:        @state-warning-border;\r\n
+\r\n
+@alert-danger-bg:             @state-danger-bg;\r\n
+@alert-danger-text:           @state-danger-text;\r\n
+@alert-danger-border:         @state-danger-border;\r\n
+\r\n
+\r\n
+// Progress bars\r\n
+// -------------------------\r\n
+@progress-bg:                 #f5f5f5;\r\n
+@progress-bar-color:          #fff;\r\n
+\r\n
+@progress-bar-bg:             @brand-primary;\r\n
+@progress-bar-success-bg:     @brand-success;\r\n
+@progress-bar-warning-bg:     @brand-warning;\r\n
+@progress-bar-danger-bg:      @brand-danger;\r\n
+@progress-bar-info-bg:        @brand-info;\r\n
+\r\n
+\r\n
+// List group\r\n
+// -------------------------\r\n
+@list-group-bg:               #fff;\r\n
+@list-group-border:           #ddd;\r\n
+@list-group-border-radius:    @border-radius-base;\r\n
+\r\n
+@list-group-hover-bg:         #f5f5f5;\r\n
+@list-group-active-color:     @component-active-color;\r\n
+@list-group-active-bg:        @component-active-bg;\r\n
+@list-group-active-border:    @list-group-active-bg;\r\n
+\r\n
+@list-group-link-color:          #555;\r\n
+@list-group-link-heading-color:  #333;\r\n
+\r\n
+\r\n
+// Panels\r\n
+// -------------------------\r\n
+@panel-bg:                    #fff;\r\n
+@panel-inner-border:          #ddd;\r\n
+@panel-border-radius:         @border-radius-base;\r\n
+@panel-footer-bg:             #f5f5f5;\r\n
+\r\n
+@panel-default-text:          @gray-dark;\r\n
+@panel-default-border:        #ddd;\r\n
+@panel-default-heading-bg:    #f5f5f5;\r\n
+\r\n
+@panel-primary-text:          #fff;\r\n
+@panel-primary-border:        @brand-primary;\r\n
+@panel-primary-heading-bg:    @brand-primary;\r\n
+\r\n
+@panel-success-text:          @state-success-text;\r\n
+@panel-success-border:        @state-success-border;\r\n
+@panel-success-heading-bg:    @state-success-bg;\r\n
+\r\n
+@panel-warning-text:          @state-warning-text;\r\n
+@panel-warning-border:        @state-warning-border;\r\n
+@panel-warning-heading-bg:    @state-warning-bg;\r\n
+\r\n
+@panel-danger-text:           @state-danger-text;\r\n
+@panel-danger-border:         @state-danger-border;\r\n
+@panel-danger-heading-bg:     @state-danger-bg;\r\n
+\r\n
+@panel-info-text:             @state-info-text;\r\n
+@panel-info-border:           @state-info-border;\r\n
+@panel-info-heading-bg:       @state-info-bg;\r\n
+\r\n
+\r\n
+// Thumbnails\r\n
+// -------------------------\r\n
+@thumbnail-padding:           4px;\r\n
+@thumbnail-bg:                @body-bg;\r\n
+@thumbnail-border:            #ddd;\r\n
+@thumbnail-border-radius:     @border-radius-base;\r\n
+\r\n
+@thumbnail-caption-color:     @text-color;\r\n
+@thumbnail-caption-padding:   9px;\r\n
+\r\n
+\r\n
+// Wells\r\n
+// -------------------------\r\n
+@well-bg:                     #f5f5f5;\r\n
+\r\n
+\r\n
+// Badges\r\n
+// -------------------------\r\n
+@badge-color:                 #fff;\r\n
+@badge-link-hover-color:      #fff;\r\n
+@badge-bg:                    @gray-light;\r\n
+\r\n
+@badge-active-color:          @link-color;\r\n
+@badge-active-bg:             #fff;\r\n
+\r\n
+@badge-font-weight:           bold;\r\n
+@badge-line-height:           1;\r\n
+@badge-border-radius:         10px;\r\n
+\r\n
+\r\n
+// Breadcrumbs\r\n
+// -------------------------\r\n
+@breadcrumb-bg:               #f5f5f5;\r\n
+@breadcrumb-color:            #ccc;\r\n
+@breadcrumb-active-color:     @gray-light;\r\n
+@breadcrumb-separator:        "/";\r\n
+\r\n
+\r\n
+// Carousel\r\n
+// ------------------------\r\n
+\r\n
+@carousel-text-shadow:                        0 1px 2px rgba(0,0,0,.6);\r\n
+\r\n
+@carousel-control-color:                      #fff;\r\n
+@carousel-control-width:                      15%;\r\n
+@carousel-control-opacity:                    .5;\r\n
+@carousel-control-font-size:                  20px;\r\n
+\r\n
+@carousel-indicator-active-bg:                #fff;\r\n
+@carousel-indicator-border-color:             #fff;\r\n
+\r\n
+@carousel-caption-color:                      #fff;\r\n
+\r\n
+\r\n
+// Close\r\n
+// ------------------------\r\n
+@close-font-weight:           bold;\r\n
+@close-color:                 #000;\r\n
+@close-text-shadow:           0 1px 0 #fff;\r\n
+\r\n
+\r\n
+// Code\r\n
+// ------------------------\r\n
+@code-color:                  #c7254e;\r\n
+@code-bg:                     #f9f2f4;\r\n
+\r\n
+@pre-bg:                      #f5f5f5;\r\n
+@pre-color:                   @gray-dark;\r\n
+@pre-border-color:            #ccc;\r\n
+@pre-scrollable-max-height:   340px;\r\n
+\r\n
+// Type\r\n
+// ------------------------\r\n
+@text-muted:                  @gray-light;\r\n
+@abbr-border-color:           @gray-light;\r\n
+@headings-small-color:        @gray-light;\r\n
+@blockquote-small-color:      @gray-light;\r\n
+@blockquote-border-color:     @gray-lighter;\r\n
+@page-header-border-color:    @gray-lighter;\r\n
+\r\n
+// Miscellaneous\r\n
+// -------------------------\r\n
+\r\n
+// Hr border color\r\n
+@hr-border:                   @gray-lighter;\r\n
+\r\n
+// Horizontal forms & lists\r\n
+@component-offset-horizontal: 180px;\r\n
+\r\n
+\r\n
+// Container sizes\r\n
+// --------------------------------------------------\r\n
+\r\n
+// Small screen / tablet\r\n
+@container-tablet:             ((720px + @grid-gutter-width));\r\n
+@container-sm:                 @container-tablet;\r\n
+\r\n
+// Medium screen / desktop\r\n
+@container-desktop:            ((940px + @grid-gutter-width));\r\n
+@container-md:                 @container-desktop;\r\n
+\r\n
+// Large screen / wide desktop\r\n
+@container-large-desktop:      ((1140px + @grid-gutter-width));\r\n
+@container-lg:                 @container-large-desktop;\r\n
+\r\n
+\r\n
+// Texture offsets\r\n
+// --------------------------------------------------\r\n
+\r\n
+// Common components texture\r\n
+@common-controls: "controls/common-controls.png";\r\n
+@common-controls2x: "controls/common-controls@2x.png";\r\n
+\r\n
+// Dialog alerts\r\n
+@alerts-offset-x: 0;\r\n
+@alerts-offset-y: 0;\r\n
+\r\n
+// Dialog close\r\n
+@but-close-offset-x: -26px;\r\n
+@but-close-offset-y: -151px;\r\n
+\r\n
+// Dropdown arrow\r\n
+@arrow-small-offset-x: -85px;\r\n
+@arrow-small-offset-y: -96px;\r\n
+\r\n
+// Dropdown arrow up\r\n
+@arrow-up-small-offset-x: -85px;\r\n
+@arrow-up-small-offset-y: -104px;\r\n
+\r\n
+// Dropdown arrow big\r\n
+@arrow-big-offset-x: -41px;\r\n
+@arrow-big-offset-y: -144px;\r\n
+\r\n
+// Checkbox\r\n
+@checkbox-offset-x: -35px;\r\n
+@checkbox-offset-y: 0px;\r\n
+\r\n
+// Radio button\r\n
+@radio-offset-x: -35px;\r\n
+@radio-offset-y: -65px;\r\n
+\r\n
+// Menu check\r\n
+@menu-check-offset-x: -41px;\r\n
+@menu-check-offset-y: -172px;\r\n
+\r\n
+// Multislider thumb\r\n
+@slide-thumb-offset-x: -13px;\r\n
+@slide-thumb-offset-y: -150px;\r\n
+\r\n
+// Slider thumb\r\n
+@multislide-thumb-offset-x: 0px;\r\n
+@multislide-thumb-offset-y: -150px;\r\n
+\r\n
+// Slider track\r\n
+@slide-track-offset-x: 0px;\r\n
+@slide-track-offset-y: -195px;\r\n
+\r\n
+// Input error\r\n
+@input-error-offset-x: -73px;\r\n
+@input-error-offset-y: -172px;\r\n
+\r\n
+// Spinner\r\n
+@spinner-offset-x: -41px;\r\n
+@spinner-offset-y: -187px;\r\n
+\r\n
+// Search dialog\r\n
+@search-dlg-offset-x: -36px;\r\n
+@search-dlg-offset-y: -96px;\r\n
+\r\n
+// No color\r\n
+@nocolor-offset-x: 0;\r\n
+@nocolor-offset-y: -137px;\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>22162</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

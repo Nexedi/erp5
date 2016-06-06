@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+Journal entries, for use with AccountingTransactionModule_viewJournal\n
+\n
+changed by BG to make a simple list of purchases / sales\n
+("rejestr zakupów" i "rejestr sprzedaży")\n
+\n
+return a list of dictionnaries like that : \n
+  \n
+{\n
+  \'date\' : Date\n
+  \'description\' : String\n
+  \'reference\':String\n
+  \'lines\' : {\n
+     \'debtor\' : Bool, \n
+     \'account_gap_id\' : String\n
+     \'account_name\' : String # with extra-description (ie. bank name if a bank, organisation name if an other party)\n
+     \'amount\' : Float\n
+     }\n
+}\n
+"""\n
+\n
+request = context.REQUEST\n
+at_date = request[\'at_date\']\n
+transaction_section_category = request[\'transaction_section_category\']\n
+transaction_simulation_state = request[\'transaction_simulation_state\']\n
+transaction_portal_type = request[\'transaction_portal_type\']\n
+from_date = request.get(\'from_date\', None)\n
+\n
+params = {\n
+  \'sort_on\' : \'delivery.stop_date\',\n
+  \'at_date\' : at_date,\n
+  \'simulation_state\': transaction_simulation_state,\n
+  \'section_category\' : transaction_section_category,\n
+  \'portal_type\': transaction_portal_type,\n
+}\n
+if from_date:\n
+  params[\'from_date\'] = from_date\n
+\n
+result=[]\n
+for transaction in context\\\n
+      .AccountingTransactionModule_zGetAccountingTransactionList(\n
+      selection_params = params, selection=None, **params):\n
+  transaction = transaction.getObject()\n
+  date = transaction.getStopDate() or transaction.getStartDate()\n
+  transaction_dict={\'date\'       : str(date)[:10], #XXX dangerous for i18n\n
+                    \'description\':"%s (source reference: %s)"%(\n
+                                    transaction.getTitle() or \'\',\n
+                                    transaction.getSourceReference() or \'\'),\n
+                    \'reference\':transaction.getReference(),\n
+                    }\n
+  result.append(transaction_dict)\n
+  transaction_lines = transaction.contentValues(\n
+    filter = {\'portal_type\' : [ \'Accounting Transaction Line\',\n
+                                \'Sale Invoice Transaction Line\',\n
+                                \'Purchase Invoice Transaction Line\',\n
+                                \'Pay Sheet Transaction Line\',\n
+                                \'Balance Transaction Line\']})\n
+\n
+  transaction_lines.sort(lambda x,y: cmp(y.getObject().getSourceDebit(),\n
+                                         x.getObject().getSourceDebit()))\n
+  for line in transaction_lines :\n
+    line = line.getObject()\n
+    debtor = (line.getSourceDebit() > line.getSourceCredit())\n
+    account = line.getSourceValue()\n
+    # BG: for report, I want both sale and purchase invoices here\n
+    if account is None: account=line.getDestinationValue()\n
+    if account is None: continue\n
+    if account.getAccountType() in (\'asset/bank\', \'asset/bank/cash\') :\n
+      account_description = "%s (%s)"%(\n
+                                    line.getSourceTitle(),\n
+                                    line.getSourcePaymentTitle())\n
+    elif account.getAccountType() in (\n
+                                  \'asset/receivable\',\n
+                                  \'liability/payable\'):\n
+      account_description = "%s (%s)"%(\n
+                                    line.getSourceTitle(),\n
+                                    line.getDestinationSectionTitle())\n
+    else :\n
+      account_description = line.getSourceTitle()\n
+    if account.getAccountType() in (\'income\',\'expense\'):\n
+      transaction_dict[\'credit\']=line.getSourceCredit()\n
+      transaction_dict[\'credit_gap\']=account.getGapId()\n
+    if account.getAccountType() in (\'liability/payable/collected_vat\',\'asset/receivable/refundable_vat\'):\n
+      transaction_dict[\'vat\']=line.getSourceCredit()+line.getDestinationCredit()\n
+\n
+\n
+     # internal mouvements, ie when we are destination and source\n
+     # BG: do we need this for PL "rejestr zakupow"?\n
+    if line.getDestinationSection() == line.getSourceSection() :\n
+      debtor = (line.getDestinationDebit() > line.getDestinationCredit())\n
+      account = line.getDestinationValue()\n
+      if account is None : continue\n
+      if account.getAccountType() == \'asset/cash\' :\n
+        account_description = "%s (%s)"%(\n
+                                    line.getDestinationTitle(),\n
+                                    line.getDestinationPaymentTitle())\n
+      elif account.getAccountType() in (\n
+                                \'asset/receivable\',\n
+                                \'liability/payable\'):\n
+        account_description = "%s (%s)"%(\n
+                                    line.getDestinationTitle(),\n
+                                    line.getSourceSectionTitle())\n
+      else :\n
+        account_description = line.getDestinationTitle()\n
+      lines.append({\n
+          \'debtor\' : debtor,\n
+          \'credit_gap\' : account.getGapId(),\n
+          \'account_name\' : account_description,\n
+          \'amount\' : debtor  and (line.getDestinationDebit() \\\n
+                                      - line.getDestinationCredit()) \\\n
+                              or (line.getDestinationCredit() \\\n
+                                      - line.getDestinationDebit())\n
+          })\n
+  # to avoid crash if transaction has no lines (can happen while debugging)\n
+  transaction_dict[\'credit\']=transaction_dict.get(\'credit\',\'\')\n
+  transaction_dict[\'credit_gap\']=transaction_dict.get(\'credit_gap\',\'\')\n
+  transaction_dict[\'vat\']=transaction_dict.get(\'vat\',\'\')\n
+\n
+return result\n
+# vim: syntax=python\n
+# vim: filetype=python\n
+# vim: shiftwidth=2\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_getJournalAccountingTransactionPolishAccountingList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

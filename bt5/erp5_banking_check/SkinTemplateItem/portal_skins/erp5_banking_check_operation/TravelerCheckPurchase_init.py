@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>reference_currency = context.Baobab_getPortalReferenceCurrencyID()\n
+context.setPriceCurrency(\'currency_module/%s\' %(reference_currency,))\n
+context.setCurrencyExchangeType(\'transfer\')\n
+context.setSource(context.getBaobabSource())\n
+\n
+movement = context.newContent(portal_type=\'Banking Operation Line\',\n
+                       id=\'movement\',\n
+                       source=\'account_module/bank_account\', # Set default source\n
+                       destination=\'account_module/bank_account\', # Set default destination\n
+                       )\n
+\n
+# calculate the source\n
+user_site = None\n
+# must use owner to know site letter\n
+group_list = context.get_local_roles()\n
+for group, role_list in group_list:\n
+  if \'Owner\' in role_list:\n
+    user_id = group\n
+\n
+site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
+user_site = None\n
+for site in site_list:\n
+  site_value = context.portal_categories.getCategoryValue(site)\n
+  context.log(\'site_value\',site_value)\n
+  if site_value.getVaultType().endswith(\'guichet\'):\n
+    user_site = site\n
+if user_site is None:\n
+  from Products.ERP5Type.Message import Message\n
+  message = Message(domain="ui", message="The owner is not assigned to the right vault.")\n
+  raise ValueError,message\n
+context.setSource(user_site)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TravelerCheckPurchase_init</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

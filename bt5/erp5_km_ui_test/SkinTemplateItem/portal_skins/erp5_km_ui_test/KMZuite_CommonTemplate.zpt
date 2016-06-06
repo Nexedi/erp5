@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+\n
+\n
+  <tal:block metal:define-macro="createKMWebSite">\n
+    <!-- create the web_site -->\n
+    <tr>\n
+      <td>open</td>\n
+      <td>${base_url}/web_site_module/WebSiteModule_createKMSite?site_id=km_test_web_site&amp;title=KM Test Web Site</td>\n
+      <td></td>\n
+      <td>Create a new site</td>\n
+    </tr>\n
+    <tr>\n
+      <td>assertTextPresent</td>\n
+      <td>Created Successfully.</td>\n
+      <td></td>\n
+      <td></td>\n
+    </tr>\n
+    <!-- Wait for activities to finish -->\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${base_url}/Zuite_waitForActivities</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>verifyTextPresent</td>\n
+      <td>Done.</td>\n
+      <td></td>\n
+    </tr> \n
+  </tal:block>\n
+</tal:block>\n
+\n
+\n
+<tal:block metal:define-macro="deleteKMWebSite">\n
+    <!-- delete the web_site XXX: not used anymore as no need to delete site -->\n
+</tal:block>\n
+\n
+\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>KMZuite_CommonTemplate</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,1234 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>svg-editor.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿body {\n
+\tbackground: #D8D8D8;\n
+}\n
+\n
+#svg_editor {\n
+\tfont-size: 8pt;\n
+\tfont-family: Verdana, Helvetica, Arial;\n
+\tcolor: #000000;\n
+}\n
+\n
+#svg_editor a {\n
+\tcolor: #0000FF;\n
+}\n
+\n
+#svg_editor hr {\n
+\tborder: none;\n
+\tborder-bottom: 1px solid #808080;\n
+}\n
+\n
+#svg_editor select {\n
+\tmargin-top: 4px;\n
+}\n
+\n
+#svg_editor #svgroot {\n
+\t-moz-user-select: none;\n
+\t-webkit-user-select: none;\n
+\tposition: absolute;\n
+\ttop: 0;\n
+\tleft: 0;\n
+}\n
+\n
+#svg_editor #svgcanvas {\n
+\tline-height: normal;\n
+\tdisplay: inline-block;\n
+\tbackground-color: #A0A0A0;\n
+\ttext-align: center;\n
+\tvertical-align: middle;\n
+\twidth: 640px;\n
+\theight: 480px;\n
+\t-apple-dashboard-region:dashboard-region(control rectangle 0px 0px 0px 0px); /* for widget regions that shouldn\'t react to dragging */\n
+\tposition: relative;\n
+\t/* \n
+\t  A subtle gradient effect in the canvas.\n
+\t  Just experimenting - not sure if this is worth it.\n
+\t*/\n
+\tbackground: -moz-radial-gradient(45deg,#bbb,#222);\n
+\tbackground: -webkit-gradient(radial, center center, 3, center center, 1000, from(#bbb), to(#222));\n
+}\n
+\n
+#svg_editor div#palette_holder {\n
+\toverflow-x: scroll;\n
+\toverflow-y: hidden;\n
+\theight: 31px;\n
+\tborder: 1px solid #808080;\n
+\tborder-top: none;\n
+\tmargin-top: 2px;\n
+\tmargin-left: 4px;\n
+\tposition: relative;\n
+\tz-index: 2;\n
+}\n
+\n
+#svg_editor #stroke_bg, \n
+#svg_editor #fill_bg {\n
+\theight: 16px;\n
+\twidth: 16px;\n
+\tmargin: 1px;\n
+}\n
+\n
+#svg_editor #fill_color, #svg_editor #stroke_color {\n
+\theight: 16px;\n
+\twidth: 16px;\n
+\tborder: 1px solid #808080;\n
+\tcursor: pointer;\n
+\tmargin-top: -18px;\n
+\tmargin-left: 1px;\n
+}\n
+\n
+#tool_stroke select {\n
+\tmargin-top: 0;\n
+}\n
+\n
+#svg_editor #color_tools .icon_label {\n
+\tpadding: 3px 19%;\n
+\twidth: 28px;\n
+\theight: 100%;\n
+\tcursor: pointer;\n
+\t\n
+}\n
+\n
+#svg_editor #group_opacityLabel, \n
+#svg_editor #zoomLabel {\n
+\tcursor: pointer;\n
+\tmargin-right: 5px;\n
+\tpadding-top: 4px\n
+}\n
+\n
+#color_tools .icon_label > * {\n
+\tposition: relative;\n
+\ttop: 1px;\n
+}\n
+\n
+#svg_editor div#palette {\n
+\tfloat: left;\n
+\twidth: 672px;\n
+\theight: 16px;\n
+}\n
+\n
+#svg_editor div#workarea {\n
+\tdisplay: inline-table-cell;\n
+\tposition:absolute;\n
+\ttop: 75px;\n
+\tleft: 40px;\n
+\tbottom: 62px;\n
+\tright: 14px;\n
+\tbackground-color: #A0A0A0;\n
+\tborder: 1px solid #808080;\n
+\toverflow: auto;\n
+\ttext-align: center;\n
+}\n
+\n
+#svg_editor #sidepanels {\n
+\tdisplay: inline-block;\n
+\tposition:absolute;\n
+\ttop: 75px;\n
+\tbottom: 60px;\n
+\tright: 0px;\n
+\twidth: 2px;\n
+\tpadding: 10px;\n
+\tborder-color: #808080;\n
+\tborder-style: solid;\n
+\tborder-width: 1px;\n
+\tborder-left: none;\n
+}\n
+\n
+#svg_editor #layerpanel {\n
+\tdisplay: inline-block;\n
+\tposition:absolute;\n
+\ttop: 1px;\n
+\tbottom: 0px;\n
+\tright: 0px;\n
+\twidth: 0px;\n
+\toverflow: auto;\n
+\tmargin: 0px;\n
+\t-moz-user-select: none;\n
+\t-webkit-user-select: none;\n
+\n
+}\n
+\n
+/*\n
+\tborder-style: solid;\n
+\tborder-color: #666;\n
+\tborder-width: 0px 0px 0px 1px;\t\n
+*/\n
+#svg_editor #sidepanel_handle {\n
+\tdisplay: inline-block;\n
+\tposition: absolute;\n
+\tbackground-color: #D8D8D8;\n
+\tfont-weight: bold;\n
+\tleft: 0px;\n
+\ttop: 40%;\n
+\twidth: 1em;\n
+\tpadding: 5px 1px 5px 5px;\n
+\tmargin-left: 3px;\n
+\tcursor: pointer;\n
+\tborder-radius: 5px;\n
+\t-moz-border-radius: 5px;\n
+\t-webkit-border-radius: 5px;\n
+\t-moz-user-select: none;\n
+\t-webkit-user-select: none;\n
+}\n
+\n
+#svg_editor #sidepanel_handle:hover {\n
+\tfont-weight: bold;\n
+}\n
+\n
+#svg_editor #sidepanel_handle * {\n
+\tcursor: pointer;\n
+\t-moz-user-select: none;\n
+\t-webkit-user-select: none;\n
+}\n
+#svg_editor #layerbuttons {\n
+\tmargin: 0px;\n
+\tpadding: 0px;\n
+\tpadding-left: 2px;\n
+\tpadding-right: 2px;\n
+\twidth: 106px;\n
+\theight: 20px;\n
+\tborder-right: 1px solid #FFFFFF;\n
+\tborder-bottom: 1px solid #FFFFFF;\n
+\tborder-left: 1px solid #808080;\n
+\tborder-top: 1px solid #808080;\n
+\toverflow: auto;\n
+}\n
+\n
+#svg_editor .layer_button {\n
+\twidth: 14px;\n
+\theight: 14px;\n
+\tpadding: 1px;\n
+\tborder-left: 1px solid #FFFFFF;\n
+\tborder-top: 1px solid #FFFFFF;\n
+\tborder-right: 1px solid #808080;\n
+\tborder-bottom: 1px solid #808080;\n
+\tcursor: pointer;\n
+\tfloat: left;\n
+\tmargin-right: 3px;\n
+}\n
+\n
+#svg_editor .layer_buttonpressed {\n
+\twidth: 14px;\n
+\theight: 14px;\n
+\tpadding: 1px;\n
+\tborder-right: 1px solid #FFFFFF;\n
+\tborder-bottom: 1px solid #FFFFFF;\n
+\tborder-left: 1px solid #808080;\n
+\tborder-top: 1px solid #808080;\n
+\tcursor: pointer;\n
+}\n
+\n
+#svg_editor #layerlist {\n
+\tmargin: 1px;\n
+\tpadding: 0px;\n
+\twidth: 110px;\n
+\tborder-collapse: collapse;\t\n
+\tborder: 1px solid #808080;\n
+\tbackground-color: #FFFFFF;\n
+}\n
+\n
+#svg_editor #layerlist tr.layer {\n
+\tbackground-color: #FFFFFF;\n
+\tmargin: 0px;\n
+\tpadding: 0px;\n
+}\n
+#svg_editor #layerlist tr.layersel {\n
+\tborder: 1px solid #808080;\n
+\tbackground-color: #CCCCCC;\n
+}\n
+\n
+#svg_editor #layerlist td.layervis {\n
+\twidth: 22px;\n
+\tcursor:pointer;\n
+}\n
+#svg_editor #layerlist td.layerinvis {\n
+\tbackground-image: none;\n
+\tcursor:pointer;\n
+}\n
+\n
+#svg_editor #layerlist td.layervis * {\n
+\tdisplay: block;\n
+}\n
+\n
+#svg_editor #layerlist td.layerinvis * {\n
+\tdisplay: none;\n
+}\n
+\n
+#svg_editor #layerlist td.layername {\n
+\tcursor: pointer;\n
+}\n
+\n
+#svg_editor #layerlist tr.layersel td.layername {\n
+\tfont-weight: bold;\n
+}\n
+\n
+#svg_editor #selLayerLabel {\n
+\twhite-space: nowrap;\n
+}\n
+\n
+#svg_editor #selLayerNames {\n
+\tdisplay: block;\n
+}\n
+\n
+#svg_editor div.palette_item {\n
+\theight: 16px;\n
+\twidth: 16px;\n
+\tfloat: left;\n
+}\n
+\n
+#svg_editor #main_button {\n
+\tposition: absolute;\n
+\ttop: 4px;\n
+\tleft: 4px;\n
+}\n
+\n
+\n
+#svg_editor #main_icon {\n
+\tbackground: #E8E8E8;\n
+\tposition: relative;\n
+\ttop: -2px;\n
+\tleft: -2px;\n
+\tpadding: 1px 0 2px 1px;\n
+\twidth: 44px;\n
+\theight: 30px;\n
+\tborder-left: 1px solid #FFF;\n
+\tborder-top: 1px solid #FFF;\n
+\tborder-right: 1px solid #808080;\n
+\tborder-bottom: 1px solid #808080;\n
+\tborder-radius: 8px;\n
+\t-moz-border-radius: 8px;\n
+\t-webkit-border-radius: 8px;\n
+}\n
+\n
+#svg_editor .tool_button:hover, \n
+#svg_editor .push_button:hover,\n
+#svg_editor .buttonup:hover,\n
+#svg_editor .buttondown,\n
+#svg_editor .tool_button_current,\n
+#svg_editor .push_button_pressed\n
+{\n
+\tborder-left: 1px #fcd9ba solid !important;\n
+\tborder-top: 1px #fcd9ba solid !important;\n
+\tborder-right: 1px #e0a874 solid !important;\n
+\tborder-bottom: 1px #e0a874 solid !important;\n
+\tbackground-color: #FFC !important;\n
+}\n
+\n
+#svg_editor .tool_button_current,\n
+#svg_editor .push_button_pressed,\n
+#svg_editor .buttondown { \n
+\tbackground-color: #f4e284 !important;\n
+\tborder-top: 1px solid #630 !important;\n
+\tborder-left: 1px solid #630 !important;\n
+}\n
+\n
+#svg_editor #main_icon span {\n
+\tposition: absolute;\n
+\twidth: 100%;\n
+\theight: 100%;\n
+\tdisplay: block;\n
+\tz-index: 2;\n
+}\n
+\n
+#svg_editor #main_menu {\n
+\tz-index: 12;\n
+\tbackground: #E8E8E8;\n
+\tposition: relative;\n
+\twidth: 200px;\n
+\tpadding: 5px;\n
+\t-moz-box-shadow: #555 1px 1px 4px;\n
+\t-webkit-box-shadow: #555 1px 1px 4px;\n
+\tfont-size: 1.1em;\n
+\tdisplay: none;\n
+\toverflow: hidden;\n
+\tborder: 1px outset gray;\n
+\tclear: both;\n
+}\n
+\n
+#svg_editor #main_menu ul,\n
+#svg_editor #main_menu li {\n
+\tlist-style: none;\n
+\tmargin: 0;\n
+\tpadding: 0;\n
+}\n
+\n
+#svg_editor #main_menu li {\n
+/*\theight: 35px;*/\n
+\tline-height: 22px;\n
+\tpadding-top: 7px;\n
+\tpadding-left: 7px;\n
+\tmargin: -5px;\n
+\toverflow: auto;\n
+\tcursor: default;\n
+}\n
+\n
+#svg_editor #main_menu li:hover {\n
+\tbackground: #FFC;\n
+}\n
+\n
+#svg_editor #main_menu li > div {\n
+\tfloat: left;\n
+\tpadding-right: 5px;\n
+}\n
+\n
+#svg_editor #main_menu p {\n
+\tmargin-top: 5px;\n
+}\n
+\n
+#svg_editor #logo img {\n
+\tborder: 0;\n
+\twidth: 32px;\n
+\theight: 32px;\n
+}\n
+\n
+\n
+\n
+#main_icon > div {\n
+\tfloat: left;\n
+}\n
+\n
+#svg_editor #main_button .dropdown {\n
+\tpadding-top: 28%;\n
+\tmargin-left: -1px;\n
+}\n
+\n
+\n
+\n
+#svg_editor #tools_top {\n
+\tposition: absolute;\n
+\tleft: 50px;\n
+\tright: 2px;\n
+\ttop: 2px;\n
+\theight: 72px;\n
+\tborder-bottom: none;\n
+\t/* Ideally this should be auto (makes scrollbar if needed), but currently hides \n
+\tthe .dropdown lists.\n
+/*\toverflow: auto;*/\n
+}\n
+\n
+#svg_editor #tools_left {\n
+\tposition: absolute;\n
+\tborder-right: none;\n
+\twidth: 32px;\n
+\ttop: 75px;\n
+\tleft: 0;\n
+\tpadding-left: 2px;\n
+\tbackground: #D8D8D8; /* Needed so flyout icons don\'t appear on the left */\n
+\tz-index: 4;\n
+}\n
+\n
+#workarea.wireframe #svgcontent * {\n
+\tfill: none;\n
+\tstroke: #000;\n
+\tstroke-width: 1px;\n
+\tstroke-opacity: 1.0;\n
+\tstroke-dasharray: 0;\n
+\topacity: 1;\n
+\tpointer-events: stroke;\n
+\tvector-effect: non-scaling-stroke;\n
+\tfilter: none;\n
+}\n
+\n
+#workarea.wireframe #svgcontent text {\n
+\tfill: #000;\n
+\tstroke: none;\n
+}\n
+\n
+#workarea.wireframe #canvasBackground rect {\n
+\tfill: #FFF !important;\n
+}\n
+\n
+#svg_editor #selected_panel,\n
+#svg_editor #multiselected_panel,\n
+#svg_editor #g_panel,\n
+#svg_editor #rect_panel,\n
+#svg_editor #circle_panel,\n
+#svg_editor #ellipse_panel,\n
+#svg_editor #line_panel,\n
+#svg_editor #image_panel,\n
+#svg_editor #text_panel,\n
+#svg_editor #path_node_panel {\n
+\tdisplay: none;\n
+}\n
+\n
+#svg_editor #multiselected_panel .selected_tool {\n
+\tvertical-align: 12px;\n
+}\n
+\n
+#svg_editor #tools_top > div, #tools_top {\n
+\tline-height: 26px;\n
+}\n
+\n
+#svg_editor div.toolset,\n
+#svg_editor div.toolset > * {\n
+\tfloat: left;\n
+}\n
+\n
+#svg_editor div.toolset {\n
+\theight: 34px;\n
+}\n
+\n
+\n
+#tools_top > div > * {\n
+\tfloat: left;\n
+\tmargin-right: 2px;\n
+}\n
+\n
+#tools_top label {\n
+\tmargin-top: 0;\n
+\tmargin-left: 5px;\n
+}\n
+\n
+#tools_top input {\n
+\tmargin-top: 5px;\n
+\theight: 15px;\n
+}\n
+\n
+#svg_editor #tools_left .tool_button,\n
+#svg_editor #tools_left .tool_button_current {\n
+\tposition: relative;\n
+\tz-index: 11;\n
+}\n
+\n
+#svg_editor .flyout_arrow_horiz {\n
+\tposition: absolute;\n
+\tbottom: -1px;\n
+\tright: 0;\n
+\tz-index: 10;\n
+}\n
+\n
+\n
+span.zoom_tool {\n
+\tline-height: 26px;\n
+\tpadding: 3px;\n
+}\n
+\n
+#zoom_panel {\n
+\tmargin-top: 5px;\n
+}\n
+\n
+.dropdown {\n
+\tposition: relative;\n
+}\n
+\n
+#svg_editor .dropdown button {\n
+\twidth: 15px;\n
+\theight: 21px;\n
+\tmargin: 6px 0 0 1px;\n
+\tpadding: 0;\n
+\tborder-left: 1px solid #FFFFFF;\n
+\tborder-top: 1px solid #FFFFFF;\n
+\tborder-right: 1px solid #808080;\n
+\tborder-bottom: 1px solid #808080;\n
+\tbackground-color: #E8E8E8;\n
+}\n
+\n
+.dropdown button.down {\n
+\tborder-left: 1px solid #808080;\n
+\tborder-top: 1px solid #808080;\n
+\tborder-right: 1px solid #FFFFFF;\n
+\tborder-bottom: 1px solid #FFFFFF;\n
+\tbackground-color: #B0B0B0;\n
+}\n
+\n
+.dropdown ul {\n
+\tlist-style: none;\n
+\tposition: absolute;\n
+\tmargin: 0;\n
+\tpadding: 0;\n
+\tleft: -80px;\n
+\ttop: 26px;\n
+\tz-index: 4;\n
+\tdisplay: none;\n
+}\n
+\n
+.dropup ul {\n
+\ttop: auto;\n
+\tbottom: 26px;\n
+}\n
+\n
+.dropdown li {\n
+\tdisplay: block;\n
+\twidth: 120px;\n
+\tpadding: 4px;\n
+\tbackground: #E8E8E8;\n
+\tborder: 1px solid #B0B0B0;\n
+\tmargin: 0 0 -1px 0;\n
+\tline-height: 16px;\n
+}\n
+\n
+.dropdown li:hover {\n
+\tbackground-color: #FFC;\n
+}\n
+\n
+.dropdown li.special {\n
+\tpadding: 10px 4px; \n
+}\n
+\n
+.dropdown li.special:hover {\n
+\tbackground: #FFC;\n
+}\n
+\n
+#font_family_dropdown li {\n
+\tfont-size: 1.4em;\n
+}\n
+\n
+#font_family {\n
+\tmargin-left: 5px;\n
+\tmargin-right: 0;\n
+}\n
+\n
+\n
+#svg_editor .tool_button, \n
+#svg_editor .push_button,\n
+#svg_editor .tool_button_current,\n
+#svg_editor .push_button_pressed \n
+{\n
+\theight: 24px;\n
+\twidth: 24px;\n
+\tmargin: 2px;\n
+\tpadding: 2px;\n
+\tborder-left: 1px solid #FFF;\n
+\tborder-top: 1px solid #FFF;\n
+\tborder-right: 1px solid #808080;\n
+\tborder-bottom: 1px solid #808080;\n
+\tbackground-color: #E8E8E8;\n
+\tcursor: pointer;\n
+\tborder-radius: 5px;\n
+\t-moz-border-radius: 5px;\n
+\t-webkit-border-radius: 5px;\n
+}\n
+\n
+#svg_editor #main_menu li#tool_open, #svg_editor #main_menu li#tool_import {\n
+\tposition: relative;\n
+\toverflow: hidden;\n
+}\n
+\n
+#tool_open input, #tool_import input {\n
+\t-moz-transform: scale(4,2); /* Not entirely necessary, but keeps it nice and big for OS X*/\n
+\theight: 100%;\n
+\tposition: absolute;\n
+\topacity: 0;\n
+\ttop: -3px;\n
+\tright: 270px;\n
+\tmargin: 0;\n
+\tcursor: pointer; /* Sadly doesn\'t appear to have an effect */\n
+}\n
+\n
+#svg_editor .disabled {\n
+\topacity: 0.5;\n
+\tcursor: default;\n
+}\n
+\n
+#svg_editor .tool_sep {\n
+\twidth: 1px;\n
+\tbackground: #888;\n
+\tborder-left: 1px outset #EEE;\n
+\tmargin: 2px 3px;\n
+\tpadding: 0;\n
+\theight: 24px;\n
+\n
+}\n
+\n
+#svg_editor .icon_label {\n
+\tfloat: left;\n
+\tpadding-top: 3px;\n
+\tpadding-right: 3px;\n
+\tbox-sizing: border-box;\n
+\t-moz-box-sizing: border-box;\n
+\t-webkit-box-sizing: border-box;\n
+\theight: 0;\n
+}\n
+\n
+#svg_editor .width_label {\n
+\tpadding-right: 5px;\n
+}\n
+\n
+#tool_bold, #tool_italic { \n
+\tfont: bold 2.1em/1.1em serif;\n
+\ttext-align: center;\n
+\tpadding-left: 2px;\n
+\tposition: relative;\n
+}\n
+\n
+#text {\n
+\tposition: absolute;\n
+\tleft: -9999px;\n
+}\n
+\n
+#tool_bold span, #tool_italic span { \n
+\tposition: absolute;\n
+\twidth: 100%;\n
+\theight: 100%;\n
+\ttop: 0; left: 0;\n
+\tbackground: #000;\n
+\topacity: 0;\n
+}\n
+\n
+#tool_italic {\n
+\tfont-weight: normal;\n
+\tfont-style: italic;\n
+}\n
+\n
+#url_notice {\n
+\tpadding-top: 4px;\n
+\tdisplay: none;\n
+}\n
+\n
+#svg_editor #color_picker {\n
+\tposition: absolute;\n
+\tdisplay: none;\n
+\tbackground: #E8E8E8;\n
+\theight: 350px;\n
+\tz-index: 4;\n
+}\n
+\n
+#svg_editor .tools_flyout {\n
+\tposition: absolute;\n
+\tdisplay: none;\n
+\tcursor: pointer;\n
+\twidth: 400px;\n
+}\n
+\n
+#svg_editor .tools_flyout_v {\n
+\tposition: absolute;\n
+\tdisplay: none;\n
+\tcursor: pointer;\n
+\twidth: 30px;\n
+}\n
+\n
+#svg_editor .tools_flyout .tool_button {\n
+\tfloat: left;\n
+\tbackground-color: #E8E8E8;\n
+\tborder-left: 1px solid #FFFFFF;\n
+\tborder-top: 1px solid #FFFFFF;\n
+\tborder-right: 1px solid #808080;\n
+\tborder-bottom: 1px solid #808080;\n
+\theight: 28px;\n
+\twidth: 28px;\n
+}\n
+\n
+#svg_editor #tools_bottom {\n
+\tposition: absolute;\n
+\tleft: 40px;\n
+\tright: 0;\n
+\tbottom: 0;\n
+\theight: 64px;\n
+\toverflow: visible;\n
+}\n
+\n
+#svg_editor #tools_bottom_1 {\n
+\twidth: 115px;\n
+\tfloat: left;\n
+}\n
+\n
+#svg_editor #tools_bottom_2 {\n
+\twidth: 165px;\n
+\tposition: relative;\n
+\tfloat: left;\n
+}\n
+\n
+#tools_bottom input[type=text] {\n
+\twidth: 2.2em;\n
+}\n
+\n
+#svg_editor #color_tools {\n
+\tdisplay: table;\n
+\tmargin-top: 1px;\n
+\tborder-spacing: 0 3px;\n
+\tclip: rect(0,0,10px,0);\n
+}\n
+\n
+.color_tool {\n
+\tdisplay: table-row;\n
+\toverflow: hidden;\n
+\theight: 26px;\n
+\tpadding: 0 4px;\n
+}\n
+\n
+.color_tool > * {\n
+\tdisplay: table-cell;\n
+\tbackground: #f0f0f0;\n
+\tpadding: 0 5px 0 0;\n
+\tvertical-align: middle;\n
+/*\theight: 25px;*/\n
+}\n
+\n
+#toggle_stroke_tools {\n
+\tletter-spacing: -.2em;\n
+\tpadding-right: 8px;\n
+}\n
+\n
+#toggle_stroke_tools:hover {\n
+\tcursor: pointer;\n
+\tbackground: #FFC;\n
+}\n
+\n
+.stroke_tool {\n
+\tdisplay: none;\n
+\twhite-space: nowrap;\n
+}\n
+\n
+#svg_editor .stroke_tool button {\n
+\tmargin-top: 3px;\n
+\tbackground: #F0F0F0;\n
+}\n
+\n
+#svg_editor .stroke_tool div div {\n
+\t-moz-user-select: none;\n
+\t-webkit-user-select: none;\n
+\twidth: 20px;\n
+\theight: 20px;\n
+\tmargin: 1px 0;\n
+\tpadding: 1px;\n
+\tborder: 1px solid #DDD;\n
+}\n
+\n
+#svg_editor .stroke_tool:hover div > * {\n
+\tbackground-color: #FFC;\n
+}\n
+\n
+#svg_editor .stroke_tool.down div div,\n
+#svg_editor .stroke_tool.down button,\n
+#tools_top .dropdown.down > * {\n
+\tborder: 1px inset gray;\n
+\tbackground: #F4E284;\n
+}\n
+\n
+.stroke_tool > div {\n
+\twidth: 42px;\n
+}\n
+\n
+.stroke_tool > div > * {\n
+\tfloat: left;\n
+}\n
+\n
+\n
+#tools_top .dropdown .icon_label {\n
+\tborder: 1px solid transparent;\n
+\tmargin-top: 3px;\n
+\theight: auto;\n
+}\n
+\n
+#option_lists ul {\n
+\tdisplay: none;\n
+\tposition: absolute;\n
+\theight: auto;\n
+\tz-index: 3;\n
+\tmargin: 0;\n
+\tlist-style: none;\n
+\tpadding-left: 0;\n
+}\n
+\n
+#option_lists .optcols2 {\n
+\twidth: 70px;\n
+\tmargin-left: -15px;\n
+}\n
+\n
+#option_lists .optcols3 {\n
+\twidth: 90px;\n
+\tmargin-left: -31px;\n
+}\n
+\n
+#option_lists .optcols4 {\n
+\twidth: 130px;\n
+\tmargin-left: -44px;\n
+}\n
+\n
+#option_lists ul[class^=optcols] li {\n
+\tfloat: left;\n
+}\n
+\n
+#svg_editor ul li.current {\n
+\tbackground-color: #F4E284;\n
+}\n
+\n
+#svg_editor #option_lists ul li {\n
+\tmargin: 0;\n
+\tborder-radius: 0;\n
+\t-moz-border-radius: 0;\n
+\t-webkit-border-radius: 0;\n
+}\n
+\n
+.color_tool > *:first-child {\n
+\t-moz-border-radius-topleft: 4px;\n
+\t-moz-border-radius-bottomleft: 4px;\n
+\t-webkit-border-top-left-radius: 4px;\n
+\t-webkit-border-bottom-left-radius: 4px;\n
+\tpadding-right: 0;\n
+}\n
+\n
+.color_tool > *:last-child {\n
+\t-moz-border-radius-topright: 4px;\n
+\t-moz-border-radius-bottomright: 4px;\n
+\t-webkit-border-top-right-radius: 4px;\n
+\t-webkit-border-bottom-right-radius: 4px;\n
+}\n
+\n
+#svg_editor #tool_opacity {\n
+\tposition: absolute;\n
+\ttop: 4px;\n
+\tright: 2px;\n
+\tbackground: #f0f0f0;\n
+\theight: 26px;\n
+\tborder-radius: 4px;\n
+\t-moz-border-radius: 4px;\n
+\t-webkit-border-radius: 4px;\n
+\tpadding: 0 3px;\n
+}\n
+\n
+#tools_bottom .dropdown button {\n
+\tmargin-top: 2px;\n
+}\n
+\n
+#opacity_dropdown li {\n
+\twidth: 140px;\n
+}\n
+\n
+#svg_editor #copyright {\n
+\ttext-align: right;\n
+\tpadding-right: .3em;\n
+}\n
+\n
+#svg_source_editor {\n
+\tdisplay: none;\n
+}\n
+\n
+#svg_source_editor #svg_source_overlay {\n
+\tposition: absolute;\n
+\ttop: 0px;\n
+\tright: 0px;\n
+\tleft: 0px;\n
+\tbottom: 0px;\n
+\tbackground-color: black;\n
+\topacity: 0.6;\n
+\tz-index: 5;\n
+}\n
+\n
+#svg_source_editor #svg_source_container {\n
+\tposition: absolute;\n
+\ttop: 30px;\n
+\tleft: 30px;\n
+\tright: 30px;\n
+\tbottom: 30px;\n
+\tbackground-color: #B0B0B0;\n
+\topacity: 1.0;\n
+\ttext-align: center;\n
+\tborder: 1px outset #777;\n
+\tz-index: 6;\n
+}\n
+\n
+#bg_blocks {\n
+\toverflow: auto;\n
+\tmargin-left: 30px;\n
+}\n
+\n
+#svg_docprops #svg_docprops_container {\n
+\tposition: absolute;\n
+\ttop: 50px;\n
+\tpadding: 10px;\n
+\tbackground-color: #B0B0B0;\n
+\tborder: 1px outset #777;\n
+\topacity: 1.0;\n
+/*\twidth: 450px;*/\n
+\tfont-family: Verdana, Helvetica, sans-serif;\n
+\tfont-size: .8em;\n
+\tz-index: 20001;\n
+}\n
+\n
+#svg_docprops .error {\n
+\tborder: 1px solid red;\n
+\tpadding: 3px;\n
+}\n
+\n
+#svg_docprops #resolution {\n
+\tmax-width: 14em;\n
+}\n
+\n
+#tool_docprops_back {\n
+\tmargin-left: 1em;\n
+\toverflow: auto;\n
+}\n
+\n
+#svg_docprops_container #svg_docprops_docprops, \n
+#svg_docprops_container #svg_docprops_prefs {\n
+\tfloat: left;\n
+\twidth: 221px;\n
+\tmargin: 5px .7em; \n
+\toverflow: hidden;\n
+}\n
+\n
+#svg_docprops_container #svg_docprops_prefs {\n
+\tfloat: right;\n
+}\n
+\n
+#svg_docprops legend {\n
+\tmax-width: 195px;\n
+}\n
+\n
+#svg_docprops_docprops > legend, #svg_docprops_prefs > legend {\n
+\tfont-weight: bold;\n
+\tfont-size: 1.1em;\n
+}\n
+\n
+\n
+#svg_docprops_container fieldset {\n
+\tpadding: 5px;\n
+\tmargin: 5px;\n
+\tborder: 1px solid #DDD;\n
+}\n
+\n
+#svg_docprops_container label {\n
+\tdisplay: block;\n
+\tmargin: .5em;\n
+}\n
+\n
+#svginfo_bg_note {\n
+\tfont-size: .9em;\n
+\tfont-style: italic;\n
+\tcolor: #444;\n
+}\n
+\n
+#canvas_title {\n
+\tdisplay: block;\n
+}\n
+\n
+#svg_source_editor #svg_source_textarea {\n
+\tposition: relative;\n
+\twidth: 95%;\n
+\ttop: 5px;\n
+\theight: 250px;\n
+\tpadding: 5px;\n
+\tfont-size: 12px;\n
+}\n
+\n
+#svg_source_editor #tool_source_back {\n
+\ttext-align: left;\n
+\tpadding-left: 20px;\n
+}\n
+\n
+#svg_docprops_container div.color_block {\n
+\tfloat: left;\n
+\tmargin: 2px;\n
+\tpadding: 20px;\n
+}\n
+\n
+#change_background div.cur_background {\n
+\tborder: 2px solid blue;\n
+\tpadding: 18px;\n
+}\n
+\n
+#background_img {\n
+\tposition: absolute;\n
+\ttop: 0;\n
+\tleft: 0;\n
+\ttext-align: left;\n
+}\n
+\n
+#svg_docprops button {\n
+\tmargin-top: 0;\n
+\tmargin-bottom: 5px;\n
+}\n
+\n
+#svg_docprops {\n
+\tdisplay: none;\n
+}\n
+\n
+#image_save_opts label {\n
+\tfont-size: .9em;\n
+}\n
+\n
+#image_save_opts input {\n
+\tmargin-left: 0;\n
+}\n
+\n
+#svg_docprops #svg_docprops_overlay {\n
+\tposition: absolute;\n
+\ttop: 0px;\n
+\tright: 0px;\n
+\tleft: 0px;\n
+\tbottom: 0px;\n
+\tbackground-color: black;\n
+\topacity: 0.6;\n
+\tz-index: 20000;\n
+}\n
+\n
+.toolbar_button button {\n
+    border:1px solid #dedede;\n
+    line-height:130%;\n
+    float: left;\n
+\tbackground: #E8E8E8 none;\n
+    padding:5px 10px 5px 7px; /* Firefox */\n
+    line-height:17px; /* Safari */\n
+\tmargin: 5px 20px 0 0;\t\n
+\t\n
+\tborder: 1px #808080 solid;\n
+\tborder-top-color: #FFF;\n
+\tborder-left-color: #FFF;\n
+\n
+\tborder-radius: 5px;\n
+\t-moz-border-radius: 5px;\n
+\t-webkit-border-radius: 5px;\n
+}\n
+\n
+.toolbar_button button:hover {\n
+\tborder: 1px #e0a874 solid;\n
+\tborder-top-color: #fcd9ba;\n
+\tborder-left-color: #fcd9ba;\n
+\tbackground-color: #FFC;\n
+}\n
+.toolbar_button button:active {\n
+\tbackground-color: #F4E284;\n
+\tborder-left: 1px solid #663300;\n
+\tborder-top: 1px solid #663300;\n
+}\n
+\n
+.toolbar_button button .svg_icon {\n
+    margin:0 3px -3px 0 !important;\n
+    padding:0;\n
+    border:none;\n
+    width:16px;\n
+    height:16px;\n
+}\n
+\n
+#dialog_box {\n
+\tdisplay: none;\n
+}\n
+\n
+#dialog_box_overlay {\n
+\tbackground: black;\n
+\topacity: .5;\n
+\theight:100%;\n
+\tleft:0;\n
+\tposition:absolute;\n
+\ttop:0;\n
+\twidth:100%;\n
+\tz-index: 6;\n
+}\n
+\n
+#dialog_content {\n
+\theight: 95px;\n
+\tmargin: 10px 10px 5px 10px;\n
+\tbackground: #DDD;\n
+\toverflow: auto;\n
+\ttext-align: left;\n
+\tborder: 1px solid #B0B0B0;\n
+}\n
+\n
+#dialog_content.prompt {\n
+\theight: 75px;\n
+}\n
+\n
+#dialog_content p {\n
+\tmargin: 10px;\n
+\tline-height: 1.3em;\n
+}\n
+\n
+#dialog_container {\n
+\tposition: absolute;\n
+\tfont-family: Verdana;\n
+\ttext-align: center;\n
+\tleft: 50%;\n
+\ttop: 50%;\n
+\twidth: 300px;\n
+\tmargin-left: -150px;\n
+\theight: 150px;\n
+\tmargin-top: -80px;\n
+\tposition:fixed;\n
+\tz-index:50001;\n
+\tbackground: #CCC;\n
+\tborder: 1px outset #777;\n
+\tfont-family:Verdana,Helvetica,sans-serif;\n
+\tfont-size:0.8em;\n
+}\n
+\n
+#dialog_container, #dialog_content {\n
+\tborder-radius: 5px;\n
+\t-moz-border-radius: 5px;\n
+\t-webkit-border-radius: 5px;\n
+}\n
+\n
+#dialog_buttons input[type=text] {\n
+\twidth: 90%;\n
+\tdisplay: block;\n
+\tmargin: 0 0 5px 11px;\n
+}\n
+\n
+#dialog_buttons input[type=button] {\n
+\tmargin: 0 1em;\n
+}\n
+\n
+\n
+/* Slider\n
+----------------------------------*/\n
+.ui-slider { position: relative; text-align: left; }\n
+.ui-slider .ui-slider-handle { position: absolute; z-index: 2; width: 1.2em; height: 1.2em; cursor: default; }\n
+.ui-slider .ui-slider-range { position: absolute; z-index: 1; font-size: .7em; display: block; border: 0; }\n
+\n
+.ui-slider-horizontal { height: .8em; }\n
+.ui-slider-horizontal .ui-slider-handle { top: -.3em; margin-left: -.6em; }\n
+.ui-slider-horizontal .ui-slider-range { top: 0; height: 100%; }\n
+.ui-slider-horizontal .ui-slider-range-min { left: 0; }\n
+.ui-slider-horizontal .ui-slider-range-max { right: 0; }\n
+\n
+.ui-slider-vertical { width: .8em; height: 100px; }\n
+.ui-slider-vertical .ui-slider-handle { left: -.3em; margin-left: 0; margin-bottom: -.6em; }\n
+.ui-slider-vertical .ui-slider-range { left: 0; width: 100%; }\n
+.ui-slider-vertical .ui-slider-range-min { bottom: 0; }\n
+.ui-slider-vertical .ui-slider-range-max { top: 0; }\n
+\n
+.ui-slider {\n
+\tborder: 1px solid #B0B0B0;\n
+}\n
+\n
+.ui-slider-handle {\n
+\tbackground: #B0B0B0;\n
+\tborder: 1px solid #000;\n
+}\n
+\n
+/* Necessary to keep the flyouts sized properly */\n
+#svg_editor .tools_flyout .tool_button,\n
+#svg_editor .tools_flyout .tool_flyout {\n
+\tpadding: 2px;\n
+\twidth: 24px;\n
+\theight: 24px;\n
+\tmargin: 0;\n
+\tborder-radius: 0px;\n
+\t-moz-border-radius: 0px;\n
+\t-webkit-border-radius: 0px;\t\n
+}\n
+\n
+
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

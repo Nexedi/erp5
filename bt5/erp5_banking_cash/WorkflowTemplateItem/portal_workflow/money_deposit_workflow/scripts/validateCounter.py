@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+\n
+transaction = state_change[\'object\']\n
+date = transaction.getStartDate()\n
+destination= transaction.getDestination(None)\n
+transaction.log(\'destination:\',destination)\n
+\n
+amount = transaction.getSourceTotalAssetPrice()\n
+if amount is None:\n
+  msg = Message(domain="ui", message="Sorry, you have to define a quantity.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+destination_payment = transaction.getDestinationPayment()\n
+if destination_payment is None:\n
+  msg = Message(domain="ui", message="Sorry, you have to define an account.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+var_state = transaction.getSimulationState()\n
+if var_state == \'confirmed\': \n
+  # Get price and total_price.\n
+  amount = transaction.getSourceTotalAssetPrice()\n
+  total_price = transaction.getTotalPrice(portal_type=\'Cash Delivery Cell\')\n
+\n
+  if amount != total_price:\n
+    msg = Message(domain="ui", message="Amount differ from total price.")\n
+    raise ValidationFailed, (msg,)\n
+\n
+if destination is None:\n
+  msg = Message(domain=\'ui\', message=\'No counter defined.\')\n
+  raise ValidationFailed, (msg,)\n
+\n
+\n
+# check we are in an opened accounting day\n
+transaction.Baobab_checkCounterDateOpen(site=destination, date=transaction.getStartDate())\n
+if transaction.getSimulationState() == "ordered":\n
+  transaction.Baobab_checkCounterOpened(destination)\n
+\n
+site = transaction.getDestinationValue()\n
+# I comment theses lines, because it\'s not necessary to control if all counter is opened or not at the moment : CISSE\n
+# check that the counter is opened\n
+#counter_list = [x.getObject() for x in transaction.portal_catalog(portal_type="Counter", simulation_state = \'open\', site_uid = site.getUid())]\n
+\n
+#if len(counter_list) == 0:\n
+#  msg = Message(domain = "ui", message="Counter is not opened")\n
+#  raise ValidationFailed, (msg,)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>validateCounter</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

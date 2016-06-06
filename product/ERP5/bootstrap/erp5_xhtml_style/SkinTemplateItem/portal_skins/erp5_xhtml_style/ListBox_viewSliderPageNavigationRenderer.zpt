@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!-- Slider navigation with input  (i.e. first, previous, next, last links)-->\n
+<tal:block metal:define-macro="page_navigation">\n
+  <tal:block tal:condition="python: here.total_pages > 1">\n
+\n
+    <!-- Non gadget mode -->\n
+    <tal:block tal:condition="not: is_gadget_mode">\n
+      <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/first_previous_page_navigation" />\n
+      <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/type_in_page_navigation" />\n
+      <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/next_last_page_navigation" />\n
+    </tal:block>\n
+\n
+    <!-- Gadget mode -->\n
+    <tal:block tal:condition="is_gadget_mode"\n
+               tal:define="max_lines      python: here.getMaxLineNumber();\n
+                           total_page     python: here.total_pages;\n
+                           page_id        python: here.current_page;\n
+                           current_page   python: page_id + 1;\n
+                           previous_page  python: current_page - 1;\n
+                           next_page      python: current_page + 1;">\n
+      <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/first_previous_page_navigation_asynchronous" />\n
+      <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/type_in_page_navigation_asynchronous" />\n
+      <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/next_last_page_navigation_asynchronous" />\n
+    </tal:block>\n
+  </tal:block>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ListBox_viewSliderPageNavigationRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

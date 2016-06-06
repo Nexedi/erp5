@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># We will make sure that the check will not be usable\n
+transaction = state_change[\'object\']\n
+from Products.ERP5Type.Message import Message\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+portal_workflow = transaction.portal_workflow\n
+\n
+aggregate_list = []\n
+line_list = transaction.getMovementList()\n
+for line in line_list:\n
+  aggregate_list.extend(line.getAggregateValueList())\n
+ref_min = transaction.getReferenceRangeMin()\n
+ref_max = transaction.getReferenceRangeMin()\n
+if ref_min is not None or ref_max is not None:\n
+  if len(aggregate_list)==0:\n
+    msg = Message(domain=\'ui\', message=\'Sorry, no check was found, but there is a reference.\')\n
+    raise ValidationFailed, (msg,)\n
+  for aggregate in aggregate_list:\n
+    if aggregate.getPortalType()==\'Check\':\n
+      aggregate.setStopDate(transaction.getStartDate())\n
+      portal_workflow.doActionFor(aggregate,\'stop_action\',wf=\'check_workflow\')\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>updateCheck</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

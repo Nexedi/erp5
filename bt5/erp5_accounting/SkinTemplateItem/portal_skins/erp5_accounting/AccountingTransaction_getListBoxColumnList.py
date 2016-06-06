@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Returns value for \'columns\' fields in accounting transaction listboxs.\n
+\n
+If there is more than one mirror_section on lines, the listbox will have an\n
+extra column showing mirror_section_title.\n
+The same for apply for most line categories.\n
+"""\n
+section_set = set((None,))\n
+payment_set = set((None,))\n
+payment_request_set = set((None,))\n
+project_set = set((None,))\n
+resource_set = set((context.getResource(),))\n
+movement_type_list = context.getPortalAccountingMovementTypeList()\n
+\n
+for line in context.getMovementList(portal_type=movement_type_list):\n
+  resource_set.add(line.getResource())\n
+  if source:\n
+    section_set.add(line.getDestinationSection())\n
+    payment_set.add(line.getSourcePayment())\n
+    payment_request_set.add(line.getSourcePaymentRequest())\n
+    project_set.add(line.getSourceProject())\n
+  else:\n
+    section_set.add(line.getSourceSection())\n
+    payment_set.add(line.getDestinationPayment())\n
+    payment_request_set.add(line.getDestinationPaymentRequest())\n
+    project_set.add(line.getDestinationProject())\n
+\n
+if context.getSourcePayment() or context.getDestinationSection():\n
+  min_payment_count = 2\n
+else:\n
+  min_payment_count = 1\n
+\n
+if context.getSourceSection() and context.getDestinationSection():\n
+  min_section_count = 2\n
+else:\n
+  # if we have no mirror_section on the transaction but a mirror_section on\n
+  # a line, we have to show the column\n
+  min_section_count = 1\n
+\n
+multiple_sections = len(section_set) > min_section_count\n
+multiple_payment = len(payment_set) > min_payment_count\n
+\n
+column_item_list = [(\'translated_id\', \'ID\')]\n
+a = column_item_list.append\n
+if source:\n
+  a((\'source\', \'Account\'))\n
+else:\n
+  a((\'destination\', \'Account\'))\n
+\n
+if context.AccountingTransactionLine_getFunctionItemList(source=source):\n
+  if source:\n
+    a((\'source_function\', context.AccountingTransactionLine_getFunctionBaseCategoryTitle()))\n
+  else:\n
+    a((\'destination_function\', context.AccountingTransactionLine_getFunctionBaseCategoryTitle()))\n
+    \n
+if context.AccountingTransactionLine_getFundingItemList(source=source):\n
+  if source:\n
+    a((\'source_funding\', context.AccountingTransactionLine_getFundingBaseCategoryTitle()))\n
+  else:\n
+    a((\'destination_funding\', context.AccountingTransactionLine_getFundingBaseCategoryTitle()))\n
+\n
+  \n
+if multiple_sections:\n
+  if source:\n
+    a((\'getDestinationSectionTitle\', \'Third Party\'))\n
+  else:\n
+    a((\'getSourceSectionTitle\', \'Third Party\'))\n
+if multiple_payment:\n
+  bank_account_display_method = \\\n
+    context.portal_preferences.getPreferredAccountingBankAccountDisplayMethod()\n
+  if source:\n
+    if bank_account_display_method == \'bank_account_title\':\n
+      a((\'getSourcePaymentTitle\', \'Bank Account\'))\n
+    else:\n
+      a((\'getSourcePaymentReference\', \'Bank Account\'))\n
+  else:\n
+    if bank_account_display_method == \'bank_account_title\':\n
+      a((\'getDestinationPaymentTitle\', \'Bank Account\'))\n
+    else:\n
+      a((\'getDestinationPaymentReference\', \'Bank Account\'))\n
+if len(resource_set) > 1:\n
+  a((\'getResourceReference\', \'Currency\'))\n
+\n
+if len(payment_request_set) > 1:\n
+  if source:\n
+    a((\'getSourcePaymentRequestTitle\', \'Payment Request\'))\n
+  else:\n
+    a((\'getDestinationPaymentRequestTitle\', \'Payment Request\'))\n
+\n
+min_project_count = 1\n
+if context.getSourceProject() or context.getDestinationProject():\n
+  min_project_count = 2\n
+if len(project_set) > min_project_count:\n
+  if source:\n
+    a((\'getSourceProjectTitle\', \'Project\'))\n
+  else:\n
+    a((\'getDestinationProjectTitle\', \'Project\'))\n
+\n
+if source:\n
+  a((\'source_debit\', \'Debit\'))\n
+  a((\'source_credit\', \'Credit\'))\n
+else:\n
+  a((\'destination_debit\', \'Debit\'))\n
+  a((\'destination_credit\', \'Credit\'))\n
+\n
+return column_item_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>source=0</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransaction_getListBoxColumnList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

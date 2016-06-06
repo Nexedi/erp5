@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block tal:define="owner_list python: options.get(\'owner_list\', None);\n
+                       modification_date python: options.get(\'modification_date\', None);\n
+                       release_date python: options.get(\'release_date\', None);\n
+                       publication_date python: options.get(\'publication_date\', None);\n
+                       status python: options.get(\'status\', None);\n
+                       group python: options.get(\'group\', None);\n
+                       project python: options.get(\'project\', None);\n
+                       reference python: options.get(\'reference\', None);\n
+                       language python: options.get(\'language\', None);\n
+                       version python: options.get(\'version\', None);\n
+                       thumbnail_url python: options.get(\'thumbnail_url\', None);\n
+                       url python: options.get(\'url\', None);\n
+                       sections python: options.get(\'sections\', None);\n
+                       image_conversion_dict here/Base_getImageArgumentDict;\n
+                       dummy python: image_conversion_dict.update(**{\'display\':\'thumbnail\'});\n
+                       image_conversion_arguments python: \'&\'.join([\'%s=%s\' % (k, v) for k, v in image_conversion_dict.items()]);">\n
+\n
+  <span id="listbox-preview-connector"></span>\n
+\n
+  <div class="popup_row" tal:condition="thumbnail_url">\n
+    <a tal:attributes="href url">\n
+      <img alt="Thumbnail" \n
+         i18n:translate="alt" i18n:domain="ui"\n
+         tal:attributes="src string:${thumbnail_url}/index_html?${image_conversion_arguments}"/>\n
+    </a>\n
+  </div>\n
+\n
+  <div class="popup_row" tal:condition="reference">    \n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Reference:</span>\n
+    <span class="reference"\n
+          tal:content="reference|nothing"/>\n
+  </div>\n
+\n
+  <div class="popup_row" tal:condition="version">    \n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Version:</span>\n
+    <span class="version"\n
+          tal:content="version|nothing"/>\n
+  </div>\n
+\n
+  <div class="popup_row" tal:condition="language">    \n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Language:</span>\n
+    <span class="language"\n
+          tal:content="language|nothing"/>\n
+  </div>  \n
+    \n
+  <div class="popup_row" tal:condition="project">\n
+    <span class="popup_label " \n
+          i18n:translate="" i18n:domain="ui">Project:</span>\n
+    <span class="project"\n
+          tal:content="project|nothing"/>\n
+  </div>\n
+  \n
+  <div class="popup_row" tal:condition="owner_list">\n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Owner:</span>\n
+    <span tal:repeat="owner owner_list"\n
+          class="owner">\n
+      <a tal:attributes="href owner/url"\n
+         tal:content="owner/title"/>\n
+    </span>\n
+  </div> \n
+  \n
+  <div class="popup_row" tal:condition="modification_date">\n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Last modified:</span>\n
+    <span class="modification_date"  \n
+          tal:content="modification_date|nothing"/>\n
+  </div>\n
+  \n
+  <div class="popup_row" tal:condition="release_date">\n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Released:</span>\n
+    <span class="release_date" \n
+          tal:content="release_date|nothing"/>\n
+  </div>\n
+  \n
+  <div class="popup_row" tal:condition="publication_date">  \n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Published:</span>\n
+    <span class="publication_date"\n
+          tal:content="publication_date|nothing"/>\n
+  </div>\n
+\n
+  <div class="popup_row" tal:condition="sections">  \n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Section:</span>\n
+    <span tal:repeat="section sections"\n
+          class="section">\n
+      <a tal:attributes="href section/url"\n
+         tal:content="section/title"/>\n
+    </span>\n
+  </div>\n
+  \n
+  <div class="popup_row" tal:condition="status">    \n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">State:</span>\n
+    <span tal:attributes="class python:\'%s-state\' %status.lower()"\n
+          tal:content="status|nothing"/>\n
+  </div>\n
+   \n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Document_viewPopupTemplate</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

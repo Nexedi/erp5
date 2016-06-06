@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+\n
+transaction = state_change[\'object\']\n
+\n
+vault = transaction.getSource()\n
+vaultDestination = transaction.getDestination()\n
+\n
+if vault is None:\n
+  msg = Message(domain="ui", \n
+         message="Sorry, you must define a source.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+if transaction.isCurrencyHandover() and vaultDestination is not None:\n
+  msg = Message(domain="ui", \n
+         message="Sorry, you must not set a destination in case of currency handover.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+# if not transaction.isCurrencyHandover() and vaultDestination is not None:\n
+#   msg = Message(domain="ui", \n
+#          message="Sorry, you must define a destination.")\n
+#   raise ValidationFailed, (msg,)\n
+\n
+if not transaction.isCurrencyHandover() and vaultDestination is None:\n
+  msg = Message(domain="ui", \n
+         message="Sorry, you must define a destination.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+\n
+# use of the constraint : Test source and destination\n
+# (Seb) : there is already everything in the checkpath script\n
+#vliste = transaction.checkConsistency()\n
+#transaction.log(\'vliste\', vliste)\n
+#if len(vliste) != 0:\n
+#  raise ValidationFailed, (vliste[0].getMessage(),)\n
+\n
+portal_type_with_no_space = transaction.getPortalType().replace(\' \',\'\')\n
+check_path_script = getattr(transaction,\'%s_checkPath\' % portal_type_with_no_space,None)\n
+\n
+\n
+if not transaction.isCurrencyHandover():\n
+  # check again that we are in the good accounting date\n
+  transaction.Baobab_checkCounterDateOpen(site=vault, date=transaction.getStartDate())\n
+\n
+if check_path_script is not None:\n
+  message = check_path_script()\n
+  transaction.log(\'check_path_script\',\'found\')\n
+  if message is not None:\n
+    raise ValidationFailed, (message,)\n
+  \n
+resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Cash Delivery Line\')\n
+\n
+\n
+# Get price and total_price.\n
+amount = transaction.getSourceTotalAssetPrice()\n
+total_price = transaction.getTotalPrice(portal_type=[\'Cash Delivery Line\',\'Cash Delivery Cell\'],fast=0)\n
+\n
+if resource == 2:\n
+  msg = Message(domain="ui", message="No Resource.")\n
+  raise ValidationFailed, (msg,)\n
+elif amount != total_price:\n
+  msg = Message(domain="ui", message="Amount differ from total price.")\n
+  raise ValidationFailed, (msg,)\n
+elif resource <> 0 :\n
+  msg = Message(domain="ui", message="Insufficient Balance.")\n
+  raise ValidationFailed, (msg,)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>validateVaultBalance</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

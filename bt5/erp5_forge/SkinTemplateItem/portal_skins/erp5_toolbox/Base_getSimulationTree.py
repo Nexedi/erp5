@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# License: GPL\n
+# Author: Lukasz Nowak <lukasz.nowak@ventis.com.pl>\n
+# Copyright 2007 Ventis s. c.\n
+# SYNOPSIS\n
+# This script exctracts simulations (Applied Rule and Simulation Movement) for context.\n
+# If start_path is given it instead extracts tree with root as given start_path.\n
+\n
+\n
+def getByRecurse(obj,rv=[]):\n
+  rv = []\n
+  for o in [q.getObject() for q in obj.searchFolder()]:\n
+    rv.append(getByRecurse(o))\n
+  return rv\n
+\n
+def getFromCatalog(start_path):\n
+  return [x.getObject() for x in context.portal_catalog(\n
+    portal_type=(\'Applied Rule\',\'Simulation Movement\',),\n
+    path=[start_path, start_path+\'/%\'],\n
+    sort_on=((\'path\',\'ascending\',\'char\'),)\n
+  )]\n
+\n
+if start_path is None:\n
+  # we have to detect simulations\n
+  if context.getPortalType() in [\'Simulation Movement\',\'Applied Rule\']:\n
+    # we are run from simulation, its our root\n
+    start_paths = [context.getPath(),]\n
+  else:\n
+    # hm, it might be, that our context have simulations in relate objects?\n
+    start_paths = [x.getPath() for x in context.portal_categories.getRelatedValueList(context,portal_type=[\'Simulation Movement\',\'Applied Rule\'])]\n
+else:\n
+  start_paths = [start_path,]\n
+if start_paths == []:\n
+  # we are in no simulation related object\n
+  return []\n
+\n
+related_simulations = {}\n
+for start_path in start_paths:\n
+\n
+  related_simulations[start_path] = getFromCatalog(start_path)\n
+\n
+return related_simulations\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>start_path=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getSimulationTree</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

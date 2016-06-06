@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# Compute the list of columns to display in the fast input\n
+request = context.REQUEST\n
+\n
+resource = request.get(\'resource\',None)\n
+if resource in (None,\'None\'):\n
+  resource = request.get(\'field_my_resource\',None)\n
+return_list = []\n
+return_list.append([\'quantity\',\'Quantity\'])\n
+item_model = context.getPortalObject().restrictedTraverse(resource)\n
+if item_model.getPortalType()== \'Check Model\':\n
+  if item_model.isAccountNumberEnabled():\n
+    return_list.append([\'destination_payment_reference\',\'Account Reference\'])\n
+  #if item_model.isQuantityRequired():\n
+  #  return_list.append([\'price\',\'Amount\'])\n
+  #  return_list.append([\'price_currency\',\'Currency\'])\n
+  if len(item_model.getVariationRangeCategoryList())>0:\n
+    return_list.append([\'check_type\',\'Check Value\'])\n
+  return_list.append([\'reference_range_min\',\'Start Number\'])\n
+  return_list.append([\'reference_range_max\',\'Stop Number\'])\n
+\n
+if item_model.getPortalType()== \'Checkbook Model\':\n
+  return_list.append([\'destination_payment_reference\',\'Account Reference\'])\n
+  return_list.append([\'check_amount\',\'Type of Checkbook\'])\n
+  return_list.append([\'reference_range_min\',\'Start Number\'])\n
+  return_list.append([\'reference_range_max\',\'Stop Number\'])\n
+return return_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CheckDetail_getFastInputColumnList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,1510 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts40515059.57</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>svg-editor.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿body {\n
+\tbackground: #D0D0D0;\n
+}\n
+\n
+html, body, div{\n
+\t-webkit-user-select: text;\n
+\t-khtml-user-select: text;\n
+\t-moz-user-select: text;\n
+\t-o-user-select: text;\n
+\tuser-select: text;\n
+\t/* this will work for QtWebKit in future */\n
+\t-webkit-user-drag: text;\n
+}\n
+\n
+#browser-not-supported {\n
+\tfont-size: 0.8em;\n
+\tfont-family: Verdana, Helvetica, Arial;\n
+\tcolor: #000000;\n
+}\n
+\n
+#svg_editor * {\n
+\ttransform-origin: 0 0;\n
+\t-moz-transform-origin: 0 0;\n
+\t-o-transform-origin: 0 0;\n
+\t-webkit-transform-origin: 0 0;\n
+}\n
+\n
+#svg_editor {\n
+\tfont-size: 8pt;\n
+\tfont-family: Verdana, Helvetica, Arial;\n
+\tcolor: #000000;\n
+}\n
+\n
+a {\n
+\tcolor: #19c;\n
+}\n
+\n
+hr {\n
+\tborder: none;\n
+\tborder-bottom: 1px solid #808080;\n
+}\n
+\n
+select {\n
+\tmargin-top: 4px;\n
+}\n
+\n
+#svgroot {\n
+\t-moz-user-select: none;\n
+\t-webkit-user-select: none;\n
+\tposition: absolute;\n
+\ttop: 0;\n
+\tleft: 0;\n
+}\n
+\n
+#svgcanvas {\n
+\tline-height: normal;\n
+\tdisplay: inline-block;\n
+\tbackground-color: #A0A0A0;\n
+\ttext-align: center;\n
+\tvertical-align: middle;\n
+\twidth: 640px;\n
+\theight: 480px;\n
+\t-apple-dashboard-region:dashboard-region(control rectangle 0px 0px 0px 0px); /* for widget regions that shouldn\'t react to dragging */\n
+\tposition: relative;\n
+\t/*\n
+\t  A subtle gradient effect in the canvas.\n
+\t  Just experimenting - not sure if this is worth it.\n
+\t*/\n
+\tbackground: -moz-radial-gradient(45deg,#bbb,#222);\n
+\tbackground: -webkit-gradient(radial, center center, 3, center center, 1000, from(#bbb), to(#222));\n
+}\n
+\n
+/* Rulers\n
+——————————————————————————————————————*/\n
+\n
+#rulers > div {\n
+\tposition: absolute;\n
+\tbackground: #DDD;\n
+\tz-index: 1;\n
+\toverflow: hidden;\n
+}\n
+\n
+#ruler_corner {\n
+\ttop: 41px;\n
+\tleft: 41px;\n
+\twidth: 15px;\n
+\theight: 15px;\n
+}\n
+\n
+#ruler_x {\n
+\theight: 15px;\n
+\ttop: 41px;\n
+\tleft: 56px;\n
+\tright: 30px;\n
+\tborder-bottom: 1px solid;\n
+\tborder-left: 1px solid #777;\n
+}\n
+\n
+#ruler_y {\n
+\twidth: 15px;\n
+\ttop: 55px;\n
+\tleft: 41px;\n
+\tbottom: 56px;\n
+\tborder-right: 1px solid;\n
+\tborder-top: 1px solid #777;\n
+}\n
+\n
+#ruler_x canvas:first-child {\n
+\tmargin-left: -16px;\n
+}\n
+\n
+#ruler_x canvas {\n
+\tfloat: left;\n
+}\n
+\n
+#ruler_y canvas {\n
+\tmargin-top: -16px;\n
+}\n
+\n
+#ruler_x > div,\n
+#ruler_y > div {\n
+\toverflow: hidden;\n
+}\n
+\n
+#palette_holder {\n
+\toverflow: hidden;\n
+\tmargin-top: 5px;\n
+\tpadding: 5px;\n
+\tposition: absolute;\n
+\tright: 15px;\n
+\theight: 16px;\n
+\tbackground: #f0f0f0;\n
+\tborder-radius: 3px;\n
+\tz-index: 2;\n
+}\n
+\n
+#stroke_bg,\n
+#fill_bg {\n
+\theight: 16px;\n
+\twidth: 16px;\n
+\tmargin: 1px;\n
+}\n
+\n
+#zoomLabel {\n
+\tcursor: pointer;\n
+\tmargin-right: 5px;\n
+\tpadding-top: 4px\n
+}\n
+\n
+#linkLabel > svg {\n
+\theight: 20px;\n
+\tpadding-top: 4px;\n
+}\n
+\n
+#palette {\n
+\tfloat: left;\n
+\twidth: 632px;\n
+\theight: 16px;\n
+}\n
+\n
+#workarea {\n
+\tdisplay: inline-table-cell;\n
+\tposition:absolute;\n
+\ttop: 40px;\n
+\tleft: 40px;\n
+\tbottom: 40px;\n
+\tright: 14px;\n
+\tbackground-color: #A0A0A0;\n
+\tborder: 1px solid #808080;\n
+\toverflow: auto;\n
+\ttext-align: center;\n
+}\n
+\n
+#sidepanels {\n
+\tdisplay: inline-block;\n
+\tposition:absolute;\n
+\ttop: 40px;\n
+\tbottom: 40px;\n
+\tright: 0;\n
+\twidth: 2px;\n
+\tpadding: 10px;\n
+\tborder-color: #808080;\n
+\tborder-style: solid;\n
+\tborder-width: 1px;\n
+\tborder-left: none;\n
+\toverflow-x:hidden;\n
+\toverflow-y:visible;\n
+}\n
+\n
+#layerpanel {\n
+\tdisplay: inline-block;\n
+\tposition:relative;\n
+\ttop: 0px;\n
+\tbottom: 0;\n
+\tleft: 12px;\n
+\twidth: 0;\n
+\toverflow: hidden;\n
+\tmargin: 0;\n
+\t-moz-user-select: none;\n
+\t-webkit-user-select: none;\n
+}\n
+\n
+/*\n
+\tborder-style: solid;\n
+\tborder-color: #666;\n
+\tborder-width: 0px 0px 0px 1px;\n
+*/\n
+#sidepanel_handle {\n
+\tdisplay: inline-block;\n
+\tposition: absolute;\n
+\tbackground-color: #D0D0D0;\n
+\tfont-weight: bold;\n
+\tleft: 0;\n
+\ttop: 40%;\n
+\twidth: 1em;\n
+\tpadding: 5px 1px 5px 5px;\n
+\tmargin-left: 3px;\n
+\tcursor: pointer;\n
+\tborder-radius: 5px;\n
+\t-moz-border-radius: 5px;\n
+\t-webkit-border-radius: 5px;\n
+\t-moz-user-select: none;\n
+\t-webkit-user-select: none;\n
+}\n
+\n
+#sidepanel_handle:hover {\n
+\tfont-weight: bold;\n
+}\n
+\n
+#sidepanel_handle * {\n
+\tcursor: pointer;\n
+\t-moz-user-select: none;\n
+\t-webkit-user-select: none;\n
+}\n
+#layerbuttons {\n
+\tmargin: 0;\n
+\tpadding: 0;\n
+\tpadding-left: 2px;\n
+\tpadding-right: 2px;\n
+\twidth: 125px;\n
+\theight: 20px;\n
+\tborder-right: 1px solid #FFFFFF;\n
+\tborder-bottom: 1px solid #FFFFFF;\n
+\tborder-left: 1px solid #808080;\n
+\tborder-top: 1px solid #808080;\n
+\toverflow: hidden;\n
+}\n
+\n
+.layer_button {\n
+\twidth: 14px;\n
+\theight: 14px;\n
+\tpadding: 1px;\n
+\tborder-left: 1px solid #FFFFFF;\n
+\tborder-top: 1px solid #FFFFFF;\n
+\tborder-right: 1px solid #808080;\n
+\tborder-bottom: 1px solid #808080;\n
+\tcursor: pointer;\n
+\tfloat: left;\n
+\tmargin-right: 3px;\n
+}\n
+\n
+.layer_button:last-child {\n
+\tmargin-right: 0;\n
+}\n
+\n
+.layer_buttonpressed {\n
+\twidth: 14px;\n
+\theight: 14px;\n
+\tpadding: 1px;\n
+\tborder-right: 1px solid #FFFFFF;\n
+\tborder-bottom: 1px solid #FFFFFF;\n
+\tborder-left: 1px solid #808080;\n
+\tborder-top: 1px solid #808080;\n
+\tcursor: pointer;\n
+}\n
+\n
+#layerlist {\n
+\tmargin: 1px;\n
+\tpadding: 0;\n
+\twidth: 127px;\n
+\tborder-collapse: collapse;\n
+\tborder: 1px solid #808080;\n
+\tbackground-color: #FFFFFF;\n
+}\n
+\n
+#layerlist tr.layer {\n
+\tbackground-color: #FFFFFF;\n
+\tmargin: 0;\n
+\tpadding: 0;\n
+}\n
+\n
+#layerlist tr.layersel {\n
+\tborder: 1px solid #808080;\n
+\tbackground-color: #CCCCCC;\n
+}\n
+\n
+#layerlist td.layervis {\n
+\twidth: 22px;\n
+\tcursor: pointer;\n
+}\n
+\n
+#layerlist td.layerinvis {\n
+\tbackground-image: none;\n
+\tcursor: pointer;\n
+}\n
+\n
+#layerlist td.layervis * {\n
+\tdisplay: block;\n
+}\n
+\n
+#layerlist td.layerinvis * {\n
+\tdisplay: none;\n
+}\n
+\n
+#layerlist td.layername {\n
+\tcursor: pointer;\n
+}\n
+\n
+#layerlist td.layername:hover {\n
+\tcolor: blue;\n
+\tfont-style: italic;\n
+}\n
+\n
+#layerlist tr.layersel td.layername {\n
+\tfont-weight: bold;\n
+}\n
+\n
+#selLayerLabel {\n
+\twhite-space: nowrap;\n
+}\n
+\n
+#selLayerNames {\n
+\tdisplay: block;\n
+}\n
+\n
+div.palette_item {\n
+\theight: 15px;\n
+\twidth: 15px;\n
+\tfloat: left;\n
+}\n
+\n
+div.palette_item:first-child {\n
+\tbackground: white;\n
+}\n
+\n
+/* Main button\n
+—————————————————————————————*/\n
+\n
+#main_button {\n
+\tposition: absolute;\n
+\ttop: 4px;\n
+\tleft: 5px;\n
+\tz-index: 5;\n
+}\n
+\n
+#main_icon {\n
+\tposition: relative;\n
+\ttop: -2px;\n
+\tleft: -2px;\n
+\twidth: 95px;\n
+\tline-height: 26px;\n
+}\n
+\n
+#main_icon:hover {\n
+\tbackground: #eee !important;\n
+}\n
+\n
+#main_icon.buttondown {\n
+\tbackground: #eee !important;\n
+\t-moz-box-shadow: none !important;\n
+\t-webkit-box-shadow: none !important;\n
+\tbox-shadow: none !important;\n
+\tborder-radius: 3px 3px 0 0;\n
+}\n
+\n
+#logo {\n
+\tmargin-top: -2px;\n
+}\n
+\n
+#logo img {\n
+\tborder: 0;\n
+\twidth: 28px;\n
+\theight: 28px;\n
+}\n
+\n
+#main_icon > div {\n
+\tfloat: left;\n
+}\n
+\n
+#main_button .dropdown {\n
+\tposition: absolute;\n
+\tright: 7px;\n
+\ttop: 4px;\n
+}\n
+\n
+#main_icon span {\n
+\tposition: absolute;\n
+\ttop: 0;\n
+\tleft: 0;\n
+\tbottom: 0;\n
+\tright: 0;\n
+\tdisplay: block;\n
+\tz-index: 2;\n
+\tfont-weight: bold;\n
+\tpadding-left: 34px;\n
+\tline-height: 32px;\n
+\tfont-family: sans-serif;\n
+}\n
+\n
+#main_menu {\n
+\tz-index: 12;\n
+\tbackground: #eee;\n
+\tposition: relative;\n
+\twidth: 230px;\n
+\tpadding: 5px;\n
+\t-moz-box-shadow: #555 1px 1px 4px;\n
+\t-webkit-box-shadow: #555 1px 1px 4px;\n
+\tbox-shadow: #555 1px 1px 4px;\n
+\tfont-size: 1.1em;\n
+\tdisplay: none;\n
+\toverflow: hidden;\n
+\tclear: both;\n
+\ttop: -9px;\n
+}\n
+\n
+#main_menu ul,\n
+#main_menu li {\n
+\tlist-style: none;\n
+\tmargin: 0;\n
+\tpadding: 0;\n
+}\n
+\n
+#main_menu li {\n
+/*\theight: 35px;*/\n
+\tline-height: 22px;\n
+\tpadding-top: 7px;\n
+\tpadding-left: 7px;\n
+\tmargin: -5px;\n
+\toverflow: auto;\n
+\tcursor: default;\n
+}\n
+\n
+#main_menu li:hover {\n
+\tbackground: #FFC;\n
+}\n
+\n
+#main_menu li > div {\n
+\tfloat: left;\n
+\tpadding-right: 5px;\n
+}\n
+\n
+#main_menu p {\n
+\tmargin-top: 5px;\n
+}\n
+\n
+/*—————————————————————————————*/\n
+\n
+.tool_button:hover,\n
+.push_button:hover,\n
+.buttonup:hover,\n
+.buttondown,\n
+.tool_button_current,\n
+.push_button_pressed\n
+{\n
+\tbackground-color: #ffc !important;\n
+}\n
+\n
+.tool_button_current,\n
+.push_button_pressed,\n
+.buttondown {\n
+\tbackground-color: #f4e284 !important;\n
+\t-webkit-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.4), 1px 1px  0 white  !important;\n
+\t-moz-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.4), 1px 1px  0 white  !important;\n
+\tbox-shadow: inset 1px 1px 2px rgba(0,0,0,0.4), 1px 1px  0 white  !important;\n
+}\n
+\n
+#tools_top {\n
+\tposition: absolute;\n
+\tleft: 108px;\n
+\tright: 2px;\n
+\ttop: 2px;\n
+\theight: 40px;\n
+\tborder-bottom: none;\n
+\toverflow: auto;\n
+}\n
+\n
+#tools_top .tool_sep {\n
+\tmargin-top: 5px;\n
+}\n
+\n
+#tools_left {\n
+\tposition: absolute;\n
+\tborder-right: none;\n
+\twidth: 32px;\n
+\ttop: 40px;\n
+\tleft: 1px;\n
+\tmargin-top: -2px;\n
+\tpadding-left: 2px;\n
+\tbackground: #D0D0D0; /* Needed so flyout icons don\'t appear on the left */\n
+\tz-index: 4;\n
+}\n
+\n
+#workarea.wireframe #svgcontent * {\n
+\tfill: none;\n
+\tstroke: #000;\n
+\tstroke-width: 1px;\n
+\tstroke-opacity: 1.0;\n
+\tstroke-dasharray: 0;\n
+\topacity: 1;\n
+\tpointer-events: stroke;\n
+\tvector-effect: non-scaling-stroke;\n
+\tfilter: none;\n
+}\n
+\n
+#workarea.wireframe #svgcontent text {\n
+\tfill: #000;\n
+\tstroke: none;\n
+}\n
+\n
+#workarea.wireframe #canvasBackground > rect {\n
+\tfill: #FFF !important;\n
+}\n
+\n
+#tools_top div[id$="_panel"]:not(#editor_panel):not(#history_panel) {\n
+\tdisplay: none;\n
+}\n
+\n
+#editor_panel, #history_panel {\n
+\theight: 34px;\n
+\tfloat: left;\n
+}\n
+\n
+#multiselected_panel .selected_tool {\n
+\tvertical-align: 12px;\n
+}\n
+\n
+/*TODO: Adjust position of rulers are not visible*/\n
+#cur_context_panel {\n
+\tposition: absolute;\n
+\ttop: 57px;\n
+\tleft: 56px;\n
+\tline-height: 22px;\n
+\toverflow: auto;\n
+\tpadding-left: 5px;\n
+\tfont-size: 12px;\n
+\tbackground: rgba(0, 0, 0, 0.8);\n
+\tcolor: #ccc;\n
+\tpadding: 0 10px;\n
+\tborder-radius: 0 0 3px 0;\n
+}\n
+\n
+#cur_context_panel a {\n
+\tfloat: none;\n
+\ttext-decoration: none;\n
+}\n
+\n
+#cur_context_panel a:hover {\n
+\ttext-decoration: underline;\n
+}\n
+\n
+#tools_top > div, #tools_top {\n
+\tline-height: 26px;\n
+}\n
+\n
+div.toolset,\n
+div.toolset > * {\n
+\tfloat: left;\n
+}\n
+\n
+div.toolset {\n
+\theight: 34px;\n
+}\n
+\n
+div.toolset label span {\n
+/*\toutline: 1px solid red;*/\n
+\tpadding-top: 3px;\n
+\tdisplay: inline-block;\n
+}\n
+\n
+#tools_top > div > * {\n
+\tfloat: left;\n
+\tmargin-right: 2px;\n
+}\n
+\n
+#tools_top label {\n
+\tmargin-top: 0;\n
+\tmargin-left: 5px;\n
+}\n
+\n
+#tools_top input {\n
+\tmargin-top: 5px;\n
+\theight: 15px;\n
+}\n
+\n
+input[type=text] {\n
+\tpadding: 2px;\n
+}\n
+\n
+#tools_left .tool_button,\n
+#tools_left .tool_button_current {\n
+\tposition: relative;\n
+\tz-index: 11;\n
+}\n
+\n
+.flyout_arrow_horiz {\n
+\tposition: absolute;\n
+\tbottom: -1px;\n
+\tright: 0;\n
+\tz-index: 10;\n
+}\n
+\n
+\n
+span.zoom_tool {\n
+\tline-height: 26px;\n
+\tpadding: 3px;\n
+}\n
+\n
+#zoom_panel {\n
+\tmargin-top: 5px;\n
+}\n
+\n
+.dropdown {\n
+\tposition: relative;\n
+}\n
+\n
+.dropdown button {\n
+\twidth: 15px;\n
+\theight: 21px;\n
+\tmargin: 6px 0 0 1px;\n
+\tpadding: 0;\n
+\tborder-left: 1px solid #FFFFFF;\n
+\tborder-top: 1px solid #FFFFFF;\n
+\tborder-right: 1px solid #808080;\n
+\tborder-bottom: 1px solid #808080;\n
+\tbackground-color: #E8E8E8;\n
+}\n
+\n
+.dropdown button.down {\n
+\tborder-left: 1px solid #808080;\n
+\tborder-top: 1px solid #808080;\n
+\tborder-right: 1px solid #FFFFFF;\n
+\tborder-bottom: 1px solid #FFFFFF;\n
+\tbackground-color: #B0B0B0;\n
+}\n
+\n
+.dropdown ul {\n
+\tlist-style: none;\n
+\tposition: absolute;\n
+\tmargin: 0;\n
+\tpadding: 0;\n
+\tleft: -85px;\n
+\ttop: 26px;\n
+\tz-index: 4;\n
+\tdisplay: none;\n
+}\n
+\n
+.dropup ul {\n
+\ttop: auto;\n
+\tbottom: 24px;\n
+}\n
+\n
+.dropdown li {\n
+\tdisplay: block;\n
+\twidth: 120px;\n
+\tpadding: 4px;\n
+\tbackground: #E8E8E8;\n
+\tborder: 1px solid #B0B0B0;\n
+\tmargin: 0 0 -1px 0;\n
+\tline-height: 16px;\n
+}\n
+\n
+.dropdown li:hover {\n
+\tbackground-color: #FFC;\n
+}\n
+\n
+.dropdown li.special {\n
+\tpadding: 10px 4px;\n
+}\n
+\n
+.dropdown li.special:hover {\n
+\tbackground: #FFC;\n
+}\n
+\n
+#font_family_dropdown-list li {\n
+\tfont-size: 1.4em;\n
+}\n
+\n
+#font_family {\n
+\tmargin-left: 5px;\n
+\tmargin-right: 0;\n
+}\n
+\n
+.tool_button,\n
+.push_button,\n
+.tool_button_current,\n
+.push_button_pressed\n
+{\n
+\theight: 24px;\n
+\twidth: 24px;\n
+\tmargin: 2px 2px 4px 2px;\n
+\tpadding: 3px;\n
+\t-webkit-box-shadow: inset 1px 1px 2px white, 1px 1px 1px rgba(0,0,0,0.3);\n
+\tmoz-box-shadow: inset 1px 1px 2px white, 1px 1px 1px rgba(0,0,0,0.3);\n
+\tbox-shadow: inset 1px 1px 2px white, 1px 1px 1px rgba(0,0,0,0.3);\n
+\tbackground-color: #E8E8E8;\n
+\tcursor: pointer;\n
+\tborder-radius: 3px;\n
+\t-moz-border-radius: 3px;\n
+\t-webkit-border-radius: 3px;\n
+}\n
+\n
+ #main_menu li#tool_open,  #main_menu li#tool_import {\n
+\tposition: relative;\n
+\toverflow: hidden;\n
+}\n
+\n
+#tool_image {\n
+\toverflow: hidden;\n
+}\n
+\n
+#tool_open input,\n
+#tool_import input,\n
+#tool_image input {\n
+\tposition: absolute;\n
+\topacity: 0;\n
+\tfont-size: 10em;\n
+\ttop: -5px;\n
+\tright: -5px;\n
+\tmargin: 0;\n
+\tcursor: pointer; /* Sadly doesn\'t appear to have an effect */\n
+}\n
+\n
+.disabled {\n
+\topacity: 0.5;\n
+\tcursor: default;\n
+}\n
+\n
+.tool_sep {\n
+\twidth: 1px;\n
+\tbackground: #888;\n
+\tborder-left: 1px outset #EEE;\n
+\tmargin: 2px 3px;\n
+\tpadding: 0;\n
+\theight: 24px;\n
+}\n
+\n
+.icon_label {\n
+\tfloat: left;\n
+\tpadding-top: 3px;\n
+\tpadding-right: 3px;\n
+\tbox-sizing: border-box;\n
+\t-moz-box-sizing: border-box;\n
+\t-webkit-box-sizing: border-box;\n
+\theight: 0;\n
+}\n
+\n
+.width_label {\n
+\tpadding-right: 5px;\n
+}\n
+\n
+#tool_bold, #tool_italic {\n
+\tfont: bold 2.1em/1.1em serif;\n
+\ttext-align: center;\n
+\tpadding-left: 2px;\n
+\tposition: relative;\n
+}\n
+\n
+#text {\n
+\tposition: absolute;\n
+\tleft: -9999px;\n
+}\n
+\n
+#tool_bold span, #tool_italic span {\n
+\tposition: absolute;\n
+\twidth: 100%;\n
+\theight: 100%;\n
+\ttop: 0; left: 0;\n
+\tbackground: #000;\n
+\topacity: 0;\n
+}\n
+\n
+#tool_italic {\n
+\tfont-weight: normal;\n
+\tfont-style: italic;\n
+}\n
+\n
+#url_notice {\n
+\tpadding-top: 4px;\n
+\tdisplay: none;\n
+}\n
+\n
+#color_picker {\n
+\tposition: absolute;\n
+\tdisplay: none;\n
+\tbackground: #E8E8E8;\n
+\theight: 350px;\n
+\tz-index: 5;\n
+}\n
+\n
+.tools_flyout {\n
+\tposition: absolute;\n
+\tdisplay: none;\n
+\tcursor: pointer;\n
+\twidth: 400px;\n
+\tz-index: 1;\n
+}\n
+\n
+.tools_flyout_v {\n
+\tposition: absolute;\n
+\tdisplay: none;\n
+\tcursor: pointer;\n
+\twidth: 30px;\n
+}\n
+\n
+.tools_flyout .tool_button {\n
+\tfloat: left;\n
+\tbackground-color: #E8E8E8;\n
+\tborder-left: 1px solid #FFFFFF;\n
+\tborder-top: 1px solid #FFFFFF;\n
+\tborder-right: 1px solid #808080;\n
+\tborder-bottom: 1px solid #808080;\n
+\theight: 28px;\n
+\twidth: 28px;\n
+}\n
+\n
+#tools_bottom {\n
+\tposition: absolute;\n
+\tleft: 40px;\n
+\tright: 0;\n
+\tbottom: 0;\n
+\theight: 40px;\n
+\toverflow: visible;\n
+}\n
+\n
+#tools_bottom_1 {\n
+\twidth: 115px;\n
+\tfloat: left;\n
+}\n
+\n
+#tools_bottom input[type=text] {\n
+\twidth: 2.2em;\n
+}\n
+\n
+/* Color tools: fill, stroke, opacity\n
+–––––––––––––––––––––––––––––––––––––*/\n
+\n
+#tools_bottom_2 {\n
+\tfloat: left;\n
+\twidth: 300px;\n
+\tposition: relative;\n
+\tmargin-top: 5px;\n
+\t-webkit-transition: width 150ms ease;\n
+}\n
+\n
+.expanded #tools_bottom_2 {\n
+\twidth: 450px;\n
+}\n
+\n
+#tools_bottom #tools_bottom_2 .dropdown button {\n
+\tmargin-top: 2px;\n
+}\n
+\n
+.dropdown li.tool_button {\n
+\twidth: 24px;\n
+}\n
+\n
+#tools_bottom_2 .icon_label {\n
+\tdisplay: block;\n
+\tmargin: 3px 5px;\n
+\tpadding: 0;\n
+}\n
+\n
+#tool_opacity { right: 0;}\n
+#tool_fill { left: 0; }\n
+#tool_stroke { left: 60px;}\n
+\n
+#fill_color,  #stroke_color {\n
+\theight: 16px;\n
+\twidth: 16px;\n
+\tborder: 1px solid #808080;\n
+\tcursor: pointer;\n
+\toverflow: hidden;\n
+}\n
+\n
+#stroke_expand {\n
+\twidth: 0;\n
+\toverflow: hidden;\n
+}\n
+\n
+#toggle_stroke_tools {\n
+\tposition: absolute;\n
+\tright: 0;\n
+\ttop: 0;\n
+\tbottom: 0;\n
+\twidth: 25px;\n
+\ttext-align: center;\n
+\tborder-radius: 0 3px 3px 0;\n
+\tmargin: 0;\n
+}\n
+\n
+#toggle_stroke_tools:before {\n
+\tcontent: \'>>\';\n
+\tletter-spacing: -3px;\n
+\tfont-weight: bold;\n
+\tcolor: #666;\n
+}\n
+\n
+.expanded #tool_stroke.color_tool {\n
+\twidth: 280px;\n
+}\n
+\n
+.expanded #toggle_stroke_tools:before {\n
+\tcontent: \'<<\';\n
+}\n
+\n
+#toggle_stroke_tools:hover {\n
+\tbackground: white;\n
+}\n
+\n
+.color_tool {\n
+\tposition: absolute;\n
+\toverflow: hidden;\n
+\tbackground: #f0f0f0;\n
+\theight: 26px;\n
+\tline-height: 26px;\n
+\tborder-radius: 3px;\n
+\tmin-width: 52px;\n
+}\n
+\n
+#tool_stroke.color_tool {\n
+\twidth: 130px;\n
+\tz-index: 2;\n
+\t-webkit-transition: width 150ms ease;\n
+\t-moz-transition: width 150ms ease;\n
+\t-o-transition: width 150ms ease;\n
+\t-ms-transition: width 150ms ease;\n
+\ttransition: width 150ms ease;\n
+}\n
+\n
+.color_block {\n
+\tposition: absolute;\n
+\ttop: 0;\n
+\tleft: 0;\n
+}\n
+\n
+.color_block svg {\n
+\tdisplay: block;\n
+}\n
+\n
+.color_tool > * {\n
+\tfloat: left;\n
+\tmargin-right: 5px;\n
+}\n
+\n
+.color_tool .dropdown > * {\n
+\tfloat: left;\n
+}\n
+\n
+.color_tool .stroke_label {\n
+\tmargin-left: 25px;\n
+\tfloat: left;\n
+}\n
+\n
+.color_tool > .color_block {\n
+\ttop: 3px;\n
+\tleft: 29px;\n
+}\n
+\n
+.color_tool input {\n
+\tmargin: 0;\n
+}\n
+\n
+#tool_opacity {\n
+\toverflow: visible;\n
+}\n
+\n
+@media screen and (max-width:1250px) {\n
+\t.expanded #palette_holder {\n
+\t\tleft: 560px;\n
+\t\toverflow-x: scroll;\n
+\t\tpadding: 0 5px;\n
+\t\tmargin-top: 2px;\n
+\t\theight: 30px;\n
+\t}\n
+\t#tools_top {\n
+\t\theight: 71px;\n
+\t}\n
+\t#workarea, #sidepanels {\n
+\t\ttop: 70px;\n
+\t}\n
+\t#rulers #ruler_corner,\n
+\t#rulers #ruler_x, #tools_left {\n
+\t\ttop: 71px;\n
+\t}\n
+\n
+\t#rulers #ruler_y {\n
+\t\ttop: 86px;\n
+\t}\n
+\n
+\t#cur_context_panel {\n
+\t\ttop: 87px;\n
+\t}\n
+\n
+\t#selected_panel {\n
+\t\tclear: right;\n
+\t}\n
+}\n
+\n
+@media screen and (max-width:1100px) {\n
+\t#tools_bottom:not(.expanded) #palette_holder {\n
+\t\tleft: 410px;\n
+\t\toverflow-x: scroll;\n
+\t\tpadding: 0 5px;\n
+\t\tmargin-top: 2px;\n
+\t\theight: 30px;\n
+\t}\n
+}\n
+\n
+/*–––––––––––––––––––––––––––––––––––––*/\n
+\n
+#option_lists ul {\n
+\tdisplay: none;\n
+\tposition: absolute;\n
+\theight: auto;\n
+\tz-index: 3;\n
+\tmargin: -10px;\n
+\tlist-style: none;\n
+\tpadding-left: 0;\n
+}\n
+\n
+#option_lists .optcols2 {\n
+\twidth: 70px;\n
+\tmargin-left: -15px;\n
+}\n
+\n
+#option_lists .optcols3 {\n
+\twidth: 90px;\n
+\tmargin-left: -31px;\n
+}\n
+\n
+#option_lists .optcols4 {\n
+\twidth: 130px;\n
+\tmargin-left: -44px;\n
+}\n
+\n
+#option_lists ul[class^=optcols] li {\n
+\tfloat: left;\n
+}\n
+\n
+ul li.current {\n
+\tbackground-color: #F4E284;\n
+}\n
+\n
+#option_lists ul li {\n
+\tmargin: 0;\n
+\tborder-radius: 0;\n
+\t-moz-border-radius: 0;\n
+\t-webkit-border-radius: 0;\n
+}\n
+\n
+#tools_bottom .dropdown button {\n
+\tmargin-top: 2px;\n
+}\n
+\n
+#opacity_dropdown li {\n
+\twidth: 140px;\n
+}\n
+\n
+ #copyright {\n
+\ttext-align: right;\n
+\tpadding-right: .3em;\n
+}\n
+\n
+#svg_source_editor {\n
+\tdisplay: none;\n
+}\n
+\n
+.overlay {\n
+\tposition: absolute;\n
+\ttop: 0;\n
+\tright: 0;\n
+\tleft: 0;\n
+\tbottom: 0;\n
+\tbackground-color: black;\n
+\topacity: 0.6;\n
+\tz-index: 5;\n
+}\n
+\n
+#svg_source_editor #svg_source_container {\n
+\tposition: absolute;\n
+\ttop: 30px;\n
+\tleft: 30px;\n
+\tright: 30px;\n
+\tbottom: 30px;\n
+\tbackground-color: #B0B0B0;\n
+\topacity: 1.0;\n
+\ttext-align: center;\n
+\tborder: 1px outset #777;\n
+\tz-index: 6;\n
+}\n
+\n
+#save_output_btns {\n
+\tdisplay: none;\n
+\ttext-align: left;\n
+}\n
+\n
+#save_output_btns p {\n
+\tmargin: .5em 1.5em;\n
+\tdisplay: inline-block;\n
+}\n
+\n
+#bg_blocks {\n
+\toverflow: auto;\n
+\tmargin-left: 30px;\n
+}\n
+\n
+#bg_blocks .color_block {\n
+\tposition: static;\n
+}\n
+\n
+#svg_docprops #svg_docprops_container,\n
+#svg_prefs #svg_prefs_container {\n
+\tposition: absolute;\n
+\ttop: 50px;\n
+\tpadding: 10px;\n
+\tbackground-color: #B0B0B0;\n
+\tborder: 1px outset #777;\n
+\topacity: 1.0;\n
+/*\twidth: 450px;*/\n
+\tfont-family: Verdana, Helvetica, sans-serif;\n
+\tfont-size: .8em;\n
+\tz-index: 20001;\n
+}\n
+\n
+#svg_docprops .error {\n
+\tborder: 1px solid red;\n
+\tpadding: 3px;\n
+}\n
+\n
+#svg_docprops #resolution {\n
+\tmax-width: 14em;\n
+}\n
+\n
+#tool_docprops_back,\n
+#tool_prefs_back {\n
+\tmargin-left: 1em;\n
+\toverflow: auto;\n
+}\n
+\n
+#svg_docprops_container #svg_docprops_docprops,\n
+#svg_prefs #svg_docprops_prefs {\n
+\tfloat: left;\n
+\twidth: 221px;\n
+\tmargin: 5px .7em;\n
+\toverflow: hidden;\n
+}\n
+\n
+#svg_prefs_container fieldset + fieldset {\n
+\tfloat: right;\n
+}\n
+\n
+#svg_docprops legend,\n
+#svg_prefs legend {\n
+\tmax-width: 195px;\n
+}\n
+\n
+#svg_docprops_docprops > legend,\n
+#svg_prefs_container > fieldset > legend {\n
+\tfont-weight: bold;\n
+\tfont-size: 1.1em;\n
+}\n
+\n
+#svg_docprops_container fieldset,\n
+#svg_prefs fieldset {\n
+\tpadding: 5px;\n
+\tmargin: 5px;\n
+\tborder: 1px solid #DDD;\n
+}\n
+\n
+#svg_docprops_container label,\n
+#svg_prefs_container label {\n
+\tdisplay: block;\n
+\tmargin: .5em;\n
+}\n
+\n
+#svginfo_bg_note {\n
+\tfont-size: .9em;\n
+\tfont-style: italic;\n
+\tcolor: #444;\n
+}\n
+\n
+#canvas_title, #canvas_bg_url {\n
+\tdisplay: block;\n
+\twidth: 96%;\n
+}\n
+\n
+\n
+#svg_source_editor form {\n
+\tposition: absolute;\n
+\ttop: 40px;\n
+\tbottom: 30px;\n
+\twidth: 100%;\n
+}\n
+\n
+#svg_source_editor #svg_source_textarea {\n
+\tposition: relative;\n
+\twidth: 95%;\n
+\theight: 95%;\n
+\tpadding: 5px;\n
+\tfont-size: 12px;\n
+}\n
+\n
+#svg_source_editor #tool_source_back {\n
+\ttext-align: left;\n
+\tpadding-left: 20px;\n
+}\n
+\n
+#svg_prefs_container div.color_block {\n
+\tfloat: left;\n
+\tmargin: 2px;\n
+\tpadding: 20px;\n
+}\n
+\n
+#change_background div.cur_background {\n
+\tborder: 2px solid blue;\n
+\tpadding: 18px;\n
+}\n
+\n
+#background_img {\n
+\tposition: absolute;\n
+\ttop: 0;\n
+\tleft: 0;\n
+\ttext-align: left;\n
+}\n
+\n
+#svg_docprops button,\n
+#svg_prefs button {\n
+\tmargin-top: 0;\n
+\tmargin-bottom: 5px;\n
+}\n
+\n
+#svg_docprops,\n
+#svg_prefs {\n
+\tdisplay: none;\n
+}\n
+\n
+#image_save_opts label {\n
+\tfont-size: .9em;\n
+}\n
+\n
+#image_save_opts input {\n
+\tmargin-left: 0;\n
+}\n
+\n
+#tool_prefs_option {\n
+\tfloat: right;\n
+}\n
+\n
+.toolbar_button button {\n
+\tborder:1px solid #dedede;\n
+\tline-height:130%;\n
+\tfloat: left;\n
+\tbackground: #E8E8E8 none;\n
+\tpadding:5px 10px 5px 7px; /* Firefox */\n
+\tline-height:17px; /* Safari */\n
+\tmargin: 5px 20px 0 0;\n
+\tborder: 1px #808080 solid;\n
+\tborder-top-color: #FFF;\n
+\tborder-left-color: #FFF;\n
+\tborder-radius: 5px;\n
+\t-moz-border-radius: 5px;\n
+\t-webkit-border-radius: 5px;\n
+}\n
+\n
+.toolbar_button button:hover {\n
+\tborder: 1px #e0a874 solid;\n
+\tborder-top-color: #fcd9ba;\n
+\tborder-left-color: #fcd9ba;\n
+\tbackground-color: #FFC;\n
+}\n
+.toolbar_button button:active {\n
+\tbackground-color: #F4E284;\n
+\tborder-left: 1px solid #663300;\n
+\tborder-top: 1px solid #663300;\n
+}\n
+\n
+.toolbar_button button .svg_icon {\n
+\tmargin: 0 3px -3px 0 !important;\n
+\tpadding: 0;\n
+\tborder: none;\n
+\twidth: 16px;\n
+\theight: 16px;\n
+}\n
+\n
+#dialog_box {\n
+\tdisplay: none;\n
+}\n
+\n
+#dialog_content {\n
+\theight: 95px;\n
+\tmargin: 10px 10px 5px 10px;\n
+\tbackground: #DDD;\n
+\toverflow: auto;\n
+\ttext-align: left;\n
+\tborder: 1px solid #B0B0B0;\n
+}\n
+\n
+#dialog_content.prompt {\n
+\theight: 75px;\n
+}\n
+\n
+#dialog_content p {\n
+\tmargin: 10px;\n
+\tline-height: 1.3em;\n
+}\n
+\n
+#dialog_container {\n
+\tposition: absolute;\n
+\tfont-family: Verdana;\n
+\ttext-align: center;\n
+\tleft: 50%;\n
+\ttop: 50%;\n
+\twidth: 300px;\n
+\tmargin-left: -150px;\n
+\theight: 150px;\n
+\tmargin-top: -80px;\n
+\tposition: fixed;\n
+\tz-index: 50001;\n
+\tbackground: #CCC;\n
+\tborder: 1px outset #777;\n
+\tfont-family:Verdana,Helvetica,sans-serif;\n
+\tfont-size:0.8em;\n
+}\n
+\n
+#dialog_container, #dialog_content {\n
+\tborder-radius: 5px;\n
+\t-moz-border-radius: 5px;\n
+\t-webkit-border-radius: 5px;\n
+}\n
+\n
+#dialog_buttons input[type=text] {\n
+\twidth: 90%;\n
+\tdisplay: block;\n
+\tmargin: 0 0 5px 11px;\n
+}\n
+\n
+#dialog_buttons input[type=button] {\n
+\tmargin: 0 1em;\n
+}\n
+\n
+/* Slider\n
+----------------------------------*/\n
+.ui-slider { position: relative; text-align: left; }\n
+.ui-slider .ui-slider-handle { position: absolute; z-index: 2; width: 1.2em; height: 1.2em; cursor: default; }\n
+.ui-slider .ui-slider-range { position: absolute; z-index: 1; font-size: .7em; display: block; border: 0; }\n
+\n
+.ui-slider-horizontal { height: .8em; }\n
+.ui-slider-horizontal .ui-slider-handle { top: -.3em; margin-left: -.6em; }\n
+.ui-slider-horizontal .ui-slider-range { top: 0; height: 100%; }\n
+.ui-slider-horizontal .ui-slider-range-min { left: 0; }\n
+.ui-slider-horizontal .ui-slider-range-max { right: 0; }\n
+\n
+.ui-slider-vertical { width: .8em; height: 100px; }\n
+.ui-slider-vertical .ui-slider-handle { left: -.3em; margin-left: 0; margin-bottom: -.6em; }\n
+.ui-slider-vertical .ui-slider-range { left: 0; width: 100%; }\n
+.ui-slider-vertical .ui-slider-range-min { bottom: 0; }\n
+.ui-slider-vertical .ui-slider-range-max { top: 0; }\n
+\n
+.ui-slider {\n
+\tborder: 1px solid #B0B0B0;\n
+}\n
+\n
+.ui-slider-handle {\n
+\tbackground: #B0B0B0;\n
+\tborder: 1px solid #000;\n
+}\n
+\n
+/* Necessary to keep the flyouts sized properly */\n
+.tools_flyout .tool_button,\n
+.tools_flyout .tool_flyout {\n
+\tpadding: 2px;\n
+\twidth: 24px;\n
+\theight: 24px;\n
+\tmargin: 0;\n
+\tborder-radius: 0px;\n
+\t-moz-border-radius: 0px;\n
+\t-webkit-border-radius: 0px;\n
+}\n
+\n
+/* Generic context menu styles */\n
+.contextMenu {\n
+\tposition: absolute;\n
+\tz-index: 99999;\n
+\tborder: solid 1px rgba(0,0,0,.33);\n
+\tbackground: rgba(255,255,255,.95);\n
+\tpadding: 5px 0;\n
+\tmargin: 0px;\n
+\tdisplay: none;\n
+\tfont: 12px/15px Lucida Sans, Helvetica, Verdana, sans-serif;\n
+\tborder-radius: 5px;\n
+\t-moz-border-radius: 5px;\n
+\t-moz-box-shadow: 2px 5px 10px rgba(0,0,0,.3);\n
+\t-webkit-box-shadow: 2px 5px 10px rgba(0,0,0,.3);\n
+\tbox-shadow: 2px 5px 10px rgba(0,0,0,.3);\n
+}\n
+\n
+.contextMenu LI {\n
+\tlist-style: none;\n
+\tpadding: 0px;\n
+\tmargin: 0px;\n
+}\n
+\n
+.contextMenu .shortcut {\n
+\twidth: 115px;\n
+\ttext-align:right;\n
+\tfloat:right;\n
+}\n
+\n
+.contextMenu A {\n
+\t-moz-user-select: none;\n
+\t-webkit-user-select: none;\n
+\tcolor: #222;\n
+\ttext-decoration: none;\n
+\tdisplay: block;\n
+\tline-height: 20px;\n
+\theight: 20px;\n
+\tbackground-position: 6px center;\n
+\tbackground-repeat: no-repeat;\n
+\toutline: none;\n
+\tpadding: 0px 15px 1px 20px;\n
+}\n
+\n
+.contextMenu LI.hover A {\n
+\tbackground-color: #2e5dea;\n
+\tcolor: white;\n
+\tcursor: default;\n
+}\n
+\n
+.contextMenu LI.disabled A {\n
+\tcolor: #999;\n
+}\n
+\n
+.contextMenu LI.hover.disabled A {\n
+\tbackground-color: transparent;\n
+}\n
+\n
+.contextMenu LI.separator {\n
+\tborder-top: solid 1px #E3E3E3;\n
+\tpadding-top: 5px;\n
+\tmargin-top: 5px;\n
+}\n
+\n
+/*\n
+\tAdding Icons\n
+\tYou can add icons to the context menu by adding\n
+\tclasses to the respective LI element(s)\n
+*/\n
+/*\n
+\n
+.contextMenu LI.edit A { background-image: url(images/page_white_edit.png); }\n
+.contextMenu LI.cut A { background-image: url(images/cut.png); }\n
+.contextMenu LI.copy A { background-image: url(images/page_white_copy.png); }\n
+.contextMenu LI.paste A { background-image: url(images/page_white_paste.png); }\n
+.contextMenu LI.delete A { background-image: url(images/page_white_delete.png); }\n
+.contextMenu LI.quit A { background-image: url(images/door.png); }\n
+*/\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>23916</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

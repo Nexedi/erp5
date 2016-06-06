@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts94421859.49</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>cwcalendar.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>fieldset.jcalendar {\n
+border:1px solid #A1A5A9;\n
+font:.9em Arial, Helvetica, sans-serif;\n
+}\n
+\n
+div.jcalendar-wrapper {\n
+width:20em;\n
+}\n
+\n
+div.jcalendar-selects {\n
+padding:.6em .4em;\n
+text-align:center;\n
+}\n
+\n
+div.jcalendar-selects select {\n
+border:1px solid #A1A5A9;\n
+font-size:100%;\n
+}\n
+\n
+div.jcalendar table {\n
+background:#a1a5a9;\n
+color:#000;\n
+margin:.3em auto;\n
+}\n
+\n
+div.jcalendar table th {\n
+background:#eee;\n
+}\n
+\n
+div.jcalendar table td {\n
+background:#f9f9f9;\n
+padding:0;\n
+width:2.2em;\n
+}\n
+\n
+div.jcalendar table th.weekend {\n
+background:#ddd;\n
+}\n
+\n
+div.jcalendar table td.weekend {\n
+background:#e9e9e9;\n
+}\n
+\n
+div.jcalendar table td a {\n
+color:#333;\n
+display:block;\n
+line-height:1.7em;\n
+text-align:center;\n
+text-decoration:none;\n
+width:2.2em;\n
+}\n
+\n
+div.jcalendar table td.today a {\n
+background:#777;\n
+border-color:#aaa;\n
+color:#fff;\n
+font-weight:700;\n
+}\n
+\n
+div.jcalendar table td a:hover,div.jcalendar table td a:focus,div.jcalendar table td a:active {\n
+background:#77b0d3;\n
+color:#fff;\n
+padding:0;\n
+}\n
+\n
+div.jcalendar table td a.selected {\n
+background:#0072b9;\n
+color:#fff;\n
+}\n
+\n
+div.jcalendar-links {\n
+margin:.4em;\n
+text-align:center;\n
+}\n
+\n
+div.jcalendar-links a {\n
+padding:.2em .4em;\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1116</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>cwcalendar.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

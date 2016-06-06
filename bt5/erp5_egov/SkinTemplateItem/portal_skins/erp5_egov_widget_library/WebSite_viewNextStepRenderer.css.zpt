@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>root_http_skin_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing"\n
+           xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"/>\n
+\n
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+\n
+/*========================================================================================\n
+  WebSite_viewNextStepWidget.css CSS.\n
+\n
+========================================================================================*/\n
+\n
+/* Define some constant to make the css flexible without pain */\n
+<tal:block\n
+  define="unit          python: \'px\';\n
+          HEIGHT_button python: 40;\n
+          MARGIN        python: 20;\n
+          CAPTCHA       python: 60;\n
+">\n
+\n
+div.next_step_action .erp5_captcha{\n
+  float:right;\n
+  margin-right:2em;\n
+}\n
+\n
+div.next_step_action img,\n
+div.next_step_action .captcha_text{\n
+  font-size: 260%;\n
+  vertical-align:middle;\n
+}\n
+\n
+form#main_form div .next_step_action .onleft button{\n
+  background: #E6E6E6 url(erp5-website-background.png) no-repeat scroll left;\n
+  background-image: url(img/save.png);\n
+  background-repeat:no-repeat;\n
+  border:none;\n
+  height: <tal:block  replace="python: (\'%s%s\') % (HEIGHT_button, unit)"/>;\n
+  padding-left: <tal:block  replace="python: (\'%s%s\') % (HEIGHT_button+5, unit)"/>;\n
+}\n
+\n
+form#main_form div .next_step_action .onright,\n
+form#main_form div .next_step_action .onleft{\n
+  margin-left:auto;\n
+  margin-right:auto;\n
+  position:relative;\n
+  margin-right: <tal:block  replace="python: (\'%s%s\') % (MARGIN, unit)"/>;\n
+}\n
+\n
+form#main_form div .become_vip_member .next_step_action .next_step{\n
+  margin-top:1em;\n
+}\n
+\n
+#wrapper_footer .footer .next_step_action{\n
+  margin: 0 0 2em 10px;\n
+  vertical-align:middle;\n
+}\n
+\n
+</tal:block>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewNextStepRenderer.css</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

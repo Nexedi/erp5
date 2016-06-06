@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+Used to set properties for Listbox\n
+"""\n
+\n
+\n
+d = dict(\n
+  field_title = \'Foos\',\n
+  field_description = \'\',\n
+  field_css_class = \'\',\n
+  field_alternate_name = \'\',\n
+  field_hidden = \'\',\n
+  field_lines = \'3\',\n
+  field_columns = \'\\n\'.join((\n
+    \'id | ID\',\n
+    \'title | Title\',\n
+    \'getQuantity | Quantity\',\n
+  )),\n
+  field_all_columns = \'\',\n
+  field_search_columns = \'\',\n
+  field_sort_columns = \'\',\n
+  field_sort = \'id\', # Very important, this allow to test tales expression on listbox_XXX fields\n
+  field_editable_columns = \'id\',\n
+  field_stat_columns = \'\',\n
+  field_url_columns = \'\',\n
+  field_list_method = \'searchFolder\',\n
+  field_count_method = \'countFolder\',\n
+  field_stat_method = \'\',\n
+  field_row_css_method = \'\',\n
+  field_selection_name = \'foo_selection\',\n
+  field_meta_types = \'\',\n
+  field_portal_types = \'Foo\',\n
+  field_default_params = \'\',\n
+  field_global_attributes = \'\',\n
+  field_search = \'checked\',\n
+  field_select = \'checked\',\n
+  field_anchor = \'\',\n
+  field_domain_tree = \'\',\n
+  field_domain_root_list = \'\',\n
+  field_report_tree = \'\',\n
+  field_report_root_list = \'\',\n
+  field_display_style_list = \'\',\n
+  field_default_display_style = \'\',\n
+  field_global_search_column = \'\',\n
+  field_global_search_column_script = \'\',\n
+  field_page_navigation_template = \'ListBox_viewSliderPageNavigationRenderer\',\n
+  field_list_action = \'list\',\n
+  field_enabled = \'checked\',\n
+  field_editable = \'\',\n
+  field_page_template = \'\',\n
+  field_external_validator = \'\',\n
+  field_untranslatable_columns = \'\',\n
+  field_hide_rows_on_no_search_criterion = \'\',\n
+  field_style_columns = \'\',\n
+)\n
+\n
+d.update(context.REQUEST)\n
+d.update(kw)\n
+#context.log(\'ListBox_setPropertyList\', \'kw = %r, d = %r\' % (kw, d,))\n
+r = context.form.validate(d)\n
+context.manage_edit_xmlrpc(r)\n
+\n
+return \'Set Successfully.\'\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ListBox_setPropertyList</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Set Property of Listbox</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

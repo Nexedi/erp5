@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.PythonScripts.standard import Object\n
+request = container.REQUEST\n
+portal = context.getPortalObject()\n
+state_item_list=[x[1] for x in portal.ERP5Site_getWorkflowStateItemList(\n
+     portal_type=portal.getPortalEventTypeList(), state_var=\'simulation_state\')]\n
+#remove deteted state\n
+if \'deleted\' in state_item_list:\n
+  state_item_list.remove(\'deleted\')\n
+\n
+request_start_date = request.get(\'from_date\', None)\n
+request_stop_date = request.get(\'at_date\', None)\n
+section_uid = context.Base_getSectionUidListForSectionCategory(request.get(\'section_category\',None))\n
+\n
+#create a default line dictionary\n
+default_dic={}\n
+default_dic[\'uid\']=""\n
+for event_state in state_item_list:\n
+  default_dic[event_state]=0\n
+default_dic[\'total\']=0\n
+default_dic[\'ticket_type\']=""\n
+default_dic[\'ticket_title\']=""\n
+default_dic[\'resource\']=""\n
+\n
+#create the work list\n
+column_list=[]\n
+\n
+#create unassigned Line dictionaty and append to the list\n
+unassigned_dic=default_dic.copy()\n
+unassigned_dic[\'ticket_title\']=""\n
+unassigned_dic[\'ticket_type\']=portal.Base_translateString("Unassigned")\n
+#column_list.append(new_dic)\n
+\n
+#Return index of uid into the list and append if not exists\n
+def createReturnLine(uid,list):\n
+  for i in xrange(len(list)):\n
+    if list[i][\'uid\']==uid:\n
+      return i\n
+  new_dic=default_dic.copy()\n
+  new_dic[\'uid\']=uid\n
+  list.append(new_dic)\n
+  return len(list)-1\n
+  \n
+# Prepare the parameters to filter\n
+query_dict = {}\n
+if request_start_date:\n
+  query_dict[\'delivery.start_date\'] = dict(range=\'min\', query=request_start_date)\n
+if request_stop_date:\n
+  query_dict[\'delivery.stop_date\'] = dict(range=\'ngt\', \n
+                                     query=request_stop_date.latestTime())\n
+#Get objects with request parameters\n
+event_list=portal.portal_catalog(portal_type=portal.getPortalEventTypeList(),\n
+                                            **query_dict)\n
+for r_event in event_list:  \n
+  event=r_event.getObject()\n
+  if event.getSimulationState() in state_item_list:\n
+    #Follow-up has priority\n
+    if not event.getFollowUpUid() == None:\n
+      ticket=portal.restrictedTraverse(event.getFollowUp())\n
+      #Filter by Source section if it\'s necessary\n
+      if not section_uid or ticket.getSourceSectionUid() in section_uid :\n
+        i=createReturnLine(event.getFollowUpUid(),column_list)\n
+        column_list[i][event.getSimulationState()]=column_list[i][event.getSimulationState()]+1\n
+        column_list[i][\'total\']=column_list[i][\'total\']+1\n
+        if column_list[i][\'ticket_type\']=="":\n
+          column_list[i][\'ticket_title\']=ticket.getTitle() \n
+          column_list[i][\'ticket_type\']=ticket.getTranslatedPortalType() \n
+          column_list[i][\'resource\']=ticket.getResourceTranslatedTitle()\n
+    else:\n
+      if not event.getCausalityUid() == None:\n
+        event_rel=portal.restrictedTraverse(event.getCausality())\n
+        #check relationship of the event with ticket by causality\n
+        if not event_rel.getFollowUpUid() == None:\n
+          ticket=portal.restrictedTraverse(event_rel.getFollowUp())\n
+          #Filter by Source section if it\'s necessary\n
+          if not section_uid or ticket.getSourceSectionUid() in section_uid:\n
+            i=createReturnLine(event_rel.getFollowUpUid(),column_list)\n
+            column_list[i][event.getSimulationState()]=column_list[i][event.getSimulationState()]+1\n
+            column_list[i][\'total\']=column_list[i][\'total\']+1\n
+            if column_list[i][\'ticket_type\']=="":\n
+              column_list[i][\'ticket_title\']=ticket.getTitle() \n
+              column_list[i][\'ticket_type\']=ticket.getTranslatedPortalType() \n
+              column_list[i][\'resource\']=ticket.getResourceTranslatedTitle()\n
+        else:\n
+          #Unassigned\n
+          if not section_uid:\n
+            unassigned_dic[event.getSimulationState()]=unassigned_dic[event.getSimulationState()]+1\n
+            unassigned_dic[\'total\']=unassigned_dic[\'total\']+1\n
+      else:\n
+        #Unassigned\n
+        if not section_uid:\n
+          unassigned_dic[event.getSimulationState()]=unassigned_dic[event.getSimulationState()]+1\n
+          unassigned_dic[\'total\']=unassigned_dic[\'total\']+1\n
+#Sort the result and add unassigned\n
+def comparator(x, y):\n
+  if x[\'ticket_type\'] == y[\'ticket_type\']:\n
+    return cmp(x[\'ticket_title\'], y[\'ticket_title\'])\n
+  return cmp(x[\'ticket_type\'], y[\'ticket_type\'])\n
+column_list.sort(comparator)\n
+if unassigned_dic[\'total\']>0: column_list.append(unassigned_dic)\n
+#fill line_list that is returned to report\n
+line_list = []\n
+for row in column_list:\n
+  obj = Object(uid="new_")\n
+  obj[\'ticket_title\']=row[\'ticket_title\']\n
+  obj[\'ticket_type\']=row[\'ticket_type\']\n
+  obj[\'resource\']=row[\'resource\']\n
+  obj[\'total\']=row[\'total\']\n
+  default_dic[\'total\']=default_dic[\'total\']+row[\'total\']\n
+  for event_state in state_item_list:\n
+    obj[event_state]=row[event_state]\n
+    default_dic[event_state]=default_dic[event_state]+row[event_state]\n
+  line_list.append(obj)\n
+                          \n
+#Totals count line\n
+obj = Object(uid="new_")\n
+obj[\'ticket_title\']=portal.Base_translateString(\'Total\')\n
+obj[\'total\']=default_dic[\'total\']\n
+for event_state in state_item_list:\n
+  obj[event_state]=default_dic[event_state]\n
+line_stats_list=[]\n
+line_stats_list.append(obj)\n
+request.set(\'stat_line\',line_stats_list)\n
+\n
+return line_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>EventModule_getEventDetailedLineList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

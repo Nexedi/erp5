@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>request = context.REQUEST\n
+from Products.ERP5Type.Document import newTempBase\n
+from Products.ERP5Type.Document import newTempMappedValue\n
+from Products.ERP5Type.Utils import getTranslationStringWithContext\n
+\n
+from AccessControl import getSecurityManager\n
+\n
+can_view_history = getSecurityManager().getUser().has_permission(\'View History\', context)\n
+\n
+marker = []\n
+result = []\n
+i = 1\n
+portal_object = context.getPortalObject()\n
+portal_workflow = portal_object.portal_workflow\n
+workflow_id_list = [x for x, y in context.getWorkflowStateItemList()]\n
+if not workflow_id in workflow_id_list:\n
+  return []\n
+\n
+actor_name_cache = {}\n
+def getActorName(actor):\n
+  # returns the name of the actor. If it\'s a person, show the usual name of the person\n
+  try:\n
+    return actor_name_cache[actor]\n
+  except KeyError:\n
+    actor_name_cache[actor] = actor\n
+    person = portal_object.portal_catalog.getResultValue(portal_type=\'Person\', reference=actor)\n
+    if person is not None:\n
+      actor_name_cache[actor] = person.getTitle()\n
+    return actor_name_cache[actor]\n
+\n
+\n
+\n
+# Get history\n
+# XXX Compatibility\n
+for history_name in [\'history\', \'building_history\', \'installation_history\']:\n
+  workflow_item_list = portal_workflow.getInfoFor(ob=context, \n
+                                          name=\'history\', wf_id=workflow_id)\n
+  if workflow_item_list != []:\n
+    break\n
+\n
+wf_state_var = portal_workflow[workflow_id].variables.getStateVar()\n
+wf_states = portal_workflow[workflow_id].states\n
+wf_transitions = portal_workflow[workflow_id].transitions\n
+\n
+next_serial = None\n
+previous_obj = None\n
+for workflow_item in workflow_item_list:\n
+  # XXX removing str method generate a strange bug\n
+  o = newTempBase(portal_object, str(i))\n
+  i += 1\n
+  for key, value in workflow_item.items():\n
+    if key == \'serial\' and not can_view_history:\n
+      continue\n
+    # XXX Compatibility\n
+    for compatibility_name in [\'building_\', \'installation_\']:\n
+      if key.startswith(compatibility_name):\n
+        # Display the workflow state in the state columns\n
+        key = key[len(compatibility_name):]\n
+    if key == wf_state_var: \n
+      # Store locally the id of state, usefull for merging action and transition\n
+      state_id = wf_states.get(value, marker) and wf_states[value].id\n
+      o.setProperty(\'state_id\', state_id)\n
+\n
+      key = \'state\'\n
+      if display:\n
+        value = wf_states.get(value, marker) and wf_states[value].title\n
+      else:\n
+        value = state_id\n
+    if key == \'action\':\n
+      # Store locally the id of action, usefull for merging action and transition\n
+      o.setProperty(\'action_id\', value)\n
+      if value != \'\' and value is not None:\n
+        if value == "\'edit\'":\n
+          value = "edit"\n
+        if display:\n
+          value = wf_transitions.get(value, marker) and (wf_transitions[value].title or wf_transitions[value].actbox_name) or value\n
+        else:\n
+          value = wf_transitions.get(value, marker) and (wf_transitions[value].id or wf_transitions[value].actbox_name) or value\n
+    if display:\n
+      if key == \'error_message\' and same_type(value, \'\'):\n
+        value = context.Localizer.erp5_ui.gettext(value)    \n
+      elif key == \'error_message\' and same_type(value, []):\n
+        value = \'. \'.join([\'%s\' % x for x in value])\n
+      elif key == \'error_message\':\n
+        value = \'%s\' % value\n
+      elif key == \'actor\':\n
+        value = getActorName(value)\n
+      elif same_type(value, \'\') and key == \'state\':\n
+        value = getTranslationStringWithContext(context, value, key, workflow_id)\n
+      elif same_type(value, \'\') and key == \'action\':\n
+        value = getTranslationStringWithContext(context, value, \'transition\', workflow_id)\n
+    if value is marker:\n
+      value = \'Does not exist\'\n
+    o.setProperty(key, value)\n
+ \n
+  # record current serial as "next serial" for the previous revision\n
+  if next_serial is not None and can_view_history:\n
+    previous_obj.setProperty(\'next_serial\', o.serial)\n
+  next_serial = getattr(o, \'serial\', None)\n
+  previous_obj = o\n
+  result.append(o)\n
+\n
+return result\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>workflow_id, display=1, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getWorkflowHistoryItemList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

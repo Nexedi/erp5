@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># This script is intended to be call at archive creation\n
+# It will launch one activity per group of 10 node uid in order\n
+# to create inventory and same for payment_uid\n
+\n
+account_uid_list = [x.uid for x in context.Archive_getBankAccountUidList()]\n
+node_uid_list = [x.node_uid for x in context.Archive_getNodeUidList(connection_id=source_connection_id,\n
+                                                                    account_uid_list=account_uid_list)]\n
+\n
+#context.log("node_uid_list", node_uid_list)\n
+while len(node_uid_list):\n
+  activity_node_list = node_uid_list[:10]\n
+  node_uid_list = node_uid_list[10:]\n
+  context.portal_simulation.activate(activity="SQLQueue", round_robin_scheduling=1,\n
+                                     tag=tag).Archive_createInventory(node_uid_list=activity_node_list,\n
+                                                                      source_connection_id=source_connection_id,\n
+                                                                      destination_sql_catalog_id=destination_sql_catalog_id,\n
+                                                                      inventory_date=inventory_date,\n
+                                                                      tag=tag)\n
+\n
+payment_uid_list = [x.payment_uid for x in context.Archive_getPaymentUidList(connection_id=source_connection_id,\n
+                                                                             account_uid_list=account_uid_list)]\n
+\n
+#context.log("payment_uid_list", payment_uid_list)\n
+while len(payment_uid_list):\n
+  activity_payment_list = payment_uid_list[:10]\n
+  payment_uid_list = payment_uid_list[10:]\n
+  context.portal_simulation.activate(activity="SQLQueue", round_robin_scheduling=1,\n
+                                     tag=tag).Archive_createInventory(payment_uid_list=activity_payment_list,\n
+                                                                      source_connection_id=source_connection_id,\n
+                                                                      destination_sql_catalog_id=destination_sql_catalog_id,\n
+                                                                      inventory_date=inventory_date,\n
+                                                                      tag=tag)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>source_connection_id=None, destination_sql_catalog_id=None, inventory_date=None, tag=""</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Archive_createAllInventory</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

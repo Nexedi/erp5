@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Document import newTempBase\n
+from Products.ERP5Type.Cache import CachingMethod\n
+Base_translateString = context.Base_translateString\n
+\n
+def getModifiedObjectList(context):\n
+  result = context.preinstall(check_dependencies=check_dependencies)\n
+  return result\n
+\n
+def cacheIdGenerator(method_id, *args, **kw):\n
+  context = args[0]\n
+  return \'%s%s%s\' % (method_id,\n
+                     context.getUid(),\n
+                     context.getModificationDate().timeTime())\n
+\n
+cache_id_generator = cacheIdGenerator\n
+\n
+getModifiedObjectList = CachingMethod(getModifiedObjectList,\n
+                              id=\'BusinessTemplate_getModifiedObjectList\',\n
+                              cache_factory=\'erp5_ui_medium\',\n
+                              cache_id_generator=cache_id_generator)\n
+\n
+modified_object_list = getModifiedObjectList(context)\n
+keys = modified_object_list.keys()\n
+keys.sort()\n
+\n
+no_backup_list = [\'Action\', \'SiteProperty\', \'Module\', \'Document\',\n
+                  \'PropertySheet\', \'Extension\', \'Test\', \'Product\', \'Role\',\n
+                  \'CatalogResultKey\', \'CatalogRelatedKey\',\n
+                  \'CatalogResultTable\', \'MessageTranslation\', \'LocalRoles\',\n
+                  \'PortalTypeAllowedContentType\',\n
+                  \'PortalTypeHiddenContentType\', \'PortalTypePropertySheet\',\n
+                  \'PortalTypeBaseCategory\', \'Tool\', ]\n
+no_backup_dict = {}\n
+for k in no_backup_list:\n
+  no_backup_dict[k] = 1\n
+\n
+install_title = Base_translateString(\'Install\')\n
+upgrade_title = Base_translateString(\'Upgrade\')\n
+backup_title = Base_translateString(\'Backup And Upgrade\')\n
+remove_title = Base_translateString(\'Remove\')\n
+save_and_remove_title = Base_translateString(\'Backup And Remove\')\n
+\n
+i = 0\n
+object_list = []\n
+for object_id in keys:\n
+  object_state, object_class = modified_object_list[object_id]\n
+  line = newTempBase(context, \'tmp_install_%s\' %(str(i)))\n
+  if object_state == \'New\':\n
+    choice_item_list=[[install_title, \'install\']]\n
+  elif object_state.startswith(\'Modified\'):\n
+    if object_class in no_backup_dict:\n
+      choice_item_list=[[upgrade_title, \'install\']]\n
+    else:\n
+      choice_item_list=[[backup_title, \'backup\']]\n
+  elif object_state.startswith(\'Removed\'):\n
+    if object_class in no_backup_dict:\n
+      choice_item_list=[[remove_title, \'remove\']]\n
+    else:\n
+      choice_item_list=[[save_and_remove_title, \'save_and_remove\']]\n
+  else:\n
+    choice_item_list = [[install_title, \'install\']]\n
+\n
+  line.edit(object_id=object_id,\n
+                object_state=object_state,\n
+                object_class=object_class,\n
+                choice_item_list=choice_item_list)\n
+  line.setUid(\'new_%s\' % str(object_id))\n
+  object_list.append(line)\n
+  i += 1                                  \n
+\n
+object_list.sort(key=lambda x:(x.object_class, x.object_state))\n
+return object_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>check_dependencies=True, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessTemplate_getModifiedObject</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

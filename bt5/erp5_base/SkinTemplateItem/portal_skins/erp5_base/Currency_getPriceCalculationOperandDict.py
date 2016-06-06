@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+Search for all predicates that corresponds to this particular context\n
+and returns the base price of the resource\n
+This script derives form getPriceCalculationOperandDict and is invoked by getPrice.\n
+\n
+  movement -- transaction line\n
+\n
+  **kw -- dictionary containing all information of the transaction\n
+\n
+"""\n
+\n
+def sort_key(exchange_line):\n
+  if exchange_line.getPortalType() == \'Currency Exchange Cell\':\n
+    exchange_line = exchange_line.getParentValue()\n
+  start_date_range_min = exchange_line.getStartDate()\n
+  start_date_range_max = exchange_line.getStopDate()\n
+  if start_date_range_min and start_date_range_max:\n
+    return start_date_range_max - start_date_range_min\n
+  return 2**16\n
+\n
+# If getPrice is directly called on a resource, call directly\n
+# Resource_getPriceCalculationOperandDict on the resource\n
+if movement is None:\n
+  return context.Resource_getPriceCalculationOperandDict(**kw)\n
+else:\n
+  if validation_state is None:\n
+    validation_state = \'validated\'\n
+  kw.setdefault(\'portal_type\', \'Currency Exchange Line\')\n
+\n
+  # discard `categories` that might have been passed by Movement_getPriceCalculationOperandDict\n
+  # and that searchPredicateList does not accept.\n
+  kw.pop(\'categories\', None)\n
+\n
+  predicate_list = context.portal_domains.searchPredicateList(\n
+      context=movement,\n
+      validation_state=validation_state,\n
+      test=True,\n
+      **kw)\n
+\n
+  predicate_list.sort(key=sort_key)\n
+  # For each predicate(i.e: Currency Exchange Line) found, get the exchange rate\n
+  # with the reference currency\n
+  for predicate in predicate_list:\n
+    price = predicate.getPrice() or predicate.getBasePrice()\n
+    if price:\n
+      return dict(price=price)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>default=None, movement=None, REQUEST=None, validation_state=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Currency_getPriceCalculationOperandDict</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308807.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>transparency_63x20@2x.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAH4AAAAoCAYAAAA49E5iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bWFnZVJlYWR5ccllPAAAAnpJREFUeNrsnDtPAkEURgex8NEKxlolqLVRY4mPxLDoT5VFC5+NUeOj
+1RiNrW87URvFO8md7ITswkAQdma/m3wNmSywJ3MPO7NsqiZQjtcYxaOUKAXKgHyxH+fFyZph2BuU
+WUpf/QCAd6PSlEWe1RL2eMiYX8oppUIpA7y9NUxZpaxT1igjIWO+KPsSNAN/wYy319dFntlLytd1
+9cqQfcoe5TPsQAAf/5rWWnior6lueVb73M5/mh0U4OPta9nGJyJ8fcawZW5afROAj5evPW7lLfm6
+nQL43tUoz2oTX29RdqJ8DfBu+PpOa+FGvgb4+PraY19P/oevAT4eNcS+Lhn42udW/tztDwnw3fX1
+NsPuqK8Bvje+lpnrpa8B/v99vcCuNvG1bOHXcf0yAN8ZXx9wC/d74WuA76yvPfb1YMiYN762joWv
+Ab79mhLBEmkzX0vYJ3HyNcB33tfnGuxrl05AksArX6v18EzImG/t+toaXwN8uK+LPKtNfL1LqSZh
+FrgIPq+18Ea+VrP62HZfJxW87mv5Ay0X4esLyqaLvk4SeOnrFfa1Z+BruZjyhIsXO8FnRbDL1cjX
++np4FYjtBJ/XWvh8hK/vtRaeSF+7AF75Wv0ZAL52GLz09bIIlkkb+brCeQQ6O8Hrvi4w/Pp6Z1+X
+4Wu7wedFsH+9AF+7C76PAZcMfK3Ww6+AxE7wpr4+FMHNCvC1peCVrz2GDl87DD7H7dvE13ID5Ai+
+thO8qa8vRXBzIXxtKXjla9XGs/C1u+AzInheSjNfq/XwD5xGO8Hrvpbr4ekIX6v9a/jagUrVhAh7
+8FVNu76Grx1v9bqv5S/xB5wed+tPgAEAA1vAwKgUqkUAAAAASUVORK5CYII=</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>728</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

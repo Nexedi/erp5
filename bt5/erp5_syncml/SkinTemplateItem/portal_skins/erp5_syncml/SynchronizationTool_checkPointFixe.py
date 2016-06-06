@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>portal = context.getPortalObject()\n
+publication = portal.restrictedTraverse(publication_path)\n
+subscription = portal.restrictedTraverse(subscription_path)\n
+\n
+\n
+# First we must get list of gid from subscriptions objects\n
+sub_xml_method_id = subscription.getXmlBindingGeneratorMethodId()\n
+pub_xml_method_id = publication.getXmlBindingGeneratorMethodId()\n
+\n
+diff_list = []\n
+append = diff_list.append\n
+\n
+# Browse objects from subscription\n
+sub_object_list = list(subscription.getDocumentList(id_list=id_list))\n
+for sub_object in sub_object_list:\n
+  # Get their gid\n
+  gid = subscription.getGidFromObject(sub_object)\n
+  # Retrieve the corresponding document from the publication\n
+  pub_object = publication.getDocumentFromGid(gid)\n
+  # Compare their xml\n
+  try:\n
+    sub_xml = getattr(sub_object, sub_xml_method_id)(context_document=subscription)\n
+  except TypeError:\n
+    sub_xml = getattr(sub_object, sub_xml_method_id)()\n
+  if pub_object:\n
+    try:\n
+      pub_xml = getattr(pub_object, pub_xml_method_id)(context_document=publication)\n
+    except TypeError:\n
+      pub_xml = getattr(pub_object, pub_xml_method_id)()\n
+  else:\n
+    pub_xml = ""\n
+  diff = portal.diffXML(xml_plugin=sub_xml, xml_erp5=pub_xml, html=False)\n
+  context.log("Got diff for GID %s" %(gid,))\n
+  if diff != "No diff":\n
+    append(diff)\n
+\n
+if len(diff_list):\n
+  severity = len(diff_list)\n
+  from Products.CMFActivity.ActiveResult import ActiveResult\n
+  active_result = ActiveResult()\n
+  active_result.edit(summary=\'Failed\',\n
+                     severity=severity,\n
+                     detail=\'\\n\'.join(diff_list))\n
+  subscription.activate(active_process=active_process,\n
+            activity=\'SQLQueue\', \n
+            priority=2,).ERP5Site_saveCheckCatalogTableResult(active_result)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>publication_path, subscription_path, id_list, active_process</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SynchronizationTool_checkPointFixe</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

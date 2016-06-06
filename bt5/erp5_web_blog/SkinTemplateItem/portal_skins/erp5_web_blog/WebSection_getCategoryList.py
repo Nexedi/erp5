@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  This script returns the list of category (or tags) which are available in the current web section.\n
+  It returns a python list of Category object. A Category object is really simple, as it has just \n
+  one property with a getter and a setter : title.\n
+\n
+  TODO: XXX-JPS\n
+  - this is way too slow - it will collapse the system\n
+  - have a look at mailreader code - there is something doing the same\n
+  - consider using virtual domains possibly - again look in email reader code\n
+""" \n
+\n
+\n
+## First step : retrieve the raw list\n
+current_section = context.getWebSectionValue()\n
+subject_list = []\n
+\n
+for item in current_section.WebSection_getDocumentValueList(): # XXX-JPS - this will fail for performance reasons\n
+  subject_list.extend([x for x in item.getSubjectList() if not x in subject_list])\n
+\n
+## Now, build the object list so that a Listbox can be used to display the results of this script.\n
+result = []\n
+\n
+class Category:\n
+  def setTitle(self, title):\n
+    self.title = title\n
+  def getTitle(self):\n
+    return self.title\n
+\n
+for item in subject_list:\n
+  obj = Category()\n
+  obj.setTitle(item)\n
+  result.append(obj)\n
+\n
+return result\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_getCategoryList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

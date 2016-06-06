@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts36632017.14</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>editdelete.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAYAAAAmlE46AAACa0lEQVQoz3XQXWjOYRjH8e913/f/
+Gc82L1vaxjDCIu95qZUDrRwonCjZoZ2MwlqJUkrZkXAmygHJiSbKS5SWEmGFM8OyeWkzbOaZ5+3/
+/O//5eC/tSS/k6u7rk/3r8u9fDnQlK4su1dRkZ4ZhkUAVKEYlghLEcWi6mhmrKv7+YPW00ePjjMR
+l8nltKa2grm1M1BVVEFRiqEnny8xlslJVXXlDvHbTj3e3XPsWVdXHsABiBiSKYgACCkHURATWGF+
+fdW0WZXpQ2eOdHrpOHu8qWlB3gEo/8YYAZSvw98ZH/9FeXkaEW1/199rz5+/0en4X0Sw1hDHyqfB
+EcLCIGKMhGGu7cvQh/v/h6oEzrJ6zXJyoWdkdAxfDMlmM9Hw8LD+DTMjkBlFaxYSBym8WIq9b5DX
+zwmWrsPVLsQ5p2LiCWhsAt+/gnev0AUrKKxrxv/4Rvm1cwTddzEtHeT2tGGCFFHkkquiE+epqoVc
+FvPoFkHfW4IPfaS6b1Ns3Ei0YQtBKoUTgGgSxgBEDSvRTVncjYuU3bkK30YJ129lfP8J4oZlOO8x
+E38kUJJHSUCq52LzJaT/I4wV0NXlMKcO4wzGe0TAT8FE2s8DuCtnMD1PiOsbkd8DlF26jBYc2eMn
+kLq6ZDeahNaBj7HXL2JuXsNvbqZw+CTytId0+2GmXbqAX7yIUnsHmnJTVSWOwQi6ZBV++15KLQeI
+G1egDcvJ/8xgHz4gWrMWEZvsTkIrSV23qwV2tiACTiFOCf7gQUr7WrHT0zg7WRHcvJpqed83wIue
+H4SRR4xFowjVGFWIjUWNRcIQax2DQ1+ZNbtS/gBYEgbXY4qmSwAAAABJRU5ErkJggg==</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>16</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>676</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>14</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

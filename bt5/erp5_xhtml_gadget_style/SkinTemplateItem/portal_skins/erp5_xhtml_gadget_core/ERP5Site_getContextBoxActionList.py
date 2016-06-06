@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  Return action and modules links for ERP5\'s navigation\n
+  box.\n
+"""\n
+from json import dumps\n
+\n
+portal= context.getPortalObject()\n
+actions = context.Base_filterDuplicateActions(portal.portal_actions.listFilteredActionsFor(context))\n
+preferred_html_style_developper_mode = portal.portal_preferences.getPreferredHtmlStyleDevelopperMode()\n
+\n
+\n
+# XXX: use client side translation!\n
+translate = context.Base_translateString\n
+\n
+def unLazyActionList(action_list):\n
+  # convert to plain dict as list items are lazy calculated ActionInfo instances\n
+  fixed_action_list = []\n
+  for action in action_list:\n
+    d = {}\n
+    for k,v in action.items():\n
+      if k in [\'url\', \'title\']:\n
+        if k == \'url\':\n
+          # escape \'&\' as not possible use it in a JSON string\n
+          if type(v)!=type(\'s\'):\n
+            # this is a tales expression so we need to calculate it\n
+            v = str(context.execExpression(v))\n
+        d[k] = v\n
+    fixed_action_list.append(d)\n
+  return fixed_action_list\n
+\n
+result = {}\n
+result[\'type_info_list\'] = []\n
+result[\'workflow_list\'] = []\n
+result[\'document_template_list\'] = []\n
+result[\'object_workflow_action_list\'] = []\n
+result[\'object_action_list\'] = []\n
+result[\'object_view_list\'] = []\n
+result[\'folder_action_list\'] = []\n
+result[\'object_jump_list\'] = unLazyActionList(actions[\'object_jump\'])\n
+\n
+# add links to edit current portal type\n
+if preferred_html_style_developper_mode:\n
+  type_info_list = []\n
+  type_info = portal.portal_types.getTypeInfo(context)\n
+  if type_info is not None:\n
+    type_info_list = [{"title": "-- %s --" %translate("Developer Mode"),\n
+                       "url": ""},\n
+                      {"title": "Edit Portal Type %s" %type_info.getPortalTypeName(),\n
+                       "url": type_info.absolute_url()}]\n
+  result[\'type_info_list\'] = type_info_list\n
+\n
+# add links for workflows\n
+if portal.portal_workflow.Base_getSourceVisibility():\n
+  workflow_list = portal.portal_workflow.getWorkflowsFor(context)\n
+  if workflow_list:\n
+    result[\'workflow_list\'] = [{"title": "-- %s --" %translate("Workflows"),\n
+                                "url": ""}]\n
+    result[\'workflow_list\'].extend([{"title": x.title,\n
+                                    "url": "%s/manage_properties" %x.absolute_url()} for x in workflow_list])\n
+# allowed types to add\n
+visible_allowed_content_type_list = context.getVisibleAllowedContentTypeList()\n
+result[\'visible_allowed_content_type_list\'] = [{"title": "Add %s" %x,\n
+                                                "url": "add %s" %x} for x in visible_allowed_content_type_list]\n
+\n
+document_template_list = context.getDocumentTemplateList()\n
+if document_template_list:\n
+  result[\'document_template_list\'] = [{"title": "-- %s --" %translate("Templates"),\n
+                                       "url": ""}]\n
+  result[\'document_template_list\'].extend([{"title": "Add %s" %x,\n
+                                            "url": "template %s" %x} for x in document_template_list])\n
+\n
+# workflow actions\n
+object_workflow_action_list = unLazyActionList(actions["workflow"])\n
+if object_workflow_action_list:\n
+  result[\'object_workflow_action_list\'] = [{"title": "-- %s --" %translate("Workflows"),\n
+                                            "url": ""}]\n
+  result[\'object_workflow_action_list\'].extend([{"title": "%s" %x[\'title\'],\n
+                                                 "url": "workflow %s" %x[\'url\']} for x in object_workflow_action_list])\n
+\n
+# object actions\n
+object_action_list = unLazyActionList(actions["object_action"])\n
+if object_action_list:\n
+  result[\'object_action_list\'] = [{"title": "-- %s --" %translate("Object"),\n
+                                   "url": ""}]\n
+  result[\'object_action_list\'].extend([{"title": "%s" %x[\'title\'],\n
+                                        "url": "object %s" %x[\'url\']} for x in object_action_list])\n
+\n
+# object_view\n
+object_view_list = [i for i in actions["object_view"] if i[\'id\']==\'module_view\']\n
+object_view_list = unLazyActionList(object_view_list)\n
+if object_view_list:\n
+  result[\'object_view_list\'].extend([{"title": "%s" %x[\'title\'],\n
+                                      "url": "object %s" %x[\'url\']} for x in object_view_list])\n
+\n
+# folder ones\n
+folder_action_list = unLazyActionList(actions["folder"])\n
+if folder_action_list:\n
+  result[\'folder_action_list\'] = [{"title": "-- %s --" %translate("Folder"),\n
+                                   "url": ""}]\n
+  result[\'folder_action_list\'].extend([{"title": "%s" %x[\'title\'],\n
+                                        "url": "folder %s" %x[\'url\']} for x in object_action_list])\n
+# XXX: buttons\n
+\n
+return dumps(result)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_getContextBoxActionList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.colorPicker.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>div.color_picker {\n
+  height: 16px;\n
+  width: 16px;\n
+  padding: 0 !important;\n
+  border: 1px solid #ccc;\n
+  background: url(arrow.gif) no-repeat top right;\n
+  cursor: pointer;\n
+  line-height: 16px;\n
+}\n
+\n
+div#color_selector {\n
+  width: 110px;\n
+  position: absolute;\n
+  border: 1px solid #598FEF;\n
+  background-color: #EFEFEF;\n
+  padding: 2px;\n
+}\n
+  div#color_custom {width: 100%; float:left }\n
+  div#color_custom label {font-size: 95%; color: #2F2F2F; margin: 5px 2px; width: 25%}\n
+  div#color_custom input {margin: 5px 2px; padding: 0; font-size: 95%; border: 1px solid #000; width: 65%; }\n
+\n
+div.color_swatch {\n
+  height: 12px;\n
+  width: 12px;\n
+  border: 1px solid #000;\n
+  margin: 2px;\n
+  float: left;\n
+  cursor: pointer;\n
+  line-height: 12px;\n
+}\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

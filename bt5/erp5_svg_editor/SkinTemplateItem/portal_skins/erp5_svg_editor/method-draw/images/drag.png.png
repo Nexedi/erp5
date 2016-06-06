@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>anonymous_http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts52851691.68</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>drag.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
+AAALEgAACxIB0t1+/AAAABV0RVh0Q3JlYXRpb24gVGltZQA3LzIxLzEy6aF4rAAAABx0RVh0U29m
+dHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNXG14zYAAADsSURBVDiNtZS9DcIwEIU/o5QegAEYgAEY
+gGHooaCDXRgE0UOfAUIdelPEFw5zdn4knmTlZJ2f3zs9B4bhgRCXtxpCCIQQRhEEQY60ROZTgrRO
+SYVsYZAt846/1QCtVmmRmXMpoL/cIpuKorLZ+AvZYJbGknmgVVm56gadH6lzmVqQRKGU5DHKAA7O
+ObNB9tNvjqwBbsBZGueqq4AXcGfi4OPFh3i+V0bcqCnYzeBB5+wHHtgAJ9TjtkAXoT2wgs9DrxSZ
+2BUbx3R2zjk9z6yqVOEW9T9T66LqtRywlGmFNbATGxEN8IzqX6jBC951oKWNYHbXfAAAAABJRU5E
+rkJggg==</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>403</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

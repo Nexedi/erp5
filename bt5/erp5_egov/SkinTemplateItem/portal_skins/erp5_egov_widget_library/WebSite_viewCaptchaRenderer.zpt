@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!-- ============================================================== -->\n
+<!--\n
+Description:\n
+  This macro render a invitation to becom vip member panel.\n
+-->\n
+\n
+<tal:block metal:define-macro="main">\n
+  <tal:block tal:define="global web_site_url web_site_url | nothing"/>\n
+  <tal:block tal:condition="not:web_site_url">\n
+    <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
+  </tal:block>\n
+  \n
+  <div class="become_vip_member">\n
+    <div class="title" i18n:domain="ui" i18n:translate="">\n
+      Anti spam test\n
+    </div>\n
+    <div class="captcha_explanations">\n
+      <tal:block i18n:domain="ui" i18n:translate="">\n
+        Type the characters you see in the picture below. \n
+        This is done to prevent access by spam bots. All letters are \n
+        lowercase. If you are unable to read, click on \'refresh\' \n
+        to generate a new image.\n
+      </tal:block>\n
+    </div>\n
+\n
+\n
+    <div class="next_step_action" tal:define="object_uid           here/getUid | nothing;\n
+                  object_path          here/getPath | nothing;\n
+                  form                 nocall: form | nothing;\n
+                  form_id              form/id | template/title_or_id | nothing;\n
+                  portal               here/getPortalObject;\n
+                  local_parameter_list local_parameter_list | python: {};\n
+                  ">\n
+\n
+      <input type="hidden" name="portal_type" value=""\n
+             tal:attributes="value python: request.get(\'portal_type\', \'\')" />\n
+\n
+      <input type="hidden" name="edit_document_url" value=""\n
+             tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), form_id)" />\n
+      <input type="hidden" name="view_document_url" value=""\n
+             tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), \'view\')" />\n
+      <!--<input type="hidden" name="actions" value=""\n
+             tal:attributes="value request/actions" />\n
+          <input type="hidden" name="current_action" value="" \n
+             tal:attributes="value request/current_action" />-->\n
+    <div>\n
+        <div class="erp5_captcha">\n
+          <img src="Captcha_getCaptchaFile?display=thumbnail&amp;format=&amp;resolution=75" alt="captcha"/>\n
+          <input class="captcha_text" type="text" size="6" name="captcha_text"/>\n
+        </div>\n
+        <a class="onright" href="" tal:attributes="href python:\'%s/%s?portal_type=%s\' % (here.absolute_url(), \'view\', request.get(\'portal_type\',\'\'))" OnClick="javascript:window.history.go()">\n
+          <img src="img/reload.png" alt="Refresh"/>\n
+        </a>\n
+      <div class="clear">\n
+      </div>\n
+        <div class="input onright">\n
+          <input class="hidden_label inline next_step" type="submit" tal:attributes="value python:context.getPortalObject().Base_translateString(\'Next Step >>\')" value="Next Step >>" name="EGov_register:method" src=""/>\n
+        </div>\n
+      <div class="clear">\n
+      </div>\n
+    </div>\n
+    </div>\n
+\n
+\n
+  </div>\n
+\n
+</tal:block>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewCaptchaRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

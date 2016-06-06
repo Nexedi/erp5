@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from ZTUtils import make_query\n
+portal = context.getPortalObject()\n
+Base_translateString = portal.Base_translateString\n
+checkPerm = portal.portal_membership.checkPermission\n
+\n
+if jump_from_relative_url is None:\n
+  relation = context\n
+else:\n
+  relation = portal.restrictedTraverse(jump_from_relative_url)\n
+\n
+# FIXME: performance problem getting *all* related documents URL is not scalable.\n
+getter_base_name = \'\'.join([x.capitalize() for x in base_category.split(\'_\')])\n
+if related:\n
+  search_method = getattr(relation, \'get%sRelatedList\' % getter_base_name)\n
+else:\n
+  search_method = getattr(relation, \'get%sList\' % getter_base_name)\n
+\n
+related_list = search_method(portal_type = portal_type)\n
+\n
+if same_type(portal_type, \'\'):\n
+  portal_type = [portal_type]\n
+\n
+relation_found = 0\n
+if len(related_list) == 0:\n
+  url = context.absolute_url()\n
+  message = Base_translateString(\n
+    \'No %s Related\' % portal_type[0],\n
+    default = unicode(Base_translateString(\'No ${portal_type} related.\',\n
+                                           mapping = { \'portal_type\': Base_translateString(portal_type[0])}), \'utf8\'))\n
+\n
+elif len(related_list) == 1:\n
+  relation_found = 1\n
+  related_object = portal.restrictedTraverse(related_list[0], None)\n
+  if related_object is None:\n
+    # this might be a category\n
+    related_object = portal.portal_categories.resolveCategory(\n
+                           "%s/%s" % (base_category, related_list[0]))\n
+\n
+  if related_object is not None and checkPerm("View", related_object) :\n
+    if target_form_id is not None:\n
+      form_id = target_form_id\n
+    else:\n
+      form_id = \'view\'\n
+    url = related_object.absolute_url()\n
+    message = Base_translateString(\n
+      # first, try to get a full translated message with portal types\n
+      "%s related to %s." % (related_object.getPortalType(), context.getPortalType()),\n
+       # if not found, fallback to generic translation\n
+      default = unicode(Base_translateString(\'${this_portal_type} related to ${that_portal_type} : ${that_title}.\',\n
+        mapping={"this_portal_type" : related_object.getTranslatedPortalType(),\n
+                 "that_portal_type" : context.getTranslatedPortalType(),\n
+                 "that_title" : context.getTitleOrId() }), \'utf8\'))\n
+  else :\n
+    url = context.absolute_url()\n
+    message = Base_translateString("You are not authorised to view the related document.")\n
+    relation_found = 0\n
+\n
+else:\n
+  # jump to the module if we can guess it\n
+  if len(portal_type) == 1:\n
+    module_id = portal.getDefaultModuleId(portal_type[0], None)\n
+    if module_id is not None:\n
+      module = portal.getDefaultModule(portal_type[0])\n
+      if related:\n
+        return module.Base_redirect(\n
+                 \'view\', keep_items={\'default_%s_uid\' % base_category: relation.getUid(),\n
+                                     \'ignore_hide_rows\': 1,\n
+                                     \'reset\': 1})\n
+      # We can not pass parameters through url, otherwise we might have too long urls (if many uids).\n
+      # Therefore check if we are in usual case of module form having a listbox, and update\n
+      # selection for it\n
+      get_uid_method = getattr(relation, \'get%sUidList\' % getter_base_name)\n
+      portal_type_object = portal.portal_types[module.getPortalType()]\n
+      module_form = portal_type_object.getDefaultViewFor(module)\n
+      if "listbox" in [x for x in module_form.objectIds()]:\n
+        listbox = module_form.listbox\n
+        selection_name = listbox.get_value("selection_name")\n
+        portal.portal_selections.setSelectionToAll(selection_name)\n
+        uid_list = get_uid_method(portal_type=portal_type, checked_permission="View")\n
+        portal.portal_selections.setSelectionParamsFor(selection_name, {"uid": uid_list})\n
+        return module.Base_redirect(\'view\', keep_items=dict(ignore_hide_rows=1))\n
+\n
+  # compute the list of objects we are actually authorised to view\n
+  related_object_list = []\n
+  for path in search_method(portal_type=portal_type) :\n
+    obj = portal.restrictedTraverse(path, None)\n
+    if obj is None:\n
+      # this might be a category\n
+      obj = portal.portal_categories.resolveCategory(\n
+                           "%s/%s" % (base_category, path))\n
+\n
+    if obj is not None and checkPerm("View", obj):\n
+      related_object_list.append(obj)\n
+  if len(related_object_list) == 0 :\n
+    url = context.absolute_url()\n
+    message = Base_translateString("You are not authorised to view any related document.")\n
+    relation_found = 0\n
+  else :\n
+    request=portal.REQUEST\n
+    selection_uid_list = [x.getUid() for x in related_object_list]\n
+    kw = {\'uid\': selection_uid_list}\n
+    portal.portal_selections.setSelectionParamsFor(\n
+                          \'Base_jumpToRelatedObjectList\', kw)\n
+    request.set(\'object_uid\', context.getUid())\n
+    request.set(\'uids\', selection_uid_list)\n
+    return getattr(context, relation_form_id)(\n
+                      uids=selection_uid_list, REQUEST=request)\n
+\n
+query_params = dict(portal_status_message=message)\n
+if selection_name and not relation_found:\n
+  query_params[\'selection_name\'] = selection_name\n
+  query_params[\'selection_index\'] = selection_index\n
+\n
+\n
+redirect_url = \'%s/%s?%s\' % (url, form_id, make_query(query_params))\n
+return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>base_category, portal_type=(), related=1, selection_name="", selection_index=0, form_id=\'view\', target_form_id=None, jump_from_relative_url=None, relation_form_id=\'Base_jumpToRelatedObjectList\'</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_jumpToRelatedObject</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

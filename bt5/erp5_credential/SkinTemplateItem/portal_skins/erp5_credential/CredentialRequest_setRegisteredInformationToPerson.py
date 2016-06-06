@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""Copy subscription information to related person\n
+Proxy:\n
+Assignee -- allow to modify the related person"""\n
+\n
+# check the script is not called from a url\n
+if REQUEST is not None:\n
+  return None\n
+\n
+from Products.ERP5Type.Errors import UnsupportedWorkflowMethod\n
+from Products.ERP5Type.Utils import sleep\n
+\n
+context.Credential_checkConsistency([\'Person\'])\n
+person = context.getDestinationDecisionValue(portal_type="Person")\n
+\n
+#Close the current career and create new career if needed\n
+default_career = getattr(person,\'default_career\',None)\n
+if default_career is not None:\n
+  try:\n
+    default_career.stop("New credential")\n
+    default_career.setStopDate(DateTime())\n
+    person.Person_shiftDefaultCareer()\n
+\n
+  except UnsupportedWorkflowMethod:\n
+    pass\n
+\n
+# Person Mapping\n
+person_mapping = (\n
+    # (subscription, person)\n
+    (\'first_name\', \'first_name\'),\n
+    (\'last_name\', \'last_name\'),\n
+    (\'gender\', \'gender\'),\n
+    (\'default_telephone_text\', \'default_telephone_text\'),\n
+    (\'default_mobile_telephone_text\', \'default_mobile_telephone_text\'),\n
+    (\'default_email_text\', \'default_email_text\'),\n
+    (\'date_of_birth\', \'start_date\'),\n
+    (\'nationality\', \'nationality\'),\n
+    (\'skill_list\', \'default_career_skill_list\'),\n
+    (\'activity_list\', \'default_career_activity_list\'),\n
+    (\'default_fax_text\', \'default_fax_text\'),\n
+    (\'default_address_street_address\', \'default_address_street_address\'),\n
+    (\'default_address_zip_code\', \'default_address_zip_code\'),\n
+    (\'default_address_city\', \'default_address_city\'),\n
+    (\'default_address_region\', \'default_address_region\'),\n
+    (\'function_list\', \'default_career_function_list\'),\n
+    (\'role_list\', \'default_career_role_list\'),\n
+    (\'default_credential_question_answer\', \'default_credential_question_answer\'),\n
+    (\'default_credential_question_question\', \'default_credential_question_question\'),\n
+    (\'default_credential_question_question_free_text\', \'default_credential_question_question_free_text\'),\n
+    )\n
+\n
+context.Credential_copyRegistredInformation(person, person_mapping)\n
+\n
+#try to validate, can be get error if already validated\n
+try:\n
+  person.validate()\n
+except UnsupportedWorkflowMethod:\n
+  pass\n
+\n
+#Get the default career\n
+default_career = getattr(person,\'default_career\',None)\n
+\n
+#Set the person subordination if we have a relative organisation on the credential\n
+organisation = context.getDestinationDecisionValue(portal_type="Organisation")\n
+if organisation is not  None:\n
+  default_career.setSubordinationValue(organisation)\n
+\n
+#Try to validate the default career\n
+try:\n
+  default_career.start()\n
+  default_career.setStartDate(DateTime())\n
+except UnsupportedWorkflowMethod:\n
+  pass\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>REQUEST=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CredentialRequest_setRegisteredInformationToPerson</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

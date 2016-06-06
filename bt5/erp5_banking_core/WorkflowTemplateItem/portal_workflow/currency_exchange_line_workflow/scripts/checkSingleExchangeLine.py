@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+from DateTime import DateTime\n
+\n
+\n
+exchange_line = state_change[\'object\']\n
+\n
+# In this script, we will make sure it is impossible to get two \n
+# exchange lines opened in the same time.\n
+\n
+if exchange_line.getBasePrice() in (None, 0, 0.0):\n
+  msg = Message(domain = \'ui\', message = \'Sorry, you must define a fixing price.\')\n
+  raise ValidationFailed, (msg,)\n
+\n
+\n
+# We have to looking for other currency exchanges lines\n
+# Note: SupplyCell is the class of Currency Exchange Line portal type objects\n
+# But in reality, anything should do.\n
+from Products.ERP5Type.Document import newTempSupplyCell as newTemp\n
+temp_object = newTemp(context.getPortalObject(),\'temp_object\')\n
+start_date = exchange_line.getStartDate()\n
+temp_kw = {\'category_list\':[\'resource/%s\' % exchange_line.getParentValue().getRelativeUrl(),\n
+                            \'price_currency/%s\' % exchange_line.getPriceCurrency()],\n
+           \'start_date\':start_date\n
+          }\n
+temp_object.edit(**temp_kw)\n
+line_list = [x for x in exchange_line.portal_domains.searchPredicateList(temp_object,\n
+                                            portal_type=\'Currency Exchange Line\',\n
+                                            validation_state=\'validated\',\n
+                                            test=1)\n
+             if x.getUid()!=exchange_line.getUid()]\n
+\n
+\n
+start_date = exchange_line.getStartDate()\n
+if start_date is None:\n
+  msg = Message(domain = \'ui\', message = \'Sorry, you must define a start date.\')\n
+  raise ValidationFailed, (msg,)\n
+\n
+# Make sure there is not two exchange lines wich defines the same dates\n
+# for this particular ressource and price_currency\n
+for line in line_list:\n
+  if line.getStopDate() is None or line.getStopDate()>line.getStartDate():\n
+    line.setStopDate(start_date)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>checkSingleExchangeLine</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

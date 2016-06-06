@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test title</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1" tal:define="site_title python:here.getPortalObject().getTitle()">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test title</td></tr>\n
+</thead><tbody>\n
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/portal_skins/erp5_ui_test/Base_createUITestLanguages"></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>New Languages Added</td>\n
+  <td></td>\n
+</tr>\n
+<tal:block tal:repeat="param_dict python: [\n
+  {\'message\': \'Foo\', \'translation\': \'Woo\', \'language\': \'wo\', \'catalog_id\': \'erp5_ui\'},\n
+  {\'message\': \'Foos\', \'translation\': \'Woos\', \'language\': \'wo\', \'catalog_id\': \'erp5_ui\'},\n
+  {\'message\': \'Dummy Workflow Action\', \'translation\': \'Muumu Workflow Action\', \'language\': \'wo\', \'catalog_id\': \'erp5_ui\'},\n
+  {\'message\': \'History\', \'translation\': \'Leeb\', \'language\': \'wo\', \'catalog_id\': \'erp5_ui\'},\n
+  {\'message\': \'Business Template Definition\', \'translation\': \'Afeer Template Definition\', \'language\': \'wo\', \'catalog_id\': \'erp5_ui\'},\n
+]">\n
+  <tr tal:define="dummy python: param_dict.update({\'root\': here.portal_url()})">\n
+    <td>open</td>\n
+    <td tal:content="python: \'%(root)s/portal_skins/erp5_ui_test/Base_addUITestTranslation?message=%(message)s&translation=%(translation)s&language=%(language)s&catalog_id=%(catalog_id)s\' % param_dict"></td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>assertTextPresent</td>\n
+    <td tal:content="python: \'Translation of %(message)s updated\' % param_dict"/>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>\n
+\n
+<tal:block tal:repeat="language python:[\n
+  (\'\', {\n
+    \'view\': \'Foo\',\n
+    \'list\': \'Foos\',\n
+    \'dialog\': \'Dummy Workflow Action\',\n
+    \'report\': \'History\',\n
+    \'quad\': \'Business Template Definition\',\n
+  }),\n
+  (\'wo\', {\n
+    \'view\': \'Woo\',\n
+    \'list\': \'Woos\',\n
+    \'dialog\': \'Muumu Workflow Action\',\n
+    \'report\': \'Leeb\',\n
+    \'quad\': \'Afeer Template Definition\',\n
+  }),\n
+]">\n
+\n
+<!-- View mode: title of the form - title of the object -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_language</td>\n
+  <td tal:content="python: \'value=%s\' % (language[0], )"/>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyTitle</td>\n
+  <td tal:content="python:\'%s - Title 0 | %s\' % (language[1][\'view\'], site_title)"/>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<!-- List mode: title of the form -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTitle</td>\n
+  <td tal:content="python:\'%s | %s\' % (language[1][\'list\'], site_title)"/>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Dialog mode: title of the form -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td tal:content="python: language[1][\'dialog\']"/>\n
+</tr>\n
+<tr>\n
+  <td>verifyTitle</td>\n
+  <td tal:content="python:\'%s | %s\' % (language[1][\'dialog\'], site_title)"/>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Report view mode: title of the form - title of the object -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Base_viewHistory</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTitle</td>\n
+  <td tal:content="python:\'%s - Title 0 | %s\' % (language[1][\'report\'], site_title)"/>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/BusinessTemplate_view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTitle</td>\n
+  <td tal:content="python:\'%s - Title 0 | %s\' % (language[1][\'quad\'], site_title)"/>\n
+  <td></td>\n
+</tr>\n
+</tal:block>\n
+\n
+<!-- portal: title of the portal -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTitle</td>\n
+  <td tal:content="python:\'ERP5 | %s\' % site_title">ERP5 | ERP5</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_language</td>\n
+  <td>label=English</td>\n
+</tr>\n
+\n
+</tbody></table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testTitle</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

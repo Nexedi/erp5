@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode>\074html\076\n
+  \074head\076\n
+    \074title tal:content="template/title"\076The title\074/title\076\n
+    \074meta http-equiv="content-type" content="text/html;charset=utf-8"\076\n
+  \074/head\076\n
+  \074body\076\n
+\n
+    \074script type="text/javascript" language="javascript"\076\n
+      //\074![CDATA[\n
+        $(document).ready(function() {\n
+            gadget = RenderJs.getSelfGadget();\n
+\n
+            // default tab should be openned fist\n
+            gadget.redirect = function () {\n
+              $.url.redirect(\'/\' + gadget.default_tab_url + \'/\');\n
+            };\n
+\n
+            // default route\n
+            RenderJs.RouteGadget.add(\'\', gadget.redirect, 1);\n
+\n
+            $.each(gadget.action_id_list, function(index, value) {\n
+              // add dynamic function to gadget that will take care to render tab using gadgets\n
+              gadget[value] = function () {\n
+                 ERP5Form.openFormInTabbularGadget(gadget.tab_container_id, value);\n
+              };\n
+              //add dynamic route\n
+              RenderJs.RouteGadget.add(\'/\' + value + \'/\', gadget[value], 1);\n
+            });\n
+        });\n
+      //]]\076\n
+    \074/script\076\n
+\n
+  \074/body\076\n
+\074/html\076</unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_tabbular_form_renderer</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308765.54</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>app.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>//\r\n
+// Common\r\n
+// --------------------------------------------------\r\n
+\r\n
+// App variables\r\n
+@import "variables.less";\r\n
+\r\n
+@import "../../../../common/main/resources/less/asc-mixins.less";\r\n
+\r\n
+// Bootstrap overwrite\r\n
+@import "../../../../common/main/resources/less/variables.less";\r\n
+\r\n
+//\r\n
+// Bootstrap\r\n
+// --------------------------------------------------\r\n
+\r\n
+// Core variables and mixins\r\n
+//@import "../../../../vendor/bootstrap/less/variables.less";\r\n
+@import "../../../../../vendor/bootstrap/less/mixins.less";\r\n
+\r\n
+// Reset\r\n
+@import "../../../../../vendor/bootstrap/less/normalize.less";\r\n
+//@import "print.less";\r\n
+\r\n
+// Core CSS\r\n
+@import "../../../../../vendor/bootstrap/less/scaffolding.less";\r\n
+@import "../../../../../vendor/bootstrap/less/type.less";\r\n
+//@import "code.less";\r\n
+//@import "grid.less";\r\n
+//@import "tables.less";\r\n
+@import "../../../../../vendor/bootstrap/less/forms.less";\r\n
+@import "../../../../../vendor/bootstrap/less/buttons.less";\r\n
+\r\n
+// Components\r\n
+@import "../../../../../vendor/bootstrap/less/component-animations.less";\r\n
+//@import "glyphicons.less";\r\n
+@import "../../../../../vendor/bootstrap/less/dropdowns.less";\r\n
+@import "../../../../../vendor/bootstrap/less/button-groups.less";\r\n
+@import "../../../../../vendor/bootstrap/less/input-groups.less";\r\n
+@import "../../../../../vendor/bootstrap/less/navs.less";\r\n
+//@import "navbar.less";\r\n
+//@import "breadcrumbs.less";\r\n
+//@import "pagination.less";\r\n
+//@import "pager.less";\r\n
+//@import "labels.less";\r\n
+//@import "badges.less";\r\n
+//@import "jumbotron.less";\r\n
+//@import "thumbnails.less";\r\n
+//@import "alerts.less";\r\n
+//@import "progress-bars.less";\r\n
+//@import "media.less";\r\n
+//@import "list-group.less";\r\n
+//@import "panels.less";\r\n
+//@import "wells.less";\r\n
+//@import "close.less";\r\n
+\r\n
+// Components w/ JavaScript\r\n
+//@import "modals.less";\r\n
+@import "../../../../../vendor/bootstrap/less/tooltip.less";\r\n
+//@import "popovers.less";\r\n
+//@import "carousel.less";\r\n
+\r\n
+// Utility classes\r\n
+@import "../../../../../vendor/bootstrap/less/utilities.less";\r\n
+@import "../../../../../vendor/bootstrap/less/responsive-utilities.less";\r\n
+\r\n
+//\r\n
+// Perfect scrollbar\r\n
+// --------------------------------------------------\r\n
+\r\n
+@import (inline) "../../../../../vendor/perfect-scrollbar/src/perfect-scrollbar.css";\r\n
+\r\n
+//\r\n
+// Common\r\n
+// --------------------------------------------------\r\n
+\r\n
+@import "../../../../common/main/resources/less/header.less";\r\n
+@import "../../../../common/main/resources/less/buttons.less";\r\n
+@import "../../../../common/main/resources/less/dropdown-menu.less";\r\n
+@import "../../../../common/main/resources/less/dropdown-submenu.less";\r\n
+@import "../../../../common/main/resources/less/separator.less";\r\n
+@import "../../../../common/main/resources/less/input.less";\r\n
+@import "../../../../common/main/resources/less/combobox.less";\r\n
+@import "../../../../common/main/resources/less/window.less";\r\n
+@import "../../../../common/main/resources/less/spinner.less";\r\n
+@import "../../../../common/main/resources/less/loadmask.less";\r\n
+@import "../../../../common/main/resources/less/checkbox.less";\r\n
+@import "../../../../common/main/resources/less/radiobox.less";\r\n
+@import "../../../../common/main/resources/less/dataview.less";\r\n
+@import "../../../../common/main/resources/less/listview.less";\r\n
+@import "../../../../common/main/resources/less/colorpalette.less";\r\n
+@import "../../../../common/main/resources/less/theme-colorpalette.less";\r\n
+@import "../../../../common/main/resources/less/dimension-picker.less";\r\n
+@import "../../../../common/main/resources/less/hsb-colorpicker.less";\r\n
+@import "../../../../common/main/resources/less/table-styler.less";\r\n
+@import "../../../../common/main/resources/less/masked-field.less";\r\n
+@import "../../../../common/main/resources/less/extended-color-picker.less";\r\n
+@import "../../../../common/main/resources/less/layout.less";\r\n
+@import "../../../../common/main/resources/less/combo-border-size.less";\r\n
+@import "../../../../common/main/resources/less/combo-dataview.less";\r\n
+@import "../../../../common/main/resources/less/slider.less";\r\n
+@import "../../../../common/main/resources/less/multislider-gradient.less";\r\n
+@import "../../../../common/main/resources/less/advanced-settings-window.less";\r\n
+@import "../../../../common/main/resources/less/chat.less";\r\n
+@import "../../../../common/main/resources/less/comments.less";\r\n
+@import "../../../../common/main/resources/less/searchdialog.less";\r\n
+@import "../../../../common/main/resources/less/about.less";\r\n
+@import "../../../../common/main/resources/less/tooltip.less";\r\n
+@import "../../../../common/main/resources/less/scroller.less";\r\n
+@import "../../../../common/main/resources/less/synchronize-tip.less";\r\n
+@import "../../../../common/main/resources/less/tabbar.less";\r\n
+@import "../../../../common/main/resources/less/common.less";\r\n
+\r\n
+// App\r\n
+// --------------------------------------------------\r\n
+\r\n
+@import "layout.less";\r\n
+@import "toolbar.less";\r\n
+@import "statusbar.less";\r\n
+@import "leftmenu.less";\r\n
+@import "rightmenu.less";\r\n
+@import "advanced-settings.less";\r\n
+@import "celleditor.less";\r\n
+@import "formuladialog.less";\r\n
+@import "filterdialog.less";\r\n
+@import "opendialog.less";\r\n
+\r\n
+.font-size-small {\r\n
+    .fontsize(@font-size-small);\r\n
+}\r\n
+\r\n
+.font-size-normal {\r\n
+    .fontsize(@font-size-base);\r\n
+}\r\n
+\r\n
+.font-size-large {\r\n
+    .fontsize(@font-size-large);\r\n
+}\r\n
+\r\n
+@huge-icon-size: 37px;\r\n
+@x-huge-icon-size: 45px;</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5329</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

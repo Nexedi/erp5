@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314529.56</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>alerts.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//\n
+// Alerts\n
+// --------------------------------------------------\n
+\n
+\n
+// Base styles\n
+// -------------------------\n
+\n
+.alert {\n
+  padding: @alert-padding;\n
+  margin-bottom: @line-height-computed;\n
+  border: 1px solid transparent;\n
+  border-radius: @alert-border-radius;\n
+\n
+  // Headings for larger alerts\n
+  h4 {\n
+    margin-top: 0;\n
+    // Specified for the h4 to prevent conflicts of changing @headings-color\n
+    color: inherit;\n
+  }\n
+  // Provide class for links that match alerts\n
+  .alert-link {\n
+    font-weight: @alert-link-font-weight;\n
+  }\n
+\n
+  // Improve alignment and spacing of inner content\n
+  > p,\n
+  > ul {\n
+    margin-bottom: 0;\n
+  }\n
+  > p + p {\n
+    margin-top: 5px;\n
+  }\n
+}\n
+\n
+// Dismissable alerts\n
+//\n
+// Expand the right padding and account for the close button\'s positioning.\n
+\n
+.alert-dismissable {\n
+ padding-right: (@alert-padding + 20);\n
+\n
+  // Adjust close link position\n
+  .close {\n
+    position: relative;\n
+    top: -2px;\n
+    right: -21px;\n
+    color: inherit;\n
+  }\n
+}\n
+\n
+// Alternate styles\n
+//\n
+// Generate contextual modifier classes for colorizing the alert.\n
+\n
+.alert-success {\n
+  .alert-variant(@alert-success-bg; @alert-success-border; @alert-success-text);\n
+}\n
+.alert-info {\n
+  .alert-variant(@alert-info-bg; @alert-info-border; @alert-info-text);\n
+}\n
+.alert-warning {\n
+  .alert-variant(@alert-warning-bg; @alert-warning-border; @alert-warning-text);\n
+}\n
+.alert-danger {\n
+  .alert-variant(@alert-danger-bg; @alert-danger-border; @alert-danger-text);\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1430</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# This scripts allows to update a list so that it\n
+# can be displayed correctly in a graph\n
+# The list given have to be of the forme:\n
+#  list = [[Datetime(),value (,value)*],([Datetime(),value (,value)*])*]\n
+\n
+list.sort()\n
+\n
+# Check if there is any none value, and replace it by 0\n
+\n
+formated_list = []\n
+if len(list) >= 1:\n
+  for i in range(len(list)):\n
+    for index_value in range(1,len(list[0])):\n
+      if list[i][index_value]==None:\n
+        list[i][index_value]=0\n
+  formated_list.append(list[0])\n
+  for i in range(1,len(list)):\n
+    nb_days = int(list[i][0]-list[i-1][0])\n
+    for day in range(1,nb_days):\n
+      formated_list.append([list[i-1][0]+day])\n
+      for nb_value in range(1,len(list[i-1])):\n
+        formated_list[len(formated_list)-1].append(list[i-1][nb_value])\n
+    formated_list.append(list[i])\n
+\n
+return formated_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>list=[]</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_convertDateListToChartList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

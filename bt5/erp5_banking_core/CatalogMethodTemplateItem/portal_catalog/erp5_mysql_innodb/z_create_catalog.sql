@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>z_create_catalog</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>1000</int> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string># Host:\n
+# Database: test\n
+# Table: \'catalog\'\n
+#\n
+CREATE TABLE `catalog` (\n
+  `uid` BIGINT UNSIGNED NOT NULL,\n
+  `security_uid` INT UNSIGNED,\n
+  `path` varchar(255) NOT NULL default \'\',\n
+  `owner` varchar(32) NOT NULL default \'\',\n
+  `relative_url` varchar(255) NOT NULL default \'\',\n
+  `parent_uid` BIGINT UNSIGNED default \'0\',\n
+  `id` varchar(255) default \'\',\n
+  `description` text,\n
+  `title` varchar(255) default \'\',\n
+  `portal_type` varchar(255) default \'\',\n
+  `validation_state` varchar(255) default \'\',\n
+  `simulation_state` varchar(255) default \'\',\n
+  `reference` varchar(255) default \'\',\n
+  `source_reference` varchar(255) default \'\',\n
+  `string_index` varchar(255),\n
+  `int_index` INT,\n
+  `has_cell_content` bool,\n
+  `creation_date` datetime,\n
+  `modification_date` datetime,\n
+  `start_date` datetime,\n
+  `stop_date` datetime,\n
+  `indexation_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n
+  PRIMARY KEY  (`uid`),\n
+  KEY `owner` (`owner`),\n
+  KEY `Parent` (`parent_uid`, `security_uid`),\n
+  KEY `parent_simulation_security` (`parent_uid`, `simulation_state`, `security_uid`),\n
+  KEY `validation_state` (`validation_state`, `portal_type`, `security_uid`),\n
+  KEY `simulation_state` (`simulation_state`, `portal_type`, `security_uid`),\n
+  KEY `source_reference` (`parent_uid`, `source_reference`),\n
+  KEY `type_source_reference` (`portal_type`, `source_reference`),\n
+  KEY `start_date` (`parent_uid`, `start_date`),\n
+  KEY `reference` (`portal_type`, `reference`),\n
+  KEY `Path` (`path`),\n
+  KEY `relative_url` (`relative_url`),\n
+  KEY `indexation_date` (`indexation_date`)\n
+) ENGINE=InnoDB;\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

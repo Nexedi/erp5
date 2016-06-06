@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>anonymous_http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts52852145.54</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>touch.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+function touchHandler(event)\n
+{   \n
+    \n
+    var touches = event.changedTouches,\n
+        first = touches[0],\n
+        type = "";\n
+         switch(event.type)\n
+    {\n
+        case "touchstart": type="mousedown"; break;\n
+        case "touchmove":  type="mousemove"; break;        \n
+        case "touchend":   type="mouseup"; break;\n
+        default: return;\n
+    }\n
+\n
+             //initMouseEvent(type, canBubble, cancelable, view, clickCount, \n
+    //           screenX, screenY, clientX, clientY, ctrlKey, \n
+    //           altKey, shiftKey, metaKey, button, relatedTarget);\n
+    \n
+    var simulatedEvent = document.createEvent("MouseEvent");\n
+    simulatedEvent.initMouseEvent(type, true, true, window, 1, \n
+                              first.screenX, first.screenY, \n
+                              first.clientX, first.clientY, false, \n
+                              false, false, false, 0/*left*/, null);\n
+    if(touches.length < 2) {\n
+      first.target.dispatchEvent(simulatedEvent);\n
+      event.preventDefault();\n
+    }\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1008</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

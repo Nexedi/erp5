@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""Returns Simulation Movements for invoice\n
+\n
+Simulation Movements can come from normal Invoice Transaction Rule\n
+and same rule which is children of Trade Model Rule """\n
+\n
+# search for normal movements\n
+kw[\'parent_specialise_reference\'] = [\'default_invoice_transaction_rule\']\n
+kw[\'grand_grand_parent_specialise_reference\'] = [\n
+             \'default_invoicing_rule\', \'default_invoice_rule\', \'default_tax_rule\']\n
+if context.Invoice_isAdvanced():\n
+  kw[\'explanation_portal_type\']       = [\'%s Order\' % trade_type,\n
+                                         \'%s Invoice\' % trade_type,\n
+                                         \'%s Packing List\' % trade_type,\n
+                                         \'Returned %s Packing List\' % trade_type]\n
+else:\n
+  kw[\'explanation_portal_type\']       = [\'%s Order\' % trade_type,\n
+                                         \'%s Invoice Transaction\' % trade_type,\n
+                                         \'%s Packing List\' % trade_type,\n
+                                         \'Returned %s Packing List\' % trade_type]\n
+kw[\'portal_type\']                   = \'Simulation Movement\'\n
+\n
+kw[\'delivery_uid\'] = None\n
+kw[\'left_join_list\'] = [\'delivery_uid\']\n
+kw[\'select_dict\'] = dict(delivery_uid=None)\n
+kw[\'group_by\'] = (\'uid\',)\n
+\n
+search_kw = kw.copy()\n
+search_kw[\'grand_parent_simulation_state\'] = [\'started\']\n
+\n
+movement_list = list(context.portal_catalog(**search_kw))\n
+\n
+# update query to search for movements which are children of Trade Model Rule\n
+kw[\'grand_grand_parent_specialise_reference\'] = \'default_trade_model_rule\'\n
+kw[\'grand_grand_grand_parent_simulation_state\'] = [\'started\']\n
+\n
+movement_list += list(context.portal_catalog(**kw))\n
+\n
+return movement_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>trade_type, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>InvoiceTransaction_selectInvoiceMovement</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

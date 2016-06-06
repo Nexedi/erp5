@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block tal:define="isAnon here/portal_membership/isAnonymousUser">\n
+  <tal:block tal:condition="isAnon">\n
+   <p class="article">\n
+     <span tal:replace="python: here.Base_translateString(\'You are not logged in\')"/>\n
+   </p>\n
+   <p class="article">\n
+     <a tal:attributes="href python: here.getWebSiteValue().absolute_url()+\'/register\';\n
+                        class string: articlelink">\n
+       &#149; <span tal:replace="python: here.Base_translateString(\'I want to create an account\')"/>\n
+     </a>\n
+   </p>\n
+\n
+     <table>\n
+       <tr>\n
+         <td class="article"><span tal:replace="python: here.Base_translateString(\'Username\')"/>:</td>\n
+         <td><input name="__ac_name" size="10" type="text" /></td>\n
+       </tr>\n
+       <tr>\n
+         <td class="article"><span tal:replace="python: here.Base_translateString(\'Password\')"/>:</td>\n
+         <td><input type="password" name="__ac_password" size="10" class="input"/></td>\n
+       </tr>\n
+       <tr>\n
+         <td><input type="hidden" name="came_from" tal:attributes="value here/absolute_url"/>\n
+             <input type="hidden" name="__ac_persistent" value="0"/>\n
+             <input type="submit" value="Login" name="WebSite_login:method"/>\n
+         </td>\n
+       </tr>\n
+     </table>\n
+   </tal:block>\n
+\n
+  <tal:block tal:condition="not: isAnon"\n
+             tal:define="shopping_cart here/SaleOrder_getShoppingCart;\n
+                         customer shopping_cart/SaleOrder_getShoppingCartCustomer;\n
+                         website here/getWebSiteValue">\n
+\n
+    <p class="article">\n
+    <span><span tal:replace="python: here.Base_translateString(\'You are logged as\')"/>  <span tal:replace="customer/getTitle | string:Unknown User"/></span>\n
+    </p>\n
+    <a class="articlelink" \n
+      tal:attributes="href python: \'%s/sale_order_module/SaleOrderModule_viewAsWebSaleOrderList\' % website.absolute_url()">\n
+      <span tal:replace="python: here.Base_translateString(\'My Orders\')"/>\n
+    </a> &nbsp;\n
+    <a class="articlelink" \n
+       tal:attributes="href python: \'%s/account\' % website.absolute_url()"> \n
+       <span tal:replace="python: here.Base_translateString(\'My Account\')"/>\n
+    </a> &nbsp;\n
+    <a class="articlelink" \n
+      tal:attributes="href python: \'%s/WebSite_logout\' %website.absolute_url()">\n
+      <span tal:replace="python: here.Base_translateString(\'Logout\')"/>\n
+    </a>\n
+    <br/>\n
+  </tal:block>\n
+\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewStandardLoginWidgetRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode>Login/Logout widget</unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

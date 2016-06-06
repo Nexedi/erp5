@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# base_id possible value: \'quantity\', \'variation\'\n
+\n
+get_variation_base_category_method_dict = {\n
+  \'quantity\': \'getQVariationBaseCategoryList\',\n
+  \'variation\': \'getVVariationBaseCategoryList\'\n
+}\n
+\n
+cell_range = []\n
+transformation = context.getParentValue()\n
+\n
+# Those value are define on property sheet of portal type\n
+line_base_category = transformation.getVariationBaseCategoryLine()\n
+column_base_category = transformation.getVariationBaseCategoryColumn()\n
+\n
+base_category_list = transformation.getVariationBaseCategoryList()\n
+tab_base_category_list = filter(lambda x: x not in [line_base_category, \n
+                                     column_base_category], base_category_list)\n
+\n
+for c in ([line_base_category, column_base_category] + tab_base_category_list):\n
+  # try to display line first, then column, and finally others\n
+  if c in getattr(context, \n
+                  get_variation_base_category_method_dict[base_id])():\n
+    # base category was selected by user\n
+    if matrixbox == 1:\n
+      # XXX matrixbox is right_display (not as listfield) \n
+      # => invert display and value in item\n
+      cell_range.append(map(lambda x: (x[1],x[0]), \n
+                        transformation.getVariationCategoryItemList\n
+                                (base_category_list=(c,))))\n
+    else:\n
+      cell_range.append(transformation.getVariationCategoryList(\n
+                                             base_category_list=(c,)))\n
+\n
+# Remove empty range\n
+cell_range = filter(lambda x: x != [], cell_range)\n
+\n
+return cell_range\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>matrixbox=0, base_id=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TransformedResource_asCellRange</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

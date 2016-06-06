@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308806.69</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Scroll_center.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\x89PNG\r\n
+\x1a\n
+\x00\x00\x00\rIHDR\x00\x00\x00\x0e\x00\x00\x00\r\x08\x06\x00\x00\x00\x99\xdc_\x7f\x00\x00\x00\x19tEXtSoftware\x00Adobe ImageReadyq\xc9e<\x00\x00\x03"iTXtXML:com.adobe.xmp\x00\x00\x00\x00\x00<?xpacket begin="\xef\xbb\xbf" id="W5M0MpCehiHzreSzNTczkc9d"?> <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.3-c011 66.145661, 2012/02/06-14:56:27        "> <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"> <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/" xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#" xmp:CreatorTool="Adobe Photoshop CS6 (Windows)" xmpMM:InstanceID="xmp.iid:EDE7926A4E1F11E492ECEEA06CDE687D" xmpMM:DocumentID="xmp.did:EDE7926B4E1F11E492ECEEA06CDE687D"> <xmpMM:DerivedFrom stRef:instanceID="xmp.iid:EDE792684E1F11E492ECEEA06CDE687D" stRef:documentID="xmp.did:EDE792694E1F11E492ECEEA06CDE687D"/> </rdf:Description> </rdf:RDF> </x:xmpmeta> <?xpacket end="r"?>\xd2\xe8Qg\x00\x00\x006IDATx\xdab\xfc\xff\xff?\x03\x08\\\xb8p\x01\xc2\x80\x00F\x10ahh\x08\xe6|\xfc\xf8\x11C\x8e\x01\xa4\x11\xa6\x99\x14\xc08j\xe3\xa8\x8dt\xb3\x91\x19D\x00\x04\x18\x00\xdb.o\xabp\x92\xef%\x00\x00\x00\x00IEND\xaeB`\x82
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>962</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,570 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308796.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>api.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\r\n
+ * Copyright (c) Ascensio System SIA 2013. All rights reserved\r\n
+ *\r\n
+ * http://www.onlyoffice.com\r\n
+ */\r\n
+\r\n
+;(function(DocsAPI, window, document, undefined) {\r\n
+\r\n
+    /*\r\n
+\r\n
+        # Full #\r\n
+\r\n
+        config = {\r\n
+            type: \'desktop or mobile\',\r\n
+            width: \'100% by default\',\r\n
+            height: \'100% by default\',\r\n
+            documentType: \'text\' | \'spreadsheet\' | \'presentation\',\r\n
+            document: {\r\n
+                title: \'document title\',\r\n
+                url: \'document url\'\r\n
+                fileType: \'document file type\',\r\n
+                options: <advanced options>,\r\n
+                key: \'key\',\r\n
+                vkey: \'vkey\',\r\n
+                info: {\r\n
+                    author: \'author name\',\r\n
+                    folder: \'path to document\',\r\n
+                    created: <creation date>,\r\n
+                    sharingSettings: [\r\n
+                        {\r\n
+                            user: \'user name\',\r\n
+                            permissions: <permissions>\r\n
+                        },\r\n
+                        ...\r\n
+                    ]\r\n
+                },\r\n
+                permissions: {\r\n
+                    edit: <can edit>,\r\n
+                    download: <can download>,\r\n
+                    reader: <can view in readable mode>\r\n
+                }\r\n
+            },\r\n
+            editorConfig: {\r\n
+                mode: \'view or edit\',\r\n
+                lang: <language code>,\r\n
+                canCoAuthoring: <can coauthoring documents>,\r\n
+                canAutosave: <can autosave documents>,\r\n
+                canBackToFolder: <can return to folder>,\r\n
+                createUrl: \'create document url\', // editor will add \'?title={document title}&template={template name}&action=create\', prevent to create a new document if empty\r\n
+                sharingSettingsUrl: \'document sharing settings url\',\r\n
+                callbackUrl: <url for connection between sdk and portal>,\r\n
+                user: {\r\n
+                    id: \'user id\',\r\n
+                    name: \'full user name\'\r\n
+                },\r\n
+                recent: [\r\n
+                    {\r\n
+                        title: \'document title\',\r\n
+                        url: \'document url\',\r\n
+                        folder: \'path to document\'\r\n
+                    },\r\n
+                    ...\r\n
+                ],\r\n
+                templates: [\r\n
+                    {\r\n
+                        name: \'template name\',\r\n
+                        icon: \'template icon url\'\r\n
+                    },\r\n
+                    ...\r\n
+                ],\r\n
+                customization: {\r\n
+                    logo: {\r\n
+                        image: url,\r\n
+                        imageEmbedded: url,\r\n
+                        url: http://...\r\n
+                    },\r\n
+                    backgroundColor: \'header background color\',\r\n
+                    textColor: \'header text color\',\r\n
+                    customer: {\r\n
+                        name: \'SuperPuper\',\r\n
+                        address: \'New-York, 125f-25\',\r\n
+                        mail: \'support@gmail.com\',\r\n
+                        www: \'www.superpuper.com\',\r\n
+                        info: \'Some info\',\r\n
+                        logo: \'\'\r\n
+                    },\r\n
+                    about: false,\r\n
+                    feedback: {\r\n
+                        visible: false,\r\n
+                        url: http://...\r\n
+                    },\r\n
+                    goback: {\r\n
+                        visible: false,\r\n
+                        text: \'Go to London\'\r\n
+                    },\r\n
+                    chat: false,\r\n
+                    comments: false\r\n
+                }\r\n
+            },\r\n
+            events: {\r\n
+                \'onReady\': <document ready callback>,\r\n
+                \'onBack\': <back to folder callback>,\r\n
+                \'onDocumentStateChange\': <document state changed callback>,\r\n
+                \'onSave\': <save request callback>\r\n
+            }\r\n
+        }\r\n
+\r\n
+        # Embedded #\r\n
+\r\n
+        config = {\r\n
+            type: \'embedded\',\r\n
+            width: \'100% by default\',\r\n
+            height: \'100% by default\',\r\n
+            documentType: \'text\' | \'spreadsheet\' | \'presentation\',\r\n
+            document: {\r\n
+                title: \'document title\',\r\n
+                url: \'document url\',\r\n
+                fileType: \'document file type\',\r\n
+                key: \'key\',\r\n
+                vkey: \'vkey\'\r\n
+            },\r\n
+            editorConfig: {\r\n
+                embedded: {\r\n
+                     embedUrl: \'url\',\r\n
+                     fullscreenUrl: \'url\',\r\n
+                     saveUrl: \'url\',\r\n
+                     shareUrl: \'url\',\r\n
+                     toolbarDocked: \'top or bottom\'\r\n
+                }\r\n
+            },\r\n
+            events: {\r\n
+                \'onReady\': <document ready callback>,\r\n
+                \'onBack\': <back to folder callback>,\r\n
+                \'onError\': <error callback>,\r\n
+            }\r\n
+        }\r\n
+    */\r\n
+\r\n
+    // TODO: allow several instances on one page simultaneously\r\n
+\r\n
+    DocsAPI.DocEditor = function(placeholderId, config) {\r\n
+        var _self = this,\r\n
+            _config = config || {};\r\n
+\r\n
+        extend(_config, DocsAPI.DocEditor.defaultConfig);\r\n
+        _config.editorConfig.canBackToFolder = _config.events && !!_config.events.onBack;\r\n
+        _config.editorConfig.canUseHistory = !!_config.events.onRequestHistory;\r\n
+\r\n
+        var onMouseUp = function (evt) {\r\n
+            _processMouse(evt);\r\n
+        };\r\n
+\r\n
+        var _attachMouseEvents = function() {\r\n
+            if (window.addEventListener) {\r\n
+                window.addEventListener("mouseup", onMouseUp, false)\r\n
+            } else if (window.attachEvent) {\r\n
+                window.attachEvent("onmouseup", onMouseUp);\r\n
+            }\r\n
+        };\r\n
+\r\n
+        var _detachMouseEvents = function() {\r\n
+            if (window.removeEventListener) {\r\n
+                window.removeEventListener("mouseup", onMouseUp, false)\r\n
+            } else if (window.detachEvent) {\r\n
+                window.detachEvent("onmouseup", onMouseUp);\r\n
+            }\r\n
+        };\r\n
+\r\n
+        var _onReady = function() {\r\n
+            if (_config.type === \'mobile\') {\r\n
+                document.body.onfocus = function(e) {\r\n
+                    setTimeout(function(){\r\n
+                        iframe.contentWindow.focus();\r\n
+\r\n
+                        _sendCommand({\r\n
+                            command: \'resetFocus\',\r\n
+                            data: {}\r\n
+                        })\r\n
+                    }, 10);\r\n
+                };\r\n
+            }\r\n
+\r\n
+            _attachMouseEvents();\r\n
+\r\n
+            if (_config.editorConfig) {\r\n
+                _init(_config.editorConfig);\r\n
+            }\r\n
+\r\n
+            if (_config.document) {\r\n
+                _openDocument(_config.document);\r\n
+            }\r\n
+        };\r\n
+\r\n
+        var _onMessage = function(msg) {\r\n
+            if (msg) {\r\n
+                var events = _config.events || {},\r\n
+                    handler = events[msg.event],\r\n
+                    res;\r\n
+\r\n
+                if (msg.event === \'onRequestEditRights\' && !handler) {\r\n
+                    _applyEditRights(true, \'handler is\\\'n defined\');\r\n
+                } else {\r\n
+                    if (msg.event === \'onReady\') {\r\n
+                        _onReady();\r\n
+                    }\r\n
+\r\n
+                    if (handler) {\r\n
+                        res = handler.call(_self, { target: _self, data: msg.data });\r\n
+                        if (msg.event === \'onSave\' && res !== false) {\r\n
+                            _processSaveResult(true);\r\n
+                        }\r\n
+                    }\r\n
+                }\r\n
+            }\r\n
+        };\r\n
+\r\n
+\r\n
+        var target = document.getElementById(placeholderId),\r\n
+            iframe;\r\n
+\r\n
+        if (target) {\r\n
+            iframe = createIframe(_config);\r\n
+            target.parentNode && target.parentNode.replaceChild(iframe, target);\r\n
+            this._msgDispatcher = new MessageDispatcher(_onMessage, this);\r\n
+        }\r\n
+\r\n
+\r\n
+        /*\r\n
+         cmd = {\r\n
+         command: \'commandName\',\r\n
+         data: <command specific data>\r\n
+         }\r\n
+         */\r\n
+        var _sendCommand = function(cmd) {\r\n
+            if (iframe && iframe.contentWindow)\r\n
+                postMessage(iframe.contentWindow, cmd);\r\n
+        };\r\n
+\r\n
+        var _init = function(editorConfig) {\r\n
+            _sendCommand({\r\n
+                command: \'init\',\r\n
+                data: {\r\n
+                    config: editorConfig\r\n
+                }\r\n
+            });\r\n
+        };\r\n
+\r\n
+        var _openDocument = function(doc) {\r\n
+            _sendCommand({\r\n
+                command: \'openDocument\',\r\n
+                data: {\r\n
+                    doc: doc\r\n
+                }\r\n
+            });\r\n
+        };\r\n
+\r\n
+        var _showError = function(title, msg) {\r\n
+            _showMessage(title, msg, "error");\r\n
+        };\r\n
+\r\n
+        // severity could be one of: "error", "info" or "warning"\r\n
+        var _showMessage = function(title, msg, severity) {\r\n
+            if (typeof severity !== \'string\') {\r\n
+                severity = "info";\r\n
+            }\r\n
+            _sendCommand({\r\n
+                command: \'showMessage\',\r\n
+                data: {\r\n
+                    title: title,\r\n
+                    msg: msg,\r\n
+                    severity: severity\r\n
+                }\r\n
+            });\r\n
+        };\r\n
+\r\n
+        var _applyEditRights = function(allowed, message) {\r\n
+            _sendCommand({\r\n
+                command: \'applyEditRights\',\r\n
+                data: {\r\n
+                    allowed: allowed,\r\n
+                    message: message\r\n
+                }\r\n
+            });\r\n
+        };\r\n
+\r\n
+        var _processSaveResult = function(result, message) {\r\n
+            _sendCommand({\r\n
+                command: \'processSaveResult\',\r\n
+                data: {\r\n
+                    result: result,\r\n
+                    message: message\r\n
+                }\r\n
+            });\r\n
+        };\r\n
+\r\n
+        var _processRightsChange = function(enabled, message) {\r\n
+            _sendCommand({\r\n
+                command: \'processRightsChange\',\r\n
+                data: {\r\n
+                    enabled: enabled,\r\n
+                    message: message\r\n
+                }\r\n
+            });\r\n
+        };\r\n
+\r\n
+        var _refreshHistory = function(data, message) {\r\n
+            _sendCommand({\r\n
+                command: \'refreshHistory\',\r\n
+                data: {\r\n
+                    data: data,\r\n
+                    message: message\r\n
+                }\r\n
+            });\r\n
+        };\r\n
+\r\n
+        var _setHistoryData = function(data, message) {\r\n
+            _sendCommand({\r\n
+                command: \'setHistoryData\',\r\n
+                data: {\r\n
+                    data: data,\r\n
+                    message: message\r\n
+                }\r\n
+            });\r\n
+        };\r\n
+\r\n
+        var _processMouse = function(evt) {\r\n
+            var r = iframe.getBoundingClientRect();\r\n
+            var data = {\r\n
+                type: evt.type,\r\n
+                x: evt.x - r.left,\r\n
+                y: evt.y - r.top\r\n
+            };\r\n
+\r\n
+            _sendCommand({\r\n
+                command: \'processMouse\',\r\n
+                data: data\r\n
+            });\r\n
+        };\r\n
+\r\n
+        var _serviceCommand = function(command, data) {\r\n
+            _sendCommand({\r\n
+                command: \'internalCommand\',\r\n
+                data: {\r\n
+                    command: command,\r\n
+                    data: data\r\n
+                }\r\n
+            });\r\n
+        };\r\n
+\r\n
+        (function() {\r\n
+            var result = /[\\?\\&]placement=(\\w+)&?/.exec(window.location.search);\r\n
+            if (!!result && result.length) {\r\n
+                if (result[1] == \'desktop\') {\r\n
+                    _config.editorConfig.targetApp = result[1];\r\n
+                    _config.editorConfig.canBackToFolder = false;\r\n
+                }\r\n
+            }\r\n
+        })();\r\n
+\r\n
+        return {\r\n
+            showError           : _showError,\r\n
+            showMessage         : _showMessage,\r\n
+            applyEditRights     : _applyEditRights,\r\n
+            processSaveResult   : _processSaveResult,\r\n
+            processRightsChange : _processRightsChange,\r\n
+            refreshHistory      : _refreshHistory,\r\n
+            setHistoryData      : _setHistoryData,\r\n
+            serviceCommand      : _serviceCommand,\r\n
+            attachMouseEvents   : _attachMouseEvents,\r\n
+            detachMouseEvents   : _detachMouseEvents\r\n
+        }\r\n
+    };\r\n
+\r\n
+\r\n
+    DocsAPI.DocEditor.defaultConfig = {\r\n
+        type: \'desktop\',\r\n
+        width: \'100%\',\r\n
+        height: \'100%\',\r\n
+        editorConfig: {\r\n
+            lang: \'en\',\r\n
+            canCoAuthoring: false,\r\n
+            customization: {\r\n
+                about: false,\r\n
+                feedback: false\r\n
+            }\r\n
+        }\r\n
+    };\r\n
+\r\n
+    DocsAPI.DocEditor.version = function() {\r\n
+        return \'3.0b##BN#\';\r\n
+    };\r\n
+\r\n
+    MessageDispatcher = function(fn, scope) {\r\n
+        var _fn     = fn,\r\n
+            _scope  = scope || window;\r\n
+\r\n
+        var _bindEvents = function() {\r\n
+            if (window.addEventListener) {\r\n
+                window.addEventListener("message", function(msg) {\r\n
+                    _onMessage(msg);\r\n
+                }, false)\r\n
+            }\r\n
+            else if (window.attachEvent) {\r\n
+                window.attachEvent("onmessage", function(msg) {\r\n
+                    _onMessage(msg);\r\n
+                });\r\n
+            }\r\n
+        };\r\n
+\r\n
+        var _onMessage = function(msg) {\r\n
+            // TODO: check message origin\r\n
+            if (msg && window.JSON) {\r\n
+\r\n
+                try {\r\n
+                    var msg = window.JSON.parse(msg.data);\r\n
+                    if (_fn) {\r\n
+                        _fn.call(_scope, msg);\r\n
+                    }\r\n
+                } catch(e) {}\r\n
+            }\r\n
+        };\r\n
+\r\n
+        _bindEvents.call(this);\r\n
+    };\r\n
+\r\n
+    function getBasePath() {\r\n
+        var scripts = document.getElementsByTagName(\'script\'),\r\n
+            match;\r\n
+\r\n
+        for (var i = scripts.length - 1; i >= 0; i--) {\r\n
+            match = scripts[i].src.match(/(.*)api\\/documents\\/api.js/i);\r\n
+            if (match) {\r\n
+                return match[1];\r\n
+            }\r\n
+        }\r\n
+\r\n
+        return "";\r\n
+    }\r\n
+\r\n
+    function getExtensionPath() {\r\n
+        if ("undefined" == typeof(extensionParams) || null == extensionParams["url"])\r\n
+            return null;\r\n
+        return extensionParams["url"] + "apps/";\r\n
+    }\r\n
+\r\n
+    function getAppPath(config) {\r\n
+        var extensionPath = getExtensionPath(),\r\n
+            path = extensionPath ? extensionPath : getBasePath(),\r\n
+            appMap = {\r\n
+                \'text\': \'documenteditor\',\r\n
+                \'text-pdf\': \'documenteditor\',\r\n
+                \'spreadsheet\': \'spreadsheeteditor\',\r\n
+                \'presentation\': \'presentationeditor\'\r\n
+            },\r\n
+            app = appMap[\'spreadsheet\'];\r\n
+\r\n
+        if (typeof config.documentType === \'string\') {\r\n
+            app = appMap[config.documentType.toLowerCase()];\r\n
+        } else\r\n
+        if (!!config.document && typeof config.document.fileType === \'string\') {\r\n
+            var type = /^(?:(xls|xlsx|ods|csv|xlst|xlsy|gsheet)|(pps|ppsx|ppt|pptx|odp|pptt|ppty|gslides))$/\r\n
+                            .exec(config.document.fileType);\r\n
+            if (type) {\r\n
+                if (typeof type[1] === \'string\') app = appMap[\'spreadsheet\']; else\r\n
+                if (typeof type[2] === \'string\') app = appMap[\'presentation\'];\r\n
+            }\r\n
+        }\r\n
+\r\n
+        path += app + "/";\r\n
+        path += config.type === "mobile"\r\n
+            ? "mobile"\r\n
+            : config.type === "embedded"\r\n
+                ? "embed"\r\n
+                : "main";\r\n
+        path += "/index.html";\r\n
+\r\n
+        return path;\r\n
+    }\r\n
+\r\n
+    function getAppParameters(config) {\r\n
+        var params = "?_dc=0";\r\n
+\r\n
+        if (config.editorConfig && config.editorConfig.lang)\r\n
+            params += "&lang=" + config.editorConfig.lang;\r\n
+\r\n
+        return params;\r\n
+    }\r\n
+\r\n
+    function createIframe(config) {\r\n
+        var iframe = document.createElement("iframe");\r\n
+\r\n
+        iframe.src = getAppPath(config) + getAppParameters(config);\r\n
+        iframe.width = config.width;\r\n
+        iframe.height = config.height;\r\n
+        iframe.align = "top";\r\n
+        iframe.frameBorder = 0;\r\n
+        iframe.name = "frameEditor";\r\n
+\r\n
+        return iframe;\r\n
+    }\r\n
+\r\n
+    function postMessage(wnd, msg) {\r\n
+        if (wnd && wnd.postMessage && window.JSON) {\r\n
+            // TODO: specify explicit origin\r\n
+            wnd.postMessage(window.JSON.stringify(msg), "*");\r\n
+        }\r\n
+\r\n
+    }\r\n
+\r\n
+    function extend(dest, src) {\r\n
+        for (var prop in src) {\r\n
+            if (src.hasOwnProperty(prop)) {\r\n
+                if (typeof dest[prop] === \'undefined\') {\r\n
+                    dest[prop] = src[prop];\r\n
+                } else\r\n
+                if (typeof dest[prop] === \'object\' &&\r\n
+                        typeof src[prop] === \'object\') {\r\n
+                    extend(dest[prop], src[prop])\r\n
+                }\r\n
+            }\r\n
+        }\r\n
+        return dest;\r\n
+    }\r\n
+\r\n
+})(window.DocsAPI = window.DocsAPI || {}, window, document);\r\n
+\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>16821</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.CMFActivity.ActiveResult import ActiveResult\n
+\n
+portal = context.getPortalObject()\n
+promise_repository = portal.getPromiseParameter(\'portal_templates\', \'repository\')\n
+\n
+if promise_repository is None:\n
+  return\n
+\n
+if promise_repository:\n
+  promise_repository_list = promise_repository.split()\n
+  promise_repository_list.sort()\n
+else:\n
+  promise_repository_list = []\n
+\n
+repository_list = portal.portal_templates.getRepositoryList()\n
+repository_list.sort()\n
+\n
+active_result = ActiveResult()\n
+\n
+if repository_list != promise_repository_list:\n
+  severity = 1\n
+  summary = "Template tool not configured as expected"\n
+  detail = \'\\n\'.join(promise_repository_list)\n
+else:\n
+  severity = 0\n
+  summary = "Nothing to do."\n
+  detail = ""\n
+\n
+active_result.edit(\n
+  summary=summary, \n
+  severity=severity,\n
+  detail=detail)\n
+\n
+\n
+context.newActiveProcess().postResult(active_result)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>tag, fixit=False, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Alarm_checkPromiseTemplateTool</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

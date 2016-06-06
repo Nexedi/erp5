@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>request = context.REQUEST\n
+\n
+cell_key_list = context.getCellKeyList( base_id = \'variation\')\n
+\n
+for cell_key in cell_key_list:\n
+  \n
+  # If cell exists, do not modify it\n
+  if not context.hasCell(base_id=\'variation\', *cell_key ):\n
+\n
+    cell = context.newCell(base_id=\'variation\', *cell_key)\n
+    cell.setCategoryList( context.getVariationCategoryList() )\n
+    cell.setMembershipCriterionCategoryList( cell_key )\n
+    cell.setMembershipCriterionBaseCategoryList( context.getVVariationBaseCategoryList() )\n
+          \n
+redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                              , form_id\n
+                              , \'portal_status_message=Variation+matrix++updated.\'\n
+)\n
+return request[ \'RESPONSE\' ].redirect( redirect_url )\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TransformedResource_completeVariationMatrix</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Complete variation matrix</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

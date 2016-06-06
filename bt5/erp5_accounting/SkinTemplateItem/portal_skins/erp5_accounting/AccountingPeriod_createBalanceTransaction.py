@@ -1,0 +1,359 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Creates a balance transaction to open the next period.\n
+\n
+"""\n
+portal = context.getPortalObject()\n
+Base_translateString = portal.Base_translateString\n
+\n
+precision_cache = {}\n
+def roundCurrency(value, resource_relative_url):\n
+  if resource_relative_url not in precision_cache:\n
+    qty_precision = portal.restrictedTraverse(\n
+                        resource_relative_url).getQuantityPrecision()\n
+    precision_cache[resource_relative_url] = qty_precision\n
+  qty_precision = precision_cache[resource_relative_url]\n
+  return round(value, qty_precision)\n
+\n
+# This tag is checked in accounting period workflow\n
+activity_tag = \'BalanceTransactionCreation\'\n
+\n
+at_date = context.getStopDate()\n
+assert at_date\n
+\n
+section = context.getParentValue()\n
+section_currency = section.getPriceCurrency()\n
+section_currency_precision = section.getPriceCurrencyValue().getQuantityPrecision()\n
+\n
+\n
+# we have two distinct cases:\n
+#  * child organisations does not have accounting periods, we create balance\n
+#    transactions for each of those sections.\n
+#  * child organisations have valid accounting periods, we will create balance\n
+#    transactions for the sections when we close their respective periods\n
+\n
+def isIndenpendantSection(section):\n
+  for ap in section.contentValues(\n
+              portal_type=\'Accounting Period\',\n
+              checked_permission=\'View\'):\n
+    if ap.getSimulationState() in (\'started\', \'stopped\', \'delivered\'):\n
+      return True\n
+  return False\n
+\n
+def getDependantSectionList(group, main_section):\n
+  section_list = []\n
+  recurse = True\n
+  for section in group.getGroupRelatedValueList(\n
+                            portal_type=\'Organisation\',\n
+                            strict_membership=True,\n
+                            checked_permission=\'View\'):\n
+    if section != main_section:\n
+      if isIndenpendantSection(section):\n
+        recurse = False\n
+      else:\n
+        section_list.append(section)\n
+  if recurse:\n
+    for subgroup in group.contentValues():\n
+      section_list.extend(getDependantSectionList(subgroup, main_section))\n
+\n
+  return section_list\n
+\n
+group_value = section.getGroupValue()\n
+section_list = [section]\n
+if group_value is not None:\n
+  section_list.extend(getDependantSectionList(group_value, section))\n
+\n
+def createBalanceTransaction(section):\n
+  balance_date = at_date + 1\n
+  # We discard hours, minutes and seconds and at the same time, make sure the date\n
+  # is in its "normal timezone". For example, when at_date is the day of a dailight saving\n
+  # time switch, we want this date to be in the new timezone.\n
+  balance_date = DateTime(balance_date.year(), balance_date.month(), balance_date.day())\n
+  return portal.accounting_module.newContent(\n
+                          portal_type=\'Balance Transaction\',\n
+                          start_date=balance_date,\n
+                          title=context.getTitle() or Base_translateString(\'Balance Transaction\'),\n
+                          destination_section_value=section,\n
+                          resource=section_currency,\n
+                          causality_value=context)\n
+\n
+with context.defaultActivateParameterDict({\'tag\': activity_tag}, placeless=True):\n
+  for section in section_list:\n
+    section_uid = section.getUid()\n
+    balance_transaction = None\n
+\n
+    group_by_node_node_category_list = []\n
+    group_by_mirror_section_node_category_list = []\n
+    group_by_payment_node_category_list = []\n
+    profit_and_loss_node_category_list = []\n
+\n
+    node_category_list = portal.portal_categories\\\n
+                .account_type.getCategoryChildValueList()\n
+    for node_category in node_category_list:\n
+      node_category_url = node_category.getRelativeUrl()\n
+      if node_category_url in (\n
+          \'account_type/asset/cash/bank\',):\n
+        group_by_payment_node_category_list.append(node_category_url)\n
+      elif node_category_url in (\n
+          \'account_type/asset/receivable\',\n
+          \'account_type/liability/payable\'):\n
+        group_by_mirror_section_node_category_list.append(node_category_url)\n
+      elif node_category.isMemberOf(\'account_type/income\') or \\\n
+           node_category.isMemberOf(\'account_type/expense\'):\n
+        profit_and_loss_node_category_list.append(node_category_url)\n
+      else:\n
+        group_by_node_node_category_list.append(node_category_url)\n
+\n
+    getInventoryList = portal.portal_simulation.getInventoryList\n
+\n
+    inventory_param_dict = dict(section_uid=section_uid,\n
+                                simulation_state=(\'delivered\',),\n
+                                precision=section_currency_precision,\n
+                                portal_type=portal.getPortalAccountingMovementTypeList(),\n
+                                at_date=at_date.latestTime(),)\n
+  \n
+    # Calculate the sum of profit and loss accounts balances for that period.\n
+    # This must match the difference between assets, liability and equity accounts.\n
+    profit_and_loss_accounts_balance = portal.portal_simulation.getInventoryAssetPrice(\n
+      from_date=context.getStartDate(),\n
+      node_category_strict_membership=profit_and_loss_node_category_list,\n
+      **inventory_param_dict)\n
+    selected_profit_and_loss_account_balance = portal.portal_simulation.getInventoryAssetPrice(\n
+      node=profit_and_loss_account,\n
+      resource=section_currency,\n
+      **inventory_param_dict)\n
+\n
+    section_currency_uid = context.getParentValue().getPriceCurrencyUid()\n
+\n
+    profit_and_loss_quantity = 0\n
+    line_count = 0\n
+\n
+    for inventory in getInventoryList(\n
+            node_category_strict_membership=group_by_node_node_category_list,\n
+            group_by_node=1,\n
+            group_by_resource=1,\n
+            **inventory_param_dict):\n
+\n
+      total_price = roundCurrency(inventory.total_price or 0, section_currency)\n
+      quantity = roundCurrency(inventory.total_quantity or 0,\n
+                               inventory.resource_relative_url)\n
+\n
+      if not total_price and not quantity:\n
+        continue\n
+\n
+      line_count += 1\n
+      if inventory.resource_uid != section_currency_uid:\n
+        profit_and_loss_quantity += total_price\n
+\n
+        if balance_transaction is None:\n
+          balance_transaction = createBalanceTransaction(section)\n
+        balance_transaction.newContent(\n
+            id=\'%03d\' % line_count,\n
+            portal_type=\'Balance Transaction Line\',\n
+            destination=inventory.node_relative_url,\n
+            resource=inventory.resource_relative_url,\n
+            quantity=quantity,\n
+            destination_total_asset_price=total_price)\n
+      else:\n
+        if total_price != quantity:\n
+          # If this fail for you, your accounting doesn\'t use currencies with\n
+          # consistency\n
+          raise ValueError(\'Different price: %s != %s \' % (\n
+                            total_price, quantity))\n
+\n
+        if inventory.node_relative_url != profit_and_loss_account:\n
+          profit_and_loss_quantity += total_price\n
+          if balance_transaction is None:\n
+            balance_transaction = createBalanceTransaction(section)\n
+          balance_transaction.newContent(\n
+            id=\'%03d\' % line_count,\n
+            portal_type=\'Balance Transaction Line\',\n
+            destination=inventory.node_relative_url,\n
+            quantity=total_price)\n
+\n
+\n
+    for inventory in getInventoryList(\n
+            node_category_strict_membership=group_by_mirror_section_node_category_list,\n
+            group_by_node=1,\n
+            group_by_mirror_section=1,\n
+            group_by_resource=1,\n
+            **inventory_param_dict):\n
+\n
+      total_price = roundCurrency(inventory.total_price or 0, section_currency)\n
+      quantity = roundCurrency(inventory.total_quantity or 0,\n
+                               inventory.resource_relative_url)\n
+\n
+      if not total_price and not quantity:\n
+        continue\n
+      profit_and_loss_quantity += total_price\n
+      line_count += 1\n
+\n
+      if inventory.resource_uid != section_currency_uid:\n
+        if balance_transaction is None:\n
+          balance_transaction = createBalanceTransaction(section)\n
+        balance_transaction.newContent(\n
+          id=\'%03d\' % line_count,\n
+          portal_type=\'Balance Transaction Line\',\n
+          destination=inventory.node_relative_url,\n
+          source_section_uid=inventory.mirror_section_uid,\n
+          resource=inventory.resource_relative_url,\n
+          quantity=quantity,\n
+          destination_total_asset_price=total_price)\n
+      else:\n
+        if total_price != quantity:\n
+          raise ValueError(\'Different price: %s != %s \' % (\n
+                            total_price, quantity))\n
+        if balance_transaction is None:\n
+          balance_transaction = createBalanceTransaction(section)\n
+        balance_transaction.newContent(\n
+          id=\'%03d\' % line_count,\n
+          portal_type=\'Balance Transaction Line\',\n
+          destination=inventory.node_relative_url,\n
+          source_section_uid=inventory.mirror_section_uid,\n
+          quantity=total_price)\n
+\n
+\n
+    for inventory in getInventoryList(\n
+            node_category_strict_membership=group_by_payment_node_category_list,\n
+            group_by_node=1,\n
+            group_by_payment=1,\n
+            group_by_resource=1,\n
+            **inventory_param_dict):\n
+\n
+      total_price = roundCurrency(inventory.total_price or 0, section_currency)\n
+      quantity = roundCurrency(inventory.total_quantity or 0,\n
+                               inventory.resource_relative_url)\n
+\n
+      if not total_price and not quantity:\n
+        continue\n
+      profit_and_loss_quantity += total_price\n
+\n
+      line_count += 1\n
+\n
+      if inventory.resource_uid != section_currency_uid:\n
+        if balance_transaction is None:\n
+          balance_transaction = createBalanceTransaction(section)\n
+        balance_transaction.newContent(\n
+          id=\'%03d\' % line_count,\n
+          portal_type=\'Balance Transaction Line\',\n
+          destination=inventory.node_relative_url,\n
+          resource=inventory.resource_relative_url,\n
+          quantity=quantity,\n
+          destination_payment_uid=inventory.payment_uid,\n
+          destination_total_asset_price=total_price)\n
+      else:\n
+        if total_price != quantity:\n
+          raise ValueError(\'Different price: %s != %s \' % (\n
+                            total_price, quantity))\n
+        if balance_transaction is None:\n
+          balance_transaction = createBalanceTransaction(section)\n
+        balance_transaction.newContent(\n
+          id=\'%03d\' % line_count,\n
+          portal_type=\'Balance Transaction Line\',\n
+          destination=inventory.node_relative_url,\n
+          destination_payment_uid=inventory.payment_uid,\n
+          quantity=total_price)\n
+\n
+    if balance_transaction is None:\n
+      # we did not have any transaction for this section\n
+\n
+      # One possible corner case is that we have only transactions that brings\n
+      # the balance of all balance sheets accounts to 0. In this case we want to\n
+      # create a balance transaction that notes that the current balance of profit\n
+      # and loss account is 0, so that the delta gets indexed. \n
+      if profit_and_loss_accounts_balance:\n
+        balance_transaction = createBalanceTransaction(section)\n
+        balance_transaction.newContent(\n
+              portal_type=\'Balance Transaction Line\',\n
+              destination=profit_and_loss_account,\n
+              quantity=0)\n
+        balance_transaction.stop()\n
+        balance_transaction.deliver()\n
+      continue\n
+\n
+    assert roundCurrency(profit_and_loss_accounts_balance, section_currency) == roundCurrency(\n
+         - roundCurrency(selected_profit_and_loss_account_balance, section_currency)\n
+         - roundCurrency(profit_and_loss_quantity, section_currency), section_currency)\n
+\n
+    # add a final line for p&l\n
+    balance_transaction.newContent(\n
+              id=\'%03d\' % (line_count + 1),\n
+              portal_type=\'Balance Transaction Line\',\n
+              destination=profit_and_loss_account,\n
+              quantity=-profit_and_loss_quantity)\n
+\n
+    # and go to delivered state directly (the user is not supposed to edit this document)\n
+    balance_transaction.stop()\n
+    balance_transaction.deliver()\n
+\n
+# make sure this Accounting Period has an activity pending during the indexing\n
+# of the balance transaction.\n
+context.activate(after_tag=activity_tag).getTitle()\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>profit_and_loss_account</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingPeriod_createBalanceTransaction</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

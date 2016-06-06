@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+  <tal:block metal:define-macro="init" tal:define="base_url python: \'/\' + here.getPortalObject().getId()">\n
+\n
+    <!-- Click on + link -->\n
+    <tr>\n
+      <td>clickAndWait</td>\n
+      <td tal:content=\'string://button[@value="site/${link_title}.0"]\'>link=node</td>\n
+      <td></td>\n
+    </tr>\n
+\n
+    <!-- Check inventory -->\n
+    <tr>\n
+      <td>verifyText</td>\n
+      <td>//span[@class="listbox-current-page-total-number"]</td>\n
+      <td tal:content="python: \'%s records\' % movement_count">number of record(s)</td>\n
+    </tr>\n
+    <tal:block tal:condition="python: movement_count != 0">\n
+\n
+      <!-- Check that inventory and movement list are consistent -->\n
+      <tal:block tal:repeat="inventory_tuple python: [(current_inventory, 3),\n
+                                                      (available_inventory, 4),\n
+                                                      (future_inventory, 5),\n
+]">\n
+        <tr>\n
+          <td>verifyText</td>\n
+          <td tal:content="python: \'//tr[@class=\\\'listbox-data-line-0 DataA\\\']/td[%s]\' % inventory_tuple[1]">inventory value</td>\n
+          <td tal:content="python: inventory_tuple[0]">current inventory</td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyText</td>\n
+          <td tal:content="python: \'//tr[@class=\\\'listbox_stat_line  listbox-stat-line\\\']/td[%s]\' % inventory_tuple[1]">inventory value</td>\n
+          <td tal:content="python: inventory_tuple[0]">current inventory</td>\n
+        </tr>\n
+\n
+        <!-- Check movement history list -->\n
+        <tr>\n
+          <td>clickAndWait</td>\n
+          <td tal:content="python: \'//tr[@class=\\\'listbox-data-line-0 DataA\\\']/td[%s]/a[1]\' % inventory_tuple[1]">link</td>\n
+          <td></td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyText</td>\n
+          <td>//span[@class="listbox-current-page-total-number"]</td>\n
+          <td tal:content="python: \'%s records\' % int(abs(inventory_tuple[0]))">number of movement(s)</td>\n
+        </tr>\n
+        <!-- Go back to inventory view -->\n
+        <tr>\n
+          <td>clickAndWait</td>\n
+          <td>//a[@class="listbox_title"]</td>\n
+          <td></td>\n
+        </tr>\n
+      </tal:block>\n
+    </tal:block>\n
+  </tal:block>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PdmZuite_checkStockBrowser</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

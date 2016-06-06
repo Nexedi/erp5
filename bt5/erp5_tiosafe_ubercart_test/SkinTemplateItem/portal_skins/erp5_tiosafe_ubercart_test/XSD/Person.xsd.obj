@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts99848408.21</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Person.xsd</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="UTF-8"?>\n
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">\n
+  <xs:element name="xml">\n
+    <xs:complexType>\n
+      <xs:sequence>\n
+        <xs:element ref="Person"/>\n
+      </xs:sequence>\n
+    </xs:complexType>\n
+  </xs:element>\n
+  <xs:element name="Person">\n
+    <xs:complexType>\n
+      <xs:sequence>\n
+        <xs:element ref="id"/>\n
+        <xs:element ref="firstname"/>\n
+        <xs:element ref="lastname"/>\n
+        <xs:element ref="email"/>\n
+        <xs:element ref="street"/>\n
+        <xs:element ref="zip"/>\n
+        <xs:element ref="city"/>\n
+        <xs:element ref="country"/>\n
+        <xs:element ref="company"/>\n
+        <xs:element ref="company_id"/>\n
+        <xs:element ref="category"/>\n
+      </xs:sequence>\n
+    </xs:complexType>\n
+  </xs:element>\n
+  <xs:element name="id" type="xs:integer"/>\n
+  <xs:element name="firstname" type="xs:NCName"/>\n
+  <xs:element name="lastname" type="xs:NCName"/>\n
+  <xs:element name="email" type="xs:string"/>\n
+  <xs:element name="street" type="xs:string"/>\n
+  <xs:element name="zip" type="xs:integer"/>\n
+  <xs:element name="city" type="xs:NCName"/>\n
+  <xs:element name="country" type="xs:string"/>\n
+  <xs:element name="company" type="xs:integer"/>\n
+  <xs:element name="company_id" type="xs:NCName"/>\n
+  <xs:element name="category" type="xs:string"/>\n
+</xs:schema>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1340</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  Get all listbox fields that uses the same selection name.\n
+"""\n
+\n
+skins_tool = context.portal_skins\n
+selection_name_dict = {}\n
+\n
+ok_to_share_selection_form_list = [\'Resource_viewInventory\', \'Resource_viewMovementHistory\']\n
+\n
+for skin_name, skin_path_list in skins_tool.getSkinPaths():\n
+  skins_tool.changeSkin(skin_name)\n
+  for skin_folder in skin_path_list.split(\',\'):\n
+    for field_path, field in skins_tool.ZopeFind(\n
+             skins_tool[skin_folder], obj_metatypes=[\'ProxyField\', \'ListBox\'], search_sub=1):\n
+      form = field.aq_parent\n
+      # in some rare cases sharing a selection can be done intentional so avoid them\n
+      if form.getId() in ok_to_share_selection_form_list:\n
+        continue\n
+      # if the form looks like a field library, we don\'t care, because it is not used directly.\n
+      if form.getId().endswith(\'FieldLibrary\'):\n
+        continue\n
+      if field.meta_type == \'ProxyField\':\n
+        try:\n
+          if field.get_recursive_tales(\'selection_name\') != \'\':\n
+            continue\n
+          selection_name = field.get_recursive_orig_value(\'selection_name\')\n
+        except KeyError:\n
+          continue\n
+      elif field.meta_type == \'ListBox\':\n
+        if field.get_tales(\'selection_name\')!=\'\':\n
+          continue\n
+        selection_name = field.get_orig_value(\'selection_name\')\n
+      if selection_name == \'\':\n
+        continue\n
+      field_path_map = selection_name_dict.setdefault(selection_name, {})\n
+      field_path_map.setdefault(field_path, set()).add(skin_folder)\n
+\n
+# leave only duplicating ones\n
+duplicating_selection_name_dict = {}\n
+for selection_name, field_list in selection_name_dict.items():\n
+  if len(field_list) > 1:\n
+    duplicating_selection_name_dict[selection_name] = field_list\n
+\n
+return duplicating_selection_name_dict\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SkinsTool_getDuplicateSelectionNameDict</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,744 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.\n
+            Thomas Bernard   <thomas@nexedi.com>\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+"""\n
+\n
+"""\n
+This script is aimed to generate the coordinates and the properties necessary to\n
+display correctly the PlaningBox in HTML style (i.e using HTML code + CSS class\n
+for positionning). The process is based on the strucutre passed in parameter (i.e\n
+\'structure\').\n
+Beware this only generates a dict based structure, and need to be passed through\n
+the CSS script (\'planning_css\') to have CSS compliant code, no HTML generation is\n
+done in this script.\n
+\n
+This script is also used by the validator script in order to recover the\n
+groups of moved blocks\n
+"""\n
+\n
+\n
+# the following values are hard-defined and can be modified if necessary to comply with\n
+# special constraints (big fonts for example)\n
+\n
+# caracter height\n
+car_height = 10 \n
+# caracter width\n
+car_width = 6 \n
+# space to insert between each depth\n
+depth_width = 10 \n
+# the same over the vertical axis\n
+depth_height = 10 \n
+# mid block size in wich we try to insert text\n
+block_width = 40 \n
+# margin between the block and the delimitation (this permits to have\n
+# blocks a bit smaller that lines or columns)\n
+margin = 5 \n
+\n
+\n
+\n
+size_planning_width = basic.field.get_value(\'size_planning_width\')\n
+size_x_axis_height = basic.field.get_value(\'size_x_axis_height\')\n
+size_x_axis_space = basic.field.get_value(\'size_x_axis_space\')\n
+size_border_width_left = basic.field.get_value(\'size_border_width_left\')\n
+size_header_height = basic.field.get_value(\'size_header_height\')\n
+size_planning_height = basic.field.get_value(\'size_planning_height\')\n
+size_y_axis_width = basic.field.get_value(\'size_y_axis_width\')\n
+size_y_axis_space = basic.field.get_value(\'size_y_axis_space\')\n
+y_axis_position = basic.field.get_value(\'y_axis_position\')\n
+x_axis_position = basic.field.get_value(\'x_axis_position\')\n
+\n
+\n
+properties_structure = {\n
+  \'base\': {},\n
+  \'frame\': {},\n
+  \'report_axis\': {},\n
+  \'lane_axis\': {},\n
+  \'line\': {},\n
+  \'content\': {},\n
+  \'info\': {},\n
+}\n
+\n
+\n
+# getting number of elements to display on the main axis\n
+if planning.report_axis.size != basic.report_axis_info[\'bound_axis_groups\']:\n
+  # number of groups to display over the main axis is different from the expected\n
+  # value : updating planning size to fit exactly the number of groups \n
+  if planning.report_axis == planning.Y:\n
+    # updating Y axis\n
+    report_axis_step = float(size_planning_height) / float(basic.report_axis_info[\'bound_axis_groups\'])\n
+    size_planning_height = report_axis_step * planning.report_axis.size\n
+  else:\n
+    report_axis_step = float(size_planning_width) / float(basic.report_axis_info[\'bound_axis_groups\'])\n
+    size_planning_width = report_axis_step * planning.report_axis.size\n
+else:\n
+  if planning.report_axis == planning.Y:\n
+    report_axis_step = float(size_planning_height) / float(basic.report_axis_info[\'bound_axis_groups\'])\n
+  else:\n
+    report_axis_step = float(size_planning_width) / float(basic.report_axis_info[\'bound_axis_groups\'])\n
+\n
+# defining planning area CSS class\n
+# XXX it can be moved to globals\n
+planning_dict = {\n
+  \'position\': \'relative\',\n
+  \'border-style\': \'solid\',\n
+  \'border-color\':  \'inherit\',\n
+  \'border-width\': 0,\n
+  \'background\': \'inherit\',\n
+  \'width\': size_planning_width + size_border_width_left + size_y_axis_width + size_y_axis_space + 20,\n
+  \'height\': size_header_height + size_x_axis_height + size_x_axis_space + size_planning_height + 100,\n
+  \'margin-top\': 0,\n
+  \'margin-left\': 0,\n
+}\n
+\n
+properties_structure[\'base\'][\'planning_box\']  = planning_dict\n
+\n
+\n
+\n
+\n
+# recovering axis CSS class information\n
+for axis in (planning.Y, planning.X):\n
+  axis_depth = None\n
+  axis_dict= {\n
+    \'position\': \'absolute\',\n
+    \'border-style\': \'solid\',\n
+    \'border-color\': \'inherit\',\n
+    \'border-width\': 0,\n
+    \'background\': \'inherit\',\n
+  }\n
+  # adding cursors position information\n
+  axis_previous = {\n
+    \'position\': \'absolute\',\n
+    \'border-width\': 0,\n
+  }\n
+  axis_next = {\n
+    \'position\': \'absolute\',\n
+    \'border-width\': 0,\n
+  }\n
+  if axis == planning.X:\n
+    # current axis is X axis\n
+    # positionning it\n
+    axis_dict[\'width\'] = size_planning_width\n
+    axis_dict[\'height\'] = size_x_axis_height\n
+    if not x_axis_position:\n
+      axis_dict[\'margin-top\'] = size_header_height\n
+    else:\n
+      axis_dict[\'margin-top\'] = size_header_height + size_planning_height + size_x_axis_space\n
+    if y_axis_position:\n
+      axis_dict[\'margin-left\'] = size_border_width_left\n
+    else:\n
+      axis_dict[\'margin-left\'] = size_border_width_left + size_y_axis_width + size_y_axis_space\n
+\n
+    axis_previous[\'margin-left\'] = -20\n
+    axis_previous[\'margin-top\'] = (axis_dict[\'height\'] - 15) / 2\n
+    axis_next[\'margin-left\'] = axis_dict[\'width\'] + 5\n
+    axis_next[\'margin-top\'] = axis_previous[\'margin-top\']\n
+\n
+    if axis == planning.report_axis:\n
+      # current axis is main axis : need to implement depth widget\n
+      axis_depth = {\n
+        \'margin-left\': -10,\n
+        \'margin-top\': 0,\n
+        \'border-width\': 0,\n
+        \'position\': \'absolute\',\n
+      }\n
+      # updating axis previous values\n
+      axis_previous[\'margin-left\'] = axis_previous[\'margin-left\'] - 10\n
+  else:\n
+    # current axis is Y axis\n
+    # positionning it\n
+    axis_dict[\'width\'] = size_y_axis_width\n
+    axis_dict[\'height\'] = size_planning_height\n
+    if not x_axis_position:\n
+      axis_dict[\'margin-top\'] = size_header_height + size_x_axis_height + size_x_axis_space\n
+    else:\n
+      axis_dict[\'margin-top\'] = size_header_height\n
+    if y_axis_position:\n
+      axis_dict[\'margin-left\'] = size_border_width_left + size_planning_width + size_y_axis_space\n
+    else:\n
+      axis_dict[\'margin-left\'] = size_border_width_left\n
+\n
+\n
+    axis_previous[\'margin-left\'] = (axis_dict[\'width\'] -15) / 2\n
+    axis_previous[\'margin-top\'] = -20\n
+    axis_next[\'margin-left\'] = axis_previous[\'margin-left\']\n
+    axis_next[\'margin-top\'] = axis_dict[\'height\'] + 5\n
+    if axis == planning.report_axis:\n
+      axis_depth = {\n
+        \'margin-left\': 0,\n
+        \'bottom\': \'100%\',\n
+        \'border-width\': 0,\n
+        \'position\': \'absolute\',\n
+      }\n
+      # updating axis previous values\n
+      axis_previous[\'margin-top\'] = axis_previous[\'margin-top\'] - 10\n
+  # adding axis_definitions to dictionnary\n
+  properties_structure[\'frame\'][axis.name] = axis_dict\n
+  properties_structure[\'frame\'][axis.name + \'_previous\'] = axis_previous\n
+  properties_structure[\'frame\'][axis.name + \'_next\'] = axis_next\n
+  if axis_depth != None:\n
+    properties_structure[\'frame\'][axis.name + \'_depth\'] = axis_depth\n
+\n
+\n
+# now processing groups over the main axis, including their info object\n
+# at the same time generating line to separate each group\n
+for axis_group in planning.report_axis.axis_group:\n
+  axis_group_dict={\n
+    \'position\': \'absolute\',\n
+    \'border-style\': \'solid\',\n
+    \'border-width\': 1,\n
+  }\n
+  #axis_group_dict[\'background\'] = \'#d5e6de\'\n
+  if axis_group.property_dict[\'stat\'] == 1 :\n
+    axis_group_dict[\'background\'] = \'#ddefe7\'\n
+  # info definition\n
+  axis_info_dict= {}\n
+  #axis_info_dict[\'position\'] = \'absolute\'\n
+  #axis_info_dict[\'border-style\'] = \'solid\'\n
+  #axis_info_dict[\'border-color\'] = \'#53676e\'\n
+  #axis_info_dict[\'border-width\'] = 0\n
+  # group line separator definition\n
+  axis_line_dict = {\n
+    \'position\': \'absolute\',\n
+    \'border-style\': \'solid\',\n
+    \'border-width\': 0,\n
+  }\n
+  if planning.report_axis == planning.X:\n
+    # current axis is X axis\n
+    axis_group_dict[\'width\'] = float(axis_group.axis_element_number) * report_axis_step\n
+    axis_group_dict[\'margin-left\'] = float( axis_group.axis_element_start -1) * report_axis_step\n
+    axis_group_dict[\'height\'] = size_x_axis_height - axis_group.depth * depth_height\n
+    axis_group_dict[\'margin-top\'] = axis_group.depth * depth_height\n
+    axis_info_dict[\'margin-top\'] = axis_group.depth * depth_height\n
+    axis_info_dict[\'margin-left\'] = 1\n
+    # dotted line must be vertical\n
+    if axis_group.depth == 0 :\n
+      #current group is main group : line must be bold\n
+      axis_line_dict[\'border-left-width\'] = 3\n
+    else:\n
+      axis_line_dict[\'border-left-width\'] = 1\n
+    #axis_line_dict[\'border-top-width\'] = 0\n
+    axis_line_dict[\'height\'] = size_planning_height\n
+    #axis_line_dict[\'width\'] = 0\n
+    axis_line_dict[\'margin-left\'] = axis_group_dict[\'margin-left\']\n
+    #axis_line_dict[\'margin-top\'] = 0\n
+\n
+    # processing depth\n
+    for depth in range(axis_group.depth):\n
+      axis_depth_dict = {\n
+        \'position\': \'absolute\',\n
+        \'border_style\': \'solid\',\n
+        \'border-color\': \'#53676e\',\n
+        \'border-width\': 1,\n
+        \'background\': \'#53676e\',\n
+        \'margin-top\': depth * depth_height,\n
+        \'margin-left\': axis_group_dict[\'margin-left\'],\n
+        \'width\': axis_group_dict[\'width\'],\n
+        \'height\': depth_height,\n
+      }\n
+\n
+      # adding current depth line info to properties structure\n
+      properties_structure[\'info\'][axis_group.name + \'_depth_\' + str(depth)] = axis_depth_dict\n
+\n
+\n
+    # updating info size\n
+    if axis_group_dict[\'height\'] - axis_info_dict[\'margin-top\'] < car_height:\n
+      # block height is too low to be able to display any text\n
+      # removing block title but keeping tooltip\n
+      axis_group.info_title.edit(\'\')\n
+    else:\n
+      # height matches info\n
+      if len(axis_group.info_title.info) * car_width > axis_group_dict[\'width\']:\n
+        # defining number of caracts to leave\n
+        nb = max((axis_group_dict[\'width\'] - car_width * 3) / car_width, 0 )\n
+        # cutting activity\n
+        axis_group.info_title.edit(axis_group.info_title.info[:int(nb)] + \'..\')\n
+\n
+\n
+    if axis_group.axis_element_number > 1:\n
+      # subgroups are present\n
+      for axis_element_number in range(axis_group.axis_element_number)[1:]:\n
+        # iterating each subgroup except the first one\n
+        # for each of them, building a new line over the axis as a delimiter\n
+        axis_element_dict = {\n
+          \'position\': \'absolute\',\n
+          \'border-right-width\': 0,\n
+          \'border-bottom-width\': 0,\n
+          \'border-left-width\': 1,\n
+          \'border-top-width\': 0,\n
+          \'border-style\': \'dotted\',\n
+          \'width\': 0,\n
+          \'height\': size_planning_height,\n
+          \'margin-left\': axis_group_dict[\'margin-left\'] + axis_element_number * report_axis_step,\n
+          \'margin-top\': 0,\n
+        }\n
+\n
+        # adding current sub line info to properties_structure\n
+        properties_structure[\'line\'][axis_group.name + \'_line_\' + str(axis_element_number)] = axis_element_dict\n
+\n
+  else:\n
+    # current axis is Y axis\n
+    axis_group_dict[\'margin-left\'] = axis_group.depth * depth_width\n
+    axis_group_dict[\'width\'] = size_y_axis_width - axis_group.depth * depth_width\n
+    axis_group_dict[\'margin-top\'] = float( axis_group.axis_element_start - 1) * report_axis_step\n
+    axis_group_dict[\'height\'] = float(axis_group.axis_element_number) * report_axis_step\n
+    #axis_group_dict[\'text-align\'] = \'center\'\n
+    #axis_group_dict[\'vertical-align\'] = \'middle\'\n
+\n
+    # positionning info object in the middle of the axisGroup\n
+    #axis_info_dict[\'margin-top\'] = ((float(axis_group_dict[\'height\']) - car_height ) / 2.0)\n
+    #axis_info_dict[\'margin-top\'] = -12\n
+    #axis_info_dict[\'margin-left\'] = axis_group.depth * depth_width + depth_width / 2\n
+    #axis_info_dict[\'margin-left\']=\'auto\'\n
+    #axis_info_dict[\'margin-right\']=\'auto\'\n
+    #axis_info_dict[\'margin-top\']=\'auto\'\n
+    #axis_info_dict[\'margin-bottom\']=\'auto\'\n
+\n
+    # main line must be horizontal\n
+    if axis_group.depth == 0:\n
+      axis_line_dict[\'border-top-width\'] = 2\n
+    else:\n
+      axis_line_dict[\'border-top-width\'] = 1\n
+    #axis_line_dict[\'border-left-width\'] = 0\n
+    axis_line_dict[\'width\'] = size_planning_width\n
+    #axis_line_dict[\'height\'] = 0\n
+    #axis_line_dict[\'margin-left\'] = 0\n
+    axis_line_dict[\'margin-top\'] = axis_group_dict[\'margin-top\']\n
+\n
+\n
+    # processing depth\n
+    for depth in range(axis_group.depth):\n
+      axis_depth_dict = {\n
+        \'position\': \'absolute\',\n
+        \'border_style\': \'solid\',\n
+        \'border-color\': \'#53676e\',\n
+        \'border-width\': 1,\n
+        \'background\': \'#53676e\',\n
+        \'margin-top\': axis_group_dict[\'margin-top\'],\n
+        \'margin-left\': depth * depth_width,\n
+        \'width\': depth_width,\n
+        \'height\': axis_group_dict[\'height\'],\n
+      }\n
+\n
+      # adding current depth line info to properties structure\n
+      properties_structure[\'info\'][axis_group.name + \'_depth_\' + str(depth)] = axis_depth_dict\n
+\n
+\n
+\n
+    # updating info size\n
+    if axis_group_dict[\'height\'] < car_height:\n
+      # block height is too low to be able to display any text\n
+      # removing block title but keeping tooltip\n
+      axis_group.info_title.edit(\'\')\n
+    else:\n
+      # height matches info\n
+      if len(axis_group.info_title.info) * car_width > axis_group_dict[\'width\']:\n
+        # defining number of caracts to leave\n
+        nb = max((axis_group_dict[\'width\'] - car_width * 3) / car_width, 0 )\n
+        # cutting activity\n
+        axis_group.info_title.edit(axis_group.info_title.info[:int(nb)] + \'..\')\n
+\n
+\n
+\n
+    if axis_group.axis_element_number > 1:\n
+      # subgroup are present\n
+      for axis_element_number in range(axis_group.axis_element_number)[1:]:\n
+        # iterating each subgroup except the first one\n
+        # for each of them, building a new line over the axis as a delimiter\n
+        axis_element_dict = {\n
+          \'position\': \'absolute\',\n
+          \'border-right-width\': 0,\n
+          \'border-bottom-width\': 0,\n
+          \'border-left-width\': 0,\n
+          \'border-top-width\': 1,\n
+          \'border-style\': \'dotted\',\n
+          \'width\': size_planning_width,\n
+          \'height\': 0,\n
+          \'margin-left\': 0,\n
+          \'margin-top\': axis_group_dict[\'margin-top\'] + axis_element_number * report_axis_step,\n
+        }\n
+\n
+        # adding current sub line info to properties_structure\n
+        properties_structure[\'line\'][axis_group.name + \'_line_\' + str(axis_element_number)] = axis_element_dict\n
+\n
+\n
+  # adding axis_definitions to dictionnary\n
+  properties_structure[\'report_axis\'][axis_group.name] = axis_group_dict\n
+  properties_structure[\'line\'][axis_group.name + \'_line\'] = axis_line_dict\n
+  #properties_structure[\'info\'][axis_group.name + \'_info\'] = axis_info_dict\n
+\n
+\n
+\n
+# processing lane_axis_group\n
+for lane_axis_group in planning.lane_axis.axis_group:\n
+  lane_axis_group_dict={\n
+    \'position\': \'absolute\',\n
+    \'border-color\': \'inherit\',\n
+    \'border-style\': \'solid\',\n
+    \'border-width\': 1,\n
+    \'background\': \'inherit\',\n
+  }\n
+  # info definition\n
+  lane_axis_info_dict= {\n
+    \'position\': \'absolute\',\n
+  }\n
+  #lane_axis_info_dict[\'border-style\'] = \'solid\'\n
+  #lane_axis_info_dict[\'border-color\'] = \'#53676e\'\n
+  #lane_axis_info_dict[\'border-width\'] = 0\n
+  # line definition\n
+  lane_axis_line_dict = {\n
+    \'position\': \'absolute\',\n
+  }\n
+  if lane_axis_group.delimiter_type == 0:\n
+    lane_axis_line_dict[\'border-style\'] = \'dotted\'\n
+  else:\n
+    lane_axis_line_dict[\'border-style\'] = \'solid\'\n
+  lane_axis_line_dict[\'border-right-width\'] = 0\n
+  lane_axis_line_dict[\'border-bottom-width\'] = 0\n
+  if planning.report_axis == planning.Y:\n
+    # current axis is X axis\n
+    lane_axis_group_dict[\'width\'] = lane_axis_group.position_lane.absolute_range * size_planning_width\n
+    lane_axis_group_dict[\'margin-left\'] = lane_axis_group.position_lane.absolute_begin * size_planning_width\n
+    lane_axis_group_dict[\'height\'] = size_x_axis_height\n
+    lane_axis_group_dict[\'margin-top\'] = lane_axis_group.depth\n
+    lane_axis_info_dict[\'margin-top\'] = 1\n
+    lane_axis_info_dict[\'margin-left\'] = 1\n
+    # dotted line must be vertical\n
+    if lane_axis_group.delimiter_type == 2:\n
+      lane_axis_line_dict[\'border-left-width\'] = 2\n
+    else:\n
+      lane_axis_line_dict[\'border-left-width\'] = 1\n
+    lane_axis_line_dict[\'border-top-width\'] = 0\n
+    lane_axis_line_dict[\'height\'] = size_planning_height\n
+    lane_axis_line_dict[\'width\'] = 0\n
+    lane_axis_line_dict[\'margin-left\'] = lane_axis_group_dict[\'margin-left\']\n
+    lane_axis_line_dict[\'margin-top\'] = 0\n
+\n
+    # updating info size\n
+    if lane_axis_group_dict[\'height\'] - lane_axis_info_dict[\'margin-top\'] < car_height:\n
+      # block height is too low to be able to display any text\n
+      # removing block title but keeping tooltip\n
+      lane_axis_group.info_title.edit(\'\')\n
+    else:\n
+      # height matches info\n
+      if len(lane_axis_group.info_title.info) * car_width > lane_axis_group_dict[\'width\']:\n
+        # defining number of caracts to leave\n
+        nb = max((lane_axis_group_dict[\'width\'] - car_width * 3) / car_width, 0 )\n
+        # cutting activity\n
+        lane_axis_group.info_title.edit(lane_axis_group.info_title.info[:int(nb)] + \'..\')\n
+    # adding axis_definitions to dictionnary\n
+    properties_structure[\'lane_axis\'][lane_axis_group.name] = lane_axis_group_dict\n
+    properties_structure[\'line\'][lane_axis_group.name + \'_line\'] = lane_axis_line_dict\n
+    #properties_structure[\'info\'][lane_axis_group.name + \'_info\'] = lane_axis_info_dict\n
+\n
+  else:\n
+    # current axis is Y axis\n
+    lane_axis_group_dict[\'margin-left\'] = lane_axis_group.depth\n
+    lane_axis_group_dict[\'width\'] = size_y_axis_width\n
+    lane_axis_group_dict[\'margin-top\'] =  lane_axis_group.position_lane.absolute_begin * size_planning_height\n
+    lane_axis_group_dict[\'height\'] = lane_axis_group.position_lane.absolute_range * size_planning_height\n
+    # positionning info object in the middle of the axisGroup\n
+    lane_axis_info_dict[\'margin-top\'] = ((float(axis_group_dict[\'height\']) - car_height ) / 2.0)\n
+    lane_axis_info_dict[\'margin-top\'] = 0\n
+    lane_axis_info_dict[\'margin-left\'] = 1\n
+    # dotted line must be horizontal\n
+    lane_axis_line_dict[\'border-left-width\'] = 0\n
+    if lane_axis_group.delimiter_type == 2:\n
+      lane_axis_line_dict[\'border-top-width\'] = 2\n
+    else:\n
+      lane_axis_line_dict[\'border-top-width\'] = 1\n
+    lane_axis_line_dict[\'width\'] = size_planning_width\n
+    lane_axis_line_dict[\'height\'] = 0\n
+    lane_axis_line_dict[\'margin-left\'] = 0\n
+    lane_axis_line_dict[\'margin-top\'] = lane_axis_group_dict[\'margin-top\']\n
+\n
+\n
+    # updating info size\n
+    if lane_axis_group_dict[\'height\'] < car_height:\n
+      # block height is too low to be able to display any text\n
+      # removing block title but keeping tooltip\n
+      lane_axis_group.info_title.edit(\'\')\n
+    else:\n
+      # height matches info\n
+      if len(lane_axis_group.info_title.info) * car_width > lane_axis_group_dict[\'width\']:\n
+        # defining number of caracts to leave\n
+        nb = max((lane_axis_group_dict[\'width\'] - car_width * 3) / car_width, 0 )\n
+        # cutting activity\n
+        lane_axis_group.info_title.edit(lane_axis_group.info_title.info[:int(nb)] + \'..\')\n
+\n
+    # adding axis_definitions to dictionnary\n
+    properties_structure[\'lane_axis\'][lane_axis_group.name] = lane_axis_group_dict\n
+    properties_structure[\'line\'][lane_axis_group.name + \'_line\'] = lane_axis_line_dict\n
+    #properties_structure[\'info\'][lane_axis_group.name + \'_info\'] = lane_axis_info_dict\n
+\n
+\n
+# defining CSS properties for content\n
+content_dict={\n
+  \'position\': \'absolute\',\n
+  \'width\': size_planning_width,\n
+  \'height\': size_planning_height,\n
+  \'background\': \'#ffffff\',\n
+  \'border-style\': \'solid\',\n
+  \'border-color\': \'#53676e\',\n
+  \'border-width\': 1,\n
+}\n
+if y_axis_position:\n
+  content_dict[\'margin-left\'] = size_border_width_left\n
+else:\n
+  content_dict[\'margin-left\'] = size_border_width_left + size_y_axis_width + size_y_axis_space\n
+if not x_axis_position:\n
+  content_dict[\'margin-top\'] = size_header_height + size_x_axis_height + size_x_axis_space\n
+else:\n
+  content_dict[\'margin-top\'] = size_header_height\n
+properties_structure[\'frame\'][\'planning_content\'] = content_dict\n
+\n
+\n
+\n
+# processing blocks in the planning content\n
+block_border_width = 1\n
+for block_object in planning.content:\n
+  block_dict = {\n
+    \'position\': \'absolute\',\n
+    \'border-style\': \'solid\',\n
+    \'border-color\':  \'#53676e\',\n
+    \'border-width\': block_border_width,\n
+  }\n
+\n
+  if block_object.error == 1:      # task has error (not validated)\n
+    block_dict[\'background\'] = \'#e4c4da\'\n
+  elif block_object.warning == 1:  # other bloc in the same task has error\n
+    block_dict[\'background\'] = \'#e9e3f0\'\n
+  elif block_object.property_dict[\'stat\'] == 1:  # stat\n
+    block_dict[\'background\'] = \'#97b0c1\'\n
+    block_dict[\'border-color\'] = \'#97b0c1\'\n
+  elif block_object.color != \'\':   # color specified\n
+    block_dict[\'background\'] = block_object.color\n
+  else:                            # default color\n
+    block_dict[\'background\'] = \'#bdd2e7\'\n
+\n
+  # XXX Define the frozen Blocs\n
+  if context.PlanningBox_isFrozenBlock(block=block_object):\n
+    block_dict[\'border-width\'] = 0\n
+  \n
+  block_dict[\'height\'] = block_object.position_y.relative_range * size_planning_height\n
+  if block_object.parent_activity.height is not None:\n
+    block_dict[\'height\'] = block_dict[\'height\']*block_object.parent_activity.height\n
+  \n
+  # the width - border width * 2 (left and right)\n
+  # When you edit one object, border was added as a part of size. So 2*border-width pixels \n
+  # was added every edition. 2 is because left and right.\n
+  # the width - border-width * 2 (left and right)\n
+  block_dict[\'width\'] = (block_object.position_x.relative_range * size_planning_width) - \\\n
+                                                                           (2*block_border_width)\n
+  #block_dict[\'height\'] = block_object.position_y.relative_range * size_planning_height\n
+  block_dict[\'margin-left\'] = block_object.position_x.relative_begin * size_planning_width\n
+  block_dict[\'margin-top\'] = block_object.position_y.relative_begin * size_planning_height\n
+\n
+  if block_object.parent_activity.property_dict[\'stat\'] == 0:\n
+    # the whole following process is aimed to take care of the non-stat blocks\n
+\n
+    if planning.report_axis == planning.Y and block_object.parent_activity.property_dict[\'stat\'] == 0:\n
+      if block_object.parent_activity.object.getUid() not in basic.sec_layer_uid_list:\n
+        # Y axis is main axis\n
+        # adapt Y block size\n
+        block_dict[\'height\'] = block_dict[\'height\'] - 10\n
+        block_dict[\'margin-top\'] = block_dict[\'margin-top\'] + 5\n
+    elif block_object.parent_activity.property_dict[\'stat\'] == 0:\n
+      # X axis is main axis\n
+      # adapt X block size\n
+      block_dict[\'width\'] = block_dict[\'width\'] - 10\n
+      block_dict[\'margin-left\'] = block_dict[\'margin-left\'] + 5\n
+\n
+    # for each block processing its info objects and placing them\n
+    # testing if there is enough room horizontally to display the info,\n
+    # first checking when 2 info on the same line (top or bottom)\n
+    top_string = \'\'\n
+    top_list = []\n
+    bot_string = \'\'\n
+    bot_list = []\n
+    center = \'\'\n
+    # recovering full string that will have to be displayed on the top & bottom line\n
+    for info_name in block_object.info.keys():\n
+      if \'top\' in info_name:\n
+        top_string += block_object.info[info_name].info\n
+        top_list.append(info_name)\n
+      if \'bot\' in info_name:\n
+        bot_string += block_object.info[info_name].info\n
+        bot_list.append(info_name)\n
+      if \'center\' in info_name:\n
+        center = info_name\n
+    # checking if block length can fit them\n
+    if (len(top_string) * car_width) > block_dict[\'width\']:\n
+      # block is too short, escaping top line\n
+      for top_id in top_list:\n
+        block_object.info[top_id].edit(\'.\')\n
+    if (len(bot_string) * car_width) > block_dict[\'width\']:\n
+      for bot_id in bot_list:\n
+        block_object.info[bot_id].edit(\'.\')\n
+    # testing if need to update center info object (horizontal test)\n
+    # as center info is automatically splitted into lines if necessary, need to check\n
+    # the length of the biggest line.\n
+    center_content_list = block_object.info[center].info.split(\' \')\n
+    center_length = 0\n
+    for center_content_string in center_content_list:\n
+      if center_length < len(center_content_string):\n
+        center_length = len(center_content_string)\n
+    # now center_length contains the maximum length of a line\n
+    # applying test\n
+    if center_length * car_width > block_dict[\'width\']:\n
+      # center length is too long, escaping it\n
+      block_object.info[center].edit(\'__\')\n
+\n
+    # now testing vertical limit (..)\n
+    # lines contains the nuber of \'lines\' to display\n
+    lines = 1 # center line is always present\n
+    for list_object in (top_list,bot_list):\n
+      if list_object is not (None,[]):\n
+        lines += 1\n
+    if block_dict[\'height\'] < car_height:\n
+      # there is no room to display any text in the block\n
+      # escaping all text\n
+      for info_name in block_object.info.keys():\n
+        block_object.info[info_name].edit(\'\')\n
+    else:\n
+      if block_dict[\'height\'] < (car_height* lines):\n
+      # there is not enought room to display all the text in the block\n
+      # keeping only the most important : center\n
+        for list_object in (top_list,bot_list):\n
+          for info_name in list_object:\n
+            block_object.info[info_name].edit(\'\')\n
+    # now processing standard testing and positionning\n
+    # testing if the info can fit inside the block horizontally\n
+    """\n
+    for info_name in block_object.info.keys():\n
+      block_info_dict = None\n
+      block_info_dict = {}\n
+      block_info_dict[\'position\'] = \'absolute\'\n
+      if \'top\' in info_name:\n
+        #block_info_dict[\'margin-top\'] = 0\n
+        pass\n
+      if \'bot\' in info_name:\n
+        #block_info_dict[\'margin-top\'] = block_dict[\'height\'] - car_height\n
+        block_info_dict[\'margin-top\'] = - car_height - 5\n
+        block_info_dict[\'top\'] = \'100%\'\n
+      if \'left\' in info_name:\n
+        #block_info_dict[\'margin-left\'] = 0\n
+        pass\n
+      if \'right\' in info_name:\n
+        #block_info_dict[\'margin-left\'] = block_dict[\'width\'] - (car_width * len(block_object.info[info_name].info))\n
+        #block_info_dict[\'margin-right\'] = 0\n
+        block_info_dict[\'left\'] = \'100%\'\n
+        block_info_dict[\'margin-left\'] = -(car_width * len(block_object.info[info_name].info))\n
+      if \'center\' in info_name:\n
+        #block_info_dict[\'margin-left\'] = (block_dict[\'width\'] - (car_width * len(block_object.info[info_name].info)))/2\n
+        block_info_dict[\'margin-left\'] = - (car_width * len(block_object.info[info_name].info)) /2\n
+        block_info_dict[\'left\'] = \'50%\'\n
+        #if block_info_dict[\'margin-left\'] < 0:\n
+        #  block_info_dict[\'margin-left\'] = 0\n
+        #block_info_dict[\'margin-left\'] = block_info_dict[\'margin-left\']\n
+        block_info_dict[\'top\'] = \'50%\'\n
+        block_info_dict[\'margin-top\'] = - car_height / 2\n
+        #block_info_dict[\'margin-top\'] = (block_dict[\'height\'] - car_height)/2\n
+      if \'error\' in info_name:\n
+        #block_info_dict[\'margin-left\'] = 0\n
+        block_info_dict[\'width\'] = block_dict[\'width\']\n
+        block_info_dict[\'margin-top\'] = block_dict[\'height\']\n
+\n
+      properties_structure[\'info\'][block_object.name + \'_\' + info_name] = block_info_dict\n
+    """\n
+\n
+\n
+  properties_structure[\'content\'][block_object.name] = block_dict\n
+\n
+"""\n
+planning_box_dict=None\n
+planning_box_dict={}\n
+planning_box_dict[\'position\']=\'absolute\'\n
+planning_box_dict[\'width\'] = \n
+planning_box_dict[\'height\'] = \n
+properties_structure[\'base\'][\'planning_box\'] = planning_box_dict\n
+"""\n
+return properties_structure\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>basic, planning</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>planning_coordinates</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

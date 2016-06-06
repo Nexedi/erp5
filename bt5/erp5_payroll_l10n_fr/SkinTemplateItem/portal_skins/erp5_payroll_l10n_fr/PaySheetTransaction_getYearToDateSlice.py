@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>\'\'\'\n
+  This script get year to date amount for the slice corresponding to slice_path\n
+  of the model.\n
+\'\'\'\n
+portal = context.getPortalObject()\n
+accounting_module = portal.accounting_module\n
+\n
+from_date=DateTime(context.getStartDate().year(), 1, 1)\n
+to_date=context.getStartDate()\n
+\n
+search_params = {\n
+    \'portal_type\'         : \'Pay Sheet Transaction\',\n
+    \'delivery.start_date\' : {\'range\': "minmax", \'query\': (from_date, to_date)},\n
+    \'delivery.source_section_uid\' : context.getSourceSectionUid(),\n
+    \'delivery.destination_section_uid\' : context.getDestinationSectionUid(),\n
+    \'simulation_state\'    : [\'stopped\', \'delivered\'],\n
+}\n
+\n
+paysheet_list = [r.getObject() for r in accounting_module.searchFolder(**search_params)]\n
+paysheet_list.append(context)\n
+yearly_slice_amount = 0\n
+\n
+for paysheet in paysheet_list:\n
+  salary = paysheet.PaySheetTransaction_getMovementTotalPriceFromCategory(\n
+        base_contribution=base_contribution,\n
+        contribution_share=\'contribution_share/employee\')\n
+  if slice_path is None:\n
+    yearly_slice_amount += salary\n
+    continue\n
+  model = paysheet.getSpecialiseValue().getEffectiveModel(\\\n
+      start_date=paysheet.getStartDate(),\n
+      stop_date=paysheet.getStopDate())\n
+  if model is not None:\n
+    slice = model.getCell(slice_path)\n
+    if slice is None:\n
+      return 0.0\n
+    plafond_max = slice.getQuantityRangeMax()\n
+    plafond_min = slice.getQuantityRangeMin()\n
+    yearly_slice_amount += min(salary, plafond_max) - plafond_min\n
+\n
+return yearly_slice_amount\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>base_contribution, slice_path=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetTransaction_getYearToDateSlice</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

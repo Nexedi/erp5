@@ -1,0 +1,247 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+  <tal:block metal:define-macro="init">\n
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
+    <tr>\n
+      <td>store</td>\n
+      <td>${base_url}/web_site_module/ung</td>\n
+      <td>ung_url</td>\n
+    </tr>\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${base_url}/ERP5Site_cleanUpUNGTestEnvironment</td>\n
+      <td></td>\n
+    </tr>\n
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${ung_url}/WebSite_logout</td>\n
+      <td></td>\n
+    </tr>\n
+    <tal:block tal:condition="python: not here.ERP5Site_hasUNGUser()">\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//td[@id="new-account-form"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="firstname"]</td>\n
+        <td>UNG</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="lastname"]</td>\n
+        <td>User</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="email"]</td>\n
+        <td>example@example.com</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="login_name"]</td>\n
+        <td>test_user</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="password"]</td>\n
+        <td>test_user</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="confirm"]</td>\n
+        <td>test_user</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//input[@value="Create Account"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForPageToLoad</td>\n
+        <td>30000</td>\n
+        <td></td>\n
+      </tr>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}</td>\n
+        <td></td>\n
+      </tr>\n
+    </tal:block>\n
+  </tal:block>\n
+  <tal:block metal:define-macro="login">\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${ung_url}/WebSite_logout</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>type</td>\n
+      <td>__ac_name</td>\n
+      <td>test_user</td>\n
+    </tr>\n
+    <tr>\n
+      <td>type</td>\n
+      <td>__ac_password</td>\n
+      <td>test_user</td>\n
+    </tr>\n
+    <tr>\n
+      <td>clickAndWait</td>\n
+      <td>//input[@type="submit"]</td>\n
+      <td></td>\n
+    </tr>\n
+  </tal:block>\n
+  <tal:block metal:define-macro="create-user">\n
+    <tr>\n
+      <td>click</td>\n
+      <td>//td[@id="new-account-form"]</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>type</td>\n
+      <td>//input[@name="firstname"]</td>\n
+      <td>Gabriel</td>\n
+    </tr>\n
+    <tr>\n
+      <td>type</td>\n
+      <td>//input[@name="lastname"]</td>\n
+      <td>Monnerat</td>\n
+    </tr>\n
+    <tr>\n
+      <td>type</td>\n
+      <td>//input[@name="email"]</td>\n
+      <td>example@example.com</td>\n
+    </tr>\n
+    <tr>\n
+      <td>type</td>\n
+      <td>//input[@name="login_name"]</td>\n
+      <td>ung_user</td>\n
+    </tr>\n
+    <tr>\n
+      <td>type</td>\n
+      <td>//input[@name="password"]</td>\n
+      <td>1234</td>\n
+    </tr>\n
+    <tr>\n
+      <td>type</td>\n
+      <td>//input[@name="confirm"]</td>\n
+      <td>1234</td>\n
+    </tr>\n
+    <tr>\n
+      <td>click</td>\n
+      <td>//input[@value="Create Account"]</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>waitForPageToLoad</td>\n
+      <td>30000</td>\n
+      <td></td>\n
+    </tr>\n
+  </tal:block>\n
+  <tal:block metal:define-macro="delete-all-documents">\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${ung_url}</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>click</td>\n
+      <td>//th[@class="listbox-table-select-cell"]/input[1]</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>clickAndWait</td>\n
+      <td>//button[@class="delete"]</td>\n
+      <td></td>\n
+    </tr>\n
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${ung_url}</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>clickAndWait</td>\n
+      <td>//table[@class="your_listbox-table-domain-tree"]/tbody/tr[11]/td/a</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>click</td>\n
+      <td>//th[@class="listbox-table-select-cell"]/input[1]</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>clickAndWait</td>\n
+      <td>//button[@class="delete"]</td>\n
+      <td></td>\n
+    </tr>\n
+  </tal:block>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Zuite_CommonTemplateForUNG</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

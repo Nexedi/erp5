@@ -1,0 +1,396 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+div.listbox-tree{\n
+  max-width: 15%;\n
+}\n
+div.listbox-content{\n
+  width: 85%;\n
+}\n
+div.maximal-width {\n
+  width: 100%;\n
+}\n
+/* Listbox action bar at bottom */\n
+div.listbox-action-widget {\n
+  float:none;\n
+}\n
+div.listbox-action-widget span.description {\n
+  font-size:12px;\n
+}\n
+\n
+.listbox_actions_title{\n
+  display: none;\n
+}\n
+\n
+div.listbox-action-widget div.bottom_actions{\n
+  float:left;\n
+  background-color:transparent;\n
+  padding:0em\n
+}\n
+\n
+/* Title of the bar */\n
+div.listbox_actions_title{\n
+  color:#FFFFFF;\n
+  display:block;\n
+  font-size:15px;\n
+  text-align:left;\n
+  width:100%;\n
+  float:left;\n
+}\n
+\n
+/* Sub container for the buttons*/\n
+div.buttons_group {\n
+  margin-right:30px;\n
+  padding-top:3px;\n
+  width:auto;\n
+  overflow: auto;\n
+}\n
+\n
+/* Buttons */\n
+div.listbox-action-widget button, \n
+div.listbox-action-widget a.button {\n
+  border:0 none;\n
+  cursor:pointer;\n
+  float:left;\n
+  margin-right:3px;\n
+  margin-bottom:3px;\n
+  width: auto;\n
+}\n
+div.listbox-action-widget button:hover,\n
+div.listbox-action-widget a:hover {\n
+ background-position:100% 100%;\n
+}\n
+\n
+/* a as button */\n
+div.listbox-action-widget a.button{\n
+  display:block;\n
+  margin-left: 9px;\n
+}\n
+\n
+/* Image in button */\n
+div.listbox-action-widget span.image{\n
+  background-repeat:no-repeat;\n
+  background-position:center center;\n
+  display:block;\n
+  position:relative;\n
+  float:left;\n
+  height:20px;\n
+  width:20px;\n
+  margin-top:3px;\n
+  left:-3px;\n
+}\n
+\n
+/* Description of botton */\n
+div.listbox-action-widget span.description{\n
+  font-size:10px;\n
+}\n
+\n
+/* Global button span */\n
+div.listbox-action-widget button > span, \n
+div.listbox-action-widget a > span{\n
+  display:block;\n
+  display:block;\n
+  height:27px;\n
+  left:-8px;\n
+  line-height:27px;\n
+  margin:0;\n
+  padding:0 0 0 5px;\n
+  position:relative;\n
+  white-space:nowrap;\n
+  width:100%;\n
+}\n
+\n
+div.listbox-action-widget button:hover > span, \n
+div.listbox-action-widget a:hover > span{\n
+  background-position:0 100%;\n
+}\n
+\n
+div.listbox-action-widget span.description span {\n
+  left:4px;\n
+  position:relative;\n
+}\n
+\n
+/*Define all button image*/\n
+<tal:block tal:define="buttons python: [\'cut\',\'copy\',\'paste\',\'delete\',\'print\',\'new\',\'reset\',\'filter\',\'find\',\'sort\',\'config\']">\n
+  <tal:block tal:repeat ="button buttons">\n
+  <tal:block tal:content="python: \'\'\'\n
+    button.%(button)s_button span.image{\n
+    background-image:url(km_img/%(button)s.png);\n
+    }\'\'\' % {\'button\':button}"\n
+/>\n
+</tal:block>\n
+</tal:block>\n
+\n
+/* We hide listbox spacer in both normal and gadget mode */\n
+div.listbox-head-spacer{\n
+  display:none;\n
+}\n
+\n
+div.listbox-head-content,\n
+div.block div.listbox-head-content{\n
+  background-color:#FFF;\n
+  background: none;\n
+  margin-left:0px;\n
+  padding:0;\n
+  border: none;\n
+}\n
+div.listbox-title span{\n
+  font-weight: bold;\n
+}\n
+\n
+div.listbox-footer{\n
+  background-color:#F0EFE9;\n
+}\n
+div.listbox-footer-box{\n
+  width: auto;\n
+  float:left;\n
+  margin-right: 5px;\n
+}\n
+\n
+\n
+div.listbox-full-text-search input.button{\n
+  background-color:#A8A799;\n
+  color:#FFFFFF;\n
+}\n
+\n
+table.listbox tr.listbox-label-line{\n
+  background-color:#F0EFE9;\n
+  border-top: none;\n
+}\n
+table.listbox tr.listbox-search-line{\n
+  background-color:#F0EFE9;\n
+}\n
+table.listbox tr.listbox-search-line th{\n
+  padding:4px;\n
+}\n
+table.listbox tr.listbox-stat-line{\n
+  background-color:#F0EFE9;\n
+  border:none;\n
+}\n
+\n
+/* Listbox table itself */\n
+table.listbox {\n
+  border: none;\n
+}\n
+\n
+table.listbox th, \n
+table.listbox td{\n
+  border-style:none;\n
+  padding:4px;\n
+}\n
+\n
+table.listbox tr td{\n
+  border-top:1px solid #ECEBE2;\n
+}\n
+\n
+table.listbox tbody tr:hover td {\n
+  background-color:#F7F6F0;\n
+}\n
+\n
+/* No results message */\n
+table.listbox td.listbox-table-no-result-row{\n
+  border: none;\n
+}\n
+/* Search inputs */\n
+table.listbox tr.listbox-search-line th.listbox-table-filter-cell input{\n
+  border: none;\n
+}\n
+\n
+/* Sort buttons */\n
+table.listbox th button.sort-button {\n
+  text-decoration: none;\n
+  background:transparent url(km_img/switch.png) no-repeat scroll 100% 50%;\n
+  padding-right:6px;\n
+}\n
+table.listbox th button.sort-button:hover{\n
+  color: #FFF;\n
+}\n
+table.listbox th button.sort-button-desc,\n
+table.listbox th button.sort-button-asc{\n
+  padding-right: 0px;\n
+\n
+}\n
+\n
+table.listbox th img.sort-button-desc,\n
+table.listbox th img.sort-button-asc{\n
+  width: 5px;\n
+  height: 10px;\n
+  padding: 0;\n
+  margin: 0;\n
+}\n
+table.listbox th img.sort-button-desc{\n
+  background: url(km_img/switch_asc.png) no-repeat scroll 100% 50%;\n
+}\n
+table.listbox th img.sort-button-asc{\n
+  background: url(km_img/switch_desc.png) no-repeat scroll 100% 50%;\n
+}\n
+table.listbox th button.sort-button-asc,\n
+table.listbox th button.sort-button-desc{\n
+  background: none;\n
+}\n
+\n
+/* Navigation buttons */\n
+div.listbox-page-navigation button{\n
+  height: 10px;\n
+  width: 10px;\n
+}\n
+\n
+div.listbox-page-navigation button.listbox_first_page span.image {\n
+  background-image:url(km_img/2leftarrowv.png);\n
+}\n
+\n
+div.listbox-page-navigation button.listbox_previous_page span.image {\n
+  background-image:url(km_img/1leftarrowv.png);\n
+}\n
+\n
+div.listbox-page-navigation button.listbox_next_page span.image {\n
+  background-image:url(km_img/1rightarrowv.png);\n
+}\n
+\n
+div.listbox-page-navigation button.listbox_last_page span.image {\n
+  background-image:url(km_img/2rightarrowv.png);\n
+}\n
+\n
+/* Listbox preview */\n
+div.search-details, \n
+span.found{\n
+  padding-top: 5px;\n
+}\n
+\n
+/* Search listbox pop up styling */\n
+span.search_result_title{\n
+  color: #1111CC;\n
+}\n
+\n
+span.found{\n
+  color: #000000;\n
+}\n
+\n
+.section, \n
+.owner {\n
+  border-bottom: 1px solid #e9e9e9;\n
+  margin-right:5px;\n
+}\n
+\n
+a.section-link,\n
+a.owner-link,\n
+a.history-link{\n
+  margin-left: 5px;\n
+}\n
+\n
+div.search-details .reference-link,\n
+div.search-details .version,\n
+div.search-details .language{\n
+  color: #228822;\n
+}\n
+\n
+div.listbox-search-mode div.maximal-width{\n
+  width: 80%;\n
+}\n
+#listbox-preview-connector{\n
+  height:27px;\n
+  position:absolute;\n
+  left:-10px;\n
+  width:10px;\n
+  top:82px; /* in the middle of #listbox-preview */\n
+  display:inline;\n
+  background: url("km_img/left-arrow-connector.png");\n
+}\n
+\n
+#listbox-preview{\n
+  position:relative;\n
+  top:35px; /* will be adjusted by JS */\n
+  width:18%;\n
+  padding-left:5px;\n
+  padding-bottom:15px;\n
+  padding-top:10px;\n
+  background-color:white;\n
+  float:left;\n
+  border:1px solid black;\n
+  -moz-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
+  -webkit-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
+  min-height:180px;\n
+  z-index:100;\n
+}\n
+\n
+/* forum */\n
+.discussion-thread-listbox table.listbox{\n
+  border-collapse: separate;\n
+}\n
+.discussion-thread-listbox table.listbox tbody tr:hover td{\n
+  background-color:#FFF;\n
+}\n
+.discussion-thread-listbox table.listbox tbody tr{\n
+  margin-bottom:5px;\n
+}\n
+\n
+.discussion-thread-listbox table.listbox thead{\n
+  display: none;\n
+}
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>km_listbox.css</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode>KM Listbox CSS</unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

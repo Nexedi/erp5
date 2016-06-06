@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># This script indexes the preferred Transformation to produce\n
+# a variation of a product.\n
+# transformation_item_list is a list of:\n
+#   transformation, variation_list_list\n
+# transformation is a transformation to index, while variation_list_list\n
+# is a list of variation categories that are relevant for the produced resource\n
+\n
+\n
+from Products.ERP5Type.Document import newTempMovement\n
+\n
+# List of dictionaries:\n
+#   { id:resource_id,\n
+#     variation_text: resource_variation_text,\n
+#     row_dict_list: list of rows to insert; each row is represented as a dict.}\n
+row_dict_dict_list = []\n
+\n
+portal = context.getPortalObject()\n
+for transformation_relative_url, variation_list_list in transformation_item_list:\n
+  transformation = portal.restrictedTraverse(transformation_relative_url)\n
+  resource = transformation.getResourceValue()\n
+\n
+  if resource is None:\n
+    continue\n
+  for variation_list in variation_list_list:\n
+    movement = newTempMovement(resource, \'temp\',\n
+                               specialise_value=transformation,\n
+                               variation_category_list=variation_list,\n
+                               resource_value=resource,\n
+                               quantity=1.0)\n
+    base_row = dict(uid=resource.getUid(), variation_text=movement.getVariationText())\n
+\n
+    row_dict_list = []\n
+    for amount in movement.getAggregatedAmountList():\n
+      transformed_resource_uid = amount.getResourceUid()\n
+      quantity = amount.getQuantity()\n
+      if transformed_resource_uid is not None and quantity is not None:\n
+        row_dict = base_row.copy()\n
+        row_dict.update(transformed_uid=transformed_resource_uid,\n
+                        transformed_variation_text=amount.getVariationText(),\n
+                        quantity=quantity)\n
+        row_dict_list.append(row_dict)\n
+\n
+    base_row[\'row_dict_list\'] = row_dict_list\n
+    row_dict_dict_list.append(base_row)\n
+\n
+context.z_catalog_transformation_list(row_dict_dict_list=row_dict_dict_list)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>transformation_item_list</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SQLCatalog_catalogTransformation</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Index Transformation required to produce a specific variation of a Resource</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

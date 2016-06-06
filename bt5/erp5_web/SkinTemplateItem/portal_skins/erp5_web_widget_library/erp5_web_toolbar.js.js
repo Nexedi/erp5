@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts68194304.12</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>erp5_web_toolbar.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+Copyright (c) 2011-2012 Nexedi SARL and Contributors. All Rights Reserved.\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+*/\n
+\n
+function setCreationMode (sel) {\n
+  // default is cloning\n
+  var action      = \'clone\';\n
+  var action_name = \'Clone &amp; Edit\';\n
+  var icon        = \'admin_toolbox_clone_document.png\';\n
+  var name        = \'Base_cloneContent:method\';\n
+  var clone_display = \'inline\';\n
+  var new_title   = \'\';\n
+\n
+  // a portal type is given, so create a new document\n
+  var portal_type = sel.options[sel.selectedIndex].value;\n
+  if (portal_type != \'None\') {\n
+    action      = \'new\';\n
+    action_name = \'Create New &amp; Edit\';\n
+    icon        = \'admin_toolbox_new_document.png\';\n
+    name        = \'Base_newContent:method\';\n
+    clone_display = \'none\';\n
+    new_title   = \'Create New Document\';\n
+  }\n
+\n
+  // update action dependent values\n
+  document.getElementById(\'create_new_document_title\').innerHTML = new_title;\n
+  document.getElementById(\'clone_document_title\'     ).style.display = clone_display;\n
+  document.getElementById(\'duplicate_document_action\').innerHTML = action_name;\n
+\n
+  // replace the action icon\n
+  document.getElementById(\'clone_action_icon\').src = eval(action + \'_icon.src\');\n
+\n
+  // update action button title\n
+  var button   = document.getElementById(\'clone_action_button\');\n
+  button.title = action_name;\n
+  button.name  = name;\n
+}\n
+\n
+function initialize_toolbar(){\n
+  /* initialize all toolbar menu items */\n
+\n
+  if (document.images) {\n
+    clone_icon = new Image();\n
+    new_icon   = new Image();\n
+    clone_icon.src = \'admin_toolbox_clone_document.png\';\n
+    new_icon.src   = \'admin_toolbox_new_document.png\';\n
+  }\n
+          \n
+  $("li.toolboxSection").each(\n
+    function (index, menu){\n
+      menu = $(this);\n
+      var menu_title = menu.children("h3.menu_title").first();\n
+      var item = menu.children("div.menu").first();\n
+      menu_title.bind("click", function (){display_menu(item);} );\n
+  });}\n
+\n
+function display_menu(clicked_item){\n
+  /* when called funtion will display current menu and hide rest */\n
+  clicked_item.toggle();\n
+  $("li.toolboxSection").each(\n
+    function (index, menu){\n
+      menu = $(this);\n
+      var item = menu.children("div.menu").first();\n
+      if (item.parent().attr("id") != clicked_item.parent().attr("id")) {item.hide();}\n
+  });}\n
+\n
+$(document).ready(initialize_toolbar);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2928</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

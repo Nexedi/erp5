@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+forbidden_property = (\'uid\', \'portal_type\',)\n
+match_property_list = []\n
+\n
+\n
+def extract_keyword(name):\n
+  return [i.lower() for i in name.replace(\'_\', \' \').split()]\n
+\n
+def match(name, keyword_list):\n
+  count = 0\n
+  if name == keyword_list:\n
+    return 1\n
+  for i in keyword_list:\n
+    if i in name:\n
+      count += 1\n
+  return count/float(len(name + keyword_list))\n
+\n
+module = context\n
+spreadsheet_column = cell.getProperty(\'spreadsheet_column\')\n
+if spreadsheet_column is None:\n
+  return \'\'\n
+spreadsheet_column_property_list = extract_keyword(spreadsheet_column)\n
+for portal_type in module.allowedContentTypes():\n
+  for property in portal_type.getInstancePropertyAndBaseCategorySet():\n
+    if property not in forbidden_property:\n
+      property_dict = {}\n
+      key = \'%s.%s\' % (portal_type.id, property)\n
+      rank = match(spreadsheet_column_property_list,\n
+                   extract_keyword(property))\n
+      property_dict[\'key\'] = key\n
+      property_dict[\'rank\'] = rank\n
+      if rank == 1:\n
+        return key\n
+      elif rank > 0:\n
+        match_property_list.append(property_dict)\n
+\n
+def comp(a, b):\n
+  return cmp(\'%s%s\' % ((1-a[\'rank\']), a[\'key\']),\n
+             \'%s%s\' % ((1-b[\'rank\']), b[\'key\']))\n
+\n
+if match_property_list:\n
+  match_property_list.sort(comp)\n
+  return match_property_list[0][\'key\']\n
+return None\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>cell</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getModulePortalTypeDefaultProperty</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

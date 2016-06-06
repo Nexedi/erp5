@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts80003297.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>lang.ja.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>[\n
+{"id": "align_relative_to", "title": "揃える"},\n
+{"id": "bkgnd_color", "title": "背景色/不透明度の変更"},\n
+{"id": "circle_cx", "title": "円の中心を変更（X座標）"},\n
+{"id": "circle_cy", "title": "円の中心を変更（Y座標）"},\n
+{"id": "circle_r", "title": "変更円の半径"},\n
+{"id": "connector_no_arrow", "textContent": "No arrow"},\n
+{"id": "copyrightLabel", "textContent": "Powered by"},\n
+{"id": "cornerRadiusLabel", "title": "角の半径："},\n
+{"id": "cornerRadiusLabel", "title": "長方形の角の半径を変更"},\n
+{"id": "curve_segments", "textContent": "カーブ"},\n
+{"id": "ellipse_cx", "title": "楕円の中心を変更（X座標）"},\n
+{"id": "ellipse_cy", "title": "楕円の中心を変更（Y座標）"},\n
+{"id": "ellipse_rx", "title": "楕円の半径を変更（X座標）"},\n
+{"id": "ellipse_ry", "title": "楕円の半径を変更（Y座標）"},\n
+{"id": "fill_color", "title": "塗りの色を変更"},\n
+{"id": "fitToContent", "textContent": "コンテンツに合わせる"},\n
+{"id": "fit_to_all", "textContent": "すべてのコンテンツに合わせる"},\n
+{"id": "fit_to_canvas", "textContent": "キャンバスに合わせる"},\n
+{"id": "fit_to_layer_content", "textContent": "レイヤー上のコンテンツに合わせる"},\n
+{"id": "fit_to_sel", "textContent": "選択対象に合わせる"},\n
+{"id": "font_family", "title": "フォントファミリーの変更"},\n
+{"id": "icon_large", "textContent": "Large"},\n
+{"id": "icon_medium", "textContent": "Medium"},\n
+{"id": "icon_small", "textContent": "Small"},\n
+{"id": "icon_xlarge", "textContent": "Extra Large"},\n
+{"id": "image_height", "title": "画像の高さを変更"},\n
+{"id": "image_opt_embed", "textContent": "SVGファイルに埋め込む"},\n
+{"id": "image_opt_ref", "textContent": "画像を参照する"},\n
+{"id": "image_url", "title": "URLを変更"},\n
+{"id": "image_width", "title": "画像の幅を変更"},\n
+{"id": "includedImages", "textContent": "挿入された画像の扱い"},\n
+{"id": "largest_object", "textContent": "最大のオブジェクト"},\n
+{"id": "layer_delete", "title": "レイヤの削除"},\n
+{"id": "layer_down", "title": "レイヤを下へ移動"},\n
+{"id": "layer_new", "title": "新規レイヤ"},\n
+{"id": "layer_rename", "title": "レイヤの名前を変更"},\n
+{"id": "layer_up", "title": "レイヤを上へ移動"},\n
+{"id": "layersLabel", "textContent": "レイヤ:"},\n
+{"id": "line_x1", "title": "開始X座標"},\n
+{"id": "line_x2", "title": "終了X座標"},\n
+{"id": "line_y1", "title": "開始Y座標"},\n
+{"id": "line_y2", "title": "終了Y座標"},\n
+{"id": "linecap_butt", "title": "Linecap: Butt"},\n
+{"id": "linecap_round", "title": "Linecap: Round"},\n
+{"id": "linecap_square", "title": "Linecap: Square"},\n
+{"id": "linejoin_bevel", "title": "Linejoin: Bevel"},\n
+{"id": "linejoin_miter", "title": "Linejoin: Miter"},\n
+{"id": "linejoin_round", "title": "Linejoin: Round"},\n
+{"id": "main_icon", "title": "Main Menu"},\n
+{"id": "mode_connect", "title": "Connect two objects"},\n
+{"id": "page", "textContent": "ページ"},\n
+{"id": "palette", "title": "クリックで塗りの色を選択、Shift+クリックで線の色を選択"},\n
+{"id": "path_node_x", "title": "ノードのX座標を変更"},\n
+{"id": "path_node_y", "title": "ノードのY座標を変更"},\n
+{"id": "rect_height_tool", "title": "長方形の高さを変更"},\n
+{"id": "rect_width_tool", "title": "長方形の幅を変更"},\n
+{"id": "relativeToLabel", "textContent": "相対:"},\n
+{"id": "seg_type", "title": "線分の種類を変更"},\n
+{"id": "selLayerLabel", "textContent": "移動先レイヤ:"},\n
+{"id": "selLayerNames", "title": "選択対象を別のレイヤに移動"},\n
+{"id": "selectedPredefined", "textContent": "デフォルト"},\n
+{"id": "selected_objects", "textContent": "選択オブジェクト"},\n
+{"id": "selected_x", "title": "X座標を変更"},\n
+{"id": "selected_y", "title": "Y座標を変更"},\n
+{"id": "smallest_object", "textContent": "最小のオブジェクト"},\n
+{"id": "straight_segments", "textContent": "直線"},\n
+{"id": "stroke_color", "title": "線の色を変更"},\n
+{"id": "stroke_style", "title": "線種の変更"},\n
+{"id": "stroke_width", "title": "線幅の変更"},\n
+{"id": "svginfo_bg_note", "textContent": "※背景色はファイルに保存されません。"},\n
+{"id": "svginfo_change_background", "textContent": "エディタの背景色"},\n
+{"id": "svginfo_dim", "textContent": "キャンバスの大きさ"},\n
+{"id": "svginfo_editor_prefs", "textContent": "エディタの設定"},\n
+{"id": "svginfo_height", "textContent": "高さ:"},\n
+{"id": "svginfo_icons", "textContent": "アイコンの大きさ"},\n
+{"id": "svginfo_image_props", "textContent": "イメージの設定"},\n
+{"id": "svginfo_lang", "textContent": "言語"},\n
+{"id": "svginfo_title", "textContent": "タイトル"},\n
+{"id": "svginfo_width", "textContent": "幅:"},\n
+{"id": "text", "title": "テキストの内容の変更"},\n
+{"id": "toggle_stroke_tools", "title": "Show/hide more stroke tools"},\n
+{"id": "tool_add_subpath", "title": "Add sub-path"},\n
+{"id": "tool_alignbottom", "title": "下揃え"},\n
+{"id": "tool_aligncenter", "title": "中央揃え"},\n
+{"id": "tool_alignleft", "title": "左揃え"},\n
+{"id": "tool_alignmiddle", "title": "中央揃え"},\n
+{"id": "tool_alignright", "title": "右揃え"},\n
+{"id": "tool_aligntop", "title": "上揃え"},\n
+{"id": "tool_angle", "title": "回転角の変更"},\n
+{"id": "tool_blur", "title": "Change gaussian blur value"},\n
+{"id": "tool_bold", "title": "太字"},\n
+{"id": "tool_circle", "title": "円"},\n
+{"id": "tool_clear", "textContent": "新規イメージ"},\n
+{"id": "tool_clone", "title": "複製"},\n
+{"id": "tool_clone_multi", "title": "選択対象を複製"},\n
+{"id": "tool_delete", "title": "削除"},\n
+{"id": "tool_delete_multi", "title": "選択対象を削除"},\n
+{"id": "tool_docprops", "textContent": "文書のプロパティ"},\n
+{"id": "tool_docprops_cancel", "textContent": "キャンセル"},\n
+{"id": "tool_docprops_save", "textContent": "OK"},\n
+{"id": "tool_ellipse", "title": "楕円"},\n
+{"id": "tool_export", "textContent": "Export as PNG"},\n
+{"id": "tool_eyedropper", "title": "Eye Dropper Tool"},\n
+{"id": "tool_fhellipse", "title": "フリーハンド楕円"},\n
+{"id": "tool_fhpath", "title": "鉛筆ツール"},\n
+{"id": "tool_fhrect", "title": "フリーハンド長方形"},\n
+{"id": "tool_font_size", "title": "文字サイズの変更"},\n
+{"id": "tool_group", "title": "グループ化"},\n
+{"id": "tool_image", "title": "イメージツール"},\n
+{"id": "tool_import", "textContent": "Import SVG"},\n
+{"id": "tool_italic", "title": "イタリック体"},\n
+{"id": "tool_line", "title": "直線ツール"},\n
+{"id": "tool_move_bottom", "title": "奥に移動"},\n
+{"id": "tool_move_top", "title": "手前に移動"},\n
+{"id": "tool_node_clone", "title": "ノードを複製"},\n
+{"id": "tool_node_delete", "title": "ノードを削除"},\n
+{"id": "tool_node_link", "title": "制御点の接続"},\n
+{"id": "tool_opacity", "title": "不透明度"},\n
+{"id": "tool_open", "textContent": "イメージを開く"},\n
+{"id": "tool_path", "title": "パスツール"},\n
+{"id": "tool_rect", "title": "長方形"},\n
+{"id": "tool_redo", "title": "やり直し"},\n
+{"id": "tool_reorient", "title": "現在の角度を０度とする"},\n
+{"id": "tool_save", "textContent": "画像を保存"},\n
+{"id": "tool_select", "title": "選択ツール"},\n
+{"id": "tool_source", "title": "ソースの編集"},\n
+{"id": "tool_source_cancel", "textContent": "キャンセル"},\n
+{"id": "tool_source_save", "textContent": "適用"},\n
+{"id": "tool_square", "title": "正方形"},\n
+{"id": "tool_text", "title": "テキストツール"},\n
+{"id": "tool_topath", "title": "パスに変換"},\n
+{"id": "tool_undo", "title": "元に戻す"},\n
+{"id": "tool_ungroup", "title": "グループ化を解除"},\n
+{"id": "tool_wireframe", "title": "ワイヤーフレームで表示 [F]"},\n
+{"id": "tool_zoom", "title": "ズームツール"},\n
+{"id": "url_notice", "title": "NOTE: This image cannot be embedded. It will depend on this path to be displayed"},\n
+{"id": "zoom_panel", "title": "ズーム倍率の変更"},\n
+{"id": "sidepanel_handle", "textContent": "L a y e r s", "title": "ドラッグで幅の調整"},\n
+{\n
+ "js_strings": {\n
+  "QerrorsRevertToSource": "ソースにエラーがあります。\\n元のソースに戻しますか？", \n
+  "QignoreSourceChanges": "ソースの変更を無視しますか？", \n
+  "QmoveElemsToLayer": "選択した要素をレイヤー \'%s\' に移動しますか？", \n
+  "QwantToClear": "キャンバスをクリアしますか？\\nアンドゥ履歴も消去されます。", \n
+  "cancel": "キャンセル", \n
+  "defsFailOnSave": "NOTE: Due to a bug in your browser, this image may appear wrong (missing gradients or elements). It will however appear correct once actually saved.", \n
+  "dupeLayerName": "同名のレイヤーが既に存在します。", \n
+  "enterNewImgURL": "画像のURLを入力してください。", \n
+  "enterNewLayerName": "レイヤの新しい名前を入力してください。", \n
+  "enterUniqueLayerName": "新規レイヤの一意な名前を入力してください。", \n
+  "exportNoBlur": "Blurred elements will appear as un-blurred", \n
+  "exportNoDashArray": "Strokes will appear filled", \n
+  "exportNoImage": "Image elements will not appear", \n
+  "exportNoText": "Text may not appear as expected", \n
+  "exportNoforeignObject": "foreignObject elements will not appear", \n
+  "featNotSupported": "機能はサポートされていません。", \n
+  "invalidAttrValGiven": "無効な値が指定されています。", \n
+  "key_backspace": "backspace", \n
+  "key_del": "delete", \n
+  "key_down": "down", \n
+  "key_up": "up", \n
+  "layer": "レイヤ", \n
+  "layerHasThatName": "既に同名が付いています。", \n
+  "loadingImage": "Loading image, please wait...", \n
+  "noContentToFitTo": "合わせる対象のコンテンツがありません。", \n
+  "noteTheseIssues": "Also note the following issues: ", \n
+  "ok": "OK", \n
+  "pathCtrlPtTooltip": "カーブの形状を調整するには、制御点をドラッグしてください。", \n
+  "pathNodeTooltip": "移動するには、ノードをドラッグしてください。ノードをダブルクリックすると線分の種類を変更できます。", \n
+  "saveFromBrowser": "Select \\"Save As...\\" in your browser to save this image as a %s file."\n
+ }\n
+}\n
+]</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10313</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

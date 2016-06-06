@@ -1,0 +1,295 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Type.Document import newTempBase\n
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery\n
+from Products.ERP5Type.Message import translateString\n
+from Products.ERP5Type.Log import log\n
+portal = context.getPortalObject()\n
+request = portal.REQUEST\n
+params = portal.ERP5Accounting_getParams(selection_name=selection_name)\n
+\n
+if params.get(\'precision\', None) is not None:\n
+  # listbox editable float fields uses request/precision to format the value.\n
+  request.set(\'precision\', params[\'precision\'])\n
+\n
+if not request.get(\'is_accounting_report\'):\n
+  # if we are in the UI, we use from date from preferences, but in a report we\n
+  # don\'t use any information from preferences, as they are passed by the\n
+  # report dialog\n
+  from_date = portal.portal_preferences.getPreferredAccountingTransactionFromDate()\n
+\n
+# this script can be used for Node, Section or Payment\n
+if kw.get(\'node_uid\'):\n
+  params[\'node_uid\'] = kw[\'node_uid\']\n
+if kw.get(\'mirror_section_uid\'):\n
+  params[\'mirror_section_uid\'] = kw[\'mirror_section_uid\']\n
+\n
+category_uid_list = (\'payment_uid\', \'project_uid\', \'funding_uid\',\n
+  \'function_uid\', \'payment_request_uid\', \'default_aggregate_uid\')\n
+for category_uid in category_uid_list:\n
+  category_uid_value = kw.get(category_uid)\n
+  if category_uid_value:\n
+    if category_uid_value == \'None\':\n
+      # XXX Jerome: this code needs some clarification. It is used after a dialog\n
+      # with a list field for project (same for function, payment_request,\n
+      # funding) where the user can select an empty item which means no filter\n
+      # on project, can select a project which means only transactions for\n
+      # that specific project, or select a special value "None" which means\n
+      # transactions that are not related to a project. For that we need a\n
+      # query that will be translated as stock.project_uid IS NULL.      \n
+      params[category_uid] = Query(**{category_uid: None})\n
+    else:\n
+      params[category_uid] = category_uid_value\n
+\n
+funding_category = kw.get(\'funding_category\')\n
+if funding_category:\n
+  if funding_category == \'None\':\n
+    params[\'funding_uid\'] = Query(funding_uid=None)\n
+  else:\n
+    params[\'funding_category\'] = funding_category\n
+function_category = kw.get(\'function_category\')\n
+if function_category:\n
+  if function_category == \'None\':\n
+    params[\'function_uid\'] = Query(function_uid=None)\n
+  else:\n
+    params[\'function_category\'] = function_category\n
+\n
+if node_category_strict_membership:\n
+  params[\'node_category_strict_membership\'] = node_category_strict_membership\n
+if node_category:\n
+  params[\'node_category\'] = node_category\n
+if mirror_section_category:\n
+  params[\'mirror_section_category\'] = mirror_section_category\n
+\n
+if not \'parent_portal_type\' in params:\n
+  params.setdefault(\'portal_type\', portal.getPortalAccountingMovementTypeList())\n
+\n
+# Create the related accouting line list\n
+new_result  = []\n
+net_balance = 0.0\n
+\n
+# accounts from PL have a balance calculated differently\n
+is_pl_account = False\n
+if params.get(\'node_uid\'):\n
+  if context.getUid() == params[\'node_uid\']:\n
+    node = context\n
+    is_pl_account = context.isMemberOf(\'account_type/expense\')\\\n
+                 or context.isMemberOf(\'account_type/income\')\n
+  else:\n
+    node = portal.portal_catalog.getObject(params[\'node_uid\'])\n
+    is_pl_account = node.isMemberOf(\'account_type/expense\')\\\n
+                 or node.isMemberOf(\'account_type/income\')\n
+\n
+# remove unknown catalog keys from params\n
+params.pop(\'detailed_from_date_summary\', None)\n
+\n
+period_start_date = params.pop(\'period_start_date\', None)\n
+if is_pl_account and not from_date:\n
+  from_date = period_start_date\n
+\n
+if portal.portal_selections.getSelectionParamsFor(selection_name).get(\'hide_grouping\'):\n
+  if params.get(\'at_date\'):\n
+    params[\'grouping_query\'] = ComplexQuery(\n
+      Query(grouping_reference=None),\n
+      Query(grouping_date=params[\'at_date\'], range="min"),\n
+      operator="OR")\n
+  else:\n
+    params[\'grouping_reference\'] = None\n
+\n
+if from_date or is_pl_account:\n
+  # Create a new parameter list to get the previous balance\n
+  get_inventory_kw = params.copy()\n
+\n
+  initial_balance_from_date = from_date\n
+\n
+  # ignore any at_date that could lay in params\n
+  get_inventory_kw.pop(\'at_date\', None)\n
+\n
+  if period_start_date:\n
+    if is_pl_account:\n
+      # if we have on an expense / income account, only take into account\n
+      # movements from the current period.\n
+      if initial_balance_from_date:\n
+        initial_balance_from_date = max(period_start_date,\n
+                                        initial_balance_from_date)\n
+      else:\n
+        initial_balance_from_date = period_start_date\n
+    else:\n
+      # for all other accounts, we calculate initial balance\n
+      if not initial_balance_from_date:\n
+        # I don\'t think this should happen\n
+        log(\'from_date not passed, defaulting to period_start_date\')\n
+        initial_balance_from_date = period_start_date\n
+\n
+  # Get previous debit and credit\n
+  if not (initial_balance_from_date == period_start_date and is_pl_account):\n
+    getInventoryAssetPrice = portal.portal_simulation.getInventoryAssetPrice\n
+    section_uid_list = params.get(\'section_uid\', [])\n
+    if not same_type(section_uid_list, []):\n
+      section_uid_list = [section_uid_list]\n
+    for section_uid in section_uid_list:\n
+      # We add one initial balance line per section. The main reason is to be able\n
+      # to know the section_title for the GL export.\n
+      # XXX we may also want detail by resource or analytic columns sometimes.\n
+      get_inventory_kw[\'section_uid\'] = section_uid\n
+      # Initial balance calculation uses the same logic as Trial Balance.\n
+      # first to the balance at the period start date\n
+      if is_pl_account:\n
+        period_openning_balance = 0\n
+      else:\n
+        period_openning_balance = getInventoryAssetPrice(\n
+                                                to_date=min(period_start_date,\n
+                                                            initial_balance_from_date),\n
+                                                **get_inventory_kw)\n
+\n
+      # then all movements between period_start_date and from_date\n
+      previous_total_debit  = getInventoryAssetPrice(omit_asset_decrease=True,\n
+             from_date=period_start_date,\n
+             to_date=initial_balance_from_date,\n
+             **get_inventory_kw) + max(period_openning_balance, 0)\n
+      previous_total_credit = getInventoryAssetPrice(omit_asset_increase=True,\n
+             from_date=period_start_date,\n
+             to_date=initial_balance_from_date,\n
+             **get_inventory_kw) - max(-period_openning_balance, 0)\n
+  \n
+      if previous_total_credit != 0:\n
+        previous_total_credit = - previous_total_credit\n
+    \n
+      # Show the previous balance if not empty\n
+      if previous_total_credit != 0 or previous_total_debit != 0:\n
+        net_balance = previous_total_debit - previous_total_credit\n
+        previous_balance = newTempBase(portal, \'_temp_accounting_transaction\')\n
+        previous_balance.edit(\n
+            uid=\'new_000\',\n
+            date=initial_balance_from_date,\n
+            simulation_state_title="",\n
+            credit_price=previous_total_credit,\n
+            debit_price=previous_total_debit,\n
+            total_price=net_balance,\n
+            credit=previous_total_credit,\n
+            debit=previous_total_debit,\n
+            total_quantity=net_balance,\n
+            running_total_price=net_balance,\n
+            is_previous_balance=True,\n
+            Movement_getSpecificReference=u\'%s\' % translateString(\'Previous Balance\'),\n
+            Movement_getExplanationTitle=u\'%s\' % translateString(\'Previous Balance\'),\n
+            Movement_getExplanationTranslatedPortalType=\'\',\n
+            Movement_getExplanationReference=\'\',\n
+            Movement_getMirrorSectionTitle=\'\',\n
+            Movement_getNodeGapId=\'\',\n
+            getListItemUrl=lambda *args,**kw: None,\n
+            Movement_getExplanationUrl=lambda **kw:None,\n
+            Movement_getFundingTitle=lambda: \'\',\n
+            Movement_getFunctionTitle=lambda: \'\',\n
+            Movement_getProjectTitle=lambda: \'\',\n
+            Node_statAccountingBalance=\'\',\n
+            getTranslatedSimulationStateTitle=\'\',\n
+            modification_date=\'\',\n
+          )\n
+\n
+        if context.getPortalType() == \'Account\':\n
+          previous_balance.edit(Movement_getExplanationTitle=\'\')\n
+        if params.get(\'node_uid\'):\n
+          previous_balance.edit(\n
+            Movement_getNodeGapId=node.Account_getGapId(),\n
+            node_translated_title=node.getTranslatedTitle()\n
+          )\n
+        section = portal.portal_catalog.getObject(section_uid)\n
+        previous_balance.edit(\n
+          Movement_getSectionPriceCurrency=section.getPriceCurrencyReference(),\n
+          resource_reference=section.getPriceCurrencyReference(),\n
+          section_title=section.getTitle(),\n
+        )\n
+        new_result.append(previous_balance)\n
+\n
+  if \'group_by\' in kw:\n
+    params[\'group_by\'] = kw[\'group_by\']\n
+  new_result.extend(\n
+    portal.portal_simulation.getMovementHistoryList(\n
+                   from_date=from_date,\n
+                   initial_running_total_price=net_balance,\n
+                   # initial_running_quantity=net_balance, TODO\n
+                   selection_domain=context.portal_selections.getSelectionDomainDictFor(selection_name),\n
+                   sort_on=sort_on,\n
+                   ignore_group_by=True,\n
+                   **params))\n
+  return new_result\n
+\n
+# We try not to convert to a list, hence the copy & paste\n
+return portal.portal_simulation.getMovementHistoryList(\n
+                 from_date=from_date,\n
+                 initial_running_total_price=net_balance,\n
+                 # initial_running_quantity=net_balance, TODO\n
+                 selection_domain=context.portal_selections.getSelectionDomainDictFor(selection_name),\n
+                 sort_on=sort_on,\n
+                 ignore_group_by=True,\n
+                 src__=src__,\n
+                 **params)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>selection=None, sort_on=[], node_category=None, node_category_strict_membership=None, mirror_section_category=None, from_date=None, selection_name=None, src__=0, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Node_getAccountingTransactionList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

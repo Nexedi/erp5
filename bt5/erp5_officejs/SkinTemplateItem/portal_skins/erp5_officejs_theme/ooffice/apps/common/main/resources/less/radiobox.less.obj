@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308810.83</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>radiobox.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+.radiobox {\r\n
+    padding-left: 22px;\r\n
+    margin-bottom: 0;\r\n
+    .font-size-normal();\r\n
+    font-weight: normal;\r\n
+\r\n
+    input[type=button] {\r\n
+        .background-ximage(\'@{common-image-path}/@{common-controls}\', \'@{common-image-path}/@{common-controls2x}\', 100px);\r\n
+        background-repeat: no-repeat;\r\n
+        background-position: @radio-offset-x @radio-offset-y;\r\n
+        background-color: transparent;\r\n
+        border: none;\r\n
+        margin-left: -22px;\r\n
+        margin-right: 6px;\r\n
+        padding-bottom: 4px;\r\n
+        width: 16px;\r\n
+        height: 16px;\r\n
+        cursor: default;\r\n
+        vertical-align: top;\r\n
+\r\n
+        &.checked {\r\n
+            background-position: @radio-offset-x @radio-offset-y - 16px;\r\n
+        }\r\n
+\r\n
+        &.disabled {\r\n
+            background-position: @radio-offset-x - 48px @radio-offset-y;\r\n
+\r\n
+            &.checked {\r\n
+                background-position: @radio-offset-x - 48px @radio-offset-y - 16px;\r\n
+            }\r\n
+        }\r\n
+    }\r\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>970</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

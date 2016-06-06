@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\'\'\'\n
+  return a list of slice items\n
+\'\'\'\n
+translateString = context.Base_translateString\n
+\n
+# get the model the related model (usefull to get slice values). This script\n
+# can be called on paysheet model line or on paysheet.\n
+model = context.getParentValue().getPortalType()==\'Pay Sheet Model\' and\\\n
+          context.getParentValue() or context.getSpecialiseValue()\n
+\n
+def framing(cell, name):\n
+  \'\'\'\n
+    this function return a string corresponding to the framing of the slice \n
+    with the min and max value of the cell.\n
+    e.g. : \'2682.0 <= Tranche B < 10728\'\n
+  \'\'\'\n
+  if cell is None:\n
+    # This error happens when the cell is not found in the parent model or any\n
+    # inherited model.\n
+    return "%s (%s)" % (name, translateString(\'slice not defined\'))\n
+\n
+  return \'%s <= %s < %s\' % (cell.getQuantityRangeMin(),\n
+                            name,\n
+                            cell.getQuantityRangeMax())\n
+\n
+resource = context.getResourceValue()\n
+cell_range = []\n
+\n
+if matrixbox :\n
+  if resource is not None:\n
+    base_category_list = context.getVariationBaseCategoryList()\n
+    base_category_list.sort()\n
+    for base_category in base_category_list:\n
+      category_cell_range = []\n
+      category_item_list = context.getVariationCategoryItemList(base_category_list = (base_category,),\n
+                                                                display_id=\'translated_logical_path\',\n
+                                                                checked_permission=\'View\')\n
+      for category_item in category_item_list:\n
+        if base_category == \'salary_range\':\n
+          category_cell_range.append((category_item[1],\\\n
+              framing(model.getCell(category_item[1]),\n
+                      category_item[0])))\n
+        elif base_category == \'contribution_share\':\n
+          category_cell_range.append((category_item[1],\n
+            translateString(\'${contribution_share_title} (Amount or Percent)\',\n
+                            mapping=dict(contribution_share_title=category_item[0]))))\n
+        else:\n
+          raise ValueError, "PaySheetModelLine_asCellRange: the two categories "\\\n
+                "must could be only contribution_share and salary_range"\n
+      cell_range.append(category_cell_range)\n
+\n
+    cell_range = filter(lambda x: x != [], cell_range)\n
+  while len(cell_range) < 3:\n
+    cell_range.append([])\n
+  return cell_range\n
+else:\n
+  list_of_category_list = []\n
+  variation_base_category_list = context.getVariationBaseCategoryList()\n
+  variation_base_category_list.sort()\n
+  for base_category in variation_base_category_list:\n
+    if base_category == "base_application":\n
+      base_application_variation_dict = {}\n
+      variation_list = context.getVariationCategoryList(base_category_list=(base_category,))\n
+      for variation in variation_list:\n
+        # We split at the sublevel of base_application/base_amount/payroll/XXX\n
+        base_variation = \'/\'.join(variation.split(\'/\')[:4])\n
+        base_application_variation_dict.setdefault(base_variation, []) \n
+        base_application_variation_dict[base_variation].append(variation)\n
+\n
+      for v in base_application_variation_dict.values():\n
+        list_of_category_list.append(v)\n
+    else:\n
+      list_of_category_list.append(\\\n
+        context.getVariationCategoryList(base_category_list=base_category))\n
+  return list_of_category_list\n
+\n
+return []\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>matrixbox=0, base_id=\'movement\', **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetModelLine_asCellRange</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

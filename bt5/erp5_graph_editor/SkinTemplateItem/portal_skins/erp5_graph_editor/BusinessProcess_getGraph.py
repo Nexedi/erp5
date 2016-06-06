@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Message import translateString\n
+import json\n
+portal = context.getPortalObject()\n
+\n
+# if a graph has been saved, we use this info for node coordinates.\n
+position_graph = context.getProperty(\'jsplumb_graph\')\n
+if position_graph:\n
+  position_graph = json.loads(position_graph)[\'graph\']\n
+\n
+visited_business_process_set = set() # prevent infinite recurisions\n
+\n
+def getBusinessProcessGraph(business_process):\n
+  graph = dict(node=dict(start=dict(_class=\'erp5.business_process.start\',\n
+                                    name=str(translateString(\'Start\'))),\n
+                         end=dict(_class=\'erp5.business_process.end\',\n
+                                  name=str(translateString(\'End\'))),),\n
+               edge=dict())\n
+\n
+\n
+  for trade_state in portal.portal_categories.trade_state.getCategoryChildValueList(): # XXX do we really want to display all trade states ?\n
+    state_id = trade_state.getReference() or trade_state.getId()\n
+    graph[\'node\'][state_id] = dict(\n
+        _class=\'erp5.business_process.trade_state\',\n
+        name=trade_state.getTranslatedTitle())\n
+\n
+  for state_id in graph[\'node\'].keys():\n
+    if position_graph and state_id in position_graph[\'node\']:\n
+      graph[\'node\'][state_id][\'coordinate\'] = position_graph[\'node\'][state_id][\'coordinate\']\n
+\n
+  if business_process in visited_business_process_set:\n
+    return graph\n
+  visited_business_process_set.add(business_process)\n
+  for link in business_process.contentValues(portal_type=\'Business Link\'):\n
+\n
+    predecessor = \'start\'\n
+    if link.getPredecessor():\n
+      predecessor = link.getPredecessorReference() or link.getPredecessorId()\n
+    successor = \'end\'\n
+    if link.getSuccessor():\n
+      successor = link.getSuccessorReference() or link.getSuccessorId()\n
+\n
+    graph[\'edge\'][link.getRelativeUrl()] = dict(\n
+        _class=\'erp5.business_process.business_link\',\n
+        source=predecessor,\n
+        destination=successor,\n
+        name=link.getTranslatedTitle(),\n
+        business_link_url=link.getRelativeUrl(),\n
+        trade_phase=link.getTradePhase() or \'\')\n
+\n
+  for specialise in [context] + business_process.getSpecialiseValueList(portal_type=\'Business Process\'):\n
+    specialise_graph = getBusinessProcessGraph(specialise)\n
+    for node_id, node_data in specialise_graph[\'node\'].items():\n
+      graph[\'node\'].setdefault(node_id, node_data)\n
+    for node_id, node_data in specialise_graph[\'edge\'].items():\n
+      graph[\'edge\'].setdefault(node_id, node_data)\n
+  return graph\n
+\n
+\n
+class_definition = {\n
+  \'erp5.business_process.business_link\': {\n
+    \'_class\': \'edge\',\n
+    \'type\': \'object\',\n
+    \'description\': \'An ERP5 Business Link\',\n
+    \'properties\': {\n
+      \'name\': {\'type\': \'string\', \'name\': str(translateString(\'Name\'))},\n
+      \'trade_phase\': {\'type\': \'string\', \'name\': str(translateString(\'Trade Phase\')), \'enum\': [\'\'] + [\n
+          trade_phase.getId() for trade_phase in portal.portal_categories.trade_phase.getCategoryChildValueList(local_sort_on=(\'int_index\', \'title\'))]}, \n
+    }\n
+  }\n
+}\n
+\n
+return json.dumps(dict(graph=getBusinessProcessGraph(context), class_definition=class_definition), indent=2)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessProcess_getGraph</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

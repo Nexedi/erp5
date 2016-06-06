@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>""" \n
+    Generate current document\'s information structure needed to be rendered \n
+    by web widget Document_viewPopupTemplate.\n
+"""\n
+from zExceptions import Unauthorized\n
+\n
+doc_info = {}\n
+doc_info[\'owner_list\'] = context.Base_getOwnerInfoList()\n
+\n
+if context.getModificationDate() is not None:\n
+  doc_info[\'modification_date\'] = context.Base_getDiffBetweenDateAndNow(context.getModificationDate())\n
+  \n
+publication_date = context.Document_getLastWorkflowStateEntryDate(state=(\'public,\'),\n
+                                                                  state_name=\'validation_state\')\n
+if publication_date is not None:\n
+  doc_info[\'publication_date\'] = context.Base_getDiffBetweenDateAndNow(publication_date)\n
+  \n
+release_date = context.Document_getLastWorkflowStateEntryDate(state=(\'released,\'),\n
+                                                              state_name=\'validation_state\')\n
+if release_date is not None:\n
+  doc_info[\'release_date\'] = context.Base_getDiffBetweenDateAndNow(release_date)\n
+  \n
+try:\n
+  doc_info[\'status\'] = context.getTranslatedValidationStateTitle() or \'\'\n
+except AttributeError:\n
+  doc_info[\'status\'] = \'\'\n
+  \n
+try:\n
+  doc_info[\'group\'] = context.getGroupTitle() or \'\'\n
+except AttributeError:\n
+  doc_info[\'group\'] = \'\'\n
+  \n
+try:\n
+  doc_info[\'project\'] = context.getFollowUpTitle(checked_permission=\'View\') or \'\'\n
+except (AttributeError, Unauthorized):\n
+  doc_info[\'project\'] = \'\'\n
+\n
+try:\n
+  doc_info[\'language\'] = context.getLanguage() or \'\'\n
+except AttributeError:\n
+  pass\n
+\n
+try:\n
+  doc_info[\'version\'] = context.getVersion() or \'\'\n
+except AttributeError:\n
+  pass\n
+\n
+try:\n
+  doc_info[\'reference\'] = context.getReference() or \'\'\n
+except AttributeError:\n
+  pass\n
+\n
+doc_info[\'thumbnail_url\'] = context.Base_getThumbnailAbsoluteUrl()\n
+\n
+# add web sections document belongs too\n
+if website is None:\n
+  website = context.getWebSiteValue() or context.REQUEST.get(\'current_web_site\')\n
+\n
+doc_info[\'sections\'] = []\n
+if document_web_section_list is None:\n
+  document_web_section_list = website.getWebSectionValueList(context)\n
+for websection in document_web_section_list:\n
+  doc_info[\'sections\'].append({\'title\': websection.getCompactTranslatedTitle(),\n
+                               \'url\': websection.absolute_url()})\n
+doc_info[\'url\'] = context.absolute_url()\n
+\n
+return context.Document_viewPopupTemplate(**doc_info)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>website=None, document_web_section_list=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Document_getPopupInfo</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,564 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308797.34</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>common.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// Core variables and mixins\n
+@import "../../../../../vendor/bootstrap/less/variables.less";\n
+\n
+@icon-font-path: "../../../../../vendor/bootstrap/dist/fonts/";\n
+\n
+@import "../../../../../vendor/bootstrap/less/mixins.less";\n
+\n
+// Reset\n
+@import "../../../../../vendor/bootstrap/less/normalize.less";\n
+@import "../../../../../vendor/bootstrap/less/print.less";\n
+\n
+// Core CSS\n
+@import "../../../../../vendor/bootstrap/less/scaffolding.less";\n
+@import "../../../../../vendor/bootstrap/less/type.less";\n
+//@import "code.less";\n
+//@import "grid.less";\n
+//@import "tables.less";\n
+@import "../../../../../vendor/bootstrap/less/forms.less";\n
+@import "../../../../../vendor/bootstrap/less/buttons.less";\n
+\n
+// Components\n
+@import "../../../../../vendor/bootstrap/less/component-animations.less";\n
+@import "../../../../../vendor/bootstrap/less/glyphicons.less";\n
+//@import "dropdowns.less";\n
+//@import "button-groups.less";\n
+//@import "input-groups.less";\n
+//@import "navs.less";\n
+//@import "navbar.less";\n
+//@import "breadcrumbs.less";\n
+//@import "pagination.less";\n
+//@import "pager.less";\n
+@import "../../../../../vendor/bootstrap/less/labels.less";\n
+//@import "badges.less";\n
+//@import "jumbotron.less";\n
+//@import "thumbnails.less";\n
+@import "../../../../../vendor/bootstrap/less/alerts.less";\n
+//@import "progress-bars.less";\n
+//@import "media.less";\n
+//@import "list-group.less";\n
+//@import "panels.less";\n
+//@import "wells.less";\n
+//@import "close.less";\n
+\n
+// Components w/ JavaScript\n
+@import "../../../../../vendor/bootstrap/less/modals.less";\n
+@import "../../../../../vendor/bootstrap/less/tooltip.less";\n
+@import "../../../../../vendor/bootstrap/less/popovers.less";\n
+//@import "carousel.less";\n
+\n
+// Utility classes\n
+@import "../../../../../vendor/bootstrap/less/utilities.less";\n
+@import "../../../../../vendor/bootstrap/less/responsive-utilities.less";\n
+\n
+\n
+@toolbarBorderColor:            #929292;\n
+@toolbarBorderShadowColor:      #FAFAFA;\n
+@toolbarTopColor:               #EBEBEB;\n
+@toolbarBottomColor:            #CCCCCC;\n
+@toolbarHoverColor:             #7698DE;\n
+@toolbarFontSize:               12px;\n
+@controlBtnHoverTopColor:       #6180C4;\n
+@controlBtnHoverBottomColor:    #8AACF1;\n
+@iconSpriteCommonPath:          "../img/glyphicons.png";\n
+\n
+.input-xs {\n
+    .input-size(@input-height-small - 8px; @padding-small-vertical; @padding-small-horizontal; @font-size-small; @line-height-small; @border-radius-small);\n
+}\n
+\n
+.embed-body {\n
+    -moz-user-select: -moz-none;\n
+    -khtml-user-select: none;\n
+    -webkit-user-select: none;\n
+    -ms-user-select: none;\n
+    user-select: none;\n
+\n
+    font-size: @toolbarFontSize;\n
+    overflow: hidden;\n
+}\n
+\n
+// Document Viewer\n
+// -------------------------\n
+.viewer {\n
+    position: absolute;\n
+    margin: 0;\n
+    padding: 0;\n
+    left: 0;\n
+    right: 0;\n
+\n
+    &.top {\n
+        top: 32px;\n
+        bottom: 0;\n
+    }\n
+\n
+    &.bottom {\n
+        top: 0;\n
+        bottom: 30px;\n
+    }\n
+}\n
+\n
+// Toolbar\n
+// -------------------------\n
+.toolbar {\n
+    position: fixed;\n
+    font-size: @toolbarFontSize;\n
+    min-width: 340px;\n
+    z-index: 100;\n
+    #gradient > .vertical(@toolbarTopColor, @toolbarBottomColor);\n
+\n
+    &.top {\n
+        top: 0;\n
+        left: 0;\n
+        width: 100%;\n
+        height: 32px;\n
+\n
+        -webkit-box-shadow: inset 0 -1px 0 @toolbarBorderColor, inset 0 1px 0 @toolbarBorderShadowColor;\n
+        -moz-box-shadow: inset 0 -1px 0 @toolbarBorderColor, inset 0 1px 0 @toolbarBorderShadowColor;\n
+        box-shadow: inset 0 -1px 0 @toolbarBorderColor, inset 0 1px 0 @toolbarBorderShadowColor;\n
+    }\n
+\n
+    &.bottom {\n
+        bottom: 0;\n
+        left: 0;\n
+        width: 100%;\n
+        height: 30px;\n
+\n
+        -webkit-box-shadow: inset 0 1px 0 @toolbarBorderColor, inset 0 2px 0 @toolbarBorderShadowColor;\n
+        -moz-box-shadow: inset 0 1px 0 @toolbarBorderColor, inset 0 2px 0 @toolbarBorderShadowColor;\n
+        box-shadow: inset 0 1px 0 @toolbarBorderColor, inset 0 2px 0 @toolbarBorderShadowColor;\n
+    }\n
+\n
+    ul {\n
+        position: absolute;\n
+        list-style-type: none;\n
+        margin: 0;\n
+        padding: 0;\n
+\n
+        li {\n
+            input {\n
+                display: inline-block;\n
+                width: 25px;\n
+                padding: 0;\n
+                height: 25px;\n
+                margin: 3px;\n
+                text-align: center;\n
+            }\n
+\n
+            .text {\n
+                cursor: default;\n
+            }\n
+        }\n
+\n
+        &.left {\n
+            left: 0;\n
+\n
+            li {\n
+                float: left;\n
+            }\n
+        }\n
+\n
+        &.right {\n
+            right: 0;\n
+\n
+            li {\n
+                float: left;\n
+            }\n
+        }\n
+\n
+        .separator {\n
+            height: 24px;\n
+            margin: 4px 9px;\n
+            border-right: 1px solid @toolbarBorderShadowColor;\n
+            border-left: 1px solid @toolbarBorderColor;\n
+        }\n
+    }\n
+}\n
+\n
+// Logo\n
+// -------------------------\n
+a.brand-logo {\n
+    display: block;\n
+    background-image: url("@{iconSpriteCommonPath}");\n
+    width: 127px;\n
+    height: 20px;\n
+    margin: 5px 0 0 10px;\n
+    background-position: 0 -100px;\n
+}\n
+\n
+// Sprite icons path\n
+// -------------------------\n
+[class^="control-icon-"],\n
+[class*=" control-icon-"] {\n
+    display: inline-block;\n
+    width: 20px;\n
+    height: 20px;\n
+    vertical-align: text-top;\n
+    background-image: url("@{iconSpriteCommonPath}");\n
+    background-repeat: no-repeat;\n
+    margin-top: -2px;\n
+}\n
+\n
+[class^="overlay-icon-"],\n
+[class*=" overlay-icon-"] {\n
+    display: inline-block;\n
+    width: 32px;\n
+    height: 32px;\n
+    vertical-align: text-top;\n
+    background-image: url("@{iconSpriteCommonPath}");\n
+    background-repeat: no-repeat;\n
+    opacity: .3;\n
+}\n
+\n
+.control-icon-share         { background-position: 0             0; }\n
+.control-icon-embed         { background-position: 0         -20px; }\n
+.control-icon-fullscreen    { background-position: 0         -40px; }\n
+.control-icon-close         { background-position: 0         -60px; }\n
+.control-icon-save          { background-position: 0         -80px; }\n
+\n
+.overlay-icon-zoom-in       { background-position: 0        -120px; }\n
+.overlay-icon-zoom-out      { background-position: -32px    -120px; }\n
+\n
+// Control buttons\n
+// -------------------------\n
+.control-btn {\n
+    display: inline-block;\n
+    padding: 1px 5px;\n
+    font-size: @toolbarFontSize;\n
+    line-height: 20px;\n
+    text-align: center;\n
+    vertical-align: middle;\n
+    cursor: pointer;\n
+    background-color: transparent;\n
+    background-image: none;\n
+    border: 1px solid transparent;\n
+    border-radius: 2px;\n
+    margin: 4px 5px 0 0;\n
+\n
+    i {\n
+        margin-right: 5px;\n
+    }\n
+\n
+    &.no-caption {\n
+        padding: 1px 2px;\n
+\n
+        i {\n
+            margin-right: 0;\n
+        }\n
+    }\n
+\n
+// Hover state\n
+    &:hover {\n
+        color: @toolbarHoverColor;\n
+        text-decoration: none;\n
+        text-shadow: 0 1px 0 @toolbarBorderShadowColor;\n
+\n
+        .control-icon-share         { background-position: -20px         0; }\n
+        .control-icon-embed         { background-position: -20px     -20px; }\n
+        .control-icon-fullscreen    { background-position: -20px     -40px; }\n
+        .control-icon-close         { background-position: -20px     -60px; }\n
+        .control-icon-save          { background-position: -20px     -80px; }\n
+    }\n
+\n
+// Focus state for keyboard and accessibility\n
+    &:focus {\n
+        .tab-focus();\n
+        outline: none;\n
+    }\n
+\n
+// Active state\n
+    &.active,\n
+    &:active {\n
+        color: #ffffff;\n
+        outline: none;\n
+        border: 1px solid darken(@controlBtnHoverTopColor, 5%);\n
+        #gradient > .vertical(@controlBtnHoverTopColor, @controlBtnHoverBottomColor);\n
+        text-shadow: 0 1px 0 darken(@toolbarBorderColor, 20%);\n
+\n
+        .control-icon-share         { background-position: -40px         0; }\n
+        .control-icon-embed         { background-position: -40px     -20px; }\n
+        .control-icon-fullscreen    { background-position: -40px     -40px; }\n
+        .control-icon-close         { background-position: -40px     -60px; }\n
+        .control-icon-save          { background-position: -40px     -80px; }\n
+    }\n
+}\n
+\n
+// Overlay control\n
+// -------------------------\n
+.overlay-controls {\n
+    position: absolute;\n
+    bottom: 55px;\n
+    z-index: 10;\n
+    left: 50%;\n
+\n
+    ul {\n
+        padding: 0;\n
+        list-style-type: none;\n
+        margin: 0 auto;\n
+\n
+        li {\n
+            display: inline-block;\n
+\n
+            &:first-child {\n
+                margin-right: 5px;\n
+            }\n
+\n
+            &:last-child {\n
+                margin-left: 5px;\n
+            }\n
+        }\n
+    }\n
+\n
+    .overlay {\n
+        width: 32px;\n
+        height: 32px;\n
+\n
+        display: inline-block;\n
+        text-align: center;\n
+        vertical-align: middle;\n
+        cursor: pointer;\n
+        background-color: transparent;\n
+        background-image: none;\n
+        border: none;\n
+        padding: 0;\n
+        line-height: 0;\n
+        outline: none;\n
+\n
+        &:hover {\n
+[class^="overlay-icon-"],\n
+[class*=" overlay-icon-"] {\n
+    opacity: .6;\n
+}\n
+    }\n
+\n
+&.active,\n
+&:active {\n
+[class^="overlay-icon-"],\n
+[class*=" overlay-icon-"] {\n
+    opacity: .8;\n
+}\n
+    }\n
+    }\n
+    }\n
+\n
+// Error mask\n
+// -------------------------\n
+.errormask {\n
+    position: absolute;\n
+    left: 0;\n
+    top: 0;\n
+    height: 100%;\n
+    width: 100%;\n
+    overflow: hidden;\n
+    border: none;\n
+    background-color: #f4f4f4;\n
+    z-index: 30002;\n
+\n
+    .error-body {\n
+        position: relative;\n
+        top: 40%;\n
+        width: 400px;\n
+        margin: 0 auto;\n
+        padding: 20px;\n
+        background-color: #FFFFFF;\n
+        border: 1px solid #C0C0C0;\n
+\n
+        .title {\n
+            font-weight: bold;\n
+            font-size: 1.6em;\n
+            padding-bottom: 10px;\n
+        }\n
+    }\n
+}\n
+\n
+// Share popover\n
+// -------------------------\n
+.popover{\n
+    .popover-content {\n
+        padding: 14px;\n
+    }\n
+\n
+    &.hyperlink {\n
+        .popover-content {\n
+            padding: 5px 10px;\n
+\n
+            p {\n
+                display: block;\n
+                word-wrap: break-word;\n
+                overflow: hidden;\n
+                white-space: nowrap;\n
+                text-overflow: ellipsis;\n
+            }\n
+        }\n
+    }\n
+\n
+    &.share {\n
+        width: 280px;\n
+\n
+        .share-link {\n
+            margin-bottom: 5px;\n
+\n
+            .caption {\n
+                margin-top: 3px;\n
+                margin-right: 8px;\n
+                float: left;\n
+            }\n
+\n
+            input[readonly] {\n
+                display: inline-block;\n
+                font-size: 1em;\n
+                padding: 0 4px;\n
+                margin-right: 5px;\n
+                border-radius: 0;\n
+                cursor: text;\n
+                background-color: #fff;\n
+                -moz-user-select: text;\n
+                -khtml-user-select: text;\n
+                -webkit-user-select: text;\n
+                -ms-user-select: text;\n
+                user-select: text;\n
+            }\n
+\n
+            .input-xs {\n
+                width: 130px;\n
+            }\n
+\n
+            .btn {\n
+                float: right;\n
+            }\n
+        }\n
+\n
+        .share-buttons {\n
+            ul {\n
+                width: 244px;\n
+                height: 25px;\n
+                list-style-type: none;\n
+                margin: 5px 0 0;\n
+                overflow: hidden;\n
+\n
+                li {\n
+                    display: inline-block;\n
+                    float: left;\n
+                    margin: 1px 5px 0 0;\n
+                    vertical-align: middle;\n
+\n
+                    &.share-mail {\n
+                        float: right;\n
+                        padding-right: 1px;\n
+                        margin: 0;\n
+\n
+                        a {\n
+                            min-width: 64px;\n
+                        }\n
+\n
+                        .glyphicon {\n
+                            margin-right: 4px;\n
+                        }\n
+                    }\n
+\n
+                    &.share-twitter {\n
+                        max-width: 93px;\n
+                    }\n
+                }\n
+            }\n
+        }\n
+    }\n
+\n
+    &.embed {\n
+        width: 270px;\n
+\n
+        .size-manual {\n
+            margin-bottom: 10px;\n
+        }\n
+\n
+        .right {\n
+            float: right;\n
+        }\n
+\n
+        .caption {\n
+            margin-top: 2px;\n
+            margin-right: 8px;\n
+        }\n
+\n
+        input {\n
+            display: inline-block;\n
+            font-size: 1em;\n
+            padding: 0 4px;\n
+            border-radius: 0;\n
+            margin: 0;\n
+            margin-top: -1px;\n
+\n
+            &.input-xs {\n
+                width: 50px;\n
+            }\n
+        }\n
+\n
+        textarea {\n
+            width: 238px;\n
+            resize: none;\n
+            cursor: auto;\n
+            font-size: 1em;\n
+            border-radius: 0;\n
+        }\n
+\n
+        button {\n
+            float: right;\n
+            margin: 10px 0 15px;\n
+            width: 86px;\n
+        }\n
+    }\n
+}\n
+\n
+// Modals\n
+// -------------------------\n
+.modal {\n
+    .modal-header {\n
+        padding: 5px 15px;\n
+    }\n
+\n
+    .modal-footer {\n
+        border-top: none;\n
+    }\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12619</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

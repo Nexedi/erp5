@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<div class="gadget-column">\n
+  <div class="gadget-action">\n
+    <div class="menu_create_object">\n
+      <tal:block tal:define="portal_path here/absolute_url;\n
+                              url_suffix python: \'/ERP5Site_createNewWebDocument?template=\'">\n
+        <li>\n
+          <a id="current">\n
+            <span i18n:translate="" i18n:domain="ui">Create New</span>\n
+            <img tal:attributes="src python: portal_path + \'/ung_images/arrow.png\'"/>\n
+          </a>\n
+          <ul>\n
+            <li>\n
+              <a tal:attributes="href python: portal_path + url_suffix + \'web_illustration_template\'">\n
+                <img tal:attributes="src python: portal_path + \'/ung_images/svg.png\'"/>\n
+                <span i18n:translate="" i18n:domain="ui">Web Illustration</span>\n
+              </a>\n
+            </li>\n
+            <li>\n
+              <a tal:attributes="href python: portal_path + url_suffix + \'web_table_template\'">\n
+                <img tal:attributes="src python: portal_path + \'/ung_images/table.jpg\'"/>\n
+                <span i18n:translate="" i18n:domain="ui">Web Table</span>\n
+              </a>\n
+            </li>\n
+            <li>\n
+              <a tal:attributes="href python: portal_path + url_suffix + \'web_page_template\'">\n
+                <img tal:attributes="src python: portal_path + \'/ung_images/document.gif\'"/>\n
+                <span i18n:translate="" i18n:domain="ui">Web Page</span>\n
+              </a>\n
+            </li>\n
+          </ul>\n
+        </li>\n
+      </tal:block>\n
+    </div>\n
+    <input type="submit" id="upload" name="Upload" value="Upload" i18n:translate="" i18n:domain="ui"/>\n
+    <div id="upload_document" title="Upload Document" i18n:translate="" i18n:domain="ui">\n
+      <form action="WebSection_uploadDocument" method="post" enctype="multipart/form-data">\n
+        <fieldset id="file_box">\n
+          <input id="upload-file" type="file" size="30" name="file"/>\n
+          <select name="portal_type">\n
+            <option value="Web Page" i18n:translate="" i18n:domain="ui">Web Page</option>\n
+            <option value="Web Illustration" i18n:translate="" i18n:domain="ui">Web Illustration</option>\n
+            <option value="Web Table" i18n:translate="" i18n:domain="ui">Web Table</option>\n
+          </select>\n
+          <br />\n
+          <input type="submit" id="submit_document" value="Submit" i18n:translate="" i18n:domain="ui"/>\n
+          <span id="no-input-file">Please input a file</span>\n
+        </fieldset>\n
+      </form> \n
+    </div>\n
+    <div class="file-selection">\n
+     <div class="file-quick-search"></div>\n
+    </div>\n
+    <div class="gadget-listbox" id="gadget-listbox" title="Add Gadgets" i18n:translate="" i18n:domain="ui">\n
+      <table id="gadget-table"></table>\n
+    </div>\n
+    <div class="front_pad">\n
+      <!-- XXX - Use WebSection_viewKnowledgePadColumn to display one column only -->\n
+      <div tal:content="structure python: here.ERP5Site_viewHomeAreaRenderer(mode=\'web_front\',\n
+                                                                             default_pad_group=\'\',\n
+                                                                             create_default_pad=True, \n
+                                                                             make_security_check=True,\n
+                                                                             columns=1)"\n
+               class="draggable_wrapper"/>\n
+    </div>\n
+  </div>\n
+</div>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_viewMenuWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

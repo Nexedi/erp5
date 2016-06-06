@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+send the password reset link by mail\n
+"""\n
+portal = context.getPortalObject()\n
+\n
+person = context.getDestinationDecisionValue(portal_type="Person")\n
+reference = person.getReference()\n
+if context.hasDocumentReference():\n
+  message_reference = context.getDocumentReference()\n
+else:\n
+  message_reference = portal.portal_preferences.getPreferredCredentialPasswordRecoveryMessageReference()\n
+if message_reference is None:\n
+  raise ValueError, "Preference not configured"\n
+notification_message = portal.NotificationTool_getDocumentValue(message_reference,\n
+                                                                context.getLanguage())\n
+\n
+context.REQUEST.set(\'came_from\', context.getUrlString())\n
+\n
+if context.hasStopDate():\n
+  kw = {\'expiration_date\':context.getStopDate()}\n
+else:\n
+  kw = {}\n
+\n
+portal.portal_password.mailPasswordResetRequest(user_login=reference,\n
+                                                REQUEST=context.REQUEST,\n
+                                                notification_message=notification_message,\n
+                                                store_as_event=portal.portal_preferences.isPreferredStoreEvents(),\n
+                                                **kw)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CredentialRecovery_sendPasswordResetLink</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

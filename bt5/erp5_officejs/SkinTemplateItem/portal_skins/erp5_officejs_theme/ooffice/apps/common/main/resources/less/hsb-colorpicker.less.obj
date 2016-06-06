@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308810.19</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>hsb-colorpicker.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+.hsb-colorpicker {\r\n
+    .top-panel {\r\n
+        height: 22px;\r\n
+        margin: 0 0 10px;\r\n
+    }\r\n
+\r\n
+    .color-value {\r\n
+        width: 22px;\r\n
+        height: 22px;\r\n
+        float: left;\r\n
+        border: 1px solid #C4C4C4;\r\n
+        background-image: none;\r\n
+        background-position: 0 -206px;\r\n
+        background-repeat: no-repeat;\r\n
+\r\n
+        .transparent-color {\r\n
+            width: 22px;\r\n
+            height: 22px;\r\n
+            float: left;\r\n
+            .background-ximage(\'@{common-image-path}/hsbcolorpicker/hsb-colorpicker.png\', \'@{common-image-path}/hsbcolorpicker/hsb-colorpicker@2x.png\', 205px);\r\n
+            background-position: 0 -206px;\r\n
+            background-repeat: no-repeat;\r\n
+        }\r\n
+    }\r\n
+\r\n
+    .color-text {\r\n
+        color: #464646;\r\n
+        height: 22px;\r\n
+        padding: 4px 32px;\r\n
+        cursor: default;\r\n
+    }\r\n
+\r\n
+    .cnt-hb {\r\n
+        display: inline-block;\r\n
+        overflow: hidden;\r\n
+        width: 195px;\r\n
+        height: 196px;\r\n
+        position: relative;\r\n
+        border: 1px solid #C4C4C4;\r\n
+        .background-ximage(\'@{common-image-path}/hsbcolorpicker/hsb-colorpicker.png\', \'@{common-image-path}/hsbcolorpicker/hsb-colorpicker@2x.png\', 205px);\r\n
+        background-position: 0 0;\r\n
+        background-repeat: no-repeat;\r\n
+    }\r\n
+\r\n
+    .cnt-root {\r\n
+        display: inline-block;\r\n
+        width: 10px;\r\n
+        height: 196px;\r\n
+        margin: 0 8px;\r\n
+    }\r\n
+\r\n
+    .cnt-sat {\r\n
+        width: 10px;\r\n
+        height: 100%;\r\n
+        position: relative;\r\n
+        border: 1px solid #C4C4C4;\r\n
+        .background-ximage(\'@{common-image-path}/hsbcolorpicker/hsb-colorpicker.png\', \'@{common-image-path}/hsbcolorpicker/hsb-colorpicker@2x.png\', 205px);\r\n
+        background-position: -195px 0;\r\n
+        background-repeat: no-repeat;\r\n
+    }\r\n
+\r\n
+    .cnt-hb-arrow {\r\n
+        width: 9px;\r\n
+        height: 9px;\r\n
+        margin: -4px;\r\n
+        position: absolute;\r\n
+        .background-ximage(\'@{common-image-path}/hsbcolorpicker/hsb-colorpicker.png\', \'@{common-image-path}/hsbcolorpicker/hsb-colorpicker@2x.png\', 205px);\r\n
+        background-position: 0 -196px;\r\n
+        background-repeat: no-repeat;\r\n
+    }\r\n
+\r\n
+    .cnt-sat-arrow {\r\n
+        width: 14px;\r\n
+        height: 9px;\r\n
+        margin: -4px -3px;\r\n
+        position: absolute;\r\n
+        .background-ximage(\'@{common-image-path}/hsbcolorpicker/hsb-colorpicker.png\', \'@{common-image-path}/hsbcolorpicker/hsb-colorpicker@2x.png\', 205px);\r\n
+        background-position: -11px -196px;\r\n
+        background-repeat: no-repeat;\r\n
+    }\r\n
+\r\n
+    .empty-color {\r\n
+        color: #464646;\r\n
+        height: 16px;\r\n
+        margin: 5px 0;\r\n
+\r\n
+        &:hover {\r\n
+            cursor: pointer;\r\n
+            background-color: #efefef;\r\n
+        }\r\n
+\r\n
+        &:active {\r\n
+            background-color: #cecece;\r\n
+        }\r\n
+\r\n
+        &:before {\r\n
+            content: "";\r\n
+            .background-ximage(\'@{common-image-path}/hsbcolorpicker/hsb-colorpicker.png\', \'@{common-image-path}/hsbcolorpicker/hsb-colorpicker@2x.png\', 205px);\r\n
+            background-position: -26px -196px;\r\n
+            background-repeat: no-repeat;\r\n
+            float: left;\r\n
+            width: 10px;\r\n
+            height: 10px;\r\n
+            margin-right: 5px;\r\n
+            margin-top: 1px;\r\n
+            border: 1px solid #C4C4C4;\r\n
+        }\r\n
+    }\r\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3266</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

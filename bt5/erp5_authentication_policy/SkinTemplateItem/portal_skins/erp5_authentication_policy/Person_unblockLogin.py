@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query\n
+\n
+portal = context.getPortalObject()\n
+portal_preferences = portal.portal_preferences\n
+\n
+if not portal.portal_preferences.isAuthenticationPolicyEnabled():\n
+  # no policy, no sense to unblock account\n
+  return 0\n
+\n
+now = DateTime()\n
+one_second = 1/24.0/60.0/60.0\n
+check_duration = portal_preferences.getPreferredAuthenticationFailureCheckDuration()\n
+block_duration = portal_preferences.getPreferredAuthenticationFailureBlockDuration()\n
+max_authentication_failures = portal_preferences.getPreferredMaxAuthenticationFailure()\n
+check_time = now - check_duration*one_second\n
+\n
+# acknowledge last authentication events for user\n
+kw = {\'portal_type\': \'Authentication Event\',\n
+      \'default_destination_uid\': context.getUid(),\n
+      \'creation_date\': Query(creation_date = check_time,\n
+                             range=\'min\'),\n
+      \'validation_state\' : \'confirmed\',\n
+      \'sort_on\' : ((\'creation_date\', \'ASC\',),),\n
+      }\n
+\n
+authentication_event_list = [x.getObject() for x in portal.portal_catalog(**kw)]\n
+\n
+for authentication_event in authentication_event_list:\n
+  authentication_event.activate().acknowledge(comment=\'User account unblocked.\')\n
+\n
+if not batch_mode:\n
+  message = context.Base_translateString(\'User Login unblocked.\')\n
+  if cancel_url is None:\n
+    context.Base_redirect(form_id=form_id, keep_items={\'portal_status_message\': message})\n
+  else:\n
+    context.REQUEST.RESPONSE.redirect(\'%s?portal_status_message=%s\' %(cancel_url, message))\n
+\n
+return\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id="view", cancel_url=None, batch_mode=False</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Person_unblockLogin</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

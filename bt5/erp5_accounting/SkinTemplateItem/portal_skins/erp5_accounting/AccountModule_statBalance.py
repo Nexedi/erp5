@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>portal = context.getPortalObject()\n
+params = portal.ERP5Accounting_getParams(selection_name)\n
+selection_params = context.portal_selections.getSelectionParamsFor(selection_name)\n
+\n
+params[\'omit_asset_increase\'] = omit_asset_increase\n
+params[\'omit_asset_decrease\'] = omit_asset_decrease\n
+# For now, we omit simulation to be compatible with other reports.\n
+params[\'omit_simulation\'] = True\n
+\n
+selection_domain = context.portal_selections.getSelectionDomainDictFor(selection_name)\n
+if callable(selection_domain):\n
+  selection_domain = selection_domain()\n
+selection_report = context.portal_selections.getSelectionReportDictFor(selection_name)\n
+if selection_domain:\n
+  params[\'selection_domain\'] = selection_domain\n
+if selection_report:\n
+  params[\'selection_report\'] = selection_report\n
+if kw.get(\'closed_summary\'):\n
+  params[\'closed_summary\'] = kw[\'closed_summary\']\n
+if context.portal_selections.getSelectionInvertModeFor(selection_name):\n
+  params[\'node_uid\'] = context.portal_selections.getSelectionInvertModeUidListFor(selection_name)\n
+elif \'title\' in selection_params or \\\n
+   \'preferred_gap_id\' in selection_params or \\\n
+   \'id\' in selection_params or \\\n
+   \'translated_validation_state_title\' in selection_params:\n
+  selection_params[\'ignore_unknown_columns\'] = True\n
+  # if list is filtered, apply the same filter here\n
+  params[\'node_uid\'] = [x.uid for x in\n
+                        portal.portal_catalog(**selection_params)]\n
+else:\n
+  # make sure we only have Accounts as nodes\n
+  params[\'node_category\'] = [\'account_type\',]\n
+\n
+# Remove params used internally by ERP5Accounting_getParams before passing to inventory API\n
+params.pop("period_start_date", None)\n
+params.pop("detailed_from_date_summary", None)\n
+\n
+return portal.portal_simulation.getInventoryAssetPrice( **params )\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>brain=None, selection=None, omit_asset_increase=0, omit_asset_decrease=0, selection_name=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountModule_statBalance</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

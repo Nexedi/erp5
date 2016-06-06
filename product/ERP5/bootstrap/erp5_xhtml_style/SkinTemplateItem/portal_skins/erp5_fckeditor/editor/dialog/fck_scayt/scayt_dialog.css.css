@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts83858910.02</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>scayt_dialog.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>html, body\r\n
+{\r\n
+\tbackground-color: transparent;\r\n
+\tmargin: 0px;\r\n
+\tpadding: 0px;\r\n
+}\r\n
+\r\n
+body\r\n
+{\r\n
+\tpadding: 10px;\r\n
+}\r\n
+\r\n
+body, td, input, select, textarea\r\n
+{\r\n
+\tfont-size: 11px;\r\n
+\tfont-family: \'Microsoft Sans Serif\' , Arial, Helvetica, Verdana;\r\n
+}\r\n
+\r\n
+.midtext\r\n
+{\r\n
+\tpadding:0px;\r\n
+\tmargin:10px;\r\n
+}\r\n
+\r\n
+.midtext p\r\n
+{\r\n
+\tpadding:0px;\r\n
+\tmargin:10px;\r\n
+}\r\n
+\r\n
+.Button\r\n
+{\r\n
+\tborder: #737357 1px solid;\r\n
+\tcolor: #3b3b1f;\r\n
+\tbackground-color: #c7c78f;\r\n
+}\r\n
+\r\n
+.PopupTabArea , .button\r\n
+{\r\n
+\tcolor: #737357;\r\n
+\tbackground-color: #e3e3c7;\r\n
+}\r\n
+\r\n
+.PopupTitleBorder\r\n
+{\r\n
+\tborder-bottom: #d5d59d 1px solid;\r\n
+}\r\n
+.PopupTabEmptyArea\r\n
+{\r\n
+\tpadding-left: 10px;\r\n
+\tborder-bottom: #d5d59d 1px solid;\r\n
+}\r\n
+\r\n
+.PopupTab, .PopupTabSelected\r\n
+{\r\n
+\tborder-right: #d5d59d 1px solid;\r\n
+\tborder-top: #d5d59d 1px solid;\r\n
+\tborder-left: #d5d59d 1px solid;\r\n
+\tpadding: 3px 5px 3px 5px;\r\n
+\tcolor: #737357;\r\n
+}\r\n
+\r\n
+.PopupTab\r\n
+{\r\n
+\tmargin-top: 1px;\r\n
+\tborder-bottom: #d5d59d 1px solid;\r\n
+\tcursor: pointer;\r\n
+\tcursor: hand;\r\n
+}\r\n
+\r\n
+.PopupTabSelected\r\n
+{\r\n
+\tfont-weight: bold;\r\n
+\tcursor: default;\r\n
+\tpadding-top: 4px;\r\n
+\tborder-bottom: #f1f1e3 1px solid;\r\n
+\tbackground-color: #f1f1e3;\r\n
+}\r\n
+\r\n
+ul {\r\n
+    padding:0;\r\n
+    margin:0px 0px 12px 0px;\r\n
+    list-style-type:none;\r\n
+}\r\n
+ul.tabs {\r\n
+    height:20px;\r\n
+    margin:10px 0px;\r\n
+}\r\n
+ul.tabs li {\r\n
+    float: left;\r\n
+\tdisplay:none;\r\n
+}\r\n
+div.tab_container {\r\n
+    /*display:none;*/\r\n
+    padding: 0px 5px ;\r\n
+}\r\n
+.lcol {\r\n
+    float:left;\r\n
+    width:47%;\r\n
+    margin-left:5px;\r\n
+}\r\n
+.rcol {\r\n
+    float:right;\r\n
+    width:47%;\r\n
+    margin-right:5px;\r\n
+}\r\n
+div.tabs-container{\r\n
+\theight:220px;\r\n
+\toverflow-x:hidden;\r\n
+\toverflow-y:auto;\r\n
+}\r\n
+\r\n
+div.tabs-container h3{\r\n
+    margin:5px 15px 7px 15px;\r\n
+    background-color:transparent;\r\n
+    font-size: 14px ;\r\n
+}\r\n
+\r\n
+.li {\r\n
+    border: 1px solid transparent;\r\n
+}\r\n
+\r\n
+#dic_message{\r\n
+\theight: 24px;\r\n
+}\r\n
+#dic_message .error{\r\n
+\tcolor: red ;\r\n
+}\r\n
+#dic_message .success{\r\n
+\tcolor: blue ;\r\n
+}\r\n
+\r\n
+.dic_buttons {\r\n
+\tmargin-top: 5px;\r\n
+\tpadding-left:10px;\r\n
+}\r\n
+.dic_buttons a {\r\n
+\tdisplay: none;\r\n
+}\r\n
+a.button {\r\n
+\tborder: #d5d59d 1px solid;\r\n
+\tpadding: 2px 4px;\r\n
+\tmargin-right: 4px;\r\n
+\ttext-decoration: none;\r\n
+}\r\n
+\r\n
+a.button:hover,\r\n
+a.button:active,\r\n
+a.button:visited{\r\n
+\tpadding: 2px 4px;\r\n
+\tmargin-right: 4px;\r\n
+\ttext-decoration: none;\r\n
+}\r\n
+a.button:hover {\r\n
+\tborder: #d5d59d 1px solid;\r\n
+\tcolor: #e3e3c7;\r\n
+\tbackground-color: #737357;\r\n
+}\r\n
+\r\n
+#scayt_options li {\r\n
+\tdisplay: none;\r\n
+}\r\n
+\r\n
+#dic_info {\r\n
+\tmargin:10px;\r\n
+}\r\n
+#dic_tab {\r\n
+\tdisplay:none;\r\n
+}\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2406</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

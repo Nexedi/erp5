@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308803.73</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>CommentsPopover.template</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<div id="<%=id%>" class="user-comment-item">\r\n
+\r\n
+    <!-- comment block -->\r\n
+\r\n
+    <div class="user-name"><%=scope.getUserName(username)%></div>\r\n
+    <div class="user-date"><%=date%></div>\r\n
+    <% if (!editTextInPopover || hint) { %>\r\n
+        <div class="user-message"><%=scope.pickLink(comment)%></div>\r\n
+    <% } else { %>\r\n
+        <div class="inner-edit-ct">\r\n
+            <textarea class="msg-reply"><%=comment%></textarea>\r\n
+            <% if (hideAddReply) { %>\r\n
+                <button class="btn normal dlg-btn primary btn-inner-edit" id="id-comments-change-popover">textAdd</button>\r\n
+            <% } else { %>\r\n
+                <button class="btn normal dlg-btn primary btn-inner-edit" id="id-comments-change-popover">textEdit</button>\r\n
+            <% } %>\r\n
+            <button class="btn normal dlg-btn btn-inner-close">textCancel</button>\r\n
+        </div>\r\n
+    <% } %>\r\n
+\r\n
+    <!-- replys elements -->\r\n
+\r\n
+    <% if (replys.length) { %>\r\n
+        <div class="reply-arrow "></div>\r\n
+        <% _.each(replys, function (item) { %>\r\n
+            <div class="reply-item-ct">\r\n
+                <div class="user-name"><%=scope.getFixedQuote(item.get("username"))%></div>\r\n
+                <div class="user-date"><%=item.get("date")%></div>\r\n
+                <% if (!item.get("editTextInPopover")) { %>\r\n
+                    <div class="user-message"><%=scope.pickLink(item.get("reply"))%></div>\r\n
+                    <% if (!hint) { %>\r\n
+                        <div class="btns-reply-ct">\r\n
+                            <div class="btn-edit" data-value="<%=item.get("id")%>"></div>\r\n
+                            <div class="btn-delete" data-value="<%=item.get("id")%>"></div>\r\n
+                        </div>\r\n
+                    <%}%>\r\n
+                <% } else { %>\r\n
+                    <div class="inner-edit-ct">\r\n
+                        <textarea class="msg-reply textarea-fix"><%=item.get("reply")%></textarea>\r\n
+                        <button class="btn normal dlg-btn primary btn-inner-edit btn-fix" id="id-comments-change-popover">textEdit</button>\r\n
+                        <button class="btn normal dlg-btn btn-inner-close">textClose</button>\r\n
+                    </div>\r\n
+                <% } %>\r\n
+                </div>\r\n
+        <% }); %>\r\n
+\r\n
+    <% } %>\r\n
+\r\n
+    <!-- add reply button -->\r\n
+\r\n
+    <% if (!showReplyInPopover && !hideAddReply && !hint) { %>\r\n
+        <% if (replys.length) { %>\r\n
+            <label class="user-reply" style="margin-left: 20px; margin-top: 5px;" role="presentation" tabindex="-1">textAddReply</label>\r\n
+        <% } else { %>\r\n
+            <label class="user-reply" role="presentation" tabindex="-1">textAddReply</label>\r\n
+        <% } %>\r\n
+    <% } %>\r\n
+\r\n
+    <!-- edit buttons -->\r\n
+\r\n
+    <% if (!editTextInPopover && !lock && !hint) { %>\r\n
+        <div class="edit-ct">\r\n
+            <div class="btn-edit"></div>\r\n
+            <div class="btn-delete"></div>\r\n
+            <% if (resolved) { %>\r\n
+                <div class="resolve-ct-check" style="float:left;">\r\n
+                <div class="resolved"></div>\r\n
+                <div class="btn-resolve-check">textResolved</div>\r\n
+            <% } else { %>\r\n
+                <div class="resolve-ct" style="float:left;">\r\n
+                <div class="btn-resolve">textResolve</div>\r\n
+            <% } %>\r\n
+            </div>\r\n
+        </div>\r\n
+    <% } %>\r\n
+\r\n
+    <!-- reply -->\r\n
+\r\n
+    <% if (showReplyInPopover) { %>\r\n
+        <div class="reply-ct">\r\n
+            <textarea class="msg-reply" placeholder="textAddReply"></textarea>\r\n
+            <button class="btn normal dlg-btn primary btn-reply" id="id-comments-change-popover">textReply</button>\r\n
+            <button class="btn normal dlg-btn btn-close">textClose</button>\r\n
+        </div>\r\n
+    <% } %>\r\n
+\r\n
+    <!-- locked user -->\r\n
+\r\n
+    <% if (lock) { %>\r\n
+        <div class="lock-area" style="cursor: default;"></div>\r\n
+        <div class="lock-author" style="cursor: default;"><%=lockuserid%></div>\r\n
+    <% } %>\r\n
+\r\n
+</div>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3926</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

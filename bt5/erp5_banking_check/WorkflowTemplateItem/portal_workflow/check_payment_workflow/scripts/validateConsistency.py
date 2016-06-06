@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+from DateTime import DateTime\n
+\n
+transaction = state_change[\'object\']\n
+\n
+site = transaction.Baobab_getUserAssignedSiteList()\n
+\n
+if len(site) > 0:\n
+  site = site[0]\n
+else:\n
+  site = None\n
+  # try to guess site from document if source is defined\n
+  # XXX useful for unit test\n
+  site = transaction.getSourceValue()\n
+  while True:\n
+    if not hasattr(site, \'getVaultTypeList\'):\n
+      msg = Message(domain = \'ui\', message = \'The site value is misconfigured; report this to system administrators.\')\n
+      raise ValidationFailed, (msg,)\n
+    if \'site\' in site.getVaultTypeList():\n
+      break\n
+    site = site.getParentValue()\n
+\n
+if site is None:\n
+  msg = Message(domain = \'ui\', message = \'Impossible to determine site for the transaction.\')\n
+  raise ValidationFailed, (msg,)\n
+\n
+\n
+date = transaction.getStartDate()\n
+\n
+# check accounting date\n
+current_date = DateTime().Date()\n
+document_date = DateTime(date).Date()\n
+# Do not check the counter date, not required at this stage\n
+#if not document_date > current_date:\n
+#  transaction.Baobab_checkCounterDateOpen(site=site, date=date)\n
+\n
+\n
+# Check the amount.\n
+price = transaction.getSourceTotalAssetPrice() \n
+if price is None or price <= 0:\n
+  msg = Message(domain="ui", message="Amount is not valid.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+# Check the bank account.\n
+bank_account = transaction.getDestinationPaymentValue()\n
+if bank_account is None:\n
+  msg = Message(domain=\'ui\', message=\'Bank account is not defined.\')\n
+  raise ValidationFailed, (msg,)\n
+\n
+# Check the check.\n
+check_number = transaction.getAggregateFreeText()\n
+\n
+# bind check payment with check model\n
+check_resource = bank_account.BankAccount_getCheckModel(\n
+  unique_per_account=transaction.isUniquePerAccount(),\n
+).getRelativeUrl()\n
+transaction.edit(aggregate_resource=check_resource)\n
+\n
+if not check_number:\n
+  msg = Message(domain=\'ui\', message="Check not defined.")\n
+  raise ValidationFailed, (msg,)\n
+if check_resource is None:\n
+  msg = Message(domain=\'ui\', message="Check type not defined.")\n
+  raise ValidationFailed, (msg,)\n
+\n
+check = transaction.Base_checkCheck(reference=check_number, bank_account=bank_account, \n
+                            resource=check_resource)\n
+transaction.edit(aggregate=check.getRelativeUrl())\n
+\n
+context.updateBankingOperation(state_change)\n
+\n
+if no_balance_check == 1:\n
+  return\n
+\n
+# Test if the account balance is sufficient.\n
+# We do not need to serialize here because we do not make\n
+# reservation yet\n
+error = transaction.BankAccount_checkAvailableBalance(bank_account.getRelativeUrl(), price)\n
+if error[\'error_code\'] == 1:\n
+  msg = Message(domain=\'ui\', message="Bank account is not sufficient.")\n
+  raise ValidationFailed, (msg,)\n
+elif error[\'error_code\'] == 2:\n
+  msg = Message(domain=\'ui\', message="Bank account is not valid.")\n
+  raise ValidationFailed, (msg,)\n
+elif error[\'error_code\'] != 0:\n
+  msg = Message(domain=\'ui\', message="Unknown error code.")\n
+  raise ValidationFailed, (msg,)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change, no_balance_check=0, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>validateConsistency</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

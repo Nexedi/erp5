@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># Reset everything for the test.\n
+portal = context.getPortalObject()\n
+\n
+# Clean up the contents.\n
+if portal.web_site_module.has_key(\'test_web_site\'):\n
+  portal.web_site_module.manage_delObjects(\'test_web_site\')\n
+\n
+if portal.web_site_module.has_key(\'web_site_test\'):\n
+  portal.web_site_module.manage_delObjects(\'web_site_test\')\n
+\n
+if portal.web_site_module.has_key(\'test_web_site_2\'):\n
+  portal.web_site_module.manage_delObjects(\'test_web_site_2\')\n
+\n
+if portal.web_site_module.has_key(\'test_web_site\'):\n
+  portal.web_site_module.manage_delObjects(\'test_web_site\')\n
+\n
+if portal.person_module.has_key(\'test_website_predicate\'):\n
+  portal.person_module.manage_delObjects(\'test_website_predicate\')\n
+\n
+portal.web_page_module.manage_delObjects(\n
+  [x.getId() for x in portal.web_page_module.objectValues() \\\n
+   if x.getTitle().startswith(\'test_\')])\n
+\n
+# Create new users\n
+if not portal.person_module.has_key(\'test_webmaster\'):\n
+  person = portal.person_module.newContent(id=\'test_webmaster\', portal_type=\'Person\')\n
+else:\n
+  person = portal.person_module.test_webmaster\n
+person.edit(first_name=\'Test\', last_name=\'Webmaster\',\n
+            reference=\'test_webmaster\', password=\'test_webmaster\')\n
+person.setRole(\'internal\')\n
+if not len(person.objectValues(portal_type=\'Assignment\')):\n
+  assignment = person.newContent(portal_type=\'Assignment\')\n
+  assignment.edit(group=\'web\',\n
+                  start_date=DateTime(\'2000/01/01\'),\n
+                  stop_date=DateTime(\'2990/12/31\'))\n
+  if assignment.getValidationState() != \'open\':\n
+    assignment.open()\n
+if person.getValidationState() != \'validated\':\n
+  person.validate()\n
+\n
+# Create region category\n
+if not portal.portal_categories.region.has_key(\'test_web_region\'):\n
+  portal.portal_categories.region.newContent(id=\'test_web_region\', portal_type=\'Category\', title=\'test_web_region\')\n
+return \'Reset Successfully.\'\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSiteModule_resetWebZuite</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

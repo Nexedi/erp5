@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts95901655.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dp.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>.bbit-dp\n
+{\n
+    position:absolute;\n
+    width:175px;    \n
+    border:#718bb7 1px solid;\n
+    overflow:hidden;\n
+    zoom:1;\n
+    padding:0;\n
+    font-size:11px;\n
+    font-family:tahoma,verdana,sans-serif;\n
+    visibility:hidden;\n
+    background:#fff;\n
+    left:0px;\n
+    top:0px;\n
+}\n
+.bbit-dp em\n
+{\n
+ font-style:normal;\n
+ font-weight:normal;    \n
+}\n
+.bbit-dp table\n
+{\n
+    width:100%;   \n
+    table-layout: fixed;\n
+    border-collapse: separate;\n
+}\n
+.bbit-dp td th\n
+{\n
+    margin:0px;\n
+}\n
+.bbit-dp-top-center\n
+{\n
+    font:normal 11px tahoma,verdana,helvetica;\n
+    cursor:pointer;\n
+    white-space:nowrap;\n
+    color:#fff;   \n
+    text-align:center;\n
+}\n
+\n
+.bbit-dp-top-center button\n
+{\n
+     font-size:13px;\n
+    border:0 none;\n
+    padding-right:10px;    \n
+    background:transparent url(jquery/plugin/wdcalendar/wdcalendar_images/btn-arrow-light.gif) no-repeat top right;\n
+    font:normal 11px tahoma,verdana,helvetica;\n
+    padding-left:3px; \n
+    color:#fff;\n
+    cursor:pointer;\n
+    margin:0;\n
+    overflow:visible;\n
+    width:auto;\n
+    -moz-outline:0 none;\n
+    outline:0 none;\n
+   \n
+}\n
+.ie .bbit-dp-top-center button\n
+{\n
+    \n
+}\n
+.bbit-dp-top-right\n
+{\n
+    height:21px;\n
+}\n
+\n
+.bbit-dp .bbit-dp-top\n
+{\n
+   background:url("jquery/plugin/wdcalendar/wdcalendar_images/hd-sprite.gif") repeat-x 0px -83px; \n
+}\n
+.bbit-dp-top-right,.bbit-dp-top-left{width:18px;}\n
+.bbit-dp-top-right{text-align:right;}\n
+\n
+.bbit-dp-top-right a,.bbit-dp-top-left a\n
+{\n
+    display:block;\n
+    width:16px;\n
+    height:16px;\n
+    background-position:center;\n
+    background-repeat:no-repeat;\n
+    cursor:pointer;\n
+    -moz-opacity:0.6;\n
+    opacity:0.6;\n
+    filter:alpha(opacity=60);\n
+}\n
+.bbit-dp-top-right a:hover,.bbit-dp-top-left a:hover\n
+{\n
+    -moz-opacity:1;\n
+    opacity:1;\n
+    filter:alpha(opacity=100);\n
+}\n
+\n
+.bbit-dp-top-left a\n
+{\n
+    background:url(jquery/plugin/wdcalendar/wdcalendar_images/left-btn.gif); MARGIN-LEFT: 2px\n
+}\n
+.bbit-dp-top-right a\n
+{\n
+    background:url(jquery/plugin/wdcalendar/wdcalendar_images/right-btn.gif); MARGIN-LEFT: 2px\n
+}\n
+.bbit-dp-inner th,.bbit-dp-inner td{\n
+border-collapse:separate;\n
+}\n
+\n
+.bbit-dp-inner th\n
+{\n
+   width:25px;\n
+   background:#dfecfb url(jquery/plugin/wdcalendar/wdcalendar_images/glass-bg.gif) repeat-x left top;\n
+   text-align:right!important;\n
+   border-bottom:1px solid #a3bad9;  \n
+   color:#233d6d;\n
+   cursor:default;\n
+   padding:0;\n
+   border-collapse:separate;\n
+}\n
+.bbit-dp-inner th span\n
+{\n
+    display:block;\n
+    padding:2px;\n
+    padding-right:7px;\n
+    font:normal 10px arial,helvetica,tahoma,sans-serif;\n
+}\n
+.bbit-dp-inner td\n
+{\n
+    border:1px solid #fff;text-align:right;padding:0;\n
+    border-collapse:separate;\n
+    color:Black;\n
+}\n
+.bbit-dp a\n
+{   \n
+    text-decoration:none;\n
+    color:black; \n
+    zoom:1; \n
+}\n
+.bbit-dp-inner td a\n
+{\n
+    font:normal 11px arial,helvetica,tahoma,sans-serif;\n
+    padding:2px 5px;\n
+    display:block;  \n
+    text-align:right;   \n
+}\n
+.picker\n
+{\n
+\theight: 16px;\n
+\twidth: 16px;\n
+\tbackground: url("jquery/plugin/wdcalendar/wdcalendar_images/cal.gif") no-repeat left top;\n
+\tmargin-left: -19px;\n
+\tcursor: pointer;\n
+\tborder: none;\n
+}\n
+\n
+.bbit-dp-inner .bbit-dp-active{cursor:pointer;color:black;}\n
+.bbit-dp-inner .bbit-dp-selected a{background:#dfecfb url(jquery/plugin/wdcalendar/wdcalendar_images/glass-bg.gif) repeat-x left top;border:1px solid #8db2e3;padding:1px 4px;}\n
+.bbit-dp-inner .bbit-dp-today a{border:1px solid darkred;padding:1px 4px;}\n
+.bbit-dp-inner .bbit-dp-selected span{font-weight:bold;}\n
+.bbit-dp-inner .bbit-dp-prevday a,.bbit-dp-inner .bbit-dp-nextday a{color:#aaa;text-decoration:none!important;}\n
+.bbit-dp-inner a:hover,.bbit-dp-inner bbit-dp-disabled a:hover{text-decoration:none!important;color:black;background:#ddecfe;}\n
+.bbit-dp-inner .bbit-dp-disabled a{cursor:default;background:#eee;color:#bbb;}\n
+\n
+.bbit-dp-bottom{padding:2px;border-top:1px solid #a3bad9;background:#dfecfb url(jquery/plugin/wdcalendar/wdcalendar_images/glass-bg.gif) repeat-x left top;}\n
+/*.bbit-dp-bottom button {text-decoration:none;text-align:center;text-decoration:none!important;background:#083772;color:white;border:1px solid;border-color:#36c #005 #005 #36c;padding:1px 3px 1px;font:normal 11px arial,helvetica,tahoma,sans-serif;cursor:pointer;}*/\n
+.bbit-dp-mp{position:absolute;left:0;top:0;background:white;display:none;}\n
+            \n
+.bbit-dp-mp td{padding:2px;font:normal 11px arial,helvetica,tahoma,sans-serif;}\n
+td.bbit-dp-mp-month,td.bbit-dp-mp-year,td.bbit-dp-mp-ybtn{border:0 none;text-align:center;vertical-align:middle;width:25%;}\n
+.bbit-dp-mp-ok{margin-right:3px;}\n
+.bbit-dp-mp-btns button{ width:45px;text-decoration:none;text-align:center;text-decoration:none!important;background:#083772;color:white;border:1px solid;border-color:#36c #005 #005 #36c;padding:1px 3px 1px;font:normal 11px arial,helvetica,tahoma,sans-serif;cursor:pointer;}\n
+.bbit-dp-mp-btns{background:#dfecfb url(jquery/plugin/wdcalendar/wdcalendar_images/glass-bg.gif) repeat-x left top;}\n
+.bbit-dp-mp-btns td{border-top:1px solid #c5d2df;text-align:center;}\n
+td.bbit-dp-mp-month a,td.bbit-dp-mp-year a{display:block;padding:2px 4px;text-decoration:none;text-align:center;color:#15428b;}\n
+td.bbit-dp-mp-month a:hover,td.bbit-dp-mp-year a:hover{color:#15428b;text-decoration:none;cursor:pointer;background:#ddecfe;}\n
+td.bbit-dp-mp-sel a{padding:1px 3px;background:#dfecfb url(jquery/plugin/wdcalendar/wdcalendar_images/glass-bg.gif) repeat-x left top;border:1px solid #8db2e3;}\n
+.bbit-dp-mp-ybtn a{overflow:hidden;width:15px;height:15px;cursor:pointer;background:transparent url(jquery/plugin/wdcalendar/wdcalendar_images/tool-sprites.gif) no-repeat;display:block;margin:0 auto;}\n
+.bbit-dp-mp-ybtn a.bbit-dp-mp-next{background-position:0 -120px;}\n
+.bbit-dp-mp-ybtn a.bbit-dp-mp-next:hover{background-position:-15px -120px;}\n
+.bbit-dp-mp-ybtn a.bbit-dp-mp-prev{background-position:0 -105px;}\n
+.bbit-dp-mp-ybtn a.bbit-dp-mp-prev:hover{background-position:-15px -105px;}\n
+.bbit-dp-mp-ybtn{text-align:center;}\n
+td.bbit-dp-mp-sep{border-right:1px solid #c5d2df;}\n
+\n
+\n
+.bbit-dp-input\n
+{\n
+    width:100px;\n
+    height:18px;\n
+    padding-left:4px;\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5937</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dp.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

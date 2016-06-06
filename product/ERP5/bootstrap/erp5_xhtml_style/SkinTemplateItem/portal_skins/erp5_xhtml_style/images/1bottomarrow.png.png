@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts28410695.59</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>1bottomarrow.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAA5klEQVQokWNgGAKAlSGegYuhhIEb
+iJmAmAEJywMxSI4diBmB6uDAk2GFUoXgf7Nu3f8ytYL/RSq5/guWs/8Xq+T5L9sg/J8pjeE/gwcQ
+KzCsQGgKYBBSLBTdtOBc1/9Jpwr+h681+G+/UPZ/4kar/yGrTf4z5QI1GDJsYpBiEEJ1YgADm0K+
+8M6Vl6b+n3u+5n/yZuv/3ss1/wuWsv1nMGXYyaDCwIbdbwEM3Bql0usXnun9X7o7/D9fIet/BguG
+9UAN3PgDJYBBWLtMdr3dJL3/jLZgDcLEhSbQRqCTSoB+IGDDoAQAAPNGguVzUcoAAAAASUVORK5C
+YII=</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>13</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>287</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>13</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308808.61</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>chat.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+#chat-box {\r\n
+    display: table;\r\n
+    position: relative;\r\n
+    width: 100%;\r\n
+    height: 100%;\r\n
+    border-collapse: collapse;\r\n
+\r\n
+    > div {\r\n
+        display: table-row;\r\n
+\r\n
+        &:not(:last-child) {\r\n
+            border-bottom: 1px solid @gray-dark;\r\n
+        }\r\n
+    }\r\n
+\r\n
+    #chat-title {\r\n
+        label {\r\n
+            padding: 18px 20px;\r\n
+            font-size: @font-size-large;\r\n
+        }\r\n
+    }\r\n
+\r\n
+    #chat-users {\r\n
+        position: absolute;\r\n
+        left: 0;\r\n
+        top: 0;\r\n
+        right: 0;\r\n
+        height: 70px;\r\n
+        padding: 5px 0;\r\n
+        overflow: hidden;\r\n
+\r\n
+        .ps-scrollbar-y-rail {\r\n
+            margin-top: 5px;\r\n
+            margin-bottom: 5px;\r\n
+            right: 4px !important;\r\n
+        }\r\n
+\r\n
+        ul {\r\n
+            margin: 0;\r\n
+            padding: 0;\r\n
+            overflow: hidden;\r\n
+\r\n
+            li {\r\n
+                list-style: none;\r\n
+                padding: 2px 0 3px 20px;\r\n
+                overflow: hidden;\r\n
+\r\n
+                &.offline {\r\n
+                    display: none;\r\n
+                }\r\n
+            }\r\n
+        }\r\n
+\r\n
+        .color {\r\n
+            width: 12px;\r\n
+            height: 12px;\r\n
+            display: inline-block;\r\n
+            vertical-align: middle;\r\n
+            border: 1px solid @gray-dark;\r\n
+        }\r\n
+\r\n
+        .name {\r\n
+            display: block;\r\n
+            padding-left: 16px;\r\n
+            margin-top: -1px;\r\n
+            white-space: nowrap;\r\n
+            text-overflow: ellipsis;\r\n
+            font-weight: bold;\r\n
+            vertical-align: middle;\r\n
+\r\n
+        }\r\n
+    }\r\n
+\r\n
+    #chat-messages {\r\n
+        position: absolute;\r\n
+        left: 0;\r\n
+        top: 70px;\r\n
+        right: 0;\r\n
+        bottom: 110px;\r\n
+        overflow: hidden;\r\n
+\r\n
+        .ps-scrollbar-y-rail {\r\n
+            margin-top: 5px;\r\n
+            margin-bottom: 5px;\r\n
+            right: 4px !important;\r\n
+        }\r\n
+\r\n
+        ul {\r\n
+            margin: 0;\r\n
+            padding: 0;\r\n
+\r\n
+            li {\r\n
+                list-style: none;\r\n
+\r\n
+                padding: 5px 10px 8px 20px;\r\n
+                white-space: pre-wrap;\r\n
+                white-space: -moz-pre-wrap;\r\n
+                white-space: -o-pre-wrap;\r\n
+                word-wrap: break-word;\r\n
+\r\n
+                .user {\r\n
+                    font-weight: bold;\r\n
+                    white-space: nowrap;\r\n
+                    .user-select(text);\r\n
+                }\r\n
+\r\n
+                .message {\r\n
+                    word-wrap: break-word;\r\n
+                    width: 100%;\r\n
+                   .user-select(text);\r\n
+\r\n
+                    &.service {\r\n
+                        text-align: center;\r\n
+                        color: #CECECE;\r\n
+                        text-shadow: 0 1px 0 #ffffff;\r\n
+                        padding-right: 20px;\r\n
+                    }\r\n
+                }\r\n
+            }\r\n
+        }\r\n
+    }\r\n
+\r\n
+    #chat-options {\r\n
+        height: 110px;\r\n
+\r\n
+        #chat-options-ct {\r\n
+            padding: 10px 20px;\r\n
+\r\n
+            textarea {\r\n
+                .user-select(text);\r\n
+                width: 100%;\r\n
+                height: 62px;\r\n
+                resize: none;\r\n
+                margin-bottom: 5px;\r\n
+                border: 1px solid @gray-dark;\r\n
+            }\r\n
+        }\r\n
+    }\r\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3176</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block\n
+  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
+  tal:define="field_id here/getId;\n
+              selection_name here/getSelectionName;\n
+              real_context here/getContext;\n
+              global is_gadget_mode request/is_gadget_mode | nothing;\n
+              line_list here/query;\n
+              listbox_max_lines  python: int(here.getMaxLineNumber());\n
+              total_line         python: int(here.total_size);\n
+              need_pagination python: total_line > listbox_max_lines;\n
+              page_navigation_template python: request.get(\'page_navigation_template\', here.getPageNavigationTemplate());\n
+              is_slider_mode python:  \'Slider\' in page_navigation_template;\n
+              is_default_listbox_field python: field_id==\'listbox\';\n
+              base_url_string real_context/absolute_url;\n
+              date_renderer nocall:real_context/WebSection_viewBlogFrontPage/listbox_effective_date/render_html;">\n
+<div class="blog_rss"><a href="./WebSection_viewContentListAsRSS"><img src="web_images/rss-image.png" alt="This blog as RSS" /></a></div>\n
+\n
+<tal:block tal:repeat="line line_list">\n
+\n
+  <!--Here is a post-->\n
+  <div class="blog_post" tal:define="render_result line/render">\n
+    <tal:block tal:define="title python: render_result[0][1]; \n
+                           author python: render_result[1][1]; \n
+                           date python: render_result[2][1]; \n
+                           categories python: render_result[3][1]; \n
+                           url python: \'%s/%s\' % (base_url_string, render_result[4][1]);\n
+                           comments_url python: \'%s#comments\' % url;\n
+                           facebook_url python: \'http://www.facebook.com/share.php?u=%s&t=%s\' % (url, title);\n
+                           twitter_url python: \'http://twitter.com/home?status=Currently reading %s\' % url;\n
+                           summary python: render_result[5][1];\n
+                           comment_count python: render_result[6][1];\n
+                           date_rendered python: date_renderer(date)">\n
+\n
+<div class="post_head">\n
+  <h1><a tal:attributes="href url" tal:content="title">This is the title of the blog post</a></h1>\n
+\n
+  <small class="post_time">\n
+    <strong tal:content="structure date_rendered">date</strong>\n
+  </small>\n
+\n
+  <small class="post_author"><tal:block i18n:translate="" i18n:domain="ui">Author</tal:block>: <span tal:replace="author">Author</span></small><tal:block tal:condition="categories"> | <small class="post_category"><tal:block i18n:translate="" i18n:domain="ui">Category</tal:block>: \n
+    <tal:block tal:repeat="category categories"><a tal:attributes="href python: \'%s?subject=%s\' % (base_url_string, category)" tal:content="category">cat.</a><tal:block tal:condition="not: repeat/category/end"> ; </tal:block></tal:block></small></tal:block>\n
+\n
+</div><!--End post_head -->\n
+\n
+  <div class="post_body" tal:content="structure summary">Here is a blog post content</div>\n
+\n
+  <!-- <div class="post_read_more"><a tal:attributes="href url" i18n:translate="" i18n:domain="ui">Read more</a></div> -->\n
+  <div class="post_bottom">\n
+    <a tal:attributes="href comments_url"><tal:block tal:replace="comment_count">0</tal:block> <tal:block i18n:translate="" i18n:domain="ui">comment</tal:block></a> | \n
+    <tal:block i18n:translate="" i18n:domain="ui">Share</tal:block>: <a title="Facebook" tal:attributes="href facebook_url"><img width="20px" alt="Facebook logo" src="web_images/facebook-button.png" /></a>\n
+         <a title="Twitter" tal:attributes="href twitter_url"><img width="20px" alt="Twitter Logo" src="web_images/twitter-button.png" /></a>\n
+\n
+  </div><!--End post_bottom-->\n
+\n
+    </tal:block>\n
+\n
+\n
+  </div><!--End blog_post-->\n
+\n
+    <tal:block tal:condition="not: repeat/line/end"><br /><hr class="post_separator" /></tal:block>\n
+\n
+</tal:block>\n
+\n
+<tal:block tal:condition="need_pagination">\n
+  <input type="hidden" \n
+         name="list_selection_name" \n
+         value="default" \n
+         tal:attributes="value selection_name" />\n
+  <input type="hidden" \n
+         name="listbox_uid:list" />\n
+  <input type="hidden" name="selection_name_selection_key" value="md5"\n
+         tal:define="selection_key here/getSelectionKey"\n
+         tal:condition="selection_key"\n
+         tal:attributes="name string:${selection_name}_selection_key;\n
+                         value selection_key" />\n
+  <div class="listbox-footer-box">\n
+    <tal:block metal:use-macro="container/ListBox_asHTMLLibrary/macros/listbox_navigation" />\n
+  </div>\n
+</tal:block>\n
+\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ListBox_viewAsBlog</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

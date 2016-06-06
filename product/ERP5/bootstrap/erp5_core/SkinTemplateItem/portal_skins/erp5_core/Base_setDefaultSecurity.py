@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>permission_list = context.possible_permissions()\n
+\n
+# First, only Manager has the permission by default\n
+manager_permission_list = permission_list\n
+\n
+# Then, define default ERP5 permissions\n
+common_permission_list = [p for p in [\n
+  \'Access Transient Objects\',\n
+  \'Access contents information\',\n
+  \'Access session data\',\n
+  \'Copy or Move\',\n
+  \'List folder contents\',\n
+  \'View History\',\n
+] if p in permission_list]\n
+\n
+author_permission_list = [p for p in [\n
+  \'Add portal content\',\n
+  \'Add portal folders\',\n
+] if p in permission_list]\n
+\n
+auditor_permission_list = [p for p in [\n
+  \'View\',\n
+] if p in permission_list]\n
+\n
+assignor_permission_list = [p for p in [\n
+  \'Modify portal content\',\n
+  \'Change local roles\',\n
+  \'Delete objects\',\n
+] if p in permission_list]\n
+\n
+# Define ERP5 permissions for each role\n
+erp5_role_dict = {\n
+  \'Assignee\': common_permission_list + auditor_permission_list,\n
+  \'Assignor\': common_permission_list + author_permission_list +\\\n
+              assignor_permission_list + auditor_permission_list,\n
+  \'Associate\': common_permission_list + auditor_permission_list,\n
+  \'Auditor\' : common_permission_list + auditor_permission_list,\n
+  \'Author\': common_permission_list + author_permission_list,\n
+  \'Manager\': manager_permission_list\n
+}\n
+\n
+# Add ERP5 permissions\n
+erp5_permission_dict = {}\n
+for role,permission_list in erp5_role_dict.items():\n
+  for permission in permission_list:\n
+    if not erp5_permission_dict.has_key(permission):\n
+      erp5_permission_dict[permission] = []\n
+    erp5_permission_dict[permission].append(role)\n
+\n
+for permission,role_list in sorted(erp5_permission_dict.items()):\n
+  # Acquire permission if the role list is same as parent\n
+  if sorted([x[\'name\'] for x in context.aq_parent.rolesOfPermission(permission) if x[\'selected\']]) == sorted(role_list):\n
+    context.manage_permission(permission, [], 1)\n
+  else:\n
+    context.manage_permission(permission,role_list, 0)\n
+\n
+return "finished"\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_setDefaultSecurity</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

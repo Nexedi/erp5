@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Form.Report import ReportSection\n
+result=[]\n
+request = context.REQUEST\n
+params = {}\n
+\n
+selection_columns = [(\'validation_state\', \'State\')]\n
+#Add dynamicaly ticket type columns to the form\n
+#The name of column must be without spaces\n
+for ticket_type in context.getPortalTicketTypeList():\n
+  selection_columns.append((ticket_type.replace(\' \',\'\'),ticket_type))\n
+selection_columns.append((\'unassigned\', \'Unassigned\'))\n
+selection_columns.append((\'total\', \'Total\'))\n
+\n
+#Future states\n
+params=dict(direction=context.Event_getFutureStateList())\n
+result.append(ReportSection(\n
+              path=context.getPhysicalPath(),\n
+              selection_columns=selection_columns,\n
+              listbox_display_mode=\'FlatListMode\',\n
+              title=context.Base_translateString(\'Future Events\'),\n
+              selection_params=params,\n
+              form_id=\'EventModule_viewEventActivityList\'))\n
+\n
+#Past states\n
+params=dict(direction=context.Event_getPastStateList())\n
+result.append(ReportSection(\n
+              path=context.getPhysicalPath(),\n
+              selection_columns=selection_columns,\n
+              listbox_display_mode=\'FlatListMode\',\n
+              title=context.Base_translateString(\'Past Events\'),\n
+              selection_params=params,\n
+              form_id=\'EventModule_viewEventActivityList\'))\n
+\n
+return result\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>EventModule_getEventActivityReportSectionList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!--\n
+    Description:\n
+    This macro render a contribution upload panel.\n
+    -->\n
+\n
+<tal:block metal:define-macro="main">\n
+<tal:block tal:define="global web_site_url web_site_url | nothing"/>\n
+<tal:block tal:condition="not:web_site_url">\n
+  <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/>\n
+</tal:block>\n
+\n
+<!-- Contribute file tab -->\n
+\n
+<div class="tabber" id="mytabber2">\n
+<form action="Base_contribute" \n
+      enctype="multipart/form-data" \n
+      method="post"\n
+      name="contribute_file_form">\n
+  <div class="tabbertab">\n
+    <h2 i18n:translate="" \n
+       i18n:domain="ui">Contribute</h2>\n
+    <div class="fieldset">\n
+      <div>\n
+        <label for="portal_type" \n
+               i18n:translate="" \n
+               i18n:domain="ui">Type</label>\n
+        <select size="1" \n
+                name="portal_type" \n
+                id="portal_type" \n
+                onchange="toggleMakeTemplateButton(this);">\n
+          <option value="" \n
+                  i18n:translate="" \n
+                  i18n:domain="ui">-- Select Document Type --</option>\n
+          <tal:block tal:repeat="ptype here/getPortalTemplateDocumentTypeList">\n
+            <option tal:content="ptype" \n
+                    tal:attributes="value ptype"\n
+                    value="" \n
+                    i18n:translate="" \n
+                    i18n:domain="ui"/>\n
+          </tal:block>\n
+          <option value="" \n
+                  i18n:translate="" \n
+                  i18n:domain="ui">-- Any Other Document Type --</option>\n
+        </select>\n
+        <input type="hidden" \n
+               name="synchronous_metadata_discovery" \n
+               value="1"/>\n
+        <input type="hidden" \n
+               name="redirect_to_document" \n
+               value="1"/>\n
+        <input type="file" \n
+               name="file" size="30" />\n
+      </div>\n
+\n
+      <div style="float:left"\n
+           tal:define="contribute_prefix string:">\n
+        <div metal:use-macro="here/WebSite_viewContributePropertyRenderer/macros/contribute_properties"/>\n
+      </div>\n
+      \n
+      <div style="float:right; margin-top:10px;">\n
+      <a onclick="setMailString();"  \n
+         id="mail_contribute_button"\n
+         tal:define="ingestion_address here/portal_preferences/getPreferredDocumentEmailIngestionAddress|nothing"\n
+         tal:condition="ingestion_address"\n
+         tal:attributes="href string:${ingestion_address}?subject=Contribution&body=">\n
+        <img src="send_by_mail" border="0"/>\n
+        <tal:block  \n
+          i18n:translate="" \n
+          i18n:domain="ui">Click here to contribute by email.</tal:block></a>\n
+\n
+      <input i18n:domain="ui" \n
+             i18n:attributes="value" \n
+             type="submit" \n
+             name="Base_contribute:method" \n
+             value="Contribute"/>\n
+    </div>\n
+    </div>\n
+    \n
+    <div class="clear"></div>\n
+</div>\n
+</form>\n
+  \n
+<!-- Contribute link tab -->\n
+<div class="tabbertab">\n
+<form action="Base_contribute" \n
+      enctype="multipart/form-data" \n
+      method="post"\n
+      name="contribute_url_form">\n
+  <h2 i18n:translate="" i18n:domain="ui">Link</h2>\n
+  <div class="fieldset tabbertabcont">\n
+    <div>\n
+      <label for="url" \n
+             i18n:translate="" \n
+             i18n:domain="ui">URL</label>\n
+      <input type="text" \n
+             name="url" \n
+             id="url" \n
+             size="80" \n
+             value="http://" />\n
+      <a href="" \n
+         target="_blank" \n
+         onclick="return setLink(this)" \n
+         value="" \n
+         i18n:translate="" \n
+         i18n:domain="ui">Preview</a>\n
+    </div>\n
+    <tal:block tal:define="contribute_prefix string:">\n
+      <div metal:use-macro="here/WebSite_viewContributePropertyRenderer/macros/contribute_properties"/>\n
+    </tal:block>\n
+    <div>\n
+      <label for="description" \n
+             i18n:translate="" \n
+             i18n:domain="ui">Description</label>\n
+      <textarea cols="80" \n
+                rows="2" \n
+                name="description"></textarea>\n
+     </div>\n
+   </div>\n
+\n
+        <input type="hidden" \n
+               name="redirect_url" \n
+               tal:attributes="value python: here.getWebSiteValue().absolute_url()"/>   \n
+   <input i18n:domain="ui" \n
+          i18n:attributes="value" \n
+          style="float:right" \n
+          type="submit" \n
+          name="Base_contribute:method" \n
+          value="Contribute"/>\n
+   <div class="clear"></div>\n
+  </form>\n
+ </div>\n
+  \n
+  <div class="tabbertab"\n
+    tal:define="user here/portal_membership/getAuthenticatedMember">\n
+    <h2 value="" i18n:translate="" i18n:domain="ui">File</h2>\n
+\n
+    <tal:block tal:repeat="file_group python:[\n
+              dict(\n
+               portal_type_list = here.getPortalTicketTypeList(),\n
+               id = \'ticket\',\n
+               title = \'Forms and Requests:\',\n
+              ),\n
+              dict(\n
+               portal_type_list = here.getPortalNodeTypeList(),\n
+               id = \'node\',\n
+               title = \'People and Projects:\',\n
+              ),\n
+              dict(\n
+               portal_type_list = here.getPortalWebDocumentTypeList(),\n
+               id = \'web\',\n
+               title = \'Online Content:\',\n
+              ),\n
+              dict(\n
+               portal_type_list = here.getPortalFileDocumentTypeList() + here.getPortalTemplateDocumentTypeList(),\n
+               id = \'content\',\n
+               title = \'Offline Content:\',\n
+              ),\n
+]">\n
+\n
+      <div class="filebox" id="administration" class="tabbertabcont" tal:attributes="id file_group/id">\n
+        <ul>\n
+          <li class="listheader" value="" tal:content="file_group/title"\n
+              i18n:translate="" i18n:domain="ui">Forms and Requests:</li>\n
+          <ul tal:condition="not:file_group/portal_type_list">\n
+            <i i18n:translate="" i18n:domain="ui">Not available</i>\n
+          </ul>\n
+          <ul tal:condition="file_group/portal_type_list">\n
+            <tal:block tal:repeat="portal_type file_group/portal_type_list">\n
+              <li tal:condition="python:here.ERP5Site_isNewContentAllowed(portal_type, user)">\n
+                <a tal:content="portal_type"\n
+                  i18n:translate="" i18n:domain="ui"\n
+                  tal:attributes="href string:ERP5Site_newContent?portal_type=${portal_type}">Toto</a>\n
+              </li>\n
+            </tal:block>\n
+          </ul>\n
+        </ul>\n
+      </div>\n
+\n
+    </tal:block>\n
+\n
+    <div class="clear"></div>\n
+  </div>\n
+</div>\n
+\n
+</tal:block>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewContributeRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+name_designation_match = {\n
+  \'stop\': \'Unimmobilisation\',\n
+  \'start\': \'Immobilisation\',\n
+  \'annuity\': \'Annuity\',\n
+  \'correction\': \'Correction\' }\n
+\n
+if transaction_line is None:\n
+  transaction_line = context\n
+if transaction_line.getPortalType() != \'Amortisation Transaction Line\':\n
+  return []\n
+\n
+\n
+returned_dict = {}\n
+delivery_related_list = transaction_line.getDeliveryRelatedValueList()\n
+\n
+for simulation_movement in delivery_related_list:\n
+  applied_rule = simulation_movement.getParentValue()\n
+  item_value = applied_rule.getCausalityValue()\n
+  item_uid = item_value.getUid()\n
+\n
+  if returned_dict.get(item_uid, None) is None:\n
+    returned_dict[item_uid] = []\n
+  detail_list = returned_dict[item_uid]\n
+\n
+\n
+  value = simulation_movement.getQuantity()\n
+  debit, credit = 0, 0\n
+  if value < 0:\n
+    debit = - value\n
+  else:\n
+    credit = value\n
+  debit = \'%0.2f\' % debit\n
+  credit = \'%0.2f\' % credit\n
+\n
+  operation = simulation_movement.getId().split(\'_\')[0]\n
+  designation = name_designation_match.get(operation, \'Unknown\')\n
+\n
+  detail_list.append( { \'item\':item_value.getTitle(), \'designation\':designation, \'debit\':debit, \'credit\':credit } )\n
+  returned_dict[item_uid] = detail_list\n
+\n
+\n
+returned_value = []\n
+for item, data in returned_dict.items():\n
+  for detail in data:\n
+    returned_value.append(detail)\n
+\n
+return returned_value\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>transaction_line=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Immobilisation_getTransactionDeliveryRelatedInfo</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Check login is available locally and globally for instance with SSO.\n
+Parameters:\n
+value -- field value (string)\n
+REQUEST -- standard REQUEST variable"""\n
+\n
+if value:\n
+  # Same tag is used as in Document.Person._setReference, in order to protect against\n
+  # concurrency between Credential Request and Person object too\n
+  tag = \'Person_setReference_%s\' % value.encode(\'hex\')\n
+  if context.getPortalObject().portal_activities.countMessageWithTag(tag):\n
+    return False\n
+\n
+def getRealContext():\n
+  if not REQUEST:\n
+    return context\n
+  object_path = REQUEST.get("object_path")\n
+  portal = context.getPortalObject()\n
+  return portal.restrictedTraverse(object_path)\n
+\n
+#Allow user to create a request with it\'s username\n
+member = context.portal_membership.getAuthenticatedMember()\n
+if member is not None \\\n
+   and member.getUserName() == value \\\n
+   and value != "Anonymous User":\n
+  return True\n
+\n
+context = getRealContext()\n
+#Allow reference for person in relation with the credential request\n
+if context.getPortalType() == "Credential Request":\n
+  related_person = context.getDestinationDecisionValue(portal_type="Person")\n
+  if related_person is not None:\n
+    if related_person.getReference() == value:\n
+      return True\n
+\n
+#check no pending credential request with this user name\n
+#Don\'t take in case the current credential \n
+module = context.getDefaultModule("Credential Request")\n
+credential_request_count_result = module.countFolder(reference=value,\n
+                                                     uid="NOT %s" % context.getUid(),\n
+                                                     validation_state=["draft", "submitted"])\n
+\n
+if credential_request_count_result[0][0] > 0:\n
+  return False\n
+\n
+#check local account\n
+if not context.ERP5Site_isLocalLoginAvailable(value):\n
+  return False\n
+\n
+if context.ERP5Site_isSingleSignOnEnable():\n
+  #check username is unique and valid\n
+  if not context.WizardTool_isPersonReferenceGloballyUnique(editor=value,\n
+                                                   request=REQUEST, \n
+                                                   ignore_users_from_same_instance=0):\n
+    return False\n
+\n
+return True\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>value,REQUEST=None</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CredentialRequest_checkLoginAvailability</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

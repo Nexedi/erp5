@@ -1,0 +1,380 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>anonymous_http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts52852895.44</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jgraduate.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* \n
+ * jGraduate Default CSS\n
+ * \n
+ * Copyright (c) 2010 Jeff Schiller\n
+ * http://blog.codedread.com/\n
+ *\n
+ * Copyright (c) 2010 Alexis Deveria\n
+ * http://a.deveria.com/\n
+ *\n
+ * Licensed under the Apache License Version 2\n
+ */\n
+\n
+h2.jGraduate_Title {\n
+  display: none;\n
+}\n
+\n
+.jGraduate_Picker {\n
+\tposition: absolute;\n
+\tpadding: 20px;\n
+}\n
+\n
+.jGraduate_tabs li {\n
+\tdisplay: inline-block;\n
+\tpadding: 5px 10px;\n
+\tmargin-right: 5px;\n
+\tcursor: pointer;\n
+}\n
+\n
+li.jGraduate_tab_current {\n
+  background: #fff;\n
+  border-radius: 3px 3px 0 0;\n
+}\n
+\n
+.jGraduate_colPick {\n
+\tdisplay: none;\n
+}\n
+\n
+.jGraduate_gradPick {\t\n
+\tdisplay: none;\n
+\toverflow: visible;\n
+/*\tposition: relative;*/\n
+}\n
+\n
+.jGraduate_tabs {\n
+\tposition: relative;\n
+\tbackground-color: #ddd;\n
+\tpadding: 10px 10px 0 10px;\n
+\tmargin: -20px -20px 20px -20px;\n
+\tborder-radius: 3px 3px 0 0;\n
+}\n
+\n
+div.jGraduate_Swatch {\n
+\tfloat: left;\n
+\tmargin: 0 15px 0 0;\n
+}\n
+div.jGraduate_GradContainer {\n
+\tborder: solid #000 1px;\n
+\tbackground-image: url(../images/map-opacity.png); \n
+\tbackground-position: 0px 0px;\n
+\theight: 256px;\n
+\twidth: 256px;\n
+\tposition: relative;\n
+}\n
+\n
+div.jGraduate_GradContainer div.grad_coord {\n
+  background: rgba(0,0,0,0.8);\n
+  border: 2px solid white;\n
+  border-radius: 15px;\n
+  -moz-border-radius: 5px;\n
+  width: 14px;\n
+  height: 14px;\n
+  position: absolute;\n
+  margin: -7px -7px;\n
+  top: 0;\n
+  left: 0;\n
+  text-align: center;\n
+  font-size: 8px;\n
+  line-height: 14px;\n
+  color: white;\n
+  text-decoration: none;\n
+  cursor: pointer;\n
+  -moz-user-select: none;\n
+  -webkit-user-select: none;\n
+}\n
+\n
+.jGraduate_AlphaArrows {\n
+\tposition: absolute;\n
+\tmargin-top: -10px;\n
+\tmargin-left: 250.5px;\n
+}\n
+\n
+div.jGraduate_Opacity {\n
+\tborder: 2px inset #eee;\n
+\tmargin-top: 14px;\n
+\tbackground-color: black;\n
+\tbackground-image: url(../images/Maps.png);\n
+\tbackground-position: 0px -2816px;\n
+\theight: 20px;\n
+\tcursor: ew-resize;\n
+}\n
+\n
+div.jGraduate_StopSlider {\n
+\tmargin: -10px 0 0 -10px;\n
+\twidth: 276px;\n
+\toverflow: visible;\n
+\tbackground: white;\n
+\theight: 45px;\n
+\tcursor: pointer;\n
+}\n
+\n
+div.jGraduate_StopSection {\n
+\twidth: 120px;\n
+\tfloat: left;\n
+}\n
+\n
+div.jGraduate_StopSection.jGraduate_SpreadMethod {\n
+  display: none;\n
+}\n
+\n
+input.jGraduate_Ok, input.jGraduate_Cancel {\n
+\tdisplay: block;\n
+\twidth: 100px;\n
+}\n
+input.jGraduate_Ok {\n
+\tmargin: 0 0 5px 0;\n
+}\n
+\n
+.colorBox {\n
+\tfloat: left;\n
+\theight: 16px;\n
+\twidth: 16px;\n
+\tborder: 1px solid #808080;\n
+\tcursor: pointer;\n
+\tmargin: 4px 4px 4px 30px;\n
+}\n
+\n
+.colorBox + label {\n
+\tfloat: left;\n
+\tmargin-top: 7px;\n
+}\n
+\n
+label.jGraduate_Form_Heading {\n
+\n
+  color: #333;\n
+\tpadding: 2px;\n
+\tfont-weight: bold;\n
+\tfont-size: 13px;\n
+}\n
+\n
+div.jGraduate_Form_Section {\n
+\t-moz-border-radius: 5px;\n
+\t-webkit-border-radius: 5px;\n
+\tpadding: 15px 5px 5px 5px;\n
+\tmargin: 5px 2px;\n
+\twidth: 100px;\n
+\ttext-align: center;\n
+\toverflow: auto;\n
+\tbackground: #eee;\n
+}\n
+\n
+div.jGraduate_Form label {\n
+\tpadding: 0 2px;\n
+\tcolor: #333;\n
+}\n
+\n
+div.jGraduate_StopSection input[type=text],\n
+div.jGraduate_Slider input[type=text] {\n
+\twidth: 33px;\n
+\tcolor: #333;\n
+}\n
+\n
+div.jGraduate_LightBox {\n
+\tposition: fixed;\n
+\ttop: 0px;\n
+\tleft: 0px;\n
+\tright: 0px;\n
+\tbottom: 0px;\n
+\tbackground-color: #000;\n
+\topacity: 0.5;\n
+\tdisplay: none;\n
+}\n
+\n
+div.jGraduate_stopPicker {\n
+  position: absolute;\n
+  display: none;\n
+  background: \n
+  white;\n
+  padding: 20px;\n
+  border-radius: 3px;\n
+  width: 530px;\n
+  height: 300px;\n
+  box-shadow: 0 5px 25px \n
+  black;\n
+}\n
+\n
+\n
+.jGraduate_gradPick {\n
+\twidth: 526px;\n
+}\n
+\n
+.jGraduate_gradPick div.jGraduate_Slider {\n
+\tline-height: 160%\n
+}\n
+\n
+.jGraduate_gradPick div.jGraduate_Slider label:last-child {\n
+\tposition: absolute;\n
+\tright: 10px;\n
+\ttop: 0;\n
+\tcolor: #999;\n
+\tfont-weight: bold;\n
+}\n
+\n
+.jGraduate_gradPick div.jGraduate_Slider label:last-child input {\n
+  margin: 0 3px 0 0;\n
+  color: #333;\n
+}\n
+\n
+.jGraduate_gradPick .jGraduate_Form {\n
+\tfloat: left;\n
+\twidth: 270px;\n
+\tposition: absolute;\n
+\tleft: 284px;\n
+\twidth: 266px;\n
+\theight: 200px;\n
+\ttop: 195px;\n
+\tmargin: -3px 3px 0px 10px;\n
+\tline-height: 200%;\n
+}\n
+\n
+.jGraduate_gradPick .jGraduate_Form label,\n
+.jGraduate_gradPick .jGraduate_Form input {\n
+  width: auto;\n
+  float: left;\n
+}\n
+\n
+.jGraduate_gradPick .jGraduate_Form.jGraduate_rg_field label, .jGraduate_gradPick .jGraduate_Form.jGraduate_rg_field input {\n
+width: auto;\n
+float: left;\n
+font-size: 11px;\n
+}\n
+\n
+.jGraduate_gradPick .jGraduate_Form.jGraduate_rg_field #color_picker_jGraduate_match_ctr {\n
+  float: none;\n
+}\n
+\n
+.jGraduate_gradPick .jGraduate_Form label {\n
+  clear: left;\n
+}\n
+\n
+.jGraduate_gradPick .jGraduate_Points {\n
+\tposition: static;\n
+\tfloat: left;\n
+  margin: 0;\n
+  width: auto;\n
+\t}\n
+\n
+.jGraduate_Colorblocks {\n
+\tdisplay: table;\n
+\tborder-spacing: 0 5px;\n
+}\n
+\n
+.jGraduate_colorblock {\n
+\tdisplay: table-row;\n
+}\n
+\n
+.jGraduate_Colorblocks .jGraduate_colorblock > * {\n
+\tdisplay: table-cell;\n
+\tvertical-align: middle;\n
+\tmargin: 0;\n
+\tfloat: none;\n
+}\n
+\n
+.jGraduate_gradPick .jGraduate_Form_Section {\n
+\tpadding-top: 9px;\n
+}\n
+\n
+\n
+.jGraduate_Slider {\n
+\ttext-align: center;\n
+\tfloat: left;\n
+\twidth: 100%;\n
+  position: relative;\n
+  margin: 5px 0;\n
+}\n
+\n
+.jGraduate_Slider .jGraduate_Form_Section {\n
+\tborder: none;\n
+\twidth: 250px;\n
+\tpadding: 0 2px;\n
+\toverflow: visible;\n
+}\n
+\n
+\n
+.jGraduate_Slider label.prelabel {\n
+\twidth: 40px;\n
+\ttext-align: left;\n
+}\n
+\n
+.jGraduate_SliderBar {\n
+\twidth: 140px;\n
+\tfloat: left;\n
+\tmargin: 0 5px;\n
+\tborder:1px solid #BBB;\n
+\theight:20px;\n
+\tposition: relative;\n
+}\n
+\n
+div.jGraduate_Slider input {\n
+\tmargin-top: 5px;\n
+}\n
+\n
+div.jGraduate_Slider img {\n
+\ttop: 0;\n
+\tleft: 0;\n
+\tposition: absolute;\n
+\tcursor:ew-resize;\n
+}\n
+\n
+.jPicker .Button .Ok, .jGraduate_Picker .jGraduate_OkCancel .jGraduate_Ok  {\n
+  -webkit-appearance: none;\n
+\tmargin: 0;\n
+  position: absolute;\n
+  bottom: 5px;\n
+  right: 5px;\n
+}\n
+\n
+.jPicker .Button .Cancel, .jGraduate_Picker .jGraduate_OkCancel .jGraduate_Cancel {\n
+  margin: 0;\n
+  position: absolute;\n
+\tbottom: 5px;\n
+\tleft: 5px;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5506</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

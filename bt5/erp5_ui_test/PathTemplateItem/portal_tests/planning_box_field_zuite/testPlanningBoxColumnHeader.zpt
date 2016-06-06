@@ -1,0 +1,354 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test Planning Box Field </title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test PlanningBox Column Header<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>\n
+</thead><tbody tal:define="year python: DateTime().year();\n
+                           now python: DateTime()">\n
+<!-- Planning Box is not displayed in mobile skin\n
+     So this test is skipped -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Foo_createObjects?num:int=1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Foo_editObjectLineDates</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Modified Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//img[@alt=\'Planning\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
+</tr>\n
+<!-- Make sure that we are working with currently date -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//img[@name=\'JumpToCurrentDay\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_1"]</td>\n
+  <td tal:content="python: \'%s %02d/%02d 00:00\' % (now.Day(), now.month(), now.day())"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_2"]</td>\n
+  <td tal:content="python: \'%s %02d/%02d 03:00\' % (now.Day(), now.month(), now.day())"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_3"]</td>\n
+  <td tal:content="python: \'%s %02d/%02d 06:00\' % (now.Day(), now.month(), now.day())"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_4"]</td>\n
+  <td tal:content="python: \'%s %02d/%02d 09:00\' % (now.Day(), now.month(), now.day())"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_5"]</td>\n
+  <td tal:content="python: \'%s %02d/%02d 12:00\' % (now.Day(), now.month(), now.day())"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_6"]</td>\n
+  <td tal:content="python: \'%s %02d/%02d 15:00\' % (now.Day(), now.month(), now.day())"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_7"]</td>\n
+  <td tal:content="python: \'%s %02d/%02d 18:00\' % (now.Day(), now.month(), now.day())"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_8"]</td>\n
+  <td tal:content="python: \'%s %02d/%02d 21:00\' % (now.Day(), now.month(), now.day())"> </td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>lane_path</td>\n
+  <td>label=Year</td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_1"]</td>\n
+  <td tal:content="string:January $year"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_2"]</td>\n
+  <td tal:content="string:February $year"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_3"]</td>\n
+  <td tal:content="string:March $year"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_4"]</td>\n
+  <td tal:content="string:April $year"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_5"]</td>\n
+  <td tal:content="string:May $year"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_6"]</td>\n
+  <td tal:content="string:June $year"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_7"]</td>\n
+  <td tal:content="string:July $year"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_8"]</td>\n
+  <td tal:content="string:August $year"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_9"]</td>\n
+  <td tal:content="string:September $year"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_10"]</td>\n
+  <td tal:content="string:October $year"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_11"]</td>\n
+  <td tal:content="string:November $year"> </td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_12"]</td>\n
+  <td tal:content="string:December $year"> </td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>lane_path</td>\n
+  <td>label=Month</td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_1"]</td>\n
+  <td tal:content="string:$year/01/01"/>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_2"]</td>\n
+  <td tal:content="string:$year/01/04"/>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_3"]</td>\n
+  <td tal:content="string:$year/01/07"/>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_4"]</td>\n
+  <td tal:content="string:$year/01/10"/>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_5"]</td>\n
+  <td tal:content="string:$year/01/13"/>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_6"]</td>\n
+  <td tal:content="string:$year/01/16"/>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_7"]</td>\n
+  <td tal:content="string:$year/01/19"/>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_8"]</td>\n
+  <td tal:content="string:$year/01/22"/>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_9"]</td>\n
+  <td tal:content="string:$year/01/25"/>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_10"]</td>\n
+  <td tal:content="string:$year/01/28"/>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//div[@id="group_lane_11"]</td>\n
+  <td tal:content="string:$year/01/31"/>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>lane_path</td>\n
+  <td>label=Day</td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>Site Error</td>\n
+  <td></td>\n
+</tr>\n
+</tal:block>\n
+\n
+</tbody></table>\n
+</body>\n
+</html>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testPlanningBoxColumnHeader</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

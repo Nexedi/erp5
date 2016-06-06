@@ -1,0 +1,239 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  This script just returns what the user entered in\n
+  the fast input form, searches for the product whose\n
+  reference or title has been just entered and updates\n
+  the total price and the stock corresponding to the \n
+  product\n
+"""\n
+no_inventory = False\n
+\n
+# Check that the requested quantities does not exceed available inventory.\n
+# We only enforce this check for sales.\n
+check_stock_availability = False\n
+\n
+portal = context.getPortalObject()\n
+Base_translateString = portal.Base_translateString\n
+\n
+# Retrieve lines portal type\n
+line_portal_type_list = [x for x in context.getTypeInfo().getTypeAllowedContentTypeList() \\\n
+                         if x in portal.getPortalMovementTypeList()]\n
+line_portal_type = line_portal_type_list[0]\n
+\n
+if line_portal_type in portal.getPortalSaleTypeList():\n
+  section_uid = context.getSourceSectionUid()\n
+  supply_cell_portal_type = "Sale Supply Cell"\n
+  supply_line_id = "default_ssl"\n
+  use_list = portal.portal_preferences.getPreferredSaleUseList()\n
+  check_stock_availability = True\n
+elif line_portal_type in portal.getPortalPurchaseTypeList():\n
+  section_uid = context.getDestinationSectionUid()\n
+  supply_cell_portal_type = "Purchase Supply Cell"\n
+  supply_line_id = "default_psl"\n
+  use_list = portal.portal_preferences.getPreferredPurchaseUseList()\n
+elif line_portal_type in portal.getPortalInternalTypeList():\n
+  section_uid = None\n
+  supply_line_id = "default_isl"\n
+  supply_cell_portal_type = "Internal Supply Cell"\n
+  use_list = portal.portal_preferences.getPreferredPurchaseUseList() \\\n
+             + portal.portal_preferences.getPreferredSaleUseList()\n
+elif line_portal_type in portal.getPortalInventoryMovementTypeList():\n
+  section_uid = None\n
+  no_inventory = True\n
+  use_list = portal.portal_preferences.getPreferredPurchaseUseList() \\\n
+             + portal.portal_preferences.getPreferredSaleUseList()\n
+else:\n
+  message = \'Type of document not known to supply cell type.\'\n
+  return context.Base_redirect(\'view\', keep_items=dict(\n
+                          portal_status_message=Base_translateString(message)))\n
+\n
+request= context.REQUEST\n
+\n
+total_price = 0.0\n
+status_message_dict = {}\n
+\n
+for line in listbox:\n
+  if \'listbox_key\' in line and (line[\'title\'] not in (\'\', None)\n
+                                      or line[\'reference\'] not in (\'\', None)\n
+                                      or line.get(\'resource_relative_url\', None) not in (\'\', None)):\n
+    line_id = line[\'listbox_key\']\n
+    product = None\n
+\n
+    # Copy user input\n
+    request.form["field_listbox_reference_new_%s"%line_id] = line["reference"]\n
+    request.form["field_listbox_title_new_%s"%line_id] = line["title"]\n
+\n
+    # Retrieve the resource\n
+    resource_relative_url = line.get(\'resource_relative_url\')\n
+    if resource_relative_url:\n
+      product = portal.restrictedTraverse(resource_relative_url)\n
+    else:\n
+      use_uid_list = [portal.portal_categories.resolveCategory(use).getUid()\n
+                                              for use in use_list]\n
+      product_list = portal.portal_catalog(\n
+                                portal_type=portal.getPortalResourceTypeList(),\n
+                                title=line[\'title\'],\n
+                                default_use_uid=use_uid_list,\n
+                                reference=line[\'reference\'])\n
+      if len(product_list) != 1:\n
+        continue\n
+      else:\n
+        product = product_list[0].getObject()\n
+\n
+    # Resource part\n
+    line["resource_relative_url"] = product.getRelativeUrl() #cell.getResource()\n
+    request.set("field_listbox_resource_relative_url_new_%s"%line_id,product.getRelativeUrl())\n
+\n
+    request.form["field_listbox_quantity_unit_new_%s"%line_id] = product.getQuantityUnit()\n
+    variation_list = line[\'variation_category_list\']\n
+\n
+    # Part for fast input wich checks inventory value\n
+    if no_inventory is False:\n
+      # First defined the price\n
+      line["total_price"] = 0.0\n
+      quantity = line.get(\'quantity\')\n
+      if quantity in (None, ""):\n
+        line["quantity"] = 0.0\n
+      if line[\'price\'] in (None,""):\n
+        if variation_list:\n
+          # Retrieve the price from the cell\n
+          # if we have variation defined\n
+          try:\n
+            supply_cell_list = product[supply_line_id].contentValues(portal_type=supply_cell_portal_type)\n
+          except KeyError:\n
+            # No price defined\n
+            supply_cell_list = []\n
+          for supply_cell in supply_cell_list:\n
+            if supply_cell.getVariationCategoryList() == variation_list:\n
+              line[\'price\'] = supply_cell.getBasePrice() or 0\n
+              line["total_price"] = line[\'quantity\'] * line[\'price\']\n
+              break\n
+        else:\n
+          # Retrieve the price from the line\n
+          # if we have no variation defined\n
+          try:\n
+            supply_line = product[supply_line_id]\n
+            line[\'price\'] = supply_line.getBasePrice() or 0\n
+            line["total_price"] = line[\'quantity\'] * line[\'price\']\n
+          except KeyError:\n
+            # No price defined\n
+            pass\n
+      else:\n
+        # Use the price defined by the user\n
+        line["total_price"] = line[\'quantity\'] * line[\'price\']\n
+\n
+      request.form["field_listbox_price_new_%s"%line_id] = line[\'price\']\n
+      request.form["field_listbox_total_price_new_%s"%line_id] = line[\'total_price\']\n
+      # Update total price of fast input\n
+      total_price +=line[\'total_price\']\n
+\n
+      # Part for products\n
+      if product.getPortalType() in portal.getPortalProductTypeList():\n
+        # Inventory part\n
+        if variation_list:\n
+          available_inv = request.form["field_listbox_available_quantity_new_%s"%line_id] = product.getAvailableInventory(\n
+                                           section_uid=section_uid,\n
+                                           variation_text=variation_list)\n
+          request.form[\'field_listbox_inventory_new_%s\'%line_id] = product.getInventory(\n
+                                           section_uid=section_uid,\n
+                                           variation_text=variation_list)\n
+          request.form["field_listbox_current_quantity_new_%s"%line_id] = product.getCurrentInventory(\n
+                                           section_uid=section_uid,\n
+                                           variation_text=variation_list)\n
+        else:\n
+          available_inv = request.form["field_listbox_available_quantity_new_%s"%line_id] = product.getAvailableInventory(section_uid=section_uid)\n
+          request.form[\'field_listbox_inventory_new_%s\'%line_id] = product.getInventory(section_uid=section_uid)\n
+          request.form["field_listbox_current_quantity_new_%s"%line_id] = product.getCurrentInventory(section_uid=section_uid)\n
+\n
+        # Check if quantity is available\n
+        if check_stock_availability and available_inv < line["quantity"]:\n
+          status_message_dict.setdefault(product.getRelativeUrl(), []).append(line[\'listbox_key\'])\n
+\n
+status_message_list = []\n
+if status_message_dict:\n
+  for product_relative_url, line_id_list in status_message_dict.items():\n
+    product = portal.restrictedTraverse(product_relative_url)\n
+    mapping = {\'product_title\': product.getTitle(\'\'),\n
+               \'product_reference\': product.getReference(\'\')}\n
+    if len(line_id_list) > 1:\n
+      line_id_list.sort()\n
+      message = \'Asked quantity of "${product_title} - ${product_reference}" is not available in inventory for lines ${line_id}\'\n
+      mapping[\'line_id\'] = \', \'.join(line_id_list)\n
+    else:\n
+      message = \'Asked quantity of "${product_title} - ${product_reference}" is not available in inventory for line ${line_id}\'\n
+      mapping[\'line_id\'] = line_id_list[0]\n
+    status_message_list.append(Base_translateString(message, mapping=mapping))\n
+  request.set(\'portal_status_message\', \' -- \'.join(status_message_list))\n
+\n
+request.form["field_my_total_price"] = total_price\n
+context.Base_updateDialogForm(listbox=listbox,update=1,kw=kw)\n
+return getattr(context, request.form[\'dialog_id\'])(listbox=listbox, kw=kw)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=[], **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Delivery_updateFastInputLineList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

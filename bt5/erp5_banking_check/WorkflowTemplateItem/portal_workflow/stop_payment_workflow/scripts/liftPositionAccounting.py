@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+\n
+transaction = state_change[\'object\']\n
+\n
+date = transaction.getStartDate()\n
+source = transaction.getSource(None)\n
+if source is None:\n
+  msg = Message(domain=\'ui\', message=\'No counter defined.\')\n
+  raise ValidationFailed, (msg,)\n
+\n
+# No need to check the counter date for stop payment\n
+#if not transaction.Baobab_checkCounterDateOpen(site=source, date=date):\n
+#  msg = Message(domain = "ui", message="Counter Date is not opened")\n
+#  raise ValidationFailed, (msg,)\n
+\n
+# First we have to look if we have some checks with some prices,\n
+# if so, this means that we are saling such kinds of check, thus\n
+# we must change the position of the customer account\n
+movement_list = transaction.getMovementList()\n
+total_debit = transaction.getSourceTotalAssetPrice()\n
+for movement in movement_list:\n
+  aggregate_value_list = movement.getAggregateValueList()\n
+  for item in aggregate_value_list:\n
+    if item.getPortalType()!=\'Check\':\n
+      msg = Message(domain = "ui", message="Sorry, You should select a check")\n
+      raise ValidationFailed, (msg,)\n
+    if item.getSimulationState()!=\'stopped\':\n
+      msg = Message(domain = "ui", message="Sorry, this check is not stopped")\n
+      raise ValidationFailed, (msg,)\n
+debit_required = transaction.isDebitRequired()\n
+if debit_required:\n
+  if transaction.getSimulationState() == \'started\':\n
+    stop_date = state_change.kwargs.get(\'stop_date\')\n
+    if stop_date is None:\n
+      msg = Message(domain = "ui", message="No stop date provided")\n
+      raise ValidationFailed, (msg,)\n
+    transaction.setStopDate(stop_date)\n
+\n
+  # Source and destination will be updated automaticaly based on the category of bank account\n
+  # The default account chosen should act as some kind of *temp* account or *parent* account\n
+  movement = transaction.get(\'lift_movement\',None)\n
+  if movement is None:\n
+    movement = transaction.newContent(portal_type=\'Banking Operation Line\',\n
+                           id=\'lift_movement\',\n
+                           source=\'account_module/bank_account\', # Set default source\n
+                           destination=\'account_module/bank_account\', # Set default destination\n
+                           )\n
+  movement.setSourceCredit(total_debit)\n
+\n
+  bank_account = transaction.getDestinationPaymentValue()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>liftPositionAccounting</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

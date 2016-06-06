@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""Create a related payment transaction, using the account `node`, the payment\n
+`payment`, and setting the payment mode `payment_mode`. An optional `date` can\n
+be provided, but by default the transaction is created at the system date.\n
+"""\n
+from DateTime import DateTime\n
+# translate with Base_translateString which is a bit more robust during\n
+# activities, because it doesn\'t rely on REQUEST[\'PARENTS\']\n
+Base_translateString = context.Base_translateString\n
+\n
+if date is None:\n
+  date = DateTime()\n
+portal = context.getPortalObject()\n
+payment_dict = {}\n
+is_source = context.AccountingTransaction_isSourceView()\n
+line_portal_type = \'Accounting Transaction Line\'\n
+\n
+# update selection params, because it\'ll be used in the selection dialog.\n
+portal.portal_selections.setSelectionParamsFor(\n
+          \'accounting_create_related_payment_selection\',\n
+          params=dict(node_for_related_payment=node,\n
+                      payment_mode_for_related_payment=payment_mode,\n
+                      payment_for_related_payment=payment))\n
+\n
+\n
+# Calculate the payable/receivable quantity, using\n
+# Invoice_getRemainingTotalPayablePrice script.\n
+total_payable_price_details = \\\n
+          context.Invoice_getRemainingTotalPayablePrice(detailed=True,\n
+                                                        quantity=True)\n
+\n
+# if there\'s nothing more to pay, don\'t create an empty transaction\n
+if sum(total_payable_price_details.values()) == 0:\n
+  if not batch_mode:\n
+    return context.REQUEST.RESPONSE.redirect(\n
+      "%s/view?portal_status_message=%s" % (\n
+      context.absolute_url(), Base_translateString(\'Nothing more to pay.\')))\n
+  return None\n
+\n
+related_payment = portal.accounting_module.newContent(\n
+  portal_type="Payment Transaction",\n
+  title=str(Base_translateString("Payment of ${invoice_title}",\n
+          mapping=dict(invoice_title=unicode((context.getReference() or\n
+                                              context.getTitle() or \'\'),\n
+                                              \'utf8\', \'repr\')))),\n
+  source_section=context.getSourceSection(),\n
+  destination_section=context.getDestinationSection(),\n
+  source_project=context.getSourceProject(),\n
+  destination_project=context.getDestinationProject(),\n
+  source_function=context.getSourceFunction(),\n
+  destination_function=context.getDestinationFunction(),\n
+  stop_date=date,\n
+  start_date=date,\n
+  resource=context.getResource(),\n
+  causality_value=context,\n
+  created_by_builder=1, # XXX this prevent init script from creating lines.\n
+  payment_mode=payment_mode,\n
+)\n
+if is_source:\n
+  related_payment.edit(destination_payment=context.getDestinationPayment(),\n
+                       source_payment=payment)\n
+  section = context.getSourceSection()\n
+  mirror_section = context.getDestinationSection()\n
+else:\n
+  related_payment.edit(destination_payment=payment,\n
+              source_payment=context.getSourcePayment())\n
+  section = context.getDestinationSection()\n
+  mirror_section = context.getSourceSection()\n
+\n
+bank = related_payment.newContent(\n
+   portal_type=line_portal_type,\n
+   id=\'bank\',\n
+)\n
+bank_quantity = 0\n
+\n
+for (line_node, line_mirror_section), quantity in\\\n
+                        total_payable_price_details.items():\n
+  if line_mirror_section == mirror_section:\n
+    bank_quantity += quantity\n
+    if is_source:\n
+      line = related_payment.newContent(\n
+        portal_type=line_portal_type,\n
+        source=line_node,\n
+        quantity=quantity)\n
+    else:\n
+      line = related_payment.newContent(\n
+        portal_type=line_portal_type,\n
+        destination=line_node,\n
+        quantity=-quantity)\n
+\n
+if is_source:\n
+  bank.edit( source=node,\n
+             quantity=-bank_quantity )\n
+else:\n
+  bank.edit( destination=node,\n
+             quantity=bank_quantity )\n
+\n
+if plan:\n
+  related_payment.plan()\n
+\n
+if not batch_mode:\n
+  return context.REQUEST.RESPONSE.redirect(\n
+    "%s/view?portal_status_message=%s" % (\n
+    related_payment.absolute_url(),\n
+    Base_translateString(\'Related payment created.\')))\n
+else:\n
+  return related_payment\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>node, payment_mode, payment, date=None, plan=False, batch_mode=0, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Invoice_createRelatedPaymentTransaction</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

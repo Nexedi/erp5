@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts21358148.06</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>default_conversion_failure_image</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">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</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>90</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2098</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Default Image returned if conversion failed</string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>120</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>portal = context.getPortalObject()\n
+\n
+preference = portal.portal_preferences.getActivePreference()\n
+if preference is None\\\n
+    or preference.getPreferenceState() != \'enabled\'\\\n
+    or not portal.portal_membership.checkPermission(\n
+      \'Add portal content\', preference):\n
+  p = portal.portal_preferences.newContent(portal_type=\'Preference\')\n
+  p.setTitle(\'Document Template Container\')\n
+  p.enable()\n
+  preference = p\n
+\n
+message = context.Base_translateString("Templated created.")\n
+\n
+# if the preference already contains a template with the same name, making\n
+# another template will replace it\n
+document_title = context.getTitle()\n
+for existing_template in preference.contentValues(\n
+    portal_type=context.getPortalType()):\n
+  if existing_template.getTitle() == document_title:\n
+    preference.manage_delObjects(ids=[existing_template.getId()])\n
+    message = context.Base_translateString("Templated updated.")\n
+    break\n
+\n
+parent = context.getParentValue()\n
+document_id = context.getId()\n
+cp = parent.manage_copyObjects(ids=[document_id])\n
+paste_info, = preference.manage_pasteObjects(cb_copy_data=cp, is_indexable=False)\n
+\n
+template = getattr(preference, paste_info[\'new_id\'])\n
+template.makeTemplate()\n
+\n
+context.portal_caches.clearCacheFactory(\'erp5_ui_short\')\n
+\n
+return context.Base_redirect(form_id,\n
+                             keep_items=dict(portal_status_message=message),\n
+                             **kw)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_makeTemplateFromDocument</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

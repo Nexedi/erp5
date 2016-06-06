@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+ This script is part of ERP5 Web\n
+\n
+ ERP5 Web is a business template of ERP5 which provides a way\n
+ to create web sites which can display selected\n
+ ERP5 contents through multiple custom web layouts.\n
+\n
+ This script returns a list of document values (ie. objects or brains)\n
+ which are considered as part of this section. It can be\n
+ a list of web pages (usual case), a list of products\n
+ (online catalog), a list of tenders (e-government), etc.\n
+\n
+ The default implementation provided here consists in\n
+ listing documents which meet the predicate defined\n
+ by the section (ex. which are part of a given publication_section)\n
+ and which are in "published" state and of a "Web Page" portal_type.\n
+\n
+ It should be noted that document selection should be implemented\n
+ as much as possible using the Domain API.\n
+\n
+ This script can be changed to meet other requirements. For example\n
+ one may want to display a list of products in a section. In this case,\n
+ this script must return a list of documents of type "Product"\n
+ with a "validated" state and in the appropriate product family.\n
+\n
+ This script is intended to be overriden by creating a new script\n
+ within the Web Section or Web Site instance. It can be also\n
+ customised per portal type within portal_skins. Customisation\n
+ thourgh local scripts is recommended to host multiple sites\n
+ on the same ERP5Site instance.\n
+\n
+ The API uses **kw so that it is possible to extend the behaviour of\n
+ the default script with advanced features (ex. group by reference,\n
+ by version, only select a specific publication state, etc.).\n
+\n
+ Here are some suggestions which can either be implemented using\n
+ SQL (group_by, order_by) or using additional python scripting\n
+ if this is compatible with data size.\n
+\n
+ SUGGESTIONS:\n
+\n
+ - Prevent showing duplicate references\n
+ \n
+ - Add documents associated to this section through \'aggregate\'.\n
+\n
+ - Display only the latest version and the appropriate language.\n
+"""\n
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery\n
+from zExceptions import Unauthorized\n
+\n
+try:\n
+  portal = container.getPortalObject()\n
+  kw = portal.portal_catalog.getSQLCatalog().getCannonicalArgumentDict(kw)\n
+\n
+  # First find the Web Section or Web Site we belong to\n
+  current_section = context.getWebSectionValue()\n
+\n
+  if all_versions is None:\n
+    all_versions = context.getLayoutProperty(\'layout_all_versions\', default=False)\n
+  if all_languages is None:\n
+    all_languages = context.getLayoutProperty(\'layout_all_languages\', default=False)\n
+\n
+  # Build the list of parameters\n
+  if not language:\n
+    language = portal.Localizer.get_selected_language()\n
+\n
+  if validation_state is None:\n
+    # XXX hardcoded validation state list.\n
+    # Use predicate or layout property instead\n
+    validation_state = (\'released\', \'released_alive\', \'published\', \n
+                        \'published_alive\', \'shared\', \'shared_alive\', \n
+                        \'public\', \'validated\')\n
+  kw[\'validation_state\'] = validation_state\n
+\n
+  if \'order_by_list\' not in kw:\n
+    # XXX Do not sort by default, as it increases query time\n
+    kw[\'order_by_list\'] = [(\'int_index\', \'DESC\'), (\'reference\', \'DESC\')]\n
+\n
+  if effective_date is None:\n
+    if now is None:\n
+      now = DateTime()\n
+    effective_date = ComplexQuery(\n
+      SimpleQuery(effective_date=None),\n
+      SimpleQuery(effective_date=now, comparison_operator=\'<=\'),\n
+      logical_operator=\'or\',\n
+    )\n
+  kw[\'effective_date\'] = effective_date\n
+\n
+  if not all_versions:\n
+    group_by_list = set(kw.get(\'group_by_list\', []))\n
+    if all_languages:\n
+      kw[\'group_by_list\'] = list(group_by_list.union((\'reference\', \'language\')))\n
+    else:\n
+      kw[\'group_by_list\'] = list(group_by_list.union((\'reference\',)))\n
+\n
+    # Extend select_dict by order_by_list and group_by_list columns.\n
+    extra_column_set = {i[0] for i in kw.get(\'order_by_list\', ())}.union(\n
+      kw.get(\'group_by_list\', ()))\n
+    kw.setdefault(\'select_dict\', {}).update(\n
+      (x.replace(\'.\', \'_\') + \'__ext__\', x)\n
+      for x in extra_column_set if not x.endswith(\'__score__\'))\n
+    return current_section.WebSection_zGetDocumentValueList(language=language,\n
+                                                            all_languages=all_languages,\n
+                                                            src__=src__,\n
+                                                            kw=kw)\n
+  else:\n
+    if not all_languages:\n
+      kw[\'language\'] = language\n
+    return current_section.searchResults(src__=src__, **kw)\n
+\n
+except Unauthorized:\n
+  return []\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>language=None, validation_state=None, all_languages=None, all_versions=None, effective_date=None, now=None, src__=0, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_getDocumentValueListBase</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

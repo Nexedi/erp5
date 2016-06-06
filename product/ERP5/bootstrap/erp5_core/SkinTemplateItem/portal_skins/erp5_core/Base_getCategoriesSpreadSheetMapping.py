@@ -1,0 +1,359 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Parses a spreadsheet containing categories and returns a mapping.\n
+\n
+`import_file` must be a spreadsheet in a format supported by openoffice\n
+\n
+`invalid_spreadsheet_error_handler` is the callback method that will be called if\n
+the spreadsheet is invalid. The method must accept one parameter, an\n
+explanation of the error.\n
+The error handler can return a boolean, true meaning that the rest of the\n
+spreadsheet have to be processed, false meaning that the processing should\n
+stop.\n
+If no error_callback is given, the default action is to raise a ValueError on\n
+the first error encountered.\n
+\n
+The returned mapping has the following structure:\n
+  \n
+  { \'base_category_id\':\n
+       # list of category info\n
+       ( { \'path\': \'bc/1\',\n
+           \'id\': \'1\',\n
+           \'title\': \'Title 1\' },\n
+         { \'path\': \'bc/1/2\'\n
+           \'id\': \'2\',\n
+           \'title\': \'Title 2\' }, ), }\n
+\n
+This scripts guarantees that the list of category info is sorted in such a\n
+way that parent always precedes their children.\n
+"""\n
+from Products.ERP5Type.Message import translateString\n
+from Products.ERP5OOo.OOoUtils import OOoParser\n
+parser = OOoParser()\n
+category_list_spreadsheet_mapping = {}\n
+error_list = []\n
+\n
+def default_invalid_spreadsheet_error_handler(error_message):\n
+  raise ValueError(error_message)\n
+\n
+if invalid_spreadsheet_error_handler is None:\n
+  invalid_spreadsheet_error_handler = default_invalid_spreadsheet_error_handler\n
+\n
+property_id_set = context.portal_types.Category.getInstancePropertySet()\n
+property_id_set.update(getattr(context.portal_types, \'Base Category\').getInstancePropertySet())\n
+\n
+def getIDFromString(string=None):\n
+  """\n
+    This function transform a string to a safe and beautiful ID.\n
+    It is used here to create a safe category ID from a string.\n
+    But the code is not really clever...\n
+  """\n
+  if string is None:\n
+    return None\n
+  clean_id = \'\'\n
+  translation_map = { \'a\'  : [u\'\\xe0\', u\'\\xe3\']\n
+                    , \'e\'  : [u\'\\xe9\', u\'\\xe8\']\n
+                    , \'i\'  : [u\'\\xed\']\n
+                    , \'u\'  : [u\'\\xf9\']\n
+                    , \'_\'  : [\' \', \'+\']\n
+                    , \'-\'  : [\'-\', u\'\\u2013\']\n
+                    , \'and\': [\'&\']\n
+                    }\n
+  # Replace odd chars by safe ascii\n
+  string = string.lower()\n
+  string = string.strip()\n
+  for (safe_char, char_list) in translation_map.items():\n
+    for char in char_list:\n
+      string = string.replace(char, safe_char)\n
+  # Exclude all non alphanumeric chars\n
+  for char in string:\n
+    if char.isalnum() or char in translation_map.keys():\n
+      clean_id += char\n
+  # Delete leading and trailing char which are not alpha-numerics\n
+  # This prevent having IDs with starting underscores\n
+  while len(clean_id) > 0 and not clean_id[0].isalnum():\n
+    clean_id = clean_id[1:]\n
+  while len(clean_id) > 0 and not clean_id[-1].isalnum():\n
+    clean_id = clean_id[:-1]\n
+\n
+  return clean_id\n
+\n
+# if the file is not an open office format, try to convert it using oood\n
+# FIXME: use portal_transforms\n
+content_type = \'unknown\'\n
+if hasattr(import_file, \'headers\'):\n
+  content_type = import_file.headers.get(\'Content-Type\', \'\')\n
+if not (content_type.startswith(\'application/vnd.sun.xml\')\n
+   or content_type.startswith(\'application/vnd.oasis.opendocument\')):\n
+  from Products.ERP5Type.Document import newTempOOoDocument\n
+  tmp_ooo = newTempOOoDocument(context, "_")\n
+  tmp_ooo.edit(data=import_file.read(),\n
+               content_type=content_type)\n
+  tmp_ooo.convertToBaseFormat()\n
+  ignored, import_file_content = tmp_ooo.convert(\'ods\')\n
+  parser.openFromString(str(import_file_content))\n
+else:\n
+  parser.openFile(import_file)\n
+\n
+# Extract tables from the speadsheet file\n
+filename = parser.getFilename()\n
+spreadsheet_list = parser.getSpreadsheetsMapping(no_empty_lines=True)\n
+\n
+\n
+for table_name in spreadsheet_list.keys():\n
+  sheet = spreadsheet_list[table_name]\n
+  if not sheet:\n
+    continue\n
+  # Get the header of the table\n
+  columns_header = sheet[0]\n
+  # Get the mapping to help us know the property according a cell index\n
+  property_map = {}\n
+  column_index = 0\n
+  path_index = 0\n
+  for column in columns_header:\n
+    column_id = getIDFromString(column)\n
+    # This give us the information that the path definition has started\n
+    path_def_started = \'path_0\' in property_map.values()\n
+    # The path of the category has started to be expressed\n
+    if column_id == \'path\':\n
+      property_map[column_index] = \'path_\' + str(path_index)\n
+      path_index += 1\n
+    # The column has no header information\n
+    elif column_id in (None, \'\'):\n
+      # Are we in the middle of the path definition ?\n
+      # If the path definition has started and not ended\n
+      if path_def_started and path_index is not None:\n
+        property_map[column_index] = \'path_\' + str(path_index)\n
+        path_index += 1\n
+      # else : The path definition is not started or is finished, so ignore the column\n
+    # The column has a normal header\n
+    else:\n
+      # If there is a new column with a header and the path definition has\n
+      # started, that seems the path definition has ended\n
+      if \'path_0\' in property_map.values():\n
+        path_index == None # FIXME: useless statement, but what was the original intention ??\n
+      property_map[column_index] = column_id.encode(\'utf8\')\n
+    column_index += 1\n
+\n
+  # Construct categories data (with absolute path) from table lines\n
+  # The first category is the Base category\n
+  # 1 table = 1 base category\n
+  base_category_name = table_name\n
+  base_category_id = getIDFromString(base_category_name)\n
+  if same_type(base_category_name, u\'\'):\n
+    base_category_name = base_category_name.encode(\'utf8\')\n
+  if same_type(base_category_id, u\'\'):\n
+    base_category_id = base_category_id.encode(\'utf8\')\n
+  category_list = category_list_spreadsheet_mapping.setdefault(base_category_id, [])\n
+  category_list.append({ \'path\' : base_category_id\n
+                    , \'title\': base_category_name\n
+                    })\n
+\n
+  # This path_element_list help us to reconstruct the absolute path\n
+  path_element_list = []\n
+  line_index = 2\n
+  for line in sheet[1:]:\n
+    # Exclude empty lines\n
+    if line.count(\'\') + line.count(None) == len(line):\n
+      continue\n
+\n
+    # Prefetch line datas\n
+    line_data = {}\n
+    path_defined = []\n
+    for cell_index, cell in enumerate(line):\n
+      # Get the property corresponding to the cell data\n
+      property_id = property_map[cell_index]\n
+      if cell is not None and cell.strip()==\'\':\n
+        # empty string is NOT a valid identifier\n
+        cell=None\n
+      line_data[property_id] = cell\n
+      if cell and property_id.startswith(\'path_\'):\n
+        path_defined.append(cell)\n
+        if len(path_defined) > 1:\n
+          invalid_spreadsheet_error_handler(\n
+              translateString("More that one path is defined in ${table}"\n
+              " at line ${line}: ${path_defined}",\n
+                  mapping=dict(path_defined=repr(path_defined),\n
+                               table=table_name,\n
+                               line=line_index)))\n
+\n
+    # Analyse every cell of the line\n
+    category_property_list = {}\n
+    cell_index = 0\n
+    for (property_id, cell_data) in line_data.items():\n
+\n
+      # Try to generate a cell id from cell data\n
+      cell_id = getIDFromString(cell_data)\n
+      # Returned cell_id can be None or \'\' (empty string). Both have different meaning:\n
+      #   None : no data was input by the user.\n
+      #   \'\'   : data entered by the user, but no good transformation of the string to a safe ID.\n
+\n
+      # If the cell_id tranformation return an empty string, and if the cell is a path item,\n
+      # we should try to use other line data to get a safe id.\n
+      if cell_id == \'\' and property_id.startswith(\'path_\'):\n
+        for alt_id_source in [\'id\', \'title\']:\n
+          if line_data.has_key(alt_id_source):\n
+            cell_id = getIDFromString(line_data[alt_id_source])\n
+            if cell_id not in (\'\', None):\n
+              break\n
+\n
+      # Ignore empty cells\n
+      if cell_id not in (\'\', None):\n
+        # Handle normal properties\n
+        if not property_id.startswith(\'path_\'):\n
+          if same_type(cell_data, u\'\'):\n
+            cell_data = cell_data.encode(\'utf8\')\n
+          category_property_list[property_id] = cell_data\n
+        # Handle \'path\' property\n
+        else:\n
+          path_element_id = cell_id\n
+          # Initialize the list of path elements to the cell element\n
+          absolute_path_element_list = [path_element_id,]\n
+          # Get the depth of the current element\n
+          element_depth = int(property_id[5:]) # 5 == len(\'path_\')\n
+          # Get a path element for each depth level to reach the 0-level\n
+          for searched_depth in range(element_depth)[::-1]:\n
+            # Get the first path element that correspond to the searched depth\n
+            for element in path_element_list[::-1]:\n
+              if element[\'depth\'] == searched_depth:\n
+                # Element found, add it to the list\n
+                absolute_path_element_list.append(element[\'value\'])\n
+                # Get the next depth\n
+                break\n
+          path = \'/\'.join([base_category_id,] + absolute_path_element_list[::-1])\n
+          if same_type(path, u\'\'):\n
+            path = path.encode(\'utf8\')\n
+          category_property_list[\'path\'] = path\n
+\n
+          # Save the current raw path item value as title if no title column defined\n
+          if \'title\' not in category_property_list.keys():\n
+            clean_title = cell_data.strip()\n
+            # Only set title if it look like a title\n
+            # (i.e. its tranformation to ID is not the same as the original value)\n
+            if clean_title != cell_id:\n
+              category_property_list[\'title\'] = clean_title\n
+\n
+          # Detect invalid IDs\n
+          if path_element_id in property_id_set:\n
+            cont = invalid_spreadsheet_error_handler(\n
+                      translateString("The ID ${id} in ${table} at line ${line} is invalid, it\'s a reserved property name",\n
+                        mapping=dict(id=path_element_id, table=table_name, line=line_index)))\n
+            if not cont:\n
+              return \n
+\n
+          # Detect duplicate IDs\n
+          for element in path_element_list[::-1]:\n
+            if element[\'depth\'] != element_depth:\n
+              break\n
+            if element[\'value\'] == path_element_id:\n
+              cont = invalid_spreadsheet_error_handler(\n
+                      translateString(\n
+                      "Duplicate ID found in ${table} at line ${line} : ${id}",\n
+                        mapping=dict(id=element[\'value\'], table=table_name, line=line_index)))\n
+              if not cont:\n
+                return\n
+\n
+\n
+          # Detect wrong hierarchy\n
+          if path_element_list:\n
+            current_depth = element_depth\n
+            for element in path_element_list[::-1]:\n
+              if element[\'depth\'] > current_depth:\n
+                break # we are now on another branch\n
+              if element[\'depth\'] == current_depth:\n
+                continue # we are on the same level\n
+              elif element[\'depth\'] == (current_depth - 1):\n
+                current_depth = element[\'depth\']\n
+                continue # we are on the direct parent (current level - 1)\n
+              else:\n
+                cont = invalid_spreadsheet_error_handler(\n
+                        translateString(\n
+                           "Wrong hierarchy found for ID ${id} and depth ${depth} in ${table} at line ${line} ",\n
+                             mapping=dict(id=path_element_id,\n
+                                       depth=element_depth, table=table_name, line=line_index)))\n
+                if not cont:\n
+                  return\n
+\n
+\n
+          # Save the path element\n
+          path_element_list.append({ \'depth\': element_depth\n
+                               , \'value\': path_element_id\n
+                               })\n
+\n
+      # Proceed to next cell\n
+      cell_index += 1\n
+    line_index += 1\n
+    if len(category_property_list) > 0 and \'path\' in category_property_list.keys():\n
+      category_list.append(category_property_list)\n
+if error_list:\n
+  return {\'error_list\':error_list}\n
+else:\n
+  return category_list_spreadsheet_mapping\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>import_file, invalid_spreadsheet_error_handler=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getCategoriesSpreadSheetMapping</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

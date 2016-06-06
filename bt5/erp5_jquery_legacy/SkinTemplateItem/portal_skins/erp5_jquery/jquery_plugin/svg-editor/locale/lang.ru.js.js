@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts80003300.56</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>lang.ru.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>[\n
+{"id": "align_relative_to", "title": "Выровнять по отношению к ..."},\n
+{"id": "bkgnd_color", "title": "Изменить цвет фона или прозрачность"},\n
+{"id": "circle_cx", "title": "Изменить горизонтальный координат (CX) окружности"},\n
+{"id": "circle_cy", "title": "Изменить вертикальный координат (CY) окружности"},\n
+{"id": "circle_r", "title": "Изменить радиус окружности"},\n
+{"id": "connector_no_arrow", "textContent": "No arrow"},\n
+{"id": "copyrightLabel", "textContent": "Powered by"},\n
+{"id": "cornerRadiusLabel", "title": "Изменить радиус скругления углов прямоугольника"},\n
+{"id": "cornerRadiusLabel", "title": "Радиус закругленности угла"},\n
+{"id": "curve_segments", "textContent": "Сплайн"},\n
+{"id": "ellipse_cx", "title": "Изменить горизонтальный координат (CX) эллипса"},\n
+{"id": "ellipse_cy", "title": "Изменить вертикальный координат (CY) эллипса"},\n
+{"id": "ellipse_rx", "title": "Изменить горизонтальный радиус эллипса"},\n
+{"id": "ellipse_ry", "title": "Изменить вертикальный радиус эллипса"},\n
+{"id": "fill_color", "title": "Изменить цвет заливки"},\n
+{"id": "fitToContent", "textContent": "Под размер содержимого"},\n
+{"id": "fit_to_all", "textContent": "Под размер всех слоев"},\n
+{"id": "fit_to_canvas", "textContent": "Под размер холста"},\n
+{"id": "fit_to_layer_content", "textContent": "Под размер содержания слоя"},\n
+{"id": "fit_to_sel", "textContent": "Под размер выделенного"},\n
+{"id": "font_family", "title": "Изменить семейство шрифтов"},\n
+{"id": "icon_large", "textContent": "Большие"},\n
+{"id": "icon_medium", "textContent": "Средние"},\n
+{"id": "icon_small", "textContent": "Малые"},\n
+{"id": "icon_xlarge", "textContent": "Огромные"},\n
+{"id": "image_height", "title": "Изменить высоту изображения"},\n
+{"id": "image_opt_embed", "textContent": "Локальные файлы"},\n
+{"id": "image_opt_ref", "textContent": "По ссылкам"},\n
+{"id": "image_url", "title": "Изменить URL"},\n
+{"id": "image_width", "title": "Изменить ширину изображения"},\n
+{"id": "includedImages", "textContent": "Встроенные изображения"},\n
+{"id": "largest_object", "textContent": "Наибольший объект"},\n
+{"id": "layer_delete", "title": "Удалить слой"},\n
+{"id": "layer_down", "title": "Опустить слой"},\n
+{"id": "layer_new", "title": "Создать слой"},\n
+{"id": "layer_rename", "title": "Переименовать Слой"},\n
+{"id": "layer_up", "title": "Поднять слой"},\n
+{"id": "layersLabel", "textContent": "Слои:"},\n
+{"id": "line_x1", "title": "Изменить горизонтальный координат X начальной точки линии"},\n
+{"id": "line_x2", "title": "Изменить горизонтальный координат X конечной точки линии"},\n
+{"id": "line_y1", "title": "Изменить вертикальный координат Y начальной точки линии"},\n
+{"id": "line_y2", "title": "Изменить вертикальный координат Y конечной точки линии"},\n
+{"id": "linecap_butt", "title": "Linecap: Butt"},\n
+{"id": "linecap_round", "title": "Linecap: Round"},\n
+{"id": "linecap_square", "title": "Linecap: Square"},\n
+{"id": "linejoin_bevel", "title": "Linejoin: Bevel"},\n
+{"id": "linejoin_miter", "title": "Linejoin: Miter"},\n
+{"id": "linejoin_round", "title": "Linejoin: Round"},\n
+{"id": "main_icon", "title": "Main Menu"},\n
+{"id": "mode_connect", "title": "Connect two objects"},\n
+{"id": "page", "textContent": "страница"},\n
+{"id": "palette", "title": "Нажмите для изменения цвета заливки, Shift-Click изменить цвета обводки"},\n
+{"id": "path_node_x", "title": "Изменить горизонтальную координату узла"},\n
+{"id": "path_node_y", "title": "Изменить вертикальную координату узла"},\n
+{"id": "rect_height_tool", "title": "Изменениe высоту прямоугольника"},\n
+{"id": "rect_width_tool", "title": "Измененить ширину прямоугольника"},\n
+{"id": "relativeToLabel", "textContent": "По отношению к "},\n
+{"id": "seg_type", "title": "Изменить вид"},\n
+{"id": "selLayerLabel", "textContent": "Переместить выделенные элементы:"},\n
+{"id": "selLayerNames", "title": "Переместить выделенные элементы на другой слой"},\n
+{"id": "selectedPredefined", "textContent": "Выбирать предопределенный размер"},\n
+{"id": "selected_objects", "textContent": "Выделенные объекты"},\n
+{"id": "selected_x", "title": "Изменить горизонтальный координат"},\n
+{"id": "selected_y", "title": "Изменить вертикальный координат"},\n
+{"id": "smallest_object", "textContent": "Самый маленький объект"},\n
+{"id": "straight_segments", "textContent": "Отрезок"},\n
+{"id": "stroke_color", "title": "Изменить цвет обводки"},\n
+{"id": "stroke_style", "title": "Изменить стиль обводки"},\n
+{"id": "stroke_width", "title": "Изменить толщину обводки"},\n
+{"id": "svginfo_bg_note", "textContent": "(Фон не сохранится вместе с изображением.)"},\n
+{"id": "svginfo_change_background", "textContent": "Фон"},\n
+{"id": "svginfo_dim", "textContent": "Размеры холста"},\n
+{"id": "svginfo_editor_prefs", "textContent": "Параметры"},\n
+{"id": "svginfo_height", "textContent": "Высота:"},\n
+{"id": "svginfo_icons", "textContent": "Размер значков"},\n
+{"id": "svginfo_image_props", "textContent": "Свойства изображения"},\n
+{"id": "svginfo_lang", "textContent": "Язык"},\n
+{"id": "svginfo_title", "textContent": "Название"},\n
+{"id": "svginfo_width", "textContent": "Ширина:"},\n
+{"id": "text", "title": "Изменить содержание текста"},\n
+{"id": "toggle_stroke_tools", "title": "Show/hide more stroke tools"},\n
+{"id": "tool_add_subpath", "title": "Add sub-path"},\n
+{"id": "tool_alignbottom", "title": "Выровнять по нижнему краю"},\n
+{"id": "tool_aligncenter", "title": "Центрировать по вертикальной оси"},\n
+{"id": "tool_alignleft", "title": "По левому краю"},\n
+{"id": "tool_alignmiddle", "title": "Центрировать по горизонтальной оси"},\n
+{"id": "tool_alignright", "title": "По правому краю"},\n
+{"id": "tool_aligntop", "title": "Выровнять по верхнему краю"},\n
+{"id": "tool_angle", "title": "Изменить угол поворота"},\n
+{"id": "tool_blur", "title": "Change gaussian blur value"},\n
+{"id": "tool_bold", "title": "Жирный"},\n
+{"id": "tool_circle", "title": "Окружность"},\n
+{"id": "tool_clear", "textContent": "Создать изображение"},\n
+{"id": "tool_clone", "title": "Создать копию элемента"},\n
+{"id": "tool_clone_multi", "title": "Создать копию элементов"},\n
+{"id": "tool_delete", "title": "Удалить элемент"},\n
+{"id": "tool_delete_multi", "title": "Удалить выбранные элементы"},\n
+{"id": "tool_docprops", "textContent": "Свойства документа"},\n
+{"id": "tool_docprops_cancel", "textContent": "Отменить"},\n
+{"id": "tool_docprops_save", "textContent": "Сохранить"},\n
+{"id": "tool_ellipse", "title": "Эллипс"},\n
+{"id": "tool_export", "textContent": "Export as PNG"},\n
+{"id": "tool_eyedropper", "title": "Eye Dropper Tool"},\n
+{"id": "tool_fhellipse", "title": "Эллипс от руки"},\n
+{"id": "tool_fhpath", "title": "Карандаш"},\n
+{"id": "tool_fhrect", "title": "Прямоугольник от руки"},\n
+{"id": "tool_font_size", "title": "Изменить размер шрифта"},\n
+{"id": "tool_group", "title": "Создать группу элементов"},\n
+{"id": "tool_image", "title": "Изображение"},\n
+{"id": "tool_import", "textContent": "Import SVG"},\n
+{"id": "tool_italic", "title": "Курсив"},\n
+{"id": "tool_line", "title": "Линия"},\n
+{"id": "tool_move_bottom", "title": "Опустить"},\n
+{"id": "tool_move_top", "title": "Поднять"},\n
+{"id": "tool_node_clone", "title": "Создать копию узла"},\n
+{"id": "tool_node_delete", "title": "Удалить узел"},\n
+{"id": "tool_node_link", "title": "Связать узлы"},\n
+{"id": "tool_opacity", "title": "Изменить непрозрачность элемента"},\n
+{"id": "tool_open", "textContent": "Открыть изображение"},\n
+{"id": "tool_path", "title": "Контуры"},\n
+{"id": "tool_rect", "title": "Прямоугольник"},\n
+{"id": "tool_redo", "title": "Вернуть"},\n
+{"id": "tool_reorient", "title": "Изменить ориентацию контура"},\n
+{"id": "tool_save", "textContent": "Сохранить изображение"},\n
+{"id": "tool_select", "title": "Выделить"},\n
+{"id": "tool_source", "title": "Редактировать исходный код"},\n
+{"id": "tool_source_cancel", "textContent": "Отменить"},\n
+{"id": "tool_source_save", "textContent": "Сохранить"},\n
+{"id": "tool_square", "title": "Квадрат"},\n
+{"id": "tool_text", "title": "Текст"},\n
+{"id": "tool_topath", "title": "В контур"},\n
+{"id": "tool_undo", "title": "Отменить"},\n
+{"id": "tool_ungroup", "title": "Разгруппировать элементы"},\n
+{"id": "tool_wireframe", "title": "Каркас"},\n
+{"id": "tool_zoom", "title": "Лупа"},\n
+{"id": "tools_ellipse_show", "title": "Эллипс / окружность"},\n
+{"id": "tools_rect_show", "title": "Прямоугольник / квадрат"},\n
+{"id": "url_notice", "title": "NOTE: This image cannot be embedded. It will depend on this path to be displayed"},\n
+{"id": "zoom_panel", "title": "Изменить масштаб"},\n
+{"id": "sidepanel_handle", "textContent": "С л о и", "title": "Перетащить налево или направо"},\n
+{\n
+ "js_strings": {\n
+  "QerrorsRevertToSource": "Была проблема при парсинге вашего SVG исходного кода.\\nЗаменить его предыдущим SVG кодом?", \n
+  "QignoreSourceChanges": "Забыть без сохранения?", \n
+  "QmoveElemsToLayer": "Переместить выделенные элементы на слой \'%s\'?", \n
+  "QwantToClear": "Вы хотите очистить?\\nИстория действий будет забыта!", \n
+  "cancel": "Отменить", \n
+  "defsFailOnSave": "NOTE: Due to a bug in your browser, this image may appear wrong (missing gradients or elements). It will however appear correct once actually saved.", \n
+  "dupeLayerName": "Слой с этим именем уже существует.", \n
+  "enterNewImgURL": "Введите новый URL изображения", \n
+  "enterNewLayerName": "Пожалуйста, введите новое имя.", \n
+  "enterUniqueLayerName": "Пожалуйста, введите имя для слоя.", \n
+  "exportNoBlur": "Blurred elements will appear as un-blurred", \n
+  "exportNoDashArray": "Strokes will appear filled", \n
+  "exportNoImage": "Image elements will not appear", \n
+  "exportNoText": "Text may not appear as expected", \n
+  "exportNoforeignObject": "foreignObject elements will not appear", \n
+  "featNotSupported": "Возможность не реализована", \n
+  "invalidAttrValGiven": "Некорректное значение аргумента", \n
+  "key_backspace": "Backspace", \n
+  "key_del": "Delete", \n
+  "key_down": "Вниз", \n
+  "key_up": "Вверх", \n
+  "layer": "Слой", \n
+  "layerHasThatName": "Слой уже называется этим именем.", \n
+  "loadingImage": "Loading image, please wait...", \n
+  "noContentToFitTo": "Нет содержания, по которому выровнять.", \n
+  "noteTheseIssues": "Also note the following issues: ", \n
+  "ok": "OK", \n
+  "pathCtrlPtTooltip": "Перетащите для изменения свойвст кривой", \n
+  "pathNodeTooltip": "Потащите узел. Чтобы изменить вид отрезка, сделайте двойной щелчок.", \n
+  "saveFromBrowser": "Select \\"Save As...\\" in your browser to save this image as a %s file."\n
+ }\n
+}\n
+]</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12995</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314532.6</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>thumbnails.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//\n
+// Thumbnails\n
+// --------------------------------------------------\n
+\n
+\n
+// Mixin and adjust the regular image class\n
+.thumbnail {\n
+  display: block;\n
+  padding: @thumbnail-padding;\n
+  margin-bottom: @line-height-computed;\n
+  line-height: @line-height-base;\n
+  background-color: @thumbnail-bg;\n
+  border: 1px solid @thumbnail-border;\n
+  border-radius: @thumbnail-border-radius;\n
+  .transition(all .2s ease-in-out);\n
+\n
+  > img,\n
+  a > img {\n
+    .img-responsive();\n
+    margin-left: auto;\n
+    margin-right: auto;\n
+  }\n
+\n
+  // Add a hover state for linked versions only\n
+  a&:hover,\n
+  a&:focus,\n
+  a&.active {\n
+    border-color: @link-color;\n
+  }\n
+\n
+  // Image captions\n
+  .caption {\n
+    padding: @thumbnail-caption-padding;\n
+    color: @thumbnail-caption-color;\n
+  }\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>742</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

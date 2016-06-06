@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html>\n
+<head><title>Sorting in Grouping Dialog</title></head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="4">\n
+Sorting in Grouping Dialog\n
+</td></tr>\n
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0&add_related_payments:int=1">\n
+\n
+<!-- Setup {{{ -->\n
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounts</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- {{{ Select Receivable account and use grouping fast input -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Receivable</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//img[@alt=\'Grouping Reference Fast Input\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4 records</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <!-- debit -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[3]/input</td>  \n
+  <td>2200</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@class="listbox-select-action"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1 records</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <!-- reset debit -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[3]/input</td>  \n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <!-- credit -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[4]/input</td>  \n
+  <td>2200</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@class="listbox-select-action"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1 records</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <!-- reset credit -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[4]/input</td>  \n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <!-- explanation reference. As this is generated, we just use % -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[5]/input</td>  \n
+  <td>%</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@class="listbox-select-action"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>2 records</td> <!-- in our test data set, only invoices have reference, not payments -->\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <!-- reset explanation reference -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[5]/input</td>  \n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <!-- date -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[6]/input</td>  \n
+  <td>2005/01/02</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@class="listbox-select-action"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>2 records</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <!-- reset date -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[6]/input</td>  \n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <!-- title -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[7]/input</td>  \n
+  <td>Client 1 Payment</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@class="listbox-select-action"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1 records</td>\n
+</tr>\n
+\n
+\n
+</tbody></table>\n
+</body>\n
+</html> <!-- vim: syntax=html foldmethod=marker\n
+-->
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_group_dialog_searching.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

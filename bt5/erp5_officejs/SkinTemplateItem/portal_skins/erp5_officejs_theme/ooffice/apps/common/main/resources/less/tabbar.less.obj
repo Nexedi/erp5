@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308811.48</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tabbar.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+.nav-tabs {\r\n
+    white-space: nowrap;\r\n
+    overflow: hidden;\r\n
+\r\n
+    > li {\r\n
+        float: none;\r\n
+        display: inline;\r\n
+\r\n
+        &.active {\r\n
+            > a, > a:hover, > a:focus {\r\n
+                background-color: #fff;\r\n
+                color: #000;\r\n
+                border-color: #fff;\r\n
+                cursor: pointer;\r\n
+            }\r\n
+        }\r\n
+\r\n
+        > a {\r\n
+            display: inline;\r\n
+            background-color: #7a7a7a;\r\n
+            color: #fff;\r\n
+\r\n
+            padding-top: 0;\r\n
+            padding-bottom: 0;\r\n
+            white-space: pre-wrap;\r\n
+\r\n
+            &:hover, &:focus {\r\n
+                background-color: #7a7a7a;\r\n
+                border-color: #7a7a7a;\r\n
+                cursor: pointer;\r\n
+            }\r\n
+        }\r\n
+    }\r\n
+\r\n
+    &.bottom {\r\n
+        border-bottom: none;\r\n
+        border-top: none;\r\n
+\r\n
+        > li {\r\n
+            vertical-align: middle;\r\n
+\r\n
+            > a {\r\n
+                padding-bottom: 1px;\r\n
+                border-radius: 0 0 4px 4px;\r\n
+            }\r\n
+        }\r\n
+    }\r\n
+}\r\n
+\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1024</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

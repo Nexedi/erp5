@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+ This script allows to create a new Discussion Post in context.\n
+"""\n
+from DateTime import DateTime\n
+\n
+portal = context.getPortalObject()\n
+person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+\n
+discussion_thread = context\n
+is_temp_object = discussion_thread.isTempObject()\n
+\n
+if is_temp_object:\n
+  # this is a temporary object accessed by its reference\n
+  # we need to get real ZODB one\n
+  discussion_thread = getattr(discussion_thread.original_container, discussion_thread.original_id)\n
+\n
+discussion_post = discussion_thread.newContent(\n
+                    portal_type = "Discussion Post",\n
+                    title = title,\n
+                    text_content = text_content,\n
+                    source_value = person,\n
+                    predecessor_value = predecessor,\n
+                    version = \'001\',\n
+                    language = portal.Localizer.get_selected_language(),\n
+                    text_format = \'text/html\')\n
+\n
+# handle attachments\n
+if getattr(file, \'filename\', \'\') != \'\':\n
+  document_kw = {\'batch_mode\': True,\n
+                 \'redirect_to_document\': False,\n
+                 \'file\': file}\n
+  document = context.Base_contribute(**document_kw)\n
+\n
+  # set relation between post and document\n
+  discussion_post.setSuccessorValueList([document])\n
+\n
+  # depending on security model this should be changed accordingly\n
+  document.publish()\n
+\n
+# depending on security model Post can be submitted for review\n
+portal_status_message = context.Base_translateString("New post created.")\n
+\n
+# a parent thread is actually just a logical container so it\'s modified\n
+# whenever a new post is done\n
+discussion_thread.edit(modification_date = DateTime())\n
+\n
+# pass current post\'s relative url in request so next view\n
+# is able to show it without waiting for indexation\n
+post_relative_url = discussion_post.getRelativeUrl()\n
+\n
+if not is_temp_object:\n
+  return discussion_thread.Base_redirect(form_id,\n
+           keep_items = dict(portal_status_message=portal_status_message,\n
+                             post_relative_url = post_relative_url))\n
+else:\n
+  # redirect using again reference\n
+  redirect_url = \'%s?portal_status_message=%s&post_relative_url=%s\' \\\n
+    %(context.REQUEST[\'URL1\'],portal_status_message,post_relative_url)\n
+  context.REQUEST.RESPONSE.redirect(redirect_url)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>title, text_content, form_id=\'view\', predecessor=None, file=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>DiscussionThread_createNewDiscussionPost</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

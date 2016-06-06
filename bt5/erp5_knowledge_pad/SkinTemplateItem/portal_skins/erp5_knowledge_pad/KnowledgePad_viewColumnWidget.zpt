@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block tal:define="layout python: options[\'section_layout\'];\n
+                       real_context python: options.get(\'real_context\', None);\n
+                       cancel_url python: options.get(\'cancel_url\', None);\n
+                       is_anonymous_user python: here.portal_membership.isAnonymousUser();\n
+                       dummy python: request.set(\'is_gadget_mode\', \'1\');\n
+                       current_web_section python: context.REQUEST.get(\'current_web_section\', here);\n
+                       current_web_section python: test(current_web_section.getPortalType()==\'Web Site\', real_context, current_web_section);\n
+                       current_web_section python: test(real_context.getPortalType() in (\'ERP5 Site\', \'Web Site\',), real_context, current_web_section); \n
+                       context_url current_web_section/absolute_url;\n
+                       is_knowledge_pad_template_used python: request.get(\'is_knowledge_pad_template_used\', 0);\n
+                       is_anonymous_knowledge_pad_used python: request.get(\'is_anonymous_knowledge_pad_used\', 0);\n
+                       visibility_css_dict python: {\'visible\': \'block\',\n
+                                                   \'invisible\': \'none\'};">\n
+\n
+<tal:block tal:repeat="box_id layout">\n
+  <tal:block \n
+        tal:condition="python: getattr(here, box_id, None) is not None"\n
+        tal:define="box python: getattr(here, box_id);\n
+                    box_relative_url box/getRelativeUrl;\n
+                    box_dom_id python: \'%s\' %box_relative_url.replace(\'/\', \'_\');\n
+                    box_class python: (\'%s %s\' % (\'block\', box.getGroup() or \'\')).strip;\n
+                    view_form_dom_id python: \'%s_content\' %box_dom_id;\n
+                    edit_form_dom_id python: \'%s_edit_form\' %box_dom_id;\n
+                    gadget_title_dom_id python: \'%s_gadget_title\' %box_dom_id;\n
+                    gadget python: box.getSpecialiseValue();\n
+                    gadget_state python: gadget.getValidationState();\n
+                    dummy python: request.set(\'box_relative_url\', box_relative_url);\n
+                    dummy python: request.form.update(dict(box_relative_url=box_relative_url));\n
+                    edit_form_id gadget/getEditFormId;\n
+                    view_form_id python: test(box.getViewFormId() is not None , box.getViewFormId(), gadget.getViewFormId());\n
+                    render_type python: test(box.getRenderType() is not None, box.getRenderType(), gadget.getRenderType());\n
+                    is_asynchronous_gadget python: render_type == \'asynchronous\';\n
+                    is_gadget_visible python: gadget is not None and gadget_state!=\'invisible\';">\n
+\n
+    <!-- Render gadget as hidden one -->\n
+    <div tal:condition="not: is_gadget_visible"\n
+         tal:attributes="id box_dom_id;\n
+                         class box_class"\n
+         class="block invisible-gadget"></div>\n
+\n
+    <!-- Show only public gadgets -->\n
+    <div class="block" \n
+         tal:condition="is_gadget_visible"\n
+         tal:attributes="id box_dom_id;\n
+                         class box_class">\n
+\n
+      <h3 class="handle">\n
+        <span class="handle">\n
+        <tal:block tal:condition="python: not (is_anonymous_user or is_anonymous_knowledge_pad_used)">\n
+          <a class="clickable-block block-remove" \n
+             i18n:translate="" \n
+             i18n:domain="ui"\n
+             i18n:attributes="title" \n
+             title="Remove"></a>\n
+          <a class="clickable-block block-edit-form"\n
+             tal:condition="python: edit_form_id is not None"\n
+             i18n:translate="" \n
+             i18n:domain="ui"\n
+             i18n:attributes="title" \n
+             title="Edit"></a>\n
+          <a class="clickable-block block-minimize"\n
+             i18n:translate="" \n
+             i18n:domain="ui"\n
+             i18n:attributes="title" \n
+             title="Minimize"></a>\n
+        </tal:block>\n
+        <span class="gadget_title" \n
+              tal:content="python: here.Base_translateString(box.getProperty(\'preferred_header_title\', None) or gadget.getTitle())"\n
+              tal:attributes="id gadget_title_dom_id"/>\n
+        </span>\n
+      </h3>\n
+\n
+        <div class="minimize_wrapper"\n
+             tal:attributes="style python: \'display: %s\' %visibility_css_dict.get(box.getValidationState(), \'block\')">\n
+\n
+          <!-- Edit form -->\n
+          <div class="edit-form" \n
+               tal:condition="python: not is_anonymous_user and edit_form_id is not None and box is not None and\n
+                                      not is_anonymous_knowledge_pad_used and not is_knowledge_pad_template_used"\n
+               tal:attributes="id edit_form_dom_id"\n
+               style="display: none;">\n
+\n
+            <tal:block tal:define="edit_form_object python: getattr(box, edit_form_id, None);">\n
+\n
+              <tal:block tal:condition="python: edit_form_object is None">\n
+                <span i18n:translate="" \n
+                      i18n:domain="ui">Server side error.</span>\n
+              </tal:block>\n
+\n
+              <tal:block tal:condition="python: edit_form_object is not None"\n
+                         tal:define="form_fields_main_prefix python: \'gadget_preference_%s_field\' %box_dom_id;">\n
+\n
+                <!-- render edit gadget preferences form -->\n
+                <div class="edit-form-content"\n
+                     tal:content="structure python: edit_form_object(key_prefix=form_fields_main_prefix)"/>\n
+\n
+                <tal:block tal:condition="not: is_asynchronous_gadget">\n
+\n
+                  <input type="hidden" \n
+                         name="cancel_url" \n
+                         tal:attributes="value cancel_url;\n
+                                         name string: \'${form_fields_main_prefix}_cancel_url\'"/>\n
+\n
+                  <button type="submit"\n
+                          i18n:translate="" \n
+                          i18n:domain="ui"\n
+                          tal:attributes="onclick string:submitSynchronousGadgetPreferenceForm(\n
+                                                           \'${form_fields_main_prefix}\',\n
+                                                           \'${box_relative_url}\',\n
+                                                           \'${edit_form_id}\');\n
+                                          id string: submit_button_${box_dom_id};">Save</button>\n
+\n
+                </tal:block>\n
+\n
+                <tal:block tal:condition="is_asynchronous_gadget">\n
+\n
+                  <button type="button" \n
+                          i18n:translate="" \n
+                          i18n:domain="ui"\n
+                          tal:attributes="onclick string:submitAsynchronousGadgetPreferenceForm(\n
+                                   \'${edit_form_dom_id}\', \n
+                                   \'${view_form_id}\', \n
+                                   \'${box_relative_url}\', \n
+                                   \'${view_form_dom_id}\', \n
+                                   \'${form_fields_main_prefix}\',\n
+                                   \'${edit_form_id}\');\n
+                                 id string:submit_button_${box_dom_id};">Save</button>\n
+\n
+\n
+                </tal:block>\n
+              </tal:block>\n
+            </tal:block>\n
+          </div>\n
+  \n
+          <!-- Content render (view form) -->\n
+          <tal:block \n
+                tal:define="exists_view_form python: view_form_id is not None and \n
+                                  getattr(real_context, view_form_id, None) is not None">\n
+\n
+            <div class="content"\n
+                 tal:condition="not: exists_view_form">\n
+              <div class="box_inner_content">\n
+                <span i18n:translate="" \n
+                      i18n:domain="ui">Server side error.</span>\n
+              </div>\n
+            </div>\n
+\n
+            <tal:block tal:condition="exists_view_form">\n
+              <div class="content"\n
+                   tal:define="view_form_object python: getattr(real_context, view_form_id);">\n
+\n
+                <!-- Synchronous Gadget -->\n
+                <div tal:condition="not: is_asynchronous_gadget"\n
+                     tal:attributes="id view_form_dom_id"\n
+                     class="box_inner_content" \n
+                     tal:content="structure python: view_form_object(box=box)"/>\n
+ \n
+                <!-- Asynchronous Gadget -->\n
+                <tal:block tal:condition="is_asynchronous_gadget">\n
+                  <div tal:attributes="id view_form_dom_id" \n
+                       class="box_inner_content"\n
+                       i18n:translate="" \n
+                       i18n:domain="ui">Loading ...</div>\n
+                    <script type="text/javascript"\n
+                            tal:content="structure python:\n
+                                  here.KnowledgePad_generateAjaxCall(\'%s/%s\' %(context_url, view_form_id),\n
+                                                                   box,\n
+                                                                   view_form_dom_id)"/>\n
+                </tal:block>\n
+              </div>\n
+\n
+            </tal:block>\n
+          </tal:block>\n
+        </div>  \n
+  </div>\n
+  </tal:block>\n
+</tal:block>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>KnowledgePad_viewColumnWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode>Render boxes for a column</unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

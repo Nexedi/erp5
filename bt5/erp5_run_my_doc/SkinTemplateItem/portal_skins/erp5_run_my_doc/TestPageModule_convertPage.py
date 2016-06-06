@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+XXX (rafael) I believe KM has a much better way to do this, \n
+ clone web page, maybe using Base_createCloneDocument from erp5_base\n
+"""\n
+\n
+conv_obj_module = context.getDefaultModule(conv_obj_type)\n
+counter = 0\n
+for uid in uids:\n
+  counter += 1\n
+  obj = context.portal_catalog.getResultValue(uid=uid)\n
+  conv_obj = conv_obj_module.newContent(portal_type = conv_obj_type,\n
+                                        title = obj.getTitle(),\n
+                                        short_title = obj.getShortTitle(),\n
+                                        reference = obj.getReference(),\n
+                                        int_index = obj.getIntIndex(),\n
+                                        version = obj.getVersion(),\n
+                                        language = obj.getLanguage(),\n
+                                        effective_date = obj.getEffectiveDate(),\n
+                                        description = obj.getDescription(),\n
+                                        publication_section_list = obj.getPublicationSectionList(),\n
+                                        text_content = obj.getTextContent(),\n
+                                        format = obj.getFormat(),\n
+                                        contributor_list = obj.getContributorList())\n
+\n
+  conv_obj = conv_obj.manage_pasteObjects(\n
+                         obj.manage_copyObjects(\n
+                            map(lambda x: x.getId(), obj.objectValues())))\n
+\n
+return conv_obj_module.Base_redirect(\'\', \n
+        dict(portal_status_message=context.Base_translateString(str(counter) + " object(s) converted.")))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>uids, conv_obj_type, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TestPageModule_convertPage</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

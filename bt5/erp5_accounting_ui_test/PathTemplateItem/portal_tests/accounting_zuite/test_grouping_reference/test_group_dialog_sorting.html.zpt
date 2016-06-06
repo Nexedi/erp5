@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html>\n
+<head><title>Sorting in Grouping Dialog</title></head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="4">\n
+Sorting in Grouping Dialog\n
+</td></tr>\n
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0&add_related_payments:int=1">\n
+\n
+<!-- Setup {{{ -->\n
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounts</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- {{{ Select Receivable account and use grouping fast input -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Receivable</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//img[@alt=\'Grouping Reference Fast Input\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4 records</td>\n
+</tr>\n
+\n
+<!-- Sort by date asc {{{ -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[6]/button[@value="listbox.date:asc"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[7]/a</td>\n
+  <td>Client 1 Sale Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[7]/a</td>\n
+  <td>Client 1 Payment</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[7]/a</td>\n
+  <td>Client 2 Sale Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[7]/a</td>\n
+  <td>Client 2 Payment</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Sort by date desc {{{ -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[6]/button[@value="listbox.date:desc"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[7]/a</td>\n
+  <td>Client 1 Sale Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[7]/a</td>\n
+  <td>Client 1 Payment</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[7]/a</td>\n
+  <td>Client 2 Sale Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[7]/a</td>\n
+  <td>Client 2 Payment</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Sort by grouping reference asc {{{ -->\n
+<tr>\n
+  <!-- XXX-Tatuya: For what purpose of this sort? -->\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[2]/button[@value="listbox.grouping_reference:asc"]</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+\n
+<!-- Sort by Account Name asc {{{ -->\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[2]/button[@value="listbox.grouping_reference:none"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset grouping reference sorting -->\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[2]/button[@value="listbox.grouping_reference:none"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[9]/button[@value="listbox.node_title:asc"]</td>\n
+  <td></td>\n
+</tr>\n
+<!-- all lines have the same account here. -->\n
+<!-- }}} -->\n
+\n
+<!-- Sort by third party title asc {{{ -->\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[9]/button[@value="listbox.node_title:none"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset Account Name sorting -->\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[9]/button[@value="listbox.node_title:none"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[10]/button[@value="listbox.Movement_getMirrorSectionTitle:asc"]</td>\n
+  <td></td>\n
+</tr>\n
+<!-- this is not really sorting by title, but by uid just to make sure lines\n
+for the same party are grouped together.\n
+-->\n
+<!-- }}} -->\n
+\n
+</tbody></table>\n
+</body>\n
+</html> <!-- vim: syntax=html foldmethod=marker\n
+-->
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_group_dialog_sorting.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

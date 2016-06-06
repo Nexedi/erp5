@@ -1,0 +1,601 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Style" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_manifest.css</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>gadget_manifest_css</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Style</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* =========================================================================*/\n
+/* ======================== Custom Overwrites ============================= */\n
+/* =========================================================================*/\n
+/* force padding-top on div.ui-page */\n
+html body div.ui-page {\n
+  padding-top: 0 !important;\n
+}\n
+/* initializing page */\n
+html body .custom-init .ui-header {\n
+  position: absolute;\n
+  z-index: 100;\n
+  width: 100%;\n
+  background-color: transparent;\n
+}\n
+html body .custom-init .ui-content {\n
+  padding-top: 1em;\n
+}\n
+html body .custom-init .ui-header-fixed {\n
+  left: 0;\n
+\tright: 0;\n
+\twidth: 100%;\n
+\tposition: fixed;\n
+\tz-index: 1000;\n
+}\n
+html body .custom-view .ui-header-fixed {\n
+  position: absolute;\n
+}\n
+html body .custom-init .ui-header .ui-subheader {\n
+  display: none;\n
+}\n
+/* background dimensions */\n
+.custom-background {\n
+  height: 400px;\n
+  height: 30vh;\n
+  padding: 15% 0;\n
+}\n
+html body section.custom-landing-page {\n
+  height: 600px;\n
+  height: 75vh;\n
+  border: 0;\n
+  position: relative;\n
+  border-radius: 0;\n
+  max-width: none;\n
+  margin: -16px -16px 0;\n
+  -webkit-box-shadow: 0 1px 3px #aaa;\n
+  -moz-box-shadow: 0 1px 3px #aaa;\n
+  box-shadow: 0 1px 3px #aaa;\n
+}\n
+html body section.custom-landing-page > div {\n
+  border-radius: 0;\n
+  width: auto;\n
+}\n
+html body .ui-content-header-section .ui-content-title.custom-title {\n
+  padding-top: 0;\n
+}\n
+.custom-title:after {\n
+  bottom: 30%;\n
+  content: "";\n
+  left: 0;\n
+  margin: 0 auto 1px;\n
+  position: absolute;\n
+  right: 0;\n
+  width: 30%;\n
+  border-bottom: 1px solid rgb(115, 115, 115); /* IE8 */\n
+  border-bottom: 1px solid rgba(0, 0, 0, 0.55);\n
+}\n
+.custom-title:before {\n
+  bottom: 30%;\n
+  content: "";\n
+  left: 0;\n
+  margin: 0 auto;\n
+  position: absolute;\n
+  right: 0;\n
+  width: 30%;\n
+  border-bottom: 1px solid rgb(232, 232, 232); /* IE8 */\n
+  border-bottom: 1px solid rgba(232, 232, 232, 0.5);\n
+}\n
+\n
+/* miserable text placement */\n
+html.ui-mobile body .custom-tagline {\n
+  padding-top: 20%;\n
+  padding-top: 20vh;  \n
+}\n
+@media (max-width: 62em) {\n
+  html.ui-mobile body .custom-tagline {\n
+    padding-top: 25%;\n
+    padding-top: 25vh;  \n
+  }\n
+}\n
+@media (max-width: 48em) {\n
+  html.ui-mobile body .custom-tagline {\n
+    padding-top: 30%;\n
+    padding-top: 30vh;  \n
+  }\n
+}\n
+\n
+/* custom card-deck width */\n
+@media (min-width: 62em) {\n
+  html.ui-mobile body .ui-card-deck.custom-deck > .ui-li-static,\n
+  html.ui-mobile body .ui-card-deck.custom-deck > li > .ui-btn {\n
+    width: 33.1%;\n
+    margin: .625em 1%;\n
+    max-width: 33.1%;\n
+  }\n
+}\n
+@media (min-width: 48em) {\n
+  html.ui-mobile body .ui-card-deck.custom-deck > .ui-li-static,\n
+  html.ui-mobile body .ui-card-deck.custom-deck > li > .ui-btn {\n
+    width: 30.9333%;\n
+    margin: .5625em 1.2%;\n
+    max-width: 30.9333%;\n
+  }\n
+}\n
+\n
+/* footer section */\n
+.custom-footer {\n
+  margin: 0;\n
+  padding: 0;\n
+}\n
+.custom-footer .ui-controlgroup {\n
+  margin: 0;\n
+  padding: 0;\n
+  text-align: right;\n
+  padding-right: 1em;\n
+}\n
+.custom-footer .ui-controlgroup .ui-btn {\n
+  border: 0 none;\n
+}\n
+.custom-footer .custom-fineprint {\n
+  margin: 0;\n
+  padding-left: 1em;\n
+  font-size: .8em;\n
+}\n
+\n
+/* center elements on small screen */\n
+@media (max-width: 48em) {\n
+  .custom-footer .custom-fineprint {\n
+    padding-top: .25em;\n
+  }\n
+  .custom-footer .ui-controlgroup,\n
+  .custom-footer .custom-fineprint {\n
+    text-align: center;\n
+  }\n
+}\n
+/* readonly */\n
+.custom-readonly {\n
+  opacity: 1;\n
+}\n
+/* invalid */\n
+.custom-invalid {\n
+  color: red !important;\n
+}\n
+/* align button left/right */\n
+.custom-right {\n
+  text-align: right;\n
+  padding-right: 2%;\n
+}\n
+@media (max-width: 48em) {\n
+  .custom-right {\n
+    text-align: center;\n
+  }\n
+}\n
+.jsbin-embed {\n
+  text-align: center;\n
+}\n
+/* hide button background, borders, hardcode dimensions */\n
+div.custom-iframe-loader {\n
+  -moz-box-shadow: none;\n
+  -webkit-box-shadow: none;\n
+  box-shadow: none;\n
+  border: 0 none;\n
+  background: 0 none;\n
+  background-image: none !important;\n
+  background-color: transparent;\n
+  min-width: 60%;\n
+  min-height: 50px;\n
+}\n
+.italic {\n
+  font-style: italic;\n
+}\n
+.align-center {\n
+  text-align: center;\n
+}\n
+.xl {\n
+  font-size: 2em;\n
+}\n
+.l {\n
+  font-size: 1em;\n
+}\n
+.m {\n
+  font-size: .8em;\n
+}\n
+.s {\n
+  font-size: .6em;\n
+}\n
+.middle {\n
+  vertical-align: middle;\n
+}\n
+.fade {\n
+  opacity: .25;\n
+}\n
+.turq {\n
+  color: turquoise;\n
+}\n
+.orange {\n
+  color: orange;\n
+}\n
+.custom-icongrid {\n
+  max-width: 80%;\n
+  margin: 0 auto;\n
+}\n
+@media (min-width: 48em) {\n
+  .custom-icongrid {\n
+    max-width: 50%;\n
+    margin: 0 auto;\n
+  }\n
+}\n
+.custom-hr {\n
+  max-width: 50%;\n
+  color: #e6e6e6;\n
+  opacity: .25;\n
+}\n
+\n
+.ui-grid-container > ul > li > iframe {\n
+  width: 99%  !important;\n
+}\n
+\n
+/* ==================== More overrides from porting ========================= */\n
+/* fix panel listview margin */\n
+html .ui-panel .ui-content > .ui-listview {\n
+  margin: -1em;\n
+}\n
+\n
+/* fix width of content sections */\n
+.ui-content-header-section,\n
+.ui-content-section {\n
+  max-width: 85%;\n
+\n
+}\n
+.ui-content-header-plain {\n
+  max-width: 85%;\n
+}\n
+\n
+/* fix padding of content header and section */\n
+.ui-content-header-section ~ .ui-content-section {\n
+  padding-top: .5em;\n
+}\n
+\n
+/* fix borders */\n
+.ui-content-header-section {\n
+  -webkit-border-top-left-radius: .3125em;\n
+  -webkit-border-top-right-radius: .3125em;\n
+  border-top-left-radius: .3125em;\n
+  border-top-right-radius: .3125em;\n
+}\n
+\n
+.ui-content-header-plain ~ .ui-content-section {\n
+  -webkit-border-top-left-radius: .3125em;\n
+  -webkit-border-top-right-radius: .3125em;\n
+  border-top-left-radius: .3125em;\n
+  border-top-right-radius: .3125em;\n
+}\n
+\n
+.ui-content-header-section ~ .ui-content-section:first-child {\n
+  -webkit-border-top-left-radius: 0;\n
+  -webkit-border-top-right-radius: 0;\n
+  border-top-left-radius: 0;\n
+  border-top-right-radius: 0;\n
+}\n
+\n
+/* iframe */\n
+iframe {\n
+  width: auto;\n
+  border: 0 none;\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Gadget Manifest CSS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1432300336.52</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>943.16586.52705.3891</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1432555331.43</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1432300237.43</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

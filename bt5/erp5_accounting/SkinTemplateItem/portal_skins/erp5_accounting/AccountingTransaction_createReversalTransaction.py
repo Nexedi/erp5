@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>""" Create a reversal transaction from current transaction. """\n
+\n
+Base_translateString = context.Base_translateString\n
+accounting_module = context.getPortalObject().accounting_module\n
+is_source = context.AccountingTransaction_isSourceView()\n
+\n
+if is_source:\n
+  specific_reference = context.getSourceReference()\n
+else:\n
+  specific_reference = context.getDestinationReference()\n
+\n
+causality_value_list = context.getCausalityValueList()\n
+causality_value_list.append(context)\n
+\n
+reversal = accounting_module.newContent (\n
+    portal_type=context.getPortalType(),\n
+    source_section=context.getSourceSection(),\n
+    destination_section=context.getDestinationSection(),\n
+    source_payment=context.getSourcePayment(),\n
+    destination_payment=context.getDestinationPayment(),\n
+    source_project=context.getSourceProject(),\n
+    destination_project=context.getDestinationProject(),\n
+    source_function=context.getSourceFunction(),\n
+    destination_function=context.getDestinationFunction(),\n
+    source_funding=context.getProperty(\'source_funding\'),\n
+    destination_funding=context.getProperty(\'destination_funding\'),\n
+    source_payment_request=context.getProperty(\'source_payment_request\'),\n
+    destination_payment_request=context.getProperty(\'destination_payment_request\'),\n
+    source_administration=context.getSourceAdministration(),\n
+    destination_administration=context.getDestinationAdministration(),\n
+    title = Base_translateString("Reversal Transaction for ${title}",\n
+                                 mapping={\'title\':unicode(context.getTitleOrId(), \'utf8\')}),\n
+    description = Base_translateString(\n
+  "Reversal Transaction for ${title} (${specific_reference})",\n
+  mapping={\'title\': unicode(context.getTitleOrId(), \'utf8\'),\n
+           \'specific_reference\': specific_reference}),\n
+    resource=context.getResource(),\n
+    specialise_list=context.getSpecialiseList(),\n
+    causality_value_list=causality_value_list,\n
+    created_by_builder=1 # XXX to prevent init script to create lines\n
+  )\n
+\n
+# copy dates\n
+if date:\n
+  start_date = stop_date = date\n
+else:\n
+  start_date = context.getStartDate()\n
+  stop_date = context.getStopDate()\n
+\n
+if start_date:\n
+  reversal.setStartDate(start_date)\n
+\n
+if context.getStopDate() != context.getStartDate():\n
+  # stop date is currently acquire from start date.\n
+  # we try not to set a stop date on the reversal if it wasn\'t set on the\n
+  # original\n
+  reversal.setStopDate(stop_date)\n
+\n
+if context.getProperty(\'payment_mode\'):\n
+  reversal.setProperty(\'payment_mode\', context.getProperty(\'payment_mode\'))\n
+\n
+line_list = context.AccountingTransaction_getAccountingTransactionLineList(\n
+                portal_type=context.getPortalAccountingMovementTypeList())\n
+if not cancellation_amount:\n
+  line_list.reverse()\n
+\n
+# guess portal_type to create lines\n
+if line_list:\n
+  line_portal_type = line_list[0].getPortalType()\n
+\n
+for line in line_list:\n
+  new_line = reversal.newContent( portal_type=line_portal_type )\n
+  new_line.edit(\n
+    source=line.getSource(portal_type=\'Account\'),\n
+    destination=line.getDestination(portal_type=\'Account\'),\n
+    quantity= - line.getQuantity(), )\n
+\n
+  if line.getSourceTotalAssetPrice():\n
+    new_line.setSourceTotalAssetPrice( - line.getSourceTotalAssetPrice() )\n
+  if line.getDestinationTotalAssetPrice():\n
+    new_line.setDestinationTotalAssetPrice(\n
+                                  - line.getDestinationTotalAssetPrice() )\n
+\n
+  new_line.setCancellationAmount(cancellation_amount)\n
+\n
+  # copy some values if they are defined explicitly on line\n
+  for prop in [ \'source_section\', \'destination_section\',\n
+                \'source_payment\', \'destination_payment\',\n
+                \'source_project\', \'destination_project\',\n
+                \'source_function\', \'destination_function\',\n
+                \'source_funding\', \'destination_funding\',\n
+                \'source_payment_request\', \'destination_payment_request\',\n
+                \'resource\', \'product_line\' ]:\n
+    if line.getProperty(prop) != context.getProperty(prop):\n
+      new_line.setProperty(prop, line.getProperty(prop))\n
+\n
+if plan:\n
+  reversal.plan()\n
+\n
+if batch:\n
+  return reversal\n
+else:\n
+  return reversal.Base_redirect(\'view\',\n
+    keep_items=dict(portal_status_message=\n
+               Base_translateString("Reversal Transaction for ${specific_reference} created.",\n
+                                    mapping={\'specific_reference\': specific_reference})))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>cancellation_amount=False, date=None, plan=False, batch=False, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransaction_createReversalTransaction</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

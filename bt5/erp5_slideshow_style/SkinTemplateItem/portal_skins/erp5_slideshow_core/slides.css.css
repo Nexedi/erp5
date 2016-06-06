@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts15240428.47</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slides.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>html { background-color: black; }\n
+a { color: #ff0066; } a:hover {text-decoration: underline;}\n
+footer { position: absolute; bottom: 50px; right: 50px; }\n
+strong {color: #ff0066}\n
+body {\n
+    font-family: \'oswald\', arial, serif;\n
+    background-color: white;\n
+    color: white;\n
+    font-size: 2em;\n
+    background: #1c1c1c;\n
+    background-image: -moz-radial-gradient(center 45deg, #333 0%, #1c1c1c 50%);\n
+    background-image: -moz-radial-gradient(center 45deg, #333 0%, #1c1c1c 50%);\n
+}\n
+\n
+\n
+/* transition effect */\n
+section {\n
+    -moz-transition: left 400ms linear 0s;\n
+    -webkit-transition: left 400ms linear 0s;\n
+    -o-transition: left 400ms linear 0s;\n
+    -ms-transition: left 400ms linear 0s;\n
+    transition: left 400ms linear 0s;\n
+}\n
+section { left: -150%; }\n
+section[aria-selected] { left: 0; }\n
+section[aria-selected] ~ section { left: +150% }\n
+\n
+.chapter { background-color: black;}\n
+.chapter h1 {line-height: 600px; vertical-align: middle; margin: 0; text-align: center; display: block}\n
+\n
+h1 {\n
+    margin: 50px 100px 0 100px;\n
+    font-size: 50px;\n
+    text-shadow: 0px -1px 0px #000;\n
+    text-align: left;\n
+}\n
+h2 {\n
+    color: #fae50b;\n
+    margin: 70px 0 0 0;\n
+    font-size: 40px;\n
+    text-align: center;\n
+}\n
+ul {\n
+    margin-top: 70px;\n
+    font-size: 35px;\n
+    text-align: right;\n
+    border-right: 4px solid white;\n
+    padding-right: 40px;\n
+    min-width: 310px;\n
+    margin-left: 50px;\n
+    display: inline-block;\n
+}\n
+q, p {\n
+    margin: 50px auto 0 auto;\n
+    width: 500px;\n
+}\n
+q:after {content: ""}\n
+q:before {content: ""}\n
+q {\n
+    display: block;\n
+    margin-top: 140px;\n
+}\n
+video {\n
+    position: absolute;\n
+    top: 210px;\n
+    width: 260px;\n
+    left: 445px;\n
+    box-shadow: 0 0 10px black;\n
+}\n
+#arrow {\n
+    position: absolute;\n
+    top: 165px;\n
+    left: 460px;\n
+    font-size: 100px;\n
+    color: white;\n
+\n
+}\n
+li {list-style-type: none}\n
+\n
+\n
+\n
+\n
+\n
+\n
+* { margin: 0; padding: 0; }\n
+details {display: none;}\n
+body {\n
+  width: 800px; height: 600px;\n
+  margin-left: -400px; margin-top: -300px;\n
+  position: absolute; top: 50%; left: 50%;\n
+  overflow: hidden;\n
+}\n
+section {\n
+  position: absolute;\n
+  pointer-events: none;\n
+  width: 100%; height: 100%;\n
+}\n
+section[aria-selected] { pointer-events: auto;}\n
+body {display: none}\n
+body.loaded {display: block}\n
+\n
+\n
+section.code pre { margin: 20px 0 0 40px;font-size: 15px; font-weight: bold;}\n
+section.code .Constant { color: #af5fff}\n
+section.code .StorageClass { color: #ff8700}\n
+section.code .Exception { color: #87ff00}\n
+section.code .Identifier { color: #ff8700}\n
+section.code .Title { color: #d75f00}\n
+section.code .String { color: #afaf87}\n
+section.code .Type { color: #5fd7ff}\n
+section.code .Statement { color: #d7005f}\n
+section.code .Function { color: #87ff00}\n
+section.code .Comment { color: #CCC}\n
+\n
+/* Cedric extensions */\n
+section img {max-width: 100%; max-height: 80%; display: block; margin-left: auto; margin-right: auto;}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2805</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slides.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

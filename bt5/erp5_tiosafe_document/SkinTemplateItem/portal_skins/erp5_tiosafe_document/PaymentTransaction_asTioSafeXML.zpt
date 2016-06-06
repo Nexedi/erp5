@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<transaction xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+  tal:attributes="type here/getPortalType" tal:define="context_path options/context_document"><tal:block\n
+    tal:condition=\'here/getStartDate\'>\n
+  <title tal:content="python: here.getTitle()" /></tal:block><tal:block\n
+    tal:condition=\'here/getTitle\'>\n
+  <start_date tal:content="python: here.getStartDate()" /></tal:block><tal:block\n
+    tal:condition=\'here/getStopDate\'>\n
+  <stop_date tal:content="python: here.getStopDate()" /></tal:block><tal:block\n
+    tal:condition=\'here/getReference\'>\n
+  <reference tal:content=\'here/getReference\' /></tal:block><tal:block\n
+    tal:condition=\'here/getPriceCurrencyReference\'>\n
+  <currency tal:content=\'here/getPriceCurrencyReference\' /></tal:block><tal:block\n
+    tal:condition=\'here/getPaymentMode\'>\n
+  <payment_mode tal:content=\'here/getPaymentMode\' /></tal:block>\n
+  <movement tal:repeat=\'movement python:here.PaymentTransaction_getLineList(context_path)\'><tal:block\n
+    tal:condition=\'movement/price\'>\n
+    <price tal:content=\'movement/price\'/></tal:block>\n
+  </movement>\n
+</transaction>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/xml</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaymentTransaction_asTioSafeXML</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

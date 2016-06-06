@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Create new Document by cloning an existing document\n
+  or by creating a new document.\n
+\n
+  Pretty messages are provided to the user.\n
+"""\n
+portal = context.getPortalObject()\n
+translateString =  portal.Base_translateString\n
+form_data = portal.REQUEST.form\n
+\n
+if clone:\n
+  portal_type = context.getPortalType()\n
+else:\n
+  portal_type = form_data[\'clone_portal_type\']\n
+\n
+# We copy contents in place if possible\n
+try:\n
+  source = context.aq_explicit.original_container\n
+except AttributeError:\n
+  source = context.getParentValue()\n
+if destination is None:\n
+  destination = source\n
+if not (portal_type in destination.getVisibleAllowedContentTypeList() and\n
+        portal.portal_membership.checkPermission(\'Copy or Move\', context)):\n
+  if batch_mode:\n
+    return None\n
+  else:\n
+    return context.Base_redirect(keep_items={\'portal_status_message\':\n
+             translateString("You are not allowed to clone this object.")})\n
+\n
+# prepare query params\n
+kw = {\'portal_type\' : translateString(portal_type)}\n
+\n
+if web_mode:\n
+  script = getattr(context, "Base_checkCloneConsistency", None)\n
+  if script is not None:\n
+    msg = script(**form_data)\n
+    if msg is not None:\n
+      return context.Base_redirect(form_id, \n
+                          editable_mode=editable_mode,\n
+                          keep_items={\'portal_status_message\': msg})\n
+\n
+# Standard cloning method\n
+if clone:\n
+  # Copy and paste the object\n
+  try:\n
+    original_id = context.aq_explicit.original_id\n
+  except AttributeError:\n
+    original_id = context.getId()\n
+  # This is required for objects acquired in Web Section\n
+  clipboard = source.manage_copyObjects(ids=[original_id])\n
+  context.REQUEST.set(\'__cp\', clipboard) # CopySupport is using this to set\n
+                           # tracebility information in edit_workflow history\n
+  paste_result = destination.manage_pasteObjects(cb_copy_data=clipboard)\n
+  new_object = destination[paste_result[0][\'new_id\']]\n
+  message_kind = \'Clone\'\n
+else:\n
+  new_object = destination.newContent(portal_type=portal_type)\n
+  message_kind = \'New\'\n
+\n
+if web_mode:\n
+  # Edit the objects with some properties\n
+  # Define a list of field name to take into account in the cloning process\n
+  ACCEPTABLE_FORM_ID_LIST = [ \'clone_reference\' , \'clone_language\'\n
+                             , \'clone_version\' , \'clone_revision\'\n
+                             , \'clone_title\' , \'clone_short_title\' ] \n
+\n
+  # Set properties to the new object\n
+  edit_kw = {}\n
+  property_id_list = new_object.propertyIds()\n
+  for (key, val) in form_data.items():\n
+    if key in ACCEPTABLE_FORM_ID_LIST and key[len(\'clone_\'):] in property_id_list:\n
+      edit_kw[key[len(\'clone_\'):]] = val\n
+  new_object.edit(**edit_kw)\n
+\n
+if batch_mode:\n
+  return new_object\n
+else:\n
+  if web_mode and not editable_mode: \n
+    form_id = \'view\'\n
+  msg = translateString("Created %s ${portal_type}." % message_kind, mapping = kw)\n
+  return new_object.Base_redirect(form_id, \n
+                                  editable_mode=1,\n
+                                  keep_items={\'portal_status_message\': msg})\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>clone=1, form_id=\'view\', web_mode=0, editable_mode=0, batch_mode=0, destination=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_createCloneDocument</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

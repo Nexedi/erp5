@@ -1,0 +1,687 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>anonymous_http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts52851990.32</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>svgutils.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Package: svgedit.utilities\n
+ *\n
+ * Licensed under the Apache License, Version 2\n
+ *\n
+ * Copyright(c) 2010 Alexis Deveria\n
+ * Copyright(c) 2010 Jeff Schiller\n
+ */\n
+\n
+// Dependencies:\n
+// 1) jQuery\n
+// 2) browser.js\n
+// 3) svgtransformlist.js\n
+\n
+var svgedit = svgedit || {};\n
+\n
+(function() {\n
+\n
+if (!svgedit.utilities) {\n
+  svgedit.utilities = {};\n
+}\n
+\n
+// Constants\n
+\n
+// String used to encode base64.\n
+var KEYSTR = \'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=\';\n
+var SVGNS = \'http://www.w3.org/2000/svg\';\n
+var XLINKNS = \'http://www.w3.org/1999/xlink\';\n
+var XMLNS = "http://www.w3.org/XML/1998/namespace";\n
+\n
+// Much faster than running getBBox() every time\n
+var visElems = \'a,circle,ellipse,foreignObject,g,image,line,path,polygon,polyline,rect,svg,text,tspan,use\';\n
+var visElems_arr = visElems.split(\',\');\n
+//var hidElems = \'clipPath,defs,desc,feGaussianBlur,filter,linearGradient,marker,mask,metadata,pattern,radialGradient,stop,switch,symbol,title,textPath\';\n
+\n
+var editorContext_ = null;\n
+var domdoc_ = null;\n
+var domcontainer_ = null;\n
+var svgroot_ = null;\n
+\n
+svgedit.utilities.init = function(editorContext) {\n
+  editorContext_ = editorContext;\n
+  domdoc_ = editorContext.getDOMDocument();\n
+  domcontainer_ = editorContext.getDOMContainer();\n
+  svgroot_ = editorContext.getSVGRoot();\n
+};\n
+\n
+// Function: svgedit.utilities.toXml\n
+// Converts characters in a string to XML-friendly entities.\n
+//\n
+// Example: "&" becomes "&amp;"\n
+//\n
+// Parameters:\n
+// str - The string to be converted\n
+//\n
+// Returns:\n
+// The converted string\n
+svgedit.utilities.toXml = function(str) {\n
+  return $(\'<p/>\').text(str).html();\n
+};\n
+  \n
+// Function: svgedit.utilities.fromXml\n
+// Converts XML entities in a string to single characters. \n
+// Example: "&amp;" becomes "&"\n
+//\n
+// Parameters:\n
+// str - The string to be converted\n
+//\n
+// Returns: \n
+// The converted string\n
+svgedit.utilities.fromXml = function(str) {\n
+  return $(\'<p/>\').html(str).text();\n
+};\n
+\n
+// This code was written by Tyler Akins and has been placed in the\n
+// public domain.  It would be nice if you left this header intact.\n
+// Base64 code from Tyler Akins -- http://rumkin.com\n
+\n
+// schiller: Removed string concatenation in favour of Array.join() optimization,\n
+//           also precalculate the size of the array needed.\n
+\n
+// Function: svgedit.utilities.encode64\n
+// Converts a string to base64\n
+svgedit.utilities.encode64 = function(input) {\n
+  // base64 strings are 4/3 larger than the original string\n
+//  input = svgedit.utilities.encodeUTF8(input); // convert non-ASCII characters\n
+  input = svgedit.utilities.convertToXMLReferences(input);\n
+  if(window.btoa) return window.btoa(input); // Use native if available\n
+  var output = new Array( Math.floor( (input.length + 2) / 3 ) * 4 );\n
+  var chr1, chr2, chr3;\n
+  var enc1, enc2, enc3, enc4;\n
+  var i = 0, p = 0;\n
+\n
+  do {\n
+    chr1 = input.charCodeAt(i++);\n
+    chr2 = input.charCodeAt(i++);\n
+    chr3 = input.charCodeAt(i++);\n
+\n
+    enc1 = chr1 >> 2;\n
+    enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);\n
+    enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);\n
+    enc4 = chr3 & 63;\n
+\n
+    if (isNaN(chr2)) {\n
+      enc3 = enc4 = 64;\n
+    } else if (isNaN(chr3)) {\n
+      enc4 = 64;\n
+    }\n
+\n
+    output[p++] = KEYSTR.charAt(enc1);\n
+    output[p++] = KEYSTR.charAt(enc2);\n
+    output[p++] = KEYSTR.charAt(enc3);\n
+    output[p++] = KEYSTR.charAt(enc4);\n
+  } while (i < input.length);\n
+\n
+  return output.join(\'\');\n
+};\n
+\n
+// Function: svgedit.utilities.decode64\n
+// Converts a string from base64\n
+svgedit.utilities.decode64 = function(input) {\n
+  if(window.atob) return window.atob(input);\n
+  var output = "";\n
+  var chr1, chr2, chr3 = "";\n
+  var enc1, enc2, enc3, enc4 = "";\n
+  var i = 0;\n
+\n
+   // remove all characters that are not A-Z, a-z, 0-9, +, /, or =\n
+   input = input.replace(/[^A-Za-z0-9\\+\\/\\=]/g, "");\n
+\n
+   do {\n
+    enc1 = KEYSTR.indexOf(input.charAt(i++));\n
+    enc2 = KEYSTR.indexOf(input.charAt(i++));\n
+    enc3 = KEYSTR.indexOf(input.charAt(i++));\n
+    enc4 = KEYSTR.indexOf(input.charAt(i++));\n
+\n
+    chr1 = (enc1 << 2) | (enc2 >> 4);\n
+    chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);\n
+    chr3 = ((enc3 & 3) << 6) | enc4;\n
+\n
+    output = output + String.fromCharCode(chr1);\n
+\n
+    if (enc3 != 64) {\n
+       output = output + String.fromCharCode(chr2);\n
+    }\n
+    if (enc4 != 64) {\n
+       output = output + String.fromCharCode(chr3);\n
+    }\n
+\n
+    chr1 = chr2 = chr3 = "";\n
+    enc1 = enc2 = enc3 = enc4 = "";\n
+\n
+   } while (i < input.length);\n
+   return unescape(output);\n
+};\n
+\n
+// Currently not being used, so commented out for now\n
+// based on http://phpjs.org/functions/utf8_encode:577\n
+// codedread:does not seem to work with webkit-based browsers on OSX\n
+//    "encodeUTF8": function(input) {\n
+//      //return unescape(encodeURIComponent(input)); //may or may not work\n
+//      var output = \'\';\n
+//      for (var n = 0; n < input.length; n++){\n
+//        var c = input.charCodeAt(n);\n
+//        if (c < 128) {\n
+//          output += input[n];\n
+//        }\n
+//        else if (c > 127) {\n
+//          if (c < 2048){\n
+//            output += String.fromCharCode((c >> 6) | 192);\n
+//          } \n
+//          else {\n
+//            output += String.fromCharCode((c >> 12) | 224) + String.fromCharCode((c >> 6) & 63 | 128);\n
+//          }\n
+//          output += String.fromCharCode((c & 63) | 128);\n
+//        }\n
+//      }\n
+//      return output;\n
+//    },\n
+\n
+// Function: svgedit.utilities.convertToXMLReferences \n
+// Converts a string to use XML references\n
+svgedit.utilities.convertToXMLReferences = function(input) {\n
+  var output = \'\';\n
+  for (var n = 0; n < input.length; n++){\n
+    var c = input.charCodeAt(n);\n
+    if (c < 128) {\n
+      output += input[n];\n
+    } else if(c > 127) {\n
+      output += ("&#" + c + ";");\n
+    }\n
+  }\n
+  return output;\n
+};\n
+\n
+// Function: svgedit.utilities.text2xml\n
+// Cross-browser compatible method of converting a string to an XML tree\n
+// found this function here: http://groups.google.com/group/jquery-dev/browse_thread/thread/c6d11387c580a77f\n
+svgedit.utilities.text2xml = function(sXML) {\n
+  if(sXML.indexOf(\'<svg:svg\') >= 0) {\n
+    sXML = sXML.replace(/<(\\/?)svg:/g, \'<$1\').replace(\'xmlns:svg\', \'xmlns\');\n
+  }\n
+\n
+  var out;\n
+  try{\n
+    var dXML = (window.DOMParser)?new DOMParser():new ActiveXObject("Microsoft.XMLDOM");\n
+    dXML.async = false;\n
+  } catch(e){ \n
+    throw new Error("XML Parser could not be instantiated"); \n
+  };\n
+  try{\n
+    if(dXML.loadXML) out = (dXML.loadXML(sXML))?dXML:false;\n
+    else out = dXML.parseFromString(sXML, "text/xml");\n
+  }\n
+  catch(e){ throw new Error("Error parsing XML string"); };\n
+  return out;\n
+};\n
+\n
+// Function: svgedit.utilities.bboxToObj\n
+// Converts a SVGRect into an object.\n
+// \n
+// Parameters:\n
+// bbox - a SVGRect\n
+// \n
+// Returns:\n
+// An object with properties names x, y, width, height.\n
+svgedit.utilities.bboxToObj = function(bbox) {\n
+  return {\n
+    x: bbox.x,\n
+    y: bbox.y,\n
+    width: bbox.width,\n
+    height: bbox.height\n
+  }\n
+};\n
+\n
+// Function: svgedit.utilities.walkTree\n
+// Walks the tree and executes the callback on each element in a top-down fashion\n
+//\n
+// Parameters:\n
+// elem - DOM element to traverse\n
+// cbFn - Callback function to run on each element\n
+svgedit.utilities.walkTree = function(elem, cbFn){\n
+  if (elem && elem.nodeType == 1) {\n
+    cbFn(elem);\n
+    var i = elem.childNodes.length;\n
+    while (i--) {\n
+      svgedit.utilities.walkTree(elem.childNodes.item(i), cbFn);\n
+    }\n
+  }\n
+};\n
+\n
+// Function: svgedit.utilities.walkTreePost\n
+// Walks the tree and executes the callback on each element in a depth-first fashion\n
+// TODO: FIXME: Shouldn\'t this be calling walkTreePost?\n
+//\n
+// Parameters:\n
+// elem - DOM element to traverse\n
+// cbFn - Callback function to run on each element\n
+svgedit.utilities.walkTreePost = function(elem, cbFn) {\n
+  if (elem && elem.nodeType == 1) {\n
+    var i = elem.childNodes.length;\n
+    while (i--) {\n
+      svgedit.utilities.walkTree(elem.childNodes.item(i), cbFn);\n
+    }\n
+    cbFn(elem);\n
+  }\n
+};\n
+\n
+// Function: svgedit.utilities.getUrlFromAttr\n
+// Extracts the URL from the url(...) syntax of some attributes.  \n
+// Three variants:\n
+//  * <circle fill="url(someFile.svg#foo)" />\n
+//  * <circle fill="url(\'someFile.svg#foo\')" />\n
+//  * <circle fill=\'url("someFile.svg#foo")\' />\n
+//\n
+// Parameters:\n
+// attrVal - The attribute value as a string\n
+// \n
+// Returns:\n
+// String with just the URL, like someFile.svg#foo\n
+svgedit.utilities.getUrlFromAttr = function(attrVal) {\n
+  if (attrVal) {    \n
+    // url("#somegrad")\n
+    if (attrVal.indexOf(\'url("\') === 0) {\n
+      return attrVal.substring(5,attrVal.indexOf(\'"\',6));\n
+    }\n
+    // url(\'#somegrad\')\n
+    else if (attrVal.indexOf("url(\'") === 0) {\n
+      return attrVal.substring(5,attrVal.indexOf("\'",6));\n
+    }\n
+    else if (attrVal.indexOf("url(") === 0) {\n
+      return attrVal.substring(4,attrVal.indexOf(\')\'));\n
+    }\n
+  }\n
+  return null;\n
+};\n
+\n
+// Function: svgedit.utilities.getHref\n
+// Returns the given element\'s xlink:href value\n
+svgedit.utilities.getHref = function(elem) {\n
+  if (elem) return elem.getAttributeNS(XLINKNS, "href");\n
+}\n
+\n
+// Function: svgedit.utilities.setHref\n
+// Sets the given element\'s xlink:href value\n
+svgedit.utilities.setHref = function(elem, val) {\n
+  elem.setAttributeNS(XLINKNS, "xlink:href", val);\n
+}\n
+\n
+// Function: findDefs\n
+// Parameters:\n
+// svgElement - The <svg> element.\n
+//\n
+// Returns:\n
+// The document\'s <defs> element, create it first if necessary\n
+svgedit.utilities.findDefs = function(svgElement) {\n
+  var svgElement = editorContext_.getSVGContent().documentElement;\n
+  var defs = svgElement.getElementsByTagNameNS(SVGNS, "defs");\n
+  if (defs.length > 0) {\n
+    defs = defs[0];\n
+  }\n
+  else {\n
+    // first child is a comment, so call nextSibling\n
+    defs = svgElement.insertBefore( svgElement.ownerDocument.createElementNS(SVGNS, "defs" ), svgElement.firstChild.nextSibling);\n
+  }\n
+  return defs;\n
+};\n
+\n
+// TODO(codedread): Consider moving the next to functions to bbox.js\n
+\n
+// Function: svgedit.utilities.getPathBBox\n
+// Get correct BBox for a path in Webkit\n
+// Converted from code found here:\n
+// http://blog.hackers-cafe.net/2009/06/how-to-calculate-bezier-curves-bounding.html\n
+// \n
+// Parameters:\n
+// path - The path DOM element to get the BBox for\n
+//\n
+// Returns:\n
+// A BBox-like object\n
+svgedit.utilities.getPathBBox = function(path) {\n
+  var seglist = path.pathSegList;\n
+  var tot = seglist.numberOfItems;\n
+  \n
+  var bounds = [[], []];\n
+  var start = seglist.getItem(0);\n
+  var P0 = [start.x, start.y];\n
+\n
+  for(var i=0; i < tot; i++) {\n
+    var seg = seglist.getItem(i);\n
+\n
+    if(typeof seg.x == \'undefined\') continue;\n
+\n
+    // Add actual points to limits\n
+    bounds[0].push(P0[0]);\n
+    bounds[1].push(P0[1]);\n
+    \n
+    if(seg.x1) {\n
+      var P1 = [seg.x1, seg.y1],\n
+        P2 = [seg.x2, seg.y2],\n
+        P3 = [seg.x, seg.y];\n
+\n
+      for(var j=0; j < 2; j++) {\n
+\n
+        var calc = function(t) {\n
+          return Math.pow(1-t,3) * P0[j] \n
+            + 3 * Math.pow(1-t,2) * t * P1[j]\n
+            + 3 * (1-t) * Math.pow(t,2) * P2[j]\n
+            + Math.pow(t,3) * P3[j];\n
+        };\n
+\n
+        var b = 6 * P0[j] - 12 * P1[j] + 6 * P2[j];\n
+        var a = -3 * P0[j] + 9 * P1[j] - 9 * P2[j] + 3 * P3[j];\n
+        var c = 3 * P1[j] - 3 * P0[j];\n
+        \n
+        if(a == 0) {\n
+          if(b == 0) {\n
+            continue;\n
+          }\n
+          var t = -c / b;\n
+          if(0 < t && t < 1) {\n
+            bounds[j].push(calc(t));\n
+          }\n
+          continue;\n
+        }\n
+        \n
+        var b2ac = Math.pow(b,2) - 4 * c * a;\n
+        if(b2ac < 0) continue;\n
+        var t1 = (-b + Math.sqrt(b2ac))/(2 * a);\n
+        if(0 < t1 && t1 < 1) bounds[j].push(calc(t1));\n
+        var t2 = (-b - Math.sqrt(b2ac))/(2 * a);\n
+        if(0 < t2 && t2 < 1) bounds[j].push(calc(t2));\n
+      }\n
+      P0 = P3;\n
+    } else {\n
+      bounds[0].push(seg.x);\n
+      bounds[1].push(seg.y);\n
+    }\n
+  }\n
+  \n
+  var x = Math.min.apply(null, bounds[0]);\n
+  var w = Math.max.apply(null, bounds[0]) - x;\n
+  var y = Math.min.apply(null, bounds[1]);\n
+  var h = Math.max.apply(null, bounds[1]) - y;\n
+  return {\n
+    \'x\': x,\n
+    \'y\': y,\n
+    \'width\': w,\n
+    \'height\': h\n
+  };\n
+};\n
+\n
+// Function: groupBBFix\n
+// Get the given/selected element\'s bounding box object, checking for\n
+// horizontal/vertical lines (see issue 717)\n
+// Note that performance is currently terrible, so some way to improve would\n
+// be great.\n
+//\n
+// Parameters: \n
+// selected - Container or <use> DOM element\n
+function groupBBFix(selected) {\n
+  if(svgedit.browser.supportsHVLineContainerBBox()) {\n
+    try { return selected.getBBox();} catch(e){} \n
+  }\n
+  var ref = $.data(selected, \'ref\');\n
+  var matched = null;\n
+  \n
+  if(ref) {\n
+    var copy = $(ref).children().clone().attr(\'visibility\', \'hidden\');\n
+    $(svgroot_).append(copy);\n
+    matched = copy.filter(\'line, path\');\n
+  } else {\n
+    matched = $(selected).find(\'line, path\');\n
+  }\n
+  \n
+  var issue = false;\n
+  if(matched.length) {\n
+    matched.each(function() {\n
+      var bb = this.getBBox();\n
+      if(!bb.width || !bb.height) {\n
+        issue = true;\n
+      }\n
+    });\n
+    if(issue) {\n
+      var elems = ref ? copy : $(selected).children();\n
+      ret = getStrokedBBox(elems);\n
+    } else {\n
+      ret = selected.getBBox();\n
+    }\n
+  } else {\n
+    ret = selected.getBBox();\n
+  }\n
+  if(ref) {\n
+    copy.remove();\n
+  }\n
+  return ret;\n
+}\n
+\n
+// Function: svgedit.utilities.getBBox\n
+// Get the given/selected element\'s bounding box object, convert it to be more\n
+// usable when necessary\n
+//\n
+// Parameters:\n
+// elem - Optional DOM element to get the BBox for\n
+svgedit.utilities.getBBox = function(elem) {\n
+  var selected = elem || editorContext_.getSelectedElements()[0];\n
+  if (elem.nodeType != 1) return null;\n
+  var ret = null;\n
+  var elname = selected.nodeName;\n
+  \n
+  switch ( elname ) {\n
+  case \'text\':\n
+    if(selected.textContent === \'\') {\n
+      selected.textContent = \'a\'; // Some character needed for the selector to use.\n
+      ret = selected.getBBox();\n
+      selected.textContent = \'\';\n
+    } else {\n
+      try { ret = selected.getBBox();} catch(e){}\n
+    }\n
+    break;\n
+  case \'path\':\n
+    if(!svgedit.browser.supportsPathBBox()) {\n
+      ret = svgedit.utilities.getPathBBox(selected);\n
+    } else {\n
+      try { ret = selected.getBBox();} catch(e){}\n
+    }\n
+    break;\n
+  case \'g\':\n
+  case \'a\':\n
+    ret = groupBBFix(selected);\n
+    break;\n
+  default:\n
+\n
+    if(elname === \'use\') {\n
+      ret = groupBBFix(selected, true);\n
+    }\n
+    \n
+    if(elname === \'use\') {\n
+      if(!ret) ret = selected.getBBox();\n
+      //if(!svgedit.browser.isWebkit()) {\n
+      //  var bb = {};\n
+      //  bb.width = ret.width;\n
+      //  bb.height = ret.height;\n
+      //  bb.x = ret.x + parseFloat(selected.getAttribute(\'x\')||0);\n
+      //  bb.y = ret.y + parseFloat(selected.getAttribute(\'y\')||0);\n
+      //  ret = bb;\n
+      //}\n
+    } else if(~visElems_arr.indexOf(elname)) {\n
+      try { ret = selected.getBBox();} \n
+      catch(e) { \n
+        // Check if element is child of a foreignObject\n
+        var fo = $(selected).closest("foreignObject");\n
+        if(fo.length) {\n
+          try {\n
+            ret = fo[0].getBBox();\n
+          } catch(e) {\n
+            ret = null;\n
+          }\n
+        } else {\n
+          ret = null;\n
+        }\n
+      }\n
+    }\n
+  }\n
+  \n
+  if(ret) {\n
+    ret = svgedit.utilities.bboxToObj(ret);\n
+  }\n
+\n
+  // get the bounding box from the DOM (which is in that element\'s coordinate system)\n
+  return ret;\n
+};\n
+\n
+// Function: svgedit.utilities.getRotationAngle\n
+// Get the rotation angle of the given/selected DOM element\n
+//\n
+// Parameters:\n
+// elem - Optional DOM element to get the angle for\n
+// to_rad - Boolean that when true returns the value in radians rather than degrees\n
+//\n
+// Returns:\n
+// Float with the angle in degrees or radians\n
+svgedit.utilities.getRotationAngle = function(elem, to_rad) {\n
+  var selected = elem || editorContext_.getSelectedElements()[0];\n
+  // find the rotation transform (if any) and set it\n
+  var tlist = svgedit.transformlist.getTransformList(selected);\n
+  if(!tlist) return 0; // <svg> elements have no tlist\n
+  var N = tlist.numberOfItems;\n
+  for (var i = 0; i < N; ++i) {\n
+    var xform = tlist.getItem(i);\n
+    if (xform.type == 4) {\n
+      return to_rad ? xform.angle * Math.PI / 180.0 : xform.angle;\n
+    }\n
+  }\n
+  return 0.0;\n
+};\n
+\n
+// Function: getElem\n
+// Get a DOM element by ID within the SVG root element.\n
+//\n
+// Parameters:\n
+// id - String with the element\'s new ID\n
+if (svgedit.browser.supportsSelectors()) {\n
+  svgedit.utilities.getElem = function(id) {\n
+    // querySelector lookup\n
+    return svgroot_.querySelector(\'#\'+id);\n
+  };\n
+} else if (svgedit.browser.supportsXpath()) {\n
+  svgedit.utilities.getElem = function(id) {\n
+    // xpath lookup\n
+    return domdoc_.evaluate(\n
+      \'svg:svg[@id="svgroot"]//svg:*[@id="\'+id+\'"]\',\n
+      domcontainer_, \n
+      function() { return "http://www.w3.org/2000/svg"; },\n
+      9,\n
+      null).singleNodeValue;\n
+  };\n
+} else {\n
+  svgedit.utilities.getElem = function(id) {\n
+    // jQuery lookup: twice as slow as xpath in FF\n
+    return $(svgroot_).find(\'[id=\' + id + \']\')[0];\n
+  };\n
+}\n
+\n
+// Function: assignAttributes\n
+// Assigns multiple attributes to an element.\n
+//\n
+// Parameters: \n
+// node - DOM element to apply new attribute values to\n
+// attrs - Object with attribute keys/values\n
+// suspendLength - Optional integer of milliseconds to suspend redraw\n
+// unitCheck - Boolean to indicate the need to use svgedit.units.setUnitAttr\n
+svgedit.utilities.assignAttributes = function(node, attrs, suspendLength, unitCheck) {\n
+\n
+  for (var i in attrs) {\n
+    var ns = (i.substr(0,4) === "xml:" ? XMLNS : \n
+      i.substr(0,6) === "xlink:" ? XLINKNS : null);\n
+      \n
+    if(ns) {\n
+      node.setAttributeNS(ns, i, attrs[i]);\n
+    } else if(!unitCheck) {\n
+      node.setAttribute(i, attrs[i]);\n
+    } else {\n
+      svgedit.units.setUnitAttr(node, i, attrs[i]);\n
+    }\n
+    \n
+  }\n
+};\n
+\n
+// Function: cleanupElement\n
+// Remove unneeded (default) attributes, makes resulting SVG smaller\n
+//\n
+// Parameters:\n
+// element - DOM element to clean up\n
+svgedit.utilities.cleanupElement = function(element) {\n
+  var defaults = {\n
+    \'fill-opacity\':1,\n
+    \'stop-opacity\':1,\n
+    \'opacity\':1,\n
+    \'stroke\':\'none\',\n
+    \'stroke-dasharray\':\'none\',\n
+    \'stroke-linejoin\':\'miter\',\n
+    \'stroke-linecap\':\'butt\',\n
+    \'stroke-opacity\':1,\n
+    \'stroke-width\':1,\n
+    \'rx\':0,\n
+    \'ry\':0\n
+  }\n
+  \n
+  for(var attr in defaults) {\n
+    var val = defaults[attr];\n
+    if(element.getAttribute(attr) == val) {\n
+      element.removeAttribute(attr);\n
+    }\n
+  }\n
+  \n
+};\n
+\n
+\n
+})();
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>17993</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

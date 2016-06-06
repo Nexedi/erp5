@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+counter_line = 0\n
+result = []\n
+resultContainer = {}\n
+result_line = []\n
+\n
+if listbox is None:\n
+  listbox = []\n
+\n
+\n
+def isSameSet(a, b):\n
+  for i in a:\n
+    if not(i in b) : return 0\n
+  for i in b:\n
+    if not(i in a): return 0\n
+  if len(a) != len(b) : return 0\n
+  return 1\n
+\n
+# remove previous line\n
+old_line = [x.getId() for x in context.objectValues(portal_type=[line_portal_type, container_line_portal_type])]\n
+if len(old_line)>0:\n
+  for line_id in old_line:\n
+    r = context.deleteContent(line_id)\n
+\n
+cash_container_item_dict = {}\n
+unrestricted_catalog = context.CatalogTool_unrestrictedSearchResults\n
+\n
+# retreive selected rows\n
+portal = context.getPortalObject()\n
+list_selection_name = context.REQUEST[\'list_selection_name\']\n
+selection_tool = context.getPortalObject().portal_selections\n
+checked_uid_list = selection_tool.getSelectionCheckedUidsFor(list_selection_name)\n
+context.log("Checked uid list: %s" % checked_uid_list)\n
+\n
+for checked_uid in checked_uid_list:\n
+    container = unrestricted_catalog(uid=checked_uid)[0].getObject()\n
+    container_dict = {}\n
+    container_dict["reference"] = container.getReference()\n
+    container_dict["range_start"] = container.getCashNumberRangeStart()\n
+    container_dict["range_stop"] = container.getCashNumberRangeStop()\n
+    container_lines = container.objectValues(portal_type=\'Container Line\')\n
+    if len(container_lines) == 0:\n
+      context.log("Delivery_saveContainerFastInputLine", "No container line find for cash container %s" %(cash_container.getRelativeUrl(),))\n
+      continue\n
+    container_line = container_lines[0]\n
+    container_dict["resource"] = container_line.getResourceValue()\n
+    container_dict["quantity"] = container_line.getQuantity()\n
+    container_dict["variation_category"] = container_line.getVariationCategoryList()\n
+    container_dict["base_variation_category"] = container_line.getVariationBaseCategoryList()\n
+    cash_container_item_dict[container] = container_dict\n
+    continue\n
+\n
+context.log("cash_container_item_list", cash_container_item_dict)\n
+\n
+resource_total_quantity = 0\n
+\n
+for cash_container in cash_container_item_dict.keys():\n
+  container_dict = cash_container_item_dict[cash_container]\n
+\n
+  movement_container = context.newContent(portal_type          = container_line_portal_type\n
+                                          , reindex_object     = 1\n
+                                          , reference                 = container_dict[\'reference\']\n
+                                          , cash_number_range_start   = container_dict[\'range_start\']\n
+                                          , cash_number_range_stop    = container_dict[\'range_stop\']\n
+                                          )\n
+  movement_container.setAggregateValueList([cash_container,])\n
+  # create a cash container line\n
+  container_line = movement_container.newContent(portal_type      = \'Container Line\'\n
+                                                 , reindex_object = 1\n
+                                                 #, resource_value = container_dict[\'resource\']\n
+                                                 , quantity       = container_dict[\'quantity\']\n
+                                                 )\n
+\n
+  container_line.setResourceValue(container_dict[\'resource\'])\n
+  container_line.setVariationCategoryList(container_dict[\'variation_category\'])\n
+  container_line.updateCellRange(script_id=\'CashDetail_asCellRange\',base_id="movement")\n
+  resource_total_quantity = 0\n
+  for key in container_line.getCellKeyList(base_id=\'movement\'):\n
+    if isSameSet(key,container_dict[\'variation_category\']):\n
+      cell = container_line.newCell(*key)\n
+      cell.setCategoryList(container_dict[\'variation_category\'])\n
+      cell.setQuantity(container_dict[\'quantity\'])\n
+      cell.setMappedValuePropertyList([\'quantity\',\'price\'])\n
+      cell.setMembershipCriterionBaseCategoryList(container_dict[\'base_variation_category\'])\n
+      cell.setMembershipCriterionCategoryList(container_dict[\'variation_category\'])\n
+      cell.edit(force_update = 1,\n
+                price = container_line.getResourceValue().getBasePrice())\n
+\n
+    resource_total_quantity += container_dict[\'quantity\']\n
+\n
+  movement_line = context.newContent(      portal_type    = line_portal_type,\n
+                                           resource_value = container_dict[\'resource\'],\n
+                                           quantity_unit_value = context.portal_categories.quantity_unit.unit\n
+                                           )\n
+  movement_line.setVariationBaseCategoryList(container_dict[\'base_variation_category\'])\n
+  movement_line.setVariationCategoryList(container_dict[\'variation_category\'])\n
+  movement_line.updateCellRange(script_id="CashDetail_asCellRange", base_id="movement")\n
+  for key in movement_line.getCellKeyList(base_id=\'movement\'):\n
+    if isSameSet(key,container_dict[\'variation_category\']):\n
+      cell = movement_line.newCell(*key)\n
+      cell.setCategoryList(container_dict[\'variation_category\'])\n
+      cell.setQuantity(resource_total_quantity)\n
+      cell.setMappedValuePropertyList([\'quantity\',\'price\'])\n
+      cell.setMembershipCriterionBaseCategoryList(container_dict[\'base_variation_category\'])\n
+      cell.setMembershipCriterionCategoryList(container_dict[\'variation_category\'])\n
+      cell.edit(force_update = 1,\n
+                  price = movement_line.getResourceValue().getBasePrice())\n
+  # Call getPrice so lines are modified before being stored, not on indexation. Sigh.\n
+  container_line.getPrice()\n
+\n
+request  = context.REQUEST\n
+redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
+                                , \'portal_status_message=done\'\n
+                                )\n
+request[ \'RESPONSE\' ].redirect( redirect_url )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=None, line_portal_type=None,container_line_portal_type=None,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Delivery_saveContainerFastInputLine</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

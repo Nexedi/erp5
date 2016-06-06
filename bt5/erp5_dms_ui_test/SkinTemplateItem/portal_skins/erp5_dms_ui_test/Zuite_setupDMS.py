@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# Setup System Preference\n
+dms_system_preference_id = \'dms_system_preference_ui_tests\'\n
+portal_preferences = context.portal_preferences\n
+dms_preference = portal_preferences.getActiveSystemPreference()\n
+if dms_preference is None:\n
+  dms_preference = portal_preferences.newContent(id = dms_system_preference_id,\n
+                                                 portal_type = \'System Preference\')\n
+kw = dict(priority = 1,\n
+          preferred_document_reference_regular_expression = \'(?P<reference>[a-zA-Z0-9-_.]+-[a-zA-Z0-9-_.]+)(|-(?P<version>[0-9a-zA-Z.]+))(|-(?P<language>[a-z]{2})[^-]*)?\',\n
+          preferred_document_file_name_regular_expression = \'(?P<node_reference>[a-zA-Z0-9_-]+)-(?P<local_reference>[a-zA-Z0-9_.]+)-(?P<version>[0-9a-zA-Z.]+)-(?P<language>[a-z]{2})[^-]*?\',\n
+          preferred_synchronous_metadata_discovery = True,\n
+          preferred_redirect_to_document = True)\n
+dms_preference.edit(**kw)\n
+if dms_preference.getPreferenceState()==\'disabled\':\n
+  dms_preference.enable()\n
+\n
+# Setup Preference so we can setup Access Tab\n
+dms_preference_id = \'dms_preference_ui_tests\'\n
+dms_preference = portal_preferences.getActivePreference()\n
+if dms_preference is None:\n
+  dms_preference = portal_preferences.newContent(\n
+                    id = dms_preference_id,\n
+                    portal_type = \'Preference\')\n
+kw=dict(priority = 1,\n
+        preferred_html_style_access_tab=1,\n
+        preferred_listbox_list_mode_line_count=10)\n
+dms_preference.edit(**kw)\n
+if dms_preference.getPreferenceState()==\'disabled\':\n
+  dms_preference.enable()\n
+\n
+# Publish all knowledge pad gadgets\n
+for gadget in context.portal_gadgets.objectValues():\n
+  if gadget.getValidationState() == \'invisible\':\n
+    gadget.visible()\n
+    gadget.public()\n
+\n
+print "Done"\n
+return printed\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Zuite_setupDMS</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block tal:define="shipping here/SaleOrder_getSelectedShippingResource;\n
+                       web_site here/getWebSiteValue;">\n
+  <h2>\n
+    <span tal:replace="python: here.Base_translateString(\'Shipping\')"/>\n
+  </h2>\n
+\n
+  <tal:block tal:condition="python: shipping is None">\n
+    <h3> <span tal:replace="python: here.Base_translateString(\'You have not selected shipping\')"/></h3>\n
+    <p> \n
+      <strong>\n
+        <span tal:replace="python: here.Base_translateString(\'Your current cart selection requires shipping. Please select shipping from\')"/>\n
+        <a tal:attributes="href python: \'%s/cart\' % web_site.absolute_url()">here</a>.\n
+      </strong>\n
+    </p>\n
+  </tal:block>\n
+\n
+  <tal:block tal:condition="python: shipping is not None">\n
+    <p>\n
+      <span tal:replace="shipping_obj/getTitle"/> : \n
+      <b>\n
+        <span tal:replace="shipping/getPrice"/>\n
+        <span tal:replace="python: web_site.WebSite_getShoppingCartDefaultCurrency().getTitle()"/>\n
+      </b>\n
+    </p>\n
+  </tal:block>\n
+</tal:block>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SaleOrder_viewShippingRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode>Shipping method custom renderer</unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

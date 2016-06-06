@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Create a blog message for current Web Section.\n
+  Try to guess as much as possible from current Web Section.\n
+"""\n
+\n
+portal = context.getPortalObject()\n
+portal_type = \'Web Page\'\n
+module = portal.getDefaultModule(portal_type=portal_type)\n
+\n
+# set predicate settings for current Web Section\n
+membership_criterion_category_list = context.getMembershipCriterionCategoryList()\n
+\n
+# generate nice reference from title\n
+reference = context.Base_generateReferenceFromString(title)\n
+existing_document = context.getDocumentValue(reference)\n
+if existing_document is not None:\n
+  # if there are other document which reference duplicates just add some random part\n
+  # so we can distinguish)\n
+  reference = \'%s-%s\' %(context.Base_generateRandomString(), reference)\n
+\n
+article = module.newContent(portal_type=portal_type,\n
+                  title=title,\n
+                  version=version,\n
+                  text_content=text_content,\n
+                  subject_list=subject_list,\n
+                  site_list=site_list,\n
+                  reference=reference,\n
+                  publication_section_list=publication_section_list,\n
+                  language=language,\n
+                  group_list=group_list,\n
+                  function_list=function_list,\n
+                  effective_date=effective_date,\n
+                  classification=classification)\n
+article.setCategoryList(membership_criterion_category_list)\n
+article.submit("Automatic Submit")\n
+\n
+portal_status_message = context.Base_translateString("New Blog Message created. It will be submitted for approval before it becomes visible.")\n
+return context.Base_redirect(\'\', keep_items = dict(portal_status_message=portal_status_message ))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>classification=None, effective_date=None, function_list=None, group_list=None, language=\'en\', publication_section_list=None, reference=None, site_list=None, subject_list=None, text_content=None, title=None, version=\'001\', **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_newBlogMessage</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

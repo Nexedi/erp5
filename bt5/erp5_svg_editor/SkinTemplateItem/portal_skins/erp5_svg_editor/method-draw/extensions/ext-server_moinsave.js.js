@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>anonymous_http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts52850536.14</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ext-server_moinsave.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+ * ext-server_moinsave.js\n
+ *\n
+ * Licensed under the Apache License, Version 2\n
+ *\n
+ * Copyright(c) 2010 Alexis Deveria\n
+ *              2011 MoinMoin:ReimarBauer\n
+ *                   adopted for moinmoins item storage. it sends in one post png and svg data\n
+ *                   (I agree to dual license my work to additional GPLv2 or later)\n
+ *\n
+ */\n
+\n
+methodDraw.addExtension("server_opensave", {\n
+  callback: function() {\n
+\n
+    var save_svg_action = \'/+modify\';\n
+    \n
+    // Create upload target (hidden iframe)\n
+    var target = $(\'<iframe name="output_frame" src="#"/>\').hide().appendTo(\'body\');\n
+  \n
+    methodDraw.setCustomHandlers({\n
+      save: function(win, data) {\n
+        var svg = "<?xml version=\\"1.0\\"?>\\n" + data;\n
+        var qstr = $.param.querystring();\n
+        var name = qstr.substr(9).split(\'/+get/\')[1];\n
+        var svg_data = svgedit.utilities.encode64(svg);\n
+        if(!$(\'#export_canvas\').length) {\n
+          $(\'<canvas>\', {id: \'export_canvas\'}).hide().appendTo(\'body\');\n
+        }\n
+        var c = $(\'#export_canvas\')[0];\n
+        c.width = svgCanvas.contentW;\n
+        c.height = svgCanvas.contentH;\n
+        $.getScript(\'canvg/canvg.js\', function() {\n
+        canvg(c, svg, {renderCallback: function() {\n
+          var datauri = c.toDataURL(\'image/png\');\n
+          var uiStrings = methodDraw.uiStrings;\n
+          var png_data = svgedit.utilities.encode64(datauri);\n
+          var form = $(\'<form>\').attr({\n
+          method: \'post\',\n
+          action: save_svg_action + \'/\' + name,\n
+          target: \'output_frame\'\n
+        })  .append(\'<input type="hidden" name="png_data" value="\' + png_data + \'">\')\n
+          .append(\'<input type="hidden" name="filepath" value="\' + svg_data + \'">\')\n
+          .append(\'<input type="hidden" name="filename" value="\' + \'drawing.svg">\')\n
+          .append(\'<input type="hidden" name="contenttype" value="application/x-svgdraw">\')\n
+          .appendTo(\'body\')\n
+          .submit().remove();\n
+          }})});\n
+        alert("Saved! Return to Item View!");\n
+        top.window.location = \'/\'+name;\n
+      },\n
+    });\n
+  \n
+  }\n
+});\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2056</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

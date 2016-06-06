@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!--  We must change the way we get the currency on sale order -->\n
+<table>\n
+  <tal:block tal:define="shopping_cart here/SaleOrder_getShoppingCart;\n
+                         shopping_cart_item_list here/SaleOrder_getShoppingCartItemList;\n
+                         web_site here/getWebSiteValue;\n
+                         empty_cart here/SaleOrder_isShoppingCartEmpty;\n
+                         total_price python: here.SaleOrder_getShoppingCartTotalPrice(include_currency=True);">\n
+\n
+  <tr tal:repeat="order_line shopping_cart_item_list">\n
+    <td tal:define="resource python: web_site.restrictedTraverse(order_line.getResource());\n
+                    quantity python: int(order_line.getQuantity());\n
+                    price resource/getPrice;\n
+                    currency web_site/WebSite_getShoppingCartDefaultCurrency;\n
+                    currency_symbol python: context.getPortalObject().restrictedTraverse(shopping_cart.getPriceCurrency()).getShortTitle();"\n
+                    class="cart_top"> \n
+\n
+          <div class="cart_left cart_item_name">\n
+            <span><span tal:replace="quantity"/> x </span>\n
+            <a class="articlelink" href="" tal:attributes="href python: \'%s/%s\' % (resource.absolute_url(), \'Resource_viewAsShop\');">\n
+              <span tal:content="resource/getTitle"/>\n
+            </a>\n
+          </div>\n
+          <div class="cart_right">\n
+            <span>\n
+              <span tal:replace="python: price * quantity"/> <span tal:replace="currency_symbol"/>\n
+            </span>\n
+          </div>       \n
+    </td>\n
+  </tr> \n
+\n
+  <tal:block tal:condition = "empty_cart">\n
+      <tr><td>\n
+        <p class="article"> \n
+          <span tal:replace="python: here.Base_translateString(\'Your shopping cart is empty.\')"/>\n
+        </p>\n
+      </td></tr>\t\t      \n
+   </tal:block>\n
+\n
+  <tal:block tal:condition = "not: empty_cart">\n
+    <tr><td class="cart_middle">\n
+        <div class="cart_left">\n
+          <span tal:replace="python: here.Base_translateString(\'Total\')"/> \n
+        </div>\n
+        <div class="cart_right">\n
+          <span tal:replace="total_price"/>\n
+        </div>  \n
+    </td></tr>\n
+    <tr>\n
+        <td class="cart_bottom">\n
+           <div class="cart_left">\n
+             <a class="articlelink" \n
+                tal:attributes="href python: \'%s/%s\' % (web_site.absolute_url(), web_site.getLayoutProperty(\'ecommerce_cart_section_id\', \'\'))">\n
+                <span tal:replace="python: here.Base_translateString(\'Shopping Cart\')"/>\n
+             </a>\n
+           </div>\n
+        </td>\n
+    </tr>\n
+  </tal:block>\n
+  </tal:block>\n
+</table>\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SaleOrder_viewShoppingCartWidgetRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode>Mini shopping cart widget custom renderer</unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

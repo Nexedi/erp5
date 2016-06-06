@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+Returns a random page in a given Web Section. This Gadget\n
+renderer can be used asynchronously only for now. \n
+\n
+web_section_url -- a relative URL to the web section\n
+                    (relative to portal or to site)\n
+"""\n
+import random\n
+request = context.REQUEST\n
+portal = context.getPortalObject()\n
+\n
+# Find the box if this gadget is asynchronous\n
+#   XXX-JPS: this could show that the script is \n
+#            not called on the appropriate context\n
+#            ie. the box. Discussion is needed here\n
+#            in order to make widgets and gadgets\n
+#            consistent (ie. develop once)\n
+#            --\n
+#            The biggest issue in current design\n
+#            is that all calls are made at the level\n
+#            of the site or at the level of the portal\n
+#            by passing a parameter to the object to\n
+#            edit. This is clearly againt object orientation\n
+if box_relative_url:\n
+  box = portal.restrictedTraverse(box_relative_url)\n
+\n
+# Get the preferences (some casting of preferences would \n
+# probably be a good thing here so that there is no need\n
+# to cas them later)\n
+# \n
+# Prevent fail if no box is provided. \n
+if box is not None:\n
+  preferences = box.KnowledgeBox_getDefaultPreferencesDict()\n
+else:\n
+  preferences = {}\n
+\n
+if web_section_url is None:\n
+  web_section_url = preferences.get(\'web_section_url\', \'\') # XXX-JPS - Why do we have to do casting ? (used to be str()\n
+\n
+# Try to find the web site else use the portal\n
+current_web_site = request.get(\'current_web_site\', None)\n
+if current_web_site is None and parent_web_section_url is not None:\n
+  # XXX-JPS This shows inconsistent API between async and non async mode\n
+  #          Some unification is needed\n
+  current_web_site = portal.restrictedTraverse(parent_web_section_url).getWebSiteValue()\n
+\n
+if current_web_site is None:\n
+  current_web_site = context.getWebSiteValue()\n
+\n
+if current_web_site is None:\n
+  current_web_site = portal\n
+\n
+# Try to find the real section\n
+web_section = current_web_site.restrictedTraverse(web_section_url)\n
+\n
+# Select a random page in the web section\n
+if web_section is not None:\n
+  web_page_list = web_section.getDocumentValueList()\n
+  web_page_len = len(web_page_list)\n
+  if web_page_len:\n
+    web_page_index = random.randint(0, web_page_len - 1)\n
+    return web_page_list[web_page_index].asStrippedHTML()\n
+\n
+return \'\' # Nothing to display\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>box=None, box_relative_url=None, is_gadget_mode=0, parent_web_section_url=None, editable_mode=None, web_section_url=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_viewRandomPageGadget</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

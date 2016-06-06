@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__propsets__</string> </key>
+            <value>
+              <tuple>
+                <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+#!/usr/bin/env node\n
+\n
+// Simple command-line code highlighting tool. Reads code from stdin,\n
+// spits html to stdout. For example:\n
+//\n
+//   echo \'function foo(a) { return a; }\' | bin/source-highlight -s javascript\n
+//   bin/source-highlight -s \n
+\n
+var fs = require("fs");\n
+\n
+var CodeMirror = require("../addon/runmode/runmode.node.js");\n
+require("../mode/meta.js");\n
+\n
+var sPos = process.argv.indexOf("-s");\n
+if (sPos == -1 || sPos == process.argv.length - 1) {\n
+   console.error("Usage: source-highlight -s language");\n
+   process.exit(1);\n
+}\n
+var lang = process.argv[sPos + 1].toLowerCase(), modeName = lang;\n
+CodeMirror.modeInfo.forEach(function(info) {\n
+  if (info.mime == lang) {\n
+    modeName = info.mode;\n
+  } else if (info.name.toLowerCase() == lang) {\n
+    modeName = info.mode;\n
+    lang = info.mime;\n
+  }\n
+});\n
+\n
+if (!CodeMirror.modes[modeName])\n
+  require("../mode/" + modeName + "/" + modeName + ".js");\n
+\n
+function esc(str) {\n
+  return str.replace(/[<&]/g, function(ch) { return ch == "&" ? "&amp;" : "&lt;"; });\n
+}\n
+\n
+var code = fs.readFileSync("/dev/stdin", "utf8");\n
+var curStyle = null, accum = "";\n
+function flush() {\n
+  if (curStyle) process.stdout.write("<span class=\\"" + curStyle.replace(/(^|\\s+)/g, "$1cm-") + "\\">" + esc(accum) + "</span>");\n
+  else process.stdout.write(esc(accum));\n
+}\n
+\n
+CodeMirror.runMode(code, lang, function(text, style) {\n
+  if (style != curStyle) {\n
+    flush();\n
+    curStyle = style; accum = text;\n
+  } else {\n
+    accum += text;\n
+  }\n
+});\n
+flush();
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>source-highlight</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PropertySheet" module="OFS.PropertySheets"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_md</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>xmlns</string> </key>
+                    <value> <unicode>http://apache.org/dav/props/</unicode> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <unicode>executable</unicode> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta</string> </key>
+                      <value>
+                        <dictionary>
+                          <item>
+                              <key> <string>__xml_attrs__</string> </key>
+                              <value>
+                                <dictionary/>
+                              </value>
+                          </item>
+                        </dictionary>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>executable</string> </key>
+            <value> <string>T</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

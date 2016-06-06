@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>portal = context.getPortalObject()\n
+\n
+bt_repository_list = [\'http://www.erp5.org/dists/snapshot/bt5/\']\n
+customer_user1_reference = \'PERSON_USER_REFERENCE\'\n
+customer_user1_used_reference = \'PERSON_RESERVED_REFERENCE\'\n
+\n
+# setup preferences\n
+preference_id = \'default_initial_configurator_system_preference\'\n
+\n
+default_site_preference = getattr(portal.portal_preferences, preference_id, None)\n
+\n
+if default_site_preference is None:\n
+  default_site_preference = portal.portal_preferences.newContent(\n
+                                id = \'default_initial_configurator_system_preference\',\n
+                                portal_type=\'System Preference\', priority = 1)\n
+\n
+default_site_preference.setPreferredHtmlStyleUnsavedFormWarning(False)\n
+default_site_preference.setPreferredHtmlStyleDevelopperMode(None)\n
+default_site_preference.setPreferredHtmlStyleAccessTab(\'1\')\n
+\n
+previous_conversion_server_address = portal.portal_preferences.getPreferredOoodocServerAddress()\n
+default_site_preference.setPreferredOoodocServerAddress(previous_conversion_server_address)\n
+\n
+previous_conversion_port = portal.portal_preferences.getPreferredOoodocServerPortNumber()\n
+default_site_preference.setPreferredOoodocServerPortNumber(previous_conversion_port)\n
+\n
+if default_site_preference.getPreferenceState() != \'global\':\n
+  default_site_preference.enable()\n
+\n
+# update repository info of Configurator site\n
+if len(portal.portal_templates.getRepositoryList()) == 0:\n
+  portal.portal_templates.updateRepositoryBusinessTemplateList(\n
+    repository_list = bt_repository_list)\n
+\n
+# (Re)Create the Business Configurator\n
+bc_id = \'STANDARD_CONFIGURATOR_TEST\'\n
+business_configuration = getattr(context.business_configuration_module, bc_id, None)\n
+if business_configuration is not None:\n
+  context.business_configuration_module.manage_delObjects([bc_id])\n
+\n
+business_configuration = context.business_configuration_module.newContent(\n
+                            portal_type="Business Configuration",\n
+                            id=bc_id, \n
+                            title=bc_id)\n
+\n
+business_configuration.setResource(workflow_path)\n
+\n
+# (Re)Create the Person with already used login.\n
+kw = dict(portal_type="Person",\n
+          reference=customer_user1_used_reference)\n
+person = context.portal_catalog.getResultValue(**kw)\n
+if person is None:\n
+  context.person_module.newContent(**kw)\n
+\n
+kw[\'reference\'] = customer_user1_reference\n
+person = context.portal_catalog.getResultValue(**kw)\n
+if person is not None:\n
+  context.person_module.manage_delObjects([person.getId()])\n
+\n
+portal.portal_caches.clearAllCache()\n
+return "### Init Ok ###"\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>workflow_path="workflow_module/erp5_standard_workflow"</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Zuite_setUpConfigurationTest</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

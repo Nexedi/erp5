@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block tal:define="last_post here/DiscussionThread_getLastPost;\n
+                       author_dict last_post/DiscussionPost_getAuthorDict;\n
+                       is_author_link_available python:author_dict[\'author_url\'] is not None;">\n
+\n
+  <a class="listbox-row-discussion-thread-last-post-by-author-link"\n
+     tal:attributes="href author_dict/author_url"\n
+     tal:content="author_dict/author_title"\n
+     tal:condition="is_author_link_available"/>\n
+\n
+  <span tal:content="author_dict/author_title"\n
+        tal:condition="not:is_author_link_available"/>\n
+ \n
+  <a class="listbox-row-discussion-thread-last-post-link"\n
+     tal:attributes="href python: \'%s/view?list_start=%s&reset=1#%s\' %(here.getReference(), last_post.getId(), last_post.getUid())">\n
+    <img src="document_icon.gif" alt="Link To Post"/>\n
+  </a>\n
+ \n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>DiscussionThread_viewLastPostWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

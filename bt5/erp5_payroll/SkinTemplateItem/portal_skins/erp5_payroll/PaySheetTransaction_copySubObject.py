@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>\'\'\'This script copies sub objects of models (corresponding to the \n
+portal_type_list) in the paysheet.\n
+\'\'\'\n
+\n
+sub_object_list = context.getInheritedObjectValueList(\n
+                         portal_type_list, property_list=property_list)\n
+\n
+# Erase existing sub objects with same reference\n
+delete_id_list = []\n
+for sub_object in sub_object_list:\n
+  sub_object_reference = sub_object.getProperty(\'reference\', sub_object.getId())\n
+  for existing_sub_object in context.contentValues(portal_type=portal_type_list):\n
+    if sub_object_reference == existing_sub_object.getProperty(\n
+                                    \'reference\', existing_sub_object.getId()):\n
+      delete_id_list.append(existing_sub_object.getId())\n
+\n
+if delete_id_list:\n
+  context.manage_delObjects(ids=delete_id_list)\n
+\n
+sub_object_by_model = {}\n
+for sub_object in sub_object_list:\n
+  sub_object_by_model.setdefault(\n
+           sub_object.getParentValue(), []).append(sub_object.getId())\n
+\n
+for model, sub_object_id_list in sub_object_by_model.items():\n
+  copy_data = model.manage_copyObjects(sub_object_id_list)\n
+  context.manage_pasteObjects(copy_data)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>portal_type_list=[], property_list=()</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetTransaction_copySubObject</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

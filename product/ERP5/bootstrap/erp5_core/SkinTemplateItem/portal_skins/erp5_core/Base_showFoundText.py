@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  This script is used in listbox allowing when switching \'table\' --> \'search\' mode.\n
+  It will try to generate parts of the document\'s text \n
+  containing searched words as well highlighting the searched \n
+  words in the text itself.\n
+"""\n
+from Products.ERP5.Document.Document import NotConvertedError\n
+\n
+encoding = \'utf-8\'\n
+is_gadget_mode = context.REQUEST.get(\'is_gadget_mode\', 0)\n
+\n
+if is_gadget_mode:\n
+  # in gadget mode less space is available thus show less text\n
+  max_text_length = 100\n
+  max_lines = 1\n
+\n
+def getRandomDocumentTextExcerpt(document_text):\n
+  # try to get somewhat arbitrary choice of searchable attrs\n
+  if isinstance(document_text, str) and document_text!=\'\':\n
+    document_text = document_text.decode(encoding, \'ignore\')\n
+    start = min(len(document_text) - 300, 200)\n
+    return \'... %s ...\' %document_text[start:start + max_text_length].encode(encoding)\n
+  else:\n
+    return \'\'\n
+\n
+if document_text is None:\n
+  try:\n
+    # if SearchableText is joinned as it is, we use it for better performance.\n
+    document_text = getattr(context, \'SearchableText\', None)\n
+    if not isinstance(document_text, (str, unicode)):\n
+      document_text = context.getSearchableText()\n
+  except NotConvertedError:\n
+    return context.Base_translateString("This document is not converted yet.")\n
+\n
+search_string = context.Base_getSearchText(selection)\n
+\n
+if search_string != \'\':\n
+  search_argument_list = context.Base_parseSearchString(search_string)\n
+  search_string = search_argument_list.get(\'searchabletext\', \'\')\n
+\n
+if search_string == \'\':\n
+  # the searched words are empty (e.g. because we used only parameters \n
+  # without pure searchable text)\n
+  return getRandomDocumentTextExcerpt(document_text)\n
+else:\n
+  found_text_fragments = context.Base_getExcerptText(\n
+                           context, \\\n
+                           document_text, \\\n
+                           search_string, \\\n
+                           tags = (\'<em>\', \'</em>\'), \\\n
+                           trail = 5, \\\n
+                           maxlines = max_lines)\n
+  result = \' \'.join(map(str, found_text_fragments))\n
+\n
+  # Document may contains charactors which utf8 codec cannot decode.\n
+  unicode_result = result.decode(encoding, \'ignore\')\n
+  result = unicode_result.encode(encoding)\n
+\n
+  return result\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>document_text=None, selection=None, max_lines = 5, max_text_length = 500</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_showFoundText</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

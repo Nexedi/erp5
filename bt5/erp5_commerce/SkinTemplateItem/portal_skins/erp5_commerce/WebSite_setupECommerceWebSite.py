@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>translateString = context.Base_translateString \n
+\n
+if (context.getPortalType() != \'Web Site\'):\n
+  context.Base_redirect(\'\', keep_items={\n
+   \'portal_status_message\': translateString("You can only launch this script on a web site.", mapping={})\n
+                                       })\n
+\n
+# creation the default sections\n
+object_id_list = [\'cart\', \'account\', \'register\']\n
+for id in object_id_list:\n
+  if id in context.objectIds():\n
+    context.manage_delObjects([id])\n
+\n
+cart_section = context.newContent(portal_type=\'Web Section\', title=\'Cart\', id=\'cart\')\n
+account_section = context.newContent(portal_type=\'Web Section\', title=\'My account\', id=\'account\')\n
+register_section = context.newContent(portal_type=\'Web Section\', title=\'Register\', id=\'register\')\n
+checkout_section = context.newContent(portal_type=\'Web Section\', title=\'Checkout\', id=\'checkout\')\n
+\n
+# make some visible by default\n
+cart_section.setVisible(True)\n
+\n
+# setup site properties\n
+context.setContainerLayout(\'erp5_web_multiflex5_commerce_layout\')\n
+context.setLayoutConfigurationFormId(\'WebSection_viewMultiflex5Configuration\')\n
+context.setProperty(\'layout_right_column\', True)\n
+context.setSiteMapSectionParent(True)\n
+context.setContentLayout(None)\n
+context.setProperty(\'layout_additional_css\', \'mf54_commerce.css\')\n
+\n
+# setup default render method\n
+cart_section.setCustomRenderMethodId(\'SaleOrder_viewAsWeb\')\n
+cart_section.setProperty(\'ecommerce_default_content\', True)\n
+cart_section.setProperty(\'ecommerce_product_list\', False)\n
+account_section.setCustomRenderMethodId(\'WebSection_viewCurrentPersonAsWeb\')\n
+account_section.setProperty(\'ecommerce_default_content\', True)\n
+account_section.setProperty(\'ecommerce_product_list\', False)\n
+register_section.setCustomRenderMethodId(\'WebSite_viewRegistrationDialog\')\n
+register_section.setProperty(\'ecommerce_default_content\', True)\n
+register_section.setProperty(\'ecommerce_product_list\', False)\n
+checkout_section.setCustomRenderMethodId(\'SaleOrder_viewConfirmAsWeb\')\n
+checkout_section.setProperty(\'ecommerce_default_content\', True)\n
+checkout_section.setProperty(\'ecommerce_product_list\', False)\n
+\n
+context.Base_redirect(\'\', keep_items={\n
+   \'portal_status_message\': translateString("Your web site is now an ecommerce plateform.", mapping={})\n
+                                       })\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_setupECommerceWebSite</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

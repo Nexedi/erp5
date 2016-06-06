@@ -1,0 +1,248 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""This script collects *all* filled properties in the P0\n
+request_eform and creates a new Person record and an organisation for this person.\n
+"""\n
+\n
+# Initalize some useful variables\n
+from Products.ZSQLCatalog.SQLCatalog import ComplexQuery\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+request_eform = state_change[\'object\']\n
+portal = request_eform.getPortalObject()\n
+person_module = portal.person_module\n
+organisation_module = portal.organisation_module\n
+organisation = None\n
+if not request_eform.getActivityRestartCheck():\n
+  organisation = organisation_module.newContent(portal_type=\'Organisation\')\n
+  organisation.edit(title = request_eform.getLogo(),\n
+                    corporate_name = request_eform.getLogo(),\n
+                    activity_free_text = request_eform.getMainActivityFreeText(),\n
+                    default_address_street_address = request_eform.getRealAddress())\n
+else:\n
+  rccm = request_eform.getPreviousActivityCorporateRegistrationCode()\n
+  if rccm :\n
+    organisation_list = portal.organisation_module.searchFolder(\\\n
+        corporate_registration_code=rccm)\n
+    if len(organisation_list) >1 :\n
+      raise ValidationFailed, "Error : There is more than one organisation with the "\\\n
+              " rccm number \'%s\'" % rccm\n
+    elif len(organisation_list) == 0:\n
+      raise ValidationFailed, "Error : There is no organisation with the "\\\n
+              " rccm number \'%s\'" % rccm\n
+    organisation = organisation_list[0].getObject()\n
+\n
+if request_eform.getBeginning():\n
+  organisation.setRole(\'commerce/siege\')\n
+if request_eform.getOpening():\n
+  organisation.setRole(\'commerce/succursale\')\n
+\n
+date = request_eform.getDate()\n
+# Create a new person based on eform data\n
+# we suppose here that all data in the form has\n
+# been validated - ex. by a constraint on the\n
+# validate transition or by any guard script\n
+request_eform.setTitle(request_eform.getFirstName() + \' \' + request_eform.getLastName())\n
+#Custom method used to create custom-made corporate_registration_codes for the companies\n
+def attachLocationYearInfo(last_id):\n
+  location_info = request_eform.getSite().split(\'/\')[0]\n
+  if location_info == \'dakar\':\n
+    location_initials = \'DKR\'\n
+  elif location_info == \'thies\':\n
+    location_initials = \'TH\'\n
+  elif location_info == \'saint-louis\':\n
+    location_initials = \'SL\'\n
+  year = str(date.year())\n
+  type_of_form = \'A\'\n
+  attach_info = \'SN\' + location_initials + year + type_of_form\n
+  last_corporate_registration_code = str(str(last_id).split(\'-\').pop())\n
+  new_corporate_registration_code  = \'%05d\' % int(str(int(last_corporate_registration_code)+1))\n
+  return (\'-\'.join([\'SN\', location_initials, year, type_of_form, new_corporate_registration_code]))\n
+\n
+# We shall now allocate a new registry number\n
+# using the custom method attachLocationYearInfo\n
+# we use corporate_registry for corporations and\n
+# merchant_registry for merchants.\n
+# the id_group is extended with the group path so that\n
+# each local registry has a different sequence\n
+\n
+group = (date.year(),)\n
+\n
+new_registry_number = request_eform.portal_ids.generateNewId(\n
+                                     id_group = group,\n
+                                     method = attachLocationYearInfo)\n
+\n
+# build a query and search in person module if the person already exists,\n
+# if the person does not exist, create the person and a new assignment for \n
+# the person with function commercant on the organisation if the \n
+# person exist, just add a new assignment for the person with the function\n
+# commercant on organisation\n
+query=ComplexQuery(Query(title=request_eform.getTitle()),\n
+             Query(birth_date=request_eform.getStartDate()),\n
+             Query(birthplace_city=request_eform.getDefaultBirthplaceAddressCity()),\n
+             operator="AND")\n
+person_list = [person.getObject() for person in person_module.searchFolder(query=query)]\n
+if  request_eform.getBeginning() or request_eform.getOpening():\n
+  if len(person_list) == 0:\n
+    person = person_module.newContent(portal_type=\'Person\')\n
+    person.edit(\n
+      first_name = request_eform.getFirstName(),\n
+      last_name = request_eform.getLastName(),\n
+      default_address_street_address = request_eform.getHeadOfficeAddress(),\n
+      start_date = request_eform.getStartDate(),\n
+      default_birthplace_address_city = request_eform.getDefaultBirthplaceAddressCity(),\n
+      default_address_city = request_eform.getPlace(),\n
+      nationality = request_eform.getCitizenship().lower())\n
+    # Update matrimonial situation for the person\n
+    if request_eform.getMarriedCheck():\n
+      person.edit(marital_status = \'married\')\n
+    elif request_eform.getDivorcedCheck():\n
+      person.edit(marital_status = \'divorced\')\n
+    elif request_eform.getSingleCheck():\n
+      person.edit(marital_status = \'single\')\n
+    elif request_eform.getWidowerCheck():\n
+      person.edit(marital_status = \'widowed\')\n
+    if request_eform.getMrCheck():\n
+      person.edit(gender = \'male\')\n
+    else:\n
+      person.edit(gender = \'female\')\n
+\n
+  else: # person exists\n
+    if len(person_list) >1 :\n
+      raise ValidationFailed, "Error : There is more than one person with the "\\\n
+              " title \'%s\', birth date \'%s\' and birthplace \'%s\'" % (request_eform.getTitle(),\n
+                  request_eform.getStartDate(),\n
+                  request_eform.getDefaultBirthplaceAddressCity())\n
+    elif len(person_list) == 0:\n
+      raise ValidationFailed, "Error : There is nobody with the "\\\n
+              " title \'%s\', birth date \'%s\' and birthplace \'%s\'" % (request_eform.getTitle(),\n
+                  request_eform.getStartDate(),\n
+                  request_eform.getDefaultBirthplaceAddressCity())\n
+    else:\n
+      person = person_list[0]\n
+\n
+  # add a new assignment to this person and open existing assignments\n
+  destination_form_uid = context.portal_categories.destination_form.getUid()\n
+  assignment_list = [assignment.getObject() for assignment in context.portal_catalog(portal_type=\'Assignment\',\n
+                      validation_state = \'open_submitted\',\n
+                      destination_form_uid = request_eform.getUid())]\n
+  for assignment in assignment_list:\n
+    assignment.open()\n
+    assignment.edit(destination_value=organisation,\n
+                   corporate_registration_code=new_registry_number)\n
+  assignment = person.newContent(portal_type=\'Assignment\',\n
+                                 function=\'commerce/commercant\',\n
+                                 start_date=request_eform.getBeginningDate(),\t\n
+                                 destination_form_value=request_eform,\n
+                                 destination_value=organisation)\n
+  assignment.openSubmit()\n
+  assignment.open()\n
+  person.updateLocalRolesOnSecurityGroups()\n
+\n
+# In case of an harmonisation, update the organisation corporate_registration_code with the old corporate_registration_code\n
+#used to create the organisation\n
+if not request_eform.getBeginning() and not request_eform.getActivityRestartCheck() and not request_eform.getOpening():\n
+  organisation.edit(corporate_registration_code = request_eform.getCorporateRegistrationCode(),\n
+    geographic_incorporate_code = \'-\'.join(str(request_eform.getCorporateRegistrationCode()).split(\'-\')[0:2])\n
+)\n
+elif not request_eform.getActivityRestartCheck():\n
+  organisation.edit(corporate_registration_code = new_registry_number,\n
+    geographic_incorporate_code = \'-\'.join(str(new_registry_number).split(\'-\')[0:2])\n
+  )\n
+\n
+# In case of opening a secondary establishment, the main company rccm number\n
+# have to be saved in source_reference variable \n
+if request_eform.getOpening():\n
+  organisation.setSourceReference(request_eform.getPreviousOwnerCorporateRegistrationCode())\n
+\n
+organisation.activerEntreprise()\n
+organisation.updateLocalRolesOnSecurityGroups()\n
+# Update the request_eform with the allocated number\n
+request_eform.edit(corporate_registration_code = new_registry_number,\n
+                   registration_number = new_registry_number)\n
+# Update the registration date of the request_eform with the time when the registry officer\n
+#validates the transition\n
+history_list = request_eform.portal_workflow.getInfoFor(request_eform,\n
+                                                        \'history\',\n
+                                                        wf_id=\'egov_form_validation_workflow\')\n
+for history in history_list:\n
+  if history[\'action\'] == \'validate_action\':\n
+    request_eform.edit(registration_date = history[\'time\'])\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>createPersonFromP0</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

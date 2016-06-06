@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""Returns the most suitable currency for a section.\n
+\n
+If the section is an organisation, returns this organisation\'s accounting\n
+currency.\n
+If the section is a category, find the most suitable currency.\n
+\n
+XXX consider using Base_getCurrencyForSectionCategory instead, because it supports\n
+section_category_strict parameter and checks for duplicate currency used.\n
+"""\n
+\n
+def getCurrencyForSection(section_url):\n
+  portal = context.getPortalObject()\n
+  section = portal.portal_categories.restrictedTraverse(section_url)\n
+\n
+  if section.getPortalType() == \'Organisation\' and section.getPriceCurrency():\n
+    return section.getPriceCurrency()\n
+\n
+  if section.getPortalType() == \'Category\':\n
+    # first get the strict one\n
+    member_list = section.getGroupRelatedValueList(portal_type=\'Organisation\',\n
+                                                   strict_membership=True,\n
+                                                   checked_permission=\'View\')\n
+    for member in member_list:\n
+      currency = member.getPriceCurrency()\n
+      if currency:\n
+        return currency\n
+\n
+    # then from mapping category\n
+    mapping = section.getMappingRelatedValue(portal_type=\'Organisation\')\n
+    if mapping is not None and mapping.getPriceCurrency():\n
+      return mapping.getPriceCurrency()\n
+\n
+    # otherwise, lookup all groups top down until we find one currency\n
+    for subsection in section.getCategoryChildValueList(local_sort_id=\'int_index\'):\n
+      member_list = section.getGroupRelatedValueList(portal_type=\'Organisation\',\n
+                                        strict_membership=True,\n
+                                        checked_permission=\'View\')\n
+      for member in member_list:\n
+        currency = member.getPriceCurrency()\n
+        if currency:\n
+          return currency\n
+\n
+\n
+from Products.ERP5Type.Cache import CachingMethod\n
+getCurrencyForSection = CachingMethod(getCurrencyForSection,\n
+                                      id=script.getId())\n
+return getCurrencyForSection(section_url)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>section_url</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getCurrencyForSection</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
