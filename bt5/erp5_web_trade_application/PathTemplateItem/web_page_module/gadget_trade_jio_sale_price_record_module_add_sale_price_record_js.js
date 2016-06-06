@@ -378,9 +378,8 @@
 
             return RSVP.all([
               form_gadget.notifySubmitted(),
-              form_gadget.redirect({
-                jio_key: form_gadget.options.jio_key,
-                page: "view"
+              form_gadget.redirect({command: 'display', options: {jio_key: "sale_price_record_module", page: "view"}
+                
 
               })
             ]);

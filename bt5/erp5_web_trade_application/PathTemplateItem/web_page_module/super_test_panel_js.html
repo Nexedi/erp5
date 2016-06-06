@@ -69,18 +69,19 @@
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
-            g.getUrlFor({jio_key: "purchase_price_record_module", page: "view"}),
-            g.getUrlFor({jio_key: "purchase_record_module", page: "view"}),
-            g.getUrlFor({jio_key: "product_module", page: "view"}),
-            g.getUrlFor({jio_key: "organisation_module", page: "view"}),
-            g.getUrlFor({jio_key: "inventory_move_record_module", page: "view"}),
-            g.getUrlFor({jio_key: "production_record_module", page: "view"}),
-            g.getUrlFor({jio_key: "sale_price_record_module", page: "view"}),
-            g.getUrlFor({jio_key: "sale_record_module", page: "view"}),
-            g.getUrlFor({jio_key: "daily_statement_record_module", page: "view"}),
-            g.getUrlFor({jio_key: "report_item_module", page: "view"}),
-            g.getUrlFor({page: "sync"}),
-            g.getUrlFor({page: "setting"})
+            g.getUrlFor({command: 'display', options: {jio_key: "purchase_price_record_module", page: "view"}}),
+            g.getUrlFor({command: 'display', options: {jio_key: "purchase_record_module", page: "view"}}),
+            g.getUrlFor({command: 'display', options: {jio_key: "product_module", page: "view"}}),
+            g.getUrlFor({command: 'display', options: {jio_key: "organisation_module", page: "view"}}),
+            g.getUrlFor({command: 'display', options: {jio_key: "inventory_move_record_module", page: "view"}}),
+            g.getUrlFor({command: 'display', options: {jio_key: "production_record_module", page: "view"}}),
+            g.getUrlFor({command: 'display', options: {jio_key: "sale_price_record_module", page: "view"}}),
+            g.getUrlFor({command: 'display', options: {jio_key: "sale_record_module", page: "view"}}),
+            g.getUrlFor({command: 'display', options: {jio_key: "daily_statement_record_module", page: "view"}}),
+            g.getUrlFor({command: 'display', options: {jio_key: "report_item_module", page: "view"}}),
+            g.getUrlFor({command: 'display', options: {page: "sync"}}),
+            g.getUrlFor({command: 'display', options: {page: "setting"}})
+            
 
           ]);
         })

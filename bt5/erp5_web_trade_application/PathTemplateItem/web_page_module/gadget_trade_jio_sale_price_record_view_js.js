@@ -855,9 +855,8 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
           return gadget.jio_put(gadget.options.jio_key, current_doc);
         })
         .push(function () {
-          return gadget.redirect({
-            jio_key: new_id,
-            page: "view"
+          return gadget.redirect({command: 'display', options: {jio_key: new_id, page: "view"}
+            
           });
         });
 
@@ -901,10 +900,8 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
 
             return RSVP.all([
               form_gadget.notifySubmitted(),
-              form_gadget.redirect({
-                jio_key: "sale_price_record_module",
-                page: "view"
-
+              form_gadget.redirect({command: 'display', options: {jio_key: "sale_price_record_module", page: "view"}
+                
               })
             ]);
 
@@ -984,9 +981,8 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
           return gadget.jio_post(doc);
         })
         .push(function (response) {
-          return gadget.redirect({
-            jio_key: response,
-            page: "view"
+           return gadget.redirect({command: 'display', options: {jio_key: response, page: "view"}
+         
           });
         });
 

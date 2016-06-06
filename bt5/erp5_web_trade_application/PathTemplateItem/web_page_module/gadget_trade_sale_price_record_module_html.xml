@@ -87,7 +87,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_trade_jio_sale_price_record_module_view.html</string> </value>
+            <value> <string>gadget_trade_jio_sale_price_record_module_view2.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -201,7 +201,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1464637980.58</float>
+                        <float>1464353519.28</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -246,7 +246,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>951.36839.10775.59187</string> </value>
+                <value> <string>951.40771.55846.52172</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -264,7 +264,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1464794330.92</float>
+                        <float>1464968234.35</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -321,7 +321,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1464637963.55</float>
+                        <float>1464353479.26</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

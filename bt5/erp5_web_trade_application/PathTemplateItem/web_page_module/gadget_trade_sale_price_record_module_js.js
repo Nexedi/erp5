@@ -17,7 +17,7 @@
 
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-      .allowPublicAcquisition('updateHeader', function () {
+    .allowPublicAcquisition('updateHeader', function () {
       return;
     })
 
@@ -51,8 +51,7 @@
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
-          return gadget.getUrlFor({jio_key: options.jio_key,
-                                   page: "add_sale_price_record"});
+          return gadget.getUrlFor({command: 'display', options: {jio_key: options.jio_key, page: "add_sale_price_record"}});
         })
         .push(function (url) {
           return gadget.updateHeader({
@@ -90,7 +89,7 @@
                 "editable": 1,
                 "editable_column_list": [],
                 "key": "field_listbox",
-                "lines": 30,
+                "lines": 20,
                 "list_method": "portal_catalog",
                 "query": 'portal_type:' +
                 '("Sale Price Record" OR "Sale Price Record Temp")',

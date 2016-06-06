@@ -103,14 +103,18 @@
         // Directly modify the previous calculated header
         // in order not to remove the submit input
         // and still receive 'submit' event
-        var class_list = this.props.right_link
-          .querySelector('button').classList;
-        if (class_list.contains('ui-icon-check')) {
-          class_list.remove('ui-icon-check');
-          class_list.add('ui-icon-warning');
+        var button = this.props.right_link.querySelector('button'),
+          class_list;
+        if (button !== null) {
+          class_list = button.classList;
+          if (class_list.contains('ui-icon-check')) {
+            class_list.remove('ui-icon-check');
+            class_list.add('ui-icon-warning');
+          }
         }
       }
     })
+    
     .declareMethod('notifySubmitting', function () {
       if (this.stats.submitted) {
         this.stats.submitted = false;
@@ -128,24 +132,27 @@
     })
     .declareMethod('render', function (options) {
       var gadget = this,
-        possible_left_link_list = [
-          // ['menu_url', 'Menu', 'bars'],
-          ['selection_url', 'Back', 'arrow-left'],
-          ['view_url', 'View', 'check'],
-          ['cancel_url', 'Cancel', 'times'],
-          ['back_url', 'Back', 'arrow-left']
-        ],
+        possible_left_link_list = [],
         possible_left_button_list = [
           ['panel_action', 'Menu', 'bars', 'panel']
         ],
+        possible_main_link_list = [
+          // ['menu_url', 'Menu', 'bars'],
+          ['front_url', 'Front', 'arrow-up'],
+          ['selection_url', 'Previous', 'arrow-up'],
+          ['cancel_url', 'Cancel', 'times'],
+          ['back_url', 'Back', 'times']
+        ],
         possible_right_link_list = [
-          ['edit_url', 'Edit', 'pencil'],
+          ['edit_url', 'Editable', 'pencil'],
+          ['view_url', 'Viewable', 'eye'],
           ['right_url', 'New', 'plus']
         ],
         possible_right_button_list = [
           ['save_action', 'Save', 'check', 'submit'],
           ['submit_action', 'Proceed', 'check', 'submit'],
-          ['add_action', 'Add', 'check', 'submit']
+          ['add_action', 'Add', 'check', 'submit'],
+          ['filter_action', 'Filter', 'filter', 'submit']
         ],
         possible_sub_header_list = [
           ['tab_url', 'Tabs', 'eye'],
@@ -186,16 +193,17 @@
         //Does not follow RenderJS philosophy, but, it is enough for now
         document.title = title_link.title;
       }
-      if (options.hasOwnProperty("breadcrumb_url")) {
-        title_link.url = options.breadcrumb_url;
-        promise_list.push(gadget
-                          .translateHtml(
-            header_title_link_template(title_link)
-          )
-                         );
+       // Handle main link
+      for (i = 0; i < possible_main_link_list.length; i += 1) {
+        if (options.hasOwnProperty(possible_main_link_list[i][0])) {
+          title_link.icon = possible_main_link_list[i][2];
+          title_link.url = options[possible_main_link_list[i][0]];
+        }
+      }
+      if (title_link.hasOwnProperty("url")) {
+        promise_list.push(gadget.translateHtml(header_title_link_template(title_link)));
       } else {
-        promise_list.push(gadget
-                          .translateHtml(header_title_template(title_link)));
+        promise_list.push(gadget.translateHtml(header_title_template(title_link)));
       }
 
       // Handle left link
