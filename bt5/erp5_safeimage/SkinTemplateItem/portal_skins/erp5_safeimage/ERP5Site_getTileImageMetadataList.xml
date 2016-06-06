@@ -64,14 +64,6 @@
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_getTileImageMetadataList</string> </value>
         </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple>
-                <string>Prints, but never reads \'printed\' variable.</string>
-              </tuple>
-            </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

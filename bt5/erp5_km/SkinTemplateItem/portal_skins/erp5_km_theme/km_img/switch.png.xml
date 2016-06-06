@@ -11,10 +11,6 @@
             <value> <string>http_cache</string> </value>
         </item>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts76763533.85</string> </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
             <value> <string>switch.png</string> </value>
         </item>
@@ -29,10 +25,6 @@
         <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <int>194</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

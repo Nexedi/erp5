@@ -7,10 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts09026702.32</string> </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
             <value> <string>Base_getODGChartAsFile</string> </value>
         </item>
@@ -21,10 +17,6 @@
         <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <long>16433</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

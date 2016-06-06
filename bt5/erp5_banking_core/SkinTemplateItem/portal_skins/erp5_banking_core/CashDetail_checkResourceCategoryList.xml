@@ -53,14 +53,6 @@
             <value> <string>resource_object, variation, emission_letter</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple>
-                <string>\'break\' outside loop (Script (Python), 6)</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>CashDetail_checkResourceCategoryList</string> </value>
         </item>

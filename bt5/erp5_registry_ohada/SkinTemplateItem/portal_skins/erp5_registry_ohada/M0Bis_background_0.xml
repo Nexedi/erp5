@@ -7,10 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts13009146.92</string> </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
             <value> <string>M0Bis_background_0</string> </value>
         </item>
@@ -25,10 +21,6 @@
         <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <long>311648</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

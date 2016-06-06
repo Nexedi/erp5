@@ -1,53 +1,13 @@
-<?xml version="1.0"?>
-<ZopeData>
-  <record id="1" aka="AAAAAAAAAAE=">
-    <pickle>
-      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>__name__</string> </key>
-            <value> <string>preview.html</string> </value>
-        </item>
-        <item>
-            <key> <string>_vars</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>globals</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+<script>
 
-<script>\r\n
-\r\n
-// Prevent from DOM clobbering.\r\n
-if ( typeof window.opener._cke_htmlToLoad == \'string\' ) {\r\n
-\tvar doc = document;\r\n
-\tdoc.open();\r\n
-\tdoc.write( window.opener._cke_htmlToLoad );\r\n
-\tdoc.close();\r\n
-\r\n
-\tdelete window.opener._cke_htmlToLoad;\r\n
-}\r\n
-\r\n
-</script>\r\n
+// Prevent from DOM clobbering.
+if ( typeof window.opener._cke_htmlToLoad == 'string' ) {
+	var doc = document;
+	doc.open();
+	doc.write( window.opener._cke_htmlToLoad );
+	doc.close();
 
+	delete window.opener._cke_htmlToLoad;
+}
 
-]]></string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-</ZopeData>
+</script>

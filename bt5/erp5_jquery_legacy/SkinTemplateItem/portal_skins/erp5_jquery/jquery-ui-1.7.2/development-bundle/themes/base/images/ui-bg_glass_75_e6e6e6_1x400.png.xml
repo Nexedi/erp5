@@ -11,10 +11,6 @@
             <value> <string>http_cache</string> </value>
         </item>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts65545390.67</string> </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
             <value> <string>ui-bg_glass_75_e6e6e6_1x400.png</string> </value>
         </item>
@@ -29,10 +25,6 @@
         <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <long>110</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

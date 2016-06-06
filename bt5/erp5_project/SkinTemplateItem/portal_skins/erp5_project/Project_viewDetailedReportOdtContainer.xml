@@ -7,10 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45484866.57</string> </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
             <value> <string>Project_viewDetailedReportOdtContainer</string> </value>
         </item>
@@ -21,10 +17,6 @@
         <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <long>9201</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

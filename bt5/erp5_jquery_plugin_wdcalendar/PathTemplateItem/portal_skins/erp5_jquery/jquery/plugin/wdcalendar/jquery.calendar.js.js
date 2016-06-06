@@ -1,2854 +1,2810 @@
-<?xml version="1.0"?>
-<ZopeData>
-  <record id="1" aka="AAAAAAAAAAE=">
-    <pickle>
-      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>http_cache</string> </value>
-        </item>
-        <item>
-            <key> <string>__name__</string> </key>
-            <value> <string>jquery.calendar.js</string> </value>
-        </item>
-        <item>
-            <key> <string>_vars</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>globals</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+/**
+  * @description {Class} wdCalendar
+  * This is the main class of wdCalendar.
+  */
+; (function($) {
+    var __WDAY = new Array(i18n.xgcalendar.dateformat.sun, i18n.xgcalendar.dateformat.mon, i18n.xgcalendar.dateformat.tue, i18n.xgcalendar.dateformat.wed, i18n.xgcalendar.dateformat.thu, i18n.xgcalendar.dateformat.fri, i18n.xgcalendar.dateformat.sat);
+    var __MonthName = new Array(i18n.xgcalendar.dateformat.jan, i18n.xgcalendar.dateformat.feb, i18n.xgcalendar.dateformat.mar, i18n.xgcalendar.dateformat.apr, i18n.xgcalendar.dateformat.may, i18n.xgcalendar.dateformat.jun, i18n.xgcalendar.dateformat.jul, i18n.xgcalendar.dateformat.aug, i18n.xgcalendar.dateformat.sep, i18n.xgcalendar.dateformat.oct, i18n.xgcalendar.dateformat.nov, i18n.xgcalendar.dateformat.dec);
+    if (!Clone || typeof (Clone) != "function") {
+        var Clone = function(obj) {
+            var objClone = new Object();
+            if (obj.constructor == Object) {
+                objClone = new obj.constructor();
+            } else {
+                objClone = new obj.constructor(obj.valueOf());
+            }
+            for (var key in obj) {
+                if (objClone[key] != obj[key]) {
+                    if (typeof (obj[key]) == 'object') {
+                        objClone[key] = Clone(obj[key]);
+                    } else {
+                        objClone[key] = obj[key];
+                    }
+                }
+            }
+            objClone.toString = obj.toString;
+            objClone.valueOf = obj.valueOf;
+            return objClone;
+        }
+    }
+    if (!dateFormat || typeof (dateFormat) != "function") {
+        var dateFormat = function(format) {
+            var o = {
+                "M+": this.getMonth() + 1,
+                "d+": this.getDate(),
+                "h+": this.getHours(),
+                "H+": this.getHours(),
+                "m+": this.getMinutes(),
+                "s+": this.getSeconds(),
+                "q+": Math.floor((this.getMonth() + 3) / 3),
+                "w": "0123456".indexOf(this.getDay()),
+                "W": __WDAY[this.getDay()],
+                "L": __MonthName[this.getMonth()] //non-standard
+            };
+            if (/(y+)/.test(format)) {
+                format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            }
+            for (var k in o) {
+                if (new RegExp("(" + k + ")").test(format))
+                    format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+            }
+            return format;
+        };
+    }
+    if (!DateAdd || typeof (DateDiff) != "function") {
+        var DateAdd = function(interval, number, idate) {
+            number = parseInt(number);
+            var date;
+            if (typeof (idate) == "string") {
+                date = idate.split(/\D/);
+                eval("var date = new Date(" + date.join(",") + ")");
+            }
 
-/**\n
-  * @description {Class} wdCalendar\n
-  * This is the main class of wdCalendar.\n
-  */\n
-; (function($) {\n
-    var __WDAY = new Array(i18n.xgcalendar.dateformat.sun, i18n.xgcalendar.dateformat.mon, i18n.xgcalendar.dateformat.tue, i18n.xgcalendar.dateformat.wed, i18n.xgcalendar.dateformat.thu, i18n.xgcalendar.dateformat.fri, i18n.xgcalendar.dateformat.sat);\n
-    var __MonthName = new Array(i18n.xgcalendar.dateformat.jan, i18n.xgcalendar.dateformat.feb, i18n.xgcalendar.dateformat.mar, i18n.xgcalendar.dateformat.apr, i18n.xgcalendar.dateformat.may, i18n.xgcalendar.dateformat.jun, i18n.xgcalendar.dateformat.jul, i18n.xgcalendar.dateformat.aug, i18n.xgcalendar.dateformat.sep, i18n.xgcalendar.dateformat.oct, i18n.xgcalendar.dateformat.nov, i18n.xgcalendar.dateformat.dec);\n
-    if (!Clone || typeof (Clone) != "function") {\n
-        var Clone = function(obj) {\n
-            var objClone = new Object();\n
-            if (obj.constructor == Object) {\n
-                objClone = new obj.constructor();\n
-            } else {\n
-                objClone = new obj.constructor(obj.valueOf());\n
-            }\n
-            for (var key in obj) {\n
-                if (objClone[key] != obj[key]) {\n
-                    if (typeof (obj[key]) == \'object\') {\n
-                        objClone[key] = Clone(obj[key]);\n
-                    } else {\n
-                        objClone[key] = obj[key];\n
-                    }\n
-                }\n
-            }\n
-            objClone.toString = obj.toString;\n
-            objClone.valueOf = obj.valueOf;\n
-            return objClone;\n
-        }\n
-    }\n
-    if (!dateFormat || typeof (dateFormat) != "function") {\n
-        var dateFormat = function(format) {\n
-            var o = {\n
-                "M+": this.getMonth() + 1,\n
-                "d+": this.getDate(),\n
-                "h+": this.getHours(),\n
-                "H+": this.getHours(),\n
-                "m+": this.getMinutes(),\n
-                "s+": this.getSeconds(),\n
-                "q+": Math.floor((this.getMonth() + 3) / 3),\n
-                "w": "0123456".indexOf(this.getDay()),\n
-                "W": __WDAY[this.getDay()],\n
-                "L": __MonthName[this.getMonth()] //non-standard\n
-            };\n
-            if (/(y+)/.test(format)) {\n
-                format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));\n
-            }\n
-            for (var k in o) {\n
-                if (new RegExp("(" + k + ")").test(format))\n
-                    format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));\n
-            }\n
-            return format;\n
-        };\n
-    }\n
-    if (!DateAdd || typeof (DateDiff) != "function") {\n
-        var DateAdd = function(interval, number, idate) {\n
-            number = parseInt(number);\n
-            var date;\n
-            if (typeof (idate) == "string") {\n
-                date = idate.split(/\\D/);\n
-                eval("var date = new Date(" + date.join(",") + ")");\n
-            }\n
-\n
-            if (typeof (idate) == "object") {\n
-                date = new Date(idate.toString());\n
-            }\n
-            switch (interval) {\n
-                case "y": date.setFullYear(date.getFullYear() + number); break;\n
-                case "m": date.setMonth(date.getMonth() + number); break;\n
-                case "d": date.setDate(date.getDate() + number); break;\n
-                case "w": date.setDate(date.getDate() + 7 * number); break;\n
-                case "h": date.setHours(date.getHours() + number); break;\n
-                case "n": date.setMinutes(date.getMinutes() + number); break;\n
-                case "s": date.setSeconds(date.getSeconds() + number); break;\n
-                case "l": date.setMilliseconds(date.getMilliseconds() + number); break;\n
-            }\n
-            return date;\n
-        }\n
-    }\n
-    if (!DateDiff || typeof (DateDiff) != "function") {\n
-        var DateDiff = function(interval, d1, d2) {\n
-            switch (interval) {\n
-                case "d": //date\n
-                case "w":\n
-                    d1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());\n
-                    d2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());\n
-                    break;  //w\n
-                case "h":\n
-                    d1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate(), d1.getHours());\n
-                    d2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate(), d2.getHours());\n
-                    break; //h\n
-                case "n":\n
-                    d1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate(), d1.getHours(), d1.getMinutes());\n
-                    d2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate(), d2.getHours(), d2.getMinutes());\n
-                    break;\n
-                case "s":\n
-                    d1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate(), d1.getHours(), d1.getMinutes(), d1.getSeconds());\n
-                    d2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate(), d2.getHours(), d2.getMinutes(), d2.getSeconds());\n
-                    break;\n
-            }\n
-            var t1 = d1.getTime(), t2 = d2.getTime();\n
-            var diff = NaN;\n
-            switch (interval) {\n
-                case "y": diff = d2.getFullYear() - d1.getFullYear(); break; //y\n
-                case "m": diff = (d2.getFullYear() - d1.getFullYear()) * 12 + d2.getMonth() - d1.getMonth(); break;    //m\n
-                case "d": diff = Math.floor(t2 / 86400000) - Math.floor(t1 / 86400000); break;\n
-                case "w": diff = Math.floor((t2 + 345600000) / (604800000)) - Math.floor((t1 + 345600000) / (604800000)); break; //w\n
-                case "h": diff = Math.floor(t2 / 3600000) - Math.floor(t1 / 3600000); break; //h\n
-                case "n": diff = Math.floor(t2 / 60000) - Math.floor(t1 / 60000); break; //\n
-                case "s": diff = Math.floor(t2 / 1000) - Math.floor(t1 / 1000); break; //s\n
-                case "l": diff = t2 - t1; break;\n
-            }\n
-            return diff;\n
-\n
-        }\n
-    }\n
-    if ($.fn.noSelect == undefined) {\n
-        $.fn.noSelect = function(p) { //no select plugin by me :-)\n
-            if (p == null)\n
-                prevent = true;\n
-            else\n
-                prevent = p;\n
-            if (prevent) {\n
-                return this.each(function() {\n
-                    if ($.browser.msie || $.browser.safari) $(this).bind(\'selectstart\', function() { return false; });\n
-                    else if ($.browser.mozilla) {\n
-                        $(this).css(\'MozUserSelect\', \'none\');\n
-                        $(\'body\').trigger(\'focus\');\n
-                    }\n
-                    else if ($.browser.opera) $(this).bind(\'mousedown\', function() { return false; });\n
-                    else $(this).attr(\'unselectable\', \'on\');\n
-                });\n
-\n
-            } else {\n
-                return this.each(function() {\n
-                    if ($.browser.msie || $.browser.safari) $(this).unbind(\'selectstart\');\n
-                    else if ($.browser.mozilla) $(this).css(\'MozUserSelect\', \'inherit\');\n
-                    else if ($.browser.opera) $(this).unbind(\'mousedown\');\n
-                    else $(this).removeAttr(\'unselectable\', \'on\');\n
-                });\n
-\n
-            }\n
-        }; //end noSelect\n
-    }\n
-    $.fn.bcalendar = function(option) {\n
-        var def = {\n
-            /**\n
-             * @description {Config} view  \n
-             * {String} Three calendar view provided, \'day\',\'week\',\'month\'. \'week\' by default.\n
-             */\n
-            view: "week", \n
-            /**\n
-             * @description {Config} weekstartday  \n
-             * {Number} First day of week 0 for Sun, 1 for Mon, 2 for Tue.\n
-             */\n
-            weekstartday: 1,  //start from Monday by default\n
-            theme: 0, //theme no\n
-            /**\n
-             * @description {Config} height  \n
-             * {Number} Calendar height, false for page height by default.\n
-             */\n
-            height: false, \n
-            /**\n
-             * @description {Config} url  \n
-             * {String} Url to request calendar data.\n
-             */\n
-            url: "", \n
-            /**\n
-             * @description {Config} eventItems  \n
-             * {Array} event items for initialization.\n
-             */   \n
-            eventItems: [], \n
-            method: "POST", \n
-            /**\n
-             * @description {Config} showday  \n
-             * {Date} Current date. today by default.\n
-             */\n
-            showday: new Date(), \n
-            /**\n
-             * @description {Event} onBeforeRequestData:function(stage)\n
-             * Fired before any ajax request is sent.\n
-             * @param {Number} stage. 1 for retrieving events, 2 - adding event, 3 - removiing event, 4 - update event.\n
-             */\n
-            onBeforeRequestData: false, \n
-            /**\n
-             * @description {Event} onAfterRequestData:function(stage)\n
-             * Fired before any ajax request is finished.\n
-             * @param {Number} stage. 1 for retrieving events, 2 - adding event, 3 - removiing event, 4 - update event.\n
-             */\n
-            onAfterRequestData: false, \n
-            /**\n
-             * @description {Event} onAfterRequestData:function(stage)\n
-             * Fired when some errors occur while any ajax request is finished.\n
-             * @param {Number} stage. 1 for retrieving events, 2 - adding event, 3 - removiing event, 4 - update event.\n
-             */\n
-            onRequestDataError: false,              \n
-            \n
-            onWeekOrMonthToDay: false, \n
-            /**\n
-             * @description {Event} quickAddHandler:function(calendar, param )\n
-             * Fired when user quick adds an item. If this function is set, ajax request to quickAddUrl will abort. \n
-             * @param {Object} calendar Calendar object.\n
-             * @param {Array} param Format [{name:"name1", value:"value1"}, ...]\n
-             *             \n
-             */\n
-            quickAddHandler: false, \n
-            /**\n
-             * @description {Config} quickAddUrl  \n
-             * {String} Url for quick adding. \n
-             */\n
-            quickAddUrl: "", \n
-            /**\n
-             * @description {Config} quickUpdateUrl  \n
-             * {String} Url for time span update.\n
-             */\n
-            quickUpdateUrl: "", \n
-            /**\n
-             * @description {Config} quickDeleteUrl  \n
-             * {String} Url for removing an event.\n
-             */\n
-            quickDeleteUrl: "", \n
-            /**\n
-             * @description {Config} autoload  \n
-             * {Boolean} If event items is empty, and this param is set to true. \n
-             * Event will be retrieved by ajax call right after calendar is initialized.\n
-             */  \n
-            autoload: false,\n
-            /**\n
-             * @description {Config} readonly  \n
-             * {Boolean} Indicate calendar is readonly or editable \n
-             */\n
-            readonly: false, \n
-            /**\n
-             * @description {Config} extParam  \n
-             * {Array} Extra params submitted to server. \n
-             * Sample - [{name:"param1", value:"value1"}, {name:"param2", value:"value2"}]\n
-             */\n
-            extParam: [], \n
-            /**\n
-             * @description {Config} enableDrag  \n
-             * {Boolean} Whether end user can drag event item by mouse. \n
-             */\n
-            enableDrag: true, \n
-            loadDateR: [] \n
-        };\n
-        var eventDiv = $("#gridEvent");\n
-        if (eventDiv.length == 0) {\n
-            eventDiv = $("<div id=\'gridEvent\' style=\'display:none;\'></div>").appendTo(document.body);\n
-        }\n
-        var gridcontainer = $(this);\n
-        option = $.extend(def, option);\n
-        //no quickUpdateUrl, dragging disabled.\n
-        if (option.quickUpdateUrl == null || option.quickUpdateUrl == "") {\n
-            option.enableDrag = false;\n
-        }\n
-        //template for month and date\n
-        var __SCOLLEVENTTEMP = "<DIV style=\\"WIDTH:${width};top:${top};left:${left};\\" title=\\"${title}\\" class=\\"chip chip${i} ${drag}\\"><div class=\\"dhdV\\" style=\\"display:none\\">${data}</div><DIV style=\\"BORDER-BOTTOM-COLOR:${bdcolor}\\" class=ct>&nbsp;</DIV><DL style=\\"BORDER-BOTTOM-COLOR:${bdcolor}; BACKGROUND-COLOR:${bgcolor1}; BORDER-TOP-COLOR: ${bdcolor}; HEIGHT: ${height}px; BORDER-RIGHT-COLOR:${bdcolor}; BORDER-LEFT-COLOR:${bdcolor}\\"><DT style=\\"BACKGROUND-COLOR:${bgcolor2}\\">${starttime} - ${endtime} ${icon}</DT><DD><SPAN>${content}</SPAN></DD><DIV class=\'resizer\' style=\'display:${redisplay}\'><DIV class=rszr_icon>&nbsp;</DIV></DIV></DL><DIV style=\\"BORDER-BOTTOM-COLOR:${bdcolor}; BACKGROUND-COLOR:${bgcolor1}; BORDER-TOP-COLOR: ${bdcolor}; BORDER-RIGHT-COLOR: ${bdcolor}; BORDER-LEFT-COLOR:${bdcolor}\\" class=cb1>&nbsp;</DIV><DIV style=\\"BORDER-BOTTOM-COLOR:${bdcolor}; BORDER-TOP-COLOR:${bdcolor}; BORDER-RIGHT-COLOR:${bdcolor}; BORDER-LEFT-COLOR:${bdcolor}\\" class=cb2>&nbsp;</DIV></DIV>";\n
-        var __ALLDAYEVENTTEMP = \'<div class="rb-o ${eclass}" id="${id}" title="${title}" style="color:${color};"><div class="dhdV" style="display:none">${data}</div><div class="${extendClass} rb-m" style="background-color:${color}">${extendHTML}<div class="rb-i">${content}</div></div></div>\';\n
-        var __MonthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];\n
-        var __LASSOTEMP = "<div class=\'drag-lasso\' style=\'left:${left}px;top:${top}px;width:${width}px;height:${height}px;\'>&nbsp;</div>";\n
-        //for dragging var\n
-        var _dragdata;\n
-        var _dragevent;\n
-\n
-        //clear DOM\n
-        clearcontainer();\n
-\n
-        //no height specified in options, we get page height.\n
-        if (!option.height) {\n
-            option.height = document.documentElement.clientHeight;\n
-        }\n
-        //\n
-        gridcontainer.css("overflow-y", "visible").height(option.height - 8);\n
-\n
-        //populate events data for first display.\n
-        if (option.url && option.autoload) {\n
-            populate(); \n
-        }\n
-        else {\n
-            //contruct HTML          \n
-            render();\n
-            //get date range\n
-            var d = getRdate();\n
-            pushER(d.start, d.end);\n
-        }\n
-\n
-        //clear DOM\n
-        function clearcontainer() {\n
-            gridcontainer.empty();\n
-        }\n
-        //get range\n
-        function getRdate() {\n
-            return { start: option.vstart, end: option.vend };\n
-        }\n
-        //add date range to cache.\n
-        function pushER(start, end) {\n
-            var ll = option.loadDateR.length;\n
-            if (!end) {\n
-                end = start;\n
-            }\n
-            if (ll == 0) {\n
-                option.loadDateR.push({ startdate: start, enddate: end });\n
-            }\n
-            else {\n
-                for (var i = 0; i < ll; i++) {\n
-                    var dr = option.loadDateR[i];\n
-                    var diff = DateDiff("d", start, dr.startdate);\n
-                    if (diff == 0 || diff == 1) {\n
-                        if (dr.enddate < end) {\n
-                            dr.enddate = end;\n
-                        }\n
-                        break;\n
-                    }\n
-                    else if (diff > 1) {\n
-                        var d2 = DateDiff("d", end, dr.startdate);\n
-                        if (d2 > 1) {\n
-                            option.loadDateR.splice(0, 0, { startdate: start, enddate: end });\n
-                        }\n
-                        else {\n
-                            dr.startdate = start;\n
-                            if (dr.enddate < end) {\n
-                                dr.enddate = end;\n
-                            }\n
-                        }\n
-                        break;\n
-                    }\n
-                    else {\n
-                        var d3 = DateDiff("d", end, dr.startdate);\n
-\n
-                        if (dr.enddate < end) {\n
-                            if (d3 < 1) {\n
-                                dr.enddate = end;\n
-                                break;\n
-                            }\n
-                            else {\n
-                                if (i == ll - 1) {\n
-                                    option.loadDateR.push({ startdate: start, enddate: end });\n
-                                }\n
-                            }\n
-                        }\n
-                    }\n
-                }\n
-                //end for\n
-                //clear\n
-                ll = option.loadDateR.length;\n
-                if (ll > 1) {\n
-                    for (var i = 0; i < ll - 1; ) {\n
-                        var d1 = option.loadDateR[i];\n
-                        var d2 = option.loadDateR[i + 1];\n
-\n
-                        var diff1 = DateDiff("d", d2.startdate, d1.enddate);\n
-                        if (diff1 <= 1) {\n
-                            d1.startdate = d2.startdate > d1.startdate ? d1.startdate : d2.startdate;\n
-                            d1.enddate = d2.enddate > d1.enddate ? d2.enddate : d1.enddate;\n
-                            option.loadDateR.splice(i + 1, 1);\n
-                            ll--;\n
-                            continue;\n
-                        }\n
-                        i++;\n
-                    }\n
-                }\n
-            }\n
-        }\n
-        //contruct DOM \n
-        function render() {\n
-            //params needed\n
-            //viewType, showday, events, config     \n
-            var showday = new Date(option.showday.getFullYear(), option.showday.getMonth(), option.showday.getDate());\n
-            var events = option.eventItems;\n
-            var config = { view: option.view, weekstartday: option.weekstartday, theme: option.theme };\n
-            if (option.view == "day" || option.view == "week") {\n
-                var $dvtec = $("#dvtec");\n
-                if ($dvtec.length > 0) {\n
-                    option.scoll = $dvtec.attr("scrollTop"); //get scroll bar position\n
-                }\n
-            }\n
-            switch (option.view) {\n
-                case "day":\n
-                    BuildDaysAndWeekView(showday, 1, events, config);\n
-                    break;\n
-                case "week":\n
-                    BuildDaysAndWeekView(showday, 7, events, config);\n
-                    break;\n
-                case "month":\n
-                    BuildMonthView(showday, events, config);\n
-                    break;\n
-                default:\n
-                    alert(i18n.xgcalendar.no_implement);\n
-                    break;\n
-            }\n
-            initevents(option.view); \n
-            ResizeView();\n
-        }\n
-\n
-        //build day view\n
-        function BuildDaysAndWeekView(startday, l, events, config) {\n
-            var days = [];\n
-            if (l == 1) {\n
-                var show = dateFormat.call(startday, i18n.xgcalendar.dateformat.Md);\n
-                days.push({ display: show, date: startday, day: startday.getDate(), year: startday.getFullYear(), month: startday.getMonth() + 1 });\n
-                option.datestrshow = CalDateShow(days[0].date);\n
-                option.vstart = days[0].date;\n
-                option.vend = days[0].date;\n
-            }\n
-            else {\n
-                var w = 0;\n
-                if (l == 7) {\n
-                    w = config.weekstartday - startday.getDay();\n
-                    if (w > 0) w = w - 7;\n
-                }\n
-                var ndate;\n
-                for (var i = w, j = 0; j < l; i = i + 1, j++) {\n
-                    ndate = DateAdd("d", i, startday);\n
-                    var show = dateFormat.call(ndate, i18n.xgcalendar.dateformat.Md);\n
-                    days.push({ display: show, date: ndate, day: ndate.getDate(), year: ndate.getFullYear(), month: ndate.getMonth() + 1 });\n
-                }\n
-                option.vstart = days[0].date;\n
-                option.vend = days[l - 1].date;\n
-                option.datestrshow = CalDateShow(days[0].date, days[l - 1].date);\n
-            }\n
-\n
-            var allDayEvents = [];\n
-            var scollDayEvents = [];\n
-            //get number of all-day events, including more-than-one-day events.\n
-            var dM = PropareEvents(days, events, allDayEvents, scollDayEvents);\n
-\n
-            var html = [];\n
-            html.push("<div id=\\"dvwkcontaienr\\" class=\\"wktopcontainer\\">");\n
-            html.push("<table class=\\"wk-top\\" border=\\"0\\" cellpadding=\\"0\\" cellspacing=\\"0\\">");\n
-            BuildWT(html, days, allDayEvents, dM);\n
-            html.push("</table>");\n
-            html.push("</div>");\n
-\n
-            //onclick=\\"javascript:FunProxy(\'rowhandler\',event,this);\\"\n
-            html.push("<div id=\\"dvtec\\"  class=\\"scolltimeevent\\"><table style=\\"table-layout: fixed;", jQuery.browser.msie ? "" : "width:100%", "\\" cellspacing=\\"0\\" cellpadding=\\"0\\"><tbody><tr><td>");\n
-            html.push("<table style=\\"height: 1008px\\" id=\\"tgTable\\" class=\\"tg-timedevents\\" cellspacing=\\"0\\" cellpadding=\\"0\\"><tbody>");\n
-            BuildDayScollEventContainer(html, days, scollDayEvents);\n
-            html.push("</tbody></table></td></tr></tbody></table></div>");\n
-            gridcontainer.html(html.join(""));\n
-            html = null;\n
-            //TODO event handlers\n
-            //$("#weekViewAllDaywk").click(RowHandler);\n
-        }\n
-        //build month view\n
-        function BuildMonthView(showday, events, config) {\n
-            var cc = "<div id=\'cal-month-cc\' class=\'cc\'><div id=\'cal-month-cc-header\'><div class=\'cc-close\' id=\'cal-month-closebtn\'></div><div id=\'cal-month-cc-title\' class=\'cc-title\'></div></div><div id=\'cal-month-cc-body\' class=\'cc-body\'><div id=\'cal-month-cc-content\' class=\'st-contents\'><table class=\'st-grid\' cellSpacing=\'0\' cellPadding=\'0\'><tbody></tbody></table></div></div></div>";\n
-            var html = [];\n
-            html.push(cc);\n
-            //build header\n
-            html.push("<div id=\\"mvcontainer\\" class=\\"mv-container\\">");\n
-            html.push("<table id=\\"mvweek\\" class=\\"mv-daynames-table\\" cellSpacing=\\"0\\" cellPadding=\\"0\\"><tbody><tr>");\n
-            for (var i = config.weekstartday, j = 0; j < 7; i++, j++) {\n
-                if (i > 6) i = 0;\n
-                var p = { dayname: __WDAY[i] };\n
-                html.push("<th class=\\"mv-dayname\\" title=\\"", __WDAY[i], "\\">", __WDAY[i], "");\n
-            }\n
-            html.push("</tr></tbody></table>");\n
-            html.push("</div>");\n
-            var bH = GetMonthViewBodyHeight() - GetMonthViewHeaderHeight();\n
-\n
-            html.push("<div id=\\"mvEventContainer\\" class=\\"mv-event-container\\" style=\\"height:", bH, "px;", "\\">");\n
-            BuilderMonthBody(html, showday, config.weekstartday, events, bH);\n
-            html.push("</div>");\n
-            gridcontainer.html(html.join(""));\n
-            html = null;\n
-            $("#cal-month-closebtn").click(closeCc);\n
-        }\n
-        function closeCc() {\n
-            $("#cal-month-cc").css("visibility", "hidden");\n
-        }\n
-        \n
-        //all-day event, including more-than-one-day events \n
-        function PropareEvents(dayarrs, events, aDE, sDE) {\n
-            var l = dayarrs.length;\n
-            var el = events.length;\n
-            var fE = [];\n
-            var deB = aDE;\n
-            var deA = sDE;\n
-            for (var j = 0; j < el; j++) {\n
-                var sD = events[j][2];\n
-                var eD = events[j][3];\n
-                var s = {};\n
-                s.event = events[j];\n
-                s.day = sD.getDate();\n
-                s.year = sD.getFullYear();\n
-                s.month = sD.getMonth() + 1;\n
-                s.allday = events[j][4] == 1;\n
-                s.crossday = events[j][5] == 1;\n
-                s.reevent = events[j][6] == 1; //Recurring event\n
-                s.daystr = [s.year, s.month, s.day].join("/");\n
-                s.st = {};\n
-                s.st.hour = sD.getHours();\n
-                s.st.minute = sD.getMinutes();\n
-                s.st.p = s.st.hour * 60 + s.st.minute; // start time\n
-                s.et = {};\n
-                s.et.hour = eD.getHours();\n
-                s.et.minute = eD.getMinutes();\n
-                s.et.p = s.et.hour * 60 + s.et.minute; // end time\n
-                fE.push(s);\n
-            }\n
-            var dMax = 0;\n
-            for (var i = 0; i < l; i++) {\n
-                var da = dayarrs[i];\n
-                deA[i] = []; deB[i] = [];\n
-                da.daystr = da.year + "/" + da.month + "/" + da.day;\n
-                for (var j = 0; j < fE.length; j++) {\n
-                    if (!fE[j].crossday && !fE[j].allday) {\n
-                        if (da.daystr == fE[j].daystr)\n
-                            deA[i].push(fE[j]);\n
-                    }\n
-                    else {\n
-                        if (da.daystr == fE[j].daystr) {\n
-                            deB[i].push(fE[j]);\n
-                            dMax++;\n
-                        }\n
-                        else {\n
-                            if (i == 0 && da.date >= fE[j].event[2] && da.date <= fE[j].event[3])//first more-than-one-day event\n
-                            {\n
-                                deB[i].push(fE[j]);\n
-                                dMax++;\n
-                            }\n
-                        }\n
-                    }\n
-                }\n
-            }\n
-            var lrdate = dayarrs[l - 1].date;\n
-            for (var i = 0; i < l; i++) { //to deal with more-than-one-day event\n
-                var de = deB[i];\n
-                if (de.length > 0) { //           \n
-                    for (var j = 0; j < de.length; j++) {\n
-                        var end = DateDiff("d", lrdate, de[j].event[3]) > 0 ? lrdate : de[j].event[3];\n
-                        de[j].colSpan = DateDiff("d", dayarrs[i].date, end) + 1\n
-                    }\n
-                }\n
-                de = null;\n
-            }\n
-            //for all-day events\n
-            for (var i = 0; i < l; i++) {\n
-                var de = deA[i];\n
-                if (de.length > 0) { \n
-                    var x = []; \n
-                    var y = []; \n
-                    var D = [];\n
-                    var dl = de.length;\n
-                    var Ia;\n
-                    for (var j = 0; j < dl; ++j) {\n
-                        var ge = de[j];\n
-                        for (var La = ge.st.p, Ia = 0; y[Ia] > La; ) Ia++;\n
-                        ge.PO = Ia; ge.ne = []; //PO is how many events before this one\n
-                        y[Ia] = ge.et.p || 1440;\n
-                        x[Ia] = ge;\n
-                        if (!D[Ia]) {\n
-                            D[Ia] = [];\n
-                        }\n
-                        D[Ia].push(ge);\n
-                        if (Ia != 0) {\n
-                            ge.pe = [x[Ia - 1]]; //previous event\n
-                            x[Ia - 1].ne.push(ge); //next event\n
-                        }\n
-                        for (Ia = Ia + 1; y[Ia] <= La; ) Ia++;\n
-                        if (x[Ia]) {\n
-                            var k = x[Ia];\n
-                            ge.ne.push(k);\n
-                            k.pe.push(ge);\n
-                        }\n
-                        ge.width = 1 / (ge.PO + 1);\n
-                        ge.left = 1 - ge.width;\n
-                    }\n
-                    var k = Array.prototype.concat.apply([], D);\n
-                    x = y = D = null;\n
-                    var t = k.length;\n
-                    for (var y = t; y--; ) {\n
-                        var H = 1;\n
-                        var La = 0;\n
-                        var x = k[y];\n
-                        for (var D = x.ne.length; D--; ) {\n
-                            var Ia = x.ne[D];\n
-                            La = Math.max(La, Ia.VL);\n
-                            H = Math.min(H, Ia.left)\n
-                        }\n
-                        x.VL = La + 1;\n
-                        x.width = H / (x.PO + 1);\n
-                        x.left = H - x.width;\n
-                    }\n
-                    for (var y = 0; y < t; y++) {\n
-                        var x = k[y];\n
-                        x.left = 0;\n
-                        if (x.pe) for (var D = x.pe.length; D--; ) {\n
-                            var H = x.pe[D];\n
-                            x.left = Math.max(x.left, H.left + H.width);\n
-                        }\n
-                        var p = (1 - x.left) / x.VL;\n
-                        x.width = Math.max(x.width, p);\n
-                        x.aQ = Math.min(1 - x.left, x.width + 0.7 * p); //width offset\n
-                    }\n
-                    de = null;\n
-                    deA[i] = k;\n
-                }\n
-            }\n
-            return dMax;\n
-        }\n
-\n
-        function BuildWT(ht, dayarrs, events, dMax) {\n
-            //1:\n
-            ht.push("<tr>", "<th width=\\"60\\" rowspan=\\"3\\">&nbsp;</th>");\n
-            for (var i = 0; i < dayarrs.length; i++) {\n
-                var ev, title, cl;\n
-                if (dayarrs.length == 1) {\n
-                    ev = "";\n
-                    title = "";\n
-                    cl = "";\n
-                }\n
-                else {\n
-                    ev = ""; // "onclick=\\"javascript:FunProxy(\'week2day\',event,this);\\"";\n
-                    title = i18n.xgcalendar.to_date_view;\n
-                    cl = "wk-daylink";\n
-                }\n
-                ht.push("<th abbr=\'", dateFormat.call(dayarrs[i].date, i18n.xgcalendar.dateformat.fulldayvalue), "\' class=\'gcweekname\' scope=\\"col\\"><div title=\'", title, "\' ", ev, " class=\'wk-dayname\'><span class=\'", cl, "\'>", dayarrs[i].display, "</span></div></th>");\n
-\n
-            }\n
-            ht.push("<th width=\\"16\\" rowspan=\\"3\\">&nbsp;</th>");\n
-            ht.push("</tr>"); //end tr1;\n
-            //2:          \n
-            ht.push("<tr>");\n
-            ht.push("<td class=\\"wk-allday\\"");\n
-\n
-            if (dayarrs.length > 1) {\n
-                ht.push(" colSpan=\'", dayarrs.length, "\'");\n
-            }\n
-            //onclick=\\"javascript:FunProxy(\'rowhandler\',event,this);\\"\n
-            ht.push("><div id=\\"weekViewAllDaywk\\" ><table class=\\"st-grid\\" cellpadding=\\"0\\" cellspacing=\\"0\\"><tbody>");\n
-\n
-            if (dMax == 0) {\n
-                ht.push("<tr>");\n
-                for (var i = 0; i < dayarrs.length; i++) {\n
-                    ht.push("<td class=\\"st-c st-s\\"", " ch=\'qkadd\' abbr=\'", dateFormat.call(dayarrs[i].date, "yyyy-M-d"), "\' axis=\'00:00\'>&nbsp;</td>");\n
-                }\n
-                ht.push("</tr>");\n
-            }\n
-            else {\n
-                var l = events.length;\n
-                var el = 0;\n
-                var x = [];\n
-                for (var j = 0; j < l; j++) {\n
-                    x.push(0);\n
-                }\n
-                //var c = tc();\n
-                for (var j = 0; el < dMax; j++) {\n
-                    ht.push("<tr>");\n
-                    for (var h = 0; h < l; ) {\n
-                        var e = events[h][x[h]];\n
-                        ht.push("<td class=\'st-c");\n
-                        if (e) { //if exists\n
-                            x[h] = x[h] + 1;\n
-                            ht.push("\'");\n
-                            var t = BuildMonthDayEvent(e, dayarrs[h].date, l - h);\n
-                            if (e.colSpan > 1) {\n
-                                ht.push(" colSpan=\'", e.colSpan, "\'");\n
-                                h += e.colSpan;\n
-                            }\n
-                            else {\n
-                                h++;\n
-                            }\n
-                            ht.push(" ch=\'show\'>", t);\n
-                            t = null;\n
-                            el++;\n
-                        }\n
-                        else {\n
-                            ht.push(" st-s\' ch=\'qkadd\' abbr=\'", dateFormat.call(dayarrs[h].date, i18n.xgcalendar.dateformat.fulldayvalue), "\' axis=\'00:00\'>&nbsp;");\n
-                            h++;\n
-                        }\n
-                        ht.push("</td>");\n
-                    }\n
-                    ht.push("</tr>");\n
-                }\n
-                ht.push("<tr>");\n
-                for (var h = 0; h < l; h++) {\n
-                    ht.push("<td class=\'st-c st-s\' ch=\'qkadd\' abbr=\'", dateFormat.call(dayarrs[h].date, i18n.xgcalendar.dateformat.fulldayvalue), "\' axis=\'00:00\'>&nbsp;</td>");\n
-                }\n
-                ht.push("</tr>");\n
-            }\n
-            ht.push("</tbody></table></div></td></tr>"); // stgrid end //wvAd end //td2 end //tr2 end\n
-            //3:\n
-            ht.push("<tr>");\n
-\n
-            ht.push("<td style=\\"height: 5px;\\"");\n
-            if (dayarrs.length > 1) {\n
-                ht.push(" colSpan=\'", dayarrs.length, "\'");\n
-            }\n
-            ht.push("></td>");\n
-            ht.push("</tr>");\n
-        }\n
-\n
-        function BuildDayScollEventContainer(ht, dayarrs, events) {\n
-            //1:\n
-            ht.push("<tr>");\n
-            ht.push("<td style=\'width:60px;\'></td>");\n
-            ht.push("<td");\n
-            if (dayarrs.length > 1) {\n
-                ht.push(" colSpan=\'", dayarrs.length, "\'");\n
-            }\n
-            ht.push("><div id=\\"tgspanningwrapper\\" class=\\"tg-spanningwrapper\\"><div style=\\"font-size: 20px\\" class=\\"tg-hourmarkers\\">");\n
-            for (var i = 0; i < 24; i++) {\n
-                ht.push("<div class=\\"tg-dualmarker\\"></div>");\n
-            }\n
-            ht.push("</div></div></td></tr>");\n
-\n
-            //2:\n
-            ht.push("<tr>");\n
-            ht.push("<td style=\\"width: 60px\\" class=\\"tg-times\\">");\n
-\n
-            //get current time \n
-            var now = new Date(); var h = now.getHours(); var m = now.getMinutes();\n
-            var mHg = gP(h, m) - 4; //make middle alignment vertically\n
-            ht.push("<div id=\\"tgnowptr\\" class=\\"tg-nowptr\\" style=\\"left:0px;top:", mHg, "px\\"></div>");\n
-            var tmt = "";\n
-            for (var i = 0; i < 24; i++) {\n
-                tmt = fomartTimeShow(i);\n
-                ht.push("<div style=\\"height: 41px\\" class=\\"tg-time\\">", tmt, "</div>");\n
-            }\n
-            ht.push("</td>");\n
-\n
-            var l = dayarrs.length;\n
-            for (var i = 0; i < l; i++) {\n
-                ht.push("<td class=\\"tg-col\\" ch=\'qkadd\' abbr=\'", dateFormat.call(dayarrs[i].date, i18n.xgcalendar.dateformat.fulldayvalue), "\'>");\n
-                var istoday = dateFormat.call(dayarrs[i].date, "yyyyMMdd") == dateFormat.call(new Date(), "yyyyMMdd");\n
-                // Today\n
-                if (istoday) {\n
-                    ht.push("<div style=\\"margin-bottom: -1008px; height:1008px\\" class=\\"tg-today\\">&nbsp;</div>");\n
-                }\n
-                //var eventC = $(eventWrap);\n
-                //onclick=\\"javascript:FunProxy(\'rowhandler\',event,this);\\"\n
-                ht.push("<div  style=\\"margin-bottom: -1008px; height: 1008px\\" id=\'tgCol", i, "\' class=\\"tg-col-eventwrapper\\">");\n
-                BuildEvents(ht, events[i], dayarrs[i]);\n
-                ht.push("</div>");\n
-\n
-                ht.push("<div class=\\"tg-col-overlaywrapper\\" id=\'tgOver", i, "\'>");\n
-                if (istoday) {\n
-                    var mhh = mHg + 4;\n
-                    ht.push("<div id=\\"tgnowmarker\\" class=\\"tg-hourmarker tg-nowmarker\\" style=\\"left:0px;top:", mhh, "px\\"></div>");\n
-                }\n
-                ht.push("</div>");\n
-                ht.push("</td>");\n
-            }\n
-            ht.push("</tr>");\n
-        }\n
-        //show events to calendar\n
-        function BuildEvents(hv, events, sday) {\n
-            for (var i = 0; i < events.length; i++) {\n
-                var c;\n
-                if (events[i].event[7] && events[i].event[7] >= 0) {\n
-                    c = tc(events[i].event[7]); //theme\n
-                }\n
-                else {\n
-                    c = tc(); //default theme\n
-                }\n
-                var tt = BuildDayEvent(c, events[i], i);\n
-                hv.push(tt);\n
-            }\n
-        }\n
-        function getTitle(event) {      \n
-            var timeshow, locationshow, attendsshow, eventshow;\n
-            var showtime = event[4] != 1;\n
-            eventshow = event[1];\n
-            var startformat = getymformat(event[2], null, showtime, true);\n
-            var endformat = getymformat(event[3], event[2], showtime, true);\n
-            timeshow = dateFormat.call(event[2], startformat) + " - " + dateFormat.call(event[3], endformat);\n
-            locationshow = (event[9] != undefined && event[9] != "") ? event[9] : i18n.xgcalendar.i_undefined;\n
-            attendsshow = (event[10] != undefined && event[10] != "") ? event[10] : "";\n
-            var ret = [];\n
-            if (event[4] == 1) {\n
-                ret.push("[" + i18n.xgcalendar.allday_event + "]",$.browser.mozilla?"":"\\r\\n" );\n
-            }\n
-            else {\n
-                if (event[5] == 1) {\n
-                    ret.push("[" + i18n.xgcalendar.repeat_event + "]",$.browser.mozilla?"":"\\r\\n");\n
-                }\n
-            }\n
-            ret.push(i18n.xgcalendar.time + ":", timeshow, $.browser.mozilla?"":"\\r\\n", i18n.xgcalendar.event + ":", eventshow,$.browser.mozilla?"":"\\r\\n", i18n.xgcalendar.location + ":", locationshow);\n
-            if (attendsshow != "") {\n
-                ret.push($.browser.mozilla?"":"\\r\\n", i18n.xgcalendar.participant + ":", attendsshow);\n
-            }\n
-            return ret.join("");\n
-        }\n
-        function BuildDayEvent(theme, e, index) {\n
-            var p = { bdcolor: theme[0], bgcolor2: theme[0], bgcolor1: theme[2], width: "70%", icon: "", title: "", data: "" };\n
-            p.starttime = pZero(e.st.hour) + ":" + pZero(e.st.minute);\n
-            p.endtime = pZero(e.et.hour) + ":" + pZero(e.et.minute);\n
-            p.content = e.event[1];\n
-            p.title = getTitle(e.event);\n
-            p.data = e.event.join("$");\n
-            var icons = [];\n
-            icons.push("<I class=\\"cic cic-tmr\\">&nbsp;</I>");\n
-            if (e.reevent) {\n
-                icons.push("<I class=\\"cic cic-spcl\\">&nbsp;</I>");\n
-            }\n
-            p.icon = icons.join("");\n
-            var sP = gP(e.st.hour, e.st.minute);\n
-            var eP = gP(e.et.hour, e.et.minute);\n
-            p.top = sP + "px";\n
-            p.left = (e.left * 100) + "%";\n
-            p.width = (e.aQ * 100) + "%";\n
-            p.height = (eP - sP - 4);\n
-            p.i = index;\n
-            if (option.enableDrag && e.event[8] == 1) {\n
-                p.drag = "drag";\n
-                p.redisplay = "block";\n
-            }\n
-            else {\n
-                p.drag = "";\n
-                p.redisplay = "none";\n
-            }\n
-            var newtemp = Tp(__SCOLLEVENTTEMP, p);\n
-            p = null;\n
-            return newtemp;\n
-        }\n
-\n
-        //get body height in month view\n
-        function GetMonthViewBodyHeight() {\n
-            return option.height;\n
-        }\n
-        function GetMonthViewHeaderHeight() {\n
-            return 21;\n
-        }\n
-        function BuilderMonthBody(htb, showday, startday, events, bodyHeight) {\n
-\n
-            var firstdate = new Date(showday.getFullYear(), showday.getMonth(), 1);\n
-            var diffday = startday - firstdate.getDay();\n
-            var showmonth = showday.getMonth();\n
-            if (diffday > 0) {\n
-                diffday -= 7;\n
-            }\n
-            var startdate = DateAdd("d", diffday, firstdate);\n
-            var enddate = DateAdd("d", 34, startdate);\n
-            var rc = 5;\n
-\n
-            if (enddate.getFullYear() == showday.getFullYear() && enddate.getMonth() == showday.getMonth() && enddate.getDate() < __MonthDays[showmonth]) {\n
-                enddate = DateAdd("d", 7, enddate);\n
-                rc = 6;\n
-            }\n
-            option.vstart = startdate;\n
-            option.vend = enddate;\n
-            option.datestrshow = CalDateShow(startdate, enddate);\n
-            bodyHeight = bodyHeight - 18 * rc;\n
-            var rowheight = bodyHeight / rc;\n
-            var roweventcount = parseInt(rowheight / 21);\n
-            if (rowheight % 21 > 15) {\n
-                roweventcount++;\n
-            }\n
-            var p = 100 / rc;\n
-            var formatevents = [];\n
-            var hastdata = formartEventsInHashtable(events, startday, 7, startdate, enddate);\n
-            var B = [];\n
-            var C = [];\n
-            for (var j = 0; j < rc; j++) {\n
-                var k = 0;\n
-                formatevents[j] = b = [];\n
-                for (var i = 0; i < 7; i++) {\n
-                    var newkeyDate = DateAdd("d", j * 7 + i, startdate);\n
-                    C[j * 7 + i] = newkeyDate;\n
-                    var newkey = dateFormat.call(newkeyDate, i18n.xgcalendar.dateformat.fulldaykey);\n
-                    b[i] = hastdata[newkey];\n
-                    if (b[i] && b[i].length > 0) {\n
-                        k += b[i].length;\n
-                    }\n
-                }\n
-                B[j] = k;\n
-            }\n
-            //var c = tc();\n
-            eventDiv.data("mvdata", formatevents);\n
-            for (var j = 0; j < rc; j++) {\n
-                //onclick=\\"javascript:FunProxy(\'rowhandler\',event,this);\\"\n
-                htb.push("<div id=\'mvrow_", j, "\' style=\\"HEIGHT:", p, "%; TOP:", p * j, "%\\"  class=\\"month-row\\">");\n
-                htb.push("<table class=\\"st-bg-table\\" cellSpacing=\\"0\\" cellPadding=\\"0\\"><tbody><tr>");\n
-                var dMax = B[j];\n
-\n
-                for (var i = 0; i < 7; i++) {\n
-                    var day = C[j * 7 + i];\n
-                    htb.push("<td abbr=\'", dateFormat.call(day, i18n.xgcalendar.dateformat.fulldayvalue), "\' ch=\'qkadd\' axis=\'00:00\' title=\'\'");\n
-\n
-                    if (dateFormat.call(day, "yyyyMMdd") == dateFormat.call(new Date(), "yyyyMMdd")) {\n
-                        htb.push(" class=\\"st-bg st-bg-today\\">");\n
-                    }\n
-                    else {\n
-                        htb.push(" class=\\"st-bg\\">");\n
-                    }\n
-                    htb.push("&nbsp;</td>");\n
-                }\n
-                //bgtable\n
-                htb.push("</tr></tbody></table>");\n
-\n
-                //stgrid\n
-                htb.push("<table class=\\"st-grid\\" cellpadding=\\"0\\" cellspacing=\\"0\\"><tbody>");\n
-\n
-                //title tr\n
-                htb.push("<tr>");\n
-                var titletemp = "<td class=\\"st-dtitle${titleClass}\\" ch=\'qkadd\' abbr=\'${abbr}\' axis=\'00:00\' title=\\"${title}\\"><span class=\'monthdayshow\'>${dayshow}</span></a></td>";\n
-\n
-                for (var i = 0; i < 7; i++) {\n
-                    var o = { titleClass: "", dayshow: "" };\n
-                    var day = C[j * 7 + i];\n
-                    if (dateFormat.call(day, "yyyyMMdd") == dateFormat.call(new Date(), "yyyyMMdd")) {\n
-                        o.titleClass = " st-dtitle-today";\n
-                    }\n
-                    if (day.getMonth() != showmonth) {\n
-                        o.titleClass = " st-dtitle-nonmonth";\n
-                    }\n
-                    o.title = dateFormat.call(day, i18n.xgcalendar.dateformat.fulldayshow);\n
-                    if (day.getDate() == 1) {\n
-                        if (day.getMonth == 0) {\n
-                            o.dayshow = dateFormat.call(day, i18n.xgcalendar.dateformat.fulldayshow);\n
-                        }\n
-                        else {\n
-                            o.dayshow = dateFormat.call(day, i18n.xgcalendar.dateformat.Md3);\n
-                        }\n
-                    }\n
-                    else {\n
-                        o.dayshow = day.getDate();\n
-                    }\n
-                    o.abbr = dateFormat.call(day, i18n.xgcalendar.dateformat.fulldayvalue);\n
-                    htb.push(Tp(titletemp, o));\n
-                }\n
-                htb.push("</tr>");\n
-                var sfirstday = C[j * 7];\n
-                BuildMonthRow(htb, formatevents[j], dMax, roweventcount, sfirstday);\n
-                //htb=htb.concat(rowHtml); rowHtml = null;  \n
-\n
-                htb.push("</tbody></table>");\n
-                //month-row\n
-                htb.push("</div>");\n
-            }\n
-\n
-            formatevents = B = C = hastdata = null;\n
-            //return htb;\n
-        }\n
-        \n
-        //formate datetime \n
-        function formartEventsInHashtable(events, startday, daylength, rbdate, redate) {\n
-            var hast = new Object();\n
-            var l = events.length;\n
-            for (var i = 0; i < l; i++) {\n
-                var sD = events[i][2];\n
-                var eD = events[i][3];\n
-                var diff = DateDiff("d", sD, eD);\n
-                var s = {};\n
-                s.event = events[i];\n
-                s.day = sD.getDate();\n
-                s.year = sD.getFullYear();\n
-                s.month = sD.getMonth() + 1;\n
-                s.allday = events[i][4] == 1;\n
-                s.crossday = events[i][5] == 1;\n
-                s.reevent = events[i][6] == 1; //Recurring event\n
-                s.daystr = s.year + "/" + s.month + "/" + s.day;\n
-                s.st = {};\n
-                s.st.hour = sD.getHours();\n
-                s.st.minute = sD.getMinutes();\n
-                s.st.p = s.st.hour * 60 + s.st.minute; // start time position\n
-                s.et = {};\n
-                s.et.hour = eD.getHours();\n
-                s.et.minute = eD.getMinutes();\n
-                s.et.p = s.et.hour * 60 + s.et.minute; // end time postition\n
-\n
-                if (diff > 0) {\n
-                    if (sD < rbdate) { //start date out of range\n
-                        sD = rbdate;\n
-                    }\n
-                    if (eD > redate) { //end date out of range\n
-                        eD = redate;\n
-                    }\n
-                    var f = startday - sD.getDay();\n
-                    if (f > 0) { f -= daylength; }\n
-                    var sdtemp = DateAdd("d", f, sD);\n
-                    for (; sdtemp <= eD; sD = sdtemp = DateAdd("d", daylength, sdtemp)) {\n
-                        var d = Clone(s);\n
-                        var key = dateFormat.call(sD, i18n.xgcalendar.dateformat.fulldaykey);\n
-                        var x = DateDiff("d", sdtemp, eD);\n
-                        if (hast[key] == null) {\n
-                            hast[key] = [];\n
-                        }\n
-                        d.colSpan = (x >= daylength) ? daylength - DateDiff("d", sdtemp, sD) : DateDiff("d", sD, eD) + 1;\n
-                        hast[key].push(d);\n
-                        d = null;\n
-                    }\n
-                }\n
-                else {\n
-                    var key = dateFormat.call(events[i][2], i18n.xgcalendar.dateformat.fulldaykey);\n
-                    if (hast[key] == null) {\n
-                        hast[key] = [];\n
-                    }\n
-                    s.colSpan = 1;\n
-                    hast[key].push(s);\n
-                }\n
-                s = null;\n
-            }\n
-            return hast;\n
-        }\n
-        function BuildMonthRow(htr, events, dMax, sc, day) {\n
-            var x = []; \n
-            var y = []; \n
-            var z = []; \n
-            var cday = [];  \n
-            var l = events.length;\n
-            var el = 0;\n
-            //var c = tc();\n
-            for (var j = 0; j < l; j++) {\n
-                x.push(0);\n
-                y.push(0);\n
-                z.push(0);\n
-                cday.push(DateAdd("d", j, day));\n
-            }\n
-            for (var j = 0; j < l; j++) {\n
-                var ec = events[j] ? events[j].length : 0;\n
-                y[j] += ec;\n
-                for (var k = 0; k < ec; k++) {\n
-                    var e = events[j][k];\n
-                    if (e && e.colSpan > 1) {\n
-                        for (var m = 1; m < e.colSpan; m++) {\n
-                            y[j + m]++;\n
-                        }\n
-                    }\n
-                }\n
-            }\n
-            //var htr=[];\n
-            var tdtemp = "<td class=\'${cssclass}\' axis=\'${axis}\' ch=\'${ch}\' abbr=\'${abbr}\' title=\'${title}\' ${otherAttr}>${html}</td>";\n
-            for (var j = 0; j < sc && el < dMax; j++) {\n
-                htr.push("<tr>");\n
-                //var gridtr = $(__TRTEMP);\n
-                for (var h = 0; h < l; ) {\n
-                    var e = events[h] ? events[h][x[h]] : undefined;\n
-                    var tempdata = { "class": "", axis: "", ch: "", title: "", abbr: "", html: "", otherAttr: "", click: "javascript:void(0);" };\n
-                    var tempCss = ["st-c"];\n
-\n
-                    if (e) { \n
-                        x[h] = x[h] + 1;\n
-                        //last event of the day\n
-                        var bs = false;\n
-                        if (z[h] + 1 == y[h] && e.colSpan == 1) {\n
-                            bs = true;\n
-                        }\n
-                        if (!bs && j == (sc - 1) && z[h] < y[h]) {\n
-                            el++;\n
-                            $.extend(tempdata, { "axis": h, ch: "more", "abbr": dateFormat.call(cday[h], i18n.xgcalendar.dateformat.fulldayvalue), html: i18n.xgcalendar.others + (y[h] - z[h]) + i18n.xgcalendar.item, click: "javascript:alert(\'more event\');" });\n
-                            tempCss.push("st-more st-moreul");\n
-                            h++;\n
-                        }\n
-                        else {\n
-                            tempdata.html = BuildMonthDayEvent(e, cday[h], l - h);\n
-                            tempdata.ch = "show";\n
-                            if (e.colSpan > 1) {\n
-                                tempdata.otherAttr = " colSpan=\'" + e.colSpan + "\'";\n
-                                for (var m = 0; m < e.colSpan; m++) {\n
-                                    z[h + m] = z[h + m] + 1;\n
-                                }\n
-                                h += e.colSpan;\n
-\n
-                            }\n
-                            else {\n
-                                z[h] = z[h] + 1;\n
-                                h++;\n
-                            }\n
-                            el++;\n
-                        }\n
-                    }\n
-                    else {\n
-                        if (j == (sc - 1) && z[h] < y[h] && y[h] > 0) {\n
-                            $.extend(tempdata, { "axis": h, ch: "more", "abbr": dateFormat.call(cday[h], i18n.xgcalendar.dateformat.fulldayvalue), html: i18n.xgcalendar.others + (y[h] - z[h]) + i18n.xgcalendar.item, click: "javascript:alert(\'more event\');" });\n
-                            tempCss.push("st-more st-moreul");\n
-                            h++;\n
-                        }\n
-                        else {\n
-                            $.extend(tempdata, { html: "&nbsp;", ch: "qkadd", "axis": "00:00", "abbr": dateFormat.call(cday[h], i18n.xgcalendar.dateformat.fulldayvalue), title: "" });\n
-                            tempCss.push("st-s");\n
-                            h++;\n
-                        }\n
-                    }\n
-                    tempdata.cssclass = tempCss.join(" ");\n
-                    tempCss = null;\n
-                    htr.push(Tp(tdtemp, tempdata));\n
-                    tempdata = null;\n
-                }\n
-                htr.push("</tr>");\n
-            }\n
-            x = y = z = cday = null;\n
-            //return htr;\n
-        }\n
-        function BuildMonthDayEvent(e, cday, length) {\n
-            var theme;\n
-            if (e.event[7] && e.event[7] >= 0) {\n
-                theme = tc(e.event[7]);\n
-            }\n
-            else {\n
-                theme = tc();\n
-            }\n
-            var p = { color: theme[2], title: "", extendClass: "", extendHTML: "", data: "" };\n
-\n
-            p.title = getTitle(e.event);\n
-            p.id = "bbit_cal_event_" + e.event[0];\n
-            if (option.enableDrag && e.event[8] == 1) {\n
-                p.eclass = "drag";\n
-            }\n
-            else {\n
-                p.eclass = "cal_" + e.event[0];\n
-            }\n
-            p.data = e.event.join("$");\n
-            var sp = "<span style=\\"cursor: pointer\\">${content}</span>";\n
-            var i = "<I class=\\"cic cic-tmr\\">&nbsp;</I>";\n
-            var i2 = "<I class=\\"cic cic-rcr\\">&nbsp;</I>";\n
-            var ml = "<div class=\\"st-ad-ml\\"></div>";\n
-            var mr = "<div class=\\"st-ad-mr\\"></div>";\n
-            var arrm = [];\n
-            var sf = e.event[2] < cday;\n
-            var ef = DateDiff("d", cday, e.event[3]) >= length;  //e.event[3] >= DateAdd("d", 1, cday);\n
-            if (sf || ef) {\n
-                if (sf) {\n
-                    arrm.push(ml);\n
-                    p.extendClass = "st-ad-mpad ";\n
-                }\n
-                if (ef)\n
-                { arrm.push(mr); }\n
-                p.extendHTML = arrm.join("");\n
-\n
-            }\n
-            var cen;\n
-            if (!e.allday && !sf) {\n
-                cen = pZero(e.st.hour) + ":" + pZero(e.st.minute) + " " + e.event[1];\n
-            }\n
-            else {\n
-                cen = e.event[1];\n
-            }\n
-            var content = [];\n
-            content.push(Tp(sp, { content: cen }));\n
-            content.push(i);\n
-            if (e.reevent)\n
-            { content.push(i2); }\n
-            p.content = content.join("");\n
-            return Tp(__ALLDAYEVENTTEMP, p);\n
-        }\n
-        //to populate the data \n
-        function populate() {\n
-            if (option.isloading){\n
-                return true;\n
-            }\n
-            if (option.url && option.url != "") {\n
-                option.isloading = true;\n
-                //clearcontainer();\n
-                if (option.onBeforeRequestData && $.isFunction(option.onBeforeRequestData)) {\n
-                  option.onBeforeRequestData(1);\n
-                }\n
-                var zone = new Date().getTimezoneOffset() / 60 * -1;\n
-                var param = [\n
-                  {name: "showdate", value: dateFormat.call(option.showday, i18n.xgcalendar.dateformat.fulldayvalue)},\n
-                  {name: "viewtype", value: option.view},\n
-                  {name: "timezone", value: zone}\n
-];\n
-                if (option.extParam) {\n
-                  for (var pi = 0; pi < option.extParam.length; pi++) {\n
-                    param[param.length] = option.extParam[pi];\n
-                  }\n
-                }\n
-                $.ajax({\n
-                    type: option.method,//\n
-                    url: option.url,\n
-                    data: param,   \n
-                    //dataType: "text",  // fixed jquery 1.4 not support Ms Date Json Format /Date(@Tickets)/\n
-                    dataType: "json",\n
-                    dataFilter: function(data, type) { \n
-                      return data;\n
-                    },\n
-                    success: function(data) {\n
-                      if (data != null && data.error != null) {\n
-                        if (option.onRequestDataError) {\n
-                          option.onRequestDataError(1, data);\n
-                        }\n
-                      }\n
-                      else {\n
-                        data["start"] = parseDate(data["start"]);\n
-                        data["end"] = parseDate(data["end"]);\n
-                        $.each(data.events, function(index, value) { \n
-                          value[2] = parseDate(value[2]);\n
-                          value[3] = parseDate(value[3]); \n
-                        });\n
-                        responseData(data, data.start, data.end);\n
-                        pushER(data.start, data.end);\n
-                      }\n
-                      if (option.onAfterRequestData && $.isFunction(option.onAfterRequestData)) {\n
-                        option.onAfterRequestData(1);\n
-                      }\n
-                      option.isloading = false;\n
-                    },\n
-                    error: function(data) { \n
-            try {             \n
-                            if (option.onRequestDataError) {\n
-                                option.onRequestDataError(1, data);\n
-                            } else {\n
-                                alert(i18n.xgcalendar.get_data_exception);\n
-                            }\n
-                            if (option.onAfterRequestData && $.isFunction(option.onAfterRequestData)) {\n
-                                option.onAfterRequestData(1);\n
-                            }\n
-                            option.isloading = false;\n
-                        } catch (e) { }\n
-                    }\n
-                });\n
-            }\n
-            else {\n
-                alert("url" + i18n.xgcalendar.i_undefined);\n
-            }\n
-        }\n
-        function responseData(data, start, end) {\n
-            var events;\n
-            if (data.issort == false) {\n
-                if (data.events && data.events.length > 0) {\n
-                    events = data.sort(function(l, r) { return l[2] > r[2] ? -1 : 1; });\n
-                }\n
-                else {\n
-                    events = [];\n
-                }\n
-            }\n
-            else {\n
-                events = data.events;\n
-            }\n
-            ConcatEvents(events, start, end);\n
-            render();\n
-        }\n
-        function clearrepeat(events, start, end) {\n
-            var jl = events.length;\n
-            if (jl > 0) {\n
-                var es = events[0][2];\n
-                var el = events[jl - 1][2];\n
-                for (var i = 0, l = option.eventItems.length; i < l; i++) {\n
-\n
-                    if (option.eventItems[i][2] > el || jl == 0) {\n
-                        break;\n
-                    }\n
-                    if (option.eventItems[i][2] >= es) {\n
-                        for (var j = 0; j < jl; j++) {\n
-                            if (option.eventItems[i][0] == events[j][0] && option.eventItems[i][2] < start) {\n
-                                events.splice(j, 1); //for duplicated event\n
-                                jl--;\n
-                                break;\n
-                            }\n
-                        }\n
-                    }\n
-                }\n
-            }\n
-        }\n
-        function ConcatEvents(events, start, end) {\n
-            if (!events) {\n
-                events = [];\n
-            }\n
-            if (events) {\n
-                if (option.eventItems.length == 0) {\n
-                    option.eventItems = events;\n
-                }\n
-                else {\n
-                    //remove duplicated one\n
-                    clearrepeat(events, start, end);\n
-                    var l = events.length;\n
-                    var sl = option.eventItems.length;\n
-                    var sI = -1;\n
-                    var eI = sl;\n
-                    var s = start;\n
-                    var e = end;\n
-                    if (option.eventItems[0][2] > e)\n
-                    {\n
-                        option.eventItems = events.concat(option.eventItems);\n
-                        return;\n
-                    }\n
-                    if (option.eventItems[sl - 1][2] < s) \n
-                    {\n
-                        option.eventItems = option.eventItems.concat(events);\n
-                        return;\n
-                    }\n
-                    for (var i = 0; i < sl; i++) {\n
-                        if (option.eventItems[i][2] >= s && sI < 0) {\n
-                            sI = i;\n
-                            continue;\n
-                        }\n
-                        if (option.eventItems[i][2] > e) {\n
-                            eI = i;\n
-                            break;\n
-                        }\n
-                    }\n
-\n
-                    var e1 = sI <= 0 ? [] : option.eventItems.slice(0, sI);\n
-                    var e2 = eI == sl ? [] : option.eventItems.slice(eI);\n
-                    option.eventItems = [].concat(e1, events, e2);\n
-                    events = e1 = e2 = null;\n
-                }\n
-            }\n
-        }\n
-        //utils goes here\n
-        function weekormonthtoday(e) {\n
-            var th = $(this);\n
-            var daystr = th.attr("abbr");\n
-            option.showday = strtodate(daystr + " 00:00");\n
-            option.view = "day";\n
-            render();\n
-            if (option.onweekormonthtoday) {\n
-                option.onweekormonthtoday(option);\n
-            }\n
-            return false;\n
-        }\n
-        function parseDate(str){\n
-            return new Date(Date.parse(str));\n
-        }\n
-        function gP(h, m) {\n
-            return h * 42 + parseInt(m / 60 * 42);\n
-        }\n
-        function gW(ts1, ts2) {\n
-            var t1 = ts1 / 42;\n
-            var t2 = parseInt(t1);\n
-            var t3 = t1 - t2 >= 0.5 ? 30 : 0;\n
-            var t4 = ts2 / 42;\n
-            var t5 = parseInt(t4);\n
-            var t6 = t4 - t5 >= 0.5 ? 30 : 0;\n
-            return { sh: t2, sm: t3, eh: t5, em: t6, h: ts2 - ts1 };\n
-        }\n
-        function gH(y1, y2, pt) {\n
-            var sy1 = Math.min(y1, y2);\n
-            var sy2 = Math.max(y1, y2);\n
-            var t1 = (sy1 - pt) / 42;\n
-            var t2 = parseInt(t1);\n
-            var t3 = t1 - t2 >= 0.5 ? 30 : 0;\n
-            var t4 = (sy2 - pt) / 42;\n
-            var t5 = parseInt(t4);\n
-            var t6 = t4 - t5 >= 0.5 ? 30 : 0;\n
-            return { sh: t2, sm: t3, eh: t5, em: t6, h: sy2 - sy1 };\n
-        }\n
-        function pZero(n) {\n
-            return n < 10 ? "0" + n : "" + n;\n
-        }\n
-        //to get color list array\n
-        function tc(d) {\n
-            function zc(c, i) {\n
-                var d = "666666888888aaaaaabbbbbbdddddda32929cc3333d96666e69999f0c2c2b1365fdd4477e67399eea2bbf5c7d67a367a994499b373b3cca2cce1c7e15229a36633cc8c66d9b399e6d1c2f029527a336699668cb399b3ccc2d1e12952a33366cc668cd999b3e6c2d1f01b887a22aa9959bfb391d5ccbde6e128754e32926265ad8999c9b1c2dfd00d78131096184cb05288cb8cb8e0ba52880066aa008cbf40b3d580d1e6b388880eaaaa11bfbf4dd5d588e6e6b8ab8b00d6ae00e0c240ebd780f3e7b3be6d00ee8800f2a640f7c480fadcb3b1440edd5511e6804deeaa88f5ccb8865a5aa87070be9494d4b8b8e5d4d47057708c6d8ca992a9c6b6c6ddd3dd4e5d6c6274878997a5b1bac3d0d6db5a69867083a894a2beb8c1d4d4dae54a716c5c8d8785aaa5aec6c3cedddb6e6e41898951a7a77dc4c4a8dcdccb8d6f47b08b59c4a883d8c5ace7dcce";\n
-                return "#" + d.substring(c * 30 + i * 6, c * 30 + (i + 1) * 6);\n
-            }\n
-            var c = d != null && d != undefined ? d : option.theme;\n
-            return [zc(c, 0), zc(c, 1), zc(c, 2), zc(c, 3)];\n
-        }\n
-        function Tp(temp, dataarry) {\n
-            return temp.replace(/\\$\\{([\\w]+)\\}/g, function(s1, s2) { var s = dataarry[s2]; if (typeof (s) != "undefined") { return s; } else { return s1; } });\n
-        }\n
-        function Ta(temp, dataarry) {\n
-            return temp.replace(/\\{([\\d])\\}/g, function(s1, s2) { var s = dataarry[s2]; if (typeof (s) != "undefined") { return encodeURIComponent(s); } else { return ""; } });\n
-        }\n
-        function fomartTimeShow(h) {\n
-            return h < 10 ? "0" + h + ":00" : h + ":00";\n
-        }\n
-        function getymformat(date, comparedate, isshowtime, isshowweek, showcompare) {\n
-            var showyear = isshowtime != undefined ? (date.getFullYear() != new Date().getFullYear()) : true;\n
-            var showmonth = true;\n
-            var showday = true;\n
-            var showtime = isshowtime || false;\n
-            var showweek = isshowweek || false;\n
-            if (comparedate) {\n
-                showyear = comparedate.getFullYear() != date.getFullYear();\n
-                //showmonth = comparedate.getFullYear() != date.getFullYear() || date.getMonth() != comparedate.getMonth();\n
-                if (comparedate.getFullYear() == date.getFullYear() &&\n
-          date.getMonth() == comparedate.getMonth() &&\n
-          date.getDate() == comparedate.getDate()\n
-          ) {\n
-                    showyear = showmonth = showday = showweek = false;\n
-                }\n
-            }\n
-\n
-            var a = [];\n
-            if (showyear) {\n
-                a.push(i18n.xgcalendar.dateformat.fulldayshow)\n
-            } else if (showmonth) {\n
-                a.push(i18n.xgcalendar.dateformat.Md3)\n
-            } else if (showday) {\n
-                a.push(i18n.xgcalendar.dateformat.day);\n
-            }\n
-            a.push(showweek ? " (W)" : "", showtime ? " HH:mm" : "");\n
-            return a.join("");\n
-        }\n
-        function CalDateShow(startday, endday, isshowtime, isshowweek) {\n
-            if (!endday) {\n
-                return dateFormat.call(startday, getymformat(startday,null,isshowtime));\n
-            } else {\n
-                var strstart= dateFormat.call(startday, getymformat(startday, null, isshowtime, isshowweek));\n
-        var strend=dateFormat.call(endday, getymformat(endday, startday, isshowtime, isshowweek));\n
-        var join = (strend!=""? " - ":"");\n
-        return [strstart,strend].join(join);\n
-            }\n
-        }\n
-\n
-        function dochange() {\n
-            var d = getRdate();\n
-            var loaded = checkInEr(d.start, d.end);\n
-            if (!loaded) {\n
-                populate();\n
-            }\n
-        }\n
-\n
-        function checkInEr(start, end) {\n
-            var ll = option.loadDateR.length;\n
-            if (ll == 0) {\n
-                return false;\n
-            }\n
-            var r = false;\n
-            var r2 = false;\n
-            for (var i = 0; i < ll; i++) {\n
-                r = false, r2 = false;\n
-                var dr = option.loadDateR[i];\n
-                if (start >= dr.startdate && start <= dr.enddate) {\n
-                    r = true;\n
-                }\n
-                if (dateFormat.call(start, "yyyyMMdd") == dateFormat.call(dr.startdate, "yyyyMMdd") || dateFormat.call(start, "yyyyMMdd") == dateFormat.call(dr.enddate, "yyyyMMdd")) {\n
-                    r = true;\n
-                }\n
-                if (!end)\n
-                { r2 = true; }\n
-                else {\n
-                    if (end >= dr.startdate && end <= dr.enddate) {\n
-                        r2 = true;\n
-                    }\n
-                    if (dateFormat.call(end, "yyyyMMdd") == dateFormat.call(dr.startdate, "yyyyMMdd") || dateFormat.call(end, "yyyyMMdd") == dateFormat.call(dr.enddate, "yyyyMMdd")) {\n
-                        r2 = true;\n
-                    }\n
-                }\n
-                if (r && r2) {\n
-                    break;\n
-                }\n
-            }\n
-            return r && r2;\n
-        }\n
-\n
-        function buildtempdayevent(sh, sm, eh, em, h, title, w, resize, thindex) {\n
-            var theme = thindex != undefined && thindex >= 0 ? tc(thindex) : tc();\n
-            var newtemp = Tp(__SCOLLEVENTTEMP, {\n
-                bdcolor: theme[0],\n
-                bgcolor2: theme[0],\n
-                bgcolor1: theme[2],\n
-                data: "",\n
-                starttime: [pZero(sh), pZero(sm)].join(":"),\n
-                endtime: [pZero(eh), pZero(em)].join(":"),\n
-                content: title ? title : i18n.xgcalendar.new_event,\n
-                title: title ? title : i18n.xgcalendar.new_event,\n
-                icon: "<I class=\\"cic cic-tmr\\">&nbsp;</I>",\n
-                top: "0px",\n
-                left: "",\n
-                width: w ? w : "100%",\n
-                height: h - 4,\n
-                i: "-1",\n
-                drag: "drag-chip",\n
-                redisplay: resize ? "block" : "none"\n
-            });\n
-            return newtemp;\n
-        }\n
-\n
-        function getdata(chip) {\n
-            var hddata = chip.find("div.dhdV");\n
-            if (hddata.length == 1) {\n
-                var str = hddata.text();\n
-                return parseED(str.split("$"));\n
-            }\n
-            return null;\n
-        }\n
-        function parseED(data) {\n
-            if (data.length > 6) {\n
-                var e = [];\n
-                e.push(data[0],\n
-                       data[1],\n
-                       new Date(data[2]), \n
-                       new Date(data[3]),\n
-                       parseInt(data[4]),\n
-                       parseInt(data[5]),\n
-                       parseInt(data[6]),\n
-                       data[7] != undefined ? parseInt(data[7]) : -1,\n
-                       data[8] != undefined ? parseInt(data[8]) : 0,\n
-                       data[9],\n
-                       data[10],\n
-                       data[11] != undefined ? data[11]: null);\n
-                return e;\n
-            }\n
-            return null;\n
-\n
-        }\n
-        function quickd(type) {\n
-            $("#bbit-cs-buddle").css("visibility", "hidden");\n
-            var calid = $("#bbit-cs-id").val();\n
-            var title = $("#bbit-cs-what").text();\n
-            var param = [{"name": "calendarId", value: calid },\n
-                        {"name": "type", value: type},\n
-                        {"name": "title", value: title}];\n
-            var de = rebyKey(calid, true);\n
-            option.onBeforeRequestData && option.onBeforeRequestData(3);\n
-            $.post(option.quickDeleteUrl, param, function(data) {\n
-                if (data) {\n
-                    if (data.IsSuccess) {\n
-                        de = null;\n
-                        option.onAfterRequestData && option.onAfterRequestData(3);\n
-                    }\n
-                    else {\n
-                        option.onRequestDataError && option.onRequestDataError(3, data);\n
-                        Ind(de);\n
-                        render();\n
-                        option.onAfterRequestData && option.onAfterRequestData(3);\n
-                    }\n
-                }\n
-            }, "json");\n
-            render();\n
-        }\n
-        function getbuddlepos(x, y) {\n
-            var tleft = x - 110; \n
-            var ttop = y - 217; \n
-            var maxLeft = document.documentElement.clientWidth;\n
-            var maxTop = document.documentElement.clientHeight;\n
-            var ishide = false;\n
-            if (tleft <= 0 || ttop <= 0 || tleft + 400 > maxLeft) {\n
-                tleft = x - 200 <= 0 ? 10 : x - 200;\n
-                ttop = y - 159 <= 0 ? 10 : y - 159;\n
-                if (tleft + 400 >= maxLeft) {\n
-                    tleft = maxLeft - 410;\n
-                }\n
-                if (ttop + 164 >= maxTop) {\n
-                    ttop = maxTop - 165;\n
-                }\n
-                ishide = true;\n
-            }\n
-            return { left: tleft, top: ttop, hide: ishide };\n
-        }\n
-        function dayshow(e, data) {\n
-            if (data == undefined) {\n
-                data = getdata($(this));\n
-            }\n
-            if (data != null) {\n
-                if (option.quickDeleteUrl != "" && data[8] == 1 && option.readonly != true) {\n
-                    var csbuddle = \'<div id="bbit-cs-buddle" style="z-index: 180; width: 400px;visibility:hidden;" class="bubble"><table class="bubble-table" cellSpacing="0" cellPadding="0"><tbody><tr><td class="bubble-cell-side"><div id="tl1" class="bubble-corner"><div class="bubble-sprite bubble-tl"></div></div><td class="bubble-cell-main"><div class="bubble-top"></div><td class="bubble-cell-side"><div id="tr1" class="bubble-corner"><div class="bubble-sprite bubble-tr"></div></div>  <tr><td class="bubble-mid" colSpan="3"><div style="overflow: hidden" id="bubbleContent1"><div><div></div><div class="cb-root"><table class="cb-table" cellSpacing="0" cellPadding="0"><tbody><tr><td class="cb-value"><div class="textbox-fill-wrapper"><div class="textbox-fill-mid"><div id="bbit-cs-what" title="\'\n
-                      + i18n.xgcalendar.click_to_detail + \'" class="textbox-fill-div lk" style="cursor:pointer;"></div></div></div></td></tr><tr><td class=cb-value><div id="bbit-cs-buddle-timeshow"></div></td></tr></tbody></table><div class="bbit-cs-split"><input id="bbit-cs-id" type="hidden" value=""/>[ <span id="bbit-cs-delete" class="lk">\'\n
-                      + i18n.xgcalendar.i_delete + \'</span> ]&nbsp; <SPAN id="bbit-cs-editLink" class="lk">\'\n
-                      + i18n.xgcalendar.update_detail + \' <StrONG>&gt;&gt;</StrONG></SPAN></div></div></div></div><tr><td><div id="bl1" class="bubble-corner"><div class="bubble-sprite bubble-bl"></div></div><td><div class="bubble-bottom"></div><td><div id="br1" class="bubble-corner"><div class="bubble-sprite bubble-br"></div></div></tr></tbody></table><div id="bubbleClose2" class="bubble-closebutton"></div><div id="prong1" class="prong"><div class=bubble-sprite></div></div></div>\';\n
-                    var bud = $("#bbit-cs-buddle");\n
-                    if (bud.length == 0) {\n
-                        bud = $(csbuddle).appendTo(document.body);\n
-                        var calbutton = $("#bbit-cs-delete");\n
-                        var lbtn = $("#bbit-cs-editLink");\n
-                        var closebtn = $("#bubbleClose2").click(function() {\n
-                            $("#bbit-cs-buddle").css("visibility", "hidden");\n
-                        });\n
-                        calbutton.click(function() {\n
-                            var data = $("#bbit-cs-buddle").data("cdata");\n
-                            if (option.DeleteCmdhandler && $.isFunction(option.DeleteCmdhandler)) {\n
-                                option.DeleteCmdhandler.call(this, data, quickd);\n
-                            }\n
-                            else {\n
-                                if (confirm(i18n.xgcalendar.confirm_delete_event + "?")) {\n
-                                    var s = 0; //0 single event , 1 for Recurring event\n
-                                    if (data[6] == 1) {\n
-                                        if (confirm(i18n.xgcalendar.confrim_delete_event_or_all)) {\n
-                                            s = 0;\n
-                                        }\n
-                                        else {\n
-                                            s = 1;\n
-                                        }\n
-                                    }\n
-                                    else {\n
-                                        s = 0;\n
-                                    }\n
-                                    quickd(s);\n
-                                }\n
-                            }\n
-                        });\n
-                        $("#bbit-cs-what").click(function(e) {\n
-                            if (!option.ViewCmdhandler) {\n
-                                alert("ViewCmdhandler" + i18n.xgcalendar.i_undefined);\n
-                            }\n
-                            else {\n
-                                if (option.ViewCmdhandler && $.isFunction(option.ViewCmdhandler)) {\n
-                                    option.ViewCmdhandler.call(this, $("#bbit-cs-buddle").data("cdata"));\n
-                                }\n
-                            }\n
-                            $("#bbit-cs-buddle").css("visibility", "hidden");\n
-                            return false;\n
-                        });\n
-                        lbtn.click(function(e) {\n
-                            if (!option.EditCmdhandler) {\n
-                                alert("EditCmdhandler" + i18n.xgcalendar.i_undefined);\n
-                            }\n
-                            else {\n
-                                if (option.EditCmdhandler && $.isFunction(option.EditCmdhandler)) {\n
-                                    option.EditCmdhandler.call(this, $("#bbit-cs-buddle").data("cdata"));\n
-                                }\n
-                            }\n
-                            $("#bbit-cs-buddle").css("visibility", "hidden");\n
-                            return false;\n
-                        });\n
-                        bud.click(function() { return false });\n
-                    }\n
-                    var pos = getbuddlepos(e.pageX, e.pageY);\n
-                    if (pos.hide) {\n
-                        $("#prong1").hide()\n
-                    }\n
-                    else {\n
-                        $("#prong1").show()\n
-                    }\n
-                    var ss = [];\n
-                    var iscos = DateDiff("d", data[2], data[3]) != 0;\n
-                    ss.push(dateFormat.call(data[2], i18n.xgcalendar.dateformat.Md3), " (", __WDAY[data[2].getDay()], ")");\n
-                    if (data[4] != 1) {\n
-                        ss.push(",", dateFormat.call(data[2], "HH:mm"));\n
-                    }\n
-\n
-                    if (iscos) {\n
-                        ss.push(" - ", dateFormat.call(data[3], i18n.xgcalendar.dateformat.Md3), " (", __WDAY[data[3].getDay()], ")");\n
-                        if (data[4] != 1) {\n
-                            ss.push(",", dateFormat.call(data[3], "HH:mm"));\n
-                        }\n
-                    }\n
-                    var ts = $("#bbit-cs-buddle-timeshow").html(ss.join(""));\n
-                    $("#bbit-cs-what").html(data[1]);\n
-                    $("#bbit-cs-id").val(data[0]);\n
-                    bud.data("cdata", data);\n
-                    bud.css({ "visibility": "visible", left: pos.left, top: pos.top });\n
-\n
-                    $(document).one("click", function() {\n
-                        $("#bbit-cs-buddle").css("visibility", "hidden");\n
-                    });\n
-                }\n
-                else {\n
-                    if (!option.ViewCmdhandler) {\n
-                        alert("ViewCmdhandler" + i18n.xgcalendar.i_undefined);\n
-                    }\n
-                    else {\n
-                        if (option.ViewCmdhandler && $.isFunction(option.ViewCmdhandler)) {\n
-                            option.ViewCmdhandler.call(this, data);\n
-                        }\n
-                    }\n
-                }\n
-            }\n
-            else {\n
-                alert(i18n.xgcalendar.data_format_error);\n
-            }\n
-            return false;\n
-        }\n
-\n
-        function moreshow(mv) {\n
-            var me = $(this);\n
-            var divIndex = mv.id.split(\'_\')[1];\n
-            var pdiv = $(mv);\n
-            var offsetMe = me.position();\n
-            var offsetP = pdiv.position();\n
-            var width = (me.width() + 2) * 1.5;\n
-            var top = offsetP.top + 15;\n
-            var left = offsetMe.left;\n
-\n
-            var daystr = this.abbr;\n
-            var arrdays = daystr.split(\'/\');\n
-            var day = new Date(arrdays[0], parseInt(arrdays[1] - 1), arrdays[2]);\n
-            var cc = $("#cal-month-cc");\n
-            var ccontent = $("#cal-month-cc-content table tbody");\n
-            var ctitle = $("#cal-month-cc-title");\n
-            ctitle.html(dateFormat.call(day, i18n.xgcalendar.dateformat.Md3) + " " + __WDAY[day.getDay()]);\n
-            ccontent.empty();\n
-            //var c = tc()[2];\n
-            var edata = $("#gridEvent").data("mvdata");\n
-            var events = edata[divIndex];\n
-            var index = parseInt(this.axis);\n
-            var htm = [];\n
-            for (var i = 0; i <= index; i++) {\n
-                var ec = events[i] ? events[i].length : 0;\n
-                for (var j = 0; j < ec; j++) {\n
-                    var e = events[i][j];\n
-                    if (e) {\n
-                        if ((e.colSpan + i - 1) >= index) {\n
-                            htm.push("<tr><td class=\'st-c\'>");\n
-                            htm.push(BuildMonthDayEvent(e, day, 1));\n
-                            htm.push("</td></tr>");\n
-                        }\n
-                    }\n
-                }\n
-            }\n
-            ccontent.html(htm.join(""));\n
-            //click\n
-            ccontent.find("div.rb-o").each(function(i) {\n
-                $(this).click(dayshow);\n
-            });\n
-\n
-            edata = events = null;\n
-            var height = cc.height();\n
-            var maxleft = document.documentElement.clientWidth;\n
-            var maxtop = document.documentElement.clientHeight;\n
-            if (left + width >= maxleft) {\n
-                left = offsetMe.left - (me.width() + 2) * 0.5;\n
-            }\n
-            if (top + height >= maxtop) {\n
-                top = maxtop - height - 2;\n
-            }\n
-            var newOff = { left: left, top: top, "z-index": 180, width: width, "visibility": "visible" };\n
-            cc.css(newOff);\n
-            $(document).one("click", closeCc);\n
-            return false;\n
-        }\n
-        function dayupdate(data, start, end) {\n
-            if (option.quickUpdateUrl != "" && data[8] == 1 && option.readonly != true) {\n
-                if (option.isloading) {\n
-                    return false;\n
-                }\n
-                option.isloading = true;\n
-                var id = data[0];\n
-                var title = data[1];\n
-                var os = data[2];\n
-                var od = data[3];\n
-                var zone = new Date().getTimezoneOffset() / 60 * -1;\n
-                var param = [{ "name": "calendarId", value: id },\n
-                             { "name": "CalendarStartTime", value: dateFormat.call(start, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm") },\n
-                             { "name": "CalendarEndTime", value: dateFormat.call(end, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm") },\n
-                             { "name": "timezone", value: zone },\n
-                             { "name": "title", value: title },\n
-                             { "name": "event_id", value: data[9]},\n
-];\n
-                var d;\n
-                if (option.quickUpdateHandler && $.isFunction(option.quickUpdateHandler)) {\n
-                    option.quickUpdateHandler.call(this, param);\n
-                }\n
-                else {\n
-                    option.onBeforeRequestData && option.onBeforeRequestData(4);\n
-                    $.post(option.quickUpdateUrl, param, function(data) {\n
-                        if (data) {\n
-                            if (data.IsSuccess == true) {\n
-                                option.isloading = false;\n
-                                option.onAfterRequestData && option.onAfterRequestData(4);\n
-                            }\n
-                            else {\n
-                                option.onRequestDataError && option.onRequestDataError(4, data);\n
-                                option.isloading = false;                 \n
-                                d = rebyKey(id, true);\n
-                                d[2] = os;\n
-                                d[3] = od;\n
-                                Ind(d);\n
-                                render();\n
-                                d = null;\n
-                                option.onAfterRequestData && option.onAfterRequestData(4);\n
-                            }\n
-                        }\n
-                    }, "json");         \n
-                    d = rebyKey(id, true);\n
-                    if (d) {\n
-                        d[2] = start;\n
-                        d[3] = end;\n
-                    }\n
-                    Ind(d);\n
-                    render();\n
-                }\n
-            }\n
-        }\n
-        function quickadd(start, end, isallday, pos) {\n
-            if ((!option.quickAddHandler && option.quickAddUrl == "") || option.readonly) {\n
-                return;\n
-            }\n
-            var buddle = $("#bbit-cal-buddle");\n
-            if (buddle.length == 0) {\n
-                var temparr = [];\n
-                temparr.push(\'<div id="bbit-cal-buddle" style="z-index: 180; width: 400px;visibility:hidden;" class="bubble">\');\n
-                temparr.push(\'<table class="bubble-table" cellSpacing="0" cellPadding="0"><tbody><tr><td class="bubble-cell-side"><div id="tl1" class="bubble-corner"><div class="bubble-sprite bubble-tl"></div></div>\');\n
-                temparr.push(\'<td class="bubble-cell-main"><div class="bubble-top"></div><td class="bubble-cell-side"><div id="tr1" class="bubble-corner"><div class="bubble-sprite bubble-tr"></div></div>  <tr><td class="bubble-mid" colSpan="3"><div style="overflow: hidden" id="bubbleContent1"><div><div></div><div class="cb-root">\');\n
-                temparr.push(\'<table class="cb-table" cellSpacing="0" cellPadding="0"><tbody><tr><th class="cb-key">\');\n
-                temparr.push(i18n.xgcalendar.time, \':</th><td class=cb-value><div id="bbit-cal-buddle-timeshow"></div></td></tr><tr><th class="cb-key">\');\n
-                temparr.push(i18n.xgcalendar.content, \':</th><td class="cb-value"><div class="textbox-fill-wrapper"><div class="textbox-fill-mid"><input id="bbit-cal-what" class="textbox-fill-input"/></div></div><div class="cb-example">\');\n
-                temparr.push(i18n.xgcalendar.example, \'</div></td></tr>\');\n
-                if (option.loadFieldOnDialog && $.isFunction(option.loadFieldOnDialog)){\n
-                  temparr.push("<tr>", option.loadFieldOnDialog(), "</tr>");\n
-                }\n
-                temparr.push(\'</tbody></table><input id="bbit-cal-start" type="hidden"/><input id="bbit-cal-end" type="hidden"/><input id="bbit-cal-allday" type="hidden"/><input id="bbit-cal-quickAddBTN" value="\');\n
-                temparr.push(i18n.xgcalendar.create_event, \'" type="button"/>&nbsp; <SPAN id="bbit-cal-editLink" class="lk">\');\n
-                temparr.push(i18n.xgcalendar.update_detail, \' <StrONG>&gt;&gt;</StrONG></SPAN></div></div></div><tr><td><div id="bl1" class="bubble-corner"><div class="bubble-sprite bubble-bl"></div></div><td><div class="bubble-bottom"></div><td><div id="br1" class="bubble-corner"><div class="bubble-sprite bubble-br"></div></div></tr></tbody></table><div id="bubbleClose1" class="bubble-closebutton"></div><div id="prong2" class="prong"><div class=bubble-sprite></div></div></div>\');\n
-                var tempquickAddHanler = temparr.join("");\n
-                temparr = null;\n
-                $(document.body).append(tempquickAddHanler);\n
-                buddle = $("#bbit-cal-buddle");\n
-                var calbutton = $("#bbit-cal-quickAddBTN");\n
-                var lbtn = $("#bbit-cal-editLink");\n
-                var closebtn = $("#bubbleClose1").click(function() {\n
-                    $("#bbit-cal-buddle").css("visibility", "hidden");\n
-                    realsedragevent();\n
-                });\n
-                calbutton.click(function(e) {\n
-                    if (option.isloading) {\n
-                        return false;\n
-                    }\n
-                    option.isloading = true;\n
-                    var what = $("#bbit-cal-what").val();\n
-                    var datestart = $("#bbit-cal-start").val();\n
-                    var dateend = $("#bbit-cal-end").val();\n
-                    var allday = $("#bbit-cal-allday").val();\n
-                    var f = /^[^\\$\\<\\>]+$/.test(what);\n
-                    if (!f) {\n
-                        alert(i18n.xgcalendar.invalid_title);\n
-                        $("#bbit-cal-what").focus();\n
-                        option.isloading = false;\n
-                        return false;\n
-                    }\n
-                    var zone = new Date().getTimezoneOffset() / 60 * -1;\n
-                    var portalType = $("select[name=\'portal_type\']").val();\n
-                    var param = [{ "name": "CalendarTitle", value: what },\n
-                                 { "name": "CalendarStartTime", value: datestart },\n
-                                 { "name": "CalendarEndTime", value: dateend },\n
-                                 { "name": "IsAllDayEvent", value: allday },\n
-                                 { "name": "timezone", value: zone},\n
-                                 { "name": "portal_type", value: portalType}];\n
-\n
-                    if (option.extParam) {\n
-                        for (var pi = 0; pi < option.extParam.length; pi++) {\n
-                            param[param.length] = option.extParam[pi];\n
-                        }\n
-                    }\n
-\n
-                    if (option.quickAddHandler && $.isFunction(option.quickAddHandler)) {\n
-                        option.quickAddHandler.call(this, param);\n
-                        $("#bbit-cal-buddle").css("visibility", "hidden");\n
-                        realsedragevent();\n
-                    }\n
-                    else {\n
-                        $("#bbit-cal-buddle").css("visibility", "hidden");\n
-                        var newdata = [];\n
-                        var tId = -1;\n
-                        option.onBeforeRequestData && option.onBeforeRequestData(2);                       \n
-                        $.post(option.quickAddUrl, param, function(data) {\n
-                          if (data) {\n
-                            if (data.IsSuccess == true) {\n
-                              option.isloading = false;\n
-                              option.eventItems[tId][0] = data.Data;\n
-                              option.eventItems[tId][8] = 1;\n
-                              render();\n
-                              option.onAfterRequestData && option.onAfterRequestData(2);\n
-                            }\n
-                            else {\n
-                              option.onRequestDataError && option.onRequestDataError(2, data);\n
-                              option.isloading = false;\n
-                              option.onAfterRequestData && option.onAfterRequestData(2);\n
-                            }\n
-                          }\n
-                        }, "json");\n
-\n
-                        newdata.push(-1, what);\n
-                        var sd = strtodate(datestart);\n
-                        var ed = strtodate(dateend);\n
-                        var diff = DateDiff("d", sd, ed);\n
-                        newdata.push(sd, ed, allday == "1" ? 1 : 0, diff > 0 ? 1 : 0, 0);\n
-                        newdata.push(-1, 0, "", ""); \n
-                        tId = Ind(newdata);\n
-                        realsedragevent();\n
-                        render();\n
-                    }\n
-                });\n
-                lbtn.click(function(e) {\n
-                    if (!option.EditCmdhandler) {\n
-                        alert("EditCmdhandler" + i18n.xgcalendar.i_undefined);\n
-                    }\n
-                    else {\n
-                        if (option.EditCmdhandler && $.isFunction(option.EditCmdhandler)) {\n
-                            option.EditCmdhandler.call(this, [\'0\', $("#bbit-cal-what").val(), $("#bbit-cal-start").val(), $("#bbit-cal-end").val(), $("#bbit-cal-allday").val()]);\n
-                        }\n
-                        $("#bbit-cal-buddle").css("visibility", "hidden");\n
-                        realsedragevent();\n
-                    }\n
-                    return false;\n
-                });\n
-                buddle.mousedown(function(e) { return false });\n
-            }\n
-      \n
-            var dateshow = CalDateShow(start, end, !isallday, true);      \n
-            var off = getbuddlepos(pos.left, pos.top);\n
-            if (off.hide) {\n
-                $("#prong2").hide()\n
-            }\n
-            else {\n
-                $("#prong2").show()\n
-            }\n
-            $("#bbit-cal-buddle-timeshow").html(dateshow);\n
-            var calwhat = $("#bbit-cal-what").val("");\n
-            $("#bbit-cal-allday").val(isallday ? "1" : "0");\n
-            $("#bbit-cal-start").val(dateFormat.call(start, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm"));\n
-            $("#bbit-cal-end").val(dateFormat.call(end, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm"));\n
-            buddle.css({ "visibility": "visible", left: off.left, top: off.top });      \n
-      calwhat.blur().focus(); //add 2010-01-26 blur() fixed chrome \n
-            $(document).one("mousedown", function() {\n
-                $("#bbit-cal-buddle").css("visibility", "hidden");\n
-                realsedragevent();\n
-            });\n
-            return false;\n
-        }\n
-        //format datestring to Date Type\n
-        function strtodate(str) {\n
-\n
-            var arr = str.split(" ");\n
-            var arr2 = arr[0].split(i18n.xgcalendar.dateformat.separator);\n
-            var arr3 = arr[1].split(":");\n
-\n
-            var y = arr2[i18n.xgcalendar.dateformat.year_index];\n
-            var m = arr2[i18n.xgcalendar.dateformat.month_index].indexOf("0") == 0 ? arr2[i18n.xgcalendar.dateformat.month_index].substr(1, 1) : arr2[i18n.xgcalendar.dateformat.month_index];\n
-            var d = arr2[i18n.xgcalendar.dateformat.day_index].indexOf("0") == 0 ? arr2[i18n.xgcalendar.dateformat.day_index].substr(1, 1) : arr2[i18n.xgcalendar.dateformat.day_index];\n
-            var h = arr3[0].indexOf("0") == 0 ? arr3[0].substr(1, 1) : arr3[0];\n
-            var n = arr3[1].indexOf("0") == 0 ? arr3[1].substr(1, 1) : arr3[1];\n
-            return new Date(y, parseInt(m) - 1, d, h, n);\n
-        }\n
-\n
-        function rebyKey(key, remove) {\n
-            if (option.eventItems && option.eventItems.length > 0) {\n
-                var sl = option.eventItems.length;\n
-                var i = -1;\n
-                for (var j = 0; j < sl; j++) {\n
-                    if (option.eventItems[j][0] == key) {\n
-                        i = j;\n
-                        break;\n
-                    }\n
-                }\n
-                if (i >= 0) {\n
-                    var t = option.eventItems[i];\n
-                    if (remove) {\n
-                        option.eventItems.splice(i, 1);\n
-                    }\n
-                    return t;\n
-                }\n
-            }\n
-            return null;\n
-        }\n
-        function Ind(event, i) {\n
-            var d = 0;\n
-            if (!i) {\n
-                if (option.eventItems && option.eventItems.length > 0) {\n
-                    var sl = option.eventItems.length;\n
-                    var s = event[2];\n
-                    var d1 = s.getTime() - option.eventItems[0][2].getTime();\n
-                    var d2 = option.eventItems[sl - 1][2].getTime() - s.getTime();\n
-                    var diff = d1 - d2;\n
-                    if (d1 < 0 || diff < 0) {\n
-                        for (var j = 0; j < sl; j++) {\n
-                            if (option.eventItems[j][2] >= s) {\n
-                                i = j;\n
-                                break;\n
-                            }\n
-                        }\n
-                    }\n
-                    else if (d2 < 0) {\n
-                        i = sl;\n
-                    }\n
-                    else {\n
-                        for (var j = sl - 1; j >= 0; j--) {\n
-                            if (option.eventItems[j][2] < s) {\n
-                                i = j + 1;\n
-                                break;\n
-                            }\n
-                        }\n
-                    }\n
-                }\n
-                else {\n
-                    i = 0;\n
-                }\n
-            }\n
-            else {\n
-                d = 1;\n
-            }\n
-            if (option.eventItems && option.eventItems.length > 0) {\n
-                if (i == option.eventItems.length) {\n
-                    option.eventItems.push(event);\n
-                }\n
-                else { option.eventItems.splice(i, d, event); }\n
-            }\n
-            else {\n
-                option.eventItems = [event];\n
-            }\n
-            return i;\n
-        }\n
-        \n
-        \n
-        function ResizeView() {\n
-            var _MH = document.documentElement.clientHeight;\n
-            var _viewType = option.view;\n
-            if (_viewType == "day" || _viewType == "week") {\n
-                var $dvwkcontaienr = $("#dvwkcontaienr");\n
-                var $dvtec = $("#dvtec");\n
-                if ($dvwkcontaienr.length == 0 || $dvtec.length == 0) {\n
-                    alert(i18n.xgcalendar.view_no_ready); return;\n
-                }\n
-                var dvwkH = $dvwkcontaienr.height() + 2;\n
-                var calH = option.height - 8 - dvwkH;\n
-                $dvtec.height(calH);\n
-                if (typeof (option.scoll) == "undefined") {\n
-                    var currentday = new Date();\n
-                    var h = currentday.getHours();\n
-                    var m = currentday.getMinutes();\n
-                    var th = gP(h, m);\n
-                    var ch = $dvtec.attr("clientHeight");\n
-                    var sh = th - 0.5 * ch;\n
-                    var ph = $dvtec.attr("scrollHeight");\n
-                    if (sh < 0) sh = 0;\n
-                    if (sh > ph - ch) sh = ph - ch - 10 * (23 - h);\n
-                    $dvtec.attr("scrollTop", sh);\n
-                }\n
-                else {\n
-                    $dvtec.attr("scrollTop", option.scoll);\n
-                }\n
-            }\n
-            else if (_viewType == "month") {\n
-                //Resize GridContainer\n
-            }\n
-        }\n
-        function returnfalse() {\n
-            return false;\n
-        }\n
-        function initevents(viewtype) {\n
-            if (viewtype == "week" || viewtype == "day") {\n
-                $("div.chip", gridcontainer).each(function(i) {\n
-                    var chip = $(this);\n
-                    chip.click(dayshow);\n
-                    if (chip.hasClass("drag")) {\n
-                        chip.mousedown(function(e) { dragStart.call(this, "dw3", e); return false; });\n
-                        //resize                      \n
-                        chip.find("div.resizer").mousedown(function(e) {\n
-                            dragStart.call($(this).parent().parent(), "dw4", e); return false;\n
-                        });\n
-                    }\n
-                    else {\n
-                        chip.mousedown(returnfalse)\n
-                    }\n
-                });\n
-                $("div.rb-o", gridcontainer).each(function(i) {\n
-                    var chip = $(this);\n
-                    chip.click(dayshow);\n
-                    if (chip.hasClass("drag") && viewtype == "week") {\n
-                        //drag;\n
-                        chip.mousedown(function(e) { dragStart.call(this, "dw5", e); return false; });\n
-                    }\n
-                    else {\n
-                        chip.mousedown(returnfalse)\n
-                    }\n
-                });\n
-                if (option.readonly == false) {\n
-                    $("td.tg-col", gridcontainer).each(function(i) {\n
-                        $(this).mousedown(function(e) { dragStart.call(this, "dw1", e); return false; });\n
-                    });\n
-                    $("#weekViewAllDaywk").mousedown(function(e) { dragStart.call(this, "dw2", e); return false; });\n
-                }\n
-\n
-                if (viewtype == "week") {\n
-                    $("#dvwkcontaienr th.gcweekname").each(function(i) {\n
-                        $(this).click(weekormonthtoday);\n
-                    });\n
-                }\n
-\n
-\n
-            }\n
-            else if (viewtype = "month") {\n
-                $("div.rb-o", gridcontainer).each(function(i) {\n
-                    var chip = $(this);\n
-                    chip.click(dayshow);\n
-                    if (chip.hasClass("drag")) {\n
-                        //drag;\n
-                        chip.mousedown(function(e) { dragStart.call(this, "m2", e); return false; });\n
-                    }\n
-                    else {\n
-                        chip.mousedown(returnfalse)\n
-                    }\n
-                });\n
-                $("td.st-more", gridcontainer).each(function(i) {\n
-\n
-                    $(this).click(function(e) {\n
-                        moreshow.call(this, $(this).parent().parent().parent().parent()[0]); return false;\n
-                    }).mousedown(function() { return false; });\n
-                });\n
-                if (option.readonly == false) {\n
-                    $("#mvEventContainer").mousedown(function(e) { dragStart.call(this, "m1", e); return false; });\n
-                }\n
-            }\n
-\n
-        }\n
-        function realsedragevent() {\n
-            if (_dragevent) {\n
-                _dragevent();\n
-                _dragevent = null;\n
-            }\n
-        }\n
-        function dragStart(type, e) {\n
-            var obj = $(this);\n
-            var source = e.srcElement || e.target;\n
-            realsedragevent();\n
-            switch (type) {\n
-                case "dw1": \n
-                    _dragdata = { type: 1, target: obj, sx: e.pageX, sy: e.pageY };\n
-                    break;\n
-                case "dw2": \n
-                    var w = obj.width();\n
-                    var h = obj.height();\n
-                    var offset = obj.offset();\n
-                    var left = offset.left;\n
-                    var top = offset.top;\n
-                    var l = option.view == "day" ? 1 : 7;\n
-                    var py = w % l;\n
-                    var pw = parseInt(w / l);\n
-                    if (py > l / 2 + 1) {\n
-                        pw++;\n
-                    }\n
-                    var xa = [];\n
-                    var ya = [];\n
-                    for (var i = 0; i < l; i++) {\n
-                        xa.push({ s: i * pw + left, e: (i + 1) * pw + left });\n
-                    }\n
-                    ya.push({ s: top, e: top + h });\n
-                    _dragdata = { type: 2, target: obj, sx: e.pageX, sy: e.pageY, pw: pw, xa: xa, ya: ya, h: h };\n
-                    w = left = l = py = pw = xa = null;\n
-                    break;\n
-                case "dw3": \n
-                    var evid = obj.parent().attr("id").replace("tgCol", "");\n
-                    var p = obj.parent();\n
-                    var pos = p.offset();\n
-                    var w = p.width() + 10;\n
-                    var h = obj.height();\n
-                    var data = getdata(obj);\n
-                    _dragdata = { type: 4, target: obj, sx: e.pageX, sy: e.pageY,\n
-                        pXMin: pos.left, pXMax: pos.left + w, pw: w, h: h,\n
-                        cdi: parseInt(evid), fdi: parseInt(evid), data: data\n
-                    };\n
-                    break;\n
-                case "dw4": //resize;\n
-                    var h = obj.height();\n
-                    var data = getdata(obj);\n
-                    _dragdata = { type: 5, target: obj, sx: e.pageX, sy: e.pageY, h: h, data: data };\n
-                    break;\n
-                case "dw5":\n
-                    var con = $("#weekViewAllDaywk");\n
-                    var w = con.width();\n
-                    var h = con.height();\n
-                    var offset = con.offset();\n
-                    var moffset = obj.offset();\n
-                    var left = offset.left;\n
-                    var top = offset.top;\n
-                    var l = 7;\n
-                    var py = w % l;\n
-                    var pw = parseInt(w / l);\n
-                    if (py > l / 2 + 1) {\n
-                        pw++;\n
-                    }\n
-                    var xa = [];\n
-                    var ya = [];\n
-                    var di = 0;\n
-                    for (var i = 0; i < l; i++) {\n
-                        xa.push({ s: i * pw + left, e: (i + 1) * pw + left });\n
-                        if (moffset.left >= xa[i].s && moffset.left < xa[i].e) {\n
-                            di = i;\n
-                        }\n
-                    }\n
-                    var fdi = { x: di, y: 0, di: di };\n
-                    ya.push({ s: top, e: top + h });\n
-                    var data = getdata(obj);\n
-                    var dp = DateDiff("d", data[2], data[3]) + 1;\n
-                    _dragdata = { type: 6, target: obj, sx: e.pageX, sy: e.pageY, data: data, xa: xa, ya: ya, fdi: fdi, h: h, dp: dp, pw: pw };\n
-                    break;\n
-                case "m1": \n
-                    var w = obj.width();\n
-                    var offset = obj.offset();\n
-                    var left = offset.left;\n
-                    var top = offset.top;\n
-                    var l = 7;\n
-                    var yl = obj.children().length;\n
-                    var py = w % l;\n
-                    var pw = parseInt(w / l);\n
-                    if (py > l / 2 + 1) {\n
-                        pw++;\n
-                    }\n
-                    var h = $("#mvrow_0").height();\n
-                    var xa = [];\n
-                    var ya = [];\n
-                    for (var i = 0; i < l; i++) {\n
-                        xa.push({ s: i * pw + left, e: (i + 1) * pw + left });\n
-                    }\n
-                    var xa = [];\n
-                    var ya = [];\n
-                    for (var i = 0; i < l; i++) {\n
-                        xa.push({ s: i * pw + left, e: (i + 1) * pw + left });\n
-                    }\n
-                    for (var i = 0; i < yl; i++) {\n
-                        ya.push({ s: i * h + top, e: (i + 1) * h + top });\n
-                    }\n
-                    _dragdata = { type: 3, target: obj, sx: e.pageX, sy: e.pageY, pw: pw, xa: xa, ya: ya, h: h };\n
-                    break;\n
-                case "m2": \n
-                    var row0 = $("#mvrow_0");\n
-                    var row1 = $("#mvrow_1");\n
-                    var w = row0.width();\n
-                    var offset = row0.offset();\n
-                    var diffset = row1.offset();\n
-                    var moffset = obj.offset();\n
-                    var h = diffset.top - offset.top;\n
-                    var left = offset.left;\n
-                    var top = offset.top;\n
-                    var l = 7;\n
-                    var yl = row0.parent().children().length;\n
-                    var py = w % l;\n
-                    var pw = parseInt(w / l);\n
-                    if (py > l / 2 + 1) {\n
-                        pw++;\n
-                    }\n
-                    var xa = [];\n
-                    var ya = [];\n
-                    var xi = 0;\n
-                    var yi = 0;\n
-                    for (var i = 0; i < l; i++) {\n
-                        xa.push({ s: i * pw + left, e: (i + 1) * pw + left });\n
-                        if (moffset.left >= xa[i].s && moffset.left < xa[i].e) {\n
-                            xi = i;\n
-                        }\n
-                    }\n
-                    for (var i = 0; i < yl; i++) {\n
-                        ya.push({ s: i * h + top, e: (i + 1) * h + top });\n
-                        if (moffset.top >= ya[i].s && moffset.top < ya[i].e) {\n
-                            yi = i;\n
-                        }\n
-                    }\n
-                    var fdi = { x: xi, y: yi, di: yi * 7 + xi };\n
-                    var data = getdata(obj);\n
-                    var dp = DateDiff("d", data[2], data[3]) + 1;\n
-                    _dragdata = { type: 7, target: obj, sx: e.pageX, sy: e.pageY, data: data, xa: xa, ya: ya, fdi: fdi, h: h, dp: dp, pw: pw };\n
-                    break;\n
-            }\n
-            $(\'body\').noSelect();\n
-        }\n
-        function dragMove(e) {\n
-            if (_dragdata) {\n
-                if (e.pageX < 0 || e.pageY < 0\n
-          || e.pageX > document.documentElement.clientWidth\n
-          || e.pageY >= document.documentElement.clientHeight) {\n
-                    dragEnd(e);\n
-                    return false;\n
-                }\n
-                var d = _dragdata;\n
-                switch (d.type) {\n
-                    case 1:\n
-                        var sy = d.sy;\n
-                        var y = e.pageY;\n
-                        var diffy = y - sy;\n
-                        if (diffy > 11 || diffy < -11 || d.cpwrap) {\n
-                            if (diffy == 0) { diffy = 21; }\n
-                            var dy = diffy % 21;\n
-                            if (dy != 0) {\n
-                                diffy = dy > 0 ? diffy + 21 - dy : diffy - 21 - dy;\n
-                                y = d.sy + diffy;\n
-                                if (diffy < 0) {\n
-                                    sy = sy + 21;\n
-                                }\n
-                            }\n
-                            if (!d.tp) {\n
-                                d.tp = $(d.target).offset().top;\n
-                            }\n
-                            var gh = gH(sy, y, d.tp);\n
-                            var ny = gP(gh.sh, gh.sm);\n
-                            var tempdata;\n
-                            if (!d.cpwrap) {\n
-                                tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h);\n
-                                var cpwrap = $("<div class=\'ca-evpi drag-chip-wrapper\' style=\'top:" + ny + "px\'/>").html(tempdata);\n
-                                $(d.target).find("div.tg-col-overlaywrapper").append(cpwrap);\n
-                                d.cpwrap = cpwrap;\n
-                            }\n
-                            else {\n
-                                if (d.cgh.sh != gh.sh || d.cgh.eh != gh.eh || d.cgh.sm != gh.sm || d.cgh.em != gh.em) {\n
-                                    tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h);\n
-                                    d.cpwrap.css("top", ny + "px").html(tempdata);\n
-                                }\n
-                            }\n
-                            d.cgh = gh;\n
-                        }\n
-                        break;\n
-                    case 2:\n
-                        var sx = d.sx;\n
-                        var x = e.pageX;\n
-                        var diffx = x - sx;\n
-                        if (diffx > 5 || diffx < -5 || d.lasso) {\n
-                            if (!d.lasso) {\n
-                                d.lasso = $("<div style=\'z-index: 10; display: block\' class=\'drag-lasso-container\'/>");\n
-                                $(document.body).append(d.lasso);\n
-                            }\n
-                            if (!d.sdi) {\n
-                                d.sdi = getdi(d.xa, d.ya, sx, d.sy);\n
-                            }\n
-                            var ndi = getdi(d.xa, d.ya, x, e.pageY);\n
-                            if (!d.fdi || d.fdi.di != ndi.di) {\n
-                                addlasso(d.lasso, d.sdi, ndi, d.xa, d.ya, d.h);\n
-                            }\n
-                            d.fdi = ndi;\n
-                        }\n
-                        break;\n
-                    case 3:\n
-                        var sx = d.sx;\n
-                        var x = e.pageX;\n
-                        var sy = d.sy;\n
-                        var y = e.pageY;\n
-                        var diffx = x - sx;\n
-                        var diffy = y - sy;\n
-                        if (diffx > 5 || diffx < -5 || diffy < -5 || diffy > 5 || d.lasso) {\n
-                            if (!d.lasso) {\n
-                                d.lasso = $("<div style=\'z-index: 10; display: block\' class=\'drag-lasso-container\'/>");\n
-                                $(document.body).append(d.lasso);\n
-                            }\n
-                            if (!d.sdi) {\n
-                                d.sdi = getdi(d.xa, d.ya, sx, sy);\n
-                            }\n
-                            var ndi = getdi(d.xa, d.ya, x, y);\n
-                            if (!d.fdi || d.fdi.di != ndi.di) {\n
-                                addlasso(d.lasso, d.sdi, ndi, d.xa, d.ya, d.h);\n
-                            }\n
-                            d.fdi = ndi;\n
-                        }\n
-                        break;\n
-                    case 4:\n
-                        var data = d.data;\n
-                        if (data != null && data[8] == 1) {\n
-                            var sx = d.sx;\n
-                            var x = e.pageX;\n
-                            var sy = d.sy;\n
-                            var y = e.pageY;\n
-                            var diffx = x - sx;\n
-                            var diffy = y - sy;\n
-                            if (diffx > 5 || diffx < -5 || diffy > 5 || diffy < -5 || d.cpwrap) {\n
-                                var gh, ny, tempdata;\n
-                                if (!d.cpwrap) {\n
-                                    gh = { sh: data[2].getHours(),\n
-                                        sm: data[2].getMinutes(),\n
-                                        eh: data[3].getHours(),\n
-                                        em: data[3].getMinutes(),\n
-                                        h: d.h\n
-                                    };\n
-                                    d.target.hide();\n
-                                    ny = gP(gh.sh, gh.sm);\n
-                                    d.top = ny;\n
-                                    tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h, data[1], false, false, data[7]);\n
-                                    var cpwrap = $("<div class=\'ca-evpi drag-chip-wrapper\' style=\'top:" + ny + "px\'/>").html(tempdata);\n
-                                    var evid = d.target.parent().attr("id").replace("tgCol", "#tgOver");\n
-                                    $(evid).append(cpwrap);\n
-                                    d.cpwrap = cpwrap;\n
-                                    d.ny = ny;\n
-                                }\n
-                                else {\n
-                                    var pd = 0;\n
-                                    if (x < d.pXMin) {\n
-                                        pd = -1;\n
-                                    }\n
-                                    else if (x > d.pXMax) {\n
-                                        pd = 1;\n
-                                    }\n
-                                    if (pd != 0) {\n
-\n
-                                        d.cdi = d.cdi + pd;\n
-                                        var ov = $("#tgOver" + d.cdi);\n
-                                        if (ov.length == 1) {\n
-                                            d.pXMin = d.pXMin + d.pw * pd;\n
-                                            d.pXMax = d.pXMax + d.pw * pd;\n
-                                            ov.append(d.cpwrap);\n
-                                        }\n
-                                        else {\n
-                                            d.cdi = d.cdi - pd;\n
-                                        }\n
-                                    }\n
-                                    ny = d.top + diffy;\n
-                                    var pny = ny % 21;\n
-                                    if (pny != 0) {\n
-                                        ny = ny - pny;\n
-                                    }\n
-                                    if (d.ny != ny) {\n
-                                        //log.info("ny=" + ny);\n
-                                        gh = gW(ny, ny + d.h);\n
-                                        //log.info("sh=" + gh.sh + ",sm=" + gh.sm);\n
-                                        tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h, data[1], false, false, data[7]);\n
-                                        d.cpwrap.css("top", ny + "px").html(tempdata);\n
-                                    }\n
-                                    d.ny = ny;\n
-                                }\n
-                            }\n
-                        }\n
-\n
-                        break;\n
-                    case 5:\n
-                        var data = d.data;\n
-                        if (data != null && data[8] == 1) {\n
-                            var sy = d.sy;\n
-                            var y = e.pageY;\n
-                            var diffy = y - sy;\n
-                            if (diffy != 0 || d.cpwrap) {\n
-                                var gh, ny, tempdata;\n
-                                if (!d.cpwrap) {\n
-                                    gh = { sh: data[2].getHours(),\n
-                                        sm: data[2].getMinutes(),\n
-                                        eh: data[3].getHours(),\n
-                                        em: data[3].getMinutes(),\n
-                                        h: d.h\n
-                                    };\n
-                                    d.target.hide();\n
-                                    ny = gP(gh.sh, gh.sm);\n
-                                    d.top = ny;\n
-                                    tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h, data[1], "100%", true, data[7]);\n
-                                    var cpwrap = $("<div class=\'ca-evpi drag-chip-wrapper\' style=\'top:" + ny + "px\'/>").html(tempdata);\n
-                                    var evid = d.target.parent().attr("id").replace("tgCol", "#tgOver");\n
-                                    $(evid).append(cpwrap);\n
-                                    d.cpwrap = cpwrap;\n
-                                }\n
-                                else {\n
-                                    nh = d.h + diffy;\n
-                                    var pnh = nh % 21;\n
-                                    nh = pnh > 1 ? nh - pnh + 21 : nh - pnh;\n
-                                    if (d.nh != nh) {\n
-                                        var sp = gP(data[2].getHours(), data[2].getMinutes());\n
-                                        var ep = sp + nh;\n
-                                        gh = gW(d.top, d.top + nh);\n
-                                        tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h, data[1], "100%", true, data[7]);\n
-                                        d.cpwrap.html(tempdata);\n
-                                    }\n
-                                    d.nh = nh;\n
-                                }\n
-                            }\n
-                        }\n
-                        break;\n
-                    case 6:\n
-                        var sx = d.sx;\n
-                        var x = e.pageX;\n
-                        var y = e.pageY;\n
-                        var diffx = x - sx;\n
-                        if (diffx > 5 || diffx < -5 || d.lasso) {\n
-                            if (!d.lasso) {\n
-                                var w1 = d.dp > 1 ? (d.pw - 4) * 1.5 : (d.pw - 4);\n
-                                var cp = d.target.clone();\n
-                                if (d.dp > 1) {\n
-                                    cp.find("div.rb-i>span").prepend("(" + d.dp + " " + i18n.xgcalendar.day_plural + ")&nbsp;");\n
-                                }\n
-                                var cpwrap = $("<div class=\'drag-event st-contents\' style=\'width:" + w1 + "px\'/>").append(cp).appendTo(document.body);\n
-                                d.cpwrap = cpwrap;\n
-                                d.lasso = $("<div style=\'z-index: 10; display: block\' class=\'drag-lasso-container\'/>");\n
-                                $(document.body).append(d.lasso);\n
-                                cp = cpwrap = null;\n
-                            }\n
-                            fixcppostion(d.cpwrap, e, d.xa, d.ya);\n
-                            var ndi = getdi(d.xa, d.ya, x, e.pageY);\n
-                            if (!d.cdi || d.cdi.di != ndi.di) {\n
-                                addlasso(d.lasso, ndi, { x: ndi.x, y: ndi.y, di: ndi.di + d.dp - 1 }, d.xa, d.ya, d.h);\n
-                            }\n
-                            d.cdi = ndi;\n
-                        }\n
-                        break;\n
-                    case 7:\n
-                        var sx = d.sx;\n
-                        var sy = d.sy;\n
-                        var x = e.pageX;\n
-                        var y = e.pageY;\n
-                        var diffx = x - sx;\n
-                        var diffy = y - sy;\n
-                        if (diffx > 5 || diffx < -5 || diffy > 5 || diffy < -5 || d.lasso) {\n
-                            if (!d.lasso) {\n
-                                var w1 = d.dp > 1 ? (d.pw - 4) * 1.5 : (d.pw - 4);\n
-                                var cp = d.target.clone();\n
-                                if (d.dp > 1) {\n
-                                    cp.find("div.rb-i>span").prepend("(" + d.dp + " " + i18n.xgcalendar.day_plural + ")&nbsp;");\n
-                                }\n
-                                var cpwrap = $("<div class=\'drag-event st-contents\' style=\'width:" + w1 + "px\'/>").append(cp).appendTo(document.body);\n
-                                d.cpwrap = cpwrap;\n
-                                d.lasso = $("<div style=\'z-index: 10; display: block\' class=\'drag-lasso-container\'/>");\n
-                                $(document.body).append(d.lasso);\n
-                                cp = cpwrap = null;\n
-                            }\n
-                            fixcppostion(d.cpwrap, e, d.xa, d.ya);\n
-                            var ndi = getdi(d.xa, d.ya, x, e.pageY);\n
-                            if (!d.cdi || d.cdi.di != ndi.di) {\n
-                                addlasso(d.lasso, ndi, { x: ndi.x, y: ndi.y, di: ndi.di + d.dp - 1 }, d.xa, d.ya, d.h);\n
-                            }\n
-                            d.cdi = ndi;\n
-                        }\n
-                        break;\n
-                }\n
-            }\n
-            return false;\n
-        }\n
-        function dragEnd(e) {\n
-            if (_dragdata) {\n
-                var d = _dragdata;\n
-                switch (d.type) {\n
-                    case 1: //day view\n
-                        var wrapid = new Date().getTime();\n
-                        tp = d.target.offset().top;\n
-                        if (!d.cpwrap) {\n
-                            var gh = gH(d.sy, d.sy + 42, tp);\n
-                            var ny = gP(gh.sh, gh.sm);\n
-                            var tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h);\n
-                            d.cpwrap = $("<div class=\'ca-evpi drag-chip-wrapper\' style=\'top:" + ny + "px\'/>").html(tempdata);\n
-                            $(d.target).find("div.tg-col-overlaywrapper").append(d.cpwrap);\n
-                            d.cgh = gh;\n
-                        }\n
-                        var pos = d.cpwrap.offset();\n
-                        pos.left = pos.left + 30;\n
-                        d.cpwrap.attr("id", wrapid);\n
-                        var start = strtodate(d.target.attr("abbr") + " " + d.cgh.sh + ":" + d.cgh.sm);\n
-                        var end = strtodate(d.target.attr("abbr") + " " + d.cgh.eh + ":" + d.cgh.em);\n
-                        _dragevent = function() { $("#" + wrapid).remove(); $("#bbit-cal-buddle").css("visibility", "hidden"); };\n
-                        quickadd(start, end, false, pos);\n
-                        break;\n
-                    case 2: //week view\n
-                    case 3: //month view          \n
-                        var source = e.srcElement || e.target;                       \n
-                        var lassoid = new Date().getTime();\n
-                        if (!d.lasso) {\n
-               if ($(source).hasClass("monthdayshow"))\n
-              {\n
-                weekormonthtoday.call($(source).parent()[0],e);\n
-                break;\n
-              }\n
-                            d.fdi = d.sdi = getdi(d.xa, d.ya, d.sx, d.sy);\n
-                            d.lasso = $("<div style=\'z-index: 10; display: block\' class=\'drag-lasso-container\'/>");\n
-                            $(document.body).append(d.lasso);\n
-                            addlasso(d.lasso, d.sdi, d.fdi, d.xa, d.ya, d.h);\n
-                        }\n
-                        d.lasso.attr("id", lassoid);\n
-                        var si = Math.min(d.fdi.di, d.sdi.di);\n
-                        var ei = Math.max(d.fdi.di, d.sdi.di);\n
-                        var firstday = option.vstart;\n
-                        var start = DateAdd("d", si, firstday);\n
-                        var end = DateAdd("d", ei, firstday);\n
-                        _dragevent = function() { $("#" + lassoid).remove(); };\n
-                        quickadd(start, end, true, { left: e.pageX, top: e.pageY });\n
-                        break;\n
-                    case 4: // event moving\n
-                        if (d.cpwrap) {\n
-                            var start = DateAdd("d", d.cdi, option.vstart);\n
-                            var end = DateAdd("d", d.cdi, option.vstart);\n
-                            var gh = gW(d.ny, d.ny + d.h);\n
-                            start.setHours(gh.sh, gh.sm);\n
-                            end.setHours(gh.eh, gh.em);\n
-                            if (start.getTime() == d.data[2].getTime() && end.getTime() == d.data[3].getTime()) {\n
-                                d.cpwrap.remove();\n
-                                d.target.show();\n
-                            }\n
-                            else {\n
-                                dayupdate(d.data, start, end);\n
-                            }\n
-                        }\n
-                        break;\n
-                    case 5: //Resize\n
-                        if (d.cpwrap) {\n
-                            var start = new Date(d.data[2].toString());\n
-                            var end = new Date(d.data[3].toString());\n
-                            var gh = gW(d.top, d.top + nh);\n
-                            start.setHours(gh.sh, gh.sm);\n
-                            end.setHours(gh.eh, gh.em);\n
-\n
-                            if (start.getTime() == d.data[2].getTime() && end.getTime() == d.data[3].getTime()) {\n
-                                d.cpwrap.remove();\n
-                                d.target.show();\n
-                            }\n
-                            else {\n
-                                dayupdate(d.data, start, end);\n
-                            }\n
-                        }\n
-                        break;\n
-                    case 6:\n
-                    case 7:\n
-                        if (d.lasso) {\n
-                            d.cpwrap.remove();\n
-                            d.lasso.remove();\n
-                            var start = new Date(d.data[2].toString());\n
-                            var end = new Date(d.data[3].toString());\n
-                            var currrentdate = DateAdd("d", d.cdi.di, option.vstart);\n
-                            var diff = DateDiff("d", start, currrentdate);\n
-                            start = DateAdd("d", diff, start);\n
-                            end = DateAdd("d", diff, end);\n
-                            if (start.getTime() != d.data[2].getTime() || end.getTime() != d.data[3].getTime()) {\n
-                                dayupdate(d.data, start, end);\n
-                            }\n
-                        }\n
-                        break;\n
-                }\n
-                d = _dragdata = null;\n
-                $(\'body\').noSelect(false);\n
-                return false;\n
-            }\n
-        }\n
-        function getdi(xa, ya, x, y) {\n
-            var ty = 0;\n
-            var tx = 0;\n
-            var lx = 0;\n
-            var ly = 0;\n
-            if (xa && xa.length != 0) {\n
-                lx = xa.length;\n
-                if (x >= xa[lx - 1].e) {\n
-                    tx = lx - 1;\n
-                }\n
-                else {\n
-                    for (var i = 0; i < lx; i++) {\n
-                        if (x > xa[i].s && x <= xa[i].e) {\n
-                            tx = i;\n
-                            break;\n
-                        }\n
-                    }\n
-                }\n
-            }\n
-            if (ya && ya.length != 0) {\n
-                ly = ya.length;\n
-                if (y >= ya[ly - 1].e) {\n
-                    ty = ly - 1;\n
-                }\n
-                else {\n
-                    for (var j = 0; j < ly; j++) {\n
-                        if (y > ya[j].s && y <= ya[j].e) {\n
-                            ty = j;\n
-                            break;\n
-                        }\n
-                    }\n
-                }\n
-            }\n
-            return { x: tx, y: ty, di: ty * lx + tx };\n
-        }\n
-        function addlasso(lasso, sdi, edi, xa, ya, height) {\n
-            var diff = sdi.di > edi.di ? sdi.di - edi.di : edi.di - sdi.di;\n
-            diff++;\n
-            var sp = sdi.di > edi.di ? edi : sdi;\n
-            var ep = sdi.di > edi.di ? sdi : edi;\n
-            var l = xa.length > 0 ? xa.length : 1;\n
-            var h = ya.length > 0 ? ya.length : 1;\n
-            var play = [];\n
-            var width = xa[0].e - xa[0].s; \n
-            var i = sp.x;\n
-            var j = sp.y;\n
-            var max = Math.min(document.documentElement.clientWidth, xa[l - 1].e) - 2;\n
-\n
-            while (j < h && diff > 0) {\n
-                var left = xa[i].s;\n
-                var d = i + diff > l ? l - i : diff;\n
-                var wid = width * d;\n
-                while (left + wid >= max) {\n
-                    wid--;\n
-                }\n
-                play.push(Tp(__LASSOTEMP, { left: left, top: ya[j].s, height: height, width: wid }));\n
-                i = 0;\n
-                diff = diff - d;\n
-                j++;\n
-            }\n
-            lasso.html(play.join(""));\n
-        }\n
-        function fixcppostion(cpwrap, e, xa, ya) {\n
-            var x = e.pageX - 6;\n
-            var y = e.pageY - 4;\n
-            var w = cpwrap.width();\n
-            var h = 21;\n
-            var lmin = xa[0].s + 6;\n
-            var tmin = ya[0].s + 4;\n
-            var lmax = xa[xa.length - 1].e - w - 2;\n
-            var tmax = ya[ya.length - 1].e - h - 2;\n
-            if (x > lmax) {\n
-                x = lmax;\n
-            }\n
-            if (x <= lmin) {\n
-                x = lmin + 1;\n
-            }\n
-            if (y <= tmin) {\n
-                y = tmin + 1;\n
-            }\n
-            if (y > tmax) {\n
-                y = tmax;\n
-            }\n
-            cpwrap.css({ left: x, top: y });\n
-        }\n
-        $(document)\n
-    .mousemove(dragMove)\n
-    .mouseup(dragEnd);\n
-        //.mouseout(dragEnd);\n
-\n
-        var c = {\n
-            sv: function(view) { //switch view                \n
-                if (view == option.view) {\n
-                    return;\n
-                }\n
-                clearcontainer();\n
-                option.view = view;\n
-                render();\n
-                dochange();\n
-            },\n
-            rf: function() {\n
-                populate();\n
-            },\n
-            gt: function(d) {\n
-                if (!d) {\n
-                    d = new Date();\n
-                }\n
-                option.showday = d;\n
-                render();\n
-                dochange();\n
-            },\n
-\n
-            pv: function() {\n
-                switch (option.view) {\n
-                    case "day":\n
-                        option.showday = DateAdd("d", -1, option.showday);\n
-                        break;\n
-                    case "week":\n
-                        option.showday = DateAdd("w", -1, option.showday);\n
-                        break;\n
-                    case "month":\n
-                        option.showday = DateAdd("m", -1, option.showday);\n
-                        break;\n
-                }\n
-                render();\n
-                dochange();\n
-            },\n
-            nt: function() {        \n
-                switch (option.view) {\n
-                    case "day":\n
-                        option.showday = DateAdd("d", 1, option.showday);\n
-                        break;\n
-                    case "week":\n
-                        option.showday = DateAdd("w", 1, option.showday);\n
-                        break;\n
-                    case "month":\n
-            var od = option.showday.getDate();\n
-            option.showday = DateAdd("m", 1, option.showday);\n
-            var nd = option.showday.getDate();\n
-            if(od !=nd) //we go to the next month\n
-            {\n
-              option.showday= DateAdd("d", 0-nd, option.showday); //last day of last month\n
-            }\n
-                        break;\n
-                }\n
-                render();\n
-                dochange();\n
-            },\n
-            go: function() {\n
-                return option;\n
-            },\n
-            so: function(p) {\n
-                option = $.extend(option, p);\n
-            }\n
-        };\n
-        this[0].bcal = c;\n
-        return this;\n
-    };\n
-    \n
-    /**\n
-     * @description {Method} swtichView To switch to another view.\n
-     * @param {String} view View name, one of \'day\', \'week\', \'month\'. \n
-     */\n
-    $.fn.swtichView = function(view) {\n
-        return this.each(function() {\n
-            if (this.bcal) {\n
-                this.bcal.sv(view);\n
-            }\n
-        })\n
-    };\n
-    \n
-    /**\n
-     * @description {Method} reload To reload event of current time range.\n
-     */\n
-    $.fn.reload = function() {\n
-        return this.each(function() {\n
-            if (this.bcal) {\n
-                this.bcal.rf();\n
-            }\n
-        })\n
-    };\n
-    \n
-    /**\n
-     * @description {Method} gotoDate To go to a range containing date.\n
-     * If view is week, it will go to a week containing date. \n
-     * If view is month, it will got to a month containing date.          \n
-     * @param {Date} date. Date to go. \n
-     */\n
-    $.fn.gotoDate = function(d) {\n
-        return this.each(function() {\n
-            if (this.bcal) {\n
-                this.bcal.gt(d);\n
-            }\n
-        })\n
-    };\n
-    \n
-    /**\n
-     * @description {Method} previousRange To go to previous date range.\n
-     * If view is week, it will go to previous week. \n
-     * If view is month, it will got to previous month.          \n
-     */\n
-    $.fn.previousRange = function() {\n
-        return this.each(function() {\n
-            if (this.bcal) {\n
-                this.bcal.pv();\n
-            }\n
-        })\n
-    };\n
-    \n
-    /**\n
-     * @description {Method} nextRange To go to next date range.\n
-     * If view is week, it will go to next week. \n
-     * If view is month, it will got to next month. \n
-     */\n
-    $.fn.nextRange = function() {\n
-        return this.each(function() {\n
-            if (this.bcal) {\n
-                this.bcal.nt();\n
-            }\n
-        })\n
-    };\n
-    \n
-    \n
-    $.fn.BcalGetOp = function() {\n
-        if (this[0].bcal) {\n
-            return this[0].bcal.go();\n
-        }\n
-        return null;\n
-    };\n
-    \n
-    \n
-    $.fn.BcalSetOp = function(p) {\n
-        if (this[0].bcal) {\n
-            return this[0].bcal.so(p);\n
-        }\n
-    };\n
-    \n
-})(jQuery);\n
+            if (typeof (idate) == "object") {
+                date = new Date(idate.toString());
+            }
+            switch (interval) {
+                case "y": date.setFullYear(date.getFullYear() + number); break;
+                case "m": date.setMonth(date.getMonth() + number); break;
+                case "d": date.setDate(date.getDate() + number); break;
+                case "w": date.setDate(date.getDate() + 7 * number); break;
+                case "h": date.setHours(date.getHours() + number); break;
+                case "n": date.setMinutes(date.getMinutes() + number); break;
+                case "s": date.setSeconds(date.getSeconds() + number); break;
+                case "l": date.setMilliseconds(date.getMilliseconds() + number); break;
+            }
+            return date;
+        }
+    }
+    if (!DateDiff || typeof (DateDiff) != "function") {
+        var DateDiff = function(interval, d1, d2) {
+            switch (interval) {
+                case "d": //date
+                case "w":
+                    d1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
+                    d2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
+                    break;  //w
+                case "h":
+                    d1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate(), d1.getHours());
+                    d2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate(), d2.getHours());
+                    break; //h
+                case "n":
+                    d1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate(), d1.getHours(), d1.getMinutes());
+                    d2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate(), d2.getHours(), d2.getMinutes());
+                    break;
+                case "s":
+                    d1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate(), d1.getHours(), d1.getMinutes(), d1.getSeconds());
+                    d2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate(), d2.getHours(), d2.getMinutes(), d2.getSeconds());
+                    break;
+            }
+            var t1 = d1.getTime(), t2 = d2.getTime();
+            var diff = NaN;
+            switch (interval) {
+                case "y": diff = d2.getFullYear() - d1.getFullYear(); break; //y
+                case "m": diff = (d2.getFullYear() - d1.getFullYear()) * 12 + d2.getMonth() - d1.getMonth(); break;    //m
+                case "d": diff = Math.floor(t2 / 86400000) - Math.floor(t1 / 86400000); break;
+                case "w": diff = Math.floor((t2 + 345600000) / (604800000)) - Math.floor((t1 + 345600000) / (604800000)); break; //w
+                case "h": diff = Math.floor(t2 / 3600000) - Math.floor(t1 / 3600000); break; //h
+                case "n": diff = Math.floor(t2 / 60000) - Math.floor(t1 / 60000); break; //
+                case "s": diff = Math.floor(t2 / 1000) - Math.floor(t1 / 1000); break; //s
+                case "l": diff = t2 - t1; break;
+            }
+            return diff;
+
+        }
+    }
+    if ($.fn.noSelect == undefined) {
+        $.fn.noSelect = function(p) { //no select plugin by me :-)
+            if (p == null)
+                prevent = true;
+            else
+                prevent = p;
+            if (prevent) {
+                return this.each(function() {
+                    if ($.browser.msie || $.browser.safari) $(this).bind('selectstart', function() { return false; });
+                    else if ($.browser.mozilla) {
+                        $(this).css('MozUserSelect', 'none');
+                        $('body').trigger('focus');
+                    }
+                    else if ($.browser.opera) $(this).bind('mousedown', function() { return false; });
+                    else $(this).attr('unselectable', 'on');
+                });
+
+            } else {
+                return this.each(function() {
+                    if ($.browser.msie || $.browser.safari) $(this).unbind('selectstart');
+                    else if ($.browser.mozilla) $(this).css('MozUserSelect', 'inherit');
+                    else if ($.browser.opera) $(this).unbind('mousedown');
+                    else $(this).removeAttr('unselectable', 'on');
+                });
+
+            }
+        }; //end noSelect
+    }
+    $.fn.bcalendar = function(option) {
+        var def = {
+            /**
+             * @description {Config} view  
+             * {String} Three calendar view provided, 'day','week','month'. 'week' by default.
+             */
+            view: "week", 
+            /**
+             * @description {Config} weekstartday  
+             * {Number} First day of week 0 for Sun, 1 for Mon, 2 for Tue.
+             */
+            weekstartday: 1,  //start from Monday by default
+            theme: 0, //theme no
+            /**
+             * @description {Config} height  
+             * {Number} Calendar height, false for page height by default.
+             */
+            height: false, 
+            /**
+             * @description {Config} url  
+             * {String} Url to request calendar data.
+             */
+            url: "", 
+            /**
+             * @description {Config} eventItems  
+             * {Array} event items for initialization.
+             */   
+            eventItems: [], 
+            method: "POST", 
+            /**
+             * @description {Config} showday  
+             * {Date} Current date. today by default.
+             */
+            showday: new Date(), 
+            /**
+             * @description {Event} onBeforeRequestData:function(stage)
+             * Fired before any ajax request is sent.
+             * @param {Number} stage. 1 for retrieving events, 2 - adding event, 3 - removiing event, 4 - update event.
+             */
+            onBeforeRequestData: false, 
+            /**
+             * @description {Event} onAfterRequestData:function(stage)
+             * Fired before any ajax request is finished.
+             * @param {Number} stage. 1 for retrieving events, 2 - adding event, 3 - removiing event, 4 - update event.
+             */
+            onAfterRequestData: false, 
+            /**
+             * @description {Event} onAfterRequestData:function(stage)
+             * Fired when some errors occur while any ajax request is finished.
+             * @param {Number} stage. 1 for retrieving events, 2 - adding event, 3 - removiing event, 4 - update event.
+             */
+            onRequestDataError: false,              
+            
+            onWeekOrMonthToDay: false, 
+            /**
+             * @description {Event} quickAddHandler:function(calendar, param )
+             * Fired when user quick adds an item. If this function is set, ajax request to quickAddUrl will abort. 
+             * @param {Object} calendar Calendar object.
+             * @param {Array} param Format [{name:"name1", value:"value1"}, ...]
+             *             
+             */
+            quickAddHandler: false, 
+            /**
+             * @description {Config} quickAddUrl  
+             * {String} Url for quick adding. 
+             */
+            quickAddUrl: "", 
+            /**
+             * @description {Config} quickUpdateUrl  
+             * {String} Url for time span update.
+             */
+            quickUpdateUrl: "", 
+            /**
+             * @description {Config} quickDeleteUrl  
+             * {String} Url for removing an event.
+             */
+            quickDeleteUrl: "", 
+            /**
+             * @description {Config} autoload  
+             * {Boolean} If event items is empty, and this param is set to true. 
+             * Event will be retrieved by ajax call right after calendar is initialized.
+             */  
+            autoload: false,
+            /**
+             * @description {Config} readonly  
+             * {Boolean} Indicate calendar is readonly or editable 
+             */
+            readonly: false, 
+            /**
+             * @description {Config} extParam  
+             * {Array} Extra params submitted to server. 
+             * Sample - [{name:"param1", value:"value1"}, {name:"param2", value:"value2"}]
+             */
+            extParam: [], 
+            /**
+             * @description {Config} enableDrag  
+             * {Boolean} Whether end user can drag event item by mouse. 
+             */
+            enableDrag: true, 
+            loadDateR: [] 
+        };
+        var eventDiv = $("#gridEvent");
+        if (eventDiv.length == 0) {
+            eventDiv = $("<div id='gridEvent' style='display:none;'></div>").appendTo(document.body);
+        }
+        var gridcontainer = $(this);
+        option = $.extend(def, option);
+        //no quickUpdateUrl, dragging disabled.
+        if (option.quickUpdateUrl == null || option.quickUpdateUrl == "") {
+            option.enableDrag = false;
+        }
+        //template for month and date
+        var __SCOLLEVENTTEMP = "<DIV style=\"WIDTH:${width};top:${top};left:${left};\" title=\"${title}\" class=\"chip chip${i} ${drag}\"><div class=\"dhdV\" style=\"display:none\">${data}</div><DIV style=\"BORDER-BOTTOM-COLOR:${bdcolor}\" class=ct>&nbsp;</DIV><DL style=\"BORDER-BOTTOM-COLOR:${bdcolor}; BACKGROUND-COLOR:${bgcolor1}; BORDER-TOP-COLOR: ${bdcolor}; HEIGHT: ${height}px; BORDER-RIGHT-COLOR:${bdcolor}; BORDER-LEFT-COLOR:${bdcolor}\"><DT style=\"BACKGROUND-COLOR:${bgcolor2}\">${starttime} - ${endtime} ${icon}</DT><DD><SPAN>${content}</SPAN></DD><DIV class='resizer' style='display:${redisplay}'><DIV class=rszr_icon>&nbsp;</DIV></DIV></DL><DIV style=\"BORDER-BOTTOM-COLOR:${bdcolor}; BACKGROUND-COLOR:${bgcolor1}; BORDER-TOP-COLOR: ${bdcolor}; BORDER-RIGHT-COLOR: ${bdcolor}; BORDER-LEFT-COLOR:${bdcolor}\" class=cb1>&nbsp;</DIV><DIV style=\"BORDER-BOTTOM-COLOR:${bdcolor}; BORDER-TOP-COLOR:${bdcolor}; BORDER-RIGHT-COLOR:${bdcolor}; BORDER-LEFT-COLOR:${bdcolor}\" class=cb2>&nbsp;</DIV></DIV>";
+        var __ALLDAYEVENTTEMP = '<div class="rb-o ${eclass}" id="${id}" title="${title}" style="color:${color};"><div class="dhdV" style="display:none">${data}</div><div class="${extendClass} rb-m" style="background-color:${color}">${extendHTML}<div class="rb-i">${content}</div></div></div>';
+        var __MonthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        var __LASSOTEMP = "<div class='drag-lasso' style='left:${left}px;top:${top}px;width:${width}px;height:${height}px;'>&nbsp;</div>";
+        //for dragging var
+        var _dragdata;
+        var _dragevent;
+
+        //clear DOM
+        clearcontainer();
+
+        //no height specified in options, we get page height.
+        if (!option.height) {
+            option.height = document.documentElement.clientHeight;
+        }
+        //
+        gridcontainer.css("overflow-y", "visible").height(option.height - 8);
+
+        //populate events data for first display.
+        if (option.url && option.autoload) {
+            populate(); 
+        }
+        else {
+            //contruct HTML          
+            render();
+            //get date range
+            var d = getRdate();
+            pushER(d.start, d.end);
+        }
+
+        //clear DOM
+        function clearcontainer() {
+            gridcontainer.empty();
+        }
+        //get range
+        function getRdate() {
+            return { start: option.vstart, end: option.vend };
+        }
+        //add date range to cache.
+        function pushER(start, end) {
+            var ll = option.loadDateR.length;
+            if (!end) {
+                end = start;
+            }
+            if (ll == 0) {
+                option.loadDateR.push({ startdate: start, enddate: end });
+            }
+            else {
+                for (var i = 0; i < ll; i++) {
+                    var dr = option.loadDateR[i];
+                    var diff = DateDiff("d", start, dr.startdate);
+                    if (diff == 0 || diff == 1) {
+                        if (dr.enddate < end) {
+                            dr.enddate = end;
+                        }
+                        break;
+                    }
+                    else if (diff > 1) {
+                        var d2 = DateDiff("d", end, dr.startdate);
+                        if (d2 > 1) {
+                            option.loadDateR.splice(0, 0, { startdate: start, enddate: end });
+                        }
+                        else {
+                            dr.startdate = start;
+                            if (dr.enddate < end) {
+                                dr.enddate = end;
+                            }
+                        }
+                        break;
+                    }
+                    else {
+                        var d3 = DateDiff("d", end, dr.startdate);
+
+                        if (dr.enddate < end) {
+                            if (d3 < 1) {
+                                dr.enddate = end;
+                                break;
+                            }
+                            else {
+                                if (i == ll - 1) {
+                                    option.loadDateR.push({ startdate: start, enddate: end });
+                                }
+                            }
+                        }
+                    }
+                }
+                //end for
+                //clear
+                ll = option.loadDateR.length;
+                if (ll > 1) {
+                    for (var i = 0; i < ll - 1; ) {
+                        var d1 = option.loadDateR[i];
+                        var d2 = option.loadDateR[i + 1];
+
+                        var diff1 = DateDiff("d", d2.startdate, d1.enddate);
+                        if (diff1 <= 1) {
+                            d1.startdate = d2.startdate > d1.startdate ? d1.startdate : d2.startdate;
+                            d1.enddate = d2.enddate > d1.enddate ? d2.enddate : d1.enddate;
+                            option.loadDateR.splice(i + 1, 1);
+                            ll--;
+                            continue;
+                        }
+                        i++;
+                    }
+                }
+            }
+        }
+        //contruct DOM 
+        function render() {
+            //params needed
+            //viewType, showday, events, config     
+            var showday = new Date(option.showday.getFullYear(), option.showday.getMonth(), option.showday.getDate());
+            var events = option.eventItems;
+            var config = { view: option.view, weekstartday: option.weekstartday, theme: option.theme };
+            if (option.view == "day" || option.view == "week") {
+                var $dvtec = $("#dvtec");
+                if ($dvtec.length > 0) {
+                    option.scoll = $dvtec.attr("scrollTop"); //get scroll bar position
+                }
+            }
+            switch (option.view) {
+                case "day":
+                    BuildDaysAndWeekView(showday, 1, events, config);
+                    break;
+                case "week":
+                    BuildDaysAndWeekView(showday, 7, events, config);
+                    break;
+                case "month":
+                    BuildMonthView(showday, events, config);
+                    break;
+                default:
+                    alert(i18n.xgcalendar.no_implement);
+                    break;
+            }
+            initevents(option.view); 
+            ResizeView();
+        }
+
+        //build day view
+        function BuildDaysAndWeekView(startday, l, events, config) {
+            var days = [];
+            if (l == 1) {
+                var show = dateFormat.call(startday, i18n.xgcalendar.dateformat.Md);
+                days.push({ display: show, date: startday, day: startday.getDate(), year: startday.getFullYear(), month: startday.getMonth() + 1 });
+                option.datestrshow = CalDateShow(days[0].date);
+                option.vstart = days[0].date;
+                option.vend = days[0].date;
+            }
+            else {
+                var w = 0;
+                if (l == 7) {
+                    w = config.weekstartday - startday.getDay();
+                    if (w > 0) w = w - 7;
+                }
+                var ndate;
+                for (var i = w, j = 0; j < l; i = i + 1, j++) {
+                    ndate = DateAdd("d", i, startday);
+                    var show = dateFormat.call(ndate, i18n.xgcalendar.dateformat.Md);
+                    days.push({ display: show, date: ndate, day: ndate.getDate(), year: ndate.getFullYear(), month: ndate.getMonth() + 1 });
+                }
+                option.vstart = days[0].date;
+                option.vend = days[l - 1].date;
+                option.datestrshow = CalDateShow(days[0].date, days[l - 1].date);
+            }
+
+            var allDayEvents = [];
+            var scollDayEvents = [];
+            //get number of all-day events, including more-than-one-day events.
+            var dM = PropareEvents(days, events, allDayEvents, scollDayEvents);
+
+            var html = [];
+            html.push("<div id=\"dvwkcontaienr\" class=\"wktopcontainer\">");
+            html.push("<table class=\"wk-top\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">");
+            BuildWT(html, days, allDayEvents, dM);
+            html.push("</table>");
+            html.push("</div>");
+
+            //onclick=\"javascript:FunProxy('rowhandler',event,this);\"
+            html.push("<div id=\"dvtec\"  class=\"scolltimeevent\"><table style=\"table-layout: fixed;", jQuery.browser.msie ? "" : "width:100%", "\" cellspacing=\"0\" cellpadding=\"0\"><tbody><tr><td>");
+            html.push("<table style=\"height: 1008px\" id=\"tgTable\" class=\"tg-timedevents\" cellspacing=\"0\" cellpadding=\"0\"><tbody>");
+            BuildDayScollEventContainer(html, days, scollDayEvents);
+            html.push("</tbody></table></td></tr></tbody></table></div>");
+            gridcontainer.html(html.join(""));
+            html = null;
+            //TODO event handlers
+            //$("#weekViewAllDaywk").click(RowHandler);
+        }
+        //build month view
+        function BuildMonthView(showday, events, config) {
+            var cc = "<div id='cal-month-cc' class='cc'><div id='cal-month-cc-header'><div class='cc-close' id='cal-month-closebtn'></div><div id='cal-month-cc-title' class='cc-title'></div></div><div id='cal-month-cc-body' class='cc-body'><div id='cal-month-cc-content' class='st-contents'><table class='st-grid' cellSpacing='0' cellPadding='0'><tbody></tbody></table></div></div></div>";
+            var html = [];
+            html.push(cc);
+            //build header
+            html.push("<div id=\"mvcontainer\" class=\"mv-container\">");
+            html.push("<table id=\"mvweek\" class=\"mv-daynames-table\" cellSpacing=\"0\" cellPadding=\"0\"><tbody><tr>");
+            for (var i = config.weekstartday, j = 0; j < 7; i++, j++) {
+                if (i > 6) i = 0;
+                var p = { dayname: __WDAY[i] };
+                html.push("<th class=\"mv-dayname\" title=\"", __WDAY[i], "\">", __WDAY[i], "");
+            }
+            html.push("</tr></tbody></table>");
+            html.push("</div>");
+            var bH = GetMonthViewBodyHeight() - GetMonthViewHeaderHeight();
+
+            html.push("<div id=\"mvEventContainer\" class=\"mv-event-container\" style=\"height:", bH, "px;", "\">");
+            BuilderMonthBody(html, showday, config.weekstartday, events, bH);
+            html.push("</div>");
+            gridcontainer.html(html.join(""));
+            html = null;
+            $("#cal-month-closebtn").click(closeCc);
+        }
+        function closeCc() {
+            $("#cal-month-cc").css("visibility", "hidden");
+        }
+        
+        //all-day event, including more-than-one-day events 
+        function PropareEvents(dayarrs, events, aDE, sDE) {
+            var l = dayarrs.length;
+            var el = events.length;
+            var fE = [];
+            var deB = aDE;
+            var deA = sDE;
+            for (var j = 0; j < el; j++) {
+                var sD = events[j][2];
+                var eD = events[j][3];
+                var s = {};
+                s.event = events[j];
+                s.day = sD.getDate();
+                s.year = sD.getFullYear();
+                s.month = sD.getMonth() + 1;
+                s.allday = events[j][4] == 1;
+                s.crossday = events[j][5] == 1;
+                s.reevent = events[j][6] == 1; //Recurring event
+                s.daystr = [s.year, s.month, s.day].join("/");
+                s.st = {};
+                s.st.hour = sD.getHours();
+                s.st.minute = sD.getMinutes();
+                s.st.p = s.st.hour * 60 + s.st.minute; // start time
+                s.et = {};
+                s.et.hour = eD.getHours();
+                s.et.minute = eD.getMinutes();
+                s.et.p = s.et.hour * 60 + s.et.minute; // end time
+                fE.push(s);
+            }
+            var dMax = 0;
+            for (var i = 0; i < l; i++) {
+                var da = dayarrs[i];
+                deA[i] = []; deB[i] = [];
+                da.daystr = da.year + "/" + da.month + "/" + da.day;
+                for (var j = 0; j < fE.length; j++) {
+                    if (!fE[j].crossday && !fE[j].allday) {
+                        if (da.daystr == fE[j].daystr)
+                            deA[i].push(fE[j]);
+                    }
+                    else {
+                        if (da.daystr == fE[j].daystr) {
+                            deB[i].push(fE[j]);
+                            dMax++;
+                        }
+                        else {
+                            if (i == 0 && da.date >= fE[j].event[2] && da.date <= fE[j].event[3])//first more-than-one-day event
+                            {
+                                deB[i].push(fE[j]);
+                                dMax++;
+                            }
+                        }
+                    }
+                }
+            }
+            var lrdate = dayarrs[l - 1].date;
+            for (var i = 0; i < l; i++) { //to deal with more-than-one-day event
+                var de = deB[i];
+                if (de.length > 0) { //           
+                    for (var j = 0; j < de.length; j++) {
+                        var end = DateDiff("d", lrdate, de[j].event[3]) > 0 ? lrdate : de[j].event[3];
+                        de[j].colSpan = DateDiff("d", dayarrs[i].date, end) + 1
+                    }
+                }
+                de = null;
+            }
+            //for all-day events
+            for (var i = 0; i < l; i++) {
+                var de = deA[i];
+                if (de.length > 0) { 
+                    var x = []; 
+                    var y = []; 
+                    var D = [];
+                    var dl = de.length;
+                    var Ia;
+                    for (var j = 0; j < dl; ++j) {
+                        var ge = de[j];
+                        for (var La = ge.st.p, Ia = 0; y[Ia] > La; ) Ia++;
+                        ge.PO = Ia; ge.ne = []; //PO is how many events before this one
+                        y[Ia] = ge.et.p || 1440;
+                        x[Ia] = ge;
+                        if (!D[Ia]) {
+                            D[Ia] = [];
+                        }
+                        D[Ia].push(ge);
+                        if (Ia != 0) {
+                            ge.pe = [x[Ia - 1]]; //previous event
+                            x[Ia - 1].ne.push(ge); //next event
+                        }
+                        for (Ia = Ia + 1; y[Ia] <= La; ) Ia++;
+                        if (x[Ia]) {
+                            var k = x[Ia];
+                            ge.ne.push(k);
+                            k.pe.push(ge);
+                        }
+                        ge.width = 1 / (ge.PO + 1);
+                        ge.left = 1 - ge.width;
+                    }
+                    var k = Array.prototype.concat.apply([], D);
+                    x = y = D = null;
+                    var t = k.length;
+                    for (var y = t; y--; ) {
+                        var H = 1;
+                        var La = 0;
+                        var x = k[y];
+                        for (var D = x.ne.length; D--; ) {
+                            var Ia = x.ne[D];
+                            La = Math.max(La, Ia.VL);
+                            H = Math.min(H, Ia.left)
+                        }
+                        x.VL = La + 1;
+                        x.width = H / (x.PO + 1);
+                        x.left = H - x.width;
+                    }
+                    for (var y = 0; y < t; y++) {
+                        var x = k[y];
+                        x.left = 0;
+                        if (x.pe) for (var D = x.pe.length; D--; ) {
+                            var H = x.pe[D];
+                            x.left = Math.max(x.left, H.left + H.width);
+                        }
+                        var p = (1 - x.left) / x.VL;
+                        x.width = Math.max(x.width, p);
+                        x.aQ = Math.min(1 - x.left, x.width + 0.7 * p); //width offset
+                    }
+                    de = null;
+                    deA[i] = k;
+                }
+            }
+            return dMax;
+        }
+
+        function BuildWT(ht, dayarrs, events, dMax) {
+            //1:
+            ht.push("<tr>", "<th width=\"60\" rowspan=\"3\">&nbsp;</th>");
+            for (var i = 0; i < dayarrs.length; i++) {
+                var ev, title, cl;
+                if (dayarrs.length == 1) {
+                    ev = "";
+                    title = "";
+                    cl = "";
+                }
+                else {
+                    ev = ""; // "onclick=\"javascript:FunProxy('week2day',event,this);\"";
+                    title = i18n.xgcalendar.to_date_view;
+                    cl = "wk-daylink";
+                }
+                ht.push("<th abbr='", dateFormat.call(dayarrs[i].date, i18n.xgcalendar.dateformat.fulldayvalue), "' class='gcweekname' scope=\"col\"><div title='", title, "' ", ev, " class='wk-dayname'><span class='", cl, "'>", dayarrs[i].display, "</span></div></th>");
+
+            }
+            ht.push("<th width=\"16\" rowspan=\"3\">&nbsp;</th>");
+            ht.push("</tr>"); //end tr1;
+            //2:          
+            ht.push("<tr>");
+            ht.push("<td class=\"wk-allday\"");
+
+            if (dayarrs.length > 1) {
+                ht.push(" colSpan='", dayarrs.length, "'");
+            }
+            //onclick=\"javascript:FunProxy('rowhandler',event,this);\"
+            ht.push("><div id=\"weekViewAllDaywk\" ><table class=\"st-grid\" cellpadding=\"0\" cellspacing=\"0\"><tbody>");
+
+            if (dMax == 0) {
+                ht.push("<tr>");
+                for (var i = 0; i < dayarrs.length; i++) {
+                    ht.push("<td class=\"st-c st-s\"", " ch='qkadd' abbr='", dateFormat.call(dayarrs[i].date, "yyyy-M-d"), "' axis='00:00'>&nbsp;</td>");
+                }
+                ht.push("</tr>");
+            }
+            else {
+                var l = events.length;
+                var el = 0;
+                var x = [];
+                for (var j = 0; j < l; j++) {
+                    x.push(0);
+                }
+                //var c = tc();
+                for (var j = 0; el < dMax; j++) {
+                    ht.push("<tr>");
+                    for (var h = 0; h < l; ) {
+                        var e = events[h][x[h]];
+                        ht.push("<td class='st-c");
+                        if (e) { //if exists
+                            x[h] = x[h] + 1;
+                            ht.push("'");
+                            var t = BuildMonthDayEvent(e, dayarrs[h].date, l - h);
+                            if (e.colSpan > 1) {
+                                ht.push(" colSpan='", e.colSpan, "'");
+                                h += e.colSpan;
+                            }
+                            else {
+                                h++;
+                            }
+                            ht.push(" ch='show'>", t);
+                            t = null;
+                            el++;
+                        }
+                        else {
+                            ht.push(" st-s' ch='qkadd' abbr='", dateFormat.call(dayarrs[h].date, i18n.xgcalendar.dateformat.fulldayvalue), "' axis='00:00'>&nbsp;");
+                            h++;
+                        }
+                        ht.push("</td>");
+                    }
+                    ht.push("</tr>");
+                }
+                ht.push("<tr>");
+                for (var h = 0; h < l; h++) {
+                    ht.push("<td class='st-c st-s' ch='qkadd' abbr='", dateFormat.call(dayarrs[h].date, i18n.xgcalendar.dateformat.fulldayvalue), "' axis='00:00'>&nbsp;</td>");
+                }
+                ht.push("</tr>");
+            }
+            ht.push("</tbody></table></div></td></tr>"); // stgrid end //wvAd end //td2 end //tr2 end
+            //3:
+            ht.push("<tr>");
+
+            ht.push("<td style=\"height: 5px;\"");
+            if (dayarrs.length > 1) {
+                ht.push(" colSpan='", dayarrs.length, "'");
+            }
+            ht.push("></td>");
+            ht.push("</tr>");
+        }
+
+        function BuildDayScollEventContainer(ht, dayarrs, events) {
+            //1:
+            ht.push("<tr>");
+            ht.push("<td style='width:60px;'></td>");
+            ht.push("<td");
+            if (dayarrs.length > 1) {
+                ht.push(" colSpan='", dayarrs.length, "'");
+            }
+            ht.push("><div id=\"tgspanningwrapper\" class=\"tg-spanningwrapper\"><div style=\"font-size: 20px\" class=\"tg-hourmarkers\">");
+            for (var i = 0; i < 24; i++) {
+                ht.push("<div class=\"tg-dualmarker\"></div>");
+            }
+            ht.push("</div></div></td></tr>");
+
+            //2:
+            ht.push("<tr>");
+            ht.push("<td style=\"width: 60px\" class=\"tg-times\">");
+
+            //get current time 
+            var now = new Date(); var h = now.getHours(); var m = now.getMinutes();
+            var mHg = gP(h, m) - 4; //make middle alignment vertically
+            ht.push("<div id=\"tgnowptr\" class=\"tg-nowptr\" style=\"left:0px;top:", mHg, "px\"></div>");
+            var tmt = "";
+            for (var i = 0; i < 24; i++) {
+                tmt = fomartTimeShow(i);
+                ht.push("<div style=\"height: 41px\" class=\"tg-time\">", tmt, "</div>");
+            }
+            ht.push("</td>");
+
+            var l = dayarrs.length;
+            for (var i = 0; i < l; i++) {
+                ht.push("<td class=\"tg-col\" ch='qkadd' abbr='", dateFormat.call(dayarrs[i].date, i18n.xgcalendar.dateformat.fulldayvalue), "'>");
+                var istoday = dateFormat.call(dayarrs[i].date, "yyyyMMdd") == dateFormat.call(new Date(), "yyyyMMdd");
+                // Today
+                if (istoday) {
+                    ht.push("<div style=\"margin-bottom: -1008px; height:1008px\" class=\"tg-today\">&nbsp;</div>");
+                }
+                //var eventC = $(eventWrap);
+                //onclick=\"javascript:FunProxy('rowhandler',event,this);\"
+                ht.push("<div  style=\"margin-bottom: -1008px; height: 1008px\" id='tgCol", i, "' class=\"tg-col-eventwrapper\">");
+                BuildEvents(ht, events[i], dayarrs[i]);
+                ht.push("</div>");
+
+                ht.push("<div class=\"tg-col-overlaywrapper\" id='tgOver", i, "'>");
+                if (istoday) {
+                    var mhh = mHg + 4;
+                    ht.push("<div id=\"tgnowmarker\" class=\"tg-hourmarker tg-nowmarker\" style=\"left:0px;top:", mhh, "px\"></div>");
+                }
+                ht.push("</div>");
+                ht.push("</td>");
+            }
+            ht.push("</tr>");
+        }
+        //show events to calendar
+        function BuildEvents(hv, events, sday) {
+            for (var i = 0; i < events.length; i++) {
+                var c;
+                if (events[i].event[7] && events[i].event[7] >= 0) {
+                    c = tc(events[i].event[7]); //theme
+                }
+                else {
+                    c = tc(); //default theme
+                }
+                var tt = BuildDayEvent(c, events[i], i);
+                hv.push(tt);
+            }
+        }
+        function getTitle(event) {      
+            var timeshow, locationshow, attendsshow, eventshow;
+            var showtime = event[4] != 1;
+            eventshow = event[1];
+            var startformat = getymformat(event[2], null, showtime, true);
+            var endformat = getymformat(event[3], event[2], showtime, true);
+            timeshow = dateFormat.call(event[2], startformat) + " - " + dateFormat.call(event[3], endformat);
+            locationshow = (event[9] != undefined && event[9] != "") ? event[9] : i18n.xgcalendar.i_undefined;
+            attendsshow = (event[10] != undefined && event[10] != "") ? event[10] : "";
+            var ret = [];
+            if (event[4] == 1) {
+                ret.push("[" + i18n.xgcalendar.allday_event + "]",$.browser.mozilla?"":"\r\n" );
+            }
+            else {
+                if (event[5] == 1) {
+                    ret.push("[" + i18n.xgcalendar.repeat_event + "]",$.browser.mozilla?"":"\r\n");
+                }
+            }
+            ret.push(i18n.xgcalendar.time + ":", timeshow, $.browser.mozilla?"":"\r\n", i18n.xgcalendar.event + ":", eventshow,$.browser.mozilla?"":"\r\n", i18n.xgcalendar.location + ":", locationshow);
+            if (attendsshow != "") {
+                ret.push($.browser.mozilla?"":"\r\n", i18n.xgcalendar.participant + ":", attendsshow);
+            }
+            return ret.join("");
+        }
+        function BuildDayEvent(theme, e, index) {
+            var p = { bdcolor: theme[0], bgcolor2: theme[0], bgcolor1: theme[2], width: "70%", icon: "", title: "", data: "" };
+            p.starttime = pZero(e.st.hour) + ":" + pZero(e.st.minute);
+            p.endtime = pZero(e.et.hour) + ":" + pZero(e.et.minute);
+            p.content = e.event[1];
+            p.title = getTitle(e.event);
+            p.data = e.event.join("$");
+            var icons = [];
+            icons.push("<I class=\"cic cic-tmr\">&nbsp;</I>");
+            if (e.reevent) {
+                icons.push("<I class=\"cic cic-spcl\">&nbsp;</I>");
+            }
+            p.icon = icons.join("");
+            var sP = gP(e.st.hour, e.st.minute);
+            var eP = gP(e.et.hour, e.et.minute);
+            p.top = sP + "px";
+            p.left = (e.left * 100) + "%";
+            p.width = (e.aQ * 100) + "%";
+            p.height = (eP - sP - 4);
+            p.i = index;
+            if (option.enableDrag && e.event[8] == 1) {
+                p.drag = "drag";
+                p.redisplay = "block";
+            }
+            else {
+                p.drag = "";
+                p.redisplay = "none";
+            }
+            var newtemp = Tp(__SCOLLEVENTTEMP, p);
+            p = null;
+            return newtemp;
+        }
+
+        //get body height in month view
+        function GetMonthViewBodyHeight() {
+            return option.height;
+        }
+        function GetMonthViewHeaderHeight() {
+            return 21;
+        }
+        function BuilderMonthBody(htb, showday, startday, events, bodyHeight) {
+
+            var firstdate = new Date(showday.getFullYear(), showday.getMonth(), 1);
+            var diffday = startday - firstdate.getDay();
+            var showmonth = showday.getMonth();
+            if (diffday > 0) {
+                diffday -= 7;
+            }
+            var startdate = DateAdd("d", diffday, firstdate);
+            var enddate = DateAdd("d", 34, startdate);
+            var rc = 5;
+
+            if (enddate.getFullYear() == showday.getFullYear() && enddate.getMonth() == showday.getMonth() && enddate.getDate() < __MonthDays[showmonth]) {
+                enddate = DateAdd("d", 7, enddate);
+                rc = 6;
+            }
+            option.vstart = startdate;
+            option.vend = enddate;
+            option.datestrshow = CalDateShow(startdate, enddate);
+            bodyHeight = bodyHeight - 18 * rc;
+            var rowheight = bodyHeight / rc;
+            var roweventcount = parseInt(rowheight / 21);
+            if (rowheight % 21 > 15) {
+                roweventcount++;
+            }
+            var p = 100 / rc;
+            var formatevents = [];
+            var hastdata = formartEventsInHashtable(events, startday, 7, startdate, enddate);
+            var B = [];
+            var C = [];
+            for (var j = 0; j < rc; j++) {
+                var k = 0;
+                formatevents[j] = b = [];
+                for (var i = 0; i < 7; i++) {
+                    var newkeyDate = DateAdd("d", j * 7 + i, startdate);
+                    C[j * 7 + i] = newkeyDate;
+                    var newkey = dateFormat.call(newkeyDate, i18n.xgcalendar.dateformat.fulldaykey);
+                    b[i] = hastdata[newkey];
+                    if (b[i] && b[i].length > 0) {
+                        k += b[i].length;
+                    }
+                }
+                B[j] = k;
+            }
+            //var c = tc();
+            eventDiv.data("mvdata", formatevents);
+            for (var j = 0; j < rc; j++) {
+                //onclick=\"javascript:FunProxy('rowhandler',event,this);\"
+                htb.push("<div id='mvrow_", j, "' style=\"HEIGHT:", p, "%; TOP:", p * j, "%\"  class=\"month-row\">");
+                htb.push("<table class=\"st-bg-table\" cellSpacing=\"0\" cellPadding=\"0\"><tbody><tr>");
+                var dMax = B[j];
+
+                for (var i = 0; i < 7; i++) {
+                    var day = C[j * 7 + i];
+                    htb.push("<td abbr='", dateFormat.call(day, i18n.xgcalendar.dateformat.fulldayvalue), "' ch='qkadd' axis='00:00' title=''");
+
+                    if (dateFormat.call(day, "yyyyMMdd") == dateFormat.call(new Date(), "yyyyMMdd")) {
+                        htb.push(" class=\"st-bg st-bg-today\">");
+                    }
+                    else {
+                        htb.push(" class=\"st-bg\">");
+                    }
+                    htb.push("&nbsp;</td>");
+                }
+                //bgtable
+                htb.push("</tr></tbody></table>");
+
+                //stgrid
+                htb.push("<table class=\"st-grid\" cellpadding=\"0\" cellspacing=\"0\"><tbody>");
+
+                //title tr
+                htb.push("<tr>");
+                var titletemp = "<td class=\"st-dtitle${titleClass}\" ch='qkadd' abbr='${abbr}' axis='00:00' title=\"${title}\"><span class='monthdayshow'>${dayshow}</span></a></td>";
+
+                for (var i = 0; i < 7; i++) {
+                    var o = { titleClass: "", dayshow: "" };
+                    var day = C[j * 7 + i];
+                    if (dateFormat.call(day, "yyyyMMdd") == dateFormat.call(new Date(), "yyyyMMdd")) {
+                        o.titleClass = " st-dtitle-today";
+                    }
+                    if (day.getMonth() != showmonth) {
+                        o.titleClass = " st-dtitle-nonmonth";
+                    }
+                    o.title = dateFormat.call(day, i18n.xgcalendar.dateformat.fulldayshow);
+                    if (day.getDate() == 1) {
+                        if (day.getMonth == 0) {
+                            o.dayshow = dateFormat.call(day, i18n.xgcalendar.dateformat.fulldayshow);
+                        }
+                        else {
+                            o.dayshow = dateFormat.call(day, i18n.xgcalendar.dateformat.Md3);
+                        }
+                    }
+                    else {
+                        o.dayshow = day.getDate();
+                    }
+                    o.abbr = dateFormat.call(day, i18n.xgcalendar.dateformat.fulldayvalue);
+                    htb.push(Tp(titletemp, o));
+                }
+                htb.push("</tr>");
+                var sfirstday = C[j * 7];
+                BuildMonthRow(htb, formatevents[j], dMax, roweventcount, sfirstday);
+                //htb=htb.concat(rowHtml); rowHtml = null;  
+
+                htb.push("</tbody></table>");
+                //month-row
+                htb.push("</div>");
+            }
+
+            formatevents = B = C = hastdata = null;
+            //return htb;
+        }
+        
+        //formate datetime 
+        function formartEventsInHashtable(events, startday, daylength, rbdate, redate) {
+            var hast = new Object();
+            var l = events.length;
+            for (var i = 0; i < l; i++) {
+                var sD = events[i][2];
+                var eD = events[i][3];
+                var diff = DateDiff("d", sD, eD);
+                var s = {};
+                s.event = events[i];
+                s.day = sD.getDate();
+                s.year = sD.getFullYear();
+                s.month = sD.getMonth() + 1;
+                s.allday = events[i][4] == 1;
+                s.crossday = events[i][5] == 1;
+                s.reevent = events[i][6] == 1; //Recurring event
+                s.daystr = s.year + "/" + s.month + "/" + s.day;
+                s.st = {};
+                s.st.hour = sD.getHours();
+                s.st.minute = sD.getMinutes();
+                s.st.p = s.st.hour * 60 + s.st.minute; // start time position
+                s.et = {};
+                s.et.hour = eD.getHours();
+                s.et.minute = eD.getMinutes();
+                s.et.p = s.et.hour * 60 + s.et.minute; // end time postition
+
+                if (diff > 0) {
+                    if (sD < rbdate) { //start date out of range
+                        sD = rbdate;
+                    }
+                    if (eD > redate) { //end date out of range
+                        eD = redate;
+                    }
+                    var f = startday - sD.getDay();
+                    if (f > 0) { f -= daylength; }
+                    var sdtemp = DateAdd("d", f, sD);
+                    for (; sdtemp <= eD; sD = sdtemp = DateAdd("d", daylength, sdtemp)) {
+                        var d = Clone(s);
+                        var key = dateFormat.call(sD, i18n.xgcalendar.dateformat.fulldaykey);
+                        var x = DateDiff("d", sdtemp, eD);
+                        if (hast[key] == null) {
+                            hast[key] = [];
+                        }
+                        d.colSpan = (x >= daylength) ? daylength - DateDiff("d", sdtemp, sD) : DateDiff("d", sD, eD) + 1;
+                        hast[key].push(d);
+                        d = null;
+                    }
+                }
+                else {
+                    var key = dateFormat.call(events[i][2], i18n.xgcalendar.dateformat.fulldaykey);
+                    if (hast[key] == null) {
+                        hast[key] = [];
+                    }
+                    s.colSpan = 1;
+                    hast[key].push(s);
+                }
+                s = null;
+            }
+            return hast;
+        }
+        function BuildMonthRow(htr, events, dMax, sc, day) {
+            var x = []; 
+            var y = []; 
+            var z = []; 
+            var cday = [];  
+            var l = events.length;
+            var el = 0;
+            //var c = tc();
+            for (var j = 0; j < l; j++) {
+                x.push(0);
+                y.push(0);
+                z.push(0);
+                cday.push(DateAdd("d", j, day));
+            }
+            for (var j = 0; j < l; j++) {
+                var ec = events[j] ? events[j].length : 0;
+                y[j] += ec;
+                for (var k = 0; k < ec; k++) {
+                    var e = events[j][k];
+                    if (e && e.colSpan > 1) {
+                        for (var m = 1; m < e.colSpan; m++) {
+                            y[j + m]++;
+                        }
+                    }
+                }
+            }
+            //var htr=[];
+            var tdtemp = "<td class='${cssclass}' axis='${axis}' ch='${ch}' abbr='${abbr}' title='${title}' ${otherAttr}>${html}</td>";
+            for (var j = 0; j < sc && el < dMax; j++) {
+                htr.push("<tr>");
+                //var gridtr = $(__TRTEMP);
+                for (var h = 0; h < l; ) {
+                    var e = events[h] ? events[h][x[h]] : undefined;
+                    var tempdata = { "class": "", axis: "", ch: "", title: "", abbr: "", html: "", otherAttr: "", click: "javascript:void(0);" };
+                    var tempCss = ["st-c"];
+
+                    if (e) { 
+                        x[h] = x[h] + 1;
+                        //last event of the day
+                        var bs = false;
+                        if (z[h] + 1 == y[h] && e.colSpan == 1) {
+                            bs = true;
+                        }
+                        if (!bs && j == (sc - 1) && z[h] < y[h]) {
+                            el++;
+                            $.extend(tempdata, { "axis": h, ch: "more", "abbr": dateFormat.call(cday[h], i18n.xgcalendar.dateformat.fulldayvalue), html: i18n.xgcalendar.others + (y[h] - z[h]) + i18n.xgcalendar.item, click: "javascript:alert('more event');" });
+                            tempCss.push("st-more st-moreul");
+                            h++;
+                        }
+                        else {
+                            tempdata.html = BuildMonthDayEvent(e, cday[h], l - h);
+                            tempdata.ch = "show";
+                            if (e.colSpan > 1) {
+                                tempdata.otherAttr = " colSpan='" + e.colSpan + "'";
+                                for (var m = 0; m < e.colSpan; m++) {
+                                    z[h + m] = z[h + m] + 1;
+                                }
+                                h += e.colSpan;
+
+                            }
+                            else {
+                                z[h] = z[h] + 1;
+                                h++;
+                            }
+                            el++;
+                        }
+                    }
+                    else {
+                        if (j == (sc - 1) && z[h] < y[h] && y[h] > 0) {
+                            $.extend(tempdata, { "axis": h, ch: "more", "abbr": dateFormat.call(cday[h], i18n.xgcalendar.dateformat.fulldayvalue), html: i18n.xgcalendar.others + (y[h] - z[h]) + i18n.xgcalendar.item, click: "javascript:alert('more event');" });
+                            tempCss.push("st-more st-moreul");
+                            h++;
+                        }
+                        else {
+                            $.extend(tempdata, { html: "&nbsp;", ch: "qkadd", "axis": "00:00", "abbr": dateFormat.call(cday[h], i18n.xgcalendar.dateformat.fulldayvalue), title: "" });
+                            tempCss.push("st-s");
+                            h++;
+                        }
+                    }
+                    tempdata.cssclass = tempCss.join(" ");
+                    tempCss = null;
+                    htr.push(Tp(tdtemp, tempdata));
+                    tempdata = null;
+                }
+                htr.push("</tr>");
+            }
+            x = y = z = cday = null;
+            //return htr;
+        }
+        function BuildMonthDayEvent(e, cday, length) {
+            var theme;
+            if (e.event[7] && e.event[7] >= 0) {
+                theme = tc(e.event[7]);
+            }
+            else {
+                theme = tc();
+            }
+            var p = { color: theme[2], title: "", extendClass: "", extendHTML: "", data: "" };
+
+            p.title = getTitle(e.event);
+            p.id = "bbit_cal_event_" + e.event[0];
+            if (option.enableDrag && e.event[8] == 1) {
+                p.eclass = "drag";
+            }
+            else {
+                p.eclass = "cal_" + e.event[0];
+            }
+            p.data = e.event.join("$");
+            var sp = "<span style=\"cursor: pointer\">${content}</span>";
+            var i = "<I class=\"cic cic-tmr\">&nbsp;</I>";
+            var i2 = "<I class=\"cic cic-rcr\">&nbsp;</I>";
+            var ml = "<div class=\"st-ad-ml\"></div>";
+            var mr = "<div class=\"st-ad-mr\"></div>";
+            var arrm = [];
+            var sf = e.event[2] < cday;
+            var ef = DateDiff("d", cday, e.event[3]) >= length;  //e.event[3] >= DateAdd("d", 1, cday);
+            if (sf || ef) {
+                if (sf) {
+                    arrm.push(ml);
+                    p.extendClass = "st-ad-mpad ";
+                }
+                if (ef)
+                { arrm.push(mr); }
+                p.extendHTML = arrm.join("");
+
+            }
+            var cen;
+            if (!e.allday && !sf) {
+                cen = pZero(e.st.hour) + ":" + pZero(e.st.minute) + " " + e.event[1];
+            }
+            else {
+                cen = e.event[1];
+            }
+            var content = [];
+            content.push(Tp(sp, { content: cen }));
+            content.push(i);
+            if (e.reevent)
+            { content.push(i2); }
+            p.content = content.join("");
+            return Tp(__ALLDAYEVENTTEMP, p);
+        }
+        //to populate the data 
+        function populate() {
+            if (option.isloading){
+                return true;
+            }
+            if (option.url && option.url != "") {
+                option.isloading = true;
+                //clearcontainer();
+                if (option.onBeforeRequestData && $.isFunction(option.onBeforeRequestData)) {
+                  option.onBeforeRequestData(1);
+                }
+                var zone = new Date().getTimezoneOffset() / 60 * -1;
+                var param = [
+                  {name: "showdate", value: dateFormat.call(option.showday, i18n.xgcalendar.dateformat.fulldayvalue)},
+                  {name: "viewtype", value: option.view},
+                  {name: "timezone", value: zone}
+];
+                if (option.extParam) {
+                  for (var pi = 0; pi < option.extParam.length; pi++) {
+                    param[param.length] = option.extParam[pi];
+                  }
+                }
+                $.ajax({
+                    type: option.method,//
+                    url: option.url,
+                    data: param,   
+                    //dataType: "text",  // fixed jquery 1.4 not support Ms Date Json Format /Date(@Tickets)/
+                    dataType: "json",
+                    dataFilter: function(data, type) { 
+                      return data;
+                    },
+                    success: function(data) {
+                      if (data != null && data.error != null) {
+                        if (option.onRequestDataError) {
+                          option.onRequestDataError(1, data);
+                        }
+                      }
+                      else {
+                        data["start"] = parseDate(data["start"]);
+                        data["end"] = parseDate(data["end"]);
+                        $.each(data.events, function(index, value) { 
+                          value[2] = parseDate(value[2]);
+                          value[3] = parseDate(value[3]); 
+                        });
+                        responseData(data, data.start, data.end);
+                        pushER(data.start, data.end);
+                      }
+                      if (option.onAfterRequestData && $.isFunction(option.onAfterRequestData)) {
+                        option.onAfterRequestData(1);
+                      }
+                      option.isloading = false;
+                    },
+                    error: function(data) { 
+            try {             
+                            if (option.onRequestDataError) {
+                                option.onRequestDataError(1, data);
+                            } else {
+                                alert(i18n.xgcalendar.get_data_exception);
+                            }
+                            if (option.onAfterRequestData && $.isFunction(option.onAfterRequestData)) {
+                                option.onAfterRequestData(1);
+                            }
+                            option.isloading = false;
+                        } catch (e) { }
+                    }
+                });
+            }
+            else {
+                alert("url" + i18n.xgcalendar.i_undefined);
+            }
+        }
+        function responseData(data, start, end) {
+            var events;
+            if (data.issort == false) {
+                if (data.events && data.events.length > 0) {
+                    events = data.sort(function(l, r) { return l[2] > r[2] ? -1 : 1; });
+                }
+                else {
+                    events = [];
+                }
+            }
+            else {
+                events = data.events;
+            }
+            ConcatEvents(events, start, end);
+            render();
+        }
+        function clearrepeat(events, start, end) {
+            var jl = events.length;
+            if (jl > 0) {
+                var es = events[0][2];
+                var el = events[jl - 1][2];
+                for (var i = 0, l = option.eventItems.length; i < l; i++) {
+
+                    if (option.eventItems[i][2] > el || jl == 0) {
+                        break;
+                    }
+                    if (option.eventItems[i][2] >= es) {
+                        for (var j = 0; j < jl; j++) {
+                            if (option.eventItems[i][0] == events[j][0] && option.eventItems[i][2] < start) {
+                                events.splice(j, 1); //for duplicated event
+                                jl--;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        function ConcatEvents(events, start, end) {
+            if (!events) {
+                events = [];
+            }
+            if (events) {
+                if (option.eventItems.length == 0) {
+                    option.eventItems = events;
+                }
+                else {
+                    //remove duplicated one
+                    clearrepeat(events, start, end);
+                    var l = events.length;
+                    var sl = option.eventItems.length;
+                    var sI = -1;
+                    var eI = sl;
+                    var s = start;
+                    var e = end;
+                    if (option.eventItems[0][2] > e)
+                    {
+                        option.eventItems = events.concat(option.eventItems);
+                        return;
+                    }
+                    if (option.eventItems[sl - 1][2] < s) 
+                    {
+                        option.eventItems = option.eventItems.concat(events);
+                        return;
+                    }
+                    for (var i = 0; i < sl; i++) {
+                        if (option.eventItems[i][2] >= s && sI < 0) {
+                            sI = i;
+                            continue;
+                        }
+                        if (option.eventItems[i][2] > e) {
+                            eI = i;
+                            break;
+                        }
+                    }
+
+                    var e1 = sI <= 0 ? [] : option.eventItems.slice(0, sI);
+                    var e2 = eI == sl ? [] : option.eventItems.slice(eI);
+                    option.eventItems = [].concat(e1, events, e2);
+                    events = e1 = e2 = null;
+                }
+            }
+        }
+        //utils goes here
+        function weekormonthtoday(e) {
+            var th = $(this);
+            var daystr = th.attr("abbr");
+            option.showday = strtodate(daystr + " 00:00");
+            option.view = "day";
+            render();
+            if (option.onweekormonthtoday) {
+                option.onweekormonthtoday(option);
+            }
+            return false;
+        }
+        function parseDate(str){
+            return new Date(Date.parse(str));
+        }
+        function gP(h, m) {
+            return h * 42 + parseInt(m / 60 * 42);
+        }
+        function gW(ts1, ts2) {
+            var t1 = ts1 / 42;
+            var t2 = parseInt(t1);
+            var t3 = t1 - t2 >= 0.5 ? 30 : 0;
+            var t4 = ts2 / 42;
+            var t5 = parseInt(t4);
+            var t6 = t4 - t5 >= 0.5 ? 30 : 0;
+            return { sh: t2, sm: t3, eh: t5, em: t6, h: ts2 - ts1 };
+        }
+        function gH(y1, y2, pt) {
+            var sy1 = Math.min(y1, y2);
+            var sy2 = Math.max(y1, y2);
+            var t1 = (sy1 - pt) / 42;
+            var t2 = parseInt(t1);
+            var t3 = t1 - t2 >= 0.5 ? 30 : 0;
+            var t4 = (sy2 - pt) / 42;
+            var t5 = parseInt(t4);
+            var t6 = t4 - t5 >= 0.5 ? 30 : 0;
+            return { sh: t2, sm: t3, eh: t5, em: t6, h: sy2 - sy1 };
+        }
+        function pZero(n) {
+            return n < 10 ? "0" + n : "" + n;
+        }
+        //to get color list array
+        function tc(d) {
+            function zc(c, i) {
+                var d = "666666888888aaaaaabbbbbbdddddda32929cc3333d96666e69999f0c2c2b1365fdd4477e67399eea2bbf5c7d67a367a994499b373b3cca2cce1c7e15229a36633cc8c66d9b399e6d1c2f029527a336699668cb399b3ccc2d1e12952a33366cc668cd999b3e6c2d1f01b887a22aa9959bfb391d5ccbde6e128754e32926265ad8999c9b1c2dfd00d78131096184cb05288cb8cb8e0ba52880066aa008cbf40b3d580d1e6b388880eaaaa11bfbf4dd5d588e6e6b8ab8b00d6ae00e0c240ebd780f3e7b3be6d00ee8800f2a640f7c480fadcb3b1440edd5511e6804deeaa88f5ccb8865a5aa87070be9494d4b8b8e5d4d47057708c6d8ca992a9c6b6c6ddd3dd4e5d6c6274878997a5b1bac3d0d6db5a69867083a894a2beb8c1d4d4dae54a716c5c8d8785aaa5aec6c3cedddb6e6e41898951a7a77dc4c4a8dcdccb8d6f47b08b59c4a883d8c5ace7dcce";
+                return "#" + d.substring(c * 30 + i * 6, c * 30 + (i + 1) * 6);
+            }
+            var c = d != null && d != undefined ? d : option.theme;
+            return [zc(c, 0), zc(c, 1), zc(c, 2), zc(c, 3)];
+        }
+        function Tp(temp, dataarry) {
+            return temp.replace(/\$\{([\w]+)\}/g, function(s1, s2) { var s = dataarry[s2]; if (typeof (s) != "undefined") { return s; } else { return s1; } });
+        }
+        function Ta(temp, dataarry) {
+            return temp.replace(/\{([\d])\}/g, function(s1, s2) { var s = dataarry[s2]; if (typeof (s) != "undefined") { return encodeURIComponent(s); } else { return ""; } });
+        }
+        function fomartTimeShow(h) {
+            return h < 10 ? "0" + h + ":00" : h + ":00";
+        }
+        function getymformat(date, comparedate, isshowtime, isshowweek, showcompare) {
+            var showyear = isshowtime != undefined ? (date.getFullYear() != new Date().getFullYear()) : true;
+            var showmonth = true;
+            var showday = true;
+            var showtime = isshowtime || false;
+            var showweek = isshowweek || false;
+            if (comparedate) {
+                showyear = comparedate.getFullYear() != date.getFullYear();
+                //showmonth = comparedate.getFullYear() != date.getFullYear() || date.getMonth() != comparedate.getMonth();
+                if (comparedate.getFullYear() == date.getFullYear() &&
+          date.getMonth() == comparedate.getMonth() &&
+          date.getDate() == comparedate.getDate()
+          ) {
+                    showyear = showmonth = showday = showweek = false;
+                }
+            }
+
+            var a = [];
+            if (showyear) {
+                a.push(i18n.xgcalendar.dateformat.fulldayshow)
+            } else if (showmonth) {
+                a.push(i18n.xgcalendar.dateformat.Md3)
+            } else if (showday) {
+                a.push(i18n.xgcalendar.dateformat.day);
+            }
+            a.push(showweek ? " (W)" : "", showtime ? " HH:mm" : "");
+            return a.join("");
+        }
+        function CalDateShow(startday, endday, isshowtime, isshowweek) {
+            if (!endday) {
+                return dateFormat.call(startday, getymformat(startday,null,isshowtime));
+            } else {
+                var strstart= dateFormat.call(startday, getymformat(startday, null, isshowtime, isshowweek));
+        var strend=dateFormat.call(endday, getymformat(endday, startday, isshowtime, isshowweek));
+        var join = (strend!=""? " - ":"");
+        return [strstart,strend].join(join);
+            }
+        }
+
+        function dochange() {
+            var d = getRdate();
+            var loaded = checkInEr(d.start, d.end);
+            if (!loaded) {
+                populate();
+            }
+        }
+
+        function checkInEr(start, end) {
+            var ll = option.loadDateR.length;
+            if (ll == 0) {
+                return false;
+            }
+            var r = false;
+            var r2 = false;
+            for (var i = 0; i < ll; i++) {
+                r = false, r2 = false;
+                var dr = option.loadDateR[i];
+                if (start >= dr.startdate && start <= dr.enddate) {
+                    r = true;
+                }
+                if (dateFormat.call(start, "yyyyMMdd") == dateFormat.call(dr.startdate, "yyyyMMdd") || dateFormat.call(start, "yyyyMMdd") == dateFormat.call(dr.enddate, "yyyyMMdd")) {
+                    r = true;
+                }
+                if (!end)
+                { r2 = true; }
+                else {
+                    if (end >= dr.startdate && end <= dr.enddate) {
+                        r2 = true;
+                    }
+                    if (dateFormat.call(end, "yyyyMMdd") == dateFormat.call(dr.startdate, "yyyyMMdd") || dateFormat.call(end, "yyyyMMdd") == dateFormat.call(dr.enddate, "yyyyMMdd")) {
+                        r2 = true;
+                    }
+                }
+                if (r && r2) {
+                    break;
+                }
+            }
+            return r && r2;
+        }
+
+        function buildtempdayevent(sh, sm, eh, em, h, title, w, resize, thindex) {
+            var theme = thindex != undefined && thindex >= 0 ? tc(thindex) : tc();
+            var newtemp = Tp(__SCOLLEVENTTEMP, {
+                bdcolor: theme[0],
+                bgcolor2: theme[0],
+                bgcolor1: theme[2],
+                data: "",
+                starttime: [pZero(sh), pZero(sm)].join(":"),
+                endtime: [pZero(eh), pZero(em)].join(":"),
+                content: title ? title : i18n.xgcalendar.new_event,
+                title: title ? title : i18n.xgcalendar.new_event,
+                icon: "<I class=\"cic cic-tmr\">&nbsp;</I>",
+                top: "0px",
+                left: "",
+                width: w ? w : "100%",
+                height: h - 4,
+                i: "-1",
+                drag: "drag-chip",
+                redisplay: resize ? "block" : "none"
+            });
+            return newtemp;
+        }
+
+        function getdata(chip) {
+            var hddata = chip.find("div.dhdV");
+            if (hddata.length == 1) {
+                var str = hddata.text();
+                return parseED(str.split("$"));
+            }
+            return null;
+        }
+        function parseED(data) {
+            if (data.length > 6) {
+                var e = [];
+                e.push(data[0],
+                       data[1],
+                       new Date(data[2]), 
+                       new Date(data[3]),
+                       parseInt(data[4]),
+                       parseInt(data[5]),
+                       parseInt(data[6]),
+                       data[7] != undefined ? parseInt(data[7]) : -1,
+                       data[8] != undefined ? parseInt(data[8]) : 0,
+                       data[9],
+                       data[10],
+                       data[11] != undefined ? data[11]: null);
+                return e;
+            }
+            return null;
+
+        }
+        function quickd(type) {
+            $("#bbit-cs-buddle").css("visibility", "hidden");
+            var calid = $("#bbit-cs-id").val();
+            var title = $("#bbit-cs-what").text();
+            var param = [{"name": "calendarId", value: calid },
+                        {"name": "type", value: type},
+                        {"name": "title", value: title}];
+            var de = rebyKey(calid, true);
+            option.onBeforeRequestData && option.onBeforeRequestData(3);
+            $.post(option.quickDeleteUrl, param, function(data) {
+                if (data) {
+                    if (data.IsSuccess) {
+                        de = null;
+                        option.onAfterRequestData && option.onAfterRequestData(3);
+                    }
+                    else {
+                        option.onRequestDataError && option.onRequestDataError(3, data);
+                        Ind(de);
+                        render();
+                        option.onAfterRequestData && option.onAfterRequestData(3);
+                    }
+                }
+            }, "json");
+            render();
+        }
+        function getbuddlepos(x, y) {
+            var tleft = x - 110; 
+            var ttop = y - 217; 
+            var maxLeft = document.documentElement.clientWidth;
+            var maxTop = document.documentElement.clientHeight;
+            var ishide = false;
+            if (tleft <= 0 || ttop <= 0 || tleft + 400 > maxLeft) {
+                tleft = x - 200 <= 0 ? 10 : x - 200;
+                ttop = y - 159 <= 0 ? 10 : y - 159;
+                if (tleft + 400 >= maxLeft) {
+                    tleft = maxLeft - 410;
+                }
+                if (ttop + 164 >= maxTop) {
+                    ttop = maxTop - 165;
+                }
+                ishide = true;
+            }
+            return { left: tleft, top: ttop, hide: ishide };
+        }
+        function dayshow(e, data) {
+            if (data == undefined) {
+                data = getdata($(this));
+            }
+            if (data != null) {
+                if (option.quickDeleteUrl != "" && data[8] == 1 && option.readonly != true) {
+                    var csbuddle = '<div id="bbit-cs-buddle" style="z-index: 180; width: 400px;visibility:hidden;" class="bubble"><table class="bubble-table" cellSpacing="0" cellPadding="0"><tbody><tr><td class="bubble-cell-side"><div id="tl1" class="bubble-corner"><div class="bubble-sprite bubble-tl"></div></div><td class="bubble-cell-main"><div class="bubble-top"></div><td class="bubble-cell-side"><div id="tr1" class="bubble-corner"><div class="bubble-sprite bubble-tr"></div></div>  <tr><td class="bubble-mid" colSpan="3"><div style="overflow: hidden" id="bubbleContent1"><div><div></div><div class="cb-root"><table class="cb-table" cellSpacing="0" cellPadding="0"><tbody><tr><td class="cb-value"><div class="textbox-fill-wrapper"><div class="textbox-fill-mid"><div id="bbit-cs-what" title="'
+                      + i18n.xgcalendar.click_to_detail + '" class="textbox-fill-div lk" style="cursor:pointer;"></div></div></div></td></tr><tr><td class=cb-value><div id="bbit-cs-buddle-timeshow"></div></td></tr></tbody></table><div class="bbit-cs-split"><input id="bbit-cs-id" type="hidden" value=""/>[ <span id="bbit-cs-delete" class="lk">'
+                      + i18n.xgcalendar.i_delete + '</span> ]&nbsp; <SPAN id="bbit-cs-editLink" class="lk">'
+                      + i18n.xgcalendar.update_detail + ' <StrONG>&gt;&gt;</StrONG></SPAN></div></div></div></div><tr><td><div id="bl1" class="bubble-corner"><div class="bubble-sprite bubble-bl"></div></div><td><div class="bubble-bottom"></div><td><div id="br1" class="bubble-corner"><div class="bubble-sprite bubble-br"></div></div></tr></tbody></table><div id="bubbleClose2" class="bubble-closebutton"></div><div id="prong1" class="prong"><div class=bubble-sprite></div></div></div>';
+                    var bud = $("#bbit-cs-buddle");
+                    if (bud.length == 0) {
+                        bud = $(csbuddle).appendTo(document.body);
+                        var calbutton = $("#bbit-cs-delete");
+                        var lbtn = $("#bbit-cs-editLink");
+                        var closebtn = $("#bubbleClose2").click(function() {
+                            $("#bbit-cs-buddle").css("visibility", "hidden");
+                        });
+                        calbutton.click(function() {
+                            var data = $("#bbit-cs-buddle").data("cdata");
+                            if (option.DeleteCmdhandler && $.isFunction(option.DeleteCmdhandler)) {
+                                option.DeleteCmdhandler.call(this, data, quickd);
+                            }
+                            else {
+                                if (confirm(i18n.xgcalendar.confirm_delete_event + "?")) {
+                                    var s = 0; //0 single event , 1 for Recurring event
+                                    if (data[6] == 1) {
+                                        if (confirm(i18n.xgcalendar.confrim_delete_event_or_all)) {
+                                            s = 0;
+                                        }
+                                        else {
+                                            s = 1;
+                                        }
+                                    }
+                                    else {
+                                        s = 0;
+                                    }
+                                    quickd(s);
+                                }
+                            }
+                        });
+                        $("#bbit-cs-what").click(function(e) {
+                            if (!option.ViewCmdhandler) {
+                                alert("ViewCmdhandler" + i18n.xgcalendar.i_undefined);
+                            }
+                            else {
+                                if (option.ViewCmdhandler && $.isFunction(option.ViewCmdhandler)) {
+                                    option.ViewCmdhandler.call(this, $("#bbit-cs-buddle").data("cdata"));
+                                }
+                            }
+                            $("#bbit-cs-buddle").css("visibility", "hidden");
+                            return false;
+                        });
+                        lbtn.click(function(e) {
+                            if (!option.EditCmdhandler) {
+                                alert("EditCmdhandler" + i18n.xgcalendar.i_undefined);
+                            }
+                            else {
+                                if (option.EditCmdhandler && $.isFunction(option.EditCmdhandler)) {
+                                    option.EditCmdhandler.call(this, $("#bbit-cs-buddle").data("cdata"));
+                                }
+                            }
+                            $("#bbit-cs-buddle").css("visibility", "hidden");
+                            return false;
+                        });
+                        bud.click(function() { return false });
+                    }
+                    var pos = getbuddlepos(e.pageX, e.pageY);
+                    if (pos.hide) {
+                        $("#prong1").hide()
+                    }
+                    else {
+                        $("#prong1").show()
+                    }
+                    var ss = [];
+                    var iscos = DateDiff("d", data[2], data[3]) != 0;
+                    ss.push(dateFormat.call(data[2], i18n.xgcalendar.dateformat.Md3), " (", __WDAY[data[2].getDay()], ")");
+                    if (data[4] != 1) {
+                        ss.push(",", dateFormat.call(data[2], "HH:mm"));
+                    }
+
+                    if (iscos) {
+                        ss.push(" - ", dateFormat.call(data[3], i18n.xgcalendar.dateformat.Md3), " (", __WDAY[data[3].getDay()], ")");
+                        if (data[4] != 1) {
+                            ss.push(",", dateFormat.call(data[3], "HH:mm"));
+                        }
+                    }
+                    var ts = $("#bbit-cs-buddle-timeshow").html(ss.join(""));
+                    $("#bbit-cs-what").html(data[1]);
+                    $("#bbit-cs-id").val(data[0]);
+                    bud.data("cdata", data);
+                    bud.css({ "visibility": "visible", left: pos.left, top: pos.top });
+
+                    $(document).one("click", function() {
+                        $("#bbit-cs-buddle").css("visibility", "hidden");
+                    });
+                }
+                else {
+                    if (!option.ViewCmdhandler) {
+                        alert("ViewCmdhandler" + i18n.xgcalendar.i_undefined);
+                    }
+                    else {
+                        if (option.ViewCmdhandler && $.isFunction(option.ViewCmdhandler)) {
+                            option.ViewCmdhandler.call(this, data);
+                        }
+                    }
+                }
+            }
+            else {
+                alert(i18n.xgcalendar.data_format_error);
+            }
+            return false;
+        }
+
+        function moreshow(mv) {
+            var me = $(this);
+            var divIndex = mv.id.split('_')[1];
+            var pdiv = $(mv);
+            var offsetMe = me.position();
+            var offsetP = pdiv.position();
+            var width = (me.width() + 2) * 1.5;
+            var top = offsetP.top + 15;
+            var left = offsetMe.left;
+
+            var daystr = this.abbr;
+            var arrdays = daystr.split('/');
+            var day = new Date(arrdays[0], parseInt(arrdays[1] - 1), arrdays[2]);
+            var cc = $("#cal-month-cc");
+            var ccontent = $("#cal-month-cc-content table tbody");
+            var ctitle = $("#cal-month-cc-title");
+            ctitle.html(dateFormat.call(day, i18n.xgcalendar.dateformat.Md3) + " " + __WDAY[day.getDay()]);
+            ccontent.empty();
+            //var c = tc()[2];
+            var edata = $("#gridEvent").data("mvdata");
+            var events = edata[divIndex];
+            var index = parseInt(this.axis);
+            var htm = [];
+            for (var i = 0; i <= index; i++) {
+                var ec = events[i] ? events[i].length : 0;
+                for (var j = 0; j < ec; j++) {
+                    var e = events[i][j];
+                    if (e) {
+                        if ((e.colSpan + i - 1) >= index) {
+                            htm.push("<tr><td class='st-c'>");
+                            htm.push(BuildMonthDayEvent(e, day, 1));
+                            htm.push("</td></tr>");
+                        }
+                    }
+                }
+            }
+            ccontent.html(htm.join(""));
+            //click
+            ccontent.find("div.rb-o").each(function(i) {
+                $(this).click(dayshow);
+            });
+
+            edata = events = null;
+            var height = cc.height();
+            var maxleft = document.documentElement.clientWidth;
+            var maxtop = document.documentElement.clientHeight;
+            if (left + width >= maxleft) {
+                left = offsetMe.left - (me.width() + 2) * 0.5;
+            }
+            if (top + height >= maxtop) {
+                top = maxtop - height - 2;
+            }
+            var newOff = { left: left, top: top, "z-index": 180, width: width, "visibility": "visible" };
+            cc.css(newOff);
+            $(document).one("click", closeCc);
+            return false;
+        }
+        function dayupdate(data, start, end) {
+            if (option.quickUpdateUrl != "" && data[8] == 1 && option.readonly != true) {
+                if (option.isloading) {
+                    return false;
+                }
+                option.isloading = true;
+                var id = data[0];
+                var title = data[1];
+                var os = data[2];
+                var od = data[3];
+                var zone = new Date().getTimezoneOffset() / 60 * -1;
+                var param = [{ "name": "calendarId", value: id },
+                             { "name": "CalendarStartTime", value: dateFormat.call(start, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm") },
+                             { "name": "CalendarEndTime", value: dateFormat.call(end, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm") },
+                             { "name": "timezone", value: zone },
+                             { "name": "title", value: title },
+                             { "name": "event_id", value: data[9]},
+];
+                var d;
+                if (option.quickUpdateHandler && $.isFunction(option.quickUpdateHandler)) {
+                    option.quickUpdateHandler.call(this, param);
+                }
+                else {
+                    option.onBeforeRequestData && option.onBeforeRequestData(4);
+                    $.post(option.quickUpdateUrl, param, function(data) {
+                        if (data) {
+                            if (data.IsSuccess == true) {
+                                option.isloading = false;
+                                option.onAfterRequestData && option.onAfterRequestData(4);
+                            }
+                            else {
+                                option.onRequestDataError && option.onRequestDataError(4, data);
+                                option.isloading = false;                 
+                                d = rebyKey(id, true);
+                                d[2] = os;
+                                d[3] = od;
+                                Ind(d);
+                                render();
+                                d = null;
+                                option.onAfterRequestData && option.onAfterRequestData(4);
+                            }
+                        }
+                    }, "json");         
+                    d = rebyKey(id, true);
+                    if (d) {
+                        d[2] = start;
+                        d[3] = end;
+                    }
+                    Ind(d);
+                    render();
+                }
+            }
+        }
+        function quickadd(start, end, isallday, pos) {
+            if ((!option.quickAddHandler && option.quickAddUrl == "") || option.readonly) {
+                return;
+            }
+            var buddle = $("#bbit-cal-buddle");
+            if (buddle.length == 0) {
+                var temparr = [];
+                temparr.push('<div id="bbit-cal-buddle" style="z-index: 180; width: 400px;visibility:hidden;" class="bubble">');
+                temparr.push('<table class="bubble-table" cellSpacing="0" cellPadding="0"><tbody><tr><td class="bubble-cell-side"><div id="tl1" class="bubble-corner"><div class="bubble-sprite bubble-tl"></div></div>');
+                temparr.push('<td class="bubble-cell-main"><div class="bubble-top"></div><td class="bubble-cell-side"><div id="tr1" class="bubble-corner"><div class="bubble-sprite bubble-tr"></div></div>  <tr><td class="bubble-mid" colSpan="3"><div style="overflow: hidden" id="bubbleContent1"><div><div></div><div class="cb-root">');
+                temparr.push('<table class="cb-table" cellSpacing="0" cellPadding="0"><tbody><tr><th class="cb-key">');
+                temparr.push(i18n.xgcalendar.time, ':</th><td class=cb-value><div id="bbit-cal-buddle-timeshow"></div></td></tr><tr><th class="cb-key">');
+                temparr.push(i18n.xgcalendar.content, ':</th><td class="cb-value"><div class="textbox-fill-wrapper"><div class="textbox-fill-mid"><input id="bbit-cal-what" class="textbox-fill-input"/></div></div><div class="cb-example">');
+                temparr.push(i18n.xgcalendar.example, '</div></td></tr>');
+                if (option.loadFieldOnDialog && $.isFunction(option.loadFieldOnDialog)){
+                  temparr.push("<tr>", option.loadFieldOnDialog(), "</tr>");
+                }
+                temparr.push('</tbody></table><input id="bbit-cal-start" type="hidden"/><input id="bbit-cal-end" type="hidden"/><input id="bbit-cal-allday" type="hidden"/><input id="bbit-cal-quickAddBTN" value="');
+                temparr.push(i18n.xgcalendar.create_event, '" type="button"/>&nbsp; <SPAN id="bbit-cal-editLink" class="lk">');
+                temparr.push(i18n.xgcalendar.update_detail, ' <StrONG>&gt;&gt;</StrONG></SPAN></div></div></div><tr><td><div id="bl1" class="bubble-corner"><div class="bubble-sprite bubble-bl"></div></div><td><div class="bubble-bottom"></div><td><div id="br1" class="bubble-corner"><div class="bubble-sprite bubble-br"></div></div></tr></tbody></table><div id="bubbleClose1" class="bubble-closebutton"></div><div id="prong2" class="prong"><div class=bubble-sprite></div></div></div>');
+                var tempquickAddHanler = temparr.join("");
+                temparr = null;
+                $(document.body).append(tempquickAddHanler);
+                buddle = $("#bbit-cal-buddle");
+                var calbutton = $("#bbit-cal-quickAddBTN");
+                var lbtn = $("#bbit-cal-editLink");
+                var closebtn = $("#bubbleClose1").click(function() {
+                    $("#bbit-cal-buddle").css("visibility", "hidden");
+                    realsedragevent();
+                });
+                calbutton.click(function(e) {
+                    if (option.isloading) {
+                        return false;
+                    }
+                    option.isloading = true;
+                    var what = $("#bbit-cal-what").val();
+                    var datestart = $("#bbit-cal-start").val();
+                    var dateend = $("#bbit-cal-end").val();
+                    var allday = $("#bbit-cal-allday").val();
+                    var f = /^[^\$\<\>]+$/.test(what);
+                    if (!f) {
+                        alert(i18n.xgcalendar.invalid_title);
+                        $("#bbit-cal-what").focus();
+                        option.isloading = false;
+                        return false;
+                    }
+                    var zone = new Date().getTimezoneOffset() / 60 * -1;
+                    var portalType = $("select[name='portal_type']").val();
+                    var param = [{ "name": "CalendarTitle", value: what },
+                                 { "name": "CalendarStartTime", value: datestart },
+                                 { "name": "CalendarEndTime", value: dateend },
+                                 { "name": "IsAllDayEvent", value: allday },
+                                 { "name": "timezone", value: zone},
+                                 { "name": "portal_type", value: portalType}];
+
+                    if (option.extParam) {
+                        for (var pi = 0; pi < option.extParam.length; pi++) {
+                            param[param.length] = option.extParam[pi];
+                        }
+                    }
+
+                    if (option.quickAddHandler && $.isFunction(option.quickAddHandler)) {
+                        option.quickAddHandler.call(this, param);
+                        $("#bbit-cal-buddle").css("visibility", "hidden");
+                        realsedragevent();
+                    }
+                    else {
+                        $("#bbit-cal-buddle").css("visibility", "hidden");
+                        var newdata = [];
+                        var tId = -1;
+                        option.onBeforeRequestData && option.onBeforeRequestData(2);                       
+                        $.post(option.quickAddUrl, param, function(data) {
+                          if (data) {
+                            if (data.IsSuccess == true) {
+                              option.isloading = false;
+                              option.eventItems[tId][0] = data.Data;
+                              option.eventItems[tId][8] = 1;
+                              render();
+                              option.onAfterRequestData && option.onAfterRequestData(2);
+                            }
+                            else {
+                              option.onRequestDataError && option.onRequestDataError(2, data);
+                              option.isloading = false;
+                              option.onAfterRequestData && option.onAfterRequestData(2);
+                            }
+                          }
+                        }, "json");
+
+                        newdata.push(-1, what);
+                        var sd = strtodate(datestart);
+                        var ed = strtodate(dateend);
+                        var diff = DateDiff("d", sd, ed);
+                        newdata.push(sd, ed, allday == "1" ? 1 : 0, diff > 0 ? 1 : 0, 0);
+                        newdata.push(-1, 0, "", ""); 
+                        tId = Ind(newdata);
+                        realsedragevent();
+                        render();
+                    }
+                });
+                lbtn.click(function(e) {
+                    if (!option.EditCmdhandler) {
+                        alert("EditCmdhandler" + i18n.xgcalendar.i_undefined);
+                    }
+                    else {
+                        if (option.EditCmdhandler && $.isFunction(option.EditCmdhandler)) {
+                            option.EditCmdhandler.call(this, ['0', $("#bbit-cal-what").val(), $("#bbit-cal-start").val(), $("#bbit-cal-end").val(), $("#bbit-cal-allday").val()]);
+                        }
+                        $("#bbit-cal-buddle").css("visibility", "hidden");
+                        realsedragevent();
+                    }
+                    return false;
+                });
+                buddle.mousedown(function(e) { return false });
+            }
+      
+            var dateshow = CalDateShow(start, end, !isallday, true);      
+            var off = getbuddlepos(pos.left, pos.top);
+            if (off.hide) {
+                $("#prong2").hide()
+            }
+            else {
+                $("#prong2").show()
+            }
+            $("#bbit-cal-buddle-timeshow").html(dateshow);
+            var calwhat = $("#bbit-cal-what").val("");
+            $("#bbit-cal-allday").val(isallday ? "1" : "0");
+            $("#bbit-cal-start").val(dateFormat.call(start, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm"));
+            $("#bbit-cal-end").val(dateFormat.call(end, i18n.xgcalendar.dateformat.fulldayvalue + " HH:mm"));
+            buddle.css({ "visibility": "visible", left: off.left, top: off.top });      
+      calwhat.blur().focus(); //add 2010-01-26 blur() fixed chrome 
+            $(document).one("mousedown", function() {
+                $("#bbit-cal-buddle").css("visibility", "hidden");
+                realsedragevent();
+            });
+            return false;
+        }
+        //format datestring to Date Type
+        function strtodate(str) {
+
+            var arr = str.split(" ");
+            var arr2 = arr[0].split(i18n.xgcalendar.dateformat.separator);
+            var arr3 = arr[1].split(":");
+
+            var y = arr2[i18n.xgcalendar.dateformat.year_index];
+            var m = arr2[i18n.xgcalendar.dateformat.month_index].indexOf("0") == 0 ? arr2[i18n.xgcalendar.dateformat.month_index].substr(1, 1) : arr2[i18n.xgcalendar.dateformat.month_index];
+            var d = arr2[i18n.xgcalendar.dateformat.day_index].indexOf("0") == 0 ? arr2[i18n.xgcalendar.dateformat.day_index].substr(1, 1) : arr2[i18n.xgcalendar.dateformat.day_index];
+            var h = arr3[0].indexOf("0") == 0 ? arr3[0].substr(1, 1) : arr3[0];
+            var n = arr3[1].indexOf("0") == 0 ? arr3[1].substr(1, 1) : arr3[1];
+            return new Date(y, parseInt(m) - 1, d, h, n);
+        }
+
+        function rebyKey(key, remove) {
+            if (option.eventItems && option.eventItems.length > 0) {
+                var sl = option.eventItems.length;
+                var i = -1;
+                for (var j = 0; j < sl; j++) {
+                    if (option.eventItems[j][0] == key) {
+                        i = j;
+                        break;
+                    }
+                }
+                if (i >= 0) {
+                    var t = option.eventItems[i];
+                    if (remove) {
+                        option.eventItems.splice(i, 1);
+                    }
+                    return t;
+                }
+            }
+            return null;
+        }
+        function Ind(event, i) {
+            var d = 0;
+            if (!i) {
+                if (option.eventItems && option.eventItems.length > 0) {
+                    var sl = option.eventItems.length;
+                    var s = event[2];
+                    var d1 = s.getTime() - option.eventItems[0][2].getTime();
+                    var d2 = option.eventItems[sl - 1][2].getTime() - s.getTime();
+                    var diff = d1 - d2;
+                    if (d1 < 0 || diff < 0) {
+                        for (var j = 0; j < sl; j++) {
+                            if (option.eventItems[j][2] >= s) {
+                                i = j;
+                                break;
+                            }
+                        }
+                    }
+                    else if (d2 < 0) {
+                        i = sl;
+                    }
+                    else {
+                        for (var j = sl - 1; j >= 0; j--) {
+                            if (option.eventItems[j][2] < s) {
+                                i = j + 1;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else {
+                    i = 0;
+                }
+            }
+            else {
+                d = 1;
+            }
+            if (option.eventItems && option.eventItems.length > 0) {
+                if (i == option.eventItems.length) {
+                    option.eventItems.push(event);
+                }
+                else { option.eventItems.splice(i, d, event); }
+            }
+            else {
+                option.eventItems = [event];
+            }
+            return i;
+        }
+        
+        
+        function ResizeView() {
+            var _MH = document.documentElement.clientHeight;
+            var _viewType = option.view;
+            if (_viewType == "day" || _viewType == "week") {
+                var $dvwkcontaienr = $("#dvwkcontaienr");
+                var $dvtec = $("#dvtec");
+                if ($dvwkcontaienr.length == 0 || $dvtec.length == 0) {
+                    alert(i18n.xgcalendar.view_no_ready); return;
+                }
+                var dvwkH = $dvwkcontaienr.height() + 2;
+                var calH = option.height - 8 - dvwkH;
+                $dvtec.height(calH);
+                if (typeof (option.scoll) == "undefined") {
+                    var currentday = new Date();
+                    var h = currentday.getHours();
+                    var m = currentday.getMinutes();
+                    var th = gP(h, m);
+                    var ch = $dvtec.attr("clientHeight");
+                    var sh = th - 0.5 * ch;
+                    var ph = $dvtec.attr("scrollHeight");
+                    if (sh < 0) sh = 0;
+                    if (sh > ph - ch) sh = ph - ch - 10 * (23 - h);
+                    $dvtec.attr("scrollTop", sh);
+                }
+                else {
+                    $dvtec.attr("scrollTop", option.scoll);
+                }
+            }
+            else if (_viewType == "month") {
+                //Resize GridContainer
+            }
+        }
+        function returnfalse() {
+            return false;
+        }
+        function initevents(viewtype) {
+            if (viewtype == "week" || viewtype == "day") {
+                $("div.chip", gridcontainer).each(function(i) {
+                    var chip = $(this);
+                    chip.click(dayshow);
+                    if (chip.hasClass("drag")) {
+                        chip.mousedown(function(e) { dragStart.call(this, "dw3", e); return false; });
+                        //resize                      
+                        chip.find("div.resizer").mousedown(function(e) {
+                            dragStart.call($(this).parent().parent(), "dw4", e); return false;
+                        });
+                    }
+                    else {
+                        chip.mousedown(returnfalse)
+                    }
+                });
+                $("div.rb-o", gridcontainer).each(function(i) {
+                    var chip = $(this);
+                    chip.click(dayshow);
+                    if (chip.hasClass("drag") && viewtype == "week") {
+                        //drag;
+                        chip.mousedown(function(e) { dragStart.call(this, "dw5", e); return false; });
+                    }
+                    else {
+                        chip.mousedown(returnfalse)
+                    }
+                });
+                if (option.readonly == false) {
+                    $("td.tg-col", gridcontainer).each(function(i) {
+                        $(this).mousedown(function(e) { dragStart.call(this, "dw1", e); return false; });
+                    });
+                    $("#weekViewAllDaywk").mousedown(function(e) { dragStart.call(this, "dw2", e); return false; });
+                }
+
+                if (viewtype == "week") {
+                    $("#dvwkcontaienr th.gcweekname").each(function(i) {
+                        $(this).click(weekormonthtoday);
+                    });
+                }
 
 
-]]></string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>jquery.calendar.js</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-</ZopeData>
+            }
+            else if (viewtype = "month") {
+                $("div.rb-o", gridcontainer).each(function(i) {
+                    var chip = $(this);
+                    chip.click(dayshow);
+                    if (chip.hasClass("drag")) {
+                        //drag;
+                        chip.mousedown(function(e) { dragStart.call(this, "m2", e); return false; });
+                    }
+                    else {
+                        chip.mousedown(returnfalse)
+                    }
+                });
+                $("td.st-more", gridcontainer).each(function(i) {
+
+                    $(this).click(function(e) {
+                        moreshow.call(this, $(this).parent().parent().parent().parent()[0]); return false;
+                    }).mousedown(function() { return false; });
+                });
+                if (option.readonly == false) {
+                    $("#mvEventContainer").mousedown(function(e) { dragStart.call(this, "m1", e); return false; });
+                }
+            }
+
+        }
+        function realsedragevent() {
+            if (_dragevent) {
+                _dragevent();
+                _dragevent = null;
+            }
+        }
+        function dragStart(type, e) {
+            var obj = $(this);
+            var source = e.srcElement || e.target;
+            realsedragevent();
+            switch (type) {
+                case "dw1": 
+                    _dragdata = { type: 1, target: obj, sx: e.pageX, sy: e.pageY };
+                    break;
+                case "dw2": 
+                    var w = obj.width();
+                    var h = obj.height();
+                    var offset = obj.offset();
+                    var left = offset.left;
+                    var top = offset.top;
+                    var l = option.view == "day" ? 1 : 7;
+                    var py = w % l;
+                    var pw = parseInt(w / l);
+                    if (py > l / 2 + 1) {
+                        pw++;
+                    }
+                    var xa = [];
+                    var ya = [];
+                    for (var i = 0; i < l; i++) {
+                        xa.push({ s: i * pw + left, e: (i + 1) * pw + left });
+                    }
+                    ya.push({ s: top, e: top + h });
+                    _dragdata = { type: 2, target: obj, sx: e.pageX, sy: e.pageY, pw: pw, xa: xa, ya: ya, h: h };
+                    w = left = l = py = pw = xa = null;
+                    break;
+                case "dw3": 
+                    var evid = obj.parent().attr("id").replace("tgCol", "");
+                    var p = obj.parent();
+                    var pos = p.offset();
+                    var w = p.width() + 10;
+                    var h = obj.height();
+                    var data = getdata(obj);
+                    _dragdata = { type: 4, target: obj, sx: e.pageX, sy: e.pageY,
+                        pXMin: pos.left, pXMax: pos.left + w, pw: w, h: h,
+                        cdi: parseInt(evid), fdi: parseInt(evid), data: data
+                    };
+                    break;
+                case "dw4": //resize;
+                    var h = obj.height();
+                    var data = getdata(obj);
+                    _dragdata = { type: 5, target: obj, sx: e.pageX, sy: e.pageY, h: h, data: data };
+                    break;
+                case "dw5":
+                    var con = $("#weekViewAllDaywk");
+                    var w = con.width();
+                    var h = con.height();
+                    var offset = con.offset();
+                    var moffset = obj.offset();
+                    var left = offset.left;
+                    var top = offset.top;
+                    var l = 7;
+                    var py = w % l;
+                    var pw = parseInt(w / l);
+                    if (py > l / 2 + 1) {
+                        pw++;
+                    }
+                    var xa = [];
+                    var ya = [];
+                    var di = 0;
+                    for (var i = 0; i < l; i++) {
+                        xa.push({ s: i * pw + left, e: (i + 1) * pw + left });
+                        if (moffset.left >= xa[i].s && moffset.left < xa[i].e) {
+                            di = i;
+                        }
+                    }
+                    var fdi = { x: di, y: 0, di: di };
+                    ya.push({ s: top, e: top + h });
+                    var data = getdata(obj);
+                    var dp = DateDiff("d", data[2], data[3]) + 1;
+                    _dragdata = { type: 6, target: obj, sx: e.pageX, sy: e.pageY, data: data, xa: xa, ya: ya, fdi: fdi, h: h, dp: dp, pw: pw };
+                    break;
+                case "m1": 
+                    var w = obj.width();
+                    var offset = obj.offset();
+                    var left = offset.left;
+                    var top = offset.top;
+                    var l = 7;
+                    var yl = obj.children().length;
+                    var py = w % l;
+                    var pw = parseInt(w / l);
+                    if (py > l / 2 + 1) {
+                        pw++;
+                    }
+                    var h = $("#mvrow_0").height();
+                    var xa = [];
+                    var ya = [];
+                    for (var i = 0; i < l; i++) {
+                        xa.push({ s: i * pw + left, e: (i + 1) * pw + left });
+                    }
+                    var xa = [];
+                    var ya = [];
+                    for (var i = 0; i < l; i++) {
+                        xa.push({ s: i * pw + left, e: (i + 1) * pw + left });
+                    }
+                    for (var i = 0; i < yl; i++) {
+                        ya.push({ s: i * h + top, e: (i + 1) * h + top });
+                    }
+                    _dragdata = { type: 3, target: obj, sx: e.pageX, sy: e.pageY, pw: pw, xa: xa, ya: ya, h: h };
+                    break;
+                case "m2": 
+                    var row0 = $("#mvrow_0");
+                    var row1 = $("#mvrow_1");
+                    var w = row0.width();
+                    var offset = row0.offset();
+                    var diffset = row1.offset();
+                    var moffset = obj.offset();
+                    var h = diffset.top - offset.top;
+                    var left = offset.left;
+                    var top = offset.top;
+                    var l = 7;
+                    var yl = row0.parent().children().length;
+                    var py = w % l;
+                    var pw = parseInt(w / l);
+                    if (py > l / 2 + 1) {
+                        pw++;
+                    }
+                    var xa = [];
+                    var ya = [];
+                    var xi = 0;
+                    var yi = 0;
+                    for (var i = 0; i < l; i++) {
+                        xa.push({ s: i * pw + left, e: (i + 1) * pw + left });
+                        if (moffset.left >= xa[i].s && moffset.left < xa[i].e) {
+                            xi = i;
+                        }
+                    }
+                    for (var i = 0; i < yl; i++) {
+                        ya.push({ s: i * h + top, e: (i + 1) * h + top });
+                        if (moffset.top >= ya[i].s && moffset.top < ya[i].e) {
+                            yi = i;
+                        }
+                    }
+                    var fdi = { x: xi, y: yi, di: yi * 7 + xi };
+                    var data = getdata(obj);
+                    var dp = DateDiff("d", data[2], data[3]) + 1;
+                    _dragdata = { type: 7, target: obj, sx: e.pageX, sy: e.pageY, data: data, xa: xa, ya: ya, fdi: fdi, h: h, dp: dp, pw: pw };
+                    break;
+            }
+            $('body').noSelect();
+        }
+        function dragMove(e) {
+            if (_dragdata) {
+                if (e.pageX < 0 || e.pageY < 0
+          || e.pageX > document.documentElement.clientWidth
+          || e.pageY >= document.documentElement.clientHeight) {
+                    dragEnd(e);
+                    return false;
+                }
+                var d = _dragdata;
+                switch (d.type) {
+                    case 1:
+                        var sy = d.sy;
+                        var y = e.pageY;
+                        var diffy = y - sy;
+                        if (diffy > 11 || diffy < -11 || d.cpwrap) {
+                            if (diffy == 0) { diffy = 21; }
+                            var dy = diffy % 21;
+                            if (dy != 0) {
+                                diffy = dy > 0 ? diffy + 21 - dy : diffy - 21 - dy;
+                                y = d.sy + diffy;
+                                if (diffy < 0) {
+                                    sy = sy + 21;
+                                }
+                            }
+                            if (!d.tp) {
+                                d.tp = $(d.target).offset().top;
+                            }
+                            var gh = gH(sy, y, d.tp);
+                            var ny = gP(gh.sh, gh.sm);
+                            var tempdata;
+                            if (!d.cpwrap) {
+                                tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h);
+                                var cpwrap = $("<div class='ca-evpi drag-chip-wrapper' style='top:" + ny + "px'/>").html(tempdata);
+                                $(d.target).find("div.tg-col-overlaywrapper").append(cpwrap);
+                                d.cpwrap = cpwrap;
+                            }
+                            else {
+                                if (d.cgh.sh != gh.sh || d.cgh.eh != gh.eh || d.cgh.sm != gh.sm || d.cgh.em != gh.em) {
+                                    tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h);
+                                    d.cpwrap.css("top", ny + "px").html(tempdata);
+                                }
+                            }
+                            d.cgh = gh;
+                        }
+                        break;
+                    case 2:
+                        var sx = d.sx;
+                        var x = e.pageX;
+                        var diffx = x - sx;
+                        if (diffx > 5 || diffx < -5 || d.lasso) {
+                            if (!d.lasso) {
+                                d.lasso = $("<div style='z-index: 10; display: block' class='drag-lasso-container'/>");
+                                $(document.body).append(d.lasso);
+                            }
+                            if (!d.sdi) {
+                                d.sdi = getdi(d.xa, d.ya, sx, d.sy);
+                            }
+                            var ndi = getdi(d.xa, d.ya, x, e.pageY);
+                            if (!d.fdi || d.fdi.di != ndi.di) {
+                                addlasso(d.lasso, d.sdi, ndi, d.xa, d.ya, d.h);
+                            }
+                            d.fdi = ndi;
+                        }
+                        break;
+                    case 3:
+                        var sx = d.sx;
+                        var x = e.pageX;
+                        var sy = d.sy;
+                        var y = e.pageY;
+                        var diffx = x - sx;
+                        var diffy = y - sy;
+                        if (diffx > 5 || diffx < -5 || diffy < -5 || diffy > 5 || d.lasso) {
+                            if (!d.lasso) {
+                                d.lasso = $("<div style='z-index: 10; display: block' class='drag-lasso-container'/>");
+                                $(document.body).append(d.lasso);
+                            }
+                            if (!d.sdi) {
+                                d.sdi = getdi(d.xa, d.ya, sx, sy);
+                            }
+                            var ndi = getdi(d.xa, d.ya, x, y);
+                            if (!d.fdi || d.fdi.di != ndi.di) {
+                                addlasso(d.lasso, d.sdi, ndi, d.xa, d.ya, d.h);
+                            }
+                            d.fdi = ndi;
+                        }
+                        break;
+                    case 4:
+                        var data = d.data;
+                        if (data != null && data[8] == 1) {
+                            var sx = d.sx;
+                            var x = e.pageX;
+                            var sy = d.sy;
+                            var y = e.pageY;
+                            var diffx = x - sx;
+                            var diffy = y - sy;
+                            if (diffx > 5 || diffx < -5 || diffy > 5 || diffy < -5 || d.cpwrap) {
+                                var gh, ny, tempdata;
+                                if (!d.cpwrap) {
+                                    gh = { sh: data[2].getHours(),
+                                        sm: data[2].getMinutes(),
+                                        eh: data[3].getHours(),
+                                        em: data[3].getMinutes(),
+                                        h: d.h
+                                    };
+                                    d.target.hide();
+                                    ny = gP(gh.sh, gh.sm);
+                                    d.top = ny;
+                                    tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h, data[1], false, false, data[7]);
+                                    var cpwrap = $("<div class='ca-evpi drag-chip-wrapper' style='top:" + ny + "px'/>").html(tempdata);
+                                    var evid = d.target.parent().attr("id").replace("tgCol", "#tgOver");
+                                    $(evid).append(cpwrap);
+                                    d.cpwrap = cpwrap;
+                                    d.ny = ny;
+                                }
+                                else {
+                                    var pd = 0;
+                                    if (x < d.pXMin) {
+                                        pd = -1;
+                                    }
+                                    else if (x > d.pXMax) {
+                                        pd = 1;
+                                    }
+                                    if (pd != 0) {
+
+                                        d.cdi = d.cdi + pd;
+                                        var ov = $("#tgOver" + d.cdi);
+                                        if (ov.length == 1) {
+                                            d.pXMin = d.pXMin + d.pw * pd;
+                                            d.pXMax = d.pXMax + d.pw * pd;
+                                            ov.append(d.cpwrap);
+                                        }
+                                        else {
+                                            d.cdi = d.cdi - pd;
+                                        }
+                                    }
+                                    ny = d.top + diffy;
+                                    var pny = ny % 21;
+                                    if (pny != 0) {
+                                        ny = ny - pny;
+                                    }
+                                    if (d.ny != ny) {
+                                        //log.info("ny=" + ny);
+                                        gh = gW(ny, ny + d.h);
+                                        //log.info("sh=" + gh.sh + ",sm=" + gh.sm);
+                                        tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h, data[1], false, false, data[7]);
+                                        d.cpwrap.css("top", ny + "px").html(tempdata);
+                                    }
+                                    d.ny = ny;
+                                }
+                            }
+                        }
+
+                        break;
+                    case 5:
+                        var data = d.data;
+                        if (data != null && data[8] == 1) {
+                            var sy = d.sy;
+                            var y = e.pageY;
+                            var diffy = y - sy;
+                            if (diffy != 0 || d.cpwrap) {
+                                var gh, ny, tempdata;
+                                if (!d.cpwrap) {
+                                    gh = { sh: data[2].getHours(),
+                                        sm: data[2].getMinutes(),
+                                        eh: data[3].getHours(),
+                                        em: data[3].getMinutes(),
+                                        h: d.h
+                                    };
+                                    d.target.hide();
+                                    ny = gP(gh.sh, gh.sm);
+                                    d.top = ny;
+                                    tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h, data[1], "100%", true, data[7]);
+                                    var cpwrap = $("<div class='ca-evpi drag-chip-wrapper' style='top:" + ny + "px'/>").html(tempdata);
+                                    var evid = d.target.parent().attr("id").replace("tgCol", "#tgOver");
+                                    $(evid).append(cpwrap);
+                                    d.cpwrap = cpwrap;
+                                }
+                                else {
+                                    nh = d.h + diffy;
+                                    var pnh = nh % 21;
+                                    nh = pnh > 1 ? nh - pnh + 21 : nh - pnh;
+                                    if (d.nh != nh) {
+                                        var sp = gP(data[2].getHours(), data[2].getMinutes());
+                                        var ep = sp + nh;
+                                        gh = gW(d.top, d.top + nh);
+                                        tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h, data[1], "100%", true, data[7]);
+                                        d.cpwrap.html(tempdata);
+                                    }
+                                    d.nh = nh;
+                                }
+                            }
+                        }
+                        break;
+                    case 6:
+                        var sx = d.sx;
+                        var x = e.pageX;
+                        var y = e.pageY;
+                        var diffx = x - sx;
+                        if (diffx > 5 || diffx < -5 || d.lasso) {
+                            if (!d.lasso) {
+                                var w1 = d.dp > 1 ? (d.pw - 4) * 1.5 : (d.pw - 4);
+                                var cp = d.target.clone();
+                                if (d.dp > 1) {
+                                    cp.find("div.rb-i>span").prepend("(" + d.dp + " " + i18n.xgcalendar.day_plural + ")&nbsp;");
+                                }
+                                var cpwrap = $("<div class='drag-event st-contents' style='width:" + w1 + "px'/>").append(cp).appendTo(document.body);
+                                d.cpwrap = cpwrap;
+                                d.lasso = $("<div style='z-index: 10; display: block' class='drag-lasso-container'/>");
+                                $(document.body).append(d.lasso);
+                                cp = cpwrap = null;
+                            }
+                            fixcppostion(d.cpwrap, e, d.xa, d.ya);
+                            var ndi = getdi(d.xa, d.ya, x, e.pageY);
+                            if (!d.cdi || d.cdi.di != ndi.di) {
+                                addlasso(d.lasso, ndi, { x: ndi.x, y: ndi.y, di: ndi.di + d.dp - 1 }, d.xa, d.ya, d.h);
+                            }
+                            d.cdi = ndi;
+                        }
+                        break;
+                    case 7:
+                        var sx = d.sx;
+                        var sy = d.sy;
+                        var x = e.pageX;
+                        var y = e.pageY;
+                        var diffx = x - sx;
+                        var diffy = y - sy;
+                        if (diffx > 5 || diffx < -5 || diffy > 5 || diffy < -5 || d.lasso) {
+                            if (!d.lasso) {
+                                var w1 = d.dp > 1 ? (d.pw - 4) * 1.5 : (d.pw - 4);
+                                var cp = d.target.clone();
+                                if (d.dp > 1) {
+                                    cp.find("div.rb-i>span").prepend("(" + d.dp + " " + i18n.xgcalendar.day_plural + ")&nbsp;");
+                                }
+                                var cpwrap = $("<div class='drag-event st-contents' style='width:" + w1 + "px'/>").append(cp).appendTo(document.body);
+                                d.cpwrap = cpwrap;
+                                d.lasso = $("<div style='z-index: 10; display: block' class='drag-lasso-container'/>");
+                                $(document.body).append(d.lasso);
+                                cp = cpwrap = null;
+                            }
+                            fixcppostion(d.cpwrap, e, d.xa, d.ya);
+                            var ndi = getdi(d.xa, d.ya, x, e.pageY);
+                            if (!d.cdi || d.cdi.di != ndi.di) {
+                                addlasso(d.lasso, ndi, { x: ndi.x, y: ndi.y, di: ndi.di + d.dp - 1 }, d.xa, d.ya, d.h);
+                            }
+                            d.cdi = ndi;
+                        }
+                        break;
+                }
+            }
+            return false;
+        }
+        function dragEnd(e) {
+            if (_dragdata) {
+                var d = _dragdata;
+                switch (d.type) {
+                    case 1: //day view
+                        var wrapid = new Date().getTime();
+                        tp = d.target.offset().top;
+                        if (!d.cpwrap) {
+                            var gh = gH(d.sy, d.sy + 42, tp);
+                            var ny = gP(gh.sh, gh.sm);
+                            var tempdata = buildtempdayevent(gh.sh, gh.sm, gh.eh, gh.em, gh.h);
+                            d.cpwrap = $("<div class='ca-evpi drag-chip-wrapper' style='top:" + ny + "px'/>").html(tempdata);
+                            $(d.target).find("div.tg-col-overlaywrapper").append(d.cpwrap);
+                            d.cgh = gh;
+                        }
+                        var pos = d.cpwrap.offset();
+                        pos.left = pos.left + 30;
+                        d.cpwrap.attr("id", wrapid);
+                        var start = strtodate(d.target.attr("abbr") + " " + d.cgh.sh + ":" + d.cgh.sm);
+                        var end = strtodate(d.target.attr("abbr") + " " + d.cgh.eh + ":" + d.cgh.em);
+                        _dragevent = function() { $("#" + wrapid).remove(); $("#bbit-cal-buddle").css("visibility", "hidden"); };
+                        quickadd(start, end, false, pos);
+                        break;
+                    case 2: //week view
+                    case 3: //month view          
+                        var source = e.srcElement || e.target;                       
+                        var lassoid = new Date().getTime();
+                        if (!d.lasso) {
+               if ($(source).hasClass("monthdayshow"))
+              {
+                weekormonthtoday.call($(source).parent()[0],e);
+                break;
+              }
+                            d.fdi = d.sdi = getdi(d.xa, d.ya, d.sx, d.sy);
+                            d.lasso = $("<div style='z-index: 10; display: block' class='drag-lasso-container'/>");
+                            $(document.body).append(d.lasso);
+                            addlasso(d.lasso, d.sdi, d.fdi, d.xa, d.ya, d.h);
+                        }
+                        d.lasso.attr("id", lassoid);
+                        var si = Math.min(d.fdi.di, d.sdi.di);
+                        var ei = Math.max(d.fdi.di, d.sdi.di);
+                        var firstday = option.vstart;
+                        var start = DateAdd("d", si, firstday);
+                        var end = DateAdd("d", ei, firstday);
+                        _dragevent = function() { $("#" + lassoid).remove(); };
+                        quickadd(start, end, true, { left: e.pageX, top: e.pageY });
+                        break;
+                    case 4: // event moving
+                        if (d.cpwrap) {
+                            var start = DateAdd("d", d.cdi, option.vstart);
+                            var end = DateAdd("d", d.cdi, option.vstart);
+                            var gh = gW(d.ny, d.ny + d.h);
+                            start.setHours(gh.sh, gh.sm);
+                            end.setHours(gh.eh, gh.em);
+                            if (start.getTime() == d.data[2].getTime() && end.getTime() == d.data[3].getTime()) {
+                                d.cpwrap.remove();
+                                d.target.show();
+                            }
+                            else {
+                                dayupdate(d.data, start, end);
+                            }
+                        }
+                        break;
+                    case 5: //Resize
+                        if (d.cpwrap) {
+                            var start = new Date(d.data[2].toString());
+                            var end = new Date(d.data[3].toString());
+                            var gh = gW(d.top, d.top + nh);
+                            start.setHours(gh.sh, gh.sm);
+                            end.setHours(gh.eh, gh.em);
+
+                            if (start.getTime() == d.data[2].getTime() && end.getTime() == d.data[3].getTime()) {
+                                d.cpwrap.remove();
+                                d.target.show();
+                            }
+                            else {
+                                dayupdate(d.data, start, end);
+                            }
+                        }
+                        break;
+                    case 6:
+                    case 7:
+                        if (d.lasso) {
+                            d.cpwrap.remove();
+                            d.lasso.remove();
+                            var start = new Date(d.data[2].toString());
+                            var end = new Date(d.data[3].toString());
+                            var currrentdate = DateAdd("d", d.cdi.di, option.vstart);
+                            var diff = DateDiff("d", start, currrentdate);
+                            start = DateAdd("d", diff, start);
+                            end = DateAdd("d", diff, end);
+                            if (start.getTime() != d.data[2].getTime() || end.getTime() != d.data[3].getTime()) {
+                                dayupdate(d.data, start, end);
+                            }
+                        }
+                        break;
+                }
+                d = _dragdata = null;
+                $('body').noSelect(false);
+                return false;
+            }
+        }
+        function getdi(xa, ya, x, y) {
+            var ty = 0;
+            var tx = 0;
+            var lx = 0;
+            var ly = 0;
+            if (xa && xa.length != 0) {
+                lx = xa.length;
+                if (x >= xa[lx - 1].e) {
+                    tx = lx - 1;
+                }
+                else {
+                    for (var i = 0; i < lx; i++) {
+                        if (x > xa[i].s && x <= xa[i].e) {
+                            tx = i;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (ya && ya.length != 0) {
+                ly = ya.length;
+                if (y >= ya[ly - 1].e) {
+                    ty = ly - 1;
+                }
+                else {
+                    for (var j = 0; j < ly; j++) {
+                        if (y > ya[j].s && y <= ya[j].e) {
+                            ty = j;
+                            break;
+                        }
+                    }
+                }
+            }
+            return { x: tx, y: ty, di: ty * lx + tx };
+        }
+        function addlasso(lasso, sdi, edi, xa, ya, height) {
+            var diff = sdi.di > edi.di ? sdi.di - edi.di : edi.di - sdi.di;
+            diff++;
+            var sp = sdi.di > edi.di ? edi : sdi;
+            var ep = sdi.di > edi.di ? sdi : edi;
+            var l = xa.length > 0 ? xa.length : 1;
+            var h = ya.length > 0 ? ya.length : 1;
+            var play = [];
+            var width = xa[0].e - xa[0].s; 
+            var i = sp.x;
+            var j = sp.y;
+            var max = Math.min(document.documentElement.clientWidth, xa[l - 1].e) - 2;
+
+            while (j < h && diff > 0) {
+                var left = xa[i].s;
+                var d = i + diff > l ? l - i : diff;
+                var wid = width * d;
+                while (left + wid >= max) {
+                    wid--;
+                }
+                play.push(Tp(__LASSOTEMP, { left: left, top: ya[j].s, height: height, width: wid }));
+                i = 0;
+                diff = diff - d;
+                j++;
+            }
+            lasso.html(play.join(""));
+        }
+        function fixcppostion(cpwrap, e, xa, ya) {
+            var x = e.pageX - 6;
+            var y = e.pageY - 4;
+            var w = cpwrap.width();
+            var h = 21;
+            var lmin = xa[0].s + 6;
+            var tmin = ya[0].s + 4;
+            var lmax = xa[xa.length - 1].e - w - 2;
+            var tmax = ya[ya.length - 1].e - h - 2;
+            if (x > lmax) {
+                x = lmax;
+            }
+            if (x <= lmin) {
+                x = lmin + 1;
+            }
+            if (y <= tmin) {
+                y = tmin + 1;
+            }
+            if (y > tmax) {
+                y = tmax;
+            }
+            cpwrap.css({ left: x, top: y });
+        }
+        $(document)
+    .mousemove(dragMove)
+    .mouseup(dragEnd);
+        //.mouseout(dragEnd);
+
+        var c = {
+            sv: function(view) { //switch view                
+                if (view == option.view) {
+                    return;
+                }
+                clearcontainer();
+                option.view = view;
+                render();
+                dochange();
+            },
+            rf: function() {
+                populate();
+            },
+            gt: function(d) {
+                if (!d) {
+                    d = new Date();
+                }
+                option.showday = d;
+                render();
+                dochange();
+            },
+
+            pv: function() {
+                switch (option.view) {
+                    case "day":
+                        option.showday = DateAdd("d", -1, option.showday);
+                        break;
+                    case "week":
+                        option.showday = DateAdd("w", -1, option.showday);
+                        break;
+                    case "month":
+                        option.showday = DateAdd("m", -1, option.showday);
+                        break;
+                }
+                render();
+                dochange();
+            },
+            nt: function() {        
+                switch (option.view) {
+                    case "day":
+                        option.showday = DateAdd("d", 1, option.showday);
+                        break;
+                    case "week":
+                        option.showday = DateAdd("w", 1, option.showday);
+                        break;
+                    case "month":
+            var od = option.showday.getDate();
+            option.showday = DateAdd("m", 1, option.showday);
+            var nd = option.showday.getDate();
+            if(od !=nd) //we go to the next month
+            {
+              option.showday= DateAdd("d", 0-nd, option.showday); //last day of last month
+            }
+                        break;
+                }
+                render();
+                dochange();
+            },
+            go: function() {
+                return option;
+            },
+            so: function(p) {
+                option = $.extend(option, p);
+            }
+        };
+        this[0].bcal = c;
+        return this;
+    };
+    
+    /**
+     * @description {Method} swtichView To switch to another view.
+     * @param {String} view View name, one of 'day', 'week', 'month'. 
+     */
+    $.fn.swtichView = function(view) {
+        return this.each(function() {
+            if (this.bcal) {
+                this.bcal.sv(view);
+            }
+        })
+    };
+    
+    /**
+     * @description {Method} reload To reload event of current time range.
+     */
+    $.fn.reload = function() {
+        return this.each(function() {
+            if (this.bcal) {
+                this.bcal.rf();
+            }
+        })
+    };
+    
+    /**
+     * @description {Method} gotoDate To go to a range containing date.
+     * If view is week, it will go to a week containing date. 
+     * If view is month, it will got to a month containing date.          
+     * @param {Date} date. Date to go. 
+     */
+    $.fn.gotoDate = function(d) {
+        return this.each(function() {
+            if (this.bcal) {
+                this.bcal.gt(d);
+            }
+        })
+    };
+    
+    /**
+     * @description {Method} previousRange To go to previous date range.
+     * If view is week, it will go to previous week. 
+     * If view is month, it will got to previous month.          
+     */
+    $.fn.previousRange = function() {
+        return this.each(function() {
+            if (this.bcal) {
+                this.bcal.pv();
+            }
+        })
+    };
+    
+    /**
+     * @description {Method} nextRange To go to next date range.
+     * If view is week, it will go to next week. 
+     * If view is month, it will got to next month. 
+     */
+    $.fn.nextRange = function() {
+        return this.each(function() {
+            if (this.bcal) {
+                this.bcal.nt();
+            }
+        })
+    };
+    
+    
+    $.fn.BcalGetOp = function() {
+        if (this[0].bcal) {
+            return this[0].bcal.go();
+        }
+        return null;
+    };
+    
+    
+    $.fn.BcalSetOp = function(p) {
+        if (this[0].bcal) {
+            return this[0].bcal.so(p);
+        }
+    };
+    
+})(jQuery);

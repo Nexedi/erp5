@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="DTMLDocument" module="OFS.DTMLDocument"/>
-        <tuple/>
-      </tuple>
+      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -28,12 +25,6 @@
             <value>
               <dictionary/>
             </value>
-        </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string>$(document).ready(function() {\n
-  checkState($("#transition-message").html());\n
-});</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -23,10 +23,6 @@
             </value>
         </item>
         <item>
-            <key> <string>raw</string> </key>
-            <value> <string>Change type of xml / svg stuff</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

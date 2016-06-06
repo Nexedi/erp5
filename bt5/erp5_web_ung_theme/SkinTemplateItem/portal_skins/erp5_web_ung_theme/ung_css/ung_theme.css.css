@@ -1,1209 +1,1165 @@
-<?xml version="1.0"?>
-<ZopeData>
-  <record id="1" aka="AAAAAAAAAAE=">
-    <pickle>
-      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>http_cache</string> </value>
-        </item>
-        <item>
-            <key> <string>__name__</string> </key>
-            <value> <string>ung_theme.css</string> </value>
-        </item>
-        <item>
-            <key> <string>_vars</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>globals</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+/* No margins, take all screen */
 
-/* No margins, take all screen */\n
-\n
-body {\n
-  background: #fff !important;\n
-  margin: 0;\n
-  padding: 0;\n
-  font-family: arial,sans-serif;\n
-  font-weight:normal;\n
-}\n
-\n
-/* Hidden input */\n
-fieldset#hidden_fieldset,\n
- div#upload_document,\n
- div#edit_document {\n
-  display: none;\n
-}\n
-\n
-/* Header classes */\n
-\n
-div.navigation {\n
-  font-family: arial,sans-serif;\n
-  padding: 5px;\n
-  height: 15px;\n
-  border-bottom: 1px solid #C9D7F1;\n
-  font-size: 13px;\n
-}\n
-\n
-div.navigation fieldset.widget {\n
-  border: 0px;\n
-  padding-top: 0.6%;\n
-  margin: -0.60%;\n
-  width: 96%;\n
-}\n
-\n
-div.navigation-right {\n
-  float: right;\n
-  margin-top: -16px;\n
-}\n
-\n
-div.header-user {\n
-  text-align: right;\n
-  font-size: 13px;\n
-  margin-right:1%;\n
-  margin-top:-1.7%;\n
-}\n
-\n
-div.main-action-area {\n
-  margin-top: 0.7%;\n
-}\n
-\n
-/* Main action classes */\n
-\n
-div.main-action-area {\n
-  padding: 8px;\n
-  height: 30px;\n
-}\n
-\n
-div.logo-area {\n
-  float: left;\n
-  padding-right: 10px;\n
-}\n
-\n
-div.search-action-area {\n
-  float: left;\n
-}\n
-\n
-div.share-action-area {\n
-  text-align: right;\n
-}\n
-\n
-/* Main classes */\n
-\n
-div.main-right {\n
-  width:82%;\n
-  float:right;\n
-  border-left: 4px solid #BBCCFF;\n
-}\n
-\n
-div.main-right div.main-content {\n
-  width: 100%;\n
-  height: 100%;\n
-  background-color: #fff;\n
-  vertical-align: middle;\n
-}\n
-\n
-div.main-right div.main-status {\n
-  padding: 5px;\n
-  height: 22px;\n
-  vertical-align: middle;\n
-  font-size: 18px;\n
-  font-style: bold;\n
-}\n
-\n
-div.main-right #page_wrapper {\n
-  margin-top: 0px; !important\n
-}\n
-\n
-div.gadget-column {\n
-  margin-left:-4px;\n
-}\n
-\n
-div.gadget-column div.file-selection {\n
-  background-color:#fff;\n
-  margin:15px -14px -4px -4px;\n
-}\n
-\n
-div.gadget-column div.file-selection div.file-quick-browser,\n
-  div.gadget-column div.file-selection div.file-quick-search {\n
-  padding-top: 5px;\n
-  padding-bottom: 5px;\n
-  border-bottom: 1px solid #DDD;\n
-}\n
-\n
-div.quick-search-item, td.listbox-table-domain-tree-cell a {\n
-  padding-left: 15px;\n
-  font-size: 13px;\n
-  line-height: 19px;\n
-  cursor: pointer;\n
-  text-decoration: none;\n
-  color: #000000;\n
-}\n
-\n
-div.quick-search-item:hover,\n
- table.listbox-table-domain-tree tbody tr:hover {\n
-  background-color: #DAE6F6;\n
-}\n
-\n
-/* ERP5 Forms*/\n
-\n
-div.field label,\n
- span.headline,\n
- a.listbox_title,\n
- div.actions, div.actions,\n
- legend.group_title, fieldset.left {\n
-  display:none;\n
-}\n
-\n
-fieldset.bottom {\n
-  position: relative;\n
-  border:0px;\n
-  padding:0px;\n
-  list-style: none;\n
-}\n
-\n
-div.listbox-content table.listbox tbody tr td {\n
-  vertical-align: middle;\n
-  padding:2.2px;\n
-}\n
-\n
-div.listbox-content tr, div#change_state_dialog tr {\n
-  font-size:13px;\n
-  empty-cells:show;\n
-  white-space:nowrap;\n
-  padding-top: 1px;\n
-  border-bottom: 1px solid #D1D1D1;\n
-}\n
-\n
-tr.DataA:hover, tr.DataB:hover {\n
-  background-color: #DAE6F6 !important;\n
-}\n
-\n
-div.listbox-content a img, div.main-content a img {\n
-  border:0px;\n
-}\n
-\n
-div.listbox-content td.listbox-table-data-cell a img {\n
-  margin-right: -8px;\n
-}\n
-div.main-right div.main-status a {\n
-  float:right;\n
-  font-size:14px;\n
-  padding-right:1%;\n
-  padding-top:0.3%;\n
-}\n
-\n
-.sort-button {\n
-  border:0px;\n
-  background: url("ung_images/href_background.gif");\n
-}\n
-\n
-.listbox {\n
-  border-collapse: collapse;\n
-}\n
-\n
-.listbox th {\n
-  border-right: 1px solid #bbccff;\n
-}\n
-\n
-thead {\n
-  font-family: serif;\n
-  font-style: normal;\n
-  font-variant: normal;\n
-  font-weight: normal;\n
-  font-size: medium;\n
-  line-height: 100%;\n
-  word-spacing: normal;\n
-  letter-spacing: normal;\n
-  background: url("ung_images/href_background.gif");\n
-}\n
-\n
-.listbox-table-select-cell {\n
-  width:0.5%;\n
-}\n
-\n
-.listbox-table-header-cell {\n
-  text-align:left;\n
-}\n
-\n
-div.listbox-content a, a:visited, a:focus {\n
-  background-color: inherit;\n
-  color:#002E3F;\n
-  text-decoration:none;\n
-}\n
-\n
-div.listbox-content a:hover {\n
-  background-color:inherit;\n
-  color:#3D6474;\n
-  text-decoration:underline;\n
-}\n
-\n
-img.sort-button-desc {\n
-  background: url("ung_images/icon_desc.gif") no-repeat;\n
-  width:10px;\n
-  margin:1px -10px;\n
-}\n
-\n
-img.sort-button-asc {\n
-  background: url("ung_images/icon_asc.gif") no-repeat;\n
-  width:10px;\n
-  margin:1px -10px;\n
-}\n
-\n
-.jSheetControls_formula {\n
-  width: 90% !important;\n
-}\n
-\n
-iframe#svgframe, fieldset.widget {\n
-  border: 0px;\n
-}\n
-\n
-iframe#svgframe {\n
-  width: 100%;\n
-}\n
-\n
-div#wrapper_toolbar {\n
-  background: #E3E9FF no-repeat;\n
-  height:35px;\n
-}\n
-\n
-button.clone {\n
-  background-image: url(\'<dtml-var expr="portal_url()">/images/fileclone.png\');\n
-  border: 0 none;\n
-  height:22px;\n
-  width:23px;\n
-}\n
-\n
-div#wrapper_toolbar fieldset.widget div.field div.input {\n
-  margin-top:-2px;\n
-}\n
-\n
-div#wrapper_header div.navigation-right {\n
-  float: right;\n
-  margin-top: -5.2em;\n
-}\n
-\n
-div#wrapper_header div.field fieldset {\n
-  border:0px;\n
-}\n
-\n
-div#wrapper_header div.field a[name="document_title"],\n
- div#wrapper_header div.field a[name="document_state"] {\n
-  margin-left:22px;\n
-  font-size:15px;\n
-}\n
-\n
-div#wrapper_header div.field a[name="document_state"] {\n
-  color:#525f94;\n
-  font-size:13px !important;\n
-}\n
-\n
-div.header-bottom {\n
-  margin-left:-7px;\n
-  margin-top:6px;\n
-  width:100%;\n
-}\n
-\n
-div.header-right {\n
-  float: right;\n
-  margin-top: -38px;\n
-  height: 18px;\n
-  width: 41.3%;;\n
-}\n
-\n
-div.main-left, div.main-right {\n
-  margin-top: -0.6em;\n
-}\n
-\n
-div.main {\n
- margin-top: 0.5em;\n
- height: auto;\n
-}\n
-button.delete {\n
-  margin-top: 6px;\n
-  margin-left: 6px;\n
-}\n
-\n
-div.favorite-box {\n
-  margin-top:-6px;\n
-  margin-left:-16px;\n
-}\n
-\n
-table.listbox {\n
-  margin-left: -12px;\n
-  background: #eff3fa;\n
-}\n
-\n
-// XXX: this disable image on main listbox (now by gadget)\n
-//div.main-right fieldset.widget div.field:last-child img {\n
-//  display:none;\n
-//}\n
-\n
-div.header-right div.input a {\n
-  color:#A7A2A2;\n
-  font-size:13px;\n
-}\n
-\n
-a.ung_docs img {\n
-  border:0 none;\n
-  left:-7px;\n
-  position:relative;\n
-  top:9px;\n
-}\n
-\n
-div.main-left {\n
-  margin-left:-4px;\n
-  width: 18%;\n
-  float:left;\n
-  background-color: #DAE6F6;\n
-  height:4em;\n
-  border: 0;\n
-}\n
-\n
-div.favorite {\n
-  background-color: #BBCCFF;\n
-  height:27px;\n
-  margin-top:-5px;\n
-  padding-top:8px;\n
-}\n
-\n
-div.favorite a {\n
-  font-size: 14px;\n
-  float: right;\n
-  margin-right: 5px;\n
-}\n
-div.toolbar, div.favorite {\n
-  margin-left:-12px;\n
-  border-collapse: collapse;\n
-}\n
-\n
-div.toolbar {\n
-  background-color: #E3E9FF;\n
-  height:27px;\n
-  padding-bottom:5px;\n
-}\n
-\n
-div.content {\n
-  background:none repeat scroll 0 0 #DAE6F6;\n
-  border-bottom:4px solid #BBCCFF;\n
-  border-top:4px solid #BBCCFF;\n
-}\n
-\n
-/* XXX: This was creating a fixed background colored block of 27em\n
-div.main-right div.content {\n
-  height:27em;\n
-}\n
-*/\n
-\n
-div.listbox-body div.main-right tbody {\n
-  height:25.35em;\n
-  overflow-x:hidden;\n
-  overflow-y:auto;\n
-}\n
-\n
-div.header-left {\n
-  margin-left:1px;\n
-  margin-top:-4px;\n
-}\n
-\n
-.sort-button span {\n
- color:#112abb;\n
-}\n
-\n
-div.navigation-left a {\n
- margin-left:7px;\n
-}\n
-\n
-div.navigation-right a {\n
- margin-left:2px;\n
-}\n
-\n
-div.main-right fieldset.widget{\n
-  padding:0;\n
-  margin-left:12px;\n
-  margin-top:5px;\n
-}\n
-\n
-div.bottom_actions button {\n
-  display:none;\n
-}\n
-\n
-div.toolbar button, div.gadget-action input#upload {\n
-  color: #333333;\n
-  border: 1px solid #BBBBBB;\n
-  background-image: url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\');\n
-  -moz-border-radius: 4px;\n
-}\n
-\n
-.menu_create_object {\n
-  color:#8e8e8e;\n
-  margin-top:-5px;\n
-}\n
-\n
-div#select_language {\n
-  color: #20C;\n
-}\n
-.menu_create_object, div#select_language {\n
-  font-family: arial,sans-serif;\n
-  font-size:14px;\n
-  list-style:none outside none;\n
-  white-space:nowrap;\n
-}\n
-.menu_create_object img {\n
-  border:0px;\n
-}\n
-\n
-.menu_create_object li a#current {\n
-  background-image: url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\');\n
-  width: 78px;\n
-  height: 19px;\n
-  color: #333333;\n
-  border:1px solid #BBBBBB;\n
-  padding-left:2px;\n
-  padding-right:14px;\n
-  text-align:justify;\n
-  -moz-border-radius: 4px;\n
-}\n
-\n
-.menu_create_object ul, div#select_language ul {\n
-  list-style:none;\n
-  margin:0;\n
-  padding:0;\n
-}\n
-\n
-span#available_language {\n
-  text-decoration: underline;\n
-}\n
-div#select_language li span {\n
-  text-color: #20C;\n
-  cursor: pointer;\n
-}\n
-.menu_create_object li {\n
-  float:left;\n
-  margin-left: 0.5em;\n
-  position:relative;\n
-  top: 0.5em;\n
-  text-decoration:none;\n
-}\n
-\n
-.menu_create_object li a, div#select_language ul li span {\n
-  display:block;\n
-  text-decoration:none;\n
-}\n
-\n
-.menu_create_object li a:hover, div#select_language li a:hover {\n
-  color:#000000;\n
-  text-decoration:none;\n
-}\n
-\n
-.menu_create_object li:hover ul, div#select_language li:hover ul {\n
-  display:block;\n
-}\n
-\n
-div#select_language li {\n
-  width: 40px;\n
-  cursor: pointer;\n
-}\n
-\n
-div#select_language li ul {\n
-  width:70px;\n
-}\n
-\n
-div#select_language li li {\n
-  background:none repeat scroll 0 0 #FFFFFF;\n
-  border-left: 1px solid #C9D7F1;\n
-  border-right: 1px solid #C9D7F1;\n
-  border-top: 2px solid transparent;\n
-  width: 100%;\n
-}\n
-\n
-.menu_create_object li li {\n
-  display:block; !important;\n
-  margin-left:0; !important;\n
-  float: none; !important;\n
-  top: 0px;\n
-  margin-top: 5px;\n
-}\n
-\n
-.menu_create_object p {\n
-  clear:left;\n
-}\n
-\n
-.menu_create_object li ul, div#select_language li ul {\n
-  border:1px solid #D1D1D1;\n
-  background-color: #FFF;\n
-}\n
-\n
-.menu_create_object li ul, div#select_language li ul {\n
-  display:none;\n
-  height:auto;\n
-  filter:alpha(opacity=95);\n
-  position:absolute;\n
-  z-index:200;\n
-}\n
-\n
-.menu_create_object li ul a, div#select_language li ul a {\n
-  display:block;\n
-  font-size:14px;\n
-  font-style:normal;\n
-  margin-left:4px;\n
-  margin-top:-5px;\n
-  padding:0 21px 0 1px;\n
-  text-align:left;\n
-  color:#002E3F;\n
-  text-decoration:none;\n
-  line-height:28px;\n
-}\n
-\n
-div.gadget-column input#upload {\n
-  left:1em;\n
-  position:relative;\n
-  top:0.5em;\n
-}\n
-\n
-.menu_create_object li li:hover, div#select_language li li:hover {\n
-  background-color: #DAE6F6;\n
-}\n
-\n
-.menu_create_object li a#current img {\n
-  margin-left:3px;\n
-  position:relative;\n
-  top:2px;\n
-}\n
-\n
-.action_menu {\n
-  float:right;\n
-  margin-right:5em;\n
-  width:25%;\n
-}\n
-\n
-.action_menu li {\n
-  list-style:none outside none;\n
-}\n
-\n
-.action_menu li ul {\n
-  background: none repeat scroll 0 0 #FFFFFF;\n
-  border: 1px solid #D1D1D1;\n
-  display: none;\n
-  height: 76px;\n
-  position: relative;\n
-  margin-top:3px;\n
-  width: 143px;\n
-  z-index: 200;\n
-}\n
-\n
-.action_menu li a:hover {\n
-  color:#000000;\n
-  text-decoration:none;\n
-}\n
-\n
-.action_menu li ul li {\n
-  margin: -26px 0px -24px -40px;\n
-  height: 23px;\n
-  text-align:center;\n
-}\n
-\n
-.action_menu li:hover ul {\n
-  display:block;\n
-}\n
-\n
-.action_menu a#change_state {\n
-  color: #333333;\n
-  background-image: url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\');\n
-  border: 1px solid #D1D1D1;\n
-  padding:2px;\n
-}\n
-\n
-.action_menu li ul li h6 {\n
-  color: #333333;\n
-  font-size: 12px;\n
-  padding-top:4px;\n
-  font-weight:lighter;\n
-}\n
-\n
-.action_menu li ul li:hover {\n
-  background: #f3f3f3;\n
-}\n
-\n
-button.save {\n
-  background-image:url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\');\n
-  border:1px solid #D1D1D1;\n
-  height:21px;\n
-  color:#333333;\n
-}\n
-\n
-button.edit {\n
-  border:1px solid #D1D1D1;\n
-  float:right;\n
-  margin-top:-1.6em;\n
-  background-image:url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\');\n
-  color:#333333;\n
-}\n
-\n
-div#wrapper_header div.field a[name="document_title"]:hover {\n
-  background:none repeat scroll 0 0 #FFFFD6;\n
-  border:1px solid #AAAAAA;\n
-}\n
-\n
-div#wrapper_header div.field a[name="document_title"] {\n
-  color:#060605;\n
-  padding:3px;\n
-  text-decoration:none;\n
-}\n
-\n
-div#edit_document fieldset label {\n
-  font-size: 12px;\n
-}\n
-\n
-div.ui-dialog-titlebar {\n
-  height:15px;\n
-}\n
-\n
-div#edit_document fieldset {\n
-  border:0 none;\n
-  height:72px;\n
-  margin-left:-1em;\n
-  margin-top:-0.5em;\n
-  width:379px;\n
-}\n
-\n
-div#edit_document {\n
-  height:80px;\n
-  width:368px;\n
-  overflow:hidden;\n
-}\n
-\n
-div#edit_document fieldset input {\n
-  margin-top:6px;\n
-  font-size:13px;\n
-  width: 95%;\n
-}\n
-\n
-div.ui-dialog {\n
- background: #C1D9FF;\n
-}\n
-\n
-div#edit_document fieldset label {\n
-  font-size: 12px;\n
-}\n
-\n
-span#ui-dialog-title-edit_document,\n
- span#ui-dialog-title-upload_document,\n
- span#ui-dialog-title-gadget-listbox{\n
-  font-size:17px;\n
-  margin-left:-8px;\n
-  margin-top:-3px;\n
-  font:bold 12pt Arial,Sans-serif;\n
-  color: #222222 !important;\n
-}\n
-\n
-div.ui-dialog-titlebar {\n
-  height:15px;\n
-  border: 0px;\n
-  background: #E0EDFE;\n
-  -moz-border-radius:1px 1px 1px 1px;\n
-}\n
-\n
-button#save_document, button#cancel_document {\n
-  font-size:11px;\n
-  margin-top:0.7em;\n
-}\n
-\n
-.ui-dialog .ui-dialog-buttonpane {\n
-  background:none repeat scroll 0 0 #C1D9FF;\n
-  border-top:0 none;\n
-//  width: 5.6em;\n
-  padding:0 !important;\n
-}\n
-\n
-.ui-button-text-only .ui-button-text {\n
-  padding:0.2em 0.3em !important;\n
-}\n
-\n
-.ui-button .ui-button-text {\n
-  line-height:1em !important;\n
-}\n
-\n
-.ui-dialog .ui-dialog-buttonpane button {\n
-  margin:0 0.4em 0.5em 0 !important;\n
-}\n
-\n
-span.ui-button-text {\n
- font-size: 12px;\n
-}\n
-\n
-.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {\n
- float:none !important;\n
-// width:104px;\n
- height:21px;\n
- margin-top:-10px;\n
-}\n
-\n
-div.listbox-navigation {\n
-  float:right;\n
-  font-size:13px;\n
-  margin-top:6px;\n
-  min-width:10%;\n
-  margin-right:5px;\n
-}\n
-\n
-div.listbox-navigation input {\n
-  height: 18px;\n
-  width: 20px;\n
-}\n
-\n
-div.listbox-header-box {\n
-  height:0px;\n
-}\n
-\n
-div.listbox-number-of-records{\n
-  float: right;\n
-  font-size: 12px;\n
-  margin-right: 12em;\n
-  margin-top: -25px;\n
-  min-width: 30%;\n
-}\n
-\n
-div.listbox-navigation button.listbox_last_page,\n
-  div.listbox-navigation button.listbox_next_page,\n
-  div.listbox-navigation button.listbox_previous_page,\n
-  div.listbox-navigation button.listbox_first_page {\n
-  height:20px;\n
-  border: 0px;\n
-}\n
-\n
-div.listbox-navigation button.listbox_previous_page,\n
-  div.listbox-navigation button.listbox_next_page {\n
-  margin: 0px;\n
-  width:12px;\n
-}\n
-\n
-div.listbox-navigation button.listbox_last_page,\n
-  div.listbox-navigation button.listbox_first_page {\n
-  margin: 0px;\n
-  width:18px;\n
-}\n
-\n
-div.listbox-navigation button.listbox_next_page {\n
-  background-image: url(\'<dtml-var expr="portal_url()">/ung_images/next_page.png\');\n
-}\n
-\n
-div.listbox-navigation button.listbox_last_page {\n
-  background-image: url(\'<dtml-var expr="portal_url()">/ung_images/last_page.png\');\n
-}\n
-\n
-div.listbox-navigation button.listbox_first_page {\n
-  background-image: url(\'<dtml-var expr="portal_url()">/ung_images/first_page.png\');\n
-}\n
-\n
-div.listbox-navigation button.listbox_previous_page {\n
-  background-image: url(\'<dtml-var expr="portal_url()">/ung_images/previous_page.png\');\n
-}\n
-\n
-div.listbox-navigation button.listbox_previous_page,\n
- div.listbox-navigation button.listbox_first_page,\n
- div.listbox-navigation button.listbox_last_page,\n
- div.listbox-navigation button.listbox_next_page {\n
- background-repeat:no-repeat;\n
-}\n
-\n
-p#more_properties, p#hide_properties {\n
-  font-size: 12px;\n
-}\n
-\n
-p#more_properties:hover, p#hide_properties:hover {\n
-  color:#525f94;\n
-}\n
-a#left_message, a#right_message {\n
-  display: none;\n
-  color: #FD0A0A;\n
-  float: left;\n
-  margin-right: 10px;\n
-}\n
-\n
-div.listbox-domain-tree-container select {\n
-  display:none;\n
-}\n
-\n
-div.listbox-tree {\n
-  font-size: 13px;\n
-  height: 233px;\n
-}\n
-\n
-div.listbox-tree-mode-selection {\n
-  display:none;\n
-}\n
-\n
-table.listbox-table-domain-tree {\n
-  width: 100%;\n
-}\n
-\n
-a.domain_selected {\n
-  float:left !important;\n
-  font-size: 15px !important;\n
-}\n
-\n
-div#upload_document {\n
-  height: 58px !important;\n
-  width: 390px !important;\n
-  font-size: 12px;\n
-}\n
-fieldset#file_box {\n
-  border: 0px !important;\n
-  margin-left: -17px;\n
-  margin-top: -4px;\n
-}\n
-input#submit_document {\n
-  background: url("jquery/ui/css/erp5-theme/images/ui-bg_glass_75_dae6f6_1x400.png") repeat-x scroll 50% 50% #DAE6F6;\n
-  border: 1px solid #3D6474;\n
-  color: #555555;\n
-  font-weight: normal;\n
-  -moz-border-radius: 4px 4px 4px 4px;\n
-  margin-top: 3px;\n
-}\n
-\n
-a#loading_message {\n
-  display: none;\n
-}\n
-\n
-iframe#field_my_text_content___Frame {\n
-  height: 489px !important;\n
-}\n
-\n
-div#login-box {\n
-  font-family: Arial,Helvetica,sans-serif;\n
-  font-size: 12px;\n
-  margin: 0;\n
-  padding: 23px 23px 0 0;\n
-  float:right;\n
-  width: 23%;\n
-}\n
-\n
-div#login-box input {\n
-  vertical-align: middle;\n
-}\n
-\n
-div#login-box input.submit {\n
-  margin-top: 6px;\n
-}\n
-\n
-div#preference_dialog {\n
-  display:none;\n
-  font-size: 14px;\n
-  white-space: nowrap;\n
-}\n
-\n
-fieldset.center.editable, fieldset.right.editable {\n
-  border: 0;\n
-  padding: 0.15em 0.35em 0.400em;\n
-  font-size: 14px;\n
-  margin-left: -11px;\n
-}\n
-\n
-fieldset.center.editable div.field label,\n
- fieldset.right.editable div.field label {\n
-  display: block;\n
-}\n
-\n
-span#ui-dialog-title-preference_dialog {\n
-  margin: 0;\n
-  margin-top: -2px;\n
-  margin-left: -10px;\n
-  font-size: 15px;\n
-  color: #222222 !important;\n
-}\n
-\n
-div#preference_dialog div.field {\n
-  padding-bottom: 1px;\n
-  padding-top: 1px;\n
-}\n
-\n
-div.header-right fieldset.widget {\n
-  height: 29px;\n
-}\n
-\n
-div.header-right fieldset.widget span#sharing_url {\n
-  padding-top: 2px;\n
-  font-size: 11px;\n
-}\n
-\n
-div.gadget-listbox {\n
-  display: none;\n
-}\n
-\n
-table#gadget-table tbody tr img {\n
-  float: right;\n
-}\n
-\n
-table#gadget-table tbody tr {\n
-  font-size: 15px;\n
-}\n
-\n
-table#gadget-table {\n
-  width: 100%;\n
-}\n
-\n
-div.gadget-action div.front_pad {\n
-  font-size: 10px;\n
-}\n
-h3.handle {\n
-  color: #222222 !important;\n
-  background: white !important;\n
-  font-size: 13px !important;\n
-  border-bottom: 0px !important;\n
-}\n
-\n
-div.block div.content {\n
-  border-top: 0px !important;\n
-  border-bottom: 1px solid #DDDDDD !important;\n
-}\n
-\n
-div.portal-column {\n
-  width: 100% !important;\n
-  min-height: 0 !important;\n
-}\n
-\n
-div#page_wrapper div.minimize_wrapper div.edit-form fieldset.left,\n
-  div#page_wrapper div.minimize_wrapper div.edit-form fieldset.left label {\n
-  display: inline !important;\n
-}\n
-\n
-div.edit-form button {\n
-  margin-top: -0.3em !important;\n
-}\n
-\n
-div.edit-form {\n
-  padding-left: 0 !important;\n
-}\n
-\n
-h3.handle span.handle {\n
-  background: white !important;\n
-}\n
-\n
-a.block-minimize {\n
-  background-image: url("../ung_images/icon_minimize.png") !important;\n
-}\n
-\n
-a.block-remove {\n
-  background-image: url("../ung_images/icon_remove.png") !important;\n
-}\n
-\n
-a.block-edit-form {\n
-  background-image: url("../ung_images/icon_edit.png") !important;\n
-}\n
-\n
-table#navigation_table td#tab-switcher-container,\n
- table#navigation_table td#tab-list-container {\n
-  display: none !important;\n
-}\n
-\n
-div#add_new_gadget_link {\n
-  border-bottom: 0px;\n
-  padding-top: 5px;\n
-  width: 50% !important;\n
-}\n
-\n
-div#page_wrapper {\n
-  min-height: 0 !important;\n
-}\n
-\n
-div.front_pad div#page_wrapper {\n
-  margin: -0.5em 0 0 !important;\n
-}\n
-\n
-#add-gadgets{\n
- font-size: 11px;\n
-}\n
-\n
-form#ung_preference,\n
- form#system_preference,\n
- form#erp5_preference,\n
- form#change_state_form {\n
-  margin:0px;\n
-  padding: 0px;\n
-}\n
-\n
-div.edit-form {\n
-  background-color: #FFF !important;\n
-  border: 0 none !important;\n
-}\n
-\n
-table.gadget tbody tr:first-child {\n
-  display: none !important;\n
-}\n
-\n
-div.edit-form {\n
-  height: 176px !important;\n
-}\n
-\n
-div#edit_document.ui-dialog-content {\n
-  background-color: #FFFFFF;\n
-}\n
-\n
-.ui-widget textarea {\n
-  font-size: 13px !important;\n
-}\n
-\n
-div#tabs, div#pad-navigation-wrapper div#tabs_switcher.tab {\n
-  display: none !important;\n
-}\n
-\n
-div#pad-navigation-wrapper {\n
-  border: 0px !important;\n
-}\n
-\n
-img[alt="calendar_logo_box"] {\n
-  margin-top: 10px;\n
-}\n
-\n
-div#preference_dialog select {\n
-  border: 0px;\n
-}\n
-\n
-a.your_listbox_title {\n
-  display: none;\n
-}\n
-\n
-table#field_table,\n
- table#new-account-table,\n
- table#create-new-user {\n
-  border: 1px solid #C3D9FF;\n
-  width: 78%;\n
-}\n
-\n
-table#field_table tbody,\n
- table#new-account-table tbody,\n
- table#create-new-user tbody {\n
-  background: #E8EEFA;\n
-}\n
-\n
-table#field_table tbody label {\n
-  font-size: 10pt;\n
-  float: right;\n
-}\n
-\n
-table#new-account-table table td,\n
- table#create-new-user td {\n
-  font-size: 10pt;\n
-}\n
-\n
-td#new-account-form {\n
-  text-decoration: underline;\n
-  color: #00C;\n
-  font-weight: bold;\n
-  cursor: pointer;\n
-}\n
-\n
-table#create-new-user {\n
-  display:none;\n
-  margin-top: -22px;\n
-}\n
-\n
-td#form-message {\n
-  color: #EC1D1D;\n
-  display: none;\n
-}\n
-\n
-div#advertisement h2 {\n
-  font-size: 15pt;\n
-}\n
-\n
-div#advertisement b {\n
-  font-size: 12px !important;\n
-}\n
-\n
-div.footer {\n
-  text-align: center;\n
-  margin-top: 40px;\n
-  font-size: 10pt;\n
-}\n
-\n
-div.header-left h2 {\n
-  font-size: 14pt;\n
-}\n
-\n
-form#create-user table tbody tr:last-child td {\n
-  color: #20C;\n
-  text-decoration: underline;\n
-  font-size: 8pt;\n
-  cursor: pointer;\n
-}\n
-\n
-select[name="field_your_language"] {\n
-  background-color: transparent;\n
-  border: 0 none;\n
-}\n
-\n
-div.navigation-right fieldset.widget div {\n
-  float: left;\n
-}\n
-\n
-span.date-format {\n
-  font-style: italic;\n
-}\n
-\n
-span#no-input-file {\n
-  display: none;\n
-  color: #f61717;\n
-}\n
-\n
-.tree-open, .tree-closed {\n
-  border: none;\n
-  background: #FFF;\n
-  cursor: pointer;\n
-}\n
-\n
-div#change_state_dialog {\n
-  display:none;\n
-  width: inherit !important;\n
-  font-size: 14px;\n
-  padding-left: .3em;\n
-  overflow: auto;\n
-}\n
-\n
-div#change_state_dialog table {\n
-  margin-left: 0;\n
-}\n
-\n
-div#change_state_dialog div.field {\n
-  padding-bottom: 1px;\n
-  padding-top: 1px;\n
-}\n
-\n
-/* Transition Message */\n
-div.portal_status_message {\n
-  float: left;\n
-  padding-left: 100px;\n
-}\n
-\n
-// fix \'_\' after ung-logo image\n
-a.ung_docs {\n
-  text-decoration: none !important;\n
-}\n
-a.ung_docs:link {\n
-  text-decoration: none !important;\n
-}\n
+body {
+  background: #fff !important;
+  margin: 0;
+  padding: 0;
+  font-family: arial,sans-serif;
+  font-weight:normal;
+}
 
+/* Hidden input */
+fieldset#hidden_fieldset,
+ div#upload_document,
+ div#edit_document {
+  display: none;
+}
 
-]]></string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-</ZopeData>
+/* Header classes */
+
+div.navigation {
+  font-family: arial,sans-serif;
+  padding: 5px;
+  height: 15px;
+  border-bottom: 1px solid #C9D7F1;
+  font-size: 13px;
+}
+
+div.navigation fieldset.widget {
+  border: 0px;
+  padding-top: 0.6%;
+  margin: -0.60%;
+  width: 96%;
+}
+
+div.navigation-right {
+  float: right;
+  margin-top: -16px;
+}
+
+div.header-user {
+  text-align: right;
+  font-size: 13px;
+  margin-right:1%;
+  margin-top:-1.7%;
+}
+
+div.main-action-area {
+  margin-top: 0.7%;
+}
+
+/* Main action classes */
+
+div.main-action-area {
+  padding: 8px;
+  height: 30px;
+}
+
+div.logo-area {
+  float: left;
+  padding-right: 10px;
+}
+
+div.search-action-area {
+  float: left;
+}
+
+div.share-action-area {
+  text-align: right;
+}
+
+/* Main classes */
+
+div.main-right {
+  width:82%;
+  float:right;
+  border-left: 4px solid #BBCCFF;
+}
+
+div.main-right div.main-content {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  vertical-align: middle;
+}
+
+div.main-right div.main-status {
+  padding: 5px;
+  height: 22px;
+  vertical-align: middle;
+  font-size: 18px;
+  font-style: bold;
+}
+
+div.main-right #page_wrapper {
+  margin-top: 0px; !important
+}
+
+div.gadget-column {
+  margin-left:-4px;
+}
+
+div.gadget-column div.file-selection {
+  background-color:#fff;
+  margin:15px -14px -4px -4px;
+}
+
+div.gadget-column div.file-selection div.file-quick-browser,
+  div.gadget-column div.file-selection div.file-quick-search {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #DDD;
+}
+
+div.quick-search-item, td.listbox-table-domain-tree-cell a {
+  padding-left: 15px;
+  font-size: 13px;
+  line-height: 19px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #000000;
+}
+
+div.quick-search-item:hover,
+ table.listbox-table-domain-tree tbody tr:hover {
+  background-color: #DAE6F6;
+}
+
+/* ERP5 Forms*/
+
+div.field label,
+ span.headline,
+ a.listbox_title,
+ div.actions, div.actions,
+ legend.group_title, fieldset.left {
+  display:none;
+}
+
+fieldset.bottom {
+  position: relative;
+  border:0px;
+  padding:0px;
+  list-style: none;
+}
+
+div.listbox-content table.listbox tbody tr td {
+  vertical-align: middle;
+  padding:2.2px;
+}
+
+div.listbox-content tr, div#change_state_dialog tr {
+  font-size:13px;
+  empty-cells:show;
+  white-space:nowrap;
+  padding-top: 1px;
+  border-bottom: 1px solid #D1D1D1;
+}
+
+tr.DataA:hover, tr.DataB:hover {
+  background-color: #DAE6F6 !important;
+}
+
+div.listbox-content a img, div.main-content a img {
+  border:0px;
+}
+
+div.listbox-content td.listbox-table-data-cell a img {
+  margin-right: -8px;
+}
+div.main-right div.main-status a {
+  float:right;
+  font-size:14px;
+  padding-right:1%;
+  padding-top:0.3%;
+}
+
+.sort-button {
+  border:0px;
+  background: url("ung_images/href_background.gif");
+}
+
+.listbox {
+  border-collapse: collapse;
+}
+
+.listbox th {
+  border-right: 1px solid #bbccff;
+}
+
+thead {
+  font-family: serif;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  font-size: medium;
+  line-height: 100%;
+  word-spacing: normal;
+  letter-spacing: normal;
+  background: url("ung_images/href_background.gif");
+}
+
+.listbox-table-select-cell {
+  width:0.5%;
+}
+
+.listbox-table-header-cell {
+  text-align:left;
+}
+
+div.listbox-content a, a:visited, a:focus {
+  background-color: inherit;
+  color:#002E3F;
+  text-decoration:none;
+}
+
+div.listbox-content a:hover {
+  background-color:inherit;
+  color:#3D6474;
+  text-decoration:underline;
+}
+
+img.sort-button-desc {
+  background: url("ung_images/icon_desc.gif") no-repeat;
+  width:10px;
+  margin:1px -10px;
+}
+
+img.sort-button-asc {
+  background: url("ung_images/icon_asc.gif") no-repeat;
+  width:10px;
+  margin:1px -10px;
+}
+
+.jSheetControls_formula {
+  width: 90% !important;
+}
+
+iframe#svgframe, fieldset.widget {
+  border: 0px;
+}
+
+iframe#svgframe {
+  width: 100%;
+}
+
+div#wrapper_toolbar {
+  background: #E3E9FF no-repeat;
+  height:35px;
+}
+
+button.clone {
+  background-image: url('<dtml-var expr="portal_url()">/images/fileclone.png');
+  border: 0 none;
+  height:22px;
+  width:23px;
+}
+
+div#wrapper_toolbar fieldset.widget div.field div.input {
+  margin-top:-2px;
+}
+
+div#wrapper_header div.navigation-right {
+  float: right;
+  margin-top: -5.2em;
+}
+
+div#wrapper_header div.field fieldset {
+  border:0px;
+}
+
+div#wrapper_header div.field a[name="document_title"],
+ div#wrapper_header div.field a[name="document_state"] {
+  margin-left:22px;
+  font-size:15px;
+}
+
+div#wrapper_header div.field a[name="document_state"] {
+  color:#525f94;
+  font-size:13px !important;
+}
+
+div.header-bottom {
+  margin-left:-7px;
+  margin-top:6px;
+  width:100%;
+}
+
+div.header-right {
+  float: right;
+  margin-top: -38px;
+  height: 18px;
+  width: 41.3%;;
+}
+
+div.main-left, div.main-right {
+  margin-top: -0.6em;
+}
+
+div.main {
+ margin-top: 0.5em;
+ height: auto;
+}
+button.delete {
+  margin-top: 6px;
+  margin-left: 6px;
+}
+
+div.favorite-box {
+  margin-top:-6px;
+  margin-left:-16px;
+}
+
+table.listbox {
+  margin-left: -12px;
+  background: #eff3fa;
+}
+
+// XXX: this disable image on main listbox (now by gadget)
+//div.main-right fieldset.widget div.field:last-child img {
+//  display:none;
+//}
+
+div.header-right div.input a {
+  color:#A7A2A2;
+  font-size:13px;
+}
+
+a.ung_docs img {
+  border:0 none;
+  left:-7px;
+  position:relative;
+  top:9px;
+}
+
+div.main-left {
+  margin-left:-4px;
+  width: 18%;
+  float:left;
+  background-color: #DAE6F6;
+  height:4em;
+  border: 0;
+}
+
+div.favorite {
+  background-color: #BBCCFF;
+  height:27px;
+  margin-top:-5px;
+  padding-top:8px;
+}
+
+div.favorite a {
+  font-size: 14px;
+  float: right;
+  margin-right: 5px;
+}
+div.toolbar, div.favorite {
+  margin-left:-12px;
+  border-collapse: collapse;
+}
+
+div.toolbar {
+  background-color: #E3E9FF;
+  height:27px;
+  padding-bottom:5px;
+}
+
+div.content {
+  background:none repeat scroll 0 0 #DAE6F6;
+  border-bottom:4px solid #BBCCFF;
+  border-top:4px solid #BBCCFF;
+}
+
+/* XXX: This was creating a fixed background colored block of 27em
+div.main-right div.content {
+  height:27em;
+}
+*/
+
+div.listbox-body div.main-right tbody {
+  height:25.35em;
+  overflow-x:hidden;
+  overflow-y:auto;
+}
+
+div.header-left {
+  margin-left:1px;
+  margin-top:-4px;
+}
+
+.sort-button span {
+ color:#112abb;
+}
+
+div.navigation-left a {
+ margin-left:7px;
+}
+
+div.navigation-right a {
+ margin-left:2px;
+}
+
+div.main-right fieldset.widget{
+  padding:0;
+  margin-left:12px;
+  margin-top:5px;
+}
+
+div.bottom_actions button {
+  display:none;
+}
+
+div.toolbar button, div.gadget-action input#upload {
+  color: #333333;
+  border: 1px solid #BBBBBB;
+  background-image: url('<dtml-var expr="portal_url()">/ung_images/button_background.png');
+  -moz-border-radius: 4px;
+}
+
+.menu_create_object {
+  color:#8e8e8e;
+  margin-top:-5px;
+}
+
+div#select_language {
+  color: #20C;
+}
+.menu_create_object, div#select_language {
+  font-family: arial,sans-serif;
+  font-size:14px;
+  list-style:none outside none;
+  white-space:nowrap;
+}
+.menu_create_object img {
+  border:0px;
+}
+
+.menu_create_object li a#current {
+  background-image: url('<dtml-var expr="portal_url()">/ung_images/button_background.png');
+  width: 78px;
+  height: 19px;
+  color: #333333;
+  border:1px solid #BBBBBB;
+  padding-left:2px;
+  padding-right:14px;
+  text-align:justify;
+  -moz-border-radius: 4px;
+}
+
+.menu_create_object ul, div#select_language ul {
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+
+span#available_language {
+  text-decoration: underline;
+}
+div#select_language li span {
+  text-color: #20C;
+  cursor: pointer;
+}
+.menu_create_object li {
+  float:left;
+  margin-left: 0.5em;
+  position:relative;
+  top: 0.5em;
+  text-decoration:none;
+}
+
+.menu_create_object li a, div#select_language ul li span {
+  display:block;
+  text-decoration:none;
+}
+
+.menu_create_object li a:hover, div#select_language li a:hover {
+  color:#000000;
+  text-decoration:none;
+}
+
+.menu_create_object li:hover ul, div#select_language li:hover ul {
+  display:block;
+}
+
+div#select_language li {
+  width: 40px;
+  cursor: pointer;
+}
+
+div#select_language li ul {
+  width:70px;
+}
+
+div#select_language li li {
+  background:none repeat scroll 0 0 #FFFFFF;
+  border-left: 1px solid #C9D7F1;
+  border-right: 1px solid #C9D7F1;
+  border-top: 2px solid transparent;
+  width: 100%;
+}
+
+.menu_create_object li li {
+  display:block; !important;
+  margin-left:0; !important;
+  float: none; !important;
+  top: 0px;
+  margin-top: 5px;
+}
+
+.menu_create_object p {
+  clear:left;
+}
+
+.menu_create_object li ul, div#select_language li ul {
+  border:1px solid #D1D1D1;
+  background-color: #FFF;
+}
+
+.menu_create_object li ul, div#select_language li ul {
+  display:none;
+  height:auto;
+  filter:alpha(opacity=95);
+  position:absolute;
+  z-index:200;
+}
+
+.menu_create_object li ul a, div#select_language li ul a {
+  display:block;
+  font-size:14px;
+  font-style:normal;
+  margin-left:4px;
+  margin-top:-5px;
+  padding:0 21px 0 1px;
+  text-align:left;
+  color:#002E3F;
+  text-decoration:none;
+  line-height:28px;
+}
+
+div.gadget-column input#upload {
+  left:1em;
+  position:relative;
+  top:0.5em;
+}
+
+.menu_create_object li li:hover, div#select_language li li:hover {
+  background-color: #DAE6F6;
+}
+
+.menu_create_object li a#current img {
+  margin-left:3px;
+  position:relative;
+  top:2px;
+}
+
+.action_menu {
+  float:right;
+  margin-right:5em;
+  width:25%;
+}
+
+.action_menu li {
+  list-style:none outside none;
+}
+
+.action_menu li ul {
+  background: none repeat scroll 0 0 #FFFFFF;
+  border: 1px solid #D1D1D1;
+  display: none;
+  height: 76px;
+  position: relative;
+  margin-top:3px;
+  width: 143px;
+  z-index: 200;
+}
+
+.action_menu li a:hover {
+  color:#000000;
+  text-decoration:none;
+}
+
+.action_menu li ul li {
+  margin: -26px 0px -24px -40px;
+  height: 23px;
+  text-align:center;
+}
+
+.action_menu li:hover ul {
+  display:block;
+}
+
+.action_menu a#change_state {
+  color: #333333;
+  background-image: url('<dtml-var expr="portal_url()">/ung_images/button_background.png');
+  border: 1px solid #D1D1D1;
+  padding:2px;
+}
+
+.action_menu li ul li h6 {
+  color: #333333;
+  font-size: 12px;
+  padding-top:4px;
+  font-weight:lighter;
+}
+
+.action_menu li ul li:hover {
+  background: #f3f3f3;
+}
+
+button.save {
+  background-image:url('<dtml-var expr="portal_url()">/ung_images/button_background.png');
+  border:1px solid #D1D1D1;
+  height:21px;
+  color:#333333;
+}
+
+button.edit {
+  border:1px solid #D1D1D1;
+  float:right;
+  margin-top:-1.6em;
+  background-image:url('<dtml-var expr="portal_url()">/ung_images/button_background.png');
+  color:#333333;
+}
+
+div#wrapper_header div.field a[name="document_title"]:hover {
+  background:none repeat scroll 0 0 #FFFFD6;
+  border:1px solid #AAAAAA;
+}
+
+div#wrapper_header div.field a[name="document_title"] {
+  color:#060605;
+  padding:3px;
+  text-decoration:none;
+}
+
+div#edit_document fieldset label {
+  font-size: 12px;
+}
+
+div.ui-dialog-titlebar {
+  height:15px;
+}
+
+div#edit_document fieldset {
+  border:0 none;
+  height:72px;
+  margin-left:-1em;
+  margin-top:-0.5em;
+  width:379px;
+}
+
+div#edit_document {
+  height:80px;
+  width:368px;
+  overflow:hidden;
+}
+
+div#edit_document fieldset input {
+  margin-top:6px;
+  font-size:13px;
+  width: 95%;
+}
+
+div.ui-dialog {
+ background: #C1D9FF;
+}
+
+div#edit_document fieldset label {
+  font-size: 12px;
+}
+
+span#ui-dialog-title-edit_document,
+ span#ui-dialog-title-upload_document,
+ span#ui-dialog-title-gadget-listbox{
+  font-size:17px;
+  margin-left:-8px;
+  margin-top:-3px;
+  font:bold 12pt Arial,Sans-serif;
+  color: #222222 !important;
+}
+
+div.ui-dialog-titlebar {
+  height:15px;
+  border: 0px;
+  background: #E0EDFE;
+  -moz-border-radius:1px 1px 1px 1px;
+}
+
+button#save_document, button#cancel_document {
+  font-size:11px;
+  margin-top:0.7em;
+}
+
+.ui-dialog .ui-dialog-buttonpane {
+  background:none repeat scroll 0 0 #C1D9FF;
+  border-top:0 none;
+//  width: 5.6em;
+  padding:0 !important;
+}
+
+.ui-button-text-only .ui-button-text {
+  padding:0.2em 0.3em !important;
+}
+
+.ui-button .ui-button-text {
+  line-height:1em !important;
+}
+
+.ui-dialog .ui-dialog-buttonpane button {
+  margin:0 0.4em 0.5em 0 !important;
+}
+
+span.ui-button-text {
+ font-size: 12px;
+}
+
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+ float:none !important;
+// width:104px;
+ height:21px;
+ margin-top:-10px;
+}
+
+div.listbox-navigation {
+  float:right;
+  font-size:13px;
+  margin-top:6px;
+  min-width:10%;
+  margin-right:5px;
+}
+
+div.listbox-navigation input {
+  height: 18px;
+  width: 20px;
+}
+
+div.listbox-header-box {
+  height:0px;
+}
+
+div.listbox-number-of-records{
+  float: right;
+  font-size: 12px;
+  margin-right: 12em;
+  margin-top: -25px;
+  min-width: 30%;
+}
+
+div.listbox-navigation button.listbox_last_page,
+  div.listbox-navigation button.listbox_next_page,
+  div.listbox-navigation button.listbox_previous_page,
+  div.listbox-navigation button.listbox_first_page {
+  height:20px;
+  border: 0px;
+}
+
+div.listbox-navigation button.listbox_previous_page,
+  div.listbox-navigation button.listbox_next_page {
+  margin: 0px;
+  width:12px;
+}
+
+div.listbox-navigation button.listbox_last_page,
+  div.listbox-navigation button.listbox_first_page {
+  margin: 0px;
+  width:18px;
+}
+
+div.listbox-navigation button.listbox_next_page {
+  background-image: url('<dtml-var expr="portal_url()">/ung_images/next_page.png');
+}
+
+div.listbox-navigation button.listbox_last_page {
+  background-image: url('<dtml-var expr="portal_url()">/ung_images/last_page.png');
+}
+
+div.listbox-navigation button.listbox_first_page {
+  background-image: url('<dtml-var expr="portal_url()">/ung_images/first_page.png');
+}
+
+div.listbox-navigation button.listbox_previous_page {
+  background-image: url('<dtml-var expr="portal_url()">/ung_images/previous_page.png');
+}
+
+div.listbox-navigation button.listbox_previous_page,
+ div.listbox-navigation button.listbox_first_page,
+ div.listbox-navigation button.listbox_last_page,
+ div.listbox-navigation button.listbox_next_page {
+ background-repeat:no-repeat;
+}
+
+p#more_properties, p#hide_properties {
+  font-size: 12px;
+}
+
+p#more_properties:hover, p#hide_properties:hover {
+  color:#525f94;
+}
+a#left_message, a#right_message {
+  display: none;
+  color: #FD0A0A;
+  float: left;
+  margin-right: 10px;
+}
+
+div.listbox-domain-tree-container select {
+  display:none;
+}
+
+div.listbox-tree {
+  font-size: 13px;
+  height: 233px;
+}
+
+div.listbox-tree-mode-selection {
+  display:none;
+}
+
+table.listbox-table-domain-tree {
+  width: 100%;
+}
+
+a.domain_selected {
+  float:left !important;
+  font-size: 15px !important;
+}
+
+div#upload_document {
+  height: 58px !important;
+  width: 390px !important;
+  font-size: 12px;
+}
+fieldset#file_box {
+  border: 0px !important;
+  margin-left: -17px;
+  margin-top: -4px;
+}
+input#submit_document {
+  background: url("jquery/ui/css/erp5-theme/images/ui-bg_glass_75_dae6f6_1x400.png") repeat-x scroll 50% 50% #DAE6F6;
+  border: 1px solid #3D6474;
+  color: #555555;
+  font-weight: normal;
+  -moz-border-radius: 4px 4px 4px 4px;
+  margin-top: 3px;
+}
+
+a#loading_message {
+  display: none;
+}
+
+iframe#field_my_text_content___Frame {
+  height: 489px !important;
+}
+
+div#login-box {
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: 12px;
+  margin: 0;
+  padding: 23px 23px 0 0;
+  float:right;
+  width: 23%;
+}
+
+div#login-box input {
+  vertical-align: middle;
+}
+
+div#login-box input.submit {
+  margin-top: 6px;
+}
+
+div#preference_dialog {
+  display:none;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+fieldset.center.editable, fieldset.right.editable {
+  border: 0;
+  padding: 0.15em 0.35em 0.400em;
+  font-size: 14px;
+  margin-left: -11px;
+}
+
+fieldset.center.editable div.field label,
+ fieldset.right.editable div.field label {
+  display: block;
+}
+
+span#ui-dialog-title-preference_dialog {
+  margin: 0;
+  margin-top: -2px;
+  margin-left: -10px;
+  font-size: 15px;
+  color: #222222 !important;
+}
+
+div#preference_dialog div.field {
+  padding-bottom: 1px;
+  padding-top: 1px;
+}
+
+div.header-right fieldset.widget {
+  height: 29px;
+}
+
+div.header-right fieldset.widget span#sharing_url {
+  padding-top: 2px;
+  font-size: 11px;
+}
+
+div.gadget-listbox {
+  display: none;
+}
+
+table#gadget-table tbody tr img {
+  float: right;
+}
+
+table#gadget-table tbody tr {
+  font-size: 15px;
+}
+
+table#gadget-table {
+  width: 100%;
+}
+
+div.gadget-action div.front_pad {
+  font-size: 10px;
+}
+h3.handle {
+  color: #222222 !important;
+  background: white !important;
+  font-size: 13px !important;
+  border-bottom: 0px !important;
+}
+
+div.block div.content {
+  border-top: 0px !important;
+  border-bottom: 1px solid #DDDDDD !important;
+}
+
+div.portal-column {
+  width: 100% !important;
+  min-height: 0 !important;
+}
+
+div#page_wrapper div.minimize_wrapper div.edit-form fieldset.left,
+  div#page_wrapper div.minimize_wrapper div.edit-form fieldset.left label {
+  display: inline !important;
+}
+
+div.edit-form button {
+  margin-top: -0.3em !important;
+}
+
+div.edit-form {
+  padding-left: 0 !important;
+}
+
+h3.handle span.handle {
+  background: white !important;
+}
+
+a.block-minimize {
+  background-image: url("../ung_images/icon_minimize.png") !important;
+}
+
+a.block-remove {
+  background-image: url("../ung_images/icon_remove.png") !important;
+}
+
+a.block-edit-form {
+  background-image: url("../ung_images/icon_edit.png") !important;
+}
+
+table#navigation_table td#tab-switcher-container,
+ table#navigation_table td#tab-list-container {
+  display: none !important;
+}
+
+div#add_new_gadget_link {
+  border-bottom: 0px;
+  padding-top: 5px;
+  width: 50% !important;
+}
+
+div#page_wrapper {
+  min-height: 0 !important;
+}
+
+div.front_pad div#page_wrapper {
+  margin: -0.5em 0 0 !important;
+}
+
+#add-gadgets{
+ font-size: 11px;
+}
+
+form#ung_preference,
+ form#system_preference,
+ form#erp5_preference,
+ form#change_state_form {
+  margin:0px;
+  padding: 0px;
+}
+
+div.edit-form {
+  background-color: #FFF !important;
+  border: 0 none !important;
+}
+
+table.gadget tbody tr:first-child {
+  display: none !important;
+}
+
+div.edit-form {
+  height: 176px !important;
+}
+
+div#edit_document.ui-dialog-content {
+  background-color: #FFFFFF;
+}
+
+.ui-widget textarea {
+  font-size: 13px !important;
+}
+
+div#tabs, div#pad-navigation-wrapper div#tabs_switcher.tab {
+  display: none !important;
+}
+
+div#pad-navigation-wrapper {
+  border: 0px !important;
+}
+
+img[alt="calendar_logo_box"] {
+  margin-top: 10px;
+}
+
+div#preference_dialog select {
+  border: 0px;
+}
+
+a.your_listbox_title {
+  display: none;
+}
+
+table#field_table,
+ table#new-account-table,
+ table#create-new-user {
+  border: 1px solid #C3D9FF;
+  width: 78%;
+}
+
+table#field_table tbody,
+ table#new-account-table tbody,
+ table#create-new-user tbody {
+  background: #E8EEFA;
+}
+
+table#field_table tbody label {
+  font-size: 10pt;
+  float: right;
+}
+
+table#new-account-table table td,
+ table#create-new-user td {
+  font-size: 10pt;
+}
+
+td#new-account-form {
+  text-decoration: underline;
+  color: #00C;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+table#create-new-user {
+  display:none;
+  margin-top: -22px;
+}
+
+td#form-message {
+  color: #EC1D1D;
+  display: none;
+}
+
+div#advertisement h2 {
+  font-size: 15pt;
+}
+
+div#advertisement b {
+  font-size: 12px !important;
+}
+
+div.footer {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 10pt;
+}
+
+div.header-left h2 {
+  font-size: 14pt;
+}
+
+form#create-user table tbody tr:last-child td {
+  color: #20C;
+  text-decoration: underline;
+  font-size: 8pt;
+  cursor: pointer;
+}
+
+select[name="field_your_language"] {
+  background-color: transparent;
+  border: 0 none;
+}
+
+div.navigation-right fieldset.widget div {
+  float: left;
+}
+
+span.date-format {
+  font-style: italic;
+}
+
+span#no-input-file {
+  display: none;
+  color: #f61717;
+}
+
+.tree-open, .tree-closed {
+  border: none;
+  background: #FFF;
+  cursor: pointer;
+}
+
+div#change_state_dialog {
+  display:none;
+  width: inherit !important;
+  font-size: 14px;
+  padding-left: .3em;
+  overflow: auto;
+}
+
+div#change_state_dialog table {
+  margin-left: 0;
+}
+
+div#change_state_dialog div.field {
+  padding-bottom: 1px;
+  padding-top: 1px;
+}
+
+/* Transition Message */
+div.portal_status_message {
+  float: left;
+  padding-left: 100px;
+}
+
+// fix '_' after ung-logo image
+a.ung_docs {
+  text-decoration: none !important;
+}
+a.ung_docs:link {
+  text-decoration: none !important;
+}

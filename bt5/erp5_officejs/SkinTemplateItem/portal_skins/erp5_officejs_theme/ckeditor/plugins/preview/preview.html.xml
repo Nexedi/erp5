@@ -23,27 +23,6 @@
             </value>
         </item>
         <item>
-            <key> <string>raw</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<script>\r\n
-\r\n
-// Prevent from DOM clobbering.\r\n
-if ( typeof window.opener._cke_htmlToLoad == \'string\' ) {\r\n
-\tvar doc = document;\r\n
-\tdoc.open();\r\n
-\tdoc.write( window.opener._cke_htmlToLoad );\r\n
-\tdoc.close();\r\n
-\r\n
-\tdelete window.opener._cke_htmlToLoad;\r\n
-}\r\n
-\r\n
-</script>\r\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

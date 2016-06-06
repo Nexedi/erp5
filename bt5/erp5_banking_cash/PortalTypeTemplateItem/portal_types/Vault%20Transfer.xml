@@ -20,7 +20,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>    Transfert intercaisse caveau : ce module permet de transf\xe9rer des fonds provenant des caisses du caveau vers la caisse courante ou la salle de tri. </string> </value>
+            <value> <string encoding="base64">ICAgIFRyYW5zZmVydCBpbnRlcmNhaXNzZSBjYXZlYXUgOiBjZSBtb2R1bGUgcGVybWV0IGRlIHRy
+YW5zZulyZXIgZGVzIGZvbmRzIHByb3ZlbmFudCBkZXMgY2Fpc3NlcyBkdSBjYXZlYXUgdmVycyBs
+YSBjYWlzc2UgY291cmFudGUgb3UgbGEgc2FsbGUgZGUgdHJpLiA=</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

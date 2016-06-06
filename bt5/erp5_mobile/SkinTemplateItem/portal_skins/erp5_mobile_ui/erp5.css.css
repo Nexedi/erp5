@@ -1,1215 +1,842 @@
-<?xml version="1.0"?>
-<ZopeData>
-  <record id="1" aka="AAAAAAAAAAE=">
-    <pickle>
-      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>http_cache</string> </value>
-        </item>
-        <item>
-            <key> <string>__name__</string> </key>
-            <value> <string>erp5.css</string> </value>
-        </item>
-        <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>main_border_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>context_bar_background_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>navigation_bar_background_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>background_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>font_family</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>font_size</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>font_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>dialog_background_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>dialog_border_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>link_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>link_hover_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>button_description_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>document_border_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>document_background_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>listbox_label_background_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>listbox_odd_background_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>listbox_even_background_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>tooltip_border_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>tooltip_background_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>tooltip_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>listbox_hover_background_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>listbox_stat_background_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>alternate_font_color</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_vars</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>alternate_font_color</string> </key>
-            <value> <string>#596dab</string> </value>
-        </item>
-        <item>
-            <key> <string>background_color</string> </key>
-            <value> <string>#DAE6F6</string> </value>
-        </item>
-        <item>
-            <key> <string>button_description_color</string> </key>
-            <value> <string>#000</string> </value>
-        </item>
-        <item>
-            <key> <string>context_bar_background_color</string> </key>
-            <value> <string>#BDD0F0</string> </value>
-        </item>
-        <item>
-            <key> <string>dialog_background_color</string> </key>
-            <value> <string>#BDD0F0</string> </value>
-        </item>
-        <item>
-            <key> <string>dialog_border_color</string> </key>
-            <value> <string>#3D5474</string> </value>
-        </item>
-        <item>
-            <key> <string>document_background_color</string> </key>
-            <value> <string>#E3EAFA</string> </value>
-        </item>
-        <item>
-            <key> <string>document_border_color</string> </key>
-            <value> <string>#3D6474</string> </value>
-        </item>
-        <item>
-            <key> <string>font_color</string> </key>
-            <value> <string>#001730</string> </value>
-        </item>
-        <item>
-            <key> <string>font_family</string> </key>
-            <value> <string>Arial, Helvetica, sans-serif</string> </value>
-        </item>
-        <item>
-            <key> <string>font_size</string> </key>
-            <value> <string>13px</string> </value>
-        </item>
-        <item>
-            <key> <string>globals</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>link_color</string> </key>
-            <value> <string>#002e3f</string> </value>
-        </item>
-        <item>
-            <key> <string>link_hover_color</string> </key>
-            <value> <string>#3D6474</string> </value>
-        </item>
-        <item>
-            <key> <string>listbox_even_background_color</string> </key>
-            <value> <string>#DAE6F6</string> </value>
-        </item>
-        <item>
-            <key> <string>listbox_hover_background_color</string> </key>
-            <value> <string>#BDD0F0</string> </value>
-        </item>
-        <item>
-            <key> <string>listbox_label_background_color</string> </key>
-            <value> <string>#C1DAEB</string> </value>
-        </item>
-        <item>
-            <key> <string>listbox_odd_background_color</string> </key>
-            <value> <string>#FFF</string> </value>
-        </item>
-        <item>
-            <key> <string>listbox_stat_background_color</string> </key>
-            <value> <string>#C1DAEB</string> </value>
-        </item>
-        <item>
-            <key> <string>main_border_color</string> </key>
-            <value> <string>#97B0D1</string> </value>
-        </item>
-        <item>
-            <key> <string>navigation_bar_background_color</string> </key>
-            <value> <string>#97B0D1</string> </value>
-        </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+<dtml-let hwidth="310" mwidth="43" scwidth="58" optwidth="260" affwidth="65">
 
-<dtml-let hwidth="310" mwidth="43" scwidth="58" optwidth="260" affwidth="65">\n
-\n
-ul li:before{\n
-  content: "\\00BB \\0020";\n
-}\n
-\n
-.list_dialog {\n
-  background-color: <dtml-var document_background_color>;\n
-  margin: 0px;\n
-  width: <dtml-var "hwidth">px;\n
-}\n
-\n
-.options_list {\n
-  border-right: solid 1px;\n
-  border-bottom: solid 1px;\n
-  border-left: solid 1px;\n
-  border-color: #3D7474;\n
-  background-color: #C1DAD2;\n
-  padding: 0px;\n
-  width: <dtml-var "optwidth">px;\n
-  margin-left: <dtml-var "(hwidth / 2)- (optwidth / 2)">px;\n
-  display: none;\n
-}\n
-\n
-.aff_options {\n
-  border-right: solid 1px;\n
-  border-top: solid 1px;\n
-  border-left: solid 1px;\n
-  border-color: #3D7474;\n
-  background-color: #D3E6DE;\n
-  padding: 0px;\n
-  width: <dtml-var "affwidth">px;\n
-  margin-left: <dtml-var "(hwidth / 2)- (affwidth / 2)">px;\n
-  text-align: center;\n
-  padding-bottom: 2px;\n
-  margin-top: 3px;\n
-  margin-bottom: 2px;\n
-}\n
-\n
-.info {\n
-  color: #3D7474;\n
-  font-size: 13px;\n
-}\n
-\n
-.text_div {\n
-  padding: 18px;\n
-}\n
-\n
-.fieldset_login {\n
-  border-color: #3D7474;\n
-  margin: 15px;\n
-}\n
-\n
-.login_div {\n
-  border-top: solid 1px;\n
-  border-bottom: solid 1px;\n
-  border-bottom-color: #3D7474;\n
-  border-top-color: #3D7474;\n
-  background-color: #C1DAD2;\n
-  margin-bottom: 3px;\n
-}\n
-\n
-.login {\n
-  width: <dtml-var "hwidth">px;\n
-  background-color: #DAE6E6;\n
-  border: solid 1px;\n
-  border-color: #FFFFFF;\n
-  position: absolute;\n
-  left: 0px;\n
-  top: 0px;\n
-}\n
-\n
-.window {\n
-margin: 15px;\n
-}\n
-\n
-.AnchorColumn {\n
-  !important\n
-  border-style:none;\n
-  border-color:<dtml-var document_border_color>;\n
-  background-color:<dtml-var document_background_color>;\n
-  border-width:0;\n
-}\n
-\n
-.button {\n
-  border-Top-Width: thin;\n
-  border-Top-Color: #3D6464;\n
-  border-Right-Width: thin;\n
-  border-Right-Color: #3D6464;\n
-  border-Bottom-Width: thin;\n
-  border-Bottom-Color: #3D7474;\n
-  border-Left-Width: thin;\n
-  border-Left-Color: #3D7474;\n
-  background-Color: #C1DAD2;\n
-  margin: 2px;\n
-  color: #3D6464;\n
-  text-decoration: none;\n
-}\n
-\n
-.button_save {\n
-  border-Top-Width: thin;\n
-  border-Top-Color: #3D6464;\n
-  border-Right-Width: thin;\n
-  border-Right-Color: #3D6464;\n
-  border-Bottom-Width: thin;\n
-  border-Bottom-Color: #3D7474;\n
-  border-Left-Width: thin;\n
-  border-Left-Color: #3D7474;\n
-  background-Color: #C1DAD2;\n
-  margin: 2px;\n
-  color: #3D6464;\n
-  text-decoration: none;\n
-  width: 100px;\n
-}\n
-\n
-\n
-.shortcuts {\n
-  border-top: solid 1px;\n
-  border-bottom: solid 1px;\n
-  border-color: #3D7474;\n
-  background-color: #C1DAD2;\n
-  margin-bottom: 5px;\n
-  /*padding-top: 10px;*/\n
-}\n
-\n
-.div_navigation {\n
-  border-top: solid 1px;\n
-  /*border-bottom: solid 1px;*/\n
-  border-color: #3D7474;\n
-  background-color: #C1DAD2;\n
-  margin-bottom: 5px;\n
-  position: absolute;\n
-  right: 10px;\n
-}\n
-\n
-.List_top {\n
-  padding-left: 5px;\n
-  padding-right: 5px;\n
-  border-left: solid 0px;\n
-  border-right: solid 0px;\n
-  border-color: #3D7474;\n
-}\n
-\n
-.top_list {\n
-  border-left: solid 1px;\n
-  border-right: solid 1px;\n
-  border-top: solid 1px;\n
-  border-color: #3D7474;\n
-}\n
-\n
-.main_div_list {\n
-  padding: 5px;\n
-  margin-top: 0px;\n
-  border-left: solid 1px;\n
-  border-right: solid 1px;\n
-  border-bottom: solid 1px;\n
-  border-color: #3D7474;\n
-}\n
-\n
-.top1 {\n
-  margin-top: 5px;\n
-  margin-left: 10px;\n
-  border-top: solid 1px;\n
-  border-color: #3D7474;\n
-  width: 45px;\n
-}\n
-\n
-.bottom1 {\n
-  margin-right: 10px;\n
-  border-bottom: solid 1px;\n
-  border-color: #3D7474;\n
-  width: 45px;\n
-  position: absolute;\n
-  right: 0px;\n
-  margin-bottom: 7px;\n
-}\n
-\n
-.breadcrumb {\n
-  border-top: solid 1px;\n
-  border-bottom: solid 1px;\n
-  border-bottom-color: #3D7474;\n
-  border-top-color: #3D7474;\n
-  background-color: #C1DAD2;\n
-}\n
-\n
-.erp {\n
-  font-size: 18px;\n
-  color: #3D7474;\n
-  text-decoration: none;\n
-}\n
-\n
-.link_white {\n
-  font-size: 14px;\n
-  color: #FFFFFF;\n
-}\n
-\n
-.modu {\n
-  font-size: 14px;\n
-  color: #3D7474;\n
-  font-style: bold;\n
-  text-decoration: none;\n
-  padding-right: 5px;\n
-}\n
-\n
-.mobil {\n
-  font-size: 10px;\n
-  font-style: italic;\n
-  color: #3D7474;\n
-  text-decoration: none;\n
-}\n
-\n
-.delimit_haut {\n
-  height: 25px;\n
-  border-right: solid 5px;\n
-  border-color: #3D7474;\n
-  background-color: #D3E6DE;\n
-}\n
-\n
-.delimit_bas {\n
-  height: 25px;\n
-  border-left: solid 5px;\n
-  border-color: #3D7474;\n
-  background-color: #D3E6DE;\n
-}\n
-\n
-.mod_badg {\n
-  background-color: #D3E6DE;\n
-  border-left: solid 1px;\n
-  border-right: solid 1px;\n
-  border-color: #3D7474;\n
-  padding-top: 0.5em;\n
-  padding-left: 10px;\n
-}\n
-\n
-.list {\n
-  list-style: none;\n
-}\n
-\n
-.option {\n
-  border-bottom: solid 1px;\n
-  border-bottom-color: #3D7474;\n
-  border-left: solid 1px;\n
-  border-left-color: #3D7474;\n
-  border-right: solid 1px;\n
-  border-right-color: #3D7474;\n
-  background-color: #D3E6DE;\n
-  padding-top: 0.5em;\n
-  padding-bottom: 0.5em;\n
-  padding-left: 10px;\n
-}\n
-\n
-.modules {\n
-  border-top: solid 1px;\n
-  border-top-color: #3D7474;\n
-  border-right: solid 1px;\n
-  border-right-color: #3D7474;\n
-  border-left: solid 1px;\n
-  border-left-color: #3D7474;\n
-  padding-left: 10px;\n
-  background-color: #D3E6DE;\n
-}\n
-\n
-input#hidden_button {\n
-  width: 0;\n
-  height: 0;\n
-  display: inline;\n
-  border-width: 0;\n
-  float: left;\n
-}\n
-\n
-img {\n
-  border: transparent;\n
-}\n
-\n
-.small {\n
-  font-size: 11pt;\n
-}\n
-\n
-.infield {\n
-  overflow : auto;\n
-}\n
-\n
-textarea {\n
-  width:100%;\n
-}\n
-\n
-.title {\n
-  border-top: solid 1px;\n
-  border-top-color: #3D7474;\n
-  border-left: solid 5px;\n
-  border-left-color: #3D7474;\n
-  background-color: #D3E6DE;\n
-}\n
-\n
-.title_list {\n
-  margin-left: 10px;\n
-  margin-right: 10px;\n
-  border-left: solid 5px;\n
-  border-left-color: #3D7474;\n
-  border-right: solid 5px;\n
-  border-right-color: #3D7474;\n
-  background-color: #D3E6DE;\n
-  margin-bottom: 5px;\n
-}\n
-\n
-.title_index {\n
-  border-bottom: solid 1px;\n
-  border-bottom-color: #3D7474;\n
-  border-left: solid 1px;\n
-  border-right: solid 1px;\n
-  border-left-color: #3D7474;\n
-  margin-bottom: 8px;\n
-  border-top: solid 1px;\n
-  border-bottom: solid 1px;\n
-  border-top-color: #3D7474;\n
-  background-color: #C1DAD2;\n
-}\n
-\n
-.delimitation {\n
-  border-top: solid 1px;\n
-  border-top-color: #4e9fa0;\n
-}\n
-\n
-.group {\n
-  border-right: solid 5px;\n
-  border-right-color: #3D7474;\n
-  border-bottom: solid 1px;\n
-  border-bottom-color: #3D7474;\n
-  position:absolute;\n
-  background-color: #D3E6DE;\n
-  right: 0px;\n
-}\n
-\n
-\n
-.div1 {\n
-  background-color: #DAE6E6;\n
-  position:absolute;\n
-  left: 0px;\n
-  top: 0px;\n
-  width: <dtml-var "hwidth">px;\n
-}\n
-\n
-.master {\n
-  width: <dtml-var "hwidth">px;\n
-  background-color: #DAE6E6;\n
-  position: absolute;\n
-  left: 0px;\n
-}\n
-\n
-.big {\n
-  font-size: 13pt;\n
-}\n
-\n
-.div2 {\n
-  border-top: solid 1px;\n
-  border-bottom: solid 1px;\n
-  border-bottom-color: #3D7474;\n
-  margin: 3px;\n
-  border-top-color: #3D7474;\n
-  background-color: #b7e8e8;\n
-}\n
-\n
-.div4 {\n
-  border-top: solid 1px;\n
-  border-top-color: #3D7474;\n
-  border-bottom: solid 1px;\n
-  border-bottom-color: #3D7474;\n
-  padding-top: 2px;\n
-  padding-bottom: 2px;\n
-  background-color: #C1DAD2;\n
-  margin-bottom: 5px;\n
-  width:100%;\n
-}\n
-\n
-.link {\n
-  color: #3D7474;\n
-  font-size: 8pt;\n
-  text-decoration: none;\n
-}\n
-\n
-.link_selected {\n
-  color: #3C6464;\n
-  font-weight: bold;\n
-  font-size: 8pt;\n
-  text-decoration: underline;\n
-}\n
-\n
-.div_short_mode, .div_normal_mode {\n
-  color: #3D7474;\n
-  font-weight: bold;\n
-  font-size: 8pt;\n
-  text-decoration: underline;\n
-  cursor: pointer;\n
-}\n
-\n
-.link2 {\n
-  color: #3D7474;\n
-  font-size: 12pt;\n
-  text-decoration: none;\n
-  font-weight: bold;\n
-}\n
-\n
-.link3 {\n
-  color: #3D7474;\n
-  font-size: 10pt;\n
-  text-decoration: none;\n
-  padding-left: 15px;\n
-}\n
-\n
-fieldset {\n
-  border-color: #3D7474;\n
-  overflow : auto;\n
-}\n
-\n
-.border {\n
-  border-color: #3D7474;\n
-}\n
-\n
-.nomarg {\n
-  line-height:90%;\n
-}\n
-\n
-.div_prev {\n
-  margin-top: 5px;\n
-  width: 95%;\n
-  text-align:left;\n
-  padding-left:5px;\n
-  line-height:85%;\n
-  margin-bottom: 10px;\n
-}\n
-\n
-.div_next {\n
-  border-top: solid 1px;\n
-  border-top-color: #3D7474;\n
-  border-left: solid 1px;\n
-  border-left-color: #3D7474;\n
-  border-bottom: solid 1px;\n
-  border-bottom-color: #3D7474;\n
-  border-right: solid 1px;\n
-  border-right-color: #3D7474;\n
-  width: 70px;\n
-  text-align:center;\n
-  position: absolute;\n
-  padding-right: 3px;\n
-  padding-bottom: 3px;\n
-  right: 0px;\n
-  /*line-height: 85%;*/\n
-  top: 100px;\n
-}\n
-\n
-.div_sc {\n
-  border: solid 1px;\n
-  border-color: #3D7474;\n
-  border-bottom: transparent;\n
-  background-color: #D3E6DE;\n
-  width:<dtml-var "scwidth">px;\n
-  text-align: center;\n
-  position: absolute;\n
-  top: 50px;\n
-  left: <dtml-var "(hwidth / 2)- (scwidth / 2)">px;\n
-  padding: 0px;\n
-  line-height:70%;\n
-}\n
-\n
-.div_gtt {\n
-  border-top: solid 0px;\n
-  border-bottom: solid 0px;\n
-  border-top-color: #3D7474;\n
-  border-bottom-color: #3D7474;\n
-  border-left: solid 0px;\n
-  border-left-color: #3D7474;\n
-  border-right: solid 0px;\n
-  border-right-color: #3D7474;\n
-  background-color: #D3E6DE;\n
-  margin: 0px;\n
-}\n
-\n
-.div1_list {\n
-  width:<dtml-var "hwidth">px;\n
-  background-color: #DAE6E6;\n
-  border-color: #FFFFFF;\n
-  position: absolute;\n
-  left: 0px;\n
-  top: 0px;\n
-}\n
-\n
-/* listbox */\n
-\n
-.ListSummary {\n
-  background: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/tab_left.png\') top left no-repeat;\n
-  color: #000;\n
-  background-color: <dtml-var document_background_color>;\n
-  padding-left: 10px;\n
-}\n
-\n
-.ListSummary table {\n
-  width: 100%;\n
-  padding-right: 5px;\n
-  padding-bottom: 2px;\n
-}\n
-\n
-.ListSummary img {\n
-  display: none;\n
-}\n
-\n
-.ListSummary #listbox_next_page,\n
-.ListSummary #listbox_previous_page {\n
-  display: block;\n
-  font-size: 0;\n
-  width: 22px;\n
-  height: 22px;\n
-}\n
-\n
-.ListContent {\n
-  color: #000;\n
-  background-color: <dtml-var document_background_color>;\n
-  padding-left: 1px;\n
-}\n
-\n
-.ListContent table {\n
-  width: 100%;\n
-}\n
-\n
-.ListContent #listbox_label_line {\n
-  color: <dtml-var font_color>;\n
-  background-color: <dtml-var listbox_label_background_color>;\n
-}\n
-\n
-.ListContent #listbox_stat_line {\n
-  background-color: <dtml-var listbox_stat_background_color>;\n
-}\n
-\n
-.DataA {\n
-  background-color: #DAE6E6 ;\n
-  border-top: solid 1px;\n
-  border-color: #3D7474;\n
-}\n
-\n
-.DataB {\n
-  background-color: #FFFFFF;\n
-  border-top: solid 1px;\n
-  border-color: #3D7474;\n
-}\n
-\n
-.ListSummary #listbox_title_line #listbox_title,\n
-.ListSummary #listbox_title_line #listbox_item_number,\n
-.ListSummary #listbox_title_line #listbox_record_number {\n
-  vertical-align: middle;\n
-}\n
-\n
-.ListContent tr.DataA:hover,\n
-.ListContent tr.DataB:hover {\n
-  background-color: <dtml-var listbox_hover_background_color>;\n
-}\n
-\n
-.ListContent td {\n
-  border-color: <dtml-var document_border_color>;\n
-}\n
-\n
-.right_title {\n
-  background-color: #C1DAD2;\n
-  padding-left: 5px;\n
-  font-size: 16px;\n
-  font-style: italic;\n
-  color: #0000FF;\n
-}\n
-\n
-.left_data {\n
-  text-decoration: none;\n
-  padding-left: 30px;\n
-  color: #000000;\n
-  font-size: 12px;\n
-}\n
-\n
-.data {\n
-  font-size: 10px;\n
-}\n
-\n
-.dialog_selector button .description {\n
-  display: none;\n
-}\n
-\n
-.ListSummary img {\n
-  display: none;\n
-}\n
-\n
-#favourites button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/favourite.png\');\n
-}\n
-\n
-#modules button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/appearance.png\');\n
-}\n
-\n
-#language button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/language.png\');\n
-}\n
-\n
-#search button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/search.png\');\n
-}\n
-\n
-#actions button .image{\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/exec16.png\');\n
-  position: relative;\n
-  background-repeat: no-repeat;\n
-}\n
-#jump button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/jump.png\');\n
-  position: relative;\n
-  background-repeat: no-repeat;\n
-}\n
-\n
-.separator {\n
-  height: 24px;\n
-  width: 2px;\n
-  margin-left: 6px;\n
-  margin-right: 6px;\n
-  display: block;\n
-  float: left;\n
-}\n
-\n
-#context_bar {\n
-  padding-top: 2px;\n
-  padding-bottom: 2px;\n
-  /* border-bottom-width: 1px;\n
-  border-bottom-style: solid; */\n
-  color: inherit;\n
-  vertical-align: middle;\n
-}\n
-\n
-#context_bar .separator {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/sepacla.png\');\n
-  height: 16px;\n
-}\n
-\n
-#context_bar .tool_buttons .jump_first .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/2leftarrowb.png\');\n
-}\n
-\n
-#context_bar .tool_buttons .jump_previous .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/1leftarrowb.png\');\n
-}\n
-\n
-#context_bar .tool_buttons .jump_next .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/1rightarrowb.png\');\n
-}\n
-\n
-#context_bar .tool_buttons .jump_last .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/2rightarrowb.png\');\n
-}\n
-\n
-#context_bar .tool_buttons .list_mode .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/text_block.png\');\n
-}\n
-\n
-#context_bar .tool_buttons .new .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/filenew.png\');\n
-}\n
-\n
-#context_bar .tool_buttons .clone .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/fileclone.png\');\n
-}\n
-\n
-#context_bar .tool_buttons .cut .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editcut.png\');\n
-}\n
-\n
-#context_bar .tool_buttons .copy .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editcopy.png\');\n
-}\n
-\n
-#context_bar .tool_buttons .paste .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editpaste.png\');\n
-}\n
-\n
-#context_bar .tool_buttons .delete .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editdelete.png\');\n
-}\n
-\n
-#context_bar .tool_buttons .find .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/find.png\');\n
-}\n
-\n
-#context_bar .tool_buttons .show_all .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/showall.png\');\n
-}\n
-\n
-#context_bar .tool_buttons .filter .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/filter.png\');\n
-}\n
-\n
-#context_bar .tool_buttons .filter_on .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/filter_on.png\');\n
-}\n
-\n
-#context_bar .tool_buttons .sort .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/sort.png\');\n
-}\n
-\n
-#context_bar .tool_buttons .configure .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/configure.png\');\n
-}\n
-\n
-#navigation_buttons {\n
-text-align: right;\n
-float: right\n
-}\n
-\n
-#navigation_bar button .image,\n
-#context_bar button .image,\n
-.dialog_selector button .image,\n
-.document .actions button.save .image {\n
-  display: block;\n
-  width: 16px;\n
-  height: 16px;\n
-}\n
-\n
-#navigation_bar button .description,\n
-#context_bar button .description,\n
-.content .field .description,\n
-.document .actions button.save .description,\n
-#context_bar .tool_buttons a .description {\n
-  display: none;\n
-}\n
-\n
-#navigation_bar button,\n
-#context_bar button,\n
-.dialog_selector button,\n
-.document .actions button.save {\n
-  border: 0;\n
-  margin-top: 1px;\n
-  margin-left: 2px;\n
-  margin-right: 2px;\n
-  padding: 0;\n
-  position: relative;\n
-  cursor: pointer;\n
-  background-color: inherit;\n
-  color: inherit;\n
-}\n
-\n
-#main_bar button .description,\n
-#context_bar button .description,\n
-.content .field .description,\n
-.document .actions button.save .description,\n
-#context_bar .tool_buttons a .description {\n
-  display: none;\n
-}\n
-\n
-#context_bar .tool_buttons {\n
-  vertical-align: middle;\n
-}\n
-\n
-#context_bar .tool_buttons a {\n
-  margin-top: 2px;\n
-  margin-left: 2px;\n
-  margin-right: 2px;\n
-  padding: 0;\n
-  position: relative;\n
-}\n
-\n
-#context_bar .tool_buttons button,\n
-#context_bar .tool_buttons a {\n
- float: left;\n
-}\n
-\n
-#context_bar .tool_buttons a .image,\n
-#context_bar .tool_buttons button .image,\n
-#context_bar .tool_buttons a img {\n
-  width: 16px;\n
-  height: 16px;\n
-  margin: 0;\n
-  padding: 0;\n
-  display: block;\n
-  background-repeat: no-repeat;\n
-}\n
-\n
-p.clear {\n
-  height: 0;\n
-  margin: 0;\n
-  padding: 0;\n
-  clear: both;\n
-}\n
-\n
-.field label {\n
-  width: 30%;\n
-  font-size: 14px;\n
-  color: #3D7474;\n
-  font-style: italic;\n
-}\n
-\n
-.required label {\n
-  font-weight: bold;\n
-}\n
-\n
-body {\n
-  background-color: <dtml-var background_color>;\n
-}\n
-\n
-#transition_message {\n
-  margin-left: 1em;\n
-  color: #f00;\n
-  background-color: inherit;\n
-  font-weight: bold;\n
-}\n
-\n
-.field .error {\n
-  background-color: inherit;\n
-  color: #f00;\n
-  font-weight: bold;\n
-}\n
-\n
-#listbox_title_line {\n
-  position: relative;\n
-}\n
-\n
-#listbox_page_selection {\n
-  position: absolute;\n
-  right: 5px;\n
-  top: 3px;\n
-}\n
-\n
-#listbox_record_number {\n
-  font-weight: bold;\n
-}\n
-\n
-fieldset.left,\n
-fieldset.right,\n
-fieldset.center,\n
-fieldset.bottom {\n
-  border-width: 1px;\n
-  border-style: solid;\n
-}\n
-\n
-fieldset.left legend,\n
-fieldset.right legend,\n
-fieldset.center legend,\n
-fieldset.bottom legend {\n
-  display: none;\n
-}\n
-\n
-</dtml-let>\n
+ul li:before{
+  content: "\00BB \0020";
+}
+
+.list_dialog {
+  background-color: <dtml-var document_background_color>;
+  margin: 0px;
+  width: <dtml-var "hwidth">px;
+}
+
+.options_list {
+  border-right: solid 1px;
+  border-bottom: solid 1px;
+  border-left: solid 1px;
+  border-color: #3D7474;
+  background-color: #C1DAD2;
+  padding: 0px;
+  width: <dtml-var "optwidth">px;
+  margin-left: <dtml-var "(hwidth / 2)- (optwidth / 2)">px;
+  display: none;
+}
+
+.aff_options {
+  border-right: solid 1px;
+  border-top: solid 1px;
+  border-left: solid 1px;
+  border-color: #3D7474;
+  background-color: #D3E6DE;
+  padding: 0px;
+  width: <dtml-var "affwidth">px;
+  margin-left: <dtml-var "(hwidth / 2)- (affwidth / 2)">px;
+  text-align: center;
+  padding-bottom: 2px;
+  margin-top: 3px;
+  margin-bottom: 2px;
+}
+
+.info {
+  color: #3D7474;
+  font-size: 13px;
+}
+
+.text_div {
+  padding: 18px;
+}
+
+.fieldset_login {
+  border-color: #3D7474;
+  margin: 15px;
+}
+
+.login_div {
+  border-top: solid 1px;
+  border-bottom: solid 1px;
+  border-bottom-color: #3D7474;
+  border-top-color: #3D7474;
+  background-color: #C1DAD2;
+  margin-bottom: 3px;
+}
+
+.login {
+  width: <dtml-var "hwidth">px;
+  background-color: #DAE6E6;
+  border: solid 1px;
+  border-color: #FFFFFF;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.window {
+margin: 15px;
+}
+
+.AnchorColumn {
+  !important
+  border-style:none;
+  border-color:<dtml-var document_border_color>;
+  background-color:<dtml-var document_background_color>;
+  border-width:0;
+}
+
+.button {
+  border-Top-Width: thin;
+  border-Top-Color: #3D6464;
+  border-Right-Width: thin;
+  border-Right-Color: #3D6464;
+  border-Bottom-Width: thin;
+  border-Bottom-Color: #3D7474;
+  border-Left-Width: thin;
+  border-Left-Color: #3D7474;
+  background-Color: #C1DAD2;
+  margin: 2px;
+  color: #3D6464;
+  text-decoration: none;
+}
+
+.button_save {
+  border-Top-Width: thin;
+  border-Top-Color: #3D6464;
+  border-Right-Width: thin;
+  border-Right-Color: #3D6464;
+  border-Bottom-Width: thin;
+  border-Bottom-Color: #3D7474;
+  border-Left-Width: thin;
+  border-Left-Color: #3D7474;
+  background-Color: #C1DAD2;
+  margin: 2px;
+  color: #3D6464;
+  text-decoration: none;
+  width: 100px;
+}
 
 
-]]></string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>tooltip_background_color</string> </key>
-            <value> <string>#FFD</string> </value>
-        </item>
-        <item>
-            <key> <string>tooltip_border_color</string> </key>
-            <value> <string>#000</string> </value>
-        </item>
-        <item>
-            <key> <string>tooltip_color</string> </key>
-            <value> <string>#000</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-</ZopeData>
+.shortcuts {
+  border-top: solid 1px;
+  border-bottom: solid 1px;
+  border-color: #3D7474;
+  background-color: #C1DAD2;
+  margin-bottom: 5px;
+  /*padding-top: 10px;*/
+}
+
+.div_navigation {
+  border-top: solid 1px;
+  /*border-bottom: solid 1px;*/
+  border-color: #3D7474;
+  background-color: #C1DAD2;
+  margin-bottom: 5px;
+  position: absolute;
+  right: 10px;
+}
+
+.List_top {
+  padding-left: 5px;
+  padding-right: 5px;
+  border-left: solid 0px;
+  border-right: solid 0px;
+  border-color: #3D7474;
+}
+
+.top_list {
+  border-left: solid 1px;
+  border-right: solid 1px;
+  border-top: solid 1px;
+  border-color: #3D7474;
+}
+
+.main_div_list {
+  padding: 5px;
+  margin-top: 0px;
+  border-left: solid 1px;
+  border-right: solid 1px;
+  border-bottom: solid 1px;
+  border-color: #3D7474;
+}
+
+.top1 {
+  margin-top: 5px;
+  margin-left: 10px;
+  border-top: solid 1px;
+  border-color: #3D7474;
+  width: 45px;
+}
+
+.bottom1 {
+  margin-right: 10px;
+  border-bottom: solid 1px;
+  border-color: #3D7474;
+  width: 45px;
+  position: absolute;
+  right: 0px;
+  margin-bottom: 7px;
+}
+
+.breadcrumb {
+  border-top: solid 1px;
+  border-bottom: solid 1px;
+  border-bottom-color: #3D7474;
+  border-top-color: #3D7474;
+  background-color: #C1DAD2;
+}
+
+.erp {
+  font-size: 18px;
+  color: #3D7474;
+  text-decoration: none;
+}
+
+.link_white {
+  font-size: 14px;
+  color: #FFFFFF;
+}
+
+.modu {
+  font-size: 14px;
+  color: #3D7474;
+  font-style: bold;
+  text-decoration: none;
+  padding-right: 5px;
+}
+
+.mobil {
+  font-size: 10px;
+  font-style: italic;
+  color: #3D7474;
+  text-decoration: none;
+}
+
+.delimit_haut {
+  height: 25px;
+  border-right: solid 5px;
+  border-color: #3D7474;
+  background-color: #D3E6DE;
+}
+
+.delimit_bas {
+  height: 25px;
+  border-left: solid 5px;
+  border-color: #3D7474;
+  background-color: #D3E6DE;
+}
+
+.mod_badg {
+  background-color: #D3E6DE;
+  border-left: solid 1px;
+  border-right: solid 1px;
+  border-color: #3D7474;
+  padding-top: 0.5em;
+  padding-left: 10px;
+}
+
+.list {
+  list-style: none;
+}
+
+.option {
+  border-bottom: solid 1px;
+  border-bottom-color: #3D7474;
+  border-left: solid 1px;
+  border-left-color: #3D7474;
+  border-right: solid 1px;
+  border-right-color: #3D7474;
+  background-color: #D3E6DE;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-left: 10px;
+}
+
+.modules {
+  border-top: solid 1px;
+  border-top-color: #3D7474;
+  border-right: solid 1px;
+  border-right-color: #3D7474;
+  border-left: solid 1px;
+  border-left-color: #3D7474;
+  padding-left: 10px;
+  background-color: #D3E6DE;
+}
+
+input#hidden_button {
+  width: 0;
+  height: 0;
+  display: inline;
+  border-width: 0;
+  float: left;
+}
+
+img {
+  border: transparent;
+}
+
+.small {
+  font-size: 11pt;
+}
+
+.infield {
+  overflow : auto;
+}
+
+textarea {
+  width:100%;
+}
+
+.title {
+  border-top: solid 1px;
+  border-top-color: #3D7474;
+  border-left: solid 5px;
+  border-left-color: #3D7474;
+  background-color: #D3E6DE;
+}
+
+.title_list {
+  margin-left: 10px;
+  margin-right: 10px;
+  border-left: solid 5px;
+  border-left-color: #3D7474;
+  border-right: solid 5px;
+  border-right-color: #3D7474;
+  background-color: #D3E6DE;
+  margin-bottom: 5px;
+}
+
+.title_index {
+  border-bottom: solid 1px;
+  border-bottom-color: #3D7474;
+  border-left: solid 1px;
+  border-right: solid 1px;
+  border-left-color: #3D7474;
+  margin-bottom: 8px;
+  border-top: solid 1px;
+  border-bottom: solid 1px;
+  border-top-color: #3D7474;
+  background-color: #C1DAD2;
+}
+
+.delimitation {
+  border-top: solid 1px;
+  border-top-color: #4e9fa0;
+}
+
+.group {
+  border-right: solid 5px;
+  border-right-color: #3D7474;
+  border-bottom: solid 1px;
+  border-bottom-color: #3D7474;
+  position:absolute;
+  background-color: #D3E6DE;
+  right: 0px;
+}
+
+
+.div1 {
+  background-color: #DAE6E6;
+  position:absolute;
+  left: 0px;
+  top: 0px;
+  width: <dtml-var "hwidth">px;
+}
+
+.master {
+  width: <dtml-var "hwidth">px;
+  background-color: #DAE6E6;
+  position: absolute;
+  left: 0px;
+}
+
+.big {
+  font-size: 13pt;
+}
+
+.div2 {
+  border-top: solid 1px;
+  border-bottom: solid 1px;
+  border-bottom-color: #3D7474;
+  margin: 3px;
+  border-top-color: #3D7474;
+  background-color: #b7e8e8;
+}
+
+.div4 {
+  border-top: solid 1px;
+  border-top-color: #3D7474;
+  border-bottom: solid 1px;
+  border-bottom-color: #3D7474;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  background-color: #C1DAD2;
+  margin-bottom: 5px;
+  width:100%;
+}
+
+.link {
+  color: #3D7474;
+  font-size: 8pt;
+  text-decoration: none;
+}
+
+.link_selected {
+  color: #3C6464;
+  font-weight: bold;
+  font-size: 8pt;
+  text-decoration: underline;
+}
+
+.div_short_mode, .div_normal_mode {
+  color: #3D7474;
+  font-weight: bold;
+  font-size: 8pt;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.link2 {
+  color: #3D7474;
+  font-size: 12pt;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.link3 {
+  color: #3D7474;
+  font-size: 10pt;
+  text-decoration: none;
+  padding-left: 15px;
+}
+
+fieldset {
+  border-color: #3D7474;
+  overflow : auto;
+}
+
+.border {
+  border-color: #3D7474;
+}
+
+.nomarg {
+  line-height:90%;
+}
+
+.div_prev {
+  margin-top: 5px;
+  width: 95%;
+  text-align:left;
+  padding-left:5px;
+  line-height:85%;
+  margin-bottom: 10px;
+}
+
+.div_next {
+  border-top: solid 1px;
+  border-top-color: #3D7474;
+  border-left: solid 1px;
+  border-left-color: #3D7474;
+  border-bottom: solid 1px;
+  border-bottom-color: #3D7474;
+  border-right: solid 1px;
+  border-right-color: #3D7474;
+  width: 70px;
+  text-align:center;
+  position: absolute;
+  padding-right: 3px;
+  padding-bottom: 3px;
+  right: 0px;
+  /*line-height: 85%;*/
+  top: 100px;
+}
+
+.div_sc {
+  border: solid 1px;
+  border-color: #3D7474;
+  border-bottom: transparent;
+  background-color: #D3E6DE;
+  width:<dtml-var "scwidth">px;
+  text-align: center;
+  position: absolute;
+  top: 50px;
+  left: <dtml-var "(hwidth / 2)- (scwidth / 2)">px;
+  padding: 0px;
+  line-height:70%;
+}
+
+.div_gtt {
+  border-top: solid 0px;
+  border-bottom: solid 0px;
+  border-top-color: #3D7474;
+  border-bottom-color: #3D7474;
+  border-left: solid 0px;
+  border-left-color: #3D7474;
+  border-right: solid 0px;
+  border-right-color: #3D7474;
+  background-color: #D3E6DE;
+  margin: 0px;
+}
+
+.div1_list {
+  width:<dtml-var "hwidth">px;
+  background-color: #DAE6E6;
+  border-color: #FFFFFF;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+/* listbox */
+
+.ListSummary {
+  background: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/tab_left.png') top left no-repeat;
+  color: #000;
+  background-color: <dtml-var document_background_color>;
+  padding-left: 10px;
+}
+
+.ListSummary table {
+  width: 100%;
+  padding-right: 5px;
+  padding-bottom: 2px;
+}
+
+.ListSummary img {
+  display: none;
+}
+
+.ListSummary #listbox_next_page,
+.ListSummary #listbox_previous_page {
+  display: block;
+  font-size: 0;
+  width: 22px;
+  height: 22px;
+}
+
+.ListContent {
+  color: #000;
+  background-color: <dtml-var document_background_color>;
+  padding-left: 1px;
+}
+
+.ListContent table {
+  width: 100%;
+}
+
+.ListContent #listbox_label_line {
+  color: <dtml-var font_color>;
+  background-color: <dtml-var listbox_label_background_color>;
+}
+
+.ListContent #listbox_stat_line {
+  background-color: <dtml-var listbox_stat_background_color>;
+}
+
+.DataA {
+  background-color: #DAE6E6 ;
+  border-top: solid 1px;
+  border-color: #3D7474;
+}
+
+.DataB {
+  background-color: #FFFFFF;
+  border-top: solid 1px;
+  border-color: #3D7474;
+}
+
+.ListSummary #listbox_title_line #listbox_title,
+.ListSummary #listbox_title_line #listbox_item_number,
+.ListSummary #listbox_title_line #listbox_record_number {
+  vertical-align: middle;
+}
+
+.ListContent tr.DataA:hover,
+.ListContent tr.DataB:hover {
+  background-color: <dtml-var listbox_hover_background_color>;
+}
+
+.ListContent td {
+  border-color: <dtml-var document_border_color>;
+}
+
+.right_title {
+  background-color: #C1DAD2;
+  padding-left: 5px;
+  font-size: 16px;
+  font-style: italic;
+  color: #0000FF;
+}
+
+.left_data {
+  text-decoration: none;
+  padding-left: 30px;
+  color: #000000;
+  font-size: 12px;
+}
+
+.data {
+  font-size: 10px;
+}
+
+.dialog_selector button .description {
+  display: none;
+}
+
+.ListSummary img {
+  display: none;
+}
+
+#favourites button .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/favourite.png');
+}
+
+#modules button .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/appearance.png');
+}
+
+#language button .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/language.png');
+}
+
+#search button .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/search.png');
+}
+
+#actions button .image{
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/exec16.png');
+  position: relative;
+  background-repeat: no-repeat;
+}
+#jump button .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/jump.png');
+  position: relative;
+  background-repeat: no-repeat;
+}
+
+.separator {
+  height: 24px;
+  width: 2px;
+  margin-left: 6px;
+  margin-right: 6px;
+  display: block;
+  float: left;
+}
+
+#context_bar {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  /* border-bottom-width: 1px;
+  border-bottom-style: solid; */
+  color: inherit;
+  vertical-align: middle;
+}
+
+#context_bar .separator {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/sepacla.png');
+  height: 16px;
+}
+
+#context_bar .tool_buttons .jump_first .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/2leftarrowb.png');
+}
+
+#context_bar .tool_buttons .jump_previous .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/1leftarrowb.png');
+}
+
+#context_bar .tool_buttons .jump_next .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/1rightarrowb.png');
+}
+
+#context_bar .tool_buttons .jump_last .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/2rightarrowb.png');
+}
+
+#context_bar .tool_buttons .list_mode .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/text_block.png');
+}
+
+#context_bar .tool_buttons .new .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/filenew.png');
+}
+
+#context_bar .tool_buttons .clone .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/fileclone.png');
+}
+
+#context_bar .tool_buttons .cut .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editcut.png');
+}
+
+#context_bar .tool_buttons .copy .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editcopy.png');
+}
+
+#context_bar .tool_buttons .paste .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editpaste.png');
+}
+
+#context_bar .tool_buttons .delete .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editdelete.png');
+}
+
+#context_bar .tool_buttons .find .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/find.png');
+}
+
+#context_bar .tool_buttons .show_all .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/showall.png');
+}
+
+#context_bar .tool_buttons .filter .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/filter.png');
+}
+
+#context_bar .tool_buttons .filter_on .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/filter_on.png');
+}
+
+#context_bar .tool_buttons .sort .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/sort.png');
+}
+
+#context_bar .tool_buttons .configure .image {
+  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/configure.png');
+}
+
+#navigation_buttons {
+text-align: right;
+float: right
+}
+
+#navigation_bar button .image,
+#context_bar button .image,
+.dialog_selector button .image,
+.document .actions button.save .image {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+#navigation_bar button .description,
+#context_bar button .description,
+.content .field .description,
+.document .actions button.save .description,
+#context_bar .tool_buttons a .description {
+  display: none;
+}
+
+#navigation_bar button,
+#context_bar button,
+.dialog_selector button,
+.document .actions button.save {
+  border: 0;
+  margin-top: 1px;
+  margin-left: 2px;
+  margin-right: 2px;
+  padding: 0;
+  position: relative;
+  cursor: pointer;
+  background-color: inherit;
+  color: inherit;
+}
+
+#main_bar button .description,
+#context_bar button .description,
+.content .field .description,
+.document .actions button.save .description,
+#context_bar .tool_buttons a .description {
+  display: none;
+}
+
+#context_bar .tool_buttons {
+  vertical-align: middle;
+}
+
+#context_bar .tool_buttons a {
+  margin-top: 2px;
+  margin-left: 2px;
+  margin-right: 2px;
+  padding: 0;
+  position: relative;
+}
+
+#context_bar .tool_buttons button,
+#context_bar .tool_buttons a {
+ float: left;
+}
+
+#context_bar .tool_buttons a .image,
+#context_bar .tool_buttons button .image,
+#context_bar .tool_buttons a img {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  display: block;
+  background-repeat: no-repeat;
+}
+
+p.clear {
+  height: 0;
+  margin: 0;
+  padding: 0;
+  clear: both;
+}
+
+.field label {
+  width: 30%;
+  font-size: 14px;
+  color: #3D7474;
+  font-style: italic;
+}
+
+.required label {
+  font-weight: bold;
+}
+
+body {
+  background-color: <dtml-var background_color>;
+}
+
+#transition_message {
+  margin-left: 1em;
+  color: #f00;
+  background-color: inherit;
+  font-weight: bold;
+}
+
+.field .error {
+  background-color: inherit;
+  color: #f00;
+  font-weight: bold;
+}
+
+#listbox_title_line {
+  position: relative;
+}
+
+#listbox_page_selection {
+  position: absolute;
+  right: 5px;
+  top: 3px;
+}
+
+#listbox_record_number {
+  font-weight: bold;
+}
+
+fieldset.left,
+fieldset.right,
+fieldset.center,
+fieldset.bottom {
+  border-width: 1px;
+  border-style: solid;
+}
+
+fieldset.left legend,
+fieldset.right legend,
+fieldset.center legend,
+fieldset.bottom legend {
+  display: none;
+}
+
+</dtml-let>

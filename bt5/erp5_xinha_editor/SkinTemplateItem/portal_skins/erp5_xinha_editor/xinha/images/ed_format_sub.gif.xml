@@ -11,10 +11,6 @@
             <value> <string>http_cache</string> </value>
         </item>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts86908961.52</string> </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
             <value> <string>ed_format_sub.gif</string> </value>
         </item>
@@ -29,10 +25,6 @@
         <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <int>67</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

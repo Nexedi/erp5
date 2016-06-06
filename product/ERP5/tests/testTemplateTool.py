@@ -347,7 +347,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     available_bt, = template_tool.getRepositoryBusinessTemplateList(
       template_list=('test_core',))
     revision = available_bt.getRevision()
-    self.assertEqual('ZjtyN3qfJKXd8TjB7JPX/mG0FkE=', revision)
+    self.assertEqual('+Kds1k1J41hzO4yIO+GcKQukNps=', revision)
     installed_bt = template_tool.download("%s/%s" % (available_bt.repository,
                                                      available_bt.filename))
     self.assertEqual(revision, installed_bt.getRevision())
@@ -363,7 +363,6 @@ class TestTemplateTool(ERP5TypeTestCase):
       # We don't export revision anymore.
       self.assertFalse(os.path.exists(os.path.join(root, 'bt', 'revision')))
       # Computed at download ...
-      revision = '+Kds1k1J41hzO4yIO+GcKQukNps='
       self.assertEqual(revision, template_tool.download(root).getRevision())
     finally:
       shutil.rmtree(root)

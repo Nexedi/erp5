@@ -1,67 +1,27 @@
-<?xml version="1.0"?>
-<ZopeData>
-  <record id="1" aka="AAAAAAAAAAE=">
-    <pickle>
-      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>__name__</string> </key>
-            <value> <string>form-test.html</string> </value>
-        </item>
-        <item>
-            <key> <string>_vars</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>globals</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+<form action="filesave.php">
+<input type="hidden" value="" name="output_svg" />
+</form>
+<script>
+/*globals $*/
+function xhtmlEscape(str) {'use strict';
+		return str.replace(/&(?!amp;)/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); // < is actually disallowed above anyways
+	}
+$('<form>').attr({
+					method: 'post',
+					action: 'filesave.php',
+					target: 'output_frame'
+				}).append('<input type="hidden" name="output_svg" value="' + xhtmlEscape('<svg width="640" height="480" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><script>alert(document.cookie);<\/script><\/svg>') + '">')
+					.appendTo('body')
+					.submit().remove();
+</script>
 
-<!DOCTYPE html>\r\n
-<html xmlns="http://www.w3.org/1999/xhtml">\r\n
-<head>\r\n
-    <meta charset="utf-8" />\r\n
-    <title></title>\r\n
-\t\t<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>\r\n
-</head>\r\n
-<body>\r\n
-<form action="filesave.php">\r\n
-<input type="hidden" value="" name="output_svg" />\r\n
-</form>\r\n
-<script>\r\n
-/*globals $*/\r\n
-function xhtmlEscape(str) {\'use strict\';\r\n
-\t\treturn str.replace(/&(?!amp;)/g, \'&amp;\').replace(/"/g, \'&quot;\').replace(/</g, \'&lt;\'); // < is actually disallowed above anyways\r\n
-\t}\r\n
-$(\'<form>\').attr({\r\n
-\t\t\t\t\tmethod: \'post\',\r\n
-\t\t\t\t\taction: \'filesave.php\',\r\n
-\t\t\t\t\ttarget: \'output_frame\'\r\n
-\t\t\t\t}).append(\'<input type="hidden" name="output_svg" value="\' + xhtmlEscape(\'<svg width="640" height="480" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><script>alert(document.cookie);<\\/script><\\/svg>\') + \'">\')\r\n
-\t\t\t\t\t.appendTo(\'body\')\r\n
-\t\t\t\t\t.submit().remove();\r\n
-</script>\r\n
-\r\n
-</body>\r\n
-</html>\r\n
-
-
-]]></string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-</ZopeData>
+</body>
+</html>

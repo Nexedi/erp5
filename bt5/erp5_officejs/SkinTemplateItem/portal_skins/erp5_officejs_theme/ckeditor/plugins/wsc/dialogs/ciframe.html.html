@@ -1,106 +1,66 @@
-<?xml version="1.0"?>
-<ZopeData>
-  <record id="1" aka="AAAAAAAAAAE=">
-    <pickle>
-      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>__name__</string> </key>
-            <value> <string>ciframe.html</string> </value>
-        </item>
-        <item>
-            <key> <string>_vars</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>globals</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>raw</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.html or http://ckeditor.com/license
+-->
+<html>
+<head>
+	<title></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script type="text/javascript">
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">\r\n
-<!--\r\n
-Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.\r\n
-For licensing, see LICENSE.html or http://ckeditor.com/license\r\n
--->\r\n
-<html>\r\n
-<head>\r\n
-\t<title></title>\r\n
-\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
-\t<script type="text/javascript">\r\n
-\r\n
-function gup( name )\r\n
-{\r\n
-\tname = name.replace( /[\\[]/, \'\\\\\\[\' ).replace( /[\\]]/, \'\\\\\\]\' ) ;\r\n
-\tvar regexS = \'[\\\\?&]\' + name + \'=([^&#]*)\' ;\r\n
-\tvar regex = new RegExp( regexS ) ;\r\n
-\tvar results = regex.exec( window.location.href ) ;\r\n
-\r\n
-\tif ( results )\r\n
-\t\treturn results[ 1 ] ;\r\n
-\telse\r\n
-\t\treturn \'\' ;\r\n
-}\r\n
-\r\n
-var interval;\r\n
-\r\n
-function sendData2Master()\r\n
-{\r\n
-\tvar destination = window.parent.parent ;\r\n
-\ttry\r\n
-\t{\r\n
-\t\tif ( destination.XDTMaster )\r\n
-\t\t{\r\n
-\t\t\tvar t = destination.XDTMaster.read( [ gup( \'cmd\' ), gup( \'data\' ) ] ) ;\r\n
-\t\t\twindow.clearInterval( interval ) ;\r\n
-\t\t}\r\n
-\t}\r\n
-\tcatch (e) {}\r\n
-}\r\n
-\r\n
-function OnMessage (event) {\r\n
-\t        var message = event.data;\r\n
-\t        var destination = window.parent.parent;\r\n
-\t        destination.XDTMaster.read( [ \'end\', message, \'fpm\' ] ) ;\r\n
-}\r\n
-\r\n
-function listenPostMessage() {\r\n
-    if (window.addEventListener) { // all browsers except IE before version 9\r\n
-            window.addEventListener ("message", OnMessage, false);\r\n
-    }else {\r\n
-            if (window.attachEvent) { // IE before version 9\r\n
-                        window.attachEvent("onmessage", OnMessage);\r\n
-                }\r\n
-        }\r\n
-}\r\n
-\r\n
-function onLoad()\r\n
-{\r\n
-\tinterval = window.setInterval( sendData2Master, 100 );\r\n
-\tlistenPostMessage();\r\n
-}\r\n
-\r\n
-</script>\r\n
-</head>\r\n
-<body onload="onLoad()"><p></p></body>\r\n
-</html>\r\n
+function gup( name )
+{
+	name = name.replace( /[\[]/, '\\\[' ).replace( /[\]]/, '\\\]' ) ;
+	var regexS = '[\\?&]' + name + '=([^&#]*)' ;
+	var regex = new RegExp( regexS ) ;
+	var results = regex.exec( window.location.href ) ;
 
+	if ( results )
+		return results[ 1 ] ;
+	else
+		return '' ;
+}
 
-]]></string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-</ZopeData>
+var interval;
+
+function sendData2Master()
+{
+	var destination = window.parent.parent ;
+	try
+	{
+		if ( destination.XDTMaster )
+		{
+			var t = destination.XDTMaster.read( [ gup( 'cmd' ), gup( 'data' ) ] ) ;
+			window.clearInterval( interval ) ;
+		}
+	}
+	catch (e) {}
+}
+
+function OnMessage (event) {
+	        var message = event.data;
+	        var destination = window.parent.parent;
+	        destination.XDTMaster.read( [ 'end', message, 'fpm' ] ) ;
+}
+
+function listenPostMessage() {
+    if (window.addEventListener) { // all browsers except IE before version 9
+            window.addEventListener ("message", OnMessage, false);
+    }else {
+            if (window.attachEvent) { // IE before version 9
+                        window.attachEvent("onmessage", OnMessage);
+                }
+        }
+}
+
+function onLoad()
+{
+	interval = window.setInterval( sendData2Master, 100 );
+	listenPostMessage();
+}
+
+</script>
+</head>
+<body onload="onLoad()"><p></p></body>
+</html>
