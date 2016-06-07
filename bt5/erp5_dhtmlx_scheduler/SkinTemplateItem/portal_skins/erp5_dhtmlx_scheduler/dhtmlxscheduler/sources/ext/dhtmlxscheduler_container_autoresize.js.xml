@@ -1,0 +1,230 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189553.17</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_container_autoresize.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+(function() {\r\n
+\r\n
+\tscheduler.config.container_autoresize = true;\r\n
+\tscheduler.config.month_day_min_height = 90;\r\n
+\r\n
+\tvar old_pre_render_event = scheduler._pre_render_events;\r\n
+\r\n
+\t//need for temporary disabling without modifying public config\r\n
+\tvar active = true;\r\n
+\r\n
+\tscheduler._pre_render_events = function(evs, hold) {\r\n
+\t\tif (!(scheduler.config.container_autoresize && active)) {\r\n
+\t\t\treturn old_pre_render_event.apply(this, arguments);\r\n
+\t\t}\r\n
+\r\n
+\t\tvar hb = this.xy.bar_height;\r\n
+\t\tvar h_old = this._colsS.heights;\r\n
+\t\tvar h = this._colsS.heights = [0, 0, 0, 0, 0, 0, 0];\r\n
+\t\tvar data = this._els["dhx_cal_data"][0];\r\n
+\r\n
+\t\tif (!this._table_view)\r\n
+\t\t\tevs = this._pre_render_events_line(evs, hold); //ignore long events for now\r\n
+\t\telse\r\n
+\t\t\tevs = this._pre_render_events_table(evs, hold);\r\n
+\r\n
+\t\tif (this._table_view) {\r\n
+\t\t\tif (hold){\r\n
+\t\t\t\tthis._colsS.heights = h_old;\r\n
+\t\t\t} else {\r\n
+\t\t\t\tvar evl = data.firstChild;\r\n
+\t\t\t\tif (evl.rows) {\r\n
+\t\t\t\t\tfor (var i = 0; i < evl.rows.length; i++) {\r\n
+\t\t\t\t\t\th[i]++;\r\n
+\t\t\t\t\t\tif ((h[i]) * hb > this._colsS.height - this.xy.month_head_height) { // 22 - height of cell\'s header\r\n
+\t\t\t\t\t\t\t//we have overflow, update heights\r\n
+\t\t\t\t\t\t\tvar cells = evl.rows[i].cells;\r\n
+\r\n
+\t\t\t\t\t\t\tvar cHeight = this._colsS.height - this.xy.month_head_height;\r\n
+\t\t\t\t\t\t\tif(this.config.max_month_events*1 !== this.config.max_month_events || h[i] <= this.config.max_month_events){\r\n
+\t\t\t\t\t\t\t\tcHeight = h[i] * hb;\r\n
+\t\t\t\t\t\t\t}else if( (this.config.max_month_events + 1) * hb > this._colsS.height - this.xy.month_head_height){\r\n
+\t\t\t\t\t\t\t\tcHeight = (this.config.max_month_events + 1) * hb;\r\n
+\t\t\t\t\t\t\t}\r\n
+\r\n
+\t\t\t\t\t\t\tfor (var j = 0; j < cells.length; j++) {\r\n
+\t\t\t\t\t\t\t\tcells[j].childNodes[1].style.height = cHeight + "px";\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t\th[i] = (h[i - 1] || 0) + cells[0].offsetHeight;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\th[i] = (h[i - 1] || 0) + evl.rows[i].cells[0].offsetHeight;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\th.unshift(0);\r\n
+\t\t\t\t\tif (evl.parentNode.offsetHeight < evl.parentNode.scrollHeight && !evl._h_fix) {\r\n
+\t\t\t\t\t\t//we have v-scroll, decrease last day cell\r\n
+\r\n
+\t\t\t\t\t\t// NO CHECK SHOULD BE MADE ON VERTICAL SCROLL\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\tif (!evs.length && this._els["dhx_multi_day"][0].style.visibility == "visible")\r\n
+\t\t\t\t\t\th[0] = -1;\r\n
+\t\t\t\t\tif (evs.length || h[0] == -1) {\r\n
+\t\t\t\t\t\t//shift days to have space for multiday events\r\n
+\t\t\t\t\t\tvar childs = evl.parentNode.childNodes;\r\n
+\t\t\t\t\t\tvar dh = ((h[0] + 1) * hb + 1) + "px"; // +1 so multiday events would have 2px from top and 2px from bottom by default\r\n
+\t\t\t\t\t\tdata.style.top = (this._els["dhx_cal_navline"][0].offsetHeight + this._els["dhx_cal_header"][0].offsetHeight + parseInt(dh, 10)) + \'px\';\r\n
+\t\t\t\t\t\tdata.style.height = (this._obj.offsetHeight - parseInt(data.style.top, 10) - (this.xy.margin_top || 0)) + \'px\';\r\n
+\t\t\t\t\t\tvar last = this._els["dhx_multi_day"][0];\r\n
+\t\t\t\t\t\tlast.style.height = dh;\r\n
+\t\t\t\t\t\tlast.style.visibility = (h[0] == -1 ? "hidden" : "visible");\r\n
+\t\t\t\t\t\tlast = this._els["dhx_multi_day"][1];\r\n
+\t\t\t\t\t\tlast.style.height = dh;\r\n
+\t\t\t\t\t\tlast.style.visibility = (h[0] == -1 ? "hidden" : "visible");\r\n
+\t\t\t\t\t\tlast.className = h[0] ? "dhx_multi_day_icon" : "dhx_multi_day_icon_small";\r\n
+\t\t\t\t\t\tthis._dy_shift = (h[0] + 1) * hb;\r\n
+\t\t\t\t\t\th[0] = 0;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\r\n
+\t\treturn evs;\r\n
+\t};\r\n
+\r\n
+\tvar checked_divs = ["dhx_cal_navline", "dhx_cal_header", "dhx_multi_day", "dhx_cal_data"];\r\n
+\tvar updateContainterHeight = function(is_repaint) {\r\n
+\t\tvar total_height = 0;\r\n
+\t\tfor (var i = 0; i < checked_divs.length; i++) {\r\n
+\r\n
+\t\t\tvar className = checked_divs[i];\r\n
+\t\t\tvar checked_div = (scheduler._els[className]) ? scheduler._els[className][0] : null;\r\n
+\t\t\tvar height = 0;\r\n
+\t\t\tswitch (className) {\r\n
+\t\t\t\tcase "dhx_cal_navline":\r\n
+\t\t\t\tcase "dhx_cal_header":\r\n
+\t\t\t\t\theight = parseInt(checked_div.style.height, 10);\r\n
+\t\t\t\t\tbreak;\r\n
+\t\t\t\tcase "dhx_multi_day":\r\n
+\t\t\t\t\theight = (checked_div) ? checked_div.offsetHeight : 0;\r\n
+\t\t\t\t\tif (height == 1)\r\n
+\t\t\t\t\t\theight = 0;\r\n
+\t\t\t\t\tbreak;\r\n
+\t\t\t\tcase "dhx_cal_data":\r\n
+\t\t\t\t\tvar mode = scheduler.getState().mode;\r\n
+\r\n
+\t\t\t\t\tif(checked_div.childNodes[1] && mode != "month") {\r\n
+\t\t\t\t\t\theight = checked_div.childNodes[1].offsetHeight;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\telse {\r\n
+\t\t\t\t\t\theight = Math.max(checked_div.offsetHeight - 1, checked_div.scrollHeight);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tif (mode == "month") {\r\n
+\t\t\t\t\t\tif (scheduler.config.month_day_min_height && !is_repaint) {\r\n
+\t\t\t\t\t\t\tvar rows_length = checked_div.getElementsByTagName("tr").length;\r\n
+\t\t\t\t\t\t\theight = rows_length * scheduler.config.month_day_min_height;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\tif (is_repaint) {\r\n
+\t\t\t\t\t\t\tchecked_div.style.height = height + "px";\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tif (scheduler.matrix && scheduler.matrix[mode]) {\r\n
+\t\t\t\t\t\tif (is_repaint) {\r\n
+\t\t\t\t\t\t\theight += 2;\r\n
+\t\t\t\t\t\t\tchecked_div.style.height = height + "px";\r\n
+\t\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\t\theight = 2;\r\n
+\t\t\t\t\t\t\tvar cfg = scheduler.matrix[mode];\r\n
+\t\t\t\t\t\t\tvar rows = cfg.y_unit;\r\n
+\t\t\t\t\t\t\tfor(var r=0; r < rows.length; r++){\r\n
+\t\t\t\t\t\t\t\theight += !rows[r].children ? cfg.dy : (cfg.folder_dy||cfg.dy);\r\n
+\t\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tif (mode == "day" || mode == "week") {\r\n
+\t\t\t\t\t\theight += 2;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tbreak;\r\n
+\t\t\t}\r\n
+\t\t\ttotal_height += height;\r\n
+\t\t}\r\n
+\t\tscheduler._obj.style.height = (total_height) + "px";\r\n
+\r\n
+\t\tif (!is_repaint)\r\n
+\t\t\tscheduler.updateView();\r\n
+\t};\r\n
+\r\n
+\tvar conditionalUpdateContainerHeight = function() {\r\n
+\t\tif(!(scheduler.config.container_autoresize && active))\r\n
+\t\t\treturn true;\r\n
+\r\n
+\t\tvar mode = scheduler.getState().mode;\r\n
+\r\n
+\t\tupdateContainterHeight();\r\n
+\t\tif ( (scheduler.matrix && scheduler.matrix[mode]) || mode == "month" ) {\r\n
+\t\t\twindow.setTimeout(function() {\r\n
+\t\t\t\tupdateContainterHeight(true);\r\n
+\t\t\t}, 1);\r\n
+\t\t}\r\n
+\t};\r\n
+\r\n
+\tscheduler.attachEvent("onViewChange", conditionalUpdateContainerHeight);\r\n
+\tscheduler.attachEvent("onXLE", conditionalUpdateContainerHeight);\r\n
+\tscheduler.attachEvent("onEventChanged", conditionalUpdateContainerHeight);\r\n
+\tscheduler.attachEvent("onEventCreated", conditionalUpdateContainerHeight);\r\n
+\tscheduler.attachEvent("onEventAdded", conditionalUpdateContainerHeight);\r\n
+\tscheduler.attachEvent("onEventDeleted", conditionalUpdateContainerHeight);\r\n
+\tscheduler.attachEvent("onAfterSchedulerResize", conditionalUpdateContainerHeight);\r\n
+\tscheduler.attachEvent("onClearAll", conditionalUpdateContainerHeight);\r\n
+\r\n
+\t//disable container autoresize when expanded\r\n
+\tscheduler.attachEvent("onBeforeExpand", function(){\r\n
+\t\tactive = false;\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\r\n
+\tscheduler.attachEvent("onBeforeCollapse", function(){\r\n
+\t\tactive = true;\r\n
+\t\treturn true;\r\n
+\t});\r\n
+})();
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6625</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

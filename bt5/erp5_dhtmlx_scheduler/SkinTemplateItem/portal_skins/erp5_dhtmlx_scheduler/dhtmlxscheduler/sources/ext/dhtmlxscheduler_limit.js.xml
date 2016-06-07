@@ -1,0 +1,1086 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189554.14</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_limit.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.config.limit_start = null;\r\n
+scheduler.config.limit_end   = null;\r\n
+scheduler.config.limit_view  = false;\r\n
+scheduler.config.check_limits = true;\r\n
+scheduler.config.mark_now = true;\r\n
+scheduler.config.display_marked_timespans = true;\r\n
+\r\n
+scheduler._temp_limit_scope = function(){\r\n
+\tvar before = null;\r\n
+\tvar dhx_time_block = "dhx_time_block";\r\n
+\tvar default_timespan_type = "default";\r\n
+\tvar fix_options = function(options, days, zones) {\r\n
+\t\tif (days instanceof Date && zones instanceof Date) {\r\n
+\t\t\toptions.start_date = days;\r\n
+\t\t\toptions.end_date = zones;\r\n
+\t\t} else {\r\n
+\t\t\toptions.days = days;\r\n
+\t\t\toptions.zones = zones;\r\n
+\t\t}\t\r\n
+\t\treturn options;\r\n
+\t};\r\n
+\tvar get_resulting_options = function(days, zones, sections) {\r\n
+\t\tvar options = (typeof days == "object") ? days : { days: days };\r\n
+\t\toptions.type = dhx_time_block;\r\n
+\t\toptions.css = "";\r\n
+\t\tif (zones) {\r\n
+\t\t\tif (sections)\r\n
+\t\t\t\toptions.sections = sections;\r\n
+\t\t\toptions = fix_options(options, days, zones);\r\n
+\t\t}\r\n
+\t\treturn options;\r\n
+\t};\r\n
+\tscheduler.blockTime = function(days, zones, sections){\r\n
+\t\tvar options = get_resulting_options(days, zones, sections);\r\n
+\t\treturn scheduler.addMarkedTimespan(options);\r\n
+\t};\r\n
+\tscheduler.unblockTime = function(days, zones, sections) {\r\n
+\t\tzones = zones || "fullday";\r\n
+\t\tvar options = get_resulting_options(days, zones, sections);\r\n
+\t\treturn scheduler.deleteMarkedTimespan(options);\r\n
+\t};\r\n
+\tscheduler.attachEvent("onBeforeViewChange",function(om,od,nm,nd){\r\n
+\r\n
+\t\tfunction isBlocked(date, mode){\r\n
+\t\t\tvar limit_start = scheduler.config.limit_start,\r\n
+\t\t\t\tlimit_end = scheduler.config.limit_end,\r\n
+\t\t\t\tdate_end =  scheduler.date.add(date,1,mode);\r\n
+\r\n
+\t\t\treturn (date.valueOf() > limit_end.valueOf() || date_end <= limit_start.valueOf());\r\n
+\t\t}\r\n
+\r\n
+\t\tif (scheduler.config.limit_view){\r\n
+\t\t\tnd = nd||od; nm = nm||om;\t\t\r\n
+\t\t\tif (isBlocked(nd, nm) && !(od.valueOf() == nd.valueOf())){\r\n
+\t\t\t\tsetTimeout(function(){\r\n
+\t\t\t\t\tvar resetDate = !isBlocked(od, nm) ? od : scheduler.config.limit_start;\r\n
+\r\n
+\t\t\t\t\tscheduler.setCurrentView(!isBlocked(resetDate, nm) ? resetDate : null, nm);\r\n
+\t\t\t\t},1);\r\n
+\t\t\t\treturn false;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\tscheduler.checkInMarkedTimespan = function(ev, timespan_type, on_overlap){\r\n
+\t\ttimespan_type = timespan_type || default_timespan_type;\r\n
+\r\n
+\t\tvar res = true;\r\n
+\t\tvar temp_start_date = new Date(ev.start_date.valueOf());\r\n
+\t\tvar temp_end_date = scheduler.date.add(temp_start_date, 1, "day");\r\n
+\t\tvar timespans = scheduler._marked_timespans;\r\n
+\t\tfor (; temp_start_date < ev.end_date; temp_start_date = scheduler.date.date_part(temp_end_date), temp_end_date = scheduler.date.add(temp_start_date, 1, "day") ) {\r\n
+\t\t\tvar day_value = +scheduler.date.date_part( new Date(temp_start_date) ); // the first part of event not necessarily contains only date part\r\n
+\t\t\tvar day_index = temp_start_date.getDay();\r\n
+\r\n
+\t\t\tvar zones = getZones(ev, timespans, day_index, day_value, timespan_type);\r\n
+\t\t\tif (zones){\r\n
+\t\t\t\tfor (var i = 0; i < zones.length; i+=2) {\r\n
+\r\n
+\t\t\t\t\t// they may change for new event if it passes limit zone\r\n
+\t\t\t\t\tvar sm = scheduler._get_zone_minutes(temp_start_date);\r\n
+\t\t\t\t\tvar em = ( ev.end_date>temp_end_date || ev.end_date.getDate() != temp_start_date.getDate() ) ? 1440 : scheduler._get_zone_minutes(ev.end_date);\r\n
+\r\n
+\t\t\t\t\tvar sz = zones[i];\r\n
+\t\t\t\t\tvar ez = zones[i+1];\r\n
+\t\t\t\t\tif (sz<em && ez>sm) {\r\n
+\t\t\t\t\t\tif(typeof on_overlap == "function"){\r\n
+\t\t\t\t\t\t\t//handler allows to cancel overlapping\r\n
+\t\t\t\t\t\t\t//actually needed only to keep default behavior of limits\r\n
+\t\t\t\t\t\t\tres = on_overlap(ev, sm, em, sz, ez);//event object, event start/end minutes in \'zones\' format, zone start/end minutes\r\n
+\t\t\t\t\t\t}else{\r\n
+\t\t\t\t\t\t\tres = false;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\tif(!res)\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\treturn !res;\r\n
+\t};\r\n
+\tvar blocker = scheduler.checkLimitViolation = function(event){\r\n
+\t\tif(!event)\r\n
+\t\t\treturn true;\r\n
+\t\tif (!scheduler.config.check_limits)\r\n
+\t\t\treturn true;\r\n
+\t\tvar s = scheduler;\r\n
+\t\tvar c = s.config;\r\n
+\t\tvar evs = [];\r\n
+\t\tif (event.rec_type) {\r\n
+\t\t\tvar dates = scheduler.getRecDates(event);\r\n
+\t\t\tfor(var i=0; i < dates.length; i++){\r\n
+\t\t\t\tvar ev = scheduler._copy_event(event);\r\n
+\t\t\t\tscheduler._lame_copy(ev, dates[i]);\r\n
+\t\t\t\tevs.push(ev);\r\n
+\t\t\t}\r\n
+\r\n
+\t\t} else {\r\n
+\t\t\tevs = [event];\r\n
+\t\t}\r\n
+\r\n
+\t\tvar complete_res = true;\r\n
+\t\tfor (var p=0; p<evs.length; p++) {\r\n
+\t\t\tvar res = true;\r\n
+\t\t\tvar ev = evs[p];\r\n
+\t\t\t// Event could have old _timed property (e.g. we are creating event with DND on timeline view and crossed day)\r\n
+\t\t\tev._timed = scheduler.isOneDayEvent(ev);\r\n
+\r\n
+\t\t\tres = (c.limit_start && c.limit_end) ? (ev.start_date.valueOf() >= c.limit_start.valueOf() && ev.end_date.valueOf() <= c.limit_end.valueOf()) : true;\r\n
+\t\t\tif (res){\r\n
+\t\t\t\tres = !scheduler.checkInMarkedTimespan(ev, dhx_time_block, function(ev, sm, em, sz, ez){\r\n
+\t\t\t\t\t//try crop event to allow placing\r\n
+\t\t\t\t\tvar allow = true;\r\n
+\t\t\t\t\tif (sm<=ez && sm >=sz){\r\n
+\t\t\t\t\t\tif (ez == 24*60 || em<ez){\r\n
+\t\t\t\t\t\t\tallow = false;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\tif(ev._timed && s._drag_id && s._drag_mode == "new-size"){\r\n
+\t\t\t\t\t\t\tev.start_date.setHours(0);\r\n
+\t\t\t\t\t\t\tev.start_date.setMinutes(ez);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\telse {\r\n
+\t\t\t\t\t\t\tallow = false;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tif ((em>=sz && em<ez) || (sm < sz && em > ez)){\r\n
+\t\t\t\t\t\tif(ev._timed && s._drag_id && s._drag_mode == "new-size"){\r\n
+\t\t\t\t\t\t\tev.end_date.setHours(0);\r\n
+\t\t\t\t\t\t\tev.end_date.setMinutes(sz);\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\telse {\r\n
+\t\t\t\t\t\t\tallow = false;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\treturn allow;\r\n
+\t\t\t\t});\r\n
+\t\t\t}\r\n
+\t\t\tif (!res) {\r\n
+\t\t\t\tres = (s.checkEvent("onLimitViolation")) ? s.callEvent("onLimitViolation",[ev.id, ev]) : res;\r\n
+\t\t\t}\r\n
+\t\t\tcomplete_res = complete_res && res;\r\n
+\t\t}\r\n
+\t\tif(!complete_res){\r\n
+\t\t\ts._drag_id = null;\r\n
+\t\t\ts._drag_mode = null;\r\n
+\t\t}\r\n
+\t\treturn complete_res;\r\n
+\r\n
+\r\n
+\t};\r\n
+\tscheduler._get_blocked_zones = function(timespans, property, day_index, day_value, timespan_type){\r\n
+\t\tvar zones =[];\r\n
+\t\tif (timespans && timespans[property]) {\r\n
+\t\t\tvar timeline_zones = timespans[property];\r\n
+\t\t\tvar blocked_timeline_zones = this._get_relevant_blocked_zones(day_index, day_value, timeline_zones, timespan_type);\r\n
+\t\t\tfor (var i=0; i<blocked_timeline_zones.length; i++) {\r\n
+\t\t\t\tzones = this._add_timespan_zones(zones, blocked_timeline_zones[i].zones);\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\treturn zones;\r\n
+\t};\r\n
+\tscheduler._get_relevant_blocked_zones = function(day_index, day_value, zones, timespan_type) {\r\n
+\t\tvar relevant_zones = (zones[day_value] && zones[day_value][timespan_type]) ? zones[day_value][timespan_type] :\r\n
+\t\t\t(zones[day_index] && zones[day_index][timespan_type]) ? zones[day_index][timespan_type] : [];\r\n
+\t\treturn relevant_zones;\r\n
+\t};\r\n
+\tfunction getZones(ev, timespans, day_index, day_value, timespan_type){\r\n
+\t\tvar s = scheduler;\r\n
+\t\t//containers for \'unit\' and \'timeline\' views, and related \'section_id\' properties\r\n
+\t\tvar zones = [];\r\n
+\t\tvar containers = {\r\n
+\t\t\t\'_props\':\'map_to\',\r\n
+\t\t\t\'matrix\':\'y_property\'};\r\n
+\t\t//check blocked sections in all units and timelines\r\n
+\t\tfor(var container in containers){\r\n
+\t\t\tvar property = containers[container];\r\n
+\t\t\tif(s[container]){\r\n
+\t\t\t\tfor(var view in s[container]){\r\n
+\t\t\t\t\tvar view_config = s[container][view];\r\n
+\t\t\t\t\tvar linker = view_config[property];\r\n
+\t\t\t\t\tif(!ev[linker]) continue;\r\n
+\t\t\t\t\tzones =  s._add_timespan_zones(zones,\r\n
+\t\t\t\t\t\tscheduler._get_blocked_zones(timespans[view], ev[linker], day_index, day_value, timespan_type));\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\t// now need to add day blocks\r\n
+\t\tzones = s._add_timespan_zones(zones, scheduler._get_blocked_zones(timespans, \'global\', day_index, day_value, timespan_type));\r\n
+\t\treturn zones;\r\n
+\t}\r\n
+\r\n
+\tscheduler.attachEvent("onMouseDown", function(classname) {\r\n
+\t\treturn !(classname == dhx_time_block);\r\n
+\t});\r\n
+\tscheduler.attachEvent("onBeforeDrag",function(id){\r\n
+\t\tif (!id) return true;\r\n
+\t\treturn blocker(scheduler.getEvent(id));\r\n
+\t});\r\n
+\tscheduler.attachEvent("onClick", function (event_id, native_event_object){\r\n
+\t\treturn blocker(scheduler.getEvent(event_id));\r\n
+    });\r\n
+\tscheduler.attachEvent("onBeforeLightbox",function(id){\r\n
+\r\n
+\t\tvar ev = scheduler.getEvent(id);\r\n
+\t\tbefore = [ev.start_date, ev.end_date];\r\n
+\t\treturn blocker(ev);\r\n
+\t});\r\n
+\tscheduler.attachEvent("onEventSave", function(id, data, is_new_event) {\r\n
+\r\n
+\t\t//lightbox may not have \'time\' section\r\n
+\t\tif(!(data.start_date && data.end_date)){\r\n
+\t\t\tvar ev = scheduler.getEvent(id);\r\n
+\t\t\tdata.start_date = new Date(ev.start_date);\r\n
+\t\t\tdata.end_date = new Date(ev.end_date);\r\n
+\t\t}\r\n
+\r\n
+\t\tif(data.rec_type){\r\n
+\t\t\t//_roll_back_dates modifies start_date of recurring event, need to check limits after modification\r\n
+\t\t\t// use a copy to keep original event unchanged\r\n
+\t\t\tvar data_copy = scheduler._lame_clone(data);\r\n
+\t\t\tscheduler._roll_back_dates(data_copy);\r\n
+\t\t\treturn blocker(data_copy);\r\n
+\t\t}\r\n
+\t\treturn blocker(data);\r\n
+\t});\r\n
+\tscheduler.attachEvent("onEventAdded",function(id){\r\n
+\t\tif (!id) return true;\r\n
+\t\tvar ev = scheduler.getEvent(id);\r\n
+\t\tif (!blocker(ev) && scheduler.config.limit_start && scheduler.config.limit_end) {\r\n
+\t\t\t//if newly created event is outside of limited time - crop it, leaving only allowed time\r\n
+\t\t\tif (ev.start_date < scheduler.config.limit_start) {\r\n
+\t\t\t\tev.start_date = new Date(scheduler.config.limit_start);\r\n
+\t\t\t}\r\n
+\t\t\tif (ev.start_date.valueOf() >= scheduler.config.limit_end.valueOf()) {\r\n
+\t\t\t\tev.start_date = this.date.add(scheduler.config.limit_end, -1, "day");\r\n
+\t\t\t}\r\n
+\t\t\tif (ev.end_date < scheduler.config.limit_start) {\r\n
+\t\t\t\tev.end_date = new Date(scheduler.config.limit_start);\r\n
+\t\t\t}\r\n
+\t\t\tif (ev.end_date.valueOf() >= scheduler.config.limit_end.valueOf()) {\r\n
+\t\t\t\tev.end_date = this.date.add(scheduler.config.limit_end, -1, "day");\r\n
+\t\t\t}\r\n
+\t\t\tif (ev.start_date.valueOf() >= ev.end_date.valueOf()) {\r\n
+\t\t\t\tev.end_date = this.date.add(ev.start_date, (this.config.event_duration||this.config.time_step), "minute");\r\n
+\t\t\t}\r\n
+\t\t\tev._timed=this.isOneDayEvent(ev);\r\n
+\t\t}\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\tscheduler.attachEvent("onEventChanged",function(id){\r\n
+\t\tif (!id) return true;\r\n
+\t\tvar ev = scheduler.getEvent(id);\r\n
+\t\tif (!blocker(ev)){\r\n
+\t\t\tif (!before) return false;\r\n
+\t\t\tev.start_date = before[0];\r\n
+\t\t\tev.end_date = before[1];\r\n
+\t\t\tev._timed=this.isOneDayEvent(ev);\r\n
+\t\t}\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\tscheduler.attachEvent("onBeforeEventChanged",function(ev, native_object, is_new){\r\n
+\t\treturn blocker(ev);\r\n
+\t});\r\n
+\tscheduler.attachEvent("onBeforeEventCreated", function(ev) { // native event\r\n
+\t\tvar start_date = scheduler.getActionData(ev).date;\r\n
+\t\tvar event = {\r\n
+\t\t\t_timed: true,\r\n
+\t\t\tstart_date: start_date,\r\n
+\t\t\tend_date: scheduler.date.add(start_date, scheduler.config.time_step, "minute")\r\n
+\t\t};\r\n
+\t\treturn blocker(event);\r\n
+\t});\r\n
+\r\n
+\tscheduler.attachEvent("onViewChange", function(){\r\n
+\t\tscheduler._mark_now();\r\n
+\t});\r\n
+\tscheduler.attachEvent("onSchedulerResize", function(){\r\n
+\t\twindow.setTimeout(function(){ scheduler._mark_now(); }, 1);\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\tscheduler.attachEvent("onTemplatesReady", function() {\r\n
+\t\tscheduler._mark_now_timer = window.setInterval(function() {\r\n
+\t\t\tif(!scheduler._is_initialized())\r\n
+\t\t\t\treturn;\r\n
+\t\t\tscheduler._mark_now();\r\n
+\t\t}, 60000);\r\n
+\t});\r\n
+\tscheduler._mark_now = function(hide) {\r\n
+\t\t// day, week, units views\r\n
+\t\tvar dhx_now_time = \'dhx_now_time\';\r\n
+\t\tif (!this._els[dhx_now_time]) {\r\n
+\t\t\tthis._els[dhx_now_time] = [];\r\n
+\t\t}\r\n
+\t\tvar now = scheduler._currentDate();\r\n
+\t\tvar cfg = this.config;\r\n
+\t\tscheduler._remove_mark_now(); // delete previous marks if they exist\r\n
+\t\tif (!hide && cfg.mark_now && now < this._max_date && now > this._min_date && now.getHours() >= cfg.first_hour && now.getHours()<cfg.last_hour) {\r\n
+\t\t\tvar day_index = this.locate_holder_day(now);\r\n
+\t\t\tthis._els[dhx_now_time] = scheduler._append_mark_now(day_index, now);\r\n
+\t\t}\r\n
+\t};\r\n
+\tscheduler._append_mark_now = function(day_index, now) {\r\n
+\t\tvar dhx_now_time = \'dhx_now_time\';\r\n
+\t\tvar zone_start= scheduler._get_zone_minutes(now);\r\n
+\t\tvar options = {\r\n
+\t\t\tzones: [zone_start, zone_start+1],\r\n
+\t\t\tcss: dhx_now_time,\r\n
+\t\t\ttype: dhx_now_time\r\n
+\t\t};\r\n
+\t\tif (!this._table_view) {\r\n
+\t\t\tif (this._props && this._props[this._mode]) { // units view\r\n
+\r\n
+\t\t\t\tvar view = this._props[this._mode];\r\n
+\t\t\t\tvar units_l = view.size || view.options.length;\r\n
+\t\t\t\tvar start_index = day_index*units_l;\r\n
+\t\t\t\tvar end_index = (day_index+1)*units_l;\r\n
+\r\n
+\t\t\t\tvar day_divs = this._els["dhx_cal_data"][0].childNodes;\r\n
+\t\t\t\tvar r_divs = [];\r\n
+\r\n
+\t\t\t\tfor (var i=start_index; i<end_index; i++) {\r\n
+\t\t\t\t\tvar t_day = i; // as each unit is actually considered +1 day\r\n
+\t\t\t\t\toptions.days = t_day;\r\n
+\t\t\t\t\tvar t_div = scheduler._render_marked_timespan(options, null, t_day)[0];\r\n
+\t\t\t\t\tr_divs.push(t_div);\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn r_divs;\r\n
+\t\t\t} else {  // day/week views\r\n
+\t\t\t\toptions.days = day_index;\r\n
+\t\t\t\treturn scheduler._render_marked_timespan(options, null, day_index);\r\n
+\t\t\t}\r\n
+\t\t} else {\r\n
+\t\t\tif (this._mode == "month") {\r\n
+\t\t\t\toptions.days = +scheduler.date.date_part(now);\r\n
+\t\t\t\treturn scheduler._render_marked_timespan(options, null, null);\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t};\r\n
+\tscheduler._remove_mark_now = function() {\r\n
+\t\tvar dhx_now_time = \'dhx_now_time\';\r\n
+\t\tvar els = this._els[dhx_now_time];\r\n
+\t\tfor (var i=0; i<els.length; i++) {\r\n
+\t\t\tvar div = els[i];\r\n
+\t\t\tvar parent = div.parentNode;\r\n
+\t\t\tif (parent) {\r\n
+\t\t\t\tparent.removeChild(div);\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\tthis._els[dhx_now_time] = [];\r\n
+\t};\r\n
+\r\n
+\t/*\r\n
+\tscheduler._marked_timespans = {\r\n
+\t\t"global": {\r\n
+\t\t\t"0": {\r\n
+\t\t\t\t"default": [\r\n
+\t\t\t\t\t{  // sunday\r\n
+\t\t\t\t\t\tzones: [0, 100, 500, 600],\r\n
+\t\t\t\t\t\tcss: "yellow_box",\r\n
+\t\t\t\t\t\ttype: "default",\r\n
+\t\t\t\t\t\tview: "global",\r\n
+\t\t\t\t\t\tday: 0\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t]\r\n
+\t\t\t}\r\n
+\t\t\t"112121312": {\r\n
+\t\t\t\t"my_special_type": [\r\n
+\t\t\t\t\t{\r\n
+\t\t\t\t\t\tzones: [600, 900],\r\n
+\t\t\t\t\t\ttype: "block",\r\n
+\t\t\t\t\t\tcss: "some_class",\r\n
+\t\t\t\t\t\tview: "global",\r\n
+\t\t\t\t\t\tday: 112121312\r\n
+\t\t\t\t\t},\r\n
+\t\t\t\t\t{}\r\n
+\t\t\t\t]\r\n
+\t\t\t}\r\n
+\t\t},\r\n
+\t\t"units": {\r\n
+\t\t\t"5_id": {\r\n
+\t\t\t\t"3": {\r\n
+\t\t\t\t\t"special_type": [ {}, {}, {} ],\r\n
+\t\t\t\t\t"another_type": [ {} ]\r\n
+\t\t\t\t}\r\n
+\t\t\t},\r\n
+\t\t\t"6_id": {\r\n
+\t\t\t\t"11212127": {\r\n
+\t\t\t\t\t...\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t}\r\n
+\t*/\r\n
+\tscheduler._marked_timespans = { global: {} };\r\n
+\r\n
+\tscheduler._get_zone_minutes = function(date) {\r\n
+\t\treturn date.getHours()*60 + date.getMinutes();\r\n
+\t};\r\n
+\tscheduler._prepare_timespan_options = function(config) { // receives 1 option, returns array of options\r\n
+\t\tvar r_configs = []; // resulting configs\r\n
+\t\tvar temp_configs = [];\r\n
+\r\n
+\t\tif (config.days == "fullweek")\r\n
+\t\t\tconfig.days = [0,1,2,3,4,5,6];\r\n
+\r\n
+\t\tif (config.days instanceof Array) {\r\n
+\t\t\tvar t_days = config.days.slice();\r\n
+\t\t\tfor (var i=0; i<t_days.length; i++) {\r\n
+\t\t\t\tvar cloned_config = scheduler._lame_clone(config);\r\n
+\t\t\t\tcloned_config.days = t_days[i];\r\n
+\t\t\t\tr_configs.push.apply(r_configs, scheduler._prepare_timespan_options(cloned_config));\r\n
+\t\t\t}\r\n
+\t\t\treturn r_configs;\r\n
+\t\t}\r\n
+\r\n
+\t\tif ( !config || !((config.start_date && config.end_date && config.end_date > config.start_date) || (config.days !== undefined && config.zones)) )\r\n
+\t\t\treturn r_configs;  // incorrect config was provided\r\n
+\r\n
+\t\tvar min = 0;\r\n
+\t\tvar max = 24*60;\r\n
+\t\tif (config.zones == "fullday")\r\n
+\t\t\tconfig.zones = [min, max];\r\n
+\t\tif (config.zones && config.invert_zones) {\r\n
+\t\t\tconfig.zones = scheduler.invertZones(config.zones);\r\n
+\t\t}\r\n
+\r\n
+\t\tconfig.id = scheduler.uid();\r\n
+\t\tconfig.css = config.css||"";\r\n
+\t\tconfig.type = config.type||default_timespan_type;\r\n
+\r\n
+\t\tvar sections = config.sections;\r\n
+\t\tif (sections) {\r\n
+\t\t\tfor (var view_key in sections) {\r\n
+\t\t\t\tif (sections.hasOwnProperty(view_key)) {\r\n
+\t\t\t\t\tvar ids = sections[view_key];\r\n
+\t\t\t\t\tif (!(ids instanceof Array))\r\n
+\t\t\t\t\t\tids = [ids];\r\n
+\t\t\t\t\tfor (var i=0; i<ids.length; i++) {\r\n
+\t\t\t\t\t\tvar t_config = scheduler._lame_copy({}, config);\r\n
+\t\t\t\t\t\tt_config.sections = {};\r\n
+\t\t\t\t\t\tt_config.sections[view_key] = ids[i];\r\n
+\t\t\t\t\t\ttemp_configs.push(t_config);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t}\t\r\n
+\t\t} else {\r\n
+\t\t\ttemp_configs.push(config);\r\n
+\t\t}\r\n
+\r\n
+\t\tfor (var k=0; k<temp_configs.length; k++) {\r\n
+\t\t\tvar c_config = temp_configs[k]; // config to be checked\r\n
+\r\n
+\t\t\tvar start_date = c_config.start_date;\r\n
+\t\t\tvar end_date = c_config.end_date;\r\n
+\r\n
+\t\t\tif (start_date && end_date) {\r\n
+\t\t\t\tvar t_sd = scheduler.date.date_part(new Date(start_date)); // e.g. 05 october\r\n
+\t\t\t\tvar t_ed= scheduler.date.add(t_sd, 1, "day");  // 06 october, will both be incremented in the loop\r\n
+\r\n
+\t\t\t\twhile (t_sd < end_date) {\r\n
+\t\t\t\t\tvar t_config = scheduler._lame_copy({}, c_config);\r\n
+\t\t\t\t\tdelete t_config.start_date;\r\n
+\t\t\t\t\tdelete t_config.end_date;\r\n
+\t\t\t\t\tt_config.days = t_sd.valueOf();\r\n
+\t\t\t\t\tvar zone_start = (start_date > t_sd) ? scheduler._get_zone_minutes(start_date) : min; \r\n
+\t\t\t\t\tvar zone_end = ( end_date>t_ed || end_date.getDate() != t_sd.getDate() ) ? max : scheduler._get_zone_minutes(end_date);\r\n
+\t\t\t\t\tt_config.zones = [zone_start, zone_end];\r\n
+\t\t\t\t\tr_configs.push(t_config);\r\n
+\r\n
+\t\t\t\t\tt_sd = t_ed;\r\n
+\t\t\t\t\tt_ed = scheduler.date.add(t_ed, 1, "day");\r\n
+\t\t\t\t}\r\n
+\t\t\t} else {\r\n
+\t\t\t\tif (c_config.days instanceof Date)\r\n
+\t\t\t\t\tc_config.days = (scheduler.date.date_part(c_config.days)).valueOf();\r\n
+\t\t\t\tc_config.zones = config.zones.slice();\r\n
+\t\t\t\tr_configs.push(c_config);\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\treturn r_configs;\r\n
+\t};\r\n
+\tscheduler._get_dates_by_index = function(index, start, end) {\r\n
+\t\tvar dates = [];\r\n
+\t\tstart = scheduler.date.date_part(new Date(start||scheduler._min_date));\r\n
+\t\tend = new Date(end||scheduler._max_date);\r\n
+\t\tvar start_day = start.getDay();\r\n
+\t\tvar delta = (index-start_day >= 0) ? (index-start_day) : (7-start.getDay()+index);\r\n
+\t\tvar t_date = scheduler.date.add(start, delta, "day");\r\n
+\t\tfor (; t_date < end; t_date = scheduler.date.add(t_date, 1, "week")) {\r\n
+\t\t\tdates.push(t_date);\r\n
+\t\t}\r\n
+\t\treturn dates;\r\n
+\t};\r\n
+\tscheduler._get_css_classes_by_config = function(config) {\r\n
+\t\tvar css_classes = [];\r\n
+\t\tif (config.type == dhx_time_block) {\r\n
+\t\t\tcss_classes.push(dhx_time_block);\r\n
+\t\t\tif (config.css)\r\n
+\t\t\t\tcss_classes.push(dhx_time_block+"_reset");\r\n
+\t\t}\r\n
+\t\tcss_classes.push("dhx_marked_timespan", config.css);\r\n
+\t\treturn css_classes.join(" ");\r\n
+\t};\r\n
+\tscheduler._get_block_by_config = function(config) {\r\n
+\t\tvar block  = document.createElement("DIV");\r\n
+\t\tif (config.html) {\r\n
+\t\t\tif (typeof config.html == "string")\r\n
+\t\t\t\tblock.innerHTML = config.html;\r\n
+\t\t\telse\r\n
+\t\t\t\tblock.appendChild(config.html);\r\n
+\t\t}\r\n
+\t\treturn block;\r\n
+\t};\r\n
+\tscheduler._render_marked_timespan = function(options, area, day) {\r\n
+\t\tvar blocks = []; // resulting block which will be rendered and returned\r\n
+\t\tvar c = scheduler.config;\r\n
+\t\tvar min_date = this._min_date;\r\n
+\t\tvar max_date = this._max_date;\r\n
+\t\tvar day_value = false; // if timespan for specific date should be displayed\r\n
+\r\n
+\t\tif (!c.display_marked_timespans)\r\n
+\t\t\treturn blocks;\r\n
+\r\n
+\t\t// in case of markTimespan\r\n
+\t\tif (!day && day !== 0) {\r\n
+\t\t\tif (options.days < 7)\r\n
+\t\t\t\tday = options.days;\r\n
+\t\t\telse {\r\n
+\t\t\t\tvar date_to_display = new Date(options.days);\r\n
+\t\t\t\tday_value = +date_to_display;\r\n
+\r\n
+\t\t\t\t// in case of markTimespan date could be not in the viewing range, need to return\r\n
+\t\t\t\tif ( !(+max_date > +date_to_display && +min_date <= +date_to_display) )\r\n
+\t\t\t\t\treturn blocks;\r\n
+\r\n
+\t\t\t\tday = date_to_display.getDay();\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\t// convert day default index (Sun - 0, Sat - 6) to index of hourscales (depends on week_start and config.start_on_monday)\r\n
+\t\t\tvar min_day = min_date.getDay();\r\n
+\t\t\tif (min_day > day) {\r\n
+\t\t\t\tday = 7 - (min_day-day);\r\n
+\t\t\t} else {\r\n
+\t\t\t\tday = day - min_day;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\tvar zones = options.zones;\r\n
+\t\tvar css_classes = scheduler._get_css_classes_by_config(options);\r\n
+\r\n
+\t\tif (scheduler._table_view && scheduler._mode == "month") {\r\n
+\t\t\tvar areas = [];\r\n
+\t\t\tvar days = [];\r\n
+\r\n
+\r\n
+\t\t\tif (!area) {\r\n
+\t\t\t\tdays = (day_value) ? [day_value] : scheduler._get_dates_by_index(day);\r\n
+\t\t\t\tfor (var i=0; i < days.length; i++) {\r\n
+\t\t\t\t\tareas.push( this._scales[days[i]] );\r\n
+\t\t\t\t}\r\n
+\t\t\t} else {\r\n
+\t\t\t\tareas.push(area);\r\n
+\t\t\t\tdays.push(day);\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\tfor (var i=0; i < areas.length; i++) {\r\n
+\t\t\t\tarea = areas[i];\r\n
+\t\t\t\tday = days[i];\r\n
+\r\n
+\t\t\t\tvar sweek = Math.floor((this._correct_shift(day,1)-min_date.valueOf())/(60*60*1000*24*this._cols.length)),\r\n
+\t\t\t\t\tsday = this.locate_holder_day(day, false) % this._cols.length;\r\n
+\r\n
+\t\t\t\tif(this._ignores[sday]) continue;\r\n
+\r\n
+\t\t\t\tvar block_proto = scheduler._get_block_by_config(options),\r\n
+\t\t\t\t\theight = Math.max(area.offsetHeight - 1, 0), // 1 for bottom border\r\n
+\t\t\t\t\twidth = Math.max(area.offsetWidth - 1, 0), // 1 for left border\r\n
+\t\t\t\t\tleft = this._colsS[sday],\r\n
+\t\t\t\t\ttop = this._colsS.heights[sweek]+(this._colsS.height?(this.xy.month_scale_height+2):2)-1;\r\n
+\r\n
+\t\t\t\tblock_proto.className = css_classes;\r\n
+\t\t\t\tblock_proto.style.top = top + "px";\r\n
+\t\t\t\tblock_proto.style.lineHeight = block_proto.style.height = height + "px";\r\n
+\r\n
+\t\t\t\tfor (var k=0; k < zones.length; k+=2) {\r\n
+\t\t\t\t\tvar start = zones[i];\r\n
+\t\t\t\t\tvar end = zones[i+1];\r\n
+\t\t\t\t\tif (end <= start)\r\n
+\t\t\t\t\t\treturn [];\r\n
+\r\n
+\t\t\t\t\tvar block = block_proto.cloneNode(true);\r\n
+\r\n
+\t\t\t\t\tblock.style.left = (left + Math.round( (start)/(24*60) * width)) + "px";\r\n
+\t\t\t\t\tblock.style.width = Math.round( (end-start)/(24*60) * width) + "px";\r\n
+\r\n
+\t\t\t\t\tarea.appendChild(block);\r\n
+\t\t\t\t\tblocks.push(block);\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t} else {\r\n
+\t\t\tvar index = day;\r\n
+\r\n
+\t\t\tif(this._ignores[this.locate_holder_day(day, false)]) return blocks;\r\n
+\r\n
+\t\t\tif (this._props && this._props[this._mode] && options.sections && options.sections[this._mode]) {\r\n
+\t\t\t\tvar view = this._props[this._mode];\r\n
+\t\t\t\tindex = view.order[options.sections[this._mode]];\r\n
+\r\n
+\t\t\t\tvar inner_index = view.order[options.sections[this._mode]];\r\n
+\t\t\t\tif(!(view.days > 1)){\r\n
+\t\t\t\t\tindex = inner_index;\r\n
+\t\t\t\t\tif (view.size && (index > view.position+view.size)) {\r\n
+\t\t\t\t\t\tindex = 0;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}else{\r\n
+\t\t\t\t\tvar units_l = view.size || view.options.length;\r\n
+\t\t\t\t\tindex = index*units_l + inner_index;\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t\tarea = area ? area : scheduler.locate_holder(index);\r\n
+\r\n
+\t\t\tfor (var i = 0; i < zones.length; i+=2){\r\n
+\t\t\t\tvar start = Math.max(zones[i], c.first_hour*60);\r\n
+\t\t\t\tvar end = Math.min(zones[i+1], c.last_hour*60);\r\n
+\t\t\t\tif (end <= start) {\r\n
+\t\t\t\t\tif (i+2 < zones.length)\r\n
+\t\t\t\t\t\tcontinue;\r\n
+\t\t\t\t\telse\r\n
+\t\t\t\t\t\treturn [];\r\n
+\t\t\t\t}\r\n
+\r\n
+\t\t\t\tvar block = scheduler._get_block_by_config(options);\r\n
+\t\t\t\tblock.className = css_classes;\r\n
+\r\n
+\t\t\t\t// +1 for working with section which really takes up whole height (as % would be == 0)\r\n
+\t\t\t\tvar all_hours_height = this.config.hour_size_px*24 + 1;\r\n
+\t\t\t\tvar hour_ms = 60*60*1000;\r\n
+\t\t\t\tblock.style.top = (Math.round((start*60*1000-this.config.first_hour*hour_ms)*this.config.hour_size_px/hour_ms) % all_hours_height) + "px";\r\n
+\t\t\t\tblock.style.lineHeight = block.style.height = Math.max((Math.round(((end-start)*60*1000)*this.config.hour_size_px/hour_ms)) % all_hours_height, 1)+"px";\r\n
+\r\n
+\t\t\t\tarea.appendChild(block);\r\n
+\t\t\t\tblocks.push(block);\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\r\n
+\t\treturn blocks;\r\n
+\t};\r\n
+\t// just marks timespan, will be cleaned after refresh\r\n
+\tscheduler.markTimespan = function(configuration) {\r\n
+\t\tvar divs = [];\r\n
+\r\n
+\t\tvar rebuild_els = false;\r\n
+\t\tif(!this._els["dhx_cal_data"]){\r\n
+\t\t\tscheduler.get_elements();\r\n
+\t\t\trebuild_els = true;\r\n
+\t\t}\r\n
+\t\tvar data = this._els["dhx_cal_data"][0];\r\n
+\r\n
+\t\t// backup regular marked timespans\r\n
+\t\tvar timespans_ids = scheduler._marked_timespans_ids,\r\n
+\t\t\ttimespan_types = scheduler._marked_timespans_types,\r\n
+\t\t\ttimespans = scheduler._marked_timespans;\r\n
+\r\n
+\t\tscheduler.deleteMarkedTimespan();\r\n
+\r\n
+\t\t//add block to configs\r\n
+\t\tscheduler.addMarkedTimespan(configuration);\r\n
+\r\n
+\t\t//manually trigger rendering of configs for each column\r\n
+\t\tvar date = new Date(scheduler._min_date);\r\n
+\t\tfor(var i = 0, len = data.childNodes.length; i < len; i++){\r\n
+\t\t\tvar area = data.childNodes[i];\r\n
+\t\t\tif(area.firstChild && (area.firstChild.className || "").indexOf("dhx_scale_hour") > -1){\r\n
+\t\t\t\tcontinue;\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\tdivs.push.apply(divs, scheduler._on_scale_add_marker(area, date));\r\n
+\t\t\tdate = scheduler.date.add(date, 1, "day");\r\n
+\t\t}\r\n
+\r\n
+\t\tif(rebuild_els)\r\n
+\t\t\tscheduler._els = [];\r\n
+\r\n
+\t\t// restore timespan config\r\n
+\t\tscheduler._marked_timespans_ids = timespans_ids;\r\n
+\t\tscheduler._marked_timespans_types = timespan_types;\r\n
+\t\tscheduler._marked_timespans = timespans;\r\n
+\r\n
+\t\treturn divs;\r\n
+\t};\r\n
+\tscheduler.unmarkTimespan = function(divs) {\r\n
+\t\tif (!divs)\r\n
+\t\t\treturn;\r\n
+\t\tfor (var i=0; i<divs.length; i++) {\r\n
+\t\t\tvar div = divs[i];\r\n
+\t\t\t// parent may no longer be present if we switched views, navigated\r\n
+\t\t\tif (div.parentNode) {\r\n
+\t\t\t\tdiv.parentNode.removeChild(div);\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t};\r\n
+\r\n
+\tscheduler._marked_timespans_ids = {};\r\n
+\t// adds marked timespan to collections, persistent\r\n
+\tscheduler.addMarkedTimespan = function(configuration) {\r\n
+\t\tvar configs = scheduler._prepare_timespan_options(configuration);\r\n
+\t\tvar global = "global";\r\n
+\r\n
+\t\tif (!configs.length)\r\n
+\t\t\treturn; // options are incorrect, nothing to mark\r\n
+\r\n
+\t\tvar id = configs[0].id;\r\n
+\t\tvar timespans = scheduler._marked_timespans;\r\n
+\t\tvar ids = scheduler._marked_timespans_ids;\r\n
+\t\tif (!ids[id])\r\n
+\t\t\tids[id] = [];\r\n
+\r\n
+\t\tfor (var i=0; i<configs.length; i++) {\r\n
+\t\t\tvar config = configs[i];\r\n
+\t\t\tvar day = config.days;\r\n
+\t\t\tvar zones = config.zones;\r\n
+\t\t\tvar css = config.css;\r\n
+\t\t\tvar sections = config.sections;\r\n
+\t\t\tvar type = config.type; // default or specified\r\n
+\t\t\tconfig.id = id;\r\n
+\r\n
+\t\t\tif (sections) {\r\n
+\t\t\t\tfor (var view_key in sections) {\r\n
+\t\t\t\t\tif (sections.hasOwnProperty(view_key)) {\r\n
+\t\t\t\t\t\tif (!timespans[view_key])\r\n
+\t\t\t\t\t\t\ttimespans[view_key] = {};\r\n
+\t\t\t\t\t\tvar unit_id = sections[view_key];\r\n
+\t\t\t\t\t\tvar timespans_view = timespans[view_key];\r\n
+\t\t\t\t\t\tif (!timespans_view[unit_id])\r\n
+\t\t\t\t\t\t\ttimespans_view[unit_id] = {};\r\n
+\t\t\t\t\t\tif (!timespans_view[unit_id][day])\r\n
+\t\t\t\t\t\t\ttimespans_view[unit_id][day] = {};\r\n
+\t\t\t\t\t\tif (!timespans_view[unit_id][day][type]){\r\n
+\t\t\t\t\t\t\ttimespans_view[unit_id][day][type] = [];\r\n
+\t\t\t\t\t\t\tif(!scheduler._marked_timespans_types)\r\n
+\t\t\t\t\t\t\t\tscheduler._marked_timespans_types = {};\r\n
+\t\t\t\t\t\t\tif(!scheduler._marked_timespans_types[type])\r\n
+\t\t\t\t\t\t\t\tscheduler._marked_timespans_types[type] = true;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t\tvar day_configs = timespans_view[unit_id][day][type];\r\n
+\t\t\t\t\t\tconfig._array = day_configs;\r\n
+\t\t\t\t\t\tday_configs.push(config);\r\n
+\t\t\t\t\t\tids[id].push(config);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t} else {\r\n
+\t\t\t\tif (!timespans[global][day])\r\n
+\t\t\t\t\ttimespans[global][day] = {};\r\n
+\t\t\t\tif (!timespans[global][day][type])\r\n
+\t\t\t\t\ttimespans[global][day][type] = [];\r\n
+\r\n
+\t\t\t\tif(!scheduler._marked_timespans_types)\r\n
+\t\t\t\t\tscheduler._marked_timespans_types = {};\r\n
+\t\t\t\tif(!scheduler._marked_timespans_types[type])\r\n
+\t\t\t\t\tscheduler._marked_timespans_types[type] = true;\r\n
+\r\n
+\r\n
+\t\t\t\tvar day_configs = timespans[global][day][type];\r\n
+\t\t\t\tconfig._array = day_configs;\r\n
+\t\t\t\tday_configs.push(config);\r\n
+\t\t\t\tids[id].push(config);\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\treturn id;\r\n
+\t};\r\n
+\t// not used for now\r\n
+\tscheduler._add_timespan_zones = function(current_zones, zones) {\r\n
+\t\tvar resulting_zones = current_zones.slice();\r\n
+\t\tzones = zones.slice();\r\n
+\r\n
+\t\tif (!resulting_zones.length)\r\n
+\t\t\treturn zones;\r\n
+\r\n
+\t\tfor (var i=0; i<resulting_zones.length; i+=2) {\r\n
+\t\t\tvar c_zone_start = resulting_zones[i];\r\n
+\t\t\tvar c_zone_end = resulting_zones[i+1];\r\n
+\t\t\tvar isLast = (i+2 == resulting_zones.length);\r\n
+\r\n
+\t\t\tfor (var k=0; k<zones.length; k+=2) {\r\n
+\t\t\t\tvar zone_start = zones[k];\r\n
+\t\t\t\tvar zone_end = zones[k+1];\r\n
+\t\t\t\tif ((zone_end > c_zone_end && zone_start <= c_zone_end) || (zone_start < c_zone_start && zone_end >= c_zone_start)) {\r\n
+\t\t\t\t\tresulting_zones[i] = Math.min(c_zone_start, zone_start);\r\n
+\t\t\t\t\tresulting_zones[i+1] = Math.max(c_zone_end, zone_end);\r\n
+\t\t\t\t\ti -= 2;\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\tif (!isLast) // do nothing, maybe next current zone will match or will be last\r\n
+\t\t\t\t\t\tcontinue;\r\n
+\r\n
+\t\t\t\t\tvar offset = (c_zone_start > zone_start)?0:2;\r\n
+\t\t\t\t\tresulting_zones.splice(i+offset, 0, zone_start, zone_end); // last current zone, need to add another\r\n
+\t\t\t\t}\r\n
+\t\t\t\tzones.splice(k--,2); // zone was merged or added, need to exclude it\r\n
+\t\t\t\tbreak;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\treturn resulting_zones;\r\n
+\t};\r\n
+\tscheduler._subtract_timespan_zones = function(current_zones, zones) {\r\n
+\t\tvar resulting_zones = current_zones.slice();\r\n
+\t\tfor (var i=0; i<resulting_zones.length; i+=2 ) {\r\n
+\t\t\tvar c_zone_start = resulting_zones[i];// current_zone_start\r\n
+\t\t\tvar c_zone_end = resulting_zones[i+1];\r\n
+\t\t\tfor (var k=0; k<zones.length; k+=2) {\r\n
+\t\t\t\tvar zone_start = zones[k];\r\n
+\t\t\t\tvar zone_end = zones[k+1];\r\n
+\t\t\t\tif (zone_end > c_zone_start && zone_start < c_zone_end) {\r\n
+\t\t\t\t\tvar is_modified = false;\r\n
+\t\t\t\t\tif (c_zone_start >= zone_start && c_zone_end <= zone_end) {\r\n
+\t\t\t\t\t\tresulting_zones.splice(i, 2);\r\n
+\t\t\t\t\t}\t\t\t\t\r\n
+\t\t\t\t\tif (c_zone_start < zone_start) {\r\n
+\t\t\t\t\t\tresulting_zones.splice(i, 2, c_zone_start, zone_start);\r\n
+\t\t\t\t\t\tis_modified = true;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tif (c_zone_end > zone_end) {\r\n
+\t\t\t\t\t\tresulting_zones.splice( (is_modified)?(i+2):i, (is_modified)?0:2, zone_end, c_zone_end);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\ti -= 2;\r\n
+\t\t\t\t\tbreak;\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\tcontinue;\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\treturn resulting_zones;\r\n
+\t};\r\n
+\tscheduler.invertZones = function(zones) {\r\n
+\t\treturn scheduler._subtract_timespan_zones([0, 1440], zones.slice());\r\n
+\t};\r\n
+\tscheduler._delete_marked_timespan_by_id = function(id) {\r\n
+\t\tvar configs = scheduler._marked_timespans_ids[id];\r\n
+\t\tif (configs) {\r\n
+\t\t\tfor (var i=0; i<configs.length; i++) {\r\n
+\t\t\t\tvar config = configs[i];\r\n
+\t\t\t\tvar parent_array = config._array;\r\n
+\t\t\t\tfor (var k=0; k<parent_array.length; k++) {\r\n
+\t\t\t\t\tif (parent_array[k] == config) {\r\n
+\t\t\t\t\t\tparent_array.splice(k, 1);\r\n
+\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t};\r\n
+\tscheduler._delete_marked_timespan_by_config = function(config) {\r\n
+\t\tvar timespans = scheduler._marked_timespans;\r\n
+\t\tvar sections = config.sections;\r\n
+\t\tvar day = config.days;\r\n
+\t\tvar type = config.type||default_timespan_type;\r\n
+\t\tvar day_timespans = []; // array of timespans to subtract our config\r\n
+\t\tif (sections) {\r\n
+\t\t\tfor (var view_key in sections) {\r\n
+\t\t\t\tif (sections.hasOwnProperty(view_key) && timespans[view_key]) {\r\n
+\t\t\t\t\tvar unit_id = sections[view_key];\r\n
+\t\t\t\t\tif (timespans[view_key][unit_id] && timespans[view_key][unit_id][day] && timespans[view_key][unit_id][day][type])\r\n
+\t\t\t\t\t\tday_timespans = timespans[view_key][unit_id][day][type];\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t} else {\r\n
+\t\t\tif (timespans.global[day] && timespans.global[day][type])\r\n
+\t\t\t\tday_timespans = timespans.global[day][type];\r\n
+\t\t}\r\n
+\t\tfor (var i=0; i<day_timespans.length; i++) {\r\n
+\t\t\tvar d_t = day_timespans[i];\r\n
+\t\t\tvar zones = scheduler._subtract_timespan_zones(d_t.zones, config.zones);\r\n
+\t\t\tif (zones.length)\r\n
+\t\t\t\td_t.zones = zones;\r\n
+\t\t\telse {\r\n
+\t\t\t\tday_timespans.splice(i,1);\r\n
+\t\t\t\ti--;\r\n
+\t\t\t\t// need to update ids collection\r\n
+\t\t\t\tvar related_zones = scheduler._marked_timespans_ids[d_t.id];\r\n
+\t\t\t\tfor (var k=0; k<related_zones.length; k++) {\r\n
+\t\t\t\t\tif (related_zones[k] == d_t) {\r\n
+\t\t\t\t\t\trelated_zones.splice(k, 1);\r\n
+\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\r\n
+\t\tfor (var i in scheduler._marked_timespans.timeline) {\r\n
+\t\t\tfor (var j in scheduler._marked_timespans.timeline[i]) {\r\n
+\t\t\t\tfor (var k in scheduler._marked_timespans.timeline[i][j]) {\r\n
+\t\t\t\t\tif (k === type) {\r\n
+\t\t\t\t\t\tdelete scheduler._marked_timespans.timeline[i][j][k];\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t};\r\n
+\tscheduler.deleteMarkedTimespan = function(configuration) {\r\n
+\t\t// delete everything\r\n
+\t\tif (!arguments.length) {\r\n
+\t\t\tscheduler._marked_timespans = { global: {} };\r\n
+\t\t\tscheduler._marked_timespans_ids = {};\r\n
+\t\t\tscheduler._marked_timespans_types = {};\r\n
+\t\t}\r\n
+\r\n
+\t\tif (typeof configuration != "object") { // id was passed\r\n
+\t\t\tscheduler._delete_marked_timespan_by_id(configuration);\r\n
+\t\t} else { // normal configuration was passed\r\n
+\r\n
+\t\t\tif(!(configuration.start_date && configuration.end_date)){\r\n
+\t\t\t\tif(!configuration.days)\r\n
+\t\t\t\t\tconfiguration.days = "fullweek";\r\n
+\t\t\t\tif(!configuration.zones)\r\n
+\t\t\t\t\tconfiguration.zones = "fullday";\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\tvar types = [];\r\n
+\t\t\tif(!configuration.type){\r\n
+\t\t\t\t//if type not specified - delete timespans of all types\r\n
+\t\t\t\tfor(var type in scheduler._marked_timespans_types){\r\n
+\t\t\t\t\ttypes.push(type);\r\n
+\t\t\t\t}\r\n
+\t\t\t}else{\r\n
+\t\t\t\ttypes.push(configuration.type);\r\n
+\t\t\t}\r\n
+\r\n
+\r\n
+\t\t\tvar configs = scheduler._prepare_timespan_options(configuration);\r\n
+\r\n
+\t\t\tfor (var i=0; i<configs.length; i++) {\r\n
+\r\n
+\t\t\t\tvar config = configs[i];\r\n
+\t\t\t\tfor( var t=0; t < types.length; t++){\r\n
+\t\t\t\t\tvar typedConfig = scheduler._lame_clone(config);\r\n
+\t\t\t\t\ttypedConfig.type = types[t];\r\n
+\t\t\t\t\tscheduler._delete_marked_timespan_by_config(typedConfig);\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\r\n
+\t\t}\r\n
+\t};\r\n
+\tscheduler._get_types_to_render = function(common, specific) {\r\n
+\t\tvar types_to_render = (common) ? common : {};\r\n
+\t\tfor (var type in specific||{} ) {\r\n
+\t\t\tif (specific.hasOwnProperty(type)) {\r\n
+\t\t\t\ttypes_to_render[type] = specific[type];\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\treturn types_to_render;\r\n
+\t};\r\n
+\tscheduler._get_configs_to_render = function(types) {\r\n
+\t\tvar configs = [];\r\n
+\t\tfor (var type in types) {\r\n
+\t\t\tif (types.hasOwnProperty(type)) {\r\n
+\t\t\t\tconfigs.push.apply(configs, types[type]);\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\treturn configs;\r\n
+\t};\r\n
+\r\n
+\tscheduler._on_scale_add_marker = function(area, day){\r\n
+\t\tif (scheduler._table_view && scheduler._mode != "month")\r\n
+\t\t\treturn;\r\n
+\r\n
+\t\tvar day_index = day.getDay();\r\n
+\t\tvar day_value = day.valueOf();\r\n
+\t\tvar mode = this._mode;\r\n
+\t\tvar timespans = scheduler._marked_timespans;\r\n
+\t\tvar r_configs = [];\r\n
+\t\tvar divs = [];\r\n
+\t\tif (this._props && this._props[mode]) { // we are in the units view and need to draw it\'s sections as well\r\n
+\t\t\tvar view = this._props[mode]; // units view object\r\n
+\t\t\tvar units = view.options;\r\n
+\t\t\tvar index = scheduler._get_unit_index(view, day);\r\n
+\t\t\tvar unit = units[index]; // key, label\r\n
+\r\n
+\t\t\tif(!(view.days > 1)){\r\n
+\t\t\t\tday = scheduler.date.date_part(new Date(this._date)); // for units view actually only 1 day is displayed yet the day variable will change, need to use this._date for all calls\r\n
+\t\t\t}else{\r\n
+\t\t\t\tvar dx = 24*60*60*1000;\r\n
+\t\t\t\tvar day_ind = Math.floor((day - scheduler._min_date)/dx);\r\n
+\r\n
+\t\t\t\tday = scheduler.date.add(scheduler._min_date, Math.floor(day_ind/units.length), "day"); // to the "same" day for all sections\r\n
+\t\t\t\tday = scheduler.date.date_part(day);\r\n
+\t\t\t}\r\n
+\t\t\tday_index = day.getDay();\r\n
+\t\t\tday_value = day.valueOf();\r\n
+\r\n
+\t\t\tif (timespans[mode] && timespans[mode][unit.key]) {\r\n
+\t\t\t\tvar unit_zones = timespans[mode][unit.key];\r\n
+\t\t\t\tvar unit_types = scheduler._get_types_to_render(unit_zones[day_index], unit_zones[day_value]);\r\n
+\t\t\t\tr_configs.push.apply(r_configs, scheduler._get_configs_to_render(unit_types));\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\r\n
+\t\tvar global_data = timespans["global"];\r\n
+\t\tvar day_types = global_data[day_value]||global_data[day_index];\r\n
+\t\tr_configs.push.apply(r_configs, scheduler._get_configs_to_render(day_types));\r\n
+\r\n
+\t\tfor (var i=0; i<r_configs.length; i++) {\r\n
+\t\t\tdivs.push.apply(divs, (scheduler._render_marked_timespan(r_configs[i], area, day)));\r\n
+\t\t}\r\n
+\t\treturn divs;\r\n
+\t};\r\n
+\tscheduler.attachEvent("onScaleAdd", scheduler._on_scale_add_marker);\r\n
+\r\n
+\tscheduler.dblclick_dhx_marked_timespan = function(e,src){\r\n
+\t\tif (!scheduler.config.dblclick_create){\r\n
+\t\t\tscheduler.callEvent("onScaleDblClick",[scheduler.getActionData(e).date,src,e]);\r\n
+\t\t}\r\n
+\t\tscheduler.addEventNow(scheduler.getActionData(e).date,null,e);\r\n
+\t};\r\n
+\r\n
+};\r\n
+scheduler._temp_limit_scope();\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>34430</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

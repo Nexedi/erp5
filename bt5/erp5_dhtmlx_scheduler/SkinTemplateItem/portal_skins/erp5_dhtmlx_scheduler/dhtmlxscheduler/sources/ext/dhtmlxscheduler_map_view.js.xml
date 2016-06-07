@@ -1,0 +1,537 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189554.34</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_map_view.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.xy.map_date_width = 188; // date column width\r\n
+scheduler.xy.map_description_width = 400; // description column width\r\n
+\r\n
+scheduler.config.map_resolve_event_location = true; // if events in database doesn\'t have lat and lng values there will be an attempt to resolve them on event loading, useful for migration\r\n
+scheduler.config.map_resolve_user_location = true; // if user will be promted to share his location to display it on the map\r\n
+\r\n
+scheduler.config.map_initial_position = new google.maps.LatLng(48.724, 8.215); // inital position of the map\r\n
+scheduler.config.map_error_position = new google.maps.LatLng(15, 15); // this position will be displayed in case if event doesn\'t have corresponding coordinates\r\n
+\r\n
+scheduler.config.map_infowindow_max_width = 300;\r\n
+\r\n
+scheduler.config.map_type = google.maps.MapTypeId.ROADMAP;\r\n
+\r\n
+scheduler.config.map_zoom_after_resolve = 15;\r\n
+\r\n
+scheduler.locale.labels.marker_geo_success = "It seems you are here.";\r\n
+scheduler.locale.labels.marker_geo_fail = "Sorry, could not get your current position using geolocation.";\r\n
+\r\n
+scheduler.templates.marker_date = scheduler.date.date_to_str("%Y-%m-%d %H:%i"); // date for map\'s infowindow will be formated following way\r\n
+\r\n
+scheduler.templates.marker_text = function(start, end, ev) {\r\n
+\treturn "<div><b>" + ev.text + "</b><br/><br/>" + (ev.event_location || \'\') + "<br/><br/>" + scheduler.templates.marker_date(start) + " - " + scheduler.templates.marker_date(end) + "</div>";\r\n
+};\r\n
+scheduler.dblclick_dhx_map_area = function() {\r\n
+\tif (!this.config.readonly && this.config.dblclick_create)\r\n
+\t\tthis.addEventNow({\r\n
+\t\t\tstart_date: scheduler._date,\r\n
+\t\t\tend_date: scheduler.date.add(scheduler._date, scheduler.config.time_step, "minute")\r\n
+\t\t});\r\n
+};\r\n
+scheduler.templates.map_time = function(start, end, ev) {\r\n
+\tif (ev._timed)\r\n
+\t\treturn this.day_date(ev.start_date, ev.end_date, ev) + " " + this.event_date(start);\r\n
+\telse\r\n
+\t\treturn scheduler.templates.day_date(start) + " &ndash; " + scheduler.templates.day_date(end);\r\n
+};\r\n
+scheduler.templates.map_text = function(start, end, ev) {\r\n
+\treturn ev.text;\r\n
+};\r\n
+\r\n
+scheduler.date.map_start = function(d) {\r\n
+\treturn d;\r\n
+};\r\n
+scheduler.date.add_map = function(date, inc, mode) {\r\n
+\treturn (new Date(date.valueOf()));\r\n
+};\r\n
+\r\n
+scheduler.templates.map_date = function(dd, ed, mode) {\r\n
+\treturn \'\';\r\n
+};\r\n
+\r\n
+scheduler._latLngUpdate = false; // flag for not displaying event second time in case of coordinates update\r\n
+\r\n
+scheduler.attachEvent("onSchedulerReady", function() {\r\n
+\tscheduler._isMapPositionSet = false; // if user actual (geolocation) position was set on the map\r\n
+\r\n
+\tvar gmap = document.createElement(\'div\');\r\n
+\tgmap.className = \'dhx_map\';\r\n
+\tgmap.id = \'dhx_gmap\';\r\n
+\tgmap.style.dispay = "none";\r\n
+\r\n
+\tvar node = scheduler._obj;\r\n
+\r\n
+\tnode.appendChild(gmap);\r\n
+\r\n
+\tscheduler._els.dhx_gmap = [];\r\n
+\tscheduler._els.dhx_gmap.push(gmap);\r\n
+\r\n
+\t_setMapSize(\'dhx_gmap\');\r\n
+\r\n
+\tvar mapOptions = {\r\n
+\t\tzoom: scheduler.config.map_inital_zoom || 10,\r\n
+\t\tcenter: scheduler.config.map_initial_position,\r\n
+\t\tmapTypeId: scheduler.config.map_type || google.maps.MapTypeId.ROADMAP\r\n
+\t};\r\n
+\tvar map = new google.maps.Map(document.getElementById(\'dhx_gmap\'), mapOptions);\r\n
+\tmap.disableDefaultUI = false;\r\n
+\tmap.disableDoubleClickZoom = !scheduler.config.readonly;\r\n
+\r\n
+\tgoogle.maps.event.addListener(map, "dblclick", function(event) {\r\n
+\t\tif (!scheduler.config.readonly && scheduler.config.dblclick_create) {\r\n
+\t\t\tvar point = event.latLng;\r\n
+\t\t\tgeocoder.geocode(\r\n
+\t\t\t\t{ \'latLng\': point },\r\n
+\t\t\t\tfunction(results, status) {\r\n
+\t\t\t\t\tif (status == google.maps.GeocoderStatus.OK) {\r\n
+\t\t\t\t\t\tpoint = results[0].geometry.location;\r\n
+\t\t\t\t\t\tscheduler.addEventNow({\r\n
+\t\t\t\t\t\t\tlat: point.lat(),\r\n
+\t\t\t\t\t\t\tlng: point.lng(),\r\n
+\t\t\t\t\t\t\tevent_location: results[0].formatted_address,\r\n
+\t\t\t\t\t\t\tstart_date: scheduler._date,\r\n
+\t\t\t\t\t\t\tend_date: scheduler.date.add(scheduler._date, scheduler.config.time_step, "minute")\r\n
+\t\t\t\t\t\t});\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t);\r\n
+\t\t}\r\n
+\t});\r\n
+\r\n
+\tvar infoWindowOptions = {\r\n
+\t\tcontent: \'\'\r\n
+\t};\r\n
+\r\n
+\tif (scheduler.config.map_infowindow_max_width) {\r\n
+\t\tinfoWindowOptions.maxWidth = scheduler.config.map_infowindow_max_width;\r\n
+\t}\r\n
+\r\n
+\tscheduler.map = {\r\n
+\t\t_points: [],\r\n
+\t\t_markers: [],\r\n
+\t\t_infowindow: new google.maps.InfoWindow(infoWindowOptions),\r\n
+\t\t_infowindows_content: [],\r\n
+\t\t_initialization_count: -1,\r\n
+\t\t_obj: map\r\n
+\t};\r\n
+\r\n
+\tgeocoder = new google.maps.Geocoder();\r\n
+\r\n
+\tif (scheduler.config.map_resolve_user_location) {\r\n
+\t\tif (navigator.geolocation) {\r\n
+\t\t\tif (!scheduler._isMapPositionSet) {\r\n
+\t\t\t\tnavigator.geolocation.getCurrentPosition(function(position) {\r\n
+\t\t\t\t\tvar _userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);\r\n
+\t\t\t\t\tmap.setCenter(_userLocation);\r\n
+\t\t\t\t\tmap.setZoom(scheduler.config.map_zoom_after_resolve || 10);\r\n
+\t\t\t\t\tscheduler.map._infowindow.setContent(scheduler.locale.labels.marker_geo_success);\r\n
+\t\t\t\t\tscheduler.map._infowindow.position = map.getCenter();\r\n
+\t\t\t\t\tscheduler.map._infowindow.open(map);\r\n
+\r\n
+\t\t\t\t\tscheduler._isMapPositionSet = true;\r\n
+\t\t\t\t},\r\n
+\t\t\t\t\t\tfunction() {\r\n
+\t\t\t\t\t\t\tscheduler.map._infowindow.setContent(scheduler.locale.labels.marker_geo_fail);\r\n
+\t\t\t\t\t\t\tscheduler.map._infowindow.setPosition(map.getCenter());\r\n
+\t\t\t\t\t\t\tscheduler.map._infowindow.open(map);\r\n
+\t\t\t\t\t\t\tscheduler._isMapPositionSet = true;\r\n
+\t\t\t\t\t\t});\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t}\r\n
+\tgoogle.maps.event.addListener(map, "resize", function(event) {\r\n
+\t\tgmap.style.zIndex = \'5\';\r\n
+\t\tmap.setZoom(map.getZoom());\r\n
+\r\n
+\t});\r\n
+\tgoogle.maps.event.addListener(map, "tilesloaded", function(event) {\r\n
+\t\tgmap.style.zIndex = \'5\';\r\n
+\t});\r\n
+\r\n
+\tgmap.style.display = \'none\'; // property was changed after attaching map\r\n
+\r\n
+\r\n
+\tscheduler.attachEvent("onSchedulerResize", function() {\r\n
+\t\tif (this._mode == "map") {\r\n
+\t\t\tthis.map_view(true);\r\n
+\t\t\treturn false;\r\n
+\t\t}\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\r\n
+\tvar old = scheduler.render_data;\r\n
+\tscheduler.render_data = function(evs, hold) {\r\n
+\t\tif (this._mode == "map") {\r\n
+\t\t\tfill_map_tab();\r\n
+\t\t\tvar events = scheduler.get_visible_events();\r\n
+\t\t\tfor (var i = 0; i < events.length; i++) {\r\n
+\t\t\t\tif (!scheduler.map._markers[events[i].id]) {\r\n
+\t\t\t\t\tshowAddress(events[i], false, false);\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t} else\r\n
+\t\t\treturn old.apply(this, arguments);\r\n
+\t};\r\n
+\r\n
+\tfunction set_full_view(mode) {\r\n
+\t\tif (mode) {\r\n
+\t\t\tvar l = scheduler.locale.labels;\r\n
+\t\t\tscheduler._els["dhx_cal_header"][0].innerHTML = "<div class=\'dhx_map_line\' style=\'width: " + (scheduler.xy.map_date_width + scheduler.xy.map_description_width + 2) + "px;\' ><div class=\'headline_date\' style=\'width: " + scheduler.xy.map_date_width + "px;\'>" + l.date + "</div><div class=\'headline_description\' style=\'width: " + scheduler.xy.map_description_width + "px;\'>" + l.description + "</div></div>";\r\n
+\t\t\tscheduler._table_view = true;\r\n
+\t\t\tscheduler.set_sizes();\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tfunction clear_map_tab() {\r\n
+\t\tscheduler._selected_event_id = null;\r\n
+\t\tscheduler.map._infowindow.close();\r\n
+\t\tvar markers = scheduler.map._markers;\r\n
+\t\tfor (var key in markers) {\r\n
+\t\t\tif (markers.hasOwnProperty(key)) {\r\n
+\t\t\t\tmarkers[key].setMap(null);\r\n
+\t\t\t\tdelete scheduler.map._markers[key];\r\n
+\t\t\t\tif (scheduler.map._infowindows_content[key])\r\n
+\t\t\t\t\tdelete scheduler.map._infowindows_content[key];\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tfunction fill_map_tab() {\r\n
+\t\t//select events for which data need to be printed\r\n
+\t\tvar events = scheduler.get_visible_events();\r\n
+\t\tevents.sort(function(a, b) {\r\n
+\t\t\tif(a.start_date.valueOf()==b.start_date.valueOf())\r\n
+\t\t\t\treturn a.id>b.id?1:-1;\r\n
+\t\t\treturn a.start_date>b.start_date?1:-1;\r\n
+\t\t});\r\n
+\r\n
+\t\t//generate html for the view\r\n
+\t\tvar html = "<div class=\'dhx_map_area\'>";\r\n
+\t\tfor (var i = 0; i < events.length; i++) {\r\n
+\t\t\tvar ev = events[i];\r\n
+\t\t\tvar event_class = (ev.id == scheduler._selected_event_id) ? \'dhx_map_line highlight\' : \'dhx_map_line\';\r\n
+\t\t\tvar bg_color = (ev.color ? ("background:" + ev.color + ";") : "");\r\n
+\t\t\tvar color = (ev.textColor ? ("color:" + ev.textColor + ";") : "");\r\n
+\t\t\thtml += "<div class=\'" + event_class + "\' event_id=\'" + ev.id + "\' style=\'" + bg_color + "" + color + "" + (ev._text_style || "") + " width: " + (scheduler.xy.map_date_width + scheduler.xy.map_description_width + 2) + "px;\'><div style=\'width: " + scheduler.xy.map_date_width + "px;\' >" + scheduler.templates.map_time(ev.start_date, ev.end_date, ev) + "</div>";\r\n
+\t\t\thtml += "<div class=\'dhx_event_icon icon_details\'>&nbsp</div>";\r\n
+\t\t\thtml += "<div class=\'line_description\' style=\'width:" + (scheduler.xy.map_description_width - 25) + "px;\'>" + scheduler.templates.map_text(ev.start_date, ev.end_date, ev) + "</div></div>"; // -25 = icon size 20 and padding 5\r\n
+\t\t}\r\n
+\t\thtml += "<div class=\'dhx_v_border\' style=\'left: " + (scheduler.xy.map_date_width - 2) + "px;\'></div><div class=\'dhx_v_border_description\'></div></div>";\r\n
+\r\n
+\t\t//render html\r\n
+\t\tscheduler._els["dhx_cal_data"][0].scrollTop = 0; //fix flickering in FF\r\n
+\t\tscheduler._els["dhx_cal_data"][0].innerHTML = html;\r\n
+\t\tscheduler._els["dhx_cal_data"][0].style.width = (scheduler.xy.map_date_width + scheduler.xy.map_description_width + 1) + \'px\';\r\n
+\r\n
+\t\tvar t = scheduler._els["dhx_cal_data"][0].firstChild.childNodes;\r\n
+\t\tscheduler._els["dhx_cal_date"][0].innerHTML = scheduler.templates[scheduler._mode + "_date"](scheduler._min_date, scheduler._max_date, scheduler._mode);\r\n
+\r\n
+\t\tscheduler._rendered = [];\r\n
+\t\tfor (var i = 0; i < t.length - 2; i++) {\r\n
+\t\t\tscheduler._rendered[i] = t[i];\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tfunction _setMapSize(elem_id) { //input - map\'s div id\r\n
+\t\tvar map = document.getElementById(elem_id);\r\n
+\t\tvar height = scheduler._y - scheduler.xy.nav_height;\r\n
+\t\tif (height < 0)\r\n
+\t\t\theight = 0;\r\n
+\t\tvar width = scheduler._x - scheduler.xy.map_date_width - scheduler.xy.map_description_width - 1;\r\n
+\t\tif (width < 0)\r\n
+\t\t\twidth = 0;\r\n
+\t\tmap.style.height = height + \'px\';\r\n
+\t\tmap.style.width = width + \'px\';\r\n
+\t\tmap.style.marginLeft = (scheduler.xy.map_date_width + scheduler.xy.map_description_width + 1) + \'px\';\r\n
+\t\tmap.style.marginTop = (scheduler.xy.nav_height + 2) + \'px\';\r\n
+\t}\r\n
+\r\n
+\tscheduler.map_view = function(mode) {\r\n
+\t\tscheduler.map._initialization_count++;\r\n
+\t\tvar gmap = scheduler._els.dhx_gmap[0];\r\n
+\t\tvar temp_center;\r\n
+\t\tscheduler._els.dhx_cal_data[0].style.width = (scheduler.xy.map_date_width + scheduler.xy.map_description_width + 1) + \'px\';\r\n
+\r\n
+\t\tscheduler._min_date = scheduler.config.map_start || (scheduler._currentDate());\r\n
+\t\tscheduler._max_date = scheduler.config.map_end || scheduler.date.add(scheduler._currentDate(), 1, "year");\r\n
+\r\n
+\t\tscheduler._table_view = true;\r\n
+\t\tset_full_view(mode);\r\n
+\r\n
+\t\tif (mode) { //map tab activated\r\n
+\t\t\tclear_map_tab();\r\n
+\t\t\tfill_map_tab();\r\n
+\t\t\tgmap.style.display = \'block\';\r\n
+\r\n
+\t\t\t// need to resize block everytime window is resized\r\n
+\t\t\t_setMapSize(\'dhx_gmap\');\r\n
+\t\t\ttemp_center = scheduler.map._obj.getCenter();\r\n
+\r\n
+\t\t\tvar events = scheduler.get_visible_events();\r\n
+\t\t\tfor (var i = 0; i < events.length; i++) {\r\n
+\t\t\t\tif (!scheduler.map._markers[events[i].id]) {\r\n
+\t\t\t\t\tshowAddress(events[i]);\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\r\n
+\t\t} else { //map tab de-activated\r\n
+\t\t\tgmap.style.display = \'none\';\r\n
+\t\t}\r\n
+\t\tgoogle.maps.event.trigger(scheduler.map._obj, \'resize\');\r\n
+\r\n
+\t\tif (scheduler.map._initialization_count === 0 && temp_center) { // if tab is activated for the first time need to fix position\r\n
+\t\t\tscheduler.map._obj.setCenter(temp_center);\r\n
+\t\t}\r\n
+\r\n
+\t\tif (scheduler._selected_event_id) {\r\n
+\t\t\tselectEvent(scheduler._selected_event_id);\r\n
+\t\t}\r\n
+\t};\r\n
+\r\n
+\tvar selectEvent = function(event_id) {\r\n
+\t\tscheduler.map._obj.setCenter(scheduler.map._points[event_id]);\r\n
+\t\tscheduler.callEvent("onClick", [event_id]);\r\n
+\t};\r\n
+\r\n
+\tvar showAddress = function(event, setCenter, performClick) { // what if event have incorrect position from the start?\r\n
+\t\tvar point = scheduler.config.map_error_position;\r\n
+\t\tif (event.lat && event.lng) {\r\n
+\t\t\tpoint = new google.maps.LatLng(event.lat, event.lng);\r\n
+\t\t}\r\n
+\t\tvar message = scheduler.templates.marker_text(event.start_date, event.end_date, event);\r\n
+\t\tif (!scheduler._new_event) {\r\n
+\r\n
+\t\t\tscheduler.map._infowindows_content[event.id] = message;\r\n
+\r\n
+\t\t\tif (scheduler.map._markers[event.id])\r\n
+\t\t\t\tscheduler.map._markers[event.id].setMap(null);\r\n
+\r\n
+\t\t\tscheduler.map._markers[event.id] = new google.maps.Marker({\r\n
+\t\t\t\tposition: point,\r\n
+\t\t\t\tmap: scheduler.map._obj\r\n
+\t\t\t});\r\n
+\r\n
+\t\t\tgoogle.maps.event.addListener(scheduler.map._markers[event.id], \'click\', function() {\r\n
+\t\t\t\tscheduler.map._infowindow.setContent(scheduler.map._infowindows_content[event.id]);\r\n
+\t\t\t\tscheduler.map._infowindow.open(scheduler.map._obj, scheduler.map._markers[event.id]);\r\n
+\t\t\t\tscheduler._selected_event_id = event.id;\r\n
+\t\t\t\tscheduler.render_data();\r\n
+\t\t\t});\r\n
+\t\t\tscheduler.map._points[event.id] = point;\r\n
+\r\n
+\t\t\tif (setCenter) scheduler.map._obj.setCenter(scheduler.map._points[event.id]);\r\n
+\t\t\tif (performClick) scheduler.callEvent("onClick", [event.id]);\r\n
+\t\t}\r\n
+\t};\r\n
+\r\n
+\tscheduler.attachEvent("onClick", function(event_id, native_event_object) {\r\n
+\t\tif (this._mode == "map") {\r\n
+\t\t\tscheduler._selected_event_id = event_id;\r\n
+\t\t\tfor (var i = 0; i < scheduler._rendered.length; i++) {\r\n
+\t\t\t\tscheduler._rendered[i].className = \'dhx_map_line\';\r\n
+\t\t\t\tif (scheduler._rendered[i].getAttribute("event_id") == event_id) {\r\n
+\t\t\t\t\tscheduler._rendered[i].className += " highlight";\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t\tif (scheduler.map._points[event_id] && scheduler.map._markers[event_id]) {\r\n
+\t\t\t\tscheduler.map._obj.setCenter(scheduler.map._points[event_id]); // was panTo\r\n
+\t\t\t\tgoogle.maps.event.trigger(scheduler.map._markers[event_id], \'click\');\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\r\n
+\tvar _displayEventOnMap = function(event) {\r\n
+\t\tif (event.event_location && geocoder) {\r\n
+\t\t\tgeocoder.geocode(\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\t\'address\': event.event_location,\r\n
+\t\t\t\t\t\'language\': scheduler.uid().toString()\r\n
+\t\t\t\t},\r\n
+\t\t\t\tfunction(results, status) {\r\n
+\t\t\t\t\tvar point = {};\r\n
+\t\t\t\t\tif (status != google.maps.GeocoderStatus.OK) {\r\n
+\t\t\t\t\t\tpoint = scheduler.callEvent("onLocationError", [event.id]);\r\n
+\t\t\t\t\t\tif (!point || point === true)\r\n
+\t\t\t\t\t\t\tpoint = scheduler.config.map_error_position;\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\tpoint = results[0].geometry.location;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tevent.lat = point.lat();\r\n
+\t\t\t\t\tevent.lng = point.lng();\r\n
+\r\n
+\t\t\t\t\tscheduler._selected_event_id = event.id;\r\n
+\r\n
+\t\t\t\t\tscheduler._latLngUpdate = true;\r\n
+\t\t\t\t\tscheduler.callEvent("onEventChanged", [event.id, event]);\r\n
+\t\t\t\t\tshowAddress(event, true, true);\r\n
+\t\t\t\t}\r\n
+\t\t\t);\r\n
+\t\t} else {\r\n
+\t\t\tshowAddress(event, true, true);\r\n
+\t\t}\r\n
+\t};\r\n
+\r\n
+\tvar _updateEventLocation = function(event) { // update lat and lng in database\r\n
+\t\tif (event.event_location && geocoder) {\r\n
+\t\t\tgeocoder.geocode(\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\t\'address\': event.event_location,\r\n
+\t\t\t\t\t\'language\': scheduler.uid().toString()\r\n
+\t\t\t\t},\r\n
+\t\t\t\tfunction(results, status) {\r\n
+\t\t\t\t\tvar point = {};\r\n
+\t\t\t\t\tif (status != google.maps.GeocoderStatus.OK) {\r\n
+\t\t\t\t\t\tpoint = scheduler.callEvent("onLocationError", [event.id]);\r\n
+\t\t\t\t\t\tif (!point || point === true)\r\n
+\t\t\t\t\t\t\tpoint = scheduler.config.map_error_position;\r\n
+\t\t\t\t\t} else {\r\n
+\t\t\t\t\t\tpoint = results[0].geometry.location;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tevent.lat = point.lat();\r\n
+\t\t\t\t\tevent.lng = point.lng();\r\n
+\t\t\t\t\tscheduler._latLngUpdate = true;\r\n
+\t\t\t\t\tscheduler.callEvent("onEventChanged", [event.id, event]);\r\n
+\t\t\t\t}\r\n
+\t\t\t);\r\n
+\t\t}\r\n
+\t};\r\n
+\r\n
+\tvar _delay = function(method, object, params, delay) {\r\n
+\t\tsetTimeout(function() {\r\n
+\t\t\tvar ret = method.apply(object, params);\r\n
+\t\t\tmethod = object = params = null;\r\n
+\t\t\treturn ret;\r\n
+\t\t}, delay || 1);\r\n
+\t};\r\n
+\r\n
+\tscheduler.attachEvent("onEventChanged", function(event_id, event_object) {\r\n
+\t\tif (!this._latLngUpdate) {\r\n
+\t\t\tvar event = scheduler.getEvent(event_id);\r\n
+\t\t\tif ((event.start_date < scheduler._min_date && event.end_date > scheduler._min_date) || (event.start_date < scheduler._max_date && event.end_date > scheduler._max_date) || (event.start_date.valueOf() >= scheduler._min_date && event.end_date.valueOf() <= scheduler._max_date)) {\r\n
+\t\t\t\tif (scheduler.map._markers[event_id])\r\n
+\t\t\t\t\tscheduler.map._markers[event_id].setMap(null);\r\n
+\t\t\t\t_displayEventOnMap(event);\r\n
+\t\t\t} else { // event no longer should be displayed on the map view\r\n
+\t\t\t\tscheduler._selected_event_id = null;\r\n
+\t\t\t\tscheduler.map._infowindow.close();\r\n
+\t\t\t\tif (scheduler.map._markers[event_id])\r\n
+\t\t\t\t\tscheduler.map._markers[event_id].setMap(null);\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\telse\r\n
+\t\t\tthis._latLngUpdate = false;\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\r\n
+\r\n
+\tscheduler.attachEvent("onEventIdChange", function(old_event_id, new_event_id) {\r\n
+\t\tvar event = scheduler.getEvent(new_event_id);\r\n
+\t\tif ((event.start_date < scheduler._min_date && event.end_date > scheduler._min_date) || (event.start_date < scheduler._max_date && event.end_date > scheduler._max_date) || (event.start_date.valueOf() >= scheduler._min_date && event.end_date.valueOf() <= scheduler._max_date)) {\r\n
+\t\t\tif (scheduler.map._markers[old_event_id]) {\r\n
+\t\t\t\tscheduler.map._markers[old_event_id].setMap(null);\r\n
+\t\t\t\tdelete scheduler.map._markers[old_event_id];\r\n
+\t\t\t}\r\n
+\t\t\tif (scheduler.map._infowindows_content[old_event_id])\r\n
+\t\t\t\tdelete scheduler.map._infowindows_content[old_event_id];\r\n
+\t\t\t_displayEventOnMap(event);\r\n
+\t\t}\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\r\n
+\tscheduler.attachEvent("onEventAdded", function(event_id, event_object) {\r\n
+\t\tif (!scheduler._dataprocessor) {\r\n
+\t\t\tif ((event_object.start_date < scheduler._min_date && event_object.end_date > scheduler._min_date) || (event_object.start_date < scheduler._max_date && event_object.end_date > scheduler._max_date) || (event_object.start_date.valueOf() >= scheduler._min_date && event_object.end_date.valueOf() <= scheduler._max_date)) {\r\n
+\t\t\t\tif (scheduler.map._markers[event_id])\r\n
+\t\t\t\t\tscheduler.map._markers[event_id].setMap(null);\r\n
+\t\t\t\t_displayEventOnMap(event_object);\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\r\n
+\t/* Test/example\r\n
+\t scheduler.attachEvent("onLocationError", function(event_id,event_object){\r\n
+\t return new google.maps.LatLng(8, 8);\r\n
+\t });\r\n
+\t */\r\n
+\r\n
+\tscheduler.attachEvent("onBeforeEventDelete", function(event_id, event_object) {\r\n
+\t\tif (scheduler.map._markers[event_id]) {\r\n
+\t\t\tscheduler.map._markers[event_id].setMap(null); // if new event is deleted tab != map then it doesn\'t have marker yet\r\n
+\t\t}\r\n
+\t\tscheduler._selected_event_id = null;\r\n
+\t\tscheduler.map._infowindow.close();\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\r\n
+\tscheduler._event_resolve_delay = 1500;\r\n
+\tscheduler.attachEvent("onEventLoading", function(event) {\r\n
+\t\tif (scheduler.config.map_resolve_event_location && event.event_location && !event.lat && !event.lng) { // don\'t delete !event.lat && !event.lng as location could change\r\n
+\t\t\tscheduler._event_resolve_delay += 1500;\r\n
+\t\t\t_delay(_updateEventLocation, this, [event], scheduler._event_resolve_delay);\r\n
+\t\t}\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\r\n
+\tscheduler.attachEvent("onEventCancel", function(event_id, is_new) {\r\n
+\t\tif (is_new) {\r\n
+\t\t\tif (scheduler.map._markers[event_id])\r\n
+\t\t\t\tscheduler.map._markers[event_id].setMap(null);\r\n
+\t\t\tscheduler.map._infowindow.close();\r\n
+\t\t}\r\n
+\t\treturn true;\r\n
+\t});\r\n
+});\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>18811</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

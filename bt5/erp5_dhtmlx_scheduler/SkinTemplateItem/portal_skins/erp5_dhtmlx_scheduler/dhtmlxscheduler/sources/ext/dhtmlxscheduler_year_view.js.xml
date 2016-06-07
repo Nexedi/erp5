@@ -1,0 +1,436 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189556.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_year_view.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.config.year_x = 4;\r\n
+scheduler.config.year_y = 3;\r\n
+scheduler.xy.year_top = 0;\r\n
+\r\n
+scheduler.templates.year_date = function(date) {\r\n
+\treturn scheduler.date.date_to_str(scheduler.locale.labels.year_tab + " %Y")(date);\r\n
+};\r\n
+scheduler.templates.year_month = scheduler.date.date_to_str("%F");\r\n
+scheduler.templates.year_scale_date = scheduler.date.date_to_str("%D");\r\n
+scheduler.templates.year_tooltip = function(s, e, ev) {\r\n
+\treturn ev.text;\r\n
+};\r\n
+\r\n
+(function() {\r\n
+\tvar is_year_mode = function() {\r\n
+\t\treturn scheduler._mode == "year";\r\n
+\t};\r\n
+\r\n
+\tscheduler.dblclick_dhx_month_head = function(e) {\r\n
+\t\tif (is_year_mode()) {\r\n
+\t\t\tvar t = (e.target || e.srcElement);\r\n
+\t\t\tif (t.parentNode.className.indexOf("dhx_before") != -1 || t.parentNode.className.indexOf("dhx_after") != -1) return false;\r\n
+\t\t\tvar start = this.templates.xml_date(t.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute("date"));\r\n
+\t\t\tstart.setDate(parseInt(t.innerHTML, 10));\r\n
+\t\t\tvar end = this.date.add(start, 1, "day");\r\n
+\t\t\tif (!this.config.readonly && this.config.dblclick_create)\r\n
+\t\t\t\tthis.addEventNow(start.valueOf(), end.valueOf(), e);\r\n
+\t\t}\r\n
+\t};\r\n
+\r\n
+\tvar chid = scheduler.changeEventId;\r\n
+\tscheduler.changeEventId = function() {\r\n
+\t\tchid.apply(this, arguments);\r\n
+\t\tif (is_year_mode())\r\n
+\t\t\tthis.year_view(true);\r\n
+\t};\r\n
+\r\n
+\r\n
+\tvar old = scheduler.render_data;\r\n
+\tvar to_attr = scheduler.date.date_to_str("%Y/%m/%d");\r\n
+\tvar from_attr = scheduler.date.str_to_date("%Y/%m/%d");\r\n
+\tscheduler.render_data = function(evs) {\r\n
+\t\tif (!is_year_mode()) return old.apply(this, arguments);\r\n
+\t\tfor (var i = 0; i < evs.length; i++)\r\n
+\t\t\tthis._year_render_event(evs[i]);\r\n
+\t};\r\n
+\r\n
+\tvar clear = scheduler.clear_view;\r\n
+\tscheduler.clear_view = function() {\r\n
+\t\tif (!is_year_mode()) return clear.apply(this, arguments);\r\n
+\t\tvar dates = scheduler._year_marked_cells,\r\n
+\t\t\tdiv = null;\r\n
+\t\tfor (var date in dates) {\r\n
+\t\t\tif (dates.hasOwnProperty(date)) {\r\n
+\t\t\t\tdiv = dates[date];\r\n
+\t\t\t\tdiv.className = "dhx_month_head";\r\n
+\t\t\t\tdiv.setAttribute("date", "");\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\tscheduler._year_marked_cells = {};\r\n
+\t};\r\n
+\r\n
+\tscheduler._hideToolTip = function() {\r\n
+\t\tif (this._tooltip) {\r\n
+\t\t\tthis._tooltip.style.display = "none";\r\n
+\t\t\tthis._tooltip.date = new Date(9999, 1, 1);\r\n
+\t\t}\r\n
+\t};\r\n
+\r\n
+\tscheduler._showToolTip = function(date, pos, e, src) {\r\n
+\t\tif (this._tooltip) {\r\n
+\t\t\tif (this._tooltip.date.valueOf() == date.valueOf()) return;\r\n
+\t\t\tthis._tooltip.innerHTML = "";\r\n
+\t\t} else {\r\n
+\t\t\tvar t = this._tooltip = document.createElement("DIV");\r\n
+\t\t\tt.className = "dhx_year_tooltip";\r\n
+\t\t\tdocument.body.appendChild(t);\r\n
+\t\t\tt.onclick = scheduler._click.dhx_cal_data;\r\n
+\t\t}\r\n
+\t\tvar evs = this.getEvents(date, this.date.add(date, 1, "day"));\r\n
+\t\tvar html = "";\r\n
+\r\n
+\t\tfor (var i = 0; i < evs.length; i++) {\r\n
+\t\t\tvar ev = evs[i];\r\n
+\t\t\tif(!this.filter_event(ev.id, ev))\r\n
+\t\t\t\tcontinue;\r\n
+\r\n
+\t\t\tvar bg_color = (ev.color ? ("background:" + ev.color + ";") : "");\r\n
+\t\t\tvar color = (ev.textColor ? ("color:" + ev.textColor + ";") : "");\r\n
+\r\n
+\t\t\thtml += "<div class=\'dhx_tooltip_line\' style=\'" + bg_color + "" + color + "\' event_id=\'" + evs[i].id + "\'>";\r\n
+\t\t\thtml += "<div class=\'dhx_tooltip_date\' style=\'" + bg_color + "" + color + "\'>" + (evs[i]._timed ? this.templates.event_date(evs[i].start_date) : "") + "</div>";\r\n
+\t\t\thtml += "<div class=\'dhx_event_icon icon_details\'>&nbsp;</div>";\r\n
+\t\t\thtml += this.templates.year_tooltip(evs[i].start_date, evs[i].end_date, evs[i]) + "</div>";\r\n
+\t\t}\r\n
+\r\n
+\t\tthis._tooltip.style.display = "";\r\n
+\t\tthis._tooltip.style.top = "0px";\r\n
+\r\n
+\r\n
+\t\tif (document.body.offsetWidth - pos.left - this._tooltip.offsetWidth < 0)\r\n
+\t\t\tthis._tooltip.style.left = pos.left - this._tooltip.offsetWidth + "px";\r\n
+\t\telse\r\n
+\t\t\tthis._tooltip.style.left = pos.left + src.offsetWidth + "px";\r\n
+\r\n
+\t\tthis._tooltip.date = date;\r\n
+\t\tthis._tooltip.innerHTML = html;\r\n
+\r\n
+\t\tif (document.body.offsetHeight - pos.top - this._tooltip.offsetHeight < 0)\r\n
+\t\t\tthis._tooltip.style.top = pos.top - this._tooltip.offsetHeight + src.offsetHeight + "px";\r\n
+\t\telse\r\n
+\t\t\tthis._tooltip.style.top = pos.top + "px";\r\n
+\t};\r\n
+\r\n
+\tscheduler._year_view_tooltip_handler = function(e){\r\n
+\t\tif (!is_year_mode()) return;\r\n
+\r\n
+\t\tvar e = e || event;\r\n
+\t\tvar src = e.target || e.srcElement;\r\n
+\t\tif (src.tagName.toLowerCase() == \'a\') // fix for active links extension (it adds links to the date in the cell)\r\n
+\t\t\tsrc = src.parentNode;\r\n
+\t\tif ((src.className || "").indexOf("dhx_year_event") != -1)\r\n
+\t\t\tscheduler._showToolTip(from_attr(src.getAttribute("date")), getOffset(src), e, src);\r\n
+\t\telse\r\n
+\t\t\tscheduler._hideToolTip();\r\n
+\t};\r\n
+\tscheduler._init_year_tooltip = function() {\r\n
+\t\tscheduler._detachDomEvent(scheduler._els["dhx_cal_data"][0], "mouseover", scheduler._year_view_tooltip_handler);\r\n
+\t\tdhtmlxEvent(scheduler._els["dhx_cal_data"][0], "mouseover", scheduler._year_view_tooltip_handler);\r\n
+\t};\r\n
+\r\n
+\tscheduler.attachEvent("onSchedulerResize", function() {\r\n
+\t\tif (is_year_mode()) {\r\n
+\t\t\tthis.year_view(true);\r\n
+\t\t\treturn false;\r\n
+\t\t}\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\tscheduler._get_year_cell = function(d) {\r\n
+\t\t//there can be more than 1 year in view\r\n
+\t\t//year can start not from January\r\n
+\t\tvar m = d.getMonth() + 12 * (d.getFullYear() - this._min_date.getFullYear()) - this.week_starts._month;\r\n
+\t\tvar t = this._els["dhx_cal_data"][0].childNodes[m];\r\n
+\t\tvar d = this.week_starts[m] + d.getDate() - 1;\r\n
+\r\n
+\r\n
+\t\treturn t.childNodes[2].firstChild.rows[Math.floor(d / 7)].cells[d % 7].firstChild;\r\n
+\t};\r\n
+\r\n
+\tscheduler._year_marked_cells = {};\r\n
+\tscheduler._mark_year_date = function(d, ev) {\r\n
+\t\tvar date = to_attr(d);\r\n
+\t\tvar c = this._get_year_cell(d);\r\n
+\t\tvar ev_class = this.templates.event_class(ev.start_date, ev.end_date, ev);\r\n
+\t\tif (!scheduler._year_marked_cells[date]) {\r\n
+\t\t\tc.className = "dhx_month_head dhx_year_event";\r\n
+\t\t\tc.setAttribute("date", date);\r\n
+\t\t\tscheduler._year_marked_cells[date] = c;\r\n
+\t\t}\r\n
+\t\tc.className += (ev_class) ? (" "+ev_class) : "";\r\n
+\t};\r\n
+\tscheduler._unmark_year_date = function(d) {\r\n
+\t\tthis._get_year_cell(d).className = "dhx_month_head";\r\n
+\t};\r\n
+\tscheduler._year_render_event = function(ev) {\r\n
+\t\tvar d = ev.start_date;\r\n
+\t\tif (d.valueOf() < this._min_date.valueOf())\r\n
+\t\t\td = this._min_date;\r\n
+\t\telse d = this.date.date_part(new Date(d));\r\n
+\r\n
+\t\twhile (d < ev.end_date) {\r\n
+\t\t\tthis._mark_year_date(d, ev);\r\n
+\t\t\td = this.date.add(d, 1, "day");\r\n
+\t\t\tif (d.valueOf() >= this._max_date.valueOf())\r\n
+\t\t\t\treturn;\r\n
+\t\t}\r\n
+\t};\r\n
+\r\n
+\tscheduler.year_view = function(mode) {\r\n
+\t\tvar temp;\r\n
+\t\tif (mode) {\r\n
+\t\t\ttemp = scheduler.xy.scale_height;\r\n
+\t\t\tscheduler.xy.scale_height = -1;\r\n
+\t\t}\r\n
+\r\n
+\t\tscheduler._els["dhx_cal_header"][0].style.display = mode ? "none" : "";\r\n
+\t\tscheduler.set_sizes();\r\n
+\r\n
+\t\tif (mode)\r\n
+\t\t\tscheduler.xy.scale_height = temp;\r\n
+\r\n
+\r\n
+\t\tscheduler._table_view = mode;\r\n
+\t\tif (this._load_mode && this._load()) return;\r\n
+\r\n
+\t\tif (mode) {\r\n
+\t\t\tscheduler._init_year_tooltip();\r\n
+\t\t\tscheduler._reset_year_scale();\r\n
+\t\t\tif (scheduler._load_mode && scheduler._load()){\r\n
+\t\t\t\tscheduler._render_wait = true;\r\n
+\t\t\t\treturn;\r\n
+\t\t\t}\r\n
+\t\t\tscheduler.render_view_data();\r\n
+\t\t} else {\r\n
+\t\t\tscheduler._hideToolTip();\r\n
+\t\t}\r\n
+\t};\r\n
+\tscheduler._reset_year_scale = function() {\r\n
+\t\tthis._cols = [];\r\n
+\t\tthis._colsS = {};\r\n
+\t\tvar week_starts = []; //start day of first week in each month\r\n
+\t\tvar b = this._els["dhx_cal_data"][0];\r\n
+\r\n
+\t\tvar c = this.config;\r\n
+\t\tb.scrollTop = 0; //fix flickering in FF\r\n
+\t\tb.innerHTML = "";\r\n
+\r\n
+\t\tvar dx = Math.floor(parseInt(b.style.width) / c.year_x);\r\n
+\t\tvar dy = Math.floor((parseInt(b.style.height) - scheduler.xy.year_top) / c.year_y);\r\n
+\t\tif (dy < 190) {\r\n
+\t\t\tdy = 190;\r\n
+\t\t\tdx = Math.floor((parseInt(b.style.width) - scheduler.xy.scroll_width) / c.year_x);\r\n
+\t\t}\r\n
+\r\n
+\t\tvar summ = dx - 11;\r\n
+\t\tvar left = 0;\r\n
+\t\tvar week_template = document.createElement("div");\r\n
+\t\tvar dummy_date = this.date.week_start(scheduler._currentDate());\r\n
+\t\tfor (var i = 0; i < 7; i++) {\r\n
+\t\t\tthis._cols[i] = Math.floor(summ / (7 - i));\r\n
+\t\t\tthis._render_x_header(i, left, dummy_date, week_template);\r\n
+\t\t\tdummy_date = this.date.add(dummy_date, 1, "day");\r\n
+\t\t\tsumm -= this._cols[i];\r\n
+\t\t\tleft += this._cols[i];\r\n
+\t\t}\r\n
+\t\tweek_template.lastChild.className += " dhx_scale_bar_last";\r\n
+\r\n
+\t\tvar sd = this.date[this._mode + "_start"](this.date.copy(this._date));\r\n
+\t\tvar ssd = sd;\r\n
+\t\tvar d = null;\r\n
+\t\tfor (var i = 0; i < c.year_y; i++)\r\n
+\t\t\tfor (var j = 0; j < c.year_x; j++) {\r\n
+\t\t\t\td = document.createElement("DIV");\r\n
+\t\t\t\td.style.cssText = "position:absolute;";\r\n
+\t\t\t\td.setAttribute("date", this.templates.xml_format(sd));\r\n
+\t\t\t\td.innerHTML = "<div class=\'dhx_year_month\'></div><div class=\'dhx_year_week\'>" + week_template.innerHTML + "</div><div class=\'dhx_year_body\'></div>";\r\n
+\t\t\t\td.childNodes[0].innerHTML = this.templates.year_month(sd);\r\n
+\r\n
+\t\t\t\tvar dd = this.date.week_start(sd);\r\n
+\t\t\t\tvar ed = this._reset_month_scale(d.childNodes[2], sd, dd);\r\n
+\r\n
+\t\t\t\tvar r = d.childNodes[2].firstChild.rows;\r\n
+\t\t\t\tfor (var k=r.length; k<6; k++) {\r\n
+\t\t\t\t\tr[0].parentNode.appendChild(r[0].cloneNode(true));\r\n
+\t\t\t\t\tfor (var ri= 0, len = r[k].childNodes.length; ri < len; ri++) {\r\n
+\t\t\t\t\t   r[k].childNodes[ri].className = "dhx_after";\r\n
+\t\t\t\t\t   r[k].childNodes[ri].firstChild.innerHTML = scheduler.templates.month_day(ed);\r\n
+\t\t\t\t\t   ed = scheduler.date.add(ed,1,"day");\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t\tb.appendChild(d);\r\n
+\r\n
+\t\t\t\td.childNodes[1].style.height = d.childNodes[1].childNodes[0].offsetHeight + "px"; // dhx_year_week should have height property so that day dates would get correct position. dhx_year_week height = height of it\'s child (with the day name)\r\n
+\t\t\t\tvar dt = Math.round((dy - 190) / 2);\r\n
+\t\t\t\td.style.marginTop = dt + "px";\r\n
+\t\t\t\tthis.set_xy(d, dx - 10, dy - dt - 10, dx * j + 5, dy * i + 5 + scheduler.xy.year_top);\r\n
+\r\n
+\t\t\t\tweek_starts[i * c.year_x + j] = (sd.getDay() - (this.config.start_on_monday ? 1 : 0) + 7) % 7;\r\n
+\t\t\t\tsd = this.date.add(sd, 1, "month");\r\n
+\r\n
+\t\t\t}\r\n
+\t\tthis._els["dhx_cal_date"][0].innerHTML = this.templates[this._mode + "_date"](ssd, sd, this._mode);\r\n
+\t\tthis.week_starts = week_starts;\r\n
+\t\tweek_starts._month = ssd.getMonth();\r\n
+\t\tthis._min_date = ssd;\r\n
+\t\tthis._max_date = sd;\r\n
+\t};\r\n
+\r\n
+\tvar getActionData = scheduler.getActionData;\r\n
+\tscheduler.getActionData = function(n_ev) {\r\n
+\t\tif(!is_year_mode())\r\n
+\t\t\treturn getActionData.apply(scheduler, arguments);\r\n
+\r\n
+\t\tvar trg = n_ev?n_ev.target:event.srcElement;\r\n
+\t\tvar date = scheduler._get_year_month_date(trg);\r\n
+\r\n
+\t\tvar day = scheduler._get_year_month_cell(trg);\r\n
+\t\tvar pos = scheduler._get_year_day_indexes(day);\r\n
+\r\n
+\t\tif(pos && date){\r\n
+\t\t\tdate = scheduler.date.add(date, pos.week, "week");\r\n
+\t\t\tdate = scheduler.date.add(date, pos.day, "day");\r\n
+\t\t}else{\r\n
+\t\t\tdate = null;\r\n
+\t\t}\r\n
+\r\n
+\t\treturn {\r\n
+\t\t\tdate:date,\r\n
+\t\t\tsection:null\r\n
+\t\t};\r\n
+\r\n
+\t};\r\n
+\tscheduler._get_year_day_indexes = function(targetCell){\r\n
+\t\tvar month = scheduler._get_year_el_node(targetCell, this._locate_year_month_table);\r\n
+\t\tif(!month)\r\n
+\t\t\treturn null;\r\n
+\r\n
+\t\tvar week = 0, day = 0;\r\n
+\t\tfor(var week = 0, weeks = month.rows.length; week < weeks;week ++){\r\n
+\t\t\tvar w = month.rows[week].getElementsByTagName("td");\r\n
+\t\t\tfor(var day = 0, days = w.length; day < days; day++){\r\n
+\t\t\t\tif(w[day] == targetCell)\r\n
+\t\t\t\t\tbreak;\r\n
+\t\t\t}\r\n
+\t\t\tif(day < days)\r\n
+\t\t\t\tbreak;\r\n
+\t\t}\r\n
+\r\n
+\t\tif(week < weeks)\r\n
+\t\t\treturn {day:day, week:week};\r\n
+\t\telse\r\n
+\t\t\treturn null;\r\n
+\t};\r\n
+\tscheduler._get_year_month_date = function (node){\r\n
+\t\tvar node = scheduler._get_year_el_node(node, scheduler._locate_year_month_root);\r\n
+\t\tif(!node)\r\n
+\t\t\treturn null;\r\n
+\r\n
+\t\tvar date = node.getAttribute("date");\r\n
+\t\tif(!date)\r\n
+\t\t\treturn null;\r\n
+\r\n
+\t\treturn scheduler.date.week_start(scheduler.templates.xml_date(date));\r\n
+\t};\r\n
+\tscheduler._locate_year_month_day = function(n){\r\n
+\t\treturn n.className && n.className.indexOf("dhx_year_event") != -1 && n.hasAttribute && n.hasAttribute("date");\r\n
+\t};\r\n
+\r\n
+\tvar locateEvent = scheduler._locate_event;\r\n
+\tscheduler._locate_event = function(node) {\r\n
+\t\tvar id = locateEvent.apply(scheduler, arguments);\r\n
+\t\tif(!id){\r\n
+\t\t\tvar day = scheduler._get_year_el_node(node, scheduler._locate_year_month_day);\r\n
+\r\n
+\t\t\tif(!day || !day.hasAttribute("date")) return null;\r\n
+\r\n
+\t\t\tvar dat = scheduler.templates.xml_date(day.getAttribute("date"));\r\n
+\t\t\tvar evs = scheduler.getEvents(dat, scheduler.date.add(dat, 1, "day"));\r\n
+\t\t\tif(!evs.length) return null;\r\n
+\r\n
+\t\t\t//can be multiple events in the cell, return any single one\r\n
+\t\t\tid = evs[0].id;\r\n
+\t\t}\r\n
+\t\treturn id;\r\n
+\t};\r\n
+\tscheduler._locate_year_month_cell = function(n){\r\n
+\t\treturn n.nodeName.toLowerCase() == "td";\r\n
+\t};\r\n
+\tscheduler._locate_year_month_table = function(n){\r\n
+\t\treturn n.nodeName.toLowerCase() == "table";\r\n
+\t};\r\n
+\tscheduler._locate_year_month_root = function(n){\r\n
+\t\treturn n.hasAttribute && n.hasAttribute("date");\r\n
+\t};\r\n
+\r\n
+\tscheduler._get_year_month_cell = function(node){\r\n
+\t\treturn this._get_year_el_node(node, this._locate_year_month_cell);\r\n
+\t};\r\n
+\r\n
+\tscheduler._get_year_month_table = function(node){\r\n
+\t\treturn this._get_year_el_node (node, this._locate_year_month_table);\r\n
+\t};\r\n
+\tscheduler._get_year_month_root = function(node){\r\n
+\t\treturn this._get_year_el_node(this._get_year_month_table(node), this._locate_year_month_root);\r\n
+\t};\r\n
+\tscheduler._get_year_el_node = function(node, condition){\r\n
+\t\twhile(node && !condition(node)){\r\n
+\t\t\tnode = node.parentNode;\r\n
+\t\t}\r\n
+\t\treturn node;\r\n
+\t};\r\n
+\r\n
+\r\n
+})();\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13272</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

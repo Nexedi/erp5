@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189556.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_ar.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.locale = {\r\n
+\tdate: {\r\n
+\t\tmonth_full: ["كانون الثاني", "شباط", "آذار", "نيسان", "أيار", "حزيران", "تموز", "آب", "أيلول", "تشرين الأول", "تشرين الثاني", "كانون الأول"],\r\n
+\t\tmonth_short: ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"],\r\n
+\t\tday_full: ["الأحد", "الأثنين", "ألثلاثاء", "الأربعاء", "ألحميس", "ألجمعة", "السبت"],\r\n
+\t\tday_short: ["احد", "اثنين", "ثلاثاء", "اربعاء", "خميس", "جمعة", "سبت"]\r\n
+\t},\r\n
+\tlabels: {\r\n
+\t\tdhx_cal_today_button: "اليوم",\r\n
+\t\tday_tab: "يوم",\r\n
+\t\tweek_tab: "أسبوع",\r\n
+\t\tmonth_tab: "شهر",\r\n
+\t\tnew_event: "حدث جديد",\r\n
+\t\ticon_save: "اخزن",\r\n
+\t\ticon_cancel: "الغاء",\r\n
+\t\ticon_details: "تفاصيل",\r\n
+\t\ticon_edit: "تحرير",\r\n
+\t\ticon_delete: "حذف",\r\n
+\t\tconfirm_closing: "التغييرات سوف تضيع, هل انت متأكد؟", //Your changes will be lost, are your sure ?\r\n
+\t\tconfirm_deleting: "الحدث سيتم حذفها نهائيا ، هل أنت متأكد؟",\r\n
+\t\tsection_description: "الوصف",\r\n
+\t\tsection_time: "الفترة الزمنية",\r\n
+\t\tfull_day: "طوال اليوم",\r\n
+\r\n
+\t\tconfirm_recurring: "هل تريد تحرير مجموعة كاملة من الأحداث المتكررة؟",\r\n
+\t\tsection_recurring: "تكرار الحدث",\r\n
+\t\tbutton_recurring: "تعطيل",\r\n
+\t\tbutton_recurring_open: "تمكين",\r\n
+\t\tbutton_edit_series: "تحرير سلسلة",\r\n
+\t\tbutton_edit_occurrence: "تعديل نسخة",\r\n
+\r\n
+\t\t/*grid view extension*/\r\n
+\t\tgrid_tab: "جدول",\r\n
+\r\n
+\t\t/* touch tooltip*/\r\n
+\t\tdrag_to_create:"Drag to create",\r\n
+\t\tdrag_to_move:"Drag to move",\r\n
+\r\n
+\t\t/* dhtmlx message default buttons */\r\n
+\t\tmessage_ok:"OK",\r\n
+\t\tmessage_cancel:"Cancel"\r\n
+\t}\r\n
+};\r\n
+\r\n
+\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2189</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

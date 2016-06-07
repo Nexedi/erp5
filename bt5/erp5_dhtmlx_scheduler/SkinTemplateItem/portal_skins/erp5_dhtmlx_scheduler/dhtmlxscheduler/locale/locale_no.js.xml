@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189535.57</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_no.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\n
+scheduler.locale={date:{month_full:["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"],month_short:["Jan","Feb","Mar","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Des"],day_full:["Søndag","Mandag","Tirsdag","Onsdag","Torsdag","Fredag","Lørdag"],day_short:["Søn","Man","Tir","Ons","Tor","Fre","Lør"]},labels:{dhx_cal_today_button:"Idag",day_tab:"Dag",week_tab:"Uke",month_tab:"Måned",new_event:"Ny",icon_save:"Lagre",icon_cancel:"Avbryt",icon_details:"Detaljer",\n
+icon_edit:"Endre",icon_delete:"Slett",confirm_closing:"Endringer blir ikke lagret, er du sikker?",confirm_deleting:"Oppføringen vil bli slettet, er du sikker?",section_description:"Beskrivelse",section_time:"Tidsperiode",full_day:"Full dag",confirm_recurring:"Vil du endre hele settet med repeterende oppføringer?",section_recurring:"Repeterende oppføring",button_recurring:"Ikke aktiv",button_recurring_open:"Aktiv",button_edit_series:"Rediger serien",button_edit_occurrence:"Redigere en kopi",agenda_tab:"Agenda",\n
+date:"Dato",description:"Beskrivelse",year_tab:"År",week_agenda_tab:"Agenda",grid_tab:"Grid",drag_to_create:"Drag to create",drag_to_move:"Drag to move",message_ok:"OK",message_cancel:"Cancel"}};\n
+//# sourceMappingURL=../sources/locale/locale_no.js.map</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1570</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

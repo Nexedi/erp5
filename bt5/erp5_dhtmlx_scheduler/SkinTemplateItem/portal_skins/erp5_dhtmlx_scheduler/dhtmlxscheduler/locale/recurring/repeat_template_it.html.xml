@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<div class="dhx_form_repeat">\r\n
+\t<form>\r\n
+    <div class="dhx_repeat_left">\r\n
+               <label><input class="dhx_repeat_radio" type="radio" name="repeat" value="day" />Quotidiano</label><br />\r\n
+               <label><input class="dhx_repeat_radio" type="radio" name="repeat" value="week"/>Settimanale</label><br />\r\n
+               <label><input class="dhx_repeat_radio" type="radio" name="repeat" value="month" checked />Mensile</label><br />\r\n
+               <label><input class="dhx_repeat_radio" type="radio" name="repeat" value="year" />Annuale</label>\r\n
+    </div>\r\n
+    <div class="dhx_repeat_divider"></div>\r\n
+    <div class="dhx_repeat_center">\r\n
+               <div style="display:none;" id="dhx_repeat_day">\r\n
+                   <label><input class="dhx_repeat_radio" type="radio" name="day_type" value="d"/>Ogni</label><input class="dhx_repeat_text" type="text" name="day_count" value="1" />giorno<br />\r\n
+                   <label><input class="dhx_repeat_radio" type="radio" name="day_type" checked value="w"/>Ogni giornata lavorativa</label>\r\n
+               </div>\r\n
+               <div style="display:none;" id="dhx_repeat_week">\r\n
+                   Ripetere ogni<input class="dhx_repeat_text" type="text" name="week_count" value="1" />settimana:<br />\r\n
+\r\n
+                   <table class="dhx_repeat_days">\r\n
+                       <tr>\r\n
+                           <td>\r\n
+                               <label><input class="dhx_repeat_checkbox" type="checkbox" name="week_day" value="1" />LunedÃ¬</label><br />\r\n
+                               <label><input class="dhx_repeat_checkbox" type="checkbox" name="week_day" value="4" />JovedÃ¬</label>\r\n
+                           </td>\r\n
+                           <td>\r\n
+                               <label><input class="dhx_repeat_checkbox" type="checkbox" name="week_day" value="2" />MartedÃ¬</label><br />\r\n
+                               <label><input class="dhx_repeat_checkbox" type="checkbox" name="week_day" value="5" />VenerdÃ¬</label>\r\n
+                           </td>\r\n
+                           <td>\r\n
+                               <label><input class="dhx_repeat_checkbox" type="checkbox" name="week_day" value="3" />MercoledÃ¬</label><br />\r\n
+                               <label><input class="dhx_repeat_checkbox" type="checkbox" name="week_day" value="6" />Sabato</label>\r\n
+                           </td>\r\n
+                           <td>\r\n
+                               <label><input class="dhx_repeat_checkbox" type="checkbox" name="week_day" value="0" />Domenica</label><br /><br />\r\n
+                           </td>\r\n
+                       </tr>\r\n
+                   </table>\r\n
+\r\n
+               </div>\r\n
+               <div id="dhx_repeat_month">\r\n
+                   <label><input class="dhx_repeat_radio" type="radio" name="month_type" value="d"/>Ripetere</label><input class="dhx_repeat_text" type="text" name="month_day" value="1" />giorno ogni<input class="dhx_repeat_text" type="text" name="month_count" value="1" />mese<br />\r\n
+                   <label><input class="dhx_repeat_radio" type="radio" name="month_type" checked value="w"/>Il</label><input class="dhx_repeat_text" type="text" name="month_week2" value="1" /><select name="month_day2"><option value="1" selected >LunedÃ¬<option value="2">MartedÃ¬<option value="3">MercoledÃ¬<option value="4">JovedÃ¬<option value="5">VenerdÃ¬<option value="6">Sabato<option value="0">Domenica</select>ogni<input class="dhx_repeat_text" type="text" name="month_count2" value="1" />mese<br />\r\n
+               </div>\r\n
+               <div style="display:none;" id="dhx_repeat_year">\r\n
+                   <label><input class="dhx_repeat_radio" type="radio" name="year_type" value="d"/>Ogni</label><input class="dhx_repeat_text" type="text" name="year_day" value="1" />giorno<select name="year_month"><option value="0" selected >Gennaio<option value="1">Febbraio<option value="2">Marzo<option value="3">Aprile<option value="4">Maggio<option value="5">Jiugno<option value="6">Luglio<option value="7">Agosto<option value="8">Settembre<option value="9">Ottobre<option value="10">Novembre<option value="11">Dicembre</select>mese<br />\r\n
+                   <label><input class="dhx_repeat_radio" type="radio" name="year_type" checked value="w"/>Il</label><input class="dhx_repeat_text" type="text" name="year_week2" value="1" /><select name="year_day2"><option value="1" selected >LunedÃ¬<option value="2">MartedÃ¬<option value="3">MercoledÃ¬<option value="4">JovedÃ¬<option value="5">VenerdÃ¬<option value="6">Sabato<option value="0">Domenica</select>del<select name="year_month2"><option value="0" selected >Gennaio<option value="1">Febbraio<option value="2">Marzo<option value="3">Aprile<option value="4">Maggio<option value="5">Jiugno<option value="6">Luglio<option value="7">Agosto<option value="8">Settembre<option value="9">Ottobre<option value="10">Novembre<option value="11">Dicembre</select><br />\r\n
+               </div>\r\n
+    </div>\r\n
+    <div class="dhx_repeat_divider"></div>\r\n
+    <div class="dhx_repeat_right">\r\n
+               <label><input class="dhx_repeat_radio" type="radio" name="end" checked/>Senza data finale</label><br />\r\n
+               <label><input class="dhx_repeat_radio" type="radio" name="end" />Dopo</label><input class="dhx_repeat_text" type="text" name="occurences_count" value="1" />occorenze<br />\r\n
+               <label><input class="dhx_repeat_radio" type="radio" name="end" />Fine</label><input class="dhx_repeat_date" type="text" name="date_of_end" value="\'+scheduler.config.repeat_date_of_end+\'" /><br />\r\n
+    </div>\r\n
+    </form>\r\n
+ </div>\r\n
+ <div style="clear:both">\r\n
+ </div>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>repeat_template_it.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189534.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_ar.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\n
+scheduler.locale={date:{month_full:["كانون الثاني","شباط","آذار","نيسان","أيار","حزيران","تموز","آب","أيلول","تشرين الأول","تشرين الثاني","كانون الأول"],month_short:["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"],day_full:["الأحد","الأثنين","ألثلاثاء","الأربعاء","ألحميس","ألجمعة","السبت"],day_short:["احد","اثنين","ثلاثاء","اربعاء","خميس","جمعة","سبت"]},labels:{dhx_cal_today_button:"اليوم",day_tab:"يوم",week_tab:"أسبوع",month_tab:"شهر",new_event:"حدث جديد",\n
+icon_save:"اخزن",icon_cancel:"الغاء",icon_details:"تفاصيل",icon_edit:"تحرير",icon_delete:"حذف",confirm_closing:"التغييرات سوف تضيع, هل انت متأكد؟",confirm_deleting:"الحدث سيتم حذفها نهائيا ، هل أنت متأكد؟",section_description:"الوصف",section_time:"الفترة الزمنية",full_day:"طوال اليوم",confirm_recurring:"هل تريد تحرير مجموعة كاملة من الأحداث المتكررة؟",section_recurring:"تكرار الحدث",button_recurring:"تعطيل",button_recurring_open:"تمكين",button_edit_series:"تحرير سلسلة",button_edit_occurrence:"تعديل نسخة",\n
+grid_tab:"جدول",drag_to_create:"Drag to create",drag_to_move:"Drag to move",message_ok:"OK",message_cancel:"Cancel"}};\n
+//# sourceMappingURL=../sources/locale/locale_ar.js.map</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1900</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

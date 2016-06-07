@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189535.31</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_he.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\n
+scheduler.locale={date:{month_full:["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"],month_short:["ינו","פבר","מרץ","אפר","מאי","יונ","יול","אוג","ספט","אוק","נוב","דצמ"],day_full:["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"],day_short:["א","ב","ג","ד","ה","ו","ש"]},labels:{dhx_cal_today_button:"היום",day_tab:"יום",week_tab:"שבוע",month_tab:"חודש",new_event:"ארוע חדש",icon_save:"שמור",icon_cancel:"בטל",icon_details:"פרטים",icon_edit:"ערוך",icon_delete:"מחק",\n
+confirm_closing:"",confirm_deleting:"ארוע ימחק סופית.להמשיך?",section_description:"הסבר",section_time:"תקופה",confirm_recurring:"האם ברצונך לשנות כל סדרת ארועים מתמשכים?",section_recurring:"להעתיק ארוע",button_recurring:"לא פעיל",button_recurring_open:"פעיל",full_day:"יום שלם",button_edit_series:"ערוך את הסדרה",button_edit_occurrence:"עריכת עותק",agenda_tab:"סדר יום",date:"תאריך",description:"תיאור",year_tab:"לשנה",week_agenda_tab:"סדר יום",grid_tab:"סורג",drag_to_create:"Drag to create",drag_to_move:"Drag to move",\n
+message_ok:"OK",message_cancel:"Cancel"}};\n
+//# sourceMappingURL=../sources/locale/locale_he.js.map</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1720</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

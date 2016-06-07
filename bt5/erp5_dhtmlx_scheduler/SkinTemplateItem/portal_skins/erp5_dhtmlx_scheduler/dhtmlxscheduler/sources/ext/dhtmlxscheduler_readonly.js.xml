@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189555.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_readonly.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.attachEvent("onTemplatesReady", function() {\r\n
+\tvar original_sns = scheduler.config.lightbox.sections.slice();\r\n
+\tvar original_left_buttons = scheduler.config.buttons_left.slice();\r\n
+\tvar original_right_buttons = scheduler.config.buttons_right.slice();\r\n
+\r\n
+\r\n
+\tscheduler.attachEvent("onBeforeLightbox", function(id) {\r\n
+\t\tif (this.config.readonly_form || this.getEvent(id).readonly) {\r\n
+\t\t\tthis.config.readonly_active = true;\r\n
+\r\n
+\t\t\tfor (var i = 0; i < this.config.lightbox.sections.length; i++) {\r\n
+\t\t\t\tthis.config.lightbox.sections[i].focus = false;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\telse {\r\n
+\t\t\tthis.config.readonly_active = false;\r\n
+\t\t\tscheduler.config.lightbox.sections = original_sns.slice(); // restore original list of sections including recurring\r\n
+\t\t\tscheduler.config.buttons_left = original_left_buttons.slice();\r\n
+\t\t\tscheduler.config.buttons_right = original_right_buttons.slice();\r\n
+\t\t}\r\n
+\r\n
+\t\tvar sns = this.config.lightbox.sections;\r\n
+\t\tif (this.config.readonly_active) {\r\n
+\t\t\tfor (var i = 0; i < sns.length; i++) {\r\n
+\t\t\t\tif (sns[i].type == \'recurring\') {\r\n
+\t\t\t\t\tif (this.config.readonly_active) {\r\n
+\t\t\t\t\t\tsns.splice(i, 1);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tbreak;\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\tvar forbidden_buttons = ["dhx_delete_btn", "dhx_save_btn"];\r\n
+\t\t\tvar button_arrays = [scheduler.config.buttons_left, scheduler.config.buttons_right];\r\n
+\t\t\tfor (var i = 0; i < forbidden_buttons.length; i++) {\r\n
+\t\t\t\tvar forbidden_button = forbidden_buttons[i];\r\n
+\t\t\t\tfor (var k = 0; k < button_arrays.length; k++) {\r\n
+\t\t\t\t\tvar button_array = button_arrays[k];\r\n
+\t\t\t\t\tvar index = -1;\r\n
+\t\t\t\t\tfor (var p = 0; p < button_array.length; p++) {\r\n
+\t\t\t\t\t\tif (button_array[p] == forbidden_button) {\r\n
+\t\t\t\t\t\t\tindex = p;\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tif (index != -1) {\r\n
+\t\t\t\t\t\tbutton_array.splice(index, 1);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\r\n
+\r\n
+\t\t}\r\n
+\r\n
+\t\tthis.resetLightbox();\r\n
+\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\r\n
+\tfunction txt_replace(tag, d, n, text) {\r\n
+\t\tvar txts = d.getElementsByTagName(tag);\r\n
+\t\tvar txtt = n.getElementsByTagName(tag);\r\n
+\t\tfor (var i = txtt.length - 1; i >= 0; i--) {\r\n
+\t\t\tvar n = txtt[i];\r\n
+\t\t\tif (!text){\r\n
+\t\t\t\tn.disabled = true;\r\n
+\t\t\t\t//radio and checkboxes loses state after .cloneNode in IE\r\n
+\t\t\t\tif(d.checked)\r\n
+\t\t\t\t\tn.checked = true;\r\n
+\t\t\t}else {\r\n
+\t\t\t\tvar t = document.createElement("SPAN");\r\n
+\t\t\t\tt.className = "dhx_text_disabled";\r\n
+\t\t\t\tt.innerHTML = text(txts[i]);\r\n
+\t\t\t\tn.parentNode.insertBefore(t, n);\r\n
+\t\t\t\tn.parentNode.removeChild(n);\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tvar old = scheduler._fill_lightbox;\r\n
+\tscheduler._fill_lightbox = function() {\r\n
+\r\n
+\t\tvar lb = this.getLightbox();\r\n
+\t\tif (this.config.readonly_active) {\r\n
+\t\t\tlb.style.visibility = \'hidden\';\r\n
+\t\t\t// lightbox should have actual sizes before rendering controls\r\n
+\t\t\t// currently only matters for dhtmlxCombo\r\n
+\t\t\tlb.style.display = \'block\';\r\n
+\t\t}\r\n
+\t\tvar res = old.apply(this, arguments);\r\n
+\t\tif (this.config.readonly_active) {\r\n
+\t\t\t//reset visibility and display\r\n
+\t\t\tlb.style.visibility = \'\';\r\n
+\t\t\tlb.style.display = \'none\';\r\n
+\t\t}\r\n
+\r\n
+\t\tif (this.config.readonly_active) {\r\n
+\r\n
+\t\t\tvar d = this.getLightbox();\r\n
+\t\t\tvar n = this._lightbox_r = d.cloneNode(true);\r\n
+\t\t\tn.id = scheduler.uid();\r\n
+\r\n
+\t\t\ttxt_replace("textarea", d, n, function(a) {\r\n
+\t\t\t\treturn a.value;\r\n
+\t\t\t});\r\n
+\t\t\ttxt_replace("input", d, n, false);\r\n
+\t\t\ttxt_replace("select", d, n, function(a) {\r\n
+\t\t\t\tif(!a.options.length) return "";\r\n
+\t\t\t\treturn a.options[Math.max((a.selectedIndex || 0), 0)].text;\r\n
+\t\t\t});\r\n
+\r\n
+\t\t\td.parentNode.insertBefore(n, d);\r\n
+\r\n
+\t\t\tolds.call(this, n);\r\n
+\t\t\tif (scheduler._lightbox)\r\n
+\t\t\t\tscheduler._lightbox.parentNode.removeChild(scheduler._lightbox);\r\n
+\t\t\tthis._lightbox = n;\r\n
+\r\n
+\t\t\tif (scheduler.config.drag_lightbox)\r\n
+\t\t\t\tn.firstChild.onmousedown = scheduler._ready_to_dnd;\r\n
+\t\t\tthis.setLightboxSize();\r\n
+\t\t\tn.onclick = function(e) {\r\n
+\t\t\t\tvar src = e ? e.target : event.srcElement;\r\n
+\t\t\t\tif (!src.className) src = src.previousSibling;\r\n
+\t\t\t\tif (src && src.className)\r\n
+\t\t\t\t\tswitch (src.className) {\r\n
+\t\t\t\t\t\tcase "dhx_cancel_btn":\r\n
+\t\t\t\t\t\t\tscheduler.callEvent("onEventCancel", [scheduler._lightbox_id]);\r\n
+\t\t\t\t\t\t\tscheduler._edit_stop_event(scheduler.getEvent(scheduler._lightbox_id), false);\r\n
+\t\t\t\t\t\t\tscheduler.hide_lightbox();\r\n
+\t\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t};\r\n
+\t\t}\r\n
+\t\treturn res;\r\n
+\t};\r\n
+\r\n
+\tvar olds = scheduler.showCover;\r\n
+\tscheduler.showCover = function() {\r\n
+\t\tif (!this.config.readonly_active)\r\n
+\t\t\tolds.apply(this, arguments);\r\n
+\t};\r\n
+\r\n
+\tvar hold = scheduler.hide_lightbox;\r\n
+\tscheduler.hide_lightbox = function() {\r\n
+\t\tif (this._lightbox_r) {\r\n
+\t\t\tthis._lightbox_r.parentNode.removeChild(this._lightbox_r);\r\n
+\t\t\tthis._lightbox_r = this._lightbox = null;\r\n
+\t\t}\r\n
+\r\n
+\t\treturn hold.apply(this, arguments);\r\n
+\t};\r\n
+});\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4812</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

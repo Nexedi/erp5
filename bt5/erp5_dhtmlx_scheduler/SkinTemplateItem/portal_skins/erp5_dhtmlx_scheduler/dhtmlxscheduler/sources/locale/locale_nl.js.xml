@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189559.37</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_nl.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.locale = {\r\n
+\tdate: {\r\n
+\t\tmonth_full: ["Januari", "Februari", "Maart", "April", "Mei", "Juni", "Juli", "Augustus", "September", "Oktober", "November", "December"],\r\n
+\t\tmonth_short: ["Jan", "Feb", "mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"],\r\n
+\t\tday_full: ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"],\r\n
+\t\tday_short: ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"]\r\n
+\t},\r\n
+\tlabels: {\r\n
+\t\tdhx_cal_today_button: "Vandaag",\r\n
+\t\tday_tab: "Dag",\r\n
+\t\tweek_tab: "Week",\r\n
+\t\tmonth_tab: "Maand",\r\n
+\t\tnew_event: "Nieuw item",\r\n
+\t\ticon_save: "Opslaan",\r\n
+\t\ticon_cancel: "Annuleren",\r\n
+\t\ticon_details: "Details",\r\n
+\t\ticon_edit: "Edit",\r\n
+\t\ticon_delete: "Verwijderen",\r\n
+\t\tconfirm_closing: "", //Your changes will be lost, are your sure ?\r\n
+\t\tconfirm_deleting: "Item zal permanent worden verwijderd, doorgaan?",\r\n
+\t\tsection_description: "Beschrijving",\r\n
+\t\tsection_time: "Tijd periode",\r\n
+\t\tfull_day: "Hele dag",\r\n
+\r\n
+\t\tconfirm_recurring: "Wilt u alle terugkerende items bijwerken?",\r\n
+\t\tsection_recurring: "Item herhalen",\r\n
+\t\tbutton_recurring: "Uit",\r\n
+\t\tbutton_recurring_open: "Aan",\r\n
+\t\tbutton_edit_series: "Bewerk de serie",\r\n
+\t\tbutton_edit_occurrence: "Bewerk een kopie",\r\n
+\r\n
+\t\t/*agenda view extension*/\r\n
+\t\tagenda_tab: "Agenda",\r\n
+\t\tdate: "Datum",\r\n
+\t\tdescription: "Omschrijving",\r\n
+\r\n
+\t\t/*year view extension*/\r\n
+\t\tyear_tab: "Jaar",\r\n
+\r\n
+\t\t/*week agenda view extension*/\r\n
+\t\tweek_agenda_tab: "Agenda",\r\n
+\r\n
+\t\t/*grid view extension*/\r\n
+\t\tgrid_tab: "Tabel",\r\n
+\r\n
+\t\t/* touch tooltip*/\r\n
+\t\tdrag_to_create:"Drag to create",\r\n
+\t\tdrag_to_move:"Drag to move",\r\n
+\r\n
+\t\t/* dhtmlx message default buttons */\r\n
+\t\tmessage_ok:"OK",\r\n
+\t\tmessage_cancel:"Cancel"\r\n
+\t}\r\n
+};\r\n
+\r\n
+\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1941</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

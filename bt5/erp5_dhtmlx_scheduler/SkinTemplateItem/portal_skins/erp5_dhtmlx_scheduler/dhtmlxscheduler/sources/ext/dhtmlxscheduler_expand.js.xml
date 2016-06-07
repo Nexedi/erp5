@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189553.58</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_expand.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.expand = function() {\r\n
+\tif(!scheduler.callEvent("onBeforeExpand", []))\r\n
+\t\treturn;\r\n
+\tvar t = scheduler._obj;\r\n
+\tdo {\r\n
+\t\tt._position = t.style.position || "";\r\n
+\t\tt.style.position = "static";\r\n
+\t} while ((t = t.parentNode) && t.style);\r\n
+\tt = scheduler._obj;\r\n
+\tt.style.position = "absolute";\r\n
+\tt._width = t.style.width;\r\n
+\tt._height = t.style.height;\r\n
+\tt.style.width = t.style.height = "100%";\r\n
+\tt.style.top = t.style.left = "0px";\r\n
+\r\n
+\tvar top = document.body;\r\n
+\ttop.scrollTop = 0;\r\n
+\r\n
+\ttop = top.parentNode;\r\n
+\tif (top)\r\n
+\t\ttop.scrollTop = 0;\r\n
+\tdocument.body._overflow = document.body.style.overflow || "";\r\n
+\tdocument.body.style.overflow = "hidden";\r\n
+\tscheduler._maximize();\r\n
+\tscheduler.callEvent("onExpand", []);\r\n
+};\r\n
+scheduler.collapse = function() {\r\n
+\tif(!scheduler.callEvent("onBeforeCollapse", []))\r\n
+\t\treturn;\r\n
+\tvar t = scheduler._obj;\r\n
+\tdo {\r\n
+\t\tt.style.position = t._position;\r\n
+\t} while ((t = t.parentNode) && t.style);\r\n
+\tt = scheduler._obj;\r\n
+\tt.style.width = t._width;\r\n
+\tt.style.height = t._height;\r\n
+\tdocument.body.style.overflow = document.body._overflow;\r\n
+\tscheduler._maximize();\r\n
+\tscheduler.callEvent("onCollapse", []);\r\n
+};\r\n
+scheduler.attachEvent("onTemplatesReady", function() {\r\n
+\tvar t = document.createElement("DIV");\r\n
+\tt.className = "dhx_expand_icon";\r\n
+\tscheduler.toggleIcon = t;\r\n
+\tscheduler._obj.appendChild(t);\r\n
+\tt.onclick = function() {\r\n
+\t\tif (!scheduler.expanded)\r\n
+\t\t\tscheduler.expand(); else\r\n
+\t\t\tscheduler.collapse();\r\n
+\t};\r\n
+});\r\n
+scheduler._maximize = function() {\r\n
+\tthis.expanded = !this.expanded;\r\n
+\tthis.toggleIcon.style.backgroundPosition = "0 " + (this.expanded ? "0" : "18") + "px";\r\n
+\r\n
+\tvar directions = [\'left\', \'top\'];\r\n
+\tfor (var i = 0; i < directions.length; i++) {\r\n
+\t\tvar margin = scheduler.xy[\'margin_\' + directions[i]];\r\n
+\t\tvar prev_margin = scheduler[\'_prev_margin_\' + directions[i]];\r\n
+\t\tif (scheduler.xy[\'margin_\' + directions[i]]) {\r\n
+\t\t\tscheduler[\'_prev_margin_\' + directions[i]] = scheduler.xy[\'margin_\' + directions[i]];\r\n
+\t\t\tscheduler.xy[\'margin_\' + directions[i]] = 0;\r\n
+\t\t} else {\r\n
+\t\t\tif (prev_margin) {\r\n
+\t\t\t\tscheduler.xy[\'margin_\' + directions[i]] = scheduler[\'_prev_margin_\' + directions[i]];\r\n
+\t\t\t\tdelete scheduler[\'_prev_margin_\' + directions[i]];\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tif (scheduler.callEvent("onSchedulerResize", [])) {\r\n
+\t\tscheduler.update_view();\r\n
+\t\tscheduler.callEvent("onAfterSchedulerResize");\r\n
+\t}\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2616</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

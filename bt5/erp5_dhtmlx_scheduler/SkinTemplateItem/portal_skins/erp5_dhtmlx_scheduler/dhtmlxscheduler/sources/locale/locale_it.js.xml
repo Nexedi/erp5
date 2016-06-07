@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189558.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_it.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.locale = {\r\n
+\tdate: {\r\n
+\t\tmonth_full: ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"],\r\n
+\t\tmonth_short: ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"],\r\n
+\t\tday_full: ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"],\r\n
+\t\tday_short: ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"]\r\n
+\t},\r\n
+\tlabels: {\r\n
+\t\tdhx_cal_today_button: "Oggi",\r\n
+\t\tday_tab: "Giorno",\r\n
+\t\tweek_tab: "Settimana",\r\n
+\t\tmonth_tab: "Mese",\r\n
+\t\tnew_event: "Nuovo evento",\r\n
+\t\ticon_save: "Salva",\r\n
+\t\ticon_cancel: "Chiudi",\r\n
+\t\ticon_details: "Dettagli",\r\n
+\t\ticon_edit: "Modifica",\r\n
+\t\ticon_delete: "Elimina",\r\n
+\t\tconfirm_closing: "", //Le modifiche apportate saranno perse, siete sicuri?\r\n
+\t\tconfirm_deleting: "L\'evento sarà eliminato, siete sicuri?",\r\n
+\t\tsection_description: "Descrizione",\r\n
+\t\tsection_time: "Periodo di tempo",\r\n
+\t\tfull_day: "Intera giornata",\r\n
+\r\n
+\t\tconfirm_recurring: "Vuoi modificare l\'intera serie di eventi?",\r\n
+\t\tsection_recurring: "Ripetere l\'evento",\r\n
+\t\tbutton_recurring: "Disattivato",\r\n
+\t\tbutton_recurring_open: "Attivato",\r\n
+\t\tbutton_edit_series: "Modificare la serie",\r\n
+\t\tbutton_edit_occurrence: "Modificare una copia",\r\n
+\r\n
+\t\t/*agenda view extension*/\r\n
+\t\tagenda_tab: "Agenda",\r\n
+\t\tdate: "Data",\r\n
+\t\tdescription: "Descrizione",\r\n
+\r\n
+\t\t/*year view extension*/\r\n
+\t\tyear_tab: "Anni",\r\n
+\r\n
+\t\t/*week agenda view extension*/\r\n
+\t\tweek_agenda_tab: "Agenda",\r\n
+\r\n
+\t\t/*grid view extension*/\r\n
+\t\tgrid_tab: "Griglia",\r\n
+\r\n
+\t\t/* touch tooltip*/\r\n
+\t\tdrag_to_create:"Drag to create",\r\n
+\t\tdrag_to_move:"Drag to move",\r\n
+\r\n
+\t\t/* dhtmlx message default buttons */\r\n
+\t\tmessage_ok:"OK",\r\n
+\t\tmessage_cancel:"Cancel"\r\n
+\t}\r\n
+};\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1991</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

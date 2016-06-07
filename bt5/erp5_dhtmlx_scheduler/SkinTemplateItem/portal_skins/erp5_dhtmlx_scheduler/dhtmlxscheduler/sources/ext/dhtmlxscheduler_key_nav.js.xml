@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189553.74</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_key_nav.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+//Initial idea and implementation by Steve MC\r\n
+scheduler._temp_key_scope = function (){\r\n
+\r\n
+scheduler.config.key_nav = true;\r\n
+\r\n
+var date; // used for copy and paste operations\r\n
+var section; // used for copy and paste operations\r\n
+var isCopy = null;\r\n
+\r\n
+\r\n
+scheduler.attachEvent("onMouseMove", function(id,e){\r\n
+\tdate = scheduler.getActionData(e).date;\r\n
+\tsection = scheduler.getActionData(e).section;\r\n
+});\r\n
+\r\n
+function clear_event_after(ev){\r\n
+\tdelete ev.rec_type; delete ev.rec_pattern;\r\n
+\tdelete ev.event_pid; delete ev.event_length;\r\n
+}\r\n
+scheduler._make_pasted_event = function(ev){\r\n
+\tvar event_duration = ev.end_date-ev.start_date;\r\n
+\r\n
+\tvar copy = scheduler._lame_copy({}, ev);\r\n
+\tclear_event_after(copy);\r\n
+\tcopy.start_date = new Date(date);\r\n
+\tcopy.end_date = new Date(copy.start_date.valueOf() + event_duration);\r\n
+\r\n
+\tif(section){\r\n
+\t\tvar property = scheduler._get_section_property();\r\n
+\t\t\r\n
+\t\tif(scheduler.config.multisection)\r\n
+\t\t\tcopy[property] = ev[property]; // save initial set of resources for multisection view\r\n
+\t\telse\r\n
+\t\t\tcopy[property] = section;\r\n
+\t}\r\n
+\treturn copy;\r\n
+};\r\n
+scheduler._do_paste = function(is_copy, modified_ev, original_ev){\r\n
+\tscheduler.addEvent(modified_ev);\r\n
+\tscheduler.callEvent("onEventPasted", [is_copy, modified_ev, original_ev]);\r\n
+};\r\n
+\r\n
+scheduler._is_key_nav_active = function(){\r\n
+\tif(this._is_initialized() && !this._is_lightbox_open() && this.config.key_nav){\r\n
+\t\treturn true;\r\n
+\t}\r\n
+\treturn false;\r\n
+};\r\n
+\r\n
+dhtmlxEvent(document,(_isOpera?"keypress":"keydown"),function(e){\r\n
+\tif(!scheduler._is_key_nav_active()) return true;\r\n
+\r\n
+\te=e||event;\r\n
+\r\n
+\tif (e.keyCode == 37 || e.keyCode == 39) { // Left, Right arrows\r\n
+\t\te.cancelBubble = true;\r\n
+\r\n
+\t\tvar next = scheduler.date.add(scheduler._date,(e.keyCode == 37 ? -1 : 1 ),scheduler._mode);\r\n
+\t\tscheduler.setCurrentView(next);\r\n
+\t\treturn true;\r\n
+\t}\r\n
+\r\n
+\tvar select_id = scheduler._select_id;\r\n
+\tif (e.ctrlKey && e.keyCode == 67) {  // CTRL+C\r\n
+\t\tif (select_id) {\r\n
+\t\t\tscheduler._buffer_id = select_id;\r\n
+\t\t\tisCopy = true;\r\n
+\t\t\tscheduler.callEvent("onEventCopied", [scheduler.getEvent(select_id)]);\r\n
+\t\t}\r\n
+\t\treturn true;\r\n
+\t}\r\n
+\tif (e.ctrlKey && e.keyCode == 88) { // CTRL+X\r\n
+\t\tif (select_id) {\r\n
+\t\t\tisCopy = false;\r\n
+\t\t\tscheduler._buffer_id = select_id;\r\n
+\t\t\tvar ev = scheduler.getEvent(select_id);\r\n
+\t\t\tscheduler.updateEvent(ev.id);\r\n
+\t\t\tscheduler.callEvent("onEventCut", [ev]);\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tif (e.ctrlKey && e.keyCode == 86) {  // CTRL+V\r\n
+\t\tvar ev = scheduler.getEvent(scheduler._buffer_id);\r\n
+\t\tif (ev) {\r\n
+\t\t\tvar new_ev = scheduler._make_pasted_event(ev);\r\n
+\t\t\tif (isCopy) {\r\n
+\t\t\t\tnew_ev.id = scheduler.uid();\r\n
+\t\t\t\tscheduler._do_paste(isCopy, new_ev, ev);\r\n
+\t\t\t}\r\n
+\t\t\telse { // cut operation\r\n
+\t\t\t\tvar res = scheduler.callEvent("onBeforeEventChanged",[new_ev, e, false, ev]);\r\n
+\t\t\t\tif (res) {\r\n
+\t\t\t\t\tscheduler._do_paste(isCopy, new_ev, ev);\r\n
+\t\t\t\t\tisCopy = true; // switch to copy after first paste operation\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\r\n
+\t\t}\r\n
+\t\treturn true;\r\n
+\t}\r\n
+\r\n
+});\r\n
+\r\n
+};\r\n
+scheduler._temp_key_scope();\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3198</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,525 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189554.51</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_minical.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.templates.calendar_month = scheduler.date.date_to_str("%F %Y");\r\n
+scheduler.templates.calendar_scale_date = scheduler.date.date_to_str("%D");\r\n
+scheduler.templates.calendar_date = scheduler.date.date_to_str("%d");\r\n
+scheduler.config.minicalendar = {\r\n
+\tmark_events: true\r\n
+};\r\n
+scheduler._synced_minicalendars = [];\r\n
+scheduler.renderCalendar = function(obj, _prev, is_refresh) {\r\n
+\tvar cal = null;\r\n
+\tvar date = obj.date || (scheduler._currentDate());\r\n
+\tif (typeof date == "string")\r\n
+\t\tdate = this.templates.api_date(date);\r\n
+\r\n
+\tif (!_prev) {\r\n
+\t\tvar cont = obj.container;\r\n
+\t\tvar pos = obj.position;\r\n
+\r\n
+\t\tif (typeof cont == "string")\r\n
+\t\t\tcont = document.getElementById(cont);\r\n
+\r\n
+\t\tif (typeof pos == "string")\r\n
+\t\t\tpos = document.getElementById(pos);\r\n
+\t\tif (pos && (typeof pos.left == "undefined")) {\r\n
+\t\t\tvar tpos = getOffset(pos);\r\n
+\t\t\tpos = {\r\n
+\t\t\t\ttop: tpos.top + pos.offsetHeight,\r\n
+\t\t\t\tleft: tpos.left\r\n
+\t\t\t};\r\n
+\t\t}\r\n
+\t\tif (!cont)\r\n
+\t\t\tcont = scheduler._get_def_cont(pos);\r\n
+\r\n
+\t\tcal = this._render_calendar(cont, date, obj);\r\n
+\t\tcal.onclick = function(e) {\r\n
+\t\t\te = e || event;\r\n
+\t\t\tvar src = e.target || e.srcElement;\r\n
+\r\n
+\t\t\tif (src.className.indexOf("dhx_month_head") != -1) {\r\n
+\t\t\t\tvar pname = src.parentNode.className;\r\n
+\t\t\t\tif (pname.indexOf("dhx_after") == -1 && pname.indexOf("dhx_before") == -1) {\r\n
+\t\t\t\t\tvar newdate = scheduler.templates.xml_date(this.getAttribute("date"));\r\n
+\t\t\t\t\tnewdate.setDate(parseInt(src.innerHTML, 10));\r\n
+\t\t\t\t\tscheduler.unmarkCalendar(this);\r\n
+\t\t\t\t\tscheduler.markCalendar(this, newdate, "dhx_calendar_click");\r\n
+\t\t\t\t\tthis._last_date = newdate;\r\n
+\t\t\t\t\tif (this.conf.handler) this.conf.handler.call(scheduler, newdate, this);\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t};\r\n
+\t} else {\r\n
+\t\tcal = this._render_calendar(_prev.parentNode, date, obj, _prev);\r\n
+\t\tscheduler.unmarkCalendar(cal);\r\n
+\t}\r\n
+\r\n
+\tif (scheduler.config.minicalendar.mark_events) {\r\n
+\t\tvar start = scheduler.date.month_start(date);\r\n
+\t\tvar end = scheduler.date.add(start, 1, "month");\r\n
+\t\tvar evs = this.getEvents(start, end);\r\n
+\t\tvar filter = this["filter_" + this._mode];\r\n
+\t\tfor (var i = 0; i < evs.length; i++) {\r\n
+\t\t\tvar ev = evs[i];\r\n
+\t\t\tif (filter && !filter(ev.id, ev))\r\n
+\t\t\t\tcontinue;\r\n
+\t\t\tvar d = ev.start_date;\r\n
+\t\t\tif (d.valueOf() < start.valueOf())\r\n
+\t\t\t\td = start;\r\n
+\t\t\td = scheduler.date.date_part(new Date(d.valueOf()));\r\n
+\t\t\twhile (d < ev.end_date) {\r\n
+\t\t\t\tthis.markCalendar(cal, d, "dhx_year_event");\r\n
+\t\t\t\td = this.date.add(d, 1, "day");\r\n
+\t\t\t\tif (d.valueOf() >= end.valueOf())\r\n
+\t\t\t\t\tbreak;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tthis._markCalendarCurrentDate(cal);\r\n
+\r\n
+\tcal.conf = obj;\r\n
+\tif (obj.sync && !is_refresh)\r\n
+\t\tthis._synced_minicalendars.push(cal);\r\n
+\r\n
+\tif(!cal.conf._on_xle_handler){\r\n
+\t\tcal.conf._on_xle_handler = scheduler.attachEvent("onXLE", function refreshOnLoad(){\r\n
+\t\t\tscheduler.updateCalendar(cal, cal.conf.date);\r\n
+\t\t});\r\n
+\t}\r\n
+\r\n
+\treturn cal;\r\n
+};\r\n
+scheduler._get_def_cont = function(pos) {\r\n
+\tif (!this._def_count) {\r\n
+\t\tthis._def_count = document.createElement("DIV");\r\n
+\t\tthis._def_count.className = "dhx_minical_popup";\r\n
+\t\tthis._def_count.onclick = function(e) { (e || event).cancelBubble = true; };\r\n
+\t\tdocument.body.appendChild(this._def_count);\r\n
+\t}\r\n
+\r\n
+\tthis._def_count.style.left = pos.left + "px";\r\n
+\tthis._def_count.style.top = pos.top + "px";\r\n
+\tthis._def_count._created = new Date();\r\n
+\r\n
+\treturn this._def_count;\r\n
+};\r\n
+scheduler._locateCalendar = function(cal, date) {\r\n
+\tif (typeof date == "string")\r\n
+\t\tdate = scheduler.templates.api_date(date);\r\n
+\r\n
+\tif(+date > +cal._max_date || +date < +cal._min_date)\r\n
+\t\treturn null;\r\n
+\r\n
+\tvar table = cal.childNodes[2].childNodes[0];\r\n
+\r\n
+\tvar weekNum = 0;\r\n
+\tvar dat = new Date(cal._min_date);\r\n
+\twhile(+this.date.add(dat, 1, "week") <= +date){\r\n
+\t\tdat = this.date.add(dat, 1, "week");\r\n
+\t\tweekNum++;\r\n
+\t}\r\n
+\r\n
+\tvar sm = scheduler.config.start_on_monday;\r\n
+\tvar day = (date.getDay() || (sm ? 7 : 0)) - (sm ? 1 : 0);\r\n
+\treturn table.rows[weekNum].cells[day].firstChild;\r\n
+};\r\n
+scheduler.markCalendar = function(cal, date, css) {\r\n
+\tvar div = this._locateCalendar(cal, date);\r\n
+\tif(!div)\r\n
+\t\treturn;\r\n
+\r\n
+\tdiv.className += " " + css;\r\n
+};\r\n
+scheduler.unmarkCalendar = function(cal, date, css) {\r\n
+\tdate = date || cal._last_date;\r\n
+\tcss = css || "dhx_calendar_click";\r\n
+\tif (!date) return;\r\n
+\tvar el = this._locateCalendar(cal, date);\r\n
+\tif(!el)\r\n
+\t\treturn;\r\n
+\tel.className = (el.className || "").replace(RegExp(css, "g"));\r\n
+};\r\n
+scheduler._week_template = function(width) {\r\n
+\tvar summ = (width || 250);\r\n
+\tvar left = 0;\r\n
+\r\n
+\tvar week_template = document.createElement("div");\r\n
+\tvar dummy_date = this.date.week_start(scheduler._currentDate());\r\n
+\tfor (var i = 0; i < 7; i++) {\r\n
+\t\tthis._cols[i] = Math.floor(summ / (7 - i));\r\n
+\t\tthis._render_x_header(i, left, dummy_date, week_template);\r\n
+\t\tdummy_date = this.date.add(dummy_date, 1, "day");\r\n
+\t\tsumm -= this._cols[i];\r\n
+\t\tleft += this._cols[i];\r\n
+\t}\r\n
+\tweek_template.lastChild.className += " dhx_scale_bar_last";\r\n
+\treturn week_template;\r\n
+};\r\n
+scheduler.updateCalendar = function(obj, sd) {\r\n
+\tobj.conf.date = sd;\r\n
+\tthis.renderCalendar(obj.conf, obj, true);\r\n
+};\r\n
+scheduler._mini_cal_arrows = ["&nbsp", "&nbsp"];\r\n
+scheduler._render_calendar = function(obj, sd, conf, previous) {\r\n
+\t/*store*/\r\n
+\tvar ts = scheduler.templates;\r\n
+\tvar temp = this._cols;\r\n
+\tthis._cols = [];\r\n
+\tvar temp2 = this._mode;\r\n
+\tthis._mode = "calendar";\r\n
+\tvar temp3 = this._colsS;\r\n
+\tthis._colsS = {height: 0};\r\n
+\tvar temp4 = new Date(this._min_date);\r\n
+\tvar temp5 = new Date(this._max_date);\r\n
+\tvar temp6 = new Date(scheduler._date);\r\n
+\tvar temp7 = ts.month_day;\r\n
+\tvar temp8 = this._ignores_detected; this._ignores_detected = 0;\r\n
+\tts.month_day = ts.calendar_date;\r\n
+\r\n
+\tsd = this.date.month_start(sd);\r\n
+\tvar week_template = this._week_template(obj.offsetWidth - 1 - this.config.minicalendar.padding );\r\n
+\r\n
+\tvar d;\r\n
+\tif (previous)\r\n
+\t\td = previous; else {\r\n
+\t\td = document.createElement("DIV");\r\n
+\t\td.className = "dhx_cal_container dhx_mini_calendar";\r\n
+\t}\r\n
+\td.setAttribute("date", this.templates.xml_format(sd));\r\n
+\td.innerHTML = "<div class=\'dhx_year_month\'></div><div class=\'dhx_year_week\'>" + week_template.innerHTML + "</div><div class=\'dhx_year_body\'></div>";\r\n
+\r\n
+\td.childNodes[0].innerHTML = this.templates.calendar_month(sd);\r\n
+\tif (conf.navigation) {\r\n
+\t\tvar move_minicalendar_date = function(calendar, diff) {\r\n
+\t\t\tvar date = scheduler.date.add(calendar._date, diff, "month");\r\n
+\t\t\tscheduler.updateCalendar(calendar, date);\r\n
+\t\t\tif (scheduler._date.getMonth() == calendar._date.getMonth() && scheduler._date.getFullYear() == calendar._date.getFullYear()) {\r\n
+\t\t\t\tscheduler._markCalendarCurrentDate(calendar);\r\n
+\t\t\t}\r\n
+\t\t};\r\n
+\r\n
+\t\tvar css_classnames = ["dhx_cal_prev_button", "dhx_cal_next_button"];\r\n
+\t\tvar css_texts = ["left:1px;top:2px;position:absolute;", "left:auto; right:1px;top:2px;position:absolute;"];\r\n
+\t\tvar diffs = [-1, 1];\r\n
+\t\tvar handler = function(diff) {\r\n
+\t\t\treturn function() {\r\n
+\t\t\t\tif (conf.sync) {\r\n
+\t\t\t\t\tvar calendars = scheduler._synced_minicalendars;\r\n
+\t\t\t\t\tfor (var k = 0; k < calendars.length; k++) {\r\n
+\t\t\t\t\t\tmove_minicalendar_date(calendars[k], diff);\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\tmove_minicalendar_date(d, diff);\r\n
+\t\t\t\t}\r\n
+\t\t\t};\r\n
+\t\t};\r\n
+\t\tfor (var j = 0; j < 2; j++) {\r\n
+\t\t\tvar arrow = document.createElement("DIV");\r\n
+\t\t\t//var diff = diffs[j];\r\n
+\t\t\tarrow.className = css_classnames[j];\r\n
+\t\t\tarrow.style.cssText = css_texts[j];\r\n
+\t\t\tarrow.innerHTML = this._mini_cal_arrows[j];\r\n
+\t\t\td.firstChild.appendChild(arrow);\r\n
+\t\t\tarrow.onclick = handler(diffs[j]);\r\n
+\t\t}\r\n
+\t}\r\n
+\td._date = new Date(sd);\r\n
+\r\n
+\td.week_start = (sd.getDay() - (this.config.start_on_monday ? 1 : 0) + 7) % 7;\r\n
+\r\n
+\tvar dd = d._min_date = this.date.week_start(sd);\r\n
+\td._max_date = this.date.add(d._min_date, 6, "week");\r\n
+\r\n
+\tthis._reset_month_scale(d.childNodes[2], sd, dd);\r\n
+\r\n
+\tvar r = d.childNodes[2].firstChild.rows;\r\n
+\tfor (var k = r.length; k < 6; k++) {\r\n
+\t\tvar last_row = r[r.length - 1];\r\n
+\t\tr[0].parentNode.appendChild(last_row.cloneNode(true));\r\n
+\t\tvar last_day_number = parseInt(last_row.childNodes[last_row.childNodes.length - 1].childNodes[0].innerHTML);\r\n
+\t\tlast_day_number = (last_day_number < 10) ? last_day_number : 0; // previous week could end on 28-31, so we should start with 0\r\n
+\t\tfor (var ri = 0; ri < r[k].childNodes.length; ri++) {\r\n
+\t\t\tr[k].childNodes[ri].className = "dhx_after";\r\n
+\t\t\tr[k].childNodes[ri].childNodes[0].innerHTML = scheduler.date.to_fixed(++last_day_number);\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tif (!previous)\r\n
+\t\tobj.appendChild(d);\r\n
+\r\n
+\td.childNodes[1].style.height = (d.childNodes[1].childNodes[0].offsetHeight - 1) + "px"; // dhx_year_week should have height property so that day dates would get correct position. dhx_year_week height = height of it\'s child (with the day name)\r\n
+\r\n
+\t/*restore*/\r\n
+\tthis._cols = temp;\r\n
+\tthis._mode = temp2;\r\n
+\tthis._colsS = temp3;\r\n
+\tthis._min_date = temp4;\r\n
+\tthis._max_date = temp5;\r\n
+\tscheduler._date = temp6;\r\n
+\tts.month_day = temp7;\r\n
+\tthis._ignores_detected = temp8;\r\n
+\treturn d;\r\n
+};\r\n
+scheduler.destroyCalendar = function(cal, force) {\r\n
+\tif (!cal && this._def_count && this._def_count.firstChild) {\r\n
+\t\tif (force || (new Date()).valueOf() - this._def_count._created.valueOf() > 500)\r\n
+\t\t\tcal = this._def_count.firstChild;\r\n
+\t}\r\n
+\tif (!cal) return;\r\n
+\tcal.onclick = null;\r\n
+\tcal.innerHTML = "";\r\n
+\tif (cal.parentNode)\r\n
+\t\tcal.parentNode.removeChild(cal);\r\n
+\tif (this._def_count)\r\n
+\t\tthis._def_count.style.top = "-1000px";\r\n
+\r\n
+\tif(cal.conf && cal.conf._on_xle_handler)\r\n
+\t\tscheduler.detachEvent(cal.conf._on_xle_handler);\r\n
+};\r\n
+scheduler.isCalendarVisible = function() {\r\n
+\tif (this._def_count && parseInt(this._def_count.style.top, 10) > 0)\r\n
+\t\treturn this._def_count;\r\n
+\treturn false;\r\n
+};\r\n
+\r\n
+scheduler._attach_minical_events = function(){\r\n
+\tdhtmlxEvent(document.body, "click", function() { scheduler.destroyCalendar(); });\r\n
+\tscheduler._attach_minical_events = function(){};\r\n
+};\r\n
+\r\n
+scheduler.attachEvent("onTemplatesReady", function() {\r\n
+\tscheduler._attach_minical_events();\r\n
+});\r\n
+\r\n
+scheduler.templates.calendar_time = scheduler.date.date_to_str("%d-%m-%Y");\r\n
+\r\n
+scheduler.form_blocks.calendar_time = {\r\n
+\trender: function() {\r\n
+\t\tvar html = "<input class=\'dhx_readonly\' type=\'text\' readonly=\'true\'>";\r\n
+\r\n
+\t\tvar cfg = scheduler.config;\r\n
+\t\tvar dt = this.date.date_part(scheduler._currentDate());\r\n
+\r\n
+\t\tvar last = 24 * 60, first = 0;\r\n
+\t\tif (cfg.limit_time_select) {\r\n
+\t\t\tfirst = 60 * cfg.first_hour;\r\n
+\t\t\tlast = 60 * cfg.last_hour + 1;  // to include "17:00" option if time select is limited\r\n
+\t\t}\r\n
+\t\tdt.setHours(first / 60);\r\n
+\r\n
+\t\thtml += " <select>";\r\n
+\t\tfor (var i = first; i < last; i += this.config.time_step * 1) { // `<` to exclude last "00:00" option\r\n
+\t\t\tvar time = this.templates.time_picker(dt);\r\n
+\t\t\thtml += "<option value=\'" + i + "\'>" + time + "</option>";\r\n
+\t\t\tdt = this.date.add(dt, this.config.time_step, "minute");\r\n
+\t\t}\r\n
+\t\thtml += "</select>";\r\n
+\r\n
+\t\tvar full_day = scheduler.config.full_day;\r\n
+\r\n
+\t\treturn "<div style=\'height:30px;padding-top:0; font-size:inherit;\' class=\'dhx_section_time\'>" + html + "<span style=\'font-weight:normal; font-size:10pt;\'> &nbsp;&ndash;&nbsp; </span>" + html + "</div>";\r\n
+\t},\r\n
+\tset_value: function(node, value, ev) {\r\n
+\r\n
+\t\tvar inputs = node.getElementsByTagName("input");\r\n
+\t\tvar selects = node.getElementsByTagName("select");\r\n
+\t\tvar start_date,\r\n
+\t\t\tend_date;\r\n
+\r\n
+\t\tvar _init_once = function(inp, date, number) {\r\n
+\t\t\tinp.onclick = function() {\r\n
+\t\t\t\tscheduler.destroyCalendar(null, true);\r\n
+\t\t\t\tscheduler.renderCalendar({\r\n
+\t\t\t\t\tposition: inp,\r\n
+\t\t\t\t\tdate: new Date(this._date),\r\n
+\t\t\t\t\tnavigation: true,\r\n
+\t\t\t\t\thandler: function(new_date) {\r\n
+\t\t\t\t\t\tinp.value = scheduler.templates.calendar_time(new_date);\r\n
+\t\t\t\t\t\tinp._date = new Date(new_date);\r\n
+\t\t\t\t\t\tscheduler.destroyCalendar();\r\n
+\t\t\t\t\t\tif (scheduler.config.event_duration && scheduler.config.auto_end_date && number === 0) { //first element = start date\r\n
+\t\t\t\t\t\t\t_update_minical_select();\r\n
+\t\t\t\t\t\t}\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t});\r\n
+\t\t\t};\r\n
+\t\t};\r\n
+\r\n
+\t\tif (scheduler.config.full_day) {\r\n
+\t\t\tif (!node._full_day) {\r\n
+\t\t\t\tvar html = "<label class=\'dhx_fullday\'><input type=\'checkbox\' name=\'full_day\' value=\'true\'> " + scheduler.locale.labels.full_day + "&nbsp;</label></input>";\r\n
+\t\t\t\tif (!scheduler.config.wide_form)\r\n
+\t\t\t\t\thtml = node.previousSibling.innerHTML + html;\r\n
+\t\t\t\tnode.previousSibling.innerHTML = html;\r\n
+\t\t\t\tnode._full_day = true;\r\n
+\t\t\t}\r\n
+\t\t\tvar input = node.previousSibling.getElementsByTagName("input")[0];\r\n
+\r\n
+\t\t\tvar isFulldayEvent = (scheduler.date.time_part(ev.start_date) === 0 && scheduler.date.time_part(ev.end_date) === 0);\r\n
+\t\t\tinput.checked = isFulldayEvent;\r\n
+\r\n
+\t\t\tselects[0].disabled = input.checked;\r\n
+\t\t\tselects[1].disabled = input.checked;\r\n
+\r\n
+\t\t\tinput.onclick = function() {\r\n
+\t\t\t\tif (input.checked === true) {\r\n
+\t\t\t\t\tvar obj = {};\r\n
+\t\t\t\t\tscheduler.form_blocks.calendar_time.get_value(node, obj);\r\n
+\r\n
+\t\t\t\t\tstart_date = scheduler.date.date_part(obj.start_date);\r\n
+\t\t\t\t\tend_date = scheduler.date.date_part(obj.end_date);\r\n
+\r\n
+\t\t\t\t\tif (+end_date == +start_date || (+end_date >= +start_date && (ev.end_date.getHours() !== 0 || ev.end_date.getMinutes() !== 0)))\r\n
+\t\t\t\t\t\tend_date = scheduler.date.add(end_date, 1, "day");\r\n
+\t\t\t\t}\r\n
+\r\n
+\t\t\t\tvar start = start_date || ev.start_date;\r\n
+\t\t\t\tvar end = end_date || ev.end_date;\r\n
+\t\t\t\t_attach_action(inputs[0], start);\r\n
+\t\t\t\t_attach_action(inputs[1], end);\r\n
+\t\t\t\tselects[0].value = start.getHours() * 60 + start.getMinutes();\r\n
+\t\t\t\tselects[1].value = end.getHours() * 60 + end.getMinutes();\r\n
+\r\n
+\t\t\t\tselects[0].disabled = input.checked;\r\n
+\t\t\t\tselects[1].disabled = input.checked;\r\n
+\r\n
+\t\t\t};\r\n
+\t\t}\r\n
+\r\n
+\t\tif (scheduler.config.event_duration && scheduler.config.auto_end_date) {\r\n
+\r\n
+\t\t\tvar _update_minical_select = function () {\r\n
+\t\t\t\tstart_date = scheduler.date.add(inputs[0]._date, selects[0].value, "minute");\r\n
+\t\t\t\tend_date = new Date(start_date.getTime() + (scheduler.config.event_duration * 60 * 1000));\r\n
+\r\n
+\t\t\t\tinputs[1].value = scheduler.templates.calendar_time(end_date);\r\n
+\t\t\t\tinputs[1]._date = scheduler.date.date_part(new Date(end_date));\r\n
+\r\n
+\t\t\t\tselects[1].value = end_date.getHours() * 60 + end_date.getMinutes();\r\n
+\t\t\t};\r\n
+\r\n
+\t\t\tselects[0].onchange = _update_minical_select; // only update on first select should trigger update so user could define other end date if he wishes too\r\n
+\t\t}\r\n
+\r\n
+\t\tfunction _attach_action(inp, date, number) {\r\n
+\t\t\t_init_once(inp, date, number);\r\n
+\t\t\tinp.value = scheduler.templates.calendar_time(date);\r\n
+\t\t\tinp._date = scheduler.date.date_part(new Date(date));\r\n
+\t\t}\r\n
+\r\n
+\t\t_attach_action(inputs[0], ev.start_date, 0);\r\n
+\t\t_attach_action(inputs[1], ev.end_date, 1);\r\n
+\t\t_init_once = function() {};\r\n
+\r\n
+\t\tselects[0].value = ev.start_date.getHours() * 60 + ev.start_date.getMinutes();\r\n
+\t\tselects[1].value = ev.end_date.getHours() * 60 + ev.end_date.getMinutes();\r\n
+\r\n
+\t},\r\n
+\tget_value: function(node, ev) {\r\n
+\t\tvar inputs = node.getElementsByTagName("input");\r\n
+\t\tvar selects = node.getElementsByTagName("select");\r\n
+\r\n
+\t\tev.start_date = scheduler.date.add(inputs[0]._date, selects[0].value, "minute");\r\n
+\t\tev.end_date = scheduler.date.add(inputs[1]._date, selects[1].value, "minute");\r\n
+\r\n
+\t\tif (ev.end_date <= ev.start_date)\r\n
+\t\t\tev.end_date = scheduler.date.add(ev.start_date, scheduler.config.time_step, "minute");\r\n
+\t\treturn {\r\n
+\t\t\tstart_date: new Date(ev.start_date),\r\n
+\t\t\tend_date: new Date(ev.end_date)\r\n
+\t\t};\r\n
+\t},\r\n
+\tfocus: function(node) {\r\n
+\t}\r\n
+};\r\n
+scheduler.linkCalendar = function(calendar, datediff) {\r\n
+\tvar action = function() {\r\n
+\t\tvar date = scheduler._date;\r\n
+\t\tvar dateNew = new Date(date.valueOf());\r\n
+\t\tif (datediff) dateNew = datediff(dateNew);\r\n
+\t\tdateNew.setDate(1);\r\n
+\t\tscheduler.updateCalendar(calendar, dateNew);\r\n
+\t\treturn true;\r\n
+\t};\r\n
+\r\n
+\tscheduler.attachEvent("onViewChange", action);\r\n
+\tscheduler.attachEvent("onXLE", action);\r\n
+\tscheduler.attachEvent("onEventAdded", action);\r\n
+\tscheduler.attachEvent("onEventChanged", action);\r\n
+\tscheduler.attachEvent("onAfterEventDelete", action);\r\n
+\taction();\r\n
+};\r\n
+\r\n
+scheduler._markCalendarCurrentDate = function(calendar) {\r\n
+\tvar date = scheduler._date;\r\n
+\tvar mode = scheduler._mode;\r\n
+\tvar month_start = scheduler.date.month_start(new Date(calendar._date));\r\n
+\tvar month_end = scheduler.date.add(month_start, 1, "month");\r\n
+\r\n
+\tif (mode == \'day\' || (this._props && !!this._props[mode])) { // if day or units view\r\n
+\t\tif (month_start.valueOf() <= date.valueOf() && month_end > date) {\r\n
+\t\t\tscheduler.markCalendar(calendar, date, "dhx_calendar_click");\r\n
+\t\t}\r\n
+\t} else if (mode == \'week\') {\r\n
+\t\tvar dateNew = scheduler.date.week_start(new Date(date.valueOf()));\r\n
+\t\tfor (var i = 0; i < 7; i++) {\r\n
+\t\t\tif (month_start.valueOf() <= dateNew.valueOf() && month_end > dateNew) // >= would mean mark first day of the next month\r\n
+\t\t\t\tscheduler.markCalendar(calendar, dateNew, "dhx_calendar_click");\r\n
+\t\t\tdateNew = scheduler.date.add(dateNew, 1, "day");\r\n
+\t\t}\r\n
+\t}\r\n
+};\r\n
+\r\n
+scheduler.attachEvent("onEventCancel", function(){\r\n
+\tscheduler.destroyCalendar(null, true);\r\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>16793</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

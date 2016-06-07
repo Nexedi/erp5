@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189558.3</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_fi.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.locale = {\r\n
+\tdate: {\r\n
+\t\tmonth_full: ["Tammikuu", "Helmikuu", "Maaliskuu", "Huhtikuu", "Toukokuu", "Kes&auml;kuu", "Hein&auml;kuu", "Elokuu", "Syyskuu", "Lokakuu", "Marraskuu", "Joulukuu"],\r\n
+\t\tmonth_short: ["Tam", "Hel", "Maa", "Huh", "Tou", "Kes", "Hei", "Elo", "Syy", "Lok", "Mar", "Jou"],\r\n
+\t\tday_full: ["Sunnuntai", "Maanantai", "Tiistai", "Keskiviikko", "Torstai", "Perjantai", "Lauantai"],\r\n
+\t\tday_short: ["Su", "Ma", "Ti", "Ke", "To", "Pe", "La"]\r\n
+\t},\r\n
+\tlabels: {\r\n
+\t\tdhx_cal_today_button: "Tänään",\r\n
+\t\tday_tab: "Päivä",\r\n
+\t\tweek_tab: "Viikko",\r\n
+\t\tmonth_tab: "Kuukausi",\r\n
+\t\tnew_event: "Uusi tapahtuma",\r\n
+\t\ticon_save: "Tallenna",\r\n
+\t\ticon_cancel: "Peru",\r\n
+\t\ticon_details: "Tiedot",\r\n
+\t\ticon_edit: "Muokkaa",\r\n
+\t\ticon_delete: "Poista",\r\n
+\t\tconfirm_closing: "", //Your changes will be lost, are your sure ?\r\n
+\t\tconfirm_deleting: "Haluatko varmasti poistaa tapahtuman?",\r\n
+\t\tsection_description: "Kuvaus",\r\n
+\t\tsection_time: "Aikajakso",\r\n
+\t\tfull_day: "Koko päivä",\r\n
+\r\n
+\t\tconfirm_recurring: "Haluatko varmasti muokata toistuvan tapahtuman kaikkia jaksoja?",\r\n
+\t\tsection_recurring: "Toista tapahtuma",\r\n
+\t\tbutton_recurring: "Ei k&auml;yt&ouml;ss&auml;",\r\n
+\t\tbutton_recurring_open: "K&auml;yt&ouml;ss&auml;",\r\n
+\t\tbutton_edit_series: "Muokkaa sarja",\r\n
+\t\tbutton_edit_occurrence: "Muokkaa kopio",\r\n
+\r\n
+\t\t/*agenda view extension*/\r\n
+\t\tagenda_tab: "Esityslista",\r\n
+\t\tdate: "Päivämäärä",\r\n
+\t\tdescription: "Kuvaus",\r\n
+\r\n
+\t\t/*year view extension*/\r\n
+\t\tyear_tab: "Vuoden",\r\n
+\r\n
+\t\t/*week agenda view extension*/\r\n
+\t\tweek_agenda_tab: "Esityslista",\r\n
+\r\n
+\t\t/*grid view extension*/\r\n
+\t\tgrid_tab: "Ritilä",\r\n
+\r\n
+\t\t/* touch tooltip*/\r\n
+\t\tdrag_to_create:"Drag to create",\r\n
+\t\tdrag_to_move:"Drag to move",\r\n
+\r\n
+\t\t/* dhtmlx message default buttons */\r\n
+\t\tmessage_ok:"OK",\r\n
+\t\tmessage_cancel:"Cancel"\r\n
+\t}\r\n
+};\r\n
+\r\n
+\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2050</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

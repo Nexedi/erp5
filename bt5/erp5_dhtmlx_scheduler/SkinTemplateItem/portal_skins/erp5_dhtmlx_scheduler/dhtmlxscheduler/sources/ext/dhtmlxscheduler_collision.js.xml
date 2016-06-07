@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189553.09</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_collision.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+(function(){\r\n
+\r\n
+var temp_section;\r\n
+var before;\r\n
+\r\n
+scheduler.config.collision_limit = 1;\t\r\n
+\r\n
+function _setTempSection(event_id) { // for custom views (matrix, timeline, units)\r\n
+\tvar checked_mode = scheduler._get_section_view();\r\n
+\tif(checked_mode && event_id){\r\n
+\t\ttemp_section = scheduler.getEvent(event_id)[scheduler._get_section_property()];\r\n
+\t}\r\n
+}\r\n
+\r\n
+scheduler.attachEvent("onBeforeDrag",function(id){\r\n
+\t_setTempSection(id); \r\n
+\treturn true;\r\n
+});\r\n
+scheduler.attachEvent("onBeforeLightbox",function(id){\r\n
+\tvar ev = scheduler.getEvent(id);\r\n
+\tbefore = [ev.start_date, ev.end_date];\r\n
+\t_setTempSection(id);\r\n
+\treturn true;\r\n
+});\r\n
+scheduler.attachEvent("onEventChanged",function(id){\r\n
+\tif (!id || !scheduler.getEvent(id)) return true;\r\n
+\tvar ev = scheduler.getEvent(id);\r\n
+\tif (!scheduler.checkCollision(ev)){\r\n
+\t\tif (!before) return false;\r\n
+\t\tev.start_date = before[0];\r\n
+\t\tev.end_date = before[1];\r\n
+\t\tev._timed=this.isOneDayEvent(ev);\r\n
+\t}\r\n
+\treturn true;\r\n
+});\r\n
+scheduler.attachEvent("onBeforeEventChanged",function(ev,e,is_new){\r\n
+\treturn scheduler.checkCollision(ev);\r\n
+});\r\n
+scheduler.attachEvent("onEventAdded",function(id,ev) {\r\n
+\tvar result = scheduler.checkCollision(ev);\r\n
+\tif (!result)\r\n
+\t\tscheduler.deleteEvent(id);\r\n
+});\r\n
+scheduler.attachEvent("onEventSave",function(id, edited_ev, is_new){\r\n
+\tedited_ev = scheduler._lame_clone(edited_ev);\r\n
+\tedited_ev.id = id;\r\n
+\r\n
+\t//lightbox may not have \'time\' section\r\n
+\tif(!(edited_ev.start_date && edited_ev.end_date)){\r\n
+\t\tvar ev = scheduler.getEvent(id);\r\n
+\t\tedited_ev.start_date = new Date(ev.start_date);\r\n
+\t\tedited_ev.end_date = new Date(ev.end_date);\r\n
+\t}\r\n
+\r\n
+\tif(edited_ev.rec_type){\r\n
+\t\tscheduler._roll_back_dates(edited_ev);\r\n
+\t}\r\n
+\treturn scheduler.checkCollision(edited_ev); // in case user creates event on one date but then edited it another\r\n
+});\r\n
+\r\n
+scheduler._check_sections_collision = function(first, second){\r\n
+\tvar map_to = scheduler._get_section_property();\r\n
+\tif (first[map_to] == second[map_to] && first.id != second.id)\r\n
+\t\treturn true;\r\n
+\treturn false;\r\n
+};\r\n
+\r\n
+scheduler.checkCollision = function(ev) {\r\n
+\tvar evs = [];\r\n
+\tvar collision_limit = scheduler.config.collision_limit;\r\n
+\r\n
+\tif (ev.rec_type) {\r\n
+\t\tvar evs_dates = scheduler.getRecDates(ev);\r\n
+\t\tfor(var k=0; k<evs_dates.length; k++) {\r\n
+\t\t\tvar tevs = scheduler.getEvents(evs_dates[k].start_date, evs_dates[k].end_date);\r\n
+\t\t\tfor(var j=0; j<tevs.length; j++) { \r\n
+\t\t\t\tif ((tevs[j].event_pid || tevs[j].id) != ev.id )\r\n
+\t\t\t\t\tevs.push(tevs[j]);\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t} else {\r\n
+\t\tevs = scheduler.getEvents(ev.start_date, ev.end_date);\r\n
+\t\tfor (var i=0; i<evs.length; i++) {\r\n
+\t\t\tif (evs[i].id == ev.id) {\r\n
+\t\t\t\tevs.splice(i,1);\r\n
+\t\t\t\tbreak;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t}\r\n
+\t\r\n
+\r\n
+\tvar checked_mode = scheduler._get_section_view();\r\n
+\tvar map_to = scheduler._get_section_property();\r\n
+\t\r\n
+\tvar single = true;\r\n
+\tif (checked_mode) { // custom view\r\n
+\t\tvar count = 0;\r\n
+\r\n
+\t\tfor (var i = 0; i < evs.length; i++){\r\n
+\t\t\tif (evs[i].id != ev.id && this._check_sections_collision(evs[i], ev))\r\n
+\t\t\t\tcount++;\r\n
+\t\t}\r\n
+\r\n
+\t\tif (count >= collision_limit) {\r\n
+\r\n
+\t\t\tsingle = false;\r\n
+\t\t}\r\n
+\t}\r\n
+\telse {\r\n
+\t\tif ( evs.length >= collision_limit )\r\n
+\t\t\tsingle = false;\r\n
+\t}\r\n
+\tif (!single) {\r\n
+\t\tvar res = !scheduler.callEvent("onEventCollision",[ev,evs]);\r\n
+\t\tif (!res) {\r\n
+\t\t\tev[map_to] = temp_section||ev[map_to]; // from _setTempSection for custom views\r\n
+\t\t}\r\n
+\t\treturn res;\r\n
+\t}\r\n
+\treturn single;\r\n
+\t\r\n
+};\r\n
+\r\n
+})();\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3600</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189531.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_pdf.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\n
+!function(){function e(e){return e.replace(f,"\\n").replace(b,"")}function t(e,t){e=parseFloat(e),t=parseFloat(t),isNaN(t)||(e-=t);var a=r(e);return e=e-a.width+a.cols*m,isNaN(e)?"auto":100*e/m}function a(e,t,a){e=parseFloat(e),t=parseFloat(t),!isNaN(t)\046\046a\046\046(e-=t);var n=r(e);return e=e-n.width+n.cols*m,isNaN(e)?"auto":100*e/(m-(isNaN(t)?0:t))}function r(e){for(var t=0,a=scheduler._els.dhx_cal_header[0].childNodes,r=a[1]?a[1].childNodes:a[0].childNodes,n=0;n\074r.length;n++){var i=r[n].style?r[n]:r[n].parentNode,d=parseFloat(i.style.width);\n
+\n
+if(!(e\076d))break;e-=d+1,t+=d+1}return{width:t,cols:n}}function n(e){return e=parseFloat(e),isNaN(e)?"auto":100*e/g}function i(e,t){return(window.getComputedStyle?window.getComputedStyle(e,null)[t]:e.currentStyle?e.currentStyle[t]:null)||""}function d(e,t){for(var a=parseInt(e.style.left,10),r=0;r\074scheduler._cols.length;r++)if(a-=scheduler._cols[r],0\076a)return r;return t}function l(e,t){for(var a=parseInt(e.style.top,10),r=0;r\074scheduler._colsS.heights.length;r++)if(scheduler._colsS.heights[r]\076a)return r;\n
+\n
+return t}function s(e){return e?"\074"+e+"\076":""}function o(e){return e?"\074/"+e+"\076":""}function _(e,t,a,r){var n="\074"+e+" profile=\'"+t+"\'";return a\046\046(n+=" header=\'"+a+"\'"),r\046\046(n+=" footer=\'"+r+"\'"),n+="\076"}function c(){var t="",a=scheduler._mode;if(scheduler.matrix\046\046scheduler.matrix[scheduler._mode]\046\046(a="cell"==scheduler.matrix[scheduler._mode].render?"matrix":"timeline"),t+="\074scale mode=\'"+a+"\' today=\'"+scheduler._els.dhx_cal_date[0].innerHTML+"\'\076","week_agenda"==scheduler._mode)for(var r=scheduler._els.dhx_cal_data[0].getElementsByTagName("DIV"),n=0;n\074r.length;n++)"dhx_wa_scale_bar"==r[n].className\046\046(t+="\074column\076"+e(r[n].innerHTML)+"\074/column\076");\n
+else if("agenda"==scheduler._mode||"map"==scheduler._mode){var r=scheduler._els.dhx_cal_header[0].childNodes[0].childNodes;t+="\074column\076"+e(r[0].innerHTML)+"\074/column\076\074column\076"+e(r[1].innerHTML)+"\074/column\076"}else if("year"==scheduler._mode)for(var r=scheduler._els.dhx_cal_data[0].childNodes,n=0;n\074r.length;n++)t+="\074month label=\'"+e(r[n].childNodes[0].innerHTML)+"\'\076",t+=h(r[n].childNodes[1].childNodes),t+=u(r[n].childNodes[2]),t+="\074/month\076";else{t+="\074x\076";var r=scheduler._els.dhx_cal_header[0].childNodes;\n
+\n
+t+=h(r),t+="\074/x\076";var i=scheduler._els.dhx_cal_data[0];if(scheduler.matrix\046\046scheduler.matrix[scheduler._mode]){t+="\074y\076";for(var n=0;n\074i.firstChild.rows.length;n++){var d=i.firstChild.rows[n];t+="\074row\076\074![CDATA["+e(d.cells[0].innerHTML)+"]]\076\074/row\076"}t+="\074/y\076",g=i.firstChild.rows[0].cells[0].offsetHeight}else if("TABLE"==i.firstChild.tagName)t+=u(i);else{for(i=i.childNodes[i.childNodes.length-1];-1==i.className.indexOf("dhx_scale_holder");)i=i.previousSibling;i=i.childNodes,t+="\074y\076";for(var n=0;n\074i.length;n++)t+="\\n\074row\076\074![CDATA["+e(i[n].innerHTML)+"]]\076\074/row\076";\n
+\n
+t+="\074/y\076",g=i[0].offsetHeight}}return t+="\074/scale\076"}function u(t){for(var a="",r=t.firstChild.rows,n=0;n\074r.length;n++){for(var i=[],d=0;d\074r[n].cells.length;d++)i.push(r[n].cells[d].firstChild.innerHTML);a+="\\n\074row height=\'"+t.firstChild.rows[n].cells[0].offsetHeight+"\'\076\074![CDATA["+e(i.join("|"))+"]]\076\074/row\076",g=t.firstChild.rows[0].cells[0].offsetHeight}return a}function h(t){var a,r="";scheduler.matrix\046\046scheduler.matrix[scheduler._mode]\046\046(scheduler.matrix[scheduler._mode].second_scale\046\046(a=t[1].childNodes),\n
+t=t[0].childNodes);for(var n=0;n\074t.length;n++)r+="\\n\074column\076\074![CDATA["+e(t[n].innerHTML)+"]]\076\074/column\076";if(m=t[0].offsetWidth,a)for(var i=0,d=t[0].offsetWidth,l=1,n=0;n\074a.length;n++)r+="\\n\074column second_scale=\'"+l+"\'\076\074![CDATA["+e(a[n].innerHTML)+"]]\076\074/column\076",i+=a[n].offsetWidth,i\076=d\046\046(d+=t[l]?t[l].offsetWidth:0,l++),m=a[0].offsetWidth;return r}function p(r){var s="",o=scheduler._rendered,_=scheduler.matrix\046\046scheduler.matrix[scheduler._mode];if("agenda"==scheduler._mode||"map"==scheduler._mode)for(var c=0;c\074o.length;c++)s+="\074event\076\074head\076\074![CDATA["+e(o[c].childNodes[0].innerHTML)+"]]\076\074/head\076\074body\076\074![CDATA["+e(o[c].childNodes[2].innerHTML)+"]]\076\074/body\076\074/event\076";\n
+else if("week_agenda"==scheduler._mode)for(var c=0;c\074o.length;c++)s+="\074event day=\'"+o[c].parentNode.getAttribute("day")+"\'\076\074body\076"+e(o[c].innerHTML)+"\074/body\076\074/event\076";else if("year"==scheduler._mode)for(var o=scheduler.get_visible_events(),c=0;c\074o.length;c++){var u=o[c].start_date;for(u.valueOf()\074scheduler._min_date.valueOf()\046\046(u=scheduler._min_date);u\074o[c].end_date;){var h=u.getMonth()+12*(u.getFullYear()-scheduler._min_date.getFullYear())-scheduler.week_starts._month,p=scheduler.week_starts[h]+u.getDate()-1,v=r?i(scheduler._get_year_cell(u),"color"):"",m=r?i(scheduler._get_year_cell(u),"backgroundColor"):"";\n
+\n
+if(s+="\074event day=\'"+p%7+"\' week=\'"+Math.floor(p/7)+"\' month=\'"+h+"\' backgroundColor=\'"+m+"\' color=\'"+v+"\'\076\074/event\076",u=scheduler.date.add(u,1,"day"),u.valueOf()\076=scheduler._max_date.valueOf())break}}else if(_\046\046"cell"==_.render)for(var o=scheduler._els.dhx_cal_data[0].getElementsByTagName("TD"),c=0;c\074o.length;c++){var v=r?i(o[c],"color"):"",m=r?i(o[c],"backgroundColor"):"";s+="\\n\074event\076\074body backgroundColor=\'"+m+"\' color=\'"+v+"\'\076\074![CDATA["+e(o[c].innerHTML)+"]]\076\074/body\076\074/event\076"}else for(var c=0;c\074o.length;c++){\n
+var b,f;if(scheduler.matrix\046\046scheduler.matrix[scheduler._mode])b=t(o[c].style.left),f=t(o[c].offsetWidth)-1;else{var y=scheduler.config.use_select_menu_space?0:26;b=a(o[c].style.left,y,!0),f=a(o[c].style.width,y)-1}if(!isNaN(1*f)){var x=n(o[c].style.top),k=n(o[c].style.height),w=o[c].className.split(" ")[0].replace("dhx_cal_","");if("dhx_tooltip_line"!==w){var D=scheduler.getEvent(o[c].getAttribute("event_id"));if(D){var p=D._sday,E=D._sweek,M=D._length||0;if("month"==scheduler._mode)k=parseInt(o[c].offsetHeight,10),\n
+x=parseInt(o[c].style.top,10)-scheduler.xy.month_head_height,p=d(o[c],p),E=l(o[c],E);else if(scheduler.matrix\046\046scheduler.matrix[scheduler._mode]){p=0;var S=o[c].parentNode.parentNode.parentNode;E=S.rowIndex;var N=g;g=o[c].parentNode.offsetHeight,x=n(o[c].style.top),x-=.2*x,g=N}else{if(o[c].parentNode==scheduler._els.dhx_cal_data[0])continue;var O=scheduler._els.dhx_cal_data[0].childNodes[0],T=parseFloat(-1!=O.className.indexOf("dhx_scale_holder")?O.style.left:0);b+=t(o[c].parentNode.style.left,T);\n
+\n
+}if(s+="\\n\074event week=\'"+E+"\' day=\'"+p+"\' type=\'"+w+"\' x=\'"+b+"\' y=\'"+x+"\' width=\'"+f+"\' height=\'"+k+"\' len=\'"+M+"\'\076","event"==w){s+="\074header\076\074![CDATA["+e(o[c].childNodes[1].innerHTML)+"]]\076\074/header\076";var v=r?i(o[c].childNodes[2],"color"):"",m=r?i(o[c].childNodes[2],"backgroundColor"):"";s+="\074body backgroundColor=\'"+m+"\' color=\'"+v+"\'\076\074![CDATA["+e(o[c].childNodes[2].innerHTML)+"]]\076\074/body\076"}else{var v=r?i(o[c],"color"):"",m=r?i(o[c],"backgroundColor"):"";s+="\074body backgroundColor=\'"+m+"\' color=\'"+v+"\'\076\074![CDATA["+e(o[c].innerHTML)+"]]\076\074/body\076";\n
+\n
+}s+="\074/event\076"}}}}return s}function v(e,t,a,r,n,i,d){var l=!1;"fullcolor"==n\046\046(l=!0,n="color"),n=n||"color";var u=scheduler.uid(),h=document.createElement("div");h.style.display="none",document.body.appendChild(h),h.innerHTML=\'\074form id="\'+u+\'" method="post" target="_blank" action="\'+r+\'" accept-charset="utf-8" enctype="application/x-www-form-urlencoded"\076\074input type="hidden" name="mycoolxmlbody"/\076 \074/form\076\';var v="";if(e){var m=scheduler._date,g=scheduler._mode;t=scheduler.date[a+"_start"](t),t=scheduler.date["get_"+a+"_end"]?scheduler.date["get_"+a+"_end"](t):scheduler.date.add(t,1,a),\n
+v=_("pages",n,i,d);for(var b=new Date(e);+t\076+b;b=scheduler.date.add(b,1,a))scheduler.setCurrentView(b,a),v+=s("page")+c().replace("–","-")+p(l)+o("page");v+=o("pages"),scheduler.setCurrentView(m,g)}else v=_("data",n,i,d)+c().replace("–","-")+p(l)+o("data");document.getElementById(u).firstChild.value=encodeURIComponent(v),document.getElementById(u).submit(),h.parentNode.removeChild(h)}var m,g,b=new RegExp("\074[^\076]*\076","g"),f=new RegExp("\074br[^\076]*\076","g");scheduler.toPDF=function(e,t,a,r){return v.apply(this,[null,null,null,e,t,a,r]);\n
+\n
+},scheduler.toPDFRange=function(e,t,a,r,n,i,d){return"string"==typeof e\046\046(e=scheduler.templates.api_date(e),t=scheduler.templates.api_date(t)),v.apply(this,arguments)}}();\n
+//# sourceMappingURL=../sources/ext/dhtmlxscheduler_pdf.js.map</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8297</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

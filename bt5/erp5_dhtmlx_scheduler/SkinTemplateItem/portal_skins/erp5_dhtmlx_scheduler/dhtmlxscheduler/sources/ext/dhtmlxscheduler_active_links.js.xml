@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189552.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_active_links.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.config.active_link_view = "day";\r\n
+scheduler._active_link_click = function(e){\r\n
+\tvar start = e.target || event.srcElement;\r\n
+\tvar to = start.getAttribute("jump_to");\r\n
+\tvar s_d = scheduler.date.str_to_date(scheduler.config.api_date);\r\n
+\tif (to) {\r\n
+\t\tscheduler.setCurrentView(s_d(to), scheduler.config.active_link_view);\r\n
+\t\tif (e && e.preventDefault)\r\n
+\t\t\te.preventDefault();\r\n
+\t\treturn false;\r\n
+\t}\r\n
+};\r\n
+scheduler.attachEvent("onTemplatesReady", function() {\r\n
+\tvar do_wrapper = function(key, fullname){\r\n
+\t\tfullname = fullname || (key+"_scale_date");\r\n
+\r\n
+\t\tif(!scheduler.templates[\'_active_links_old_\'+ fullname]){\r\n
+\t\t\tscheduler.templates[\'_active_links_old_\'+ fullname] = scheduler.templates[fullname];\r\n
+\t\t}\r\n
+\t\tvar week_x = scheduler.templates[\'_active_links_old_\'+ fullname];\r\n
+\t\tvar d_s = scheduler.date.date_to_str(scheduler.config.api_date);\r\n
+\t\tscheduler.templates[fullname] = function(date) {\r\n
+\t\t\treturn "<a jump_to=\'" + d_s(date) + "\' href=\'#\'>" + week_x(date) + "</a>";\r\n
+\t\t};\r\n
+\t};\r\n
+\r\n
+\tdo_wrapper("week");\r\n
+\tdo_wrapper("", "month_day");\r\n
+\tif (this.matrix){\r\n
+\t\tfor (var key in this.matrix)\r\n
+\t\t\tdo_wrapper(key);\r\n
+\t}\r\n
+\r\n
+\tthis._detachDomEvent(this._obj, "click", scheduler._active_link_click);\r\n
+\tdhtmlxEvent(this._obj, "click", scheduler._active_link_click);\r\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1537</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

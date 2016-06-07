@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189557.75</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_el.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.locale = {\r\n
+\tdate: {\r\n
+\t\tmonth_full: ["Ιανουάριος", "Φεβρουάριος", "Μάρτιος", "Απρίλιος", "Μάϊος", "Ιούνιος", "Ιούλιος", "Αύγουστος", "Σεπτέμβριος", "Οκτώβριος", "Νοέμβριος", "Δεκέμβριος"],\r\n
+\t\tmonth_short: ["ΙΑΝ", "ΦΕΒ", "ΜΑΡ", "ΑΠΡ", "ΜΑΙ", "ΙΟΥΝ", "ΙΟΥΛ", "ΑΥΓ", "ΣΕΠ", "ΟΚΤ", "ΝΟΕ", "ΔΕΚ"],\r\n
+\t\tday_full: ["Κυριακή", "Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Κυριακή"],\r\n
+\t\tday_short: ["ΚΥ", "ΔΕ", "ΤΡ", "ΤΕ", "ΠΕ", "ΠΑ", "ΣΑ"]\r\n
+\t},\r\n
+\tlabels: {\r\n
+\t\tdhx_cal_today_button: "Σήμερα",\r\n
+\t\tday_tab: "Ημέρα",\r\n
+\t\tweek_tab: "Εβδομάδα",\r\n
+\t\tmonth_tab: "Μήνας",\r\n
+\t\tnew_event: "Νέο έργο",\r\n
+\t\ticon_save: "Αποθήκευση",\r\n
+\t\ticon_cancel: "Άκυρο",\r\n
+\t\ticon_details: "Λεπτομέρειες",\r\n
+\t\ticon_edit: "Επεξεργασία",\r\n
+\t\ticon_delete: "Διαγραφή",\r\n
+\t\tconfirm_closing: "", //Your changes will be lost, are your sure ?\r\n
+\t\tconfirm_deleting: "Το έργο θα διαγραφεί οριστικά. Θέλετε να συνεχίσετε;",\r\n
+\t\tsection_description: "Περιγραφή",\r\n
+\t\tsection_time: "Χρονική περίοδος",\r\n
+\t\tfull_day: "Πλήρης Ημέρα",\r\n
+\r\n
+\t\t/*recurring events*/\r\n
+\t\tconfirm_recurring: "Θέλετε να επεξεργασθείτε ολόκληρη την ομάδα των επαναλαμβανόμενων έργων;",\r\n
+\t\tsection_recurring: "Επαναλαμβανόμενο έργο",\r\n
+\t\tbutton_recurring: "Ανενεργό",\r\n
+\t\tbutton_recurring_open: "Ενεργό",\r\n
+\t\tbutton_edit_series: "Επεξεργαστείτε τη σειρά",\r\n
+\t\tbutton_edit_occurrence: "Επεξεργασία ένα αντίγραφο",\r\n
+\r\n
+\t\t/*agenda view extension*/\r\n
+\t\tagenda_tab: "Ημερήσια Διάταξη",\r\n
+\t\tdate: "Ημερομηνία",\r\n
+\t\tdescription: "Περιγραφή",\r\n
+\r\n
+\t\t/*year view extension*/\r\n
+\t\tyear_tab: "Έτος",\r\n
+\r\n
+\t\t/*week agenda view extension*/\r\n
+\t\tweek_agenda_tab: "Ημερήσια Διάταξη",\r\n
+\r\n
+\t\t/*grid view extension*/\r\n
+\t\tgrid_tab: "Πλέγμα",\r\n
+\r\n
+\t\t/* touch tooltip*/\r\n
+\t\tdrag_to_create:"Drag to create",\r\n
+\t\tdrag_to_move:"Drag to move",\r\n
+\r\n
+\t\t/* dhtmlx message default buttons */\r\n
+\t\tmessage_ok:"OK",\r\n
+\t\tmessage_cancel:"Cancel"\r\n
+\t}\r\n
+};\r\n
+\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2654</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

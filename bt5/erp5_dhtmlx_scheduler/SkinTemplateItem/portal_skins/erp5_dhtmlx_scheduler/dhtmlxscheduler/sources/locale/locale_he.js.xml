@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189558.45</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_he.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.locale = {\r\n
+\tdate: {\r\n
+\t\tmonth_full: ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"],\r\n
+\t\tmonth_short: ["ינו", "פבר", "מרץ", "אפר", "מאי", "יונ", "יול", "אוג", "ספט", "אוק", "נוב", "דצמ"],\r\n
+\t\tday_full: ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"],\r\n
+\t\tday_short: ["א", "ב", "ג", "ד", "ה", "ו", "ש"]\r\n
+\t},\r\n
+\tlabels: {\r\n
+\t\tdhx_cal_today_button: "היום",\r\n
+\t\tday_tab: "יום",\r\n
+\t\tweek_tab: "שבוע",\r\n
+\t\tmonth_tab: "חודש",\r\n
+\t\tnew_event: "ארוע חדש",\r\n
+\t\ticon_save: "שמור",\r\n
+\t\ticon_cancel: "בטל",\r\n
+\t\ticon_details: "פרטים",\r\n
+\t\ticon_edit: "ערוך",\r\n
+\t\ticon_delete: "מחק",\r\n
+\t\tconfirm_closing: "", //Your changes will be lost, are your sure ?\r\n
+\t\tconfirm_deleting: "ארוע ימחק סופית.להמשיך?",\r\n
+\t\tsection_description: "הסבר",\r\n
+\t\tsection_time: "תקופה",\r\n
+\r\n
+\t\tconfirm_recurring: "האם ברצונך לשנות כל סדרת ארועים מתמשכים?",\r\n
+\t\tsection_recurring: "להעתיק ארוע",\r\n
+\t\tbutton_recurring: "לא פעיל",\r\n
+\t\tbutton_recurring_open: "פעיל",\r\n
+\t\tfull_day: "יום שלם",\r\n
+\t\tbutton_edit_series: "ערוך את הסדרה",\r\n
+\t\tbutton_edit_occurrence: "עריכת עותק",\r\n
+\r\n
+\t\t/*agenda view extension*/\r\n
+\t\tagenda_tab: "סדר יום",\r\n
+\t\tdate: "תאריך",\r\n
+\t\tdescription: "תיאור",\r\n
+\r\n
+\t\t/*year view extension*/\r\n
+\t\tyear_tab: "לשנה",\r\n
+\r\n
+\t\t/*week agenda view extension*/\r\n
+\t\tweek_agenda_tab: "סדר יום",\r\n
+\r\n
+\t\t/*grid view extension*/\r\n
+\t\tgrid_tab: "סורג",\r\n
+\r\n
+\t\t/* touch tooltip*/\r\n
+\t\tdrag_to_create:"Drag to create",\r\n
+\t\tdrag_to_move:"Drag to move",\r\n
+\r\n
+\t\t/* dhtmlx message default buttons */\r\n
+\t\tmessage_ok:"OK",\r\n
+\t\tmessage_cancel:"Cancel"\r\n
+\t}\r\n
+};\r\n
+\r\n
+\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2130</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

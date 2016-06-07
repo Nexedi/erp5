@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189558.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_id.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.locale = {\r\tdate: {\r\t\tmonth_full: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"],\r\t\tmonth_short: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"],\r\t\tday_full: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"],\r\t\tday_short: ["Ming", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"]\r\t},\r\tlabels: {\r\t\tdhx_cal_today_button: "Hari Ini",\r\t\tday_tab: "Hari",\r\t\tweek_tab: "Minggu",\r\t\tmonth_tab: "Bulan",\r\t\tnew_event: "Acara Baru",\r\t\ticon_save: "Simpan",\r\t\ticon_cancel: "Batal",\r\t\ticon_details: "Detail",\r\t\ticon_edit: "Edit",\r\t\ticon_delete: "Hapus",\r\t\tconfirm_closing: "", /*Perubahan tidak akan disimpan ?*/\r\t\tconfirm_deleting: "Acara akan dihapus",\r\t\tsection_description: "Keterangan",\r\t\tsection_time: "Periode",\r\t\tfull_day: "Hari penuh",\r\r\t\t/*recurring events*/\r\t\tconfirm_recurring: "Apakah acara ini akan berulang?",\r\t\tsection_recurring: "Acara Rutin",\r\t\tbutton_recurring: "Tidak Difungsikan",\r\t\tbutton_recurring_open: "Difungsikan",\r\t\tbutton_edit_series: "Mengedit seri",\r\t\tbutton_edit_occurrence: "Mengedit salinan",\r\r\t\t/*agenda view extension*/\r\t\tagenda_tab: "Agenda",\r\t\tdate: "Tanggal",\r\t\tdescription: "Keterangan",\r\r\t\t/*year view extension*/\r\t\tyear_tab: "Tahun",\r\r\t\t/*week agenda view extension*/\r\t\tweek_agenda_tab: "Agenda",\r\r\t\t/*grid view extension*/\r\t\tgrid_tab: "Tabel",\r\r\t\t/* touch tooltip*/\r\t\tdrag_to_create:"Drag to create",\r\t\tdrag_to_move:"Drag to move",\r\r\t\t/* dhtmlx message default buttons */\r\t\tmessage_ok:"OK",\r\t\tmessage_cancel:"Cancel"\r\t}\r};</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1854</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

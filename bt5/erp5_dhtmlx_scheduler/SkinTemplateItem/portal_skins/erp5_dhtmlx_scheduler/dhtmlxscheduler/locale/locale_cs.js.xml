@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189534.97</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_cs.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\n
+scheduler.locale={date:{month_full:["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"],month_short:["Led","Ún","Bře","Dub","Kvě","Čer","Čec","Srp","Září","Říj","List","Pro"],day_full:["Neděle","Pondělí","Úterý","Středa","Čtvrtek","Pátek","Sobota"],day_short:["Ne","Po","Út","St","Čt","Pá","So"]},labels:{dhx_cal_today_button:"Dnes",day_tab:"Den",week_tab:"Týden",month_tab:"Měsíc",new_event:"Nová událost",icon_save:"Uložit",icon_cancel:"Zpět",icon_details:"Detail",\n
+icon_edit:"Edituj",icon_delete:"Smazat",confirm_closing:"",confirm_deleting:"Událost bude trvale smazána, opravdu?",section_description:"Poznámky",section_time:"Doba platnosti",confirm_recurring:"Přejete si upravit celou řadu opakovaných událostí?",section_recurring:"Opakování události",button_recurring:"Vypnuto",button_recurring_open:"Zapnuto",button_edit_series:"Edit series",button_edit_occurrence:"Upravit instance",agenda_tab:"Program",date:"Datum",description:"Poznámka",year_tab:"Rok",full_day:"Full day",\n
+week_agenda_tab:"Program",grid_tab:"Mřížka",drag_to_create:"Drag to create",drag_to_move:"Drag to move",message_ok:"OK",message_cancel:"Cancel"}};\n
+//# sourceMappingURL=../sources/locale/locale_cs.js.map</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1564</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189555.28</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_offline.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.load=function(url,call){\r\n
+\tvar type;\r\n
+\tif (typeof call == "string"){\r\n
+\t\tthis._process=call;\r\n
+\t\ttype = call;\r\n
+\t\tcall = arguments[2];\r\n
+\t}\r\n
+\r\n
+\tthis._load_url=url;\r\n
+\tthis._after_call=call;\r\n
+\tif (url.$proxy) {\r\n
+\t\turl.load(this, typeof type == "string" ? type : null);\r\n
+\t\treturn;\r\n
+\t}\r\n
+\r\n
+\tthis._load(url,this._date);\r\n
+};\r\n
+\r\n
+scheduler._dp_init_backup = scheduler._dp_init;\r\n
+scheduler._dp_init = function(dp) {\r\n
+\tdp._sendData = function(a1,rowId){\r\n
+    \tif (!a1) return; //nothing to send\r\n
+\t\tif (!this.callEvent("onBeforeDataSending",rowId?[rowId,this.getState(rowId),a1]:[null, null, a1])) return false;\t\t\t\t\r\n
+    \tif (rowId)\r\n
+\t\t\tthis._in_progress[rowId]=(new Date()).valueOf();\r\n
+\t\tif (this.serverProcessor.$proxy) {\r\n
+\t\t\tvar mode = this._tMode!="POST" ? \'get\' : \'post\';\r\n
+\t\t\tvar to_send = [];\r\n
+\t\t\tfor (var i in a1)\r\n
+\t\t\t\tto_send.push({ id: i, data: a1[i], operation: this.getState(i)});\r\n
+\t\t\tthis.serverProcessor._send(to_send, mode, this);\r\n
+\t\t\treturn;\r\n
+\t\t}\r\n
+\r\n
+\t\tvar a2=new dtmlXMLLoaderObject(this.afterUpdate,this,true);\r\n
+\t\tvar a3 = this.serverProcessor+(this._user?(getUrlSymbol(this.serverProcessor)+["dhx_user="+this._user,"dhx_version="+this.obj.getUserData(0,"version")].join("&")):"");\r\n
+\t\tif (this._tMode!="POST")\r\n
+        \ta2.loadXML(a3+((a3.indexOf("?")!=-1)?"&":"?")+this.serialize(a1,rowId));\r\n
+\t\telse\r\n
+        \ta2.loadXML(a3,true,this.serialize(a1,rowId));\r\n
+\t\tthis._waitMode++;\r\n
+    };\r\n
+\t\r\n
+\tdp._updatesToParams = function(items) {\r\n
+\t\tvar stack = {};\r\n
+\t\tfor (var i = 0; i < items.length; i++)\r\n
+\t\t\tstack[items[i].id] = items[i].data;\r\n
+\t\treturn this.serialize(stack);\r\n
+\t};\r\n
+\r\n
+\tdp._processResult = function(text, xml, loader) {\r\n
+\t\tif (loader.status != 200) {\r\n
+\t\t\tfor (var i in this._in_progress) {\r\n
+\t\t\t\tvar state = this.getState(i);\r\n
+\t\t\t\tthis.afterUpdateCallback(i, i, state, null);\r\n
+\t\t\t}\r\n
+\t\t\treturn;\r\n
+\t\t}\r\n
+\t\txml = new dtmlXMLLoaderObject(function() {},this,true);\r\n
+\t\txml.loadXMLString(text);\r\n
+\t\txml.xmlDoc = loader;\r\n
+\r\n
+\t\tthis.afterUpdate(this, null, null, null, xml);\r\n
+\t};\r\n
+\tthis._dp_init_backup(dp);\r\n
+};\r\n
+\r\n
+if (window.dataProcessor)\r\n
+\tdataProcessor.prototype.init=function(obj){\r\n
+\t\tthis.init_original(obj);\r\n
+\t\tobj._dataprocessor=this;\r\n
+\t\t\r\n
+\t\tthis.setTransactionMode("POST",true);\r\n
+\t\tif (!this.serverProcessor.$proxy)\r\n
+\t\t\tthis.serverProcessor+=(this.serverProcessor.indexOf("?")!=-1?"&":"?")+"editing=true";\r\n
+\t};
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2591</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

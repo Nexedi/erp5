@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189559.98</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_ro.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+/*\r\n
+\tTraducere de Ovidiu Lixandru: http://www.madball.ro\r\n
+ */\r\n
+\r\n
+scheduler.locale = {\r\n
+\tdate:{\r\n
+\t\tmonth_full:["Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "November", "December"],\r\n
+\t\tmonth_short:["Ian", "Feb", "Mar", "Apr", "Mai", "Iun", "Iul", "Aug", "Sep", "Oct", "Nov", "Dec"],\r\n
+\t\tday_full:["Duminica", "Luni", "Marti", "Miercuri", "Joi", "Vineri", "Sambata"],\r\n
+\t\tday_short:["Du", "Lu", "Ma", "Mi", "Jo", "Vi", "Sa"]\r\n
+\t},\r\n
+\tlabels:{\r\n
+\t\tdhx_cal_today_button:"Astazi",\r\n
+\t\tday_tab:"Zi",\r\n
+\t\tweek_tab:"Saptamana",\r\n
+\t\tmonth_tab:"Luna",\r\n
+\t\tnew_event:"Eveniment nou",\r\n
+\t\ticon_save:"Salveaza",\r\n
+\t\ticon_cancel:"Anuleaza",\r\n
+\t\ticon_details:"Detalii",\r\n
+\t\ticon_edit:"Editeaza",\r\n
+\t\ticon_delete:"Sterge",\r\n
+\t\tconfirm_closing:"Schimbarile nu vor fi salvate, esti sigur?",//Your changes will be lost, are your sure ?\r\n
+\t\tconfirm_deleting:"Evenimentul va fi sters permanent, esti sigur?",\r\n
+\t\tsection_description:"Descriere",\r\n
+\t\tsection_time:"Interval",\r\n
+\t\tfull_day:"Toata ziua",\r\n
+\r\n
+\t\t/*recurring events*/\r\n
+\t\tconfirm_recurring:"Vrei sa editezi toata seria de evenimente repetate?",\r\n
+\t\tsection_recurring:"Repetare",\r\n
+\t\tbutton_recurring:"Dezactivata",\r\n
+\t\tbutton_recurring_open:"Activata",\r\n
+\t\tbutton_edit_series: "Editeaza serie",\r\n
+\t\tbutton_edit_occurrence: "Editeaza doar intrare",\r\n
+\r\n
+\t\t/*agenda view extension*/\r\n
+\t\tagenda_tab:"Agenda",\r\n
+\t\tdate:"Data",\r\n
+\t\tdescription:"Descriere",\r\n
+\r\n
+\t\t/*year view extension*/\r\n
+\t\tyear_tab:"An",\r\n
+\r\n
+\t\t/* week agenda extension */\r\n
+\t\tweek_agenda_tab: "Agenda",\r\n
+\r\n
+\t\t/*grid view extension*/\r\n
+\t\tgrid_tab: "Lista",\r\n
+\r\n
+\t\t/* touch tooltip*/\r\n
+\t\tdrag_to_create:"Drag to create",\r\n
+\t\tdrag_to_move:"Drag to move",\r\n
+\r\n
+\t\t/* dhtmlx message default buttons */\r\n
+\t\tmessage_ok:"OK",\r\n
+\t\tmessage_cancel:"Cancel"\r\n
+\t}\r\n
+};\r\n
+\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2048</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

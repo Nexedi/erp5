@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189557.18</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_cn.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+/*\r\n
+Translation by FreezeSoul\r\n
+*/\r\n
+scheduler.config.day_date="%M %d日 %D";\r\n
+scheduler.config.default_date="%Y年 %M %d日";\r\n
+scheduler.config.month_date="%Y年 %M";\r\n
+\r\n
+scheduler.locale={\r\n
+\tdate: {\r\n
+\t\tmonth_full: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],\r\n
+\t\tmonth_short: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],\r\n
+\t\tday_full: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],\r\n
+\t\tday_short: ["日", "一", "二", "三", "四", "五", "六"]\r\n
+\t},\r\n
+\tlabels: {\r\n
+\t\tdhx_cal_today_button: "今天",\r\n
+\t\tday_tab: "日",\r\n
+\t\tweek_tab: "周",\r\n
+\t\tmonth_tab: "月",\r\n
+\t\tnew_event: "新建日程",\r\n
+\t\ticon_save: "保存",\r\n
+\t\ticon_cancel: "关闭",\r\n
+\t\ticon_details: "详细",\r\n
+\t\ticon_edit: "编辑",\r\n
+\t\ticon_delete: "删除",\r\n
+\t\tconfirm_closing: "请确认是否撤销修改!", //Your changes will be lost, are your sure?\r\n
+\t\tconfirm_deleting: "是否删除日程?",\r\n
+\t\tsection_description: "描述",\r\n
+\t\tsection_time: "时间范围",\r\n
+\t\tfull_day: "整天",\r\n
+\r\n
+\t\tconfirm_recurring:"请确认是否将日程设为重复模式?",\r\n
+\t\tsection_recurring:"重复周期",\r\n
+\t\tbutton_recurring:"禁用",\r\n
+\t\tbutton_recurring_open:"启用",\r\n
+\t\tbutton_edit_series: "编辑系列",\r\n
+\t\tbutton_edit_occurrence: "编辑实例",\r\n
+\t\t\r\n
+\t\t/*agenda view extension*/\r\n
+\t\tagenda_tab:"议程",\r\n
+\t\tdate:"日期",\r\n
+\t\tdescription:"说明",\r\n
+\t\t\r\n
+\t\t/*year view extension*/\r\n
+\t\tyear_tab:"今年",\r\n
+\r\n
+\t\t/*week agenda view extension*/\r\n
+\t\tweek_agenda_tab: "议程",\r\n
+\r\n
+\t\t/*grid view extension*/\r\n
+\t\tgrid_tab:"电网",\r\n
+\r\n
+\t\t/* touch tooltip*/\r\n
+\t\tdrag_to_create:"Drag to create",\r\n
+\t\tdrag_to_move:"Drag to move",\r\n
+\r\n
+\t\t/* dhtmlx message default buttons */\r\n
+\t\tmessage_ok:"OK",\r\n
+\t\tmessage_cancel:"Cancel"\r\n
+\t}\r\n
+};\r\n
+\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2115</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

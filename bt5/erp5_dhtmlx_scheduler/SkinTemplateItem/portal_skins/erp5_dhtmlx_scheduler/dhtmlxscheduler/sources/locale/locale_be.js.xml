@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189556.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_be.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+/*\r\n
+ Translation by Sofya Morozova\r\n
+ */\r\n
+scheduler.locale = {\r\n
+\tdate: {\r\n
+\t\tmonth_full: ["Студзень", "Люты", "Сакавік", "Красавік", "Maй", "Чэрвень", "Ліпень", "Жнівень", "Верасень", "Кастрычнік", "Лістапад", "Снежань"],\r\n
+\t\tmonth_short: ["Студз", "Лют", "Сак", "Крас", "Maй", "Чэр", "Ліп", "Жнів", "Вер", "Каст", "Ліст", "Снеж"],\r\n
+\t\tday_full: [ "Нядзеля", "Панядзелак", "Аўторак", "Серада", "Чацвер", "Пятніца", "Субота"],\r\n
+\t\tday_short: ["Нд", "Пн", "Аўт", "Ср", "Чцв", "Пт", "Сб"]\r\n
+\t},\r\n
+\tlabels: {\r\n
+\t\tdhx_cal_today_button: "Сёння",\r\n
+\t\tday_tab: "Дзень",\r\n
+\t\tweek_tab: "Тыдзень",\r\n
+\t\tmonth_tab: "Месяц",\r\n
+\t\tnew_event: "Новая падзея",\r\n
+\t\ticon_save: "Захаваць",\r\n
+\t\ticon_cancel: "Адмяніць",\r\n
+\t\ticon_details: "Дэталі",\r\n
+\t\ticon_edit: "Змяніць",\r\n
+\t\ticon_delete: "Выдаліць",\r\n
+\t\tconfirm_closing: "", //Унесеныя змены будуць страчаны, працягнуць?\r\n
+\t\tconfirm_deleting: "Падзея будзе выдалена незваротна, працягнуць?",\r\n
+\t\tsection_description: "Апісанне",\r\n
+\t\tsection_time: "Перыяд часу",\r\n
+\t\tfull_day: "Увесь дзень",\r\n
+\r\n
+\t\tconfirm_recurring: "Вы хочаце змяніць усю серыю паўтаральных падзей?",\r\n
+\t\tsection_recurring: "Паўтарэнне",\r\n
+\t\tbutton_recurring: "Адключана",\r\n
+\t\tbutton_recurring_open: "Уключана",\r\n
+\t\tbutton_edit_series: "Рэдагаваць серыю",\r\n
+\t\tbutton_edit_occurrence: "Рэдагаваць асобнік",\r\n
+\r\n
+\t\t/*agenda view extension*/\r\n
+\t\tagenda_tab: "Спіс",\r\n
+\t\tdate: "Дата",\r\n
+\t\tdescription: "Апісанне",\r\n
+\r\n
+\t\t/*year view extension*/\r\n
+\t\tyear_tab: "Год",\r\n
+\r\n
+\t\t/*week agenda view extension*/\r\n
+\t\tweek_agenda_tab: "Спіс",\r\n
+\r\n
+\t\t/*grid view extension*/\r\n
+\t\tgrid_tab: "Спic",\r\n
+\r\n
+\t\t/* touch tooltip*/\r\n
+\t\tdrag_to_create:"Drag to create",\r\n
+\t\tdrag_to_move:"Drag to move",\r\n
+\r\n
+\t\t/* dhtmlx message default buttons */\r\n
+\t\tmessage_ok:"OK",\r\n
+\t\tmessage_cancel:"Cancel"\r\n
+\t}\r\n
+};</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2484</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

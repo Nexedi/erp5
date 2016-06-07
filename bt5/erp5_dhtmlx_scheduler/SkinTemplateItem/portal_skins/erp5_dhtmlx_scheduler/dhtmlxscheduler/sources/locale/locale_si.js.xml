@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189560.26</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_si.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.locale = {\r\n
+\tdate: {\r\n
+\t\tmonth_full: ["Januar", "Februar", "Marec", "April", "Maj", "Junij", "Julij", "Avgust", "September", "Oktober", "November", "December"],\r\n
+\t\tmonth_short: ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"],\r\n
+\t\tday_full: ["Nedelja", "Ponedeljek", "Torek", "Sreda", "Četrtek", "Petek", "Sobota"],\r\n
+\t\tday_short: ["Ned", "Pon", "Tor", "Sre", "Čet", "Pet", "Sob"]\r\n
+\t},\r\n
+\tlabels: {\r\n
+\t\tdhx_cal_today_button: "Danes",\r\n
+\t\tday_tab: "Dan",\r\n
+\t\tweek_tab: "Teden",\r\n
+\t\tmonth_tab: "Mesec",\r\n
+\t\tnew_event: "Nov dogodek",\r\n
+\t\ticon_save: "Shrani",\r\n
+\t\ticon_cancel: "Prekliči",\r\n
+\t\ticon_details: "Podrobnosti",\r\n
+\t\ticon_edit: "Uredi",\r\n
+\t\ticon_delete: "Izbriši",\r\n
+\t\tconfirm_closing: "", //Spremembe ne bodo shranjene. Želite nadaljevati ?\r\n
+\t\tconfirm_deleting: "Dogodek bo izbrisan. Želite nadaljevati?",\r\n
+\t\tsection_description: "Opis",\r\n
+\t\tsection_time: "Časovni okvir",\r\n
+\t\tfull_day: "Ves dan",\r\n
+\r\n
+\t\t/*recurring events*/\r\n
+\t\tconfirm_recurring: "Želite urediti celoten set ponavljajočih dogodkov?",\r\n
+\t\tsection_recurring: "Ponovi dogodek",\r\n
+\t\tbutton_recurring: "Onemogočeno",\r\n
+\t\tbutton_recurring_open: "Omogočeno",\r\n
+\t\tbutton_edit_series: "Edit series",\r\n
+\t\tbutton_edit_occurrence: "Edit occurrence",\r\n
+\r\n
+\t\t/*agenda view extension*/\r\n
+\t\tagenda_tab: "Zadeva",\r\n
+\t\tdate: "Datum",\r\n
+\t\tdescription: "Opis",\r\n
+\r\n
+\t\t/*year view extension*/\r\n
+\t\tyear_tab: "Leto",\r\n
+\r\n
+\t\t/*week agenda view extension*/\r\n
+\t\tweek_agenda_tab: "Zadeva",\r\n
+\r\n
+\t\t/*grid view extension*/\r\n
+\t\tgrid_tab: "Miza",\r\n
+\r\n
+\t\t/* touch tooltip*/\r\n
+\t\tdrag_to_create:"Drag to create",\r\n
+\t\tdrag_to_move:"Drag to move",\r\n
+\r\n
+\t\t/* dhtmlx message default buttons */\r\n
+\t\tmessage_ok:"OK",\r\n
+\t\tmessage_cancel:"Cancel"\r\n
+\t}\r\n
+};\r\n
+\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1973</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

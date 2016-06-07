@@ -1,0 +1,404 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189555.58</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_pdf.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+(function() {\r\n
+\tvar dx, dy,\t\r\n
+\t\thtml_regexp = new RegExp("\074[^\076]*\076", "g"),\r\n
+\t\tnewline_regexp = new RegExp("\074br[^\076]*\076", "g");\r\n
+\r\n
+\tfunction clean_html(val) {\r\n
+\t\treturn val.replace(newline_regexp, "\\n").replace(html_regexp, "");\r\n
+\t}\r\n
+\r\n
+\tfunction x_norm(x, offset) {\r\n
+\t\tx = parseFloat(x);\r\n
+\t\toffset = parseFloat(offset);\r\n
+\t\tif (!isNaN(offset)) x -= offset;\r\n
+\r\n
+\t\tvar w = colsWidth(x);\r\n
+\t\tx = x - w.width + w.cols*dx;\r\n
+\t\treturn isNaN(x)?"auto":(100*x/(dx));\r\n
+\t}\r\n
+\r\n
+\tfunction x_norm_event(x, offset, is_left) {\r\n
+\t\tx = parseFloat(x);\r\n
+\t\toffset = parseFloat(offset);\r\n
+\t\tif (!isNaN(offset) \046\046 is_left) x -= offset;\r\n
+\r\n
+\t\tvar w = colsWidth(x);\r\n
+\t\tx = x - w.width + w.cols*dx;\r\n
+\t\treturn isNaN(x)?"auto":(100*x/(dx-(!isNaN(offset)?offset:0)));\r\n
+\t}\r\n
+\tfunction colsWidth(width) {\r\n
+\t\tvar r = 0;\r\n
+\t\tvar header = scheduler._els.dhx_cal_header[0].childNodes;\r\n
+\t\tvar els = header[1] ? header[1].childNodes : header[0].childNodes;\r\n
+\t\tfor (var i = 0; i \074 els.length; i++) {\r\n
+\t\t\tvar el = els[i].style ? els[i] : els[i].parentNode;\r\n
+\t\t\tvar w = parseFloat(el.style.width);\r\n
+\t\t\tif (width \076 w){\r\n
+\t\t\t\twidth -= (w+1);\r\n
+\t\t\t\tr+=(w+1);\r\n
+\t\t\t}\r\n
+\t\t\telse\r\n
+\t\t\t\tbreak;\r\n
+\t\t}\r\n
+\t\treturn { width: r, cols: i };\r\n
+\t}\r\n
+\r\n
+\tfunction y_norm(y) {\r\n
+\t\ty = parseFloat(y);\r\n
+\t\tif (isNaN(y)) return "auto";\r\n
+\t\treturn 100 * y / dy;\r\n
+\t}\r\n
+\r\n
+\tfunction get_style(node, style){\r\n
+\t\treturn (window.getComputedStyle?(window.getComputedStyle(node, null)[style]):(node.currentStyle?node.currentStyle[style]:null))||"";\r\n
+\t}\r\n
+\r\n
+\tfunction de_day(node, n) {\r\n
+\t\tvar x = parseInt(node.style.left, 10);\r\n
+\r\n
+\t\tfor (var dx = 0; dx \074 scheduler._cols.length; dx++) {\r\n
+\t\t\tx -= scheduler._cols[dx];\r\n
+\t\t\tif (x \074 0) return dx;\r\n
+\t\t}\r\n
+\t\treturn n;\r\n
+\t}\r\n
+\r\n
+\tfunction de_week(node, n) {\r\n
+\t\tvar y = parseInt(node.style.top, 10);\r\n
+\t\tfor (var dy = 0; dy \074 scheduler._colsS.heights.length; dy++)\r\n
+\t\t\tif (scheduler._colsS.heights[dy] \076 y) return dy;\r\n
+\t\treturn n;\r\n
+\t}\r\n
+\r\n
+\tfunction xml_start(tag) {\r\n
+\t\treturn tag ? "\074"+tag+"\076" : "";\r\n
+\t}\r\n
+\tfunction xml_end(tag) {\r\n
+\t\treturn tag ? "\074/"+tag+"\076" : "";\r\n
+\t}\r\n
+\r\n
+\tfunction xml_top(tag, profile, header, footer) {\r\n
+\t\tvar xml = "\074"+tag+" profile=\'" + profile + "\'";\r\n
+\t\tif (header)\r\n
+\t\t\txml += " header=\'" + header + "\'";\r\n
+\t\tif (footer)\r\n
+\t\t\txml += " footer=\'" + footer + "\'";\r\n
+\t\txml += "\076";\r\n
+\t\treturn xml;\r\n
+\t}\r\n
+\r\n
+\tfunction xml_body_header() {\r\n
+\t\tvar xml = "";\r\n
+\t\t// detects if current mode is timeline\r\n
+\t\tvar mode = scheduler._mode;\r\n
+\t\tif (scheduler.matrix \046\046 scheduler.matrix[scheduler._mode])\r\n
+\t\t\tmode = (scheduler.matrix[scheduler._mode].render == "cell") ? "matrix" : "timeline";\r\n
+\t\txml += "\074scale mode=\'" + mode + "\' today=\'" + scheduler._els.dhx_cal_date[0].innerHTML + "\'\076";\r\n
+\r\n
+\t\tif (scheduler._mode == "week_agenda") {\r\n
+\t\t\tvar xh = scheduler._els.dhx_cal_data[0].getElementsByTagName("DIV");\r\n
+\t\t\tfor (var i = 0; i \074 xh.length; i++)\r\n
+\t\t\t\tif (xh[i].className == "dhx_wa_scale_bar")\r\n
+\t\t\t\t\txml += "\074column\076" + clean_html(xh[i].innerHTML) + "\074/column\076";\r\n
+\t\t} else if (scheduler._mode == "agenda" || scheduler._mode == "map") {\r\n
+\t\t\tvar xh = scheduler._els.dhx_cal_header[0].childNodes[0].childNodes;\r\n
+\r\n
+\t\t\txml += "\074column\076" + clean_html(xh[0].innerHTML) + "\074/column\076\074column\076" + clean_html(xh[1].innerHTML) + "\074/column\076";\r\n
+\t\t} else if (scheduler._mode == "year") {\r\n
+\t\t\tvar xh = scheduler._els.dhx_cal_data[0].childNodes;\r\n
+\t\t\tfor (var i = 0; i \074 xh.length; i++) {\r\n
+\t\t\t\txml += "\074month label=\'" + clean_html(xh[i].childNodes[0].innerHTML) + "\'\076";\r\n
+\t\t\t\txml += xml_month_scale(xh[i].childNodes[1].childNodes);\r\n
+\t\t\t\txml += xml_month(xh[i].childNodes[2]);\r\n
+\t\t\t\txml += "\074/month\076";\r\n
+\t\t\t}\r\n
+\t\t} else {\r\n
+\t\t\txml += "\074x\076";\r\n
+\t\t\tvar xh = scheduler._els.dhx_cal_header[0].childNodes;\r\n
+\t\t\txml += xml_month_scale(xh);\r\n
+\t\t\txml += "\074/x\076";\r\n
+\r\n
+\t\t\tvar yh = scheduler._els.dhx_cal_data[0];\r\n
+\t\t\tif (scheduler.matrix \046\046 scheduler.matrix[scheduler._mode]) {\r\n
+\t\t\t\txml += "\074y\076";\r\n
+\t\t\t\tfor (var i = 0; i \074 yh.firstChild.rows.length; i++) {\r\n
+\t\t\t\t\tvar el = yh.firstChild.rows[i];\r\n
+\t\t\t\t\txml += "\074row\076\074![CDATA[" + clean_html(el.cells[0].innerHTML) + "]]\076\074/row\076";\r\n
+\t\t\t\t}\r\n
+\t\t\t\txml += "\074/y\076";\r\n
+\t\t\t\tdy = yh.firstChild.rows[0].cells[0].offsetHeight;\r\n
+\t\t\t} else if (yh.firstChild.tagName == "TABLE") {\r\n
+\t\t\t\txml += xml_month(yh);\r\n
+\t\t\t} else {\r\n
+\t\t\t\tyh = yh.childNodes[yh.childNodes.length - 1];\r\n
+\t\t\t\twhile (yh.className.indexOf("dhx_scale_holder") == -1)\r\n
+\t\t\t\t\tyh = yh.previousSibling;\r\n
+\t\t\t\tyh = yh.childNodes;\r\n
+\r\n
+\t\t\t\txml += "\074y\076";\r\n
+\t\t\t\tfor (var i = 0; i \074 yh.length; i++)\r\n
+\t\t\t\t\txml += "\\n\074row\076\074![CDATA[" + clean_html(yh[i].innerHTML) + "]]\076\074/row\076";\r\n
+\t\t\t\txml += "\074/y\076";\r\n
+\t\t\t\tdy = yh[0].offsetHeight;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\txml += "\074/scale\076";\r\n
+\t\treturn xml;\r\n
+\t}\r\n
+\r\n
+\tfunction xml_month(yh) {\r\n
+\t\tvar xml = "";\r\n
+\t\tvar r = yh.firstChild.rows;\r\n
+\t\tfor (var i = 0; i \074 r.length; i++) {\r\n
+\t\t\tvar days = [];\r\n
+\t\t\tfor (var j = 0; j \074 r[i].cells.length; j++)\r\n
+\t\t\t\tdays.push(r[i].cells[j].firstChild.innerHTML);\r\n
+\r\n
+\t\t\txml += "\\n\074row height=\'" + yh.firstChild.rows[i].cells[0].offsetHeight + "\'\076\074![CDATA[" + clean_html(days.join("|")) + "]]\076\074/row\076";\r\n
+\t\t\tdy = yh.firstChild.rows[0].cells[0].offsetHeight;\r\n
+\t\t}\r\n
+\t\treturn xml;\r\n
+\t}\r\n
+\r\n
+\tfunction xml_month_scale(xh) {\r\n
+\t\tvar xhs,\r\n
+\t\t\txml = "";\r\n
+\t\tif (scheduler.matrix \046\046 scheduler.matrix[scheduler._mode]) {\r\n
+\t\t\tif (scheduler.matrix[scheduler._mode].second_scale)\r\n
+\t\t\t\txhs = xh[1].childNodes;\r\n
+\r\n
+\t\t\txh = xh[0].childNodes;\r\n
+\t\t}\r\n
+\r\n
+\t\tfor (var i = 0; i \074 xh.length; i++)\r\n
+\t\t\txml += "\\n\074column\076\074![CDATA[" + clean_html(xh[i].innerHTML) + "]]\076\074/column\076";\r\n
+\t\tdx = xh[0].offsetWidth;\r\n
+\r\n
+\t\tif (xhs) {\r\n
+\t\t\tvar width = 0;\r\n
+\t\t\tvar top_width = xh[0].offsetWidth;\r\n
+\t\t\tvar top_col = 1;\r\n
+\t\t\tfor (var i = 0; i \074 xhs.length; i++) {\r\n
+\t\t\t\txml += "\\n\074column second_scale=\'" + top_col + "\'\076\074![CDATA[" + clean_html(xhs[i].innerHTML) + "]]\076\074/column\076";\r\n
+\t\t\t\twidth += xhs[i].offsetWidth;\r\n
+\t\t\t\tif (width \076= top_width) {\r\n
+\t\t\t\t\ttop_width += (xh[top_col] ? xh[top_col].offsetWidth : 0);\r\n
+\t\t\t\t\ttop_col++;\r\n
+\t\t\t\t}\r\n
+\t\t\t\tdx = xhs[0].offsetWidth;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\treturn xml;\r\n
+\t}\r\n
+\r\n
+\tfunction xml_body(colors) {\r\n
+\t\tvar xml = "";\r\n
+\t\tvar evs = scheduler._rendered;\r\n
+\t\tvar matrix = scheduler.matrix \046\046 scheduler.matrix[scheduler._mode];\r\n
+\r\n
+\t\tif (scheduler._mode == "agenda" || scheduler._mode == "map") {\r\n
+\r\n
+\t\t\tfor (var i = 0; i \074 evs.length; i++)\r\n
+                xml += "\074event\076\074head\076\074![CDATA[" + clean_html(evs[i].childNodes[0].innerHTML) + "]]\076\074/head\076\074body\076\074![CDATA[" + clean_html(evs[i].childNodes[2].innerHTML) + "]]\076\074/body\076\074/event\076";\r\n
+\r\n
+\t\t} else if (scheduler._mode == "week_agenda") {\r\n
+\r\n
+\t\t\tfor (var i = 0; i \074 evs.length; i++)\r\n
+\t\t\t\txml += "\074event day=\'" + evs[i].parentNode.getAttribute("day") + "\'\076\074body\076" + clean_html(evs[i].innerHTML) + "\074/body\076\074/event\076";\r\n
+\r\n
+\t\t} else if (scheduler._mode == "year") {\r\n
+\r\n
+\t\t\tvar evs = scheduler.get_visible_events();\r\n
+\t\t\tfor (var i = 0; i \074 evs.length; i++) {\r\n
+\t\t\t\tvar d = evs[i].start_date;\r\n
+\t\t\t\tif (d.valueOf() \074 scheduler._min_date.valueOf())\r\n
+\t\t\t\t\td = scheduler._min_date;\r\n
+\r\n
+\t\t\t\twhile (d \074 evs[i].end_date) {\r\n
+\t\t\t\t\tvar m = d.getMonth() + 12 * (d.getFullYear() - scheduler._min_date.getFullYear()) - scheduler.week_starts._month;\r\n
+\t\t\t\t\tvar day = scheduler.week_starts[m] + d.getDate() - 1;\r\n
+\t\t\t\t\tvar text_color = colors ? get_style(scheduler._get_year_cell(d), "color") : "";\r\n
+\t\t\t\t\tvar bg_color = colors ? get_style(scheduler._get_year_cell(d), "backgroundColor") : "";\r\n
+\r\n
+\t\t\t\t\txml += "\074event day=\'" + (day % 7) + "\' week=\'" + Math.floor(day / 7) + "\' month=\'" + m + "\' backgroundColor=\'" + bg_color + "\' color=\'" + text_color + "\'\076\074/event\076";\r\n
+\t\t\t\t\td = scheduler.date.add(d, 1, "day");\r\n
+\t\t\t\t\tif (d.valueOf() \076= scheduler._max_date.valueOf())\r\n
+\t\t\t\t\t\tbreak;\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t} else if (matrix \046\046 matrix.render == "cell") {\r\n
+\t\t\tvar evs = scheduler._els.dhx_cal_data[0].getElementsByTagName("TD");\r\n
+\t\t\tfor (var i = 0; i \074 evs.length; i++) {\r\n
+\t\t\t\tvar text_color = colors ? get_style(evs[i], "color") : "";\r\n
+\t\t\t\tvar bg_color = colors ? get_style(evs[i], "backgroundColor") : "";\r\n
+\t\t\t\txml += "\\n\074event\076\074body backgroundColor=\'" + bg_color + "\' color=\'" + text_color + "\'\076\074![CDATA[" + clean_html(evs[i].innerHTML) + "]]\076\074/body\076\074/event\076";\r\n
+\t\t\t}\r\n
+\t\t} else {\r\n
+\t\t\tfor (var i = 0; i \074 evs.length; i++) {\r\n
+\t\t\t\tvar zx, zdx;\r\n
+\t\t\t\tif (scheduler.matrix \046\046 scheduler.matrix[scheduler._mode]) {\r\n
+\t\t\t\t\t// logic for timeline view\r\n
+\t\t\t\t\tzx = x_norm(evs[i].style.left);\r\n
+\t\t\t\t\tzdx = x_norm(evs[i].offsetWidth)-1;\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\t// we should use specific logic for day/week/units view\r\n
+\t\t\t\t\tvar left_norm = scheduler.config.use_select_menu_space ? 0 : 26;\r\n
+\t\t\t\t\tzx = x_norm_event(evs[i].style.left, left_norm, true);\r\n
+\t\t\t\t\tzdx = x_norm_event(evs[i].style.width, left_norm)-1;\r\n
+\t\t\t\t}\r\n
+\t\t\t\tif (isNaN(zdx * 1)) continue;\r\n
+\t\t\t\tvar zy = y_norm(evs[i].style.top);\r\n
+\t\t\t\tvar zdy = y_norm(evs[i].style.height);\r\n
+\r\n
+\t\t\t\tvar e_type = evs[i].className.split(" ")[0].replace("dhx_cal_", "");\r\n
+\t\t\t\tif (e_type === \'dhx_tooltip_line\') continue;\r\n
+\r\n
+\t\t\t\tvar dets = scheduler.getEvent(evs[i].getAttribute("event_id"));\r\n
+                if (!dets) continue;\r\n
+\t\t\t\tvar day = dets._sday;\r\n
+\t\t\t\tvar week = dets._sweek;\r\n
+\t\t\t\tvar length = dets._length || 0;\r\n
+\r\n
+\t\t\t\tif (scheduler._mode == "month") {\r\n
+\t\t\t\t\tzdy = parseInt(evs[i].offsetHeight, 10);\r\n
+\t\t\t\t\tzy = parseInt(evs[i].style.top, 10) - scheduler.xy.month_head_height;\r\n
+\r\n
+\t\t\t\t\tday = de_day(evs[i], day);\r\n
+\t\t\t\t\tweek = de_week(evs[i], week);\r\n
+\t\t\t\t} else if (scheduler.matrix \046\046 scheduler.matrix[scheduler._mode]) {\r\n
+\t\t\t\t\tday = 0;\r\n
+\t\t\t\t\tvar el = evs[i].parentNode.parentNode.parentNode;\r\n
+\t\t\t\t\tweek = el.rowIndex;\r\n
+\t\t\t\t\tvar dy_copy = dy;\r\n
+\t\t\t\t\tdy = evs[i].parentNode.offsetHeight;\r\n
+\t\t\t\t\tzy = y_norm(evs[i].style.top);\r\n
+\t\t\t\t\tzy -= zy * 0.2;\r\n
+\t\t\t\t\tdy = dy_copy;\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\tif (evs[i].parentNode == scheduler._els.dhx_cal_data[0]) continue;\r\n
+\t\t\t\t\tvar parent = scheduler._els["dhx_cal_data"][0].childNodes[0];\r\n
+\t\t\t\t\tvar offset = parseFloat(parent.className.indexOf("dhx_scale_holder") != -1 ? parent.style.left : 0);\r\n
+\t\t\t\t\tzx += x_norm(evs[i].parentNode.style.left, offset);\r\n
+\t\t\t\t}\r\n
+\r\n
+\t\t\t\txml += "\\n\074event week=\'" + week + "\' day=\'" + day + "\' type=\'" + e_type + "\' x=\'" + zx + "\' y=\'" + zy + "\' width=\'" + zdx + "\' height=\'" + zdy + "\' len=\'" + length + "\'\076";\r\n
+\r\n
+\t\t\t\tif (e_type == "event") {\r\n
+\t\t\t\t\txml += "\074header\076\074![CDATA[" + clean_html(evs[i].childNodes[1].innerHTML) + "]]\076\074/header\076";\r\n
+\t\t\t\t\tvar text_color = colors ? get_style(evs[i].childNodes[2], "color") : "";\r\n
+\t\t\t\t\tvar bg_color = colors ? get_style(evs[i].childNodes[2], "backgroundColor") : "";\r\n
+\t\t\t\t\txml += "\074body backgroundColor=\'" + bg_color + "\' color=\'" + text_color + "\'\076\074![CDATA[" + clean_html(evs[i].childNodes[2].innerHTML) + "]]\076\074/body\076";\r\n
+\t\t\t\t} else {\r\n
+\t\t\t\t\tvar text_color = colors ? get_style(evs[i], "color") : "";\r\n
+\t\t\t\t\tvar bg_color = colors ? get_style(evs[i], "backgroundColor") : "";\r\n
+\t\t\t\t\txml += "\074body backgroundColor=\'" + bg_color + "\' color=\'" + text_color + "\'\076\074![CDATA[" + clean_html(evs[i].innerHTML) + "]]\076\074/body\076";\r\n
+\t\t\t\t}\r\n
+\t\t\t\txml += "\074/event\076";\r\n
+\t\t\t}\r\n
+\t\t\t}\r\n
+\r\n
+\t\treturn xml;\r\n
+\t}\r\n
+\r\n
+\tfunction to_pdf(start, end, view, url, mode, header, footer) {\r\n
+\t\tvar colors = false;\r\n
+\t\tif (mode == "fullcolor") {\r\n
+\t\t\tcolors = true;\r\n
+\t\t\tmode = "color";\r\n
+\t\t}\r\n
+\r\n
+\t\tmode = mode || "color";\r\n
+\r\n
+\t\tvar uid = scheduler.uid();\r\n
+\t\tvar d = document.createElement("div");\r\n
+\t\td.style.display = "none";\r\n
+\t\tdocument.body.appendChild(d);\r\n
+\r\n
+\t\td.innerHTML = \'\074form id="\' + uid + \'" method="post" target="_blank" action="\' + url + \'" accept-charset="utf-8" enctype="application/x-www-form-urlencoded"\076\074input type="hidden" name="mycoolxmlbody"/\076 \074/form\076\';\r\n
+\r\n
+\r\n
+\t\tvar xml = "";\r\n
+\t\tif (start) {\r\n
+\t\t\tvar original_date = scheduler._date;\r\n
+\t\t\tvar original_mode = scheduler._mode;\r\n
+\t\t\tend = scheduler.date[view+"_start"](end);\r\n
+\t\t\tend = scheduler.date["get_"+view+"_end"] ? scheduler.date["get_"+view+"_end"](end) : scheduler.date.add(end, 1, view);\r\n
+\r\n
+\t\t\txml = xml_top("pages", mode, header, footer);\r\n
+\t\t\tfor (var temp_date = new Date(start); +temp_date \074 +end; temp_date = scheduler.date.add(temp_date, 1, view)) {\r\n
+\t\t\t\tscheduler.setCurrentView(temp_date, view);\r\n
+\t\t\t\txml += xml_start("page") + xml_body_header().replace("\\u2013", "-") + xml_body(colors) + xml_end("page");\r\n
+\t\t\t}\r\n
+\t\t\txml += xml_end("pages");\r\n
+\r\n
+\t\t\tscheduler.setCurrentView(original_date, original_mode);\r\n
+\t\t} else {\r\n
+\t\t\txml = xml_top("data", mode, header, footer) + xml_body_header().replace("\\u2013", "-") + xml_body(colors) + xml_end("data");\r\n
+\t\t}\r\n
+\r\n
+\r\n
+\t\tdocument.getElementById(uid).firstChild.value = encodeURIComponent(xml);\r\n
+\t\tdocument.getElementById(uid).submit();\r\n
+\t\td.parentNode.removeChild(d);\r\n
+\t}\r\n
+\r\n
+\tscheduler.toPDF = function(url, mode, header, footer) {\r\n
+\t\treturn to_pdf.apply(this, [null, null, null, url, mode, header, footer]);\r\n
+\t};\r\n
+\tscheduler.toPDFRange = function(start, end, view, url, mode, header, footer) {\r\n
+\t\tif (typeof start == "string") {\r\n
+\t\t\tstart = scheduler.templates.api_date(start);\r\n
+\t\t\tend = scheduler.templates.api_date(end);\r\n
+\t\t}\r\n
+\r\n
+\t\treturn to_pdf.apply(this, arguments);\r\n
+\t};\r\n
+})();\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13036</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

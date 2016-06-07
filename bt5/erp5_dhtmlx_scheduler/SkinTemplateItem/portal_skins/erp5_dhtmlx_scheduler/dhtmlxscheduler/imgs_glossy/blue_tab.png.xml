@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189533.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>blue_tab.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAADwAAAAWCAIAAAATqWh1AAAABnRSTlMAAAAAAABupgeRAAAArElE
+QVRIie3VMQrCMBiG4bcYEHFx06HOQsULWL2EB/USVi8gFZzbwW5dSqk0jUPROUsbf8g7ZXz4CEkA
+JGlWlFXdtPx3s6laLuaH7TpI0gyIo9A1yarrIwdUUVan/ebddq49VsVReL49VX8rdGdce2yrm1b1
+J61lLA0T4IuWszQ/dCcRLXJpjx48jx4rce80CF/ao4dOMtp/44Pnn7yxCowxwOX+ci2x6rhbAR/A
+7Fl3tVsnHQAAAABJRU5ErkJggg==</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>22</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>247</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>60</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

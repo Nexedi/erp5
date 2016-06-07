@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189555.15</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_mvc.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+(function(){\r\n
+\r\n
+\tvar cfg = {\r\n
+\t\tuse_id : false\r\n
+\t};\r\n
+\r\n
+\t//remove private properties\r\n
+\tfunction sanitize(ev){\r\n
+\t\tvar obj = {};\r\n
+\t\tfor (var key in ev)\r\n
+\t\t\tif (key.indexOf("_") !== 0)\r\n
+\t\t\t\tobj[key] = ev[key];\r\n
+\r\n
+\t\tif (!cfg.use_id)\r\n
+\t\t\tdelete obj.id;\r\n
+\r\n
+\t\treturn obj;\r\n
+\t}\r\n
+\r\n
+\tvar update_timer;\r\n
+\tfunction update_view(){\r\n
+\t\tclearTimeout(update_timer);\r\n
+\t\tupdate_timer = setTimeout(function(){\r\n
+\t\t\tscheduler.updateView();\r\n
+\t\t},1);\r\n
+\t}\r\n
+\r\n
+\tfunction _start_ext_load(cal){\r\n
+\t\tcal._loading = true;\r\n
+\t\tcal._not_render = true;\r\n
+\r\n
+\t\tcal.callEvent("onXLS", []);\r\n
+\t}\r\n
+\tfunction _finish_ext_load(cal){\r\n
+\t\tcal._not_render = false;\r\n
+\t\tif (cal._render_wait) \r\n
+\t\t\tcal.render_view_data();\r\n
+\t\tcal._loading = false;\r\n
+\r\n
+\t\tcal.callEvent("onXLE", []);\r\n
+\t}\r\n
+\r\n
+\t\r\n
+\tfunction _get_id(model){\r\n
+\t\treturn cfg.use_id ? model.id : model.cid;\r\n
+\t}\r\n
+\r\n
+scheduler.backbone = function(events, config){\r\n
+\tif (config) cfg = config;\r\n
+\r\n
+\tevents.bind("change", function(model, info){\r\n
+\t\tvar cid = _get_id(model);\r\n
+\t\tvar ev = scheduler._events[cid] = model.toJSON();\r\n
+\t\tev.id = cid;\r\n
+\r\n
+\t\tscheduler._init_event(ev);\r\n
+\t\tupdate_view();\r\n
+\t});\r\n
+\tevents.bind("remove", function(model, changes){\r\n
+\t\tvar cid = _get_id(model);\r\n
+\t\tif (scheduler._events[cid])\r\n
+\t\t\tscheduler.deleteEvent(cid);\r\n
+\t});\r\n
+\r\n
+\tvar queue = [];\r\n
+\tfunction add_from_queue(){\r\n
+\t\tif (queue.length){\r\n
+\t\t\tscheduler.parse(queue, "json");\r\n
+\t\t\tqueue = [];\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tevents.bind("add", function(model, changes){ \r\n
+\t\tvar cid = _get_id(model);\r\n
+\t\tif (!scheduler._events[cid]){\r\n
+\t\t\tvar ev =  model.toJSON();\r\n
+\t\t\tev.id = cid;\r\n
+\t\t\tscheduler._init_event(ev); \r\n
+\r\n
+\t\t\tqueue.push(ev);\r\n
+\t\t\tif (queue.length == 1)\r\n
+\t\t\t\tsetTimeout(add_from_queue,1);\r\n
+\t\t}\r\n
+\t});\r\n
+\r\n
+\tevents.bind("request", function(obj){\r\n
+\t\tif (obj instanceof Backbone.Collection)\r\n
+\t\t\t_start_ext_load(scheduler);\r\n
+\t});\r\n
+\tevents.bind("sync", function(obj){\r\n
+\t\tif (obj instanceof Backbone.Collection)\r\n
+\t\t\t_finish_ext_load(scheduler);\r\n
+\t});\r\n
+\tevents.bind("error", function(obj){\r\n
+\t\tif (obj instanceof Backbone.Collection)\r\n
+\t\t\t_finish_ext_load(scheduler);\r\n
+\t});\r\n
+\r\n
+\r\n
+\tscheduler.attachEvent("onEventCreated", function(id){\r\n
+\t\tvar ev = new events.model(scheduler.getEvent(id));\r\n
+\t\tscheduler._events[id] = ev.toJSON();\r\n
+\t\tscheduler._events[id].id = id;\r\n
+\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\r\n
+\tscheduler.attachEvent("onEventAdded", function(id){\r\n
+\t\tif (!events.get(id)){\r\n
+\t\t\tvar data = sanitize(scheduler.getEvent(id));\r\n
+\t\t\tvar model = new events.model(data);\r\n
+\r\n
+\t\t\tvar cid = _get_id(model);\r\n
+\t\t\tif (cid != id)\r\n
+\t\t\t\tthis.changeEventId(id, cid);\r\n
+\t\t\tevents.add(model);\r\n
+\t\t\tevents.trigger("scheduler:add", model);\r\n
+\t\t}\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\tscheduler.attachEvent("onEventChanged", function(id){\r\n
+\t\tvar ev = events.get(id);\r\n
+\t\tvar upd = sanitize(scheduler.getEvent(id));\r\n
+\r\n
+\t\tev.set(upd);\r\n
+\t\tevents.trigger("scheduler:change", ev);\r\n
+\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\tscheduler.attachEvent("onEventDeleted", function(id){\r\n
+\t\tvar model = events.get(id);\r\n
+\t\tif (model){\r\n
+\t\t\tevents.trigger("scheduler:remove", model);\r\n
+\t\t\tevents.remove(id);\r\n
+\t\t}\r\n
+\t\treturn true;\r\n
+\t});\r\n
+};\r\n
+\r\n
+})();</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3280</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

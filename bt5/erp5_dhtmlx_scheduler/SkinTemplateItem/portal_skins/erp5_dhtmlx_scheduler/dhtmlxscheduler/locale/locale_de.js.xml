@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189535.05</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_de.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\n
+scheduler.locale={date:{month_full:[" Januar"," Februar"," März "," April"," Mai"," Juni"," Juli"," August"," September "," Oktober"," November "," Dezember"],month_short:["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],day_full:["Sonntag","Montag","Dienstag"," Mittwoch"," Donnerstag","Freitag","Samstag"],day_short:["So","Mo","Di","Mi","Do","Fr","Sa"]},labels:{dhx_cal_today_button:"Heute",day_tab:"Tag",week_tab:"Woche",month_tab:"Monat",new_event:"neuer Eintrag",icon_save:"Speichern",\n
+icon_cancel:"Abbrechen",icon_details:"Details",icon_edit:"Ändern",icon_delete:"Löschen",confirm_closing:"",confirm_deleting:"Der Eintrag wird gelöscht",section_description:"Beschreibung",section_time:"Zeitspanne",full_day:"Ganzer Tag",confirm_recurring:"Wollen Sie alle Einträge bearbeiten oder nur diesen einzelnen Eintrag?",section_recurring:"Wiederholung",button_recurring:"Aus",button_recurring_open:"An",button_edit_series:"Bearbeiten Sie die Serie",button_edit_occurrence:"Bearbeiten Sie eine Kopie",\n
+agenda_tab:"Agenda",date:"Datum",description:"Beschreibung",year_tab:"Jahre",week_agenda_tab:"Agenda",grid_tab:"Grid",drag_to_create:"Drag to create",drag_to_move:"Drag to move",message_ok:"OK",message_cancel:"Cancel"}};\n
+//# sourceMappingURL=../sources/locale/locale_de.js.map</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1575</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

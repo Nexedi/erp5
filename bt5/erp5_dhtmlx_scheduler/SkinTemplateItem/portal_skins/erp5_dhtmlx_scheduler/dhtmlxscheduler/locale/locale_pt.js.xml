@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189535.69</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_pt.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\n
+scheduler.locale={date:{month_full:["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"],month_short:["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],day_full:["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"],day_short:["Dom","Seg","Ter","Qua","Qui","Sex","Sab"]},labels:{dhx_cal_today_button:"Hoje",day_tab:"Dia",week_tab:"Semana",month_tab:"Mês",new_event:"Novo evento",icon_save:"Salvar",icon_cancel:"Cancelar",\n
+icon_details:"Detalhes",icon_edit:"Editar",icon_delete:"Deletar",confirm_closing:"",confirm_deleting:"Tem certeza que deseja excluir?",section_description:"Descrição",section_time:"Período de tempo",full_day:"Dia inteiro",confirm_recurring:"Deseja editar todos esses eventos repetidos?",section_recurring:"Repetir evento",button_recurring:"Desabilitar",button_recurring_open:"Habilitar",button_edit_series:"Editar a série",button_edit_occurrence:"Editar uma cópia",agenda_tab:"Dia",date:"Data",description:"Descrição",\n
+year_tab:"Ano",week_agenda_tab:"Dia",grid_tab:"Grade",drag_to_create:"Drag to create",drag_to_move:"Drag to move",message_ok:"OK",message_cancel:"Cancel"}};\n
+//# sourceMappingURL=../sources/locale/locale_pt.js.map</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1529</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

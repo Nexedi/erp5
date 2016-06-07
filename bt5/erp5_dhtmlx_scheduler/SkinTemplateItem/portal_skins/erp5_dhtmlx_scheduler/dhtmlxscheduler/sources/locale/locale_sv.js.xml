@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189560.66</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_sv.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.locale = {\r\n
+\tdate: {\r\n
+\t\tmonth_full: ["Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "September", "Oktober", "November", "December"],\r\n
+\t\tmonth_short: ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"],\r\n
+\t\tday_full: ["Söndag", "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag"],\r\n
+\t\tday_short: ["Sön", "Mån", "Tis", "Ons", "Tor", "Fre", "Lör"]\r\n
+\t},\r\n
+\tlabels: {\r\n
+\t\tdhx_cal_today_button: "Idag",\r\n
+\t\tday_tab: "Dag",\r\n
+\t\tweek_tab: "Vecka",\r\n
+\t\tmonth_tab: "Månad",\r\n
+\t\tnew_event: "Ny händelse",\r\n
+\t\ticon_save: "Spara",\r\n
+\t\ticon_cancel: "Ångra",\r\n
+\t\ticon_details: "Detajer",\r\n
+\t\ticon_edit: "Ändra",\r\n
+\t\ticon_delete: "Ta bort",\r\n
+\t\tconfirm_closing: "", //Dina förändingar kommer gå förlorade, är du säker?\r\n
+\t\tconfirm_deleting: "Är du säker på att du vill ta bort händelsen permanent?",\r\n
+\t\tsection_description: "Beskrivning",\r\n
+\t\tsection_time: "Tid",\r\n
+\t\tfull_day: "Hela dagen",\r\n
+\r\n
+\t\t/*recurring events*/\r\n
+\t\tconfirm_recurring: "Vill du redigera hela serien med repeterande händelser?",\r\n
+\t\tsection_recurring: "Upprepa händelse",\r\n
+\t\tbutton_recurring: "Inaktiverat",\r\n
+\t\tbutton_recurring_open: "Aktiverat",\r\n
+\t\tbutton_edit_series: "Redigera serien",\r\n
+\t\tbutton_edit_occurrence: "Redigera en kopia",\r\n
+\r\n
+\t\t/*agenda view extension*/\r\n
+\t\tagenda_tab: "Dagordning",\r\n
+\t\tdate: "Datum",\r\n
+\t\tdescription: "Beskrivning",\r\n
+\r\n
+\t\t/*year view extension*/\r\n
+\t\tyear_tab: "År",\r\n
+\r\n
+\t\t/*week agenda view extension*/\r\n
+\t\tweek_agenda_tab: "Dagordning",\r\n
+\r\n
+\t\t/*grid view extension*/\r\n
+\t\tgrid_tab: "Galler",\r\n
+\r\n
+\t\t/* touch tooltip*/\r\n
+\t\tdrag_to_create:"Drag to create",\r\n
+\t\tdrag_to_move:"Drag to move",\r\n
+\r\n
+\t\t/* dhtmlx message default buttons */\r\n
+\t\tmessage_ok:"OK",\r\n
+\t\tmessage_cancel:"Cancel"\r\n
+\t}\r\n
+};</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2014</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,269 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189556.25</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_tooltip.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+window.dhtmlXTooltip = scheduler.dhtmlXTooltip = window.dhtmlxTooltip = {};\r\n
+\r\n
+dhtmlXTooltip.config = {\r\n
+\tclassName: \'dhtmlXTooltip tooltip\',\r\n
+\ttimeout_to_display: 50,\r\n
+\ttimeout_to_hide: 50,\r\n
+\tdelta_x: 15,\r\n
+\tdelta_y: -20\r\n
+};\r\n
+\r\n
+dhtmlXTooltip.tooltip = document.createElement(\'div\');\r\n
+dhtmlXTooltip.tooltip.className = dhtmlXTooltip.config.className;\r\n
+\r\n
+dhtmlXTooltip.show = function(event, text) { //browser event, text to display\r\n
+\tif (scheduler.config.touch && !scheduler.config.touch_tooltip) return;\r\n
+\t\r\n
+\tvar dhxTooltip = dhtmlXTooltip;\r\n
+\tvar tooltip_div = this.tooltip;\r\n
+\tvar tooltip_div_style = tooltip_div.style;\r\n
+\tdhxTooltip.tooltip.className = dhxTooltip.config.className;\r\n
+\tvar pos = this.position(event);\r\n
+\r\n
+\tvar target = event.target || event.srcElement;\r\n
+\t// if we are over tooltip -- do nothing, just return (so tooltip won\'t move)\r\n
+\tif (this.isTooltip(target)) {\r\n
+\t\treturn;\r\n
+\t}\r\n
+\r\n
+\tvar actual_x = pos.x + (dhxTooltip.config.delta_x || 0);\r\n
+\tvar actual_y = pos.y - (dhxTooltip.config.delta_y || 0);\r\n
+\r\n
+\ttooltip_div_style.visibility = "hidden";\r\n
+\r\n
+\tif (tooltip_div_style.removeAttribute) {\r\n
+\t\ttooltip_div_style.removeAttribute("right");\r\n
+\t\ttooltip_div_style.removeAttribute("bottom");\r\n
+\t} else {\r\n
+\t\ttooltip_div_style.removeProperty("right");\r\n
+\t\ttooltip_div_style.removeProperty("bottom");\r\n
+\t}\r\n
+\r\n
+\ttooltip_div_style.left = "0";\r\n
+\ttooltip_div_style.top = "0";\r\n
+\r\n
+\tthis.tooltip.innerHTML = text;\r\n
+\tdocument.body.appendChild(this.tooltip);\r\n
+\r\n
+\tvar tooltip_width = this.tooltip.offsetWidth;\r\n
+\tvar tooltip_height = this.tooltip.offsetHeight;\r\n
+\r\n
+\tif ((document.body.offsetWidth - actual_x - tooltip_width) < 0) { // tooltip is out of the right page bound\r\n
+\t\tif(tooltip_div_style.removeAttribute)\r\n
+\t\t\ttooltip_div_style.removeAttribute("left");\r\n
+\t\telse\r\n
+\t\t\ttooltip_div_style.removeProperty("left");\r\n
+\t\ttooltip_div_style.right = (document.body.offsetWidth - actual_x + 2 * (dhxTooltip.config.delta_x||0)) + "px";\r\n
+\t} else {\r\n
+\t\tif (actual_x < 0) {\r\n
+\t\t\t// tooltips is out of the left page bound\r\n
+\t\t\ttooltip_div_style.left = (pos.x + Math.abs(dhxTooltip.config.delta_x||0)) + "px";\r\n
+\t\t} else {\r\n
+\t\t\t// normal situation\r\n
+\t\t\ttooltip_div_style.left = actual_x + "px";\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tif ((document.body.offsetHeight - actual_y - tooltip_height) < 0) { // tooltip is below bottom of the page\r\n
+\t\tif(tooltip_div_style.removeAttribute)\r\n
+\t\t\ttooltip_div_style.removeAttribute("top");\r\n
+\t\telse\r\n
+\t\t\ttooltip_div_style.removeProperty("top");\r\n
+\t\ttooltip_div_style.bottom = (document.body.offsetHeight - actual_y - 2 * (dhxTooltip.config.delta_y||0)) + "px";\r\n
+\t} else {\r\n
+\t\tif (actual_y < 0) {\r\n
+\t\t\t// tooltip is higher then top of the page\r\n
+\t\t\ttooltip_div_style.top = (pos.y + Math.abs(dhxTooltip.config.delta_y||0)) + "px";\r\n
+\t\t} else {\r\n
+\t\t\t// normal situation\r\n
+\t\t\ttooltip_div_style.top = actual_y + "px";\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\ttooltip_div_style.visibility = "visible";\r\n
+\tthis.tooltip.onmouseleave = function(e){\r\n
+\t\te = e || window.event;\r\n
+\t\t/*\r\n
+\t\t A rare but reported scenario, when tooltip appears at the edge of the scheduler (e.g. left part inside cal, right part - outside).\r\n
+\t\t User moves mouse from the scheduler into the tooltip, and then from the tooltip to the page outside the calendar.\r\n
+\t\t As a result - tooltip freezes and no longer reacts until mouse reenters the calendar.\r\n
+\t\t*/\r\n
+\t\tvar tooltip = scheduler.dhtmlXTooltip;\r\n
+\r\n
+\t\tvar node = e.relatedTarget;\r\n
+\t\twhile (node != scheduler._obj && node) {\r\n
+\t\t\tnode = node.parentNode;\r\n
+\t\t}\r\n
+\r\n
+\t\tif(node != scheduler._obj)\r\n
+\t\t\ttooltip.delay(tooltip.hide, tooltip, [], tooltip.config.timeout_to_hide);\r\n
+\t};\r\n
+\r\n
+\tscheduler.callEvent("onTooltipDisplayed", [this.tooltip, this.tooltip.event_id]);\r\n
+};\r\n
+dhtmlXTooltip._clearTimeout = function(){\r\n
+\tif(this.tooltip._timeout_id) {\r\n
+\t\twindow.clearTimeout(this.tooltip._timeout_id);\r\n
+\t}\r\n
+};\r\n
+\r\n
+dhtmlXTooltip.hide = function() {\r\n
+\tif (this.tooltip.parentNode) {\r\n
+\t\tvar event_id = this.tooltip.event_id;\r\n
+\t\tthis.tooltip.event_id = null;\r\n
+\t\tthis.tooltip.onmouseleave = null;\r\n
+\t\tthis.tooltip.parentNode.removeChild(this.tooltip);\r\n
+\t\tscheduler.callEvent("onAfterTooltip", [event_id]);\r\n
+\t}\r\n
+\tthis._clearTimeout();\r\n
+};\r\n
+dhtmlXTooltip.delay = function(method, object, params, delay) {\r\n
+\tthis._clearTimeout();\r\n
+\tthis.tooltip._timeout_id = setTimeout(function() {\r\n
+\t\tvar ret = method.apply(object, params);\r\n
+\t\tmethod = object = params = null;\r\n
+\t\treturn ret;\r\n
+\t}, delay || this.config.timeout_to_display);\r\n
+};\r\n
+\r\n
+dhtmlXTooltip.isTooltip = function(node) {\r\n
+\tvar res = false;\r\n
+\tif (node.className.split(" ")[0] == "dhtmlXTooltip") {\r\n
+\t\t//debugger;\r\n
+\t}\r\n
+\twhile (node && !res) {\r\n
+\t\tres = (node.className == this.tooltip.className);\r\n
+\t\tnode = node.parentNode;\r\n
+\t}\r\n
+\treturn res;\r\n
+};\r\n
+\r\n
+dhtmlXTooltip.position = function(ev) {\r\n
+\tev = ev || window.event;\r\n
+\tif (ev.pageX || ev.pageY) //FF, KHTML\r\n
+\t\treturn {x:ev.pageX, y:ev.pageY};\r\n
+\t//IE\r\n
+\tvar d = ((window._isIE) && (document.compatMode != "BackCompat")) ? document.documentElement : document.body;\r\n
+\treturn {\r\n
+\t\tx:ev.clientX + d.scrollLeft - d.clientLeft,\r\n
+\t\ty:ev.clientY + d.scrollTop - d.clientTop\r\n
+\t};\r\n
+};\r\n
+\r\n
+scheduler.attachEvent("onMouseMove", function(event_id, e) { // (scheduler event_id, browser event)\r\n
+\tvar ev = window.event || e;\r\n
+\tvar target = ev.target || ev.srcElement;\r\n
+\tvar dhxTooltip = dhtmlXTooltip;\r\n
+\r\n
+\tvar is_tooltip = dhxTooltip.isTooltip(target);\r\n
+\tvar is_tooltip_target = (dhxTooltip.isTooltipTarget && dhxTooltip.isTooltipTarget(target));\r\n
+\r\n
+\t// if we are over event or tooltip or custom target for tooltip\r\n
+\tif (event_id || is_tooltip || is_tooltip_target) {\r\n
+\t\tvar text;\r\n
+\r\n
+\t\tif (event_id || dhxTooltip.tooltip.event_id) {\r\n
+\t\t\tvar event = scheduler.getEvent(event_id) || scheduler.getEvent(dhxTooltip.tooltip.event_id);\r\n
+\t\t\tif (!event)\r\n
+\t\t\t\treturn;\r\n
+\r\n
+\t\t\tdhxTooltip.tooltip.event_id = event.id;\r\n
+\t\t\ttext = scheduler.templates.tooltip_text(event.start_date, event.end_date, event);\r\n
+\t\t\tif (!text)\r\n
+\t\t\t\treturn dhxTooltip.hide();\r\n
+\t\t}\r\n
+\t\tif (is_tooltip_target) {\r\n
+\t\t\ttext = "";\r\n
+\t\t}\r\n
+\r\n
+\t\tvar evt;\r\n
+\t\tif (_isIE) {\r\n
+\t\t\t//make a copy of event, will be used in timed call\r\n
+\r\n
+\t\t\tevt = {\'pageX\':undefined,\r\n
+\t\t\t\t\'pageY\':undefined,\r\n
+\t\t\t\t\'clientX\':undefined,\r\n
+\t\t\t\t\'clientY\':undefined,\r\n
+\t\t\t\t\'target\':undefined,\r\n
+\t\t\t\t\'srcElement\':undefined\r\n
+\t\t\t};\r\n
+\t\t\tfor(var i in evt){\r\n
+\t\t\t\tevt[i] = ev[i];\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\r\n
+\t\tif (!scheduler.callEvent("onBeforeTooltip", [event_id]) || !text)\r\n
+\t\t\treturn;\r\n
+\r\n
+\t\tdhxTooltip.delay(dhxTooltip.show, dhxTooltip, [(evt || ev), text]); // showing tooltip\r\n
+\t} else {\r\n
+\t\tdhxTooltip.delay(dhxTooltip.hide, dhxTooltip, [], dhxTooltip.config.timeout_to_hide);\r\n
+\t}\r\n
+});\r\n
+scheduler.attachEvent("onBeforeDrag", function() {\r\n
+\tdhtmlXTooltip.hide();\r\n
+\treturn true;\r\n
+});\r\n
+scheduler.attachEvent("onEventDeleted", function() {\r\n
+\tdhtmlXTooltip.hide();\r\n
+\treturn true;\r\n
+});\r\n
+\r\n
+/* Could be redifined */\r\n
+scheduler.templates.tooltip_date_format = scheduler.date.date_to_str("%Y-%m-%d %H:%i");\r\n
+\r\n
+scheduler.templates.tooltip_text = function(start, end, event) {\r\n
+\treturn "<b>Event:</b> " + event.text + "<br/><b>Start date:</b> " + scheduler.templates.tooltip_date_format(start) + "<br/><b>End date:</b> " + scheduler.templates.tooltip_date_format(end);\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7345</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

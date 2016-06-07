@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189556.21</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_serialize.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler._get_serializable_data = function(){\r\n
+\tvar res = {};\r\n
+\tfor (var a in this._events){\r\n
+\t\tvar ev = this._events[a];\r\n
+\t\tif (ev.id.toString().indexOf("#") == -1){\r\n
+\t\t\tres[ev.id] = ev;\r\n
+\t\t}\r\n
+\t}\r\n
+\treturn res;\r\n
+};\r\n
+\r\n
+//redefine this method, if you want to provide a custom set of attributes for serialization\r\n
+scheduler.data_attributes=function(){\r\n
+\tvar attrs = [];\r\n
+\tvar format = scheduler.templates.xml_format;\r\n
+\tvar all_events = this._get_serializable_data();\r\n
+\tfor (var a in all_events){\r\n
+\t\tvar ev = all_events[a];\r\n
+\t\tfor (var name in ev)\r\n
+\t\t\tif (name.substr(0,1) !="_")\r\n
+\t\t\t\tattrs.push([name,((name == "start_date" || name == "end_date")?format:null)]);\r\n
+\t\tbreak;\r\n
+\t}\r\n
+\treturn attrs;\r\n
+};\r\n
+\r\n
+scheduler.toXML = function(header){\r\n
+\tvar xml = [];\r\n
+\tvar attrs = this.data_attributes();\r\n
+\r\n
+\tvar all_events = this._get_serializable_data();\r\n
+\tfor (var a in all_events){\r\n
+\t\tvar ev = all_events[a];\r\n
+\r\n
+\t\txml.push("\074event\076");\t\r\n
+\t\tfor (var i=0; i \074 attrs.length; i++)\r\n
+\t\t\txml.push("\074"+attrs[i][0]+"\076\074![CDATA["+(attrs[i][1]?attrs[i][1](ev[attrs[i][0]]):ev[attrs[i][0]])+"]]\076\074/"+attrs[i][0]+"\076");\r\n
+\t\t\t\r\n
+\t\txml.push("\074/event\076");\r\n
+\t}\r\n
+\treturn (header||"")+"\074data\076"+xml.join("\\n")+"\074/data\076";\r\n
+};\r\n
+\r\n
+scheduler._serialize_json_value = function(value){\r\n
+\tif(value === null || typeof value === "boolean"){\r\n
+\t\tvalue = "" + value;\r\n
+\t}else{\r\n
+\t\tif(!value \046\046 value !== 0){\r\n
+\t\t\tvalue = "";\r\n
+\t\t}\r\n
+\t\tvalue = \'"\' + value.toString().\r\n
+\t\t\treplace(/\\n/g,"").\r\n
+\t\t\treplace(/\\\\/g,"\\\\\\\\").\r\n
+\t\t\treplace(/\\"/g, \'\\\\"\') + \'"\';\r\n
+\t}\r\n
+\treturn value;\r\n
+};\r\n
+\r\n
+scheduler.toJSON = function(){\r\n
+\tvar json = [], value = "";\r\n
+\tvar attrs = this.data_attributes();\r\n
+\tvar all_events = this._get_serializable_data();\r\n
+\tfor (var a in all_events){\r\n
+\t\tvar ev = all_events[a];\r\n
+\r\n
+\t\tvar line =[];\t\r\n
+\t\tfor (var i=0; i \074 attrs.length; i++){\r\n
+\t\t\tvalue = (attrs[i][1]) ? attrs[i][1](ev[attrs[i][0]]) : ev[attrs[i][0]];\r\n
+\r\n
+\t\t\tline.push(\' "\'+attrs[i][0]+\'": \'+ this._serialize_json_value(value));\r\n
+\t\t}\r\n
+\t\tjson.push("{"+line.join(",")+"}");\r\n
+\t}\r\n
+\treturn "["+json.join(",\\n")+"]";\r\n
+};\r\n
+\r\n
+\r\n
+scheduler.toICal = function(header){\r\n
+\tvar start = "BEGIN:VCALENDAR\\nVERSION:2.0\\nPRODID:-//dhtmlXScheduler//NONSGML v2.2//EN\\nDESCRIPTION:";\r\n
+\tvar end = "END:VCALENDAR";\r\n
+\tvar format = scheduler.date.date_to_str("%Y%m%dT%H%i%s");\r\n
+\tvar full_day_format = scheduler.date.date_to_str("%Y%m%d");\r\n
+\t\t\r\n
+\tvar ical = [];\r\n
+\tvar all_events = this._get_serializable_data();\r\n
+\tfor (var a in all_events){\r\n
+\t\tvar ev = all_events[a];\r\n
+\t\t\r\n
+\t\t\r\n
+\t\tical.push("BEGIN:VEVENT");\t\r\n
+\t\tif (!ev._timed || (!ev.start_date.getHours() \046\046 !ev.start_date.getMinutes()))\r\n
+\t\t\tical.push("DTSTART:"+full_day_format(ev.start_date));\t\r\n
+\t\telse\r\n
+\t\t\tical.push("DTSTART:"+format(ev.start_date));\r\n
+\t\tif (!ev._timed || (!ev.end_date.getHours() \046\046 !ev.end_date.getMinutes()))\r\n
+\t\t\tical.push("DTEND:"+full_day_format(ev.end_date));\t\r\n
+\t\telse\r\n
+\t\t\tical.push("DTEND:"+format(ev.end_date));\r\n
+\t\tical.push("SUMMARY:"+ev.text);\t\r\n
+\t\tical.push("END:VEVENT");\r\n
+\t}\r\n
+\treturn start+(header||"")+"\\n"+ical.join("\\n")+"\\n"+end;\r\n
+};</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3269</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

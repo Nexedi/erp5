@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_multisource.js.map</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>{"version":3,"file":"dhtmlxscheduler_multisource.js","sources":["dhtmlxscheduler_multisource.js"],"names":["backup","obj","t","prototype","old","scheduler","_load","url","from","this","_load_url","_loaded","i","length","call","apply","arguments"],"mappings":";;;;;;;;CAQA,WAEC,QAASA,GAAOC,GACf,GAAIC,GAAI,YAER,OADAA,GAAEC,UAAYF,EACPC,EAGR,GAAIE,GAAMC,UAAUC,KACpBD,WAAUC,MAAM,SAASC,EAAIC,GAE5B,GADAD,EAAIA,GAAKE,KAAKC,UACI,gBAAPH,GAEV,IAAK,GADDL,GAAIF,EAAOS,KAAKE,SACXC,EAAE,EAAGA,EAAIL,EAAIM,OAAQD,IAC7BH,KAAKE,QAAQ,GAAIT,GACjBE,EAAIU,KAAKL,KAAKF,EAAIK,GAAGJ,OAGtBJ,GAAIW,MAAMN,KAAKO"}</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

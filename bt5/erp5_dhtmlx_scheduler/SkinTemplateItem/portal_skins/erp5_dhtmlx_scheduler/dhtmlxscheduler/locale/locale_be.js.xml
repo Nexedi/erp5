@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189534.84</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_be.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\n
+scheduler.locale={date:{month_full:["Студзень","Люты","Сакавік","Красавік","Maй","Чэрвень","Ліпень","Жнівень","Верасень","Кастрычнік","Лістапад","Снежань"],month_short:["Студз","Лют","Сак","Крас","Maй","Чэр","Ліп","Жнів","Вер","Каст","Ліст","Снеж"],day_full:["Нядзеля","Панядзелак","Аўторак","Серада","Чацвер","Пятніца","Субота"],day_short:["Нд","Пн","Аўт","Ср","Чцв","Пт","Сб"]},labels:{dhx_cal_today_button:"Сёння",day_tab:"Дзень",week_tab:"Тыдзень",month_tab:"Месяц",new_event:"Новая падзея",icon_save:"Захаваць",\n
+icon_cancel:"Адмяніць",icon_details:"Дэталі",icon_edit:"Змяніць",icon_delete:"Выдаліць",confirm_closing:"",confirm_deleting:"Падзея будзе выдалена незваротна, працягнуць?",section_description:"Апісанне",section_time:"Перыяд часу",full_day:"Увесь дзень",confirm_recurring:"Вы хочаце змяніць усю серыю паўтаральных падзей?",section_recurring:"Паўтарэнне",button_recurring:"Адключана",button_recurring_open:"Уключана",button_edit_series:"Рэдагаваць серыю",button_edit_occurrence:"Рэдагаваць асобнік",agenda_tab:"Спіс",\n
+date:"Дата",description:"Апісанне",year_tab:"Год",week_agenda_tab:"Спіс",grid_tab:"Спic",drag_to_create:"Drag to create",drag_to_move:"Drag to move",message_ok:"OK",message_cancel:"Cancel"}};\n
+//# sourceMappingURL=../sources/locale/locale_be.js.map</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2000</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

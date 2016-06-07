@@ -1,0 +1,244 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189555.62</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_quick_info.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.config.icons_select = ["icon_details", "icon_delete"];\r\n
+scheduler.config.details_on_create = true;\r\n
+scheduler.config.show_quick_info = true;\r\n
+scheduler.xy.menu_width = 0;\r\n
+\r\n
+scheduler.attachEvent("onClick", function(id){\r\n
+\tscheduler.showQuickInfo(id);\r\n
+\treturn true;\r\n
+});\r\n
+\r\n
+(function(){\r\n
+\tvar events = ["onEmptyClick", "onViewChange", "onLightbox", "onBeforeEventDelete", "onBeforeDrag"];\r\n
+\tvar hiding_function = function(){\r\n
+\t\tscheduler._hideQuickInfo();\r\n
+\t\treturn true;\r\n
+\t};\r\n
+\tfor (var i=0; i<events.length; i++)\r\n
+\t\tscheduler.attachEvent(events[i], hiding_function);\r\n
+})();\r\n
+\r\n
+scheduler.templates.quick_info_title = function(start, end, ev){ return ev.text.substr(0,50); };\r\n
+scheduler.templates.quick_info_content = function(start, end, ev){ return ev.details || ev.text; };\r\n
+scheduler.templates.quick_info_date = function(start, end, ev){\r\n
+\tif (scheduler.isOneDayEvent(ev))\r\n
+\t\treturn scheduler.templates.day_date(start, end, ev) + " " +scheduler.templates.event_header(start, end, ev);\r\n
+\telse\r\n
+\t\treturn scheduler.templates.week_date(start, end, ev);\r\n
+};\r\n
+\r\n
+scheduler.showQuickInfo = function(id){\r\n
+\tif (id == this._quick_info_box_id || !this.config.show_quick_info) return;\r\n
+\tthis.hideQuickInfo(true);\r\n
+\r\n
+\tvar pos = this._get_event_counter_part(id);\r\n
+\t\r\n
+\tif (pos){\r\n
+\t\tthis._quick_info_box = this._init_quick_info(pos);\r\n
+\t\tthis._fill_quick_data(id);\r\n
+\t\tthis._show_quick_info(pos);\r\n
+\t}\r\n
+};\r\n
+scheduler._hideQuickInfo = function(){\r\n
+\tscheduler.hideQuickInfo();\r\n
+};\r\n
+scheduler.hideQuickInfo = function(forced){\r\n
+\tvar qi = this._quick_info_box;\r\n
+\tthis._quick_info_box_id = 0;\r\n
+\r\n
+\tif (qi && qi.parentNode){\r\n
+\t\tvar width = qi._offsetWidth;\r\n
+\t\tif (scheduler.config.quick_info_detached)\r\n
+\t\t\treturn qi.parentNode.removeChild(qi);\r\n
+\r\n
+\t\tif (qi.style.right == "auto")\r\n
+\t\t\tqi.style.left = -width + "px";\r\n
+\t\telse\r\n
+\t\t\tqi.style.right = -width + "px";\r\n
+\r\n
+\t\tif (forced)\r\n
+\t\t\tqi.parentNode.removeChild(qi);\r\n
+\t}\r\n
+};\r\n
+dhtmlxEvent(window, "keydown", function(e){\r\n
+\tif (e.keyCode == 27)\r\n
+\t\tscheduler.hideQuickInfo();\r\n
+});\r\n
+\r\n
+scheduler._show_quick_info = function(pos){\r\n
+\tvar qi = scheduler._quick_info_box;\r\n
+\tscheduler._obj.appendChild(qi);\r\n
+\tvar width = qi.offsetWidth;\r\n
+\tvar height = qi.offsetHeight;\r\n
+\r\n
+\tif (scheduler.config.quick_info_detached){\r\n
+\t\tqi.style.left = pos.left - pos.dx*(width - pos.width) + "px";\r\n
+\t\tqi.style.top = pos.top - (pos.dy?height:-pos.height) + "px";\r\n
+\t} else {\r\n
+\t\tqi.style.top = this.xy.scale_height+this.xy.nav_height + 20 + "px";\r\n
+\t\tif (pos.dx == 1){\r\n
+\t\t\tqi.style.right = "auto";\r\n
+\t\t\tqi.style.left = -width + "px";\r\n
+\t\t\t\r\n
+\t\t\tsetTimeout(function(){\r\n
+\t\t\t\tqi.style.left = "-10px";\r\n
+\t\t\t},1);\r\n
+\t\t} else {\r\n
+\t\t\tqi.style.left = "auto";\r\n
+\t\t\tqi.style.right = -width + "px";\r\n
+\t\t\t\r\n
+\t\t\tsetTimeout(function(){\r\n
+\t\t\t\tqi.style.right = "-10px";\r\n
+\t\t\t},1);\r\n
+\t\t}\r\n
+\t\tqi.className = qi.className.replace("dhx_qi_left","").replace("dhx_qi_right","")+" dhx_qi_"+(pos==1?"left":"right");\r\n
+\t}\r\n
+};\r\n
+scheduler.attachEvent("onTemplatesReady", function(){\r\n
+\tscheduler.hideQuickInfo();\r\n
+\tif(this._quick_info_box){\r\n
+\t\tvar box = this._quick_info_box;\r\n
+\t\tif(box.parentNode){\r\n
+\t\t\tbox.parentNode.removeChild(box);\r\n
+\t\t}\r\n
+\t\tthis._quick_info_box = null;\r\n
+\t}\r\n
+});\r\n
+scheduler._quick_info_onscroll_handler = function(e){\r\n
+\tscheduler.hideQuickInfo();\r\n
+};\r\n
+scheduler._init_quick_info = function(){\r\n
+\tif (!this._quick_info_box){\r\n
+\t\tvar sizes = scheduler.xy;\r\n
+\r\n
+\t\tvar qi = this._quick_info_box = document.createElement("div");\r\n
+\t\tqi.className = "dhx_cal_quick_info";\r\n
+\t\tif (scheduler.$testmode)\r\n
+\t\t\tqi.className += " dhx_no_animate";\r\n
+\t//title\r\n
+\t\tvar html = "<div class=\\"dhx_cal_qi_title\\" style=\\"height:"+sizes.quick_info_title+"px\\">" +\r\n
+\t\t\t"<div class=\\"dhx_cal_qi_tcontent\\"></div><div  class=\\"dhx_cal_qi_tdate\\"></div>" +\r\n
+\t\t\t"</div>" +\r\n
+\t\t\t"<div class=\\"dhx_cal_qi_content\\"></div>";\r\n
+\r\n
+\t//buttons\r\n
+\t\thtml += "<div class=\\"dhx_cal_qi_controls\\" style=\\"height:"+sizes.quick_info_buttons+"px\\">";\r\n
+\t\tvar buttons = scheduler.config.icons_select;\r\n
+\t\tfor (var i = 0; i < buttons.length; i++)\r\n
+\t\t\thtml += "<div class=\\"dhx_qi_big_icon "+buttons[i]+"\\" title=\\""+scheduler.locale.labels[buttons[i]]+"\\"><div class=\'dhx_menu_icon " + buttons[i] + "\'></div><div>"+scheduler.locale.labels[buttons[i]]+"</div></div>";\r\n
+\t\thtml += "</div>";\r\n
+\r\n
+\t\tqi.innerHTML = html;\r\n
+\t\tdhtmlxEvent(qi, "click", function(ev){\r\n
+\t\t\tev = ev || event;\r\n
+\t\t\tscheduler._qi_button_click(ev.target || ev.srcElement);\r\n
+\t\t});\r\n
+\t\tif (scheduler.config.quick_info_detached){\r\n
+\t\t\tscheduler._detachDomEvent(scheduler._els["dhx_cal_data"][0], "scroll", scheduler._quick_info_onscroll_handler);\r\n
+\t\t\tdhtmlxEvent(scheduler._els["dhx_cal_data"][0], "scroll", scheduler._quick_info_onscroll_handler);\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\treturn this._quick_info_box;\r\n
+};\r\n
+\r\n
+scheduler._qi_button_click = function(node){\r\n
+\tvar box = scheduler._quick_info_box;\r\n
+\tif (!node || node == box) return;\r\n
+\r\n
+\tvar mask = node.className;\r\n
+\tif (mask.indexOf("_icon")!=-1){\r\n
+\t\tvar id = scheduler._quick_info_box_id;\r\n
+\t\tscheduler._click.buttons[mask.split(" ")[1].replace("icon_","")](id);\r\n
+\t} else\r\n
+\t\tscheduler._qi_button_click(node.parentNode);\r\n
+};\r\n
+scheduler._get_event_counter_part = function(id){\r\n
+\tvar domEv = scheduler.getRenderedEvent(id);\r\n
+\tvar left = 0;\r\n
+\tvar top = 0;\r\n
+\r\n
+\tvar node = domEv;\r\n
+\twhile (node && node != scheduler._obj){\r\n
+\t\tleft += node.offsetLeft;\r\n
+\t\ttop += node.offsetTop-node.scrollTop;\r\n
+\t\tnode = node.offsetParent;\r\n
+\t}\r\n
+\tif(node){\r\n
+\t\tvar dx = (left + domEv.offsetWidth/2) > (scheduler._x/2) ? 1 : 0;\r\n
+\t\tvar dy = (top + domEv.offsetHeight/2) > (scheduler._y/2) ? 1 : 0;\r\n
+\r\n
+\t\treturn { left:left, top:top, dx:dx, dy:dy,\r\n
+\t\t\twidth:domEv.offsetWidth, height:domEv.offsetHeight };\r\n
+\t}\r\n
+\treturn 0;\r\n
+};\r\n
+\r\n
+scheduler._fill_quick_data  = function(id){\r\n
+\tvar ev = scheduler.getEvent(id);\r\n
+\tvar qi = scheduler._quick_info_box;\r\n
+\r\n
+\tscheduler._quick_info_box_id = id;\r\n
+\r\n
+//title content\r\n
+\tvar titleContent = qi.firstChild.firstChild;\r\n
+\ttitleContent.innerHTML = scheduler.templates.quick_info_title(ev.start_date, ev.end_date, ev);\r\n
+\tvar titleDate = titleContent.nextSibling;\r\n
+\ttitleDate.innerHTML = scheduler.templates.quick_info_date(ev.start_date, ev.end_date, ev);\r\n
+\r\n
+//main content\r\n
+\tvar main = qi.firstChild.nextSibling;\r\n
+\tmain.innerHTML = scheduler.templates.quick_info_content(ev.start_date, ev.end_date, ev);\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6495</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

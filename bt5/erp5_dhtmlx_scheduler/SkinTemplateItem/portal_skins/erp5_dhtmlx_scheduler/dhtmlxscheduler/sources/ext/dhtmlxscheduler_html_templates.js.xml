@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189553.63</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_html_templates.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.attachEvent("onTemplatesReady",function(){\r\n
+\tvar els = document.body.getElementsByTagName("DIV");\r\n
+\tfor (var i=0; i < els.length; i++) {\r\n
+\t\tvar cs = els[i].className||"";\r\n
+\t\tcs = cs.split(":");\r\n
+\t\tif (cs.length == 2 && cs[0] == "template"){\r\n
+\t\t\tvar code = "return \\""+(els[i].innerHTML||"").replace(/\\"/g,"\\\\\\"").replace(/[\\n\\r]+/g,"")+"\\";";\r\n
+\t\t\tcode = unescape(code).replace(/\\{event\\.([a-z]+)\\}/g,function(all,mask){\r\n
+\t\t\t\treturn \'"+ev.\'+mask+\'+"\';\r\n
+\t\t\t});\r\n
+\t\t\tscheduler.templates[cs[1]]=Function("start","end","ev",code);\r\n
+\t\t\tels[i].style.display=\'none\';\r\n
+\t\t}\r\n
+\t}\r\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>853</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,452 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189553.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_layer.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler.attachEvent("onTemplatesReady",function(){\r\n
+\r\n
+\tthis.layers.sort(function(a, b){\r\n
+\t\treturn a.zIndex - b.zIndex;\r\n
+\t});\r\n
+\t\r\n
+\tscheduler._dp_init=function(dp){\r\n
+\t\tdp._methods=["_set_event_text_style","","changeEventId","deleteEvent"];\r\n
+\t\t\r\n
+\t\tthis.attachEvent("onEventAdded",function(id){\r\n
+\t\t\tif (!this._loading && this.validId(id) && this.getEvent(id) && this.getEvent(id).layer == dp.layer)\r\n
+\t\t\t\tdp.setUpdated(id,true,"inserted");\r\n
+\t\t});\r\n
+\t\tthis.attachEvent("onBeforeEventDelete",function(id){\r\n
+\t\t\tif(this.getEvent(id) && this.getEvent(id).layer == dp.layer) {\r\n
+\t\t\t\tif (!this.validId(id)) return;\r\n
+\t\t\t\t  var z=dp.getState(id);\r\n
+\t\t\t\t  \r\n
+\t\t\t\tif (z=="inserted" || this._new_event) {  dp.setUpdated(id,false);\t\treturn true; }\r\n
+\t\t\t\tif (z=="deleted")  return false;\r\n
+\t\t\t\tif (z=="true_deleted")  return true;\r\n
+\t\t\t\t\r\n
+\t\t\t\tdp.setUpdated(id,true,"deleted");\r\n
+\t\t\t\t\treturn false;\t\t\t\t\r\n
+\t\t\t}\r\n
+\t\t\telse return true;\r\n
+\t\t});\r\n
+\t\tthis.attachEvent("onEventChanged",function(id){\r\n
+\t\t\tif (!this._loading && this.validId(id) && this.getEvent(id) && this.getEvent(id).layer == dp.layer)\r\n
+\t\t\t\tdp.setUpdated(id,true,"updated");\r\n
+\t\t});\r\n
+\t\t\r\n
+\t\tdp._getRowData=function(id,pref){\r\n
+\t\t\tvar ev=this.obj.getEvent(id);\r\n
+\t\t\tvar data = {};\r\n
+\t\t\t\r\n
+\t\t\tfor (var a in ev){\r\n
+\t\t\t\tif (a.indexOf("_")===0) continue;\r\n
+\t\t\t\tif (ev[a] && ev[a].getUTCFullYear) //not very good, but will work\r\n
+\t\t\t\t\tdata[a] = this.obj.templates.xml_format(ev[a]);\r\n
+\t\t\t\telse\r\n
+\t\t\t\t\tdata[a] = ev[a];\r\n
+\t\t\t}\r\n
+\t\t\treturn data;\r\n
+\t\t};\r\n
+\t\tdp._clearUpdateFlag=function(){};\r\n
+\t\t\r\n
+\t\tdp.attachEvent("insertCallback", scheduler._update_callback);\r\n
+\t\tdp.attachEvent("updateCallback", scheduler._update_callback);\r\n
+\t\tdp.attachEvent("deleteCallback", function(upd, id) {\r\n
+\t\t\tthis.obj.setUserData(id, this.action_param, "true_deleted");\r\n
+\t\t\tthis.obj.deleteEvent(id);\r\n
+\t\t});\t\r\n
+\t};\r\n
+\r\n
+\t(function() {\r\n
+        var _cloneObj = function(obj){\r\n
+            if(obj === null || typeof(obj) != \'object\')\r\n
+                return obj;\r\n
+            var temp = new obj.constructor();\r\n
+            for(var key in obj)\r\n
+                temp[key] = _cloneObj(obj[key]);\r\n
+            return temp;\r\n
+        };\r\n
+        \r\n
+\t\tscheduler._dataprocessors = [];\r\n
+\t\tscheduler._layers_zindex = {};\r\n
+\t\tfor(var i=0; i<scheduler.layers.length; i++) {\r\n
+\t\t\tscheduler.config[\'lightbox_\'+scheduler.layers[i].name] = { };\r\n
+            scheduler.config[\'lightbox_\'+scheduler.layers[i].name].sections = _cloneObj(scheduler.config.lightbox.sections);\r\n
+\t\t\tscheduler._layers_zindex[scheduler.layers[i].name] = scheduler.config.inital_layer_zindex||5 + i*3;\r\n
+\t\t\tif(scheduler.layers[i].url) {\r\n
+\t\t\t\tvar dp = new dataProcessor(scheduler.layers[i].url);\r\n
+\t\t\t\tdp.layer = scheduler.layers[i].name;\r\n
+\t\t\t\tscheduler._dataprocessors.push(dp);\r\n
+\t\t\t\tscheduler._dataprocessors[i].init(scheduler);\r\n
+\t\t\t}\r\n
+\t\t\tif(scheduler.layers[i].isDefault)\r\n
+\t\t\t\tscheduler.defaultLayer = scheduler.layers[i].name;\r\n
+\t\t}\r\n
+\t})();\r\n
+\r\n
+\t\r\n
+\tscheduler.showLayer = function(tlayer) {\r\n
+\t\tthis.toggleLayer(tlayer, true);\r\n
+\t};\r\n
+\t\r\n
+\tscheduler.hideLayer = function(tlayer) {\r\n
+\t\tthis.toggleLayer(tlayer, false);\r\n
+\t};\r\n
+\t\r\n
+\tscheduler.toggleLayer = function(tlayer, visible) { // visible is optional\r\n
+\t\tvar layer = this.getLayer(tlayer);\r\n
+\t\t\r\n
+\t\tif(typeof visible != \'undefined\')\r\n
+\t\t\tlayer.visible = !!visible;\r\n
+\t\telse\r\n
+\t\t\tlayer.visible = !layer.visible;\r\n
+\t\t\t\r\n
+\t\tthis.setCurrentView(this._date, this._mode);\r\n
+\t};\r\n
+\t\r\n
+\tscheduler.getLayer = function(tlayer) { // either string with layer name or event with layer property\r\n
+\t\tvar layer,\r\n
+\t\t\tlayer_name;\r\n
+\t\tif(typeof tlayer == \'string\') \r\n
+\t\t\tlayer_name = tlayer;\r\n
+\t\tif(typeof tlayer == \'object\') \r\n
+\t\t\tlayer_name = tlayer.layer;\r\n
+\t\tfor (var i=0; i<scheduler.layers.length; i++) {\r\n
+\t\t\tif(scheduler.layers[i].name == layer_name)\r\n
+\t\t\t\tlayer = scheduler.layers[i];\r\n
+\t\t}\t\r\n
+\t\treturn layer;\r\n
+\t};\r\n
+\r\n
+\tscheduler.attachEvent("onBeforeLightbox", function (event_id){\r\n
+\t\tvar ev = this.getEvent(event_id);\r\n
+        this.config.lightbox.sections = this.config[\'lightbox_\'+ev.layer].sections;\r\n
+        scheduler.resetLightbox();\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\r\n
+\tscheduler.attachEvent("onClick", function (event_id, native_event_object){\r\n
+\t\tvar ev = scheduler.getEvent(event_id);\r\n
+        return !scheduler.getLayer(ev.layer).noMenu;\r\n
+\t});\t\r\n
+\t\r\n
+\tscheduler.attachEvent(\'onEventCollision\', function(ev, evs) {\r\n
+\t\tvar layer = this.getLayer(ev);\r\n
+\t\tif(!layer.checkCollision)\r\n
+\t\t\treturn false;\r\n
+\t\tvar count = 0;\r\n
+\t\tfor(var i = 0; i<evs.length; i++) {\r\n
+\t\t\tif(evs[i].layer == layer.name && evs[i].id != ev.id)\r\n
+\t\t\t\tcount++;\r\n
+\t\t}\r\n
+\t\treturn (count >= scheduler.config.collision_limit);\r\n
+\t});\r\n
+\t\r\n
+\tscheduler.addEvent=function(start_date,end_date,text,id,extra_data){\r\n
+\t\tvar ev=start_date;\r\n
+\t\tif (arguments.length!=1){\r\n
+\t\t\tev=extra_data||{};\r\n
+\t\t\tev.start_date=start_date;\r\n
+\t\t\tev.end_date=end_date;\r\n
+\t\t\tev.text=text;\r\n
+\t\t\tev.id=id;\r\n
+\t\t\tev.layer = this.defaultLayer;\r\n
+\t\t}\r\n
+\t\tev.id = ev.id||scheduler.uid();\r\n
+\t\tev.text = ev.text||"";\r\n
+\t\t\r\n
+\t\t\r\n
+\t\tif (typeof ev.start_date == "string")  ev.start_date=this.templates.api_date(ev.start_date);\r\n
+\t\tif (typeof ev.end_date == "string")  ev.end_date=this.templates.api_date(ev.end_date);\r\n
+\t\tev._timed=this.isOneDayEvent(ev);\r\n
+\r\n
+\t\tvar is_new=!this._events[ev.id];\r\n
+\t\tthis._events[ev.id]=ev;\r\n
+\t\tthis.event_updated(ev);\r\n
+\t\tif (!this._loading)\r\n
+\t\t\tthis.callEvent(is_new?"onEventAdded":"onEventChanged",[ev.id,ev]);\r\n
+\t};\t\t\r\n
+\t\r\n
+\tthis._evs_layer = {};\r\n
+\tfor (var i = 0; i < this.layers.length; i++) { // array in object for each layer\r\n
+\t\tthis._evs_layer[this.layers[i].name] = [];\r\n
+\t}\t\t\r\n
+\t\r\n
+\tscheduler.addEventNow=function(start,end,e){\r\n
+\t\tvar base = {};\r\n
+\t\tif (typeof start == "object"){\r\n
+\t\t\tbase = start;\r\n
+\t\t\tstart = null;\r\n
+\t\t}\r\n
+\t\t\r\n
+\t\tvar d = (this.config.event_duration||this.config.time_step)*60000;\r\n
+\t\tif (!start) start = Math.round((scheduler._currentDate()).valueOf()/d)*d;\r\n
+\t\tvar start_date = new Date(start);\r\n
+\t\tif (!end){\r\n
+\t\t\tvar start_hour = this.config.first_hour;\r\n
+\t\t\tif (start_hour > start_date.getHours()){\r\n
+\t\t\t\tstart_date.setHours(start_hour);\r\n
+\t\t\t\tstart = start_date.valueOf();\r\n
+\t\t\t}\r\n
+\t\t\tend = start+d;\r\n
+\t\t}\r\n
+\t\t\r\n
+\t\t\r\n
+\t\tbase.start_date = base.start_date||start_date;\r\n
+\t\tbase.end_date =  base.end_date||new Date(end);\r\n
+\t\tbase.text = base.text||this.locale.labels.new_event;\r\n
+\t\tbase.id = this._drag_id = this.uid();\r\n
+\t\tbase.layer = this.defaultLayer;\r\n
+\t\tthis._drag_mode="new-size";\r\n
+\t\t\r\n
+\t\tthis._loading=true;\r\n
+\t\tthis.addEvent(base);\r\n
+\t\tthis.callEvent("onEventCreated",[this._drag_id,e]);\r\n
+\t\tthis._loading=false;\r\n
+\t\t\r\n
+\t\tthis._drag_event={}; //dummy , to trigger correct event updating logic\r\n
+\t\tthis._on_mouse_up(e);\t\r\n
+\t};\r\n
+\t\r\n
+\tscheduler._t_render_view_data = function(events) { // helper\r\n
+\t\tif (this.config.multi_day && !this._table_view) {\r\n
+\t\t\tvar tvs = [];\r\n
+\t\t\tvar tvd = [];\r\n
+\t\t\tfor (var k = 0; k < events.length; k++) {\r\n
+\t\t\t\tif (events[k]._timed) \r\n
+\t\t\t\t\ttvs.push(events[k]);\r\n
+\t\t\t\telse \r\n
+\t\t\t\t\ttvd.push(events[k]);\r\n
+\t\t\t}\r\n
+\t\t\tthis._table_view = true;\r\n
+\t\t\tthis.render_data(tvd);\r\n
+\t\t\tthis._table_view = false;\r\n
+\t\t\tthis.render_data(tvs);\r\n
+\t\t}\r\n
+\t\telse \r\n
+\t\t\tthis.render_data(events);\t\t\r\n
+\t};\r\n
+\t\r\n
+\tscheduler.render_view_data = function(){\r\n
+\t\tif (this._not_render) {\r\n
+\t\t\tthis._render_wait = true;\r\n
+\t\t\treturn;\r\n
+\t\t}\r\n
+\t\tthis._render_wait = false;\r\n
+\t\t\r\n
+\t\tthis.clear_view();\r\n
+\r\n
+\t\tthis._evs_layer = {};\r\n
+\t\tfor (var i = 0; i < this.layers.length; i++) { // array in object for each layer\r\n
+\t\t\tthis._evs_layer[this.layers[i].name] = [];\r\n
+\t\t}\t\t\r\n
+\t\t\r\n
+\t\tvar evs = this.get_visible_events();\r\n
+\t\tfor (var i = 0; i < evs.length; i++) { // filling layer arrays with events\r\n
+\t\t\tif(this._evs_layer[evs[i].layer])\r\n
+\t\t\t\tthis._evs_layer[evs[i].layer].push(evs[i]);\r\n
+\t\t}\t\t\t\r\n
+\r\n
+\t\tif(this._mode == \'month\') { // old logic is used\r\n
+\t\t\tvar tevs = [];\r\n
+\t\t\tfor (var i = 0; i < this.layers.length; i++) {\r\n
+\t\t\t\tif (this.layers[i].visible) \r\n
+\t\t\t\t\ttevs = tevs.concat(this._evs_layer[this.layers[i].name]);\r\n
+\t\t\t}\r\n
+\t\t\tthis._t_render_view_data(tevs);\r\n
+\t\t}\r\n
+\t\telse { // week, day; should use new logic\r\n
+\t\t\tfor (var i = 0; i < this.layers.length; i++) {\r\n
+\t\t\t\tif (this.layers[i].visible) {\r\n
+\t\t\t\t\tvar evs_layer = this._evs_layer[this.layers[i].name];\r\n
+\t\t\t\t\tthis._t_render_view_data(evs_layer);\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t};\r\n
+\t\r\n
+\tscheduler._render_v_bar=function(ev,x,y,w,h,style,contentA,contentB,bottom){\r\n
+\t\tvar id = ev.id;\r\n
+\t\tif(contentA.indexOf(\'<div class=\') == -1)\r\n
+\t\t\tcontentA = (scheduler.templates[\'event_header_\'+ev.layer])?scheduler.templates[\'event_header_\'+ev.layer](ev.start_date,ev.end_date,ev):contentA;\r\n
+\t\tif(contentB.indexOf(\'<div class=\') == -1)\t\r\n
+\t\tcontentB = (scheduler.templates[\'event_text_\'+ev.layer])?scheduler.templates[\'event_text_\'+ev.layer](ev.start_date,ev.end_date,ev):contentB;\r\n
+\t\t\r\n
+\t\tvar d=document.createElement("DIV");\r\n
+\t\t\r\n
+\t\t\r\n
+\t\tvar cs = "dhx_cal_event";\r\n
+\t\tvar cse = (scheduler.templates[\'event_class_\'+ev.layer])?scheduler.templates[\'event_class_\'+ev.layer](ev.start_date,ev.end_date,ev):scheduler.templates.event_class(ev.start_date,ev.end_date,ev);\r\n
+\t\tif (cse) cs=cs+" "+cse;\r\n
+\t\t\r\n
+\t\tvar html=\'<div event_id="\'+id+\'" class="\'+cs+\'" style="position:absolute; top:\'+y+\'px; left:\'+x+\'px; width:\'+(w-4)+\'px; height:\'+h+\'px;\'+(style||"")+\'">\';\r\n
+\t\thtml+=\'<div class="dhx_header" style=" width:\'+(w-6)+\'px;" >&nbsp;</div>\';\r\n
+\t\thtml+=\'<div class="dhx_title">\'+contentA+\'</div>\';\r\n
+\t\thtml+=\'<div class="dhx_body" style=" width:\'+(w-(this._quirks?4:14))+\'px; height:\'+(h-(this._quirks?20:30))+\'px;">\'+contentB+\'</div>\';\r\n
+\t\thtml+=\'<div class="dhx_footer" style=" width:\'+(w-8)+\'px;\'+(bottom?\' margin-top:-1px;\':\'\')+\'" ></div></div>\';\r\n
+\t\t\r\n
+\t\td.innerHTML=html;\r\n
+\t\td.style.zIndex = 100;\r\n
+\t\treturn d.firstChild;\r\n
+\t};\t\r\n
+\t\r\n
+\tscheduler.render_event_bar=function(ev){\r\n
+\t\tvar parent=this._els["dhx_cal_data"][0];\r\n
+\r\n
+\t\tvar x=this._colsS[ev._sday];\r\n
+\t\tvar x2=this._colsS[ev._eday];\r\n
+\t\tif (x2==x) x2=this._colsS[ev._eday+1];\r\n
+\t\tvar hb = this.xy.bar_height;\r\n
+\t\t\r\n
+\t\tvar y=this._colsS.heights[ev._sweek]+(this._colsS.height?(this.xy.month_scale_height+2):2)+ev._sorder*hb; \r\n
+\t\t\t\t\r\n
+\t\tvar d=document.createElement("DIV");\r\n
+\t\tvar cs = ev._timed?"dhx_cal_event_clear":"dhx_cal_event_line";\r\n
+\t\tvar cse = (scheduler.templates[\'event_class_\'+ev.layer])?scheduler.templates[\'event_class_\'+ev.layer](ev.start_date,ev.end_date,ev):scheduler.templates.event_class(ev.start_date,ev.end_date,ev);\r\n
+\t\tif (cse) cs=cs+" "+cse; \r\n
+\t\t\r\n
+\t\tvar html=\'<div event_id="\'+ev.id+\'" class="\'+cs+\'" style="position:absolute; top:\'+y+\'px; left:\'+x+\'px; width:\'+(x2-x-15)+\'px;\'+(ev._text_style||"")+\'">\';\r\n
+\t\t\t\r\n
+\t\tif (ev._timed)\r\n
+\t\t\thtml+=(scheduler.templates[\'event_bar_date_\'+ev.layer])?scheduler.templates[\'event_bar_date_\'+ev.layer](ev.start_date,ev.end_date,ev):scheduler.templates.event_bar_date(ev.start_date,ev.end_date,ev);\r\n
+\t\thtml+=( (scheduler.templates[\'event_bar_text_\'+ev.layer])?scheduler.templates[\'event_bar_text_\'+ev.layer](ev.start_date,ev.end_date,ev):scheduler.templates.event_bar_text(ev.start_date,ev.end_date,ev) + \'</div>)\');\r\n
+\t\thtml+=\'</div>\';\r\n
+\t\t\r\n
+\t\td.innerHTML=html;\r\n
+\t\t\r\n
+\t\tthis._rendered.push(d.firstChild);\r\n
+\t\tparent.appendChild(d.firstChild);\r\n
+\t};\t\r\n
+\r\n
+\tscheduler.render_event=function(ev){\r\n
+\t\tvar menu = scheduler.xy.menu_width;\r\n
+\t\tif(scheduler.getLayer(ev.layer).noMenu) \r\n
+\t\t\tmenu = 0;\r\n
+\t\t\r\n
+\t\tif (ev._sday<0) return; //can occur in case of recurring event during time shift\r\n
+\t\tvar parent=scheduler.locate_holder(ev._sday);\t\r\n
+\t\tif (!parent) return; //attempt to render non-visible event\r\n
+\t\tvar sm = ev.start_date.getHours()*60+ev.start_date.getMinutes();\r\n
+\t\tvar em = (ev.end_date.getHours()*60+ev.end_date.getMinutes())||(scheduler.config.last_hour*60);\r\n
+\t\t\r\n
+\t\tvar top = (Math.round((sm*60*1000-this.config.first_hour*60*60*1000)*this.config.hour_size_px/(60*60*1000)))%(this.config.hour_size_px*24)+1; //42px/hour\r\n
+\t\tvar height = Math.max(scheduler.xy.min_event_height,(em-sm)*this.config.hour_size_px/60)+1; //42px/hour\r\n
+\t\t//var height = Math.max(25,Math.round((ev.end_date.valueOf()-ev.start_date.valueOf())*(this.config.hour_size_px+(this._quirks?1:0))/(60*60*1000))); //42px/hour\r\n
+\t\tvar width=Math.floor((parent.clientWidth-menu)/ev._count);\r\n
+\t\tvar left=ev._sorder*width+1;\r\n
+\t\tif (!ev._inner) width=width*(ev._count-ev._sorder);\r\n
+\t\t\r\n
+\t\t\r\n
+\t\t\r\n
+\t\tvar d=this._render_v_bar(ev.id,menu+left,top,width,height,ev._text_style,scheduler.templates.event_header(ev.start_date,ev.end_date,ev),scheduler.templates.event_text(ev.start_date,ev.end_date,ev));\r\n
+\t\t\t\r\n
+\t\tthis._rendered.push(d);\r\n
+\t\tparent.appendChild(d);\r\n
+\t\t\r\n
+\t\tleft=left+parseInt(parent.style.left,10)+menu;\r\n
+\t\t\r\n
+\t\ttop+=this._dy_shift; //corrupt top, to include possible multi-day shift\r\n
+\t\td.style.zIndex = this._layers_zindex[ev.layer];\r\n
+\t\t\r\n
+\t\tif (this._edit_id==ev.id){\r\n
+\t\t\td.style.zIndex = parseInt(d.style.zIndex)+1; //fix overlapping issue\r\n
+\t\t\tvar new_zIndex = d.style.zIndex;\r\n
+\t\t\twidth=Math.max(width-4,scheduler.xy.editor_width);\r\n
+\t\t\tvar d=document.createElement("DIV");\r\n
+\t\t\td.setAttribute("event_id",ev.id);\r\n
+\t\t\tthis.set_xy(d,width,height-20,left,top+14);\r\n
+\t\t\td.className="dhx_cal_editor";\r\n
+\t\t\td.style.zIndex = new_zIndex;\r\n
+\t\t\tvar d2=document.createElement("DIV");\r\n
+\t\t\tthis.set_xy(d2,width-6,height-26);\r\n
+\t\t\td2.style.cssText+=";margin:2px 2px 2px 2px;overflow:hidden;";\r\n
+\t\t\t\r\n
+\t\t\t\r\n
+\t\t\td2.style.zIndex = new_zIndex;\r\n
+\t\t\td.appendChild(d2);\r\n
+\t\t\tthis._els["dhx_cal_data"][0].appendChild(d);\r\n
+\t\t\tthis._rendered.push(d);\r\n
+\t\t\r\n
+\t\t\td2.innerHTML="<textarea class=\'dhx_cal_editor\'>"+ev.text+"</textarea>";\r\n
+\t\t\tif (this._quirks7) d2.firstChild.style.height=height-12+"px"; //IEFIX\r\n
+\t\t\tthis._editor=d2.firstChild;\r\n
+\t\t\tthis._editor.onkeypress=function(e){ \r\n
+\t\t\t\tif ((e||event).shiftKey) return true;\r\n
+\t\t\t\tvar code=(e||event).keyCode; \r\n
+\t\t\t\tif (code==scheduler.keys.edit_save) scheduler.editStop(true); \r\n
+\t\t\t\tif (code==scheduler.keys.edit_cancel) scheduler.editStop(false); \r\n
+\t\t\t};\r\n
+\t\t\tthis._editor.onselectstart=function(e){ (e||event).cancelBubble=true; return true; };\r\n
+\t\t\td2.firstChild.focus();\r\n
+\t\t\t//IE and opera can add x-scroll during focusing\r\n
+\t\t\tthis._els["dhx_cal_data"][0].scrollLeft=0;\r\n
+\t\t\td2.firstChild.select();\r\n
+\t\t}\r\n
+\t\tif (this._select_id==ev.id){\r\n
+\t\t\td.style.zIndex = parseInt(d.style.zIndex)+1; //fix overlapping issue\r\n
+\t\t\tvar icons=this.config["icons_"+((this._edit_id==ev.id)?"edit":"select")];\r\n
+\t\t\tvar icons_str="";\r\n
+\t\t\tfor (var i=0; i<icons.length; i++)\r\n
+\t\t\t\ticons_str+="<div class=\'dhx_menu_icon "+icons[i]+"\' title=\'"+this.locale.labels[icons[i]]+"\'></div>";\r\n
+\t\t\tvar obj = this._render_v_bar(ev.id,left-menu+1,top,menu,icons.length*20+26,"","<div class=\'dhx_menu_head\'></div>",icons_str,true);\r\n
+\t\t\tobj.style.left=left-menu+1;\r\n
+\t\t\tobj.style.zIndex = d.style.zIndex;\r\n
+\t\t\tthis._els["dhx_cal_data"][0].appendChild(obj);\r\n
+\t\t\tthis._rendered.push(obj);\r\n
+\t\t}\r\n
+\t\t\r\n
+\t};\r\n
+\r\n
+    scheduler.filter_agenda = function(id, event) {\r\n
+        var layer = scheduler.getLayer(event.layer);\r\n
+        return (layer && layer.visible);\r\n
+    };\r\n
+});\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>14899</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

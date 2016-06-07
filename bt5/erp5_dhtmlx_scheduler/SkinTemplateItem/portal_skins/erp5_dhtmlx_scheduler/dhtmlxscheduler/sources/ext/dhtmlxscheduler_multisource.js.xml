@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189555.07</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_multisource.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+(function(){\r\n
+\r\n
+\tfunction backup(obj){\r\n
+\t\tvar t = function(){};\r\n
+\t\tt.prototype = obj;\r\n
+\t\treturn t;\r\n
+\t}\r\n
+\r\n
+\tvar old = scheduler._load;\r\n
+\tscheduler._load=function(url,from){\r\n
+\t\turl=url||this._load_url;\r\n
+\t\tif (typeof url == "object"){\r\n
+\t\t\tvar t = backup(this._loaded);\r\n
+\t\t\tfor (var i=0; i < url.length; i++) {\r\n
+\t\t\t\tthis._loaded=new t();\r\n
+\t\t\t\told.call(this,url[i],from);\r\n
+\t\t\t}\r\n
+\t\t} else \r\n
+\t\t\told.apply(this,arguments);\r\n
+\t};\r\n
+\t\r\n
+})();
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>701</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

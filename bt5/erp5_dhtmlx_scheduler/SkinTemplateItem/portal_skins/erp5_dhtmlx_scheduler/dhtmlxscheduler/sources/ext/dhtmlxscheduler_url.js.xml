@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189556.41</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_url.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+scheduler._get_url_nav = function(){\r\n
+\tvar p = {};\r\n
+\tvar data = (document.location.hash || "").replace("#", "").split(",");\r\n
+\tfor (var i = 0; i < data.length; i++) {\r\n
+\t\tvar s = data[i].split("=");\r\n
+\t\tif (s.length == 2)\r\n
+\t\t\tp[s[0]] = s[1];\r\n
+\t}\r\n
+\treturn p;\r\n
+};\r\n
+\r\n
+scheduler.attachEvent("onTemplatesReady", function () {\r\n
+\tvar first = true;\r\n
+\tvar s2d = scheduler.date.str_to_date("%Y-%m-%d");\r\n
+\tvar d2s = scheduler.date.date_to_str("%Y-%m-%d");\r\n
+\tvar select_event =  scheduler._get_url_nav().event || null;\r\n
+\r\n
+\tscheduler.attachEvent("onAfterEventDisplay", function(ev){\r\n
+\t\tselect_event = null;\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\r\n
+\tscheduler.attachEvent("onBeforeViewChange", function (om, od, m, d) {\r\n
+\t\tif (first) {\r\n
+\t\t\tfirst = false;\r\n
+\t\t\tvar p = scheduler._get_url_nav();\r\n
+\r\n
+\t\t\tif (p.event){\r\n
+\t\t\t\ttry{\r\n
+\t\t\t\t\tif(scheduler.getEvent(p.event)){\r\n
+\t\t\t\t\t\tshowEvent(p.event);\r\n
+\t\t\t\t\t\treturn false;\r\n
+\t\t\t\t\t}else{\r\n
+\t\t\t\t\t\tvar handler = scheduler.attachEvent("onXLE", function(){\r\n
+\t\t\t\t\t\t\tshowEvent(p.event);\r\n
+\t\t\t\t\t\t\tscheduler.detachEvent(handler);\r\n
+\t\t\t\t\t\t});\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t} catch (e){}\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\tif (p.date || p.mode) {\r\n
+\t\t\t\ttry {\r\n
+\t\t\t\t\tthis.setCurrentView((p.date ? s2d(p.date) : null), (p.mode || null));\r\n
+\t\t\t\t} catch (e) {\r\n
+\t\t\t\t\t//assuming that mode is not available anymore\r\n
+\t\t\t\t\tthis.setCurrentView((p.date ? s2d(p.date) : null), m);\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn false;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\r\n
+\t\tvar values = [\r\n
+\t\t\t"date=" + d2s(d || od),\r\n
+\t\t\t"mode=" + (m || om)\r\n
+\t\t];\r\n
+\r\n
+\t\tif(select_event){\r\n
+\t\t\tvalues.push("event=" + select_event);\r\n
+\t\t}\r\n
+\r\n
+\t\tvar text = "#" + values.join(",");\r\n
+\t\tdocument.location.hash = text;\r\n
+\t\treturn true;\r\n
+\t});\r\n
+\r\n
+\tfunction showEvent(e){\r\n
+\t\tselect_event = e;\r\n
+\t\tif(scheduler.getEvent(e)){\r\n
+\t\t\tscheduler.showEvent(e);\r\n
+\t\t}\r\n
+\t}\r\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1987</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189530.77</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_key_nav.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\n
+scheduler._temp_key_scope=function(){function e(e){delete e.rec_type,delete e.rec_pattern,delete e.event_pid,delete e.event_length}scheduler.config.key_nav=!0;var t,a,i=null;scheduler.attachEvent("onMouseMove",function(e,i){t=scheduler.getActionData(i).date,a=scheduler.getActionData(i).section}),scheduler._make_pasted_event=function(i){var n=i.end_date-i.start_date,r=scheduler._lame_copy({},i);if(e(r),r.start_date=new Date(t),r.end_date=new Date(r.start_date.valueOf()+n),a){var l=scheduler._get_section_property();\n
+\n
+scheduler.config.multisection?r[l]=i[l]:r[l]=a}return r},scheduler._do_paste=function(e,t,a){scheduler.addEvent(t),scheduler.callEvent("onEventPasted",[e,t,a])},scheduler._is_key_nav_active=function(){return this._is_initialized()&&!this._is_lightbox_open()&&this.config.key_nav?!0:!1},dhtmlxEvent(document,_isOpera?"keypress":"keydown",function(e){if(!scheduler._is_key_nav_active())return!0;if(e=e||event,37==e.keyCode||39==e.keyCode){e.cancelBubble=!0;var t=scheduler.date.add(scheduler._date,37==e.keyCode?-1:1,scheduler._mode);\n
+\n
+return scheduler.setCurrentView(t),!0}var a=scheduler._select_id;if(e.ctrlKey&&67==e.keyCode)return a&&(scheduler._buffer_id=a,i=!0,scheduler.callEvent("onEventCopied",[scheduler.getEvent(a)])),!0;if(e.ctrlKey&&88==e.keyCode&&a){i=!1,scheduler._buffer_id=a;var n=scheduler.getEvent(a);scheduler.updateEvent(n.id),scheduler.callEvent("onEventCut",[n])}if(e.ctrlKey&&86==e.keyCode){var n=scheduler.getEvent(scheduler._buffer_id);if(n){var r=scheduler._make_pasted_event(n);if(i)r.id=scheduler.uid(),scheduler._do_paste(i,r,n);\n
+else{var l=scheduler.callEvent("onBeforeEventChanged",[r,e,!1,n]);l&&(scheduler._do_paste(i,r,n),i=!0)}}return!0}})},scheduler._temp_key_scope();\n
+//# sourceMappingURL=../sources/ext/dhtmlxscheduler_key_nav.js.map
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2063</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

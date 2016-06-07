@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189535.39</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_id.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\n
+scheduler.locale={date:{month_full:["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"],month_short:["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Ags","Sep","Okt","Nov","Des"],day_full:["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"],day_short:["Ming","Sen","Sel","Rab","Kam","Jum","Sab"]},labels:{dhx_cal_today_button:"Hari Ini",day_tab:"Hari",week_tab:"Minggu",month_tab:"Bulan",new_event:"Acara Baru",icon_save:"Simpan",icon_cancel:"Batal",\n
+icon_details:"Detail",icon_edit:"Edit",icon_delete:"Hapus",confirm_closing:"",confirm_deleting:"Acara akan dihapus",section_description:"Keterangan",section_time:"Periode",full_day:"Hari penuh",confirm_recurring:"Apakah acara ini akan berulang?",section_recurring:"Acara Rutin",button_recurring:"Tidak Difungsikan",button_recurring_open:"Difungsikan",button_edit_series:"Mengedit seri",button_edit_occurrence:"Mengedit salinan",agenda_tab:"Agenda",date:"Tanggal",description:"Keterangan",year_tab:"Tahun",\n
+week_agenda_tab:"Agenda",grid_tab:"Tabel",drag_to_create:"Drag to create",drag_to_move:"Drag to move",message_ok:"OK",message_cancel:"Cancel"}};\n
+//# sourceMappingURL=../sources/locale/locale_id.js.map</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1489</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

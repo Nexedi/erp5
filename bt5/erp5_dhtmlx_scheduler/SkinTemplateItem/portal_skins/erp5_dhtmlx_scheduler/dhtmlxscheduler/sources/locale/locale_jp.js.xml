@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189559.05</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>locale_jp.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\r\n
+/*\r\n
+ Translation by Genexus Japan Inc.\r\n
+ */\r\n
+scheduler.locale = {\r\n
+\tdate: {\r\n
+\t\tmonth_full: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],\r\n
+\t\tmonth_short: [ "1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],\r\n
+\t\tday_full: ["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"],\r\n
+\t\tday_short: ["日", "月", "火", "水", "木", "金", "土"]\r\n
+\t},\r\n
+\tlabels: {\r\n
+\t\tdhx_cal_today_button: "今日",\r\n
+\t\tday_tab: "日",\r\n
+\t\tweek_tab: "週",\r\n
+\t\tmonth_tab: "月",\r\n
+\t\tnew_event: "新イベント",\r\n
+\t\ticon_save: "保存",\r\n
+\t\ticon_cancel: "キャンセル",\r\n
+\t\ticon_details: "詳細",\r\n
+\t\ticon_edit: "編集",\r\n
+\t\ticon_delete: "削除",\r\n
+\t\tconfirm_closing: "", //変更が取り消されます、宜しいですか？\r\n
+\t\tconfirm_deleting: "イベント完全に削除されます、宜しいですか？",\r\n
+\t\tsection_description: "デスクリプション",\r\n
+\t\tsection_time: "期間",\r\n
+\t\tconfirm_recurring: "繰り返されているイベントを全て編集しますか？",\r\n
+\t\tsection_recurring: "イベントを繰り返す",\r\n
+\t\tbutton_recurring: "無効",\r\n
+\t\tbutton_recurring_open: "有効",\r\n
+\t\tfull_day: "終日",\r\n
+\t\tbutton_edit_series: "シリーズを編集します",\r\n
+\t\tbutton_edit_occurrence: "コピーを編集",\r\n
+\r\n
+\t\t/*agenda view extension*/\r\n
+\t\tagenda_tab: "議題は",\r\n
+\t\tdate: "日付",\r\n
+\t\tdescription: "説明",\r\n
+\r\n
+\t\t/*year view extension*/\r\n
+\t\tyear_tab: "今年",\r\n
+\r\n
+\t\t/*week agenda view extension*/\r\n
+\t\tweek_agenda_tab: "議題は",\r\n
+\r\n
+\t\t/*grid view extension*/\r\n
+\t\tgrid_tab: "グリッド",\r\n
+\r\n
+\t\t/* touch tooltip*/\r\n
+\t\tdrag_to_create:"Drag to create",\r\n
+\t\tdrag_to_move:"Drag to move",\r\n
+\r\n
+\t\t/* dhtmlx message default buttons */\r\n
+\t\tmessage_ok:"OK",\r\n
+\t\tmessage_cancel:"Cancel"\r\n
+\t}\r\n
+};\r\n
+\r\n
+\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2099</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189534.6</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>multi-days-bg.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAEAAAH0CAMAAADL47elAAAAulBMVEX////j7/7e7P7a6v7V5/7R
+5f7M4v7M4v7M4v7N4/7N4/7O4/7O4/7P5P7P5P7P5P7Q5P7Q5f7R5f7R5f7R5f7S5v7S5v7T5v7T
+5v7U5/7U5/7U5/7V5/7V6P7W6P7W6P7W6P7X6f7Z6v7a6v7c6/7d7P7e7f7g7v7h7v7j7/7k8P7m
+8f7n8v7o8v7q8/7r9P/t9f/u9f/v9v/x9//y+P/0+f/1+f/3+v/4+//5/P/7/f/8/f/+/v////8W
+684uAAAAX0lEQVQoke3BxWECAQAAsODu7k6Lu8P+a7EFr0uEhEVExcQlJKWkZWTl5BUUlZRVVNXU
+NTS1tHV09fQNDI2MTUzNzP35t7C0sraxtbN3cHRydnF1c/fw9PL2EQgEfuQLidMHZHR8R9EAAAAA
+SUVORK5CYII=</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>500</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>350</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

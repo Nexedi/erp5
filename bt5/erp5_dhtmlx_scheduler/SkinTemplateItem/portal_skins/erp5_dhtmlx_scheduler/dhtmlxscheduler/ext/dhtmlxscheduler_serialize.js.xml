@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65189531.53</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dhtmlxscheduler_serialize.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+@license\r\n
+dhtmlxScheduler v.4.3.1 \r\n
+\r\n
+This software is covered by GPL license. You also can obtain Commercial or Enterprise license to use it in non-GPL project - please contact sales@dhtmlx.com. Usage without proper license is prohibited.\r\n
+\r\n
+(c) Dinamenta, UAB.\r\n
+*/\n
+scheduler._get_serializable_data=function(){var e={};for(var t in this._events){var a=this._events[t];-1==a.id.toString().indexOf("#")\046\046(e[a.id]=a)}return e},scheduler.data_attributes=function(){var e=[],t=scheduler.templates.xml_format,a=this._get_serializable_data();for(var r in a){var n=a[r];for(var i in n)"_"!=i.substr(0,1)\046\046e.push([i,"start_date"==i||"end_date"==i?t:null]);break}return e},scheduler.toXML=function(e){var t=[],a=this.data_attributes(),r=this._get_serializable_data();for(var n in r){\n
+var i=r[n];t.push("\074event\076");for(var l=0;l\074a.length;l++)t.push("\074"+a[l][0]+"\076\074![CDATA["+(a[l][1]?a[l][1](i[a[l][0]]):i[a[l][0]])+"]]\076\074/"+a[l][0]+"\076");t.push("\074/event\076")}return(e||"")+"\074data\076"+t.join("\\n")+"\074/data\076"},scheduler._serialize_json_value=function(e){return null===e||"boolean"==typeof e?e=""+e:(e||0===e||(e=""),e=\'"\'+e.toString().replace(/\\n/g,"").replace(/\\\\/g,"\\\\\\\\").replace(/\\"/g,\'\\\\"\')+\'"\'),e},scheduler.toJSON=function(){var e=[],t="",a=this.data_attributes(),r=this._get_serializable_data();\n
+\n
+for(var n in r){for(var i=r[n],l=[],d=0;d\074a.length;d++)t=a[d][1]?a[d][1](i[a[d][0]]):i[a[d][0]],l.push(\' "\'+a[d][0]+\'": \'+this._serialize_json_value(t));e.push("{"+l.join(",")+"}")}return"["+e.join(",\\n")+"]"},scheduler.toICal=function(e){var t="BEGIN:VCALENDAR\\nVERSION:2.0\\nPRODID:-//dhtmlXScheduler//NONSGML v2.2//EN\\nDESCRIPTION:",a="END:VCALENDAR",r=scheduler.date.date_to_str("%Y%m%dT%H%i%s"),n=scheduler.date.date_to_str("%Y%m%d"),i=[],l=this._get_serializable_data();for(var d in l){var s=l[d];\n
+\n
+i.push("BEGIN:VEVENT"),i.push(s._timed\046\046(s.start_date.getHours()||s.start_date.getMinutes())?"DTSTART:"+r(s.start_date):"DTSTART:"+n(s.start_date)),i.push(s._timed\046\046(s.end_date.getHours()||s.end_date.getMinutes())?"DTEND:"+r(s.end_date):"DTEND:"+n(s.end_date)),i.push("SUMMARY:"+s.text),i.push("END:VEVENT")}return t+(e||"")+"\\n"+i.join("\\n")+"\\n"+a};\n
+//# sourceMappingURL=../sources/ext/dhtmlxscheduler_serialize.js.map</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2214</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
