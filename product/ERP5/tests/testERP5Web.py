@@ -31,6 +31,8 @@
 import re
 import unittest
 from unittest import expectedFailure, skip
+from StringIO import StringIO
+from urllib import urlencode
 from AccessControl import Unauthorized
 from Testing import ZopeTestCase
 from DateTime import DateTime
@@ -1259,14 +1261,14 @@ Hé Hé Hé!""", page.asText().strip())
                      language, websection.getId()),
                      basic='ERP5TypeTestCase:',
                      request_method='POST',
-                     extra={
+                     stdin=StringIO(urlencode({
                        'form_id': 'WebSection_view',
                        'form_action': 'Base_edit',
                        'edit_document_url': '%s/%s/%s/WebSection_view' % \
                            (website.absolute_url(), language,
                              websection.getId()),
                        'field_my_title': '%s_edited' % websection.getId(),
-                     }
+                     }))
                     )
 
     self.assertEqual(MOVED_TEMPORARILY, response.getStatus())
@@ -1315,14 +1317,14 @@ Hé Hé Hé!""", page.asText().strip())
                      language),
                      basic='ERP5TypeTestCase:',
                      request_method='POST',
-                     extra={
+                     stdin=StringIO(urlencode({
                        'form_id': 'WebSite_view',
                        'form_action': 'Base_edit',
                        'edit_document_url': '%s/%s/WebSite_view' % \
                            (website.absolute_url(), language),
                        'field_my_title': '%s_edited' % website.getId(),
                        'field_my_id': language,
-                     }
+                     }))
                     )
 
     self.assertEqual(MOVED_TEMPORARILY, response.getStatus())
