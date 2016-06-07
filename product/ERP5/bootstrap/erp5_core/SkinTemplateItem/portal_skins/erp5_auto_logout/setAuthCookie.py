@@ -8,7 +8,13 @@ else:
   now = DateTime()
   kw['expires'] = (now + expire_interval).toZone('GMT').rfc822()
   ac_renew = (now + expire_interval / 2).millis()
-portal.portal_sessions[portal.Base_getAutoLogoutSessionKey()]['ac_renew'] = ac_renew
+portal.portal_sessions[
+  portal.Base_getAutoLogoutSessionKey(
+    username=portal.Base_getUsernameFromAuthenticationCookie(
+      cookie_value,
+    )
+  )
+]['ac_renew'] = ac_renew
 resp.setCookie(
   name=cookie_name,
   value=cookie_value,

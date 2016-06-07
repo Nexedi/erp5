@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>username, REQUEST=None</string> </value>
+            <value> <string>value</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getAutoLogoutSessionKey</string> </value>
+            <value> <string>Base_getUsernameFromAuthenticationCookie</string> </value>
         </item>
       </dictionary>
     </pickle>
