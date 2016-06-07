@@ -494,7 +494,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
                 "title": "Sales Organisation",
                 "default": page_gadget.options.doc.previousowner,
                 "css_class": "",
-                "required": 1,
+                "required": 0,
                 "editable": editable,
                 "key": "previousowner",
                 "hidden": 0,
@@ -584,7 +584,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
                 "title": "Input Date",
                 "default": page_gadget.options.doc.date,
                 "css_class": "",
-                "required": 1,
+                "required": 0,
                 "editable": editable,
                 "key": "date",
                 "hidden": 0,
@@ -627,8 +627,8 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
                 "description": "",
                 "title": "Sync Method",
                 "default": sycn_method,
-                "items": [["Ready To Sync", "Ready To Sync"],
-                          ["Do Not Sync", "Do Not Sync"]
+                "items": [["Ready To Sync", "1"],
+                          ["Do Not Sync", "0"]
                          ],
                 "css_class": "",
                 "required": 1,
