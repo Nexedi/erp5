@@ -247,6 +247,28 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     return mvt
 
   @reindex
+  def _makeInventory(self, **kw):
+    """
+    Create inventory
+    """
+    portal = self.getPortal()
+    inventory_module = portal.getDefaultModule(portal_type = "Inventory Module")
+    inventory = inventory_module.newContent(portal_type = "Inventory")
+    kw.setdefault('destination_section_value', self.section)
+    kw.setdefault('source_section_value', self.mirror_section)
+    kw.setdefault('destination_value', self.node)
+    kw.setdefault('source_value', self.mirror_node)
+    kw.setdefault('resource_value', self.resource)
+
+    inventory.edit(**kw)
+
+    inventory_line = inventory.newContent(portal_type="Inventory Line")
+    inventory_line.edit(**kw)
+
+    inventory.deliver()
+    return inventory
+
+  @reindex
   def _makeSimulationMovement(self, **kw):
     """Creates a simulation movement.
     """
@@ -3007,6 +3029,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
                          self.getInventory(optimisation__=False,
                                            **inventory_kw))
 
+  @expectedFailure
   def test_12_CheckCacheFlush(self):
     """
     Test the cache is flushed when indexing a movement into stock
@@ -3042,6 +3065,10 @@ class TestInventoryCacheTable(InventoryAPITestCase):
       value + INVENTORY_QUANTITY_4 + self.INVENTORY_QUANTITY_1,
       self.getInventory(**inventory_kw),
     )
+    self.assertEqual(
+      value + INVENTORY_QUANTITY_4 + self.INVENTORY_QUANTITY_1,
+      self.getInventory(optimisation__=False, **inventory_kw),
+    )
     self.doubleStockValue()
     # Cache hit again
     self.assertEqual(
@@ -3059,6 +3086,10 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     self.assertEqual(
       value + INVENTORY_QUANTITY_4 + 3 * self.INVENTORY_QUANTITY_1,
       self.getInventory(**inventory_kw),
+    )
+    self.assertEqual(
+      value + INVENTORY_QUANTITY_4 + 3 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(optimisation__=False, **inventory_kw),
     )
     self.doubleStockValue()
     # Cache hit again
@@ -3078,6 +3109,10 @@ class TestInventoryCacheTable(InventoryAPITestCase):
       value + INVENTORY_QUANTITY_4 + 7 * self.INVENTORY_QUANTITY_1,
       self.getInventory(**inventory_kw),
     )
+    self.assertEqual(
+      value + INVENTORY_QUANTITY_4 + 7 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(optimisation__=False, **inventory_kw),
+    )
     self.doubleStockValue()
     # Cache hit again
     self.assertEqual(
@@ -3096,12 +3131,68 @@ class TestInventoryCacheTable(InventoryAPITestCase):
       value + 15 * self.INVENTORY_QUANTITY_1,
       self.getInventory(**inventory_kw),
     )
+    self.assertEqual(
+      value + 15 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(optimisation__=False, **inventory_kw),
+    )
     self.doubleStockValue()
     # Cache hit again
     self.assertEqual(
       value + 15 * self.INVENTORY_QUANTITY_1,
       self.getInventory(**inventory_kw),
     )
+    self.assertEqual(
+      value + 31 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(optimisation__=False, **inventory_kw),
+    )
+
+    # Create an inventory
+    INVENTORY_QUANTITY_5 = 0
+    inventory = self._makeInventory(
+      quantity=INVENTORY_QUANTITY_5,
+      start_date=self.NOW - 1
+    )
+    self.tic()
+    self.assertEqual(
+      INVENTORY_QUANTITY_5,
+      self.getInventory(optimisation__=False, **inventory_kw),
+    )
+    self.assertEqual(
+      INVENTORY_QUANTITY_5,
+      self.getInventory(**inventory_kw),
+    )
+    self.doubleStockValue()
+    # Cache hit again
+    self.assertEqual(
+      value + 63 * self.INVENTORY_QUANTITY_1 - value - 31 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(optimisation__=False, **inventory_kw),
+    )
+    self.assertEqual(
+      INVENTORY_QUANTITY_5,
+      self.getInventory(**inventory_kw),
+    )
+
+    # Delete inventory, so it gets unindexed and cache entry is flushed
+    self.portal.inventory_module.manage_delObjects(ids=[inventory.getId(), ])
+    self.tic()
+    self.assertEqual(
+      value + 63 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(optimisation__=False, **inventory_kw),
+    )
+    self.assertEqual(
+      value + 63 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    self.doubleStockValue()
+    self.assertEqual(
+      value + 127 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(optimisation__=False, **inventory_kw),
+    )
+    self.assertEqual(
+      value + 63 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+
 
   def test_13_CacheCreatedFromCache(self):
     """
