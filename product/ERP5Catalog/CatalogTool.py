@@ -42,6 +42,9 @@ from Acquisition import aq_base, aq_inner, aq_parent, ImplicitAcquisitionWrapper
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.CMFActivity.ActivityTool import GroupedMessage
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.Core.Folder import Folder
+from Products.ERP5Type.Tool.BaseTool import BaseTool
+from Products.ERP5Type import PropertySheet
 
 from AccessControl.PermissionRole import rolesForPermissionOn
 
@@ -302,31 +305,96 @@ class RelatedBaseCategory(Method):
         'RELATED_QUERY_SEPARATOR': RELATED_QUERY_SEPARATOR,
       }
 
-class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
+class CatalogTool (BaseTool, ZCatalog, CMFCoreCatalogTool):
     """
     This is a ZSQLCatalog that filters catalog queries.
     It is based on ZSQLCatalog
     """
     id = 'portal_catalog'
-    meta_type = 'ERP5 Catalog'
+    title = 'Catalog Tool'
+    meta_type = 'Catalog Tool'
+    portal_type = 'Catalog Tool'
+    allowed_types = ('Catalog',)
+
+    # Declarative security
     security = ClassSecurityInfo()
 
     default_result_limit = None
     default_count_limit = 1
 
     manage_options = ({ 'label' : 'Overview', 'action' : 'manage_overview' },
-                     ) + ZCatalog.manage_options
+                      { 'label' : 'Catalog', 'action' : 'manage_catalogView'},
+                     ) + Folder.manage_options
 
-    def __init__(self):
-        ZCatalog.__init__(self, self.getId())
+    property_sheets = ( PropertySheet.Base
+                    , PropertySheet.SimpleItem
+                    , PropertySheet.Folder
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.CatalogTool
+                    )
+
+    # Use reindexObject method from BaseTool class and declare it public
+    reindexObject = BaseTool.reindexObject
+    security.declarePublic('reindexObject')
 
     # Explicit Inheritance
     __url = CMFCoreCatalogTool.__url
     manage_catalogFind = CMFCoreCatalogTool.manage_catalogFind
 
     security.declareProtected(Permissions.ManagePortal
-                , 'manage_schema')
-    manage_schema = DTMLFile('dtml/manageSchema', globals())
+                , 'manage_overview')
+    manage_overview = DTMLFile('dtml/explainCatalogTool', globals())
+
+    # IMPORTANT:Solve inheritance conflict, this is necessary as getObject from
+    # Base gives the current object, which migth be harmful for CatalogTool as
+    # we use this function here to sometimes get objects to delete which if
+    # not solved of inheritance conflict might lead to catalog deletion.
+    getObject = ZCatalog.getObject
+
+    def __init__(self):
+        ZCatalog.__init__(self, self.getId())
+        BaseTool.__init__(self, self.getId())
+
+    # Filter content (ZMI))
+    def filtered_meta_types(self, user=None):
+        # Filters the list of available meta types for CatalogTool
+        meta_types = []
+        for meta_type in CatalogTool.inheritedAttribute('filtered_meta_types')(self):
+            if meta_type['name'] in self.allowed_types:
+                meta_types.append(meta_type)
+        return meta_types
+
+    allowedContentTypes = BaseTool.allowedContentTypes
+    getVisibleAllowedContentTypeList = BaseTool.getVisibleAllowedContentTypeList
+
+    # The functions 'getERP5CatalogIdList' and 'getERP5Catalog' are meant to
+    # be used in restricted environment, cause the reason they were created is
+    # the transition of Catalog from SQLCatalog to ERP5Catalog, which basically
+    # means Catalog is going to be an ERP5 object, which is why we need these
+    # functions to be declared public.
+
+    security.declarePublic('getERP5CatalogIdList')
+    def getERP5CatalogIdList(self):
+      """
+      Get ERP5 Catalog Ids
+      """
+      return self.objectIds(spec=('ERP5 Catalog',))
+
+    security.declarePublic('getERP5Catalog')
+    def getERP5Catalog(self, id=None, default_value=None):
+      """
+      Get current ERP5 Catalog
+      """
+      if id is None:
+        if not self.default_erp5_catalog_id:
+          id_list = self.getERP5CatalogIdList()
+          if len(id_list) > 0:
+            self.default_erp5_catalog_id = id_list[0]
+          else:
+            return default_value
+        id = self.default_erp5_catalog_id
+
+      return self._getOb(id, default_value)
 
     security.declarePublic('getPreferredSQLCatalogId')
     def getPreferredSQLCatalogId(self, id=None):
@@ -1114,6 +1182,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           for r in src:
             db.query(r)
       return src
+
 
 
 InitializeClass(CatalogTool)
