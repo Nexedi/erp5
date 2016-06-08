@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Transition Variable" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>causality/workflow_module/run_my_doc_configuration_workflow/variable_client_id</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_value</string> </key>
+            <value> <string>Default Value = python: object.document.getCurrentStateValue().getVariableValue(object.document, \'user_number\') + 1</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Transition Variable</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

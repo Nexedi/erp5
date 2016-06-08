@@ -88,7 +88,7 @@ class WorkflowSecurityConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       state_list = table_dict['state']
       for state_config in state_list:
         state_id = state_config.pop('state')
-        state = workflow.states[state_id]
+        state = workflow.getStateValueList()[state_id]
         # Clean the state matrix
         for permission in permission_list:
           state.setPermission(permission, 0, [])
@@ -116,7 +116,7 @@ class WorkflowSecurityConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       transition_list = table_dict['transition']
       for transition_conf in transition_list:
         transition_id = transition_conf.pop('transition')
-        transition = workflow.transitions[transition_id]
+        transition = workflow.getTransitionValueList()[transition_id]
         guard = transition.getGuard()
         role_list = [x.capitalize() for x in transition_conf.keys()]
         role_string = ';'.join(role_list)

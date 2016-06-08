@@ -106,6 +106,9 @@ class InteractionDefinition (SimpleItem):
     def getAvailableVarIds(self):
         return self.getWorkflow().variables.keys()
 
+    def getTriggerMethodIdList(self):
+      return self.method_id
+
     _properties_form = DTMLFile('interaction_properties', _dtmldir)
 
     def manage_properties(self, REQUEST, manage_tabs_message=None):
@@ -255,6 +258,19 @@ class InteractionDefinition (SimpleItem):
                 ve[id] = expr
 
             return self.manage_variables(REQUEST, 'Variables changed.')
+
+    def getReference(self):
+        return self.id
+
+    def showDict(self):
+      attr_dict = {}
+      for attr in sorted(self.__dict__.keys()):
+        value = getattr(self, attr)
+        if value is not None:
+          attr_dict[attr] = value
+        else:
+          attr_dict[attr] = ''
+      return attr_dict
 
 Globals.InitializeClass(InteractionDefinition)
 

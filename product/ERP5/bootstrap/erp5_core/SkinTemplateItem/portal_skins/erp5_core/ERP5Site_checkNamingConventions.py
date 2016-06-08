@@ -10,15 +10,15 @@
 # - Check script names (from skin folders and workflows).
 import re
 ABBREVIATION_WORD_SET = ((
-  "BBAN", "BIC", "BOM", "CAD", "CRM", "CSS", "CSV", "CTX", "DMS", "DNS",
+  "BBAN", "BIC", "BOM", "BT", "BT5", "CAD", "CRM", "CSS", "CSV", "CTX", "DMS", "DNS",
   "EAN", "ERP5", "FAX", "GAP", "GID", "GPG", "HTML", "HTTP", "IBAN", "ID",
   "IMAP", "IP", "KM", "MIME", "MRP", "NVP", "ODT", "PDF", "PDM", "PO",
   "RAM", "RSS", "SMS", "SOAP", "SQL", "SVN", "TALES", "TCP", "TSV", "UBM",
-  "UID", "UOM", "URI", "URL", "VADS", "VAT", "VCS", "VPN", "XML", "ZODB",
+  "UID", "UNG", "UOM", "URI", "URL", "VADS", "VAT", "VCS", "VPN", "XML", "ZODB",
 ))
 
 # List of words that do not need to be titlecased
-LOWERCASE_WORD_SET = set(('g', 'cm', 'kg', '%', '/', '...', 'm', '-', 'g/m2', 'iCalendar', 'm&#179;', 'kB'))
+LOWERCASE_WORD_SET = set(('g', 'cm', 'kg', '%', '/', '...', 'm', '-', 'g/m2', 'iCalendar', 'm&#179;', 'kB', 's', ))
 
 # List of words that should not be modified
 SPECIALCASE_WORD_SET = set(("ChangeLog", "EGov", "iCal", "included",
@@ -42,6 +42,7 @@ CLOSED_CLASS_WORD_LIST = """
   well what whatever when where whereas whether which while whilst who whoever
   whom whose with within without worth would yes you your yours yourself
   """.split()
+
 CLOSED_CLASS_WORD_SET = set(CLOSED_CLASS_WORD_LIST)
 assert len(CLOSED_CLASS_WORD_SET) == len(CLOSED_CLASS_WORD_LIST)
 SENTENCE_PART_LIST = (
@@ -183,10 +184,11 @@ for folder in context.portal_skins.objectValues(spec=('Folder',)):
 for wf in context.portal_workflow.objectValues():
 
   # Test workflow states
-  wf_states = wf.states
+  wf_states = wf.getStateValueList()
   message = ''
   if wf_states not in (None, (), [], ''):
-    for state in wf_states.objectValues() :
+    for state_id in wf_states.keys():
+      state = wf_states[state_id]
       message += checkTitle('/'.join(['portal_workflow', wf.id, 'states', state.id]), 'title', state.title)
     if message:
       message_list.append(message)

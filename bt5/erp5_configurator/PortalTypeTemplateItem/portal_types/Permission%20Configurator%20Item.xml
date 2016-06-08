@@ -19,6 +19,12 @@
             <value> <string> Set permission matrix on module.</string> </value>
         </item>
         <item>
+            <key> <string>erp5workflow_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>factory</string> </key>
             <value> <string>addPermissionConfiguratorItem</string> </value>
         </item>
@@ -29,6 +35,12 @@
         <item>
             <key> <string>type_class</string> </key>
             <value> <string>PermissionConfiguratorItem</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>

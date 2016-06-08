@@ -55,6 +55,23 @@ class PortalTypeClassInteractor(Interactor):
     self.on(Localizer.add_language).doAfter(self.resetDynamic)
     self.on(Localizer.del_language).doAfter(self.resetDynamic)
 
+    # New workflow compatibility
+    from Products.ERP5Type.ERP5Type import ERP5TypeInformation
+    self.on(ERP5TypeInformation.addTypeWorkflowList).doAfter(self.resetDynamic)
+    self.on(ERP5TypeInformation._edit).doAfter(self.resetDynamic)
+
+    from Products.ERP5Workflow.Document.Workflow import Workflow
+    self.on(Workflow._delObject).doAfter(self.resetDynamic)
+    self.on(Workflow._edit).doAfter(self.resetDynamic)
+
+    from Products.ERP5Workflow.Document.Transition import Transition
+    self.on(Transition._delObject).doAfter(self.resetDynamic)
+    self.on(Transition._edit).doAfter(self.resetDynamic)
+
+    from Products.ERP5Workflow.Document.Variable import Variable
+    self.on(Variable._edit).doAfter(self.resetDynamic)
+
+
   def resetDynamic(self, method_call_object, *args, **kw):
     """
     Call resetDynamicDocuments at the end of the transaction

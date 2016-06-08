@@ -2,37 +2,23 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Transition" module="erp5.portal_type"/>
+      <global name="Configuration Transition" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_count</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_mt_index</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_tree</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>after_script_id</string> </key>
-            <value> <string>BusinessConfiguration_displayDownload</string> </value>
+            <value>
+              <tuple>
+                <string>BusinessConfiguration_displayDownload</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/workflow_module/erp5_consulting_workflow/11</string>
+                <string>destination/workflow_module/erp5_consulting_workflow/2</string>
               </tuple>
             </value>
         </item>
@@ -51,7 +37,7 @@ We don\'t use ExpressConfiguration_displayDownload script, because it would crea
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Transition</string> </value>
+            <value> <string>Configuration Transition</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -62,28 +48,6 @@ We don\'t use ExpressConfiguration_displayDownload script, because it would crea
             <value> <string>BusinessConfiguration_displayDownloadForm</string> </value>
         </item>
       </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Length" module="BTrees.Length"/>
-    </pickle>
-    <pickle> <int>0</int> </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="OOBTree" module="BTrees.OOBTree"/>
-    </pickle>
-    <pickle>
-      <none/>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="OOBTree" module="BTrees.OOBTree"/>
-    </pickle>
-    <pickle>
-      <none/>
     </pickle>
   </record>
 </ZopeData>

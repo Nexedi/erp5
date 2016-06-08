@@ -70,9 +70,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_comment</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -86,8 +84,8 @@
                     <value>
                       <list>
                         <string>my_causality</string>
-                        <string>my_description</string>
                         <string>my_initial_value</string>
+                        <string>my_default_expr</string>
                       </list>
                     </value>
                 </item>

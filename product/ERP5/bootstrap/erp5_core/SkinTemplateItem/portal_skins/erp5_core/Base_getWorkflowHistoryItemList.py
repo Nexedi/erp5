@@ -38,9 +38,10 @@ for history_name in ['history', 'building_history', 'installation_history']:
   if workflow_item_list != []:
     break
 
-wf_state_var = portal_workflow[workflow_id].variables.getStateVar()
-wf_states = portal_workflow[workflow_id].states
-wf_transitions = portal_workflow[workflow_id].transitions
+workflow = getattr(portal_workflow, workflow_id)
+wf_state_var = workflow.getStateVariable()
+wf_states = workflow.getStateValueList()
+wf_transitions = workflow.getTransitionValueList()
 
 next_serial = None
 previous_obj = None
@@ -58,7 +59,7 @@ for workflow_item in workflow_item_list:
         key = key[len(compatibility_name):]
     if key == wf_state_var: 
       # Store locally the id of state, usefull for merging action and transition
-      state_id = wf_states.get(value, marker) and wf_states[value].id
+      state_id = wf_states.get(value, marker) and wf_states[value].getReference()
       o.setProperty('state_id', state_id)
 
       key = 'state'
@@ -75,7 +76,7 @@ for workflow_item in workflow_item_list:
         if display:
           value = wf_transitions.get(value, marker) and (wf_transitions[value].title or wf_transitions[value].actbox_name) or value
         else:
-          value = wf_transitions.get(value, marker) and (wf_transitions[value].id or wf_transitions[value].actbox_name) or value
+          value = wf_transitions.get(value, marker) and (wf_transitions[value].getReference() or wf_transitions[value].actbox_name) or value
     if display:
       if key == 'error_message' and same_type(value, ''):
         value = context.Localizer.erp5_ui.gettext(value)    

@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Standard Property" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>elementary_type/string</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>A ERP5 state security feature which assigns roles to permissions. (assigned_role_list)</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>state_permission_roles_property</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Standard Property</string> </value>
+        </item>
+        <item>
+            <key> <string>property_default</string> </key>
+            <value> <string>python: ()</string> </value>
+        </item>
+        <item>
+            <key> <string>storage_id</string> </key>
+            <value> <string>assigned_role_list</string> </value>
+        </item>
+        <item>
+            <key> <string>translatable</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>translation_domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -45,8 +45,11 @@ import os
 import warnings
 import transaction
 from App.config import getConfiguration
+from Products.ERP5Workflow.Tool.WorkflowTool import WorkflowTool
+from zope.lifecycleevent import ObjectCopiedEvent
+from OFS.event import ObjectClonedEvent
+from zope.event import notify
 MARKER = []
-
 
 # Site Creation DTML
 manage_addERP5SiteFormDtml = Globals.HTMLFile('dtml/addERP5Site', globals())
@@ -770,10 +773,11 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     def getStateList(group):
       state_dict = {}
       for wf in self.portal_workflow.objectValues():
-        if getattr(wf, 'states', None):
-          for state in wf.states.objectValues():
-            if group in getattr(state, 'type_list', ()):
-              state_dict[state.getId()] = None
+        state_list = wf.getStateValueList()
+        for state_id in state_list:
+          state = state_list[state_id]
+          if group in getattr(state, 'type_list', ()):
+            state_dict[state.getReference()] = None
       return tuple(state_dict.keys())
 
     getStateList = CachingMethod(getStateList,
@@ -1296,12 +1300,12 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     def getStateList():
       state_dict = {}
       for wf in self.portal_workflow.objectValues():
-        if getattr(wf, 'variables', None) and \
-           wf.variables.getStateVar() == 'simulation_state':
-          if getattr(wf, 'states', None):
-            for state in wf.states.objectValues():
-              if getattr(state, 'type_list', None):
-                state_dict[state.getId()] = None
+        if wf.getVariableValueList() and wf.getStateVariable() == 'simulation_state':
+          state_list = wf.getStateValueList()
+          for state_id in state_list:
+            state = state_list[state_id]
+            if getattr(state, 'type_list', None):
+              state_dict[state.getReference()] = None
       return tuple(sorted(state_dict.keys()))
 
     getStateList = CachingMethod(getStateList,
@@ -1693,6 +1697,32 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
             for obj in tool.objectValues():
               obj.migrateToPortalTypeClass()
 
+  def migrateToPortalWorkflowClass(self):
+    """ migrate dcworkflow to erp5workflow.
+        can only be executed after install bt erp5_workflow.
+    """
+    tool = self.portal_workflow
+    if not isinstance(tool, WorkflowTool):
+
+      # create new Workflow Tool
+      new_tool = self._setObject('portal_workflow_new', WorkflowTool())
+      new_tool._chains_by_type = tool._chains_by_type
+
+      # copy-paste operation
+      for id in tool.objectIds():
+        ob = tool._getOb(id)
+        ob = ob._getCopy(new_tool)
+        ob._setId(id)
+        new_tool._setObject(id, ob)
+        ob = new_tool._getOb(id)
+        ob._postCopy(new_tool, op=0)
+        ob.wl_clearLocks()
+
+      # migration
+      self.portal_workflow = new_tool
+      self.portal_workflow.id = 'portal_workflow'
+      self._delObject('portal_workflow_new')
+
 Globals.InitializeClass(ERP5Site)
 
 def getBootstrapDirectory():
@@ -1732,7 +1762,6 @@ class PortalGenerator:
         addCMFCoreTool('CMF Skins Tool', None)
         addCMFCoreTool('CMF Undo Tool', None)
         addCMFCoreTool('CMF URL Tool', None)
-        addCMFCoreTool('CMF Workflow Tool', None)
 
         addCMFDefaultTool = p.manage_addProduct['CMFDefault'].manage_addTool
         addCMFDefaultTool('Default Discussion Tool', None)
@@ -2245,6 +2274,9 @@ class ERP5Generator(PortalGenerator):
 
     # Make sure the cache is initialized
     p.portal_caches.updateCache()
+    # Workflow Tool migration. It's better to create an ERP5 Workflow Tool from
+    # beginning than migrate DC Workflow Tool
+    #p.migrateToPortalWorkflowClass()
 
     self.setupLastTools(p, **kw)
 

@@ -283,7 +283,7 @@ class CopyContainer:
     # Add info about copy to edit workflow
     REQUEST = get_request()
     pw = portal.portal_workflow
-    if 'edit_workflow' in pw.getChainFor(self)\
+    if portal.portal_workflow._getOb('edit_workflow') in pw.getWorkflowsFor(self)\
         and (REQUEST is None or
             not REQUEST.get('is_business_template_installation', 0)):
       if REQUEST is not None and REQUEST.get('__cp', None):

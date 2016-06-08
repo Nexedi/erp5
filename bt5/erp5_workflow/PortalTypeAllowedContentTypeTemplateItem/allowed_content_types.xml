@@ -1,4 +1,25 @@
 <allowed_content_type_list>
+ <portal_type id="Configuration Transition">
+  <item>Transition Variable</item>
+ </portal_type>
+ <portal_type id="Configuration Workflow">
+  <item>Configuration State</item>
+  <item>Configuration Transition</item>
+  <item>Embedded File</item>
+  <item>Variable</item>
+  <item>Worklist</item>
+ </portal_type>
+ <portal_type id="Interaction">
+  <item>Transition Variable</item>
+ </portal_type>
+ <portal_type id="Interaction Workflow">
+  <item>Interaction</item>
+  <item>Variable</item>
+  <item>Workflow Script</item>
+ </portal_type>
+ <portal_type id="State">
+  <item>PermissionRoles</item>
+ </portal_type>
  <portal_type id="Transition">
   <item>Transition Variable</item>
  </portal_type>
@@ -6,9 +27,18 @@
   <item>State</item>
   <item>Transition</item>
   <item>Variable</item>
+  <item>Workflow Script</item>
   <item>Worklist</item>
  </portal_type>
  <portal_type id="Workflow Module">
+  <item>Configuration Workflow</item>
+ </portal_type>
+ <portal_type id="Workflow Tool">
+  <item>Configuration Workflow</item>
+  <item>Interaction Workflow</item>
   <item>Workflow</item>
+ </portal_type>
+ <portal_type id="Worklist">
+  <item>Worklist Variable</item>
  </portal_type>
 </allowed_content_type_list>

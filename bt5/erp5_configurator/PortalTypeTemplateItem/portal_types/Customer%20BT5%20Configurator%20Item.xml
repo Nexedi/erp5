@@ -38,6 +38,12 @@
             <value> <string> Create a new bt5 for customer configuration. </string> </value>
         </item>
         <item>
+            <key> <string>erp5workflow_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>factory</string> </key>
             <value> <string>addCustomerBT5ConfiguratorItem</string> </value>
         </item>
@@ -48,6 +54,12 @@
         <item>
             <key> <string>type_class</string> </key>
             <value> <string>CustomerBT5ConfiguratorItem</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>

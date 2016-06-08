@@ -64,7 +64,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_jsplumb_graph</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -84,7 +86,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>your_workflow_graph</string>
                       </list>
                     </value>
                 </item>
