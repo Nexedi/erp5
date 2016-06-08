@@ -652,6 +652,7 @@ class SimulationTool(BaseTool):
           # if we consider flow, we also select movement whose mirror date is
           # in the from_date/to_date range and movement whose
           # start_date/stop_date contains the report range.
+          # XXX review this
           column_value_dict['date'] = ComplexQuery(
                   Query(date=(from_date, to_date), range='minmax'),
                   Query(mirror_date=(from_date, to_date), range='minmax'),
@@ -1031,11 +1032,16 @@ class SimulationTool(BaseTool):
       output_simulation_state - only take rows with specified simulation_state
                         and quantity < 0
 
-      interpolation_method - XXX name ???? how to evaluate flow movement.
-        * full (default): Consider the movement decreases 100% of source stock on
-          start date and increase 100% of the destination node stock on stop date.
+      interpolation_method - Method to consider movements when calculating flows.
+        * (default): Consider the movement decreases 100% of source stock on
+          start date and increase 100% of the destination node stock on stop
+          date.
         * linear: consider the movement decreases source stock and increase
           destination stock linearly between start date and stop date.
+        * all_or_nothing: consider only movement who starts after the beginning of
+          the query period and finishes after the end of the query period.
+        * one_for_all: consider the movement fully as long as it is partially
+          contained in the query period.
 
       ignore_variation -  do not take into account variation in inventory
                         calculation (useless on getInventory, but useful on
@@ -1351,7 +1357,7 @@ class SimulationTool(BaseTool):
       stock_sql_kw.update(base_inventory_kw)
 
         # TODO: move in _generateSQLKeywordDictFromKeywordDict
-      if interpolation_method == 'linear':
+      if interpolation_method in ('linear', 'all_or_nothing', 'one_for_all'):
           # XXX only DateTime instance are supported
         from_date = kw.get('from_date')
         if from_date:
@@ -1359,9 +1365,12 @@ class SimulationTool(BaseTool):
         to_date = kw.get('to_date')
         if to_date:
           to_date = to_date.toZone("UTC")
-        # TODO: support at_date ?
+        at_date = kw.get('at_date')
+        if at_date:
+          at_date = at_date.toZone("UTC")
         stock_sql_kw['interpolation_method_from_date'] = from_date
         stock_sql_kw['interpolation_method_to_date'] = to_date
+        stock_sql_kw['interpolation_method_at_date'] = at_date
       elif interpolation_method != 'default':
         raise ValueError("Unsupported interpolation_method %r" % (interpolation_method,))
 
