@@ -104,9 +104,12 @@
       return gadget.updateHeader({
         title: "Storage Configuration"
       }).push(function () {
-        return gadget.getSetting('jio_storage_name');
-      }).push(function (jio_storage_name) {
-        switch (jio_storage_name) {
+        return RSVP.all([
+          gadget.getSetting('jio_storage_name'),
+          gadget.getSetting('application_title')
+        ]);
+      }).push(function (setting_list) {
+        switch (setting_list[0]) {
         case "ERP5":
           gadget.props.element.querySelector("form.select-erp5-form button").classList.add("ui-btn-active");
           break;
@@ -117,7 +120,7 @@
           gadget.props.element.querySelector("form.select-local-form button").classList.add("ui-btn-active");
           break;
         default:
-          gadget.props.element.querySelector(".message h3").appendChild(document.createTextNode("Welcome! Please start by choosing a storage:"));
+          gadget.props.element.querySelector(".message h3").appendChild(document.createTextNode("Welcome in OfficeJS " + setting_list[1] + "! Please start by choosing a storage:"));
           gadget.props.element.querySelector(".message").setAttribute("style", "");
           gadget.props.element.querySelector(".document-access").setAttribute("style", "display: none;");
           break;
