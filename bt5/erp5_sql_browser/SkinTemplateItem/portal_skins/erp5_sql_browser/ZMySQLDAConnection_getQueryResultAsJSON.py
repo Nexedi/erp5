@@ -1,4 +1,4 @@
-#from decimal import Decimal
+from decimal import Decimal
 import datetime
 import json
 from DateTime import DateTime
@@ -26,7 +26,7 @@ for line in data[1:]:
       v = v.ISO()
     elif isinstance(v, datetime.datetime):
       v = v.isoformat()
-    elif "Decimal" in repr(v): # XXX decimal is not allowed in restricted environment
+    elif isinstance(v, Decimal):
       v = float(v)
     new_line.append(v)
   new_data.append(new_line)
