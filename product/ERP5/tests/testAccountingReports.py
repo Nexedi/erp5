@@ -527,6 +527,39 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=500, credit=500)
 
+  def testJournalLedger(self):
+    self.createLedgerDataSet()
+    request_form = self.portal.REQUEST.form
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['portal_type'] = ['Sale Invoice Transaction']
+    request_form['simulation_state'] = ['delivered']
+    request_form['ledger'] = 'ledger/accounting/general'
+    request_form['hide_analytic'] = True
+
+    report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
+                               'AccountingTransactionModule_viewJournalReport')
+    self.assertEqual(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(2, len(data_line_list))
+
+    self.checkLineProperties(data_line_list[0],
+                             node_title='41',
+                             mirror_section_title='Client 1',
+                             debit=500,
+                             credit=0)
+    self.checkLineProperties(data_line_list[1],
+                             node_title='7',
+                             debit=0,
+                             credit=500)
+    stat_line = line_list[-1]
+    self.assertTrue(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=500, credit=500)
+
   def createAccountStatementDataSet(self, use_two_bank_accounts=1):
     """Create transactions for Account statement report.
 
