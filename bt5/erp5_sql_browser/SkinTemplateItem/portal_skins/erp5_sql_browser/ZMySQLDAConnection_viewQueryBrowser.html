@@ -5,6 +5,7 @@
 
     <script type="text/javascript" src="jquery/core/jquery-1.9.min.js"></script>
     <script type="text/javascript" src="jquery/ui/js/jquery-ui.min.js"></script>
+    <link rel="stylesheet" media="screen" href="jquery/ui/css/erp5-theme/jquery-ui.min.css">
 
     <!-- "local" handsontable TODO make a bt ? -->
     <script src="sql_browser/handsontable.full.js"></script>
@@ -116,6 +117,8 @@
             extraKeys: {"Ctrl-Space": "autocomplete", "Ctrl-Enter": redraw, "Alt-Space": redraw},
             mode: "text/x-mariadb"
           });
+          $(editor.getWrapperElement()).resizable();
+          
           $.getJSON("ZMySQLDAConnection_getSchemaAsJSON").then(
             function(schema) {
               CodeMirror.commands.autocomplete = function(cm) {
