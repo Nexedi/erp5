@@ -4214,6 +4214,50 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0], debit_price=500, credit_price=500)
 
+  def testGeneralLedgerLedger(self):
+    # general ledger restricted to a ledger
+    self.createLedgerDataSet()
+
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['ledger'] = 'ledger/accounting/general'
+    request_form['hide_analytic'] = False
+    request_form['export'] = False
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewGeneralLedgerReport')
+    self.assertEqual(3, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getExplanationTitleAndAnalytics='Ledger general\nlag',
+          date=DateTime(2006, 2, 2),
+          debit_price=500, credit_price=0, running_total_price=500, )
+    self.assertTrue(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit_price=500, credit_price=0)
+
+    line_list = self.getListBoxLineList(report_section_list[1])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getExplanationTitleAndAnalytics='Ledger general\nlag',
+          date=DateTime(2006, 2, 2),
+          debit_price=0, credit_price=500, running_total_price=-500, )
+    self.assertTrue(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit_price=0, credit_price=500)
+
+    line_list = self.getListBoxLineList(report_section_list[2])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0], debit_price=500, credit_price=500)
+
   def testGeneralLedgerMirrorSectionRole(self):
     # general ledger restricted to a mirror section role
     self.createMirrorSectionRoleDataSet()
