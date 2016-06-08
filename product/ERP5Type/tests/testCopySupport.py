@@ -89,7 +89,7 @@ class TestCopySupport(ERP5TypeTestCase):
     person = self.portal.person_module.newContent(portal_type='Person',
                                                   address_city='Lille')
     self.tic()
-    getPath = self.portal.portal_catalog.getPath
+    getPath = self.portal.portal_catalog.getpath
     address = person.default_address
     self.assertEqual(address.getPath(), getPath(address.getUid()))
     person.recursiveReindexObject()
