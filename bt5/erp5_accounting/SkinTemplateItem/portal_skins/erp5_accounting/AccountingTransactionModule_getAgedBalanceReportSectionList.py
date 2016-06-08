@@ -43,6 +43,17 @@ selection_columns.append(('period_%s' % (idx + 1),
    mapping={'day_count': period_list[-1]}))))
 editable_columns.append(('period_%s' % (idx + 1), ''))
 
+selection_params = dict(section_category=section_category,
+                        section_category_strict=section_category_strict,
+                        account_type=account_type,
+                        editable_columns=editable_columns,
+                        simulation_state=simulation_state,
+                        period_list=period_list,
+                        at_date=at_date)
+
+ledger = request.get('ledger', None)
+if ledger:
+  selection_params['ledger'] = ledger
 
 return [ReportSection(form_id=(detailed and 
                                'AccountingTransactionModule_viewDetailedAgedBalanceReportSection' or
@@ -52,10 +63,4 @@ return [ReportSection(form_id=(detailed and
                       selection_name=(detailed and
                                       'accounting_transaction_module_detailed_aged_balance_selection' or
                                       'accounting_transaction_module_summary_aged_balance_selection'),
-                      selection_params=dict(section_category=section_category,
-                                            section_category_strict=section_category_strict,
-                                            account_type=account_type,
-                                            editable_columns=editable_columns,
-                                            simulation_state=simulation_state,
-                                            period_list=period_list,
-                                            at_date=at_date))]
+                      selection_params=selection_params)]
