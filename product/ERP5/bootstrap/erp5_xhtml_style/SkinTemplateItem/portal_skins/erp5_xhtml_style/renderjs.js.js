@@ -737,7 +737,12 @@ if (typeof document.contains !== 'function') {
     renderJS,
     Monitor,
     scope_increment = 0,
-    isAbsoluteOrDataURL = new RegExp('^(?:[a-z]+:)?//|data:', 'i');
+    isAbsoluteOrDataURL = new RegExp('^(?:[a-z]+:)?//|data:', 'i'),
+    is_page_unloaded = false;
+
+  window.addEventListener('beforeunload', function () {
+    is_page_unloaded = true;
+  });
 
   /////////////////////////////////////////////////////////////////
   // Helper functions
@@ -751,6 +756,12 @@ if (typeof document.contains !== 'function') {
   }
 
   function letsCrash(e) {
+    if (is_page_unloaded) {
+      /*global console*/
+      console.info('-- Error dropped, as page is unloaded');
+      console.info(e);
+      return;
+    }
     if (e.constructor === XMLHttpRequest) {
       e = {
         readyState: e.readyState,
@@ -1701,9 +1712,6 @@ if (typeof document.contains !== 'function') {
 
       last_acquisition_gadget = new RenderJSGadget();
       last_acquisition_gadget.__acquired_method_dict = {
-        getTopURL: function () {
-          return url;
-        },
         reportServiceError: function (param_list) {
           letsCrash(param_list[0]);
         }
@@ -1815,30 +1823,19 @@ if (typeof document.contains !== 'function') {
               });
               return;
             }
-            // Get Top URL
-            return tmp_constructor.prototype.__aq_parent('getTopURL', [])
-              .then(function (topURL) {
-                var base = document.createElement('base');
-                base.href = topURL;
-                base.target = "_top";
-                document.head.appendChild(base);
-                connection_ready = true;
-                notifyReady();
-                //the channel is ok
-                //so bind calls to renderJS method on the instance
-                embedded_channel.bind("methodCall", function (trans, v) {
-                  root_gadget[v[0]].apply(root_gadget, v[1])
-                    .then(function (g) {
-                      trans.complete(g);
-                    }).fail(function (e) {
-                      trans.error(e.toString());
-                    });
-                  trans.delayReturn(true);
+            connection_ready = true;
+            notifyReady();
+            //the channel is ok
+            //so bind calls to renderJS method on the instance
+            embedded_channel.bind("methodCall", function (trans, v) {
+              root_gadget[v[0]].apply(root_gadget, v[1])
+                .then(function (g) {
+                  trans.complete(g);
+                }).fail(function (e) {
+                  trans.error(e.toString());
                 });
-              })
-              .fail(function (error) {
-                throw error;
-              });
+              trans.delayReturn(true);
+            });
           }
         });
 
