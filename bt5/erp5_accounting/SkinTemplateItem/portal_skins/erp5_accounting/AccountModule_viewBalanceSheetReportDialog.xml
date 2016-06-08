@@ -90,6 +90,7 @@
                     <value>
                       <list>
                         <string>your_simulation_state</string>
+                        <string>your_ledger</string>
                       </list>
                     </value>
                 </item>
