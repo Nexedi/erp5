@@ -2772,8 +2772,8 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     force = kw.get('force')
     installed_bt = kw.get('installed_bt')
     if installed_bt is not None:
-      old_objects = getattr(installed_bt,
-                            self.business_template_class_property)._objects
+      old_objects = getattr(getattr(installed_bt,
+          self.business_template_class_property), '_objects', {})
     else:
       old_objects = {}
     for key in set(self._objects.keys()).union(old_objects.keys()):
