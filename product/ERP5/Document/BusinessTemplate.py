@@ -1312,11 +1312,27 @@ class ObjectTemplateItem(BaseTemplateItem):
             # The id match, but better double check with the meta type
             # while avoiding the impact of systematic check
             container_container = portal.unrestrictedTraverse(container_path[:-1])
-            if container_container.meta_type == 'ERP5 Catalog':
+            # Check for meta_type of container before creating Catalog
+            if container_container.meta_type == 'Catalog Tool':
+              container_container.newContent(portal_type='Catalog', id=container_path[-1], title='')
+            elif container_container.meta_type == 'ERP5 Catalog':
               container_container.manage_addProduct['ZSQLCatalog'].manage_addSQLCatalog(id=container_path[-1], title='')
-              if len(container_container.objectIds()) == 1:
-                container_container.default_sql_catalog_id = container_path[-1]
-              container = portal.unrestrictedTraverse(container_path)
+            else:
+              # Raise in case meta_type don't match
+              raise ValueError(
+                'No meta_type exists for %r during Catalog installation' % (
+                container_container.title,
+                ),
+              )
+
+            # Update default catalog ID
+            if len(container_container.objectIds()) == 1:
+              # Set the default catalog. Here, thanks to consistency between
+              # ERP5CatalogTool and ZSQLCatalog, we can use the explicit accessor
+              # `_setDefaultSqlCatalogId` to update both `default_sql_catalog_id`
+              # and `default_erp5_catalog_id`
+              container_container._setDefaultSqlCatalogId(container_path[-1])
+            container = portal.unrestrictedTraverse(container_path)
           else:
             raise
         saved_uid_dict = {}
