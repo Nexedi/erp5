@@ -139,6 +139,24 @@
    //////////////////////////////////////////////////////////////////
   // exec command functions
   //////////////////////////////////////////////////////////////////
+  function calculateChangeOptions(previous_options, next_options, drop_options) {
+    var key;
+    for (key in previous_options) {
+      if (previous_options.hasOwnProperty(key)) {
+        if (!next_options.hasOwnProperty(key)) {
+          next_options[key] = previous_options[key];
+        }
+      }
+    }
+    for (key in drop_options) {
+      if (drop_options.hasOwnProperty(key)) {
+        delete next_options[key];
+      }
+    }
+    return next_options;
+  }  
+  
+  
   function execDisplayCommand(next_options) {
     // console.warn(command_options);
     var jio_key = next_options.jio_key,
@@ -167,13 +185,17 @@
   }  
   
   
-  function execChangeCommand(previous_options,next_options) {
-    // console.warn(command_options);
-    var jio_key = previous_options.jio_key,
+  function execChangeCommand(previous_options,next_options, drop_options) {
+    
+    
+    var options,
+      jio_key,
       hash;
-    next_options.page = previous_options.page;
-    next_options.extended_search = previous_options.extended_search;
-    hash = getDisplayUrlFor(jio_key, next_options);
+    options = calculateChangeOptions(previous_options, next_options, drop_options);
+
+    jio_key = options.jio_key;
+    delete options.jio_key;
+    hash = getDisplayUrlFor(jio_key, options);
     return new RSVP.Queue()
       .push(function () {
         return synchronousChangeState(hash);
@@ -181,12 +203,18 @@
   } 
   
   
-  function execStoreAndChangeCommand(previous_options,next_options) {
-    // console.warn(command_options);
-    var jio_key = previous_options.jio_key,
+  function execStoreAndChangeCommand(previous_options,next_options, drop_options) {
+    
+    
+    
+    var options,
+      jio_key,
       hash;
-    next_options.page = previous_options.page;
-    hash = getDisplayUrlFor(jio_key, next_options);
+    options = calculateChangeOptions(previous_options, next_options, drop_options);
+
+    jio_key = options.jio_key;
+    delete options.jio_key;
+    hash = getDisplayUrlFor(jio_key, options);
     return new RSVP.Queue()
       .push(function () {
         return synchronousChangeState(hash);
@@ -297,10 +325,10 @@
       return execIndexCommand(next_options);
     }
     if (command_options.path === COMMAND_STORE_AND_CHANGE_STATE) {
-      return execStoreAndChangeCommand(previous_options, next_options);
+      return execStoreAndChangeCommand(previous_options, next_options, drop_options);
     }
     if (command_options.path === COMMAND_CHANGE_STATE) {
-      return execChangeCommand(previous_options, next_options);
+      return execChangeCommand(previous_options, next_options, drop_options);
     }
     throw new Error('Unsupported command ' + command_options.path);
 
