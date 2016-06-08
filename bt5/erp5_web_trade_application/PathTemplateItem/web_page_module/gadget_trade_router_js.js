@@ -172,6 +172,7 @@
     var jio_key = previous_options.jio_key,
       hash;
     next_options.page = previous_options.page;
+    next_options.extended_search = previous_options.extended_search;
     hash = getDisplayUrlFor(jio_key, next_options);
     return new RSVP.Queue()
       .push(function () {
@@ -236,7 +237,7 @@
           sub_options = {
             doc: doc,
             jio_key: path,
-            search: args.search,
+            extended_search: args.extended_search,
             begin_from: args.begin_from
 
           };
