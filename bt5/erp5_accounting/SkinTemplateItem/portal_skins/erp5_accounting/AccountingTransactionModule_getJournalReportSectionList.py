@@ -2,10 +2,13 @@ from Products.ERP5Form.Report import ReportSection
 request = container.REQUEST
 Base_translateString = container.Base_translateString
 
+portal = context.getPortalObject()
+
 portal_type = request['portal_type']
 simulation_state = request['simulation_state']
 hide_analytic = request['hide_analytic']
 project = request.get('project', None)
+ledger = request.get('ledger', None)
 at_date = request['at_date'].latestTime()
 from_date = request.get('from_date') or at_date.earliestTime()
 section_uid = context.Base_getSectionUidListForSectionCategory(
@@ -37,6 +40,16 @@ if project:
   else:
     selection_params['project_uid'] = \
        context.getPortalObject().restrictedTraverse(project).getUid()
+
+if ledger:
+  if not isinstance(ledger, list):
+    # Allows the generation of reports on different ledgers as the same time
+    ledger = [ledger]
+  portal_categories = portal.portal_categories
+  ledger_value_list = [portal_categories.restrictedTraverse(ledger_category, None)
+                       for ledger_category in ledger]
+  for ledger_value in ledger_value_list:
+    selection_params.setdefault('ledger_uid', []).append(ledger_value.getUid())
 
 analytic_column_list = ()
 if hide_analytic:
