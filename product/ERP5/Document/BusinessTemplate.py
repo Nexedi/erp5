@@ -888,6 +888,12 @@ class ObjectTemplateItem(BaseTemplateItem):
     except BrokenModified:
       obj.__Broken_state__[property_name] = data
       obj._p_changed = 1
+    else:
+      # Revert any work done by __setstate__.
+      # XXX: This is enough for all objects we currently split in 2 files,
+      #      but __setstate__ could behave badly with the missing attribute
+      #      and newly added types may require more than this.
+      self.removeProperties(obj, 1, keep_workflow_history=True)
 
   def _importFile(self, file_name, file_obj, catalog_method_template_item = 0):
     obj_key, file_ext = os.path.splitext(file_name)

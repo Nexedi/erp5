@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import \
+  ERP5TypeTestCase, immediateCompilation
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from runUnitTest import tests_home
 import glob
@@ -223,13 +224,11 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
     skin_folder = self.portal.portal_skins[skin_folder_id]
 
     python_script_id = 'dummy_test_script'
-    if python_script_id in skin_folder.objectIds():
-      skin_folder.manage_delObjects([python_script_id])
-    skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(id=python_script_id)
-    python_script = skin_folder[python_script_id]
-    python_script.ZPythonScript_edit('', "context.setTitle('foo')")
+    skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(
+      id=python_script_id)
+    skin_folder[python_script_id].ZPythonScript_edit('', "return 1")
 
-    python_script_kw = {"_body": "context.setTitle('foo')\n",}
+    python_script_kw = {"_body": "return 1\n",}
 
     self.template.edit(template_skin_id_list=[skin_folder_id+'/'+python_script_id,])
 
@@ -237,20 +236,21 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
       'SkinTemplateItem', 'portal_skins', skin_folder_id, python_script_id)
 
 
-    import_template = self._exportAndReImport(
+    with immediateCompilation():
+      import_template = self._exportAndReImport(
                                   python_script_path,
                                   ".py",
                                   python_script_kw["_body"],
                                   ['_body','_code'])
 
-    self.portal.portal_skins[skin_folder_id].manage_delObjects([python_script_id])
+      skin_folder.manage_delObjects(python_script_id)
 
-    import_template.install()
+      import_template.install()
 
-    python_script_page = self.portal.portal_skins[skin_folder_id][python_script_id]
+      script = skin_folder[python_script_id]
 
-    python_script_content = python_script_page.read()
-    self.assertTrue(python_script_content.endswith(python_script_kw['_body']))
+      self.assertTrue(script.read().endswith(python_script_kw['_body']))
+      self.assertEqual(1, script())
 
   def _checkTwoFileImportExportForImageInImageModule(self,
                                                     image_document_kw,

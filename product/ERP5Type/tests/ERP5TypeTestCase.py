@@ -19,6 +19,7 @@ import time
 import traceback
 import urllib
 import ConfigParser
+from contextlib import contextmanager
 from cStringIO import StringIO
 from cPickle import dumps
 from glob import glob
@@ -57,6 +58,7 @@ from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from zLOG import LOG, DEBUG
 
@@ -1323,13 +1325,27 @@ class lazy_func_prop(object):
     self.default_dict[name] = default
   def __get__(self, instance, owner):
     if self.name not in instance.__dict__:
-      instance.__dict__.update(self.default_dict)
-      instance._orig_compile()
+      self.compile(instance)
     return instance.__dict__[self.name]
   def __set__(self, instance, value):
     instance.__dict__[self.name] = value
   def __delete__(self, instance):
     del instance.__dict__[self.name]
+  @classmethod
+  def compile(cls, instance, _compile=PythonScript._compile):
+    instance.__dict__.update(cls.default_dict)
+    _compile(instance)
+
+immediate_compilation = 0
+
+@contextmanager
+def immediateCompilation():
+  global immediate_compilation
+  immediate_compilation += 1
+  try:
+    yield
+  finally:
+    immediate_compilation -= 1
 
 @onsetup
 def optimize():
@@ -1341,13 +1357,13 @@ def optimize():
   Expression.__init__ = __init__
 
   # Delay the compilations of Python Scripts until they are really executed.
-  from Products.PythonScripts.PythonScript import PythonScript
   # Python Scripts are exported without those 2 attributes:
   PythonScript.func_code = lazy_func_prop('func_code', None)
   PythonScript.func_defaults = lazy_func_prop('func_defaults', None)
 
-  PythonScript._orig_compile = PythonScript._compile
   def _compile(self):
+    if immediate_compilation:
+      return lazy_func_prop.compile(self)
     # mark the script as being not compiled
     for name in lazy_func_prop.default_dict:
       self.__dict__.pop(name, None)
@@ -1360,8 +1376,7 @@ def optimize():
   from Acquisition import aq_parent
   def _makeFunction(self, dummy=0): # CMFCore.FSPythonScript uses dummy arg.
     self.ZCacheable_invalidate()
-    self.__dict__.update(lazy_func_prop.default_dict)
-    self._orig_compile()
+    lazy_func_prop.compile(self)
     if not (aq_parent(self) is None or hasattr(self, '_filepath')):
       # It needs a _filepath, and has an acquisition wrapper.
       self._filepath = self.get_filepath()
