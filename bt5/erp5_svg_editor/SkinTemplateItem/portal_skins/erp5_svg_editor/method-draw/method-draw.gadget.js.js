@@ -8,13 +8,6 @@
   rJS(window)
     .ready(function (g) {
       g.props = {};
-      [].forEach.call(window.document.head.querySelectorAll("base"), function (el) {
-        // XXX GadgetField adds <base> tag to fit to the parent page location, it's BAD to remove them.
-        //     In the case of method-draw, all component are loaded dynamicaly through ajax requests in
-        //     method-draw "folder". By setting a <base> tag, we change the url resolution behavior, and
-        //     we break all dynamic links. So, deleting <base> is required.
-        window.document.head.removeChild(el);
-      });
       var deferred = RSVP.defer();
       svgCanvas.ready(function () {
         deferred.resolve();
@@ -22,6 +15,13 @@
       return deferred.promise;
     })
     .declareMethod('render', function (options) {
+      [].forEach.call(window.document.head.querySelectorAll("base"), function (el) {
+        // XXX GadgetField adds <base> tag to fit to the parent page location, it's BAD to remove them.
+        //     In the case of method-draw, all component are loaded dynamicaly through ajax requests in
+        //     method-draw "folder". By setting a <base> tag, we change the url resolution behavior, and
+        //     we break all dynamic links. So, deleting <base> is required.
+        window.document.head.removeChild(el);
+      });
       this.props.key = options.key;
       svgCanvas.setSvgString(options.value);
     })

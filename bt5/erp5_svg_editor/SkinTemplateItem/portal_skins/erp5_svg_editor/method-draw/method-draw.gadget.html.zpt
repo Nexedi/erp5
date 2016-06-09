@@ -57,8 +57,8 @@
 
 
 <!-- renderjs -->
-<script src="rsvp.js"></script>
-<script src="renderjs.js"></script>
+<script src="../rsvp.js"></script>
+<script src="../renderjs.js"></script>
 <!-- custom script -->
 <script src="method-draw.gadget.js"></script>
 <title>Method Draw</title>
