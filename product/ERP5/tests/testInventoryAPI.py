@@ -3028,8 +3028,6 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     self.assertEqual(value,
                          self.getInventory(optimisation__=False,
                                            **inventory_kw))
-
-  @expectedFailure
   def test_12_CheckCacheFlush(self):
     """
     Test the cache is flushed when indexing a movement into stock
@@ -3144,6 +3142,91 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     self.assertEqual(
       value + 31 * self.INVENTORY_QUANTITY_1,
       self.getInventory(optimisation__=False, **inventory_kw),
+    )
+
+  @expectedFailure
+  def test_12_CheckCacheFlushWithInventory(self):
+    """
+    Test the cache is flushed when indexing an inventory into stock
+    """
+    inventory_kw = {
+      'node_uid': self.node_uid,
+      'to_date': self.NOW,
+    }
+    # Fill cache and make stock inconsistent
+    value = self.getInventory(**inventory_kw)
+    self.doubleStockValue()
+    # Create a movement after CACHE DATE
+    # Cache is cleared for all entry > movement date
+    # as at a cache date D, it contains results from stock
+    # for all line < D
+    INVENTORY_QUANTITY_4 = 5000
+    INVENTORY_DATE_4 = self.CACHE_DATE
+    movement = self._makeMovement(
+      quantity=INVENTORY_QUANTITY_4,
+      start_date=INVENTORY_DATE_4,
+      simulation_state='delivered',
+    )
+    self.tic()
+    # Optimisation must still be used
+    self.assertEqual(
+      value + INVENTORY_QUANTITY_4,
+      self.getInventory(**inventory_kw),
+    )
+    # Edit start date so that cache table is cleared
+    movement.edit(start_date=self.LAST_CACHED_MOVEMENT_DATE)
+    self.tic()
+    self.assertEqual(
+      value + INVENTORY_QUANTITY_4 + self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    self.doubleStockValue()
+    # Cache hit again
+    self.assertEqual(
+      value + INVENTORY_QUANTITY_4 + self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    # Move movement's start date in the future and check cache is flushed
+    # at former date
+    movement.edit(start_date=self.NOW - 1)
+    self.tic()
+    self.assertEqual(
+      value + INVENTORY_QUANTITY_4 + 3 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    self.doubleStockValue()
+    # Cache hit again
+    self.assertEqual(
+      value + INVENTORY_QUANTITY_4 + 3 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+
+    # Set date back in the past, cache is clear again
+    movement.edit(start_date=self.LAST_CACHED_MOVEMENT_DATE)
+    self.tic()
+    self.assertEqual(
+      value + INVENTORY_QUANTITY_4 + 7 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    self.doubleStockValue()
+    # Cache hit again
+    self.assertEqual(
+      value + INVENTORY_QUANTITY_4 + 7 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+
+    # Delete movement, so it gets unindexed and cache entry is flushed
+    self.folder.manage_delObjects(ids=[movement.getId(), ])
+    self.tic()
+    self.assertEqual(
+      value + 15 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    self.doubleStockValue()
+    # Cache hit again
+    self.assertEqual(
+      value + 15 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
     )
 
     # Create an inventory
