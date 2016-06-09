@@ -652,6 +652,8 @@ class SimulationTool(BaseTool):
           # if we consider flow, we also select movement whose mirror date is
           # in the from_date/to_date range and movement whose
           # start_date/stop_date contains the report range.
+          # The selected range is wider, but the selected movements will have an
+          # "interpolation_ratio" applied to their quantity and prices.
           if to_date:
             column_value_dict['date'] = ComplexQuery(
                   Query(date=(from_date, to_date), range='minmax'),
