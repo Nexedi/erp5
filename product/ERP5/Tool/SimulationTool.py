@@ -648,12 +648,12 @@ class SimulationTool(BaseTool):
         if date_dict:
           column_value_dict['date'] = date_dict
         if interpolation_method != 'default':
-          assert from_date and to_date
+          assert from_date and (to_date or at_date)
           # if we consider flow, we also select movement whose mirror date is
           # in the from_date/to_date range and movement whose
           # start_date/stop_date contains the report range.
-          # XXX review this
-          column_value_dict['date'] = ComplexQuery(
+          if to_date:
+            column_value_dict['date'] = ComplexQuery(
                   Query(date=(from_date, to_date), range='minmax'),
                   Query(mirror_date=(from_date, to_date), range='minmax'),
                   ComplexQuery(
@@ -663,6 +663,20 @@ class SimulationTool(BaseTool):
                   ComplexQuery(
                       Query(date=from_date, range='min'),
                       Query(mirror_date=to_date, range='max'),
+                      operator="AND"),
+                  operator="OR"
+              )
+          else:
+            column_value_dict['date'] = ComplexQuery(
+                  Query(date=(from_date, at_date), range='minngt'),
+                  Query(mirror_date=(from_date, at_date), range='minngt'),
+                  ComplexQuery(
+                      Query(mirror_date=from_date, range='min'),
+                      Query(date=at_date, range='ngt'),
+                      operator="AND"),
+                  ComplexQuery(
+                      Query(date=from_date, range='min'),
+                      Query(mirror_date=at_date, range='ngt'),
                       operator="AND"),
                   operator="OR"
               )

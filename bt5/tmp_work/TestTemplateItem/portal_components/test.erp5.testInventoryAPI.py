@@ -816,7 +816,7 @@ class TestInventory(InventoryAPITestCase):
                             resource=self.resource.getRelativeUrl(),
                             at_date=date_gmt_1)
 
-  def test_interpolation_method_linear(self):
+  def test_interpolation_method_linear_to_date(self):
     self._makeMovement(
        quantity=10,
        start_date=DateTime("2016/01/01 01:00:00"),
@@ -881,7 +881,72 @@ class TestInventory(InventoryAPITestCase):
       to_date=DateTime("2016/01/01 11:00:00"),
       interpolation_method='linear')
 
-  def test_interpolation_method_XXX_one_for_all(self):
+  def test_interpolation_method_linear_at_date(self):
+    self._makeMovement(
+       quantity=10,
+       start_date=DateTime("2016/01/01 01:00:00"),
+       stop_date=DateTime("2016/01/01 11:00:00"),
+    )
+
+    # With a time frame that does not contain the movement, we have 0%
+    self.assertInventoryEquals(0,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/02/01 00:00:00"),
+      at_date=DateTime("2016/02/02 00:00:00"),
+      interpolation_method='linear')
+
+    # With a time frame that contains the full movement, we have 100% of the quantity
+    self.assertInventoryEquals(10,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 00:00:00"),
+      at_date=DateTime("2016/01/02 00:00:00"),
+      interpolation_method='linear')
+
+    # corner case: exact same time, we also have 100%
+    self.assertInventoryEquals(10,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 01:00:00"),
+      at_date=DateTime("2016/01/01 11:00:00"),
+      interpolation_method='linear')
+
+    # With a time frame containing the 50% of the movement, we have 50% of the quantity
+
+    # time frame start before movement
+    self.assertInventoryEquals(5,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 00:00:00"),
+      at_date=DateTime("2016/01/01 06:00:00"),
+      interpolation_method='linear')
+
+    # time frame start at exact same time as movement
+    self.assertInventoryEquals(5,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 01:00:00"),
+      at_date=DateTime("2016/01/01 06:00:00"),
+      interpolation_method='linear')
+
+    # Time frame is contained inside the movement
+    self.assertInventoryEquals(5,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 02:00:00"),
+      at_date=DateTime("2016/01/01 07:00:00"),
+      interpolation_method='linear')
+
+    # Time frame finishes after movement end
+    self.assertInventoryEquals(5,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 06:00:00"),
+      at_date=DateTime("2016/01/01 12:00:00"),
+      interpolation_method='linear')
+
+    # Time frame finishes at exact same time that movement end
+    self.assertInventoryEquals(5,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 06:00:00"),
+      at_date=DateTime("2016/01/01 11:00:00"),
+      interpolation_method='linear')
+
+  def test_interpolation_method_XXX_one_for_all_to_date(self):
     self._makeMovement(
        quantity=10,
        start_date=DateTime("2016/01/01 01:00:00"),
@@ -947,7 +1012,73 @@ class TestInventory(InventoryAPITestCase):
       to_date=DateTime("2016/01/01 11:00:00"),
       interpolation_method='one_for_all')
 
-  def test_interpolation_method_XXX_all_or_nothing(self):
+  def test_interpolation_method_XXX_one_for_all_at_date(self):
+    self._makeMovement(
+       quantity=10,
+       start_date=DateTime("2016/01/01 01:00:00"),
+       stop_date=DateTime("2016/01/01 11:00:00"),
+    )
+
+    # With a time frame that does not contain the movement, we have 0%
+    self.assertInventoryEquals(0,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/02/01 00:00:00"),
+      at_date=DateTime("2016/02/02 00:00:00"),
+      interpolation_method='one_for_all')
+
+    # With a time frame that contains the full movement, we have 100% of the quantity
+    self.assertInventoryEquals(10,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 00:00:00"),
+      at_date=DateTime("2016/01/02 00:00:00"),
+      interpolation_method='one_for_all')
+
+    # corner case: exact same time, we also have 100%
+    self.assertInventoryEquals(10,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 01:00:00"),
+      at_date=DateTime("2016/01/01 11:00:00"),
+      interpolation_method='one_for_all')
+
+    # With a time frame containing the 50% of the movement, we have 100% of the quantity
+    # this is "one_for_all" XXX naming
+
+    # time frame start before movement
+    self.assertInventoryEquals(10,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 00:00:00"),
+      at_date=DateTime("2016/01/01 06:00:00"),
+      interpolation_method='one_for_all')
+
+    # time frame start at exact same time as movement
+    self.assertInventoryEquals(10,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 01:00:00"),
+      at_date=DateTime("2016/01/01 06:00:00"),
+      interpolation_method='one_for_all')
+
+    # Time frame is contained inside the movement
+    self.assertInventoryEquals(10,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 02:00:00"),
+      at_date=DateTime("2016/01/01 07:00:00"),
+      interpolation_method='one_for_all')
+
+    # Time frame finishes after movement end
+    self.assertInventoryEquals(10,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 06:00:00"),
+      at_date=DateTime("2016/01/01 12:00:00"),
+      interpolation_method='one_for_all')
+
+    # Time frame finishes at exact same time that movement end
+    self.assertInventoryEquals(10,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 06:00:00"),
+      at_date=DateTime("2016/01/01 11:00:00"),
+      interpolation_method='one_for_all')
+
+  def test_interpolation_method_XXX_all_or_nothing_to_date(self):
     self._makeMovement(
        quantity=10,
        start_date=DateTime("2016/01/01 01:00:00"),
@@ -1011,6 +1142,73 @@ class TestInventory(InventoryAPITestCase):
       node_uid=self.node.getUid(),
       from_date=DateTime("2016/01/01 06:00:00"),
       to_date=DateTime("2016/01/01 11:00:00"),
+      interpolation_method='all_or_nothing')
+
+
+  def test_interpolation_method_XXX_all_or_nothing_at_date(self):
+    self._makeMovement(
+       quantity=10,
+       start_date=DateTime("2016/01/01 01:00:00"),
+       stop_date=DateTime("2016/01/01 11:00:00"),
+    )
+
+    # With a time frame that does not contain the movement, we have 0%
+    self.assertInventoryEquals(0,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/02/01 00:00:00"),
+      at_date=DateTime("2016/02/02 00:00:00"),
+      interpolation_method='all_or_nothing')
+
+    # With a time frame that contains the full movement, we have 100% of the quantity
+    self.assertInventoryEquals(10,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 00:00:00"),
+      at_date=DateTime("2016/01/02 00:00:00"),
+      interpolation_method='all_or_nothing')
+
+    # corner case: exact same time, we also have 0%, because at_date
+    self.assertInventoryEquals(0,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 01:00:00"),
+      at_date=DateTime("2016/01/01 11:00:00"),
+      interpolation_method='all_or_nothing')
+
+    # With a time frame containing the 50% of the movement, we have 0% of the quantity
+    # this is "all or nothing" XXX naming
+
+    # time frame start before movement
+    self.assertInventoryEquals(0,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 00:00:00"),
+      at_date=DateTime("2016/01/01 06:00:00"),
+      interpolation_method='all_or_nothing')
+
+    # time frame start at exact same time as movement
+    self.assertInventoryEquals(0,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 01:00:00"),
+      at_date=DateTime("2016/01/01 06:00:00"),
+      interpolation_method='all_or_nothing')
+
+    # Time frame is contained inside the movement
+    self.assertInventoryEquals(0,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 02:00:00"),
+      at_date=DateTime("2016/01/01 07:00:00"),
+      interpolation_method='all_or_nothing')
+
+    # Time frame finishes after movement end
+    self.assertInventoryEquals(0,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 06:00:00"),
+      at_date=DateTime("2016/01/01 12:00:00"),
+      interpolation_method='all_or_nothing')
+
+    # Time frame finishes at exact same time that movement end
+    self.assertInventoryEquals(0,
+      node_uid=self.node.getUid(),
+      from_date=DateTime("2016/01/01 06:00:00"),
+      at_date=DateTime("2016/01/01 11:00:00"),
       interpolation_method='all_or_nothing')
 
 
