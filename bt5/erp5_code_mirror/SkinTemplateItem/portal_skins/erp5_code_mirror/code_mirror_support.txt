@@ -145,6 +145,21 @@
 
  maximize_mode_message = $('<span id="maximize_message">Press ESC to leave maximize mode</span>');
 
+ // Improve python completer
+ CodeMirror.registerHelper(
+   "hint", "python",
+   function (mirror, options) {
+     // return merged default python completions from keywords + completions from anyword
+     var python_completion_result = CodeMirror.hint.fromList(cm, {words: cm.getHelper(cm.getCursor(), "hintWords")}),
+       anyword_completion_result = CodeMirror.hint.anyword(mirror, {range: Infinity});
+     if ( python_completion_result ) {
+       python_completion_result.list.concat(anyword_completion_result.list || []);
+       return python_completion_result;
+     }
+   return anyword_completion_result;
+   }
+ );
+
  function getTextareaField() {
    // When the textarea does not exist yet (eg ERP5Form EditorField)
 <dtml-if field_id>
