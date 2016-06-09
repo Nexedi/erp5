@@ -1890,6 +1890,7 @@ class TestInventoryList(InventoryAPITestCase):
 
 
   def test_inventory_asset_price(self):
+    # (XXX misplaced method, this is not inventory list)
     # examples from http://accountinginfo.com/study/inventory/inventory-120.htm
     movement_list = [
         (1,  "Beginning Inventory", -700, 10),
@@ -1927,6 +1928,7 @@ class TestInventoryList(InventoryAPITestCase):
     self.assertEqual(8600, valuate("Fifo"))
 
   def test_weighted_average_asset_price(self):
+    # (XXX misplaced method, this is not inventory list)
     def h(quantity, total_price):
       """
       A small helper. Returns a dictionary
