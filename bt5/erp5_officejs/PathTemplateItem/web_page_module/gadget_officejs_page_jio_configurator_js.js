@@ -120,7 +120,7 @@
           gadget.props.element.querySelector("form.select-local-form button").classList.add("ui-btn-active");
           break;
         default:
-          gadget.props.element.querySelector(".message h3").appendChild(document.createTextNode("Welcome in OfficeJS " + setting_list[1] + "! Please start by choosing a storage:"));
+          gadget.props.element.querySelector(".message h3").appendChild(document.createTextNode("Welcome in OfficeJS " + setting_list[1] + ". Please start by choosing a storage."));
           gadget.props.element.querySelector(".message").setAttribute("style", "");
           gadget.props.element.querySelector(".document-access").setAttribute("style", "display: none;");
           break;
