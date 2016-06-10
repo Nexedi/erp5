@@ -161,7 +161,7 @@ def checkGuard(guard, ob):
 PythonScript_exec = PythonScript._exec
 def _exec(self, *args):
   # PATCH BEGIN : check guard against context, if guard exists.
-  guard = getattr(self, 'guard', None)
+  guard = getattr(aq_base(self), 'guard', None)
   if guard is not None:
     if not checkGuard(guard, aq_parent(self)):
       raise Forbidden, 'Calling %s %s is denied by Guard.' % (self.meta_type, self.id)
