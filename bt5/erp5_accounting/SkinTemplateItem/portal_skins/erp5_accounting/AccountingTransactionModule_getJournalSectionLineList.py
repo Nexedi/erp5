@@ -19,6 +19,9 @@ if project_uid:
   else:
     extra_kw['project_uid'] = project_uid
 
+if ledger_uid:
+  extra_kw['ledger_uid'] = ledger_uid
+
 account_title_cache = {}
 def getAccountId(node_relative_url):
   if node_relative_url not in account_title_cache:

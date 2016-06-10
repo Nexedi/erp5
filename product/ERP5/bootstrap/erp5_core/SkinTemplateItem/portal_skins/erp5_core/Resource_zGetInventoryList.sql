@@ -45,6 +45,7 @@ SELECT
   <dtml-var stock_table_id>.function_uid as function_uid,
   <dtml-var stock_table_id>.project_uid as project_uid,
   <dtml-var stock_table_id>.funding_uid as funding_uid,
+  <dtml-var stock_table_id>.ledger_uid as ledger_uid,
   <dtml-var stock_table_id>.payment_request_uid as payment_request_uid,
   catalog.path as path
 </dtml-if>

@@ -114,6 +114,8 @@
                         <string>Base_viewReportFieldLibrary</string>
                         <string>your_from_date</string>
                         <string>your_simulation_state</string>
+                        <string>my_view_mode_category</string>
+                        <string>my_ledger</string>
                       </list>
                     </value>
                 </item>

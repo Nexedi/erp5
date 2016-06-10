@@ -33,6 +33,7 @@ getSourceProjectUid\r\n
 getDestinationProjectUid\r\n
 getSourceFundingUid\r\n
 getDestinationFundingUid\r\n
+getLedgerUid\r\n
 getSourcePaymentRequestUid\r\n
 getDestinationPaymentRequestUid\r\n
 getSimulationState\r\n

@@ -84,6 +84,8 @@
                         <string>my_preferred_accounting_transaction_source_section</string>
                         <string>my_preferred_accounting_transaction_currency</string>
                         <string>my_preferred_accounting_bank_account_display_method</string>
+                        <string>my_preferred_accounting_transaction_gap</string>
+                        <string>my_preferred_account_number_method</string>
                       </list>
                     </value>
                 </item>
@@ -98,8 +100,7 @@
                     <value>
                       <list>
                         <string>my_preferred_accounting_transaction_simulation_state_list</string>
-                        <string>my_preferred_accounting_transaction_gap</string>
-                        <string>my_preferred_account_number_method</string>
+                        <string>my_preferred_accounting_transaction_ledger_list</string>
                       </list>
                     </value>
                 </item>

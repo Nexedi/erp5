@@ -1,4 +1,4 @@
-from Products.ZSQLCatalog.SQLCatalog import Query
+from Products.ZSQLCatalog.SQLCatalog import Query, SimpleQuery, ComplexQuery
 portal = context.getPortalObject()
 
 params = portal.ERP5Accounting_getParams(selection_name=selection_name)
@@ -16,7 +16,7 @@ if kw.get('mirror_section_uid'):
   params['mirror_section_uid'] = kw['mirror_section_uid']
 
 category_uid_list = ('payment_uid', 'project_uid', 'funding_uid',
-  'function_uid', 'payment_request_uid')
+  'ledger_uid', 'function_uid', 'payment_request_uid')
 for category_uid in category_uid_list:
   category_uid_value = kw.get(category_uid)
   if category_uid_value:
@@ -64,6 +64,9 @@ if not 'parent_portal_type' in params:
 
 # Remove unsupported inventory API parameters
 params.pop('detailed_from_date_summary', None)
+
+if kw.get('ledger', None):
+  params['ledger'] = kw.get('ledger')
 
 period_start_date = params.pop('period_start_date', None)
 if period_start_date and params.get('node_uid'):

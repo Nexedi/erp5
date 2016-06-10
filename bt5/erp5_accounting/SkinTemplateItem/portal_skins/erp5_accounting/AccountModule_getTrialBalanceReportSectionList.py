@@ -10,6 +10,7 @@ from_date = request.get('from_date', None)
 portal_type = request.get('portal_type', None)
 function = request.get('function', None)
 funding = request.get('funding', None)
+ledger = request.get('ledger', None)
 project = request.get('project', None)
 simulation_state = request['simulation_state']
 expand_accounts = request.get('expand_accounts', False)
@@ -119,6 +120,7 @@ return [ ReportSection(
                                   section_uid=section_uid,
                                   function=function,
                                   funding=funding,
+                                  ledger=ledger,
                                   project=project,
                                   portal_type=portal_type,
                                   simulation_state=simulation_state,

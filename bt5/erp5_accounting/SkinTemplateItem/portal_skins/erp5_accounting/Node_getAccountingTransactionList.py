@@ -22,8 +22,11 @@ if kw.get('node_uid'):
 if kw.get('mirror_section_uid'):
   params['mirror_section_uid'] = kw['mirror_section_uid']
 
-category_uid_list = ('payment_uid', 'project_uid', 'funding_uid',
-  'function_uid', 'payment_request_uid', 'default_aggregate_uid')
+if kw.get('ledger', None):
+  params['ledger'] = kw['ledger']
+
+category_uid_list = ('payment_uid', 'project_uid', 'funding_uid', 'function_uid',
+  'ledger_uid', 'payment_request_uid', 'default_aggregate_uid')
 for category_uid in category_uid_list:
   category_uid_value = kw.get(category_uid)
   if category_uid_value:

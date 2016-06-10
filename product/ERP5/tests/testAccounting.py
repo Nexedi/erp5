@@ -42,6 +42,8 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Form.PreferenceTool import Priority
 
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+
 SOURCE = 'source'
 DESTINATION = 'destination'
 RUN_ALL_TESTS = 1
@@ -1167,6 +1169,356 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEqual(None, pl_movement.getSourceTotalAssetPrice())
     self.assertEqual(200., pl_movement.getDestinationCredit())
 
+  @UnrestrictedMethod
+  def setUpLedger(self):
+   # Create Ledger Categories
+    ledger_category = self.portal.portal_categories.ledger
+    ledger_accounting_category = ledger_category.get('accounting', None)
+    if ledger_accounting_category is None:
+      ledger_accounting_category = ledger_category.newContent(portal_type='Category', id='accounting')
+    if ledger_accounting_category.get('general', None) is None:
+      ledger_accounting_category.newContent(portal_type='Category', id='general')
+    if ledger_accounting_category.get('detailed', None) is None:
+      ledger_accounting_category.newContent(portal_type='Category', id='detailed')
+    if ledger_accounting_category.get('other', None) is None:
+      ledger_accounting_category.newContent(portal_type='Category', id='other')
+
+    # Allow some ledgers on the 'Sale Invoice Transaction' portal type
+    self.portal.portal_types['Sale Invoice Transaction'].edit(
+      ledger=['accounting/general', 'accounting/detailed'])
+
+  def test_createBalanceOnLedgerWithTransactionsWithNoLedger(self):
+    self.setUpLedger()
+    organisation_module = self.organisation_module
+    period = self.section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStopDate(DateTime(2006, 12, 31))
+
+    pl = self.portal.account_module.newContent(
+          portal_type='Account',
+          account_type='equity')
+
+    # 2 Transactions for clients 1 and 2 on ledger accounting/general
+    transaction1 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        portal_type='Sale Invoice Transaction',
+        ledger='accounting/general',
+        destination_section_value=organisation_module.client_1,
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_debit=100),
+               dict(source_value=self.account_module.receivable,
+                    source_credit=100)))
+
+    transaction2 = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        portal_type='Sale Invoice Transaction',
+        ledger='accounting/general',
+        destination_section_value=organisation_module.client_2,
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_debit=200),
+               dict(source_value=self.account_module.receivable,
+                    source_credit=200)))
+
+    # 2 Transactions for clients 1 and 2 on ledger accounting/detailed
+    transaction3 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        portal_type='Sale Invoice Transaction',
+        ledger='accounting/detailed',
+        destination_section_value=organisation_module.client_1,
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_debit=400),
+               dict(source_value=self.account_module.receivable,
+                    source_credit=400)))
+
+    transaction4 = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        portal_type='Sale Invoice Transaction',
+        ledger='accounting/detailed',
+        destination_section_value=organisation_module.client_2,
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_debit=800),
+               dict(source_value=self.account_module.receivable,
+                    source_credit=800)))
+
+    # 2 Transactions for clients 1 and 2 with no ledger
+    transaction5 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        portal_type='Sale Invoice Transaction',
+        ledger='',
+        destination_section_value=organisation_module.client_1,
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_debit=1600),
+               dict(source_value=self.account_module.receivable,
+                    source_credit=1600)))
+
+    transaction6 = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        portal_type='Sale Invoice Transaction',
+        ledger='',
+        destination_section_value=organisation_module.client_2,
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_debit=3200),
+               dict(source_value=self.account_module.receivable,
+                    source_credit=3200)))
+
+    period.AccountingPeriod_createBalanceTransaction(
+                               profit_and_loss_account=pl.getRelativeUrl())
+    accounting_transaction_list = self.accounting_module.contentValues()
+    self.assertEqual(9, len(accounting_transaction_list))
+    balance_transaction_list = self.accounting_module.contentValues(
+                              portal_type='Balance Transaction')
+    self.assertEqual(3, len(balance_transaction_list))
+
+    # 1st balance has 3 lines :           # 2nd balance has 3 lines :
+    #   on ledger/accounting/general      #   on ledger/accounting/detailed
+    #   pl                 = 300 D        #   pl                 = 1200 D
+    #   receivable/client1 =      200 C   #   receivable/client1 =       800 C
+    #   receivable/client2 =      100 C   #   receivable/client2 =       400 C
+    # 3rd balance has 3 lines :
+    #   on no ledger
+    #   pl                 = 4800 D
+    #   receivable/client1 =       3200 C
+    #   receivable/client2 =       1600 C
+
+    result_mapping = {}
+    result_mapping['accounting/general'] = {'client1': 100., 'client2': 200., 'pl': 300.}
+    result_mapping['accounting/detailed'] = {'client1': 400., 'client2': 800., 'pl': 1200.}
+    result_mapping[None] = {'client1': 1600., 'client2': 3200., 'pl': 4800.}
+
+    for balance_transaction in balance_transaction_list:
+
+      self.assertEqual(self.section,
+                       balance_transaction.getDestinationSectionValue())
+      self.assertEqual(None, balance_transaction.getSourceSection())
+      self.assertEqual(DateTime(2007, 1, 1),
+                       balance_transaction.getStartDate())
+      self.assertEqual('currency_module/euro',
+                       balance_transaction.getResource())
+      self.assertEqual('delivered', balance_transaction.getSimulationState())
+      movement_list = balance_transaction.getMovementList()
+      self.assertEqual(3, len(movement_list))
+
+      current_ledger = balance_transaction.getLedger()
+      assert current_ledger in (None, 'accounting/general', 'accounting/detailed')
+      result = result_mapping[current_ledger]
+
+      client1_movement_list = [m for m in movement_list
+       if m.getSourceSectionValue() == organisation_module.client_1]
+      self.assertEqual(1, len(client1_movement_list))
+      client1_movement = client1_movement_list[0]
+      self.assertEqual([], client1_movement.getValueList('resource'))
+      self.assertEqual([], client1_movement.getValueList('destination_section'))
+      self.assertEqual(None, client1_movement.getSource())
+      self.assertEqual(self.account_module.receivable,
+                        client1_movement.getDestinationValue())
+      self.assertEqual(organisation_module.client_1,
+                        client1_movement.getSourceSectionValue())
+      self.assertEqual(None, client1_movement.getDestinationTotalAssetPrice())
+      self.assertEqual(None, client1_movement.getSourceTotalAssetPrice())
+      self.assertEqual(result['client1'], client1_movement.getDestinationCredit())
+
+      client2_movement_list = [m for m in movement_list
+       if m.getSourceSectionValue() == organisation_module.client_2]
+      self.assertEqual(1, len(client2_movement_list))
+      client2_movement = client2_movement_list[0]
+      self.assertEqual([], client2_movement.getValueList('resource'))
+      self.assertEqual([], client2_movement.getValueList('destination_section'))
+      self.assertEqual(None, client2_movement.getSource())
+      self.assertEqual(self.account_module.receivable,
+                        client2_movement.getDestinationValue())
+      self.assertEqual(organisation_module.client_2,
+                        client2_movement.getSourceSectionValue())
+      self.assertEqual(None, client2_movement.getDestinationTotalAssetPrice())
+      self.assertEqual(None, client2_movement.getSourceTotalAssetPrice())
+      self.assertEqual(result['client2'], client2_movement.getDestinationCredit())
+
+      pl_movement_list = [m for m in movement_list
+                          if m.getDestinationValue() == pl]
+      self.assertEqual(1, len(pl_movement_list))
+      pl_movement = pl_movement_list[0]
+      self.assertEqual([], pl_movement.getValueList('resource'))
+      self.assertEqual(None, pl_movement.getSource())
+      self.assertEqual(pl,
+                        pl_movement.getDestinationValue())
+      self.assertEqual(None,
+                        pl_movement.getSourceSection())
+      self.assertEqual(None, pl_movement.getDestinationTotalAssetPrice())
+      self.assertEqual(None, pl_movement.getSourceTotalAssetPrice())
+      self.assertEqual(result['pl'], pl_movement.getDestinationDebit())
+      self.tic()
+
+  def test_createBalanceOnLedgerWithAllTransactionsWithLedger(self):
+    self.setUpLedger()
+    organisation_module = self.organisation_module
+    period = self.section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStopDate(DateTime(2006, 12, 31))
+
+    pl = self.portal.account_module.newContent(
+          portal_type='Account',
+          account_type='equity')
+
+    # 2 Transactions for clients 1 and 2 on ledger accounting/general
+    transaction1 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        portal_type='Sale Invoice Transaction',
+        ledger='accounting/general',
+        destination_section_value=organisation_module.client_1,
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_debit=100),
+               dict(source_value=self.account_module.receivable,
+                    source_credit=100)))
+
+    transaction2 = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        portal_type='Sale Invoice Transaction',
+        ledger='accounting/general',
+        destination_section_value=organisation_module.client_2,
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_debit=200),
+               dict(source_value=self.account_module.receivable,
+                    source_credit=200)))
+
+    # 2 Transactions for clients 1 and 2 on ledger accounting/detailed
+    transaction3 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        portal_type='Sale Invoice Transaction',
+        ledger='accounting/detailed',
+        destination_section_value=organisation_module.client_1,
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_debit=400),
+               dict(source_value=self.account_module.receivable,
+                    source_credit=400)))
+
+    transaction4 = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        portal_type='Sale Invoice Transaction',
+        ledger='accounting/detailed',
+        destination_section_value=organisation_module.client_2,
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_debit=800),
+               dict(source_value=self.account_module.receivable,
+                    source_credit=800)))
+
+    period.AccountingPeriod_createBalanceTransaction(
+                               profit_and_loss_account=pl.getRelativeUrl())
+    accounting_transaction_list = self.accounting_module.contentValues()
+    self.assertEqual(6, len(accounting_transaction_list))
+    balance_transaction_list = self.accounting_module.contentValues(
+                              portal_type='Balance Transaction')
+    self.assertEqual(2, len(balance_transaction_list))
+
+    # 1st balance has 3 lines :           # 2nd balance has 3 lines :
+    #   on ledger/accounting/general      #   on ledger/accounting/detailed
+    #   pl                 = 300 D        #   pl                 = 1200 D
+    #   receivable/client1 =      200 C   #   receivable/client1 =       800 C
+    #   receivable/client2 =      100 C   #   receivable/client2 =       400 C
+
+    result_mapping = {}
+    result_mapping['accounting/general'] = {'client1': 100., 'client2': 200., 'pl': 300.}
+    result_mapping['accounting/detailed'] = {'client1': 400., 'client2': 800., 'pl': 1200.}
+
+    for balance_transaction in balance_transaction_list:
+
+      self.assertEqual(self.section,
+                       balance_transaction.getDestinationSectionValue())
+      self.assertEqual(None, balance_transaction.getSourceSection())
+      self.assertEqual(DateTime(2007, 1, 1),
+                       balance_transaction.getStartDate())
+      self.assertEqual('currency_module/euro',
+                       balance_transaction.getResource())
+      self.assertEqual('delivered', balance_transaction.getSimulationState())
+      movement_list = balance_transaction.getMovementList()
+      self.assertEqual(3, len(movement_list))
+
+      current_ledger = balance_transaction.getLedger()
+      assert current_ledger in ('accounting/general', 'accounting/detailed')
+      result = result_mapping[current_ledger]
+
+      client1_movement_list = [m for m in movement_list
+       if m.getSourceSectionValue() == organisation_module.client_1]
+      self.assertEqual(1, len(client1_movement_list))
+      client1_movement = client1_movement_list[0]
+      self.assertEqual([], client1_movement.getValueList('resource'))
+      self.assertEqual([], client1_movement.getValueList('destination_section'))
+      self.assertEqual(None, client1_movement.getSource())
+      self.assertEqual(self.account_module.receivable,
+                        client1_movement.getDestinationValue())
+      self.assertEqual(organisation_module.client_1,
+                        client1_movement.getSourceSectionValue())
+      self.assertEqual(None, client1_movement.getDestinationTotalAssetPrice())
+      self.assertEqual(None, client1_movement.getSourceTotalAssetPrice())
+      self.assertEqual(result['client1'], client1_movement.getDestinationCredit())
+
+      client2_movement_list = [m for m in movement_list
+       if m.getSourceSectionValue() == organisation_module.client_2]
+      self.assertEqual(1, len(client2_movement_list))
+      client2_movement = client2_movement_list[0]
+      self.assertEqual([], client2_movement.getValueList('resource'))
+      self.assertEqual([], client2_movement.getValueList('destination_section'))
+      self.assertEqual(None, client2_movement.getSource())
+      self.assertEqual(self.account_module.receivable,
+                        client2_movement.getDestinationValue())
+      self.assertEqual(organisation_module.client_2,
+                        client2_movement.getSourceSectionValue())
+      self.assertEqual(None, client2_movement.getDestinationTotalAssetPrice())
+      self.assertEqual(None, client2_movement.getSourceTotalAssetPrice())
+      self.assertEqual(result['client2'], client2_movement.getDestinationCredit())
+
+      pl_movement_list = [m for m in movement_list
+                          if m.getDestinationValue() == pl]
+      self.assertEqual(1, len(pl_movement_list))
+      pl_movement = pl_movement_list[0]
+      self.assertEqual([], pl_movement.getValueList('resource'))
+      self.assertEqual(None, pl_movement.getSource())
+      self.assertEqual(pl,
+                        pl_movement.getDestinationValue())
+      self.assertEqual(None,
+                        pl_movement.getSourceSection())
+      self.assertEqual(None, pl_movement.getDestinationTotalAssetPrice())
+      self.assertEqual(None, pl_movement.getSourceTotalAssetPrice())
+      self.assertEqual(result['pl'], pl_movement.getDestinationDebit())
+      self.tic()
+
+    def testStockTableContent():
+      q = self.portal.erp5_sql_connection.manage_test
+      self.assertEqual(2, q(
+        "SELECT count(*) FROM stock WHERE portal_type="
+        "'Balance Transaction Line'")[0][0])
+      self.assertEqual(300, q(
+        "SELECT sum(total_price) FROM stock WHERE portal_type="
+        "'Balance Transaction Line' AND ledger_uid="
+        "%s GROUP BY ledger_uid" %
+        self.portal.portal_categories.ledger.accounting.general.getUid())[0][0])
+      self.assertEqual(300, q(
+        "SELECT sum(quantity) FROM stock WHERE portal_type="
+        "'Balance Transaction Line' AND ledger_uid="
+        "%s GROUP BY ledger_uid" %
+        self.portal.portal_categories.ledger.accounting.general.getUid())[0][0])
+      self.assertEqual(1200, q(
+        "SELECT sum(total_price) FROM stock WHERE portal_type="
+        "'Balance Transaction Line' AND ledger_uid="
+        "%s GROUP BY ledger_uid" % self.portal.portal_categories.ledger.accounting.detailed.getUid())[0][0])
+      self.assertEqual(1200, q(
+        "SELECT sum(quantity) FROM stock WHERE portal_type="
+        "'Balance Transaction Line' AND ledger_uid="
+        "%s GROUP BY ledger_uid" % self.portal.portal_categories.ledger.accounting.detailed.getUid())[0][0])
+
+    # now check content of stock table
+    testStockTableContent()
+    balance_transaction.immediateReindexObject()
+    self.tic()
+    testStockTableContent()
 
   def test_createBalanceOnMirrorSectionMultiCurrency(self):
     pl = self.portal.account_module.newContent(
