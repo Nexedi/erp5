@@ -101,22 +101,22 @@ Test Transactions related to an Organisation, with start date
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[9]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[10]</td>
   <td>72600.00</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[10]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[11]</td>
   <td>1100.00</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[12]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[13]</td>
   <td>71500.00</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[13]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[14]</td>
   <td>71500.00</td>
 </tr>
 <!-- }}} -->
@@ -134,27 +134,27 @@ Test Transactions related to an Organisation, with start date
 </tr>
 <tr>
   <td>verifyText</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[8]</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[9]</td>
   <td>Posted to General Ledger</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[9]</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[10]</td>
   <td>13200.0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[10]</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[11]</td>
   <td>0.00</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[12]</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[13]</td>
   <td>13200.00</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[13]</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[14]</td>
   <td>84700.00</td>
 </tr>
 <!-- }}} -->
@@ -162,17 +162,17 @@ Test Transactions related to an Organisation, with start date
 <!-- Stat line {{{ -->
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
-  <td>446600.0</td>
-</tr>
-<tr>
-  <td>verifyFloat</td>
   <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[10]</td>
   <td>446600.0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[12]</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[11]</td>
+  <td>446600.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[13]</td>
   <td>0</td>
 </tr>
 <!-- }}} -->
@@ -205,22 +205,22 @@ Test Transactions related to an Organisation, with start date
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[9]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[10]</td>
   <td>0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[10]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[11]</td>
   <td>12100</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[12]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[13]</td>
   <td>-12100</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[13]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[14]</td>
   <td>181500</td>
 </tr>
 <!-- }}} -->
@@ -228,17 +228,17 @@ Test Transactions related to an Organisation, with start date
 <!-- Stat line again {{{ -->
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
-  <td>446600.0</td>
-</tr>
-<tr>
-  <td>verifyFloat</td>
   <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[10]</td>
   <td>446600.0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[12]</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[11]</td>
+  <td>446600.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[13]</td>
   <td>0</td>
 </tr>
 <!-- }}} -->

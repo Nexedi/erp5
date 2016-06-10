@@ -52,17 +52,17 @@ Test Transactions related to an Organisation, with multiple pages and date range
 
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
-  <td>446600.00</td>
-</tr>
-<tr>
-  <td>verifyFloat</td>
   <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[10]</td>
   <td>446600.00</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[12]</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[11]</td>
+  <td>446600.00</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[13]</td>
   <td>0.0</td>
 </tr>
 <!-- }}} -->
@@ -116,42 +116,37 @@ Test Transactions related to an Organisation, with multiple pages and date range
 </tr>
 <tr>
   <td>verifyText</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[8]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[9]</td>
   <td>Posted to General Ledger</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[9]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[10]</td>
   <td>17600.00</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[10]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[11]</td>
   <td>0</td>
 </tr>
 <tr>
   <td>verifyText</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[11]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[12]</td>
   <td></td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[12]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[13]</td>
   <td>17600.00</td>
 </tr>
 <!-- this is the same as the last net_balance from the previous page -->
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[13]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[14]</td>
   <td>133100.00</td>
 </tr>
 
 <!-- Stats should not change -->
-<tr>
-  <td>verifyFloat</td>
-  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
-  <td>446600.00</td>
-</tr>
 <tr>
   <td>verifyFloat</td>
   <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[10]</td>
@@ -159,7 +154,12 @@ Test Transactions related to an Organisation, with multiple pages and date range
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[12]</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[11]</td>
+  <td>446600.00</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[13]</td>
   <td>0.0</td>
 </tr>
 <!-- }}} -->
