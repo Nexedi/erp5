@@ -93,29 +93,28 @@ class Inventory(Delivery):
     to have our own temp object constructor, this is usefull if we
     want to use some classes with some particular methods
     """
+    portal = self.getPortalObject()
     sql_catalog_id = kw.pop("sql_catalog_id", None)
     disable_archive = kw.pop("disable_archive", 0)
 
-    draft_state_list = list(self.getPortalDraftOrderStateList())
+    state = self.getSimulationState()
     # we need reindex when cancelling inventories
-    if 'cancelled' in draft_state_list:
-      draft_state_list.remove('cancelled')
-    if self.getSimulationState() in draft_state_list:
+    if (state in portal.getPortalDraftOrderStateList() and
+        state != 'cancelled'):
       # this prevent from trying to calculate stock
       # with not all properties defined and thus making
       # request with no condition in mysql
-      object_list = [self]
       immediate_reindex_archive = sql_catalog_id is not None
-      self.portal_catalog.catalogObjectList(object_list,
-                                            sql_catalog_id = sql_catalog_id,
-                                            disable_archive=disable_archive,
-                                            immediate_reindex_archive=immediate_reindex_archive)
+      portal.portal_catalog.catalogObjectList([self],
+        sql_catalog_id = sql_catalog_id,
+        disable_archive=disable_archive,
+        immediate_reindex_archive=immediate_reindex_archive)
       return
 
     connection_id = None
     if sql_catalog_id is not None:
       # try to get connection used in the catalog
-      catalog = self.portal_catalog[sql_catalog_id]
+      catalog = portal.portal_catalog[sql_catalog_id]
       for method in catalog.objectValues():
         if method.meta_type == "Z SQL Method":
           if 'deferred' not in method.connection_id \
@@ -150,8 +149,7 @@ class Inventory(Delivery):
 
 
     if temp_constructor is None:
-      from Products.ERP5Type.Document import newTempMovement
-      temp_constructor = newTempMovement
+      from Products.ERP5Type.Document import newTempMovement as temp_constructor
     stop_date = self.getStopDate()
 
     stock_object_list = []
@@ -162,7 +160,7 @@ class Inventory(Delivery):
       # build a dict containing all inventory for this node
       # group by resource/variation and then subvariation
       current_inventory_list = \
-          self.getPortalObject().portal_simulation.getCurrentInventoryList(
+          portal.portal_simulation.getCurrentInventoryList(
                   to_date=stop_date,
                   connection_id=connection_id,
                   **inventory_calculation_dict['inventory_params']
@@ -326,23 +324,22 @@ class Inventory(Delivery):
             stock_append(temp_delivery_line)
 
     # Reindex objects
-    object_list = [self]
     immediate_reindex_archive = sql_catalog_id is not None
-    self.portal_catalog.catalogObjectList(object_list,
-                                          sql_catalog_id = sql_catalog_id,
-                                          disable_archive=disable_archive,
-                                          immediate_reindex_archive=immediate_reindex_archive)
+    portal.portal_catalog.catalogObjectList([self],
+      sql_catalog_id = sql_catalog_id,
+      disable_archive=disable_archive,
+      immediate_reindex_archive=immediate_reindex_archive)
 
     if stock_object_list:
       # Delete existing stock records and old inventory_cache first.
-      self.portal_catalog.catalogObjectList(
+      portal.portal_catalog.catalogObjectList(
            stock_object_list[:], method_id_list=('z0_uncatalog_stock',
                                                  'SQLCatalog_trimInventoryCacheOnCatalog', ),
            sql_catalog_id = sql_catalog_id,
            disable_cache=1, check_uid=0, disable_archive=disable_archive,
            immediate_reindex_archive=immediate_reindex_archive)
       # Then insert new records without delete.
-      self.portal_catalog.catalogObjectList(
+      portal.portal_catalog.catalogObjectList(
            stock_object_list[:], method_id_list=('z_catalog_stock_list_without_delete_for_inventory_virtual_movement', ),
            sql_catalog_id = sql_catalog_id,
            disable_cache=1, check_uid=0, disable_archive=disable_archive,
