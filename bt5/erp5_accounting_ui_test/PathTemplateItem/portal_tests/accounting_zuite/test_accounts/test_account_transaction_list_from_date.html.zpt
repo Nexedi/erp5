@@ -112,23 +112,28 @@ Test Transactions related to an account, with from date parameter
   <td></td>
 </tr>
 <tr>
-  <td>verifyFloat</td>
+  <td>verifyText</td>
   <td>//tr[@class='listbox-data-line-0 DataA']/td[8]</td>
-  <td>217800.0</td>
+  <td></td>
 </tr>
 <tr>
   <td>verifyFloat</td>
   <td>//tr[@class='listbox-data-line-0 DataA']/td[9]</td>
-  <td>3300</td>
+  <td>217800.0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
   <td>//tr[@class='listbox-data-line-0 DataA']/td[10]</td>
-  <td>214500.0</td>
+  <td>3300</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
   <td>//tr[@class='listbox-data-line-0 DataA']/td[11]</td>
+  <td>214500.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[12]</td>
   <td>214500.0</td>
 </tr>
 <!-- }}} -->
@@ -139,17 +144,17 @@ client 1 invoice or client 2 invoice will have the first uid. -->
 <!-- {{{ stat line -->
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[8]</td>
-  <td>1339800.0</td>
-</tr>
-<tr>
-  <td>verifyFloat</td>
   <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
   <td>1339800.0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
   <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[10]</td>
+  <td>1339800.0</td>
+</tr>
+<tr>
+  <td>verifyFloat</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[11]</td>
   <td>0.0</td>
 </tr>
 <!-- }}} -->
