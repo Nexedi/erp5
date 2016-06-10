@@ -331,16 +331,17 @@ class Inventory(Delivery):
       immediate_reindex_archive=immediate_reindex_archive)
 
     if stock_object_list:
+      kw = dict(sql_catalog_id=sql_catalog_id,
+           disable_cache=1, check_uid=0, disable_archive=disable_archive,
+           immediate_reindex_archive=immediate_reindex_archive)
+      method_id_list = ['z0_uncatalog_stock']
+      script_id = 'SQLCatalog_trimInventoryCacheOnCatalog'
+      if getattr(portal, script_id, None) is not None:
+        method_id_list.append(script_id)
       # Delete existing stock records and old inventory_cache first.
       portal.portal_catalog.catalogObjectList(
-           stock_object_list[:], method_id_list=('z0_uncatalog_stock',
-                                                 'SQLCatalog_trimInventoryCacheOnCatalog', ),
-           sql_catalog_id = sql_catalog_id,
-           disable_cache=1, check_uid=0, disable_archive=disable_archive,
-           immediate_reindex_archive=immediate_reindex_archive)
+           stock_object_list[:], method_id_list=method_id_list, **kw)
       # Then insert new records without delete.
       portal.portal_catalog.catalogObjectList(
-           stock_object_list[:], method_id_list=('z_catalog_stock_list_without_delete_for_inventory_virtual_movement', ),
-           sql_catalog_id = sql_catalog_id,
-           disable_cache=1, check_uid=0, disable_archive=disable_archive,
-           immediate_reindex_archive=immediate_reindex_archive)
+           stock_object_list, method_id_list=('z_catalog_stock_list_without_delete_for_inventory_virtual_movement', ),
+           **kw)
