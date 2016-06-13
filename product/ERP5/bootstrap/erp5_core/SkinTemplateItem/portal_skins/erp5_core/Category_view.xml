@@ -80,13 +80,7 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_codification</string>
-                        <string>listbox_id</string>
-                        <string>listbox_int_index</string>
-                        <string>listbox_title</string>
-                        <string>listbox_short_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

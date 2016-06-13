@@ -12,6 +12,11 @@
               <list>
                 <string>columns</string>
                 <string>editable_columns</string>
+                <string>all_columns</string>
+                <string>columns</string>
+                <string>editable_columns</string>
+                <string>report_root_list</string>
+                <string>report_tree</string>
                 <string>search</string>
                 <string>select</string>
                 <string>selection_name</string>
@@ -98,6 +103,33 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>translated_title</string>
+                          <string>Translated Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>all_editable_columns</string> </key>
                     <value>
                       <list/>
@@ -154,6 +186,10 @@
                           <string>int_index</string>
                           <string>int_index</string>
                         </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -164,6 +200,21 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>report_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>parent</string>
+                          <string>Parent</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>report_tree</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>search</string> </key>

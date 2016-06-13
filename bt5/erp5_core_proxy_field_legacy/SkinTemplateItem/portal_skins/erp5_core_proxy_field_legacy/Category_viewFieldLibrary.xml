@@ -96,6 +96,8 @@
                         <string>my_translated_validation_state_title</string>
                         <string>listbox_short_title</string>
                         <string>my_reference</string>
+                        <string>listbox_reference</string>
+                        <string>listbox_codification</string>
                       </list>
                     </value>
                 </item>
