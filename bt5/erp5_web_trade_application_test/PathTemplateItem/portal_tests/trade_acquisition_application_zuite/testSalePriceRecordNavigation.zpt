@@ -14,7 +14,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/super_test/</td>
+  <td>${base_url}/web_site_module/trade_application/</td>
   <td></td>
 </tr>
 <tr>
