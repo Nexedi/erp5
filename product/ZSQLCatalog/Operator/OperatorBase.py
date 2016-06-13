@@ -29,6 +29,7 @@
 ##############################################################################
 
 from zLOG import LOG
+from DateTime import DateTime
 from Products.ZSQLCatalog.interfaces.operator import IOperator
 from Products.ZSQLCatalog.Utils import sqlquote as escapeString
 from zope.interface.verify import verifyClass
@@ -50,16 +51,18 @@ def valueNoneRenderer(value):
   return 'NULL'
 
 value_renderer = {
-  'int': str,
-  'long': str,
-  'float': valueFloatRenderer,
-  'DateTime': valueDateTimeRenderer,
-  'NoneType': valueNoneRenderer,
-  'bool': int,
+  int: str,
+  long: str,
+  float: valueFloatRenderer,
+  DateTime: valueDateTimeRenderer,
+  None.__class__: valueNoneRenderer,
+  bool: int,
+  str: escapeString,
+  unicode: escapeString,
 }
 
 value_search_text_renderer = {
-  'DateTime': str,
+  DateTime: str,
 }
 
 def valueDefaultSearchTextRenderer(value):
@@ -111,7 +114,9 @@ class OperatorBase(object):
   def getOperatorSearchText(self):
     return self.operator_search_text
 
-  def _render(self, column, value):
+  def _render(self, column, value,
+              value_renderer_get={k.__name__: v
+                for k, v in value_renderer.iteritems()}.get):
     """
       Render given column and value for use in SQL.
       Value is rendered to convert it to SQL-friendly value.
@@ -125,26 +130,25 @@ class OperatorBase(object):
     if isinstance(value, dict):
       type = value['type']
       column = column_renderer.get(type, columnDefaultRenderer)(column, format=value['format'])
-      value = value_renderer.get(type, valueDefaultRenderer)(value['query'])
+      value = value_renderer_get(type, valueDefaultRenderer)(value['query'])
     else:
       value = self._renderValue(value)
     return column, value
 
-  def _renderValue(self, value):
+  def _renderValue(self, value,
+                   value_renderer_get=value_renderer.get,
+                   valueDefaultRenderer=valueDefaultRenderer):
     """
       Render given value as string.
 
       value (int, float, long, DateTime, string, None)
         Value to render as a string for use in SQL (quoted, escaped).
     """
-    if isinstance(value, basestring):
-      value = escapeString(value)
-    else:
-      value = value_renderer.get(value.__class__.__name__, valueDefaultRenderer)(value)
-    return value
+    return value_renderer_get(value.__class__, valueDefaultRenderer)(value)
 
   def asSearchText(self, value):
-    return value_search_text_renderer.get(value.__class__.__name__, valueDefaultSearchTextRenderer)(value)
+    return value_search_text_renderer.get(value.__class__,
+                                          valueDefaultSearchTextRenderer)(value)
 
   def asSQLExpression(self, column, value_list, only_group_columns):
     raise NotImplementedError, 'This method must be overloaded by a subclass ' \
