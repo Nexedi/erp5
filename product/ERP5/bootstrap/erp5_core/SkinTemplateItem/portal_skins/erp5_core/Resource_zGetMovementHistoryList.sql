@@ -32,7 +32,6 @@ SELECT DISTINCT
   stock.function_uid AS function_uid,
   stock.project_uid AS project_uid,
   stock.funding_uid AS funding_uid,
-  stock.ledger_uid AS ledger_uid,
   stock.payment_request_uid AS payment_request_uid,
   stock.node_uid AS node_uid,
   stock.section_uid AS section_uid
