@@ -886,8 +886,8 @@ class CatalogTool (BaseTool, ZCatalog, CMFCoreCatalogTool):
 
         return ImplicitAcquisitionWrapper(w, aq_parent(document_object))
 
-    security.declarePrivate('reindexObject')
-    def reindexObject(self, object, idxs=None, sql_catalog_id=None,**kw):
+    security.declarePrivate('reindexCatalogObject')
+    def reindexCatalogObject(self, object, idxs=None, sql_catalog_id=None,**kw):
         '''Update catalog after object data has changed.
         The optional idxs argument is a list of specific indexes
         to update (all of them by default).
@@ -945,8 +945,8 @@ class CatalogTool (BaseTool, ZCatalog, CMFCoreCatalogTool):
           path = self.__url(object)
         self.beforeUncatalogObject(path=path,uid=uid, sql_catalog_id=sql_catalog_id)
 
-    security.declarePrivate('getUrl')
-    def getUrl(self, object):
+    security.declarePrivate('getCatalogUrl')
+    def getCatalogUrl(self, object):
       return self.__url(object)
 
     security.declarePrivate('moveObject')
