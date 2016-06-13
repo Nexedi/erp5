@@ -832,7 +832,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           source_credit=300.0)))
 
   @UnrestrictedMethod
-  def createLedgerCategories(self):
+  def createLedgerCategory(self):
     ledger = self.portal.portal_categories.ledger
     self.accounting_ledger = ledger.get('accounting', None)
     if self.accounting_ledger is None:
