@@ -64,12 +64,6 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -77,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_trade_widget_listbox.js</string> </value>
+            <value> <string>renderjs.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_trade_widget_listbox_js</string> </value>
+            <value> <string>rjs_renderjs_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -105,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Trade Widget Listbox JS</string> </value>
+            <value> <string>RenderJS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -169,7 +163,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -191,7 +185,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1460037867.59</float>
+                        <float>1440175545.67</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -236,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>951.10752.44007.3805</string> </value>
+                <value> <string>946.5479.64168.11417</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,8 +248,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1463143758.73</float>
-                        <string>UTC</string>
+                        <float>1444839118.63</float>
+                        <string>GMT+8</string>
                       </tuple>
                     </state>
                   </object>
@@ -281,7 +275,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -311,7 +305,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1460037759.51</float>
+                        <float>1440175328.89</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -64,26 +64,14 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>classification/collaborative/team</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_trade_widget_listbox.html</string> </value>
+            <value> <string>jiodev.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_trade_widget_listbox_html</string> </value>
+            <value> <string>rjs_jio_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -101,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -111,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Trade Widget Listbox</string> </value>
+            <value> <string>jio.js</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -175,7 +163,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -197,8 +185,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1460037872.18</float>
-                        <string>UTC</string>
+                        <float>1406898405.92</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
@@ -242,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>950.23084.35212.6024</string> </value>
+                <value> <string>947.36734.40776.11025</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,8 +248,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1460037959.31</float>
-                        <string>UTC</string>
+                        <float>1449467603.93</float>
+                        <string>GMT+8</string>
                       </tuple>
                     </state>
                   </object>
@@ -287,7 +275,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -317,8 +305,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1460037756.29</float>
-                        <string>UTC</string>
+                        <float>1405087167.31</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
