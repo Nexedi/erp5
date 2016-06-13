@@ -62,22 +62,22 @@ Test Transactions related to an account
 </tr>
 <tr>
   <td>verifyText</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[8]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[7]</td>
   <td>Posted to General Ledger</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[9]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[8]</td>
   <td>2200.0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[10]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[9]</td>
   <td>0.0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[11]</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[10]</td>
   <td>2200.0</td>
 </tr>
 
@@ -103,27 +103,27 @@ Test Transactions related to an account
 </tr>
 <tr>
   <td>verifyText</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[8]</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[7]</td>
   <td>Posted to General Ledger</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[9]</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[8]</td>
   <td>3300.0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[10]</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[9]</td>
   <td>0.0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[11]</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[10]</td>
   <td>3300.0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[12]</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[11]</td>
   <td>5500.0</td>
 </tr>
 <!-- }}} -->
@@ -131,17 +131,17 @@ Test Transactions related to an account
 <!-- {{{ stat line -->
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[8]</td>
   <td>5500.0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[10]</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
   <td>0.0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[11]</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[10]</td>
   <td>5500.0</td>
 </tr>
 <!-- 2}}} -->

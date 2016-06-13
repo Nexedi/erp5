@@ -73,12 +73,12 @@ Test Transactions related to an account, with at date parameter
 <!-- List lines {{{ -->
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[12]</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[11]</td>
   <td>3300.0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox-data-line-3 DataB']/td[12]</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[11]</td>
   <td>9900.0</td>
 </tr>
 <!-- }}} -->
@@ -86,17 +86,17 @@ Test Transactions related to an account, with at date parameter
 <!-- {{{ stat line -->
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[8]</td>
   <td>217800.0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[10]</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[9]</td>
   <td>3300.0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
-  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[11]</td>
+  <td>//tr[@class='listbox_stat_line listbox-stat-line']/td[10]</td>
   <td>214500</td>
 </tr>
 <!-- }}} -->
