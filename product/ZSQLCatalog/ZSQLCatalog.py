@@ -1088,7 +1088,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
-      return apply(catalog.searchResults, (REQUEST, ), kw)
+      return catalog.searchResults(REQUEST, **kw)
     return []
 
   __call__=searchResults
@@ -1100,7 +1100,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
-      return apply(catalog.countResults, (REQUEST, ), kw)
+      return catalog.countResults(REQUEST, **kw)
     return []
 
 ## this stuff is so the find machinery works

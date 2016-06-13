@@ -150,7 +150,6 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
               dict = {}
               # Patch for ERP5 by JP Smets in order
               # to implement worklists and search of local roles
-              searchres_len = 0
               var_match_keys = qdef.getVarMatchKeys()
               if var_match_keys:
                   # Check the catalog for items in the worklist.
@@ -175,9 +174,11 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
                     dict['local_roles'] = guard.roles
                   # Patch to use ZSQLCatalog and get high speed
                   # LOG("PatchedDCWorkflowDefinition", 0, dict)
-                  searchres_len = int(apply(catalog.countResults, (), dict)[0][0])
-                  if searchres_len == 0:
+                  searchres_len = catalog.countResults(**dict)[0][0]
+                  if not searchres_len:
                     continue
+              else:
+                  searchres_len = 0
               if fmt_data is None:
                   fmt_data = TemplateDict()
                   fmt_data._push(info)

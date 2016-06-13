@@ -203,7 +203,7 @@ class WorkflowMethod(Method):
 
     # Try to return immediately if there are no transition to invoke
     if not candidate_transition_item_list:
-      return apply(self.__dict__['_m'], (instance,) + args, kw)
+      return self.__dict__['_m'](instance, *args, **kw)
 
     # Prepare a list of transitions which should be invoked.
     # This list is based on the results of isWorkflowMethodSupported.
@@ -240,7 +240,7 @@ class WorkflowMethod(Method):
        wf[wf_id].notifyBefore(instance, transition_list, args=args, kw=kw)
 
     # Compute expected result
-    result = apply(self.__dict__['_m'], (instance,) + args, kw)
+    result = self.__dict__['_m'](instance, *args, **kw)
 
     # Change the state of statefull workflows
     for wf_id, transition_list in valid_transition_item_list:

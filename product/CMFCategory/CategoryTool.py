@@ -179,7 +179,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       return filt
 
     def _buildQuery(self, spec, filter, kw):
-      return apply( ContentFilter, (), self._buildFilter(spec, filter, kw) )
+      return ContentFilter(**self._buildFilter(spec, filter, kw))
 
     # Category accessors
     security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryList')
