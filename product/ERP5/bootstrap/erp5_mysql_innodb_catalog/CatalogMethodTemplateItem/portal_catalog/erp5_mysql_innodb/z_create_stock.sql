@@ -35,7 +35,6 @@ CREATE TABLE `stock` (
   KEY `node_uid` (`node_uid`),
   KEY `payment_uid` (`payment_uid`),
   KEY `function_uid` (`function_uid`),
-  KEY `ledger_uid` (`ledger_uid`),
   KEY `payment_request_uid` (`payment_request_uid`),
   KEY `project_uid` (`project_uid`),
   KEY `funding_uid` (`funding_uid`),
