@@ -175,7 +175,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
               'function/function1',
               'function/function1/function2',
               'ledger/accounting',
-              'ledger/accounting/detailled',
+              'ledger/accounting/detailed',
               'ledger/accounting/general',
            # we create a huge group category for consolidation tests
            ) + self.GROUP_CATEGORIES + self.VARIATION_CATEGORIES
@@ -471,12 +471,12 @@ class TestInventory(InventoryAPITestCase):
     self._makeMovement(quantity=100, source_value=None,
                        ledger='accounting/general')
     self._makeMovement(quantity=50, source_value=None,
-                       ledger='accounting/detailled')
+                       ledger='accounting/detailed')
 
     self.assertInventoryEquals(100, ledger='ledger/accounting/general')
-    self.assertInventoryEquals(50, ledger='ledger/accounting/detailled')
+    self.assertInventoryEquals(50, ledger='ledger/accounting/detailed')
     self.assertInventoryEquals(150, ledger=['ledger/accounting/general',
-                                            'ledger/accounting/detailled'])
+                                            'ledger/accounting/detailed'])
 
   def test_LedgerUid(self):
     """Tests inventory on ledger uid"""
@@ -487,7 +487,7 @@ class TestInventory(InventoryAPITestCase):
     self.assertInventoryEquals(100,
                             ledger_uid=ledger.accounting.general.getUid())
     self.assertInventoryEquals(0,
-                            ledger_uid=ledger.accounting.detailled.getUid())
+                            ledger_uid=ledger.accounting.detailed.getUid())
 
   def test_LedgerCategory(self):
     """Tests inventory on ledger category"""
@@ -1084,7 +1084,7 @@ class TestInventoryList(InventoryAPITestCase):
 
     self._makeMovement(ledger='accounting/general', quantity=100)
     self._makeMovement(ledger='accounting/general', quantity=30)
-    self._makeMovement(ledger='accounting/detailled', quantity=70)
+    self._makeMovement(ledger='accounting/detailed', quantity=70)
 
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       group_by_ledger=1)
@@ -1093,7 +1093,7 @@ class TestInventoryList(InventoryAPITestCase):
     self.assertEqual([r for r in inventory_list if r.ledger_uid ==
       ledger.accounting.general.getUid()][0].inventory, 130)
     self.assertEqual([r for r in inventory_list if r.ledger_uid ==
-      ledger.accounting.detailled.getUid()][0].inventory, 70)
+      ledger.accounting.detailed.getUid()][0].inventory, 70)
 
   def test_GroupByPaymentRequest(self):
     getInventoryList = self.getSimulationTool().getInventoryList
@@ -1832,7 +1832,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     ledger = self.portal.portal_categories.ledger
 
     mvt = self._makeMovement(quantity=100, ledger="accounting/general")
-    another_mvt = self._makeMovement(quantity=50, ledger="accounting/detailled")
+    another_mvt = self._makeMovement(quantity=50, ledger="accounting/detailed")
 
     # first ledger
     mvt_history_list = getMovementHistoryList(
@@ -1844,7 +1844,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     # second ledger
     mvt_history_list = getMovementHistoryList(
                             node_uid=self.node.getUid(),
-                            ledger_uid=ledger.accounting.detailled.getUid())
+                            ledger_uid=ledger.accounting.detailed.getUid())
     self.assertEqual(1, len(mvt_history_list))
     self.assertEqual(50, mvt_history_list[0].total_quantity)
 
