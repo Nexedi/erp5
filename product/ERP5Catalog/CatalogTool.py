@@ -837,8 +837,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         wrapped_object_list.append(ImplicitAcquisitionWrapper(w, aq_parent(document_object)))
       return wrapped_object_list
 
-    security.declarePrivate('reindexObject')
-    def reindexObject(self, object, idxs=None, sql_catalog_id=None,**kw):
+    security.declarePrivate('reindexCatalogObject')
+    def reindexCatalogObject(self, object, idxs=None, sql_catalog_id=None,**kw):
         '''Update catalog after object data has changed.
         The optional idxs argument is a list of specific indexes
         to update (all of them by default).
@@ -846,6 +846,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if idxs is None: idxs = []
         url = self.__url(object)
         self.catalog_object(object, url, idxs=idxs, sql_catalog_id=sql_catalog_id,**kw)
+
+    # Required for compatibilty with ERP5CatalogTool
+    security.declarePrivate('reindexObject')
+    reindexObject = reindexCatalogObject
 
 
     def catalogObjectList(self, object_list, *args, **kw):
