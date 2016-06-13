@@ -173,10 +173,6 @@
                           <string>Transaction Reference</string>
                         </tuple>
                         <tuple>
-                          <string>ledger_title</string>
-                          <string>Ledger</string>
-                        </tuple>
-                        <tuple>
                           <string>getTranslatedSimulationStateTitle</string>
                           <string>State</string>
                         </tuple>
