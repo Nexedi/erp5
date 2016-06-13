@@ -866,6 +866,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if idxs is None: idxs = []
         url = self.__url(object)
         self.catalog_object(object, url, idxs=idxs, sql_catalog_id=sql_catalog_id,**kw)
+    # Required for compatibilty with ERP5CatalogTool
+    reindexCatalogObject = reindexObject
 
 
     def catalogObjectList(self, object_list, *args, **kw):
