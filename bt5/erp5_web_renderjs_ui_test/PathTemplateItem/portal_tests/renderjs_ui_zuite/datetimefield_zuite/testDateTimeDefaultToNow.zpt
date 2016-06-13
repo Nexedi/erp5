@@ -54,16 +54,115 @@
   <td>//button[@data-i18n='Proceed']</td>
   <td></td>
 </tr>
+
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Views']</td>
   <td></td>
 </tr>
+
+
+
+
+<tr>
+  <td>storeLocation</td>
+  <td>url</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/bar_module</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']//a</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']//a</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[contains(text(),'DateTimeField')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//span[contains(text(),'DateTimeField')]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='subfield_field_my_start_date_year']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>storeValue</td>
+  <td>//input[@name='subfield_field_my_start_date_year']</td>
+  <td>year</td>
+</tr>
+
+
+
+<tr>
+  <td>storeValue</td>
+  <td>//input[@name='subfield_field_my_start_date_month']</td>
+  <td>month</td>
+</tr>
+
+
+<tr>
+  <td>storeValue</td>
+  <td>//input[@name='subfield_field_my_start_date_day']</td>
+  <td>day</td>
+</tr>
+
+
+<tr>
+  <td>storeEval</td>
+  <td>storedVars['year'] + '-' + storedVars['month'] + '-' + storedVars['day']</td>
+  <td>now</td>
+</tr>
+
+
+<tr>
+  <td>open</td>
+  <td>${url}</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Views']</td>
+  <td></td>
+</tr>
+
+
+
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Views']</td>
   <td></td>
 </tr>
+
 
 <tr>
   <td>waitForElementPresent</td>
@@ -80,12 +179,6 @@
   <td>waitForElementPresent</td>
   <td>//input[@name='field_my_start_date']</td>
   <td></td>
-</tr>
-
-<tr>
-  <td>storeEval</td>
-  <td>(new Date()).toISOString().substring(0, 10);</td>
-  <td>now</td>
 </tr>
 
 
