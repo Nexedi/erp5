@@ -160,17 +160,6 @@ class WorkflowMethod(Method):
     """
       Invoke the wrapped method, and deal with the results.
     """
-    if getattr(self, '__name__', None) in ('getPhysicalPath', 'getId'):
-      # To prevent infinite recursion, 2 methods must have special treatment
-      # this is clearly not the best way to implement this but it is
-      # already better than what we had. I (JPS) would prefer to use
-      # critical sections in this part of the code and a
-      # thread variable which tells in which semantic context the code
-      # should ne executed. - XXX
-      return self._m(instance, *args, **kw)
-
-    # New implementation does not use any longer wrapWorkflowMethod
-    # but directly calls the workflow methods
     try:
       wf = getattr(instance.getPortalObject(), 'portal_workflow')
     except AttributeError:
@@ -633,7 +622,11 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
             continue
 
           # Wrap method
-          if not callable(method):
+          if not callable(method) or method_id in (
+              # To prevent infinite recursion in case of mistake in a worflow,
+              # methods that are always used by WorkflowMethod.__call__
+              # must be excluded.
+              'getPortalObject', 'getPhysicalPath', 'getId'):
             LOG('initializePortalTypeDynamicWorkflowMethods', 100,
                 'WARNING! Can not initialize %s on %s' % \
                   (method_id, portal_type))
