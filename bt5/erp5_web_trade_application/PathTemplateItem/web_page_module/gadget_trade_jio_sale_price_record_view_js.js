@@ -342,10 +342,10 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
         editable,
         state;
       page_gadget.options = options;
-      if (page_gadget.options.doc.sync_flag === 1) {
-        sycn_method = "Ready To Sync";
+      if (page_gadget.options.doc.sync_flag === "1") {
+        sycn_method = "1";
       } else {
-        sycn_method = "Do Not Sync";
+        sycn_method = "0";
       }
       state = translateString(getWorkflowState(
         page_gadget.options.doc.portal_type,
@@ -855,9 +855,9 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
           return gadget.jio_put(gadget.options.jio_key, current_doc);
         })
         .push(function () {
-          return gadget.redirect({command: 'display', options: {jio_key: new_id, page: "view"}
-            
-          });
+          return gadget.redirect({command: 'display',
+            options: {jio_key: new_id, page: "view"}
+            });
         });
 
     })
@@ -879,7 +879,6 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
             return erp5_form.getContent();
           })
           .push(function (doc) {
-
             doc.parent_relative_url = "sale_price_record_module";
             doc.portal_type = "Sale Price Record";
             doc.doc_id = form_gadget.options.doc.doc_id;
@@ -888,25 +887,17 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
             if (doc.sync_flag !== "1") {
               doc.portal_type = 'Sale Price Record Temp'; // For to avoid sync
             }
-
-
             addTemporaryCustomer(form_gadget);
-
-            return form_gadget.jio_put(form_gadget.options.jio_key,doc);
-
+            return form_gadget.jio_put(form_gadget.options.jio_key, doc);
           })
-
           .push(function () {
-
             return RSVP.all([
               form_gadget.notifySubmitted(),
-              form_gadget.redirect({command: 'display', options: {jio_key: "sale_price_record_module", page: "view"}
-                
-              })
+              form_gadget.redirect({command: 'display',
+                options: {jio_key: "sale_price_record_module", page: "view"}
+                })
             ]);
-
           });
-
       }
 
       // Listen to form submit
@@ -981,9 +972,9 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
           return gadget.jio_post(doc);
         })
         .push(function (response) {
-           return gadget.redirect({command: 'display', options: {jio_key: response, page: "view"}
-         
-          });
+          return gadget.redirect({command: 'display',
+            options: {jio_key: response, page: "view"}
+            });
         });
 
     }

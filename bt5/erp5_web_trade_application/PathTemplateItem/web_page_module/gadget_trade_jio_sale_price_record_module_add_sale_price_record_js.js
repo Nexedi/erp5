@@ -378,14 +378,11 @@
 
             return RSVP.all([
               form_gadget.notifySubmitted(),
-              form_gadget.redirect({command: 'display', options: {jio_key: "sale_price_record_module", page: "view"}
-                
-
-              })
+              form_gadget.redirect({command: 'display',
+                options: {jio_key: "sale_price_record_module", page: "view"}
+                })
             ]);
-
           });
-
       }
 
       // Listen to form submit
@@ -396,8 +393,6 @@
         formSubmit
       );
     })
-
-
 
     .declareMethod("render", function (options) {
       var page_gadget = this,

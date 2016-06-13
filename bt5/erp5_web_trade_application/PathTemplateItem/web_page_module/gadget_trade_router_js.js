@@ -186,8 +186,6 @@
   
   
   function execChangeCommand(previous_options,next_options, drop_options) {
-    
-    
     var options,
       jio_key,
       hash;
@@ -201,27 +199,6 @@
         return synchronousChangeState(hash);
       });
   } 
-  
-  
-  function execStoreAndChangeCommand(previous_options,next_options, drop_options) {
-    
-    
-    
-    var options,
-      jio_key,
-      hash;
-    options = calculateChangeOptions(previous_options, next_options, drop_options);
-
-    jio_key = options.jio_key;
-    delete options.jio_key;
-    hash = getDisplayUrlFor(jio_key, options);
-    return new RSVP.Queue()
-      .push(function () {
-        return synchronousChangeState(hash);
-      });
-  }
-  
-  
   
   
   //////////////////////////////////////////////////////////////////
@@ -324,7 +301,7 @@
     if (command_options.path === COMMAND_INDEX_STATE) {
       return execIndexCommand(next_options);
     }
-    if (command_options.path === COMMAND_STORE_AND_CHANGE_STATE) {
+    if (command_options.path === COMMAND_CHANGE_STATE) {
       return execStoreAndChangeCommand(previous_options, next_options, drop_options);
     }
     if (command_options.path === COMMAND_CHANGE_STATE) {

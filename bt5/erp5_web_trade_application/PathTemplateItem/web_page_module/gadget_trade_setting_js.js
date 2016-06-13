@@ -1,15 +1,15 @@
-/*globals window, rJS, Handlebars, RSVP*/
+/*globals window, rJS, Handlebars, RSVP, location, indexedDB*/
 /*jslint indent: 2, nomen: true, maxlen: 80*/
-(function (window, document, RSVP, rJS, Handlebars, promiseEventListener, loopEventListener, $) {
+(function (window, document, RSVP, rJS, Handlebars,
+  promiseEventListener, loopEventListener, $) {
   "use strict";
 
   var gadget_klass = rJS(window),
     source = gadget_klass.__template_element
                               .querySelector(".view-setting-template")
                               .innerHTML,
-    template = Handlebars.compile(source);
-
-  var update_check_flag = false;
+    template = Handlebars.compile(source),
+    update_check_flag = false;
 
   gadget_klass
     .ready(function (g) {
@@ -26,18 +26,27 @@
     .declareAcquiredMethod("get", "jio_get")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod('allDocs', 'jio_allDocs')
+    .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod("getSetting", "getSetting")
 
     .declareMethod("render", function (options) {
       var gadget = this;
       gadget.options = options;
       return new RSVP.Queue()
-        .push(function (result_list) {
-          return gadget.translateHtml(template({jid:Cookies.get('jid')}));
+        .push(function () {
+          return gadget.getSetting('jid');
+        })
+        .push(function (login) {
+          return gadget.translateHtml(template({jid: login}));
         })
         .push(function (html) {
           gadget.props.element.innerHTML = html;
-          var element = gadget.props.element.querySelector("input[type=radio][value="+Cookies.get('language')+"]");
-          if(element){
+          return gadget.getSetting('language');
+        })
+        .push(function (language) {
+          var element = gadget.props.element
+            .querySelector("input[type=radio][value=" + language + "]");
+          if (element) {
             element.setAttribute('checked', 'checked');
           }
           return gadget.updateHeader({
@@ -54,7 +63,7 @@
     // Form submit
     /////////////////////////////////////////
     .declareService(function () {
-      var gadget = this;
+      var gadget = this, login, passwd;
 
       return new RSVP.Queue()
         .push(function () {
@@ -68,32 +77,38 @@
             false
           );
         })
-        .push(function (submit_event) {
-          gadget.props.element.querySelector("input[type=submit]").disabled = true;
-          var checked_element = gadget.props.element.querySelector("input[type=radio]:checked");
-          if (checked_element != null){
-            var language = checked_element.value;
-            if (language){
-              Cookies.set('language', language, {expires:36500});
+        .push(function () {
+          gadget.props.element
+            .querySelector("input[type=submit]").disabled = true;
+          var checked_element = gadget.props.element
+            .querySelector("input[type=radio]:checked"),
+            language;
+          if (checked_element !== null) {
+            language = checked_element.value;
+            if (language) {
+              return gadget.setSetting('language', language);
             }
           }
-          var login = gadget.props.element.querySelector("input[name=jid]").value;
-          var passwd = gadget.props.element.querySelector("input[name=passwd]").value;
-          if(login){
-            Cookies.remove('jid');
-            Cookies.remove('jid', {path:''});
-            Cookies.remove('jid', {path:'/'});
-            Cookies.set('jid', login, {expires:36500, path:'/'})
-          }
-          if(login && passwd){
-            Cookies.remove('__ac');
-            Cookies.remove('__ac', {path:''});
-            Cookies.remove('__ac', {path:'/'});
-            Cookies.set('__ac', window.btoa(login + ":" + passwd), {expires:36500, path:'/'})
-          }
-          location.reload();
+          return;
         })
         .push(function () {
+          login = gadget.props.element.querySelector("input[name=jid]").value;
+          if (login) {
+            return gadget.setSetting('jid', login);
+          }
+          return;
+        })
+        .push(function () {
+          passwd = gadget.props.element
+            .querySelector("input[name=passwd]").value;
+          if (login && passwd) {
+            var ac = window.btoa(login + ":" + passwd);
+            return gadget.setSetting('_ac', ac);
+          }
+          return;
+        })
+        .push(function () {
+          location.reload();
         });
     })
 
@@ -111,18 +126,19 @@
         .push(function () {
 
           return loopEventListener(
-            gadget.props.element.querySelector('input[type=button][name=reset_database]'),
+            gadget.props.element
+              .querySelector('input[type=button][name=reset_database]'),
             'click',
             false,
-            function (click_event) {
-              return new RSVP.Queue()
-                .push(function () {
-                  indexedDB.deleteDatabase("jio:erp5js_gkr_"+Cookies.get('jid'))
-                  alert('Deleted');
-                })
-            }
+            function () {
+                return new RSVP.Queue()
+                  .push(function () {
+                    indexedDB.deleteDatabase("jio:trade");
+                    //alert('Deleted');
+                  });
+              }
           );
-      })
+        });
     })
 
 
@@ -139,117 +155,120 @@
         .push(function () {
 
           return loopEventListener(
-            gadget.props.element.querySelector('input[type=button][name=update_application]'),
+            gadget.props.element
+              .querySelector('input[type=button][name=update_application]'),
             'click',
             false,
-            function (click_event) {
-              return new RSVP.Queue()
-                .push(function () {
-                  alert(translateString('HTML5 App Update Started'));
-                  update_check_flag = true;
-                  if(window.applicationCache.status == window.applicationCache.UNCACHED){
-                    location.reload();
-                  }else if(window.applicationCache.status == window.applicationCache.IDLE){
-                    try{
-                      window.applicationCache.update();
-                    }catch(error){
+            function () {
+                return new RSVP.Queue()
+                  .push(function () {
+                  //alert(translateString('HTML5 App Update Started'));
+                    update_check_flag = true;
+                    if (window.applicationCache.status
+                        === window.applicationCache.UNCACHED) {
                       location.reload();
+                    } else if (window.applicationCache.status
+                                 === window.applicationCache.IDLE) {
+                      try {
+                        window.applicationCache.update();
+                      } catch (error) {
+                        location.reload();
+                      }
                     }
-                  }
-                })
-            }
+                  });
+              }
           );
-        })
+        });
     })
-    .declareService(function(){
+    .declareService(function () {
       var gadget = this;
       return new RSVP.Queue()
-        .push(function(){
+        .push(function () {
           return gadget.props.deferred.promise;
         })
-        .push(function(){
+        .push(function () {
           return loopEventListener(
             window.applicationCache,
             'cached',
             false,
-            function(event){
+            function () {
               return new RSVP.Queue()
-                .push(function(){
-                alert(translateString('HTML5 App Update Finished'));
-                location.reload();
-                })
+                .push(function () {
+               // alert(translateString('HTML5 App Update Finished'));
+                  location.reload();
+                });
             }
           );
-        })
+        });
     })
-    .declareService(function(){
+    .declareService(function () {
       var gadget = this;
       return new RSVP.Queue()
-        .push(function(){
+        .push(function () {
           return gadget.props.deferred.promise;
         })
-        .push(function(){
+        .push(function () {
           return loopEventListener(
             window.applicationCache,
             'updateready',
             false,
             function(event){
               return new RSVP.Queue()
-                .push(function(){
-                alert(translateString('HTML5 App Update Finished'));
+                .push(function () {
+                //alert(translateString('HTML5 App Update Finished'));
                 location.reload();
-                })
+                });
             }
           );
-        })
+        });
     })
-    .declareService(function(){
+    .declareService(function () {
       var gadget = this;
       return new RSVP.Queue()
-        .push(function(){
+        .push(function () {
           return gadget.props.deferred.promise;
         })
-        .push(function(){
+        .push(function () {
           return loopEventListener(
             window.applicationCache,
             'error',
             false,
             function(event){
               return new RSVP.Queue()
-                .push(function(){
+                .push(function () {
                   window.applicationCache.update();
-                })
+                });
             }
           );
-        })
+        });
     })
-    .declareService(function(){
+    .declareService(function () {
       var gadget = this;
       return new RSVP.Queue()
-        .push(function(){
+        .push(function () {
           return gadget.props.deferred.promise;
         })
-        .push(function(){
+        .push(function () {
           return new RSVP.Queue()
-            .push(function(){
+            .push(function () {
               if(window.applicationCache.status == window.applicationCache.DOWNLOADING){
                 alert(translateString('Downloading New Version Of HTML5 App'));
               }
-            })
+            });
         })
-        .push(function(){
+        .push(function () {
           return loopEventListener(
             window.applicationCache,
             'downloading',
             false,
-            function(event){
+            function(event) {
               return new RSVP.Queue()
-                .push(function(){
-                alert(translateString('Downloading New Version Of HTML5 App'));
-                })
+                .push(function () {
+                //alert(translateString('Downloading New Version Of HTML5 App'));
+                });
             }
           );
-        })
+        });
     })
     .declareService(function(){
       var gadget = this;
@@ -266,10 +285,10 @@
               return new RSVP.Queue()
                 .push(function(){
                   event.loaded / event.total;
-                })
+                });
             }
           );
-        })
+        });
     })
     .declareService(function(){
       var gadget = this;
@@ -285,15 +304,15 @@
             function(event){
               return new RSVP.Queue()
                 .push(function(){
-                if(update_check_flag == true){
+                if(update_check_flag === true){
                   alert(translateString('No HTML5 App Update Found'));
                   update_check_flag = false;
                 }
-                })
+                });
             }
           );
-        })
-    })
+        });
+    });
 
 
 }(window, document, RSVP, rJS, Handlebars, promiseEventListener, loopEventListener, jQuery));

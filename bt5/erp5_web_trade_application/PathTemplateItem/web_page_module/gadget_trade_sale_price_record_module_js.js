@@ -24,7 +24,8 @@
       .allowPublicAcquisition('getUrlParameter', function (argument_list) {
       return this.getUrlParameter(argument_list)
         .push(function (result) {
-          if ((result === undefined) && (argument_list[0] === 'field_listbox_sort_list:json')) {
+          if ((result === undefined) &&
+               (argument_list[0] === 'field_listbox_sort_list:json')) {
             return [['doc_id', 'descending']];
           }
           return result;
@@ -51,8 +52,9 @@
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
-          return gadget.getUrlFor({command: 'display', options: {jio_key: options.jio_key, page: "add_sale_price_record"}})
-           })
+          return gadget.getUrlFor({command: 'display', options:
+            {jio_key: options.jio_key, page: "add_sale_price_record"}});
+        })
         .push(function (url) {
           return gadget.updateHeader({
             title: "Sale Price Record",
@@ -64,7 +66,7 @@
           return gadget.getDeclaredGadget("form_list");
         })
         .push(function (form_gadget) {
-        var column_list = [
+          var column_list = [
             ['doc_id', 'ID'],
             ['product', 'Product'],
             ['priced_quantity', 'Priced Quantity'],
@@ -75,12 +77,9 @@
             ['comment', 'Comment'],
             ['date', 'Input Date'],
             ['inputusername', 'Input User Name'],
-            ['state', 'State'],
-
+            ['state', 'State']
           ];
-        
-        
-        return form_gadget.render({
+          return form_gadget.render({
             erp5_document: {"_embedded": {"_view": {
               "listbox": {
                 "column_list": column_list,
@@ -91,8 +90,8 @@
                 "key": "field_listbox",
                 "lines": 10,
                 "list_method": "portal_catalog",
-                "query": 'urn:jio:allDocs?query='+'portal_type:' +
-                '("Sale Price Record" OR "Sale Price Record Temp")',
+                "query": 'urn:jio:allDocs?query=' + 'portal_type:' +
+                  '("Sale Price Record" OR "Sale Price Record Temp")',
                 "portal_type": [],
                 "search_column_list": column_list,
                 "sort_column_list": column_list,
