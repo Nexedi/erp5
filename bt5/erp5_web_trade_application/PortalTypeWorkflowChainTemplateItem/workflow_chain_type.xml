@@ -5,6 +5,6 @@
  </chain>
  <chain>
   <type>Sale Price Record</type>
-  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow, trade_event_simulation_workflow, trade_jio_interaction_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
 </workflow_chain>
