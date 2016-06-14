@@ -4591,7 +4591,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     transaction_list = [purchase1, sale2, payment3, payment4]
 
     if use_ledger:
-      self.createLedgerCategories()
+      self.createLedgerCategory()
 
       purchase5 = self._makeOne(
             portal_type='Purchase Invoice Transaction',
