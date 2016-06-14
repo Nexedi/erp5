@@ -143,12 +143,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Text Documents']</td>
+  <td>//a[@data-i18n='Document List']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Text Documents']</td>
+  <td>//a[@data-i18n='Document List']</td>
   <td></td>
 </tr>
 <tr>
