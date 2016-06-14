@@ -4425,7 +4425,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     # Other parties report with a filter on ledger
     # This tests works because /for the moment/ any transaction between 2
     # entities belong to the same ledger
-    self.createLedgerCategories()
+    self.createLedgerCategory()
     account_module = self.portal.account_module
     t1 = self._makeOne(
               portal_type='Accounting Transaction',
