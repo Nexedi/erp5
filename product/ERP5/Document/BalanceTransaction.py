@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Inventory import Inventory
 from Products.ERP5.Document.AccountingTransaction import AccountingTransaction
+from Products.ZSQLCatalog.SQLCatalog import Query
 import types
 
 
@@ -136,6 +137,10 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     getInventoryList = self.getPortalObject()\
                             .portal_simulation.getInventoryList
     section_uid = self.getDestinationSectionUid()
+    ledger_uid = self.getLedgerUid()
+    if ledger_uid is None:
+      ledger_uid = Query(ledger_uid=None)
+
     precision = 2
     if section_uid is not None:
       accounting_currency = \
@@ -150,7 +155,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                         section_uid=section_uid,
                         precision=precision,
                         portal_type=self.getPortalAccountingMovementTypeList(),
-                        simulation_state=('delivered', ))
+                        simulation_state=('delivered', ),
+                        ledger_uid=ledger_uid)
 
     # node
     for movement in self._getGroupByNodeMovementList():
@@ -267,7 +273,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                    relative_url=movement.getRelativeUrl(),
                    quantity=movement.getQuantity(),
                    total_price=movement\
-                    .getDestinationInventoriatedTotalAssetPrice(), ))
+                    .getDestinationInventoriatedTotalAssetPrice(),
+                   ledger_uid=movement.getLedgerUid(), ))
 
     # mirror section
     for movement in self._getGroupByMirrorSectionMovementList():
@@ -291,7 +298,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                    relative_url=movement.getRelativeUrl(),
                    quantity=movement.getQuantity(),
                    total_price=movement\
-                    .getDestinationInventoriatedTotalAssetPrice(), ))
+                    .getDestinationInventoriatedTotalAssetPrice(),
+                   ledger_uid=movement.getLedgerUid(), ))
 
     # payment
     for movement in self._getGroupByPaymentMovementList():
@@ -315,7 +323,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                    relative_url=movement.getRelativeUrl(),
                    quantity=movement.getQuantity(),
                    total_price=movement\
-                    .getDestinationInventoriatedTotalAssetPrice(), ))
+                    .getDestinationInventoriatedTotalAssetPrice(),
+                   ledger_uid=movement.getLedgerUid(), ))
 
     return new_stock
 
