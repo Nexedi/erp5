@@ -845,7 +845,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
 
   def createLedgerDataSet(self):
     # create some ledgers
-    self.createLedgerCategories()
+    self.createLedgerCategory()
 
     account_module = self.portal.account_module
     self._makeOne(
