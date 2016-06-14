@@ -1427,7 +1427,6 @@ class Base( CopyContainer,
       restricted_method_set = ()
 
     getProperty = self.getProperty
-    hasProperty = self.hasProperty
     _setProperty = self._setProperty
 
     def setChangedPropertyList(key_list):
@@ -1446,13 +1445,14 @@ class Base( CopyContainer,
             not_modified_list.append(key)
             continue
 
+        # If the keep_existing flag is set to 1,
+        # we do not update properties which are defined
+        if keep_existing and self.hasProperty(key):
+          continue
         # We keep in a thread var the previous values
         # this can be useful for interaction workflow to implement lookups
         # XXX If iteraction workflow script is triggered by edit and calls
         # edit itself, this is useless as the dict will be overwritten
-        # If the keep_existing flag is set to 1, we do not update properties which are defined
-        if keep_existing and hasProperty(key):
-          continue
         if restricted:
           accessor_name = 'set' + UpperCase(key)
           if accessor_name in restricted_method_set:
