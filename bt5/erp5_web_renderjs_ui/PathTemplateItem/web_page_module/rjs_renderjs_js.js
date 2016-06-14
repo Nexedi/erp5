@@ -1687,7 +1687,11 @@ if (typeof document.contains !== 'function') {
       notifyDeclareMethod,
       gadget_ready = false,
       iframe_top_gadget,
-      last_acquisition_gadget;
+      last_acquisition_gadget,
+      declare_method_list_waiting = [],
+      gadget_failed = false,
+      gadget_error,
+      connection_ready = false;
 
     // Create the gadget class for the current url
     if (gadget_model_dict.hasOwnProperty(url)) {
@@ -1746,19 +1750,97 @@ if (typeof document.contains !== 'function') {
         setAqParent(root_gadget, last_acquisition_gadget);
 
       } else {
-        // Create the communication channel
-        embedded_channel = Channel.build({
-          window: window.parent,
-          origin: "*",
-          scope: "renderJS"
-        });
         // Create the root gadget instance and put it in the loading stack
         tmp_constructor = RenderJSEmbeddedGadget;
         tmp_constructor.__ready_list = RenderJSGadget.__ready_list.slice();
         tmp_constructor.__service_list = RenderJSGadget.__service_list.slice();
         tmp_constructor.prototype.__path = url;
         root_gadget = new RenderJSEmbeddedGadget();
+        setAqParent(root_gadget, last_acquisition_gadget);
 
+        // Create the communication channel
+        embedded_channel = Channel.build({
+          window: window.parent,
+          origin: "*",
+          scope: "renderJS",
+          onReady: function () {
+            var k;
+            iframe_top_gadget = false;
+            //Default: Define __aq_parent to inform parent window
+            root_gadget.__aq_parent =
+              tmp_constructor.prototype.__aq_parent = function (method_name,
+                argument_list, time_out) {
+                return new RSVP.Promise(function (resolve, reject) {
+                  embedded_channel.call({
+                    method: "acquire",
+                    params: [
+                      method_name,
+                      argument_list
+                    ],
+                    success: function (s) {
+                      resolve(s);
+                    },
+                    error: function (e) {
+                      reject(e);
+                    },
+                    timeout: time_out
+                  });
+                });
+              };
+
+            // Channel is ready, so now declare Function
+            notifyDeclareMethod = function (name) {
+              declare_method_count += 1;
+              embedded_channel.call({
+                method: "declareMethod",
+                params: name,
+                success: function () {
+                  declare_method_count -= 1;
+                  notifyReady();
+                },
+                error: function () {
+                  declare_method_count -= 1;
+                }
+              });
+            };
+            for (k = 0; k < declare_method_list_waiting.length; k += 1) {
+              notifyDeclareMethod(declare_method_list_waiting[k]);
+            }
+            declare_method_list_waiting = [];
+            // If Gadget Failed Notify Parent
+            if (gadget_failed) {
+              embedded_channel.notify({
+                method: "failed",
+                params: gadget_error
+              });
+              return;
+            }
+            // Get Top URL
+            return tmp_constructor.prototype.__aq_parent('getTopURL', [])
+              .then(function (topURL) {
+                var base = document.createElement('base');
+                base.href = topURL;
+                base.target = "_top";
+                document.head.appendChild(base);
+                connection_ready = true;
+                notifyReady();
+                //the channel is ok
+                //so bind calls to renderJS method on the instance
+                embedded_channel.bind("methodCall", function (trans, v) {
+                  root_gadget[v[0]].apply(root_gadget, v[1])
+                    .then(function (g) {
+                      trans.complete(g);
+                    }).fail(function (e) {
+                      trans.error(e.toString());
+                    });
+                  trans.delayReturn(true);
+                });
+              })
+              .fail(function (error) {
+                throw error;
+              });
+          }
+        });
 
         // Notify parent about gadget instanciation
         notifyReady = function () {
@@ -1769,18 +1851,7 @@ if (typeof document.contains !== 'function') {
 
         // Inform parent gadget about declareMethod calls here.
         notifyDeclareMethod = function (name) {
-          declare_method_count += 1;
-          embedded_channel.call({
-            method: "declareMethod",
-            params: name,
-            success: function () {
-              declare_method_count -= 1;
-              notifyReady();
-            },
-            error: function () {
-              declare_method_count -= 1;
-            }
-          });
+          declare_method_list_waiting.push(name);
         };
 
         notifyDeclareMethod("getInterfaceList");
@@ -1806,26 +1877,7 @@ if (typeof document.contains !== 'function') {
         tmp_constructor.allowPublicAcquisition =
           RenderJSGadget.allowPublicAcquisition;
 
-        //Default: Define __aq_parent to inform parent window
-        tmp_constructor.prototype.__aq_parent = function (method_name,
-          argument_list, time_out) {
-          return new RSVP.Promise(function (resolve, reject) {
-            embedded_channel.call({
-              method: "acquire",
-              params: [
-                method_name,
-                argument_list
-              ],
-              success: function (s) {
-                resolve(s);
-              },
-              error: function (e) {
-                reject(e);
-              },
-              timeout: time_out
-            });
-          });
-        };
+        iframe_top_gadget = true;
       }
 
       tmp_constructor.prototype.__acquired_method_dict = {};
@@ -1950,45 +2002,6 @@ if (typeof document.contains !== 'function') {
           return root_gadget;
         }
 
-        if (window.top !== window.self) {
-          //checking channel should be done before sub gadget's declaration
-          //__ready_list:
-          //0: clearGadgetInternalParameters
-          //1: loadSubGadgetDOMDeclaration
-          //.....
-          tmp_constructor.__ready_list.splice(1, 0, function () {
-            return root_gadget.__aq_parent('getTopURL', [], 100)
-              .then(function (topURL) {
-                var base = document.createElement('base');
-                base.href = topURL;
-                base.target = "_top";
-                document.head.appendChild(base);
-                //the channel is ok
-                //so bind calls to renderJS method on the instance
-                embedded_channel.bind("methodCall", function (trans, v) {
-                  root_gadget[v[0]].apply(root_gadget, v[1])
-                    .then(function (g) {
-                      trans.complete(g);
-                    }).fail(function (e) {
-                      trans.error(e.toString());
-                    });
-                  trans.delayReturn(true);
-                });
-              })
-              .fail(function (error) {
-                if (error === "timeout_error") {
-                  //the channel fail
-                  //we consider current gadget is parent gadget
-                  //redifine last acquisition gadget
-                  iframe_top_gadget = true;
-                  setAqParent(root_gadget, last_acquisition_gadget);
-                } else {
-                  throw error;
-                }
-              });
-          });
-        }
-
         tmp_constructor.ready(function (g) {
           return startService(g);
         });
@@ -2013,11 +2026,15 @@ if (typeof document.contains !== 'function') {
       loading_gadget_promise
         .then(function () {
           gadget_ready = true;
-          notifyReady();
+          if (connection_ready) {
+            notifyReady();
+          }
         })
         .fail(function (e) {
           //top gadget in iframe
           if (iframe_top_gadget) {
+            gadget_failed = true;
+            gadget_error = e.toString();
             letsCrash(e);
           } else {
             embedded_channel.notify({method: "failed", params: e.toString()});
