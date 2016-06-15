@@ -35,6 +35,7 @@ class TestNamingConvention(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     # include all standard Business Templates, i.e. erp5_*
     return (
+      'erp5_core_proxy_field_legacy',
       'erp5_base', 'erp5_pdm',
       'erp5_simulation', 'erp5_trade', 'erp5_accounting',
       'erp5_apparel', 'erp5_mrp', 'erp5_project',
