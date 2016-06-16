@@ -1187,10 +1187,6 @@ class TestClosingPeriod(AccountingTestCase):
     self.portal.portal_types['Sale Invoice Transaction'].edit(
       ledger=['accounting/general', 'accounting/detailed'])
 
-  def unSetUpLedger(self):
-    self.portal.portal_types['Sale Invoice Transaction'].edit(
-      ledger=None)
-
   def test_createBalanceOnLedger(self):
     self.setUpLedger()
     organisation_module = self.organisation_module
@@ -1356,9 +1352,6 @@ class TestClosingPeriod(AccountingTestCase):
       self.assertEqual(None, pl_movement.getSourceTotalAssetPrice())
       self.assertEqual(result['pl'], pl_movement.getDestinationDebit())
       self.tic()
-
-      # Unconfigure ledgers from the instance
-      self.unSetUpLedger()
 
   def test_createBalanceOnMirrorSectionMultiCurrency(self):
     pl = self.portal.account_module.newContent(
