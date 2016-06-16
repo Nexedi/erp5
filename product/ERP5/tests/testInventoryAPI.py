@@ -1619,7 +1619,6 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertTrue(hasattr(brain, 'payment_uid'))
     self.assertTrue(hasattr(brain, 'project_uid'))
     self.assertTrue(hasattr(brain, 'funding_uid'))
-    self.assertTrue(hasattr(brain, 'ledger_uid'))
     self.assertTrue(hasattr(brain, 'mirror_node_uid'))
     self.assertTrue(hasattr(brain, 'mirror_section_uid'))
 
