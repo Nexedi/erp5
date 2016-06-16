@@ -65,7 +65,6 @@
   <td></td>
 </tr>
 
-
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Views']</td>
@@ -98,7 +97,7 @@
 <tr>
   <td>type</td>
   <td>//input[@name='field_my_foo_category_title']</td>
-  <td>a1</td>
+  <td>unknowntext</td>
 </tr>
 
 <tr>
@@ -109,47 +108,87 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//li[@data-relative-url='portal_categories/foo_category/a/a1']</td>
+  <td>//li[@data-explore='true']</td>
   <td></td>
 </tr>
 
-<tr>
-  <td>click</td>
-  <td>//li[@data-relative-url='portal_categories/foo_category/a/a1']</td>
-  <td></td>
-</tr>
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
 <tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Views']</td>
-  <td></td>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>blur</td>
 </tr>
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
+  <td>//div[@data-gadget-scope="field_my_foo_category_title"]//a[contains(@class, "ui-icon-warning")]</td>
   <td></td>
 </tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-gadget-scope="field_my_foo_category_title"]//a[contains(@class, "ui-icon-warning")]</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_my_successor_title']</td>
+  <td>search</td>
+</tr>
+
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_successor_title']</td>
+  <td>input</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@data-explore='true']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_successor_title']</td>
+  <td>blur</td>
+</tr>
+
+
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
+  <td>//li[@data-explore='true']</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>//input[@name='search']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//h1[@class="ui-title"]//a</td>
   <td></td>
 </tr>
 
 
 <tr>
-  <td>verifyValue</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
-  <td>a1</td>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope="field_my_foo_category_title"]//a[contains(@class, "ui-icon-warning")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-gadget-scope="field_my_foo_category_title"]//a[contains(@class, "ui-icon-warning")]</td>
+  <td></td>
 </tr>
 </tbody></table>
 </body>

@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, loopEventListener, document, jIO, URI, URL */
+/*global window, rJS, RSVP, loopEventListener, document, jIO, URI, URL, Blob */
 /*jslint nomen: true, indent: 2 */
-(function (window, rJS, RSVP, loopEventListener, document, jIO, URI, URL) {
+(function (window, rJS, RSVP, loopEventListener, document, jIO, URI, URL, Blob) {
   "use strict";
 
   // Keep reference of the latest allDocs params which reach to this view
@@ -330,7 +330,15 @@
         return addHistory(gadget, previous_options);
       })
       .push(function (id) {
+        var tmp;
         next_options.history = id;
+        if (gadget.props.form_content) {
+          tmp = gadget.props.form_content;
+          delete gadget.props.form_content;
+          return gadget.props.jio_form_content.putAttachment('/', id, new Blob([JSON.stringify(tmp)], {type: "application/json"}));
+        }
+      })
+      .push(function () {
         return addNavigationHistoryAndDisplay(gadget, jio_key, next_options);
       });
   }
@@ -454,17 +462,49 @@
       });
   }
 
-  function execHistoryPreviousCommand(gadget, previous_options) {
+  function execHistoryPreviousCommand(gadget, previous_options, load_options) {
     var history = previous_options.history,
       jio_key = previous_options.jio_key,
+      target_index = previous_options.target_index,
+      field = previous_options.back_field,
+      queue =  new RSVP.Queue(),
       previous_id;
     if (history === undefined) {
       if (jio_key !== undefined) {
         return redirectToParent(gadget, jio_key);
       }
     }
+    if (previous_options.back_field) {
+      queue
+        .push(function () {
+          return gadget.props.jio_form_content.getAttachment('/', history);
+        })
+        .push(function (results) {
+          return jIO.util.readBlobAsText(results);
+        }, function (error) {
+          if ((error instanceof jIO.util.jIOError) &&
+              (error.status_code === 404)) {
+            return;
+          }
+          throw error;
+        })
+        .push(function (results) {
+          if (results) {
+            results = JSON.parse(results.target.result);
+            if (load_options.uid) {
+              results[field].value[target_index] =  "";
+              results[field].relation_item_relative_url[target_index] = load_options.jio_key;
+              results[field].uid = load_options.uid;
+            }
+            gadget.props.form_content = results;
+          }
+        });
+    }
 
-    return gadget.props.jio_gadget.get(history)
+    queue
+      .push(function () {
+        return gadget.props.jio_gadget.get(history);
+      })
       .push(function (history) {
         previous_id = history.previous_history_id;
         return gadget.props.jio_gadget.get(history.options_id);
@@ -486,6 +526,7 @@
         delete options.jio_key;
         return addNavigationHistoryAndDisplay(gadget, next_jio_key, options);
       });
+    return queue;
   }
 
 
@@ -567,6 +608,10 @@
     // Store current options to handle navigation
     gadget.props.options = JSON.parse(JSON.stringify(command_options.args));
 
+    if (gadget.props.form_content) {
+      command_options.args.form_content = gadget.props.form_content;
+      delete gadget.props.form_content;
+    }
     return {
       url: "gadget_erp5_page_" + command_options.args.page + ".html",
       // XXX Drop this options thing.
@@ -631,7 +676,7 @@
       return execSelectionPreviousCommand(gadget, previous_options);
     }
     if (command_options.path === COMMAND_HISTORY_PREVIOUS) {
-      return execHistoryPreviousCommand(gadget, previous_options);
+      return execHistoryPreviousCommand(gadget, previous_options, next_options);
     }
     if (command_options.path === COMMAND_PUSH_HISTORY) {
       return execPushHistoryCommand(gadget, previous_options, next_options);
@@ -746,6 +791,16 @@
           });
         });
     })
+    .ready(function (g) {
+      return g.getDeclaredGadget("jio_form_content")
+        .push(function (jio_form_content) {
+          g.props.jio_form_content = jio_form_content;
+          return jio_form_content.createJio({
+            type: "local",
+            sessiononly: true
+          });
+        });
+    })
 
     .declareMethod('getCommandUrlFor', function (options) {
       var command = options.command,
@@ -776,6 +831,8 @@
     })
 
     .declareMethod('redirect', function (options) {
+      this.props.form_content = options.form_content;
+      delete options.form_content;
       return this.getCommandUrlFor(options)
         .push(function (hash) {
           window.location.replace(hash);
@@ -824,4 +881,4 @@
         });
     });
 
-}(window, rJS, RSVP, loopEventListener, document, jIO, URI, URL));
+}(window, rJS, RSVP, loopEventListener, document, jIO, URI, URL, Blob));

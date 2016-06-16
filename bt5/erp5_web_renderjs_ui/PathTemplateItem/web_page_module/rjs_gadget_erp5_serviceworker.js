@@ -77,6 +77,8 @@
       'gadget_erp5_page_logout.js',
       'gadget_erp5_page_preference.html',
       'gadget_erp5_page_preference.js',
+      'gadget_erp5_page_relation_search.html',
+      'gadget_erp5_page_relation_search.js',
       'gadget_erp5_page_search.html',
       'gadget_erp5_page_search.js',
       'gadget_erp5_page_tab.html',

@@ -98,6 +98,9 @@
     .allowPublicAcquisition("getFieldTypeGadgetUrl", function (param_list) {
       return getFieldTypeGadgetUrl(param_list[0]);
     })
+    .allowPublicAcquisition("getFormContent", function (param_list) {
+      return this.getContent(param_list[0]);
+    })
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -196,6 +199,7 @@
                       form_gadget.props.gadget_list.push(field_gadget);
                       var suboptions = options[renderered_field.key] || suboption_dict;
                       suboptions.field_json = renderered_field;
+                      suboptions.field_json.view = options.view;
                       return field_gadget.render(suboptions);
                     });
                 }
@@ -237,14 +241,13 @@
       }
       return {};
     })
-    .declareMethod("getContent", function () {
+    .declareMethod("getContent", function (options) {
       var form_gadget = this,
         k,
         field_gadget,
         count = form_gadget.props.gadget_list.length,
         data = {},
         queue = new RSVP.Queue();
-
       function extendData(field_data) {
         var key;
         for (key in field_data) {
@@ -253,13 +256,17 @@
           }
         }
       }
-
+      if (options === undefined) {
+        options = {
+          "format": "erp5"
+        };
+      }
       for (k = 0; k < count; k += 1) {
         field_gadget = form_gadget.props.gadget_list[k];
         // XXX Hack until better defined
         if (field_gadget.getContent !== undefined) {
           queue
-            .push(field_gadget.getContent.bind(field_gadget))
+            .push(field_gadget.getContent.bind(field_gadget, options))
             .push(extendData);
         }
       }
