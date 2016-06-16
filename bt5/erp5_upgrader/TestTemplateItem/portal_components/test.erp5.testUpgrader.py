@@ -435,6 +435,8 @@ class TestUpgrader(ERP5TypeTestCase):
         "It means that one Business Template was not found in repositories")
 
   def stepCreateOrganisationWithActivity(self, sequence=None):
+    self.portal.portal_categories.activity.newContent(portal_type="Category",
+      id="education", title="Education")
     new_organisation = self.portal.organisation_module.newContent(
       portal_type="Organisation",
       title="Active Organisation",
@@ -444,13 +446,22 @@ class TestUpgrader(ERP5TypeTestCase):
                      ['activity/education'])
     sequence.set('organisation', new_organisation)
 
-  def stepCreateCustomUpgradeCategoryList(self, sequence=None):
+  def stepCreateCustomUpgradeCategoryListForRenaming(self, sequence=None):
     portal = self.portal
     skin_folder = portal.portal_skins.custom
     script_id = "Base_getUpgradeCategoryNameList"
     skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(script_id)
     custom_script = getattr(skin_folder, script_id)
     script_body = "return (('activity', 'business_core'),)"
+    custom_script.ZPythonScript_edit('', script_body)
+
+  def stepCreateCustomUpgradeCategoryListForMoving(self, sequence=None):
+    portal = self.portal
+    skin_folder = portal.portal_skins.custom
+    script_id = "Base_getUpgradeCategoryNameList"
+    skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(script_id)
+    custom_script = getattr(skin_folder, script_id)
+    script_body = "return (('activity/education', 'activity/social/education'),)"
     custom_script.ZPythonScript_edit('', script_body)
 
   def stepRemoveCustomUpgradeCategoryList(self, sequence=None):
@@ -463,6 +474,17 @@ class TestUpgrader(ERP5TypeTestCase):
       id="business_core",
       title="Business Core")
 
+  def stepChangeCategoryRelativeUrl(self, sequence=None):
+    """Move the category 'activity/education' to 'activity/social/education'"""
+    # To move the category we need to delete it, and recreate it
+    # because this is what will happen when the bt containing the
+    # category will be upgraded
+    self.portal.portal_categories.activity.manage_delObjects('education')
+    self.portal.portal_categories.activity.newContent(portal_type="Category",
+      id="social", title="Social")
+    self.portal.portal_categories.activity.social.newContent(
+      portal_type="Category", id="education", title="Education")
+
   def stepUpdateOrganisationPropertySheetManually(self, sequence=None):
     """
     Changes the category property Activity of an Organisation to Business Core.
@@ -474,9 +496,13 @@ class TestUpgrader(ERP5TypeTestCase):
                   title= "business_core",
 		  reference="business_core")
 
-  def stepCheckOrganisationObjectUpdated(self, sequence=None):
+  def stepCheckOrganisationObjectUpdatedAfterCategoryRenaming(self, sequence=None):
     self.assertEqual(sequence.get('organisation').getCategoriesList(),
                      ['business_core/education'])
+
+  def stepCheckOrganisationObjectUpdatedAfterCategoryMoving(self, sequence=None):
+    self.assertEqual(sequence.get('organisation').getCategoriesList(),
+                     ['activity/social/education'])
 
   def stepCheckPostUpgradeCategoryName(self, sequence=None):
     alarm = getattr(self.portal.portal_alarms, 'upgrader_check_post_upgrade')
@@ -691,7 +717,7 @@ class TestUpgrader(ERP5TypeTestCase):
     sequence_list = SequenceList()
     sequence_string = """
       stepCreateOrganisationWithActivity
-      stepCreateCustomUpgradeCategoryList
+      stepCreateCustomUpgradeCategoryListForRenaming
       stepRenameCategoryActivityToBusinessCore
       stepUpdateOrganisationPropertySheetManually
       stepTic
@@ -702,7 +728,33 @@ class TestUpgrader(ERP5TypeTestCase):
       stepTic
       stepRunPostUpgrade
       stepTic
-      stepCheckOrganisationObjectUpdated
+      stepCheckOrganisationObjectUpdatedAfterCategoryRenaming
+      stepRemoveCustomUpgradeCategoryList
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_move_category(self):
+    """
+    Check that changing the relative URL of a category
+    correctly updates objects.
+    For this test, we will move the category "activity/education"
+    to "activity/social/education"
+    """
+    sequence_list = SequenceList()
+    sequence_string = """
+      stepCreateOrganisationWithActivity
+      stepCreateCustomUpgradeCategoryListForMoving
+      stepChangeCategoryRelativeUrl
+      stepTic
+      stepActiveSensePreUpgradeAlarm
+      stepActiveSensePostUpgradeAlarm
+      stepTic
+      stepRunUpgrader
+      stepTic
+      stepRunPostUpgrade
+      stepTic
+      stepCheckOrganisationObjectUpdatedAfterCategoryMoving
       stepRemoveCustomUpgradeCategoryList
     """
     sequence_list.addSequenceString(sequence_string)

@@ -8,6 +8,7 @@
 # looking for the category by its new name.
 
 portal = context.getPortalObject()
+portal_categories = portal.portal_categories
 
 error_list = []
 
@@ -19,10 +20,11 @@ if not upgrade_list:
 for old_category_name, new_category_name in upgrade_list:
 
   sensitive_portal_type_list = []
+  new_base_category = portal_categories.restrictedTraverse(new_category_name).getBaseCategoryId()
   
   # We gather portal types having the new category defined as a property
   for portal_type in portal.portal_types.listTypeInfo():
-    if new_category_name in portal_type.getInstancePropertyAndBaseCategoryList():
+    if new_base_category in portal_type.getInstancePropertyAndBaseCategoryList():
       sensitive_portal_type_list.append(portal_type.getId())
 
   # if sensitive_portal_type_list is empty, we don't want to check all objects
