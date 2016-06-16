@@ -80,8 +80,31 @@ def createBalanceTransaction(section, ledger=None):
                           resource=section_currency,
                           causality_value=context)
 
+getInventoryList = portal.portal_simulation.getInventoryList
+
 with context.defaultActivateParameterDict({'tag': activity_tag}, placeless=True):
+  # List ledgers on which there are movements
+  inventory_ledger_uid_list = [inventory.ledger_uid for inventory \
+    in getInventoryList(at_date=at_date.latestTime(),
+                        portal_type=portal.getPortalAccountingMovementTypeList(),
+                        group_by_ledger=True)]
+
   for ledger in ledger_list:
+
+    # If there are no movements within this ledger, we can
+    # directly go to another
+    if ledger is None and None not in inventory_ledger_uid_list:
+      continue
+    elif ledger is not None and ledger.getUid() not in inventory_ledger_uid_list:
+      continue
+
+    if ledger is not None:
+      ledger_uid = ledger.getUid()
+      ledger_url = ledger.getCategoryRelativeUrl()
+    else:
+      ledger_uid = Query(ledger_uid=None)
+      ledger_url = ''
+
     for section in section_list:
       section_uid = section.getUid()
       balance_transaction = None
@@ -107,15 +130,6 @@ with context.defaultActivateParameterDict({'tag': activity_tag}, placeless=True)
           profit_and_loss_node_category_list.append(node_category_url)
         else:
           group_by_node_node_category_list.append(node_category_url)
-  
-      getInventoryList = portal.portal_simulation.getInventoryList
-
-      if ledger is not None:
-        ledger_uid = ledger.getUid()
-        ledger_url = ledger.getCategoryRelativeUrl()
-      else:
-        ledger_uid = Query(ledger_uid=None)
-        ledger_url = ''
   
       inventory_param_dict = dict(section_uid=section_uid,
                                   simulation_state=('delivered',),
