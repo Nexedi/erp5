@@ -75,7 +75,9 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>PaySheetTransaction_init</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
