@@ -789,8 +789,12 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       # Let's be a litte tolerant for the moment.
       BaseMessage.max_retry = property(lambda self:
         self.activity_kw.get('max_retry', 1))
-
       template_list = list(self.getBusinessTemplateList())
+      # XXX: Explicit addition of Business Template so that we can use
+      # it with transition of CatalogTool to inside ERP5.
+      # This is just fo testing how many things break everytime we use under-
+      # -developed bt5. This would be removed while going in production
+      template_list.append('erp5_catalog_transition')
       erp5_catalog_storage = os.environ.get('erp5_catalog_storage',
                                             'erp5_mysql_innodb_catalog')
       update_business_templates = os.environ.get('update_business_templates') is not None
