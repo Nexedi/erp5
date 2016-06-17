@@ -1,1 +1,1 @@
-context.Delivery_init(*args, **kw)
+# _init script for the Pay Sheet Transaction portal_type
