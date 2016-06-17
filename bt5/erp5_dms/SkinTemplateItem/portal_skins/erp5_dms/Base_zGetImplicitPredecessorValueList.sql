@@ -1,8 +1,15 @@
-SET @current_path = NULL; <dtml-var sql_delimiter>
-SET @current_reference = NULL; <dtml-var sql_delimiter>
+<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(), portal_type=getPortalDocumentTypeList())"
+          user_language="Localizer.get_selected_language()"
+          optimizer_switch_key_list="portal_catalog.getSQLCatalog().getOptimizerSwitchKeyList()">
+<dtml-if "'derived_merge' in optimizer_switch_key_list">
+  SET @current_optimizer_switch = @@optimizer_switch,
+      @@optimizer_switch = 'derived_merge=off'
+  <dtml-var sql_delimiter>
+</dtml-if>
+SET @current_path = NULL,
+    @current_reference = NULL
+<dtml-var sql_delimiter>
 
-<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(), portal_type=getPortalDocumentTypeList())">
-<dtml-let user_language="Localizer.get_selected_language()">
 SELECT path, uid
 FROM
 (
@@ -14,7 +21,7 @@ FROM
     @current_path:=IF(@current_reference = reference, @current_path, path) AS path,
     @current_reference:=reference AS reference
   FROM (
-    SELECT DISTINCT
+    SELECT
       reference,
       path,
       catalog.uid,
@@ -42,6 +49,8 @@ WHERE
 <dtml-sqltest "getUid()" column=uid op=ne type=int>
 LIMIT 1000
 
+<dtml-if "'derived_merge' in optimizer_switch_key_list">
+  <dtml-var sql_delimiter>
+  SET @@optimizer_switch = @current_optimizer_switch
+</dtml-if>
 </dtml-let>
-</dtml-let>
-

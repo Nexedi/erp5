@@ -1,6 +1,7 @@
 <dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw), **kw)"
           selection_domain="kw.get('selection_domain', None)"
-          selection_report="kw.get('selection_report', None)">
+          selection_report="kw.get('selection_report', None)"
+          optimizer_switch_key_list="portal_catalog.getSQLCatalog().getOptimizerSwitchKeyList()">
 
   <dtml-comment>
     Currently, there is no other choice to implement this method as an SQL catalog until SQLCatalog
@@ -10,11 +11,16 @@
      The subquery is named catalog to prevent use another LEFT JOIN.
   </dtml-comment>
 
+  <dtml-if "'derived_merge' in optimizer_switch_key_list">
+    SET @current_optimizer_switch = @@optimizer_switch,
+        @@optimizer_switch = 'derived_merge=off'
+    <dtml-var sql_delimiter>
+  </dtml-if>
   SELECT
     catalog.*
   FROM
     (
-      SELECT DISTINCT
+      SELECT
         catalog.uid,
         catalog.path,
         catalog.int_index,
@@ -73,4 +79,8 @@
     LIMIT 1000
   </dtml-if>
 
+  <dtml-if "'derived_merge' in optimizer_switch_key_list">
+    <dtml-var sql_delimiter>
+    SET @@optimizer_switch = @current_optimizer_switch
+  </dtml-if>
 </dtml-let>
