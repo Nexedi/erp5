@@ -1490,6 +1490,36 @@ class TestClosingPeriod(AccountingTestCase):
       self.assertEqual(result['pl'], pl_movement.getDestinationDebit())
       self.tic()
 
+    def testStockTableContent():
+      q = self.portal.erp5_sql_connection.manage_test
+      self.assertEqual(2, q(
+        "SELECT count(*) FROM stock WHERE portal_type="
+        "'Balance Transaction Line'")[0][0])
+      self.assertEqual(300, q(
+        "SELECT sum(total_price) FROM stock WHERE portal_type="
+        "'Balance Transaction Line' AND ledger_uid="
+        "%s GROUP BY ledger_uid" %
+        self.portal.portal_categories.ledger.accounting.general.getUid())[0][0])
+      self.assertEqual(300, q(
+        "SELECT sum(quantity) FROM stock WHERE portal_type="
+        "'Balance Transaction Line' AND ledger_uid="
+        "%s GROUP BY ledger_uid" %
+        self.portal.portal_categories.ledger.accounting.general.getUid())[0][0])
+      self.assertEqual(1200, q(
+        "SELECT sum(total_price) FROM stock WHERE portal_type="
+        "'Balance Transaction Line' AND ledger_uid="
+        "%s GROUP BY ledger_uid" % self.portal.portal_categories.ledger.accounting.detailed.getUid())[0][0])
+      self.assertEqual(1200, q(
+        "SELECT sum(quantity) FROM stock WHERE portal_type="
+        "'Balance Transaction Line' AND ledger_uid="
+        "%s GROUP BY ledger_uid" % self.portal.portal_categories.ledger.accounting.detailed.getUid())[0][0])
+
+    # now check content of stock table
+    testStockTableContent()
+    balance_transaction.immediateReindexObject()
+    self.tic()
+    testStockTableContent()
+
   def test_createBalanceOnMirrorSectionMultiCurrency(self):
     pl = self.portal.account_module.newContent(
               portal_type='Account',
