@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from cStringIO import StringIO
-from Products.ERP5Type.Globals import  PersistentMapping
 from erp5.portal_type import Image
 from types import ModuleType
 
@@ -570,27 +569,7 @@ def AddNewLocalVariableDict(self):
   """
   Function to add a new Local Variable for a Data Notebook
   """
-  new_dict = PersistentMapping()
-  variable_dict = PersistentMapping()
-  module_dict = PersistentMapping()
-  setup_dict = PersistentMapping()
-  new_dict['variables'] = variable_dict
-  new_dict['imports'] = module_dict
-  new_dict['setup'] = setup_dict 
-  return new_dict
-
-def UpdateLocalVariableDict(self, existing_dict):
-  """
-  Function to update local_varibale_dict for a Data Notebook
-  """
-  new_dict = self.Base_addLocalVariableDict()
-  for key, val in existing_dict['variables'].iteritems():
-    new_dict['variables'][key] = val
-  for key, val in existing_dict['imports'].iteritems():
-    new_dict['imports'][key] = val
-  for key, val in existing_dict['setup'].iteritems():
-    new_dict['setup'][key] = val
-  return new_dict
+  return {'variables': {}, 'setup': {}}
 
 class ObjectProcessor(object):
   '''
