@@ -3,27 +3,14 @@ Python script to add a new notebook to Data Notebook module.
 This script also concerns for assigning an Active Process for each data notebook
 created.
 """
-from Products.CMFActivity.ActiveResult import ActiveResult
-
-# Comment out person in case addition of person required to Data Notebook object
-#person = context.ERP5Site_getAuthenticatedMemberPersonValue()
-
-# Create new ActiveProcess object and getting its id
-active_process = context.portal_activities.newActiveProcess()
-active_process_id = active_process.getId()
-
 # Creating new dictionary via external method to save results in ZODB
 new_dict = context.Base_addLocalVariableDict()
-# Add new ActiveResult object and add it to the activeprocess concerned with ...
-# Data Notebook in concern
-result = ActiveResult(summary=new_dict)
-active_process.activateResult(result)
 
 # Create new notebook
 notebook = context.newContent(
     title=title,
     reference=reference,
-    process=active_process_id,
+    notebook_context=new_dict,
     portal_type='Data Notebook'
   )
 
