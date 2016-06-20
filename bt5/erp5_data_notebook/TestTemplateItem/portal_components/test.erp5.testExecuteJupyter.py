@@ -321,26 +321,6 @@ portal.%s()
     expected_result = '11'
     self.assertEquals(json.loads(result)['code_result'].rstrip(), expected_result)
 
-  def testBaseExecuteJupyterWithContextObjectsAsLocalVariables(self):
-    """
-    Test Base_executeJupyter with context objects as local variables
-    """
-    portal = self.portal
-    self.login('dev_user')
-    python_expression = 'a=context.getPortalObject(); print a.getTitle()'
-    reference = 'Test.Notebook.ExecutePythonExpressionWithVariables %s' % time.time()
-    title = 'Test NB Title %s' % time.time()
-
-    result = portal.Base_executeJupyter(
-                                        title=title,
-                                        reference=reference,
-                                        python_expression=python_expression
-                                        )
-    self.tic()
-
-    expected_result = portal.getTitle()
-    self.assertEquals(json.loads(result)['code_result'].rstrip(), expected_result)
-
   def testSavingModuleObjectLocalVariables(self):
     """
     Test to check the saving of module objects in local_variable_dict
@@ -393,7 +373,7 @@ image = context.portal_catalog.getResultValue(portal_type='Image',reference='%s'
 context.Base_renderAsHtml(image)
 """%reference
 
-    local_variable_dict = {'imports' : {}, 'variables' : {}}
+    local_variable_dict = {'setup' : {}, 'variables' : {}}
     result = self.portal.Base_runJupyter(
       jupyter_code=jupyter_code,
       old_local_variable_dict=local_variable_dict
@@ -438,6 +418,187 @@ context.Base_renderAsHtml(image)
       python_expression=jupyter_code2
       )
     self.assertEquals(json.loads(result)['code_result'].rstrip(), 'sys')
+    
+  def testEnvironmentObjectWithFunctionAndClass(self):
+    self.login('dev_user')
+    environment_define_code = '''
+def create_sum_machines():
+  def sum_function(x, y):
+    return x + y
+    
+  class Calculator(object):
+  
+    def sum(self, x, y):
+      return x + y
+    
+  return {'sum_function': sum_function, 'Calculator': Calculator}
+
+environment.clearAll()
+environment.define(create_sum_machines, 'creates sum function and class')
+'''
+    reference = 'Test.Notebook.EnvironmentObject.Function'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=environment_define_code
+    )
+    
+    self.tic()
+    self.assertEquals(json.loads(result)['status'], 'ok')
+    
+    jupyter_code = '''
+print sum_function(1, 1)
+print Calculator().sum(2, 2)
+'''
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    
+    self.tic()
+    result = json.loads(result)
+    output = result['code_result']
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(output.strip(), '2\n4')
+    
+  def testEnvironmentObjectSimpleVariable(self):
+    self.login('dev_user')
+    environment_define_code = '''
+environment.clearAll()
+environment.define(x='couscous')
+'''
+    reference = 'Test.Notebook.EnvironmentObject.Variable'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=environment_define_code
+    )
+    
+    self.tic()
+    self.assertEquals(json.loads(result)['status'], 'ok')
+    
+    jupyter_code = 'print x'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    
+    self.tic()
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(result['code_result'].strip(), 'couscous')
+    
+  def testEnvironmentUndefineFunctionClass(self):
+    self.login('dev_user')
+    environment_define_code = '''
+def create_sum_machines():
+  def sum_function(x, y):
+    return x + y
+    
+  class Calculator(object):
+  
+    def sum(self, x, y):
+      return x + y
+    
+  return {'sum_function': sum_function, 'Calculator': Calculator}
+
+environment.clearAll()
+environment.define(create_sum_machines, 'creates sum function and class')
+'''
+    reference = 'Test.Notebook.EnvironmentObject.Function.Undefine'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=environment_define_code
+    )
+    
+    self.tic()
+    self.assertEquals(json.loads(result)['status'], 'ok')
+    
+    undefine_code = '''
+environment.undefine('creates sum function and class')
+'''
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=undefine_code
+    )
+    
+    self.tic()
+    self.assertEquals(json.loads(result)['status'], 'ok')
+    
+    jupyter_code = '''
+print 'sum_function' in locals()
+print 'Calculator' in locals()
+'''
+
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    result = json.loads(result)
+    output = result['code_result']
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(output.strip(), 'False\nFalse')
+    
+  def testEnvironmentUndefineVariable(self):
+    self.login('dev_user')
+    environment_define_code = '''
+environment.clearAll()
+environment.define(x='couscous')
+'''
+    reference = 'Test.Notebook.EnvironmentObject.Variable.Undefine'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=environment_define_code
+    )
+    
+    self.tic()
+    self.assertEquals(json.loads(result)['status'], 'ok')
+    
+    undefine_code = 'environment.undefine("x")'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=undefine_code
+    )
+    
+    self.tic()
+    self.assertEquals(json.loads(result)['status'], 'ok')
+    
+    jupyter_code = "'x' in locals()"
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    
+    self.tic()
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(result['code_result'].strip(), 'False')
+    
+  def testImportFixer(self):
+    self.login('dev_user')
+    import_code = '''
+import random
+'''
+
+    reference = 'Test.Notebook.EnvironmentObject.ImportFixer'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=import_code
+    )
+    
+    self.tic()
+    self.assertEquals(json.loads(result)['status'], 'ok')
+    
+    jupyter_code = '''
+print random.randint(1,1)
+'''
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    
+    self.tic()
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(result['code_result'].strip(), '1')
     
   def testPivotTableJsIntegration(self):
     '''
