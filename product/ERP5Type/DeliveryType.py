@@ -48,7 +48,7 @@ class DeliveryType(ERP5TypeInformation):
     "Creates a new delivery with a default ledger found on the portal type"
     has_ledger_parameter = False
     for k in kw:
-      if k.startswith('ledger_'):
+      if k.startswith('ledger'):
         has_ledger_parameter = True
     if not has_ledger_parameter:
       ledger = self.getDefaultLedger()
