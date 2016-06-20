@@ -10,7 +10,7 @@
   // HISTORY KEY = "h"
   // Current display parameter
   // DISPLAY KEY = "d"
-  var MAIN_PAGE_PREFIX = "gadget_trade_", 
+  var MAIN_PAGE_PREFIX = "gadget_trade_",
     PREVIOUS_KEY = "p",
     NEXT_KEY = "n",
     DROP_KEY = "u",
@@ -49,8 +49,6 @@
   function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
   }
-  
-  
   //////////////////////////////////////////////////////////////////
   // Change URL functions
   //////////////////////////////////////////////////////////////////
@@ -66,7 +64,6 @@
     // fail if nothing happens
     return RSVP.timeout(REDIRECT_TIMEOUT);
   }
-
 
   //////////////////////////////////////////////////////////////////
   // Build URL functions
@@ -87,7 +84,8 @@
         if (endsWith(key, ":json")) {
           tmp = JSON.stringify(tmp);
         }
-        result += prefix + PREVIOUS_KEY + "." + encodeURIComponent(key) + "=" + encodeURIComponent(tmp);
+        result += prefix + PREVIOUS_KEY + "." +
+          encodeURIComponent(key) + "=" + encodeURIComponent(tmp);
         prefix = "&";
       }
     }
@@ -101,7 +99,8 @@
           if (endsWith(key, ":json")) {
             tmp = JSON.stringify(tmp);
           }
-          result += prefix + NEXT_KEY + "." + encodeURIComponent(key) + "=" + encodeURIComponent(tmp);
+          result += prefix + NEXT_KEY + "." +
+            encodeURIComponent(key) + "=" + encodeURIComponent(tmp);
         }
         prefix = "&";
       }
@@ -112,8 +111,6 @@
     }
     return result;
   }
-
-
 
 
   function getDisplayUrlFor(jio_key, options) {
@@ -129,17 +126,19 @@
         if (endsWith(key, ":json")) {
           tmp = JSON.stringify(tmp);
         }
-        result += prefix + encodeURIComponent(key) + "=" + encodeURIComponent(tmp);
+        result += prefix + encodeURIComponent(key) +
+          "=" + encodeURIComponent(tmp);
         prefix = '&';
       }
     }
     return result;
   }
-  
+
    //////////////////////////////////////////////////////////////////
   // exec command functions
   //////////////////////////////////////////////////////////////////
-  function calculateChangeOptions(previous_options, next_options, drop_options) {
+  function calculateChangeOptions(previous_options,
+    next_options, drop_options) {
     var key;
     for (key in previous_options) {
       if (previous_options.hasOwnProperty(key)) {
@@ -154,9 +153,9 @@
       }
     }
     return next_options;
-  }  
-  
-  
+  }
+
+
   function execDisplayCommand(next_options) {
     // console.warn(command_options);
     var jio_key = next_options.jio_key,
@@ -168,7 +167,7 @@
       .push(function () {
         return synchronousChangeState(hash);
       });
-  } 
+  }
 
   function execIndexCommand(next_options) {
     // console.warn(command_options);
@@ -182,14 +181,15 @@
       .push(function () {
         return synchronousChangeState(hash);
       });
-  }  
-  
-  
-  function execChangeCommand(previous_options,next_options, drop_options) {
+  }
+
+
+  function execChangeCommand(previous_options, next_options, drop_options) {
     var options,
       jio_key,
       hash;
-    options = calculateChangeOptions(previous_options, next_options, drop_options);
+    options = calculateChangeOptions(previous_options,
+      next_options, drop_options);
 
     jio_key = options.jio_key;
     delete options.jio_key;
@@ -198,72 +198,65 @@
       .push(function () {
         return synchronousChangeState(hash);
       });
-  } 
-  
-  
-  //////////////////////////////////////////////////////////////////
-  // Command URL functions
-  //////////////////////////////////////////////////////////////////
-  function routeMethodLess(gadget) {
-    // Nothing. Go to setting page
-   
-    return synchronousChangeState(
-      getDisplayUrlFor(undefined, {page: "setting"})
-    );
-    
   }
 
 
-  function routeDisplay(gadget,command_options) {
-  
+  //////////////////////////////////////////////////////////////////
+  // Command URL functions
+  //////////////////////////////////////////////////////////////////
+  function routeMethodLess() {
+    // Nothing. Go to setting page
+    return synchronousChangeState(
+      getDisplayUrlFor(undefined, {page: "setting"})
+    );
+
+  }
+
+
+  function routeDisplay(gadget, command_options) {
     var args = command_options.args,
-        path = command_options.path;
+      path = command_options.path;
     args.jio_key = path;
      // Store current options to handle navigation
     gadget.props.options = JSON.parse(JSON.stringify(args));
     if (args.page === undefined) {
       return routeMethodLess(gadget);
     }
-    
-    
-    
-      if (path === undefined || path === '') {
-        
-        return {
-          url: MAIN_PAGE_PREFIX + "page_" + args.page + ".html",
-          options: args
+    if (path === undefined || path === '') {
+      return {
+        url: MAIN_PAGE_PREFIX + "page_" + args.page + ".html",
+        options: args
+      };
+    }
+    return gadget.jio_get(path)
+      .push(function (doc) {
+        var sub_options = {},
+          base_portal_type = doc.portal_type
+            .toLowerCase().replace(/\s/g, "_");
+        sub_options = {
+          doc: doc,
+          jio_key: path,
+          extended_search: args.extended_search,
+          begin_from: args.begin_from
         };
-      }
-      return gadget.jio_get(path)
-        .push(function (doc) {
-          var sub_options = {},
-            base_portal_type = doc.portal_type
-              .toLowerCase().replace(/\s/g, "_");
-          sub_options = {
-            doc: doc,
-            jio_key: path,
-            extended_search: args.extended_search,
-            begin_from: args.begin_from
-
-          };
-          if (base_portal_type.search(/_temp$/) >= 0) {
+        if (base_portal_type.search(/_temp$/) >= 0) {
             //Remove "_temp"
-            base_portal_type = base_portal_type.substr(
-              0,
-              base_portal_type.length - 5
-            );
-          }
-          return {
-            url: MAIN_PAGE_PREFIX + "jio_"
-              + base_portal_type
-              + "_" + args.page + ".html",
-            options: sub_options
-          };
-        });
+          base_portal_type = base_portal_type.substr(
+            0,
+            base_portal_type.length - 5
+          );
+        }
+        return {
+          url: MAIN_PAGE_PREFIX + "jio_"
+            + base_portal_type
+            + "_" + args.page + ".html",
+          options: sub_options
+        };
+      });
   }
 
 
-  function routeCommand(gadget, command_options) {
+  function routeCommand(command_options) {
     var args = command_options.args,
       key,
       split_list,
@@ -301,10 +294,8 @@
     if (command_options.path === COMMAND_INDEX_STATE) {
       return execIndexCommand(next_options);
     }
-    if (command_options.path === COMMAND_CHANGE_STATE) {
-      return execStoreAndChangeCommand(previous_options, next_options, drop_options);
-    }
-    if (command_options.path === COMMAND_CHANGE_STATE) {
+    if (command_options.path === COMMAND_CHANGE_STATE ||
+        command_options.path === COMMAND_STORE_AND_CHANGE_STATE) {
       return execChangeCommand(previous_options, next_options, drop_options);
     }
     throw new Error('Unsupported command ' + command_options.path);
@@ -385,12 +376,14 @@
       // Drop all other kind of parameters, to detect issue more easily
       for (key in options) {
         if (options.hasOwnProperty(key)) {
-          if ((key !== 'command') && (key !== 'options') && (key !== 'absolute_url')) {
+          if ((key !== 'command') && (key !== 'options') &&
+              (key !== 'absolute_url')) {
             valid = false;
           }
         }
       }
-      if (valid && (options.command) && (VALID_URL_COMMAND_DICT.hasOwnProperty(options.command))) {
+      if (valid && (options.command) &&
+          (VALID_URL_COMMAND_DICT.hasOwnProperty(options.command))) {
         hash = getCommandUrlFor(this, command, args);
       } else {
         hash = getCommandUrlFor(this, 'error', options);
@@ -400,9 +393,7 @@
         hash = new URL(hash, window.location.href).href;
       }
       return hash;
-    })    
-    
-    
+    })
 
     .declareMethod('redirect', function (options) {
       if (options !== undefined && options.toExternal) {
@@ -429,7 +420,7 @@
         return routeDisplay(gadget, command_options);
       }
       if (command_options.method === PREFIX_COMMAND) {
-        return routeCommand(gadget, command_options);
+        return routeCommand(command_options);
       }
       if (command_options.method) {
         throw new Error('Unsupported hash method: ' + command_options.method);
@@ -437,8 +428,6 @@
       return routeMethodLess(gadget);
     })
 
-
-  
     .declareMethod('getUrlParameter', function (key) {
       return this.props.options[key];
     })
